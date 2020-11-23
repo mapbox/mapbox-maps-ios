@@ -1,0 +1,30 @@
+---
+name: Bug template
+about: This is the template for reporting bugs and other issue types
+title: ''
+labels: 'bug'
+assignees: ''
+
+---
+
+## Observed behavior and steps to reproduce
+
+<!--- Please include as much evidence as possible (traces, videos, screenshots etc --->
+
+
+## Expected behavior
+
+
+
+## Notes / preliminary analysis
+
+<!--- include your initial analysis, if available --->
+
+## Additional links and references
+
+<!--- Links to traces, videos et --->
+
+## Environment
+
+<!--- iOS, Android, Native and version --->
+- Platform: 

@@ -88,3 +88,6 @@ fastlane/test_output
 # https://github.com/johnno1962/injectionforxcode
 
 iOSInjectionProject/
+Umbrella.xcworkspace/xcshareddata
+.DS_Store
+Umbrella.xcworkspace/contents.xcworkspacedata

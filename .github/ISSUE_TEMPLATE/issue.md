@@ -7,6 +7,9 @@ assignees: ''
 
 ---
 
+## What
+
+<- Short description of what should be done ->
 ## Why
 1-2 sentence description of why we're doing this work. What problem does it solve? Why is it valuable? (When in doubt, use the [JTBD](https://jtbd.info/replacing-the-user-story-with-the-job-story-af7cdee10c27) framework as a guide for writing the issue). 
 

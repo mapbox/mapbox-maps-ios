@@ -7,14 +7,13 @@ In its current state, it's possible to create the end-to-end debuggable environm
 2. Run `git submodule update --init --recursive` manually (takes about 10 minutes)
 3. Run `sh generate-debuggable-environment.sh` with your required branches. 
 
-**Example**
+   **Example**
 
-```bash
-# Usage: ./generate-debuggable-environment.sh <mapbox-gl-native-internal branch> <mapbox-maps-ios branch>
-./generate-debuggable-environment.sh internal main 
-```
-
-This command ☝️ will create a debuggable environment where `mapbox-maps-ios` will be checked out at the latest `main` and `mapbox-gl-native-internal` will be checked out at the latest `internal`. You may choose to provide Git SHAs as well.
+   ```bash
+   # Usage: ./generate-debuggable-environment.sh <mapbox-gl-native-internal branch> <mapbox-maps-ios branch>
+   ./generate-debuggable-environment.sh internal main 
+   ```
+   This command ☝️ will create a debuggable environment where `mapbox-maps-ios` will be checked out at the latest `main` and `mapbox-gl-native-internal` will be checked out at the latest `internal`. You may choose to provide Git SHAs as well.
 
 4. Once the script above completes -- the `Umbrella.xcworkspace` will open.
 5. Only thing remaining is to ensure that you set a well-known path to `DerivedData` (the directory where `MapboxCoreMaps.framework` gets built into). 

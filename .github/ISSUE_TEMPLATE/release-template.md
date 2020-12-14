@@ -44,10 +44,10 @@ _Required dependencies:_
 **2) Draft the GitHub release**
 
 * This is included in automation. Once the CI job has completed, a new draft release will be made [here](https://github.com/mapbox/mapbox-maps-ios/releases)
-* Update the release notes with changelog items (TODO: Automate this)
+* Update the release notes with changelog items located in `CHANGELOG.md`. Make sure you review the commit and ensure that information is organized correctly
 
 **If Manual Release Is Needed**
-- [ ] While the CI job is in progress, prepare the GitHub release by creating a draft release on Github, based off the new tag you created. In the release description, include the following template: 
+- [ ] While the CI job is in progress, prepare the GitHub release by creating a draft release on Github, based off the new tag you created. In the release description, copy and paste the information in CHANGELOG.md after reviewing the commit that CI posts
 
 ````
 

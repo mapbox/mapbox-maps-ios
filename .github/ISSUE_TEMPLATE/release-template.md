@@ -44,7 +44,7 @@ _Required dependencies:_
 **2) Draft the GitHub release**
 
 * This is included in automation. Once the CI job has completed, a new draft release will be made [here](https://github.com/mapbox/mapbox-maps-ios/releases)
-* Update the release notes with changelog items located in `CHANGELOG.md`. Make sure you review the commit and ensure that information is organized correctly
+* Update the release notes with changelog items located in `CHANGELOG.md`. **Make sure you review the commit and ensure that information is organized correctly** (Feel free to edit and commit to master with the updated changes)
 
 **If Manual Release Is Needed**
 - [ ] While the CI job is in progress, prepare the GitHub release by creating a draft release on Github, based off the new tag you created. In the release description, copy and paste the information in CHANGELOG.md after reviewing the commit that CI posts
@@ -96,6 +96,7 @@ https://api.mapbox.com/downloads/v2/mobile-maps-ios-privatebeta/releases/ios/<ve
 
 - [ ] Navigate to the [CircleCI job page](https://app.circleci.com/pipelines/github/mapbox/mapbox-maps-ios), and download the `api-docs.zip` artifact.
 - [ ] Move and rename this zip file to Google Drive in Mobile Maps SDK/Public/Carbon Docs (PUBLIC)/maps-ios-`<version>`.zip.
+- [ ] Package the Examples workspace as a zip and upload it to Google Drive in Mobile Maps SDK/Public/Carbon Docs
 
 ## 🚢 Publish the release
 

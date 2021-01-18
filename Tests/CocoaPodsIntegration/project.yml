@@ -1,0 +1,11 @@
+name: CocoaPodsIntegration
+options:
+  bundleIdPrefix: com.mapbox.CocoaPodsIntegration
+targets:
+  CocoaPodsIntegration:
+    type: application
+    platform: iOS
+    deploymentTarget: "13.0"
+    info:
+        path: App.plist
+    sources: [Sources]

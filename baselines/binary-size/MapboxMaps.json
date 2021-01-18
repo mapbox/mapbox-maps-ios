@@ -1,0 +1,29 @@
+{
+  "binary_name": "MapboxMaps.xcframework",
+  "created": "2020-12-08T02:57:56.705545",
+  "binary_size": 4880433,
+  "platform": {
+    "MapboxMaps_arm64": 1405712,
+    "MapboxMaps_arm64_bitcodeSize": 7798784,
+    "MapboxMaps_arm64_debugSymbolsSize": 92080,
+    "MapboxMaps_arm64_humanReadableSize": "1.3 MB",
+    "MapboxMaps_x86_64": 1502096,
+    "MapboxMaps_x86_64_bitcodeSize": 0,
+    "MapboxMaps_x86_64_debugSymbolsSize": 92064,
+    "MapboxMaps_x86_64_humanReadableSize": "1.4 MB"
+  },
+  "core": {},
+  "build": {
+    "build": 17286,
+    "project": "mapbox-maps-ios",
+    "branch": "HEAD",
+    "sha": "773e6b54d9b1eae3e069df7a32200ed4691561b9",
+    "author": "Maps SDK github release bot",
+    "timestamp": 1607395149,
+    "message": "fixing danger\n",
+    "xcode": "Xcode 12.0 Build version 12A7209",
+    "metrics-sha": "5d8e5be1172ee962dd72a731e2d6e8cc79a78a0c"
+  },
+  "name": "ios-maps-v10",
+  "version": "3"
+}

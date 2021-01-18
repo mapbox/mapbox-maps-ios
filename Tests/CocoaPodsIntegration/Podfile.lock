@@ -1,0 +1,29 @@
+PODS:
+  - CMapbox (0.0.1)
+  - Gestures (0.0.1):
+    - CMapbox (= 0.0.1)
+  - Mapbox (0.0.1):
+    - CMapbox (= 0.0.1)
+    - Gestures (= 0.0.1)
+
+DEPENDENCIES:
+  - CMapbox (from `../../`)
+  - Gestures (from `../../`)
+  - Mapbox (from `../../`)
+
+EXTERNAL SOURCES:
+  CMapbox:
+    :path: "../../"
+  Gestures:
+    :path: "../../"
+  Mapbox:
+    :path: "../../"
+
+SPEC CHECKSUMS:
+  CMapbox: a146d828bd856670a5d07710f8e8916edcf920cf
+  Gestures: 9997ee5ae75ca8f59d86f5a64fd91ffd6e5862e6
+  Mapbox: 044ef0c99ac1cfb2afe172a5af28645aa25cff90
+
+PODFILE CHECKSUM: 30a8bc41e03a1f93264d19604a1b4cc85f9dba36
+
+COCOAPODS: 1.8.4

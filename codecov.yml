@@ -1,0 +1,9 @@
+ignore:
+  - "Example/"
+  - "Tests/"
+  - "docs"
+coverage:
+  status:
+    project:
+      default:
+        threshold: 2

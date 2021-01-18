@@ -1,0 +1,5 @@
+#
+*.pbxproj merge=union
+
+# Mark files as generated in Github PRs
+Mapbox/MapboxMapsStyle/Generated/** linguist-generated=true

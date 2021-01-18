@@ -1,0 +1,7 @@
+platform :ios, '11.0'
+
+target 'CocoaPodsIntegration' do
+    pod 'MapboxMaps', :path => "../../"
+    pod 'Gestures', :path => "../../"
+    pod 'CMapbox', :path => "../../", :modular_headers => true
+end

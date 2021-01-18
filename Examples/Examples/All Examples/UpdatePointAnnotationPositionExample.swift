@@ -1,0 +1,60 @@
+import UIKit
+import MapboxMaps
+import Turf
+
+@objc(UpdatePointAnnotationPositionExample)
+
+public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProtocol {
+
+    internal var mapView: MapView!
+    internal var pointAnnotation: PointAnnotation!
+
+    override public func viewDidLoad() {
+        super.viewDidLoad()
+
+        guard let accessToken = AccountManager.shared.accessToken else {
+            fatalError("Access token not set")
+        }
+
+        let resourceOptions = ResourceOptions(accessToken: accessToken)
+        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions)
+
+        mapView.cameraManager.setCamera(centerCoordinate: CLLocationCoordinate2D(latitude: 59.3, longitude: 8.06),
+                                        zoom: 12)
+        self.view.addSubview(mapView)
+
+        // Allows the view controller to recieve information about map events.
+        mapView.on(.mapLoadingFinished) { [weak self] _ in
+            guard let self = self else { return }
+            self.addPointAnnotation()
+            // The below line is used for internal testing purposes only.
+            self.finish()
+        }
+
+    }
+
+    public func addPointAnnotation() {
+        pointAnnotation = PointAnnotation(coordinate: mapView.centerCoordinate)
+        mapView.annotationManager.addAnnotation(pointAnnotation)
+        mapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(updatePosition)))
+    }
+
+    @objc public func updatePosition(_ sender: UITapGestureRecognizer) {
+        let newCoordinate = mapView.coordinate(for: sender.location(in: mapView))
+        pointAnnotation.coordinate = newCoordinate
+
+        do {
+            try self.mapView.annotationManager.updateAnnotation(pointAnnotation)
+        } catch let error {
+            displayAlert(message: error.localizedDescription)
+        }
+    }
+
+    fileprivate func displayAlert(message: String) {
+        let alertController = UIAlertController(title: "Error:",
+                                                message: message,
+                                                preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+        self.present(alertController, animated: true, completion: nil)
+    }
+}

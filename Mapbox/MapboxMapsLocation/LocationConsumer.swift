@@ -1,0 +1,45 @@
+import Foundation
+import CoreLocation
+
+@objc public class Location: NSObject {
+    public let heading: CLHeading?
+    public let internalLocation: CLLocation
+
+    public var coordinate: CLLocationCoordinate2D {
+        return self.internalLocation.coordinate
+    }
+
+    public var course: CLLocationDirection {
+        return self.internalLocation.course
+    }
+
+    public var horizontalAccuracy: CLLocationAccuracy {
+        return self.internalLocation.horizontalAccuracy
+    }
+
+    public var headingDirection: CLLocationDirection? {
+        guard let heading = self.heading else { return nil }
+
+        if heading.trueHeading >= 0 {
+            return heading.trueHeading
+        }
+
+        return heading.magneticHeading
+    }
+
+    public init(with location: CLLocation, heading: CLHeading? = nil) {
+        self.internalLocation = location
+        self.heading = heading
+    }
+}
+
+@objc public protocol LocationConsumer {
+
+    /// Represents whether the locationConsumer is currently tracking
+    /// Set this to `false` to stop tracking
+    /// Set this to `true` to start tracking
+    var shouldTrackLocation: Bool { get set }
+
+    /// New location update received
+    func locationUpdate(newLocation: Location)
+}

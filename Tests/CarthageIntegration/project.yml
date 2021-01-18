@@ -1,0 +1,15 @@
+name: CarthageIntegration
+options:
+  bundleIdPrefix: com.mapbox.CarthageIntegration
+targets:
+  CarthageIntegration:
+    type: application
+    platform: iOS
+    deploymentTarget: "13.0"
+    info:
+        path: App.plist
+    sources: [Sources]
+    dependencies:
+      - carthage: MapboxMaps
+      - carthage: CMapbox
+      - carthage: Gestures

@@ -181,7 +181,18 @@ private extension PuckLocationIndicatorLayer {
         paint.location = .constant([location.coordinate.latitude,
                                     location.coordinate.longitude,
                                     location.internalLocation.altitude])
-        paint.accuracyRadius = .constant(5000)
+        let exp = Exp(.interpolate) {
+            Exp(.linear) 
+            Exp(.zoom)
+            0
+            400000
+            4
+            200000
+            8
+            5000
+        }
+        paint.accuracyRadius = .expression(exp)
+
         paint.accuracyRadiusColor = .constant(ColorRepresentable(color: UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
         paint.accuracyRadiusBorderColor = .constant(ColorRepresentable(color: .lightGray))
         layer.paint = paint

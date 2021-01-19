@@ -13,3 +13,4 @@ developer.xcconfig
 Carthage
 api-docs
 Package.resolved
+.swiftpm/

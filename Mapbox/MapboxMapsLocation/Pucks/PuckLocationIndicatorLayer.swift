@@ -173,26 +173,28 @@ private extension PuckLocationIndicatorLayer {
     func createApproximateLocationIndicatorLayer(location: Location) throws {
         guard let style = self.locationSupportableMapView?.style else { return }
 
-        // Add image to sprite sheet
-        guard let triangle = UIImage(named: "triangle") else { return }
-        let setStyleImageResult = style.setStyleImage(image: triangle, with: "puck", scale: 50.0)
-
-        if case .failure(let imageError) = setStyleImageResult {
-            throw imageError
-        }
-
         // Create Layer
         var layer = LocationIndicatorLayer(id: "puck")
-
-        // Create and set Layout property
-        let layout = LocationIndicatorLayer.Layout()
-        layer.layout = layout
 
         // Create and set Paint property
         var paint = LocationIndicatorLayer.Paint()
         paint.location = .constant([location.coordinate.latitude,
                                     location.coordinate.longitude,
                                     location.internalLocation.altitude])
+        let exp = Exp(.interpolate) {
+            Exp(.linear) 
+            Exp(.zoom)
+            0
+            400000
+            4
+            200000
+            8
+            5000
+        }
+        paint.accuracyRadius = .expression(exp)
+
+        paint.accuracyRadiusColor = .constant(ColorRepresentable(color: UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
+        paint.accuracyRadiusBorderColor = .constant(ColorRepresentable(color: .lightGray))
         layer.paint = paint
 
         // Call customizationHandler to allow developers to granularly modify the layer

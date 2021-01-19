@@ -17,11 +17,14 @@ public enum SourceError: Error {
     /// The source could not be added to the map
     case addSourceFailed(String?)
 
-    /// The sourcce could not be retrieved from the map
+    /// The source could not be retrieved from the map
     case getSourceFailed(String?)
 
     /// The source property could not be set.
     case setSourceProperty(String?)
+
+    /// The source could not be removed from the map
+    case removeSourceFailed(String?)
 }
 
 /// Error enum for all layer-related errors
@@ -318,6 +321,19 @@ public class Style {
         } catch {
             return .failure(.decodingTerrainFailed(error))
         }
+    }
+
+    /**
+     Remove a source with a specified identifier from the map.
+     - Parameter sourceID: The unique identifer representing the source to be removed.
+     - Returns: If operation successful, returns a `true` as part of the `Result`
+                success case. Else, returns a `SourceError` in the `Result` failure case.
+     */
+    public func removeSource(for sourceID: String) -> Result<Bool, SourceError> {
+        let expected = try! styleManager.removeStyleSource(forSourceId: sourceID)
+
+        return expected.isError() ? .failure(.removeSourceFailed(expected.error as? String))
+                                  : .success(true)
     }
 
 }

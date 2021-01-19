@@ -1,0 +1,15 @@
+.DS_Store
+vendor/*
+/build
+/.build
+/Packages
+xcuserdata/
+Sources/CMapbox/lib/libMapbox.a
+Sources/CMapbox/lib/libMapboxCore.a
+/Mapbox/CMapbox/lib/libMapbox.a
+/Mapbox/MapboxMaps.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+node_modules
+developer.xcconfig
+Carthage
+api-docs
+Package.resolved

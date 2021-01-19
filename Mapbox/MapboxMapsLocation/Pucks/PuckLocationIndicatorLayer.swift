@@ -115,13 +115,27 @@ internal class PuckLocationIndicatorLayer: Puck {
 // MARK: Layer Creation Functions
 private extension PuckLocationIndicatorLayer {
     func createPreciseLocationIndicatorLayer(location: Location) throws {
-        guard let style = self.locationSupportableMapView?.style else { return }
+        guard let style = self.locationSupportableMapView?.style else {
+            print("returning early")
+            return
+        }
 
-        // Add image to sprite sheet
-        guard let triangle = UIImage(named: "triangle") else { return }
-        let setStyleImageResult = style.setStyleImage(image: triangle, with: "puck", scale: 50.0)
+        // Add images to sprite sheet
+        guard let locationDotInner = UIImage(named: "location-dot-inner",
+                                             in: Bundle(for: PuckLocationIndicatorLayer.self),
+                                             compatibleWith: nil) else { return }
+        let setStyleImageResultInner = style.setStyleImage(image: locationDotInner, with: "locationDotInner", scale: 44.0)
 
-        if case .failure(let imageError) = setStyleImageResult {
+        if case .failure(let imageError) = setStyleImageResultInner {
+            throw imageError
+        }
+
+        guard let locationDotOuter = UIImage(named: "location-dot-outer",
+                                             in: Bundle(for: PuckLocationIndicatorLayer.self),
+                                             compatibleWith: nil) else { return }
+        let setStyleImageResultOuter = style.setStyleImage(image: locationDotOuter, with: "locationDotOuter", scale: 44.0)
+
+        if case .failure(let imageError) = setStyleImageResultOuter {
             throw imageError
         }
 
@@ -130,9 +144,9 @@ private extension PuckLocationIndicatorLayer {
 
         // Create and set Layout property
         var layout = LocationIndicatorLayer.Layout()
-        layout.topImage = .constant(ResolvedImage.name("puck"))
-        layout.bearingImage = .constant(ResolvedImage.name("puck"))
-        layout.shadowImage = .constant(ResolvedImage.name("puck"))
+        layout.topImage = .constant(ResolvedImage.name("locationDotInner"))
+        layout.bearingImage = .constant(ResolvedImage.name("locationDotOuter"))
+
         layer.layout = layout
 
         // Create and set Paint property
@@ -141,19 +155,15 @@ private extension PuckLocationIndicatorLayer {
                                     location.coordinate.longitude,
                                     location.internalLocation.altitude])
         paint.locationTransition = StyleTransition(duration: 0, delay: 0)
-        paint.bearing = .constant(0.0)
-        paint.topImageSize = .constant(0.5)
-        paint.bearingImageSize = .constant(0.26)
-        paint.shadowImageSize = .constant(0.2)
-        paint.accuracyRadius = .constant(50.0)
+        paint.topImageSize = .constant(1.0)
+        paint.bearingImageSize = .constant(1.0)
+
+        paint.accuracyRadius = .constant(location.horizontalAccuracy)
 
         paint.emphasisCircleRadiusTransition = StyleTransition(duration: 0, delay: 0)
         paint.bearingTransition = StyleTransition(duration: 0, delay: 0)
-        paint.accuracyRadiusColor = .constant(ColorRepresentable(color: UIColor(displayP3Red: 0.0, green: 1.0, blue: 0.0, alpha: 0.2)))
-        paint.accuracyRadiusBorderColor = .constant(ColorRepresentable(color: UIColor(displayP3Red: 0.0, green: 1.0, blue: 0.0, alpha: 0.4)))
-        paint.imagePitchDisplacement = .constant(0.0)
-        paint.perspectiveCompensation = .constant(0.9)
-        paint.emphasisCircleColor = .constant(ColorRepresentable(color: UIColor(displayP3Red: 0.2, green: 0.2, blue: 0.7, alpha: 0.5)))
+        paint.accuracyRadiusColor = .constant(ColorRepresentable(color: UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
+        paint.accuracyRadiusBorderColor = .constant(ColorRepresentable(color: .lightGray))
 
         layer.paint = paint
 

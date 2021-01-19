@@ -1,0 +1,19 @@
+ name: SPMTest
+ options:
+   bundleIdPrefix: com.mapbox.maps.SPM
+ packages:
+   MapboxMaps:
+     url: git@github.com:mapbox/mapbox-maps-ios.git
+     branch: fred/spm
+ targets:
+   SPMTest:
+     type: application
+     platform: iOS
+     deploymentTarget: "13.2"
+     sources: [Sources]
+     dependencies:
+       - sdk: libc++.tbd
+       - package: MapboxMaps
+     settings:
+         DEVELOPMENT_TEAM: "GJZR2MEM28"
+         OTHER_LDFLAGS: "-lc++"

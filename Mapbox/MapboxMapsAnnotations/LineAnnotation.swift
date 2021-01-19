@@ -32,6 +32,11 @@ public struct LineAnnotation: Annotation {
      */
     public var isSelected: Bool = false
 
+    /**
+     The optional properties associated with the line annotation.
+     */
+    public var properties: [String: Any]?
+
     // MARK: - Internal properties
 
     /**
@@ -40,11 +45,6 @@ public struct LineAnnotation: Annotation {
      The annotation is rendered on the map at this location.
      */
     private(set) public var coordinates: [CLLocationCoordinate2D]
-
-    /**
-     The optional properties associated with the line annotation.
-     */
-    public var properties: [String: Any]?
 
     // MARK: - Initialization
 

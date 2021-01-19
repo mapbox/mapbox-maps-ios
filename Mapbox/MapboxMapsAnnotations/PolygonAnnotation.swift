@@ -32,6 +32,11 @@ public struct PolygonAnnotation: Annotation {
      */
     public var isSelected: Bool = false
 
+    /**
+     The optional properties associated with the polygon annotation.
+     */
+    public var properties: [String: Any]?
+
     // MARK: - Internal properties
 
     /**
@@ -45,10 +50,6 @@ public struct PolygonAnnotation: Annotation {
      */
     private(set) public var interiorPolygons: [[CLLocationCoordinate2D]]?
 
-    /**
-     The optional properties associated with the polygon annotation.
-     */
-    public var properties: [String: Any]?
 
     // MARK: - Initialization
 

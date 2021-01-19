@@ -50,7 +50,7 @@ public struct PointAnnotation: Annotation {
 
      The annotation is rendered on the map at this location.
      */
-    public var coordinate: CLLocationCoordinate2D
+    public private(set) var coordinate: CLLocationCoordinate2D
 
     /**
      The optional properties associated with the point annotation.

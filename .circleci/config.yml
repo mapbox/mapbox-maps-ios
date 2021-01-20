@@ -336,33 +336,33 @@ jobs:
                 include_visit_job_action: true
             - make-deps
             - run: pip3 install awscli
-            - make-docs
-            # - make-xcframework-zip
-            # - make-xcframeworks-bundle
-            # - run: 
-            #     name: Uploading to XCFramework to SDK Registry
-            #     command: |
-            #         ./scripts/release/upload-to-registry.sh MapboxMaps.xcframework.zip mobile-maps-ios packages/${VERSION} mapbox-maps-ios.zip
-            # - run: 
-            #     name: Uploading to Direct Download to SDK Registry
-            #     command: |
-            #         ./scripts/release/upload-to-registry.sh MapboxMaps.zip mobile-maps-ios ${VERSION} mapbox-maps-ios.zip
-            # - run:
-            #     name: Run `npm ci`
-            #     command: |
-            #         echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-            #         npm ci
-            #     when: always
-            # - run: 
-            #     name: Creating SDK Registry PR
-            #     command: |
-            #         ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios ${VERSION} mapbox-maps-ios
-            #     when: always
-            # - slack/status:
-            #     fail_only: false
-            #     include_visit_job_action: true
-            #     failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` failed.>'
-            #     success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` succeeded!> :tada:'
+            # - make-docs
+            - make-xcframework-zip
+            - make-xcframeworks-bundle
+            - run: 
+                name: Uploading to XCFramework to SDK Registry
+                command: |
+                    ./scripts/release/upload-to-registry.sh MapboxMaps.xcframework.zip mobile-maps-ios packages/${VERSION} mapbox-maps-ios.zip
+            - run: 
+                name: Uploading to Direct Download to SDK Registry
+                command: |
+                    ./scripts/release/upload-to-registry.sh MapboxMaps.zip mobile-maps-ios ${VERSION} mapbox-maps-ios.zip
+            - run:
+                name: Run `npm ci`
+                command: |
+                    echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+                    npm ci
+                when: always
+            - run: 
+                name: Creating SDK Registry PR
+                command: |
+                    ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios ${VERSION} mapbox-maps-ios
+                when: always
+            - slack/status:
+                fail_only: false
+                include_visit_job_action: true
+                failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` failed.>'
+                success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` succeeded!> :tada:'
 
     ios-release-tag:
         <<: *default-job

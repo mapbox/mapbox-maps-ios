@@ -318,7 +318,7 @@ jobs:
     
     # This job was created for the public beta
     ios-build-release:
-     <<: *default-job
+        <<: *default-job
         steps:
             - ensure-text-exists-in-commit:
                 commit-text: "*.*.* release"  

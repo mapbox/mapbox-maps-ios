@@ -29,6 +29,11 @@ git checkout -b ${BRANCH_NAME}
 
 cat << EOF > config/${PROJECT_ROOT}/${VERSION}.yaml
 api-downloads: v2
+
+packages:
+  ios:
+      - MapboxMaps.xcframework
+
 bundles:
   ios: ${SDK_FILE_NAME}
 EOF

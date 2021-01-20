@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Usage: ./upload-to-registry.sh </path/to/source/zip> <project> <version> <zipfile name>
 
-# //s3://mapbox-api-downloads-production/v2/mobile-maps-ios-privatebeta/releases/ios/<version>/mapbox-maps-ios-privatebeta.zip
+# Direct Download //s3://mapbox-api-downloads-production/v2/mobile-maps-ios/releases/ios/<version>/mapbox-maps-ios.zip
+# SPM/Pods //s3://mapbox-api-downloads-production/v2/mobile-maps-ios/releases/ios/packages/<version>/mapbox-maps-ios.zip
 
 set -euo pipefail
 
@@ -23,15 +24,6 @@ if [[ "${AWS_SECRET_ACCESS_KEY:-invalid}" == "invalid" ]]; then
     echo AWS_SECRET_ACCESS_KEY not set.
     exit 1
 fi
-
-# DRYRUN=""
-# if [[ ${SKIP_S3-} ]]; then
-#     DRYRUN="--dryrun"
-# fi
-# PROGRESS=""
-# if [ -n "${CI:-}" ]; then
-#     PROGRESS="--no-progress"
-# fi
 
 SOURCE_ZIP=$1
 PROJECT=$2

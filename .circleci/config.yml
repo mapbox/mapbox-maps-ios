@@ -330,35 +330,38 @@ jobs:
                 command: |
                     GIT_COMMIT_MSG=`git log --format=oneline -n 1`
                     export VERSION=$(echo $GIT_COMMIT_MSG| cut -d' ' -f3)
-                    env
-            # - slack/notify:
-            #     message: '<$CIRCLE_BUILD_URL|Release build for \`$CIRCLE_TAG\` started.>'
-            #     include_visit_job_action: true
-            # - make-deps
-            # - run: pip3 install awscli
-            # - make-docs
-            # - make-xcframework-zip
-            # - make-xcframeworks-bundle
-            # - run: 
-            #     name: Uploading to SDK Registry
-            #     command: |
-            #         ./scripts/release/upload-to-registry.sh MapboxMaps.zip mobile-maps-ios-privatebeta ${CIRCLE_TAG} mapbox-maps-ios-privatebeta.zip
-            # - run:
-            #     name: Run `npm ci`
-            #     command: |
-            #         echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-            #         npm ci
-            #     when: always
-            # - run: 
-            #     name: Creating SDK Registry PR
-            #     command: |
-            #         ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios-privatebeta ${CIRCLE_TAG} mapbox-maps-ios-privatebeta
-            #     when: always
-            # - slack/status:
-            #     fail_only: false
-            #     include_visit_job_action: true
-            #     failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release build for \`$CIRCLE_TAG\` failed.>'
-            #     success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release build for \`$CIRCLE_TAG\` succeeded!> :tada:'
+            - slack/notify:
+                message: '<$CIRCLE_BUILD_URL|Release build for \`$VERSION\` started.>'
+                include_visit_job_action: true
+            - make-deps
+            - run: pip3 install awscli
+            - make-docs
+            - make-xcframework-zip
+            - make-xcframeworks-bundle
+            - run: 
+                name: Uploading to XCFramework to SDK Registry
+                command: |
+                    ./scripts/release/upload-to-registry.sh MapboxMaps.xcframework.zip mobile-maps-ios packages/${VERSION} mapbox-maps-ios.zip
+            - run: 
+                name: Uploading to Direct Download to SDK Registry
+                command: |
+                    ./scripts/release/upload-to-registry.sh MapboxMaps.zip mobile-maps-ios ${VERSION} mapbox-maps-ios.zip
+            - run:
+                name: Run `npm ci`
+                command: |
+                    echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+                    npm ci
+                when: always
+            - run: 
+                name: Creating SDK Registry PR
+                command: |
+                    ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios ${VERSION} mapbox-maps-ios
+                when: always
+            - slack/status:
+                fail_only: false
+                include_visit_job_action: true
+                failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` failed.>'
+                success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` succeeded!> :tada:'
 
     ios-release-tag:
         <<: *default-job
@@ -615,9 +618,14 @@ commands:
             - run:
                 name: Zipping xcframework
                 command: |
-                    zip -r MapboxMaps.xcframework.zip build/Build/Products/XCFramework/
+                    zip -r MapboxMaps.xcframework.zip build/Build/Products/XCFramework/ /Users/distiller/project/LICENSE.md
+                    cd /Users/distiller/project/
+                    swift package compute-checksum MapboxMaps.xcframework.zip > MapboxMaps.xcframework.zip.checksum
+                    cat MapboxMaps.xcframework.zip.checksum
             - store_artifacts:
                 path: MapboxMaps.xcframework.zip
+            - store_artifacts:
+                path: MapboxMaps.xcframework.zip.checksum
 
     make-xcframeworks-bundle:
         # Requires make-xcframework-zip 
@@ -629,6 +637,7 @@ commands:
                     mkdir artifact
                     cp scripts/release/README.md artifact
                     cp -r build/Build/Products/XCFramework/MapboxMaps.xcframework artifact
+                    cp /Users/distiller/project/LICENSE.md artifact
                     scripts/framework/make-xcframework.sh MapboxCommon Carthage/Build/iOS artifact
                     scripts/framework/make-xcframework.sh MapboxCoreMaps Carthage/Build/iOS artifact
                     scripts/framework/make-xcframework.sh MapboxMobileEvents Carthage/Build/iOS artifact

@@ -43,7 +43,7 @@ public class LocationManager: NSObject {
 
     internal var locationOptions: LocationOptions!
 
-    internal init(locationOptions: LocationOptions,
+    public init(locationOptions: LocationOptions,
                   locationSupportableMapView: LocationSupportableMapView) {
         super.init()
 

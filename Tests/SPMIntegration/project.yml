@@ -2,9 +2,11 @@
  options:
    bundleIdPrefix: com.mapbox.maps.SPM
  packages:
+   MapboxCoreMaps:
+     url: git@github.com:mapbox/mapbox-core-maps-ios.git
+     revision: 1943791b1152b2a9802ab17db4d89f5b5ecc4c15
    MapboxMaps:
-     url: git@github.com:mapbox/mapbox-maps-ios.git
-     branch: fred/spm
+     path: ../..
  targets:
    SPMTest:
      type: application
@@ -13,6 +15,7 @@
      sources: [Sources]
      dependencies:
        - sdk: libc++.tbd
+       - package: MapboxCoreMaps
        - package: MapboxMaps
      settings:
          DEVELOPMENT_TEAM: "GJZR2MEM28"

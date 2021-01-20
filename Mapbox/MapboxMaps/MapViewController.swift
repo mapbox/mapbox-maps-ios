@@ -1,5 +1,12 @@
 import UIKit
 import MapboxCoreMaps
+import MapboxMapsGestures
+import MapboxMapsOrnaments
+import MapboxMapsFoundation
+import MapboxMapsStyle
+import MapboxMapsAnnotations
+import MapboxMapsLocation
+
 
 /// The MapViewController is responsible for managing the `mapView`
 /// and orchestrating between the different components of the Mapbox SDK
@@ -20,7 +27,7 @@ open class MapManager: UIViewController {
     public private(set) var cameraManager: CameraManager!
 
     /// The `locationManager` that handles location events of the map
-    public private(set) var locationManager: LocationManager!
+    public private(set) var locationManager: MapboxMapsLocation.LocationManager!
 
     /// The `style` object supports run time styling
     public private(set) var style: Style!
@@ -63,8 +70,10 @@ open class MapManager: UIViewController {
         self.frame = frame
         self.accessToken = accessToken
         self.baseURL = baseURL
-        self.eventsManager = EventsManager(accessToken: accessToken)
-        self.mapView = MapView(with: frame, accessToken: accessToken, baseURL: baseURL, styleURL: styleURL)
+        //self.eventsManager = EventsManager(accessToken: accessToken)
+        //self.mapView = MapView(with: frame, accessToken: accessToken, baseURL: baseURL, styleURL: styleURL)
+        let options = ResourceOptions(accessToken: "<#token#>")
+        self.mapView = MapView(with: frame, resourceOptions: options)
 
         super.init(nibName: nil, bundle: nil)
         self.setupManagers()
@@ -94,10 +103,10 @@ open class MapManager: UIViewController {
         setupOrnaments(with: mapView, options: mapOptions.ornaments)
 
         // Initialize/Configure location manager
-        setupUserLocationManager(with: mapView, options: mapOptions.location)
+//        setupUserLocationManager(with: mapView, options: mapOptions.location)
 
         // Initialize/Configure annotations manager
-        setupAnnotationManager(with: mapView, and: style)
+//        setupAnnotationManager(with: mapView, and: style)
     }
 
     /// Updates the map with new configuration options. Causes underlying structures to reload configuration synchronously.
@@ -110,7 +119,7 @@ open class MapManager: UIViewController {
         updateCamera(with: mapOptions.camera)
         updateGestures(with: mapOptions.gestures)
         updateOrnaments(with: mapOptions.ornaments)
-        updateUserLocationManager(with: mapOptions.location)
+//        updateUserLocationManager(with: mapOptions.location)
     }
 
     internal func setupMapView() {
@@ -119,12 +128,12 @@ open class MapManager: UIViewController {
 
         // Set prefetch zoom delta
         let defaultPrefetchZoomDelta: UInt8 = 4
-        mapView.__map.setPrefetchZoomDeltaForDelta(self.mapOptions.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
+        //mapView.__map.setPrefetchZoomDeltaForDelta(self.mapOptions.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
     }
 
     internal func updateMapView(with newOptions: MapOptions) {
         let defaultPrefetchZoomDelta: UInt8 = 4
-        mapView.__map.setPrefetchZoomDeltaForDelta(newOptions.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
+//        mapView.__map.setPrefetchZoomDeltaForDelta(newOptions.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
     }
 
     internal func setupGestures(with view: UIView, options: GestureOptions, cameraManager: CameraManager) {
@@ -152,27 +161,27 @@ open class MapManager: UIViewController {
         ornamentsManager.ornamentConfig = mapOptions.ornaments.makeConfig()
     }
 
-    internal func setupUserLocationManager(with locationSupportableMapView: LocationSupportableMapView, options: LocationProviderOptions) {
-
-        var locationConsumers: [LocationConsumer] = []
-        if case let LocationTrackingMode.custom(customLocationConsumer) = mapOptions.location.locationTrackingMode {
-            locationConsumers = [customLocationConsumer]
-        } else {
-            locationConsumers = [cameraManager]
-        }
-
-        locationManager = LocationManager(locationProviderOptions: options,
-                                           locationConsumers: locationConsumers,
-                                           locationSupportableMapView: locationSupportableMapView)
-    }
-
-    internal func updateUserLocationManager(with options: LocationProviderOptions) {
-        locationManager.updateLocationOptions(with: mapOptions.location)
-    }
-
-    internal func setupAnnotationManager(with annotationSupportableMap: AnnotationSupportableMap, and style: Style) {
-        annotationManager = AnnotationManager(for: annotationSupportableMap, with: style)
-    }
+//    internal func setupUserLocationManager(with locationSupportableMapView: LocationSupportableMapView, options: LocationProviderOptions) {
+//
+//        var locationConsumers: [LocationConsumer] = []
+//        if case let LocationTrackingMode.custom(customLocationConsumer) = mapOptions.location.locationTrackingMode {
+//            locationConsumers = [customLocationConsumer]
+//        } else {
+//            locationConsumers = [cameraManager]
+//        }
+//
+//        locationManager = LocationManager(locationProviderOptions: options,
+//                                           locationConsumers: locationConsumers,
+//                                           locationSupportableMapView: locationSupportableMapView)
+//    }
+//
+//    internal func updateUserLocationManager(with options: LocationProviderOptions) {
+//        locationManager.updateLocationOptions(with: mapOptions.location)
+//    }
+//
+//    internal func setupAnnotationManager(with annotationSupportableMap: AnnotationSupportableMap, and style: Style) {
+//        annotationManager = AnnotationManager(for: annotationSupportableMap, with: style)
+//    }
 
     internal func setupStyle(with map: Map) {
         self.style = Style(with: mapView.__map)

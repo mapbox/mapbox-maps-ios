@@ -1,4 +1,6 @@
 import UIKit
+import MapboxMapsOrnaments
+
 
 private let defaultOrnamentsMargin = CGPoint(x: 8.0, y: 8.0)
 

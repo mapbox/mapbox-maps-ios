@@ -27,7 +27,7 @@ public class CameraManager {
     public var mapCameraOptions: MapCameraOptions!
 
     /// Used to update the map's camera options and pass them to the core Map.
-    internal func updateMapCameraOptions(newOptions: MapCameraOptions) {
+    public func updateMapCameraOptions(newOptions: MapCameraOptions) {
         let boundOptions = BoundOptions(__bounds: newOptions.restrictedCoordinateBounds ?? nil,
                                         maxZoom: newOptions.maximumZoomLevel as NSNumber,
                                         minZoom: newOptions.minimumZoomLevel as NSNumber,

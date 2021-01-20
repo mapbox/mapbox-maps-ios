@@ -1,9 +1,9 @@
 import UIKit
 import CoreLocation
 
-#if canImport(MapboxMapsFoundation)
+//#if canImport(MapboxMapsFoundation)
 import MapboxMapsFoundation
-#endif
+//#endif
 
 public enum GestureType: Hashable {
     /// The pan gesture type
@@ -122,7 +122,7 @@ public class GestureManager: NSObject {
 
     public var delegate: GestureManagerDelegate?
 
-    internal init(for view: UIView, options: GestureOptions, cameraManager: CameraManager) {
+    public init(for view: UIView, options: GestureOptions, cameraManager: CameraManager) {
         super.init()
         self.view = view
         self.gestureOptions = options
@@ -130,7 +130,7 @@ public class GestureManager: NSObject {
         self.configureGestureHandlers(for: options)
     }
 
-    internal func updateGestureOptions(with newOptions: GestureOptions) {
+    public func updateGestureOptions(with newOptions: GestureOptions) {
         self.gestureOptions = newOptions
         self.configureGestureHandlers(for: newOptions)
     }

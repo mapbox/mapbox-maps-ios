@@ -1,5 +1,11 @@
 import UIKit
 import CoreLocation
+import MapboxMapsOrnaments
+import MapboxMapsFoundation
+import MapboxMapsStyle
+import MapboxMapsLocation
+import MapboxMapsAnnotations
+
 
 extension MapView: OrnamentSupportableView {
     // User has tapped on an ornament

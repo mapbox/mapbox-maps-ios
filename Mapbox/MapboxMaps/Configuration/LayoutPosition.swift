@@ -1,4 +1,6 @@
 import Foundation
+import MapboxMapsOrnaments
+
 
 /// Enum that provides options for positioning an ornament
 public enum LayoutPosition: String, Equatable {

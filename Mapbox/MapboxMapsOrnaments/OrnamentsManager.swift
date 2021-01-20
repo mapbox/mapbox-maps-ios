@@ -1,9 +1,6 @@
 import Foundation
 import UIKit
-
-#if canImport(MapboxMapsFoundation)
 import MapboxMapsFoundation
-#endif
 
 /**
 Ornament positions:
@@ -86,10 +83,10 @@ public enum OrnamentType: Hashable {
     }
 }
 
-internal class OrnamentsManager: NSObject {
+public class OrnamentsManager: NSObject {
 
     /// The `OrnamentConfig` that is used to set up the required ornaments on the map
-    internal var ornamentConfig: OrnamentConfig {
+    public var ornamentConfig: OrnamentConfig {
         get {
             _ornamentConfig
         }
@@ -123,7 +120,7 @@ internal class OrnamentsManager: NSObject {
      TODO: Implement logo and attribution ornaments
      */
 
-    internal init(for view: OrnamentSupportableView, withConfig ornamentConfig: OrnamentConfig) {
+    public init(for view: OrnamentSupportableView, withConfig ornamentConfig: OrnamentConfig) {
         super.init()
         self.view = view
         self.ornamentConfig = ornamentConfig

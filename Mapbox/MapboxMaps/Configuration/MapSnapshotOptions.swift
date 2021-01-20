@@ -1,6 +1,10 @@
 import Foundation
+import CoreGraphics
+import MapboxCoreMaps
+
 
 public extension MapSnapshotOptions {
+    
     convenience init(size: CGSize,
                      resourceOptions: ResourceOptions,
                      pixelRatio: CGFloat = UIScreen.main.scale,

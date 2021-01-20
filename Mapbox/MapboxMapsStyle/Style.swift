@@ -1,8 +1,7 @@
 import Turf
-
-#if canImport(MapboxMapsFoundation)
+import Foundation
 import MapboxMapsFoundation
-#endif
+
 
 // MARK: - Style error types
 

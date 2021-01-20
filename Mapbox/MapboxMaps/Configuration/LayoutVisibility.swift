@@ -1,4 +1,5 @@
 import Foundation
+import MapboxMapsOrnaments
 
 /// Constants indicating the visibility of different map ornaments.
 public enum LayoutVisibility: String, Equatable {

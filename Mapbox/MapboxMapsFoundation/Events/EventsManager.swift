@@ -1,6 +1,7 @@
 import UIKit
 import MapboxMobileEvents
 
+
 class EventsManager: EventsListener {
     private enum Constants {
         static let MGLAPIClientUserAgentBase = "mapbox-maps-ios"

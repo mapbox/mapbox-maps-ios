@@ -1,4 +1,9 @@
 import Foundation
+import MapboxCoreMaps
+import MapboxMapsGestures
+import MapboxMapsFoundation
+import MapboxMapsLocation
+
 
 /// Options for frame rate
 public enum PreferredFramesPerSecond: Int, Equatable {
@@ -15,6 +20,10 @@ public enum PreferredFramesPerSecond: Int, Equatable {
 
 /// `MapOptions` is the structure used to configure the map with a set of capabilities
 public struct MapOptions: Equatable {
+    public static func == (lhs: MapOptions, rhs: MapOptions) -> Bool {
+        return true // TODO: Fix
+    }
+    
     /// Used to configure the gestures on the map
     public var gestures: GestureOptions = GestureOptions()
 

@@ -1,13 +1,7 @@
 import Foundation
 import CoreLocation
-
-#if canImport(MapboxMapsFoundation)
 import MapboxMapsFoundation
-#endif
-
-#if canImport(MapboxMapsStyle)
 import MapboxMapsStyle
-#endif
 
 public protocol LocationSupportableMapView: UIView {
 

@@ -4,12 +4,9 @@ import MapboxCoreMaps
 import MapboxCommon
 import Turf
 import CoreLocation
-
-#if canImport(MapboxMaps)
-#else
 import MapboxMapsStyle
 import MapboxMapsFoundation
-#endif
+
 
 //swiftlint:disable file_length type_body_length
 /**

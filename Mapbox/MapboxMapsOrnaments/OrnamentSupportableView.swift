@@ -6,7 +6,7 @@ import MapboxMapsFoundation
 
 /// The `OrnamentSupportableView` protocol supports communication
 /// from the MapboxMapsOrnaments module to the `MapView`.
-internal protocol OrnamentSupportableView: UIView {
+public protocol OrnamentSupportableView: UIView {
     // View has been tapped
     func tapped()
 

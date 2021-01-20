@@ -42,7 +42,7 @@ public struct OrnamentConfig: Equatable {
      */
     internal let telemetryOptOutShownInApp: Bool
 
-    internal init(ornamentPositions: [OrnamentType: OrnamentPosition],
+    public init(ornamentPositions: [OrnamentType: OrnamentPosition],
                 ornamentMargins: [OrnamentType: OrnamentMargins],
                 ornamentVisibility: [OrnamentType: OrnamentVisibility], telemetryOptOutShownInApp: Bool = false) {
         assert(ornamentPositions.count == ornamentMargins.count)

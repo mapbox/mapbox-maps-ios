@@ -36,7 +36,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
     public var __map: Map!
 
     /// Resource options for this map view
-    internal var resourceOptions: ResourceOptions?
+    var resourceOptions: ResourceOptions?
 
     public var needsDisplayRefresh: Bool = false
     public var dormant: Bool = false

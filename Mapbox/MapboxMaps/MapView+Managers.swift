@@ -1,6 +1,12 @@
 import UIKit
+import MapboxMapsGestures
+import MapboxMapsFoundation
+import MapboxMapsOrnaments
+import MapboxMapsLocation
+import MapboxMapsStyle
 
-/// The `MapManager` is responsible for managing the `mapView`
+
+/// The `MapManager` is r, LocationSupportableMapViewesponsible for managing the `mapView`
 /// and orchestrating between the different components of the Mapbox SDK
 extension MapView {
 
@@ -23,10 +29,10 @@ extension MapView {
         setupOrnaments(with: self, options: mapOptions.ornaments)
 
         // Initialize/Configure location manager
-        setupUserLocationManager(with: self, options: mapOptions.location)
+        //setupUserLocationManager(with: self, options: mapOptions.location)
 
         // Initialize/Configure annotations manager
-        setupAnnotationManager(with: self, and: style)
+        //setupAnnotationManager(with: self, and: style)
     }
 
     /// Updates the map with new configuration options. Causes underlying structures to reload configuration synchronously.
@@ -81,17 +87,17 @@ extension MapView {
 
     internal func setupUserLocationManager(with locationSupportableMapView: LocationSupportableMapView, options: LocationOptions) {
 
-        locationManager = LocationManager(locationOptions: options,
-                                           locationSupportableMapView: locationSupportableMapView)
+        //locationManager = LocationManager(locationOptions: options,
+//                                           locationSupportableMapView: locationSupportableMapView)
     }
 
     internal func updateUserLocationManager(with options: LocationOptions) {
-        locationManager.updateLocationOptions(with: mapOptions.location)
+        //locationManager.updateLocationOptions(with: mapOptions.location)
     }
 
-    internal func setupAnnotationManager(with annotationSupportableMap: AnnotationSupportableMap, and style: Style) {
-        annotationManager = AnnotationManager(for: annotationSupportableMap, with: style)
-    }
+//    internal func setupAnnotationManager(with annotationSupportableMap: AnnotationSupportableMap, and style: Style) {
+//        annotationManager = AnnotationManager(for: annotationSupportableMap, with: style)
+//    }
 
     internal func setupStyle(with map: Map) {
         self.style = Style(with: self.__map)

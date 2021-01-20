@@ -329,7 +329,7 @@ jobs:
                 name: Extract Version From Commit
                 command: |
                     GIT_COMMIT_MSG=`git log --format=oneline -n 1`
-                    VERSION=$(echo $GIT_COMMIT_MSG| cut -d' ' -f3)"
+                    VERSION=$(echo $GIT_COMMIT_MSG| cut -d' ' -f3)
                     echo "export $VERSION" >> $BASH_ENV
                     echo $VERSION
             - run:

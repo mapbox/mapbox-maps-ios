@@ -329,10 +329,8 @@ jobs:
                 name: Extract Version From Commit
                 command: |
                     GIT_COMMIT_MSG=`git log --format=oneline -n 1`
-                    export VERSION=$(echo $GIT_COMMIT_MSG| cut -d' ' -f3)
+                    export VERSION=$(echo $GIT_COMMIT_MSG| cut -d' ' -f3) >> $BASH_ENV
                     echo $VERSION
-                environment:
-                    VERSION: $VERSION
             - run:
                 name: Ignore me
                 command: |

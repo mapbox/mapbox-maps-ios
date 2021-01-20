@@ -119,6 +119,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
                                                selector: #selector(willTerminate),
                                                name: UIApplication.willTerminateNotification,
                                                object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(deviceOrientationChanged), name: UIDevice.orientationDidChangeNotification, object: nil)
 
         if let validStyleURL = styleURL {
             try! __map?.setStyleURIForUri(validStyleURL.absoluteString)
@@ -180,10 +181,17 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         return nil
     }
 
+    @objc func deviceOrientationChanged(_ notification: Notification) {
+        guard self.window?.rootViewController?.shouldAutorotate == true else { return }
+        self.layoutSubviews()
+    }
+
     public override func layoutSubviews() {
         super.layoutSubviews()
+
         let size = MapboxCoreMaps.Size(width: Float(self.bounds.size.width),
                                        height: Float(self.bounds.size.height))
+        print("width: \(Float(self.bounds.size.width)) \n height : \(Float(self.bounds.size.height))")
         try! self.__map?.setSizeFor(size)
     }
 

@@ -331,17 +331,12 @@ jobs:
                     GIT_COMMIT_MSG=`git log --format=oneline -n 1`
                     export VERSION=$(echo $GIT_COMMIT_MSG| cut -d' ' -f3)
                     echo "export VERSION=$VERSION" >> $BASH_ENV
-                    echo $VERSION
-            - run:
-                name: Ignore me
-                command: |
-                    echo $VERSION
-            # - slack/notify:
-            #     message: '<$CIRCLE_BUILD_URL|Release build for \`$VERSION\` started.>'
-            #     include_visit_job_action: true
-            # - make-deps
-            # - run: pip3 install awscli
-            # - make-docs
+            - slack/notify:
+                message: '<$CIRCLE_BUILD_URL|Release build for \`$VERSION\` started.>'
+                include_visit_job_action: true
+            - make-deps
+            - run: pip3 install awscli
+            - make-docs
             # - make-xcframework-zip
             # - make-xcframeworks-bundle
             # - run: 

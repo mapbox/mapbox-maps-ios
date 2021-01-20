@@ -188,10 +188,8 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 
     public override func layoutSubviews() {
         super.layoutSubviews()
-
         let size = MapboxCoreMaps.Size(width: Float(self.bounds.size.width),
                                        height: Float(self.bounds.size.height))
-        print("width: \(Float(self.bounds.size.width)) \n height : \(Float(self.bounds.size.height))")
         try! self.__map?.setSizeFor(size)
     }
 

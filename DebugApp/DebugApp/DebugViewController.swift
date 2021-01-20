@@ -31,4 +31,9 @@ public class DebugViewController: UIViewController {
 
         self.view.addSubview(mapView)
     }
+
+    public override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        self.mapView.frame.size = size
+    }
 }

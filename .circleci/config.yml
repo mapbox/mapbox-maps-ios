@@ -322,14 +322,16 @@ jobs:
         <<: *default-job
         steps:
             - checkout
-            # - ensure-text-exists-in-commit:
-            #     commit-text: "*.*.* release"  
-            #     always-run: << parameters.device-tests-always-run >>
+            - ensure-text-exists-in-commit:
+                commit-text: "*.*.* release"  
+                always-run: << parameters.device-tests-always-run >>
             - run:
                 name: Extract Version To ENV
                 command: |
-                    GIT_COMMIT_MSG=git log --format=oneline -n 1 $CIRCLE_SHA1
-                    echo $GIT_COMMIT_MSG
+                    GIT_COMMIT_MSG=`git log --format=oneline -n 1`
+                    VERSION=$(echo $GIT_COMMIT_MSG| cut -d' ' -f1)
+                    export $VERSION
+                    env
             # - slack/notify:
             #     message: '<$CIRCLE_BUILD_URL|Release build for \`$CIRCLE_TAG\` started.>'
             #     include_visit_job_action: true

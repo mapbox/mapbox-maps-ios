@@ -101,7 +101,10 @@ workflows:
     public-beta:
         jobs:
             - ios-build-release:
+                type: approval
                 name: "Public Beta Release"
+                parameters:
+                    version: "10.0.0-test"
 
 # ======================================================================================================================
 
@@ -319,18 +322,21 @@ jobs:
     
     # This job was created for the public beta
     ios-build-release:
+        parameters:
+            version:
+                type: string
         <<: *default-job
         steps:
             - checkout
-            - ensure-text-exists-in-commit:
-                commit-text: "[release]"
-                always-run: << parameters.device-tests-always-run >>
-            - run:
-                name: Extract Version From Commit
-                command: |
-                    echo export "GIT_COMMIT_MSG=`git log --format=oneline -n 1`" >> $BASH_ENV
-                    echo export "VERSION=$(echo $GIT_COMMIT_MSG| cut -d' ' -f3)" >> $BASH_ENV
-                    echo $VERSION
+            # - ensure-text-exists-in-commit:
+            #     commit-text: "[release]"
+            #     always-run: << parameters.device-tests-always-run >>
+            # - run:
+            #     name: Extract Version From Commit
+            #     command: |
+            #         GIT_COMMIT_MSG=`git log --format=oneline -n 1`
+            #         export VERSION=$(echo $GIT_COMMIT_MSG| cut -d' ' -f3)
+            #         echo $VERSION
             - run:
                 name: Ignore me
                 command: |

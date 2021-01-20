@@ -320,13 +320,13 @@ jobs:
     ios-build-release:
         <<: *default-job
         steps:
+            - checkout
             - ensure-text-exists-in-commit:
                 commit-text: "*.*.* release"  
                 always-run: << parameters.device-tests-always-run >>
             # - slack/notify:
             #     message: '<$CIRCLE_BUILD_URL|Release build for \`$CIRCLE_TAG\` started.>'
             #     include_visit_job_action: true
-            - checkout
             # - make-deps
             # - run: pip3 install awscli
             # - make-docs

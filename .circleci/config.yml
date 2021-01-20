@@ -329,6 +329,7 @@ jobs:
                 name: Extract Version To ENV
                 command: |
                     GIT_COMMIT_MSG=`git log --format=oneline -n 1`
+                    echo $GIT_COMMIT_MSG
                     VERSION=$(echo $GIT_COMMIT_MSG| cut -d' ' -f2)
                     export $VERSION
                     env

@@ -323,7 +323,7 @@ jobs:
         steps:
             - checkout
             - ensure-text-exists-in-commit:
-                commit-text: "*.*.* release"  
+                commit-text: "^[0-9]+\.[0-9]+\.[0-9]+ release"  
                 always-run: << parameters.device-tests-always-run >>
             - run:
                 name: Extract Version To ENV

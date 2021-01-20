@@ -84,9 +84,6 @@ workflows:
                     branches:
                         ignore: /.*/
 
-            - ios-build-release:
-                name: "Public Beta Release"
-
             - maps-unit-tests:
                 name: "Run Unit tests"
 
@@ -101,6 +98,10 @@ workflows:
             #     filters:
             #         branches:
             #             only: main
+    public-beta:
+        jobs:
+            - ios-build-release:
+                name: "Public Beta Release"
 
 # ======================================================================================================================
 

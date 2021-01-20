@@ -323,13 +323,13 @@ jobs:
         steps:
             - checkout
             - ensure-text-exists-in-commit:
-                commit-text: "^[0-9]+\.[0-9]+\.[0-9]+ release"  
+                commit-text: "[release]"
                 always-run: << parameters.device-tests-always-run >>
             - run:
                 name: Extract Version To ENV
                 command: |
                     GIT_COMMIT_MSG=`git log --format=oneline -n 1`
-                    VERSION=$(echo $GIT_COMMIT_MSG| cut -d' ' -f1)
+                    VERSION=$(echo $GIT_COMMIT_MSG| cut -d' ' -f2)
                     export $VERSION
                     env
             # - slack/notify:

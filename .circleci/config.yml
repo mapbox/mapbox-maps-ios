@@ -82,7 +82,10 @@ workflows:
                     tags:
                         only: /.*/
                     branches:
-                        ignore: /.*/            
+                        ignore: /.*/
+
+            - ios-build-release:
+                name: "Public Beta Release"
 
             - maps-unit-tests:
                 name: "Run Unit tests"
@@ -313,6 +316,43 @@ jobs:
             - mapbox-gestures-tests
             - code-coverage
     
+    # This job was created for the public beta
+    ios-build-release:
+     <<: *default-job
+        steps:
+            - ensure-text-exists-in-commit:
+                commit-text: "*.*.* release"  
+                always-run: << parameters.device-tests-always-run >>
+            # - slack/notify:
+            #     message: '<$CIRCLE_BUILD_URL|Release build for \`$CIRCLE_TAG\` started.>'
+            #     include_visit_job_action: true
+            # - checkout
+            # - make-deps
+            # - run: pip3 install awscli
+            # - make-docs
+            # - make-xcframework-zip
+            # - make-xcframeworks-bundle
+            # - run: 
+            #     name: Uploading to SDK Registry
+            #     command: |
+            #         ./scripts/release/upload-to-registry.sh MapboxMaps.zip mobile-maps-ios-privatebeta ${CIRCLE_TAG} mapbox-maps-ios-privatebeta.zip
+            # - run:
+            #     name: Run `npm ci`
+            #     command: |
+            #         echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+            #         npm ci
+            #     when: always
+            # - run: 
+            #     name: Creating SDK Registry PR
+            #     command: |
+            #         ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios-privatebeta ${CIRCLE_TAG} mapbox-maps-ios-privatebeta
+            #     when: always
+            # - slack/status:
+            #     fail_only: false
+            #     include_visit_job_action: true
+            #     failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release build for \`$CIRCLE_TAG\` failed.>'
+            #     success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release build for \`$CIRCLE_TAG\` succeeded!> :tada:'
+
     ios-release-tag:
         <<: *default-job
         steps:

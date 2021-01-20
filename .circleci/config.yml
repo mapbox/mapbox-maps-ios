@@ -331,6 +331,8 @@ jobs:
                     GIT_COMMIT_MSG=`git log --format=oneline -n 1`
                     export VERSION=$(echo $GIT_COMMIT_MSG| cut -d' ' -f3)
                     echo $VERSION
+                environment:
+                    VERSION: $VERSION
             - run:
                 name: Ignore me
                 command: |

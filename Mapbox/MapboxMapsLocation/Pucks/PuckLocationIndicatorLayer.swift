@@ -115,10 +115,7 @@ internal class PuckLocationIndicatorLayer: Puck {
 // MARK: Layer Creation Functions
 private extension PuckLocationIndicatorLayer {
     func createPreciseLocationIndicatorLayer(location: Location) throws {
-        guard let style = self.locationSupportableMapView?.style else {
-            print("returning early")
-            return
-        }
+        guard let style = self.locationSupportableMapView?.style else { return }
 
         // Add images to sprite sheet
         guard let locationDotInner = UIImage(named: "location-dot-inner",

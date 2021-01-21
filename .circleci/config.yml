@@ -336,7 +336,6 @@ jobs:
             #     include_visit_job_action: true
             - make-deps
             - run: pip3 install awscli
-            # - make-docs
             - make-xcframework-zip
             - make-xcframeworks-bundle
             - run: 
@@ -370,22 +369,22 @@ jobs:
             - ensure-tag-is-semver-like:
                 tag: ${CIRCLE_TAG}
             - slack/notify:
-                message: '<$CIRCLE_BUILD_URL|Release build for \`$CIRCLE_TAG\` started.>'
+                message: '<$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` started.>'
                 include_visit_job_action: true
             - checkout
-            - make-deps
+            # - make-deps
             - run: pip3 install awscli
             - make-docs
-            - make-xcframework-zip
-            - make-xcframeworks-bundle
-            - run: 
-                name: Uploading to SDK Registry
-                command: |
-                    ./scripts/release/upload-to-registry.sh MapboxMaps.zip mobile-maps-ios-privatebeta ${CIRCLE_TAG} mapbox-maps-ios-privatebeta.zip
-            - run: 
-                name: Pushing CHANGELOG to main branch
-                command: |
-                    ./scripts/release/generate_changelog.sh
+            # - make-xcframework-zip
+            # - make-xcframeworks-bundle
+            # - run: 
+            #     name: Uploading to SDK Registry
+            #     command: |
+            #         ./scripts/release/upload-to-registry.sh MapboxMaps.zip mobile-maps-ios-privatebeta ${CIRCLE_TAG} mapbox-maps-ios-privatebeta.zip
+            # - run: 
+            #     name: Pushing CHANGELOG to main branch
+            #     command: |
+            #         ./scripts/release/generate_changelog.sh
             - run:
                 name: Run `npm ci`
                 command: |
@@ -397,16 +396,16 @@ jobs:
                 command: |
                     ./scripts/release/create-github-draft-release.sh ${CIRCLE_TAG}
                 when: always
-            - run: 
-                name: Creating SDK Registry PR
-                command: |
-                    ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios-privatebeta ${CIRCLE_TAG} mapbox-maps-ios-privatebeta
-                when: always
+            # - run: 
+            #     name: Creating SDK Registry PR
+            #     command: |
+            #         ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios-privatebeta ${CIRCLE_TAG} mapbox-maps-ios-privatebeta
+            #     when: always
             - slack/status:
                 fail_only: false
                 include_visit_job_action: true
-                failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release build for \`$CIRCLE_TAG\` failed.>'
-                success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release build for \`$CIRCLE_TAG\` succeeded!> :tada:'
+                failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` failed.>'
+                success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` succeeded!> :tada:'
           
     nightly-tests:
         <<: *default-job

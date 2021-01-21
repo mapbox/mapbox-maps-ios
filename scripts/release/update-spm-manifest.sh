@@ -4,7 +4,7 @@ set -euo pipefail
 
 #
 # Usage:
-#   ./scripts/update-spm-manifest.sh <maps version number> <common version number> <core version number> <maps xcframework checksum>
+#   ./scripts/release/update-spm-manifest.sh <maps version number> <common version number> <core version number> <maps xcframework checksum>
 #
 
 MAPS_VERSION=${1}

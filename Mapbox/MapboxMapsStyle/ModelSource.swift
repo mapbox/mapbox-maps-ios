@@ -1,7 +1,7 @@
 import Foundation
 
 /// A structure represeting a Model
-public struct Model: Codable {
+public struct Model: Equatable, Codable {
 
     /// URL to a `gltf` 3D asset in the application bundle
     public var uri: URL?

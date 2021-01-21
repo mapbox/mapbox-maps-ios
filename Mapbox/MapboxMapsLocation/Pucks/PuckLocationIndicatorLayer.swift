@@ -10,21 +10,40 @@ import MapboxMapsFoundation
 import MapboxMapsStyle
 #endif
 
+public struct LocationIndicatorLayerViewModel: Equatable {
+    /// Name of image in sprite to use as the top of the location indicator.
+    public var topImage: UIImage?
+
+    /// Name of image in sprite to use as the middle of the location indicator.
+    public var bearingImage: UIImage?
+
+    /// Name of image in sprite to use as the background of the location indicator.
+    public var shadowImage: UIImage?
+
+    public init(topImage: UIImage?, bearingImage: UIImage?, shadowImage: UIImage?) {
+        self.topImage = topImage
+        self.bearingImage = bearingImage
+        self.shadowImage = shadowImage
+    }
+}
+
 internal class PuckLocationIndicatorLayer: Puck {
 
     // MARK: Properties
     internal var locationIndicatorLayer: LocationIndicatorLayer?
+    internal var locationIndicatorLayerVM: LocationIndicatorLayerViewModel
 
     // MARK: Protocol Properties
     internal var puckStyle: PuckStyle
 
     internal weak var locationSupportableMapView: LocationSupportableMapView?
 
-    internal var customizationHandler: ((inout LocationIndicatorLayer) -> Void)? = nil
+    internal var customizationHandler: ((inout LocationIndicatorLayerViewModel) -> Void)?
 
     // MARK: Initializers
-    internal init(currentPuckStyle: PuckStyle, locationSupportableMapView: LocationSupportableMapView, customizationHandler: ((inout LocationIndicatorLayer) -> Void)? = nil) {
+    internal init(currentPuckStyle: PuckStyle, locationSupportableMapView: LocationSupportableMapView, customizationHandler: ((inout LocationIndicatorLayerViewModel) -> Void)? = nil) {
         self.locationSupportableMapView = locationSupportableMapView
+        self.locationIndicatorLayerVM = LocationIndicatorLayerViewModel(topImage: nil, bearingImage: nil, shadowImage: nil)
         self.puckStyle = currentPuckStyle
         self.customizationHandler = customizationHandler
     }
@@ -65,7 +84,6 @@ internal class PuckLocationIndicatorLayer: Puck {
 
     internal func updateStyle(puckStyle: PuckStyle, location: Location) {
         self.puckStyle = puckStyle
-
 
         let setupLocationIndicatorLayer = { [weak self] in
             guard let self = self else { return }
@@ -111,23 +129,51 @@ private extension PuckLocationIndicatorLayer {
     func createPreciseLocationIndicatorLayer(location: Location) throws {
         guard let style = self.locationSupportableMapView?.style else { return }
 
-        // Add images to sprite sheet
-        guard let locationDotInner = UIImage(named: "location-dot-inner",
-                                             in: Bundle(for: PuckLocationIndicatorLayer.self),
-                                             compatibleWith: nil) else { return }
-        let setStyleImageResultInner = style.setStyleImage(image: locationDotInner, with: "locationDotInner", scale: 44.0)
+        // Call customizationHandler to allow developers to granularly modify the layer
+        self.customizationHandler?(&locationIndicatorLayerVM)
 
-        if case .failure(let imageError) = setStyleImageResultInner {
-            throw imageError
+        // Add images to sprite sheet
+        if let validTopImage = locationIndicatorLayerVM.topImage {
+            let setStyleImageResult = style.setStyleImage(image: validTopImage, with: "locationIndicatorLayerTopImage", scale: 44.0)
+
+            if case .failure(let imageError) = setStyleImageResult {
+                throw imageError
+            }
+        } else {
+            // Add images to sprite sheet
+            guard let locationDotInner = UIImage(named: "location-dot-inner",
+                                                 in: Bundle(for: PuckLocationIndicatorLayer.self),
+                                                 compatibleWith: nil) else { return }
+            let setStyleImageResult = style.setStyleImage(image: locationDotInner, with: "locationIndicatorLayerTopImage", scale: 44.0)
+
+            if case .failure(let imageError) = setStyleImageResult {
+                throw imageError
+            }
         }
 
-        guard let locationDotOuter = UIImage(named: "location-dot-outer",
-                                             in: Bundle(for: PuckLocationIndicatorLayer.self),
-                                             compatibleWith: nil) else { return }
-        let setStyleImageResultOuter = style.setStyleImage(image: locationDotOuter, with: "locationDotOuter", scale: 44.0)
+        if let validBearingImage = locationIndicatorLayerVM.bearingImage {
+            let setStyleImageResult = style.setStyleImage(image: validBearingImage, with: "locationIndicatorLayerBearingImage", scale: 44.0)
 
-        if case .failure(let imageError) = setStyleImageResultOuter {
-            throw imageError
+            if case .failure(let imageError) = setStyleImageResult {
+                throw imageError
+            }
+        } else {
+            guard let locationDotOuter = UIImage(named: "location-dot-outer",
+                                                 in: Bundle(for: PuckLocationIndicatorLayer.self),
+                                                 compatibleWith: nil) else { return }
+            let setStyleImageResult = style.setStyleImage(image: locationDotOuter, with: "locationIndicatorLayerBearingImage", scale: 44.0)
+
+            if case .failure(let imageError) = setStyleImageResult {
+                throw imageError
+            }
+        }
+
+        if let validShadowImage = locationIndicatorLayerVM.shadowImage {
+            let setStyleImageResultInner = style.setStyleImage(image: validShadowImage, with: "locationIndicatorLayerShadowImage", scale: 44.0)
+
+            if case .failure(let imageError) = setStyleImageResultInner {
+                throw imageError
+            }
         }
 
         // Create Layer
@@ -135,8 +181,8 @@ private extension PuckLocationIndicatorLayer {
 
         // Create and set Layout property
         var layout = LocationIndicatorLayer.Layout()
-        layout.topImage = .constant(ResolvedImage.name("locationDotInner"))
-        layout.bearingImage = .constant(ResolvedImage.name("locationDotOuter"))
+        layout.topImage = .constant(ResolvedImage.name("locationIndicatorLayerTopImage"))
+        layout.bearingImage = .constant(ResolvedImage.name("locationIndicatorLayerBearingImage"))
 
         layer.layout = layout
 
@@ -157,9 +203,6 @@ private extension PuckLocationIndicatorLayer {
         paint.accuracyRadiusBorderColor = .constant(ColorRepresentable(color: .lightGray))
 
         layer.paint = paint
-
-        // Call customizationHandler to allow developers to granularly modify the layer
-        self.customizationHandler?(&layer)
 
         // Add layer to style
         let addLayerResult = style.addLayer(layer: layer, layerPosition: nil)
@@ -183,7 +226,7 @@ private extension PuckLocationIndicatorLayer {
                                     location.coordinate.longitude,
                                     location.internalLocation.altitude])
         let exp = Exp(.interpolate) {
-            Exp(.linear) 
+            Exp(.linear)
             Exp(.zoom)
             0
             400000
@@ -198,129 +241,12 @@ private extension PuckLocationIndicatorLayer {
         paint.accuracyRadiusBorderColor = .constant(ColorRepresentable(color: .lightGray))
         layer.paint = paint
 
-        // Call customizationHandler to allow developers to granularly modify the layer
-        self.customizationHandler?(&layer)
-
         // Add layer to style
         let addLayerResult = style.addLayer(layer: layer, layerPosition: nil)
 
         if case .failure(let layerError) = addLayerResult {
             throw layerError
         }
-        self.locationIndicatorLayer = layer
-    }
-
-    func createHeadingArrowLocationIndicatorLayer(location: Location) throws {
-        guard let style = self.locationSupportableMapView?.style else { return }
-
-        // Add image to sprite sheet
-        guard let triangle = UIImage(named: "triangle") else { return }
-        let setStyleImageResult = style.setStyleImage(image: triangle, with: "puck", scale: 50.0)
-
-        if case .failure(let imageError) = setStyleImageResult {
-            throw imageError
-        }
-
-        // Create Layer
-        var layer = LocationIndicatorLayer(id: "puck")
-
-        // Create and set Layout property
-        let layout = LocationIndicatorLayer.Layout()
-        layer.layout = layout
-
-        // Create and set Paint property
-        var paint = LocationIndicatorLayer.Paint()
-        paint.location = .constant([location.coordinate.latitude,
-                                    location.coordinate.longitude,
-                                    location.internalLocation.altitude])
-        layer.paint = paint
-
-        // Call customizationHandler to allow developers to granularly modify the layer
-        self.customizationHandler?(&layer)
-
-        // Add layer to style
-        let addLayerResult = style.addLayer(layer: layer, layerPosition: nil)
-
-        if case .failure(let layerError) = addLayerResult {
-            throw layerError
-        }
-
-        self.locationIndicatorLayer = layer
-    }
-
-    func createHeadingBeamLocationIndicatorLayer(location: Location) throws {
-        guard let style = self.locationSupportableMapView?.style else { return }
-
-        // Add image to sprite sheet
-        guard let triangle = UIImage(named: "triangle") else { return }
-        let setStyleImageResult = style.setStyleImage(image: triangle, with: "puck", scale: 50.0)
-
-        if case .failure(let imageError) = setStyleImageResult {
-            throw imageError
-        }
-
-        // Create Layer
-        var layer = LocationIndicatorLayer(id: "puck")
-
-        // Create and set Layout property
-        let layout = LocationIndicatorLayer.Layout()
-        layer.layout = layout
-
-        // Create and set Paint property
-        var paint = LocationIndicatorLayer.Paint()
-        paint.location = .constant([location.coordinate.latitude,
-                                    location.coordinate.longitude,
-                                    location.internalLocation.altitude])
-        layer.paint = paint
-
-        // Call customizationHandler to allow developers to granularly modify the layer
-        self.customizationHandler?(&layer)
-
-        // Add layer to style
-        let addLayerResult = style.addLayer(layer: layer, layerPosition: nil)
-
-        if case .failure(let layerError) = addLayerResult {
-            throw layerError
-        }
-
-        self.locationIndicatorLayer = layer
-    }
-
-    func createArrowLocationIndicatorLayer(location: Location) throws {
-        guard let style = self.locationSupportableMapView?.style else { return }
-
-        // Add image to sprite sheet
-        guard let triangle = UIImage(named: "triangle") else { return }
-        let setStyleImageResult = style.setStyleImage(image: triangle, with: "puck", scale: 50.0)
-
-        if case .failure(let imageError) = setStyleImageResult {
-            throw imageError
-        }
-
-        // Create Layer
-        var layer = LocationIndicatorLayer(id: "puck")
-
-        // Create and set Layout property
-        let layout = LocationIndicatorLayer.Layout()
-        layer.layout = layout
-
-        // Create and set Paint property
-        var paint = LocationIndicatorLayer.Paint()
-        paint.location = .constant([location.coordinate.latitude,
-                                    location.coordinate.longitude,
-                                    location.internalLocation.altitude])
-        layer.paint = paint
-
-        // Call customizationHandler to allow developers to granularly modify the layer
-        self.customizationHandler?(&layer)
-
-        // Add layer to style
-        let addLayerResult = style.addLayer(layer: layer, layerPosition: nil)
-
-        if case .failure(let layerError) = addLayerResult {
-            throw layerError
-        }
-
         self.locationIndicatorLayer = layer
     }
 }

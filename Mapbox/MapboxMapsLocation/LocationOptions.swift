@@ -25,10 +25,7 @@ public struct LocationOptions: Equatable {
     public var showUserLocation: Bool = false
 
     /// Sets the type of backend that should be used for the PuckView
-    public var puckBackend: PuckBackend = .view
-
-    /// Set the style of the puck that will be shown on the screen
-    public var puckStyle: PuckStyle = .precise
+    public var locationPuck: LocationPuck = .view
     
     public init() {}
 

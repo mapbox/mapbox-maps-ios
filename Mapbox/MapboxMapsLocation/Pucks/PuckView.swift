@@ -37,7 +37,6 @@ class PuckView: Puck {
             self.updateStyle(puckStyle: self.puckStyle, location: location)
         }
 
-        handleRotationForView(location: location)
     }
 
     func updateStyle(puckStyle: PuckStyle, location: Location) {
@@ -56,18 +55,6 @@ class PuckView: Puck {
         case .approximate:
             let puckView = ApproximatePuckView(origin: center)
             puckView.configure(with: locationSupportableMapView.tintColor, and: calculateAccuracyRing(location: location))
-            self.puckView = puckView
-        case .headingArrow:
-            let puckView = HeadingArrowPuckView(origin: center)
-            puckView.configure(with: locationSupportableMapView.tintColor, and: calculateAccuracyRing(location: location))
-            self.puckView = puckView
-        case .headingBeam:
-            let puckView = HeadingBeamPuckView(origin: center)
-            puckView.configure(with: locationSupportableMapView.tintColor, and: calculateAccuracyRing(location: location))
-            self.puckView = puckView
-        case .arrow:
-            let puckView = ArrowPuckView(origin: center)
-            puckView.configure(with: locationSupportableMapView.tintColor)
             self.puckView = puckView
         }
 
@@ -124,19 +111,6 @@ private extension PuckView {
         guard let magneticHeading = location.headingDirection else { return 0.0 }
 
         return CGFloat(magneticHeading)
-    }
-
-    func handleRotationForView(location: Location) {
-        if puckStyle == .headingArrow,
-           let puckView = self.puckView as? HeadingArrowPuckView {
-            rotate(for: puckView.arrowLayer, headingDirection: getHeadingDirectionAsFloat(location: location))
-        } else if puckStyle == .headingBeam,
-                  let puckView = self.puckView as? HeadingBeamPuckView {
-            rotate(for: puckView.headingIndicatorLayer, headingDirection: getHeadingDirectionAsFloat(location: location))
-        } else if puckStyle == .arrow,
-                  let puckView = self.puckView as? ArrowPuckView {
-            rotate(for: puckView.puckArrowLayer, headingDirection: getHeadingDirectionAsFloat(location: location))
-        }
     }
 
     func rotate(for layer: CALayer, headingDirection: CGFloat) {

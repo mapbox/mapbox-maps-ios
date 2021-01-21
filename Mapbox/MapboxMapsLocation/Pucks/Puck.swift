@@ -3,7 +3,7 @@ import MapboxMapsFoundation
 #endif
 
 /// This protocol is used to help manipulate the different type of puck views we have
-public protocol Puck {
+internal protocol Puck {
 
     /// Property that stores the current `PuckStyle` of the puck
     var puckStyle: PuckStyle { get set }

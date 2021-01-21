@@ -4,19 +4,19 @@ set -euo pipefail
 
 #
 # Usage:
-#   ./scripts/update-spm-manifest.sh <maps version number> <common version number> <core version number> <maps xcframework checksum>
+#   ./scripts/update-spm-manifest.sh <maps version number> <common version number> <core version number> <maps xcframework checksum> <branch name>
 #
 
 MAPS_VERSION=${1}
 COMMON_VERSION=${2//v/}
 CORE_VERSION=${3//v/}
-BRANCH_NAME="nm/spm_ci_updates"
 CHECKSUM=${4}
-GITHUB_TOKEN=$(./scripts/release/get_token.js)
+BRANCH_NAME=${5} #TODO: Should be updated for when it is added to automation
+GITHUB_TOKEN=$(./scripts/get_token.js)
 
 TMPDIR=`mktemp -d`
 
-# git checkout -b ${BRANCH_NAME}
+git checkout -b ${BRANCH_NAME}
 git pull origin main
 
 # Update Package.swift
@@ -30,7 +30,8 @@ sed -i '' s/"mapbox-core-maps-ios.git\", .exact(\".*\")"/"mapbox-core-maps-ios.g
 #
 git add -A
 git commit -m "Update SPM configs for ${BRANCH_NAME} release"
-git push origin ${BRANCH_NAME}
+# git push --set-upstream origin ${BRANCH_NAME}
+git push origin ${BRANCH_NAME} #TODO: Update, this works great for local, but should be updated for automation
 
 #
 # Create PR

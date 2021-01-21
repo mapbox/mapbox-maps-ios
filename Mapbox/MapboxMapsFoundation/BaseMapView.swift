@@ -42,7 +42,18 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
     public var dormant: Bool = false
     public var displayCallback: (() -> Void)?
     private var observerConcrete: ObserverConcrete!
-    @objc dynamic private var displayLink: CADisplayLink?
+//    internal var lastSnapshotImage: UIImage? // JK : Do we need?
+    internal var metalSnapshotView: UIImageView?
+
+    /* Whether map rendering should occur during the `UIApplicationStateInactive` state.
+
+     This property is ignored for map views where background rendering is permitted.
+
+     This property should be considered undocumented, and prone to change.
+     */
+    public var renderingInInactiveStateEnabled: Bool = true
+
+    @objc dynamic internal var displayLink: CADisplayLink?
 
     @IBInspectable var styleURL__: String = ""
     @IBInspectable var baseURL__: String = ""
@@ -204,6 +215,23 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         try! self.__map?.setSizeFor(size)
     }
 
+    // MARK: Display Link
+    func createDisplayLink() {
+        precondition(self.displayLink == nil)
+        precondition(self.windowScreen() != nil)
+        let screen = self.windowScreen()
+        self.displayLink = screen?.displayLink(withTarget: self, selector: #selector(updateFromDisplayLink(displayLink:)))
+        self.displayLink?.isPaused = true
+        self.updateDisplayLinkPreferredFramesPerSecond()
+
+        self.displayLink?.add(to: .current, forMode: .common)
+
+        // JK - Should we check constrain modes
+        if (self.__map != nil) {
+            let _ = try? self.__map.setConstrainModeFor(.heightOnly)
+        }
+    }
+
     func validateDisplayLink() {
         if self.superview != nil
             && self.window != nil
@@ -227,6 +255,12 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         }
     }
 
+    func startDisplayLink() {
+        self.displayLink?.isPaused = false
+        self.assertIsMainThread()
+        self.needsDisplayRefresh = true
+    }
+
     func updateDisplayLinkPreferredFramesPerSecond() {
 
         if displayLink == nil {
@@ -241,6 +275,19 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 
             displayLink?.preferredFramesPerSecond = newFrameRate.rawValue
         }
+    }
+
+    func stopDisplayLink() {
+        self.displayLink?.isPaused = true
+        self.needsDisplayRefresh = false
+        // Do we need to handle pending blocks?
+    }
+
+    func destroyDisplayLink() {
+        self.displayLink?.invalidate()
+        self.displayLink = nil
+        self.needsDisplayRefresh = false
+        // Do we need to handle pending blocks?
     }
 
     open override func willMove(toWindow newWindow: UIWindow?) {
@@ -381,5 +428,38 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         rect = rect.extend(from: nePoint)
 
         return rect
+    }
+
+    func mapViewSupportsBackgroundRendering() -> Bool {
+        // JK: check if this comment from gl-native is out of date
+
+        // If this view targets an external display, such as AirPlay or CarPlay, we
+        // can safely continue to render OpenGL content without tripping
+        // gpus_ReturnNotPermittedKillClient in libGPUSupportMercury, because the
+        // external connection keeps the application from truly receding to the
+        // background.
+        let screen = self.windowScreen()
+
+        let supportsBackgroundRendering : Bool = (screen != nil && screen != UIScreen.main)
+        return supportsBackgroundRendering
+    }
+
+    func isVisible() -> Bool {
+        let screen = self.windowScreen()
+        return (!self.isHidden && screen != nil)
+    }
+
+    func windowScreen() -> UIScreen? {
+        if #available(iOS 13, *) {
+            if let newScreen = self.window?.windowScene?.screen {
+                return newScreen
+            }
+        }
+
+        if let windowScreen = self.window?.screen {
+            return windowScreen
+        }
+
+        return nil
     }
 }

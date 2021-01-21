@@ -12,22 +12,19 @@ import MapboxMapsStyle
 
 // MARK: PuckStyle Enum
 /// This enum represents the different styles of pucks that can be generated
-public enum PuckStyle {
+internal enum PuckStyle {
     case approximate
-    case arrow
-    case headingArrow
-    case headingBeam
     case precise
 }
 
 // MARK: PuckBackend
 /// This enum represents the different backends that can be used for Pucks
-public enum PuckBackend: Equatable {
+public enum LocationPuck: Equatable {
     case layer2d(customize: ((inout LocationIndicatorLayer) -> Void)? = nil) // Backed by `LocationIndicatorLayer`. Implement customize block to granularly modify the puck's styling.
     case layer3d(customize: ((inout ModelLayer, inout ModelSource) -> Void))// Backed by `ModelLayer`
     case view // Backed by `PuckView` which is a `UIView`
 
-    public static func == (lhs: PuckBackend, rhs: PuckBackend) -> Bool {
+    public static func == (lhs: LocationPuck, rhs: LocationPuck) -> Bool {
         switch (lhs, rhs) {
         case (.view, .view):
             return true
@@ -61,13 +58,12 @@ public class LocationPuckManager: LocationConsumer {
     internal var currentPuckStyle: PuckStyle
 
     /// Stores the current backend that should be used to render the puck
-    internal var currentPuckBackend: PuckBackend
+    internal var currentPuckBackend: LocationPuck
 
     public init(shouldTrackLocation: Bool,
                 locationSupportableMapView: LocationSupportableMapView,
-                currentPuckStyle: PuckStyle,
-                currentPuckSource: PuckBackend) {
-        self.currentPuckStyle = currentPuckStyle
+                currentPuckSource: LocationPuck) {
+        self.currentPuckStyle = .precise
         self.currentPuckBackend = currentPuckSource
         self.shouldTrackLocation = shouldTrackLocation
         self.locationSupportableMapView = locationSupportableMapView
@@ -118,7 +114,7 @@ public class LocationPuckManager: LocationConsumer {
         self.puck = nil
     }
 
-    internal func changePuckBackend(newPuckBackend: PuckBackend) {
+    internal func changePuckBackend(newPuckBackend: LocationPuck) {
         removePuck()
         self.currentPuckBackend = newPuckBackend
         createPuck()

@@ -519,7 +519,7 @@ commands:
             - run:
                 name: Checking << parameters.tag >> is SEMVER like
                 command: |
-                    if [[ ! << parameters.tag >> =~  v^[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+                    if [[ ! << parameters.tag >> =~  ^\v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
                         echo "Skipping job"
                         circleci-agent step halt
                     fi

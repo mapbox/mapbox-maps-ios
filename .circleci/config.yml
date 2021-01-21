@@ -342,7 +342,7 @@ jobs:
             - run: 
                 name: Uploading to XCFramework to SDK Registry
                 command: |
-                    ./scripts/release/upload-to-registry.sh MapboxMaps.xcframework.zip mobile-maps-ios packages/${VERSION} MapboxMaps.xcframework.zip
+                    ./scripts/release/upload-to-registry.sh MapboxMaps.xcframework.zip mobile-maps-ios ${VERSION}/packages MapboxMaps.xcframework.zip
             - run: 
                 name: Uploading to Direct Download to SDK Registry
                 command: |

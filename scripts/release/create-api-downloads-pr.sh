@@ -13,7 +13,7 @@ SDK_FILE_NAME=$3
 REFERENCE=${4:-}
 
 # Variables needed for github actions
-BRANCH_NAME="${PROJECT_ROOT}-ios/${VERSION}"
+BRANCH_NAME="${PROJECT_ROOT}/${VERSION}"
 GITHUB_TOKEN=$(./scripts/release/get_token.js)
 
 TMPDIR=`mktemp -d`

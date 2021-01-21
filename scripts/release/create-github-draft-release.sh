@@ -9,8 +9,6 @@ set -euo pipefail
 
 TAG=$1
 
-TAG_STRIPPED=${TAG//v/}
-
 # Variables needed for github actions
 GITHUB_TOKEN=$(./scripts/release/get_token.js)
 
@@ -42,7 +40,7 @@ https://api.mapbox.com/downloads/v2/mobile-maps-ios-privatebeta/releases/ios/<ve
 \`\`\`"
 
 # Body that is passed to the POST request
-BODY="{\"tag_name\":\"$TAG_STRIPPED\",\"target_commitish\":\"main\",\"name\":\"Mapbox Maps: $TAG_STRIPPED\",\"body\":\"$MESSAGE\",\"draft\":true,\"prerelease\":true}"
+BODY="{\"tag_name\":\"$TAG\",\"target_commitish\":\"main\",\"name\":\"Mapbox Maps: $TAG\",\"body\":\"$MESSAGE\",\"draft\":true,\"prerelease\":true}"
 
 # Performing the request using github API
 CURL_RESULT=0

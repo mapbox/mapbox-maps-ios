@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		073475D725AFAE520049B0B8 /* CustomLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073475D625AFAE520049B0B8 /* CustomLayerExample.swift */; };
 		0706C4A625B1181A008733C0 /* TerrainExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0706C4A525B1181A008733C0 /* TerrainExample.swift */; };
+		073475D725AFAE520049B0B8 /* CustomLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073475D625AFAE520049B0B8 /* CustomLayerExample.swift */; };
 		077C4EFA252F7E89007636F1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 077C4EF8252F7E89007636F1 /* LaunchScreen.storyboard */; };
 		077C4F05252F7E89007636F1 /* ExamplesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077C4F04252F7E89007636F1 /* ExamplesTests.swift */; };
 		077C4F10252F7E89007636F1 /* ExamplesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077C4F0F252F7E89007636F1 /* ExamplesUITests.swift */; };
@@ -16,6 +16,7 @@
 		07DC84422538B1F100F4AF14 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07DC84412538B1F100F4AF14 /* Assets.xcassets */; };
 		0C52BA9825AF8C880054ECA8 /* PuckModelLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C52BA9725AF8C880054ECA8 /* PuckModelLayerExample.swift */; };
 		0C52BA9C25AFB5940054ECA8 /* arrow.gltf in Resources */ = {isa = PBXBuildFile; fileRef = 0C52BA9B25AFB5940054ECA8 /* arrow.gltf */; };
+		0CC4ECEA25B8AD3000F998B8 /* CustomLocationIndicatorLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC4ECE925B8AD3000F998B8 /* CustomLocationIndicatorLayerExample.swift */; };
 		0CE8ED88258928200066E56C /* race_car_model.gltf in Resources */ = {isa = PBXBuildFile; fileRef = 0CE8ED87258928200066E56C /* race_car_model.gltf */; };
 		0CE8ED8C2589285C0066E56C /* ModelExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE8ED8B2589285C0066E56C /* ModelExample.swift */; };
 		A4211CE62592549900D215B4 /* RestrictCoordinateBoundsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4211CE52592549900D215B4 /* RestrictCoordinateBoundsExample.swift */; };
@@ -126,6 +127,7 @@
 		07DC84412538B1F100F4AF14 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0C52BA9725AF8C880054ECA8 /* PuckModelLayerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuckModelLayerExample.swift; sourceTree = "<group>"; };
 		0C52BA9B25AFB5940054ECA8 /* arrow.gltf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = arrow.gltf; sourceTree = "<group>"; };
+		0CC4ECE925B8AD3000F998B8 /* CustomLocationIndicatorLayerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLocationIndicatorLayerExample.swift; sourceTree = "<group>"; };
 		0CE3D3BE25818626000585A2 /* ColorExpressionExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExpressionExample.swift; sourceTree = "<group>"; };
 		0CE3D3C225818786000585A2 /* FlyToExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyToExample.swift; sourceTree = "<group>"; };
 		0CE8ED87258928200066E56C /* race_car_model.gltf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = race_car_model.gltf; sourceTree = "<group>"; };
@@ -234,6 +236,7 @@
 				073475D625AFAE520049B0B8 /* CustomLayerExample.swift */,
 				0C52BA9725AF8C880054ECA8 /* PuckModelLayerExample.swift */,
 				0706C4A525B1181A008733C0 /* TerrainExample.swift */,
+				0CC4ECE925B8AD3000F998B8 /* CustomLocationIndicatorLayerExample.swift */,
 			);
 			path = "All Examples";
 			sourceTree = "<group>";
@@ -524,6 +527,7 @@
 				CADCF72C2584990E0065C51B /* PointAnnotationExample.swift in Sources */,
 				CADCF7242584990E0065C51B /* AnimateLayerExample.swift in Sources */,
 				073475D725AFAE520049B0B8 /* CustomLayerExample.swift in Sources */,
+				0CC4ECEA25B8AD3000F998B8 /* CustomLocationIndicatorLayerExample.swift in Sources */,
 				CADCF71F2584990E0065C51B /* DataDrivenSymbolsExample.swift in Sources */,
 				CADCF7302584990E0065C51B /* LayerPositionExample.swift in Sources */,
 				0706C4A625B1181A008733C0 /* TerrainExample.swift in Sources */,

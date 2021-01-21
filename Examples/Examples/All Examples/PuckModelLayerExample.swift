@@ -77,8 +77,8 @@ public class PuckModelLayerExample: UIViewController, ExampleProtocol {
             }
         }
 
-        let sanFrancisco = CLLocationCoordinate2D(latitude: 39.085006, longitude: -77.150925)
-        self.mapView.cameraManager.setCamera(centerCoordinate: sanFrancisco,
+        let coordinate = CLLocationCoordinate2D(latitude: 39.085006, longitude: -77.150925)
+        self.mapView.cameraManager.setCamera(centerCoordinate: coordinate,
                                              zoom: 14,
                                              pitch: 80)
     }

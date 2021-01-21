@@ -29,7 +29,7 @@ _Required dependencies:_
 
 ## 📦 Release MapboxMaps
 
-**1) Create Release Branch & Kickoff Build
+**1) Create Release Branch & Kickoff Build**
 
 - [ ] Pull the latest from main to include all code updates. Then make a new branch called "Release_{VERSION}"
 - [ ] Kickoff the build but passing an empty commit with the message "[release] {VERSION}". Please copy this command to use an empty commit `git commit --allow-empty -m "[release] {VERSION}"`
@@ -44,13 +44,13 @@ _Required dependencies:_
 - Create a PR [here](https://github.com/mapbox/api-downloads/pulls) so that our SDK can be consumed
 - The above PR needs to be approved and merged before continuing
 
-**2) Update Distribution & Changelog
+**2) Update Distribution & Changelog**
 
 - [ ] From the previous job, go to the CI Artifacts and get the value from the `MapboxMaps.xcframework.zip.checksum`. This will be needed to update SPM
 - [ ] On your release branch, run the update manifest script `./scripts/update-spm-manifest.sh <maps version number> <common version number> <core version number> <maps xcframework checksum>`
 - [ ] The above script will update `Package.swift`. Open the file and verify the changes are correct and then push this commit to remote
 - [ ] This is where we need to verify SPM update was successful. Open a tester single view application. Go to the Swift Package Manager menu and add our repo `https://github.com/mapbox/mapbox-maps-ios.git`. For the branch, specify your current release branch. Then verify that you can load the SDK, and display a basic map on device to verify that the build is working.
-    - ***Note that if the api-downloads PR needs to be merged and sanity checks need to complete before downloads are available here
+    - ***Note that if the api-downloads PR needs to be merged and sanity checks need to complete before downloads are available here***
 - [ ] Generate the changelog by running the following script `./scripts/release/generate_changelog.sh`
 - [ ] Update the changelog as needed and push those changes
 
@@ -60,7 +60,7 @@ _Required dependencies:_
     - `git tag <version> && git push origin <version>`
     - This will trigger a CircleCI workflow that will produce the following artifacts (can be [found here](https://app.circleci.com/pipelines/github/mapbox/mapbox-maps-ios)):
         - an api-docs.zip
-- The completion of this job will make our api-docs which will be found in ci artifacts. It will also publich a github draft release
+- The completion of this job will make our api-docs which will be found in ci artifacts. It will also publish a github draft release
 - [ ] Update the information in the draft release with the correct changelog, versions, etc
 - [ ] Have your release buddy review the draft release, and save the draft. You will publish it in a later step.
 

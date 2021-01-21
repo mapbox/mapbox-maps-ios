@@ -170,6 +170,7 @@ public class Style {
      - Returns: A boolean associated with a `Result` type if the operation is successful.
                 Otherwise, this will return a `StyleError` as part of the `Result` failure case.
      */
+    @discardableResult
     public func setStyleImage(image: UIImage,
                               with identifier: String,
                               sdf: Bool = false,

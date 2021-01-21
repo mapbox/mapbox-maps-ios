@@ -135,6 +135,10 @@ public struct Examples {
                 type: CustomLayerExample.self),
         Example(title: "Show 3D terrain",
                 description: "Show realistic elevation by enabling terrain.",
-                type: TerrainExample.self)
+                type: TerrainExample.self),
+        Example(title: "Customize the location puck",
+                description: "Use a different asset to represent the puck",
+                type: CustomLocationIndicatorLayerExample.self)
+
     ]
 }

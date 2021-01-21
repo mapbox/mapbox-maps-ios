@@ -10,13 +10,13 @@ set -euo pipefail
 MAPS_VERSION=${1}
 COMMON_VERSION=${2//v/}
 CORE_VERSION=${3//v/}
-BRANCH_NAME=$1
+BRANCH_NAME="nm/spm_ci_updates"
 CHECKSUM=${4}
-GITHUB_TOKEN=$(./scripts/get_token.js)
+GITHUB_TOKEN=$(./scripts/release/get_token.js)
 
 TMPDIR=`mktemp -d`
 
-git checkout -b ${BRANCH_NAME}
+# git checkout -b ${BRANCH_NAME}
 git pull origin main
 
 # Update Package.swift
@@ -30,13 +30,13 @@ sed -i '' s/"mapbox-core-maps-ios.git\", .exact(\".*\")"/"mapbox-core-maps-ios.g
 #
 git add -A
 git commit -m "Update SPM configs for ${BRANCH_NAME} release"
-git push --set-upstream origin ${BRANCH_NAME}
+git push origin ${BRANCH_NAME}
 
 #
 # Create PR
 #
-git config --global user.email "maps_sdk_ios@mapbox.com"
-git config --global user.name "Release SDK bot for Maps SDK iOS team"
+# git config --global user.email "maps_sdk_ios@mapbox.com"
+# git config --global user.name "Release SDK bot for Maps SDK iOS team"
 
 TITLE="Update SPM configs for ${BRANCH_NAME} release"
 URL="https://api.github.com/repos/mapbox/mapbox-maps-ios/pulls"

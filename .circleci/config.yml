@@ -331,9 +331,9 @@ jobs:
                     GIT_COMMIT_MSG=`git log --format=oneline -n 1`
                     export VERSION=$(echo $GIT_COMMIT_MSG| cut -d' ' -f3)
                     echo "export VERSION=$VERSION" >> $BASH_ENV
-            - slack/notify:
-                message: '<$CIRCLE_BUILD_URL|Release build for \`$VERSION\` started.>'
-                include_visit_job_action: true
+            # - slack/notify:
+            #     message: '<$CIRCLE_BUILD_URL|Release build for \`$VERSION\` started.>'
+            #     include_visit_job_action: true
             - make-deps
             - run: pip3 install awscli
             # - make-docs
@@ -342,7 +342,7 @@ jobs:
             - run: 
                 name: Uploading to XCFramework to SDK Registry
                 command: |
-                    ./scripts/release/upload-to-registry.sh MapboxMaps.xcframework.zip mobile-maps-ios packages/${VERSION} mapbox-maps-ios.zip
+                    ./scripts/release/upload-to-registry.sh MapboxMaps.xcframework.zip mobile-maps-ios packages/${VERSION} MapboxMaps.xcframework.zip
             - run: 
                 name: Uploading to Direct Download to SDK Registry
                 command: |
@@ -358,11 +358,11 @@ jobs:
                 command: |
                     ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios ${VERSION} mapbox-maps-ios
                 when: always
-            - slack/status:
-                fail_only: false
-                include_visit_job_action: true
-                failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` failed.>'
-                success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` succeeded!> :tada:'
+            # - slack/status:
+            #     fail_only: false
+            #     include_visit_job_action: true
+            #     failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` failed.>'
+            #     success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` succeeded!> :tada:'
 
     ios-release-tag:
         <<: *default-job
@@ -619,7 +619,7 @@ commands:
             - run:
                 name: Zipping xcframework
                 command: |
-                    cp build/Build/Products/XCFramework/MapboxMaps.xcframework ./
+                    cp -r build/Build/Products/XCFramework/MapboxMaps.xcframework ./
                     cp /Users/distiller/project/LICENSE.md ./
                     zip -r MapboxMaps.xcframework.zip MapboxMaps.xcframework LICENSE.md
                     cd /Users/distiller/project/

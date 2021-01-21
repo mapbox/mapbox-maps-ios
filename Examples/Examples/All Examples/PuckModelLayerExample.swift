@@ -31,17 +31,15 @@ public class PuckModelLayerExample: UIViewController, ExampleProtocol {
 
             mapOptions.location.showUserLocation = true
 
-            mapOptions.location.puckBackend = .layer3d { (modelLayer, modelSource) in
+            mapOptions.location.locationPuck = .layer3d { (puckModelLayerViewModel) in
                 let uri = Bundle.main.url(forResource: "race_car_model",
                                           withExtension: "gltf")
 
-                let arrowModel = Model(uri: uri,
-                                         position: [-177.150925, 39.085006],
-                                         orientation: [0, 0, 0])
+                let myModel = Model(uri: uri,
+                                    position: [-177.150925, 39.085006],
+                                    orientation: [0, 0, 0])
 
-                modelSource.models = ["race_car_model": arrowModel]
-                modelLayer.layout?.visibility = .visible
-                modelLayer.paint?.modelOpacity = .constant(0.8)
+                puckModelLayerViewModel.model = myModel
 
                 /// Setting an expression to  scale the model based on camera zoom
                 let scalingExpression = Exp(.interpolate) {
@@ -73,7 +71,7 @@ public class PuckModelLayerExample: UIViewController, ExampleProtocol {
                     }
                 }
 
-                modelLayer.paint?.modelScale = .expression(scalingExpression)
+                puckModelLayerViewModel.modelScale = .expression(scalingExpression)
             }
         }
 

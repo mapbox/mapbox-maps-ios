@@ -27,13 +27,12 @@ public class CustomLocationIndicatorLayerExample: UIViewController, ExampleProto
 
     internal func setupExample() {
 
-        guard let star = UIImage(named: "star") else { return }
-        mapView.style.setStyleImage(image: star, with: "star-puck", scale: 50.0)
-
         self.mapView.update { (mapOptions) in
             mapOptions.location.showUserLocation = true
-            mapOptions.location.puckBackend = .layer2d(customize: { (layer) in
-                layer.layout?.topImage = .constant(.name("star-puck"))
+            mapOptions.location.locationPuck = .layer2d(customize: { (locationIndicatorLayerVM) in
+
+                let topImage = UIImage(named: "star")
+                locationIndicatorLayerVM.topImage = topImage
                 // Perform additional styling here
             })
         }

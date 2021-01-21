@@ -10,12 +10,29 @@ import MapboxMapsFoundation
 import MapboxMapsStyle
 #endif
 
+public struct PuckModelLayerViewModel: Equatable {
+
+    /// The model to use as the locaiton puck
+    public var model: Model?
+
+    /// The scale of the model.
+    public var modelScale: Value<[Double]>?
+
+    /// The rotation of the model in euler angles [lon, lat, z].
+    public var modelRotation: Value<[Double]>?
+
+    public static func == (lhs: PuckModelLayerViewModel, rhs: PuckModelLayerViewModel) -> Bool {
+        return lhs.model == rhs.model
+    }
+}
+
 internal class PuckModelLayer: Puck {
 
     // MARK: Properties
+    internal var puckModelLayerVM: PuckModelLayerViewModel
     internal var modelLayer: ModelLayer
     internal var modelSource: ModelSource
-    internal var initialPuckOrientation: [Double] = []
+    internal var initialPuckOrientation: [Double]?
 
     // MARK: Protocol Properties
     internal var puckStyle: PuckStyle
@@ -23,12 +40,13 @@ internal class PuckModelLayer: Puck {
     public var style: Style!
     
     // Customization hook
-    internal var customizationHandler: ((inout ModelLayer, inout ModelSource) -> Void)
+    internal var customizationHandler: ((inout PuckModelLayerViewModel) -> Void)
 
     // MARK: Initializers
-    internal init(currentPuckStyle: PuckStyle, locationSupportableMapView: LocationSupportableMapView, customizationHandler: @escaping ((inout ModelLayer, inout ModelSource) -> Void)) {
+    internal init(currentPuckStyle: PuckStyle, locationSupportableMapView: LocationSupportableMapView, customizationHandler: @escaping ((inout PuckModelLayerViewModel) -> Void)) {
         modelLayer = ModelLayer(id: "puck-model-layer")
         modelSource = ModelSource()
+        puckModelLayerVM = PuckModelLayerViewModel()
         self.locationSupportableMapView = locationSupportableMapView
         style = locationSupportableMapView.style
         puckStyle = currentPuckStyle
@@ -38,17 +56,25 @@ internal class PuckModelLayer: Puck {
 
     internal func setup() {
 
+        customizationHandler(&puckModelLayerVM)
         modelLayer.source = "puck-model-source"
-        customizationHandler(&modelLayer, &modelSource)
 
-        if let model = modelSource.models?.values.first,
-           let orientation = model.orientation {
-            initialPuckOrientation = orientation
+        if let validModel = puckModelLayerVM.model {
+            modelSource.models = ["puck-model": validModel]
+            initialPuckOrientation = validModel.orientation
+        }
+
+        if let validModelScale = puckModelLayerVM.modelScale {
+            modelLayer.paint?.modelScale = validModelScale
+        }
+
+        if let validModelRotation = puckModelLayerVM.modelRotation {
+            modelLayer.paint?.modelRotation = validModelRotation
         }
 
         let addStyle = { [weak self] in
-            guard let self = self, let style = self.style else { return }
 
+            guard let self = self, let style = self.style else { return }
             self.removePuck()
             style.addSource(source: self.modelSource, identifier: "puck-model-source")
             style.addLayer(layer: self.modelLayer)
@@ -72,11 +98,13 @@ internal class PuckModelLayer: Puck {
         model.position = [location.coordinate.longitude, location.coordinate.latitude]
         if var orientation = model.orientation,
            let validDirection = location.headingDirection {
-            orientation[2] = initialPuckOrientation[2] + validDirection
+
+            let initalOrientation = initialPuckOrientation != nil ? initialPuckOrientation![2] : 0
+            orientation[2] = initalOrientation + validDirection
             model.orientation = orientation
         }
 
-        modelSource.models = [key : model]
+        modelSource.models = [key: model]
         if let data = try? JSONEncoder().encode([key : model]),
            let jsonDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] {
             style.updateSourceProperty(id: "puck-model-source", property: "models", value: jsonDictionary)

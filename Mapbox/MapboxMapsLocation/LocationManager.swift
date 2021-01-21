@@ -97,12 +97,11 @@ public class LocationManager: NSObject {
             }
         }
 
-        if newOptions.puckBackend != locationOptions.puckBackend {
+        if newOptions.locationPuck != locationOptions.locationPuck {
             if let locationPuckManager = self.locationPuckManager {
-                locationPuckManager.changePuckBackend(newPuckBackend: newOptions.puckBackend)
+                locationPuckManager.changePuckBackend(newPuckBackend: newOptions.locationPuck)
             }
         }
-
 
         self.locationProvider.locationProviderOptions = newOptions
 
@@ -219,7 +218,7 @@ private extension LocationManager {
             else {
                 let locationPuckManager = LocationPuckManager(shouldTrackLocation: true,
                                                               locationSupportableMapView: self.locationSupportableMapView,
-                                                              currentPuckSource: self.locationProvider.locationProviderOptions.puckBackend)
+                                                              currentPuckSource: self.locationProvider.locationProviderOptions.locationPuck)
 
                 self.consumers.add(locationPuckManager)
                 self.locationPuckManager = locationPuckManager

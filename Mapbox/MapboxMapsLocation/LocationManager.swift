@@ -13,7 +13,7 @@ public class LocationManager: NSObject {
     public private(set) var latestLocation: Location?
 
     /// Represents the style of the user location puck
-    public var currentPuckStyle: PuckStyle = .precise {
+    internal var currentPuckStyle: PuckStyle = .precise {
         didSet {
             self.locationPuckManager?.changePuckStyle(newPuckStyle: currentPuckStyle)
         }
@@ -51,9 +51,6 @@ public class LocationManager: NSObject {
 
         /// Allows location updates to be reflected on screen using delegate method
         self.locationSupportableMapView = locationSupportableMapView
-
-        /// Set the current  puck style
-        self.currentPuckStyle = locationOptions.puckStyle
 
         /// Sets our default `locationProvider`
         self.locationProvider = AppleLocationProvider()
@@ -106,9 +103,6 @@ public class LocationManager: NSObject {
             }
         }
 
-        if newOptions.puckStyle != locationOptions.puckStyle {
-            self.currentPuckStyle = newOptions.puckStyle
-        }
 
         self.locationProvider.locationProviderOptions = newOptions
 
@@ -190,7 +184,7 @@ extension LocationManager: LocationProviderDelegate {
                     provider.requestTemporaryFullAccuracyAuthorization(withPurposeKey: purposeKey)
                     self.currentPuckStyle = .approximate
                 } else {
-                    self.currentPuckStyle = self.locationOptions.puckStyle
+                    self.currentPuckStyle = .precise
                 }
             }
             showUserLocation = true
@@ -225,7 +219,6 @@ private extension LocationManager {
             else {
                 let locationPuckManager = LocationPuckManager(shouldTrackLocation: true,
                                                               locationSupportableMapView: self.locationSupportableMapView,
-                                                              currentPuckStyle: currentPuckStyle,
                                                               currentPuckSource: self.locationProvider.locationProviderOptions.puckBackend)
 
                 self.consumers.add(locationPuckManager)

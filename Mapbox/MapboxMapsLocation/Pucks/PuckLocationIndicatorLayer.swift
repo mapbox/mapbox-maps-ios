@@ -76,12 +76,6 @@ internal class PuckLocationIndicatorLayer: Puck {
                     try self.createPreciseLocationIndicatorLayer(location: location)
                 case .approximate:
                     try self.createApproximateLocationIndicatorLayer(location: location)
-                case .headingArrow:
-                    try self.createHeadingArrowLocationIndicatorLayer(location: location)
-                case .headingBeam:
-                    try self.createHeadingBeamLocationIndicatorLayer(location: location)
-                case .arrow:
-                    try self.createArrowLocationIndicatorLayer(location: location)
                 }
             } catch {
                 try! Log.error(forMessage: "Error when creating location indicator layer: \(error)", category: "Location")

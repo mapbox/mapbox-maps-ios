@@ -619,7 +619,9 @@ commands:
             - run:
                 name: Zipping xcframework
                 command: |
-                    zip -r MapboxMaps.xcframework.zip build/Build/Products/XCFramework/ /Users/distiller/project/LICENSE.md
+                    cp build/Build/Products/XCFramework/MapboxMaps.xcframework ./
+                    cp /Users/distiller/project/LICENSE.md ./
+                    zip -r MapboxMaps.xcframework.zip MapboxMaps.xcframework LICENSE.md
                     cd /Users/distiller/project/
                     swift package compute-checksum MapboxMaps.xcframework.zip > MapboxMaps.xcframework.zip.checksum
                     cat MapboxMaps.xcframework.zip.checksum

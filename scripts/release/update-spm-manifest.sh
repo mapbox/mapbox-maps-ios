@@ -22,7 +22,8 @@ git pull origin main
 # Update Package.swift
 sed -i '' s/"let version = \".*\""/"let version = \"${MAPS_VERSION}\""/ Package.swift
 sed -i '' s/"let checksum = \".*\""/"let checksum = \"${CHECKSUM}\""/ Package.swift
-sed -i '' s/"mapbox-common-ios.git\", from: \".*\""/"mapbox-common-ios.git\", from: \"${COMMON_VERSION}\""/ Package.swift
+sed -i '' s/"mapbox-common-ios.git\", .exact(\".*\")"/"mapbox-common-ios.git\", .exact(\"${COMMON_VERSION}\")"/ Package.swift
+sed -i '' s/"mapbox-core-maps-ios.git\", .exact(\".*\")"/"mapbox-core-maps-ios.git\", .exact(\"${CORE_VERSION}\")"/ Package.swift
 
 #
 # Commit to a branch
@@ -49,9 +50,6 @@ HTTP_CODE=$(curl ${URL} \
     -H "Authorization: token ${GITHUB_TOKEN}" \
     -H "Accept: application/vnd.github.v3+json" \
     -d "${BODY}" -w "%{response_code}") || CURL_RESULT=$?
-
-cd -
-rm -rf ${TMPDIR}
 
 if [[ ${CURL_RESULT} != 0 ]]; then
     echo "Failed to create PR (curl error: ${CURL_RESULT})"

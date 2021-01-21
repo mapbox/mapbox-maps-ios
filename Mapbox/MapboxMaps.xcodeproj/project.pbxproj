@@ -297,8 +297,6 @@
 		A4519DDD2432FF03007CF39A /* MapboxMapsStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = A4519DCF2432FF03007CF39A /* MapboxMapsStyle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A4519DE52432FF14007CF39A /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4519DE42432FF14007CF39A /* Style.swift */; };
 		A4519DE724330083007CF39A /* MapboxStyleURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4519DE624330083007CF39A /* MapboxStyleURL.swift */; };
-		A4A9EC8E25B9F0E80024B86C /* BaseMapView+Backgrounding.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A9EC8D25B9F0E80024B86C /* BaseMapView+Backgrounding.swift */; };
-		A4A9ECA025B9F1000024B86C /* BaseMapView+Backgrounding.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A9EC8D25B9F0E80024B86C /* BaseMapView+Backgrounding.swift */; };
 		A4C0116F25664BD400787494 /* MapboxMapsFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F11C10F2421B05600F8397B /* MapboxMapsFoundation.framework */; };
 		A4C786612440EAF0000CEF1E /* StyleURLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C786602440EAF0000CEF1E /* StyleURLTests.swift */; };
 		A4FE8893255F365B00FBF117 /* MapboxMapsCameraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC8DA47243BE4A400A19318 /* MapboxMapsCameraTests.swift */; };
@@ -912,7 +910,6 @@
 		A4519DDC2432FF03007CF39A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A4519DE42432FF14007CF39A /* Style.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
 		A4519DE624330083007CF39A /* MapboxStyleURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxStyleURL.swift; sourceTree = "<group>"; };
-		A4A9EC8D25B9F0E80024B86C /* BaseMapView+Backgrounding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BaseMapView+Backgrounding.swift"; sourceTree = "<group>"; };
 		A4BDC0CC244A23EB00AA9B64 /* QuickZoomGestureHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickZoomGestureHandler.swift; sourceTree = "<group>"; };
 		A4C786602440EAF0000CEF1E /* StyleURLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleURLTests.swift; sourceTree = "<group>"; };
 		A4E82010255A10A100926E90 /* MapboxAnimationGroupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxAnimationGroupTests.swift; sourceTree = "<group>"; };
@@ -1476,7 +1473,6 @@
 				1F11C1122421B05600F8397B /* Info.plist */,
 				1F2AD70A2421BCBF006592F4 /* AccountManager.swift */,
 				0C95DBB8257A92F90018252C /* BaseMapView.swift */,
-				A4A9EC8D25B9F0E80024B86C /* BaseMapView+Backgrounding.swift */,
 				07D71590257994430025BF61 /* MapboxLogoView.swift */,
 				07A0BC9D2582F15B00B8E109 /* GeoJSONManager.swift */,
 				1F4B7D7A2464C36E00745F05 /* Camera */,
@@ -3101,7 +3097,6 @@
 				0CE8ED6125890F870066E56C /* ModelSource.swift in Sources */,
 				C64994A9258D5ADE0052C21C /* LocationPuckManager.swift in Sources */,
 				5A35924524644C5E00E67344 /* CompassDirectionFormatter.swift in Sources */,
-				A4A9ECA025B9F1000024B86C /* BaseMapView+Backgrounding.swift in Sources */,
 				0CA3DD5F257AAE3B00B12C8F /* ModelLayer.swift in Sources */,
 				0C31F7AA25AF87AB00DCFB28 /* PuckModelLayer.swift in Sources */,
 				07D7150425798CD70025BF61 /* UIImage.swift in Sources */,
@@ -3291,7 +3286,6 @@
 				0782B1A4258C250400D5FCE5 /* Geometry.swift in Sources */,
 				0782AFFC258BFE5800D5FCE5 /* CoreGraphics.swift in Sources */,
 				1F4B7D7B2464C39000745F05 /* CameraView.swift in Sources */,
-				A4A9EC8E25B9F0E80024B86C /* BaseMapView+Backgrounding.swift in Sources */,
 				0782B11C258C1B9C00D5FCE5 /* Feature.swift in Sources */,
 				07625BC82587F294002EEBCC /* EventsManager.swift in Sources */,
 				CAF9A6DE2582B041007EF9EC /* UIImage.swift in Sources */,

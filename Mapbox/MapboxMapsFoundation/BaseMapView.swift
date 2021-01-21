@@ -226,7 +226,6 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 
         self.displayLink?.add(to: .current, forMode: .common)
 
-        // JK - Should we check constrain modes
         if (self.__map != nil) {
             let _ = try? self.__map.setConstrainModeFor(.heightOnly)
         }
@@ -461,5 +460,129 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         }
 
         return nil
+    }
+}
+
+// MARK: Handle background rendering
+extension BaseMapView: UIApplicationDelegate {
+
+    func assertIsMainThread() {
+        if !Thread.isMainThread {
+            preconditionFailure("applicationWillResignActive must be accessed on the main thread.")
+        }
+    }
+
+    public func applicationWillResignActive(_ application: UIApplication) {
+        self.assertIsMainThread()
+
+        if self.renderingInInactiveStateEnabled || self.mapViewSupportsBackgroundRendering() {
+            return
+        }
+
+        self.stopDisplayLink()
+        // We want to reduce memory usage before the map goes into the background
+    }
+
+    public func applicationDidEnterBackground(_ application: UIApplication) {
+        self.assertIsMainThread()
+        precondition(!self.dormant, "Should not be dormant heading into background.")
+
+        if self.mapViewSupportsBackgroundRendering() { return }
+
+        if self.renderingInInactiveStateEnabled {
+            self.stopDisplayLink()
+        }
+
+        self.destroyDisplayLink()
+        // Do we need to handle pending blocks?
+        // how do we delete a metal view?
+        guard let metalView = self.subviews.first as? MTKView else { return }
+        metalView.delete(nil)
+
+        // Handle non-rendering backgrounding
+        // validate location services
+        // flush
+    }
+
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        if self.mapViewSupportsBackgroundRendering() { return }
+
+        // what is the equivalent of createViwe?
+
+        if window?.screen != nil {
+            self.validateDisplayLink()
+
+            if self.renderingInInactiveStateEnabled && self.isVisible() {
+                self.startDisplayLink()
+            }
+        }
+
+        self.dormant = false
+
+        // Validate location services
+
+        // Reports events
+        // Report number of render errors
+    }
+
+    func enableSnapshotView() {
+        if self.metalSnapshotView == nil {
+            self.metalSnapshotView = UIImageView(frame: self.getMetalView(for: nil)?.frame ?? self.frame)
+            self.metalSnapshotView?.autoresizingMask = self.autoresizingMask
+            let options = MapSnapshotOptions(size: self.frame.size, resourceOptions: self.resourceOptions ?? ResourceOptions())
+            let snapshotter = Snapshotter(options: options)
+            snapshotter.camera = self.cameraView.camera
+
+            snapshotter.start(overlayHandler: nil) { [weak self] (result) in
+                guard let self = self else { return }
+                self.metalSnapshotView?.image = try? result.get()
+            }
+        }
+
+        self.metalSnapshotView?.isHidden = false
+        self.metalSnapshotView?.alpha = 1
+        self.metalSnapshotView?.isOpaque = false
+
+        // Handle a debug mask if applicable
+    }
+
+    public func applicationDidBecomeActive(_ application: UIApplication) {
+        let applicationState : UIApplication.State = UIApplication.shared.applicationState
+
+        if self.dormant == true {
+            // create a view
+            self.dormant = false
+        }
+
+        if self.displayLink != nil {
+            if self.windowScreen() != nil {
+                self.createDisplayLink()
+            }
+        }
+
+        if applicationState == .active || (applicationState == .inactive && self.renderingInInactiveStateEnabled) {
+            let mapViewVisible = self.isVisible()
+            if self.displayLink != nil {
+                if mapViewVisible && self.displayLink?.isPaused == true  {
+                    self.startDisplayLink()
+                }
+                else if !mapViewVisible && self.displayLink?.isPaused != true {
+                    // Unlikely scenario
+                    self.stopDisplayLink()
+                }
+            }
+        }
+
+        if self.metalSnapshotView != nil && self.metalSnapshotView?.isHidden != true {
+            UIView .transition(with: self, duration: 0.25, options: .transitionCrossDissolve) { [weak self] in
+                guard let self = self else { return }
+                self.metalSnapshotView?.isHidden = true
+            } completion: { [weak self] (finished) in
+                guard let self = self else { return }
+                let subviews = self.metalSnapshotView?.subviews
+                subviews?.forEach { $0.removeFromSuperview() }
+            }
+
+        }
     }
 }

@@ -11,19 +11,28 @@ import MapboxMapsStyle
 #endif
 
 public struct LocationIndicatorLayerViewModel: Equatable {
-    /// Name of image in sprite to use as the top of the location indicator.
+
+    /// Image to use as the top of the location indicator.
     public var topImage: UIImage?
 
-    /// Name of image in sprite to use as the middle of the location indicator.
+    /// Image to use as the middle of the location indicator.
     public var bearingImage: UIImage?
 
-    /// Name of image in sprite to use as the background of the location indicator.
+    /// Image to use as the background of the location indicator.
     public var shadowImage: UIImage?
 
-    public init(topImage: UIImage?, bearingImage: UIImage?, shadowImage: UIImage?) {
+    /// The size of the images, as a scale factor applied to the size of the specified image.
+    public var scale: Value<Double>?
+
+    public init(topImage: UIImage?, bearingImage: UIImage?, shadowImage: UIImage?, scale: Value<Double>?) {
         self.topImage = topImage
         self.bearingImage = bearingImage
         self.shadowImage = shadowImage
+        self.scale = scale
+    }
+
+    public static func == (lhs: LocationIndicatorLayerViewModel, rhs: LocationIndicatorLayerViewModel) -> Bool {
+        return lhs.topImage == rhs.topImage && lhs.bearingImage == rhs.bearingImage && lhs.shadowImage == rhs.shadowImage
     }
 }
 
@@ -43,7 +52,7 @@ internal class PuckLocationIndicatorLayer: Puck {
     // MARK: Initializers
     internal init(currentPuckStyle: PuckStyle, locationSupportableMapView: LocationSupportableMapView, customizationHandler: ((inout LocationIndicatorLayerViewModel) -> Void)? = nil) {
         self.locationSupportableMapView = locationSupportableMapView
-        self.locationIndicatorLayerVM = LocationIndicatorLayerViewModel(topImage: nil, bearingImage: nil, shadowImage: nil)
+        self.locationIndicatorLayerVM = LocationIndicatorLayerViewModel(topImage: nil, bearingImage: nil, shadowImage: nil, scale: nil)
         self.puckStyle = currentPuckStyle
         self.customizationHandler = customizationHandler
     }
@@ -192,9 +201,9 @@ private extension PuckLocationIndicatorLayer {
                                     location.coordinate.longitude,
                                     location.internalLocation.altitude])
         paint.locationTransition = StyleTransition(duration: 0, delay: 0)
-        paint.topImageSize = .constant(1.0)
-        paint.bearingImageSize = .constant(1.0)
-
+        paint.topImageSize = locationIndicatorLayerVM.scale ?? .constant(1.0)
+        paint.bearingImageSize = locationIndicatorLayerVM.scale ?? .constant(1.0)
+        paint.shadowImageSize = locationIndicatorLayerVM.scale ?? .constant(1.0)
         paint.accuracyRadius = .constant(location.horizontalAccuracy)
 
         paint.emphasisCircleRadiusTransition = StyleTransition(duration: 0, delay: 0)

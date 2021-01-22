@@ -76,15 +76,6 @@ public class Snapshotter: Observer {
         }
     }
 
-    /// Rectangular bounds to which the snapshot is restricted
-    public var bounds: CoordinateBounds {
-        get {
-            return try! mapSnapshotter.getRegion()
-        } set(newBounds) {
-            try! mapSnapshotter.setRegionFor(newBounds)
-        }
-    }
-
     /// In the tile mode, the snapshotter fetches the still image of a single tile.
     public var tileMode: Bool {
         get {

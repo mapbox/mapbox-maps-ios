@@ -218,7 +218,7 @@ public struct FlyToInterpolator {
                                                         destination: destPoint,
                                                         fraction: CGFloat(us))
 
-        let position = ScreenCoordinate(x: interpolated.x, y: interpolated.y)
+        let position = MercatorCoordinate(x: Double(interpolated.x), y: Double(interpolated.y))
 
         return try! Projection.unproject(for: position, zoomScale: Double(sourceScale))
     }

@@ -48,6 +48,8 @@ public class LocationManager: NSObject {
         super.init()
 
         self.locationOptions = locationOptions
+        /// Sets the local options needed to configure the user location puck
+        self.showUserLocation = locationOptions.showUserLocation
 
         /// Allows location updates to be reflected on screen using delegate method
         self.locationSupportableMapView = locationSupportableMapView
@@ -57,8 +59,6 @@ public class LocationManager: NSObject {
         self.locationProvider.setDelegate(self)
         self.locationProvider.locationProviderOptions = locationOptions
 
-        /// Sets the local options needed to configure the user location puck
-        self.showUserLocation = locationOptions.showUserLocation
         toggleUserLocationUpdates(showUserLocation: locationOptions.showUserLocation)
     }
 
@@ -186,7 +186,7 @@ extension LocationManager: LocationProviderDelegate {
                     self.currentPuckStyle = .precise
                 }
             }
-            showUserLocation = true
+            showUserLocation = locationOptions.showUserLocation
         } else {
             showUserLocation = false
         }
@@ -218,7 +218,7 @@ private extension LocationManager {
             else {
                 let locationPuckManager = LocationPuckManager(shouldTrackLocation: true,
                                                               locationSupportableMapView: self.locationSupportableMapView,
-                                                              currentPuckSource: self.locationProvider.locationProviderOptions.locationPuck)
+                                                              currentPuckSource: self.locationOptions.locationPuck)
 
                 self.consumers.add(locationPuckManager)
                 self.locationPuckManager = locationPuckManager

@@ -38,7 +38,7 @@ _Required dependencies:_
 ***What will this job do?***
 
 - Build our xcframework and our direct-download bundle
-- Add our LICENSE.md to our packages before zipping
+- Include LICENSE.md in the zip files
 - Upload direct download and xcframework to S3
 - Store the checksum of the .xcframework.zip as a CI artifact
 - Create a PR [here](https://github.com/mapbox/api-downloads/pulls) so that our SDK can be consumed

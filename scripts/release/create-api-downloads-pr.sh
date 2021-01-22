@@ -4,16 +4,14 @@ set -euo pipefail
 
 #
 # Usage:
-#   ./scripts/release/create-api-downloads-pr.sh <project root> <version number without v prefix> <sdk file names without zip extension> <link to release PR>
+#   ./scripts/release/create-api-downloads-pr.sh <project root> <version number without v prefix>
 #
 
 PROJECT_ROOT=$1
 VERSION=$2
-SDK_FILE_NAME=$3
-REFERENCE=${4:-}
 
 # Variables needed for github actions
-BRANCH_NAME="${PROJECT_ROOT}-ios/${VERSION}"
+BRANCH_NAME="${PROJECT_ROOT}/${VERSION}"
 GITHUB_TOKEN=$(./scripts/release/get_token.js)
 
 TMPDIR=`mktemp -d`
@@ -29,8 +27,13 @@ git checkout -b ${BRANCH_NAME}
 
 cat << EOF > config/${PROJECT_ROOT}/${VERSION}.yaml
 api-downloads: v2
+
+packages:
+  ios:
+      - MapboxMaps.xcframework
+
 bundles:
-  ios: ${SDK_FILE_NAME}
+  ios: mapbox-maps-ios
 EOF
 
 #

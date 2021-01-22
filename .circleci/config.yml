@@ -355,7 +355,7 @@ jobs:
             - run: 
                 name: Creating SDK Registry PR
                 command: |
-                    ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios ${VERSION} mapbox-maps-ios
+                    ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios ${VERSION}
                 when: always
             - slack/status:
                 fail_only: false

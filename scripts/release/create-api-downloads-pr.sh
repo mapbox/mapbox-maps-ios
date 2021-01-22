@@ -4,13 +4,11 @@ set -euo pipefail
 
 #
 # Usage:
-#   ./scripts/release/create-api-downloads-pr.sh <project root> <version number without v prefix> <sdk file names without zip extension> <link to release PR>
+#   ./scripts/release/create-api-downloads-pr.sh <project root> <version number without v prefix>
 #
 
 PROJECT_ROOT=$1
 VERSION=$2
-SDK_FILE_NAME=$3
-REFERENCE=${4:-}
 
 # Variables needed for github actions
 BRANCH_NAME="${PROJECT_ROOT}/${VERSION}"

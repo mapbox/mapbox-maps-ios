@@ -79,6 +79,11 @@ _Required dependencies:_
 
 - [ ] Publish the GitHub draft. The release is now done!
 
+## 🚢 Merge your release branch
+
+- [ ] Make a PR from your release branch, back into main so that main has the update manifest and changelog
+- [ ] Have your release buddy approve and then merge it
+
 ## 📣 Announcements
 
 - [ ] Tag the `@maps-ios` team in #mobile-maps-ios to notify the team about the completed release! 🎉

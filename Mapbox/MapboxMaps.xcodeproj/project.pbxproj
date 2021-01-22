@@ -246,9 +246,6 @@
 		0CE3D1B425816BD6000585A2 /* MapView+Supportable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE3D1B325816BD6000585A2 /* MapView+Supportable.swift */; };
 		0CE8ED6125890F870066E56C /* ModelSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE8ED6025890F870066E56C /* ModelSource.swift */; };
 		0CE8ED6225890F870066E56C /* ModelSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE8ED6025890F870066E56C /* ModelSource.swift */; };
-		0CECCCB12534916A0000FC64 /* ArrowPuckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B58C46252E55CE0063AC3E /* ArrowPuckView.swift */; };
-		0CECCCB22534916A0000FC64 /* PrecisePuckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B58C13252E55110063AC3E /* PrecisePuckView.swift */; };
-		0CECCCB32534916A0000FC64 /* ApproximatePuckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B58BDF252E54BA0063AC3E /* ApproximatePuckView.swift */; };
 		0CECCCCD253491A80000FC64 /* LocationSupportableMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CECCCCC253491A80000FC64 /* LocationSupportableMapView.swift */; };
 		0CECCCCE253491A80000FC64 /* LocationSupportableMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CECCCCC253491A80000FC64 /* LocationSupportableMapView.swift */; };
 		0CF0C42924EB1779000DC118 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF0C42824EB1779000DC118 /* Enums.swift */; };
@@ -324,21 +321,12 @@
 		C64ED33C253F819B00ADADFB /* LocationConsumerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64ED33B253F819B00ADADFB /* LocationConsumerMock.swift */; };
 		C64ED33D253F819B00ADADFB /* LocationConsumerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64ED33B253F819B00ADADFB /* LocationConsumerMock.swift */; };
 		C64ED33E253F819B00ADADFB /* LocationConsumerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64ED33B253F819B00ADADFB /* LocationConsumerMock.swift */; };
-		C661A056253A2DBD005AC5EB /* HeadingArrowPuckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C661A055253A2DBD005AC5EB /* HeadingArrowPuckView.swift */; };
-		C661A057253A2DBD005AC5EB /* HeadingArrowPuckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C661A055253A2DBD005AC5EB /* HeadingArrowPuckView.swift */; };
 		C69F011225431AF4001AB49B /* LocationManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69F011125431AF4001AB49B /* LocationManagerIntegrationTests.swift */; };
 		C69F0142254358B3001AB49B /* LocationManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69F011125431AF4001AB49B /* LocationManagerIntegrationTests.swift */; };
 		C69F015A254358C5001AB49B /* AnnotationManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07958C23253A2AE50043ECC0 /* AnnotationManagerIntegrationTests.swift */; };
 		C69F017425435C55001AB49B /* LocationProviderMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69F017325435C55001AB49B /* LocationProviderMock.swift */; };
 		C69F017525435C55001AB49B /* LocationProviderMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69F017325435C55001AB49B /* LocationProviderMock.swift */; };
 		C69F017625435C55001AB49B /* LocationProviderMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69F017325435C55001AB49B /* LocationProviderMock.swift */; };
-		C6B58BE0252E54BA0063AC3E /* ApproximatePuckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B58BDF252E54BA0063AC3E /* ApproximatePuckView.swift */; };
-		C6B58C14252E55110063AC3E /* PrecisePuckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B58C13252E55110063AC3E /* PrecisePuckView.swift */; };
-		C6B58C47252E55CE0063AC3E /* ArrowPuckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B58C46252E55CE0063AC3E /* ArrowPuckView.swift */; };
-		C6B58EDA253629E20063AC3E /* PuckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B58ED9253629E20063AC3E /* PuckView.swift */; };
-		C6B58EDB253629E20063AC3E /* PuckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B58ED9253629E20063AC3E /* PuckView.swift */; };
-		C6F4EF012539E7E70009C0CC /* HeadingBeamPuckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6F4EF002539E7E70009C0CC /* HeadingBeamPuckView.swift */; };
-		C6F4EF022539E7E70009C0CC /* HeadingBeamPuckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6F4EF002539E7E70009C0CC /* HeadingBeamPuckView.swift */; };
 		CA050571259104E200FF7D02 /* FeatureQueryingTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B82A652548C1320048D0F2 /* FeatureQueryingTest.swift */; };
 		CA05A71F2551C89600ABF902 /* CacheManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA05A71E2551C89600ABF902 /* CacheManagerIntegrationTests.swift */; };
 		CA05A7202551C89600ABF902 /* CacheManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA05A71E2551C89600ABF902 /* CacheManagerIntegrationTests.swift */; };
@@ -932,14 +920,8 @@
 		C64ED305253F7CF500ADADFB /* LocationSupportableMapViewMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSupportableMapViewMock.swift; sourceTree = "<group>"; };
 		C64ED320253F7E9100ADADFB /* LocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerTests.swift; sourceTree = "<group>"; };
 		C64ED33B253F819B00ADADFB /* LocationConsumerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationConsumerMock.swift; sourceTree = "<group>"; };
-		C661A055253A2DBD005AC5EB /* HeadingArrowPuckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadingArrowPuckView.swift; sourceTree = "<group>"; };
 		C69F011125431AF4001AB49B /* LocationManagerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerIntegrationTests.swift; sourceTree = "<group>"; };
 		C69F017325435C55001AB49B /* LocationProviderMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationProviderMock.swift; sourceTree = "<group>"; };
-		C6B58BDF252E54BA0063AC3E /* ApproximatePuckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApproximatePuckView.swift; sourceTree = "<group>"; };
-		C6B58C13252E55110063AC3E /* PrecisePuckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrecisePuckView.swift; sourceTree = "<group>"; };
-		C6B58C46252E55CE0063AC3E /* ArrowPuckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrowPuckView.swift; sourceTree = "<group>"; };
-		C6B58ED9253629E20063AC3E /* PuckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuckView.swift; sourceTree = "<group>"; };
-		C6F4EF002539E7E70009C0CC /* HeadingBeamPuckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadingBeamPuckView.swift; sourceTree = "<group>"; };
 		CA05A71E2551C89600ABF902 /* CacheManagerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManagerIntegrationTests.swift; sourceTree = "<group>"; };
 		CA2E498825380B300096DEDE /* DidIdleFailureIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DidIdleFailureIntegrationTest.swift; sourceTree = "<group>"; };
 		CA355C06256EEA7C00FD1DB7 /* FlyToInterpolator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyToInterpolator.swift; sourceTree = "<group>"; };
@@ -1745,12 +1727,6 @@
 				C64994A5258D5ADD0052C21C /* LocationPuckManager.swift */,
 				C64994A6258D5ADE0052C21C /* Puck.swift */,
 				C64994A8258D5ADE0052C21C /* PuckLocationIndicatorLayer.swift */,
-				C6B58BDF252E54BA0063AC3E /* ApproximatePuckView.swift */,
-				C6B58C13252E55110063AC3E /* PrecisePuckView.swift */,
-				C6B58C46252E55CE0063AC3E /* ArrowPuckView.swift */,
-				C6B58ED9253629E20063AC3E /* PuckView.swift */,
-				C6F4EF002539E7E70009C0CC /* HeadingBeamPuckView.swift */,
-				C661A055253A2DBD005AC5EB /* HeadingArrowPuckView.swift */,
 				0C31F7A925AF87AB00DCFB28 /* PuckModelLayer.swift */,
 			);
 			path = Pucks;
@@ -3132,7 +3108,6 @@
 				0C708F4F24EB23C7003CE791 /* VectorSource.swift in Sources */,
 				0C946D1324DC5F8E003F114A /* Event.swift in Sources */,
 				0CD62F1A245886E7006421D1 /* LocationManager.swift in Sources */,
-				C661A056253A2DBD005AC5EB /* HeadingArrowPuckView.swift in Sources */,
 				0C1AF55C244DF500008D2A10 /* MapOptions.swift in Sources */,
 				0CD62F1E24588730006421D1 /* LocationProvider.swift in Sources */,
 				0C1AF565244F65E6008D2A10 /* OrnamentOptions.swift in Sources */,
@@ -3168,7 +3143,6 @@
 				0C708F2724EB1EE2003CE791 /* LineLayer.swift in Sources */,
 				07A5DE852515576E00A27F8B /* AnnotationStyleDelegate.swift in Sources */,
 				0C708F5124EB23C7003CE791 /* GeojsonSource.swift in Sources */,
-				C6B58C47252E55CE0063AC3E /* ArrowPuckView.swift in Sources */,
 				07625C8C2589755A002EEBCC /* SnapshotOverlay.swift in Sources */,
 				0CD62F0524587CF3006421D1 /* PanGestureHandler.swift in Sources */,
 				0782B076258C190C00D5FCE5 /* CoordinateBounds.swift in Sources */,
@@ -3190,14 +3164,11 @@
 				0782B037258C14A400D5FCE5 /* NSNumber.swift in Sources */,
 				07BA35E825157A0E003E1B55 /* AnnotationSupportableMap.swift in Sources */,
 				0C55010B2476D83A00AE019A /* Light.swift in Sources */,
-				C6B58BE0252E54BA0063AC3E /* ApproximatePuckView.swift in Sources */,
 				0CD34FE8242AAE0900943687 /* MapView+Managers.swift in Sources */,
 				5A3593B6247FD9AD00E67344 /* LayoutVisibility.swift in Sources */,
 				0CD62F12245885AA006421D1 /* AccountManager.swift in Sources */,
 				5A9648FE246429C3001FF05D /* MapboxCompassOrnamentView.swift in Sources */,
 				0C8AA1F3257FE1830037FD6B /* MapEvents.swift in Sources */,
-				C6B58C14252E55110063AC3E /* PrecisePuckView.swift in Sources */,
-				C6F4EF012539E7E70009C0CC /* HeadingBeamPuckView.swift in Sources */,
 				0C479F90251CEC340025EC4F /* Snapshotter.swift in Sources */,
 				0CD62F182458865A006421D1 /* CameraView.swift in Sources */,
 				07BA35CE251578DD003E1B55 /* AnnotationInteractionDelegate.swift in Sources */,
@@ -3227,7 +3198,6 @@
 				07D71591257994430025BF61 /* MapboxLogoView.swift in Sources */,
 				0782B061258C16B200D5FCE5 /* Utils.swift in Sources */,
 				0CD62F2C24588937006421D1 /* Style.swift in Sources */,
-				C6B58EDA253629E20063AC3E /* PuckView.swift in Sources */,
 				0CAC3CAA2534E8CC00D031E7 /* ResourceOptions.swift in Sources */,
 				0CA3DD61257AAE3B00B12C8F /* SkyLayer.swift in Sources */,
 				0C708F2B24EB1EE2003CE791 /* FillLayer.swift in Sources */,
@@ -3406,19 +3376,13 @@
 				1FF65A68244E34000069B561 /* LocationManager.swift in Sources */,
 				C64994B0258D5ADE0052C21C /* PuckLocationIndicatorLayer.swift in Sources */,
 				C64994AC258D5ADE0052C21C /* Puck.swift in Sources */,
-				0CECCCB32534916A0000FC64 /* ApproximatePuckView.swift in Sources */,
-				C6F4EF022539E7E70009C0CC /* HeadingBeamPuckView.swift in Sources */,
-				0CECCCB22534916A0000FC64 /* PrecisePuckView.swift in Sources */,
 				C64994AA258D5ADE0052C21C /* LocationPuckManager.swift in Sources */,
 				1FF65A79244F78540069B561 /* AppleLocationProvider.swift in Sources */,
-				C661A057253A2DBD005AC5EB /* HeadingArrowPuckView.swift in Sources */,
 				0CDEA62625B0EAD40068B344 /* LocationConsumer.swift in Sources */,
 				1FF65A6E244E53F50069B561 /* LocationPermissionsDelegate.swift in Sources */,
 				1FF65A87245354E30069B561 /* LocationOptions.swift in Sources */,
-				C6B58EDB253629E20063AC3E /* PuckView.swift in Sources */,
 				1FF65A75244F6E320069B561 /* LocationProvider.swift in Sources */,
 				0C31F7AB25AF87AB00DCFB28 /* PuckModelLayer.swift in Sources */,
-				0CECCCB12534916A0000FC64 /* ArrowPuckView.swift in Sources */,
 				0CECCCCE253491A80000FC64 /* LocationSupportableMapView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

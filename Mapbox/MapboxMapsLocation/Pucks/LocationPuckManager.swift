@@ -22,12 +22,9 @@ internal enum PuckStyle {
 public enum LocationPuck: Equatable {
     case layer2d(customize: ((inout LocationIndicatorLayerViewModel) -> Void)? = nil) // Backed by `LocationIndicatorLayer`. Implement customize block to granularly modify the puck's styling.
     case layer3d(customize: ((inout PuckModelLayerViewModel) -> Void))// Backed by `ModelLayer`
-    case view // Backed by `PuckView` which is a `UIView`
 
     public static func == (lhs: LocationPuck, rhs: LocationPuck) -> Bool {
         switch (lhs, rhs) {
-        case (.view, .view):
-            return true
         case (.layer2d(_), .layer2d(_)):
             return true
         case (.layer3d(_), .layer3d(_)):
@@ -91,9 +88,6 @@ public class LocationPuckManager: LocationConsumer {
         var puck: Puck
 
         switch self.currentPuckBackend {
-        case .view:
-            puck = PuckView(currentPuckStyle: self.currentPuckStyle, locationSupportableMapView: locationSupportableMapView)
-            subscribeRendererFrameHandler()
         case let .layer2d(customizationHandler):
             puck = PuckLocationIndicatorLayer(currentPuckStyle: self.currentPuckStyle, locationSupportableMapView: locationSupportableMapView, customizationHandler: customizationHandler)
         case let .layer3d(customizationHandler):
@@ -128,24 +122,6 @@ public class LocationPuckManager: LocationConsumer {
             puck.updateStyle(puckStyle: newPuckStyle, location: location)
         } else {
             createPuck()
-        }
-    }
-
-    /// Update the puck whenever a new frame is rendered
-    /// Only needed for View backed Pucks
-    private func subscribeRendererFrameHandler() {
-        guard let locationSupportableMapView = self.locationSupportableMapView else { return }
-
-        locationSupportableMapView.subscribeRenderFrameHandler { [weak self] (_) in
-
-            guard let self = self,
-                  let latestLocation = self.latestLocation,
-                  let puck = self.puck
-            else { return }
-
-            if self.currentPuckBackend == .view {
-                puck.updateLocation(location: latestLocation)
-            }
         }
     }
 }

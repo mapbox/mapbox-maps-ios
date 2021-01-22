@@ -11,6 +11,7 @@ public class GeoJSONSourceExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.view.addSubview(mapView)
 
         // Set the center coordinate and zoom level.

@@ -11,6 +11,7 @@ public class BasicMapExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         self.mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.update { (mapOptions) in
             mapOptions.ornaments.showsScale = true
         }

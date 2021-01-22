@@ -11,6 +11,7 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.view.addSubview(mapView)
 
         // Center the map camera over New York City

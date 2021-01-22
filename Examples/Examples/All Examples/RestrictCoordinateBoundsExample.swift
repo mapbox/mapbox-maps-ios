@@ -10,6 +10,7 @@ public class RestrictCoordinateBoundsExample: UIViewController, ExampleProtocol 
         super.viewDidLoad()
 
         let mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.view.addSubview(mapView)
 
         let bounds = CoordinateBounds(southwest: CLLocationCoordinate2D(latitude: 63.33, longitude: -25.52),

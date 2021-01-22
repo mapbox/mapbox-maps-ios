@@ -16,6 +16,7 @@ public class CameraUIViewAnimationExample: UIViewController, ExampleProtocol {
 
         let resourceOptions = ResourceOptions(accessToken: accessToken)
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions)
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.view.addSubview(mapView)
 
         self.mapView.cameraView.centerCoordinate = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)

@@ -11,6 +11,7 @@ public class LineAnnotationExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.view.addSubview(mapView)
 
         let centerCoordinate = CLLocationCoordinate2D(latitude: 39.7128, longitude: -75.0060)

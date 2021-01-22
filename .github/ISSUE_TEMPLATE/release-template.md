@@ -37,7 +37,7 @@ _Required dependencies:_
 
 ***What will this job do?***
 
-- Build our framework and our bundle framework(for direct downloads)
+- Build our xcframework and our direct-download bundle
 - Add our LICENSE.md to our packages before zipping
 - Upload direct download and xcframework to S3
 - Store the checksum of the .xcframework.zip as a CI artifact

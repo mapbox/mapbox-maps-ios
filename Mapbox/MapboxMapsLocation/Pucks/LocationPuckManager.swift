@@ -20,14 +20,14 @@ internal enum PuckStyle {
 // MARK: PuckBackend
 /// This enum represents the different backends that can be used for Pucks
 public enum LocationPuck: Equatable {
-    case layer2d(customize: ((inout LocationIndicatorLayerViewModel) -> Void)? = nil) // Backed by `LocationIndicatorLayer`. Implement customize block to granularly modify the puck's styling.
-    case layer3d(customize: ((inout PuckModelLayerViewModel) -> Void))// Backed by `ModelLayer`
+    case puck2D(customize: ((inout LocationIndicatorLayerViewModel) -> Void)? = nil) // Backed by `LocationIndicatorLayer`. Implement customize block to granularly modify the puck's styling.
+    case puck3D(customize: ((inout PuckModelLayerViewModel) -> Void))// Backed by `ModelLayer`. Implement customize block to granularly modify the puck's styling.
 
     public static func == (lhs: LocationPuck, rhs: LocationPuck) -> Bool {
         switch (lhs, rhs) {
-        case (.layer2d(_), .layer2d(_)):
+        case (.puck2D(_), .puck2D(_)):
             return true
-        case (.layer3d(_), .layer3d(_)):
+        case (.puck3D(_), .puck3D(_)):
             return true
         default:
             return false
@@ -88,9 +88,9 @@ public class LocationPuckManager: LocationConsumer {
         var puck: Puck
 
         switch self.currentPuckBackend {
-        case let .layer2d(customizationHandler):
+        case let .puck2D(customizationHandler):
             puck = PuckLocationIndicatorLayer(currentPuckStyle: self.currentPuckStyle, locationSupportableMapView: locationSupportableMapView, customizationHandler: customizationHandler)
-        case let .layer3d(customizationHandler):
+        case let .puck3D(customizationHandler):
             puck = PuckModelLayer(currentPuckStyle: self.currentPuckStyle, locationSupportableMapView: locationSupportableMapView, customizationHandler: customizationHandler)
         }
 

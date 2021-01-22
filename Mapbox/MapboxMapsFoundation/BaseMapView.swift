@@ -42,8 +42,6 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
     public var dormant: Bool = false
     public var displayCallback: (() -> Void)?
     private var observerConcrete: ObserverConcrete!
-//    internal var lastSnapshotImage: UIImage? // JK : Do we need?
-    internal var metalSnapshotView: UIImageView?
 
     /* Whether map rendering should occur during the `UIApplicationStateInactive` state.
 
@@ -504,7 +502,7 @@ extension BaseMapView: UIApplicationDelegate {
         // flush
     }
 
-    func applicationWillEnterForeground(_ application: UIApplication) {
+    public func applicationWillEnterForeground(_ application: UIApplication) {
         if self.mapViewSupportsBackgroundRendering() { return }
 
         // what is the equivalent of createViwe?
@@ -523,27 +521,6 @@ extension BaseMapView: UIApplicationDelegate {
 
         // Reports events
         // Report number of render errors
-    }
-
-    func enableSnapshotView() {
-        if self.metalSnapshotView == nil {
-            self.metalSnapshotView = UIImageView(frame: self.getMetalView(for: nil)?.frame ?? self.frame)
-            self.metalSnapshotView?.autoresizingMask = self.autoresizingMask
-            let options = MapSnapshotOptions(size: self.frame.size, resourceOptions: self.resourceOptions ?? ResourceOptions())
-            let snapshotter = Snapshotter(options: options)
-            snapshotter.camera = self.cameraView.camera
-
-            snapshotter.start(overlayHandler: nil) { [weak self] (result) in
-                guard let self = self else { return }
-                self.metalSnapshotView?.image = try? result.get()
-            }
-        }
-
-        self.metalSnapshotView?.isHidden = false
-        self.metalSnapshotView?.alpha = 1
-        self.metalSnapshotView?.isOpaque = false
-
-        // Handle a debug mask if applicable
     }
 
     public func applicationDidBecomeActive(_ application: UIApplication) {
@@ -571,18 +548,6 @@ extension BaseMapView: UIApplicationDelegate {
                     self.stopDisplayLink()
                 }
             }
-        }
-
-        if self.metalSnapshotView != nil && self.metalSnapshotView?.isHidden != true {
-            UIView .transition(with: self, duration: 0.25, options: .transitionCrossDissolve) { [weak self] in
-                guard let self = self else { return }
-                self.metalSnapshotView?.isHidden = true
-            } completion: { [weak self] (finished) in
-                guard let self = self else { return }
-                let subviews = self.metalSnapshotView?.subviews
-                subviews?.forEach { $0.removeFromSuperview() }
-            }
-
         }
     }
 }

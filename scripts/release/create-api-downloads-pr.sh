@@ -35,7 +35,7 @@ packages:
       - MapboxMaps.xcframework
 
 bundles:
-  ios: ${SDK_FILE_NAME}
+  ios: mapbox-maps-ios
 EOF
 
 #

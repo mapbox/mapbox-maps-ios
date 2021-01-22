@@ -606,6 +606,7 @@ commands:
                     cp -r build/Build/Products/XCFramework/MapboxMaps.xcframework ./
                     zip -r MapboxMaps.xcframework.zip MapboxMaps.xcframework LICENSE.md
                     swift package --package-path /Users/distiller/project/ compute-checksum MapboxMaps.xcframework.zip > MapboxMaps.xcframework.zip.checksum
+                    echo "Generating Checksum for MapboxMaps.xcframework.zip"
                     cat MapboxMaps.xcframework.zip.checksum
             - store_artifacts:
                 path: MapboxMaps.xcframework.zip

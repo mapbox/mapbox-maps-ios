@@ -224,7 +224,7 @@ internal class OrnamentsManager: NSObject {
                 ornamentView.trailingAnchor.constraint(equalTo: self.universalLayoutGuide.trailingAnchor,
                                                        constant: -ornament.margins.x),
                 ornamentView.bottomAnchor.constraint(equalTo: self.universalLayoutGuide.bottomAnchor,
-                                                     constant: ornament.margins.y)
+                                                     constant: -ornament.margins.y)
             ])
         case .bottomCenter:
             print("bottom center")
@@ -233,7 +233,7 @@ internal class OrnamentsManager: NSObject {
                 ornamentView.leadingAnchor.constraint(equalTo: self.universalLayoutGuide.leadingAnchor,
                                                       constant: ornament.margins.x),
                 ornamentView.bottomAnchor.constraint(equalTo: self.universalLayoutGuide.bottomAnchor,
-                                                     constant: ornament.margins.y)
+                                                     constant: -ornament.margins.y)
             ])
         case .centerLeft:
             print("center left")

@@ -1,6 +1,6 @@
 ## Mapbox Maps SDK Carbon for iOS
 
-[![CircleCI](https://circleci.com/gh/mapbox/mapbox-maps-ios.svg?style=svg&circle-token=e07a3b02884d42176d39cdc0d2af4bd59cd150d3)](https://circleci.com/gh/mapbox/mapbox-maps-ios) [![codecov](https://codecov.io/gh/mapbox/mapbox-maps-ios/branch/main/graph/badge.svg?token=7rlytil9XT)](https://codecov.io/gh/mapbox/mapbox-maps-ios) [![Secret-shield enabled](https://github.com/mapbox/secret-shield/blob/assets/secret-shield-enabled-badge.svg)](https://github.com/mapbox/secret-shield/blob/main/docs/enabledBadge.md)
+[![CircleCI](https://circleci.com/gh/mapbox/mapbox-maps-ios.svg?style=svg&circle-token=fb3cfef30d0bed9e8639e1d6967f905a6eba71c8)](https://circleci.com/gh/mapbox/mapbox-maps-ios) [![codecov](https://codecov.io/gh/mapbox/mapbox-maps-ios/branch/main/graph/badge.svg?token=7rlytil9XT)](https://codecov.io/gh/mapbox/mapbox-maps-ios) [![Secret-shield enabled](https://github.com/mapbox/secret-shield/blob/assets/secret-shield-enabled-badge.svg)](https://github.com/mapbox/secret-shield/blob/main/docs/enabledBadge.md)
 
 
 <img alt="Mapbox Navigation SDK" src="./docs/map.png" width="258" align="right" />

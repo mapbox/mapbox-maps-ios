@@ -8,6 +8,7 @@ public class MapViewExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         let mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
         NSLayoutConstraint.activate([
             mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),

@@ -15,6 +15,7 @@ internal class CustomStyleURLExample: UIViewController, ExampleProtocol {
         }
 
         self.mapView = MapView(with: view.bounds, resourceOptions: resourceOptions(), styleURL: .custom(url: customStyleURL))
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.view.addSubview(mapView)
 
         self.mapView.on(.styleLoadingFinished) { _ in

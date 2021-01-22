@@ -20,6 +20,7 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
 
         let testRect = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height / 2)
         mapView = MapView(with: testRect, resourceOptions: resourceOptions())
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.style.styleURL = .dark
         mapView.cameraManager.setCamera(centerCoordinate: CLLocationCoordinate2D(latitude: 37.858, longitude: 138.472),
                                                   zoom: 3.5)

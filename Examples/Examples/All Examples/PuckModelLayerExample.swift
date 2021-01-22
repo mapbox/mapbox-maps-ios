@@ -31,7 +31,7 @@ public class PuckModelLayerExample: UIViewController, ExampleProtocol {
 
             mapOptions.location.showUserLocation = true
 
-            mapOptions.location.locationPuck = .layer3d { (puckModelLayerViewModel) in
+            mapOptions.location.locationPuck = .puck3D { (puckModelLayerViewModel) in
                 let uri = Bundle.main.url(forResource: "race_car_model",
                                           withExtension: "gltf")
 

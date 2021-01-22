@@ -77,13 +77,13 @@ public class Snapshotter: Observer {
     }
 
     /// Rectangular bounds to which the snapshot is restricted
-    public var bounds: CoordinateBounds {
-        get {
-            return try! mapSnapshotter.getRegion()
-        } set(newBounds) {
-            try! mapSnapshotter.setRegionFor(newBounds)
-        }
-    }
+//    public var bounds: CoordinateBounds {
+//        get {
+//            return try! mapSnapshotter.getRegion()
+//        } set(newBounds) {
+//            try! mapSnapshotter.cameraForCoordinates(forCoordinates: <#T##[CLLocation]#>, padding: <#T##EdgeInsets#>, bearing: <#T##NSNumber?#>, pitch: <#T##NSNumber?#>)
+//        }
+//    }
 
     /// In the tile mode, the snapshotter fetches the still image of a single tile.
     public var tileMode: Bool {

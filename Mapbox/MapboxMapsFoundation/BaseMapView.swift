@@ -150,6 +150,11 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
             try! __map?.setStyleURIForUri(validStyleURL.absoluteString)
         }
 
+        NotificationCenter.default.addObserver(self, selector: #selector(mapViewWillResignAction), name: UIApplication.willResignActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(mapViewDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(mapViewDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(mapViewWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+
     }
 
     class internal func parseIBString(ibString: String) -> String? {
@@ -214,21 +219,6 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
     }
 
     // MARK: Display Link
-    func createDisplayLink() {
-        precondition(self.displayLink == nil)
-        precondition(self.windowScreen() != nil)
-        let screen = self.windowScreen()
-        self.displayLink = screen?.displayLink(withTarget: self, selector: #selector(updateFromDisplayLink(displayLink:)))
-        self.displayLink?.isPaused = true
-        self.updateDisplayLinkPreferredFramesPerSecond()
-
-        self.displayLink?.add(to: .current, forMode: .common)
-
-        if (self.__map != nil) {
-            let _ = try? self.__map.setConstrainModeFor(.heightOnly)
-        }
-    }
-
     func validateDisplayLink() {
         if self.superview != nil
             && self.window != nil
@@ -276,13 +266,6 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 
     func stopDisplayLink() {
         self.displayLink?.isPaused = true
-        self.needsDisplayRefresh = false
-        // Do we need to handle pending blocks?
-    }
-
-    func destroyDisplayLink() {
-        self.displayLink?.invalidate()
-        self.displayLink = nil
         self.needsDisplayRefresh = false
         // Do we need to handle pending blocks?
     }
@@ -428,7 +411,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
     }
 
     func mapViewSupportsBackgroundRendering() -> Bool {
-        // JK: check if this comment from gl-native is out of date
+        // check if this comment from gl-native is out of date
 
         // If this view targets an external display, such as AirPlay or CarPlay, we
         // can safely continue to render OpenGL content without tripping
@@ -462,7 +445,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 }
 
 // MARK: Handle background rendering
-extension BaseMapView: UIApplicationDelegate {
+extension BaseMapView{
 
     func assertIsMainThread() {
         if !Thread.isMainThread {
@@ -470,7 +453,7 @@ extension BaseMapView: UIApplicationDelegate {
         }
     }
 
-    public func applicationWillResignActive(_ application: UIApplication) {
+    @objc func mapViewWillResignAction() {
         self.assertIsMainThread()
 
         if self.renderingInInactiveStateEnabled || self.mapViewSupportsBackgroundRendering() {
@@ -481,7 +464,7 @@ extension BaseMapView: UIApplicationDelegate {
         // We want to reduce memory usage before the map goes into the background
     }
 
-    public func applicationDidEnterBackground(_ application: UIApplication) {
+    @objc func mapViewDidEnterBackground() {
         self.assertIsMainThread()
         precondition(!self.dormant, "Should not be dormant heading into background.")
 
@@ -490,19 +473,12 @@ extension BaseMapView: UIApplicationDelegate {
         if self.renderingInInactiveStateEnabled {
             self.stopDisplayLink()
         }
-
-        self.destroyDisplayLink()
-        // Do we need to handle pending blocks?
-        // how do we delete a metal view?
-        guard let metalView = self.subviews.first as? MTKView else { return }
-        metalView.delete(nil)
-
         // Handle non-rendering backgrounding
         // validate location services
         // flush
     }
 
-    public func applicationWillEnterForeground(_ application: UIApplication) {
+    @objc func mapViewWillEnterForeground() {
         if self.mapViewSupportsBackgroundRendering() { return }
 
         // what is the equivalent of createViwe?
@@ -518,23 +494,16 @@ extension BaseMapView: UIApplicationDelegate {
         self.dormant = false
 
         // Validate location services
-
         // Reports events
         // Report number of render errors
     }
 
-    public func applicationDidBecomeActive(_ application: UIApplication) {
+    @objc func mapViewDidBecomeActive() {
         let applicationState : UIApplication.State = UIApplication.shared.applicationState
 
         if self.dormant == true {
             // create a view
             self.dormant = false
-        }
-
-        if self.displayLink != nil {
-            if self.windowScreen() != nil {
-                self.createDisplayLink()
-            }
         }
 
         if applicationState == .active || (applicationState == .inactive && self.renderingInInactiveStateEnabled) {

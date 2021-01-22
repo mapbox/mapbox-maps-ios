@@ -408,39 +408,6 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 
         return rect
     }
-
-    func mapViewSupportsBackgroundRendering() -> Bool {
-        // check if this comment from gl-native is out of date
-
-        // If this view targets an external display, such as AirPlay or CarPlay, we
-        // can safely continue to render OpenGL content without tripping
-        // gpus_ReturnNotPermittedKillClient in libGPUSupportMercury, because the
-        // external connection keeps the application from truly receding to the
-        // background.
-        let screen = self.windowScreen()
-
-        let supportsBackgroundRendering : Bool = (screen != nil && screen != UIScreen.main)
-        return supportsBackgroundRendering
-    }
-
-    func isVisible() -> Bool {
-        let screen = self.windowScreen()
-        return (!self.isHidden && screen != nil)
-    }
-
-    func windowScreen() -> UIScreen? {
-        if #available(iOS 13, *) {
-            if let newScreen = self.window?.windowScene?.screen {
-                return newScreen
-            }
-        }
-
-        if let windowScreen = self.window?.screen {
-            return windowScreen
-        }
-
-        return nil
-    }
 }
 
 // MARK: Handle background rendering
@@ -455,7 +422,7 @@ extension BaseMapView{
     @objc func mapViewWillResignAction() {
         self.assertIsMainThread()
 
-        if self.renderingInInactiveStateEnabled || self.mapViewSupportsBackgroundRendering() {
+        if self.renderingInInactiveStateEnabled {
             return
         }
 
@@ -467,8 +434,6 @@ extension BaseMapView{
         self.assertIsMainThread()
         precondition(!self.dormant, "Should not be dormant heading into background.")
 
-        if self.mapViewSupportsBackgroundRendering() { return }
-
         if self.renderingInInactiveStateEnabled {
             self.stopDisplayLink()
         }
@@ -478,11 +443,10 @@ extension BaseMapView{
     }
 
     @objc func mapViewWillEnterForeground() {
-        if self.mapViewSupportsBackgroundRendering() { return }
         if window?.screen != nil {
             self.validateDisplayLink()
 
-            if self.renderingInInactiveStateEnabled && self.isVisible() {
+            if self.renderingInInactiveStateEnabled && self.isHidden == true {
                 self.startDisplayLink()
             }
         }
@@ -502,7 +466,7 @@ extension BaseMapView{
         }
 
         if applicationState == .active || (applicationState == .inactive && self.renderingInInactiveStateEnabled) {
-            let mapViewVisible = self.isVisible()
+            let mapViewVisible = !self.isHidden
             if self.displayLink != nil {
                 if mapViewVisible && self.displayLink?.isPaused == true  {
                     self.startDisplayLink()

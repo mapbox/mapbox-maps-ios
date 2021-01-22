@@ -267,7 +267,6 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
     func stopDisplayLink() {
         self.displayLink?.isPaused = true
         self.needsDisplayRefresh = false
-        // Do we need to handle pending blocks?
     }
 
     open override func willMove(toWindow newWindow: UIWindow?) {
@@ -480,9 +479,6 @@ extension BaseMapView{
 
     @objc func mapViewWillEnterForeground() {
         if self.mapViewSupportsBackgroundRendering() { return }
-
-        // what is the equivalent of createViwe?
-
         if window?.screen != nil {
             self.validateDisplayLink()
 
@@ -502,7 +498,6 @@ extension BaseMapView{
         let applicationState : UIApplication.State = UIApplication.shared.applicationState
 
         if self.dormant == true {
-            // create a view
             self.dormant = false
         }
 

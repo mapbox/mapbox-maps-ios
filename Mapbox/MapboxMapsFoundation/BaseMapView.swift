@@ -150,7 +150,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
             try! __map?.setStyleURIForUri(validStyleURL.absoluteString)
         }
 
-        NotificationCenter.default.addObserver(self, selector: #selector(mapViewWillResignAction), name: UIApplication.willResignActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(mapViewWillResignActive), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(mapViewDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(mapViewDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(mapViewWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -419,7 +419,7 @@ extension BaseMapView{
         }
     }
 
-    @objc func mapViewWillResignAction() {
+    @objc func mapViewWillResignActive() {
         self.assertIsMainThread()
 
         if self.renderingInInactiveStateEnabled {
@@ -437,9 +437,6 @@ extension BaseMapView{
         if self.renderingInInactiveStateEnabled {
             self.stopDisplayLink()
         }
-        // Handle non-rendering backgrounding
-        // validate location services
-        // flush
     }
 
     @objc func mapViewWillEnterForeground() {
@@ -452,10 +449,6 @@ extension BaseMapView{
         }
 
         self.dormant = false
-
-        // Validate location services
-        // Reports events
-        // Report number of render errors
     }
 
     @objc func mapViewDidBecomeActive() {

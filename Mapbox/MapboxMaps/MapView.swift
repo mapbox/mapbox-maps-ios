@@ -9,22 +9,22 @@ open class MapView: BaseMapView, EventsEmitter {
     internal var mapOptions: MapOptions = MapOptions()
 
     /// The `gestureManager` will be responsible for all gestures on the map
-    internal var gestureManager: GestureManager!
+    public internal(set) var gestureManager: GestureManager!
 
     /// The `ornamentsManager` will be responsible for all ornaments on the map
     internal var ornamentsManager: OrnamentsManager!
 
     /// The `cameraManager` that manages a camera's view lifecycle.
-    public var cameraManager: CameraManager!
+    public internal(set) var cameraManager: CameraManager!
 
     /// The `locationManager` that handles location events of the map
-    public var locationManager: LocationManager!
+    public internal(set) var locationManager: LocationManager!
 
     /// The `style` object supports run time styling
-    public var style: Style!
+    public internal(set) var style: Style!
 
     /// Controls the addition/removal of annotations to the map.
-    public var annotationManager: AnnotationManager!
+    public internal(set) var annotationManager: AnnotationManager!
 
     /// A reference to the `EventsManager` used for dispatching telemetry.
     public var eventsListener: EventsListener!

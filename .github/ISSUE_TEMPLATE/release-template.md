@@ -81,7 +81,7 @@ _Required dependencies:_
 
 ## 🚢 Merge your release branch
 
-- [ ] Make a PR from your release branch, back into main so that main has the update manifest and changelog
+- [ ] Create a pull request from your release branch which targets `main`.
 - [ ] Have your release buddy approve and then merge it
 
 ## 📣 Announcements

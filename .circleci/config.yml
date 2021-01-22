@@ -519,7 +519,7 @@ commands:
             - run:
                 name: Checking << parameters.tag >> is SEMVER like
                 command: |
-                    if [[ ! << parameters.tag >> =~  ^\v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+                    if [[ ! << parameters.tag >> =~ ^v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
                         echo "Skipping job"
                         circleci-agent step halt
                     fi
@@ -605,8 +605,7 @@ commands:
                 command: |
                     cp -r build/Build/Products/XCFramework/MapboxMaps.xcframework ./
                     zip -r MapboxMaps.xcframework.zip MapboxMaps.xcframework LICENSE.md
-                    cd /Users/distiller/project/
-                    swift package compute-checksum MapboxMaps.xcframework.zip > MapboxMaps.xcframework.zip.checksum
+                    swift package --package-path /Users/distiller/project/ compute-checksum MapboxMaps.xcframework.zip > MapboxMaps.xcframework.zip.checksum
                     cat MapboxMaps.xcframework.zip.checksum
             - store_artifacts:
                 path: MapboxMaps.xcframework.zip

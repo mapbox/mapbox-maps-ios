@@ -29,68 +29,46 @@ _Required dependencies:_
 
 ## 📦 Release MapboxMaps
 
-**1) Create the release tag**
+**1) Create Release Branch & Kickoff Build**
 
-- [ ] Create a SEMVER tag, e.g. `X.Y.Z-beta.N` and push the tag to GitHub: 
+- [ ] Pull the latest from main to include all code updates. Then make a new branch called "Release/{VERSION}"
+- [ ] Kickoff the build by passing an empty commit with the message "[release] {VERSION}". Please copy this command to use an empty commit `git commit --allow-empty -m "[release] {VERSION}"` <-- do not include the "v" in version here
+- **It's important that you follow the commit message. This is what triggers the build job
+
+***What will this job do?***
+
+- Build our xcframework and our direct-download bundle
+- Include LICENSE.md in the zip files
+- Upload direct download and xcframework to S3
+- Store the checksum of the .xcframework.zip as a CI artifact
+- Create a PR [here](https://github.com/mapbox/api-downloads/pulls) so that our SDK can be consumed
+- The above PR needs to be approved and merged before continuing
+
+**2) Update Distribution & Changelog**
+
+- [ ] From the previous job, go to the CI Artifacts and get the value from the `MapboxMaps.xcframework.zip.checksum`. This will be needed to update SPM
+- [ ] On your release branch, run the update manifest script `./scripts/update-spm-manifest.sh <maps version number> <common version number> <core version number> <maps xcframework checksum>`
+- [ ] The above script will update `Package.swift`. Open the file and verify the changes are correct and then push this commit to remote
+- [ ] This is where we need to verify SPM update was successful. Open a tester single view application. Go to the Swift Package Manager menu and add our repo `https://github.com/mapbox/mapbox-maps-ios.git`. For the branch, specify your current release branch. Then verify that you can load the SDK, and display a basic map on device to verify that the build is working.
+    - ***Note that the api-downloads PR needs to be merged and sanity checks need to complete before downloads are available here***
+- [ ] Generate the changelog by running the following script `./scripts/release/generate_changelog.sh`
+- [ ] Update the changelog as needed and push those changes
+
+**3) Create the Release Tag**
+
+- [ ] Create a SEMVER tag, e.g. `vX.Y.Z-beta.N` and push the tag to GitHub: 
     - `git tag <version> && git push origin <version>`
-        - NOTE: We are NOT using release branches at this moment, so perform the tag on `main`.
     - This will trigger a CircleCI workflow that will produce the following artifacts (can be [found here](https://app.circleci.com/pipelines/github/mapbox/mapbox-maps-ios)):
-        - a zip containing the 5 xcframeworks
         - an api-docs.zip
-    - The artifacts will also be automatically uploaded to AWS S3 to prepare them to be hosted on the SDK registry.
-    
-**NOTE** This should be the only step you need to do, other than reviewing/merging PRs. The remaining steps are a reference in case automation fails
-
-**2) Draft the GitHub release**
-
-* This is included in automation. Once the CI job has completed, a new draft release will be made [here](https://github.com/mapbox/mapbox-maps-ios/releases)
-* Update the release notes with changelog items located in `CHANGELOG.md`. **Make sure you review the commit and ensure that information is organized correctly** (Feel free to edit and commit to master with the updated changes)
-
-**If Manual Release Is Needed**
-- [ ] While the CI job is in progress, prepare the GitHub release by creating a draft release on Github, based off the new tag you created. In the release description, copy and paste the information in CHANGELOG.md after reviewing the commit that CI posts
-
-````
-
-### Dependency requirements:
-
-* Compatible version of MapboxCoreMaps:
-* Compatible version of MapboxCommon:
-* Compatible version of Xcode:
-* Compatible version of MacOS:
-
-### Changes
-
-<Copy and paste CHANGELOG.MD>
-
-[See changes since <previous version>](https://github.com/mapbox/mapbox-maps-ios/compare/<previous version>>...<version>)
-
-### Direct download
-
-Link to download binaries (append your own Mapbox access token [scoped with `DOWNLOADS:READ`](https://account.mapbox.com/)):
-
-```
-https://api.mapbox.com/downloads/v2/mobile-maps-ios-privatebeta/releases/ios/<version>/mapbox-maps-ios-privatebeta.zip?access_token=<access-token>
-```
-````
-
-- [ ] Then, have your release buddy review the draft release, and save the draft. You will publish it in a later step.
-
-**3) Release binaries to SDK registry**
-
-* This is included in automation. Once the CI job has completed, a pr will be made [here](https://github.com/mapbox/api-downloads/pulls)
-
-**If Manual Release Is Needed**
-- [ ] Next, trigger the creation of a PR to `api-downloads` with the configurations needed to host the artifacts on the SDK registry by running the following script:
-
-```
-./scripts/release/create-api-downloads-pr.sh mobile-maps-ios-privatebeta <version> mapbox-maps-ios-privatebeta <link to this release ticket>
-```
-
-- [ ] Have your release buddy approve this PR and then merge it.
+	- The completion of this job will make our api-docs which will be found in ci artifacts. It will also publish a GitHub draft release
+- [ ] Push the release to CocoaPods via `$ pod trunk push`
+- [ ] Update the information in the draft release with the correct changelog, versions, etc
+- [ ] Have your release buddy review the draft release, and save the draft. You will publish it in a later step.
 
 **4) Confirm everything works as expected**
 
 - [ ] Download the artifacts from the SDK registry. The zip file will include five xcframeworks. Create a new iOS application project in Xcode, and add all the frameworks. In the view controller, load a basic map view to ensure everything works as expected.
+- [ ] Test that consumption via CocoaPods works. SPM should have been verified at an earlier step
 
 ## 📚 Update documentation
 
@@ -101,6 +79,11 @@ https://api.mapbox.com/downloads/v2/mobile-maps-ios-privatebeta/releases/ios/<ve
 ## 🚢 Publish the release
 
 - [ ] Publish the GitHub draft. The release is now done!
+
+## 🚢 Merge your release branch
+
+- [ ] Create a pull request from your release branch which targets `main`.
+- [ ] Have your release buddy approve and then merge it
 
 ## 📣 Announcements
 

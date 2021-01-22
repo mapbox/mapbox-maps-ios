@@ -84,6 +84,23 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
     }
 
     private func commonInit(resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions, styleURL: URL?) {
+
+        if MTLCreateSystemDefaultDevice() == nil {
+            // Check if we're running on a simulator on iOS 11 or 12
+            var loggedWarning = false
+
+            #if targetEnvironment(simulator)
+            if !ProcessInfo().isOperatingSystemAtLeast(OperatingSystemVersion(majorVersion: 13, minorVersion: 0, patchVersion: 0)) {
+                try! Log.warning(forMessage: "Metal rendering is not supported on iOS versions < iOS 13. Please test on device or on iOS version >= 13.", category: "MapView")
+                loggedWarning = true
+            }
+            #endif
+
+            if !loggedWarning {
+                try! Log.error(forMessage: "No suitable Metal device or simulator can be found.", category: "MapView")
+            }
+        }
+
         self.resourceOptions = resourceOptions
         observerConcrete = ObserverConcrete()
 

@@ -10,6 +10,7 @@ public class PolygonAnnotationExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.view.addSubview(mapView)
 
         let centerCoordinate = CLLocationCoordinate2D(latitude: 25.04579, longitude: -88.90136)

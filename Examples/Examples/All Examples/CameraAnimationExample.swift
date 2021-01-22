@@ -16,6 +16,7 @@ public class CameraAnimationExample: UIViewController, ExampleProtocol {
 
         let resourceOptions = ResourceOptions(accessToken: accessToken)
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions)
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.view.addSubview(mapView)
 
         // Allows the delegate to receive information about map events.

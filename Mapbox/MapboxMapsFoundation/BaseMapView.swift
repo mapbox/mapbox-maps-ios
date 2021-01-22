@@ -43,14 +43,6 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
     public var displayCallback: (() -> Void)?
     private var observerConcrete: ObserverConcrete!
 
-    /* Whether map rendering should occur during the `UIApplicationStateInactive` state.
-
-     This property is ignored for map views where background rendering is permitted.
-
-     This property should be considered undocumented, and prone to change.
-     */
-    public var renderingInInactiveStateEnabled: Bool = true
-
     @objc dynamic internal var displayLink: CADisplayLink?
 
     @IBInspectable var styleURL__: String = ""
@@ -421,11 +413,6 @@ extension BaseMapView{
 
     @objc func mapViewWillResignActive() {
         self.assertIsMainThread()
-
-        if self.renderingInInactiveStateEnabled {
-            return
-        }
-
         self.stopDisplayLink()
         // We want to reduce memory usage before the map goes into the background
     }
@@ -434,31 +421,24 @@ extension BaseMapView{
         self.assertIsMainThread()
         precondition(!self.dormant, "Should not be dormant heading into background.")
 
-        if self.renderingInInactiveStateEnabled {
-            self.stopDisplayLink()
-        }
+        self.stopDisplayLink()
+
     }
 
     @objc func mapViewWillEnterForeground() {
         if window?.screen != nil {
             self.validateDisplayLink()
 
-            if self.renderingInInactiveStateEnabled && self.isHidden == true {
+            if self.isHidden != true {
                 self.startDisplayLink()
             }
         }
-
-        self.dormant = false
     }
 
     @objc func mapViewDidBecomeActive() {
         let applicationState : UIApplication.State = UIApplication.shared.applicationState
 
-        if self.dormant == true {
-            self.dormant = false
-        }
-
-        if applicationState == .active || (applicationState == .inactive && self.renderingInInactiveStateEnabled) {
+        if applicationState == .active {
             let mapViewVisible = !self.isHidden
             if self.displayLink != nil {
                 if mapViewVisible && self.displayLink?.isPaused == true  {

@@ -138,6 +138,7 @@ private extension PuckLocationIndicatorLayer {
     func createPreciseLocationIndicatorLayer(location: Location) throws {
         guard let style = self.locationSupportableMapView?.style else { return }
 
+        _ = style.removeStyleLayer(forLayerId: "approximate-puck")
         // Call customizationHandler to allow developers to granularly modify the layer
         self.customizationHandler?(&locationIndicatorLayerVM)
 
@@ -225,9 +226,11 @@ private extension PuckLocationIndicatorLayer {
 
     func createApproximateLocationIndicatorLayer(location: Location) throws {
         guard let style = self.locationSupportableMapView?.style else { return }
+        // TODO: Handle removal of precise indicator properly.
+        _ = style.removeStyleLayer(forLayerId: "puck")
 
         // Create Layer
-        var layer = LocationIndicatorLayer(id: "puck")
+        var layer = LocationIndicatorLayer(id: "approximate-puck")
 
         // Create and set Paint property
         var paint = LocationIndicatorLayer.Paint()

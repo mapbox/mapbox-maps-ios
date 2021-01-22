@@ -60,14 +60,15 @@ _Required dependencies:_
     - `git tag <version> && git push origin <version>`
     - This will trigger a CircleCI workflow that will produce the following artifacts (can be [found here](https://app.circleci.com/pipelines/github/mapbox/mapbox-maps-ios)):
         - an api-docs.zip
-- The completion of this job will make our api-docs which will be found in ci artifacts. It will also publish a github draft release
+	- The completion of this job will make our api-docs which will be found in ci artifacts. It will also publish a GitHub draft release
+- [ ] Push the release to CocoaPods via `$ pod trunk push`
 - [ ] Update the information in the draft release with the correct changelog, versions, etc
 - [ ] Have your release buddy review the draft release, and save the draft. You will publish it in a later step.
 
 **4) Confirm everything works as expected**
 
 - [ ] Download the artifacts from the SDK registry. The zip file will include five xcframeworks. Create a new iOS application project in Xcode, and add all the frameworks. In the view controller, load a basic map view to ensure everything works as expected.
-- [ ] Test that consumption via cocoapods wors. SPM should have been verified at an earlier step
+- [ ] Test that consumption via CocoaPods works. SPM should have been verified at an earlier step
 
 ## 📚 Update documentation
 

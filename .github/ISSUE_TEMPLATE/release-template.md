@@ -31,8 +31,8 @@ _Required dependencies:_
 
 **1) Create Release Branch & Kickoff Build**
 
-- [ ] Pull the latest from main to include all code updates. Then make a new branch called "Release_{VERSION}"
-- [ ] Kickoff the build by passing an empty commit with the message "[release] {VERSION}". Please copy this command to use an empty commit `git commit --allow-empty -m "[release] {VERSION}"`
+- [ ] Pull the latest from main to include all code updates. Then make a new branch called "Release/{VERSION}"
+- [ ] Kickoff the build by passing an empty commit with the message "[release] {VERSION}". Please copy this command to use an empty commit `git commit --allow-empty -m "[release] {VERSION}"` <-- do not include the "v" in version here
 - **It's important that you follow the commit message. This is what triggers the build job
 
 ***What will this job do?***
@@ -67,7 +67,7 @@ _Required dependencies:_
 **4) Confirm everything works as expected**
 
 - [ ] Download the artifacts from the SDK registry. The zip file will include five xcframeworks. Create a new iOS application project in Xcode, and add all the frameworks. In the view controller, load a basic map view to ensure everything works as expected.
-- [ ] SPM should have been verified at an earlier step
+- [ ] Test that consumption via cocoapods wors. SPM should have been verified at an earlier step
 
 ## 📚 Update documentation
 

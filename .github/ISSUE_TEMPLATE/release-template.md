@@ -32,7 +32,7 @@ _Required dependencies:_
 **1) Create Release Branch & Kickoff Build**
 
 - [ ] Pull the latest from main to include all code updates. Then make a new branch called "Release_{VERSION}"
-- [ ] Kickoff the build but passing an empty commit with the message "[release] {VERSION}". Please copy this command to use an empty commit `git commit --allow-empty -m "[release] {VERSION}"`
+- [ ] Kickoff the build by passing an empty commit with the message "[release] {VERSION}". Please copy this command to use an empty commit `git commit --allow-empty -m "[release] {VERSION}"`
 - **It's important that you follow the commit message. This is what triggers the build job
 
 ***What will this job do?***

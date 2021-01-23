@@ -84,6 +84,40 @@ class BackgroundLayerTests: XCTestCase {
            XCTFail("Failed to decode BackgroundLayer")
        }
     }
+
+    func testEncodingAndDecodingOfPaintProperties() {
+
+       var layer = BackgroundLayer(id: "test-id")	
+       layer.paint?.backgroundColor = Value<ColorRepresentable>.testConstantValue()
+       layer.paint?.backgroundColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.backgroundOpacity = Value<Double>.testConstantValue()
+       layer.paint?.backgroundOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.backgroundPattern = Value<ResolvedImage>.testConstantValue()
+       layer.paint?.backgroundPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
+
+       var data: Data?
+       do {
+       	   data = try JSONEncoder().encode(layer)
+       } catch {
+           XCTFail("Failed to encode BackgroundLayer")
+       }
+
+       guard let validData = data else {
+           XCTFail("Failed to encode BackgroundLayer")
+           return
+       }
+
+       do {
+           let decodedLayer = try JSONDecoder().decode(BackgroundLayer.self, from: validData)
+           XCTAssert(decodedLayer.layout?.visibility == .visible)
+       	   XCTAssert(layer.paint?.backgroundColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.paint?.backgroundOpacity == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.paint?.backgroundPattern == Value<ResolvedImage>.testConstantValue())
+ 
+       } catch {
+           XCTFail("Failed to decode BackgroundLayer")
+       }
+    }
 }
 
 // End of generated file

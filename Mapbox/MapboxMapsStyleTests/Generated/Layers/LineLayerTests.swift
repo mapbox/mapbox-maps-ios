@@ -94,6 +94,62 @@ class LineLayerTests: XCTestCase {
            XCTFail("Failed to decode LineLayer")
        }
     }
+
+    func testEncodingAndDecodingOfPaintProperties() {
+
+       var layer = LineLayer(id: "test-id")	
+       layer.paint?.lineBlur = Value<Double>.testConstantValue()
+       layer.paint?.lineBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.lineColor = Value<ColorRepresentable>.testConstantValue()
+       layer.paint?.lineColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.lineDasharray = Value<[Double]>.testConstantValue()
+       layer.paint?.lineDasharrayTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.lineGapWidth = Value<Double>.testConstantValue()
+       layer.paint?.lineGapWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.lineGradient = Value<String>.testConstantValue()
+       layer.paint?.lineOffset = Value<Double>.testConstantValue()
+       layer.paint?.lineOffsetTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.lineOpacity = Value<Double>.testConstantValue()
+       layer.paint?.lineOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.linePattern = Value<ResolvedImage>.testConstantValue()
+       layer.paint?.linePatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.lineTranslate = Value<[Double]>.testConstantValue()
+       layer.paint?.lineTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.lineTranslateAnchor = LineTranslateAnchor.testConstantValue()
+       layer.paint?.lineWidth = Value<Double>.testConstantValue()
+       layer.paint?.lineWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
+
+       var data: Data?
+       do {
+       	   data = try JSONEncoder().encode(layer)
+       } catch {
+           XCTFail("Failed to encode LineLayer")
+       }
+
+       guard let validData = data else {
+           XCTFail("Failed to encode LineLayer")
+           return
+       }
+
+       do {
+           let decodedLayer = try JSONDecoder().decode(LineLayer.self, from: validData)
+           XCTAssert(decodedLayer.layout?.visibility == .visible)
+       	   XCTAssert(layer.paint?.lineBlur == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.paint?.lineColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.paint?.lineDasharray == Value<[Double]>.testConstantValue())
+       	   XCTAssert(layer.paint?.lineGapWidth == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.paint?.lineGradient == Value<String>.testConstantValue())
+       	   XCTAssert(layer.paint?.lineOffset == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.paint?.lineOpacity == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.paint?.linePattern == Value<ResolvedImage>.testConstantValue())
+       	   XCTAssert(layer.paint?.lineTranslate == Value<[Double]>.testConstantValue())
+       	   XCTAssert(layer.paint?.lineTranslateAnchor == LineTranslateAnchor.testConstantValue())
+       	   XCTAssert(layer.paint?.lineWidth == Value<Double>.testConstantValue())
+ 
+       } catch {
+           XCTFail("Failed to decode LineLayer")
+       }
+    }
 }
 
 // End of generated file

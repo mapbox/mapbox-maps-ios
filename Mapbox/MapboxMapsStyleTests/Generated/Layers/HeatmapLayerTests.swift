@@ -84,6 +84,44 @@ class HeatmapLayerTests: XCTestCase {
            XCTFail("Failed to decode HeatmapLayer")
        }
     }
+
+    func testEncodingAndDecodingOfPaintProperties() {
+
+       var layer = HeatmapLayer(id: "test-id")	
+       layer.paint?.heatmapColor = Value<String>.testConstantValue()
+       layer.paint?.heatmapIntensity = Value<Double>.testConstantValue()
+       layer.paint?.heatmapIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.heatmapOpacity = Value<Double>.testConstantValue()
+       layer.paint?.heatmapOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.heatmapRadius = Value<Double>.testConstantValue()
+       layer.paint?.heatmapRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.heatmapWeight = Value<Double>.testConstantValue()
+
+       var data: Data?
+       do {
+       	   data = try JSONEncoder().encode(layer)
+       } catch {
+           XCTFail("Failed to encode HeatmapLayer")
+       }
+
+       guard let validData = data else {
+           XCTFail("Failed to encode HeatmapLayer")
+           return
+       }
+
+       do {
+           let decodedLayer = try JSONDecoder().decode(HeatmapLayer.self, from: validData)
+           XCTAssert(decodedLayer.layout?.visibility == .visible)
+       	   XCTAssert(layer.paint?.heatmapColor == Value<String>.testConstantValue())
+       	   XCTAssert(layer.paint?.heatmapIntensity == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.paint?.heatmapOpacity == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.paint?.heatmapRadius == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.paint?.heatmapWeight == Value<Double>.testConstantValue())
+ 
+       } catch {
+           XCTFail("Failed to decode HeatmapLayer")
+       }
+    }
 }
 
 // End of generated file

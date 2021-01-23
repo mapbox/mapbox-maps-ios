@@ -84,6 +84,41 @@ class ModelLayerTests: XCTestCase {
            XCTFail("Failed to decode ModelLayer")
        }
     }
+
+    func testEncodingAndDecodingOfPaintProperties() {
+
+       var layer = ModelLayer(id: "test-id")	
+       layer.paint?.modelOpacity = Value<Double>.testConstantValue()
+       layer.paint?.modelOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.modelRotation = Value<[Double]>.testConstantValue()
+       layer.paint?.modelRotationTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.modelScale = Value<[Double]>.testConstantValue()
+       layer.paint?.modelTranslation = Value<[Double]>.testConstantValue()
+
+       var data: Data?
+       do {
+       	   data = try JSONEncoder().encode(layer)
+       } catch {
+           XCTFail("Failed to encode ModelLayer")
+       }
+
+       guard let validData = data else {
+           XCTFail("Failed to encode ModelLayer")
+           return
+       }
+
+       do {
+           let decodedLayer = try JSONDecoder().decode(ModelLayer.self, from: validData)
+           XCTAssert(decodedLayer.layout?.visibility == .visible)
+       	   XCTAssert(layer.paint?.modelOpacity == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.paint?.modelRotation == Value<[Double]>.testConstantValue())
+       	   XCTAssert(layer.paint?.modelScale == Value<[Double]>.testConstantValue())
+       	   XCTAssert(layer.paint?.modelTranslation == Value<[Double]>.testConstantValue())
+ 
+       } catch {
+           XCTFail("Failed to decode ModelLayer")
+       }
+    }
 }
 
 // End of generated file

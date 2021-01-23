@@ -166,6 +166,71 @@ class SymbolLayerTests: XCTestCase {
            XCTFail("Failed to decode SymbolLayer")
        }
     }
+
+    func testEncodingAndDecodingOfPaintProperties() {
+
+       var layer = SymbolLayer(id: "test-id")	
+       layer.paint?.iconColor = Value<ColorRepresentable>.testConstantValue()
+       layer.paint?.iconColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.iconHaloBlur = Value<Double>.testConstantValue()
+       layer.paint?.iconHaloBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.iconHaloColor = Value<ColorRepresentable>.testConstantValue()
+       layer.paint?.iconHaloColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.iconHaloWidth = Value<Double>.testConstantValue()
+       layer.paint?.iconHaloWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.iconOpacity = Value<Double>.testConstantValue()
+       layer.paint?.iconOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.iconTranslate = Value<[Double]>.testConstantValue()
+       layer.paint?.iconTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.iconTranslateAnchor = IconTranslateAnchor.testConstantValue()
+       layer.paint?.textColor = Value<ColorRepresentable>.testConstantValue()
+       layer.paint?.textColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.textHaloBlur = Value<Double>.testConstantValue()
+       layer.paint?.textHaloBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.textHaloColor = Value<ColorRepresentable>.testConstantValue()
+       layer.paint?.textHaloColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.textHaloWidth = Value<Double>.testConstantValue()
+       layer.paint?.textHaloWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.textOpacity = Value<Double>.testConstantValue()
+       layer.paint?.textOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.textTranslate = Value<[Double]>.testConstantValue()
+       layer.paint?.textTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.paint?.textTranslateAnchor = TextTranslateAnchor.testConstantValue()
+
+       var data: Data?
+       do {
+       	   data = try JSONEncoder().encode(layer)
+       } catch {
+           XCTFail("Failed to encode SymbolLayer")
+       }
+
+       guard let validData = data else {
+           XCTFail("Failed to encode SymbolLayer")
+           return
+       }
+
+       do {
+           let decodedLayer = try JSONDecoder().decode(SymbolLayer.self, from: validData)
+           XCTAssert(decodedLayer.layout?.visibility == .visible)
+       	   XCTAssert(layer.paint?.iconColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.paint?.iconHaloBlur == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.paint?.iconHaloColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.paint?.iconHaloWidth == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.paint?.iconOpacity == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.paint?.iconTranslate == Value<[Double]>.testConstantValue())
+       	   XCTAssert(layer.paint?.iconTranslateAnchor == IconTranslateAnchor.testConstantValue())
+       	   XCTAssert(layer.paint?.textColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.paint?.textHaloBlur == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.paint?.textHaloColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.paint?.textHaloWidth == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.paint?.textOpacity == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.paint?.textTranslate == Value<[Double]>.testConstantValue())
+       	   XCTAssert(layer.paint?.textTranslateAnchor == TextTranslateAnchor.testConstantValue())
+ 
+       } catch {
+           XCTFail("Failed to decode SymbolLayer")
+       }
+    }
 }
 
 // End of generated file

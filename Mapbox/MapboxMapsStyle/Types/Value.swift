@@ -33,3 +33,8 @@ public enum Value<T: Codable>: Codable {
         throw DecodingError.dataCorrupted(context)
     }
 }
+
+
+extension Value: Equatable where T: Equatable {
+    
+}

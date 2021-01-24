@@ -164,12 +164,33 @@
 		0C5CFCF325BB951B0001E753 /* FillLayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFCD125BB951A0001E753 /* FillLayerTests.swift */; };
 		0C5CFCF425BB951B0001E753 /* FillLayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFCD125BB951A0001E753 /* FillLayerTests.swift */; };
 		0C5CFCF525BB951B0001E753 /* FillLayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFCD125BB951A0001E753 /* FillLayerTests.swift */; };
-		0C5CFD1A25BB963A0001E753 /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD1925BB963A0001E753 /* Fixtures.swift */; };
-		0C5CFD1B25BB963A0001E753 /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD1925BB963A0001E753 /* Fixtures.swift */; };
-		0C5CFD1C25BB963A0001E753 /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD1925BB963A0001E753 /* Fixtures.swift */; };
-		0C5CFD4025BBA06D0001E753 /* EnumsFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD3F25BBA06D0001E753 /* EnumsFixtures.swift */; };
-		0C5CFD4125BBA06D0001E753 /* EnumsFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD3F25BBA06D0001E753 /* EnumsFixtures.swift */; };
-		0C5CFD4225BBA06D0001E753 /* EnumsFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD3F25BBA06D0001E753 /* EnumsFixtures.swift */; };
+		0C5CFD1A25BB963A0001E753 /* Value+Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD1925BB963A0001E753 /* Value+Fixtures.swift */; };
+		0C5CFD1B25BB963A0001E753 /* Value+Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD1925BB963A0001E753 /* Value+Fixtures.swift */; };
+		0C5CFD1C25BB963A0001E753 /* Value+Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD1925BB963A0001E753 /* Value+Fixtures.swift */; };
+		0C5CFD4025BBA06D0001E753 /* Enums+Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD3F25BBA06D0001E753 /* Enums+Fixtures.swift */; };
+		0C5CFD4125BBA06D0001E753 /* Enums+Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD3F25BBA06D0001E753 /* Enums+Fixtures.swift */; };
+		0C5CFD4225BBA06D0001E753 /* Enums+Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD3F25BBA06D0001E753 /* Enums+Fixtures.swift */; };
+		0C5CFD6B25BE25210001E753 /* RasterDemSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD6625BE25210001E753 /* RasterDemSourceTests.swift */; };
+		0C5CFD6C25BE25210001E753 /* RasterDemSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD6625BE25210001E753 /* RasterDemSourceTests.swift */; };
+		0C5CFD6D25BE25210001E753 /* RasterDemSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD6625BE25210001E753 /* RasterDemSourceTests.swift */; };
+		0C5CFD6E25BE25210001E753 /* VectorSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD6725BE25210001E753 /* VectorSourceTests.swift */; };
+		0C5CFD6F25BE25210001E753 /* VectorSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD6725BE25210001E753 /* VectorSourceTests.swift */; };
+		0C5CFD7025BE25210001E753 /* VectorSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD6725BE25210001E753 /* VectorSourceTests.swift */; };
+		0C5CFD7125BE25210001E753 /* ImageSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD6825BE25210001E753 /* ImageSourceTests.swift */; };
+		0C5CFD7225BE25210001E753 /* ImageSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD6825BE25210001E753 /* ImageSourceTests.swift */; };
+		0C5CFD7325BE25210001E753 /* ImageSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD6825BE25210001E753 /* ImageSourceTests.swift */; };
+		0C5CFD7425BE25210001E753 /* GeoJsonSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD6925BE25210001E753 /* GeoJsonSourceTests.swift */; };
+		0C5CFD7525BE25210001E753 /* GeoJsonSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD6925BE25210001E753 /* GeoJsonSourceTests.swift */; };
+		0C5CFD7625BE25210001E753 /* GeoJsonSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD6925BE25210001E753 /* GeoJsonSourceTests.swift */; };
+		0C5CFD7725BE25210001E753 /* RasterSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD6A25BE25210001E753 /* RasterSourceTests.swift */; };
+		0C5CFD7825BE25210001E753 /* RasterSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD6A25BE25210001E753 /* RasterSourceTests.swift */; };
+		0C5CFD7925BE25210001E753 /* RasterSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFD6A25BE25210001E753 /* RasterSourceTests.swift */; };
+		0C5CFDAE25BE28D20001E753 /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFDAD25BE28D20001E753 /* Fixtures.swift */; };
+		0C5CFDAF25BE28D20001E753 /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFDAD25BE28D20001E753 /* Fixtures.swift */; };
+		0C5CFDB025BE28D20001E753 /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFDAD25BE28D20001E753 /* Fixtures.swift */; };
+		0C5CFDD425BE29BC0001E753 /* SouceProperties+Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFDD325BE29BC0001E753 /* SouceProperties+Fixtures.swift */; };
+		0C5CFDD525BE29BC0001E753 /* SouceProperties+Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFDD325BE29BC0001E753 /* SouceProperties+Fixtures.swift */; };
+		0C5CFDD625BE29BC0001E753 /* SouceProperties+Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFDD325BE29BC0001E753 /* SouceProperties+Fixtures.swift */; };
 		0C69328624462F2A001E820A /* RotateGestureHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C69328524462F2A001E820A /* RotateGestureHandler.swift */; };
 		0C708F1F24EB1EE2003CE791 /* BackgroundLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C708F1524EB1EE2003CE791 /* BackgroundLayer.swift */; };
 		0C708F2024EB1EE2003CE791 /* BackgroundLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C708F1524EB1EE2003CE791 /* BackgroundLayer.swift */; };
@@ -834,8 +855,15 @@
 		0C5CFCCF25BB951A0001E753 /* LocationIndicatorLayerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationIndicatorLayerTests.swift; sourceTree = "<group>"; };
 		0C5CFCD025BB951A0001E753 /* SkyLayerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkyLayerTests.swift; sourceTree = "<group>"; };
 		0C5CFCD125BB951A0001E753 /* FillLayerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FillLayerTests.swift; sourceTree = "<group>"; };
-		0C5CFD1925BB963A0001E753 /* Fixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fixtures.swift; sourceTree = "<group>"; };
-		0C5CFD3F25BBA06D0001E753 /* EnumsFixtures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnumsFixtures.swift; sourceTree = "<group>"; };
+		0C5CFD1925BB963A0001E753 /* Value+Fixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Value+Fixtures.swift"; sourceTree = "<group>"; };
+		0C5CFD3F25BBA06D0001E753 /* Enums+Fixtures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Enums+Fixtures.swift"; sourceTree = "<group>"; };
+		0C5CFD6625BE25210001E753 /* RasterDemSourceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RasterDemSourceTests.swift; sourceTree = "<group>"; };
+		0C5CFD6725BE25210001E753 /* VectorSourceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VectorSourceTests.swift; sourceTree = "<group>"; };
+		0C5CFD6825BE25210001E753 /* ImageSourceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageSourceTests.swift; sourceTree = "<group>"; };
+		0C5CFD6925BE25210001E753 /* GeoJsonSourceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoJsonSourceTests.swift; sourceTree = "<group>"; };
+		0C5CFD6A25BE25210001E753 /* RasterSourceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RasterSourceTests.swift; sourceTree = "<group>"; };
+		0C5CFDAD25BE28D20001E753 /* Fixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fixtures.swift; sourceTree = "<group>"; };
+		0C5CFDD325BE29BC0001E753 /* SouceProperties+Fixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SouceProperties+Fixtures.swift"; sourceTree = "<group>"; };
 		0C69328524462F2A001E820A /* RotateGestureHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotateGestureHandler.swift; sourceTree = "<group>"; };
 		0C708F1524EB1EE2003CE791 /* BackgroundLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundLayer.swift; sourceTree = "<group>"; };
 		0C708F1624EB1EE2003CE791 /* FillExtrusionLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FillExtrusionLayer.swift; sourceTree = "<group>"; };
@@ -1433,6 +1461,7 @@
 		0C5CFCC425BB951A0001E753 /* Generated */ = {
 			isa = PBXGroup;
 			children = (
+				0C5CFD6525BE25210001E753 /* Sources */,
 				0C5CFCC525BB951A0001E753 /* Layers */,
 			);
 			path = Generated;
@@ -1460,10 +1489,24 @@
 		0C5CFD1825BB961B0001E753 /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
-				0C5CFD3F25BBA06D0001E753 /* EnumsFixtures.swift */,
-				0C5CFD1925BB963A0001E753 /* Fixtures.swift */,
+				0C5CFD3F25BBA06D0001E753 /* Enums+Fixtures.swift */,
+				0C5CFD1925BB963A0001E753 /* Value+Fixtures.swift */,
+				0C5CFDAD25BE28D20001E753 /* Fixtures.swift */,
+				0C5CFDD325BE29BC0001E753 /* SouceProperties+Fixtures.swift */,
 			);
 			path = Fixtures;
+			sourceTree = "<group>";
+		};
+		0C5CFD6525BE25210001E753 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				0C5CFD6625BE25210001E753 /* RasterDemSourceTests.swift */,
+				0C5CFD6725BE25210001E753 /* VectorSourceTests.swift */,
+				0C5CFD6825BE25210001E753 /* ImageSourceTests.swift */,
+				0C5CFD6925BE25210001E753 /* GeoJsonSourceTests.swift */,
+				0C5CFD6A25BE25210001E753 /* RasterSourceTests.swift */,
+			);
+			path = Sources;
 			sourceTree = "<group>";
 		};
 		0C708F1424EB1EE2003CE791 /* Layers */ = {
@@ -3309,6 +3352,7 @@
 				CA548EC6251C3D3C00F829A3 /* MapboxMapsCameraTests.swift in Sources */,
 				0C5CFCEA25BB951B0001E753 /* HillshadeLayerTests.swift in Sources */,
 				CA548F6E251C3D9400F829A3 /* MapboxCompassOrnamentViewTests.swift in Sources */,
+				0C5CFD6B25BE25210001E753 /* RasterDemSourceTests.swift in Sources */,
 				CA548E7F251C3CD200F829A3 /* PointAnnotationTests.swift in Sources */,
 				C64ED33C253F819B00ADADFB /* LocationConsumerMock.swift in Sources */,
 				CA2E4A672538DCE10096DEDE /* IntegrationTestCase.swift in Sources */,
@@ -3324,19 +3368,22 @@
 				CA548F89251C3DA100F829A3 /* MapboxMapsSnapshotTests.swift in Sources */,
 				CA548EFF251C3D5500F829A3 /* GeoJSONManagerTests.swift in Sources */,
 				CA548F21251C3D7200F829A3 /* PinchGestureHandlerTests.swift in Sources */,
+				0C5CFD7125BE25210001E753 /* ImageSourceTests.swift in Sources */,
 				0C5CFCE725BB951B0001E753 /* LineLayerTests.swift in Sources */,
 				CA548F24251C3D7200F829A3 /* PitchGestureHandlerTests.swift in Sources */,
 				CAC1964325AEAFD500F69FEA /* GlyphsRasterizationOptionsTests.swift in Sources */,
+				0C5CFDAE25BE28D20001E753 /* Fixtures.swift in Sources */,
 				C69F011225431AF4001AB49B /* LocationManagerIntegrationTests.swift in Sources */,
 				0C5CFCDB25BB951B0001E753 /* ModelLayerTests.swift in Sources */,
 				CA548F26251C3D7200F829A3 /* GestureUtilitiesTests.swift in Sources */,
+				0C5CFD7425BE25210001E753 /* GeoJsonSourceTests.swift in Sources */,
 				CAED9FB0258C69DB003CCEFE /* MapViewTests.swift in Sources */,
 				0C01C0A125486E6500E4AA46 /* ExpressionTests.swift in Sources */,
 				07958C24253A2AE50043ECC0 /* AnnotationManagerIntegrationTests.swift in Sources */,
 				0C5CFCDE25BB951B0001E753 /* BackgroundLayerTests.swift in Sources */,
 				CA99A86F2540CD1900D16C78 /* StyleLoadIntegrationTests.swift in Sources */,
 				CA548F22251C3D7200F829A3 /* GestureManagerTests.swift in Sources */,
-				0C5CFD4025BBA06D0001E753 /* EnumsFixtures.swift in Sources */,
+				0C5CFD4025BBA06D0001E753 /* Enums+Fixtures.swift in Sources */,
 				CA4AE13B252D656700183075 /* AnnotationStyleDelegateMock.swift in Sources */,
 				0CDFEAFB25A77459008BC505 /* UtilsTests.swift in Sources */,
 				CA548F29251C3D7200F829A3 /* GestureSupportableViewMock.swift in Sources */,
@@ -3356,9 +3403,10 @@
 				0C5CFCF025BB951B0001E753 /* SkyLayerTests.swift in Sources */,
 				CA4AE063252D655000183075 /* PolygonAnnotationTests.swift in Sources */,
 				CA548F04251C3D5500F829A3 /* FeatureCollectionTests.swift in Sources */,
+				0C5CFD6E25BE25210001E753 /* VectorSourceTests.swift in Sources */,
 				CA548F02251C3D5500F829A3 /* MultiPointTests.swift in Sources */,
 				CA548F25251C3D7200F829A3 /* RotateGestureHandlerTests.swift in Sources */,
-				0C5CFD1A25BB963A0001E753 /* Fixtures.swift in Sources */,
+				0C5CFD1A25BB963A0001E753 /* Value+Fixtures.swift in Sources */,
 				CA05A71F2551C89600ABF902 /* CacheManagerIntegrationTests.swift in Sources */,
 				0C5CFCF325BB951B0001E753 /* FillLayerTests.swift in Sources */,
 				CA4AE032252D654800183075 /* LineAnnotationTests.swift in Sources */,
@@ -3372,6 +3420,7 @@
 				C64ED306253F7CF500ADADFB /* LocationSupportableMapViewMock.swift in Sources */,
 				0C5CFCD825BB951B0001E753 /* CircleLayerTests.swift in Sources */,
 				0C5CFCE125BB951B0001E753 /* SymbolLayerTests.swift in Sources */,
+				0C5CFDD425BE29BC0001E753 /* SouceProperties+Fixtures.swift in Sources */,
 				0C5CFCD225BB951B0001E753 /* RasterLayerTests.swift in Sources */,
 				CA548F72251C3D9400F829A3 /* CompassDirectionFormatterTests.swift in Sources */,
 				CA548FA0251C3DA800F829A3 /* StyleURLTests.swift in Sources */,
@@ -3379,6 +3428,7 @@
 				CA2E4A662538DCE10096DEDE /* MapViewIntegrationTestCase.swift in Sources */,
 				CA548F27251C3D7200F829A3 /* PanGestureHandlerTests.swift in Sources */,
 				CA548F23251C3D7200F829A3 /* QuickZoomGestureHandlerTests.swift in Sources */,
+				0C5CFD7725BE25210001E753 /* RasterSourceTests.swift in Sources */,
 				0C9DE39B252C2A1F00880CC8 /* GeoJSONSourceDataTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3551,17 +3601,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C5CFD7625BE25210001E753 /* GeoJsonSourceTests.swift in Sources */,
+				0C5CFDD625BE29BC0001E753 /* SouceProperties+Fixtures.swift in Sources */,
 				0C9DE383252C299800880CC8 /* GeoJSONSourceDataTests.swift in Sources */,
 				0C5CFCDD25BB951B0001E753 /* ModelLayerTests.swift in Sources */,
 				A4C786612440EAF0000CEF1E /* StyleURLTests.swift in Sources */,
 				0C5CFCD725BB951B0001E753 /* FillExtrusionLayerTests.swift in Sources */,
 				0C5CFCF225BB951B0001E753 /* SkyLayerTests.swift in Sources */,
+				0C5CFD7025BE25210001E753 /* VectorSourceTests.swift in Sources */,
+				0C5CFD6D25BE25210001E753 /* RasterDemSourceTests.swift in Sources */,
 				0C5CFCE025BB951B0001E753 /* BackgroundLayerTests.swift in Sources */,
-				0C5CFD1C25BB963A0001E753 /* Fixtures.swift in Sources */,
+				0C5CFD7325BE25210001E753 /* ImageSourceTests.swift in Sources */,
+				0C5CFD1C25BB963A0001E753 /* Value+Fixtures.swift in Sources */,
+				0C5CFDB025BE28D20001E753 /* Fixtures.swift in Sources */,
 				0C5CFCF525BB951B0001E753 /* FillLayerTests.swift in Sources */,
 				0C5CFCD425BB951B0001E753 /* RasterLayerTests.swift in Sources */,
 				0C5CFCE625BB951B0001E753 /* HeatmapLayerTests.swift in Sources */,
-				0C5CFD4225BBA06D0001E753 /* EnumsFixtures.swift in Sources */,
+				0C5CFD4225BBA06D0001E753 /* Enums+Fixtures.swift in Sources */,
 				0C5CFCEC25BB951B0001E753 /* HillshadeLayerTests.swift in Sources */,
 				0C5CFCE925BB951B0001E753 /* LineLayerTests.swift in Sources */,
 				A4519DDB2432FF03007CF39A /* MapboxMapsStyleTests.swift in Sources */,
@@ -3569,6 +3625,7 @@
 				0C5CFCDA25BB951B0001E753 /* CircleLayerTests.swift in Sources */,
 				0C5CFCEF25BB951B0001E753 /* LocationIndicatorLayerTests.swift in Sources */,
 				0C5CFCE325BB951B0001E753 /* SymbolLayerTests.swift in Sources */,
+				0C5CFD7925BE25210001E753 /* RasterSourceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3588,9 +3645,13 @@
 				CA548FD3251C404B00F829A3 /* PolygonTests.swift in Sources */,
 				CAC1965525AEAFD900F69FEA /* GlyphsRasterizationOptionsTests.swift in Sources */,
 				CA548FD4251C404B00F829A3 /* MapboxMapsCameraTests.swift in Sources */,
+				0C5CFD7525BE25210001E753 /* GeoJsonSourceTests.swift in Sources */,
 				CA548FD5251C404B00F829A3 /* MapboxCompassOrnamentViewTests.swift in Sources */,
 				CA548FD7251C404B00F829A3 /* PointAnnotationTests.swift in Sources */,
+				0C5CFD6C25BE25210001E753 /* RasterDemSourceTests.swift in Sources */,
 				C64ED33D253F819B00ADADFB /* LocationConsumerMock.swift in Sources */,
+				0C5CFD7825BE25210001E753 /* RasterSourceTests.swift in Sources */,
+				0C5CFDAF25BE28D20001E753 /* Fixtures.swift in Sources */,
 				C69F015A254358C5001AB49B /* AnnotationManagerIntegrationTests.swift in Sources */,
 				CAB11C9A2555986F00060963 /* HTTPIntegrationTests.swift in Sources */,
 				0C5CFCDF25BB951B0001E753 /* BackgroundLayerTests.swift in Sources */,
@@ -3607,6 +3668,7 @@
 				0C5CFCF125BB951B0001E753 /* SkyLayerTests.swift in Sources */,
 				CA548FDE251C404B00F829A3 /* MapboxMapsStyleTests.swift in Sources */,
 				CA548FDF251C404B00F829A3 /* MapboxMapsSnapshotTests.swift in Sources */,
+				0C5CFD7225BE25210001E753 /* ImageSourceTests.swift in Sources */,
 				CA548FE0251C404B00F829A3 /* GeoJSONManagerTests.swift in Sources */,
 				CA548FE1251C404B00F829A3 /* PinchGestureHandlerTests.swift in Sources */,
 				CA050571259104E200FF7D02 /* FeatureQueryingTest.swift in Sources */,
@@ -3614,7 +3676,7 @@
 				CA548FE3251C404B00F829A3 /* GestureUtilitiesTests.swift in Sources */,
 				CA548FE4251C404B00F829A3 /* GestureManagerTests.swift in Sources */,
 				CA4AE123252D656600183075 /* AnnotationStyleDelegateMock.swift in Sources */,
-				0C5CFD4125BBA06D0001E753 /* EnumsFixtures.swift in Sources */,
+				0C5CFD4125BBA06D0001E753 /* Enums+Fixtures.swift in Sources */,
 				CA548FE6251C404B00F829A3 /* GestureSupportableViewMock.swift in Sources */,
 				0C5CFCE825BB951B0001E753 /* LineLayerTests.swift in Sources */,
 				CA548FE7251C404B00F829A3 /* TapGestureHandlerTests.swift in Sources */,
@@ -3624,7 +3686,7 @@
 				CA548FE9251C404B00F829A3 /* GeometryCollectionTests.swift in Sources */,
 				0C5CFCD925BB951B0001E753 /* CircleLayerTests.swift in Sources */,
 				0C5CFCE525BB951B0001E753 /* HeatmapLayerTests.swift in Sources */,
-				0C5CFD1B25BB963A0001E753 /* Fixtures.swift in Sources */,
+				0C5CFD1B25BB963A0001E753 /* Value+Fixtures.swift in Sources */,
 				CA548FEA251C404B00F829A3 /* AnnotationManagerTests.swift in Sources */,
 				CAEDA0B0258E8188003CCEFE /* MapViewIntegrationTests.swift in Sources */,
 				0C5CFCE225BB951B0001E753 /* SymbolLayerTests.swift in Sources */,
@@ -3633,7 +3695,9 @@
 				CA548FEB251C404B00F829A3 /* MapboxMapsFoundationTests.swift in Sources */,
 				CA548FEC251C404B00F829A3 /* MultiPolygonTests.swift in Sources */,
 				CA548FED251C404B00F829A3 /* Geometry+MBXGeometryTests.swift in Sources */,
+				0C5CFDD525BE29BC0001E753 /* SouceProperties+Fixtures.swift in Sources */,
 				CA4AE07B252D655000183075 /* PolygonAnnotationTests.swift in Sources */,
+				0C5CFD6F25BE25210001E753 /* VectorSourceTests.swift in Sources */,
 				CA548FEE251C404B00F829A3 /* FeatureCollectionTests.swift in Sources */,
 				CA05A7202551C89600ABF902 /* CacheManagerIntegrationTests.swift in Sources */,
 				CA548FF0251C404B00F829A3 /* MultiPointTests.swift in Sources */,

@@ -41,7 +41,20 @@ public enum ResolvedImage: Codable {
     }
 }
 
-public struct ResolvedImageData: Codable {
+public struct ResolvedImageData: Codable, Equatable {
     public var available: Bool
     public var name: String
+}
+
+extension ResolvedImage: Equatable {
+    public static func == (lhs: ResolvedImage, rhs: ResolvedImage) -> Bool {
+        switch (lhs, rhs) {
+        case (let .name(lhsName), let .name(rhsName)):
+            return lhsName == rhsName
+        case (let .data(lhsData), let .data(rhsData)):
+            return lhsData == rhsData
+        default:
+            return false
+        }
+    }
 }

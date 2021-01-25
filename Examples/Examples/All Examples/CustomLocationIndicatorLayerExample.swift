@@ -22,7 +22,7 @@ public class CustomLocationIndicatorLayerExample: UIViewController, ExampleProto
 
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-         // The below line is used for internal testing purposes only.
+        // The below line is used for internal testing purposes only.
         self.finish()
     }
 

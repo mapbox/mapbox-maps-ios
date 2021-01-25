@@ -128,7 +128,7 @@ public struct Examples {
                 description: "Prevent the map from panning outside the specified coordinate bounds.",
                 type: RestrictCoordinateBoundsExample.self),
         Example(title: "Use a 3D model to show the user's location",
-                description: "A 3D model is used to represent the user's location",
+                description: "A 3D model is used to represent the user's location.",
                 type: PuckModelLayerExample.self),
         Example(title: "Add a custom rendered layer",
                 description: "Add a custom rendered Metal layer.",
@@ -137,8 +137,10 @@ public struct Examples {
                 description: "Show realistic elevation by enabling terrain.",
                 type: TerrainExample.self),
         Example(title: "Customize the location puck",
-                description: "Use a different asset to represent the puck",
-                type: CustomLocationIndicatorLayerExample.self)
-
+                description: "Use a different asset to represent the puck.",
+                type: CustomLocationIndicatorLayerExample.self),
+        Example(title: "Display buildings in 3D",
+                description: "Use extrusions to display buildings' height in 3D.",
+                type: BuildingExtrusionsExample.self)
     ]
 }

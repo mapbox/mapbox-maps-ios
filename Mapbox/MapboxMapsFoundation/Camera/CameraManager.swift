@@ -168,7 +168,7 @@ public class CameraManager {
     public func setCamera(to newCamera: CameraOptions,
                              animated: Bool = false,
                              duration: TimeInterval? = 0,
-                             completion: ((Bool) -> Void)?) {
+                             completion: ((Bool) -> Void)? = nil) {
         guard let mapView = mapView else {
             assertionFailure("MapView is nil.")
             completion?(false)

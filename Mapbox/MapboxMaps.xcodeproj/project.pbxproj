@@ -129,6 +129,9 @@
 		0C50AAE325BE8806007C0068 /* LightTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C50AAE225BE8806007C0068 /* LightTests.swift */; };
 		0C50AAE425BE8806007C0068 /* LightTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C50AAE225BE8806007C0068 /* LightTests.swift */; };
 		0C50AAE525BE8806007C0068 /* LightTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C50AAE225BE8806007C0068 /* LightTests.swift */; };
+		0C50AB2D25BF2682007C0068 /* ColorRepresentableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C50AB2C25BF2682007C0068 /* ColorRepresentableTests.swift */; };
+		0C50AB2E25BF2682007C0068 /* ColorRepresentableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C50AB2C25BF2682007C0068 /* ColorRepresentableTests.swift */; };
+		0C50AB2F25BF2682007C0068 /* ColorRepresentableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C50AB2C25BF2682007C0068 /* ColorRepresentableTests.swift */; };
 		0C55010B2476D83A00AE019A /* Light.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5501082476D83A00AE019A /* Light.swift */; };
 		0C55010C2476D83A00AE019A /* Light.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5501082476D83A00AE019A /* Light.swift */; };
 		0C5CFCD225BB951B0001E753 /* RasterLayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFCC625BB951A0001E753 /* RasterLayerTests.swift */; };
@@ -846,6 +849,7 @@
 		0C455F70258D221C001BB023 /* MapboxCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxCommon.framework; path = ../Carthage/Build/iOS/MapboxCommon.framework; sourceTree = "<group>"; };
 		0C479F8F251CEC340025EC4F /* Snapshotter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snapshotter.swift; sourceTree = "<group>"; };
 		0C50AAE225BE8806007C0068 /* LightTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightTests.swift; sourceTree = "<group>"; };
+		0C50AB2C25BF2682007C0068 /* ColorRepresentableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorRepresentableTests.swift; sourceTree = "<group>"; };
 		0C5501082476D83A00AE019A /* Light.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Light.swift; sourceTree = "<group>"; };
 		0C5CFCC625BB951A0001E753 /* RasterLayerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RasterLayerTests.swift; sourceTree = "<group>"; };
 		0C5CFCC725BB951A0001E753 /* FillExtrusionLayerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FillExtrusionLayerTests.swift; sourceTree = "<group>"; };
@@ -1840,6 +1844,7 @@
 				0C9DE382252C299800880CC8 /* GeoJSONSourceDataTests.swift */,
 				0C01C08825486E6100E4AA46 /* ExpressionTests.swift */,
 				0C50AAE225BE8806007C0068 /* LightTests.swift */,
+				0C50AB2C25BF2682007C0068 /* ColorRepresentableTests.swift */,
 			);
 			path = MapboxMapsStyleTests;
 			sourceTree = "<group>";
@@ -3380,6 +3385,7 @@
 				0C5CFDAE25BE28D20001E753 /* Fixtures.swift in Sources */,
 				C69F011225431AF4001AB49B /* LocationManagerIntegrationTests.swift in Sources */,
 				0C5CFCDB25BB951B0001E753 /* ModelLayerTests.swift in Sources */,
+				0C50AB2D25BF2682007C0068 /* ColorRepresentableTests.swift in Sources */,
 				CA548F26251C3D7200F829A3 /* GestureUtilitiesTests.swift in Sources */,
 				0C5CFD7425BE25210001E753 /* GeoJsonSourceTests.swift in Sources */,
 				CAED9FB0258C69DB003CCEFE /* MapViewTests.swift in Sources */,
@@ -3626,6 +3632,7 @@
 				0C5CFCE625BB951B0001E753 /* HeatmapLayerTests.swift in Sources */,
 				0C5CFD4225BBA06D0001E753 /* Enums+Fixtures.swift in Sources */,
 				0C5CFCEC25BB951B0001E753 /* HillshadeLayerTests.swift in Sources */,
+				0C50AB2F25BF2682007C0068 /* ColorRepresentableTests.swift in Sources */,
 				0C5CFCE925BB951B0001E753 /* LineLayerTests.swift in Sources */,
 				A4519DDB2432FF03007CF39A /* MapboxMapsStyleTests.swift in Sources */,
 				0C01C08925486E6100E4AA46 /* ExpressionTests.swift in Sources */,
@@ -3650,6 +3657,7 @@
 			files = (
 				0C5CFCDC25BB951B0001E753 /* ModelLayerTests.swift in Sources */,
 				CA548FD3251C404B00F829A3 /* PolygonTests.swift in Sources */,
+				0C50AB2E25BF2682007C0068 /* ColorRepresentableTests.swift in Sources */,
 				CAC1965525AEAFD900F69FEA /* GlyphsRasterizationOptionsTests.swift in Sources */,
 				CA548FD4251C404B00F829A3 /* MapboxMapsCameraTests.swift in Sources */,
 				0C5CFD7525BE25210001E753 /* GeoJsonSourceTests.swift in Sources */,

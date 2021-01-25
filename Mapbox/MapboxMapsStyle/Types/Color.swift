@@ -1,24 +1,11 @@
 import UIKit
 
-public typealias ColorRepresentable = String
-extension ColorRepresentable {
+/// Codable data structure that is used to represent platform colors to the map renderer
+public struct ColorRepresentable: Codable, Equatable {
 
-    /// Create a string representation of a `UIColor`
-    public init(color: UIColor) {
-        var red: CGFloat = 0.0
-        var green: CGFloat = 0.0
-        var blue: CGFloat = 0.0
-        var alpha: CGFloat = 0.0
-        color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-        self = "rgba(\(red * 255.0), \(green * 255.0), \(blue * 255.0), \(alpha))"
-    }
-}
-
-public extension UIColor {
-
-    /// Initialize a `UIColor` from a `ColorRepresentable`
-    convenience init?(hex: ColorRepresentable?) {
-        guard let hex = hex else { return nil }
+    /// UIColor value of the color representable
+    public var uiColor: UIColor? {
+        guard let hex = colorRepresentation else { return nil }
 
         let red, green, blue, alpha: CGFloat
 
@@ -36,17 +23,37 @@ public extension UIColor {
                     blue = CGFloat((hexNumber & 0x0000ff00) >> 8) / 255
                     alpha = CGFloat(hexNumber & 0x000000ff) / 255
 
-                    self.init(red: red, green: green, blue: blue, alpha: alpha)
-                    return
+                    return UIColor(red: red, green: green, blue: blue, alpha: alpha)
                 }
             }
         }
-
         return nil
+    }
+
+    internal let colorRepresentation: String?
+
+    /// Initialize a `ColorRepresentable` with a `UIColor`
+    public init(color: UIColor) {
+        var red: CGFloat = 0.0
+        var green: CGFloat = 0.0
+        var blue: CGFloat = 0.0
+        var alpha: CGFloat = 0.0
+        color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        self.colorRepresentation = "rgba(\(red * 255.0), \(green * 255.0), \(blue * 255.0), \(alpha))"
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(colorRepresentation)
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        self.colorRepresentation = try container.decode(String.self)
     }
 }
 
-extension UIColor : ValidExpressionArgument {
+extension UIColor: ValidExpressionArgument {
 
     public var expressionElements: [Expression.Element] {
         var red: CGFloat = 0.0

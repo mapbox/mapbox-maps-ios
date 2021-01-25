@@ -23,6 +23,12 @@ internal extension Value where T == String {
     }
 }
 
+internal extension Value where T == ColorRepresentable {
+    static func testConstantValue() -> Value<ColorRepresentable> {
+        return .constant(ColorRepresentable(color: .red))
+    }
+}
+
 internal extension Value where T == [String] {
     static func testConstantValue() -> Value<[String]> {
         return .constant(["some string", "some other string"])

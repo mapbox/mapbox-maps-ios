@@ -16,6 +16,8 @@
 		07DC84422538B1F100F4AF14 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07DC84412538B1F100F4AF14 /* Assets.xcassets */; };
 		0C52BA9825AF8C880054ECA8 /* PuckModelLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C52BA9725AF8C880054ECA8 /* PuckModelLayerExample.swift */; };
 		0C52BA9C25AFB5940054ECA8 /* arrow.gltf in Resources */ = {isa = PBXBuildFile; fileRef = 0C52BA9B25AFB5940054ECA8 /* arrow.gltf */; };
+		0C78AC2925BF70E40057F570 /* LineGradientExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78AC2825BF70E40057F570 /* LineGradientExample.swift */; };
+		0C78AC2F25BF72C70057F570 /* GradientLine.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 0C78AC2C25BF71E40057F570 /* GradientLine.geojson */; };
 		0CC4ECEA25B8AD3000F998B8 /* CustomLocationIndicatorLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC4ECE925B8AD3000F998B8 /* CustomLocationIndicatorLayerExample.swift */; };
 		0CE8ED88258928200066E56C /* race_car_model.gltf in Resources */ = {isa = PBXBuildFile; fileRef = 0CE8ED87258928200066E56C /* race_car_model.gltf */; };
 		0CE8ED8C2589285C0066E56C /* ModelExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE8ED8B2589285C0066E56C /* ModelExample.swift */; };
@@ -129,6 +131,8 @@
 		07DC84412538B1F100F4AF14 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0C52BA9725AF8C880054ECA8 /* PuckModelLayerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuckModelLayerExample.swift; sourceTree = "<group>"; };
 		0C52BA9B25AFB5940054ECA8 /* arrow.gltf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = arrow.gltf; sourceTree = "<group>"; };
+		0C78AC2825BF70E40057F570 /* LineGradientExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineGradientExample.swift; sourceTree = "<group>"; };
+		0C78AC2C25BF71E40057F570 /* GradientLine.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = GradientLine.geojson; sourceTree = "<group>"; };
 		0CC4ECE925B8AD3000F998B8 /* CustomLocationIndicatorLayerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLocationIndicatorLayerExample.swift; sourceTree = "<group>"; };
 		0CE3D3BE25818626000585A2 /* ColorExpressionExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExpressionExample.swift; sourceTree = "<group>"; };
 		0CE3D3C225818786000585A2 /* FlyToExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyToExample.swift; sourceTree = "<group>"; };
@@ -243,6 +247,7 @@
 				0CC4ECE925B8AD3000F998B8 /* CustomLocationIndicatorLayerExample.swift */,
 				CA86E81725BE7C2200E5A1D9 /* BuildingExtrusionsExample.swift */,
 				CA86E86825BF551F00E5A1D9 /* OfflineRegionManagerExample.swift */,
+				0C78AC2825BF70E40057F570 /* LineGradientExample.swift */,
 			);
 			path = "All Examples";
 			sourceTree = "<group>";
@@ -327,6 +332,7 @@
 				07B071D22547CFC3007F2865 /* GeoJSONSourceExample.geojson */,
 				0CE8ED87258928200066E56C /* race_car_model.gltf */,
 				0C52BA9B25AFB5940054ECA8 /* arrow.gltf */,
+				0C78AC2C25BF71E40057F570 /* GradientLine.geojson */,
 			);
 			path = "Sample Data";
 			sourceTree = "<group>";
@@ -450,6 +456,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				07B071D32547CFC3007F2865 /* GeoJSONSourceExample.geojson in Resources */,
+				0C78AC2F25BF72C70057F570 /* GradientLine.geojson in Resources */,
 				0C52BA9C25AFB5940054ECA8 /* arrow.gltf in Resources */,
 				07DC84422538B1F100F4AF14 /* Assets.xcassets in Resources */,
 				0CE8ED88258928200066E56C /* race_car_model.gltf in Resources */,
@@ -541,6 +548,7 @@
 				CADCF7282584990E0065C51B /* LineAnnotationExample.swift in Sources */,
 				CADCF72F2584990E0065C51B /* SnapshotterCoreGraphicsExample.swift in Sources */,
 				CAC195B725AC098A00F69FEA /* CameraUIViewAnimationExample.swift in Sources */,
+				0C78AC2925BF70E40057F570 /* LineGradientExample.swift in Sources */,
 				CADCF72B2584990E0065C51B /* FlyToExample.swift in Sources */,
 				CADCF72D2584990E0065C51B /* GeoJSONSourceExample.swift in Sources */,
 				CADCF72E2584990E0065C51B /* MapViewExample.swift in Sources */,

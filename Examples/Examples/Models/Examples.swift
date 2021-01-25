@@ -144,6 +144,9 @@ public struct Examples {
                 type: BuildingExtrusionsExample.self),
         Example(title: "Use OfflineRegionManager to download a region.",
                 description: "Use the deprecated OfflineRegionManager to download regions for offline use.",
-                type: OfflineRegionManagerExample.self)
+                type: OfflineRegionManagerExample.self),
+        Example(title: "Add a line with a color gradient",
+                description: "Add a line with a rainbow color gradient.",
+                type: LineGradientExample.self)
     ]
 }

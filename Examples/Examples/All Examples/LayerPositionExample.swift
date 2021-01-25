@@ -24,7 +24,7 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
         mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
                                                   zoom: 3)
 
-        // Allows the view controller to recieve information about map events.
+        // Allows the view controller to receive information about map events.
         mapView.on(.mapLoadingFinished) { [weak self] _ in
             guard let self = self else { return }
             self.setupExample()

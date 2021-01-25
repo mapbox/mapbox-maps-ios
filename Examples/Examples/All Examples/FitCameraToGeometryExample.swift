@@ -20,7 +20,7 @@ public class FitCameraToGeometryExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.view.addSubview(mapView)
 
-        // Allows the view controller to recieve information about map events.
+        // Allows the view controller to receive information about map events.
         mapView.on(.mapLoadingFinished) { [weak self] _ in
             guard let self = self else { return }
             self.fitToCameraToGeometry()

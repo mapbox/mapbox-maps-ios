@@ -97,8 +97,8 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
         layer = FillLayer(id: "polygon-layer")
         layer.source = sourceIdentifier
         // Apply basic styling to the fill layer.
-        layer.paint?.fillColor = .constant(ColorRepresentable(color: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)))
-        layer.paint?.fillOutlineColor = .constant(ColorRepresentable(color: #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)))
+        layer.paint?.fillColor = .constant(ColorRepresentable(color: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1))!)
+        layer.paint?.fillOutlineColor = .constant(ColorRepresentable(color: #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1))!)
 
         // Create a new GeoJSON data source which gets its data from a polygon.
         source = GeoJSONSource()

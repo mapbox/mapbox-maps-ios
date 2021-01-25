@@ -25,7 +25,7 @@ internal extension Value where T == String {
 
 internal extension Value where T == ColorRepresentable {
     static func testConstantValue() -> Value<ColorRepresentable> {
-        return .constant(ColorRepresentable(color: .red))
+        return .constant(ColorRepresentable(color: .red)!)
     }
 }
 

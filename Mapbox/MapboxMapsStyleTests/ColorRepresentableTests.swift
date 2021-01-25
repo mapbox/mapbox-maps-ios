@@ -8,7 +8,7 @@ import XCTest
 internal class ColorRepresentableTests: XCTestCase {
 
     func testEncodingAndDecoding() throws {
-        let colorRepresentable = ColorRepresentable(color: .systemRed)
+        let colorRepresentable = ColorRepresentable(color: .systemRed)!
 
         var data: Data?
         do {

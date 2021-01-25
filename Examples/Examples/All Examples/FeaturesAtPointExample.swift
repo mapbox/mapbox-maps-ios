@@ -46,9 +46,9 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
         fillLayer.source = sourceIdentifier
 
         // Apply basic styling to the fill layer.
-        fillLayer.paint?.fillColor = .constant(ColorRepresentable(color: UIColor.blue))
+        fillLayer.paint?.fillColor = .constant(ColorRepresentable(color: UIColor.blue)!)
         fillLayer.paint?.fillOpacity = .constant(0.3)
-        fillLayer.paint?.fillOutlineColor = .constant(ColorRepresentable(color: UIColor.black))
+        fillLayer.paint?.fillOutlineColor = .constant(ColorRepresentable(color: UIColor.black)!)
 
         // Add the data source and style layer to the map.
         _ = mapView.style.addSource(source: geoJSONSource, identifier: sourceIdentifier)

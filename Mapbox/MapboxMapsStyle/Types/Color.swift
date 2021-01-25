@@ -33,12 +33,19 @@ public struct ColorRepresentable: Codable, Equatable {
     internal let colorRepresentation: String?
 
     /// Initialize a `ColorRepresentable` with a `UIColor`
-    public init(color: UIColor) {
+    /// - Parameter color: A `UIColor` in sRGB color space
+    /// - Returns: Returns a valid `ColorRepresentable` if initialized with a color in sRGB color space. Returns `nil` otherwise.
+    public init?(color: UIColor) {
         var red: CGFloat = 0.0
         var green: CGFloat = 0.0
         var blue: CGFloat = 0.0
         var alpha: CGFloat = 0.0
-        color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        let success = color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+
+        if !success {
+            return nil
+        }
+
         self.colorRepresentation = "rgba(\(red * 255.0), \(green * 255.0), \(blue * 255.0), \(alpha))"
     }
 

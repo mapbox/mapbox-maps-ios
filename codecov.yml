@@ -1,8 +1,11 @@
 ignore:
   - "Example/"
-  - "Tests/"
+  - "Mapbox/*Tests/"
   - "docs"
   - "DebugApp"
+  - "Mapbox/MapboxMapsStyle/Generated"
+  - "StressTest/"
+  - "PCVD/"
 coverage:
   status:
     project:

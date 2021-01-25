@@ -23,6 +23,7 @@
 		CA252D782587DD9500A989CD /* MapboxMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA252D772587DD9500A989CD /* MapboxMaps.framework */; };
 		CA252D792587DD9500A989CD /* MapboxMaps.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CA252D772587DD9500A989CD /* MapboxMaps.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CA86E81825BE7C2300E5A1D9 /* BuildingExtrusionsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA86E81725BE7C2200E5A1D9 /* BuildingExtrusionsExample.swift */; };
+		CA86E86925BF551F00E5A1D9 /* OfflineRegionManagerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA86E86825BF551F00E5A1D9 /* OfflineRegionManagerExample.swift */; };
 		CAC195B725AC098A00F69FEA /* CameraUIViewAnimationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC195B625AC098A00F69FEA /* CameraUIViewAnimationExample.swift */; };
 		CADCF71D2584990E0065C51B /* CustomPointAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64ED3C42540DD6E00ADADFB /* CustomPointAnnotationExample.swift */; };
 		CADCF71E2584990E0065C51B /* ExternalVectorSourceExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077E3B2B2581810600564A3E /* ExternalVectorSourceExample.swift */; };
@@ -143,6 +144,7 @@
 		C69F01EC2543646A001AB49B /* DataDrivenSymbolsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataDrivenSymbolsExample.swift; sourceTree = "<group>"; };
 		CA252D772587DD9500A989CD /* MapboxMaps.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MapboxMaps.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA86E81725BE7C2200E5A1D9 /* BuildingExtrusionsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingExtrusionsExample.swift; sourceTree = "<group>"; };
+		CA86E86825BF551F00E5A1D9 /* OfflineRegionManagerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineRegionManagerExample.swift; sourceTree = "<group>"; };
 		CAC195B625AC098A00F69FEA /* CameraUIViewAnimationExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraUIViewAnimationExample.swift; sourceTree = "<group>"; };
 		CADCF742258499570065C51B /* BasicMapExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicMapExample.swift; sourceTree = "<group>"; };
 		CADCF76A25854AEF0065C51B /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MapboxMobileEvents.framework; sourceTree = "<group>"; };
@@ -240,6 +242,7 @@
 				0706C4A525B1181A008733C0 /* TerrainExample.swift */,
 				0CC4ECE925B8AD3000F998B8 /* CustomLocationIndicatorLayerExample.swift */,
 				CA86E81725BE7C2200E5A1D9 /* BuildingExtrusionsExample.swift */,
+				CA86E86825BF551F00E5A1D9 /* OfflineRegionManagerExample.swift */,
 			);
 			path = "All Examples";
 			sourceTree = "<group>";
@@ -547,6 +550,7 @@
 				0C52BA9825AF8C880054ECA8 /* PuckModelLayerExample.swift in Sources */,
 				CADCF7292584990E0065C51B /* FeaturesAtPointExample.swift in Sources */,
 				0CE8ED8C2589285C0066E56C /* ModelExample.swift in Sources */,
+				CA86E86925BF551F00E5A1D9 /* OfflineRegionManagerExample.swift in Sources */,
 				CADCF71E2584990E0065C51B /* ExternalVectorSourceExample.swift in Sources */,
 				CADCF7202584990E0065C51B /* SelectAnnotationExample.swift in Sources */,
 			);

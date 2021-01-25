@@ -157,12 +157,11 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         super.awakeFromNib()
 
         guard let accessToken = BaseMapView.parseIBString(ibString: accessToken__) else {
-            fatalError("Must provide access token to the MapView in Interface Builder")
+            fatalError("Must provide access token to the MapView in Interface Builder / Storyboard")
         }
 
-        guard let styleURL = BaseMapView.parseIBStringAsURL(ibString: self.styleURL__) else {
-            return
-        }
+        let ibStyleURL = BaseMapView.parseIBStringAsURL(ibString: self.styleURL__)
+        let styleURL = ibStyleURL ?? URL(string: "mapbox://styles/mapbox/streets-v11")!
 
         let baseURL = BaseMapView.parseIBString(ibString: self.baseURL__)
         let resourceOptions = ResourceOptions(accessToken: accessToken, baseUrl: baseURL)

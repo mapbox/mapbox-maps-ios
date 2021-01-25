@@ -1,4 +1,4 @@
-# Changelog for Mapbox Maps SDK Carbon for iOS
+# Changelog for Mapbox Maps SDK v10 for iOS
 
 Mapbox welcomes participation and contributions from everyone.
 

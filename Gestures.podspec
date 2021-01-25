@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
 
   s.name = "Gestures"
   s.version = "0.0.1"
-  s.summary = "Gestures for Mapbox Maps Carbon SDK."
+  s.summary = "Gestures for Mapbox Maps v10 SDK."
 
   s.description  = <<-DESC
   The Mapbox Maps SDK for iOS.

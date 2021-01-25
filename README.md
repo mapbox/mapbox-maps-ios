@@ -1,4 +1,4 @@
-## Mapbox Maps SDK Carbon for iOS
+## Mapbox Maps SDK v10 for iOS
 
 [![CircleCI](https://circleci.com/gh/mapbox/mapbox-maps-ios.svg?style=svg&circle-token=fb3cfef30d0bed9e8639e1d6967f905a6eba71c8)](https://circleci.com/gh/mapbox/mapbox-maps-ios) [![codecov](https://codecov.io/gh/mapbox/mapbox-maps-ios/branch/main/graph/badge.svg?token=7rlytil9XT)](https://codecov.io/gh/mapbox/mapbox-maps-ios) [![Secret-shield enabled](https://github.com/mapbox/secret-shield/blob/assets/secret-shield-enabled-badge.svg)](https://github.com/mapbox/secret-shield/blob/main/docs/enabledBadge.md)
 
@@ -13,7 +13,7 @@ This repository is a continuation of the Mapbox Maps SDK available at [mapbox/ma
 
 - The Legacy SDK is still maintained by Mapbox to address bug fixes and security vulnerabilities. However, new features like Metal support are only implemented in this repository (`mapbox-maps-ios`).
 - Unlike the Legacy SDK, the Maps SDK in this repository has been rearchitected from scratch with modularity in mind. This allows removing or replacing functionality both at build and at run time, and saving on app size.
-- In both cases, ObjC bindings are provided to interact with the [native renderer](https://github.com/mapbox/mapbox-gl-native). The Maps SDK Carbon benefits from an automatic code generator developed by Mapbox, which provides clean, idiomatic APIs and ensures consistency with best practices across platforms.
+- In both cases, ObjC bindings are provided to interact with the [native renderer](https://github.com/mapbox/mapbox-gl-native). The Maps SDK v10 benefits from an automatic code generator developed by Mapbox, which provides clean, idiomatic APIs and ensures consistency with best practices across platforms.
 
 Read [the announcement](https://github.com/mapbox/mapbox-gl-native/issues/15971) for more information.
 

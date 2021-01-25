@@ -1,11 +1,11 @@
 # Style
 
-In carbon SDK, the style API is directly aligned with the Mapbox Style Specification. `Sources`, `Layers`, `Light` all work in the exact same manner as in the Style Specification. 
+In v10 SDK, the style API is directly aligned with the Mapbox Style Specification. `Sources`, `Layers`, `Light` all work in the exact same manner as in the Style Specification. 
 
 The `Style` object in the `MapViewController` is responsible for all run time styling related functionality.
 
 ### Type-safe API
-Every `Source` and `Layer` declared in the Style Specification exists in Carbon as a simple Swift struct. Furthermore, every property within those sources and layers is modeled using familiar swift types. This means that creating new sources and layers are easy!
+Every `Source` and `Layer` declared in the Style Specification exists in v10 as a simple Swift struct. Furthermore, every property within those sources and layers is modeled using familiar swift types. This means that creating new sources and layers are easy!
 
 ##### GeoJSON Source Example
 For example, a simple GeoJSON source can be created by the following code. We can set properties on this source (with the help of the full power of Xcode's autocomplete) as we would expect too! 
@@ -34,7 +34,7 @@ self.mapViewController.addSource(myGeoJSONSource)
 ```
 
 ##### Background Layer Example
-Let's add a simple background layer to further demonstrate the type-safety provided in Carbon.
+Let's add a simple background layer to further demonstrate the type-safety provided in v10.
 
 As mentioned earlier, all Layers are also simple Swift structs. The following code sets up a background layer and sets its background color to red.
 
@@ -52,9 +52,9 @@ self.mapViewController.addLayer(myBackgroundLayer)
 
 In the Background Layer example above, we set a constant value to the `backgroundColor` porperty of the layer. However, the `backgroundColor` property (and nearly all layout and paint properties) support expressions too! 
 
-Fortunately, the SDK is flexible enough to handle both expressions and constants. Moreover, expressions have been redesigned from the ground up in Carbon. Instead of using `NSExpression` to represent expressions, the new Expression DSL directly models expressions based on the Mapbox Style Specification. 
+Fortunately, the SDK is flexible enough to handle both expressions and constants. Moreover, expressions have been redesigned from the ground up in v10. Instead of using `NSExpression` to represent expressions, the new Expression DSL directly models expressions based on the Mapbox Style Specification. 
 
-In Carbon, expressions now exist as simple, familiar and type-safe Swift structs. They are also backed by Swift function-builders to make the experience of writing an expression similar to the way SwiftUI works.
+In v10, expressions now exist as simple, familiar and type-safe Swift structs. They are also backed by Swift function-builders to make the experience of writing an expression similar to the way SwiftUI works.
 
 Consider a simple `interpolate` expression written in raw JSON:
 ```json
@@ -69,7 +69,7 @@ Consider a simple `interpolate` expression written in raw JSON:
 ]
 ```
 
-In carbon, this can be translated to Swift like so:
+In v10, this can be translated to Swift like so:
 
 ```swift
 Exp(.interpolate) {
@@ -99,7 +99,7 @@ Exp(.interpolate) {
 ```
 
 #### Composable expressions
-In Carbon, Expressions can also be composed and built in modular ways.
+In v10, Expressions can also be composed and built in modular ways.
 
 ```swift
 Exp(.interpolate) {

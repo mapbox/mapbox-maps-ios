@@ -1,4 +1,4 @@
-# Maps SDK for iOS v10.0 (Carbon)
+# Mapbox Maps SDK v10 for iOS
 
 ## Xcode Installation Instructions
 

@@ -6,7 +6,7 @@ ignore:
   - "Mapbox/MapboxMapsStyle/Generated"
   - "StressTest/"
   - "PCVD/"
-  - "TestHelpers"
+  - "Mapbox/Test*"
 coverage:
   status:
     project:

@@ -141,6 +141,9 @@ public struct Examples {
                 type: CustomLocationIndicatorLayerExample.self),
         Example(title: "Display buildings in 3D",
                 description: "Use extrusions to display buildings' height in 3D.",
-                type: BuildingExtrusionsExample.self)
+                type: BuildingExtrusionsExample.self),
+        Example(title: "Use OfflineRegionManager to download a region.",
+                description: "Use the deprecated OfflineRegionManager to download regions for offline use.",
+                type: OfflineRegionManagerExample.self)
     ]
 }

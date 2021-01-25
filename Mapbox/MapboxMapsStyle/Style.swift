@@ -65,6 +65,15 @@ public enum TerrainError: Error {
     case addTerrainFailed(String?)
 }
 
+/// Enum for all light-related errors
+public enum LightError: Error {
+    /// Adding a new light object to style failed
+    case addLightFailed(String?)
+
+    /// Retrieving a light object from style failed
+    case getLightFailed(Error)
+}
+
 public class Style {
     public private(set) weak var styleManager: StyleManager!
     internal var styleUrl: StyleURL = .streets
@@ -337,6 +346,21 @@ public class Style {
                                   : .success(true)
     }
 
+    /// Add a light object to the map's style
+    /// - Parameter light: The `Light` object to be applied to the style.
+    /// - Returns: IF operation successful, returns a `true` as part of the `Result`.  Else returns a `LightError`.
+    public func addLight(_ light: Light) -> Result<Bool, LightError> {
+        do {
+            let lightData = try JSONEncoder().encode(light)
+            let lightDictionary = try JSONSerialization.jsonObject(with: lightData)
+            let expectation = try styleManager.setStyleTerrainForProperties(lightDictionary)
+
+            return expectation.isValue() ? .success(true)
+                                         : .failure(.addLightFailed(expectation.error as? String))
+        } catch {
+            return .failure(.addLightFailed(nil))
+        }
+    }
 }
 
 /**

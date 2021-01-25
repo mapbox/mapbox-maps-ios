@@ -1,7 +1,3 @@
-codecov:
-  ci:
-    - CircleCI
-
 ignore:
   - "Example/"
   - "Mapbox/*Tests/"
@@ -10,6 +6,7 @@ ignore:
   - "Mapbox/MapboxMapsStyle/Generated"
   - "StressTest/"
   - "PCVD/"
+  - "TestHelpers"
 coverage:
   status:
     project:

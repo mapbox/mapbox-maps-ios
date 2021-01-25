@@ -10,6 +10,7 @@ assignees: ''
 - Xcode version:
 - iOS version:
 - Devices affected:
+- Maps SDK Version:
 
 ## Observed behavior and steps to reproduce
 

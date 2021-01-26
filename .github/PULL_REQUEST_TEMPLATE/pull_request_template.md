@@ -5,23 +5,18 @@ Please fill out the sections below to complete your submission.
 
 We appreciate your contributions!
 -->
+PRs must be submitted under the terms of our Contributor License Agreement [CLA](https://github.com/mapbox/mapbox-maps-ios/blob/main/CONTRIBUTING.md#contributor-license-agreement). Please affirm that you have read and agree to the CLA by typing `I agree`:
 
-Fixes < Link to related issues that will be fixed by this pull request, if they exist >
+Fixes: < Link to related issues that will be fixed by this pull request, if they exist >
 
 ## Pull request checklist:
-- [ ] Tests have been added (if no tests are required, please explain why)
-- [ ] Add an appropriate label to the changelog
-  <!--
-  ### Add appropriate labels for Changelog
-  **breaking change**: If your Pull Request introduces a breaking change and updates are required when version is published
-  **bug**: If your Pull Request is fixing a known bug. Bug should be linked/described in the description
-  **feature**: If your Pull Request is introducing a new feature to the SDK
-  **docs**: If your Pull Request is updating documentation
-  **performance**: If your Pull Request is making updates to the performance of the SDK
-  **build**: If your Pull Request is changing the CI/CD process, automation, or local build
-  **testing**: If your Pull Request is adding to the test suite
-  **skip changelog**: If your Pull Request does not need a changelog entry
-  -->
+ - [ ] Briefly describe the changes in this PR.
+ - [ ] Include before/after visuals or gifs if this PR includes visual changes.
+ - [ ] Write tests for all new functionality. If tests were not written, please explain why.
+ - [ ] Add example if relevant.
+ - [ ] Document any changes to public APIs.
+ - [ ] Apply changelog label ('breaking change', 'bug :beetle:', 'build', 'docs', 'feature :green_apple:', 'performance :zap:', 'testing :100:') or use the label 'skip changelog'
+ - [ ] Add an entry inside this element for inclusion in the `mapbox-maps-ios` changelog: `<changelog></changelog>`.
 
 ### Summary of changes
 

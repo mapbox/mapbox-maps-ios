@@ -1,7 +1,7 @@
 ---
 name: Release template — iOS stable
 about: Checklist for a single release.
-title: Release Maps Carbon SDK <version> (<codename>)
+title: Release Maps v10 SDK <version>
 labels: release
 assignees: ''
 

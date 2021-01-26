@@ -5,8 +5,8 @@
  import Foundation
 
  let registry = SDKRegistry()
- let version = "10.0.0-beta.5"
- let checksum = "fa2fd722424179cf9cfbfc01312309dad6a061b27f76cddfb722a7d8e42048a1"
+ let version = "10.0.0-beta.12"
+ let checksum = "26503fde935220208b56fd215ba24da8ab853962317ba68fccf06b8fd68aa888"
 
  let package = Package(
      name: "MapboxMaps",
@@ -17,8 +17,8 @@
              targets: ["MapboxMapsWrapper"]),
      ],
      dependencies: [
-        .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .exact("10.0.0-beta.4")),
-        .package(name: "MapboxCoreMaps", url: "https://github.com/mapbox/mapbox-core-maps-ios.git", .exact("10.0.0-beta.11")),
+        .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .exact("10.0.0-beta.8")),
+        .package(name: "MapboxCoreMaps", url: "https://github.com/mapbox/mapbox-core-maps-ios.git", .exact("10.0.0-beta.13")),
         .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", .exact("0.12.0-alpha.1")),
         .package(name: "Turf", url: "https://github.com/mapbox/turf-swift.git", .exact("2.0.0-alpha.1")),
      ],
@@ -64,7 +64,7 @@
      func mapboxMapsTarget(version: String, checksum: String) -> Target {
          return binaryTarget(name: "MapboxMaps",
                              version: version,
-                             path: "mobile-maps-ios-privatebeta",
+                             path: "mobile-maps-ios",
                              filename: "MapboxMaps.xcframework.zip",
                              checksum: checksum)
      }

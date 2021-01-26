@@ -1,6 +1,6 @@
 Pod::Spec.new do |m|
 
-  version = '10.0.0-beta.6'
+  version = '10.0.0-beta.12'
 
   m.name = 'MapboxMaps'
   m.version = version
@@ -14,7 +14,7 @@ Pod::Spec.new do |m|
   m.social_media_url = 'https://twitter.com/mapbox'
   m.documentation_url = 'https://docs.mapbox.com/ios/maps/api/'
 
-  m.source = { http: "https://api.mapbox.com/downloads/v2/mobile-maps-ios-privatebeta/releases/ios/packages/#{version.to_s}/MapboxMaps.xcframework.zip" }
+  m.source = { http: "https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/packages/#{version.to_s}/MapboxMaps.xcframework.zip" }
   m.vendored_frameworks = 'MapboxMaps.xcframework'
 
   m.platform = :ios
@@ -23,8 +23,8 @@ Pod::Spec.new do |m|
   m.requires_arc = true
   m.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
 
-  m.dependency 'MapboxCoreMaps', '10.0.0-beta.12'
-  m.dependency 'MapboxCommon', '10.0.0-beta.7'
+  m.dependency 'MapboxCoreMaps', '10.0.0-beta.13'
+  m.dependency 'MapboxCommon', '10.0.0-beta.8'
   m.dependency 'MapboxMobileEvents', '0.10.7'
 
   # The consuming app must specify Turf in their Podfile because this version of MapboxMaps depends on an unreleased Turf version:

@@ -7,12 +7,11 @@ Pod::Spec.new do |m|
 
   m.summary = 'Vector map solution for iOS with full styling capabilities.'
   m.description = 'Metal-based vector map solution for iOS with full styling capabilities.'
-  m.homepage = 'https://docs.mapbox.com/ios/maps/'
+  m.homepage = 'https://docs.mapbox.com/ios/beta/maps/guides/'
   m.license = { type: 'Commercial', file: 'LICENSE.md' }
   m.author = { 'Mapbox' => 'mobile@mapbox.com' }
-  m.screenshot = "https://docs.mapbox.com/ios/maps/api/#{version}/img/screenshot.png"
   m.social_media_url = 'https://twitter.com/mapbox'
-  m.documentation_url = 'https://docs.mapbox.com/ios/maps/api/'
+  m.documentation_url = 'https://docs.mapbox.com/ios/beta/maps/api-reference/'
 
   m.source = { http: "https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/packages/#{version.to_s}/MapboxMaps.xcframework.zip" }
   m.vendored_frameworks = 'MapboxMaps.xcframework'

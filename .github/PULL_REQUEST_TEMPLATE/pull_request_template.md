@@ -10,19 +10,12 @@ PRs must be submitted under the terms of our Contributor License Agreement [CLA]
 Fixes: < Link to related issues that will be fixed by this pull request, if they exist >
 
 ## Pull request checklist:
-- [ ] Tests have been added (if no tests are required, please explain why)
-- [ ] Add an appropriate label to the changelog
-  <!--
-  ### Add appropriate labels for Changelog
-  **breaking change**: If your Pull Request introduces a breaking change and updates are required when version is published
-  **bug**: If your Pull Request is fixing a known bug. Bug should be linked/described in the description
-  **feature**: If your Pull Request is introducing a new feature to the SDK
-  **docs**: If your Pull Request is updating documentation
-  **performance**: If your Pull Request is making updates to the performance of the SDK
-  **build**: If your Pull Request is changing the CI/CD process, automation, or local build
-  **testing**: If your Pull Request is adding to the test suite
-  **skip changelog**: If your Pull Request does not need a changelog entry
-  -->
+ - [ ] Briefly describe the changes in this PR.
+ - [ ] Include before/after visuals or gifs if this PR includes visual changes.
+ - [ ] Write tests for all new functionality. If tests were not written, please explain why.
+ - [ ] Document any changes to public APIs.
+ - [ ] apply changelog label ('breaking change', 'bug', 'build', 'docs', 'feature', 'performance', 'testing') or use the label 'skip changelog'
+ - [ ] add an entry inside this element for inclusion in the `mapbox-maps-ios` changelog: `<changelog></changelog>`
 
 ### Summary of changes
 

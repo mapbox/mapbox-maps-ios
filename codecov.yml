@@ -1,9 +1,15 @@
 ignore:
   - "Example/"
-  - "Tests/"
+  - "Mapbox/*Tests/"
   - "docs"
+  - "DebugApp"
+  - "Mapbox/MapboxMapsStyle/Generated"
+  - "StressTest/"
+  - "PCVD/"
+  - "Mapbox/Test*"
 coverage:
   status:
     project:
       default:
         threshold: 2
+      patch: off

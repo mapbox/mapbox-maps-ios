@@ -265,7 +265,8 @@ jobs:
             # Parse xcresults for any tests that ran on Device
             # - gather-xcresults
             # - store-device-farm-artifacts
-            - store-logs   
+            - store-logs 
+            - code-coverage  
             - report-failure:
                 report_failure: << parameters.report_failure >>
                 message: "maps-unit-tests"

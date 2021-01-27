@@ -15,6 +15,9 @@ public class ExampleTableViewController: UITableViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Examples"
+
+        searchBar.delegate = self
+        
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
     }
 }

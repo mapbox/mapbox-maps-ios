@@ -266,7 +266,7 @@ jobs:
             # - gather-xcresults
             # - store-device-farm-artifacts
             - store-logs 
-            - code-coverage  
+            # - code-coverage  
             - report-failure:
                 report_failure: << parameters.report_failure >>
                 message: "maps-unit-tests"
@@ -286,8 +286,9 @@ jobs:
             - device-test-scheme:
                 scheme: MapboxMapsTestsWithHost
                 configuration: Release
-            - gather-xcresults
+            - gather-xcresults # get xcresults here, may be zipped with more than one result
             - store-device-farm-artifacts
+            # JK - Look at adding code cov here - BONUS
             - store-logs
             - report-failure:
                 report_failure: << parameters.report_failure >>
@@ -487,10 +488,11 @@ commands:
             # simulators
             - test-with-simulator:
                 scheme: << parameters.scheme >>
-            # - run:
-            #     name: Clean Build directory
-            #     command: |
-            #         rm -rf build/Build                
+            - code-coverage
+            - run:
+                name: Clean Build directory
+                command: |
+                    rm -rf build/Build                
               
     ensure-text-exists-in-commit:
         parameters:
@@ -579,7 +581,7 @@ commands:
         steps:
             - run: 
                 name: "Upload code coverage report"
-                command: bash <(curl -sSfL https://codecov.io/bash) -X gcov -t $CODECOV_TOKEN -D ./build/ || echo 'Codecov failed to upload'
+                command: bash <(curl -sSfL https://codecov.io/bash) -X gcov -t $CODECOV_TOKEN -D ./ || echo 'Codecov failed to upload'
     
     make-deps:
         steps:

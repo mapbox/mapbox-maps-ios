@@ -52,8 +52,9 @@ git config --global user.email "maps_sdk_ios@mapbox.com"
 git config --global user.name "Release SDK bot for Maps SDK team"
 
 TITLE="Update config for ${PROJECT_ROOT} @ ${VERSION}"
+BODY_TEXT="Bump maps version"
 URL="https://api.github.com/repos/mapbox/api-downloads/pulls"
-BODY="{\"head\":\"${BRANCH_NAME}\",\"base\":\"main\",\"title\":\"${TITLE}\",\"body\":\"${REFERENCE}\"}"
+BODY="{\"head\":\"${BRANCH_NAME}\",\"base\":\"main\",\"title\":\"${TITLE}\",\"body\":\"${BODY_TEXT}\"}"
 
 CURL_RESULT=0
 HTTP_CODE=$(curl ${URL} \

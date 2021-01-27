@@ -91,13 +91,6 @@ workflows:
 
             - create-xcframework
             
-            # TODO: Re-enable when code cov works again
-            # - upload-code-coverage:
-            #     name: "Upload code coverage"
-            #     xcode: "11.3.1"
-            #     filters:
-            #         branches:
-            #             only: main
     public-beta:
         jobs:
             - ios-build-release:
@@ -244,22 +237,22 @@ jobs:
             - checkout
             - access-token-xcconfig
             - make-deps
-            - test-scheme:
-                scheme: MapboxMapsAnnotations
-            - test-scheme:
-                scheme: MapboxMapsFoundation
-            - test-scheme:
-                scheme: MapboxMapsGestures
-            - test-scheme:
-                scheme: MapboxMapsLocation
-            - test-scheme:
-                scheme: MapboxMapsOffline
-            - test-scheme:
-                scheme: MapboxMapsOrnaments
-            - test-scheme:
-                scheme: MapboxMapsSnapshot
-            - test-scheme:
-                scheme: MapboxMapsStyle 
+            # - test-scheme:
+            #     scheme: MapboxMapsAnnotations
+            # - test-scheme:
+            #     scheme: MapboxMapsFoundation
+            # - test-scheme:
+            #     scheme: MapboxMapsGestures
+            # - test-scheme:
+            #     scheme: MapboxMapsLocation
+            # - test-scheme:
+            #     scheme: MapboxMapsOffline
+            # - test-scheme:
+            #     scheme: MapboxMapsOrnaments
+            # - test-scheme:
+            #     scheme: MapboxMapsSnapshot
+            # - test-scheme:
+            #     scheme: MapboxMapsStyle 
             - test-scheme:
                 scheme: MapboxMaps
             # Parse xcresults for any tests that ran on Device
@@ -488,10 +481,14 @@ commands:
             # simulators
             - test-with-simulator:
                 scheme: << parameters.scheme >>
-            - code-coverage
+            - when: 
+                equal: ['MapboxMaps', << parameters.scheme >>]
+                steps:
+                  - code-coverage              
             - run:
                 name: Clean Build directory
                 command: |
+                    cp build
                     rm -rf build/Build                
               
     ensure-text-exists-in-commit:

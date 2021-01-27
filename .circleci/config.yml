@@ -300,7 +300,7 @@ jobs:
                 commit-text: "[create xcframework]"
                 always-run: << parameters.create-xcframework-always-run >>
             - make-deps
-            - make-docs
+            # - make-docs
             - make-xcframework-zip
             - make-xcframeworks-bundle
             - danger

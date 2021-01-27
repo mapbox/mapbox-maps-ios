@@ -487,10 +487,10 @@ commands:
             # simulators
             - test-with-simulator:
                 scheme: << parameters.scheme >>
-            - run:
-                name: Clean Build directory
-                command: |
-                    rm -rf build/Build                
+            # - run:
+            #     name: Clean Build directory
+            #     command: |
+            #         rm -rf build/Build                
               
     ensure-text-exists-in-commit:
         parameters:

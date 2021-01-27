@@ -5,7 +5,7 @@
 The Mapbox Maps SDK for iOS is a public library for displaying interactive, thoroughly customizable maps in native iOS. It takes map styles that conform to the [Mapbox Style Specification](https://docs.mapbox.com/mapbox-gl-js/style-spec/), applies them to vector tiles that conform to the [Mapbox Vector Tile Specification](https://github.com/mapbox/vector-tile-spec), and renders them using Metal.
 
 ## Getting Started
-This README is intended for developers who are interested in contributing to the Mapbox Maps SDK for iOS. Please visit https://docs.mapbox.com/ios/maps/overview for general information and instructions on using the Maps SDK in your iOS application.
+This README is intended for developers who are interested in contributing to the Mapbox Maps SDK for iOS. Please visit https://docs.mapbox.com/ios/beta/maps/guides/ for general information and instructions on using the Maps SDK in your iOS application.
 
 ## Developing
 If you are interested in contributing to the Maps SDK, please see the [DEVELOPING.md](DEVELOPING.md) file for information on setting up, running and building the SDK. 

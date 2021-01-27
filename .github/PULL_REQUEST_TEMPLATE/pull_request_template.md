@@ -5,7 +5,7 @@ Please fill out the sections below to complete your submission.
 
 We appreciate your contributions!
 -->
-PRs must be submitted under the terms of our Contributor License Agreement [CLA](https://github.com/mapbox/mapbox-maps-ios/blob/main/CONTRIBUTING.md#contributor-license-agreement). Please affirm that you have read and agree to the CLA by typing `I agree`:
+PRs must be submitted under the terms of our Contributor License Agreement [CLA](https://github.com/mapbox/mapbox-maps-ios/blob/main/CONTRIBUTING.md#contributor-license-agreement).
 
 Fixes: < Link to related issues that will be fixed by this pull request, if they exist >
 

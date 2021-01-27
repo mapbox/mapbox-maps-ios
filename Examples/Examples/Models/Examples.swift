@@ -122,7 +122,7 @@ public struct Examples {
                 description: "Update the position of a point annotation tapping the map.",
                 type: UpdatePointAnnotationPositionExample.self),
         Example(title: "Add a 3D Model to the map",
-                description: "",
+                description: "Add a 3D object in the glTF format to a map.",
                 type: ModelExample.self),
         Example(title: "Restrict the map's coordinate bounds",
                 description: "Prevent the map from panning outside the specified coordinate bounds.",
@@ -142,11 +142,11 @@ public struct Examples {
         Example(title: "Display buildings in 3D",
                 description: "Use extrusions to display buildings' height in 3D.",
                 type: BuildingExtrusionsExample.self),
-        Example(title: "Use OfflineRegionManager to download a region.",
+        Example(title: "Use OfflineRegionManager to download a region",
                 description: "Use the deprecated OfflineRegionManager to download regions for offline use.",
                 type: OfflineRegionManagerExample.self),
         Example(title: "Add a line with a color gradient",
-                description: "Add a line with a rainbow color gradient.",
+                description: "Add a line with a rainbow color gradient",
                 type: LineGradientExample.self)
     ]
 }

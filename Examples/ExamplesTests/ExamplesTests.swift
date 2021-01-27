@@ -16,7 +16,7 @@ class ExamplesTests: XCTestCase {
             XCTAssertTrue(string[indexEnd...] == "Example")
 
             // Check that examples have descriptions.
-            XCTAssertFalse(example.description.isEmpty, "Examples should have a description.")
+            XCTAssertFalse(example.description.isEmpty, "Example '\(example.type)' should have a description.")
 
             // Check punctuation for titles.
             XCTAssertFalse(example.title.last == ".", "Example titles should not end with punctuation.")

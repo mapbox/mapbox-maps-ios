@@ -137,6 +137,12 @@ jobs:
             report_failure:
                 type: boolean
                 default: false
+            scheme:
+                type: string
+                default: "MapboxMapsTestsWithHost"
+            app-name:
+                type: string
+                default: "MapboxTestHost"
         executor:
             name: xcode-executor
             xcode: << parameters.xcode >>
@@ -277,16 +283,10 @@ jobs:
             - report-failure:
                 report_failure: << parameters.report_failure >>
                 message: "maps-unit-tests"
- 
 
     # We may want to split this across multiple jobs, rather than multiple
     run-tests-on-devices:
         <<: *default-job
-        parameters:
-            scheme:
-                type: string
-            app-name:
-                type: string
         steps:
             - checkout
             - access-token-xcconfig

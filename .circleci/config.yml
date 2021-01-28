@@ -479,7 +479,6 @@ commands:
             - run:
                 name: Clean Build directory
                 command: |
-                    cp build
                     rm -rf build/Build                
               
     ensure-text-exists-in-commit:

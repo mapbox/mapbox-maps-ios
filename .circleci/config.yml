@@ -91,13 +91,6 @@ workflows:
 
             - create-xcframework
             
-            # TODO: Re-enable when code cov works again
-            # - upload-code-coverage:
-            #     name: "Upload code coverage"
-            #     xcode: "11.3.1"
-            #     filters:
-            #         branches:
-            #             only: main
     public-beta:
         jobs:
             - ios-build-release:
@@ -262,10 +255,10 @@ jobs:
                 scheme: MapboxMapsStyle 
             - test-scheme:
                 scheme: MapboxMaps
-            # Parse xcresults for any tests that ran on Device
+            # TODO: Parse xcresults for any tests that ran on Device
             # - gather-xcresults
             # - store-device-farm-artifacts
-            - store-logs   
+            - store-logs 
             - report-failure:
                 report_failure: << parameters.report_failure >>
                 message: "maps-unit-tests"
@@ -285,8 +278,9 @@ jobs:
             - device-test-scheme:
                 scheme: MapboxMapsTestsWithHost
                 configuration: Release
-            - gather-xcresults
+            - gather-xcresults # get xcresults here, may be zipped with more than one result
             - store-device-farm-artifacts
+            # TODO: Add code cov here
             - store-logs
             - report-failure:
                 report_failure: << parameters.report_failure >>
@@ -307,15 +301,6 @@ jobs:
             - report-failure:
                 report_failure: << parameters.report_failure >>
                 message: "create-xcframework"
-
-
-    # TODO: Should depend on the above job and reuse build/results
-    upload-code-coverage:
-        <<: *default-job
-        steps:
-            - checkout
-            - mapbox-gestures-tests
-            - code-coverage
     
     # This job was created for the public beta
     ios-build-release:
@@ -486,6 +471,11 @@ commands:
             # simulators
             - test-with-simulator:
                 scheme: << parameters.scheme >>
+            - when:
+                condition:
+                    equal: ['MapboxMaps', << parameters.scheme >>]
+                steps:
+                  - code-coverage              
             - run:
                 name: Clean Build directory
                 command: |
@@ -578,7 +568,7 @@ commands:
         steps:
             - run: 
                 name: "Upload code coverage report"
-                command: bash <(curl -sSfL https://codecov.io/bash) -X gcov -t $CODECOV_TOKEN || echo 'Codecov failed to upload'
+                command: bash <(curl -sSfL https://codecov.io/bash) -X gcov -t $CODECOV_TOKEN -D ./ -J '^MapboxMaps$' || echo 'Codecov failed to upload'
     
     make-deps:
         steps:

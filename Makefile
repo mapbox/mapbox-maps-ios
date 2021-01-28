@@ -97,11 +97,11 @@ build-for-simulator:
 
 .PHONY: build-for-testing-simulator
 build-for-testing-simulator:
-	set -o pipefail && $(XCODE_BUILD_SIM) -scheme '$(SCHEME)' ENABLE_TESTABILITY=YES build-for-testing
+	set -o pipefail && $(XCODE_BUILD_SIM) -scheme '$(SCHEME)' ENABLE_TESTABILITY=YES build-for-testing -enableCodeCoverage YES
 
 .PHONY: test-without-building-simulator
 test-without-building-simulator:
-	set -o pipefail && $(XCODE_BUILD_SIM) -scheme '$(SCHEME)' $(DESTINATIONS) test-without-building
+	set -o pipefail && $(XCODE_BUILD_SIM) -scheme '$(SCHEME)' $(DESTINATIONS) test-without-building -enableCodeCoverage YES
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Devices

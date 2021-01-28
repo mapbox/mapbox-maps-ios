@@ -160,7 +160,7 @@ jobs:
         <<: *default-job
         steps:
             - checkout
-            - access-token-configs
+            - access-token-xcconfig
             - make-deps
             - run: brew install swiftlint
             - build-scheme:
@@ -259,7 +259,7 @@ jobs:
         <<: *default-job    
         steps:
             - checkout
-            - access-token-configs
+            - access-token-xcconfig
             - make-deps
             - test-scheme:
                 scheme: MapboxMapsAnnotations
@@ -292,7 +292,7 @@ jobs:
         <<: *default-job
         steps:
             - checkout
-            - access-token-configs
+            - access-token-xcconfig
             - ensure-text-exists-in-commit:
                 commit-text: "[run device tests]"  
                 always-run: << parameters.device-tests-always-run >>
@@ -423,13 +423,9 @@ commands:
 
     # Configurable build/test commands
 
-    access-token-configs:
+    access-token-xcconfig:
         steps:
-            - run:
-                name: Save mapbox access token to configs
-                command: |
-                    echo "MAPBOX_ACCESS_TOKEN = ${MAPBOX_ACCESS_TOKEN}" > ./developer.xcconfig
-                    echo "${MAPBOX_ACCESS_TOKEN}" > ~/.mapbox
+            - run: echo "MAPBOX_ACCESS_TOKEN = ${MAPBOX_ACCESS_TOKEN}" > ./developer.xcconfig
 
     build-for-simulator:
         parameters:

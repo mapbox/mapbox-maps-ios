@@ -49,6 +49,7 @@ workflows:
                         report_failure: [true]
 
             - run-tests-on-devices:
+                name: "Run MapboxTestHost tests on devices"
                 scheme: "MapboxMapsTestsWithHost"
                 app-name: "MapboxTestHost"
                 device-pool: $(AWS_DEVICE_FARM_5_DEVICE_POOL)
@@ -90,10 +91,12 @@ workflows:
                 name: "Run Unit tests"
 
             - run-tests-on-devices:
+                name: "Run MapboxTestHost tests on devices"
                 scheme: "MapboxMapsTestsWithHost"
                 app-name: "MapboxTestHost"
 
             - run-tests-on-devices:
+                name: "Run Examples tests on devices"
                 scheme: "Examples"
                 app-name: "Examples"
 
@@ -287,7 +290,6 @@ jobs:
     # We may want to split this across multiple jobs, rather than multiple
     run-tests-on-devices:
         <<: *default-job
-        name: "Run << parameters.app-name >> tests on devices"
         steps:
             - checkout
             - access-token-xcconfig

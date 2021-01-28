@@ -237,29 +237,28 @@ jobs:
             - checkout
             - access-token-xcconfig
             - make-deps
-            # - test-scheme:
-            #     scheme: MapboxMapsAnnotations
-            # - test-scheme:
-            #     scheme: MapboxMapsFoundation
-            # - test-scheme:
-            #     scheme: MapboxMapsGestures
-            # - test-scheme:
-            #     scheme: MapboxMapsLocation
-            # - test-scheme:
-            #     scheme: MapboxMapsOffline
-            # - test-scheme:
-            #     scheme: MapboxMapsOrnaments
-            # - test-scheme:
-            #     scheme: MapboxMapsSnapshot
-            # - test-scheme:
-            #     scheme: MapboxMapsStyle 
+            - test-scheme:
+                scheme: MapboxMapsAnnotations
+            - test-scheme:
+                scheme: MapboxMapsFoundation
+            - test-scheme:
+                scheme: MapboxMapsGestures
+            - test-scheme:
+                scheme: MapboxMapsLocation
+            - test-scheme:
+                scheme: MapboxMapsOffline
+            - test-scheme:
+                scheme: MapboxMapsOrnaments
+            - test-scheme:
+                scheme: MapboxMapsSnapshot
+            - test-scheme:
+                scheme: MapboxMapsStyle 
             - test-scheme:
                 scheme: MapboxMaps
-            # Parse xcresults for any tests that ran on Device
+            # TODO: Parse xcresults for any tests that ran on Device
             # - gather-xcresults
             # - store-device-farm-artifacts
             - store-logs 
-            # - code-coverage  
             - report-failure:
                 report_failure: << parameters.report_failure >>
                 message: "maps-unit-tests"
@@ -281,7 +280,7 @@ jobs:
                 configuration: Release
             - gather-xcresults # get xcresults here, may be zipped with more than one result
             - store-device-farm-artifacts
-            # JK - Look at adding code cov here - BONUS
+            # TODO: Add code cov here
             - store-logs
             - report-failure:
                 report_failure: << parameters.report_failure >>
@@ -302,15 +301,6 @@ jobs:
             - report-failure:
                 report_failure: << parameters.report_failure >>
                 message: "create-xcframework"
-
-
-    # TODO: Should depend on the above job and reuse build/results
-    upload-code-coverage:
-        <<: *default-job
-        steps:
-            - checkout
-            - mapbox-gestures-tests
-            - code-coverage
     
     # This job was created for the public beta
     ios-build-release:

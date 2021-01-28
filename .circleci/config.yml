@@ -97,6 +97,7 @@ workflows:
 
             - run-tests-on-devices:
                 name: "Run Examples tests on devices"
+                device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
                 scheme: "Examples"
                 app-name: "Examples"
 

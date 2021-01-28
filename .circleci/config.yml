@@ -287,6 +287,7 @@ jobs:
     # We may want to split this across multiple jobs, rather than multiple
     run-tests-on-devices:
         <<: *default-job
+        name: "Run << parameters.app-name >> tests on devices"
         steps:
             - checkout
             - access-token-xcconfig

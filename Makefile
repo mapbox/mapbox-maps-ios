@@ -7,6 +7,7 @@ CONFIGURATION    ?= Debug
 BUILD_DIR        ?= $(CURDIR)/build
 JOBS             ?= $(shell sysctl -n hw.ncpu)
 DESTINATIONS     ?= -destination 'platform=iOS Simulator,OS=latest,name=iPhone 11'
+APP_NAME		 ?= $(SCHEME)
 
 # Circle
 CIRCLE_CI_CLI       ?= /usr/local/bin/circleci
@@ -140,8 +141,10 @@ build-for-testing-device: $(XCTESTRUN_PACKAGE)
 # assumes that the tests require the "test host" app
 $(XCTESTRUN_PACKAGE): | $(PAYLOAD_DIR) $(TEST_ROOT)
 ifneq ($(SCHEME),MapboxMapsTestsWithHost)
-	$(error SCHEME should be MapboxMapsTestsWithHost)
-endif	
+ifneq ($(SCHEME),Examples)
+	$(error SCHEME should be MapboxMapsTestsWithHost or Examples)
+endif
+endif
 
 	# Build for testing
 	set -o pipefail && $(XCODE_BUILD_DEVICE) \
@@ -155,6 +158,7 @@ endif
 
 	# For use in Device Farm config
 	echo $(SCHEME) > $(TEST_ROOT)/scheme.txt
+	echo $(APP_NAME) > $(TEST_ROOT)/app_name.txt
 	echo $(CONFIGURATION) > $(TEST_ROOT)/configuration.txt
 	cp $(BUILT_DEVICE_PRODUCTS_DIR)/../$(SCHEME)_iphoneos*.xctestrun $(TEST_ROOT)/device.xctestrun
 
@@ -281,8 +285,8 @@ $(DEVICE_FARM_UPLOAD_IPA): $(XCTESTRUN_PACKAGE) | $(DEVICE_TEST_PATH) $(PAYLOAD_
 	-rm -rf $(PAYLOAD_DIR)/*
 
 	# Creating IPA package for upload
-	cp -R $(BUILT_DEVICE_PRODUCTS_DIR)/MapboxTestHost.app $(PAYLOAD_DIR)
-	cp $(XCTESTRUN_PACKAGE) $(PAYLOAD_DIR)/MapboxTestHost.app/xctestrun.zip
+	cp -R $(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app $(PAYLOAD_DIR)
+	cp $(XCTESTRUN_PACKAGE) $(PAYLOAD_DIR)/$(APP_NAME).app/xctestrun.zip
 
 	-rm $(DEVICE_FARM_UPLOAD_IPA)
 	cd $(BUILD_DIR) && zip -r $(notdir $(DEVICE_FARM_UPLOAD_IPA)) Payload

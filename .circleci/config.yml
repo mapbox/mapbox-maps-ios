@@ -48,7 +48,9 @@ workflows:
                         configuration: ["Debug", "Release"]
                         report_failure: [true]
 
-            - maps-device-unit-tests:
+            - run-tests-on-devices:
+                scheme: "MapboxMapsTestsWithHost"
+                app-name: "MapboxTestHost"
                 device-pool: $(AWS_DEVICE_FARM_5_DEVICE_POOL)
                 device-tests-always-run: true
                 report_failure: true
@@ -87,7 +89,13 @@ workflows:
             - maps-unit-tests:
                 name: "Run Unit tests"
 
-            - maps-device-unit-tests
+            - run-tests-on-devices:
+                scheme: "MapboxMapsTestsWithHost"
+                app-name: "MapboxTestHost"
+
+            - run-tests-on-devices:
+                scheme: "Examples"
+                app-name: "Examples"
 
             - create-xcframework
             
@@ -272,8 +280,13 @@ jobs:
  
 
     # We may want to split this across multiple jobs, rather than multiple
-    maps-device-unit-tests:
+    run-tests-on-devices:
         <<: *default-job
+        parameters:
+            scheme:
+                type: string
+            app-name:
+                type: string
         steps:
             - checkout
             - access-token-xcconfig
@@ -283,7 +296,8 @@ jobs:
             - run: make install-devicefarm-dependencies
             - make-deps
             - device-test-scheme:
-                scheme: MapboxMapsTestsWithHost
+                scheme: << parameters.scheme >>
+                app-name: << parameters.app-name >>
                 configuration: Release
             - gather-xcresults
             - store-device-farm-artifacts
@@ -528,13 +542,15 @@ commands:
         parameters:
             scheme:
                 type: string
+            app-name:
+                type: string
             configuration:
                 type: string
         steps:
             - run:
                 name: Testing << parameters.scheme >> on AWS Device Farm
                 command: |
-                    make test-with-device-farm SCHEME=<< parameters.scheme >> CONFIGURATION=<< parameters.configuration >>
+                    make test-with-device-farm SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=<< parameters.configuration >>
                 when: always
 
     store-logs:

@@ -319,7 +319,6 @@ class Project:
 
         aws_command = ['aws', 'devicefarm', 'schedule-run',
                                             '--project-arn', self.project_arn,
-                                            '--configuration', 'customerArtifactPaths={iosPaths=["Documents"]}',
                                             '--device-pool-arn', self.device_pool_arn,
                                             '--name', self.name,
                                             '--test', test,

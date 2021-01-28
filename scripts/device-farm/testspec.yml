@@ -21,32 +21,23 @@ phases:
       # uploaded (the testrun file is included in the app package.)
       # - ls -laR $DEVICEFARM_TEST_PACKAGE_PATH
       - mkdir -p /tmp/test-root
-      - mkdir -p /tmp/build
       - unzip $DEVICEFARM_TEST_PACKAGE_PATH -d /tmp/unzipped-ipa
-      - mv /tmp/unzipped-ipa/Payload/MapboxTestHost.app/xctestrun.zip /tmp/xctestrun.zip
+      - mv /tmp/unzipped-ipa/Payload/*.app/xctestrun.zip /tmp/xctestrun.zip
       - unzip /tmp/xctestrun.zip -d /tmp/test-root
 
       - export CONFIG=`cat /tmp/test-root/configuration.txt`
       - export SCHEME=`cat /tmp/test-root/scheme.txt`
+      - export APP_NAME=`cat /tmp/test-root/app_name.txt`
       - export DATE=`date +"%Y-%m-%d_%H%M%S"`
   
-      - cp -R /tmp/unzipped-ipa/Payload/MapboxTestHost.app /tmp/test-root/$CONFIG-iphoneos
+      - cp -R /tmp/unzipped-ipa/Payload/$APP_NAME.app /tmp/test-root/$CONFIG-iphoneos
 
 
   # The test phase includes commands that run your test suite execution.
   test:
     commands:
       # TODO: Investigate -resultBundlePath
-      - cd /tmp/test-root && xcodebuild test-without-building -destination id=$DEVICEFARM_DEVICE_UDID -xctestrun device.xctestrun -derivedDataPath /tmp/build -resultBundlePath /tmp/build/$SCHEME.$CONFIG.$DATE.xcresult
-
-  # The post test phase includes are commands that are run after your tests are
-  # executed.
-  post_test:
-    commands:
-      # We created a separate /tmp/build directory as we were seeing some
-      # "permission denied" errors with the xcresult package (resulting in an
-      # essentially empty result folder).
-      - cp -R /tmp/build $DEVICEFARM_LOG_DIR
+      - cd /tmp/test-root && xcodebuild test-without-building -destination id=$DEVICEFARM_DEVICE_UDID -xctestrun device.xctestrun -derivedDataPath $DEVICEFARM_LOG_DIR -resultBundlePath $DEVICEFARM_LOG_DIR/$SCHEME.$CONFIG.$DATE.xcresult
 
 # The artifacts phase lets you specify the location where your tests logs,
 # device logs will be stored. And also let you specify the location of your test
@@ -56,7 +47,3 @@ artifacts:
   # By default, Device Farm will collect your artifacts from following
   # directories
   - $DEVICEFARM_LOG_DIR
-
-  # This appears necessary, even though it is specified on the schedule-run
-  # command-line
-  - Documents

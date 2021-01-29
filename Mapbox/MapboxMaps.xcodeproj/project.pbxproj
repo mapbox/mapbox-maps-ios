@@ -396,6 +396,11 @@
 		CA050571259104E200FF7D02 /* FeatureQueryingTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B82A652548C1320048D0F2 /* FeatureQueryingTest.swift */; };
 		CA05A71F2551C89600ABF902 /* CacheManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA05A71E2551C89600ABF902 /* CacheManagerIntegrationTests.swift */; };
 		CA05A7202551C89600ABF902 /* CacheManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA05A71E2551C89600ABF902 /* CacheManagerIntegrationTests.swift */; };
+		CA0B373325C4BEAE00B3396E /* MapboxMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CD34FCE242AADDB00943687 /* MapboxMaps.framework */; };
+		CA0B373925C4BEAE00B3396E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07182014256C1F6100F22489 /* Assets.xcassets */; };
+		CA0B37E725C4C00300B3396E /* HTTPIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB11C982555986F00060963 /* HTTPIntegrationTests.swift */; };
+		CA0B380C25C4C01400B3396E /* MapViewIntegrationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA53616D2537ECA600A8AE38 /* MapViewIntegrationTestCase.swift */; };
+		CA0B380D25C4C01400B3396E /* IntegrationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5361862537EE0600A8AE38 /* IntegrationTestCase.swift */; };
 		CA2E4A1B2538D3530096DEDE /* MapViewIntegrationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA53616D2537ECA600A8AE38 /* MapViewIntegrationTestCase.swift */; };
 		CA2E4A1C2538D3530096DEDE /* IntegrationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5361862537EE0600A8AE38 /* IntegrationTestCase.swift */; };
 		CA2E4A1D2538D3530096DEDE /* DidIdleFailureIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA2E498825380B300096DEDE /* DidIdleFailureIntegrationTest.swift */; };
@@ -506,8 +511,6 @@
 		CAA73A9C256F750B00E14EE0 /* FlyToTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA73A9B256F750B00E14EE0 /* FlyToTests.swift */; };
 		CAA73A9D256F750B00E14EE0 /* FlyToTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA73A9B256F750B00E14EE0 /* FlyToTests.swift */; };
 		CAA73A9E256F750B00E14EE0 /* FlyToTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA73A9B256F750B00E14EE0 /* FlyToTests.swift */; };
-		CAB11C992555986F00060963 /* HTTPIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB11C982555986F00060963 /* HTTPIntegrationTests.swift */; };
-		CAB11C9A2555986F00060963 /* HTTPIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB11C982555986F00060963 /* HTTPIntegrationTests.swift */; };
 		CAC1960B25AE98F400F69FEA /* GlyphsRasterizationOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC1960A25AE98F400F69FEA /* GlyphsRasterizationOptions.swift */; };
 		CAC1960C25AE98F400F69FEA /* GlyphsRasterizationOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC1960A25AE98F400F69FEA /* GlyphsRasterizationOptions.swift */; };
 		CAC1962025AEAE6600F69FEA /* GlyphsRasterizationOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC1961F25AEAE6600F69FEA /* GlyphsRasterizationOptionsTests.swift */; };
@@ -694,6 +697,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = A4519DCC2432FF03007CF39A;
 			remoteInfo = MapboxMapsStyle;
+		};
+		CA0B36D925C4BEAE00B3396E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1FEE78BA2421884000337895 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0CD34FCD242AADDB00943687;
+			remoteInfo = Mapbox;
+		};
+		CA0B36DB25C4BEAE00B3396E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1FEE78BA2421884000337895 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CA4453C42436E71500477B4F;
+			remoteInfo = MapboxMapsTestHost;
 		};
 		CA548FD1251C404B00F829A3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1011,6 +1028,8 @@
 		C69F011125431AF4001AB49B /* LocationManagerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerIntegrationTests.swift; sourceTree = "<group>"; };
 		C69F017325435C55001AB49B /* LocationProviderMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationProviderMock.swift; sourceTree = "<group>"; };
 		CA05A71E2551C89600ABF902 /* CacheManagerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManagerIntegrationTests.swift; sourceTree = "<group>"; };
+		CA0B374325C4BEAE00B3396E /* MapboxMapsHTTPTestsWithHost.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxMapsHTTPTestsWithHost.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA0B374425C4BEAE00B3396E /* MapboxMapsTestsWithHost copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "MapboxMapsTestsWithHost copy-Info.plist"; path = "/Users/julianrex/development/mapbox-maps-ios/Mapbox/MapboxMapsTestsWithHost copy-Info.plist"; sourceTree = "<absolute>"; };
 		CA2E498825380B300096DEDE /* DidIdleFailureIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DidIdleFailureIntegrationTest.swift; sourceTree = "<group>"; };
 		CA355C06256EEA7C00FD1DB7 /* FlyToInterpolator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyToInterpolator.swift; sourceTree = "<group>"; };
 		CA4453C52436E71500477B4F /* MapboxTestHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapboxTestHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1199,6 +1218,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				CAFF1997251CE81D00129C5F /* MapboxMapsStyle.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CA0B373225C4BEAE00B3396E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CA0B373325C4BEAE00B3396E /* MapboxMaps.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1706,6 +1733,7 @@
 				CA9481542554AA3D00D93C3C /* TestHelpers */,
 				1FEE78C42421884000337895 /* Products */,
 				1FEE79BC2421AC7C00337895 /* Frameworks */,
+				CA0B374425C4BEAE00B3396E /* MapboxMapsTestsWithHost copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1732,6 +1760,7 @@
 				07E4FD1824E4A35600D734D1 /* MapboxMapsAnnotations.framework */,
 				07E4FD2024E4A35600D734D1 /* MapboxMapsAnnotationsTests.xctest */,
 				CA54900D251C404B00F829A3 /* MapboxMapsTestsWithHost.xctest */,
+				CA0B374325C4BEAE00B3396E /* MapboxMapsHTTPTestsWithHost.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2414,6 +2443,26 @@
 			productReference = A4519DD52432FF03007CF39A /* MapboxMapsStyleTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		CA0B36D725C4BEAE00B3396E /* MapboxMapsHTTPTestsWithHost */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CA0B374025C4BEAE00B3396E /* Build configuration list for PBXNativeTarget "MapboxMapsHTTPTestsWithHost" */;
+			buildPhases = (
+				CA0B36DC25C4BEAE00B3396E /* Sources */,
+				CA0B373225C4BEAE00B3396E /* Frameworks */,
+				CA0B373425C4BEAE00B3396E /* Resources */,
+				CA0B373F25C4BEAE00B3396E /* Lint with SwiftLint */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CA0B36D825C4BEAE00B3396E /* PBXTargetDependency */,
+				CA0B36DA25C4BEAE00B3396E /* PBXTargetDependency */,
+			);
+			name = MapboxMapsHTTPTestsWithHost;
+			productName = MapboxTests;
+			productReference = CA0B374325C4BEAE00B3396E /* MapboxMapsHTTPTestsWithHost.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		CA4453C42436E71500477B4F /* MapboxTestHost */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CA4453D82436E71900477B4F /* Build configuration list for PBXNativeTarget "MapboxTestHost" */;
@@ -2553,6 +2602,7 @@
 				0CD34FCD242AADDB00943687 /* MapboxMaps */,
 				0CD34FD5242AADDB00943687 /* MapboxMapsTests */,
 				CA548FCF251C404B00F829A3 /* MapboxMapsTestsWithHost */,
+				CA0B36D725C4BEAE00B3396E /* MapboxMapsHTTPTestsWithHost */,
 				07E4FD1724E4A35600D734D1 /* MapboxMapsAnnotations */,
 				07E4FD1F24E4A35600D734D1 /* MapboxMapsAnnotationsTests */,
 				1F11C10E2421B05600F8397B /* MapboxMapsFoundation */,
@@ -2723,6 +2773,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CA0B373425C4BEAE00B3396E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CA0B373925C4BEAE00B3396E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3097,6 +3155,24 @@
 			shellPath = /bin/sh;
 			shellScript = "if which swiftlint >/dev/null; then\n  echo \"Linting ${TARGET_NAME}...\"\n  swiftlint lint --config $SRCROOT/../.swiftlint.yml ${TARGET_NAME}\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
+		CA0B373F25C4BEAE00B3396E /* Lint with SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Lint with SwiftLint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  echo \"Linting ${TARGET_NAME}...\"\n  echo \"Please re-enable if/when MapboxMapsTests has its own test cases.\"\n#  swiftlint lint --config $SRCROOT/../.swiftlint.yml ${TARGET_NAME}\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
 		CABF7DB82437A72900DFEF7E /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3405,7 +3481,6 @@
 				0C50AAE325BE8806007C0068 /* LightTests.swift in Sources */,
 				07B82A662548C1320048D0F2 /* FeatureQueryingTest.swift in Sources */,
 				0C5CFCED25BB951B0001E753 /* LocationIndicatorLayerTests.swift in Sources */,
-				CAB11C992555986F00060963 /* HTTPIntegrationTests.swift in Sources */,
 				0C5CFCF025BB951B0001E753 /* SkyLayerTests.swift in Sources */,
 				CA4AE063252D655000183075 /* PolygonAnnotationTests.swift in Sources */,
 				CA548F04251C3D5500F829A3 /* FeatureCollectionTests.swift in Sources */,
@@ -3636,6 +3711,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CA0B36DC25C4BEAE00B3396E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CA0B380C25C4C01400B3396E /* MapViewIntegrationTestCase.swift in Sources */,
+				CA0B380D25C4C01400B3396E /* IntegrationTestCase.swift in Sources */,
+				CA0B37E725C4C00300B3396E /* HTTPIntegrationTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CA4453C12436E71500477B4F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3660,7 +3745,6 @@
 				0C5CFD7825BE25210001E753 /* RasterSourceTests.swift in Sources */,
 				0C5CFDAF25BE28D20001E753 /* Fixtures.swift in Sources */,
 				C69F015A254358C5001AB49B /* AnnotationManagerIntegrationTests.swift in Sources */,
-				CAB11C9A2555986F00060963 /* HTTPIntegrationTests.swift in Sources */,
 				0C5CFCDF25BB951B0001E753 /* BackgroundLayerTests.swift in Sources */,
 				CA2E4A1C2538D3530096DEDE /* IntegrationTestCase.swift in Sources */,
 				CA4AE0DB252D655A00183075 /* AnnotationInteractionDelegateTests.swift in Sources */,
@@ -3833,6 +3917,16 @@
 			isa = PBXTargetDependency;
 			target = A4519DCC2432FF03007CF39A /* MapboxMapsStyle */;
 			targetProxy = C64994C4259114550052C21C /* PBXContainerItemProxy */;
+		};
+		CA0B36D825C4BEAE00B3396E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0CD34FCD242AADDB00943687 /* MapboxMaps */;
+			targetProxy = CA0B36D925C4BEAE00B3396E /* PBXContainerItemProxy */;
+		};
+		CA0B36DA25C4BEAE00B3396E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CA4453C42436E71500477B4F /* MapboxTestHost */;
+			targetProxy = CA0B36DB25C4BEAE00B3396E /* PBXContainerItemProxy */;
 		};
 		CA548FD0251C404B00F829A3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -4987,6 +5081,44 @@
 			};
 			name = Release;
 		};
+		CA0B374125C4BEAE00B3396E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0C8CD15E24DAF6DD00DC3713 /* unitTests.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = MapboxMapsTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MapboxTestHost.app/MapboxTestHost";
+			};
+			name = Debug;
+		};
+		CA0B374225C4BEAE00B3396E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0C8CD15E24DAF6DD00DC3713 /* unitTests.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = MapboxMapsTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MapboxTestHost.app/MapboxTestHost";
+			};
+			name = Release;
+		};
 		CA4453D62436E71900477B4F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -5233,6 +5365,15 @@
 			buildConfigurations = (
 				A4519DE02432FF03007CF39A /* Debug */,
 				A4519DE12432FF03007CF39A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CA0B374025C4BEAE00B3396E /* Build configuration list for PBXNativeTarget "MapboxMapsHTTPTestsWithHost" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CA0B374125C4BEAE00B3396E /* Debug */,
+				CA0B374225C4BEAE00B3396E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

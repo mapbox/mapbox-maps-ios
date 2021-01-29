@@ -1,50 +1,100 @@
 import XCTest
 import MapboxMaps
 
-class HTTPIntegrationTestHTTPService: HttpServiceInterface {
-
-    /// Set this to an error that `request(for:callback:)` should pass to its callback
-    var error: HttpRequestError?
-
-    /// An expectation that will be fulfilled when the request function is called
-    var requestExpectation: XCTestExpectation?
+class CustomHttpService: HttpServiceInterface {
 
     // MARK: - HttpServiceInterface protocol conformance
+    var forcedError: HttpRequestError?
+
+    /// An expectation that will be fulfilled when the request function is called
+    var requestCompletion: (() -> Void)?
+
+    // MARK: - HttpServiceInterface conformance
 
     func setMaxRequestsPerHostForMax(_ max: UInt8) {
-        print("setMaxRequestsPerHostForMax conformance")
+        print("TODO: setMaxRequestsPerHostForMax conformance")
     }
 
     func request(for request: HttpRequest, callback: @escaping HttpResponseCallback) -> UInt64 {
-        let expected: MBXExpected<HttpResponseData, HttpRequestError>
-        if let error = error {
-            expected = MBXExpected(error: error)
-        } else {
-            XCTFail("Not yet implemented")
-            expected = MBXExpected(value: HttpResponseData())
+
+        // If the test sets an error, call the callback with immediately
+        if let error = forcedError {
+            let expected = MBXExpected<HttpResponseData, HttpRequestError>(error: error)
+            let response = HttpResponse(request: request, result: expected as! MBXExpected<AnyObject, AnyObject>)
+            callback(response)
+            requestCompletion?()
+            return 0
         }
 
-        let response = HttpResponse(request: request, result: expected as! MBXExpected<AnyObject, AnyObject>)
+        // Make an API request
+        var urlRequest = URLRequest(url: URL(string: request.url)!)
 
-        callback(response)
+        let methodMap: [HttpMethod: String] = [
+            .get : "GET",
+            .head : "HEAD",
+            .post : "POST"
+        ]
 
-        if let expectation = requestExpectation {
-            expectation.fulfill()
+        urlRequest.httpMethod = methodMap[request.method]!
+        urlRequest.httpBody = request.body
+        urlRequest.allHTTPHeaderFields = request.headers
+
+        let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+
+            // `HttpResponse` takes an `MBXExpected` type. This is very similar to Swift's
+            // `Result` type.
+            // APIs using `MBXExpected` are prone to future changes.
+            let expected: MBXExpected<HttpResponseData, HttpRequestError>
+
+            if let error = error {
+                // Map NSURLError to HttpRequestErrorType
+                let requestError = HttpRequestError(type: .otherError, message: error.localizedDescription)
+                expected = MBXExpected(error: requestError)
+            }
+            else if let response = response as? HTTPURLResponse,
+                    let data = data {
+
+                // Keys are expected to be lowercase
+                var headers: [String: String] = [:]
+                for (key, value) in response.allHeaderFields {
+                    guard let key = key as? String,
+                          let value = value as? String else {
+                        continue
+                    }
+
+                    headers[key.lowercased()] = value
+                }
+
+                let responseData = HttpResponseData(headers: headers, code: Int64(response.statusCode), data: data)
+                expected = MBXExpected(value: responseData)
+            }
+            else {
+                // error
+                let requestError = HttpRequestError(type: .otherError, message: "Invalid response")
+                expected = MBXExpected(error: requestError)
+            }
+
+            let response = HttpResponse(request: request, result: expected as! MBXExpected<AnyObject, AnyObject>)
+            callback(response)
+            self.requestCompletion?()
         }
-        return 0
+
+        task.resume()
+
+        // Handle used to cancel requests
+        return UInt64(task.taskIdentifier)
     }
 
     func cancelRequest(forId id: UInt64, callback: @escaping ResultCallback) {
-        print("cancelRequest(forId:callback:) conformance")
+        print("TODO: cancelRequest(forId:callback:) conformance")
     }
 
     func supportsKeepCompression() -> Bool {
-        print("supportsKeepCompression conformance")
-        return true
+        return false
     }
 
     func download(for options: DownloadOptions, callback: @escaping DownloadStatusCallback) -> UInt64 {
-        print("download(for:callback:) conformance")
+        print("TODO: download(for:callback:) conformance")
         return 0
     }
 
@@ -53,34 +103,38 @@ class HTTPIntegrationTestHTTPService: HttpServiceInterface {
 
 class HTTPIntegrationTests: MapViewIntegrationTestCase {
 
-    override func setUpWithError() throws {
-        try super.setUpWithError()
+    static let customHTTPService = CustomHttpService()
 
-        let resourceOptions = try! mapView!.__map.getResourceOptions()
-        let cm = try! CacheManager(options: resourceOptions)
-        try! cm.clearAmbientCache { _ in
+    override class func setUp() {
+        super.setUp()
+
+        try! HttpServiceFactory.setUserDefinedForCustom(customHTTPService)
+    }
+
+    func testReplacingHTTPService() throws {
+        let serviceExpectation = XCTestExpectation(description: "Requests should be made by custom HTTP stack")
+        serviceExpectation.assertForOverFulfill = false
+
+        Self.customHTTPService.requestCompletion = {
+            XCTAssertNotNil(Self.customHTTPService.forcedError)
+            serviceExpectation.fulfill()
         }
+
+        style!.styleURL = .streets
+
+        wait(for: [serviceExpectation], timeout: 5.0)
     }
 
-    override func tearDownWithError() throws {
-        try super.tearDownWithError()
-
-        // Reset to default
-        try! HttpServiceFactory.setUserDefinedForCustom(MBXHTTPService.default())
-    }
-
-    func disabledTestReplacingHTTPService() throws {
-
-        let mockHttpService = HTTPIntegrationTestHTTPService()
-        try! HttpServiceFactory.setUserDefinedForCustom(mockHttpService)
-
+    func testReplacingHTTPServiceAndForcedError() throws {
         let serviceExpectation = XCTestExpectation(description: "Mock service request should be called")
         let errorExpectation = XCTestExpectation(description: "Map should fail to load, with our custom error")
 
         let errorMessage = "mock HTTP service request error"
         let error = HttpRequestError(type: .otherError, message: errorMessage)
-        mockHttpService.error = error
-        mockHttpService.requestExpectation = serviceExpectation
+        Self.customHTTPService.forcedError = error
+        Self.customHTTPService.requestCompletion = {
+            serviceExpectation.fulfill()
+        }
 
         style!.styleURL = .streets
 

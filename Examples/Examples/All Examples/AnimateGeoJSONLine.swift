@@ -2,56 +2,54 @@ import UIKit
 import MapboxMaps
 import Turf
 
-
-
 @objc(AnimateGeoJSONLine)
 public class AnimateGeoJSONLine: UIViewController, ExampleProtocol {
-    
+
     internal var mapView: MapView!
     internal let sourceIdentifier = "route-source-identifier"
     internal var routeLineSource: GeoJSONSource!
     var currentIndex = 0
-    
+
     public var geoJSONLine = (identifier: "routeLine", source: GeoJSONSource())
-    
+
     override public func viewDidLoad() {
         super.viewDidLoad()
-        
+
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.view.addSubview(mapView)
-        
+
         let centerCoordinate = CLLocationCoordinate2D(latitude: 45.5076, longitude: -122.6736)
-        
+
         mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
                                         zoom: 11.0)
-        
+
         // Allows the delegate to receive information about map events.
         mapView.on(.mapLoadingFinished) { [weak self] _ in
-            
+
             guard let self = self else { return }
             self.addLine()
             self.animatePolyline()
-            
+
             // The below line is used for internal testing purposes only.
             self.finish()
         }
     }
-    
+
     func addLine() {
-        
+
         // Create a GeoJSON data source.
         routeLineSource = GeoJSONSource()
         routeLineSource.data = .feature(Feature(LineString([allCoordinates[currentIndex]])))
-        
+
         // Create a line layer
         var lineLayer = LineLayer(id: "line-layer")
         lineLayer.source = sourceIdentifier
         lineLayer.paint?.lineColor = .constant(ColorRepresentable(color: UIColor.red))
-        
+
         let lowZoomWidth = 5
         let highZoomWidth = 20
-        
+
         // Use an expression to define the line width at different zoom extents
         lineLayer.paint?.lineWidth = .expression(
             Exp(.interpolate) {
@@ -65,37 +63,37 @@ public class AnimateGeoJSONLine: UIViewController, ExampleProtocol {
         )
         lineLayer.layout?.lineCap = .round
         lineLayer.layout?.lineJoin = .round
-        
+
         // Add the lineLayer to the map.
         self.mapView.style.addSource(source: routeLineSource,
                                      identifier: sourceIdentifier)
         self.mapView.style.addLayer(layer: lineLayer)
-        
+
     }
-    
+
     func animatePolyline() {
         var currentCoordinates = [CLLocationCoordinate2D]()
-        
+
         // Start a timer that will add a new coordinate to the line and redraw it every time it repeats.
         Timer.scheduledTimer(withTimeInterval: 0.10, repeats: true) { ( timer ) in
-            
+
             if self.currentIndex > self.allCoordinates.count {
                 timer.invalidate()
                 return
             }
-            
+
             self.currentIndex += 1
-            
+
             // Create a subarray of locations up to the current index.
             currentCoordinates = Array(self.allCoordinates[0..<self.currentIndex - 1])
-            
+
             let updatedLine = Feature(LineString(currentCoordinates))
             self.routeLineSource.data = .feature(updatedLine)
             _ = self.mapView.style.updateGeoJSON(for: self.sourceIdentifier,
                                                  with: updatedLine)
         }
     }
-    
+
     let allCoordinates = [
         CLLocationCoordinate2D(latitude: 45.52214, longitude: -122.63748),
         CLLocationCoordinate2D(latitude: 45.52218, longitude: -122.64855),
@@ -169,6 +167,6 @@ public class AnimateGeoJSONLine: UIViewController, ExampleProtocol {
         CLLocationCoordinate2D(latitude: 45.49798, longitude: -122.70807),
         CLLocationCoordinate2D(latitude: 45.49798, longitude: -122.70717),
         CLLocationCoordinate2D(latitude: 45.4984, longitude: -122.70713),
-        CLLocationCoordinate2D(latitude: 45.49893, longitude: -122.70774),
+        CLLocationCoordinate2D(latitude: 45.49893, longitude: -122.70774)
     ]
 }

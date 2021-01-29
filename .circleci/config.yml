@@ -97,6 +97,7 @@ workflows:
 
             - run-tests-on-devices:
                 name: "Run Examples tests on devices"
+                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
                 device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
                 scheme: "Examples"
                 app-name: "Examples"
@@ -126,6 +127,9 @@ jobs:
             xcode:
                 type: string
                 default: "12.2.0"
+            device-farm-project:
+                type: string
+                default: $(AWS_DEVICE_FARM_PROJECT_ARN)
             device-pool:
                 type: string
                 default: $(AWS_DEVICE_FARM_1_PHONE_POOL)
@@ -152,6 +156,7 @@ jobs:
             xcode: << parameters.xcode >>
         environment:
             AWS_DEVICE_FARM_DEVICE_POOL: << parameters.device-pool >>
+            AWS_DEVICE_FARM_PROJECT_ARN: << parameters.device-farm-project >>
             CONFIGURATION: << parameters.configuration >>
         steps:
             # Don't run the default job

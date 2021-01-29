@@ -92,6 +92,8 @@ workflows:
 
             - run-tests-on-devices:
                 name: "Run MapboxTestHost tests on devices"
+                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
+                device-pool: $(AWS_DEVICE_FARM_1_PHONE_POOL)
                 scheme: "MapboxMapsTestsWithHost"
                 app-name: "MapboxTestHost"
 
@@ -129,7 +131,7 @@ jobs:
                 default: "12.2.0"
             device-farm-project:
                 type: string
-                default: $(AWS_DEVICE_FARM_PROJECT_ARN)
+                default: $(AWS_DEVICE_FARM_PROJECT_MAPS)
             device-pool:
                 type: string
                 default: $(AWS_DEVICE_FARM_1_PHONE_POOL)
@@ -156,7 +158,7 @@ jobs:
             xcode: << parameters.xcode >>
         environment:
             AWS_DEVICE_FARM_DEVICE_POOL: << parameters.device-pool >>
-            AWS_DEVICE_FARM_PROJECT_ARN: << parameters.device-farm-project >>
+            AWS_DEVICE_FARM_PROJECT: << parameters.device-farm-project >>
             CONFIGURATION: << parameters.configuration >>
         steps:
             # Don't run the default job

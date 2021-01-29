@@ -185,8 +185,8 @@ ifndef AWS_SECRET_ACCESS_KEY
 	@echo AWS_SECRET_ACCESS_KEY not set.
 	exit 1
 endif
-ifndef AWS_DEVICE_FARM_PROJECT_ARN
-	@echo AWS_DEVICE_FARM_PROJECT_ARN not set.
+ifndef AWS_DEVICE_FARM_PROJECT
+	@echo AWS_DEVICE_FARM_PROJECT not set.
 	exit 1
 endif
 
@@ -206,7 +206,7 @@ clean-for-device-build:
 # 	
 #	AWS_ACCESS_KEY_ID 
 #	AWS_SECRET_ACCESS_KEY
-#	AWS_DEVICE_FARM_PROJECT_ARN
+#	AWS_DEVICE_FARM_PROJECT
 #	AWS_DEVICE_FARM_DEVICE_POOL
 #
 # 	make test-with-device-farm SCHEME=MapboxTestsWithHost
@@ -227,7 +227,7 @@ test-with-device-farm: check_aws_creds $(DEVICE_FARM_RESULTS)
 # Wait for the previous scheduled run to complete and dump results/artifacts
 $(DEVICE_FARM_RESULTS): $(DEVICE_FARM_RUN)
 	-python3 ./scripts/device-farm/devicefarm.py \
-		$(AWS_DEVICE_FARM_PROJECT_ARN) \
+		$(AWS_DEVICE_FARM_PROJECT) \
 		--run-arn-file $(DEVICE_FARM_RUN) \
 		--artifacts-dir $(DEVICE_TEST_PATH) \
 		--output $(DEVICE_FARM_RESULTS)
@@ -267,7 +267,7 @@ ifndef AWS_DEVICE_FARM_DEVICE_POOL
 else	
 	# Upload and start tests
 	python3 ./scripts/device-farm/devicefarm.py \
-		$(AWS_DEVICE_FARM_PROJECT_ARN) \
+		$(AWS_DEVICE_FARM_PROJECT) \
 		--name $(BUILD_NAME) \
 		--device-pool $(AWS_DEVICE_FARM_DEVICE_POOL) \
 		--ipa $(DEVICE_FARM_UPLOAD_IPA) \

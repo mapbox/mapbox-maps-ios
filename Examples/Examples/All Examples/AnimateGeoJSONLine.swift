@@ -24,7 +24,7 @@ public class AnimateGeoJSONLine: UIViewController, ExampleProtocol {
         mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
                                         zoom: 11.0)
 
-        // Allows the delegate to receive information about map events.
+        // Wait for the map to load its style before adding data.
         mapView.on(.mapLoadingFinished) { [weak self] _ in
 
             guard let self = self else { return }

@@ -30,5 +30,22 @@ public class DebugViewController: UIViewController {
         }
 
         self.view.addSubview(mapView)
+
+        mapView.on(.mapLoadingFinished) { [weak self] _ in
+            guard let self = self else { return }
+
+            self.mapView.update {
+                $0.ornaments.showsScale = false
+                $0.location.showUserLocation = true
+
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+//                    self.mapView.cameraManager.setCamera(bearing: 90, animated: true, duration: 2.0, completion: nil)
+//                }
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                    self.mapView.cameraManager.setCamera(bearing: 270, animated: true, duration: 2.0, completion: nil)
+                }
+            }
+        }
     }
 }

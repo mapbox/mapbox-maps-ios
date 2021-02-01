@@ -147,6 +147,9 @@ public struct Examples {
                 type: OfflineRegionManagerExample.self),
         Example(title: "Add a line with a color gradient",
                 description: "Add a line with a rainbow color gradient",
-                type: LineGradientExample.self)
+                type: LineGradientExample.self),
+        Example(title: "Animate a GeoJSON line",
+                description: "Update a map's style to animate a line over time.",
+                type: AnimateGeoJSONLine.self)
     ]
 }

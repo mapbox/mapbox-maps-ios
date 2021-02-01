@@ -47,3 +47,6 @@ artifacts:
   # By default, Device Farm will collect your artifacts from following
   # directories
   - $DEVICEFARM_LOG_DIR
+  # This appears necessary, even though it is specified on the schedule-run
+  # command-line
+  - Documents

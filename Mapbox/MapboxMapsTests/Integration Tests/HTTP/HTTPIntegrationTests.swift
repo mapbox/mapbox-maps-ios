@@ -112,6 +112,11 @@ class HTTPIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testReplacingHTTPService() throws {
+        guard let style = style else {
+            XCTFail("Style should be valid")
+            return
+        }
+
         let serviceExpectation = XCTestExpectation(description: "Requests should be made by custom HTTP stack")
         serviceExpectation.assertForOverFulfill = false
 
@@ -120,12 +125,17 @@ class HTTPIntegrationTests: MapViewIntegrationTestCase {
             serviceExpectation.fulfill()
         }
 
-        style!.styleURL = .streets
+        style.styleURL = .streets
 
         wait(for: [serviceExpectation], timeout: 5.0)
     }
 
     func testReplacingHTTPServiceAndForcedError() throws {
+        guard let style = style else {
+            XCTFail("Style should be valid")
+            return
+        }
+
         let serviceExpectation = XCTestExpectation(description: "Mock service request should be called")
         let errorExpectation = XCTestExpectation(description: "Map should fail to load, with our custom error")
 
@@ -136,7 +146,7 @@ class HTTPIntegrationTests: MapViewIntegrationTestCase {
             serviceExpectation.fulfill()
         }
 
-        style!.styleURL = .streets
+        style.styleURL = .streets
 
         didFailLoadingMap = { (_, error2) in
             XCTAssertNotNil(error2)

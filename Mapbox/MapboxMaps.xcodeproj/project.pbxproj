@@ -1029,7 +1029,6 @@
 		C69F017325435C55001AB49B /* LocationProviderMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationProviderMock.swift; sourceTree = "<group>"; };
 		CA05A71E2551C89600ABF902 /* CacheManagerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManagerIntegrationTests.swift; sourceTree = "<group>"; };
 		CA0B374325C4BEAE00B3396E /* MapboxMapsHTTPTestsWithHost.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxMapsHTTPTestsWithHost.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		CA0B374425C4BEAE00B3396E /* MapboxMapsTestsWithHost copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "MapboxMapsTestsWithHost copy-Info.plist"; path = "/Users/julianrex/development/mapbox-maps-ios/Mapbox/MapboxMapsTestsWithHost copy-Info.plist"; sourceTree = "<absolute>"; };
 		CA2E498825380B300096DEDE /* DidIdleFailureIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DidIdleFailureIntegrationTest.swift; sourceTree = "<group>"; };
 		CA355C06256EEA7C00FD1DB7 /* FlyToInterpolator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyToInterpolator.swift; sourceTree = "<group>"; };
 		CA4453C52436E71500477B4F /* MapboxTestHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapboxTestHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1733,7 +1732,6 @@
 				CA9481542554AA3D00D93C3C /* TestHelpers */,
 				1FEE78C42421884000337895 /* Products */,
 				1FEE79BC2421AC7C00337895 /* Frameworks */,
-				CA0B374425C4BEAE00B3396E /* MapboxMapsTestsWithHost copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};

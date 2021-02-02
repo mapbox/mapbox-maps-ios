@@ -12,7 +12,7 @@ assignees: ''
 - Releaser:
 - Release buddy:
 - Release commencement time:
-- SEMVER tag/`<version>`:
+- SEMVER tag e.g `v10.0.0-beta.12`:
 - Milestone:
 
 _Required dependencies:_
@@ -22,10 +22,12 @@ _Required dependencies:_
 - Compatible version of Xcode:
 - Compatible version of MacOS:
 
-## 📦 Release MapboxCoreMaps
+## 📦 Verify Dependencies
 
-- [ ] Release MapboxCoreMaps, if needed.
-    * If necessary, [follow these instructions](https://github.com/mapbox/mapbox-gl-native-ios-internal#how-to-build-mapboxcoremaps-used-in-carbon-releases) to do so. 
+- [ ] Verify the Cartfile for correct version of MapboxCoreMaps
+- [ ] Verify the Cartfile for correct version of MapboxCommon
+- [ ] Verify the Cartfile for correct version of Turf
+- [ ] Verify the Cartfile for correct version of MME
 
 ## 📦 Release MapboxMaps
 
@@ -42,7 +44,7 @@ _Required dependencies:_
 - Upload direct download and xcframework to S3
 - Store the checksum of the .xcframework.zip as a CI artifact
 - Create a PR [here](https://github.com/mapbox/api-downloads/pulls) so that our SDK can be consumed
-- The above PR needs to be approved and merged before continuing
+- [ ] The above PR needs to be approved and merged before continuing
 
 **2) Update Distribution & Changelog**
 

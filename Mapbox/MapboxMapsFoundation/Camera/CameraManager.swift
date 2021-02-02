@@ -220,11 +220,13 @@ public class CameraManager {
         let clampedZoom: CGFloat? = zoom?.clamp(withMax: mapCameraOptions.maximumZoomLevel,
                                                 andMin: mapCameraOptions.minimumZoomLevel)
 
+        let optimalBearing = optimizeBearing(startBearing: mapView.bearing, endBearing: bearing)
+
         let newCamera = CameraOptions(center: centerCoordinate,
                                       padding: padding,
                                       anchor: anchor,
                                       zoom: clampedZoom,
-                                      bearing: bearing,
+                                      bearing: optimalBearing,
                                       pitch: pitch)
 
         guard mapView.cameraView.camera != newCamera else { return }
@@ -641,6 +643,22 @@ public class CameraManager {
 
         animationGroup.delegate = animationGroup
         cameraLayer.add(animationGroup, forKey: animationKey)
+    }
+
+    /// This function optimizes the bearing for set camera so that it is taking the shortest path
+    private func optimizeBearing(startBearing: CLLocationDirection?, endBearing: CLLocationDirection?) -> CLLocationDirection? {
+        guard
+            let startBearing = startBearing,
+            let endBearing = endBearing
+        else {
+            return nil
+        }
+
+        if endBearing - startBearing >= 180 {
+            return endBearing - 360
+        }
+
+        return endBearing
     }
 }
 

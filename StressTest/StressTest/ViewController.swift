@@ -240,18 +240,22 @@ class ViewController: UIViewController {
             Exp(.linear)
             Exp(.zoom)
             0
-            UIColor.red.expression
+            UIColor.red
             14
-            UIColor.blue.expression
+            UIColor.blue
         }
 
-        if let jsonObject = try? exp.jsonObject() {
-            color = mapView.__map.getStyleLayerProperty(forLayerId: land, property: "background-color")
+        do {
+            let jsonObject = try exp.jsonObject()
+            color = try mapView.__map.getStyleLayerProperty(forLayerId: land, property: "background-color")
 
             print("Setting background color expression")
-            mapView.__map.setStyleLayerPropertyForLayerId(land,
-                                                          property: "background-color",
-                                                          value: jsonObject)
+            try mapView.__map.setStyleLayerPropertyForLayerId(land,
+                                                              property: "background-color",
+                                                              value: jsonObject)
+        }
+        catch let error {
+            print("Error setting background color: \(error)")
         }
     }
 
@@ -262,9 +266,14 @@ class ViewController: UIViewController {
 
         if let color = color {
             print("Re-setting background color expression")
-            mapView.__map.setStyleLayerPropertyForLayerId(land,
-                                                      property: "background-color",
-                                                      value: color.value)
+            do {
+                try mapView.__map.setStyleLayerPropertyForLayerId(land,
+                                                                  property: "background-color",
+                                                                  value: color.value)
+            }
+            catch let error {
+                print("Failed to reset the background color: \(error)")
+            }
         }
         color = nil
     }

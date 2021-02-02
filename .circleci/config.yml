@@ -519,11 +519,6 @@ commands:
             # simulators
             - test-with-simulator:
                 scheme: << parameters.scheme >>
-            # - when:
-            #     condition:
-            #         equal: ['MapboxMaps', << parameters.scheme >>]
-            #     steps:
-            #       - code-coverage              
             - run:
                 name: Clean Build directory
                 command: |

@@ -55,7 +55,7 @@ public struct PointAnnotation: Annotation {
     /**
      The optional properties associated with the point annotation.
      */
-    public var properties: [String: Any]?
+    private(set) public var properties: [String: Any]?
 
     // MARK: - Internal properties
 

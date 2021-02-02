@@ -48,7 +48,7 @@ public struct PolygonAnnotation: Annotation {
     /**
      The optional properties associated with the polygon annotation.
      */
-    public var properties: [String: Any]?
+    private(set) public var properties: [String: Any]?
 
     // MARK: - Initialization
 

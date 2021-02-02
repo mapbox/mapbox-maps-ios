@@ -44,7 +44,7 @@ public struct LineAnnotation: Annotation {
     /**
      The optional properties associated with the line annotation.
      */
-    public var properties: [String: Any]?
+    private(set) public var properties: [String: Any]?
 
     // MARK: - Initialization
 

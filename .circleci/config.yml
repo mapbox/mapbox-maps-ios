@@ -316,6 +316,7 @@ jobs:
                 scheme: << parameters.scheme >>
                 app-name: << parameters.app-name >>
                 configuration: Release
+            - code-coverage
             - gather-xcresults # get xcresults here, may be zipped with more than one result
             - store-device-farm-artifacts
             # TODO: Add code cov here

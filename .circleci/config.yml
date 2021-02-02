@@ -613,7 +613,7 @@ commands:
         steps:
             - run: 
                 name: "Upload code coverage report"
-                command: bash <(curl -sSfL https://codecov.io/bash) -X gcov -t $CODECOV_TOKEN -D ./build/testruns -J '^MapboxMaps' || echo 'Codecov failed to upload'
+                command: bash <(curl -sSfL https://codecov.io/bash) -X gcov -t $CODECOV_TOKEN -D ./build/testruns || echo 'Codecov failed to upload'
     
     make-deps:
         steps:

@@ -36,26 +36,6 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "07344BE92425868300D302F2"
-               BuildableName = "MapboxMapsCommonsTests.xctest"
-               BlueprintName = "MapboxMapsCommonsTests"
-               ReferencedContainer = "container:MapboxMaps.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "07F0CA182448E738007FC521"
-               BuildableName = "MapboxMapsGeoJSONTests.xctest"
-               BlueprintName = "MapboxMapsGeoJSONTests"
-               ReferencedContainer = "container:MapboxMaps.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "1F2AD7362421C462006592F4"
                BuildableName = "MapboxMapsGesturesTests.xctest"
                BlueprintName = "MapboxMapsGesturesTests"

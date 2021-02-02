@@ -331,6 +331,10 @@ public class Style {
                                          value: geoJSONDictionary)
     }
 
+    /// Sets a terrain on the style
+    /// - Parameter terrain: The `Terrain` that should be rendered
+    /// - Returns: Result type with `.success` if terrain is successfully applied. `TerrainError` otherwise.
+    @discardableResult
     public func setTerrain(_ terrain: Terrain) -> Result<Bool, TerrainError> {
         do {
             let terrainData = try JSONEncoder().encode(terrain)
@@ -379,6 +383,7 @@ public class Style {
     ///   - type: Type of the layer
     ///   - update: Closure that mutates a layer passed to it
     /// - Returns: Result type with  `.success` if update is successful, `LayerError` otherwise
+    @discardableResult
     func updateLayer<T: Layer>(id: String, type: T.Type, update: (inout T) -> Void) -> Result<Bool, LayerError> {
 
         let result = self.getLayer(with: id, type: T.self)

@@ -3,7 +3,7 @@ import MapboxMaps
 import Turf
 
 @objc(AnimateGeoJSONLine)
-public class AnimateGeoJSONLine: UIViewController, ExampleProtocol {
+public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
     internal let sourceIdentifier = "route-source-identifier"

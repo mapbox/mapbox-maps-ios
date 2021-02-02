@@ -42,6 +42,12 @@ public enum LayerError: Error {
 
     /// Remove the style layer from the map failed
     case removeStyleLayerFailed(String?)
+
+    /// The retrieved layer is nil
+    case retrievedLayerIsNil
+
+    /// Updating the layer failed with error
+    case updateStyleLayerFailed(Error)
 }
 
 /// Error enum for all image-related errors
@@ -364,6 +370,45 @@ public class Style {
                                          : .failure(.addLightFailed(expectation.error as? String))
         } catch {
             return .failure(.addLightFailed(nil))
+        }
+    }
+
+    /// Updates a layer that exists in the style already
+    /// - Parameters:
+    ///   - id: identifier of layer to update
+    ///   - type: Type of the layer
+    ///   - update: Closure that mutates a layer passed to it
+    /// - Returns: Result type with  `.success` if update is successful, `LayerError` otherwise
+    func updateLayer<T: Layer>(id: String, type: T.Type, update: (inout T) -> Void) -> Result<Bool, LayerError> {
+
+        let result = self.getLayer(with: id, type: T.self)
+        var layer: T?
+
+        // Fetch the layer from the style
+        switch result {
+        case .success(let retrievedLayer):
+            // Successfully retrieved the layer
+            layer = retrievedLayer
+        case .failure(_):
+            // Could not retrieve the layer
+            return .failure(.getStyleLayerFailed(nil))
+        }
+
+        guard var validLayer = layer else {
+            return .failure(.retrievedLayerIsNil)
+        }
+
+        // Call closure to update the retrieved layer
+        update(&validLayer)
+
+        do {
+            let data = try JSONEncoder().encode(validLayer)
+            let value = try JSONSerialization.jsonObject(with: data, options: [])
+            // Re-apply the changes to the layer properties to the style
+            try self.styleManager.setStyleLayerPropertiesForLayerId(id, properties: value)
+            return .success(true)
+        } catch {
+            return .failure(.updateStyleLayerFailed(error))
         }
     }
 }

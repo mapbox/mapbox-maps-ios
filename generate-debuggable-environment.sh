@@ -32,10 +32,6 @@ make deps
 cd lib
 rm MapboxCommon.framework
 rm MapboxCoreMaps.framework
-ln -s ./../../DerivedData/Umbrella/Build/Products/Debug-iphonesimulator/MapboxCoreMaps.framework .
+ln -s ./../../DerivedData/MapboxMaps/Build/Products/Debug-iphonesimulator/MapboxCoreMaps.framework .
 ln -s ./../../mapbox-gl-native-internal/build/ios/lib/Debug/MapboxCommon.framework .
 cd ..
-
-# Open the workspace
-cd ..
-xed Umbrella.xcworkspace

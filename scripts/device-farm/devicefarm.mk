@@ -45,3 +45,4 @@ test:
 			-xctestrun device.xctestrun \
 			-derivedDataPath $(BUILD_PATH) \
 			-resultBundlePath $(BUILD_PATH)/$$SCHEME.$$CONFIG.$$DATE.xcresult
+			-enableCodeCoverage YES

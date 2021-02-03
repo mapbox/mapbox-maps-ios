@@ -169,7 +169,6 @@ class CameraManagerTests: XCTestCase {
     func testOptimizeBearingClockwise() {
         let startBearing = 0.0
         let endBearing = 90.0
-
         let optimizedBearing = cameraManager.optimizeBearing(startBearing: startBearing, endBearing: endBearing)
 
         XCTAssertEqual(optimizedBearing, 90.0)
@@ -178,9 +177,9 @@ class CameraManagerTests: XCTestCase {
     func testOptimizeBearingCounterClockwise() {
         let startBearing = 0.0
         let endBearing = 270.0
-
         let optimizedBearing = cameraManager.optimizeBearing(startBearing: startBearing, endBearing: endBearing)
 
+        // We should rotate counter clockwise which is shown by a negative angle
         XCTAssertEqual(optimizedBearing, -90.0)
     }
 

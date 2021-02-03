@@ -7,7 +7,7 @@ CONFIGURATION    ?= Debug
 BUILD_DIR        ?= $(CURDIR)/build
 JOBS             ?= $(shell sysctl -n hw.ncpu)
 DESTINATIONS     ?= -destination 'platform=iOS Simulator,OS=latest,name=iPhone 11'
-APP_NAME		 ?= $(SCHEME)
+APP_NAME         ?= $(SCHEME)
 
 # Circle
 CIRCLE_CI_CLI       ?= /usr/local/bin/circleci

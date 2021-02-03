@@ -165,4 +165,12 @@ class CameraManagerTests: XCTestCase {
         XCTAssertEqual(mapView.centerCoordinate.latitude, 7.013668, accuracy: 0.0001, "The new latitude should be approximately 7.013668")
         XCTAssertEqual(mapView.centerCoordinate.longitude, 7.03125, accuracy: 0.0001, "The new longitude should be approximately 7.03125")
     }
+
+    func testOptimizeBearingClockwise() {
+
+    }
+
+    func testOptimizeBearingCounterClockwise() {
+
+    }
 }

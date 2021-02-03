@@ -646,11 +646,11 @@ public class CameraManager {
     }
 
     /**
-        This function optimizes the bearing for set camera so that it is taking the shortest path
+    This function optimizes the bearing for set camera so that it is taking the shortest path
 
-        - Parameter startBearting: The current or start bearing of the map viewport
-        - Parameter endBearting: The bearing of where the map viewport should end at
-        - Returns: A `CLLocationDirection` that represents the correct final bearing accounting for positive and negatives
+    - Parameter startBearting: The current or start bearing of the map viewport
+    - Parameter endBearting: The bearing of where the map viewport should end at
+    - Returns: A `CLLocationDirection` that represents the correct final bearing accounting for positive and negatives
     */
     internal func optimizeBearing(startBearing: CLLocationDirection?, endBearing: CLLocationDirection?) -> CLLocationDirection? {
         guard

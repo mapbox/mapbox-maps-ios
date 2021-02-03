@@ -195,11 +195,11 @@ class CameraManagerTests: XCTestCase {
     func testOptimizeBearingWhenStartBearingIsNegative() {
         var optimizedBearing: CLLocationDirection?
 
-        // Starting at -90 aka 270 should rotation clockwise to 20
+        // Starting at -90 aka 270 should rotate clockwise to 20
         optimizedBearing = cameraManager.optimizeBearing(startBearing: -90.0, endBearing: 20.0)
         XCTAssertEqual(optimizedBearing, 20)
 
-        // Starting at -90 aka 270 should rotation counter clockwise to -270 aka 90
+        // Starting at -90 aka 270 should rotate counter clockwise to -270 aka 90
         optimizedBearing = cameraManager.optimizeBearing(startBearing: -90.0, endBearing: -270)
         XCTAssertEqual(optimizedBearing, -270)
     }

@@ -35,6 +35,12 @@ internal extension Value where T == ResolvedImage {
     }
 }
 
+internal extension Value where T == ColorRepresentable {
+    static func testConstantValue() -> Value<ColorRepresentable> {
+        return .constant(ColorRepresentable(color: UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3))!)
+    }
+}
+
 internal extension Value where T == Bool {
     static func testConstantValue() -> Value<Bool> {
         return .constant(true)

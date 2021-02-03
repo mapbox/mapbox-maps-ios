@@ -1,5 +1,5 @@
 import XCTest
-import MapboxMaps
+@testable import MapboxMaps
 import MapboxCoreMaps
 
 class MapViewIntegrationTests: IntegrationTestCase {
@@ -33,4 +33,32 @@ class MapViewIntegrationTests: IntegrationTestCase {
         }
         XCTAssertNil(weakMapView)
     }
+
+    func testUpdateFromDisplayLink() throws {
+
+        guard let rootView = rootViewController?.view else {
+            throw XCTSkip("No valid UIWindow or root view controller")
+        }
+
+        let resourceOptions = ResourceOptions(accessToken: accessToken)
+        let mapView = MapView(with: CGRect(origin: .zero, size: rootView.bounds.size), resourceOptions: resourceOptions, styleURL: .streets)
+        rootView.addSubview(mapView)
+
+        let originalFPS = mapView.preferredFPS
+
+        XCTAssertNotNil(mapView.displayLink)
+
+        mapView.preferredFPS = .lowPower
+
+        XCTAssertNotEqual(originalFPS, mapView.preferredFPS)
+        XCTAssertEqual(mapView.preferredFPS.rawValue, mapView.displayLink?.preferredFramesPerSecond)
+
+        mapView.displayLink = nil
+
+        mapView.preferredFPS = .maximum
+
+        XCTAssertNil(mapView.displayLink?.preferredFramesPerSecond)
+        XCTAssertNotEqual(mapView.preferredFPS.rawValue, mapView.displayLink?.preferredFramesPerSecond)
+        }
+
 }

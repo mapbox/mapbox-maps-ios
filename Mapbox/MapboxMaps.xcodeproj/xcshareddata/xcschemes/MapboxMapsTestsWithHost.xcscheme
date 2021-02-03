@@ -46,6 +46,13 @@
             BlueprintName = "MapboxTestHost"
             ReferencedContainer = "container:MapboxMaps.xcodeproj">
          </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "0CD34FCD242AADDB00943687"
+            BuildableName = "MapboxMaps.framework"
+            BlueprintName = "MapboxMaps"
+            ReferencedContainer = "container:MapboxMaps.xcodeproj">
+         </BuildableReference>
       </CodeCoverageTargets>
       <Testables>
          <TestableReference

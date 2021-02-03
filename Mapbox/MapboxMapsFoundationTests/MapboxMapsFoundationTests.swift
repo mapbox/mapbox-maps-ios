@@ -270,23 +270,4 @@ class MapboxMapsFoundationTests: XCTestCase {
          // amount of byte difference that can't be accounted for.
          // XCTAssertEqual(original.pngData(), roundtripped.pngData())
     }
-
-    func testUpdateFromDisplayLink() {
-        mapView.validateDisplayLink()
-
-        let originalFPS = mapView.preferredFPS
-
-        XCTAssertNotNil(mapView.displayLink)
-
-        mapView.preferredFPS = .lowPower
-
-        XCTAssertNotEqual(originalFPS, mapView.preferredFPS)
-//        XCTAssertEqual(mapView.preferredFPS, mapView.displayLink?.preferredFramesPerSecond)
-
-        mapView.displayLink = nil
-
-        mapView.preferredFPS = .maximum
-
-
-    }
 }

@@ -209,8 +209,14 @@ private extension PuckLocationIndicatorLayer {
 
         paint.emphasisCircleRadiusTransition = StyleTransition(duration: 0, delay: 0)
         paint.bearingTransition = StyleTransition(duration: 0, delay: 0)
-        paint.accuracyRadiusColor = .constant(ColorRepresentable(color: UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
-        paint.accuracyRadiusBorderColor = .constant(ColorRepresentable(color: .lightGray))
+        if let validColor = ColorRepresentable(color: UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)) {
+            paint.accuracyRadiusColor = .constant(validColor)
+        }
+
+        if let validColor = ColorRepresentable(color: .lightGray) {
+            paint.accuracyRadiusBorderColor = .constant(validColor)
+        }
+
 
         layer.paint = paint
 
@@ -249,8 +255,14 @@ private extension PuckLocationIndicatorLayer {
         }
         paint.accuracyRadius = .expression(exp)
 
-        paint.accuracyRadiusColor = .constant(ColorRepresentable(color: UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
-        paint.accuracyRadiusBorderColor = .constant(ColorRepresentable(color: .lightGray))
+        if let validColor = ColorRepresentable(color: UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)) {
+            paint.accuracyRadiusColor = .constant(validColor)
+        }
+
+        if let validColor = ColorRepresentable(color: .lightGray) {
+            paint.accuracyRadiusBorderColor = .constant(validColor)
+        }
+
         layer.paint = paint
 
         // Add layer to style

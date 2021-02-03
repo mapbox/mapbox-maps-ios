@@ -67,7 +67,7 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
         lineLayer.source = geoJSONDataSourceIdentifier
 
         // Styling the line
-        lineLayer.paint?.lineColor = .constant(ColorRepresentable(color: UIColor.red))
+        lineLayer.paint?.lineColor = .constant(ColorRepresentable(color: UIColor.red)!)
         lineLayer.paint?.lineGradient = .expression(
             Exp(.interpolate) {
                 Exp(.linear)

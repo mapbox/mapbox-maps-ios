@@ -21,7 +21,7 @@
 		0CC4ECEA25B8AD3000F998B8 /* CustomLocationIndicatorLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC4ECE925B8AD3000F998B8 /* CustomLocationIndicatorLayerExample.swift */; };
 		0CE8ED88258928200066E56C /* race_car_model.gltf in Resources */ = {isa = PBXBuildFile; fileRef = 0CE8ED87258928200066E56C /* race_car_model.gltf */; };
 		0CE8ED8C2589285C0066E56C /* ModelExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE8ED8B2589285C0066E56C /* ModelExample.swift */; };
-		58A3C0C925C4B93600CAE5F0 /* AnimateGeoJSONLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLine.swift */; };
+		58A3C0C925C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */; };
 		A4211CE62592549900D215B4 /* RestrictCoordinateBoundsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4211CE52592549900D215B4 /* RestrictCoordinateBoundsExample.swift */; };
 		CA252D782587DD9500A989CD /* MapboxMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA252D772587DD9500A989CD /* MapboxMaps.framework */; };
 		CA252D792587DD9500A989CD /* MapboxMaps.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CA252D772587DD9500A989CD /* MapboxMaps.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -139,7 +139,7 @@
 		0CE3D3C225818786000585A2 /* FlyToExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyToExample.swift; sourceTree = "<group>"; };
 		0CE8ED87258928200066E56C /* race_car_model.gltf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = race_car_model.gltf; sourceTree = "<group>"; };
 		0CE8ED8B2589285C0066E56C /* ModelExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelExample.swift; sourceTree = "<group>"; };
-		58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateGeoJSONLine.swift; sourceTree = "<group>"; };
+		58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateGeoJSONLineExample.swift; sourceTree = "<group>"; };
 		666E0D4925664EE7000B8AF5 /* LayerPositionExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerPositionExample.swift; sourceTree = "<group>"; };
 		A4211CE52592549900D215B4 /* RestrictCoordinateBoundsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictCoordinateBoundsExample.swift; sourceTree = "<group>"; };
 		A4AC5DEB2542CB2200995E4C /* CustomStyleURLExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomStyleURLExample.swift; sourceTree = "<group>"; };
@@ -250,7 +250,7 @@
 				CA86E81725BE7C2200E5A1D9 /* BuildingExtrusionsExample.swift */,
 				CA86E86825BF551F00E5A1D9 /* OfflineRegionManagerExample.swift */,
 				0C78AC2825BF70E40057F570 /* LineGradientExample.swift */,
-				58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLine.swift */,
+				58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */,
 			);
 			path = "All Examples";
 			sourceTree = "<group>";
@@ -501,7 +501,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/insert_access_token.sh\n";
+			shellScript = "$SRCROOT/../scripts/insert_access_token.sh\n";
 		};
 		0746C193252FB370001638BD /* Lint with SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -556,7 +556,7 @@
 				CADCF72D2584990E0065C51B /* GeoJSONSourceExample.swift in Sources */,
 				CADCF72E2584990E0065C51B /* MapViewExample.swift in Sources */,
 				CADCF73F258499240065C51B /* SceneDelegate.swift in Sources */,
-				58A3C0C925C4B93600CAE5F0 /* AnimateGeoJSONLine.swift in Sources */,
+				58A3C0C925C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift in Sources */,
 				CADCF736258499170065C51B /* ExampleTableViewController.swift in Sources */,
 				A4211CE62592549900D215B4 /* RestrictCoordinateBoundsExample.swift in Sources */,
 				0C52BA9825AF8C880054ECA8 /* PuckModelLayerExample.swift in Sources */,

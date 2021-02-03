@@ -7,6 +7,7 @@ CONFIGURATION    ?= Debug
 BUILD_DIR        ?= $(CURDIR)/build
 JOBS             ?= $(shell sysctl -n hw.ncpu)
 DESTINATIONS     ?= -destination 'platform=iOS Simulator,OS=latest,name=iPhone 11'
+APP_NAME         ?= $(SCHEME)
 
 # Circle
 CIRCLE_CI_CLI       ?= /usr/local/bin/circleci
@@ -140,8 +141,10 @@ build-for-testing-device: $(XCTESTRUN_PACKAGE)
 # assumes that the tests require the "test host" app
 $(XCTESTRUN_PACKAGE): | $(PAYLOAD_DIR) $(TEST_ROOT)
 ifneq ($(SCHEME),MapboxMapsTestsWithHost)
-	$(error SCHEME should be MapboxMapsTestsWithHost)
-endif	
+ifneq ($(SCHEME),Examples)
+	$(error SCHEME should be MapboxMapsTestsWithHost or Examples)
+endif
+endif
 
 	# Build for testing
 	set -o pipefail && $(XCODE_BUILD_DEVICE) \
@@ -155,6 +158,7 @@ endif
 
 	# For use in Device Farm config
 	echo $(SCHEME) > $(TEST_ROOT)/scheme.txt
+	echo $(APP_NAME) > $(TEST_ROOT)/app_name.txt
 	echo $(CONFIGURATION) > $(TEST_ROOT)/configuration.txt
 	cp $(BUILT_DEVICE_PRODUCTS_DIR)/../$(SCHEME)_iphoneos*.xctestrun $(TEST_ROOT)/device.xctestrun
 
@@ -181,8 +185,8 @@ ifndef AWS_SECRET_ACCESS_KEY
 	@echo AWS_SECRET_ACCESS_KEY not set.
 	exit 1
 endif
-ifndef AWS_DEVICE_FARM_PROJECT_ARN
-	@echo AWS_DEVICE_FARM_PROJECT_ARN not set.
+ifndef AWS_DEVICE_FARM_PROJECT
+	@echo AWS_DEVICE_FARM_PROJECT not set.
 	exit 1
 endif
 
@@ -202,7 +206,7 @@ clean-for-device-build:
 # 	
 #	AWS_ACCESS_KEY_ID 
 #	AWS_SECRET_ACCESS_KEY
-#	AWS_DEVICE_FARM_PROJECT_ARN
+#	AWS_DEVICE_FARM_PROJECT
 #	AWS_DEVICE_FARM_DEVICE_POOL
 #
 # 	make test-with-device-farm SCHEME=MapboxTestsWithHost
@@ -223,7 +227,7 @@ test-with-device-farm: check_aws_creds $(DEVICE_FARM_RESULTS)
 # Wait for the previous scheduled run to complete and dump results/artifacts
 $(DEVICE_FARM_RESULTS): $(DEVICE_FARM_RUN)
 	-python3 ./scripts/device-farm/devicefarm.py \
-		$(AWS_DEVICE_FARM_PROJECT_ARN) \
+		$(AWS_DEVICE_FARM_PROJECT) \
 		--run-arn-file $(DEVICE_FARM_RUN) \
 		--artifacts-dir $(DEVICE_TEST_PATH) \
 		--output $(DEVICE_FARM_RESULTS)
@@ -263,7 +267,7 @@ ifndef AWS_DEVICE_FARM_DEVICE_POOL
 else	
 	# Upload and start tests
 	python3 ./scripts/device-farm/devicefarm.py \
-		$(AWS_DEVICE_FARM_PROJECT_ARN) \
+		$(AWS_DEVICE_FARM_PROJECT) \
 		--name $(BUILD_NAME) \
 		--device-pool $(AWS_DEVICE_FARM_DEVICE_POOL) \
 		--ipa $(DEVICE_FARM_UPLOAD_IPA) \
@@ -281,8 +285,8 @@ $(DEVICE_FARM_UPLOAD_IPA): $(XCTESTRUN_PACKAGE) | $(DEVICE_TEST_PATH) $(PAYLOAD_
 	-rm -rf $(PAYLOAD_DIR)/*
 
 	# Creating IPA package for upload
-	cp -R $(BUILT_DEVICE_PRODUCTS_DIR)/MapboxTestHost.app $(PAYLOAD_DIR)
-	cp $(XCTESTRUN_PACKAGE) $(PAYLOAD_DIR)/MapboxTestHost.app/xctestrun.zip
+	cp -R $(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app $(PAYLOAD_DIR)
+	cp $(XCTESTRUN_PACKAGE) $(PAYLOAD_DIR)/$(APP_NAME).app/xctestrun.zip
 
 	-rm $(DEVICE_FARM_UPLOAD_IPA)
 	cd $(BUILD_DIR) && zip -r $(notdir $(DEVICE_FARM_UPLOAD_IPA)) Payload

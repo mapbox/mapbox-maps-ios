@@ -150,6 +150,6 @@ public struct Examples {
                 type: LineGradientExample.self),
         Example(title: "Animate a GeoJSON line",
                 description: "Update a map's style to animate a line over time.",
-                type: AnimateGeoJSONLine.self)
+                type: AnimateGeoJSONLineExample.self)
     ]
 }

@@ -352,7 +352,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/insert_access_token.sh\n";
+			shellScript = "$SRCROOT/../scripts/insert_access_token.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

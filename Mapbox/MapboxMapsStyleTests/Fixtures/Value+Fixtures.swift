@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 #if canImport(MapboxMaps)
 @testable import MapboxMaps
 #else

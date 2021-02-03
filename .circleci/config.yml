@@ -48,11 +48,24 @@ workflows:
                         configuration: ["Debug", "Release"]
                         report_failure: [true]
 
-            - maps-device-unit-tests:
+            - run-tests-on-devices:
+                name: "Run MapboxTestHost tests on devices"
+                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
                 device-pool: $(AWS_DEVICE_FARM_5_DEVICE_POOL)
+                scheme: "MapboxMapsTestsWithHost"
+                app-name: "MapboxTestHost"
                 device-tests-always-run: true
                 report_failure: true
-            
+
+            - run-tests-on-devices:
+                name: "Run Examples tests on devices"
+                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
+                device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
+                scheme: "Examples"
+                app-name: "Examples"
+                device-tests-always-run: true
+                report_failure: true
+
             - create-xcframework:
                 create-xcframework-always-run: true
                 report_failure: true
@@ -87,7 +100,19 @@ workflows:
             - maps-unit-tests:
                 name: "Run Unit tests"
 
-            - maps-device-unit-tests
+            - run-tests-on-devices:
+                name: "Run MapboxTestHost tests on devices"
+                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
+                device-pool: $(AWS_DEVICE_FARM_1_PHONE_POOL)
+                scheme: "MapboxMapsTestsWithHost"
+                app-name: "MapboxTestHost"
+
+            - run-tests-on-devices:
+                name: "Run Examples tests on devices"
+                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
+                device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
+                scheme: "Examples"
+                app-name: "Examples"
 
             - create-xcframework
             
@@ -107,6 +132,9 @@ jobs:
             xcode:
                 type: string
                 default: "12.2.0"
+            device-farm-project:
+                type: string
+                default: $(AWS_DEVICE_FARM_PROJECT_MAPS)
             device-pool:
                 type: string
                 default: $(AWS_DEVICE_FARM_1_PHONE_POOL)
@@ -122,11 +150,18 @@ jobs:
             report_failure:
                 type: boolean
                 default: false
+            scheme:
+                type: string
+                default: "MapboxMapsTestsWithHost"
+            app-name:
+                type: string
+                default: "MapboxTestHost"
         executor:
             name: xcode-executor
             xcode: << parameters.xcode >>
         environment:
             AWS_DEVICE_FARM_DEVICE_POOL: << parameters.device-pool >>
+            AWS_DEVICE_FARM_PROJECT: << parameters.device-farm-project >>
             CONFIGURATION: << parameters.configuration >>
         steps:
             # Don't run the default job
@@ -136,7 +171,7 @@ jobs:
         <<: *default-job
         steps:
             - checkout
-            - access-token-xcconfig
+            - access-token-configs
             - make-deps
             - run: brew install swiftlint
             - build-scheme:
@@ -235,7 +270,7 @@ jobs:
         <<: *default-job    
         steps:
             - checkout
-            - access-token-xcconfig
+            - access-token-configs
             - make-deps
             - test-scheme:
                 scheme: MapboxMapsAnnotations
@@ -262,21 +297,21 @@ jobs:
             - report-failure:
                 report_failure: << parameters.report_failure >>
                 message: "maps-unit-tests"
- 
 
     # We may want to split this across multiple jobs, rather than multiple
-    maps-device-unit-tests:
+    run-tests-on-devices:
         <<: *default-job
         steps:
             - checkout
-            - access-token-xcconfig
+            - access-token-configs
             - ensure-text-exists-in-commit:
                 commit-text: "[run device tests]"  
                 always-run: << parameters.device-tests-always-run >>
             - run: make install-devicefarm-dependencies
             - make-deps
             - device-test-scheme:
-                scheme: MapboxMapsTestsWithHost
+                scheme: << parameters.scheme >>
+                app-name: << parameters.app-name >>
                 configuration: Release
             - gather-xcresults # get xcresults here, may be zipped with more than one result
             - store-device-farm-artifacts
@@ -391,9 +426,13 @@ commands:
 
     # Configurable build/test commands
 
-    access-token-xcconfig:
+    access-token-configs:
         steps:
-            - run: echo "MAPBOX_ACCESS_TOKEN = ${MAPBOX_ACCESS_TOKEN}" > ./developer.xcconfig
+            - run:
+                name: Save mapbox access token to configs
+                command: |
+                    echo "MAPBOX_ACCESS_TOKEN = ${MAPBOX_ACCESS_TOKEN}" > ./developer.xcconfig
+                    echo "${MAPBOX_ACCESS_TOKEN}" > ~/.mapbox
 
     build-for-simulator:
         parameters:
@@ -518,13 +557,15 @@ commands:
         parameters:
             scheme:
                 type: string
+            app-name:
+                type: string
             configuration:
                 type: string
         steps:
             - run:
                 name: Testing << parameters.scheme >> on AWS Device Farm
                 command: |
-                    make test-with-device-farm SCHEME=<< parameters.scheme >> CONFIGURATION=<< parameters.configuration >>
+                    make test-with-device-farm SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=<< parameters.configuration >>
                 when: always
 
     store-logs:

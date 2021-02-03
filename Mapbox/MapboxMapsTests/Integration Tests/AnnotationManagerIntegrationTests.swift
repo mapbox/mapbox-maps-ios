@@ -49,6 +49,60 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
 
         wait(for: expectations, timeout: 5.0)
     }
+
+    // MARK: - Test adding userInfo to annotation still renders annotation
+
+    /**
+     The purpose of this test is to ensure that adding userInfo to the annotation
+     will still render that annotation without fail, while also being able to retrieve that
+     that information at another instance.
+     */
+    internal func testAddUserInfoToAnnotation() {
+        style?.styleURL = .streets
+
+        let styleLoadedExpectation = XCTestExpectation(description: "Wait for map to load style")
+        let sourceAddedExpectation = XCTestExpectation(description: "Annotation source layer added")
+        let styleLayerAddedExpectation = XCTestExpectation(description: "Annotation style layer added")
+        let retrieveUserInfoExpectation = XCTestExpectation(description: "Get the userInfo value that was set for the annotation")
+
+        didFinishLoadingStyle = { mapView in
+
+            // Given
+            var annotation = PointAnnotation(coordinate: mapView.centerCoordinate)
+            let annotationManager = AnnotationManager(for: mapView, with: self)
+            annotation.userInfo = ["TestKey": true]
+            annotationManager.addAnnotation(annotation)
+
+            // When
+            let sourceResult = self.style?.getSource(identifier: annotationManager.defaultSourceId, type: GeoJSONSource.self)
+            let styleLayer = try! self.mapView?.__map.getStyleLayerProperties(forLayerId: annotationManager.defaultSymbolLayerId)
+            // ❓ Core SDK call to get style layer works, but not Style API line below
+            // let styleLayer = self.style?.getLayer(with: annotationManager.defaultSymbolLayerId, type: SymbolLayer.self)
+
+            // Then
+            styleLoadedExpectation.fulfill()
+
+            if let value = annotation.userInfo?["TestKey"] as? Bool,
+               value == true {
+                retrieveUserInfoExpectation.fulfill()
+            }
+
+            if case .success = sourceResult {
+                sourceAddedExpectation.fulfill()
+            }
+
+            if styleLayer?.value != nil {
+                styleLayerAddedExpectation.fulfill()
+            }
+        }
+
+        let expectations = [styleLoadedExpectation,
+                            sourceAddedExpectation,
+                            styleLayerAddedExpectation,
+                            retrieveUserInfoExpectation]
+
+        wait(for: expectations, timeout: 5.0)
+    }
 }
 
 // MARK: - Set up AnnotationManager

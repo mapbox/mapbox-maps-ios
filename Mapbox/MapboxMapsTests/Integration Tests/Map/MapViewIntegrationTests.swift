@@ -35,7 +35,6 @@ class MapViewIntegrationTests: IntegrationTestCase {
     }
 
     func testUpdateFromDisplayLink() throws {
-
         guard let rootView = rootViewController?.view else {
             throw XCTSkip("No valid UIWindow or root view controller")
         }
@@ -57,6 +56,7 @@ class MapViewIntegrationTests: IntegrationTestCase {
 
         mapView.preferredFPS = .maximum
 
+        // Test that the preferredFPS are not being updated when the displayLink is nil
         XCTAssertNil(mapView.displayLink?.preferredFramesPerSecond)
         XCTAssertNotEqual(mapView.preferredFPS.rawValue, mapView.displayLink?.preferredFramesPerSecond)
         }

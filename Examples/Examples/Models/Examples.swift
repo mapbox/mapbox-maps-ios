@@ -150,6 +150,9 @@ public struct Examples {
                 type: LineGradientExample.self),
         Example(title: "Animate a GeoJSON line",
                 description: "Update a map's style to animate a line over time.",
-                type: AnimateGeoJSONLineExample.self)
+                type: AnimateGeoJSONLineExample.self),
+        Example(title: "Use a map inside a SwiftUI view",
+                description: "Use the UIViewRepresentable protocol to wrap a MapView within a SwiftUI view",
+                type: SwiftUIExample.self)
     ]
 }

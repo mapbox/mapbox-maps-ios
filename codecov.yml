@@ -1,9 +1,8 @@
 ignore:
-  - "Example/"
+  - "Examples/"
   - "Mapbox/*Tests/"
   - "docs"
   - "DebugApp"
-  - "Mapbox/MapboxMapsStyle/Generated"
   - "StressTest/"
   - "PCVD/"
   - "Mapbox/Test*"

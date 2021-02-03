@@ -167,10 +167,36 @@ class CameraManagerTests: XCTestCase {
     }
 
     func testOptimizeBearingClockwise() {
+        let startBearing = 0.0
+        let endBearing = 90.0
 
+        let optimizedBearing = cameraManager.optimizeBearing(startBearing: startBearing, endBearing: endBearing)
+
+        XCTAssertEqual(optimizedBearing, 90.0)
     }
 
     func testOptimizeBearingCounterClockwise() {
+        let startBearing = 0.0
+        let endBearing = 270.0
 
+        let optimizedBearing = cameraManager.optimizeBearing(startBearing: startBearing, endBearing: endBearing)
+
+        XCTAssertEqual(optimizedBearing, -90.0)
+    }
+
+    func testOptimizeBearingHandlesNil() {
+        var optimizedBearing: CLLocationDirection?
+
+        // Test when no end bearing is provided
+        optimizedBearing = cameraManager.optimizeBearing(startBearing: 0.0, endBearing: nil)
+        XCTAssertNil(optimizedBearing)
+
+        // Test when no start bearing is provided
+        optimizedBearing = cameraManager.optimizeBearing(startBearing: nil, endBearing: 90)
+        XCTAssertNil(optimizedBearing)
+
+        // Test when no bearings are provided
+        optimizedBearing = cameraManager.optimizeBearing(startBearing: nil, endBearing: nil)
+        XCTAssertNil(optimizedBearing)
     }
 }

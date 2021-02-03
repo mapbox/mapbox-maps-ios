@@ -46,9 +46,9 @@ public struct PolygonAnnotation: Annotation {
     private(set) public var interiorPolygons: [[CLLocationCoordinate2D]]?
 
     /**
-     The optional properties associated with the polygon annotation.
+     The optional userInfo associated with the polygon annotation.
      */
-    private(set) public var properties: [String: Any]?
+    public var userInfo: [String: Any]?
 
     // MARK: - Initialization
 

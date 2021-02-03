@@ -53,14 +53,14 @@ public struct PointAnnotation: Annotation {
     public var coordinate: CLLocationCoordinate2D
 
     /**
-     The optional properties associated with the point annotation.
+     The optional userInfo associated with the point annotation.
      */
-    private(set) public var properties: [String: Any]?
+    public var userInfo: [String: Any]?
 
     // MARK: - Internal properties
 
-    internal let defaultIconSize = CGSize(width: 20, height: 32)
-    internal let defaultIconImageIdentifier = "com.mapbox.AnnotationManager.DefaultIconImage"
+    internal static let defaultIconSize = CGSize(width: 20, height: 32)
+    internal static let defaultIconImageIdentifier = "com.mapbox.AnnotationManager.DefaultIconImage"
 
     // MARK: - Initialization
 
@@ -78,12 +78,6 @@ public struct PointAnnotation: Annotation {
         self.identifier = UUID().uuidString
         self.coordinate = coordinate
         self.image = image
-
-        if image != nil {
-            self.properties = ["icon-image": identifier]
-        } else {
-            self.properties = ["icon-image": defaultIconImageIdentifier]
-        }
     }
 
     // MARK: - Private functions
@@ -93,7 +87,7 @@ public struct PointAnnotation: Annotation {
      */
     //swiftlint:disable function_body_length
     public func defaultAnnotationImage() -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(defaultIconSize,
+        UIGraphicsBeginImageContextWithOptions(PointAnnotation.defaultIconSize,
                                                false,
                                                0)
         defer { UIGraphicsEndImageContext() }

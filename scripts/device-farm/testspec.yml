@@ -37,7 +37,7 @@ phases:
   test:
     commands:
       # TODO: Investigate -resultBundlePath
-      - cd /tmp/test-root && xcodebuild test-without-building -destination id=$DEVICEFARM_DEVICE_UDID -xctestrun device.xctestrun -derivedDataPath $DEVICEFARM_LOG_DIR -resultBundlePath $DEVICEFARM_LOG_DIR/$SCHEME.$CONFIG.$DATE.xcresult
+      - cd /tmp/test-root && xcodebuild test-without-building -destination id=$DEVICEFARM_DEVICE_UDID -xctestrun device.xctestrun -derivedDataPath $DEVICEFARM_LOG_DIR -resultBundlePath $DEVICEFARM_LOG_DIR/$SCHEME.$CONFIG.$DATE.xcresult -enableCodeCoverage YES
 
 # The artifacts phase lets you specify the location where your tests logs,
 # device logs will be stored. And also let you specify the location of your test

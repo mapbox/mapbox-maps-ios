@@ -40,7 +40,7 @@ class MapViewIntegrationTests: IntegrationTestCase {
         }
 
         let resourceOptions = ResourceOptions(accessToken: accessToken)
-        let mapView = MapView(with: CGRect(origin: .zero, size: rootView.bounds.size), resourceOptions: resourceOptions, styleURL: .streets)
+        let mapView = MapView(with: rootView.bounds, resourceOptions: resourceOptions, styleURL: .streets)
         rootView.addSubview(mapView)
 
         let originalFPS = mapView.preferredFPS

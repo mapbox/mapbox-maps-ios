@@ -17,16 +17,7 @@ public struct FormatOptions: ExpressionOption {
     public var textFont: [String]?
 
     /// Overrides the color specified by the root paint property.
-    public var textColor: UIColor? {
-        set(newTextColor) {
-            if let validColor = newTextColor {
-                self.textColorInternal = ColorRepresentable(color: validColor)
-            }
-        }
-        get {
-            return UIColor(hex: textColorInternal)
-        }
-    }
+    public var textColor: ColorRepresentable?
 
     /// Internal facing, serializable representative of `textColor`
     private var textColorInternal: ColorRepresentable?
@@ -34,13 +25,16 @@ public struct FormatOptions: ExpressionOption {
     internal enum CodingKeys: String, CodingKey {
         case fontScale = "font-scale"
         case textFont = "text-font"
-        case textColorInternal = "text-color"
+        case textColor = "text-color"
     }
 
     public init(fontScale: Double?, textFont: [String]?, textColor: UIColor?) {
         self.fontScale = fontScale
-        self.textColor = textColor
         self.textFont = textFont
+
+        if let textColor = textColor {
+            self.textColor = ColorRepresentable(color: textColor)
+        }
     }
 }
 

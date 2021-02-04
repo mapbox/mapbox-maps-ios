@@ -42,7 +42,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
     public var dormant: Bool = false
     public var displayCallback: (() -> Void)?
     private var observerConcrete: ObserverConcrete!
-    @objc dynamic private var displayLink: CADisplayLink?
+    @objc dynamic internal var displayLink: CADisplayLink?
 
     @IBInspectable var styleURL__: String = ""
     @IBInspectable var baseURL__: String = ""
@@ -228,7 +228,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 
     func updateDisplayLinkPreferredFramesPerSecond() {
 
-        if displayLink == nil {
+        if let displayLink = displayLink {
 
             var newFrameRate: PreferredFPS = .maximum
 
@@ -238,7 +238,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
                 newFrameRate = preferredFPS
             }
 
-            displayLink?.preferredFramesPerSecond = newFrameRate.rawValue
+            displayLink.preferredFramesPerSecond = newFrameRate.rawValue
         }
     }
 

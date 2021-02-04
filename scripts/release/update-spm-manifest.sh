@@ -13,7 +13,6 @@ COMMON_VERSION=${3//v/}
 CORE_VERSION=${4//v/}
 EVENTS_VERSION=${5//v/}
 TURF_VERSION=${6//v/}
-GITHUB_TOKEN=$(./scripts/release/get_token.js)
 
 #
 # Checkout the release branch

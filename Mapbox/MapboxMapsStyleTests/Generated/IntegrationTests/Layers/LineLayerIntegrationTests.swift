@@ -44,7 +44,6 @@ class LineLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.lineBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.lineColor = Value<ColorRepresentable>.testConstantValue()
             layer.paint?.lineColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.lineDasharray = Value<[Double]>.testConstantValue()
             layer.paint?.lineDasharrayTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.lineGapWidth = Value<Double>.testConstantValue()
             layer.paint?.lineGapWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -55,7 +54,6 @@ class LineLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.lineOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.linePattern = Value<ResolvedImage>.testConstantValue()
             layer.paint?.linePatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.lineTranslate = Value<[Double]>.testConstantValue()
             layer.paint?.lineTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.lineTranslateAnchor = LineTranslateAnchor.testConstantValue()
             layer.paint?.lineWidth = Value<Double>.testConstantValue()
@@ -70,7 +68,7 @@ class LineLayerIntegrationTests: MapViewIntegrationTestCase {
                     XCTFail("Failed to add LineLayer because of error: \(error)")
             }
         }
-        
+
         wait(for: [expectation], timeout: 5.0)
     }
 }

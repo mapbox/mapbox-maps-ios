@@ -39,7 +39,6 @@ class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.layout?.iconIgnorePlacement = Value<Bool>.testConstantValue()
             layer.layout?.iconImage = Value<ResolvedImage>.testConstantValue()
             layer.layout?.iconKeepUpright = Value<Bool>.testConstantValue()
-            layer.layout?.iconOffset = Value<[Double]>.testConstantValue()
             layer.layout?.iconOptional = Value<Bool>.testConstantValue()
             layer.layout?.iconPadding = Value<Double>.testConstantValue()
             layer.layout?.iconPitchAlignment = IconPitchAlignment.testConstantValue()
@@ -47,7 +46,6 @@ class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.layout?.iconRotationAlignment = IconRotationAlignment.testConstantValue()
             layer.layout?.iconSize = Value<Double>.testConstantValue()
             layer.layout?.iconTextFit = IconTextFit.testConstantValue()
-            layer.layout?.iconTextFitPadding = Value<[Double]>.testConstantValue()
             layer.layout?.symbolAvoidEdges = Value<Bool>.testConstantValue()
             layer.layout?.symbolPlacement = SymbolPlacement.testConstantValue()
             layer.layout?.symbolSortKey = Value<Double>.testConstantValue()
@@ -64,7 +62,6 @@ class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.layout?.textLineHeight = Value<Double>.testConstantValue()
             layer.layout?.textMaxAngle = Value<Double>.testConstantValue()
             layer.layout?.textMaxWidth = Value<Double>.testConstantValue()
-            layer.layout?.textOffset = Value<[Double]>.testConstantValue()
             layer.layout?.textOptional = Value<Bool>.testConstantValue()
             layer.layout?.textPadding = Value<Double>.testConstantValue()
             layer.layout?.textPitchAlignment = TextPitchAlignment.testConstantValue()
@@ -86,7 +83,6 @@ class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.iconHaloWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.iconOpacity = Value<Double>.testConstantValue()
             layer.paint?.iconOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.iconTranslate = Value<[Double]>.testConstantValue()
             layer.paint?.iconTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.iconTranslateAnchor = IconTranslateAnchor.testConstantValue()
             layer.paint?.textColor = Value<ColorRepresentable>.testConstantValue()
@@ -99,7 +95,6 @@ class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.textHaloWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.textOpacity = Value<Double>.testConstantValue()
             layer.paint?.textOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.textTranslate = Value<[Double]>.testConstantValue()
             layer.paint?.textTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.textTranslateAnchor = TextTranslateAnchor.testConstantValue()
 
@@ -112,7 +107,7 @@ class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
                     XCTFail("Failed to add SymbolLayer because of error: \(error)")
             }
         }
-        
+
         wait(for: [expectation], timeout: 5.0)
     }
 }

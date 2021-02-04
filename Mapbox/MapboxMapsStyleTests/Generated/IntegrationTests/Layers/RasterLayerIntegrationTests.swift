@@ -59,7 +59,7 @@ class RasterLayerIntegrationTests: MapViewIntegrationTestCase {
                     XCTFail("Failed to add RasterLayer because of error: \(error)")
             }
         }
-        
+
         wait(for: [expectation], timeout: 5.0)
     }
 }

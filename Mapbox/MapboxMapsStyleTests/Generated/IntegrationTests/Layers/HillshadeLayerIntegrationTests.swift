@@ -55,7 +55,7 @@ class HillshadeLayerIntegrationTests: MapViewIntegrationTestCase {
                     XCTFail("Failed to add HillshadeLayer because of error: \(error)")
             }
         }
-        
+
         wait(for: [expectation], timeout: 5.0)
     }
 }

@@ -53,7 +53,7 @@ class HeatmapLayerIntegrationTests: MapViewIntegrationTestCase {
                     XCTFail("Failed to add HeatmapLayer because of error: \(error)")
             }
         }
-        
+
         wait(for: [expectation], timeout: 5.0)
     }
 }

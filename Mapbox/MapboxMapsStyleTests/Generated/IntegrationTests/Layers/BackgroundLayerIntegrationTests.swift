@@ -51,7 +51,7 @@ class BackgroundLayerIntegrationTests: MapViewIntegrationTestCase {
                     XCTFail("Failed to add BackgroundLayer because of error: \(error)")
             }
         }
-        
+
         wait(for: [expectation], timeout: 5.0)
     }
 }

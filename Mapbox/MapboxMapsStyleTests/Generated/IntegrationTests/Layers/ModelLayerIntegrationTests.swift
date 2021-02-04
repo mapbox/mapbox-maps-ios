@@ -37,10 +37,7 @@ class ModelLayerIntegrationTests: MapViewIntegrationTestCase {
 
             layer.paint?.modelOpacity = Value<Double>.testConstantValue()
             layer.paint?.modelOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.modelRotation = Value<[Double]>.testConstantValue()
             layer.paint?.modelRotationTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.modelScale = Value<[Double]>.testConstantValue()
-            layer.paint?.modelTranslation = Value<[Double]>.testConstantValue()
 
             let result = style.addLayer(layer: layer)
 
@@ -51,7 +48,7 @@ class ModelLayerIntegrationTests: MapViewIntegrationTestCase {
                     XCTFail("Failed to add ModelLayer because of error: \(error)")
             }
         }
-        
+
         wait(for: [expectation], timeout: 5.0)
     }
 }

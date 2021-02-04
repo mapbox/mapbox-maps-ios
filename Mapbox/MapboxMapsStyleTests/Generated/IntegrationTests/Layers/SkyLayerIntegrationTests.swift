@@ -37,10 +37,8 @@ class SkyLayerIntegrationTests: MapViewIntegrationTestCase {
 
             layer.paint?.skyAtmosphereColor = Value<ColorRepresentable>.testConstantValue()
             layer.paint?.skyAtmosphereHaloColor = Value<ColorRepresentable>.testConstantValue()
-            layer.paint?.skyAtmosphereSun = Value<[Double]>.testConstantValue()
             layer.paint?.skyAtmosphereSunIntensity = Value<Double>.testConstantValue()
             layer.paint?.skyGradient = Value<String>.testConstantValue()
-            layer.paint?.skyGradientCenter = Value<[Double]>.testConstantValue()
             layer.paint?.skyGradientRadius = Value<Double>.testConstantValue()
             layer.paint?.skyOpacity = Value<Double>.testConstantValue()
             layer.paint?.skyOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -55,7 +53,7 @@ class SkyLayerIntegrationTests: MapViewIntegrationTestCase {
                     XCTFail("Failed to add SkyLayer because of error: \(error)")
             }
         }
-        
+
         wait(for: [expectation], timeout: 5.0)
     }
 }

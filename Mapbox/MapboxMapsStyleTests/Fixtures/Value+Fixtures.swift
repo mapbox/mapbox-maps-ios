@@ -13,13 +13,13 @@ internal extension Value where T == Double {
 
 internal extension Value where T == [Double] {
     static func testConstantValue() -> Value<[Double]> {
-        return .constant([1.0, 2.0, 3.0])
+        return .constant([1.0, 2.0])
     }
 }
 
 internal extension Value where T == String {
     static func testConstantValue() -> Value<String> {
-        return .constant("rgba(255, 255, 255, 1)")
+        return .constant("some string")
     }
 }
 

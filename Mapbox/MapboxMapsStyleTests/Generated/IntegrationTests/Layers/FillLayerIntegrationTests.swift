@@ -45,7 +45,6 @@ class FillLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.fillOutlineColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.fillPattern = Value<ResolvedImage>.testConstantValue()
             layer.paint?.fillPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.fillTranslate = Value<[Double]>.testConstantValue()
             layer.paint?.fillTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.fillTranslateAnchor = FillTranslateAnchor.testConstantValue()
 
@@ -58,7 +57,7 @@ class FillLayerIntegrationTests: MapViewIntegrationTestCase {
                     XCTFail("Failed to add FillLayer because of error: \(error)")
             }
         }
-        
+
         wait(for: [expectation], timeout: 5.0)
     }
 }

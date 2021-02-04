@@ -52,7 +52,6 @@ class LocationIndicatorLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.emphasisCircleRadius = Value<Double>.testConstantValue()
             layer.paint?.emphasisCircleRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.imagePitchDisplacement = Value<Double>.testConstantValue()
-            layer.paint?.location = Value<[Double]>.testConstantValue()
             layer.paint?.locationTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.perspectiveCompensation = Value<Double>.testConstantValue()
             layer.paint?.shadowImageSize = Value<Double>.testConstantValue()
@@ -69,7 +68,7 @@ class LocationIndicatorLayerIntegrationTests: MapViewIntegrationTestCase {
                     XCTFail("Failed to add LocationIndicatorLayer because of error: \(error)")
             }
         }
-        
+
         wait(for: [expectation], timeout: 5.0)
     }
 }

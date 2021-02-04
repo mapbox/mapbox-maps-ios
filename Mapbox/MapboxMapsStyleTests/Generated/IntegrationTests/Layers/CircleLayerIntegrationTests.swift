@@ -52,7 +52,6 @@ class CircleLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.circleStrokeOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.circleStrokeWidth = Value<Double>.testConstantValue()
             layer.paint?.circleStrokeWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.circleTranslate = Value<[Double]>.testConstantValue()
             layer.paint?.circleTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.circleTranslateAnchor = CircleTranslateAnchor.testConstantValue()
 
@@ -65,7 +64,7 @@ class CircleLayerIntegrationTests: MapViewIntegrationTestCase {
                     XCTFail("Failed to add CircleLayer because of error: \(error)")
             }
         }
-        
+
         wait(for: [expectation], timeout: 5.0)
     }
 }

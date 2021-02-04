@@ -45,7 +45,6 @@ class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.fillExtrusionOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.fillExtrusionPattern = Value<ResolvedImage>.testConstantValue()
             layer.paint?.fillExtrusionPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.fillExtrusionTranslate = Value<[Double]>.testConstantValue()
             layer.paint?.fillExtrusionTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.fillExtrusionTranslateAnchor = FillExtrusionTranslateAnchor.testConstantValue()
             layer.paint?.fillExtrusionVerticalGradient = Value<Bool>.testConstantValue()
@@ -59,7 +58,7 @@ class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
                     XCTFail("Failed to add FillExtrusionLayer because of error: \(error)")
             }
         }
-        
+
         wait(for: [expectation], timeout: 5.0)
     }
 }

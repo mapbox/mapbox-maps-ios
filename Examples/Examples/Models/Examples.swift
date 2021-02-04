@@ -151,7 +151,7 @@ public struct Examples {
         Example(title: "Animate a GeoJSON line",
                 description: "Update a map's style to animate a line over time.",
                 type: AnimateGeoJSONLineExample.self),
-        Example(title: "Use a map inside a SwiftUI view",
+        Example(title: "Use a map with SwiftUI",
                 description: "Use the UIViewRepresentable protocol to wrap a MapView within a SwiftUI view",
                 type: SwiftUIExample.self)
     ]

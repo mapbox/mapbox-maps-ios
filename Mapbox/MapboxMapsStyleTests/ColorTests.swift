@@ -20,25 +20,25 @@ internal class ColorTests: XCTestCase {
         encodeAndDecodeColor(testColor: .white)
     }
 
-    func encodeAndDecodeColor(testColor: UIColor) {
+    func encodeAndDecodeColor(testColor: UIColor, test: String = #function) {
         let color = ColorRepresentable(color: testColor)
         var data: Data?
         do {
             data = try JSONEncoder().encode(color)
         } catch {
-            XCTFail("Could not encode color")
+            XCTFail("Could not encode color in test: \(test)")
         }
 
         guard let validData = data else {
-            XCTFail("Color data is nil")
+            XCTFail("Color data is nil in test: \(test)")
             return
         }
 
         do {
             let decodedColor = try JSONDecoder().decode(ColorRepresentable.self, from: validData)
-            XCTAssert(decodedColor == color, "Color should not change after encoding - decoding pass")
+            XCTAssert(decodedColor == color, "Color should not change after encoding - decoding pass in test: \(test)")
         } catch {
-            XCTFail("Could not decode color")
+            XCTFail("Could not decode color in test: \(test)")
         }
     }
 }

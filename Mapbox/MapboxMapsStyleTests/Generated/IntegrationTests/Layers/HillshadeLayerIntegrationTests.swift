@@ -55,20 +55,7 @@ class HillshadeLayerIntegrationTests: MapViewIntegrationTestCase {
                     XCTFail("Failed to add HillshadeLayer because of error: \(error)")
             }
         }
-
-//         didBecomeIdle = { _ in
-
-// //            if let snapshot = mapView.snapshot() {
-// //                let attachment = XCTAttachment(image: snapshot)
-// //                self.add(attachment)
-// //
-// //                // TODO: Compare images...
-// //                //
-// //            }
-
-//             expectation.fulfill()
-//         }
-
+        
         wait(for: [expectation], timeout: 5.0)
     }
 }

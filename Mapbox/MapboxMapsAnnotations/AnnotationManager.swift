@@ -330,6 +330,12 @@ public class AnnotationManager: Observer {
         switch annotation {
         case let point as PointAnnotation:
             feature = Feature(Point(point.coordinate))
+
+            if point.image != nil {
+                feature.properties = ["icon-image": point.identifier]
+            } else {
+                feature.properties = ["icon-image": PointAnnotation.defaultIconImageIdentifier]
+            }
         case let line as LineAnnotation:
             feature = Feature(LineString(line.coordinates))
         case let polygon as PolygonAnnotation:
@@ -350,7 +356,6 @@ public class AnnotationManager: Observer {
         }
 
         feature.identifier = FeatureIdentifier.string(annotation.identifier)
-        feature.properties = annotation.properties
 
         return feature
     }
@@ -445,10 +450,10 @@ public class AnnotationManager: Observer {
         // Add the default symbol layer image.
         if defaultSymbolLayer == nil {
             // Add the default icon image to the sprite, but only once.
-            if styleDelegate.getStyleImage(with: pointAnnotation.defaultIconImageIdentifier) == nil {
+            if styleDelegate.getStyleImage(with: PointAnnotation.defaultIconImageIdentifier) == nil {
 
                 let expectedDefaultImage = styleDelegate.setStyleImage(image: pointAnnotation.defaultAnnotationImage(),
-                                                                       with: pointAnnotation.defaultIconImageIdentifier,
+                                                                       with: PointAnnotation.defaultIconImageIdentifier,
                                                                        sdf: false,
                                                                        stretchX: [],
                                                                        stretchY: [],

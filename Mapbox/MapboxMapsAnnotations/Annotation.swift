@@ -35,5 +35,5 @@ public protocol Annotation {
     /**
      Properties associated with the annotation
      */
-    var properties: [String: Any]? { get set }
+    var userInfo: [String: Any]? { get }
 }

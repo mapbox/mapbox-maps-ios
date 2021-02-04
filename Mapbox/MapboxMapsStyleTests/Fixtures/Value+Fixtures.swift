@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 #if canImport(MapboxMaps)
 @testable import MapboxMaps
 #else
@@ -32,6 +32,12 @@ internal extension Value where T == [String] {
 internal extension Value where T == ResolvedImage {
     static func testConstantValue() -> Value<ResolvedImage> {
         return .constant(ResolvedImage.name("some-resolved-image"))
+    }
+}
+
+internal extension Value where T == ColorRepresentable {
+    static func testConstantValue() -> Value<ColorRepresentable> {
+        return .constant(ColorRepresentable(color: UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
     }
 }
 

@@ -377,6 +377,11 @@ jobs:
                 command: |
                     ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios ${VERSION}
                 when: always
+            - run:
+                name: Update Package Manifest & Podspec
+                command: |
+                    ./scripts/release/update-spm-manifest.sh ${VERSION} "$(cat MapboxMaps.xcframework.zip.checksum)" 10.0.0-beta.8 10.0.0-beta.13 0.12.0-alpha.1 2.0.0-alpha.1
+                when: on_success
             - slack/status:
                 fail_only: false
                 include_visit_job_action: true

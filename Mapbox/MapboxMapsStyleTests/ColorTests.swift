@@ -9,25 +9,15 @@ internal class ColorTests: XCTestCase {
 
     func testColorEncodingAndDecoding() throws {
         let testColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)
-        let color = ColorRepresentable(color: testColor)
-        var data: Data?
-        do {
-            data = try JSONEncoder().encode(color)
-        } catch {
-            XCTFail("Could not encode color")
-        }
+        encodeAndDecodeColor(testColor: testColor)
+    }
 
-        guard let validData = data else {
-            XCTFail("Color data is nil")
-            return
-        }
+    func testColorEncodingAndDecodingBlack() throws {
+        encodeAndDecodeColor(testColor: .black)
+    }
 
-        do {
-            let decodedColor = try JSONDecoder().decode(ColorRepresentable.self, from: validData)
-            XCTAssert(decodedColor == color, "Color should not change after encoding - decoding pass")
-        } catch {
-            XCTFail("Could not decode color")
-        }
+    func testColorEncodingAndDecodingWhite() throws {
+        encodeAndDecodeColor(testColor: .white)
     }
 
     func testNonSRGBColor() throws {
@@ -36,30 +26,8 @@ internal class ColorTests: XCTestCase {
         XCTAssertNil(color)
     }
 
-    func testColorEncodingAndDecodingBlack() throws {
-        let color = ColorRepresentable(color: .black)
-        var data: Data?
-        do {
-            data = try JSONEncoder().encode(color)
-        } catch {
-            XCTFail("Could not encode color")
-        }
-
-        guard let validData = data else {
-            XCTFail("Color data is nil")
-            return
-        }
-
-        do {
-            let decodedColor = try JSONDecoder().decode(ColorRepresentable.self, from: validData)
-            XCTAssert(decodedColor == color, "Color should not change after encoding - decoding pass")
-        } catch {
-            XCTFail("Could not decode color")
-        }
-    }
-
-    func testColorEncodingAndDecodingWhite() throws {
-        let color = ColorRepresentable(color: .white)
+    func encodeAndDecodeColor(testColor: UIColor) {
+        let color = ColorRepresentable(color: testColor)
         var data: Data?
         do {
             data = try JSONEncoder().encode(color)

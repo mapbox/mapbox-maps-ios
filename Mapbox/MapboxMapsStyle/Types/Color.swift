@@ -8,17 +8,28 @@ public struct ColorRepresentable: Codable, Equatable {
 
     /// Create a string representation of a `UIColor`
     /// - Parameter color: A `UIColor` instance in the sRGB color space
-    /// - Returns: Initializes a `ColorRepresentable` instance if the `color` is in sRGB color space. Returns `nil` otherwise.
-    public init?(color: UIColor) {
+    /// - Returns: Initializes a `ColorRepresentable` instance if the `color` is in sRGB color space.
+    public init(color: UIColor) {
         var red: CGFloat = 0.0
         var green: CGFloat = 0.0
         var blue: CGFloat = 0.0
         var alpha: CGFloat = 0.0
-        if color.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
+        let success = color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        let validColorComponents = Self.isValidColor(red: red, green: red, blue: blue, alpha: alpha)
+        if success && validColorComponents {
             self.colorRepresentation = "rgba(\(red * 255.0), \(green * 255.0), \(blue * 255.0), \(alpha))"
         } else {
-            return nil
+            fatalError("Please use a color in the sRGB color space")
         }
+    }
+
+    /// Checks if all color components are within the 0-1 range
+    internal static func isValidColor(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) -> Bool {
+        let validRange = 0.0...1.0
+        return validRange ~= Double(red)
+            && validRange ~= Double(green)
+            && validRange ~= Double(blue)
+            && validRange ~= Double(alpha)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -32,7 +43,7 @@ public struct ColorRepresentable: Codable, Equatable {
     }
 }
 
-extension UIColor : ValidExpressionArgument {
+extension UIColor: ValidExpressionArgument {
 
     public var expressionElements: [Expression.Element] {
         var red: CGFloat = 0.0

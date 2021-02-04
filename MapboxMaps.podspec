@@ -1,9 +1,9 @@
 Pod::Spec.new do |m|
 
-  version = '10.0.0-beta.12'
+  maps_version = '10.0.0-beta.12'
 
   m.name = 'MapboxMaps'
-  m.version = version
+  m.version = maps_version
 
   m.summary = 'Vector map solution for iOS with full styling capabilities.'
   m.description = 'Metal-based vector map solution for iOS with full styling capabilities.'
@@ -13,7 +13,7 @@ Pod::Spec.new do |m|
   m.social_media_url = 'https://twitter.com/mapbox'
   m.documentation_url = 'https://docs.mapbox.com/ios/beta/maps/api-reference/'
 
-  m.source = { http: "https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/packages/#{version.to_s}/MapboxMaps.xcframework.zip" }
+  m.source = { http: "https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/packages/#{maps_version.to_s}/MapboxMaps.xcframework.zip" }
   m.vendored_frameworks = 'MapboxMaps.xcframework'
 
   m.platform = :ios

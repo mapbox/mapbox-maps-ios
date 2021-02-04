@@ -11,6 +11,7 @@ class MapViewIntegrationTests: IntegrationTestCase {
             throw XCTSkip("No valid UIWindow or root view controller")
         }
         rootView = root
+
         let resourceOptions = ResourceOptions(accessToken: accessToken)
         mapView = MapView(with: rootView.bounds, resourceOptions: resourceOptions, styleURL: .streets)
         rootView.addSubview(mapView)

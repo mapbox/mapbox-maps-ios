@@ -15,6 +15,12 @@ EVENTS_VERSION=${5//v/}
 TURF_VERSION=${6//v/}
 GITHUB_TOKEN=$(./scripts/release/get_token.js)
 
+#
+# Checkout the release branch
+#
+git pull
+git checkout Release/v${MAPS_VERSION}
+
 # Update Package.swift
 sed -i '' s/"let version = \".*\""/"let version = \"${MAPS_VERSION}\""/ Package.swift
 sed -i '' s/"let checksum = \".*\""/"let checksum = \"${CHECKSUM}\""/ Package.swift
@@ -32,8 +38,6 @@ sed -i '' s/"m.dependency 'MapboxMobileEvents', '.*'"/"m.dependency 'MapboxMobil
 #
 # Commit to the release branch
 #
-git pull
-git checkout Release/v${MAPS_VERSION}
 git add Package.swift MapboxMaps.podspec
 git commit -m "Update SPM configs for ${MAPS_VERSION} release"
 git push

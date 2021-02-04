@@ -42,9 +42,9 @@ public struct LineAnnotation: Annotation {
     private(set) public var coordinates: [CLLocationCoordinate2D]
 
     /**
-     The optional properties associated with the line annotation.
+     The optional userInfo associated with the line annotation.
      */
-    public var properties: [String: Any]?
+    public var userInfo: [String: Any]?
 
     // MARK: - Initialization
 

@@ -23,43 +23,17 @@ sed -i '' s/"mapbox-core-maps-ios.git\", .exact(\".*\")"/"mapbox-core-maps-ios.g
 sed -i '' s/"mapbox-events-ios.git\", .exact(\".*\")"/"mapbox-events-ios.git\", .exact(\"${EVENTS_VERSION}\")"/ Package.swift
 sed -i '' s/"turf-swift.git\", .exact(\".*\")"/"turf-swift.git\", .exact(\"${TURF_VERSION}\")"/ Package.swift
 
-# Update MapboxCoreMaps.podspec
+# Update MapboxMaps.podspec
 sed -i '' s/"maps_version = '.*'"/"maps_version = '${MAPS_VERSION}'"/ MapboxMaps.podspec
 sed -i '' s/"m.dependency 'MapboxCommon', '.*'"/"m.dependency 'MapboxCommon', '${COMMON_VERSION}'"/ MapboxMaps.podspec
 sed -i '' s/"m.dependency 'MapboxCoreMaps', '.*'"/"m.dependency 'MapboxCoreMaps', '${CORE_VERSION}'"/ MapboxMaps.podspec
 sed -i '' s/"m.dependency 'MapboxMobileEvents', '.*'"/"m.dependency 'MapboxMobileEvents', '${EVENTS_VERSION}'"/ MapboxMaps.podspec
 
 #
-# Commit to a branch
+# Commit to the release branch
 #
-# git add -A
-# git commit -m "Update SPM configs for ${MAPS_VERSION} release"
-
-# TODO: Automate PR Creation when run on CI
-# #
-# # Create PR
-# #
-# git config --global user.email "maps_sdk_ios@mapbox.com"
-# git config --global user.name "Release SDK bot for Maps SDK iOS team"
-
-# TITLE="Update SPM configs for ${MAPS_VERSION} release"
-# URL="https://api.github.com/repos/mapbox/mapbox-maps-ios/pulls"
-# BODY="{\"head\":\"${BRANCH_NAME}\",\"base\":\"main\",\"title\":\"${TITLE}\",\"body\":\"\"}"
-
-# CURL_RESULT=0
-# HTTP_CODE=$(curl ${URL} \
-#     --write-out %{http_code} \
-#     --silent \
-#     --output /dev/null \
-#     -H "Authorization: token ${GITHUB_TOKEN}" \
-#     -H "Accept: application/vnd.github.v3+json" \
-#     -d "${BODY}" -w "%{response_code}") || CURL_RESULT=$?
-
-# if [[ ${CURL_RESULT} != 0 ]]; then
-#     echo "Failed to create PR (curl error: ${CURL_RESULT})"
-#     exit $CURL_RESULT
-# fi
-# if [[ ${HTTP_CODE} != "201" ]]; then
-#     echo "Failed to create PR (http code: ${HTTP_CODE})"
-#     exit 1
-# fi
+git pull
+git checkout Release/v${MAPS_VERSION}
+git add Package.swift MapboxMaps.podspec
+git commit -m "Update SPM configs for ${MAPS_VERSION} release"
+git push

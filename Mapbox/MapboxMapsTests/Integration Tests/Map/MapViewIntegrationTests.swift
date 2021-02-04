@@ -53,13 +53,13 @@ class MapViewIntegrationTests: IntegrationTestCase {
         mapView.preferredFPS = .lowPower
         XCTAssertNotEqual(originalFPS, mapView.preferredFPS)
         XCTAssertEqual(mapView.preferredFPS.rawValue, mapView.displayLink?.preferredFramesPerSecond)
-      }
+    }
 
-      func testUpdateFromDisplayLinkWhenNil() {
+    func testUpdateFromDisplayLinkWhenNil() {
         mapView.displayLink = nil
         mapView.preferredFPS = .maximum
 
         XCTAssertNil(mapView.displayLink?.preferredFramesPerSecond)
         XCTAssertNotEqual(mapView.preferredFPS.rawValue, mapView.displayLink?.preferredFramesPerSecond)
-      }
+    }
 }

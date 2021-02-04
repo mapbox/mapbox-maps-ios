@@ -24,7 +24,7 @@ public struct SwiftUIMapView: UIViewRepresentable {
 
     let resourceOptions: ResourceOptions
     internal let observerConcrete: ObserverConcrete // Manages the observation of map events
-    internal var mapView: MapView
+    internal let mapView: MapView
 
     init(resourceOptions: ResourceOptions) {
         self.resourceOptions = resourceOptions
@@ -32,7 +32,7 @@ public struct SwiftUIMapView: UIViewRepresentable {
         self.observerConcrete = ObserverConcrete(mapView: self.mapView)
 
         // Subscribe to map events
-        let events = MapEvents.EventKind.allCases.map({ $0.rawValue })
+        let events = MapEvents.EventKind.allCases.map { $0.rawValue }
         try? mapView.__map.subscribe(for: observerConcrete, events: events)
     }
 

@@ -18,7 +18,7 @@ GITHUB_TOKEN=$(./scripts/release/get_token.js)
 #
 # Checkout the release branch
 #
-git pull
+git fetch origin main
 git checkout Release/v${MAPS_VERSION}
 
 # Update Package.swift

@@ -59,6 +59,6 @@ class MapViewIntegrationTests: IntegrationTestCase {
         // Test that the preferredFPS are not being updated when the displayLink is nil
         XCTAssertNil(mapView.displayLink?.preferredFramesPerSecond)
         XCTAssertNotEqual(mapView.preferredFPS.rawValue, mapView.displayLink?.preferredFramesPerSecond)
-        }
+    }
 
 }

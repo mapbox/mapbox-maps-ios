@@ -85,7 +85,10 @@ extension Dictionary: ValidExpressionArgument where Key == Double,
     public var expressionElements: [Expression.Element] {
         var elements = [Expression.Element]()
         for key in Array(self.keys).sorted(by: <) {
-            guard let value = self[key] else { return [] }
+            guard key >= 0, let value = self[key] else {
+                assertionFailure("Invalid stops dictionary with negative key")
+                return []
+            }
             elements = elements + key.expressionElements + value.expressionElements
         }
         return elements

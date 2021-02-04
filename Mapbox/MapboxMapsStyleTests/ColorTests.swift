@@ -20,12 +20,6 @@ internal class ColorTests: XCTestCase {
         encodeAndDecodeColor(testColor: .white)
     }
 
-    func testNonSRGBColor() throws {
-        let testColor = UIColor(patternImage: UIImage())
-        let color = ColorRepresentable(color: testColor)
-        XCTAssertNil(color)
-    }
-
     func encodeAndDecodeColor(testColor: UIColor) {
         let color = ColorRepresentable(color: testColor)
         var data: Data?

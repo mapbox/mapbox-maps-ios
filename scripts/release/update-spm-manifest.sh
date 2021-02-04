@@ -11,8 +11,6 @@ MAPS_VERSION=${1}
 CHECKSUM=${2}
 COMMON_VERSION=${3//v/}
 CORE_VERSION=${4//v/}
-EVENTS_VERSION=${5//v/}
-TURF_VERSION=${6//v/}
 
 #
 # Checkout the release branch
@@ -25,14 +23,11 @@ sed -i '' s/"let version = \".*\""/"let version = \"${MAPS_VERSION}\""/ Package.
 sed -i '' s/"let checksum = \".*\""/"let checksum = \"${CHECKSUM}\""/ Package.swift
 sed -i '' s/"mapbox-common-ios.git\", .exact(\".*\")"/"mapbox-common-ios.git\", .exact(\"${COMMON_VERSION}\")"/ Package.swift
 sed -i '' s/"mapbox-core-maps-ios.git\", .exact(\".*\")"/"mapbox-core-maps-ios.git\", .exact(\"${CORE_VERSION}\")"/ Package.swift
-sed -i '' s/"mapbox-events-ios.git\", .exact(\".*\")"/"mapbox-events-ios.git\", .exact(\"${EVENTS_VERSION}\")"/ Package.swift
-sed -i '' s/"turf-swift.git\", .exact(\".*\")"/"turf-swift.git\", .exact(\"${TURF_VERSION}\")"/ Package.swift
 
 # Update MapboxMaps.podspec
 sed -i '' s/"maps_version = '.*'"/"maps_version = '${MAPS_VERSION}'"/ MapboxMaps.podspec
 sed -i '' s/"m.dependency 'MapboxCommon', '.*'"/"m.dependency 'MapboxCommon', '${COMMON_VERSION}'"/ MapboxMaps.podspec
 sed -i '' s/"m.dependency 'MapboxCoreMaps', '.*'"/"m.dependency 'MapboxCoreMaps', '${CORE_VERSION}'"/ MapboxMaps.podspec
-sed -i '' s/"m.dependency 'MapboxMobileEvents', '.*'"/"m.dependency 'MapboxMobileEvents', '${EVENTS_VERSION}'"/ MapboxMaps.podspec
 
 #
 # Commit to the release branch

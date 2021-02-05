@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+#
+# Usage:
+#   ./scripts/release/update-version.sh <maps sem version number>
+#
+
 set -e
 set -o pipefail
 set -u

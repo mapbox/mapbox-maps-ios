@@ -81,7 +81,10 @@ public enum LightError: Error {
 
 public class Style {
     public private(set) weak var styleManager: StyleManager!
+
     internal var styleUrl: StyleURL = .streets
+
+    private var layerCache: [String: Layer] = [:]
 
     public init(with styleManager: StyleManager) {
         self.styleManager = styleManager
@@ -124,8 +127,12 @@ public class Style {
             let layerJSON = try JSONSerialization.jsonObject(with: layerData) as! [String: AnyObject]
             let expected = try! self.styleManager.addStyleLayer(forProperties: layerJSON, layerPosition: layerPosition)
 
-            return expected.isError() ? .failure(.addStyleLayerFailed(expected.error as? String))
-                                      : .success(true)
+            if expected.isError() {
+                return .failure(.addStyleLayerFailed(expected.error as? String))
+            } else {
+                self.layerCache[layer.id] = layer
+                return .success(true)
+            }
         } catch {
             // Return failure if we run into an issue
             return .failure(.layerEncodingFailed(error))
@@ -143,8 +150,12 @@ public class Style {
      */
     public func getLayer<T: Layer>(with layerID: String, type: T.Type) -> Result<T, LayerError> {
 
+        // Try to get layer from cache if possible
+        if let cachedLayer = layerCache[layerID] as? T {
+            return .success(cachedLayer)
+        }
 
-        // Get the layer properties from the map
+        // If layer not in cache, get the layer properties from the map directly
         var layerProps: MBXExpected<AnyObject, AnyObject>?
         do {
             layerProps = try self.styleManager.getStyleLayerProperties(forLayerId: layerID)
@@ -395,6 +406,7 @@ public class Style {
             // Successfully retrieved the layer
             layer = retrievedLayer
         case .failure(_):
+
             // Could not retrieve the layer
             return .failure(.getStyleLayerFailed(nil))
         }
@@ -409,7 +421,8 @@ public class Style {
         do {
             let data = try JSONEncoder().encode(validLayer)
             let value = try JSONSerialization.jsonObject(with: data, options: [])
-            // Re-apply the changes to the layer properties to the style
+
+            // Apply the changes to the layer properties to the style
             try self.styleManager.setStyleLayerPropertiesForLayerId(id, properties: value)
             return .success(true)
         } catch {

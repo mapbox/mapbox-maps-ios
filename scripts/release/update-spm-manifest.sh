@@ -4,13 +4,13 @@ set -euo pipefail
 
 #
 # Usage:
-#   ./scripts/release/update-spm-manifest.sh <maps version number> <maps xcframework checksum> <common version number> <core version number>
+#   ./scripts/release/update-spm-manifest.sh <maps version number> <maps xcframework checksum>
 #
 
 MAPS_VERSION=${1}
 CHECKSUM=${2}
-COMMON_VERSION=${3//v/}
-CORE_VERSION=${4//v/}
+COMMON_VERSION=`awk -F'MapboxCommon-ios.json" ==' '{ print $2 }' Cartfile`
+CORE_VERSION=`awk -F'MapboxCoreMaps.json" ==' '{ print $2 }' Cartfile`
 
 #
 # Checkout the release branch

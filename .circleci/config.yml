@@ -89,14 +89,6 @@ workflows:
                     branches:
                         only: main
 
-            - ios-release-tag:
-                name: "iOS release"
-                filters:
-                    tags:
-                        only: /.*/
-                    branches:
-                        ignore: /.*/
-
             - maps-unit-tests:
                 name: "Run Unit tests"
 
@@ -120,6 +112,17 @@ workflows:
         jobs:
             - ios-build-release:
                 name: "Public Beta Release"
+                filters:
+                    branches:
+                        only: Release/*
+
+            - ios-release-tag:
+                name: "iOS release"
+                filters:
+                    tags:
+                        only: /.*/
+                    branches:
+                        ignore: /.*/
 
 # ======================================================================================================================
 

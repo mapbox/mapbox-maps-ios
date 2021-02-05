@@ -21,7 +21,7 @@ step "Version ${SEM_VERSION}"
 
 step "Updating CocoaPods podspecs to version ${SEM_VERSION}…"
 
-find . -type f -name '*.podspec' -exec sed -i '' "s/^ *version *=.*$/  version = '${SEM_VERSION}'/" {} +
+find . -type f -name '*.podspec' -exec sed -i '' "s/^ *maps_version *=.*$/  maps_version = '${SEM_VERSION}'/" {} +
 
 cd Mapbox
 

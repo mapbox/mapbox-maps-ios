@@ -14,15 +14,16 @@ class FillLayerIntegrationTests: MapViewIntegrationTestCase {
     }
 
     internal func testWaitForIdle() throws {
-        guard
-            let mapView = mapView,
-            let style = style else {
+        guard let style = style else {
             XCTFail("There should be valid MapView and Style objects created by setUp.")
             return
         }
 
-        let expectation = XCTestExpectation(description: "Successfully add FillLayer to Map")
-        expectation.expectedFulfillmentCount = 1
+        let successfullyAddedLayerExpectation = XCTestExpectation(description: "Successfully added FillLayer to Map")
+        successfullyAddedLayerExpectation.expectedFulfillmentCount = 1
+
+        let successfullyRetrievedLayerExpectation = XCTestExpectation(description: "Successfully retrieved FillLayer from Map")
+        successfullyRetrievedLayerExpectation.expectedFulfillmentCount = 1
 
         style.styleURL = .streets
 
@@ -48,17 +49,28 @@ class FillLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.fillTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.fillTranslateAnchor = FillTranslateAnchor.testConstantValue()
 
-            let result = style.addLayer(layer: layer)
+            // Add the layer
+            let addResult = style.addLayer(layer: layer)
 
-            switch (result) {
+            switch (addResult) {
                 case .success(_):
-                    expectation.fulfill()    
+                    successfullyAddedLayerExpectation.fulfill()
                 case .failure(let error):
                     XCTFail("Failed to add FillLayer because of error: \(error)")
             }
+
+            // Retrieve the layer
+            let retrieveResult = style.getLayer(with: "test-id", type: FillLayer.self)
+
+            switch (retrieveResult) {
+                case .success(_):
+                    successfullyRetrievedLayerExpectation.fulfill()    
+                case .failure(let error):
+                    XCTFail("Failed to retreive FillLayer because of error: \(error)")   
+            }
         }
 
-        wait(for: [expectation], timeout: 5.0)
+        wait(for: [successfullyAddedLayerExpectation, successfullyRetrievedLayerExpectation], timeout: 5.0)
     }
 }
 

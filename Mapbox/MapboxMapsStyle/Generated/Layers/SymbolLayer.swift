@@ -28,7 +28,7 @@ public struct SymbolLayer: Layer {
     public struct Layout: Codable {
 
       /// Whether this layer is displayed.
-      public var visibility: Visibility
+      public var visibility: Visibility?
       
       public init() {
         self.visibility = .visible

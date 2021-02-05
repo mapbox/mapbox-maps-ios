@@ -28,7 +28,7 @@ public struct HeatmapLayer: Layer {
     public struct Layout: Codable {
 
       /// Whether this layer is displayed.
-      public var visibility: Visibility
+      public var visibility: Visibility?
       
       public init() {
         self.visibility = .visible
@@ -48,7 +48,7 @@ public struct HeatmapLayer: Layer {
       public init() {}
           
       /// Defines the color of each pixel based on its density value in a heatmap.  Should be an expression that uses `["heatmap-density"]` as input.
-      public var heatmapColor: Value<String>?
+      public var heatmapColor: Value<ColorRepresentable>?
             
       /// Similar to `heatmap-weight` but controls the intensity of the heatmap globally. Primarily used for adjusting the heatmap based on zoom level.
       public var heatmapIntensity: Value<Double>?

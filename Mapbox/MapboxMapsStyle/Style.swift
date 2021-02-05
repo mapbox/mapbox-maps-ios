@@ -1,5 +1,4 @@
 import Turf
-
 #if canImport(MapboxMapsFoundation)
 import MapboxMapsFoundation
 #endif
@@ -138,13 +137,20 @@ public class Style {
      */
     public func getLayer<T: Layer>(with layerID: String, type: T.Type) -> Result<T, LayerError> {
 
+
         // Get the layer properties from the map
-        let layerProps = try! self.styleManager.getStyleLayerProperties(forLayerId: layerID)
+        var layerProps: MBXExpected<AnyObject, AnyObject>?
+        do {
+            layerProps = try self.styleManager.getStyleLayerProperties(forLayerId: layerID)
+        } catch {
+            print(error)
+            return .failure(.getStyleLayerFailed(nil))
+        }
 
         // If layerProps represents an error, return early
-        guard layerProps.isValue(),
-            let validValue = layerProps.value else {
-            return .failure(.getStyleLayerFailed(layerProps.error as? String))
+        guard let validLayerProps = layerProps, validLayerProps.isValue(),
+            let validValue = validLayerProps.value else {
+            return .failure(.getStyleLayerFailed(layerProps?.error as? String))
         }
 
         // Decode the layer properties into a layer object

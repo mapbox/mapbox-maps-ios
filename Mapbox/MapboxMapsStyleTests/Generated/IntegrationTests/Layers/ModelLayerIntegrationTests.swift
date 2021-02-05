@@ -14,15 +14,16 @@ class ModelLayerIntegrationTests: MapViewIntegrationTestCase {
     }
 
     internal func testWaitForIdle() throws {
-        guard
-            let mapView = mapView,
-            let style = style else {
+        guard let style = style else {
             XCTFail("There should be valid MapView and Style objects created by setUp.")
             return
         }
 
-        let expectation = XCTestExpectation(description: "Successfully add ModelLayer to Map")
-        expectation.expectedFulfillmentCount = 1
+        let successfullyAddedLayerExpectation = XCTestExpectation(description: "Successfully added ModelLayer to Map")
+        successfullyAddedLayerExpectation.expectedFulfillmentCount = 1
+
+        let successfullyRetrievedLayerExpectation = XCTestExpectation(description: "Successfully retrieved ModelLayer from Map")
+        successfullyRetrievedLayerExpectation.expectedFulfillmentCount = 1
 
         style.styleURL = .streets
 
@@ -39,17 +40,28 @@ class ModelLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.modelOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.modelRotationTransition = StyleTransition(duration: 10.0, delay: 10.0)
 
-            let result = style.addLayer(layer: layer)
+            // Add the layer
+            let addResult = style.addLayer(layer: layer)
 
-            switch (result) {
+            switch (addResult) {
                 case .success(_):
-                    expectation.fulfill()    
+                    successfullyAddedLayerExpectation.fulfill()
                 case .failure(let error):
                     XCTFail("Failed to add ModelLayer because of error: \(error)")
             }
+
+            // Retrieve the layer
+            let retrieveResult = style.getLayer(with: "test-id", type: ModelLayer.self)
+
+            switch (retrieveResult) {
+                case .success(_):
+                    successfullyRetrievedLayerExpectation.fulfill()    
+                case .failure(let error):
+                    XCTFail("Failed to retreive ModelLayer because of error: \(error)")   
+            }
         }
 
-        wait(for: [expectation], timeout: 5.0)
+        wait(for: [successfullyAddedLayerExpectation, successfullyRetrievedLayerExpectation], timeout: 5.0)
     }
 }
 

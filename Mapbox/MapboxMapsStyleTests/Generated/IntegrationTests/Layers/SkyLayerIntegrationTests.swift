@@ -14,15 +14,16 @@ class SkyLayerIntegrationTests: MapViewIntegrationTestCase {
     }
 
     internal func testWaitForIdle() throws {
-        guard
-            let mapView = mapView,
-            let style = style else {
+        guard let style = style else {
             XCTFail("There should be valid MapView and Style objects created by setUp.")
             return
         }
 
-        let expectation = XCTestExpectation(description: "Successfully add SkyLayer to Map")
-        expectation.expectedFulfillmentCount = 1
+        let successfullyAddedLayerExpectation = XCTestExpectation(description: "Successfully added SkyLayer to Map")
+        successfullyAddedLayerExpectation.expectedFulfillmentCount = 1
+
+        let successfullyRetrievedLayerExpectation = XCTestExpectation(description: "Successfully retrieved SkyLayer from Map")
+        successfullyRetrievedLayerExpectation.expectedFulfillmentCount = 1
 
         style.styleURL = .streets
 
@@ -38,23 +39,34 @@ class SkyLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.skyAtmosphereColor = Value<ColorRepresentable>.testConstantValue()
             layer.paint?.skyAtmosphereHaloColor = Value<ColorRepresentable>.testConstantValue()
             layer.paint?.skyAtmosphereSunIntensity = Value<Double>.testConstantValue()
-            layer.paint?.skyGradient = Value<String>.testConstantValue()
+            layer.paint?.skyGradient = Value<ColorRepresentable>.testConstantValue()
             layer.paint?.skyGradientRadius = Value<Double>.testConstantValue()
             layer.paint?.skyOpacity = Value<Double>.testConstantValue()
             layer.paint?.skyOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.skyType = SkyType.testConstantValue()
 
-            let result = style.addLayer(layer: layer)
+            // Add the layer
+            let addResult = style.addLayer(layer: layer)
 
-            switch (result) {
+            switch (addResult) {
                 case .success(_):
-                    expectation.fulfill()    
+                    successfullyAddedLayerExpectation.fulfill()
                 case .failure(let error):
                     XCTFail("Failed to add SkyLayer because of error: \(error)")
             }
+
+            // Retrieve the layer
+            let retrieveResult = style.getLayer(with: "test-id", type: SkyLayer.self)
+
+            switch (retrieveResult) {
+                case .success(_):
+                    successfullyRetrievedLayerExpectation.fulfill()    
+                case .failure(let error):
+                    XCTFail("Failed to retreive SkyLayer because of error: \(error)")   
+            }
         }
 
-        wait(for: [expectation], timeout: 5.0)
+        wait(for: [successfullyAddedLayerExpectation, successfullyRetrievedLayerExpectation], timeout: 5.0)
     }
 }
 

@@ -88,7 +88,7 @@ class HeatmapLayerTests: XCTestCase {
     func testEncodingAndDecodingOfPaintProperties() {
 
        var layer = HeatmapLayer(id: "test-id")	
-       layer.paint?.heatmapColor = Value<String>.testConstantValue()
+       layer.paint?.heatmapColor = Value<ColorRepresentable>.testConstantValue()
        layer.paint?.heatmapIntensity = Value<Double>.testConstantValue()
        layer.paint?.heatmapIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.paint?.heatmapOpacity = Value<Double>.testConstantValue()
@@ -112,7 +112,7 @@ class HeatmapLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(HeatmapLayer.self, from: validData)
            XCTAssert(decodedLayer.layout?.visibility == .visible)
-       	   XCTAssert(layer.paint?.heatmapColor == Value<String>.testConstantValue())
+       	   XCTAssert(layer.paint?.heatmapColor == Value<ColorRepresentable>.testConstantValue())
        	   XCTAssert(layer.paint?.heatmapIntensity == Value<Double>.testConstantValue())
        	   XCTAssert(layer.paint?.heatmapOpacity == Value<Double>.testConstantValue())
        	   XCTAssert(layer.paint?.heatmapRadius == Value<Double>.testConstantValue())

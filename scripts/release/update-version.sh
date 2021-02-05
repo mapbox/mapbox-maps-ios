@@ -24,10 +24,6 @@ SHORT_VERSION=${SEM_VERSION%-*}
 
 step "Version ${SEM_VERSION}"
 
-step "Updating CocoaPods podspecs to version ${SEM_VERSION}…"
-
-find . -type f -name '*.podspec' -exec sed -i '' "s/^ *maps_version *=.*$/  maps_version = '${SEM_VERSION}'/" {} +
-
 cd Mapbox
 
 step "Updating Xcode targets to version ${SHORT_VERSION}…"

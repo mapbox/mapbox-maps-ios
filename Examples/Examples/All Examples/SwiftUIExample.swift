@@ -55,7 +55,6 @@ public struct SwiftUIMapView: UIViewRepresentable {
     }
 
     public func updateUIView(_ uiView: MapView, context: Context) {
-        // Unimplemented
         uiView.cameraManager.setCamera(centerCoordinate: mapViewModel.centerCoordinate,
                                        zoom: mapViewModel.zoomLevel,
                                        animated: false)
@@ -63,7 +62,7 @@ public struct SwiftUIMapView: UIViewRepresentable {
     }
 
     // MARK: - Setting basic map properties
-    
+
     public func centerCoordinate(_ newValue: CLLocationCoordinate2D) -> SwiftUIMapView {
         self.mapViewModel.centerCoordinate = newValue
         return self

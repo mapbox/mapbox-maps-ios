@@ -210,6 +210,7 @@ public class CameraManager {
                           pitch: CGFloat? = nil,
                           animated: Bool = false,
                           duration: TimeInterval? = nil,
+                          takeShortestPath: Bool = true,
                           completion: ((Bool) -> Void)? = nil) {
         guard let mapView = mapView else {
             assertionFailure("MapView is nil.")
@@ -220,13 +221,18 @@ public class CameraManager {
         let clampedZoom: CGFloat? = zoom?.clamp(withMax: mapCameraOptions.maximumZoomLevel,
                                                 andMin: mapCameraOptions.minimumZoomLevel)
 
-        let optimalBearing = optimizeBearing(startBearing: mapView.bearing, endBearing: bearing)
+        var newBearing: CLLocationDirection?
+        if !takeShortestPath {
+            newBearing = bearing
+        } else {
+            newBearing = optimizeBearing(startBearing: mapView.bearing, endBearing: bearing)
+        }
 
         let newCamera = CameraOptions(center: centerCoordinate,
                                       padding: padding,
                                       anchor: anchor,
                                       zoom: clampedZoom,
-                                      bearing: optimalBearing,
+                                      bearing: newBearing,
                                       pitch: pitch)
 
         guard mapView.cameraView.camera != newCamera else { return }

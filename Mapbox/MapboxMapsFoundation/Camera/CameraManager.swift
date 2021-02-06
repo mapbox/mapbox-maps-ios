@@ -220,11 +220,13 @@ public class CameraManager {
         let clampedZoom: CGFloat? = zoom?.clamp(withMax: mapCameraOptions.maximumZoomLevel,
                                                 andMin: mapCameraOptions.minimumZoomLevel)
 
+        let optimizedBearing = optimizeBearing(startBearing: mapView.bearing, endBearing: bearing)
+
         let newCamera = CameraOptions(center: centerCoordinate,
                                       padding: padding,
                                       anchor: anchor,
                                       zoom: clampedZoom,
-                                      bearing: bearing,
+                                      bearing: optimizedBearing,
                                       pitch: pitch)
 
         guard mapView.cameraView.camera != newCamera else { return }
@@ -641,6 +643,36 @@ public class CameraManager {
 
         animationGroup.delegate = animationGroup
         cameraLayer.add(animationGroup, forKey: animationKey)
+    }
+
+    /**
+    This function optimizes the bearing for set camera so that it is taking the shortest path
+
+    - Parameter startBearting: The current or start bearing of the map viewport
+    - Parameter endBearting: The bearing of where the map viewport should end at
+    - Returns: A `CLLocationDirection` that represents the correct final bearing accounting for positive and negatives
+    */
+    internal func optimizeBearing(startBearing: CLLocationDirection?, endBearing: CLLocationDirection?) -> CLLocationDirection? {
+        // This modulus is required to account for larger values
+        guard
+            let startBearing = startBearing?.truncatingRemainder(dividingBy: 360.0),
+            let endBearing = endBearing?.truncatingRemainder(dividingBy: 360.0)
+        else {
+            return nil
+        }
+
+        // 180 degrees is the max the map should rotate, therefore if the difference between the end and start point is
+        // more than 180 we need to go the opposite direction
+        if endBearing - startBearing >= 180 {
+            return endBearing - 360
+        }
+
+        // This is the inverse of the above, accounting for negative bearings
+        if endBearing - startBearing <= -180 {
+            return endBearing + 360
+        }
+
+        return endBearing
     }
 }
 

@@ -24,6 +24,7 @@ phases:
       - unzip $DEVICEFARM_TEST_PACKAGE_PATH -d /tmp/unzipped-ipa
       - mv /tmp/unzipped-ipa/Payload/*.app/xctestrun.zip /tmp/xctestrun.zip
       - unzip /tmp/xctestrun.zip -d /tmp/test-root
+      - cp /tmp/xctestrun.zip $DEVICEFARM_LOG_DIR
 
       - export CONFIG=`cat /tmp/test-root/configuration.txt`
       - export SCHEME=`cat /tmp/test-root/scheme.txt`
@@ -31,6 +32,7 @@ phases:
       - export DATE=`date +"%Y-%m-%d_%H%M%S"`
   
       - cp -R /tmp/unzipped-ipa/Payload/$APP_NAME.app /tmp/test-root/$CONFIG-iphoneos
+
 
 
   # The test phase includes commands that run your test suite execution.

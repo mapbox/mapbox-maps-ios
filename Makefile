@@ -149,7 +149,8 @@ endif
 	# Build for testing
 	set -o pipefail && $(XCODE_BUILD_DEVICE) \
 		-scheme '$(SCHEME)' \
-		-xcconfig $(CURDIR)/Mapbox/Configurations/testhost.xcconfig \
+		-xcconfig $(CURDIR)/Mapbox/Configurations/$(APP_NAME)_testhost.xcconfig \
+		-enableCodeCoverage YES \
 		build-for-testing 
 
 	# Gather app, frameworks and xctestrun
@@ -209,7 +210,7 @@ clean-for-device-build:
 #	AWS_DEVICE_FARM_PROJECT
 #	AWS_DEVICE_FARM_DEVICE_POOL
 #
-# 	make test-with-device-farm SCHEME=MapboxTestsWithHost
+# 	make test-with-device-farm SCHEME=MapboxMapsTestsWithHost APP_NAME=MapboxTestHost 
 # 
 # If token expires while the tests are in progress, run `mbx env` again followed by restarting
 # the test call. 

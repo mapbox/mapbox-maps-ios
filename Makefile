@@ -237,7 +237,7 @@ $(DEVICE_FARM_RESULTS): $(DEVICE_FARM_RUN)
 # This should match what happens on Device Farm (except for processing of results). The devicefarm.mk makefile
 # ought to match the contents of the testspec.yml file (ideally it would be shared).
 #
-# 	make local-test-with-device-farm-ipa SCHEME=MapboxTestsWithHost CONFIGURATION=Release ENABLE_CODE_SIGNING=1
+# make local-test-with-device-farm-ipa SCHEME=MapboxMapsTestsWithHost APP_NAME=MapboxTestHost CONFIGURATION=Release ENABLE_CODE_SIGNING=1
 
 .PHONY: local-test-with-device-farm-ipa
 local-test-with-device-farm-ipa: $(DEVICE_FARM_UPLOAD_IPA)

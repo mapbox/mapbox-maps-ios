@@ -1,6 +1,6 @@
 import Foundation
 
-public enum StyleURL {
+public enum StyleURL: Hashable {
     public static var defaultStreetsVersion: UInt { return 11 }
     public static var defaultOutdoorsVersion: UInt { return 11 }
     public static var defaultLightVersion: UInt { return 10 }

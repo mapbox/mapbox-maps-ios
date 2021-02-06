@@ -3,117 +3,105 @@ import MapboxMaps
 import Turf
 import SwiftUI
 
-/// Example of how a SwiftUI map view can be used within a typical `ContentView`.
-public struct ContentView: View {
-
-    public var body: some View {
-
-        SwiftUIMapView(resourceOptions: ResourceOptions(accessToken: AccountManager.shared.accessToken!))
-            .zoomLevel(18.0)
-            .centerCoordinate(CLLocationCoordinate2D(latitude: 20.6905, longitude: -88.2024))
-            .zoomLevel(14.0)
-            .styleURL(.dark)
-            .on(.mapLoadingFinished) { ( mapView ) in
-                let pointAnnotation = PointAnnotation(coordinate: mapView.centerCoordinate)
-                mapView.annotationManager.addAnnotation(pointAnnotation)
-            }
-    }
+internal struct Camera {
+    var center: CLLocationCoordinate2D
+    var zoom: CGFloat
 }
 
-/// Create a view model that is an `ObservableObject`
-/// so the map will be able to re-rendeer when map
-/// properties change.
-public class MapViewModel: ObservableObject {
-    @Published var centerCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-    @Published var zoomLevel = CGFloat.zero
-    @Published var styleURL = StyleURL.streets
-}
+internal struct SwiftUIMapView: UIViewRepresentable {
 
-/// To render a `MapView` as a SwiftUI view, configure a new
-/// struct that implements the required `UIViewRepresentable` protocol.
-public struct SwiftUIMapView: UIViewRepresentable {
+    private let resourceOptions: ResourceOptions
 
-    let resourceOptions: ResourceOptions
-    @State internal var observerConcrete = ObserverConcrete() // Manages the observation of map events
-    @ObservedObject internal var mapViewModel: MapViewModel
+    // Use @Bindings for map values that can change as a result of user interaction
+    @Binding private var camera: Camera
 
-    init(resourceOptions: ResourceOptions) {
+    init(resourceOptions: ResourceOptions, camera: Binding<Camera>) {
         self.resourceOptions = resourceOptions
-        self.mapViewModel = MapViewModel()
+        self._camera = camera
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(camera: $camera)
     }
 
     // MARK: - UIViewRepresentable required methods
-    public func makeUIView(context: UIViewRepresentableContext<SwiftUIMapView>) -> MapboxMaps.MapView {
+    func makeUIView(context: UIViewRepresentableContext<SwiftUIMapView>) -> MapboxMaps.MapView {
+        // Create the map and synchronize its initial state
         let mapView = MapView(with: .zero, resourceOptions: resourceOptions)
+        updateUIView(mapView, context: context)
 
-        // Subscribe to map events
-        observerConcrete.mapView = mapView
-        let events = MapEvents.EventKind.allCases.map { $0.rawValue }
-        try? mapView.__map.subscribe(for: observerConcrete, events: events)
-
+        // Configure the coordinator to be able to observe and synchronize camera changes
+        context.coordinator.mapView = mapView
+        mapView.on(.cameraDidChange, handler: context.coordinator.notify(for:))
         return mapView
     }
 
-    public func updateUIView(_ uiView: MapView, context: Context) {
-        uiView.cameraManager.setCamera(centerCoordinate: mapViewModel.centerCoordinate,
-                                       zoom: mapViewModel.zoomLevel,
-                                       animated: false)
-        uiView.style.styleURL = mapViewModel.styleURL
+    func updateUIView(_ mapView: MapView, context: Context) {
+        mapView.cameraManager.setCamera(centerCoordinate: camera.center,
+                                        zoom: camera.zoom,
+                                        animated: false)
+        mapView.style.styleURL = styleURL
     }
 
-    // MARK: - Setting basic map properties
+    // Use vars for values and setter funcs for map attributes that only change as a result of
+    // some other part of the program.
+    private var styleURL = StyleURL.streets
 
-    public func centerCoordinate(_ newValue: CLLocationCoordinate2D) -> SwiftUIMapView {
-        self.mapViewModel.centerCoordinate = newValue
-        return self
+    func styleURL(_ styleURL: StyleURL) -> Self {
+        var updated = self
+        updated.styleURL = styleURL
+        return updated
     }
 
-    public func zoomLevel(_ newValue: CGFloat) -> SwiftUIMapView {
-        self.mapViewModel.zoomLevel = newValue
-        return self
-    }
+    class Coordinator: Observer {
+        var peer: MBXPeerWrapper?
 
-    public func styleURL(_ newValue: StyleURL) -> SwiftUIMapView {
-        self.mapViewModel.styleURL = newValue
-        return self
-    }
+        @Binding var camera: Camera
 
-    // MARK: - Responding to events
-    // Allows the SwiftUI map view to respond to map events coming from the internal `MapView`.
-    public func on(_ eventType: MapEvents.EventKind, handler: @escaping (MapboxMaps.MapView) -> Void) -> SwiftUIMapView {
-        var handlers: [(MapboxMaps.MapView) -> Void] = observerConcrete.eventHandlers[eventType.rawValue] ?? []
-        handlers.append(handler)
-        observerConcrete.eventHandlers[eventType.rawValue] = handlers
-        return self
-    }
+        weak var mapView: MapView?
 
-    /// The nested class responsible for listening to map events.
-    class ObserverConcrete: Observer {
-        public var peer: MBXPeerWrapper?
-        public var mapView: MapView?
+        init(camera: Binding<Camera>) {
+            _camera = camera
+        }
 
-        init() { }
-
-        /// Map of event types to subscribed event handlers.
-        internal var eventHandlers: [String: [(MapboxMaps.MapView) -> Void]] = [:]
-
-        /// Notify the correct handler when the event occurs.
-        public func notify(for event: MapboxCoreMaps.Event) {
-            guard let mapView = mapView else { return }
-            let handlers = eventHandlers[event.type]
-            handlers?.forEach({ (handler) in
-                handler(mapView)
-            })
+        func notify(for event: Event) {
+            guard let typedEvent = MapEvents.EventKind(rawValue: event.type),
+                  let mapView = mapView else {
+                return
+            }
+            switch typedEvent {
+            case .cameraDidChange:
+                camera.center = mapView.centerCoordinate
+                camera.zoom = mapView.zoom
+            default:
+                break
+            }
         }
     }
 }
 
-/// Since the target of this example application is a UIKit-based app,
-/// for the purposes of this particular example we're embedding a
-/// `UIHostingController` in order to render the SwiftUI view
-/// within this example's view controller.
+internal struct ContentView: View {
+
+    @State var camera = Camera(center: CLLocationCoordinate2D(latitude: 40, longitude: -75), zoom: 14)
+    @State var styleURL = StyleURL.streets
+
+    public var body: some View {
+        VStack {
+            SwiftUIMapView(
+                resourceOptions: ResourceOptions(accessToken: AccountManager.shared.accessToken!),
+                camera: $camera)
+                .styleURL(styleURL)
+            Slider(value: $camera.zoom, in: 0...20)
+            Picker(selection: $styleURL, label: Text("Map Style")) {
+                Text("Streets").tag(StyleURL.streets)
+                Text("Dark").tag(StyleURL.dark)
+            }.pickerStyle(SegmentedPickerStyle())
+        }
+    }
+}
+
 @objc(SwiftUIExample)
-public class SwiftUIExample: UIViewController, ExampleProtocol {
+internal class SwiftUIExample: UIViewController, ExampleProtocol {
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -121,10 +109,10 @@ public class SwiftUIExample: UIViewController, ExampleProtocol {
     }
 
     internal func setupHostingController() {
-        let childView = UIHostingController(rootView: ContentView())
-        addChild(childView)
-        childView.view.frame = self.view.frame
-        view.addSubview(childView.view)
-        childView.didMove(toParent: self)
+        let hostingViewController = UIHostingController(rootView: ContentView())
+        addChild(hostingViewController)
+        hostingViewController.view.frame = view.frame
+        view.addSubview(hostingViewController.view)
+        hostingViewController.didMove(toParent: self)
     }
 }

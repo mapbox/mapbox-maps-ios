@@ -35,7 +35,6 @@ internal class LocationPuckTests: XCTestCase {
         let puck2 = LocationPuck.puck2D(vm2)
 
         XCTAssertEqual(puck1, puck2)
-
     }
 
     func testLocationPuck2DAreNotEqual() throws {
@@ -47,7 +46,6 @@ internal class LocationPuckTests: XCTestCase {
         let puck2 = LocationPuck.puck2D(vm2)
 
         XCTAssertNotEqual(puck1, puck2)
-
     }
 
     func testLocationPuck3DAreEqual() throws {

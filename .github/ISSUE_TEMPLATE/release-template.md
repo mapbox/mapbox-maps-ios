@@ -12,7 +12,7 @@ assignees: ''
 - Releaser:
 - Release buddy:
 - Release commencement time:
-- SEMVER tag/`<version>`:
+- SEMVER tag e.g `v10.0.0-beta.12`:
 - Milestone:
 
 _Required dependencies:_
@@ -22,16 +22,12 @@ _Required dependencies:_
 - Compatible version of Xcode:
 - Compatible version of MacOS:
 
-## 📦 Release MapboxCoreMaps
-
-- [ ] Release MapboxCoreMaps, if needed.
-    * If necessary, [follow these instructions](https://github.com/mapbox/mapbox-gl-native-ios-internal#how-to-build-mapboxcoremaps-used-in-carbon-releases) to do so. 
-
 ## 📦 Release MapboxMaps
 
 **1) Create Release Branch & Kickoff Build**
 
 - [ ] Pull the latest from main to include all code updates. Then make a new branch called "Release/{VERSION}"
+- [ ] Update the internal version pointers by running this command `./scripts/release/update-version.sh {VERSION}`. Commit these changes so they will be included in the build.
 - [ ] Kickoff the build by passing an empty commit with the message "[release] {VERSION}". Please copy this command to use an empty commit `git commit --allow-empty -m "[release] {VERSION}"` <-- do not include the "v" in version here
 - **It's important that you follow the commit message. This is what triggers the build job
 
@@ -41,14 +37,14 @@ _Required dependencies:_
 - Include LICENSE.md in the zip files
 - Upload direct download and xcframework to S3
 - Store the checksum of the .xcframework.zip as a CI artifact
+- Update the existing podspec and package manifest and commit that to the release branch
 - Create a PR [here](https://github.com/mapbox/api-downloads/pulls) so that our SDK can be consumed
-- The above PR needs to be approved and merged before continuing
+- [ ] The above PR needs to be approved and merged before continuing
 
 **2) Update Distribution & Changelog**
 
-- [ ] From the previous job, go to the CI Artifacts and get the value from the `MapboxMaps.xcframework.zip.checksum`. This will be needed to update SPM
-- [ ] On your release branch, run the update manifest script `./scripts/update-spm-manifest.sh <maps version number> <common version number> <core version number> <maps xcframework checksum>`
-- [ ] The above script will update `Package.swift`. Open the file and verify the changes are correct and then push this commit to remote
+- [ ] Pull the latest from release branch. CI will have commited changes to podspec and package manifest
+    - [ ] You can verify the checksum by going to the CI Artifacts and getting the value from the `MapboxMaps.xcframework.zip.checksum`. 
 - [ ] This is where we need to verify SPM update was successful. Open a tester single view application. Go to the Swift Package Manager menu and add our repo `https://github.com/mapbox/mapbox-maps-ios.git`. For the branch, specify your current release branch. Then verify that you can load the SDK, and display a basic map on device to verify that the build is working.
     - ***Note that the api-downloads PR needs to be merged and sanity checks need to complete before downloads are available here***
 - [ ] Generate the changelog by running the following script `./scripts/release/generate_changelog.sh`
@@ -84,6 +80,7 @@ _Required dependencies:_
 
 - [ ] Create a pull request from your release branch which targets `main`.
 - [ ] Have your release buddy approve and then merge it
+***When you squash & merge, make the commit message "Maps SDK Release {Version}"***
 
 ## 📣 Announcements
 

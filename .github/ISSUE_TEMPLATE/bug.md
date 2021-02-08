@@ -4,7 +4,7 @@ about: This template should be used for reporting bugs and defects.
 labels: 'bug :beetle:'
 assignees: ''
 ---
-
+<!--- Thanks for submitting a bug report! Please note that our team does take time to review each issue submitted, but we cannot guarantee a timeframe for resolution.  For dedicated support, please see our support plans: https://www.mapbox.com/pricing/#support-pricing  --->
 ## Environment
 
 - Xcode version:

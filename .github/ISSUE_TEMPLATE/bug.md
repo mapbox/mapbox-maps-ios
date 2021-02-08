@@ -9,7 +9,7 @@ assignees: ''
 
 - Xcode version:
 - iOS version:
-- Devices affected:
+- Devices affected: <!--- Please also note if device is a simulator or real hardware.  --->
 - Maps SDK Version:
 
 ## Observed behavior and steps to reproduce

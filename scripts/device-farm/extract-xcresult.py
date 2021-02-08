@@ -20,7 +20,14 @@ def xcresult_paths_from_zip(filepath):
         zip_ref.extractall(directory)
 
     test_runs = glob.iglob(directory+'/**/*.xcresult', recursive=True)
-    return [xcresult for xcresult in test_runs]
+    test_runs_array = [path for path in test_runs] 
+
+    # Coverage profdata too
+    coverages =  glob.iglob(directory+'/**/Coverage.profdata', recursive=True)
+    coverage_array = [path for path in coverages]
+    test_runs_array.extend(coverage_array)
+
+    return test_runs_array
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Gather xcresult folders under an output directory')

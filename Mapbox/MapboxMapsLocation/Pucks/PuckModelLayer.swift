@@ -21,12 +21,6 @@ public struct PuckModelLayerViewModel: Equatable {
     /// The rotation of the model in euler angles [lon, lat, z].
     public var modelRotation: Value<[Double]>?
 
-    public static func == (lhs: PuckModelLayerViewModel, rhs: PuckModelLayerViewModel) -> Bool {
-        return lhs.model == rhs.model
-            && lhs.modelScale == rhs.modelScale
-            && lhs.modelRotation == rhs.modelRotation
-    }
-
     /// Initialize a PuckModelLayerViewModel with a model, scale and rotation
     public init(model: Model, modelScale: Value<[Double]>? = nil, modelRotation: Value<[Double]>? = nil) {
         self.model = model

@@ -26,16 +26,6 @@ public enum LocationPuck: Equatable {
     /// Backed by `ModelLayer`.
     case puck3D(PuckModelLayerViewModel)
 
-    public static func == (lhs: LocationPuck, rhs: LocationPuck) -> Bool {
-        switch (lhs, rhs) {
-        case (.puck2D(let lhsVM), .puck2D(let rhsVM)):
-            return lhsVM == rhsVM
-        case (.puck3D(let lhsVM), .puck3D(let rhsVM)):
-            return lhsVM == rhsVM
-        default:
-            return false
-        }
-    }
 }
 
 // MARK: LocationPuckManager

@@ -108,6 +108,8 @@
 		0C1AF567244F6A80008D2A10 /* OrnamentConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1AF566244F6A80008D2A10 /* OrnamentConfig.swift */; };
 		0C26425524EECD14001FE2E3 /* AllExpressions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C26425424EECD14001FE2E3 /* AllExpressions.swift */; };
 		0C26425624EECD14001FE2E3 /* AllExpressions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C26425424EECD14001FE2E3 /* AllExpressions.swift */; };
+		0C2CD9E325D19D30006D068F /* OptionsIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2CD9E225D19D30006D068F /* OptionsIntegrationTests.swift */; };
+		0C2CD9F625D19D75006D068F /* OptionsIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2CD9E225D19D30006D068F /* OptionsIntegrationTests.swift */; };
 		0C31F7AA25AF87AB00DCFB28 /* PuckModelLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C31F7A925AF87AB00DCFB28 /* PuckModelLayer.swift */; };
 		0C31F7AB25AF87AB00DCFB28 /* PuckModelLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C31F7A925AF87AB00DCFB28 /* PuckModelLayer.swift */; };
 		0C37B1E325CB05F000DCDD3D /* ColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C37B1E225CB05F000DCDD3D /* ColorTests.swift */; };
@@ -850,6 +852,7 @@
 		0C1AF564244F65E6008D2A10 /* OrnamentOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrnamentOptions.swift; sourceTree = "<group>"; };
 		0C1AF566244F6A80008D2A10 /* OrnamentConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrnamentConfig.swift; sourceTree = "<group>"; };
 		0C26425424EECD14001FE2E3 /* AllExpressions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllExpressions.swift; sourceTree = "<group>"; };
+		0C2CD9E225D19D30006D068F /* OptionsIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsIntegrationTests.swift; sourceTree = "<group>"; };
 		0C31F7A925AF87AB00DCFB28 /* PuckModelLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuckModelLayer.swift; sourceTree = "<group>"; };
 		0C37B1E225CB05F000DCDD3D /* ColorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorTests.swift; sourceTree = "<group>"; };
 		0C3B1E8A24DDADD000CC29E8 /* EventsStringTokens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventsStringTokens.swift; sourceTree = "<group>"; };
@@ -1598,6 +1601,7 @@
 				C69F017225435BAE001AB49B /* Mocks */,
 				CA2E498725380AE10096DEDE /* Integration Tests */,
 				0CD34FDD242AADDB00943687 /* Info.plist */,
+				0C2CD9E225D19D30006D068F /* OptionsIntegrationTests.swift */,
 			);
 			path = MapboxMapsTests;
 			sourceTree = "<group>";
@@ -3484,6 +3488,7 @@
 				CA548FA0251C3DA800F829A3 /* StyleURLTests.swift in Sources */,
 				CAD7BA0525A368DE00E64C78 /* ExampleIntegrationTest.swift in Sources */,
 				CA2E4A662538DCE10096DEDE /* MapViewIntegrationTestCase.swift in Sources */,
+				0C2CD9E325D19D30006D068F /* OptionsIntegrationTests.swift in Sources */,
 				CA548F27251C3D7200F829A3 /* PanGestureHandlerTests.swift in Sources */,
 				CA548F23251C3D7200F829A3 /* QuickZoomGestureHandlerTests.swift in Sources */,
 				0C5CFD7725BE25210001E753 /* RasterSourceTests.swift in Sources */,
@@ -3734,6 +3739,7 @@
 				CA548FDB251C404B00F829A3 /* LineStringTests.swift in Sources */,
 				0C5CFCF425BB951B0001E753 /* FillLayerTests.swift in Sources */,
 				0C5CFCEB25BB951B0001E753 /* HillshadeLayerTests.swift in Sources */,
+				0C2CD9F625D19D75006D068F /* OptionsIntegrationTests.swift in Sources */,
 				0C5CFCF125BB951B0001E753 /* SkyLayerTests.swift in Sources */,
 				CA548FDE251C404B00F829A3 /* MapboxMapsStyleTests.swift in Sources */,
 				CA548FDF251C404B00F829A3 /* MapboxMapsSnapshotTests.swift in Sources */,

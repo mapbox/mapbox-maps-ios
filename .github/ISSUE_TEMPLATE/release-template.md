@@ -87,6 +87,7 @@ _Required dependencies:_
 
 - [ ] Create a pull request from your release branch which targets `main`.
 - [ ] Have your release buddy approve and then merge it
+***Do not squash and merge here!***
 
 ## 📣 Announcements
 

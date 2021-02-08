@@ -143,7 +143,6 @@ public class Style {
         do {
             layerProps = try self.styleManager.getStyleLayerProperties(forLayerId: layerID)
         } catch {
-            print(error)
             return .failure(.getStyleLayerFailed(nil))
         }
 

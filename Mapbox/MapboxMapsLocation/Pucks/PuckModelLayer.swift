@@ -23,6 +23,8 @@ public struct PuckModelLayerViewModel: Equatable {
 
     public static func == (lhs: PuckModelLayerViewModel, rhs: PuckModelLayerViewModel) -> Bool {
         return lhs.model == rhs.model
+            && lhs.modelScale == rhs.modelScale
+            && lhs.modelRotation == rhs.modelRotation
     }
 }
 

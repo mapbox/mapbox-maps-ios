@@ -24,7 +24,7 @@ public struct LocationIndicatorLayerViewModel: Equatable {
     /// The size of the images, as a scale factor applied to the size of the specified image.
     public var scale: Value<Double>?
 
-    public init(topImage: UIImage?, bearingImage: UIImage?, shadowImage: UIImage?, scale: Value<Double>?) {
+    public init(topImage: UIImage? = nil, bearingImage: UIImage? = nil, shadowImage: UIImage? = nil, scale: Value<Double>? = nil) {
         self.topImage = topImage
         self.bearingImage = bearingImage
         self.shadowImage = shadowImage

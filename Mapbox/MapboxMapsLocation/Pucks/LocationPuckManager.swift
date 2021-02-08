@@ -25,10 +25,19 @@ public enum LocationPuck: Equatable {
 
     public static func == (lhs: LocationPuck, rhs: LocationPuck) -> Bool {
         switch (lhs, rhs) {
-        case (.puck2D(_), .puck2D(_)):
-            return true
-        case (.puck3D(_), .puck3D(_)):
-            return true
+        case (.puck2D(let lhsClosure), .puck2D(let rhsClosure)):
+            guard let lhsClosure = lhsClosure, let rhsClosure = rhsClosure else { return false }
+            var lhsViewModel = LocationIndicatorLayerViewModel()
+            var rhsViewModel = LocationIndicatorLayerViewModel()
+            lhsClosure(&lhsViewModel)
+            rhsClosure(&rhsViewModel)
+            return lhsViewModel == rhsViewModel
+        case (.puck3D(let lhsClosure), .puck3D(let rhsClosure)):
+            var lhsViewModel = PuckModelLayerViewModel()
+            var rhsViewModel = PuckModelLayerViewModel()
+            lhsClosure(&lhsViewModel)
+            rhsClosure(&rhsViewModel)
+            return lhsViewModel == rhsViewModel
         default:
             return false
         }

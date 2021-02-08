@@ -21,7 +21,7 @@ assignees: ''
 <!--- Please include the expected behavior and any resources supporting this expected behavior. --->
 
 ## Notes / preliminary analysis
-
+<!--- If you suspect why the issue is happening, describe your thoughts here. --->
 <!--- include your initial analysis, if available --->
 
 ## Additional links and references

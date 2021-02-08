@@ -13,7 +13,7 @@ import MapboxMapsStyle
 public struct PuckModelLayerViewModel: Equatable {
 
     /// The model to use as the locaiton puck
-    public var model: Model?
+    public var model: Model
 
     /// The scale of the model.
     public var modelScale: Value<[Double]>?
@@ -25,6 +25,13 @@ public struct PuckModelLayerViewModel: Equatable {
         return lhs.model == rhs.model
             && lhs.modelScale == rhs.modelScale
             && lhs.modelRotation == rhs.modelRotation
+    }
+
+    /// Initialize a PuckModelLayerViewModel with a model, scale and rotation
+    public init(model: Model, modelScale: Value<[Double]>? = nil, modelRotation: Value<[Double]>? = nil) {
+        self.model = model
+        self.modelScale = modelScale
+        self.modelRotation = modelRotation
     }
 }
 
@@ -40,31 +47,26 @@ internal class PuckModelLayer: Puck {
     internal var puckStyle: PuckStyle
     internal weak var locationSupportableMapView: LocationSupportableMapView?
     public var style: Style!
-    
-    // Customization hook
-    internal var customizationHandler: ((inout PuckModelLayerViewModel) -> Void)
 
     // MARK: Initializers
-    internal init(currentPuckStyle: PuckStyle, locationSupportableMapView: LocationSupportableMapView, customizationHandler: @escaping ((inout PuckModelLayerViewModel) -> Void)) {
+    internal init(currentPuckStyle: PuckStyle, locationSupportableMapView: LocationSupportableMapView, viewModel: PuckModelLayerViewModel) {
         modelLayer = ModelLayer(id: "puck-model-layer")
         modelSource = ModelSource()
-        puckModelLayerVM = PuckModelLayerViewModel()
+        puckModelLayerVM = viewModel
         self.locationSupportableMapView = locationSupportableMapView
         style = locationSupportableMapView.style
         puckStyle = currentPuckStyle
-        self.customizationHandler = customizationHandler
-        setup()
+        self.setup()
     }
 
     internal func setup() {
 
-        customizationHandler(&puckModelLayerVM)
         modelLayer.source = "puck-model-source"
 
-        if let validModel = puckModelLayerVM.model {
-            modelSource.models = ["puck-model": validModel]
-            initialPuckOrientation = validModel.orientation
-        }
+        // Set the model to the source
+        modelSource.models = ["puck-model": puckModelLayerVM.model]
+        initialPuckOrientation = puckModelLayerVM.model.orientation
+
 
         if let validModelScale = puckModelLayerVM.modelScale {
             modelLayer.paint?.modelScale = validModelScale

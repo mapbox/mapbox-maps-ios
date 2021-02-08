@@ -10,21 +10,29 @@ import MapboxMapsStyle
 
 internal class LocationPuckTests: XCTestCase {
 
+    var image: UIImage? {
+        if #available(iOS 13.0, *) {
+            return UIImage(systemName: "house")
+        } else {
+            return nil
+        }
+    }
+
+    var model1: Model {
+        return Model(uri: URL(string: "some-url"), position: [1.0, 2.0])
+    }
+
+    var model2: Model {
+        return Model(uri: URL(string: "some-other-url"), position: [1.0, 2.0])
+    }
+
     func testLocationPuck2DAreEqual() throws {
 
-        let puck1 = LocationPuck.puck2D { (vm) in
-            vm.scale = .constant(10.0)
-            if #available(iOS 13.0, *) {
-                vm.topImage = UIImage(systemName: "house")
-            }
-        }
+        let vm1 = LocationIndicatorLayerViewModel(topImage: image, scale: .constant(10))
+        let puck1 = LocationPuck.puck2D(vm1)
 
-        let puck2 = LocationPuck.puck2D { (vm) in
-            vm.scale = .constant(10.0)
-            if #available(iOS 13.0, *) {
-                vm.topImage = UIImage(systemName: "house")
-            }
-        }
+        let vm2 = LocationIndicatorLayerViewModel(topImage: image, scale: .constant(10))
+        let puck2 = LocationPuck.puck2D(vm2)
 
         XCTAssertEqual(puck1, puck2)
 
@@ -32,16 +40,11 @@ internal class LocationPuckTests: XCTestCase {
 
     func testLocationPuck2DAreNotEqual() throws {
 
-        let puck1 = LocationPuck.puck2D { (vm) in
-            vm.scale = .constant(10.0)
-            if #available(iOS 13.0, *) {
-                vm.topImage = UIImage(systemName: "house")
-            }
-        }
+        let vm1 = LocationIndicatorLayerViewModel(topImage: image, scale: .constant(12))
+        let puck1 = LocationPuck.puck2D(vm1)
 
-        let puck2 = LocationPuck.puck2D { (vm) in
-            vm.scale = .constant(10.0)
-        }
+        let vm2 = LocationIndicatorLayerViewModel(topImage: image, scale: .constant(10))
+        let puck2 = LocationPuck.puck2D(vm2)
 
         XCTAssertNotEqual(puck1, puck2)
 
@@ -49,33 +52,22 @@ internal class LocationPuckTests: XCTestCase {
 
     func testLocationPuck3DAreEqual() throws {
 
-        let puck1 = LocationPuck.puck3D { (vm) in
-            vm.modelScale = .constant([0.1, 0.2])
-            vm.modelRotation = .constant([0.3, 0.4])
-            vm.model = Model(uri: URL(string: "some-url"), position: [1.0, 2.0])
-        }
+        let vm1 = PuckModelLayerViewModel(model: model1, modelScale: .constant([0.1, 0.2]), modelRotation: .constant([0.3, 0.4]))
+        let puck1 = LocationPuck.puck3D(vm1)
 
-        let puck2 = LocationPuck.puck3D { (vm) in
-            vm.modelScale = .constant([0.1, 0.2])
-            vm.modelRotation = .constant([0.3, 0.4])
-            vm.model = Model(uri: URL(string: "some-url"), position: [1.0, 2.0])
-        }
+        let vm2 = PuckModelLayerViewModel(model: model1, modelScale: .constant([0.1, 0.2]), modelRotation: .constant([0.3, 0.4]))
+        let puck2 = LocationPuck.puck3D(vm2)
 
         XCTAssertEqual(puck1, puck2)
     }
 
     func testLocationPuck3DAreNotEqual() throws {
 
-        let puck1 = LocationPuck.puck3D { (vm) in
-            vm.modelScale = .constant([0.1, 0.2])
-            vm.modelRotation = .constant([0.3, 0.4])
-        }
+        let vm1 = PuckModelLayerViewModel(model: model1, modelScale: .constant([0.1, 0.2]), modelRotation: .constant([0.3, 0.4]))
+        let puck1 = LocationPuck.puck3D(vm1)
 
-        let puck2 = LocationPuck.puck3D { (vm) in
-            vm.modelScale = .constant([0.1, 0.2])
-            vm.modelRotation = .constant([0.2, 0.4])
-            vm.model = Model(uri: URL(string: "some-url"), position: [1.0, 2.0])
-        }
+        let vm2 = PuckModelLayerViewModel(model: model2, modelScale: .constant([0.1, 0.3]), modelRotation: .constant([0.4, 0.5]))
+        let puck2 = LocationPuck.puck3D(vm2)
 
         XCTAssertNotEqual(puck1, puck2)
     }

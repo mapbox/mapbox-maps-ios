@@ -84,7 +84,7 @@ public class LocationManager: NSObject {
 
     internal func updateLocationOptions(with newOptions: LocationOptions) {
 
-        guard newOptions != locationOptions else { return }
+//        guard newOptions != locationOptions else { return }
 
         if newOptions.showUserLocation != showUserLocation {
             self.showUserLocation = newOptions.showUserLocation

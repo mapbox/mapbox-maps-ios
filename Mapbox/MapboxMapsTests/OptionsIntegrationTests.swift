@@ -4,10 +4,6 @@ import CoreLocation
 
 internal class OptionsIntegrationTest: MapViewIntegrationTestCase {
 
-    internal func testBaseClass() throws {
-        // Do nothing
-    }
-
     internal func testOptionsAreUpdated() throws {
         guard let mapView = mapView else {
             XCTFail("There should be valid MapView and Style objects created by setUp.")
@@ -25,10 +21,13 @@ internal class OptionsIntegrationTest: MapViewIntegrationTestCase {
             options = newOptions
         }
 
-        XCTAssert(mapView.gestureManager.gestureOptions == newOptions.gestures)
-        XCTAssert(mapView.cameraManager.mapCameraOptions == newOptions.camera)
-        XCTAssert(mapView.locationManager.locationOptions == newOptions.location)
-        XCTAssert(!mapView.ornamentsManager.ornamentConfig.ornaments.contains(where: {$0.type == .compass
-                                                                                || $0.type == .mapboxScaleBar}))
+        XCTAssertEqual(mapView.gestureManager.gestureOptions, newOptions.gestures)
+        XCTAssertEqual(mapView.cameraManager.mapCameraOptions, newOptions.camera)
+        XCTAssertEqual(mapView.locationManager.locationOptions, newOptions.location)
+        XCTAssertFalse(
+            mapView.ornamentsManager.ornamentConfig.ornaments.contains {
+                $0.type == .compass || $0.type == .mapboxScaleBar
+            }
+        )
     }
 }

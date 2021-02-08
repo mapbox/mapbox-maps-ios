@@ -28,7 +28,7 @@ public struct SkyLayer: Layer {
     public struct Layout: Codable {
 
       /// Whether this layer is displayed.
-      public var visibility: Visibility
+      public var visibility: Visibility?
       
       public init() {
         self.visibility = .visible
@@ -60,7 +60,7 @@ public struct SkyLayer: Layer {
       public var skyAtmosphereSunIntensity: Value<Double>?
             
       /// Defines a radial color gradient with which to color the sky. The color values can be interpolated with an expression using `sky-radial-progress`. The range [0, 1] for the interpolant covers a radial distance (in degrees) of [0, `sky-gradient-radius`] centered at the position specified by `sky-gradient-center`.
-      public var skyGradient: Value<String>?
+      public var skyGradient: Value<ColorRepresentable>?
             
       /// Position of the gradient center [a azimuthal angle, p polar angle]. The azimuthal angle indicates the position of the gradient center relative to 0&#xB0; north, where degrees proceed clockwise. The polar angle indicates the height of the gradient center, where 0&#xB0; is directly above, at zenith, and 90&#xB0; at the horizon.
       public var skyGradientCenter: Value<[Double]>?

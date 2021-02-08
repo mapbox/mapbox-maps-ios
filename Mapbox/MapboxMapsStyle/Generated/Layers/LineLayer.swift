@@ -28,7 +28,7 @@ public struct LineLayer: Layer {
     public struct Layout: Codable {
 
       /// Whether this layer is displayed.
-      public var visibility: Visibility
+      public var visibility: Visibility?
       
       public init() {
         self.visibility = .visible
@@ -92,7 +92,7 @@ public struct LineLayer: Layer {
       public var lineGapWidthTransition: StyleTransition?
             
       /// Defines a gradient with which to color a line feature. Can only be used with GeoJSON sources that specify `"lineMetrics": true`.
-      public var lineGradient: Value<String>?
+      public var lineGradient: Value<ColorRepresentable>?
             
       /// The line's offset. For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. For polygon features, a positive value results in an inset, and a negative value results in an outset.
       public var lineOffset: Value<Double>?

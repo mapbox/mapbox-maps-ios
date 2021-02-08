@@ -22,13 +22,6 @@ _Required dependencies:_
 - Compatible version of Xcode:
 - Compatible version of MacOS:
 
-## 📦 Verify Dependencies
-
-- [ ] Verify the Cartfile for correct version of MapboxCoreMaps
-- [ ] Verify the Cartfile for correct version of MapboxCommon
-- [ ] Verify the Cartfile for correct version of Turf
-- [ ] Verify the Cartfile for correct version of MME
-
 ## 📦 Release MapboxMaps
 
 **1) Create Release Branch & Kickoff Build**
@@ -87,7 +80,7 @@ _Required dependencies:_
 
 - [ ] Create a pull request from your release branch which targets `main`.
 - [ ] Have your release buddy approve and then merge it
-***Do not squash and merge here!***
+***When you squash & merge, make the commit message "Maps SDK Release {Version}"***
 
 ## 📣 Announcements
 

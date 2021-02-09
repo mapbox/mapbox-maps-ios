@@ -80,11 +80,15 @@ extension Expression.Operator: ValidExpressionArgument {
     }
 }
 
-extension Dictionary: ValidExpressionArgument where Key: ValidExpressionArgument,
+extension Dictionary: ValidExpressionArgument where Key == Double,
                                                     Value: ValidExpressionArgument {
     public var expressionElements: [Expression.Element] {
         var elements = [Expression.Element]()
-        for (key, value) in self {
+        for key in Array(self.keys).sorted(by: <) {
+            guard key >= 0, let value = self[key] else {
+                assertionFailure("Invalid stops dictionary with negative key")
+                return []
+            }
             elements = elements + key.expressionElements + value.expressionElements
         }
         return elements

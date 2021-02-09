@@ -44,7 +44,7 @@ public class ColorExpressionExample: UIViewController, ExampleProtocol {
          ]
          */
 
-        let stops: [UInt: UIColor] = [
+        let stops: [Double: UIColor] = [
             0: .red,
             14: .blue
         ]

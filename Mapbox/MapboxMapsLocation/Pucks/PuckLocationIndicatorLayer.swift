@@ -24,15 +24,11 @@ public struct LocationIndicatorLayerViewModel: Equatable {
     /// The size of the images, as a scale factor applied to the size of the specified image.
     public var scale: Value<Double>?
 
-    public init(topImage: UIImage?, bearingImage: UIImage?, shadowImage: UIImage?, scale: Value<Double>?) {
+    public init(topImage: UIImage? = nil, bearingImage: UIImage? = nil, shadowImage: UIImage? = nil, scale: Value<Double>? = nil) {
         self.topImage = topImage
         self.bearingImage = bearingImage
         self.shadowImage = shadowImage
         self.scale = scale
-    }
-
-    public static func == (lhs: LocationIndicatorLayerViewModel, rhs: LocationIndicatorLayerViewModel) -> Bool {
-        return lhs.topImage == rhs.topImage && lhs.bearingImage == rhs.bearingImage && lhs.shadowImage == rhs.shadowImage
     }
 }
 
@@ -40,21 +36,18 @@ internal class PuckLocationIndicatorLayer: Puck {
 
     // MARK: Properties
     internal var locationIndicatorLayer: LocationIndicatorLayer?
-    internal var locationIndicatorLayerVM: LocationIndicatorLayerViewModel
+    internal var locationIndicatorLayerVM: LocationIndicatorLayerViewModel?
 
     // MARK: Protocol Properties
     internal var puckStyle: PuckStyle
 
     internal weak var locationSupportableMapView: LocationSupportableMapView?
 
-    internal var customizationHandler: ((inout LocationIndicatorLayerViewModel) -> Void)?
-
     // MARK: Initializers
-    internal init(currentPuckStyle: PuckStyle, locationSupportableMapView: LocationSupportableMapView, customizationHandler: ((inout LocationIndicatorLayerViewModel) -> Void)? = nil) {
+    internal init(currentPuckStyle: PuckStyle, locationSupportableMapView: LocationSupportableMapView, viewModel: LocationIndicatorLayerViewModel?) {
         self.locationSupportableMapView = locationSupportableMapView
-        self.locationIndicatorLayerVM = LocationIndicatorLayerViewModel(topImage: nil, bearingImage: nil, shadowImage: nil, scale: nil)
+        self.locationIndicatorLayerVM = viewModel
         self.puckStyle = currentPuckStyle
-        self.customizationHandler = customizationHandler
     }
 
     // MARK: Protocol Implementation
@@ -140,10 +133,10 @@ private extension PuckLocationIndicatorLayer {
 
         _ = style.removeStyleLayer(forLayerId: "approximate-puck")
         // Call customizationHandler to allow developers to granularly modify the layer
-        self.customizationHandler?(&locationIndicatorLayerVM)
+
 
         // Add images to sprite sheet
-        if let validTopImage = locationIndicatorLayerVM.topImage {
+        if let validTopImage = locationIndicatorLayerVM?.topImage {
             let setStyleImageResult = style.setStyleImage(image: validTopImage, with: "locationIndicatorLayerTopImage", scale: 44.0)
 
             if case .failure(let imageError) = setStyleImageResult {
@@ -161,7 +154,7 @@ private extension PuckLocationIndicatorLayer {
             }
         }
 
-        if let validBearingImage = locationIndicatorLayerVM.bearingImage {
+        if let validBearingImage = locationIndicatorLayerVM?.bearingImage {
             let setStyleImageResult = style.setStyleImage(image: validBearingImage, with: "locationIndicatorLayerBearingImage", scale: 44.0)
 
             if case .failure(let imageError) = setStyleImageResult {
@@ -178,7 +171,7 @@ private extension PuckLocationIndicatorLayer {
             }
         }
 
-        if let validShadowImage = locationIndicatorLayerVM.shadowImage {
+        if let validShadowImage = locationIndicatorLayerVM?.shadowImage {
             let setStyleImageResultInner = style.setStyleImage(image: validShadowImage, with: "locationIndicatorLayerShadowImage", scale: 44.0)
 
             if case .failure(let imageError) = setStyleImageResultInner {
@@ -202,9 +195,9 @@ private extension PuckLocationIndicatorLayer {
                                     location.coordinate.longitude,
                                     location.internalLocation.altitude])
         paint.locationTransition = StyleTransition(duration: 0, delay: 0)
-        paint.topImageSize = locationIndicatorLayerVM.scale ?? .constant(1.0)
-        paint.bearingImageSize = locationIndicatorLayerVM.scale ?? .constant(1.0)
-        paint.shadowImageSize = locationIndicatorLayerVM.scale ?? .constant(1.0)
+        paint.topImageSize = locationIndicatorLayerVM?.scale ?? .constant(1.0)
+        paint.bearingImageSize = locationIndicatorLayerVM?.scale ?? .constant(1.0)
+        paint.shadowImageSize = locationIndicatorLayerVM?.scale ?? .constant(1.0)
         paint.accuracyRadius = .constant(location.horizontalAccuracy)
 
         paint.emphasisCircleRadiusTransition = StyleTransition(duration: 0, delay: 0)

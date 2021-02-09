@@ -30,12 +30,10 @@ public class CustomLocationIndicatorLayerExample: UIViewController, ExampleProto
 
         self.mapView.update { (mapOptions) in
             mapOptions.location.showUserLocation = true
-            mapOptions.location.locationPuck = .puck2D(customize: { (locationIndicatorLayerVM) in
 
-                let topImage = UIImage(named: "star")
-                locationIndicatorLayerVM.topImage = topImage
-                // Perform additional styling here
-            })
+            // Granularly style the location puck with a `LocationIndicatorLayerViewModel`
+            let locationIndicatorLayerVM = LocationIndicatorLayerViewModel(topImage: UIImage(named: "star"))
+            mapOptions.location.locationPuck = .puck2D(locationIndicatorLayerVM)
         }
 
         let coordinate = CLLocationCoordinate2D(latitude: 39.085006, longitude: -77.150925)

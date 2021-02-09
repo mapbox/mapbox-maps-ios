@@ -20,19 +20,12 @@ internal enum PuckStyle {
 // MARK: PuckBackend
 /// This enum represents the different backends that can be used for Pucks
 public enum LocationPuck: Equatable {
-    case puck2D(customize: ((inout LocationIndicatorLayerViewModel) -> Void)? = nil) // Backed by `LocationIndicatorLayer`. Implement customize block to granularly modify the puck's styling.
-    case puck3D(customize: ((inout PuckModelLayerViewModel) -> Void))// Backed by `ModelLayer`. Implement customize block to granularly modify the puck's styling.
+    /// Backed by `LocationIndicatorLayer`. Optionally provide `LocationIndicatorViewModel` to granularly modify the puck's styling.
+    case puck2D(LocationIndicatorLayerViewModel? = nil)
 
-    public static func == (lhs: LocationPuck, rhs: LocationPuck) -> Bool {
-        switch (lhs, rhs) {
-        case (.puck2D(_), .puck2D(_)):
-            return true
-        case (.puck3D(_), .puck3D(_)):
-            return true
-        default:
-            return false
-        }
-    }
+    /// Backed by `ModelLayer`.
+    case puck3D(PuckModelLayerViewModel)
+
 }
 
 // MARK: LocationPuckManager
@@ -88,10 +81,10 @@ public class LocationPuckManager: LocationConsumer {
         var puck: Puck
 
         switch self.currentPuckBackend {
-        case let .puck2D(customizationHandler):
-            puck = PuckLocationIndicatorLayer(currentPuckStyle: self.currentPuckStyle, locationSupportableMapView: locationSupportableMapView, customizationHandler: customizationHandler)
-        case let .puck3D(customizationHandler):
-            puck = PuckModelLayer(currentPuckStyle: self.currentPuckStyle, locationSupportableMapView: locationSupportableMapView, customizationHandler: customizationHandler)
+        case let .puck2D(viewModel):
+            puck = PuckLocationIndicatorLayer(currentPuckStyle: self.currentPuckStyle, locationSupportableMapView: locationSupportableMapView, viewModel: viewModel)
+        case let .puck3D(viewModel):
+            puck = PuckModelLayer(currentPuckStyle: self.currentPuckStyle, locationSupportableMapView: locationSupportableMapView, viewModel: viewModel)
         }
 
         if let location = self.latestLocation {

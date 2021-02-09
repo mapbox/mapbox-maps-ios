@@ -384,7 +384,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
     }
 }
 
-class BaseMapViewProxy: NSObject {
+private class BaseMapViewProxy: NSObject {
     weak var mapView: BaseMapView?
 
     init(mapView: BaseMapView) {

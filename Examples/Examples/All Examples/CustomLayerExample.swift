@@ -18,7 +18,7 @@ public class CustomLayerExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.view.addSubview(mapView)
 
-        self.mapView.on(.styleLoadingFinished) { [weak self] _ in
+        self.mapView.on(.styleFullyLoaded) { [weak self] _ in
             self?.addCustomLayer()
         }
     }

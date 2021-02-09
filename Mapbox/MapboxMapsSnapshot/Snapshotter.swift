@@ -39,7 +39,7 @@ public class Snapshotter: Observer {
     public init(options: MapSnapshotOptions) {
         self.mapSnapshotter = try! MapSnapshotter(options: options)
         self.style = Style(with: mapSnapshotter)
-        try! self.mapSnapshotter.subscribe(for: self, events: [MapEvents.styleLoadingFinished,
+        try! self.mapSnapshotter.subscribe(for: self, events: [MapEvents.styleFullyLoaded,
                                                           MapEvents.styleImageMissing,
                                                           MapEvents.mapLoadingError])
     }

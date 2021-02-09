@@ -207,7 +207,8 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         if self.superview != nil
             && self.window != nil
             && displayLink == nil {
-            displayLink = self.window?.screen.displayLink(withTarget: BaseMapViewProxy(target: self), selector: #selector(updateFromDisplayLink))
+            let target = BaseMapViewProxy(mapView: self)
+            displayLink = self.window?.screen.displayLink(withTarget: target, selector: #selector(target.updateFromDisplayLink))
 
             self.updateDisplayLinkPreferredFramesPerSecond()
             displayLink?.add(to: .current, forMode: .common)
@@ -384,19 +385,14 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 }
 
 class BaseMapViewProxy: NSObject {
-    // https://stackoverflow.com/questions/44096793/how-to-set-cadisplaylink-in-swift-with-weak-reference-between-target-and-cadispl/44098377#44098377
-    weak var target: NSObjectProtocol?
+    weak var mapView: BaseMapView?
 
-    init(target: NSObjectProtocol) {
-        self.target = target
+    init(mapView: BaseMapView) {
+        self.mapView = mapView
         super.init()
     }
 
-    override func responds(to aSelector: Selector!) -> Bool {
-        return (target?.responds(to: aSelector) ?? false) || super.responds(to: aSelector)
-    }
-
-    override func forwardingTarget(for aSelector: Selector!) -> Any? {
-        return target
+    @objc func updateFromDisplayLink(displayLink: CADisplayLink) {
+        mapView?.updateFromDisplayLink(displayLink: displayLink)
     }
 }

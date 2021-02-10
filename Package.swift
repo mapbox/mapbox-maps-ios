@@ -29,7 +29,6 @@
          ),
          registry.mapboxMapsTarget(version: version, checksum: checksum),
      ],
-     cxxLanguageStandard: .cxx14
  )
 
  struct SDKRegistry {

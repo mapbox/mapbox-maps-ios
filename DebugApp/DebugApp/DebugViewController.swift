@@ -29,6 +29,10 @@ public class DebugViewController: UIViewController {
             mapOptions.location.showUserLocation = true
         }
 
+        let centerCoordinate = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
+
+        mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate, padding: nil, anchor: nil, zoom: 7, bearing: nil, pitch: 45 , animated: true, duration: nil, completion: nil)
+
         self.view.addSubview(mapView)
     }
 }

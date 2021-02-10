@@ -10,7 +10,7 @@
 
  let package = Package(
      name: "MapboxMaps",
-     platforms: [.iOS(.v10), .macOS(.v10_15)],
+     platforms: [.iOS(.v11)],
      products: [
          .library(
              name: "MapboxMaps",

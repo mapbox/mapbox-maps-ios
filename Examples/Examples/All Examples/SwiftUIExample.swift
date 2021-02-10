@@ -41,6 +41,15 @@ internal struct SwiftUIMapView: UIViewRepresentable {
         return updated
     }
 
+    /// Here's a property and builder method for annotations
+    private var annotations = [Annotation]()
+
+    func annotations(_ annotations: [Annotation]) -> Self {
+        var updated = self
+        updated.annotations = annotations
+        return updated
+    }
+
     /// Unlike `styleURL`, there's no good default value for `resourceOptions`
     /// because it's the value that contains your Mapbox access token. For that reason,
     /// it's declared here as a `let` and is a required parameter in the initializer.
@@ -69,11 +78,9 @@ internal struct SwiftUIMapView: UIViewRepresentable {
         updateUIView(mapView, context: context)
 
         /// Additionally, this is your opportunity to connect the coordinator to the map view. In this example
-        /// the coordinator is given a reference to the map view and is configured to observe the `.cameraDidChange`
-        /// event. Whenever the camera changes, the coordinator will be able to update the camera binding
-        /// that was provided to it when it was initialized.
+        /// the coordinator is given a reference to the map view. It uses the reference to set up the necessary
+        /// observations so that it can respond to map events.
         context.coordinator.mapView = mapView
-        mapView.on(.cameraDidChange, handler: context.coordinator.notify(for:))
 
         return mapView
     }
@@ -84,18 +91,45 @@ internal struct SwiftUIMapView: UIViewRepresentable {
         mapView.cameraManager.setCamera(centerCoordinate: camera.center,
                                         zoom: camera.zoom,
                                         animated: false)
-        mapView.style.styleURL = styleURL
+        /// Since changing the style causes annotations to be removed from the map
+        /// we only call the setter if the value has changed.
+        if mapView.style.styleURL != styleURL {
+            mapView.style.styleURL = styleURL
+        }
+
+        /// The coordinator needs to manager annotations because
+        /// they need to be applied *after* `.mapLoadingFinished`
+        context.coordinator.annotations = annotations
     }
 
     /// Here's our custom `Coordinator` implementation.
     class Coordinator {
-        @Binding var camera: Camera
+        /// It holds a binding to the camera
+        @Binding private var camera: Camera
+
+        /// It also has a setter for annotations. When the annotations
+        /// are set, it synchronizes them to the map
+        var annotations = [Annotation]() {
+            didSet {
+                syncAnnotations()
+            }
+        }
 
         /// This `mapView` property needs to be weak because
         /// the map view takes a strong reference to the coordiantor
         /// when we make the coordinator observe the `.cameraDidChange`
         /// event
-        weak var mapView: MapView?
+        weak var mapView: MapView? {
+            didSet {
+                /// The coordinator observes the `.cameraDidChange` event, and
+                /// whenever the camera changes, it updates the camera binding
+                mapView?.on(.cameraDidChange, handler: notify(for:))
+
+                /// The coordinator also observes the `.mapLoadingFinished` event
+                /// so that it can sync annotations whenever the map reloads
+                mapView?.on(.mapLoadingFinished, handler: notify(for:))
+            }
+        }
 
         init(camera: Binding<Camera>) {
             _camera = camera
@@ -113,10 +147,44 @@ internal struct SwiftUIMapView: UIViewRepresentable {
             case .cameraDidChange:
                 camera.center = mapView.centerCoordinate
                 camera.zoom = mapView.zoom
+
+            /// When the map reloads, we need to re-sync the annotations
+            case .mapLoadingFinished:
+                initialMapLoadComplete = true
+                syncAnnotations()
+
             default:
                 break
             }
         }
+
+        /// Only sync annotations once the map's initial load is complete
+        private var initialMapLoadComplete = false
+
+        /// To sync annotations, we use the annotations' idenitifiers to determine which
+        /// annotations need to be added and which ones need to be removed.
+        private func syncAnnotations() {
+            guard let mapView = mapView, initialMapLoadComplete else {
+                return
+            }
+            let annotationsByIdentifier = Dictionary(uniqueKeysWithValues: annotations.map { ($0.identifier, $0) })
+
+            let oldAnnotationIds = Set(mapView.annotationManager.annotations.values.map(\.identifier))
+            let newAnnotationIds = Set(annotationsByIdentifier.values.map(\.identifier))
+
+            let idsForAnnotationsToRemove = oldAnnotationIds.subtracting(newAnnotationIds)
+            let annotationsToRemove = idsForAnnotationsToRemove.compactMap { mapView.annotationManager.annotations[$0] }
+            if !annotationsToRemove.isEmpty {
+                mapView.annotationManager.removeAnnotations(annotationsToRemove)
+            }
+
+            let idsForAnnotationsToAdd = newAnnotationIds.subtracting(oldAnnotationIds)
+            let annotationsToAdd = idsForAnnotationsToAdd.compactMap { annotationsByIdentifier[$0] }
+            if !annotationsToAdd.isEmpty {
+                mapView.annotationManager.addAnnotations(annotationsToAdd)
+            }
+        }
+
     }
 }
 
@@ -126,8 +194,15 @@ internal struct ContentView: View {
     /// For demonstration purposes, this view has its own state for the camera and style URL.
     /// In your app, these values could be constants defined directly in `body` or could come
     /// from a model object.
-    @State var camera = Camera(center: CLLocationCoordinate2D(latitude: 40, longitude: -75), zoom: 14)
-    @State var styleURL = StyleURL.streets
+    @State private var camera = Camera(center: CLLocationCoordinate2D(latitude: 40, longitude: -75), zoom: 14)
+    @State private var styleURL = StyleURL.streets
+
+    /// Each time you create an annotation, it is assigned a UUID. For this reason, it's not a great
+    /// idea to actually create annotations inside of `body` which may be called repeatedly
+    @State private var annotations = [
+        PointAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -75)),
+        PointAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -75.001)),
+        PointAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -74.999))]
 
     public var body: some View {
         VStack {
@@ -141,6 +216,9 @@ internal struct ContentView: View {
                 /// Note that in this case, we just need the current value, so we write
                 /// `styleURL`, not `$styleURL`
                 .styleURL(styleURL)
+
+                /// Since these methods use the builder pattern, we can chain them together
+                .annotations(annotations)
 
             /// We configure the slider to bind to the camera's zoom. Adjusting the slider with
             /// change the zoom on the map, and changing the zoom by interacting with the map

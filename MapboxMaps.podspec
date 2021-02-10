@@ -25,23 +25,6 @@ Pod::Spec.new do |m|
   m.dependency 'MapboxCoreMaps', '10.0.0-beta.13'
   m.dependency 'MapboxCommon', '10.0.0-beta.8'
   m.dependency 'MapboxMobileEvents', '0.10.7'
-
-  # The consuming app must specify Turf in their Podfile because this version of MapboxMaps depends on an unreleased Turf version:
-  #
-  #   pod 'Turf', git: 'https://github.com/mapbox/turf-swift.git', commit: '17c5fd8a7757b4a37a859e75f0a3c4f8f6f177e3'
-  #
-  # Additionally, you must add a post-install hook to your Podfile to add a configuration to the Turf target:
-  #
-  #   post_install do |installer|
-  #     installer.pods_project.targets.each do |target|
-  #       if target.name == 'Turf'
-  #         target.build_configurations.each do |config|
-  #           config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
-  #         end
-  #       end
-  #     end
-  #   end
-  #
-  m.dependency 'Turf'
+  m.dependency 'Turf', '2.0.0-alpha.2'
 
 end

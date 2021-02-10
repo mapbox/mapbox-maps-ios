@@ -295,7 +295,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 
         let metalView = MTKView(frame: self.frame, device: metalDevice)
         self.displayCallback = {
-            metalView.draw()
+            metalView.setNeedsDisplay()
         }
 
         metalView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
@@ -305,7 +305,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         metalView.isOpaque = self.isOpaque
         metalView.layer.isOpaque = self.isOpaque
         metalView.isPaused = true
-        metalView.enableSetNeedsDisplay = false
+        metalView.enableSetNeedsDisplay = true
         metalView.presentsWithTransaction = false
 
         self.insertSubview(metalView, at: 0)

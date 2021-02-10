@@ -163,11 +163,11 @@ endif
 	echo $(CONFIGURATION) > $(TEST_ROOT)/configuration.txt
 	cp $(BUILT_DEVICE_PRODUCTS_DIR)/../$(SCHEME)_iphoneos*.xctestrun $(TEST_ROOT)/device.xctestrun
 
-	# Copy source
-	cp -R $(CURDIR)/Mapbox $(TEST_ROOT)
-
-	# Modify the xctestrun, so code coverage points to local source
-	./scripts/device-farm/update-xctestrun.sh $(TEST_ROOT)/device.xctestrun
+#	# Copy source
+#	cp -R $(CURDIR)/Mapbox $(TEST_ROOT)
+#
+#	# Modify the xctestrun, so code coverage points to local source
+#	./scripts/device-farm/update-xctestrun.sh $(TEST_ROOT)/device.xctestrun
 
 	# Package as a zip
 	cd $(TEST_ROOT) && zip -r $@ -x.* .

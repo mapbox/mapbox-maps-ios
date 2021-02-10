@@ -33,7 +33,11 @@ open class ObserverConcrete: Observer {
 
 open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 
+    /// The underlying renderer object responsible for rendering the map
     public var __map: Map!
+
+    /// The underlying metal view that is used to render the map
+    internal var metalView: MTKView?
 
     /// Resource options for this map view
     internal var resourceOptions: ResourceOptions?
@@ -305,6 +309,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         metalView.presentsWithTransaction = false
 
         self.insertSubview(metalView, at: 0)
+        self.metalView = metalView
 
         return metalView
     }

@@ -71,7 +71,7 @@ _Required dependencies:_
 - [ ] Navigate to the [CircleCI job page](https://app.circleci.com/pipelines/github/mapbox/mapbox-maps-ios), and download the `api-docs.zip` artifact.
 - [ ] In the mapbox-maps-ios repo, `git checkout origin publisher-staging`. This is the branch that houses our API-Docs. Make a new branch off this one `git checkout -b Release/{version}_docs`
 - [ ] Unzip the `api-docs.zip` and move the new docs into our repo. Commit those changes and then make a pull request to the branch `publisher-staging`
-- [ ] Share this with Dan Swick to approve and prepare to publish
+- [ ] Share this with @mapbox/docs to approve and prepare to publish
 
 ## 🚢 Publish the release
 

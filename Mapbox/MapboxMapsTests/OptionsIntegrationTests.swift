@@ -16,6 +16,7 @@ internal class OptionsIntegrationTest: MapViewIntegrationTestCase {
         newOptions.gestures.scrollEnabled = false
         newOptions.ornaments.showsScale = false
         newOptions.ornaments.showsCompass = false
+        newOptions.render.presentsWithTransaction = true
 
         mapView.update { (options) in
             options = newOptions
@@ -29,5 +30,6 @@ internal class OptionsIntegrationTest: MapViewIntegrationTestCase {
                 $0.type == .compass || $0.type == .mapboxScaleBar
             }
         )
+        XCTAssertEqual(mapView.metalView?.presentsWithTransaction, true)
     }
 }

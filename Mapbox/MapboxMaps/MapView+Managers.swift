@@ -8,7 +8,7 @@ extension MapView {
     internal func setupManagers() {
 
         // Initialize/configure the map if needed
-        setupMapView()
+        setupMapView(with: mapOptions.render)
 
         // Initialize/Configure camera manager first since Gestures needs it as dependency
         setupCamera(for: self, options: mapOptions.camera)
@@ -35,23 +35,28 @@ extension MapView {
         updateMapOptions(&self.mapOptions) // This mutates the map options
 
         // Update the managers in order
-        updateMapView(with: mapOptions)
+        updateMapView(with: mapOptions.render)
         updateCamera(with: mapOptions.camera)
         updateGestures(with: mapOptions.gestures)
         updateOrnaments(with: mapOptions.ornaments)
         updateUserLocationManager(with: mapOptions.location)
     }
 
-    internal func setupMapView() {
+    internal func setupMapView(with renderOptions: RenderOptions) {
 
         // Set prefetch zoom delta
         let defaultPrefetchZoomDelta: UInt8 = 4
-        try! self.__map.setPrefetchZoomDeltaForDelta(self.mapOptions.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
+        try! self.__map.setPrefetchZoomDeltaForDelta(renderOptions.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
+        self.metalView?.presentsWithTransaction = renderOptions.presentsWithTransaction
+        self.preferredFPS = renderOptions.preferredFramesPerSecond
     }
 
-    internal func updateMapView(with newOptions: MapOptions) {
+    internal func updateMapView(with newOptions: RenderOptions) {
+        // Set prefetch zoom delta
         let defaultPrefetchZoomDelta: UInt8 = 4
         try! self.__map.setPrefetchZoomDeltaForDelta(newOptions.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
+        self.metalView?.presentsWithTransaction = newOptions.presentsWithTransaction
+        self.preferredFPS = newOptions.preferredFramesPerSecond
     }
 
     internal func setupGestures(with view: UIView, options: GestureOptions, cameraManager: CameraManager) {

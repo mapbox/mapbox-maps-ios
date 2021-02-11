@@ -28,7 +28,7 @@ public class TerrainExample: UIViewController, ExampleProtocol {
                                         bearing: 80,
                                         pitch: 85)
 
-        self.mapView.on(.styleFullyLoaded) { [weak self] _ in
+        self.mapView.on(.styleLoadingFinished) { [weak self] _ in
             self?.addTerrain()
         }
     }

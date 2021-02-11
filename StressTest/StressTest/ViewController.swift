@@ -97,7 +97,7 @@ class ViewController: UIViewController {
         super.viewDidAppear(animated)
 
         // Set initial conditions
-        mapView.on(.styleFullyLoaded) { _ in
+        mapView.on(.styleLoadingFinished) { _ in
             self.flyToNextCoordinate()
         }
 
@@ -293,7 +293,7 @@ class ViewController: UIViewController {
         snapshotter.style.styleURL = .light
         snapshotter.camera = mapView.cameraView.camera
 
-        snapshotter.on(.styleFullyLoaded) { [weak self] _ in
+        snapshotter.on(.styleLoadingFinished) { [weak self] _ in
             guard let snapshotter = self?.snapshotter else {
                 assertionFailure("Snapshotter does not exist")
                 completion()

@@ -42,7 +42,7 @@ extension MapView: LocationSupportableMapView {
     }
 
     public func subscribeStyleChangeHandler(_ handler: @escaping (MapboxCoreMaps.Event) -> Void) {
-         self.on(.styleFullyLoaded) { (event) in
+         self.on(.styleLoadingFinished) { (event) in
              handler(event)
          }
     }

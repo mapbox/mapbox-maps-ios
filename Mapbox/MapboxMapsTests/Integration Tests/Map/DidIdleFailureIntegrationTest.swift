@@ -191,7 +191,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
             XCTFail("Failed to load map with \(userInfo)")
         }
 
-        mapView.on(.styleFullyLoaded) { _ in
+        mapView.on(.styleLoadingFinished) { _ in
             expectation.fulfill()
         }
 

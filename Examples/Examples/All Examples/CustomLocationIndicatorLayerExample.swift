@@ -14,7 +14,7 @@ public class CustomLocationIndicatorLayerExample: UIViewController, ExampleProto
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.view.addSubview(mapView)
 
-        self.mapView.on(.styleFullyLoaded) { [weak self] _ in
+        self.mapView.on(.styleLoadingFinished) { [weak self] _ in
             guard let self = self else { return }
             self.setupExample()
         }

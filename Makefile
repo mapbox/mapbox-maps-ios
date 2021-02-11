@@ -328,7 +328,7 @@ update-codecov-with-profdata:
 			-t $(CODECOV_TOKEN) \
 			-J '^MapboxMaps$$' \
 			-n $${RESULT}.lcov \
-			-F integration-tests ; \
+			-F $(SCHEME) ; \
 	done
 	@echo "Done"
 

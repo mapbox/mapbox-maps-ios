@@ -321,7 +321,7 @@ jobs:
             - run:
                 name: Converting and uploading coverage
                 command: |
-                    make update-codecov-with-profdata SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=<< parameters.configuration >>
+                    make update-codecov-with-profdata SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
 
             - store-device-farm-artifacts
             - store-logs

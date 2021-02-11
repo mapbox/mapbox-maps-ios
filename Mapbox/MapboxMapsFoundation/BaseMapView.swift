@@ -207,7 +207,8 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         if self.superview != nil
             && self.window != nil
             && displayLink == nil {
-            displayLink = self.window?.screen.displayLink(withTarget: self, selector: #selector(updateFromDisplayLink))
+            let target = BaseMapViewProxy(mapView: self)
+            displayLink = self.window?.screen.displayLink(withTarget: target, selector: #selector(target.updateFromDisplayLink))
 
             self.updateDisplayLinkPreferredFramesPerSecond()
             displayLink?.add(to: .current, forMode: .common)
@@ -380,5 +381,18 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         rect = rect.extend(from: nePoint)
 
         return rect
+    }
+}
+
+private class BaseMapViewProxy: NSObject {
+    weak var mapView: BaseMapView?
+
+    init(mapView: BaseMapView) {
+        self.mapView = mapView
+        super.init()
+    }
+
+    @objc func updateFromDisplayLink(displayLink: CADisplayLink) {
+        mapView?.updateFromDisplayLink(displayLink: displayLink)
     }
 }

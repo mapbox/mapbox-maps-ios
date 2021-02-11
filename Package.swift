@@ -10,7 +10,7 @@
 
  let package = Package(
      name: "MapboxMaps",
-     platforms: [.iOS(.v10), .macOS(.v10_15)],
+     platforms: [.iOS(.v11)],
      products: [
          .library(
              name: "MapboxMaps",
@@ -20,7 +20,7 @@
         .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .exact("10.0.0-beta.8")),
         .package(name: "MapboxCoreMaps", url: "https://github.com/mapbox/mapbox-core-maps-ios.git", .exact("10.0.0-beta.13")),
         .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", .exact("0.12.0-alpha.1")),
-        .package(name: "Turf", url: "https://github.com/mapbox/turf-swift.git", .exact("2.0.0-alpha.1")),
+        .package(name: "Turf", url: "https://github.com/mapbox/turf-swift.git", .exact("2.0.0-alpha.2")),
      ],
      targets: [
          .target(
@@ -29,7 +29,6 @@
          ),
          registry.mapboxMapsTarget(version: version, checksum: checksum),
      ],
-     cxxLanguageStandard: .cxx14
  )
 
  struct SDKRegistry {

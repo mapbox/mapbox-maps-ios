@@ -29,10 +29,11 @@ public enum GestureType: Hashable {
     func makeHandler(for view: UIView,
                      delegate: GestureHandlerDelegate,
                      contextProvider: GestureContextProvider,
-                     gestureOptions: GestureOptions) -> GestureHandler {
+                     gestureOptions: GestureOptions,
+                     cameraManager: CameraManager?) -> GestureHandler {
         switch self {
         case .pan:
-            return PanGestureHandler(for: view, withDelegate: delegate, panScrollMode: gestureOptions.scrollingMode)
+            return PanGestureHandler(for: view, withDelegate: delegate, panScrollMode: gestureOptions.scrollingMode, cameraManager: cameraManager)
         case .tap(let numberOfTaps, let numberOfTouches):
             return TapGestureHandler(for: view,
                                      numberOfTapsRequired: numberOfTaps,
@@ -147,7 +148,8 @@ public class GestureManager: NSObject {
                 newGestureHandlerMap[gestureType] = gestureType.makeHandler(for: view,
                                                                             delegate: self,
                                                                             contextProvider: self,
-                                                                            gestureOptions: options)
+                                                                            gestureOptions: options,
+                                                                            cameraManager: cameraManager)
             } else {
                 newGestureHandlerMap[gestureType] = gestureHandlers[gestureType]
             }

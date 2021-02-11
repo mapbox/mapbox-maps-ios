@@ -6,9 +6,10 @@ internal class PanGestureHandler: GestureHandler {
 
     internal let decelerationRate = UIScrollView.DecelerationRate.normal.rawValue
     internal var scrollMode = PanScrollingMode.horizontalAndVertical
+    internal var cameraManager: CameraManager?
 
     // Initialize the handler which creates the panGestureRecognizer and adds to the view
-    internal init(for view: UIView, withDelegate delegate: GestureHandlerDelegate, panScrollMode: PanScrollingMode) {
+    internal init(for view: UIView, withDelegate delegate: GestureHandlerDelegate, panScrollMode: PanScrollingMode, cameraManager: CameraManager?) {
         super.init(for: view, withDelegate: delegate)
         let pan = UIPanGestureRecognizer(target: self,
                                          action: #selector(self.handlePan(_:)))
@@ -16,6 +17,7 @@ internal class PanGestureHandler: GestureHandler {
         view.addGestureRecognizer(pan)
         self.gestureRecognizer = pan
         self.scrollMode = panScrollMode
+        self.cameraManager = cameraManager
     }
 
     // Handles the pan operation and calls the associated view
@@ -31,22 +33,33 @@ internal class PanGestureHandler: GestureHandler {
             //swiftlint:disable no_fallthrough_only
             fallthrough
         case .cancelled:
-            var velocity = pan.velocity(in: pan.view)
-            if self.decelerationRate == 0.0
-                || (sqrt(pow(velocity.x, 2) + pow(velocity.y, 2)) < 100) {
+            let velocity = pan.velocity(in: pan.view)
 
-                // Not enough velocity to overcome friction
-                velocity = CGPoint.zero
-            }
+            if let cameraManager = self.cameraManager,
+               let pitch = cameraManager.mapView?.pitch,
+               pitch > 0.0 {
+                var pitchFactor = pitch
 
-            if velocity != CGPoint.zero { // There is a potential drift after the gesture has ended
-                let offset = CGPoint(x: velocity.x * decelerationRate / 4,
-                                     y: velocity.y * decelerationRate / 4)
-                                    .applyPanScrollingMode(panScrollingMode: scrollMode)
+                if pitch == cameraManager.mapCameraOptions.minimumPitch {
+                    pitchFactor = 0
+                }
 
+                if pitch > cameraManager.mapCameraOptions.minimumPitch && pitch < cameraManager.mapCameraOptions.maximumPitch {
+                    pitchFactor /= 10.0
+                }
+
+                pitchFactor += 1.5
+
+                let offset = CGPoint(x: velocity.x / pitchFactor * (decelerationRate / 4),
+                                     y: velocity.y / pitchFactor * (decelerationRate / 4))
                 self.delegate.panEnded(with: offset)
+            } else {
+                if velocity != CGPoint.zero {
+                    let offset = CGPoint(x: velocity.x * decelerationRate / 4,
+                                         y: velocity.y * decelerationRate / 4)
+                    self.delegate.panEnded(with: offset)
+                }
             }
-
         default:
             break
         }

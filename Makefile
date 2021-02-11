@@ -307,22 +307,30 @@ gather-results:
 # converting it to lcov first, and specifying the filename works.
 .PHONY: update-codecov-with-profdata
 update-codecov-with-profdata:
-	@PROF_DATA=`find $(BUILD_DIR)/testruns -regex ".*\.profdata"` ; \
+	curl -sSfL https://codecov.io/bash > /tmp/codecov.sh
+	@PROF_DATA=`find $(BUILD_DIR)/testruns -regex '.*\.profdata'` ; \
 	for RESULT in $${PROF_DATA[@]} ; \
 	do \
+		echo "Generating $${RESULT}.lcov" ; \
 		xcrun llvm-cov export \
 			$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Frameworks/MapboxMaps.framework/MapboxMaps \
 			-instr-profile=$${RESULT} \
 			-arch=arm64 \
-			-format=lcov > $${RESULT}.lcov \
-		echo "Uploading $${RESULT}.lcov to CodeCov.io" \
- 		bash <(curl -sSfL https://codecov.io/bash) \
- 			-f $${RESULT}.lcov \
- 			-t $(CODECOV_TOKEN) \
- 			-J '^MapboxMaps$' \
- 			-n $${RESULT}.lcov \
- 			-F integration-tests
+			-format=lcov > $${RESULT}.lcov ; \
+		xcrun llvm-cov export \
+			$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Frameworks/MapboxMaps.framework/MapboxMaps \
+			-instr-profile=$${RESULT} \
+			-arch=arm64 \
+			-format=text | python3 -m json.tool > $${RESULT}.json ; \
+		echo "Uploading $${RESULT}.lcov to CodeCov.io" ; \
+		bash /tmp/codecov.sh \
+			-f $${RESULT}.lcov \
+			-t $(CODECOV_TOKEN) \
+			-J '^MapboxMaps$$' \
+			-n $${RESULT}.lcov \
+			-F integration-tests ; \
 	done
+	@echo "Done"
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Dependencies

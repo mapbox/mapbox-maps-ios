@@ -90,6 +90,9 @@ public struct Examples {
         Example(title: "Change the position of a layer",
                 description: "Adjust the position of a layer to be above or below other layers.",
                 type: LayerPositionExample.self),
+        Example(title: "Change the position of a layer",
+                description: "Adjust the position of a layer to be above or below other layers.",
+                type: LayerPositionExample.self),
         Example(title: "Create a static map snapshot",
                 description: """
                     Create a static, non-interactive snapshot from an existing map.
@@ -150,6 +153,9 @@ public struct Examples {
                 type: LineGradientExample.self),
         Example(title: "Animate a GeoJSON line",
                 description: "Update a map's style to animate a line over time.",
-                type: AnimateGeoJSONLineExample.self)
+                type: AnimateGeoJSONLineExample.self),
+        Example(title: "Track Location Updates",
+                description: "Track a device's GPS updates with the camera and location provider",
+                type: TrackingModeExample.self)
     ]
 }

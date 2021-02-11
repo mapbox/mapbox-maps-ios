@@ -1,4 +1,4 @@
 binary "https://api.mapbox.com/downloads/v2/carthage/mapbox-common/MapboxCommon-ios.json" == 10.0.0-beta.8
 binary "https://api.mapbox.com/downloads/v2/carthage/mobile-maps-core/MapboxCoreMaps.json" == 10.0.0-beta.13
-github "mapbox/turf-swift" "build-for-distribution"
+github "mapbox/turf-swift" == 2.0.0-alpha.2
 github "mapbox/mapbox-events-ios" ~> 0.10

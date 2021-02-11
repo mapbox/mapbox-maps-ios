@@ -110,6 +110,9 @@
 		0C26425624EECD14001FE2E3 /* AllExpressions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C26425424EECD14001FE2E3 /* AllExpressions.swift */; };
 		0C2CD9E325D19D30006D068F /* OptionsIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2CD9E225D19D30006D068F /* OptionsIntegrationTests.swift */; };
 		0C2CD9F625D19D75006D068F /* OptionsIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2CD9E225D19D30006D068F /* OptionsIntegrationTests.swift */; };
+		0C2CDA2E25D1A51C006D068F /* LocationPuckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2CDA2D25D1A51C006D068F /* LocationPuckTests.swift */; };
+		0C2CDA2F25D1A51C006D068F /* LocationPuckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2CDA2D25D1A51C006D068F /* LocationPuckTests.swift */; };
+		0C2CDA3025D1A51C006D068F /* LocationPuckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2CDA2D25D1A51C006D068F /* LocationPuckTests.swift */; };
 		0C31F7AA25AF87AB00DCFB28 /* PuckModelLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C31F7A925AF87AB00DCFB28 /* PuckModelLayer.swift */; };
 		0C31F7AB25AF87AB00DCFB28 /* PuckModelLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C31F7A925AF87AB00DCFB28 /* PuckModelLayer.swift */; };
 		0C37B1E325CB05F000DCDD3D /* ColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C37B1E225CB05F000DCDD3D /* ColorTests.swift */; };
@@ -136,6 +139,9 @@
 		0C50AAE525BE8806007C0068 /* LightTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C50AAE225BE8806007C0068 /* LightTests.swift */; };
 		0C55010B2476D83A00AE019A /* Light.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5501082476D83A00AE019A /* Light.swift */; };
 		0C55010C2476D83A00AE019A /* Light.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5501082476D83A00AE019A /* Light.swift */; };
+		0C59ED2225CC6D7E00C72E7A /* ExpressionBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C59ED2125CC6D7E00C72E7A /* ExpressionBuilderTests.swift */; };
+		0C59ED2325CC6D7E00C72E7A /* ExpressionBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C59ED2125CC6D7E00C72E7A /* ExpressionBuilderTests.swift */; };
+		0C59ED2425CC6D7E00C72E7A /* ExpressionBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C59ED2125CC6D7E00C72E7A /* ExpressionBuilderTests.swift */; };
 		0C5CFCD225BB951B0001E753 /* RasterLayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFCC625BB951A0001E753 /* RasterLayerTests.swift */; };
 		0C5CFCD325BB951B0001E753 /* RasterLayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFCC625BB951A0001E753 /* RasterLayerTests.swift */; };
 		0C5CFCD425BB951B0001E753 /* RasterLayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CFCC625BB951A0001E753 /* RasterLayerTests.swift */; };
@@ -877,6 +883,7 @@
 		0C1AF566244F6A80008D2A10 /* OrnamentConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrnamentConfig.swift; sourceTree = "<group>"; };
 		0C26425424EECD14001FE2E3 /* AllExpressions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllExpressions.swift; sourceTree = "<group>"; };
 		0C2CD9E225D19D30006D068F /* OptionsIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsIntegrationTests.swift; sourceTree = "<group>"; };
+		0C2CDA2D25D1A51C006D068F /* LocationPuckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPuckTests.swift; sourceTree = "<group>"; };
 		0C31F7A925AF87AB00DCFB28 /* PuckModelLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuckModelLayer.swift; sourceTree = "<group>"; };
 		0C37B1E225CB05F000DCDD3D /* ColorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorTests.swift; sourceTree = "<group>"; };
 		0C3B1E8A24DDADD000CC29E8 /* EventsStringTokens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventsStringTokens.swift; sourceTree = "<group>"; };
@@ -889,6 +896,7 @@
 		0C479F8F251CEC340025EC4F /* Snapshotter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snapshotter.swift; sourceTree = "<group>"; };
 		0C50AAE225BE8806007C0068 /* LightTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightTests.swift; sourceTree = "<group>"; };
 		0C5501082476D83A00AE019A /* Light.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Light.swift; sourceTree = "<group>"; };
+		0C59ED2125CC6D7E00C72E7A /* ExpressionBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionBuilderTests.swift; sourceTree = "<group>"; };
 		0C5CFCC625BB951A0001E753 /* RasterLayerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RasterLayerTests.swift; sourceTree = "<group>"; };
 		0C5CFCC725BB951A0001E753 /* FillExtrusionLayerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FillExtrusionLayerTests.swift; sourceTree = "<group>"; };
 		0C5CFCC825BB951A0001E753 /* CircleLayerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleLayerTests.swift; sourceTree = "<group>"; };
@@ -1507,6 +1515,15 @@
 			path = Light;
 			sourceTree = "<group>";
 		};
+		0C59ED2025CC6D5400C72E7A /* ExpressionTests */ = {
+			isa = PBXGroup;
+			children = (
+				0C01C08825486E6100E4AA46 /* ExpressionTests.swift */,
+				0C59ED2125CC6D7E00C72E7A /* ExpressionBuilderTests.swift */,
+			);
+			path = ExpressionTests;
+			sourceTree = "<group>";
+		};
 		0C5CFCC425BB951A0001E753 /* Generated */ = {
 			isa = PBXGroup;
 			children = (
@@ -1862,6 +1879,7 @@
 				C64ED305253F7CF500ADADFB /* LocationSupportableMapViewMock.swift */,
 				C64ED320253F7E9100ADADFB /* LocationManagerTests.swift */,
 				C64ED33B253F819B00ADADFB /* LocationConsumerMock.swift */,
+				0C2CDA2D25D1A51C006D068F /* LocationPuckTests.swift */,
 			);
 			path = MapboxMapsLocationTests;
 			sourceTree = "<group>";
@@ -1921,13 +1939,13 @@
 		A4519DD92432FF03007CF39A /* MapboxMapsStyleTests */ = {
 			isa = PBXGroup;
 			children = (
+				0C59ED2025CC6D5400C72E7A /* ExpressionTests */,
 				0C5CFD1825BB961B0001E753 /* Fixtures */,
 				0C5CFCC425BB951A0001E753 /* Generated */,
 				A4519DDA2432FF03007CF39A /* MapboxMapsStyleTests.swift */,
 				A4C786602440EAF0000CEF1E /* StyleURLTests.swift */,
 				A4519DDC2432FF03007CF39A /* Info.plist */,
 				0C9DE382252C299800880CC8 /* GeoJSONSourceDataTests.swift */,
-				0C01C08825486E6100E4AA46 /* ExpressionTests.swift */,
 				0C50AAE225BE8806007C0068 /* LightTests.swift */,
 				0C37B1E225CB05F000DCDD3D /* ColorTests.swift */,
 			);
@@ -3519,10 +3537,12 @@
 				0C5CFCE725BB951B0001E753 /* LineLayerTests.swift in Sources */,
 				0CC6EF2225C3263400BFB153 /* SkyLayerIntegrationTests.swift in Sources */,
 				CA548F24251C3D7200F829A3 /* PitchGestureHandlerTests.swift in Sources */,
+				0C2CDA2E25D1A51C006D068F /* LocationPuckTests.swift in Sources */,
 				CAC1964325AEAFD500F69FEA /* GlyphsRasterizationOptionsTests.swift in Sources */,
 				0C5CFDAE25BE28D20001E753 /* Fixtures.swift in Sources */,
 				C69F011225431AF4001AB49B /* LocationManagerIntegrationTests.swift in Sources */,
 				0C5CFCDB25BB951B0001E753 /* ModelLayerTests.swift in Sources */,
+				0C59ED2225CC6D7E00C72E7A /* ExpressionBuilderTests.swift in Sources */,
 				CA548F26251C3D7200F829A3 /* GestureUtilitiesTests.swift in Sources */,
 				0C5CFD7425BE25210001E753 /* GeoJsonSourceTests.swift in Sources */,
 				0CC6EF0A25C3263400BFB153 /* ModelLayerIntegrationTests.swift in Sources */,
@@ -3705,6 +3725,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C64ED323253F7E9100ADADFB /* LocationManagerTests.swift in Sources */,
+				0C2CDA3025D1A51C006D068F /* LocationPuckTests.swift in Sources */,
 				C69F017625435C55001AB49B /* LocationProviderMock.swift in Sources */,
 				C64ED33E253F819B00ADADFB /* LocationConsumerMock.swift in Sources */,
 				C64ED308253F7CF500ADADFB /* LocationSupportableMapViewMock.swift in Sources */,
@@ -3757,6 +3778,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C5CFD7625BE25210001E753 /* GeoJsonSourceTests.swift in Sources */,
+				0C59ED2425CC6D7E00C72E7A /* ExpressionBuilderTests.swift in Sources */,
 				0C5CFDD625BE29BC0001E753 /* SouceProperties+Fixtures.swift in Sources */,
 				0C9DE383252C299800880CC8 /* GeoJSONSourceDataTests.swift in Sources */,
 				0C5CFCDD25BB951B0001E753 /* ModelLayerTests.swift in Sources */,
@@ -3858,6 +3880,7 @@
 				CA548FE8251C404B00F829A3 /* OrnamentSupportableViewMock.swift in Sources */,
 				C64ED322253F7E9100ADADFB /* LocationManagerTests.swift in Sources */,
 				CA9481572554AA9E00D93C3C /* TestConveniences.swift in Sources */,
+				0C2CDA2F25D1A51C006D068F /* LocationPuckTests.swift in Sources */,
 				CA548FE9251C404B00F829A3 /* GeometryCollectionTests.swift in Sources */,
 				0C5CFCD925BB951B0001E753 /* CircleLayerTests.swift in Sources */,
 				0C5CFCE525BB951B0001E753 /* HeatmapLayerTests.swift in Sources */,
@@ -3875,6 +3898,7 @@
 				CA4AE07B252D655000183075 /* PolygonAnnotationTests.swift in Sources */,
 				0C5CFD6F25BE25210001E753 /* VectorSourceTests.swift in Sources */,
 				CA548FEE251C404B00F829A3 /* FeatureCollectionTests.swift in Sources */,
+				0C59ED2325CC6D7E00C72E7A /* ExpressionBuilderTests.swift in Sources */,
 				CA05A7202551C89600ABF902 /* CacheManagerIntegrationTests.swift in Sources */,
 				CA548FF0251C404B00F829A3 /* MultiPointTests.swift in Sources */,
 				CA548FF1251C404B00F829A3 /* RotateGestureHandlerTests.swift in Sources */,

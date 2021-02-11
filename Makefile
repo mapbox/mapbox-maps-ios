@@ -303,6 +303,26 @@ $(DEVICE_FARM_UPLOAD_IPA): $(XCTESTRUN_PACKAGE) | $(DEVICE_TEST_PATH) $(PAYLOAD_
 gather-results:
 	python3 ./scripts/device-farm/extract-xcresult.py --outdir $(BUILD_DIR)/testruns
 
+# It seems that the codecov.io script sometimes struggles with coverage data from Xcode, but 
+# converting it to lcov first, and specifying the filename works.
+.PHONY: update-codecov-with-profdata
+update-codecov-with-profdata:
+	@PROF_DATA=`find $(BUILD_DIR)/testruns -regex ".*\.profdata"` ; \
+	for RESULT in $${PROF_DATA[@]} ; \
+	do \
+		xcrun llvm-cov export \
+			$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Frameworks/MapboxMaps.framework/MapboxMaps \
+			-instr-profile=$${RESULT} \
+			-arch=arm64 \
+			-format=lcov > $${RESULT}.lcov \
+		echo "Uploading $${RESULT}.lcov to CodeCov.io" \
+ 		bash <(curl -sSfL https://codecov.io/bash) \
+ 			-f $${RESULT}.lcov \
+ 			-t $(CODECOV_TOKEN) \
+ 			-J '^MapboxMaps$' \
+ 			-n $${RESULT}.lcov \
+ 			-F integration-tests
+	done
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Dependencies

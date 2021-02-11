@@ -35,30 +35,30 @@ internal class PanGestureHandler: GestureHandler {
         case .cancelled:
             let velocity = pan.velocity(in: pan.view)
 
+            // If there is no velocity, then quit the gesture and don't drift
+            if velocity == CGPoint.zero {
+                break
+            }
+
+            /// Pitched camera's will have a larger velocity when panning and therefore the offset will need a multiplier applied to it
+            /// based on the current pitch value of the mapView
             if let cameraManager = self.cameraManager,
-               let pitch = cameraManager.mapView?.pitch,
-               pitch > 0.0 {
+               let pitch = cameraManager.mapView?.pitch {
                 var pitchFactor = pitch
 
                 if pitch == cameraManager.mapCameraOptions.minimumPitch {
-                    pitchFactor = 0
-                }
-
-                if pitch > cameraManager.mapCameraOptions.minimumPitch && pitch < cameraManager.mapCameraOptions.maximumPitch {
+                    pitchFactor = 0.0
+                } else {
                     pitchFactor /= 10.0
                 }
 
                 pitchFactor += 1.5
 
-                let offset = CGPoint(x: velocity.x / pitchFactor * (decelerationRate / 4),
+                var offset = CGPoint(x: velocity.x / pitchFactor * (decelerationRate / 4),
                                      y: velocity.y / pitchFactor * (decelerationRate / 4))
+                offset = offset.applyPanScrollingMode(panScrollingMode: scrollMode)
+
                 self.delegate.panEnded(with: offset)
-            } else {
-                if velocity != CGPoint.zero {
-                    let offset = CGPoint(x: velocity.x * decelerationRate / 4,
-                                         y: velocity.y * decelerationRate / 4)
-                    self.delegate.panEnded(with: offset)
-                }
             }
         default:
             break

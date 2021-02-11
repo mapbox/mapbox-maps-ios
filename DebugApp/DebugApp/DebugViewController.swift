@@ -31,7 +31,7 @@ public class DebugViewController: UIViewController {
 
         let centerCoordinate = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
 
-        mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate, zoom: 7, pitch: 45)
+        mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate, zoom: 7, pitch: 0)
 
         self.view.addSubview(mapView)
     }

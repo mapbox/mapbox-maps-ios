@@ -163,12 +163,6 @@ endif
 	echo $(CONFIGURATION) > $(TEST_ROOT)/configuration.txt
 	cp $(BUILT_DEVICE_PRODUCTS_DIR)/../$(SCHEME)_iphoneos*.xctestrun $(TEST_ROOT)/device.xctestrun
 
-#	# Copy source
-#	cp -R $(CURDIR)/Mapbox $(TEST_ROOT)
-#
-#	# Modify the xctestrun, so code coverage points to local source
-#	./scripts/device-farm/update-xctestrun.sh $(TEST_ROOT)/device.xctestrun
-
 	# Package as a zip
 	cd $(TEST_ROOT) && zip -r $@ -x.* .
 
@@ -303,8 +297,15 @@ $(DEVICE_FARM_UPLOAD_IPA): $(XCTESTRUN_PACKAGE) | $(DEVICE_TEST_PATH) $(PAYLOAD_
 gather-results:
 	python3 ./scripts/device-farm/extract-xcresult.py --outdir $(BUILD_DIR)/testruns
 
-# It seems that the codecov.io script sometimes struggles with coverage data from Xcode, but 
-# converting it to lcov first, and specifying the filename works.
+# Codecov.io appears to struggle with the raw coverage data from Xcode (in this Device Farm testing scenario). 
+# Explicitly converting it to an lcov format helps.
+#
+# However, the following conversion of the profdata has failed once. If this continues to be an
+# issue, it will be worth trying the following first:
+#
+# xcrun llvm-profdata merge -o dest.profdata source.profraw
+#
+
 .PHONY: update-codecov-with-profdata
 update-codecov-with-profdata:
 	curl -sSfL --retry 5 --connect-timeout 5 https://codecov.io/bash > /tmp/codecov.sh

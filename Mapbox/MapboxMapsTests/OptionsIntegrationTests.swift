@@ -11,11 +11,13 @@ internal class OptionsIntegrationTest: MapViewIntegrationTestCase {
         }
 
         var newOptions = MapboxMaps.MapOptions()
-        newOptions.location.showUserLocation = true
+        newOptions.location.showUserLocation = false
+        newOptions.location.activityType = .automotiveNavigation
         newOptions.camera.animationDuration = 0.1
         newOptions.gestures.scrollEnabled = false
         newOptions.ornaments.showsScale = false
         newOptions.ornaments.showsCompass = false
+        newOptions.render.presentsWithTransaction = true
 
         mapView.update { (options) in
             options = newOptions
@@ -29,5 +31,6 @@ internal class OptionsIntegrationTest: MapViewIntegrationTestCase {
                 $0.type == .compass || $0.type == .mapboxScaleBar
             }
         )
+        XCTAssertEqual(mapView.metalView?.presentsWithTransaction, true)
     }
 }

@@ -33,7 +33,11 @@ open class ObserverConcrete: Observer {
 
 open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 
+    /// The underlying renderer object responsible for rendering the map
     public var __map: Map!
+
+    /// The underlying metal view that is used to render the map
+    internal var metalView: MTKView?
 
     /// Resource options for this map view
     internal var resourceOptions: ResourceOptions?
@@ -59,7 +63,11 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 
     /// The map's current center coordinate.
     public var centerCoordinate: CLLocationCoordinate2D {
-        return cameraView.centerCoordinate
+        // cameraView.centerCoordinate is allowed to exceed [-180, 180]
+        // so that core animation interpolation works correctly when
+        // crossing the antimeridian. We wrap here to hide that implementation
+        // detail when accessing centerCoordinate via BaseMapView
+        return cameraView.centerCoordinate.wrap()
     }
 
     /// The map's current zoom level.
@@ -207,7 +215,8 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         if self.superview != nil
             && self.window != nil
             && displayLink == nil {
-            displayLink = self.window?.screen.displayLink(withTarget: self, selector: #selector(updateFromDisplayLink))
+            let target = BaseMapViewProxy(mapView: self)
+            displayLink = self.window?.screen.displayLink(withTarget: target, selector: #selector(target.updateFromDisplayLink))
 
             self.updateDisplayLinkPreferredFramesPerSecond()
             displayLink?.add(to: .current, forMode: .common)
@@ -290,7 +299,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 
         let metalView = MTKView(frame: self.frame, device: metalDevice)
         self.displayCallback = {
-            metalView.draw()
+            metalView.setNeedsDisplay()
         }
 
         metalView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
@@ -300,10 +309,11 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         metalView.isOpaque = self.isOpaque
         metalView.layer.isOpaque = self.isOpaque
         metalView.isPaused = true
-        metalView.enableSetNeedsDisplay = false
+        metalView.enableSetNeedsDisplay = true
         metalView.presentsWithTransaction = false
 
         self.insertSubview(metalView, at: 0)
+        self.metalView = metalView
 
         return metalView
     }
@@ -380,5 +390,18 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         rect = rect.extend(from: nePoint)
 
         return rect
+    }
+}
+
+private class BaseMapViewProxy: NSObject {
+    weak var mapView: BaseMapView?
+
+    init(mapView: BaseMapView) {
+        self.mapView = mapView
+        super.init()
+    }
+
+    @objc func updateFromDisplayLink(displayLink: CADisplayLink) {
+        mapView?.updateFromDisplayLink(displayLink: displayLink)
     }
 }

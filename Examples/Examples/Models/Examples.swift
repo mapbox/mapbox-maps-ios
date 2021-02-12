@@ -90,9 +90,6 @@ public struct Examples {
         Example(title: "Change the position of a layer",
                 description: "Adjust the position of a layer to be above or below other layers.",
                 type: LayerPositionExample.self),
-        Example(title: "Change the position of a layer",
-                description: "Adjust the position of a layer to be above or below other layers.",
-                type: LayerPositionExample.self),
         Example(title: "Create a static map snapshot",
                 description: """
                     Create a static, non-interactive snapshot from an existing map.

@@ -93,6 +93,12 @@ public class LocationManager: NSObject {
         if newOptions.showUserLocation != showUserLocation {
             self.showUserLocation = newOptions.showUserLocation
             toggleUserLocationUpdates(showUserLocation: self.showUserLocation)
+
+            if !newOptions.showUserLocation {
+                // If we should not show user location, then we should
+                // not try and change source or style below
+                return
+            }
         }
 
         if newOptions.locationPuck != locationOptions.locationPuck {

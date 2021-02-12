@@ -283,7 +283,10 @@ extension GestureManager: GestureHandlerDelegate {
 
     // Pan has ended on the MapView with a residual `offset`
     internal func panEnded(with offset: CGPoint) {
-        self.cameraManager.moveCamera(by: offset, animated: true)
+        if let pitch = self.cameraManager.mapView?.pitch,
+           pitch == 0.0 {
+            self.cameraManager.moveCamera(by: offset, animated: true)
+        }
     }
 
     internal func cancelGestureTransitions() {

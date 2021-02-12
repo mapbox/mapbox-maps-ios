@@ -30,7 +30,9 @@ class PanGestureHandlerTests: XCTestCase {
     }
 
     func testHandlePan() {
-        let panGestureHandler = PanGestureHandler(for: view, withDelegate: self.delegate, panScrollMode: .horizontal)
+        let panGestureHandler = PanGestureHandler(for: view,
+                                                  withDelegate: self.delegate,
+                                                  panScrollMode: .horizontal)
         let panMock = UIPanGestureRecognizerMock()
         panGestureHandler.handlePan(panMock)
 

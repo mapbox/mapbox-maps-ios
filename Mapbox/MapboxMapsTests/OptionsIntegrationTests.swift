@@ -11,7 +11,8 @@ internal class OptionsIntegrationTest: MapViewIntegrationTestCase {
         }
 
         var newOptions = MapboxMaps.MapOptions()
-        newOptions.location.showUserLocation = true
+        newOptions.location.showUserLocation = false
+        newOptions.location.activityType = .automotiveNavigation
         newOptions.camera.animationDuration = 0.1
         newOptions.gestures.scrollEnabled = false
         newOptions.ornaments.showsScale = false

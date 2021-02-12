@@ -483,13 +483,25 @@ public class CameraManager {
         var newLong: Double
 
         // This logic is to prevent a rubber band effect when a pan's drift takes you across the antimeridian.
-        if offset.x < 0 {
+
+        // First calculate the scalar projection of the offset onto the unit vector pointing due east.
+        // offset.y is negated so that the two coordinate systems (iOS graphics, map bearing) match.
+        let bearingInRadians = CGFloat(mapView.bearing.toRadians())
+        let offsetAlongLongitudinalAxis = offset.x * cos(bearingInRadians) - offset.y * sin(bearingInRadians)
+
+        // If the offset is negative, the map center needs to move east, suggesting that the new longitude
+        // should be greater than the old one. However, if the antimeridian was crossed, the new longitude
+        // will actually be less than the old one at this point. To deal with that, we'll add 360 to ensure
+        // that the new value is in the right direction relative to the old one.
+        if offsetAlongLongitudinalAxis < 0 {
             newLong = centerCoordinate.longitude
             while newLong < Double(cameraLayer.centerCoordinateLongitude) {
                 newLong += 360
             }
             centerCoordinate = CLLocationCoordinate2D(latitude: centerCoordinate.latitude, longitude: newLong)
-        } else if offset.x > 0 {
+        }
+        // If it's positive, the map center needs to move west, and the opposite antimeridian adjustment is required
+        else if offsetAlongLongitudinalAxis > 0 {
             newLong = centerCoordinate.longitude
             while newLong > Double(cameraLayer.centerCoordinateLongitude) {
                 newLong -= 360

@@ -26,7 +26,6 @@ public class DebugViewController: UIViewController {
 
         self.mapView = MapView(with: view.bounds, resourceOptions: resourceOptions)
         mapView.update { (mapOptions) in
-            mapOptions.render.presentsWithTransaction = false
             mapOptions.location.showUserLocation = true
         }
 

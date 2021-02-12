@@ -29,34 +29,28 @@ internal class PanGestureHandler: GestureHandler {
             let delta = pan.translation(in: pan.view).applyPanScrollingMode(panScrollingMode: scrollMode)
             self.delegate.panned(by: delta)
             pan.setTranslation(.zero, in: pan.view)
-        case .ended:
-            //swiftlint:disable no_fallthrough_only
-            fallthrough
-        case .cancelled:
-            let velocity = pan.velocity(in: pan.view)
-
-            // If there is no velocity, then quit the gesture and don't drift
-            if velocity == CGPoint.zero {
-                break
+        case .ended, .cancelled:
+            guard
+                let pitch = cameraManager?.mapView?.pitch,
+                pitch == 0.0
+            else {
+                // Stop gap solution for pitched maps, do not do any map drift
+                return
             }
 
-            /// Pitched camera's will have a larger velocity when panning and therefore the offset will need a multiplier applied to it
-            /// based on the current pitch value of the mapView
-            if let cameraManager = self.cameraManager,
-               let pitch = cameraManager.mapView?.pitch {
-                var pitchFactor = pitch
+            var velocity = pan.velocity(in: pan.view)
 
-                if pitch == cameraManager.mapCameraOptions.minimumPitch {
-                    pitchFactor = 0.0
-                } else {
-                    pitchFactor /= 10.0
-                }
+            if self.decelerationRate == 0.0
+                || (sqrt(pow(velocity.x, 2) + pow(velocity.y, 2)) < 100) {
 
-                pitchFactor += 1.5
+                // Not enough velocity to overcome friction
+                velocity = CGPoint.zero
+            }
 
-                var offset = CGPoint(x: velocity.x / pitchFactor * (decelerationRate / 4),
-                                     y: velocity.y / pitchFactor * (decelerationRate / 4))
-                offset = offset.applyPanScrollingMode(panScrollingMode: scrollMode)
+            if velocity != CGPoint.zero { // There is a potential drift after the gesture has ended
+                let offset = CGPoint(x: velocity.x * decelerationRate / 4,
+                                     y: velocity.y * decelerationRate / 4)
+                                    .applyPanScrollingMode(panScrollingMode: scrollMode)
 
                 self.delegate.panEnded(with: offset)
             }

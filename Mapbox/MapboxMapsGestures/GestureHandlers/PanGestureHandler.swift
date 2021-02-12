@@ -29,21 +29,18 @@ internal class PanGestureHandler: GestureHandler {
             pan.setTranslation(.zero, in: pan.view)
         case .ended, .cancelled:
             var velocity = pan.velocity(in: pan.view)
-            if self.decelerationRate == 0.0
-                || (sqrt(pow(velocity.x, 2) + pow(velocity.y, 2)) < 100) {
 
-                // Not enough velocity to overcome friction
-                velocity = CGPoint.zero
+            if self.decelerationRate == 0.0 || (sqrt(pow(velocity.x, 2) + pow(velocity.y, 2)) < 100) {
+                velocity = CGPoint.zero // Not enough velocity to overcome friction
             }
 
             if velocity != CGPoint.zero { // There is a potential drift after the gesture has ended
-                let offset = CGPoint(x: velocity.x * decelerationRate / 4,
-                                     y: velocity.y * decelerationRate / 4)
+                let offset = CGPoint(x: velocity.x * decelerationRate,
+                                     y: velocity.y * decelerationRate)
                                     .applyPanScrollingMode(panScrollingMode: scrollMode)
 
                 self.delegate.panEnded(with: offset)
             }
-
         default:
             break
         }

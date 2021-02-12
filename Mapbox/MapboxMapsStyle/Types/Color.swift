@@ -3,13 +3,14 @@ import UIKit
 /// Container to represent `UIColor`for use by the map renderer
 public struct ColorRepresentable: Codable, Equatable {
 
-    /// String representation of a `UIColor` used by the renderer
-    public let colorRepresentation: String?
+    /// Expression representation of a `UIColor` used by the renderer
+    public let colorRepresentation: Expression?
 
     /// Create a string representation of a `UIColor`
     /// - Parameter color: A `UIColor` instance in the sRGB color space
     /// - Returns: Initializes a `ColorRepresentable` instance if the `color` is in sRGB color space.
     public init(color: UIColor) {
+
         var red: CGFloat = 0.0
         var green: CGFloat = 0.0
         var blue: CGFloat = 0.0
@@ -17,7 +18,12 @@ public struct ColorRepresentable: Codable, Equatable {
         let success = color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
         let validColorComponents = Self.isValidColor(red: red, green: red, blue: blue, alpha: alpha)
         if success && validColorComponents {
-            self.colorRepresentation = "rgba(\(red * 255.0), \(green * 255.0), \(blue * 255.0), \(alpha))"
+            self.colorRepresentation = Exp(.rgba) {
+                Double(red)
+                Double(green)
+                Double(blue)
+                Double(alpha)
+            }
         } else {
             fatalError("Please use a color in the sRGB color space")
         }
@@ -39,7 +45,7 @@ public struct ColorRepresentable: Codable, Equatable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
-        self.colorRepresentation = try container.decode(String.self)
+        self.colorRepresentation = try container.decode(Expression.self)
     }
 }
 

@@ -28,7 +28,7 @@
              dependencies: ["MapboxMaps", "MapboxCommon", "MapboxCoreMaps", "Turf", "MapboxMobileEvents"]
          ),
          registry.mapboxMapsTarget(version: version, checksum: checksum),
-     ],
+     ]
  )
 
  struct SDKRegistry {

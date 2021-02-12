@@ -1,10 +1,17 @@
+# Changelog for Mapbox Maps SDK v10 for iOS
+
+Mapbox welcomes participation and contributions from everyone.
+
+# 10.0.0-beta.13 - February 12, 2021
+
 ## Breaking changes ⚠️
 * Rely on consumer provided view models directly to customize location pucks  ([#86](https://github.com/mapbox/mapbox-maps-ios/pull/86))
 * Update Mapbox Common for iOS to v10.0.0-beta.9.1 and MapboxCoreMaps to v10.0.0-beta.14.1. ([#89](https://github.com/mapbox/mapbox-maps-ios/pull/89))
-
+* Update to Turf 2.0.0-alpha.2 ([#93](https://github.com/mapbox/mapbox-maps-ios/pull/93))
 
 ## Features ✨ and improvements 🏁
 * Expose `presentsWithTransaction` property to better synchronize UIKit elements with the `MapView`. ([#94](https://github.com/mapbox/mapbox-maps-ios/pull/94))
+* Add MapEvents.styleFullyLoaded.  ([#90](https://github.com/mapbox/mapbox-maps-ios/pull/90))
 
 
 ## Bug fixes 🐞
@@ -16,44 +23,6 @@
 * Fix issue where toggling LocationOptions.showsUserLocation resulted in options not being updated ([#101](https://github.com/mapbox/mapbox-maps-ios/pull/101))
 * Pan drift for pitched maps will be disabled. A solution for smooth drifting is being worked on. ([#100](https://github.com/mapbox/mapbox-maps-ios/pull/100))
 
-
-## MAYBE INTERNAL (workflow changes, issues filed since last release)
-* [tests] Adding generated integration tests ([#75](https://github.com/mapbox/mapbox-maps-ios/pull/75))
-
-
-## Skipped (no entry needed)
-* Fix example tests & search functionality ([#55](https://github.com/mapbox/mapbox-maps-ios/pull/55))
-* Remove unused MapboxMapsCommons files ([#61](https://github.com/mapbox/mapbox-maps-ios/pull/61))
-* [Tests] Re-enables and updates the HTTP stack replacement tests ([#64](https://github.com/mapbox/mapbox-maps-ios/pull/64))
-* Include generated files in code coverage number ([#71](https://github.com/mapbox/mapbox-maps-ios/pull/71))
-* [style] Convert `ColorRepresentable` to a struct ([#76](https://github.com/mapbox/mapbox-maps-ios/pull/76))
-* Check that displayLink is not nil in updateDisplayLinkPreferredFramesPerSecond ([#77](https://github.com/mapbox/mapbox-maps-ios/pull/77))
-* [build] Add version script and update Mapbox project targets (only) ([#82](https://github.com/mapbox/mapbox-maps-ios/pull/82))
-* Update CI/CD Automation For Releases ([#83](https://github.com/mapbox/mapbox-maps-ios/pull/83))
-* Fix MapViewIntegrationTests ([#87](https://github.com/mapbox/mapbox-maps-ios/pull/87))
-* Use a proxy target for BaseMapView.displayLink ([#92](https://github.com/mapbox/mapbox-maps-ios/pull/92))
-* Make internal representation of colorRepresentable an expression  ([#98](https://github.com/mapbox/mapbox-maps-ios/pull/98))
-
-
-## UNCATEGORIZED
-* Release 10.0.0-beta.12 ([#44](https://github.com/mapbox/mapbox-maps-ios/pull/44))
-* Update Pull Request & Issue Templates ([#46](https://github.com/mapbox/mapbox-maps-ios/pull/46))
-* Update documentation links in podspec ([#47](https://github.com/mapbox/mapbox-maps-ios/pull/47))
-* [CLA] Updates CLA agreement text; adds badge ([#49](https://github.com/mapbox/mapbox-maps-ios/pull/49))
-* [ci] Temporarily disable the make-docs step ([#50](https://github.com/mapbox/mapbox-maps-ios/pull/50))
-* [ci] Fix SDK Registry automation script ([#52](https://github.com/mapbox/mapbox-maps-ios/pull/52))
-* Fix pull request template ([#53](https://github.com/mapbox/mapbox-maps-ios/pull/53))
-* Enable code coverage generation ([#54](https://github.com/mapbox/mapbox-maps-ios/pull/54))
-* [Example] Add an animate a line example ([#60](https://github.com/mapbox/mapbox-maps-ios/pull/60))
-* Run examples tests on devices ([#58](https://github.com/mapbox/mapbox-maps-ios/pull/58))
-* Update to Turf 2.0.0-alpha.2 ([#93](https://github.com/mapbox/mapbox-maps-ios/pull/93))
-*  Add MapEvents.styleFullyLoaded.  ([#90](https://github.com/mapbox/mapbox-maps-ios/pull/90))
-* Release v10.0.0 beta.13 ([#104](https://github.com/mapbox/mapbox-maps-ios/pull/104))
-
-
-# Changelog for Mapbox Maps SDK v10 for iOS
-
-Mapbox welcomes participation and contributions from everyone.
 
 # 10.0.0-beta.12 - January 27, 2021
 

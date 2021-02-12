@@ -33,7 +33,7 @@ public enum GestureType: Hashable {
                      cameraManager: CameraManager?) -> GestureHandler {
         switch self {
         case .pan:
-            return PanGestureHandler(for: view, withDelegate: delegate, panScrollMode: gestureOptions.scrollingMode, cameraManager: cameraManager)
+            return PanGestureHandler(for: view, withDelegate: delegate, panScrollMode: gestureOptions.scrollingMode)
         case .tap(let numberOfTaps, let numberOfTouches):
             return TapGestureHandler(for: view,
                                      numberOfTapsRequired: numberOfTaps,

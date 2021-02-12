@@ -3,7 +3,6 @@ import XCTest
 @testable import MapboxMaps
 #else
 @testable import MapboxMapsGestures
-@testable import MapboxMapsFoundation
 #endif
 
 //swiftlint:disable explicit_acl explicit_top_level_acl
@@ -26,16 +25,14 @@ class PanGestureHandlerTests: XCTestCase {
     func testSetup() {
         let panGestureHandler = PanGestureHandler(for: view,
                                                   withDelegate: self.delegate,
-                                                  panScrollMode: .horizontalAndVertical,
-                                                  cameraManager: nil)
+                                                  panScrollMode: .horizontalAndVertical)
         XCTAssertTrue(panGestureHandler.view?.gestureRecognizers?.first is UIPanGestureRecognizer)
     }
 
     func testHandlePan() {
         let panGestureHandler = PanGestureHandler(for: view,
                                                   withDelegate: self.delegate,
-                                                  panScrollMode: .horizontal,
-                                                  cameraManager: nil)
+                                                  panScrollMode: .horizontal)
         let panMock = UIPanGestureRecognizerMock()
         panGestureHandler.handlePan(panMock)
 

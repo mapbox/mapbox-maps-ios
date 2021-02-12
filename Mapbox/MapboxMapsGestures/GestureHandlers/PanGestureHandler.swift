@@ -1,5 +1,4 @@
 import UIKit
-import MapboxMapsFoundation
 
 /// The PanGestureHandler is responsible for all `pan` related infrastructure
 /// Tells the view to update itself when required
@@ -7,10 +6,9 @@ internal class PanGestureHandler: GestureHandler {
 
     internal let decelerationRate = UIScrollView.DecelerationRate.normal.rawValue
     internal var scrollMode = PanScrollingMode.horizontalAndVertical
-    internal var cameraManager: CameraManager?
 
     // Initialize the handler which creates the panGestureRecognizer and adds to the view
-    internal init(for view: UIView, withDelegate delegate: GestureHandlerDelegate, panScrollMode: PanScrollingMode, cameraManager: CameraManager?) {
+    internal init(for view: UIView, withDelegate delegate: GestureHandlerDelegate, panScrollMode: PanScrollingMode) {
         super.init(for: view, withDelegate: delegate)
         let pan = UIPanGestureRecognizer(target: self,
                                          action: #selector(self.handlePan(_:)))
@@ -18,7 +16,6 @@ internal class PanGestureHandler: GestureHandler {
         view.addGestureRecognizer(pan)
         self.gestureRecognizer = pan
         self.scrollMode = panScrollMode
-        self.cameraManager = cameraManager
     }
 
     // Handles the pan operation and calls the associated view
@@ -30,16 +27,11 @@ internal class PanGestureHandler: GestureHandler {
             let delta = pan.translation(in: pan.view).applyPanScrollingMode(panScrollingMode: scrollMode)
             self.delegate.panned(by: delta)
             pan.setTranslation(.zero, in: pan.view)
-        case .ended, .cancelled:
-
-            // Stop gap solution to avoid poor UX when panning a pitched map
-            if let pitch = cameraManager?.mapView?.pitch,
-                pitch != 0.0 {
-                return
-            }
-
+        case .ended:
+            //swiftlint:disable no_fallthrough_only
+            fallthrough
+        case .cancelled:
             var velocity = pan.velocity(in: pan.view)
-
             if self.decelerationRate == 0.0
                 || (sqrt(pow(velocity.x, 2) + pow(velocity.y, 2)) < 100) {
 
@@ -54,6 +46,7 @@ internal class PanGestureHandler: GestureHandler {
 
                 self.delegate.panEnded(with: offset)
             }
+
         default:
             break
         }

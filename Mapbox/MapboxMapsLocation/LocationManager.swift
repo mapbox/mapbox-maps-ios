@@ -86,6 +86,10 @@ public class LocationManager: NSObject {
 
         guard newOptions != locationOptions else { return }
 
+        // Update the location options
+        self.locationOptions = newOptions
+        self.locationProvider.locationProviderOptions = newOptions
+
         if newOptions.showUserLocation != showUserLocation {
             self.showUserLocation = newOptions.showUserLocation
             toggleUserLocationUpdates(showUserLocation: self.showUserLocation)
@@ -102,10 +106,6 @@ public class LocationManager: NSObject {
                 locationPuckManager.changePuckBackend(newPuckBackend: newOptions.locationPuck)
             }
         }
-
-        self.locationProvider.locationProviderOptions = newOptions
-
-        self.locationOptions = newOptions
     }
 
     /// Allows a custom case to request full accuracy

@@ -112,9 +112,9 @@ workflows:
         jobs:
             - ios-build-release:
                 name: "Public Beta Release"
-                filters:
-                    branches:
-                        only: Release/*
+                # filters:
+                #     branches:
+                #         only: Release/*
 
             - ios-release-tag:
                 name: "iOS release"

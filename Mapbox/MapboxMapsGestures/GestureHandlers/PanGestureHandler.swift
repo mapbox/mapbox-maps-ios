@@ -27,10 +27,7 @@ internal class PanGestureHandler: GestureHandler {
             let delta = pan.translation(in: pan.view).applyPanScrollingMode(panScrollingMode: scrollMode)
             self.delegate.panned(by: delta)
             pan.setTranslation(.zero, in: pan.view)
-        case .ended:
-            //swiftlint:disable no_fallthrough_only
-            fallthrough
-        case .cancelled:
+        case .ended, .cancelled:
             var velocity = pan.velocity(in: pan.view)
             if self.decelerationRate == 0.0
                 || (sqrt(pow(velocity.x, 2) + pow(velocity.y, 2)) < 100) {

@@ -1,4 +1,5 @@
 import UIKit
+import MapboxMapsFoundation
 
 /// The PanGestureHandler is responsible for all `pan` related infrastructure
 /// Tells the view to update itself when required
@@ -30,11 +31,10 @@ internal class PanGestureHandler: GestureHandler {
             self.delegate.panned(by: delta)
             pan.setTranslation(.zero, in: pan.view)
         case .ended, .cancelled:
-            guard
-                let pitch = cameraManager?.mapView?.pitch,
-                pitch == 0.0
-            else {
-                // Stop gap solution for pitched maps, do not do any map drift
+
+            // Stop gap solution to avoid poor UX when panning a pitched map
+            if let pitch = cameraManager?.mapView?.pitch,
+                pitch != 0.0 {
                 return
             }
 

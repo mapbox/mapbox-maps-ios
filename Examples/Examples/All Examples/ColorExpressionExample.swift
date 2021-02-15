@@ -48,7 +48,7 @@ public class ColorExpressionExample: UIViewController, ExampleProtocol {
             0: .red,
             14: .blue
         ]
-        
+
         let exp = Exp(.interpolate) {
             Exp(.linear)
             Exp(.zoom)

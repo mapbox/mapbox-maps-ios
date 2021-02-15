@@ -134,7 +134,9 @@ To run device tests there are few options:
 
 2. Trigger via CI by adding `[run device tests]` to a git commit message. These tests also run "nightly".
 
-3. Trigger tests on a local device (connected by USB) using the same setup as Device Farm testing by running:
+3. Trigger tests on AWS Device Farm from the command line by running `make test-with-device-farm SCHEME=MapboxMapsTestsWithHost APP_NAME=MapboxTestHost`. This requires certain environment variables to be set; please see the makefile for these.
+
+4. Trigger tests on a local device (connected by USB) using the same setup as Device Farm testing by running:
 `make local-test-with-device-farm-ipa SCHEME=MapboxTestsWithHost CONFIGURATION=Release ENABLE_CODE_SIGNING=1`
 
 ## Integration Tests

@@ -165,7 +165,7 @@ public class CameraManager {
      - Parameter completion: The completion block to execute after the transition has occurred.
      */
 
-    public func setCamera(to newCamera: CameraOptions,
+    public func setCamera(to camera: CameraOptions,
                              animated: Bool = false,
                              duration: TimeInterval? = 0,
                              completion: ((Bool) -> Void)? = nil) {
@@ -175,13 +175,21 @@ public class CameraManager {
             return
         }
 
-        guard mapView.cameraView.camera != newCamera else {
+        let clampedCamera = CameraOptions(
+            center: camera.center,
+            padding: camera.padding,
+            anchor: camera.anchor,
+            zoom: camera.zoom?.clamped(to: mapCameraOptions.minimumZoomLevel...mapCameraOptions.maximumZoomLevel),
+            bearing: optimizeBearing(startBearing: mapView.bearing, endBearing: camera.bearing),
+            pitch: camera.pitch?.clamped(to: mapCameraOptions.minimumPitch...mapCameraOptions.maximumPitch))
+
+        guard mapView.cameraView.camera != clampedCamera else {
             completion?(true)
             return
         }
 
         let animation = {
-            mapView.cameraView.camera = newCamera
+            mapView.cameraView.camera = clampedCamera
         }
 
         performCameraAnimation(animated: animated, duration: duration, animation: animation, completion: completion)
@@ -211,26 +219,12 @@ public class CameraManager {
                           animated: Bool = false,
                           duration: TimeInterval? = nil,
                           completion: ((Bool) -> Void)? = nil) {
-        guard let mapView = mapView else {
-            assertionFailure("MapView is nil.")
-            completion?(false)
-            return
-        }
-
-        let clampedZoom: CGFloat? = zoom?.clamp(withMax: mapCameraOptions.maximumZoomLevel,
-                                                andMin: mapCameraOptions.minimumZoomLevel)
-
-        let optimizedBearing = optimizeBearing(startBearing: mapView.bearing, endBearing: bearing)
-
         let newCamera = CameraOptions(center: centerCoordinate,
                                       padding: padding,
                                       anchor: anchor,
-                                      zoom: clampedZoom,
-                                      bearing: optimizedBearing,
+                                      zoom: zoom,
+                                      bearing: bearing,
                                       pitch: pitch)
-
-        guard mapView.cameraView.camera != newCamera else { return }
-
         setCamera(to: newCamera, animated: animated, duration: duration, completion: completion)
     }
     // swiftlint:enable function_parameter_count
@@ -698,19 +692,6 @@ extension MapboxAnimationGroup: CAAnimationDelegate {
         if let executeBlock = completionBlock {
             executeBlock(flag)
         }
-    }
-}
-
-internal extension CGFloat {
-    func clamp(withMax max: CGFloat, andMin min: CGFloat) -> CGFloat {
-        if self > max {
-            return max
-        }
-
-        if self < min {
-            return min
-        }
-        return self
     }
 }
 

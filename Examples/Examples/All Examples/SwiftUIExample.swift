@@ -117,7 +117,7 @@ internal class SwiftUIMapViewCoordinator {
     }
 
     /// This `mapView` property needs to be weak because
-    /// the map view takes a strong reference to the coordiantor
+    /// the map view takes a strong reference to the coordinator
     /// when we make the coordinator observe the `.cameraDidChange`
     /// event
     weak var mapView: MapView? {
@@ -162,7 +162,7 @@ internal class SwiftUIMapViewCoordinator {
     /// Only sync annotations once the map's initial load is complete
     private var initialMapLoadComplete = false
 
-    /// To sync annotations, we use the annotations' idenitifiers to determine which
+    /// To sync annotations, we use the annotations' identifiers to determine which
     /// annotations need to be added and which ones need to be removed.
     private func syncAnnotations() {
         guard let mapView = mapView, initialMapLoadComplete else {
@@ -187,7 +187,7 @@ internal class SwiftUIMapViewCoordinator {
     }
 }
 
-/// Here's an example usasge of `SwiftUIMapView`
+/// Here's an example usage of `SwiftUIMapView`
 internal struct ContentView: View {
 
     /// For demonstration purposes, this view has its own state for the camera and style URL.

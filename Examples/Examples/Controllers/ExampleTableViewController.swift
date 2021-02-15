@@ -17,7 +17,7 @@ public class ExampleTableViewController: UITableViewController {
         self.title = "Examples"
 
         searchBar.delegate = self
-        
+
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
     }
 }

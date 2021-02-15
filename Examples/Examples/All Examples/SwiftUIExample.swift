@@ -66,8 +66,8 @@ internal struct SwiftUIMapView: UIViewRepresentable {
     /// use the coordinator for this and not this struct because this struct can be recreated many times
     /// as your map configurations change externally. Fortunately, even as this struct is recreated,
     /// the coordinator and the map view will only be created once.
-    func makeCoordinator() -> Coordinator {
-        Coordinator(camera: $camera)
+    func makeCoordinator() -> SwiftUIMapViewCoordinator {
+        SwiftUIMapViewCoordinator(camera: $camera)
     }
 
     /// After SwiftUI creates the coordinator, it creates the underlying `UIView`, in this case a `MapView`.
@@ -101,90 +101,89 @@ internal struct SwiftUIMapView: UIViewRepresentable {
         /// they need to be applied *after* `.mapLoadingFinished`
         context.coordinator.annotations = annotations
     }
+}
 
-    /// Here's our custom `Coordinator` implementation.
-    class Coordinator {
-        /// It holds a binding to the camera
-        @Binding private var camera: Camera
+/// Here's our custom `Coordinator` implementation.
+internal class SwiftUIMapViewCoordinator {
+    /// It holds a binding to the camera
+    @Binding private var camera: Camera
 
-        /// It also has a setter for annotations. When the annotations
-        /// are set, it synchronizes them to the map
-        var annotations = [Annotation]() {
-            didSet {
-                syncAnnotations()
-            }
+    /// It also has a setter for annotations. When the annotations
+    /// are set, it synchronizes them to the map
+    var annotations = [Annotation]() {
+        didSet {
+            syncAnnotations()
+        }
+    }
+
+    /// This `mapView` property needs to be weak because
+    /// the map view takes a strong reference to the coordiantor
+    /// when we make the coordinator observe the `.cameraDidChange`
+    /// event
+    weak var mapView: MapView? {
+        didSet {
+            /// The coordinator observes the `.cameraDidChange` event, and
+            /// whenever the camera changes, it updates the camera binding
+            mapView?.on(.cameraDidChange, handler: notify(for:))
+
+            /// The coordinator also observes the `.mapLoadingFinished` event
+            /// so that it can sync annotations whenever the map reloads
+            mapView?.on(.mapLoadingFinished, handler: notify(for:))
+        }
+    }
+
+    init(camera: Binding<Camera>) {
+        _camera = camera
+    }
+
+    func notify(for event: Event) {
+        guard let typedEvent = MapEvents.EventKind(rawValue: event.type),
+              let mapView = mapView else {
+            return
+        }
+        switch typedEvent {
+        /// As the camera changes, we update the binding. SwiftUI
+        /// will propagate this change to any other UI elements connected
+        /// to the same binding.
+        case .cameraDidChange:
+            camera.center = mapView.centerCoordinate
+            camera.zoom = mapView.zoom
+
+        /// When the map reloads, we need to re-sync the annotations
+        case .mapLoadingFinished:
+            initialMapLoadComplete = true
+            syncAnnotations()
+
+        default:
+            break
+        }
+    }
+
+    /// Only sync annotations once the map's initial load is complete
+    private var initialMapLoadComplete = false
+
+    /// To sync annotations, we use the annotations' idenitifiers to determine which
+    /// annotations need to be added and which ones need to be removed.
+    private func syncAnnotations() {
+        guard let mapView = mapView, initialMapLoadComplete else {
+            return
+        }
+        let annotationsByIdentifier = Dictionary(uniqueKeysWithValues: annotations.map { ($0.identifier, $0) })
+
+        let oldAnnotationIds = Set(mapView.annotationManager.annotations.values.map(\.identifier))
+        let newAnnotationIds = Set(annotationsByIdentifier.values.map(\.identifier))
+
+        let idsForAnnotationsToRemove = oldAnnotationIds.subtracting(newAnnotationIds)
+        let annotationsToRemove = idsForAnnotationsToRemove.compactMap { mapView.annotationManager.annotations[$0] }
+        if !annotationsToRemove.isEmpty {
+            mapView.annotationManager.removeAnnotations(annotationsToRemove)
         }
 
-        /// This `mapView` property needs to be weak because
-        /// the map view takes a strong reference to the coordiantor
-        /// when we make the coordinator observe the `.cameraDidChange`
-        /// event
-        weak var mapView: MapView? {
-            didSet {
-                /// The coordinator observes the `.cameraDidChange` event, and
-                /// whenever the camera changes, it updates the camera binding
-                mapView?.on(.cameraDidChange, handler: notify(for:))
-
-                /// The coordinator also observes the `.mapLoadingFinished` event
-                /// so that it can sync annotations whenever the map reloads
-                mapView?.on(.mapLoadingFinished, handler: notify(for:))
-            }
+        let idsForAnnotationsToAdd = newAnnotationIds.subtracting(oldAnnotationIds)
+        let annotationsToAdd = idsForAnnotationsToAdd.compactMap { annotationsByIdentifier[$0] }
+        if !annotationsToAdd.isEmpty {
+            mapView.annotationManager.addAnnotations(annotationsToAdd)
         }
-
-        init(camera: Binding<Camera>) {
-            _camera = camera
-        }
-
-        func notify(for event: Event) {
-            guard let typedEvent = MapEvents.EventKind(rawValue: event.type),
-                  let mapView = mapView else {
-                return
-            }
-            switch typedEvent {
-            /// As the camera changes, we update the binding. SwiftUI
-            /// will propagate this change to any other UI elements connected
-            /// to the same binding.
-            case .cameraDidChange:
-                camera.center = mapView.centerCoordinate
-                camera.zoom = mapView.zoom
-
-            /// When the map reloads, we need to re-sync the annotations
-            case .mapLoadingFinished:
-                initialMapLoadComplete = true
-                syncAnnotations()
-
-            default:
-                break
-            }
-        }
-
-        /// Only sync annotations once the map's initial load is complete
-        private var initialMapLoadComplete = false
-
-        /// To sync annotations, we use the annotations' idenitifiers to determine which
-        /// annotations need to be added and which ones need to be removed.
-        private func syncAnnotations() {
-            guard let mapView = mapView, initialMapLoadComplete else {
-                return
-            }
-            let annotationsByIdentifier = Dictionary(uniqueKeysWithValues: annotations.map { ($0.identifier, $0) })
-
-            let oldAnnotationIds = Set(mapView.annotationManager.annotations.values.map(\.identifier))
-            let newAnnotationIds = Set(annotationsByIdentifier.values.map(\.identifier))
-
-            let idsForAnnotationsToRemove = oldAnnotationIds.subtracting(newAnnotationIds)
-            let annotationsToRemove = idsForAnnotationsToRemove.compactMap { mapView.annotationManager.annotations[$0] }
-            if !annotationsToRemove.isEmpty {
-                mapView.annotationManager.removeAnnotations(annotationsToRemove)
-            }
-
-            let idsForAnnotationsToAdd = newAnnotationIds.subtracting(oldAnnotationIds)
-            let annotationsToAdd = idsForAnnotationsToAdd.compactMap { annotationsByIdentifier[$0] }
-            if !annotationsToAdd.isEmpty {
-                mapView.annotationManager.addAnnotations(annotationsToAdd)
-            }
-        }
-
     }
 }
 

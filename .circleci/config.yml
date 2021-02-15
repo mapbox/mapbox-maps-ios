@@ -72,41 +72,53 @@ workflows:
 
     steve:
         jobs:
-            - build-all-targets:
+            # - build-all-targets:
+            #     matrix:
+            #         parameters:
+            #             xcode: ["12.2.0"]
+            #             configuration: ["Debug", "Release"]
+
+            # - binary-size:
+            #     requires: 
+            #         - build-all-targets
+
+            # - metrics:
+            #     requires: 
+            #         - build-all-targets
+            #     filters:
+            #         branches:
+            #             only: main
+
+            # Original
+            # - maps-unit-tests:
+            #     name: "Run Unit tests"
+
+
+            # Moved from nightly
+            - maps-unit-tests:
                 matrix:
                     parameters:
                         xcode: ["12.2.0"]
                         configuration: ["Debug", "Release"]
+                        report_failure: [false]
 
-            - binary-size:
-                requires: 
-                    - build-all-targets
 
-            - metrics:
-                requires: 
-                    - build-all-targets
-                filters:
-                    branches:
-                        only: main
 
-            - maps-unit-tests:
-                name: "Run Unit tests"
+            # - run-tests-on-devices:
+            #     name: "Run MapboxTestHost tests on devices"
+            #     device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
+            #     device-pool: $(AWS_DEVICE_FARM_1_PHONE_POOL)
+            #     scheme: "MapboxMapsTestsWithHost"
+            #     app-name: "MapboxTestHost"
 
-            - run-tests-on-devices:
-                name: "Run MapboxTestHost tests on devices"
-                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
-                device-pool: $(AWS_DEVICE_FARM_1_PHONE_POOL)
-                scheme: "MapboxMapsTestsWithHost"
-                app-name: "MapboxTestHost"
+            # - run-tests-on-devices:
+            #     name: "Run Examples tests on devices"
+            #     device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
+            #     device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
+            #     scheme: "Examples"
+            #     app-name: "Examples"
 
-            - run-tests-on-devices:
-                name: "Run Examples tests on devices"
-                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
-                device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
-                scheme: "Examples"
-                app-name: "Examples"
-
-            - create-xcframework
+            # - create-xcframework
             
     public-beta:
         jobs:
@@ -244,22 +256,22 @@ jobs:
             - checkout
             - access-token-configs
             - make-deps
-            - test-scheme:
-                scheme: MapboxMapsAnnotations
-            - test-scheme:
-                scheme: MapboxMapsFoundation
-            - test-scheme:
-                scheme: MapboxMapsGestures
-            - test-scheme:
-                scheme: MapboxMapsLocation
-            - test-scheme:
-                scheme: MapboxMapsOffline
-            - test-scheme:
-                scheme: MapboxMapsOrnaments
-            - test-scheme:
-                scheme: MapboxMapsSnapshot
-            - test-scheme:
-                scheme: MapboxMapsStyle 
+            # - test-scheme:
+            #     scheme: MapboxMapsAnnotations
+            # - test-scheme:
+            #     scheme: MapboxMapsFoundation
+            # - test-scheme:
+            #     scheme: MapboxMapsGestures
+            # - test-scheme:
+            #     scheme: MapboxMapsLocation
+            # - test-scheme:
+            #     scheme: MapboxMapsOffline
+            # - test-scheme:
+            #     scheme: MapboxMapsOrnaments
+            # - test-scheme:
+            #     scheme: MapboxMapsSnapshot
+            # - test-scheme:
+            #     scheme: MapboxMapsStyle 
             - test-scheme:
                 scheme: MapboxMaps
             # TODO: Parse xcresults for any tests that ran on Device
@@ -290,7 +302,7 @@ jobs:
             - run:
                 name: Converting and uploading coverage
                 command: |
-                    make update-codecov-with-profdata SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
+                    make device-update-codecov-with-profdata SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
 
             - store-device-farm-artifacts
             - store-logs
@@ -496,11 +508,16 @@ commands:
                 condition:
                     equal: ['MapboxMaps', << parameters.scheme >>]
                 steps:
-                  - code-coverage
-            - run:
-                name: Clean Build directory
-                command: |
-                    rm -rf build/Build                
+                  # - code-coverage
+                    - run:
+                        name: Converting and uploading coverage
+                        command: |
+                            make update-codecov-with-profdata SCHEME=<< parameters.scheme >>
+
+            # - run:
+            #     name: Clean Build directory
+            #     command: |
+            #         rm -rf build/Build                
               
     ensure-text-exists-in-commit:
         parameters:
@@ -582,14 +599,14 @@ commands:
             - store_artifacts:
                 path: build.zip
 
-    code-coverage:
-        description: "Upload code coverage report"
-        steps:
-            - run: 
-                name: "Upload code coverage report"
-                command: |
-                    curl -sSfL --retry 5 --connect-timeout 5 https://codecov.io/bash > /tmp/codecov.sh
-                    bash /tmp/codecov.sh -X gcov -t $CODECOV_TOKEN -D ./ -J '^MapboxMaps$' -F unit-tests || echo 'Codecov failed to upload'
+    # code-coverage:
+    #     description: "Upload code coverage report"
+    #     steps:
+    #         - run: 
+    #             name: "Upload code coverage report"
+    #             command: |
+    #                 curl -sSfL --retry 5 --connect-timeout 5 https://codecov.io/bash > /tmp/codecov.sh
+    #                 bash /tmp/codecov.sh -v -X gcov -t $CODECOV_TOKEN -D ./ -J '^MapboxMaps$' -F unit-tests || echo 'Codecov failed to upload'
 
     make-deps:
         steps:

@@ -306,22 +306,28 @@ gather-results:
 # xcrun llvm-profdata merge -o dest.profdata source.profraw
 #
 
-.PHONY: update-codecov-with-profdata
+# Root directory in which to search for "profdata" coverage files, from which we generate
+# the lcov data (both lcov and json formats)
+COVERAGE_ROOT_DIR ?= $(BUILD_DIR)
+COVERAGE_MAPBOX_MAPS ?= $(BUILD_DIR)/Build/Products/$(CONFIGURATION)-iphonesimulator/MapboxMaps.framework/MapboxMaps
+COVERAGE_ARCH ?= x86_64
+
+.PHONY: update-codecov-with-profdata device-update-codecov-with-profdata
 update-codecov-with-profdata:
 	curl -sSfL --retry 5 --connect-timeout 5 https://codecov.io/bash > /tmp/codecov.sh
-	@PROF_DATA=`find $(BUILD_DIR)/testruns -regex '.*\.profdata'` ; \
+	@PROF_DATA=`find $(COVERAGE_ROOT_DIR) -regex '.*\.profdata'` ; \
 	for RESULT in $${PROF_DATA[@]} ; \
 	do \
 		echo "Generating $${RESULT}.lcov" ; \
 		xcrun llvm-cov export \
-			$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Frameworks/MapboxMaps.framework/MapboxMaps \
+			$(COVERAGE_MAPBOX_MAPS) \
 			-instr-profile=$${RESULT} \
-			-arch=arm64 \
+			-arch=$(COVERAGE_ARCH) \
 			-format=lcov > $${RESULT}.lcov ; \
 		xcrun llvm-cov export \
-			$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Frameworks/MapboxMaps.framework/MapboxMaps \
+			$(COVERAGE_MAPBOX_MAPS) \
 			-instr-profile=$${RESULT} \
-			-arch=arm64 \
+			-arch=$(COVERAGE_ARCH) \
 			-format=text | python3 -m json.tool > $${RESULT}.json ; \
 		echo "Uploading $${RESULT}.lcov to CodeCov.io" ; \
 		bash /tmp/codecov.sh \
@@ -332,6 +338,12 @@ update-codecov-with-profdata:
 			-F $(SCHEME) ; \
 	done
 	@echo "Done"
+
+device-update-codecov-with-profdata:
+	make update-codecov-with-profdata \
+		COVERAGE_ARCH=arm64 \
+		COVERAGE_ROOT_DIR=$(BUILD_DIR)/testruns \
+		COVERAGE_MAPBOX_MAPS=$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Frameworks/MapboxMaps.framework/MapboxMaps
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Dependencies

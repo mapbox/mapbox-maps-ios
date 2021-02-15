@@ -5,8 +5,8 @@
  import Foundation
 
  let registry = SDKRegistry()
- let version = "10.0.0-beta.12"
- let checksum = "26503fde935220208b56fd215ba24da8ab853962317ba68fccf06b8fd68aa888"
+ let version = "10.0.0-beta.13"
+ let checksum = "772c123b7ac102ee10d9af84efdd5c86da64778ba6e931041919f9531dd5d71b"
 
  let package = Package(
      name: "MapboxMaps",
@@ -28,7 +28,7 @@
              dependencies: ["MapboxMaps", "MapboxCommon", "MapboxCoreMaps", "Turf", "MapboxMobileEvents"]
          ),
          registry.mapboxMapsTarget(version: version, checksum: checksum),
-     ],
+     ]
  )
 
  struct SDKRegistry {

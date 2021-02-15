@@ -149,7 +149,8 @@ endif
 	# Build for testing
 	set -o pipefail && $(XCODE_BUILD_DEVICE) \
 		-scheme '$(SCHEME)' \
-		-xcconfig $(CURDIR)/Mapbox/Configurations/testhost.xcconfig \
+		-xcconfig $(CURDIR)/Mapbox/Configurations/$(APP_NAME)_testhost.xcconfig \
+		-enableCodeCoverage YES \
 		build-for-testing 
 
 	# Gather app, frameworks and xctestrun
@@ -209,7 +210,7 @@ clean-for-device-build:
 #	AWS_DEVICE_FARM_PROJECT
 #	AWS_DEVICE_FARM_DEVICE_POOL
 #
-# 	make test-with-device-farm SCHEME=MapboxTestsWithHost
+# 	make test-with-device-farm SCHEME=MapboxMapsTestsWithHost APP_NAME=MapboxTestHost 
 # 
 # If token expires while the tests are in progress, run `mbx env` again followed by restarting
 # the test call. 
@@ -236,7 +237,7 @@ $(DEVICE_FARM_RESULTS): $(DEVICE_FARM_RUN)
 # This should match what happens on Device Farm (except for processing of results). The devicefarm.mk makefile
 # ought to match the contents of the testspec.yml file (ideally it would be shared).
 #
-# 	make local-test-with-device-farm-ipa SCHEME=MapboxTestsWithHost CONFIGURATION=Release ENABLE_CODE_SIGNING=1
+# make local-test-with-device-farm-ipa SCHEME=MapboxMapsTestsWithHost APP_NAME=MapboxTestHost CONFIGURATION=Release ENABLE_CODE_SIGNING=1
 
 .PHONY: local-test-with-device-farm-ipa
 local-test-with-device-farm-ipa: $(DEVICE_FARM_UPLOAD_IPA)
@@ -296,6 +297,41 @@ $(DEVICE_FARM_UPLOAD_IPA): $(XCTESTRUN_PACKAGE) | $(DEVICE_TEST_PATH) $(PAYLOAD_
 gather-results:
 	python3 ./scripts/device-farm/extract-xcresult.py --outdir $(BUILD_DIR)/testruns
 
+# Codecov.io appears to struggle with the raw coverage data from Xcode (in this Device Farm testing scenario). 
+# Explicitly converting it to an lcov format helps.
+#
+# However, the following conversion of the profdata has failed once. If this continues to be an
+# issue, it will be worth trying the following first:
+#
+# xcrun llvm-profdata merge -o dest.profdata source.profraw
+#
+
+.PHONY: update-codecov-with-profdata
+update-codecov-with-profdata:
+	curl -sSfL --retry 5 --connect-timeout 5 https://codecov.io/bash > /tmp/codecov.sh
+	@PROF_DATA=`find $(BUILD_DIR)/testruns -regex '.*\.profdata'` ; \
+	for RESULT in $${PROF_DATA[@]} ; \
+	do \
+		echo "Generating $${RESULT}.lcov" ; \
+		xcrun llvm-cov export \
+			$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Frameworks/MapboxMaps.framework/MapboxMaps \
+			-instr-profile=$${RESULT} \
+			-arch=arm64 \
+			-format=lcov > $${RESULT}.lcov ; \
+		xcrun llvm-cov export \
+			$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Frameworks/MapboxMaps.framework/MapboxMaps \
+			-instr-profile=$${RESULT} \
+			-arch=arm64 \
+			-format=text | python3 -m json.tool > $${RESULT}.json ; \
+		echo "Uploading $${RESULT}.lcov to CodeCov.io" ; \
+		bash /tmp/codecov.sh \
+			-f $${RESULT}.lcov \
+			-t $(CODECOV_TOKEN) \
+			-J '^MapboxMaps$$' \
+			-n $${RESULT}.lcov \
+			-F $(SCHEME) ; \
+	done
+	@echo "Done"
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Dependencies

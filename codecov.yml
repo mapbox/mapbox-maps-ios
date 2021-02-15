@@ -12,3 +12,6 @@ coverage:
       default:
         threshold: 2
       patch: off
+comment:
+  require_changes: true
+  layout: "reach, diff, flags, files"

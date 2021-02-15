@@ -24,6 +24,7 @@ phases:
       - unzip $DEVICEFARM_TEST_PACKAGE_PATH -d /tmp/unzipped-ipa
       - mv /tmp/unzipped-ipa/Payload/*.app/xctestrun.zip /tmp/xctestrun.zip
       - unzip /tmp/xctestrun.zip -d /tmp/test-root
+      - cp /tmp/xctestrun.zip $DEVICEFARM_LOG_DIR
 
       - export CONFIG=`cat /tmp/test-root/configuration.txt`
       - export SCHEME=`cat /tmp/test-root/scheme.txt`
@@ -33,11 +34,13 @@ phases:
       - cp -R /tmp/unzipped-ipa/Payload/$APP_NAME.app /tmp/test-root/$CONFIG-iphoneos
 
 
+
   # The test phase includes commands that run your test suite execution.
   test:
     commands:
       # TODO: Investigate -resultBundlePath
-      - cd /tmp/test-root && xcodebuild test-without-building -destination id=$DEVICEFARM_DEVICE_UDID -xctestrun device.xctestrun -derivedDataPath $DEVICEFARM_LOG_DIR -resultBundlePath $DEVICEFARM_LOG_DIR/$SCHEME.$CONFIG.$DATE.xcresult
+      - xcodebuild -version
+      - cd /tmp/test-root && xcodebuild test-without-building -destination id=$DEVICEFARM_DEVICE_UDID -xctestrun device.xctestrun -derivedDataPath $DEVICEFARM_LOG_DIR -resultBundlePath $DEVICEFARM_LOG_DIR/$SCHEME.$CONFIG.$DATE.xcresult -enableCodeCoverage YES
 
 # The artifacts phase lets you specify the location where your tests logs,
 # device logs will be stored. And also let you specify the location of your test

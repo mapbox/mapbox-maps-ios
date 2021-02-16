@@ -36,7 +36,10 @@ internal class ColorTests: XCTestCase {
 
         do {
             let decodedColor = try JSONDecoder().decode(ColorRepresentable.self, from: validData)
-            XCTAssert(decodedColor == color, "Color should not change after encoding - decoding pass", line: line)
+            XCTAssert(decodedColor == color, "ColorRepresentable instance should not change after encoding - decoding pass", line: line)
+            XCTAssertNotNil(decodedColor.uiColor)
+            XCTAssertEqual(decodedColor.uiColor, color.uiColor)
+
         } catch {
             XCTFail("Could not decode color", line: line)
         }

@@ -24,10 +24,10 @@
      ],
      targets: [
          .target(
-             name: "MapboxMapsWrapper",
-             dependencies: ["MapboxMaps", "MapboxCommon", "MapboxCoreMaps", "Turf", "MapboxMobileEvents"]
-         ),
-         registry.mapboxMapsTarget(version: version, checksum: checksum),
+             name: "MapboxMaps",
+             dependencies: ["MapboxMaps", "MapboxCommon", "MapboxCoreMaps", "Turf", "MapboxMobileEvents"],
+            path: "Mapbox/"
+         )
      ]
  )
 
@@ -56,16 +56,6 @@
          }
 
          return mapboxToken
-     }
- }
-
- extension SDKRegistry {
-     func mapboxMapsTarget(version: String, checksum: String) -> Target {
-         return binaryTarget(name: "MapboxMaps",
-                             version: version,
-                             path: "mobile-maps-ios",
-                             filename: "MapboxMaps.xcframework.zip",
-                             checksum: checksum)
      }
  }
 

@@ -29,9 +29,11 @@ internal class PanGestureHandler: GestureHandler {
             pan.setTranslation(.zero, in: pan.view)
         case .ended, .cancelled:
             var velocity = pan.velocity(in: pan.view)
+            let velocityHypot = sqrt(pow(velocity.x, 2) + pow(velocity.y, 2))
 
-            if self.decelerationRate == 0.0 || (sqrt(pow(velocity.x, 2) + pow(velocity.y, 2)) < 100) {
-                velocity = CGPoint.zero // Not enough velocity to overcome friction
+            if self.decelerationRate == 0.0 || velocityHypot < 1000 {
+                velocity = CGPoint.zero
+                return
             }
 
             if velocity != CGPoint.zero { // There is a potential drift after the gesture has ended

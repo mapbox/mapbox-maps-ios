@@ -14,7 +14,7 @@
      products: [
          .library(
              name: "MapboxMaps",
-             targets: ["MapboxMaps"]),
+             targets: ["MapboxMapsWrapper"]),
      ],
      dependencies: [
         .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .exact("10.0.0-beta.9.1")),
@@ -24,7 +24,7 @@
      ],
      targets: [
          .target(
-             name: "MapboxMaps",
+             name: "MapboxMapsWrapper",
              dependencies: ["MapboxMaps", "MapboxCommon", "MapboxCoreMaps", "Turf", "MapboxMobileEvents"],
             path: "Mapbox/"
          )

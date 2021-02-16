@@ -90,7 +90,6 @@ workflows:
             #         branches:
             #             only: main
 
-            Original
             - maps-unit-tests:
                 name: "Run Unit tests"
 

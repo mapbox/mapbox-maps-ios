@@ -33,12 +33,11 @@ internal class PanGestureHandler: GestureHandler {
 
             if self.decelerationRate == 0.0 || velocityHypot < 1000 {
                 velocity = CGPoint.zero
-                return
             }
 
             if velocity != CGPoint.zero { // There is a potential drift after the gesture has ended
-                let offset = CGPoint(x: velocity.x * decelerationRate,
-                                     y: velocity.y * decelerationRate)
+                let offset = CGPoint(x: velocity.x * decelerationRate / 4,
+                                     y: velocity.y * decelerationRate / 4)
                                     .applyPanScrollingMode(panScrollingMode: scrollMode)
 
                 self.delegate.panEnded(with: offset)

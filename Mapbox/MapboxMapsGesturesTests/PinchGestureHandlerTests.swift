@@ -36,7 +36,7 @@ class PinchGestureHandlerTests: XCTestCase {
         XCTAssertTrue(self.delegate.cancelTransitionsCalled,
                       "Cancel Transitions was not called before commencing gesture processing")
 
-        XCTAssertTrue(self.delegate.scaleForZoomCalled, "Initial scale was not calculated")
+        XCTAssertEqual(self.delegate.scaleForZoomStub.invocations.count, 1, "Initial scale was not calculated")
 
         XCTAssertTrue(self.delegate.gestureBeganMethod.wasCalled,
                       "Gesture Supportable view should be notified when gesture begins")
@@ -45,7 +45,7 @@ class PinchGestureHandlerTests: XCTestCase {
     func testPinchChanged() {
 
         let pinchGestureHandler = PinchGestureHandler(for: self.view, withDelegate: self.delegate)
-        pinchGestureHandler.scale = 10.0
+        pinchGestureHandler.scale = pow(2, 10.0)
 
         let pinchGestureRecognizerMock = UIPinchGestureRecognizerMock()
         pinchGestureRecognizerMock.mockState = .changed
@@ -58,7 +58,7 @@ class PinchGestureHandlerTests: XCTestCase {
 
         XCTAssertTrue(self.delegate.pinchScaleChangedMethod.wasCalled, "Pinch scale not recalculated")
 
-        XCTAssertTrue(self.delegate.pinchScaleChangedMethod.newScale == 20.0, "New scale not calculated properly")
+        XCTAssertEqual(self.delegate.pinchScaleChangedMethod.newScale, 11.0, "New scale not calculated properly")
 
         XCTAssertTrue(self.delegate.pinchScaleChangedMethod.anchor == CGPoint(x: 0.0, y: 0.0),
                       "Invalid pinch center point")

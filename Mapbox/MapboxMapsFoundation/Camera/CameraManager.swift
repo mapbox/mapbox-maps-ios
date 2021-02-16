@@ -24,7 +24,7 @@ public extension Notification.Name {
 public class CameraManager {
 
     /// Used to set up camera specific configuration
-    public var mapCameraOptions: MapCameraOptions!
+    public internal(set) var mapCameraOptions: MapCameraOptions
 
     /// Used to update the map's camera options and pass them to the core Map.
     internal func updateMapCameraOptions(newOptions: MapCameraOptions) {
@@ -167,7 +167,7 @@ public class CameraManager {
 
     public func setCamera(to camera: CameraOptions,
                              animated: Bool = false,
-                             duration: TimeInterval? = 0,
+                             duration: TimeInterval = 0,
                              completion: ((Bool) -> Void)? = nil) {
         guard let mapView = mapView else {
             assertionFailure("MapView is nil.")
@@ -217,7 +217,7 @@ public class CameraManager {
                           bearing: CLLocationDirection? = nil,
                           pitch: CGFloat? = nil,
                           animated: Bool = false,
-                          duration: TimeInterval? = nil,
+                          duration: TimeInterval = 0,
                           completion: ((Bool) -> Void)? = nil) {
         let newCamera = CameraOptions(center: centerCoordinate,
                                       padding: padding,
@@ -244,9 +244,9 @@ public class CameraManager {
         - animation: closure to perform
         - completion: animation block called on completion
      */
-    fileprivate func performCameraAnimation(animated: Bool, duration: TimeInterval?, animation: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
+    fileprivate func performCameraAnimation(animated: Bool, duration: TimeInterval, animation: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
         if animated {
-            UIView.animate(withDuration: duration ?? 0,
+            UIView.animate(withDuration: duration,
                            delay: 0,
                            options: [.curveEaseOut, .allowUserInteraction],
                            animations: animation,

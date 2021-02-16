@@ -4,10 +4,10 @@ import UIKit
 /// infrastructure. The `quickZoom` gesture recognizer is triggered by
 /// a tap gesture followed by a long press gesture.
 internal class QuickZoomGestureHandler: GestureHandler {
-    internal var quickZoomStart: CGFloat = 0.0
-    internal var scale: CGFloat = 0.0
+    private var quickZoomStart: CGFloat = 0.0
+    private var scale: CGFloat = 0.0
 
-    override internal init(for view: UIView, withDelegate delegate: GestureHandlerDelegate) {
+    override init(for view: UIView, withDelegate delegate: GestureHandlerDelegate) {
         super.init(for: view, withDelegate: delegate)
 
         let quickZoom = UILongPressGestureRecognizer(target: self, action: #selector(self.handleQuickZoom(_:)))
@@ -18,28 +18,28 @@ internal class QuickZoomGestureHandler: GestureHandler {
     }
 
     // Register the location of the touches in the view.
-    @objc internal func handleQuickZoom(_ quickZoom: UILongPressGestureRecognizer) {
+    @objc func handleQuickZoom(_ gestureRecognizer: UILongPressGestureRecognizer) {
         guard let view = view else {
             return
         }
 
-        let touchPoint = quickZoom.location(in: view)
+        let touchPoint = gestureRecognizer.location(in: view)
 
-        if quickZoom.state == .began {
+        if gestureRecognizer.state == .began {
             self.delegate.gestureBegan(for: .quickZoom)
             self.quickZoomStart = touchPoint.y
             self.scale = self.delegate.scaleForZoom()
-        } else if quickZoom.state == .changed {
+        } else if gestureRecognizer.state == .changed {
             let distance = touchPoint.y - self.quickZoomStart
             let bounds = view.bounds
             let anchor = CGPoint(x: bounds.midX, y: bounds.midY)
 
-            var newScale = log2(self.scale + (distance / 75))
+            var newScale = scale + distance / 75
 
             if newScale.isNaN { newScale = 0 }
 
             self.delegate.quickZoomChanged(with: newScale, and: anchor)
-        } else if quickZoom.state == .ended || quickZoom.state == .cancelled {
+        } else if gestureRecognizer.state == .ended || gestureRecognizer.state == .cancelled {
             self.delegate.quickZoomEnded()
         }
     }

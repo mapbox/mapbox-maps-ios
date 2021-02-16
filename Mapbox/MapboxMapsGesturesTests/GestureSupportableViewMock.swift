@@ -15,7 +15,6 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
 
     var pannedCalled = false
 
-    var scaleForZoomCalled = false
     var pinchScaleChangedMethod: (wasCalled: Bool, newScale: CGFloat?, anchor: CGPoint?) = (false, nil, nil)
     var pinchEndedMethod: (wasCalled: Bool, drift: Bool?, anchor: CGPoint?) = (false, nil, nil)
 
@@ -25,10 +24,6 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
     var rotationStartCalled = false
     var rotationChangedMethod: (wasCalled: Bool, newAngle: CGFloat?, anchor: CGPoint?) = (false, nil, nil)
     var rotationEndedMethod: (wasCalled: Bool, finalAngle: CGFloat?, anchor: CGPoint?) = (false, nil, nil)
-
-    var quickZoomCalled = false
-    var quickZoomChangedMethod: (wasCalled: Bool, newScale: CGFloat?, anchor: CGPoint?) = (false, nil, nil)
-    var quickZoomEndedMethod = false
 
     var initialPitch = 0.0
     var pitchTolerance = 45.0
@@ -54,9 +49,9 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
         gestureBeganMethod.type = gestureType
     }
 
+    let scaleForZoomStub = Stub<Void, CGFloat>(defaultReturnValue: 0)
     func scaleForZoom() -> CGFloat {
-        scaleForZoomCalled = true
-        return -1.0
+        scaleForZoomStub.call()
     }
 
     func pinchScaleChanged(with newScale: CGFloat, andAnchor anchor: CGPoint) {
@@ -88,15 +83,21 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
         rotationEndedMethod.anchor = anchor
     }
 
+    struct QuickZoomChangedParameters {
+        var newScale: CGFloat
+        var anchor: CGPoint
+    }
+    let quickZoomChangedStub = Stub<QuickZoomChangedParameters, Void>()
     func quickZoomChanged(with newScale: CGFloat, and anchor: CGPoint) {
-        quickZoomChangedMethod.wasCalled = true
-        quickZoomChangedMethod.newScale = newScale
-        quickZoomChangedMethod.anchor = anchor
+        quickZoomChangedStub.call(
+            with: QuickZoomChangedParameters(
+                newScale: newScale,
+                anchor: anchor))
     }
 
+    let quickZoomEndedStub = Stub<Void, Void>()
     func quickZoomEnded() {
-        quickZoomCalled = true
-        quickZoomEndedMethod = true
+        quickZoomEndedStub.call()
     }
 
     func pitchChanged(newPitch: CGFloat) {

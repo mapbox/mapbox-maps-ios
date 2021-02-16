@@ -26,7 +26,7 @@
          .target(
              name: "MapboxMapsWrapper",
              dependencies: ["MapboxMaps", "MapboxCommon", "MapboxCoreMaps", "Turf", "MapboxMobileEvents"],
-            path: "Mapbox/"
+             path: "Mapbox/"
          )
      ]
  )

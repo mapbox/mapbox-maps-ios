@@ -401,13 +401,13 @@ public class CameraManager {
      - Parameter zoom: The amount to adjust the camera's zoom level by.
      - Parameter animated: Indicates  whether the camera changes should be animated.
      */
-    public func moveCamera(by offset: CGPoint? = nil, rotation: CGFloat? = nil, pitch: CGFloat? = nil, zoom: CGFloat? = nil, animated: Bool = false) {
+    public func moveCamera(by offset: CGPoint? = nil, rotation: CGFloat? = nil, pitch: CGFloat? = nil, zoom: CGFloat? = nil, animated: Bool = false, didFling: Bool = false) {
         guard let mapView = mapView else {
             assertionFailure("MapView is nil.")
             return
         }
 
-        let centerCoordinate = self.shiftCenterCoordinate(by: offset ?? .zero)
+        let centerCoordinate = self.shiftCenterCoordinate(by: offset ?? .zero, didFling: didFling)
 
         var newBearing: CGFloat = 0
         if let angle = rotation {
@@ -456,7 +456,7 @@ public class CameraManager {
      Return a new center coordinate shifted by a given offset value.
      - Parameter offset: The `CGPoint` value to shift the map's center by.
      */
-    func shiftCenterCoordinate(by offset: CGPoint) -> CLLocationCoordinate2D {
+    func shiftCenterCoordinate(by offset: CGPoint, didFling: Bool) -> CLLocationCoordinate2D {
         guard let mapView = mapView else {
             assertionFailure("MapView is nil.")
             return CLLocationCoordinate2D(latitude: 0, longitude: 0)
@@ -465,13 +465,23 @@ public class CameraManager {
             return CLLocationCoordinate2D(latitude: 0, longitude: 0)
         }
 
+        var pitchFactor = mapView.pitch
+        if didFling {
+            if pitchFactor != 0.0 {
+                pitchFactor /= 10.0
+                pitchFactor += 1.5
+            }
+        } else {
+            pitchFactor = 1.0 // We do not want divide by 0
+        }
+
         let cameraViewSize    = mapView.cameraView.frame.size
         let cameraPadding     = mapView.cameraView.padding
         let viewPortSize      = CGSize(width: cameraViewSize.width - cameraPadding.left - cameraPadding.right,
                                        height: cameraViewSize.height - cameraPadding.top - cameraPadding.bottom)
         let viewPortCenter    = CGPoint(x: (viewPortSize.width / 2) + cameraPadding.left,
                                         y: (viewPortSize.height / 2) + cameraPadding.top)
-        let newViewPortCenter = CGPoint(x: viewPortCenter.x - offset.x, y: viewPortCenter.y - offset.y)
+        let newViewPortCenter = CGPoint(x: viewPortCenter.x - (offset.x / pitchFactor), y: viewPortCenter.y - (offset.y / pitchFactor))
         var centerCoordinate  = mapView.coordinate(for: newViewPortCenter)
 
         var newLong: Double

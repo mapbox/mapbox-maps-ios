@@ -4647,7 +4647,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMaps;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = NO;
-				SWIFT_TREAT_WARNINGS_AS_ERRORS = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -4671,7 +4670,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMaps;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = NO;
-				SWIFT_TREAT_WARNINGS_AS_ERRORS = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -4882,12 +4880,10 @@
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(SRCROOT)/../Carthage/Build/iOS/",
 				);
-				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = "$(GCC_WARN_64_TO_32_BIT_CONVERSION)";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SWIFT_TREAT_WARNINGS_AS_ERRORS = NO;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -4907,12 +4903,10 @@
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(SRCROOT)/../Carthage/Build/iOS/",
 				);
-				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = "$(GCC_WARN_64_TO_32_BIT_CONVERSION)";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_TREAT_WARNINGS_AS_ERRORS = NO;
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";

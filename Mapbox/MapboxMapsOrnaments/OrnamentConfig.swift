@@ -10,9 +10,9 @@ public class Ornament: Equatable {
     public let visibility: OrnamentVisibility
 
     convenience internal init(view: UIView?,
-                            type: OrnamentType,
-                            position: OrnamentPosition,
-                            visibility: OrnamentVisibility = .visible) {
+                              type: OrnamentType,
+                              position: OrnamentPosition,
+                              visibility: OrnamentVisibility = .visible) {
         self.init(view: view, type: type, position: position, margins: .defaultMargins, visibility: visibility)
     }
 
@@ -43,8 +43,8 @@ public struct OrnamentConfig: Equatable {
     internal let telemetryOptOutShownInApp: Bool
 
     internal init(ornamentPositions: [OrnamentType: OrnamentPosition],
-                ornamentMargins: [OrnamentType: OrnamentMargins],
-                ornamentVisibility: [OrnamentType: OrnamentVisibility], telemetryOptOutShownInApp: Bool = false) {
+                  ornamentMargins: [OrnamentType: OrnamentMargins],
+                  ornamentVisibility: [OrnamentType: OrnamentVisibility], telemetryOptOutShownInApp: Bool = false) {
         assert(ornamentPositions.count == ornamentMargins.count)
 
         var ornaments = [Ornament]()

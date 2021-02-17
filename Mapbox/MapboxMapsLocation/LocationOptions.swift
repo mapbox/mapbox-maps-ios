@@ -26,7 +26,7 @@ public struct LocationOptions: Equatable {
 
     /// Sets the type of backend that should be used for the PuckView
     public var locationPuck: LocationPuck = .puck2D()
-    
+
     public init() {}
 
 }

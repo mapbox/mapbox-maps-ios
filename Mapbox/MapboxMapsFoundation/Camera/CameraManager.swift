@@ -166,9 +166,9 @@ public class CameraManager {
      */
 
     public func setCamera(to camera: CameraOptions,
-                             animated: Bool = false,
-                             duration: TimeInterval = 0,
-                             completion: ((Bool) -> Void)? = nil) {
+                          animated: Bool = false,
+                          duration: TimeInterval = 0,
+                          completion: ((Bool) -> Void)? = nil) {
         guard let mapView = mapView else {
             assertionFailure("MapView is nil.")
             completion?(false)
@@ -195,7 +195,6 @@ public class CameraManager {
         performCameraAnimation(animated: animated, duration: duration, animation: animation, completion: completion)
     }
 
-    // swiftlint:disable function_parameter_count
     /**
      Transition the camera view to a new map camera based on individual camera properties,
      optionally animating the change and executing a completion block after the transition occurs.
@@ -640,7 +639,7 @@ public class CameraManager {
         animationGroup.isRemovedOnCompletion = false
 
         /// Remove the animation group once the animation is done.
-        animationGroup.completionBlock = { [weak cameraLayer] finished in
+        animationGroup.completionBlock = { [weak cameraLayer] _ in
             cameraLayer?.removeAnimation(forKey: animationKey)
 
             // Temp?

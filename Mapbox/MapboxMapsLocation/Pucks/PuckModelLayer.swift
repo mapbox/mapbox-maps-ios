@@ -61,7 +61,6 @@ internal class PuckModelLayer: Puck {
         modelSource.models = ["puck-model": puckModelLayerVM.model]
         initialPuckOrientation = puckModelLayerVM.model.orientation
 
-
         if let validModelScale = puckModelLayerVM.modelScale {
             modelLayer.paint?.modelScale = validModelScale
         }
@@ -103,8 +102,8 @@ internal class PuckModelLayer: Puck {
         }
 
         modelSource.models = [key: model]
-        if let data = try? JSONEncoder().encode([key : model]),
-           let jsonDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] {
+        if let data = try? JSONEncoder().encode([key: model]),
+           let jsonDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
             style.updateSourceProperty(id: "puck-model-source", property: "models", value: jsonDictionary)
         }
     }

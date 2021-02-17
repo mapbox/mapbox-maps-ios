@@ -1,49 +1,44 @@
 import XCTest
+import MapboxMaps
+import CoreLocation
 
-#if canImport(MapboxMaps)
-@testable import MapboxMaps
-#else
-@testable import MapboxMapsStyle
-#endif
+internal class ExampleIntegrationTest: MapViewIntegrationTestCase {
 
-internal class StyleIntegrationTests: MapViewIntegrationTestCase {
+    internal func testBaseClass() throws {
+        // Do nothing
+    }
 
-    internal func testUpdateStyleLayer() throws {
+    internal func testWaitForIdle() throws {
         guard
+            let mapView = mapView,
             let style = style else {
             XCTFail("There should be valid MapView and Style objects created by setUp.")
             return
         }
 
-        let expectation = XCTestExpectation(description: "Manipulating style succeeded")
+        let expectation = XCTestExpectation(description: "Wait for map to idle")
         expectation.expectedFulfillmentCount = 2
 
         style.styleURL = .streets
 
+        mapView.cameraView.centerCoordinate = CLLocationCoordinate2D(latitude: 42.0, longitude: -71.0)
+        mapView.cameraView.zoom = 8.0
+
         didFinishLoadingStyle = { _ in
+            expectation.fulfill()
+        }
 
-            var newBackgroundLayer = BackgroundLayer(id: "test-id")
-            newBackgroundLayer.paint?.backgroundColor = .constant(.init(color: .white))
+        didBecomeIdle = { _ in
 
-            let result1 = style.addLayer(layer: newBackgroundLayer)
+//            if let snapshot = mapView.snapshot() {
+//                let attachment = XCTAttachment(image: snapshot)
+//                self.add(attachment)
+//
+//                // TODO: Compare images...
+//                //
+//            }
 
-            switch result1 {
-            case .success(_):
-                expectation.fulfill()
-            case .failure(let error):
-                XCTFail("Could not add background layer due to error: \(error)")
-            }
-
-            let result2 = style.updateLayer(id: newBackgroundLayer.id, type: BackgroundLayer.self) { (layer) in
-                layer.paint?.backgroundColor = .constant(.init(color: .blue))
-            }
-
-            switch result2 {
-            case .success(_):
-                expectation.fulfill()
-            case .failure(let error):
-                XCTFail("Could not update background layer due to error: \(error)")
-            }
+            expectation.fulfill()
         }
 
         wait(for: [expectation], timeout: 5.0)

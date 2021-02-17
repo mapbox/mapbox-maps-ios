@@ -5,8 +5,8 @@
  import Foundation
 
  let registry = SDKRegistry()
- let version = "10.0.0-beta.13"
- let checksum = "772c123b7ac102ee10d9af84efdd5c86da64778ba6e931041919f9531dd5d71b"
+ let version = "10.0.0-beta.13.1"
+ let checksum = "4006caf1337c5c8ae63d166218f0e2c5285be01d258873ad56b762cee36ce720"
 
  let package = Package(
      name: "MapboxMaps",
@@ -17,8 +17,8 @@
              targets: ["MapboxMapsWrapper"]),
      ],
      dependencies: [
-        .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .exact("10.0.0-beta.9.1")),
-        .package(name: "MapboxCoreMaps", url: "https://github.com/mapbox/mapbox-core-maps-ios.git", .exact("10.0.0-beta.14.1")),
+        .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .exact("10.0.0-beta.9.2")),
+        .package(name: "MapboxCoreMaps", url: "https://github.com/mapbox/mapbox-core-maps-ios.git", .exact("10.0.0-beta.14.2")),
         .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", .exact("0.12.0-alpha.1")),
         .package(name: "Turf", url: "https://github.com/mapbox/turf-swift.git", .exact("2.0.0-alpha.2")),
      ],

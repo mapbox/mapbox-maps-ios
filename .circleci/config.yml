@@ -562,7 +562,8 @@ commands:
             - run:
                 name: Zipping logs
                 command: |
-                    zip -r build.zip build/Logs
+                    zip -r build.zip build
+#                    zip -r build.zip build/Logs
                 when: always
             - store_artifacts:
                 path: build.zip

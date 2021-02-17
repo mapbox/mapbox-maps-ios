@@ -308,7 +308,7 @@ gather-results:
 
 # Root directory in which to search for "profdata" coverage files, from which we generate
 # the lcov data (both lcov and json formats)
-COVERAGE_ROOT_DIR ?= $(BUILD_DIR)
+COVERAGE_ROOT_DIR ?= $(BUILD_DIR)/Build/ProfileData
 COVERAGE_MAPBOX_MAPS ?= $(BUILD_DIR)/Build/Products/$(CONFIGURATION)-iphonesimulator/MapboxMaps.framework/MapboxMaps
 COVERAGE_ARCH ?= x86_64
 

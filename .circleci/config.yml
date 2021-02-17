@@ -72,22 +72,22 @@ workflows:
 
     steve:
         jobs:
-            - build-all-targets:
-                matrix:
-                    parameters:
-                        xcode: ["12.2.0"]
-                        configuration: ["Debug", "Release"]
+            # - build-all-targets:
+            #     matrix:
+            #         parameters:
+            #             xcode: ["12.2.0"]
+            #             configuration: ["Debug", "Release"]
 
-            - binary-size:
-                requires: 
-                    - build-all-targets
+            # - binary-size:
+            #     requires: 
+            #         - build-all-targets
 
-            - metrics:
-                requires: 
-                    - build-all-targets
-                filters:
-                    branches:
-                        only: main
+            # - metrics:
+            #     requires: 
+            #         - build-all-targets
+            #     filters:
+            #         branches:
+            #             only: main
 
             - maps-unit-tests:
                 name: "Run Unit tests"
@@ -106,7 +106,7 @@ workflows:
                 scheme: "Examples"
                 app-name: "Examples"
 
-            - create-xcframework
+            # - create-xcframework
             
     public-beta:
         jobs:
@@ -275,22 +275,22 @@ jobs:
             - checkout
             - access-token-configs
             - make-deps
-            - test-scheme:
-                scheme: MapboxMapsAnnotations
-            - test-scheme:
-                scheme: MapboxMapsFoundation
-            - test-scheme:
-                scheme: MapboxMapsGestures
-            - test-scheme:
-                scheme: MapboxMapsLocation
-            - test-scheme:
-                scheme: MapboxMapsOffline
-            - test-scheme:
-                scheme: MapboxMapsOrnaments
-            - test-scheme:
-                scheme: MapboxMapsSnapshot
-            - test-scheme:
-                scheme: MapboxMapsStyle 
+            # - test-scheme:
+            #     scheme: MapboxMapsAnnotations
+            # - test-scheme:
+            #     scheme: MapboxMapsFoundation
+            # - test-scheme:
+            #     scheme: MapboxMapsGestures
+            # - test-scheme:
+            #     scheme: MapboxMapsLocation
+            # - test-scheme:
+            #     scheme: MapboxMapsOffline
+            # - test-scheme:
+            #     scheme: MapboxMapsOrnaments
+            # - test-scheme:
+            #     scheme: MapboxMapsSnapshot
+            # - test-scheme:
+            #     scheme: MapboxMapsStyle 
             - test-scheme:
                 scheme: MapboxMaps
             # TODO: Parse xcresults for any tests that ran on Device
@@ -528,10 +528,10 @@ commands:
                     equal: ['MapboxMaps', << parameters.scheme >>]
                 steps:
                   - code-coverage
-            - run:
-                name: Clean Build directory
-                command: |
-                    rm -rf build/Build                
+            # - run:
+            #     name: Clean Build directory
+            #     command: |
+            #         rm -rf build/Build                
               
     ensure-text-exists-in-commit:
         parameters:
@@ -587,7 +587,8 @@ commands:
             - run:
                 name: Zipping logs
                 command: |
-                    zip -r build.zip build/Logs
+                    zip -r build.zip build
+#                    zip -r build.zip build/Logs
                 when: always
             - store_artifacts:
                 path: build.zip

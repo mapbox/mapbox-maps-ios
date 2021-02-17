@@ -10,7 +10,11 @@ assignees: ''
 # Stable release: <version>
 
 - Releaser:
+  - The releaser kicks off each step, tests the state of the SDK prior to and after the release, and updates the documentation. They should request their release and buddies the afternoon prior to the release.
 - Release buddy:
+  - The release buddy is on-hand to review PRs generated through the release process and to assist in troubleshooting the release.
+- Docs buddy: 
+  - The docs buddy reviews the documentation PR and assists with troubleshooting docs issues. 
 - Release commencement time:
 - SEMVER tag e.g `v10.0.0-beta.12`:
 - Milestone:
@@ -24,12 +28,22 @@ _Required dependencies:_
 
 ## 📦 Release MapboxMaps
 
+Notes: Unless otherwise specified, `VERSION` refers to the SEMVER tag with the `v` prefix.
+
+Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox-sdk-common/releases) and [MapboxCoreMaps](https://github.com/mapbox/mapbox-core-maps-ios/releases) versions that you will use have been released and are available to download via CocoaPods and SPM. 
+
+### Pull requests:
+- [ ] mapbox-maps-ios release PR ->
+- [ ] api-downloads PR ->
+- [ ] mapbox-maps-ios docs PR ->
+- [ ] ios-sdk PR ->
+ 
 **1) Create Release Branch & Kickoff Build**
 
 - [ ] Pull the latest from main to include all code updates. Then make a new branch called "Release/{VERSION}"
 - [ ] Update the internal version pointers by running this command `./scripts/release/update-version.sh {VERSION}`. Commit these changes so they will be included in the build.
-- [ ] Kickoff the build by passing an empty commit with the message "[release] {VERSION}". Please copy this command to use an empty commit `git commit --allow-empty -m "[release] {VERSION}"` <-- do not include the "v" in version here
-- **It's important that you follow the commit message. This is what triggers the build job
+- [ ] Open a PR for the "Release/{VERSION}" branch. This allows CI to run.
+- [ ] Kickoff the build by passing an empty commit with the message "[release] {VERSION}", with the SEMVER version but no `v` prefix. For example: `git commit --allow-empty -m "[release] 10.0.0-beta.14"`. It's important that you follow the commit message as it triggers the build job.
 
 ***What will this job do?***
 
@@ -39,11 +53,11 @@ _Required dependencies:_
 - Store the checksum of the .xcframework.zip as a CI artifact
 - Update the existing podspec and package manifest and commit that to the release branch
 - Create a PR [here](https://github.com/mapbox/api-downloads/pulls) so that our SDK can be consumed
-- [ ] The above PR needs to be approved and merged before continuing
+- [ ] The API Downloads PR needs to be approved and merged before continuing. You do not need to merge your PR in `mapbox-maps-ios` yet.
 
 **2) Update Distribution & Changelog**
 
-- [ ] Pull the latest from release branch. CI will have commited changes to podspec and package manifest
+- [ ] On your local `Release/{VERSION}` branch, pull the latest from remote release branch. CI will have committed changes to podspec and package manifest.
     - [ ] You can verify the checksum by going to the CI Artifacts and getting the value from the `MapboxMaps.xcframework.zip.checksum`. 
 - [ ] This is where we need to verify SPM update was successful. Open a tester single view application. Go to the Swift Package Manager menu and add our repo `https://github.com/mapbox/mapbox-maps-ios.git`. For the branch, specify your current release branch. Then verify that you can load the SDK, and display a basic map on device to verify that the build is working.
     - ***Note that the api-downloads PR needs to be merged and sanity checks need to complete before downloads are available here***
@@ -69,9 +83,18 @@ _Required dependencies:_
 ## 📚 Update documentation
 
 - [ ] Navigate to the [CircleCI job page](https://app.circleci.com/pipelines/github/mapbox/mapbox-maps-ios), and download the `api-docs.zip` artifact.
-- [ ] In the mapbox-maps-ios repo, `git checkout origin publisher-staging`. This is the branch that houses our API-Docs. Make a new branch off this one `git checkout -b Release/{version}_docs`
-- [ ] Unzip the `api-docs.zip` and move the new docs into our repo. Commit those changes and then make a pull request to the branch `publisher-staging`
-- [ ] Share this with @mapbox/docs to approve and prepare to publish
+
+- [ ] In the `mapbox-maps-ios` repo, `git checkout origin publisher-staging`. This is the branch that houses our API-Docs. Make a new branch off this one `git checkout -b Release/{version}_docs`
+  - If you would like to test your API docs before publishing them, target the `publisher-staging` branch first, then once your PR lands there, cherry-pick your commit to a branch based on `publisher-production`.
+- [ ] Unzip the `api-docs.zip` and move the new docs into our repo. 
+- [ ] Commit and push those changes.
+- [ ] Make a pull request targeting the branch `publisher-production`.
+- [ ] Share this with @mapbox/docs to approve.
+- [ ] Merge the PR in `mapbox-maps-ios`. Cherry-pick to the `publisher-production`
+- [ ] Create a `maps-{VERSION}` branch in [ios-sdk](https://github.com/mapbox/ios-sdk).
+- [ ] Add the new version (without a v prefix) as the first element in the [src/data/ios-maps-sdk-version.json](https://github.com/mapbox/ios-sdk/blob/publisher-production/src/data/ios-maps-sdk-versions.json).
+- [ ] Commit and push these changes, then open a PR.
+- [ ] Ask your docs buddy to review it. Merge once approved!
 
 ## 🚢 Publish the release
 
@@ -79,8 +102,7 @@ _Required dependencies:_
 
 ## 🚢 Merge your release branch
 
-- [ ] Create a pull request from your release branch which targets `main`.
-- [ ] Have your release buddy approve and then merge it
+- [ ] Have your release buddy approve and then merge your release branch in `mapbox-maps-ios`.
 ***When you squash & merge, make the commit message "Maps SDK Release {Version}"***
 
 ## 📣 Announcements

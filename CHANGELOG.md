@@ -2,6 +2,15 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+# 10.0.0-beta.13.1 - February 17. 2021
+
+## Breaking changes ⚠️
+* Update Mapbox Common for iOS to v10.0.0-beta.9.2 and MapboxCoreMaps to v10.0.0-beta.14.2. ([#115](https://github.com/mapbox/mapbox-maps-ios/pull/115))
+
+## Bug fixes 🐞
+* Fix issue where color components were in incorrect range ([#112])(https://github.com/mapbox/mapbox-maps-ios/pull/112)
+
+
 # 10.0.0-beta.13 - February 12, 2021
 
 ## Breaking changes ⚠️

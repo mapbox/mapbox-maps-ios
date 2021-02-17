@@ -28,7 +28,7 @@ def xcresult_paths_from_zip(filepath):
     # Coverage profdata too
     for xcresult in test_runs_array:
         xcresult_dir = os.path.dirname(xcresult)
-        stuff =  glob.iglob(xcresult_dir+'/**/Coverage.profdata', recursive=True)
+        stuff =  glob.iglob(xcresult_dir+'/**/*.profraw', recursive=True)
         coverages = [a for a in stuff]
         try:
             coverage = coverages[0]
@@ -63,7 +63,7 @@ if __name__ == "__main__":
 
         coverage = result[1]
         if coverage is not None:
-            newpath = os.path.join(args.outdir, stem + ".profdata")
+            newpath = os.path.join(args.outdir, stem + ".profraw")
             shutil.rmtree(newpath, ignore_errors=True) #, ignore_errors=False,
             os.renames(coverage, newpath)
             print("coverage: " + newpath)

@@ -96,7 +96,8 @@ workflows:
             - run-tests-on-devices:
                 name: "Run MapboxTestHost tests on devices"
                 device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
-                device-pool: $(AWS_DEVICE_FARM_1_PHONE_POOL)
+#                device-pool: $(AWS_DEVICE_FARM_1_PHONE_POOL)
+                device-pool: $(AWS_DEVICE_FARM_5_DEVICE_POOL)
                 scheme: "MapboxMapsTestsWithHost"
                 app-name: "MapboxTestHost"
 

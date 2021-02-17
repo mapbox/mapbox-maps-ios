@@ -34,7 +34,6 @@ public enum Value<T: Codable>: Codable {
     }
 }
 
-
 extension Value: Equatable where T: Equatable {
-    
+
 }

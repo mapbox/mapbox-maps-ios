@@ -1,6 +1,5 @@
 import Foundation
 
-
 // MARK: - MapEvents
 
 public extension MapEvents {

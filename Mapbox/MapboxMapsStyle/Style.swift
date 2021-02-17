@@ -71,7 +71,7 @@ public class Style {
      */
     public func getLayer<T: Layer>(with layerID: String, type: T.Type) -> Result<T, LayerError> {
 
-        // Get the layer properties from the map directly
+        // Get the layer properties from the map
         var layerProps: MBXExpected<AnyObject, AnyObject>?
         do {
             layerProps = try self.styleManager.getStyleLayerProperties(forLayerId: layerID)

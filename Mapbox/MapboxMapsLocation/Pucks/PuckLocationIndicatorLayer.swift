@@ -134,7 +134,6 @@ private extension PuckLocationIndicatorLayer {
         _ = style.removeStyleLayer(forLayerId: "approximate-puck")
         // Call customizationHandler to allow developers to granularly modify the layer
 
-
         // Add images to sprite sheet
         if let validTopImage = locationIndicatorLayerVM?.topImage {
             let setStyleImageResult = style.setStyleImage(image: validTopImage, with: "locationIndicatorLayerTopImage", scale: 44.0)

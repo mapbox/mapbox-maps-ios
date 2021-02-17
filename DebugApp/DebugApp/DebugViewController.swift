@@ -29,12 +29,6 @@ public class DebugViewController: UIViewController {
             mapOptions.location.showUserLocation = true
         }
 
-        mapView.on(.styleLoadingFinished) { (_) in
-            self.mapView.style.updateLayer(id: "land", type: BackgroundLayer.self) { (layer) in
-                layer.paint?.backgroundColor = .constant(.init(color: .blue))
-            }
-        }
-
         self.view.addSubview(mapView)
     }
 }

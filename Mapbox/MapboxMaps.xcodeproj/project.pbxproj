@@ -119,7 +119,6 @@
 		0C35750225DD8D960085D775 /* StyleErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3574EE25DD8D5C0085D775 /* StyleErrors.swift */; };
 		0C35751625DD8E010085D775 /* StyleIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C35751525DD8E010085D775 /* StyleIntegrationTests.swift */; };
 		0C35751725DD8E010085D775 /* StyleIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C35751525DD8E010085D775 /* StyleIntegrationTests.swift */; };
-		0C35751825DD8E010085D775 /* StyleIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C35751525DD8E010085D775 /* StyleIntegrationTests.swift */; };
 		0C37B1E325CB05F000DCDD3D /* ColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C37B1E225CB05F000DCDD3D /* ColorTests.swift */; };
 		0C37B1E425CB05F000DCDD3D /* ColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C37B1E225CB05F000DCDD3D /* ColorTests.swift */; };
 		0C37B1E525CB05F000DCDD3D /* ColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C37B1E225CB05F000DCDD3D /* ColorTests.swift */; };
@@ -3853,7 +3852,6 @@
 				0C5CFCD425BB951B0001E753 /* RasterLayerTests.swift in Sources */,
 				0C5CFCE625BB951B0001E753 /* HeatmapLayerTests.swift in Sources */,
 				0C5CFD4225BBA06D0001E753 /* Enums+Fixtures.swift in Sources */,
-				0C35751825DD8E010085D775 /* StyleIntegrationTests.swift in Sources */,
 				0C5CFCEC25BB951B0001E753 /* HillshadeLayerTests.swift in Sources */,
 				0C37B1E525CB05F000DCDD3D /* ColorTests.swift in Sources */,
 				0C5CFCE925BB951B0001E753 /* LineLayerTests.swift in Sources */,

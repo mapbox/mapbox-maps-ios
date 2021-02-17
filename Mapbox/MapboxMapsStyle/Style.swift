@@ -3,78 +3,9 @@ import Turf
 import MapboxMapsFoundation
 #endif
 
-// MARK: - Style error types
-
-/// All source related errors
-public enum SourceError: Error {
-    /// The source could not be encoded to JSON
-    case sourceEncodingFailed(Error)
-
-    /// The source could not be decoded from JSON
-    case sourceDecodingFailed(Error)
-
-    /// The source could not be added to the map
-    case addSourceFailed(String?)
-
-    /// The source could not be retrieved from the map
-    case getSourceFailed(String?)
-
-    /// The source property could not be set.
-    case setSourceProperty(String?)
-
-    /// The source could not be removed from the map
-    case removeSourceFailed(String?)
-}
-
-/// Error enum for all layer-related errors
-public enum LayerError: Error {
-    /// The layer provided to the map in `addLayer()` could not be encoded
-    case layerEncodingFailed(Error)
-
-    /// The layer retrieved from the map could not be decoded.
-    case layerDecodingFailed(Error)
-
-    /// Addding the style layer to the map failed
-    case addStyleLayerFailed(String?)
-
-    /// The layer properties for a layer are nil
-    case getStyleLayerFailed(String?)
-
-    /// Remove the style layer from the map failed
-    case removeStyleLayerFailed(String?)
-}
-
-/// Error enum for all image-related errors
-public enum ImageError: Error {
-    /// Converting the input image to internal `Image` format failed.
-    case convertingImageFailed(String?)
-
-    /// Adding the image to the style's sprite failed.
-    case addStyleImageFailed(String?)
-
-    /// The style image does not exist in the sprite
-    case getStyleImageFailed(String?)
-}
-
-/// Error enum for all terrain-related errors
-public enum TerrainError: Error {
-    /// Decoding terrain failed
-    case decodingTerrainFailed(Error)
-    /// Adding terrain failed
-    case addTerrainFailed(String?)
-}
-
-/// Enum for all light-related errors
-public enum LightError: Error {
-    /// Adding a new light object to style failed
-    case addLightFailed(String?)
-
-    /// Retrieving a light object from style failed
-    case getLightFailed(Error)
-}
-
 public class Style {
     public private(set) weak var styleManager: StyleManager!
+
     internal var styleUrl: StyleURL = .streets
 
     public init(with styleManager: StyleManager) {
@@ -118,8 +49,11 @@ public class Style {
             let layerJSON = try JSONSerialization.jsonObject(with: layerData) as! [String: AnyObject]
             let expected = try! self.styleManager.addStyleLayer(forProperties: layerJSON, layerPosition: layerPosition)
 
-            return expected.isError() ? .failure(.addStyleLayerFailed(expected.error as? String))
-                                      : .success(true)
+            if expected.isError() {
+                return .failure(.addStyleLayerFailed(expected.error as? String))
+            } else {
+                return .success(true)
+            }
         } catch {
             // Return failure if we run into an issue
             return .failure(.layerEncodingFailed(error))
@@ -137,8 +71,7 @@ public class Style {
      */
     public func getLayer<T: Layer>(with layerID: String, type: T.Type) -> Result<T, LayerError> {
 
-
-        // Get the layer properties from the map
+        // Get the layer properties from the map directly
         var layerProps: MBXExpected<AnyObject, AnyObject>?
         do {
             layerProps = try self.styleManager.getStyleLayerProperties(forLayerId: layerID)
@@ -325,6 +258,10 @@ public class Style {
                                          value: geoJSONDictionary)
     }
 
+    /// Sets a terrain on the style
+    /// - Parameter terrain: The `Terrain` that should be rendered
+    /// - Returns: Result type with `.success` if terrain is successfully applied. `TerrainError` otherwise.
+    @discardableResult
     public func setTerrain(_ terrain: Terrain) -> Result<Bool, TerrainError> {
         do {
             let terrainData = try JSONEncoder().encode(terrain)
@@ -364,6 +301,48 @@ public class Style {
                                          : .failure(.addLightFailed(expectation.error as? String))
         } catch {
             return .failure(.addLightFailed(nil))
+        }
+    }
+
+    /// Updates a layer that exists in the style already
+    /// - Parameters:
+    ///   - id: identifier of layer to update
+    ///   - type: Type of the layer
+    ///   - update: Closure that mutates a layer passed to it
+    /// - Returns: Result type with  `.success` if update is successful, `LayerError` otherwise
+    @discardableResult
+    public func updateLayer<T: Layer>(id: String, type: T.Type, update: (inout T) -> Void) -> Result<Bool, LayerError> {
+
+        let result = self.getLayer(with: id, type: T.self)
+        var layer: T?
+
+        // Fetch the layer from the style
+        switch result {
+        case .success(let retrievedLayer):
+            // Successfully retrieved the layer
+            layer = retrievedLayer
+        case .failure(_):
+
+            // Could not retrieve the layer
+            return .failure(.getStyleLayerFailed(nil))
+        }
+
+        guard var validLayer = layer else {
+            return .failure(.retrievedLayerIsNil)
+        }
+
+        // Call closure to update the retrieved layer
+        update(&validLayer)
+
+        do {
+            let data = try JSONEncoder().encode(validLayer)
+            let value = try JSONSerialization.jsonObject(with: data, options: [])
+
+            // Apply the changes to the layer properties to the style
+            try self.styleManager.setStyleLayerPropertiesForLayerId(id, properties: value)
+            return .success(true)
+        } catch {
+            return .failure(.updateStyleLayerFailed(error))
         }
     }
 }

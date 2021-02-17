@@ -465,11 +465,13 @@ public class CameraManager {
             return CLLocationCoordinate2D(latitude: 0, longitude: 0)
         }
 
-        var pitchFactor = mapView.pitch
+        var pitchFactor: CGFloat = mapView.pitch
         if didFling {
             if pitchFactor != 0.0 {
                 pitchFactor /= 10.0
                 pitchFactor += 1.5
+            } else {
+                pitchFactor = 1.0
             }
         } else {
             pitchFactor = 1.0 // We do not want divide by 0

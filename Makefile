@@ -319,7 +319,7 @@ update-codecov-with-profdata:
 	for RESULT in $${PROF_DATA[@]} ; \
 	do \
 		echo "Generating $${RESULT}.lcov" ; \
-		xcrun llvm-profdata merge -o $${RESULT}.profdata $${RESULT} \
+		xcrun llvm-profdata merge -o $${RESULT}.profdata $${RESULT} ; \
 		xcrun llvm-cov export \
 			$(COVERAGE_MAPBOX_MAPS) \
 			-instr-profile=$${RESULT}.profdata \

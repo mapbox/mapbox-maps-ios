@@ -8,5 +8,4 @@ node_modules
 developer.xcconfig
 Carthage
 api-docs
-Package.resolved
-.swiftpm/
+Tests/MapboxMapsTests/TestHelpers/MapboxAccessToken

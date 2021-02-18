@@ -61,6 +61,12 @@ internal class IntegrationTestCase: XCTestCase {
             return
         }
 
+        if let url = Bundle.mbx_current(for: type(of: self)).url(forResource: "MapboxAccessToken", withExtension: nil),
+           let token = try? String(contentsOf: url) {
+            print("Found access token in MapboxAccessToken")
+            accessToken = token.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+
         throw XCTSkip("MBXAccessToken not found")
     }
 }

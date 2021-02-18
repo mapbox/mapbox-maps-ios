@@ -46,7 +46,6 @@
                               "MapboxMapsOfflineTests/Info.plist",
                               "MapboxMapsOrnamentsTests/Info.plist",
                               "MapboxMapsTests/Info.plist",
-
                               "MapboxMapsSnapshotTests/Info.plist"
                     ],
                     resources: [
@@ -58,7 +57,8 @@
                         .copy("MapboxMapsFoundationTests/GeoJSON/Fixtures/featurecollection-no-properties.geojson"),
                         .copy("MapboxMapsFoundationTests/GeoJSON/Fixtures/simple-line.geojson"),
                         .copy("MapboxMapsFoundationTests/GeoJSON/Fixtures/polygon.geojson"),
-                        .copy("MapboxMapsFoundationTests/GeoJSON/Fixtures/multipolygon.geojson")
+                        .copy("MapboxMapsFoundationTests/GeoJSON/Fixtures/multipolygon.geojson"),
+                        .copy("MapboxMapsTests/TestHelpers/MapboxAccessToken.token")
                         ]
                     )
      ]

@@ -25,4 +25,4 @@ In its current state, it's possible to create the end-to-end debuggable environm
 
 
 ### Known issues:
-- Currently this will work only for simulators. To make it work for devices you have to change the Cmake invocation in `generate-debuggable-environment.sh` to build for `iphoneos ` instead of `iphonesimulator` -- you may also have to change this symlinks.
+- Currently this will work only for simulators. To make it work for devices you have to change the Cmake invocation in `generate-debuggable-environment.sh` to build for `iphoneos ` instead of `iphonesimulator` -- you may also have to change the symlinks.

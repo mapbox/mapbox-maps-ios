@@ -32,7 +32,7 @@
                 "MapboxMapsOffline/Info.plist",
                 "MapboxMapsLocation/Info.plist",
                 "MapboxMapsOrnaments/Info.plist",
-                "MapboxMapsGestures/Info.plist",
+                "MapboxMapsGestures/Info.plist"
             ]
          ),
         .testTarget(name: "MapboxMapsTests",
@@ -45,7 +45,9 @@
                               "MapboxMapsFoundationTests/Info.plist",
                               "MapboxMapsOfflineTests/Info.plist",
                               "MapboxMapsOrnamentsTests/Info.plist",
-                              "MapboxMapsTests/Info.plist"
+                              "MapboxMapsTests/Info.plist",
+
+                              "MapboxMapsSnapshotTests/Info.plist"
                     ],
                     resources: [
                         .copy("MapboxMapsFoundationTests/GeoJSON/Fixtures/point.geojson"),

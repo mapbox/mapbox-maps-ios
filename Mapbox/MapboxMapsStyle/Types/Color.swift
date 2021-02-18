@@ -3,13 +3,37 @@ import UIKit
 /// Container to represent `UIColor`for use by the map renderer
 public struct ColorRepresentable: Codable, Equatable {
 
-    /// String representation of a `UIColor` used by the renderer
-    public let colorRepresentation: String?
+    /// Expression representation of a `UIColor` used by the renderer
+    public let colorRepresentation: Expression?
+
+    /// `UIColor` instance represented by this `ColorRepresentable`
+    public var uiColor: UIColor? {
+
+        if case let .op(rgbaOp) = colorRepresentation?.elements[0],
+           rgbaOp == .rgba, // operator must be `rgba`
+           case let .argument(.number(red)) = colorRepresentation?.elements[1],    // red
+           case let .argument(.number(green)) = colorRepresentation?.elements[2],  // green
+           case let .argument(.number(blue)) = colorRepresentation?.elements[3],   // blue
+           case let .argument(.number(alpha)) = colorRepresentation?.elements[4] { // alpha
+
+            // Color components are in the range of 0-255 for use in the renderer,
+            // but `UIColor` requires color components in the range of 0-1.
+            // So we must divide each color component by 255 before (re)creating the `UIColor`.
+            // NOTE: Alpha values are expected to in the range of 0-1 across the renderer and `UIKit` constructs.
+            return UIColor(red: CGFloat(red / 255.0),
+                           green: CGFloat(green / 255.0),
+                           blue: CGFloat(blue / 255.0),
+                           alpha: CGFloat(alpha))
+        }
+
+        return nil
+    }
 
     /// Create a string representation of a `UIColor`
     /// - Parameter color: A `UIColor` instance in the sRGB color space
     /// - Returns: Initializes a `ColorRepresentable` instance if the `color` is in sRGB color space.
     public init(color: UIColor) {
+
         var red: CGFloat = 0.0
         var green: CGFloat = 0.0
         var blue: CGFloat = 0.0
@@ -17,7 +41,15 @@ public struct ColorRepresentable: Codable, Equatable {
         let success = color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
         let validColorComponents = Self.isValidColor(red: red, green: red, blue: blue, alpha: alpha)
         if success && validColorComponents {
-            self.colorRepresentation = "rgba(\(red * 255.0), \(green * 255.0), \(blue * 255.0), \(alpha))"
+            // Renderer requires color components to be in the range of 0-255
+            // So we must multply each component by 255 in order for the renderer
+            // to honor the color.
+            self.colorRepresentation = Exp(.rgba) {
+                Double(red * 255.0)
+                Double(green * 255.0)
+                Double(blue * 255.0)
+                Double(alpha)
+            }
         } else {
             fatalError("Please use a color in the sRGB color space")
         }
@@ -39,7 +71,7 @@ public struct ColorRepresentable: Codable, Equatable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
-        self.colorRepresentation = try container.decode(String.self)
+        self.colorRepresentation = try container.decode(Expression.self)
     }
 }
 

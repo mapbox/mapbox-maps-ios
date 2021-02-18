@@ -18,8 +18,15 @@ class ExamplesTests: XCTestCase {
             // Check that examples have descriptions.
             XCTAssertFalse(example.description.isEmpty, "Example '\(example.type)' should have a description.")
 
-            // Check punctuation for titles.
-            XCTAssertFalse(example.title.last == ".", "Example titles should not end with punctuation.")
+            // Check that examples have titles.
+            XCTAssertFalse(example.title.isEmpty, "Example '\(example.type)' should have a title.")
+
+            // Check that example titles do not end in punctuation
+            if let last = example.title.last {
+                XCTAssertTrue(
+                    CharacterSet(charactersIn: String(last)).isDisjoint(with: .punctuationCharacters),
+                    "Title for example '\(example.type)' should not end with punctuation.")
+            }
         }
     }
 

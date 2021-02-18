@@ -9,28 +9,33 @@ import MapboxMapsFoundation
 #endif
 
 //swiftlint:disable explicit_acl explicit_top_level_acl
-class GestureManagerTests: XCTestCase {
+final class GestureManagerTests: XCTestCase {
 
-    var view: BaseMapView!
+    var mapView: BaseMapView!
     // swiftlint:disable weak_delegate
     var delegate: GestureHandlerDelegateMock!
-    var cameraManager: CameraManager!
+    var cameraManager: MockCameraManager!
+    var initialGestureOptions: GestureOptions!
+    var gestureManager: GestureManager!
 
     override func setUp() {
         let resourceOptions = ResourceOptions(accessToken: "")
-        self.view = BaseMapView(with: CGRect(x: 0, y: 0, width: 100, height: 100),
-                                resourceOptions: resourceOptions,
-                                glyphsRasterizationOptions: GlyphsRasterizationOptions.default,
-                                styleURL: nil)
-        self.delegate = GestureHandlerDelegateMock()
-        let options = MapCameraOptions()
-        self.cameraManager = CameraManager(for: self.view, with: options)
+        mapView = BaseMapView(
+            with: CGRect(x: 0, y: 0, width: 100, height: 100),
+            resourceOptions: resourceOptions,
+            glyphsRasterizationOptions: GlyphsRasterizationOptions.default,
+            styleURL: nil)
+        delegate = GestureHandlerDelegateMock()
+        cameraManager = MockCameraManager()
+        cameraManager.mapView = mapView
+        initialGestureOptions = GestureOptions()
+        gestureManager = GestureManager(
+            for: mapView,
+            options: initialGestureOptions,
+            cameraManager: cameraManager)
     }
 
     func testInitializer() {
-        let options = GestureOptions()
-        let gestureManager = GestureManager(for: self.view, options: options, cameraManager: cameraManager)
-
         XCTAssert(gestureManager.gestureHandlers.count == 7)
         XCTAssert(gestureManager.gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 1)] is TapGestureHandler)
         XCTAssert(gestureManager.gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 2)] is TapGestureHandler)
@@ -55,7 +60,7 @@ class GestureManagerTests: XCTestCase {
 
         var options = GestureOptions()
         options.pitchEnabled = false
-        let gestureManager = GestureManager(for: self.view, options: options, cameraManager: self.cameraManager)
+        let gestureManager = GestureManager(for: self.mapView, options: options, cameraManager: self.cameraManager)
 
         options.pitchEnabled = true
         gestureManager.updateGestureOptions(with: options)
@@ -64,10 +69,7 @@ class GestureManagerTests: XCTestCase {
     }
 
     func testUpdateOfGestureConfigByRemovingAllGestures() {
-
         var options = GestureOptions()
-        let gestureManager = GestureManager(for: self.view, options: options, cameraManager: self.cameraManager)
-
         options.pitchEnabled = false
         options.scrollEnabled = false
         options.zoomEnabled = false
@@ -79,9 +81,6 @@ class GestureManagerTests: XCTestCase {
     }
 
     func testSimultaneousRotationAndPanGestures() {
-        let options = GestureOptions()
-        let gestureManager = GestureManager(for: self.view, options: options, cameraManager: self.cameraManager)
-
         let panGestureRecognizer = UIPanGestureRecognizer()
         let rotateGestureRecognizer = UIRotationGestureRecognizer()
         XCTAssertTrue(gestureManager.gestureRecognizer(panGestureRecognizer,
@@ -89,12 +88,37 @@ class GestureManagerTests: XCTestCase {
     }
 
     func testSimultaneousTapAndPanGestures() {
-        let options = GestureOptions()
-        let gestureManager = GestureManager(for: self.view, options: options, cameraManager: self.cameraManager)
-
         let panGestureRecognizer = UIPanGestureRecognizer()
         let tapGestureRecognizer = UITapGestureRecognizer()
         XCTAssertFalse(gestureManager.gestureRecognizer(panGestureRecognizer,
                                                         shouldRecognizeSimultaneouslyWith: tapGestureRecognizer))
+    }
+
+    func testScaleForZoom() {
+        mapView.cameraView.zoom = CGFloat.random(in: 0...22)
+
+        let scale = gestureManager.scaleForZoom()
+
+        XCTAssertEqual(scale, mapView.cameraView.zoom)
+    }
+
+    func testPinchScaleChanged_SetsCamera() {
+        let zoom = CGFloat.random(in: 0...22)
+
+        gestureManager.pinchScaleChanged(with: zoom, andAnchor: .zero)
+
+        XCTAssertEqual(cameraManager.setCameraStub.invocations.count, 1)
+        XCTAssertEqual(cameraManager.setCameraStub.parameters.first?.camera.zoom, zoom)
+        XCTAssertEqual(cameraManager.setCameraStub.parameters.first?.camera.anchor, .zero)
+    }
+
+    func testPinchEnded_SetsCamera() {
+        let zoom = CGFloat.random(in: 0...22)
+
+        gestureManager.pinchEnded(with: zoom, andDrift: true, andAnchor: .zero)
+
+        XCTAssertEqual(cameraManager.setCameraStub.invocations.count, 1)
+        XCTAssertEqual(cameraManager.setCameraStub.parameters.first?.camera.zoom, zoom)
+        XCTAssertEqual(cameraManager.setCameraStub.parameters.first?.camera.anchor, .zero)
     }
 }

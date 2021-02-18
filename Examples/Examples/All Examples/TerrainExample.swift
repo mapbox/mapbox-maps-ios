@@ -53,4 +53,3 @@ public class TerrainExample: UIViewController, ExampleProtocol {
         _ = self.mapView.style.addLayer(layer: skyLayer)
     }
 }
-

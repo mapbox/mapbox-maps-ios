@@ -27,7 +27,7 @@ internal class PinchGestureHandler: GestureHandler {
 
         if pinchGestureRecognizer.state == .began {
 
-            self.scale = self.delegate.scaleForZoom()
+            self.scale = pow(2, self.delegate.scaleForZoom())
             self.delegate.gestureBegan(for: .pinch)
 
             /**
@@ -38,7 +38,7 @@ internal class PinchGestureHandler: GestureHandler {
         } else if pinchGestureRecognizer.state == .changed {
 
             let newScale = self.scale * pinchGestureRecognizer.scale
-            self.delegate.pinchScaleChanged(with: newScale, andAnchor: pinchCenterPoint)
+            self.delegate.pinchScaleChanged(with: log2(newScale), andAnchor: pinchCenterPoint)
 
         } else if pinchGestureRecognizer.state == .ended
             || pinchGestureRecognizer.state == .cancelled {
@@ -64,7 +64,7 @@ internal class PinchGestureHandler: GestureHandler {
 
             let possibleDrift = velocity > 0.0 && duration > 0.0
 
-            self.delegate.pinchEnded(with: newScale, andDrift: possibleDrift, andAnchor: pinchCenterPoint)
+            self.delegate.pinchEnded(with: log2(newScale), andDrift: possibleDrift, andAnchor: pinchCenterPoint)
         }
     }
 }

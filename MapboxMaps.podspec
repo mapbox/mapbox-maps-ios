@@ -1,6 +1,6 @@
 Pod::Spec.new do |m|
 
-  maps_version = '10.0.0-beta.12'
+  maps_version = '10.0.0-beta.13'
 
   m.name = 'MapboxMaps'
   m.version = maps_version
@@ -22,8 +22,8 @@ Pod::Spec.new do |m|
   m.requires_arc = true
   m.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
 
-  m.dependency 'MapboxCoreMaps', '10.0.0-beta.13'
-  m.dependency 'MapboxCommon', '10.0.0-beta.8'
+  m.dependency 'MapboxCoreMaps', '10.0.0-beta.14.1'
+  m.dependency 'MapboxCommon', '10.0.0-beta.9.1'
   m.dependency 'MapboxMobileEvents', '0.10.7'
   m.dependency 'Turf', '2.0.0-alpha.2'
 

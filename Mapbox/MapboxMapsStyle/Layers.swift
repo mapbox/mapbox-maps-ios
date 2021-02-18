@@ -68,7 +68,6 @@ public protocol Layer: Codable {
     var maxZoom: Double? { get set }
 }
 
-
 public extension LayerPosition {
     convenience init(above: String? = nil, below: String? = nil, at: Int? = nil) {
         self.init(__above: above, below: below, at: at?.NSNumber)

@@ -17,10 +17,8 @@ public extension ScreenCoordinate {
     }
     // swiftlint:enable identifier_name
 
-
     /// Reurns a `CGPoint` representation of an internal `ScreenCoordinate` value.
     var point: CGPoint {
         CGPoint(x: x, y: y)
     }
 }
-

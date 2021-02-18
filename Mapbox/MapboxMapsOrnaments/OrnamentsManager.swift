@@ -132,8 +132,8 @@ internal class OrnamentsManager: NSObject {
     }
 
     internal func addOrnament(_ ornamentType: OrnamentType,
-                            at position: OrnamentPosition,
-                            visibility: OrnamentVisibility) {
+                              at position: OrnamentPosition,
+                              visibility: OrnamentVisibility) {
         let ornament = Ornament(view: nil, type: ornamentType, position: position, visibility: visibility)
         self.ornamentConfig = ornamentConfig.with(ornament: ornament)
     }

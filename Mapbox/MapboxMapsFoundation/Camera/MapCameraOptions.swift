@@ -38,12 +38,12 @@ public struct MapCameraOptions: Equatable {
         The maximum pitch of the map’s camera toward the horizon measured in degrees.
 
         If the value of this property is smaller than that of the `minimumPitch`
-        property, the behavior is undefined. The pitch may not exceed 60 degrees
+        property, the behavior is undefined. The pitch may not exceed 85 degrees
         regardless of this property.
 
-        The default value of this property is 60 degrees.
+        The default value of this property is 85 degrees.
     */
-    public var maximumPitch: CGFloat = 60.0
+    public var maximumPitch: CGFloat = 85.0
 
     /**
         A time interval that represents the amount of time the camera view is animated for.

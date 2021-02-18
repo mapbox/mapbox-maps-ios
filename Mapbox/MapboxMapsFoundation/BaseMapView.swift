@@ -33,7 +33,11 @@ open class ObserverConcrete: Observer {
 
 open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 
+    /// The underlying renderer object responsible for rendering the map
     public var __map: Map!
+
+    /// The underlying metal view that is used to render the map
+    internal var metalView: MTKView?
 
     /// Resource options for this map view
     internal var resourceOptions: ResourceOptions?
@@ -59,7 +63,11 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 
     /// The map's current center coordinate.
     public var centerCoordinate: CLLocationCoordinate2D {
-        return cameraView.centerCoordinate
+        // cameraView.centerCoordinate is allowed to exceed [-180, 180]
+        // so that core animation interpolation works correctly when
+        // crossing the antimeridian. We wrap here to hide that implementation
+        // detail when accessing centerCoordinate via BaseMapView
+        return cameraView.centerCoordinate.wrap()
     }
 
     /// The map's current zoom level.
@@ -255,8 +263,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 
         if window != nil {
             self.validateDisplayLink()
-        }
-        else {
+        } else {
             // TODO: Fix this up correctly.
             displayLink?.invalidate()
             displayLink = nil
@@ -291,7 +298,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 
         let metalView = MTKView(frame: self.frame, device: metalDevice)
         self.displayCallback = {
-            metalView.draw()
+            metalView.setNeedsDisplay()
         }
 
         metalView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
@@ -301,10 +308,11 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         metalView.isOpaque = self.isOpaque
         metalView.layer.isOpaque = self.isOpaque
         metalView.isPaused = true
-        metalView.enableSetNeedsDisplay = false
+        metalView.enableSetNeedsDisplay = true
         metalView.presentsWithTransaction = false
 
         self.insertSubview(metalView, at: 0)
+        self.metalView = metalView
 
         return metalView
     }

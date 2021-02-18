@@ -1,7 +1,7 @@
 import UIKit
 import MapboxMobileEvents
 
-class EventsManager: EventsListener {
+internal class EventsManager: EventsListener {
     private enum Constants {
         static let MGLAPIClientUserAgentBase = "mapbox-maps-ios"
     }
@@ -78,7 +78,7 @@ class EventsManager: EventsListener {
     }
 }
 
-protocol TelemetryProtocol {
+internal protocol TelemetryProtocol {
     func flush()
     func send(event: String)
     func send(event: String, withAttributes: [String: Any])

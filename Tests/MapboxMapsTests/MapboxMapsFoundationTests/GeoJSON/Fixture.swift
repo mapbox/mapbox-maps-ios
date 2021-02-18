@@ -5,8 +5,8 @@ import Foundation
 // swiftlint:disable force_cast explicit_acl explicit_top_level_acl
 class Fixture {
     class func stringFromFileNamed(name: String) -> String {
-        guard let path = Bundle(for: self).path(forResource: name, ofType: "json") ??
-            Bundle(for: self).path(forResource: name, ofType: "geojson") else {
+        guard let path = Bundle.mbx_current(for: self).path(forResource: name, ofType: "json") ??
+                Bundle.mbx_current(for: self).path(forResource: name, ofType: "geojson") else {
             XCTAssert(false, "Fixture \(name) not found.")
             return ""
         }
@@ -19,7 +19,7 @@ class Fixture {
     }
 
     class func geojsonData(from name: String) throws -> Data? {
-        guard let path = Bundle(for: self).path(forResource: name, ofType: "geojson") else {
+        guard let path = Bundle.mbx_current(for: self).path(forResource: name, ofType: "geojson") else {
             XCTAssert(false, "Fixture \(name) not found.")
             return nil
         }
@@ -28,8 +28,8 @@ class Fixture {
     }
 
     class func JSONFromFileNamed(name: String) -> [String: Any] {
-        guard let path = Bundle(for: self).path(forResource: name, ofType: "json") ??
-            Bundle(for: self).path(forResource: name, ofType: "geojson") else {
+        guard let path = Bundle.mbx_current(for: self).path(forResource: name, ofType: "json") ??
+                Bundle.mbx_current(for: self).path(forResource: name, ofType: "geojson") else {
             XCTAssert(false, "Fixture \(name) not found.")
             return [:]
         }
@@ -43,5 +43,15 @@ class Fixture {
             XCTAssert(false, "Unable to decode JSON fixture at \(path): \(error).")
             return [:]
         }
+    }
+}
+
+extension Bundle {
+    class func mbx_current(for type: AnyClass) -> Bundle {
+        #if SWIFT_PACKAGE
+        return Bundle.module
+        #else
+        return Bundle(for: type)
+        #endif
     }
 }

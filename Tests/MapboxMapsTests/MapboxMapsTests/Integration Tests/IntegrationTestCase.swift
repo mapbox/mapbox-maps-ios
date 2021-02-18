@@ -54,7 +54,7 @@ internal class IntegrationTestCase: XCTestCase {
             return
         }
 
-        if let token = Bundle(for: Self.self).infoDictionary?["MBXAccessToken"] as? String,
+        if let token = Bundle.mbx_current(for: type(of: self)).infoDictionary?["MBXAccessToken"] as? String,
            token.starts(with: "pk.") {
             print("Found access token in Info.plist")
             accessToken = token

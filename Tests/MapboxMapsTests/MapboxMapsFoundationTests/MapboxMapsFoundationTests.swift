@@ -250,7 +250,7 @@ class MapboxMapsFoundationTests: XCTestCase {
     }
 
     func testImageConversion() {
-        guard let original = UIImage(named: "green-star", in: Bundle(for: type(of: self)), compatibleWith: nil) else {
+        guard let original = UIImage(named: "green-star", in: Bundle.mbx_current(for: type(of: self)), compatibleWith: nil) else {
             XCTFail("Could not load test image from bundle")
             return
         }

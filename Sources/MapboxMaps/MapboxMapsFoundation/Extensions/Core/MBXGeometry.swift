@@ -77,8 +77,10 @@ extension MBXGeometry {
         case .geometryCollection(let geometryCollection):
             let geometryValues = geometryCollection.geometries.map {( MBXGeometry.init(geometry: $0) )}
             self.init(geometryCollection: geometryValues)
+        #if TURF_LIBRARY_EVOLUTION_ENABLED
         @unknown default:
             fatalError("Could not determine MBXGeometry from given Turf Geometry")
+        #endif
         }
     }
 }

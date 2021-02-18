@@ -1,8 +1,8 @@
 import XCTest
 import MapboxCoreMaps
 
-#if canImport(Mapbox)
-@testable import Mapbox
+#if canImport(MapboxMaps)
+@testable import MapboxMaps
 #else
 @testable import MapboxMapsAnnotations
 #endif

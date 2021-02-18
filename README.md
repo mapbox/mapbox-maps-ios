@@ -7,14 +7,6 @@ In its current state, it's possible to create the end-to-end debuggable environm
 2. Run `git submodule update --init --recursive` manually (takes about 10 minutes)
 3. Checkout your required branches of `mapbox-gl-native-internal` and `mapbox-maps-ios` and update submodules if needed.
 4. Run `sh generate-debuggable-environment.sh` with your required branches. 
-
-   **Example**
-
-   ```bash
-   # Usage: ./generate-debuggable-environment.sh <mapbox-gl-native-internal branch> <mapbox-maps-ios branch>
-   ./generate-debuggable-environment.sh 
-   ```
-
 5. Once the script above completes -- the `Umbrella.xcworkspace` will open.
 6. Only thing remaining is to ensure that you set a well-known path to `DerivedData` (the directory where `MapboxCoreMaps.framework` gets built into). 
 
@@ -33,4 +25,4 @@ In its current state, it's possible to create the end-to-end debuggable environm
 
 
 ### Known issues:
-- Currently this will work only for simulators. To make it work for devices you have to change the Cmake invocation in `generate-debuggable-environment.sh` to build for `iphoneos ` instead of `iphonesimulator`
+- Currently this will work only for simulators. To make it work for devices you have to change the Cmake invocation in `generate-debuggable-environment.sh` to build for `iphoneos ` instead of `iphonesimulator` -- you may also have to change the symlinks.

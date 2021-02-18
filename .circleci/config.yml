@@ -73,33 +73,36 @@ workflows:
     steve:
         jobs:
 
-            # - build-all-targets:
-            #     matrix:
-            #         parameters:
-            #             xcode: ["12.2.0"]
-            #             configuration: ["Debug", "Release"]
+            - build-all-targets:
+                matrix:
+                    parameters:
+                        xcode: ["12.2.0"]
+                        configuration: ["Debug", "Release"]
 
-            # - binary-size:
-            #     requires: 
-            #         - build-all-targets
+            - binary-size:
+                requires: 
+                    - build-all-targets
 
-            # - metrics:
-            #     requires: 
-            #         - build-all-targets
-            #     filters:
-            #         branches:
-            #             only: main
+            - metrics:
+                requires: 
+                    - build-all-targets
+                filters:
+                    branches:
+                        only: main
 
             - maps-unit-tests:
                 name: "Run Unit tests"
 
+            # Not on main
             - run-tests-on-devices:
                 name: "Run MapboxTestHost tests on devices"
                 device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
-#                device-pool: $(AWS_DEVICE_FARM_1_PHONE_POOL)
-                device-pool: $(AWS_DEVICE_FARM_5_DEVICE_POOL)
+                device-pool: $(AWS_DEVICE_FARM_1_PHONE_POOL)
                 scheme: "MapboxMapsTestsWithHost"
                 app-name: "MapboxTestHost"
+                filters:
+                    branches:
+                        ignore: main                
 
             - run-tests-on-devices:
                 name: "Run Examples tests on devices"
@@ -107,8 +110,36 @@ workflows:
                 device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
                 scheme: "Examples"
                 app-name: "Examples"
+                filters:
+                    branches:
+                        ignore: main                
 
-            # - create-xcframework
+            - create-xcframework
+
+            # On main
+            - run-tests-on-devices:
+                name: "Run MapboxTestHost tests on devices (main)"
+                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
+                device-pool: $(AWS_DEVICE_FARM_5_DEVICE_POOL)
+                scheme: "MapboxMapsTestsWithHost"
+                app-name: "MapboxTestHost"
+                device-tests-always-run: true
+                report_failure: true
+                filters:
+                    branches:
+                        only: main                
+
+            - run-tests-on-devices:
+                name: "Run Examples tests on devices (main)"
+                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
+                device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
+                scheme: "Examples"
+                app-name: "Examples"
+                device-tests-always-run: true
+                report_failure: true                
+                filters:
+                    branches:
+                        only: main
             
     public-beta:
         jobs:
@@ -246,28 +277,24 @@ jobs:
             - checkout
             - access-token-configs
             - make-deps
-            # - test-scheme:
-            #     scheme: MapboxMapsAnnotations
-            # - test-scheme:
-            #     scheme: MapboxMapsFoundation
-            # - test-scheme:
-            #     scheme: MapboxMapsGestures
-            # - test-scheme:
-            #     scheme: MapboxMapsLocation
-            # - test-scheme:
-            #     scheme: MapboxMapsOffline
-            # - test-scheme:
-            #     scheme: MapboxMapsOrnaments
-            # - test-scheme:
-            #     scheme: MapboxMapsSnapshot
-            # - test-scheme:
-            #     scheme: MapboxMapsStyle 
+            - test-scheme:
+                scheme: MapboxMapsAnnotations
+            - test-scheme:
+                scheme: MapboxMapsFoundation
+            - test-scheme:
+                scheme: MapboxMapsGestures
+            - test-scheme:
+                scheme: MapboxMapsLocation
+            - test-scheme:
+                scheme: MapboxMapsOffline
+            - test-scheme:
+                scheme: MapboxMapsOrnaments
+            - test-scheme:
+                scheme: MapboxMapsSnapshot
+            - test-scheme:
+                scheme: MapboxMapsStyle 
             - test-scheme:
                 scheme: MapboxMaps
-            # TODO: Parse xcresults for any tests that ran on Device
-            # - gather-xcresults
-            # - store-device-farm-artifacts
-            - store-logs 
             - report-failure:
                 report_failure: << parameters.report_failure >>
                 message: "maps-unit-tests"
@@ -498,16 +525,16 @@ commands:
                 condition:
                     equal: ['MapboxMaps', << parameters.scheme >>]
                 steps:
-                  # - code-coverage
                     - run:
                         name: Converting and uploading coverage
                         command: |
                             make update-codecov-with-profdata SCHEME=<< parameters.scheme >>
-
-            # - run:
-            #     name: Clean Build directory
-            #     command: |
-            #         rm -rf build/Build                
+            - store-logs :
+                artifact_name: << parameters.scheme >>
+            - run:
+                name: Clean Build directory
+                command: |
+                    rm -rf build
               
     ensure-text-exists-in-commit:
         parameters:
@@ -557,18 +584,6 @@ commands:
                     make test-with-device-farm SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=<< parameters.configuration >>
                 when: always
 
-    store-logs:
-        description: "Saving Logs as artifacts"
-        steps:
-            - run:
-                name: Zipping logs
-                command: |
-                    zip -r build.zip build
-#                    zip -r build.zip build/Logs
-                when: always
-            - store_artifacts:
-                path: build.zip
-
     gather-xcresults:
         description: "Gathering results"
         steps:
@@ -577,27 +592,41 @@ commands:
                     make gather-results
                 when: always
 
+    store-logs:
+        parameters:
+            artifact_name:
+                type: string
+                default: "build"
+        description: "Saving Logs as artifacts"
+        steps:
+            - run:
+                name: Zipping logs
+                command: |
+                   zip -r << parameters.artifact_name >>.zip . -i build/Build/Products
+                   zip -r << parameters.artifact_name >>.zip . -i build/Build/ProfileData
+                   zip -r << parameters.artifact_name >>.zip . -i build/Logs
+                when: always
+            - store_artifacts:
+                path: << parameters.artifact_name >>.zip
+
     store-device-farm-artifacts:
+        parameters:
+            artifact_name:
+                type: string
+                default: "build"
         description: "Saving Device Farm results as artifacts."
         steps:
             - run:
                 name: Zipping device farm results
                 command: |
-                    zip -r build.zip build/DeviceFarmResults
-                    zip -r build.zip build/testruns
-                    zip -r build.zip build/*.json
+                    zip -r << parameters.artifact_name >>.zip . -i build/DeviceFarmResults
+                    zip -r << parameters.artifact_name >>.zip . -i build/Payload
+                    zip -r << parameters.artifact_name >>.zip . -i build/test-root
+                    zip -r << parameters.artifact_name >>.zip . -i build/testruns
+                    zip -r << parameters.artifact_name >>.zip . -i build/*.json
                 when: always
             - store_artifacts:
-                path: build.zip
-
-    # code-coverage:
-    #     description: "Upload code coverage report"
-    #     steps:
-    #         - run: 
-    #             name: "Upload code coverage report"
-    #             command: |
-    #                 curl -sSfL --retry 5 --connect-timeout 5 https://codecov.io/bash > /tmp/codecov.sh
-    #                 bash /tmp/codecov.sh -v -X gcov -t $CODECOV_TOKEN -D ./ -J '^MapboxMaps$' -F unit-tests || echo 'Codecov failed to upload'
+                path: << parameters.artifact_name >>.zip
 
     make-deps:
         steps:

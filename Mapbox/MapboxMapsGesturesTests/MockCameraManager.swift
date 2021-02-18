@@ -35,7 +35,8 @@ final class MockCameraManager: CameraManagerProtocol {
                     rotation: CGFloat?,
                     pitch: CGFloat?,
                     zoom: CGFloat?,
-                    animated: Bool) {
+                    animated: Bool,
+                    didFling: Bool) {
     }
 
     func cancelTransitions() {

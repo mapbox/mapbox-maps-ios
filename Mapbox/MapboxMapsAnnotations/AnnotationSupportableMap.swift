@@ -88,9 +88,9 @@ extension BaseMapView: AnnotationSupportableMap {
     ///   - filter: An optional expression to use in order to filter features from the result.
     ///   - completion: A closure that receives and operates on `Result<[Feature], QueryRenderedFeaturesError>`
     public func visibleFeatures(at point: CGPoint,
-                                    styleLayers: Set<String>? = nil,
-                                    filter: Expression? = nil,
-                                    completion: @escaping (Result<[Feature], QueryRenderedFeaturesError>) -> Void) {
+                                styleLayers: Set<String>? = nil,
+                                filter: Expression? = nil,
+                                completion: @escaping (Result<[Feature], QueryRenderedFeaturesError>) -> Void) {
 
         var styleLayerIdentifiers: [String]?
         var jsonExpression: Any?

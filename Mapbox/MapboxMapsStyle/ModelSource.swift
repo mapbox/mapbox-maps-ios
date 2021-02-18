@@ -19,17 +19,15 @@ public struct Model: Equatable, Codable {
     }
 }
 
-
 /// A model data source used to power a `ModelLayer`
 public struct ModelSource: Source {
 
     public let type: SourceType
 
     /// Dictionary of model identifiers to models
-    public var models: [String : Model]?
+    public var models: [String: Model]?
 
     public init() {
       self.type = .model
     }
 }
-

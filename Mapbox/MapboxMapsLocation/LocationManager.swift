@@ -214,8 +214,7 @@ private extension LocationManager {
             if let locationPuckManager = self.locationPuckManager {
                 // This serves as a reset and handles the case if permissions were changed for accuracy
                 locationPuckManager.changePuckStyle(newPuckStyle: currentPuckStyle)
-            }
-            else {
+            } else {
                 let locationPuckManager = LocationPuckManager(shouldTrackLocation: true,
                                                               locationSupportableMapView: self.locationSupportableMapView,
                                                               currentPuckSource: self.locationOptions.locationPuck)

@@ -24,7 +24,7 @@ public extension Notification.Name {
 public class CameraManager {
 
     /// Used to set up camera specific configuration
-    public var mapCameraOptions: MapCameraOptions!
+    public internal(set) var mapCameraOptions: MapCameraOptions
 
     /// Used to update the map's camera options and pass them to the core Map.
     internal func updateMapCameraOptions(newOptions: MapCameraOptions) {
@@ -166,9 +166,9 @@ public class CameraManager {
      */
 
     public func setCamera(to camera: CameraOptions,
-                             animated: Bool = false,
-                             duration: TimeInterval? = 0,
-                             completion: ((Bool) -> Void)? = nil) {
+                          animated: Bool = false,
+                          duration: TimeInterval = 0,
+                          completion: ((Bool) -> Void)? = nil) {
         guard let mapView = mapView else {
             assertionFailure("MapView is nil.")
             completion?(false)
@@ -195,7 +195,6 @@ public class CameraManager {
         performCameraAnimation(animated: animated, duration: duration, animation: animation, completion: completion)
     }
 
-    // swiftlint:disable function_parameter_count
     /**
      Transition the camera view to a new map camera based on individual camera properties,
      optionally animating the change and executing a completion block after the transition occurs.
@@ -217,7 +216,7 @@ public class CameraManager {
                           bearing: CLLocationDirection? = nil,
                           pitch: CGFloat? = nil,
                           animated: Bool = false,
-                          duration: TimeInterval? = nil,
+                          duration: TimeInterval = 0,
                           completion: ((Bool) -> Void)? = nil) {
         let newCamera = CameraOptions(center: centerCoordinate,
                                       padding: padding,
@@ -244,9 +243,9 @@ public class CameraManager {
         - animation: closure to perform
         - completion: animation block called on completion
      */
-    fileprivate func performCameraAnimation(animated: Bool, duration: TimeInterval?, animation: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
+    fileprivate func performCameraAnimation(animated: Bool, duration: TimeInterval, animation: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
         if animated {
-            UIView.animate(withDuration: duration ?? 0,
+            UIView.animate(withDuration: duration,
                            delay: 0,
                            options: [.curveEaseOut, .allowUserInteraction],
                            animations: animation,
@@ -471,7 +470,7 @@ public class CameraManager {
                 pitchFactor /= 10.0
                 pitchFactor += 1.5
             } else {
-                pitchFactor = 1.0
+                pitchFactor = 1.0 // We do not want divide by 0
             }
         } else {
             pitchFactor = 1.0 // We do not want divide by 0
@@ -652,7 +651,7 @@ public class CameraManager {
         animationGroup.isRemovedOnCompletion = false
 
         /// Remove the animation group once the animation is done.
-        animationGroup.completionBlock = { [weak cameraLayer] finished in
+        animationGroup.completionBlock = { [weak cameraLayer] _ in
             cameraLayer?.removeAnimation(forKey: animationKey)
 
             // Temp?

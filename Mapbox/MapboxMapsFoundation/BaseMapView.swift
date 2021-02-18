@@ -263,8 +263,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 
         if window != nil {
             self.validateDisplayLink()
-        }
-        else {
+        } else {
             // TODO: Fix this up correctly.
             displayLink?.invalidate()
             displayLink = nil

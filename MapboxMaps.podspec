@@ -20,7 +20,8 @@ Pod::Spec.new do |m|
   m.requires_arc = true
   m.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
 
-  m.source_files = 'Mapbox/MapboxMaps/**/*.{swift,h,plist}', 'Mapbox/MapboxMapsAnnotations/**/*.{swift,h,plist}', 'Mapbox/MapboxMapsFoundation/**/*.{swift,h,plist}', 'Mapbox/MapboxMapsGestures/**/*.{swift,h,plist}', 'Mapbox/MapboxMapsLocation/**/*.{swift,h,plist}', 'Mapbox/MapboxMapsOffline/**/*.{swift,h,plist}', 'Mapbox/MapboxMapsOrnaments/**/*.{swift,h,plist}', 'Mapbox/MapboxMapsSnapshot/**/*.{swift,h,plist}', 'Mapbox/MapboxMapsStyle/**/*.{swift,h,plist}'
+  m.source_files = 'Mapbox/MapboxMaps/**/*.{swift,h,plist}', 'Mapbox/MapboxMapsAnnotations/**/*.{swift,h,plist}', 'Mapbox/MapboxMapsFoundation/**/*.{swift,h,plist}', 'Mapbox/MapboxMapsGestures/**/*.{swift,h,plist}', 'Mapbox/MapboxMapsLocation/**/*.{swift,h,plist}', 'Mapbox/MapboxMapsOffline/**/*.{swift,h,plist}', 'Mapbox/MapboxMapsOrnaments/**/*.{swift,h,plist,strings}', 'Mapbox/MapboxMapsSnapshot/**/*.{swift,h,plist}', 'Mapbox/MapboxMapsStyle/**/*.{swift,h,plist}'
+  m.resources = 'Mapbox/MapboxMapsLocation/Pucks/IndicatorAssets.xcassets'
 
   m.dependency 'MapboxCoreMaps', '10.0.0-beta.14.1'
   m.dependency 'MapboxCommon', '10.0.0-beta.9.1'

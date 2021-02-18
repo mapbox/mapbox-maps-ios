@@ -325,11 +325,6 @@ update-codecov-with-profdata:
 			-instr-profile=$${RESULT}.profdata \
 			-arch=$(COVERAGE_ARCH) \
 			-format=lcov > $${RESULT}.lcov ; \
-		xcrun llvm-cov export \
-			$(COVERAGE_MAPBOX_MAPS) \
-			-instr-profile=$${RESULT}.profdata \
-			-arch=$(COVERAGE_ARCH) \
-			-format=text | python3 -m json.tool > $${RESULT}.json ; \
 		echo "Uploading $${RESULT}.lcov to CodeCov.io" ; \
 		bash /tmp/codecov.sh \
 			-f $${RESULT}.lcov \
@@ -337,6 +332,18 @@ update-codecov-with-profdata:
 			-J '^MapboxMaps$$' \
 			-n $${RESULT}.lcov \
 			-F $(SCHEME) ; \
+		echo "Generating lcov JSON" ; \
+		xcrun llvm-cov export \
+			$(COVERAGE_MAPBOX_MAPS) \
+			-instr-profile=$${RESULT}.profdata \
+			-arch=$(COVERAGE_ARCH) \
+			-format=text | python3 -m json.tool > $${RESULT}.json ; \
+		echo "Uploading to S3" ; \
+		python3 ./scripts/code-coverage/parse-code-coverage.py \
+			-g . \
+			-c MapboxMaps \
+			--scheme $(SCHEME) \
+			--report $${RESULT}.json ; \
 	done
 	@echo "Done"
 

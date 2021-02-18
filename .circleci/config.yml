@@ -361,7 +361,6 @@ jobs:
                 message: '<$CIRCLE_BUILD_URL|Release build for \`$VERSION\` started.>'
                 include_visit_job_action: true
             - make-deps
-            - run: pip3 install awscli
             - make-xcframework-zip
             - make-xcframeworks-bundle
             - run: 
@@ -404,7 +403,6 @@ jobs:
                 include_visit_job_action: true
             - checkout
             - make-deps
-            - run: pip3 install awscli
             - make-docs
             - run:
                 name: Run `npm ci`
@@ -631,6 +629,7 @@ commands:
     make-deps:
         steps:
             - run: make deps
+            - run: pip3 install awscli gitpython requests python-dateutil
 
     make-docs:
         description: "Generate documentation"

@@ -602,9 +602,9 @@ commands:
             - run:
                 name: Zipping logs
                 command: |
-                   zip -r << parameters.artifact_name >>.zip . -i build/Build/Products
-                   zip -r << parameters.artifact_name >>.zip . -i build/Build/ProfileData
-                   zip -r << parameters.artifact_name >>.zip . -i build/Logs
+                   zip -r << parameters.artifact_name >>.zip build/Build/Products || echo "Skipping build/Build/Products"
+                   zip -r << parameters.artifact_name >>.zip build/Build/ProfileData || echo "Skipping build/Build/ProfileData"
+                   zip -r << parameters.artifact_name >>.zip build/Logs || echo "Skipping build/Logs"
                 when: always
             - store_artifacts:
                 path: << parameters.artifact_name >>.zip
@@ -619,11 +619,11 @@ commands:
             - run:
                 name: Zipping device farm results
                 command: |
-                    zip -r << parameters.artifact_name >>.zip . -i build/DeviceFarmResults
-                    zip -r << parameters.artifact_name >>.zip . -i build/Payload
-                    zip -r << parameters.artifact_name >>.zip . -i build/test-root
-                    zip -r << parameters.artifact_name >>.zip . -i build/testruns
-                    zip -r << parameters.artifact_name >>.zip . -i build/*.json
+                    zip -r << parameters.artifact_name >>.zip build/DeviceFarmResults || echo "Skipping build/DeviceFarmResults"
+                    zip -r << parameters.artifact_name >>.zip build/Payload || echo "Skipping build/Payload"
+                    zip -r << parameters.artifact_name >>.zip build/test-root || echo "Skipping build/test-root"
+                    zip -r << parameters.artifact_name >>.zip build/testruns || echo "Skipping build/testruns"
+                    zip -r << parameters.artifact_name >>.zip build/*.json || echo "Skipping build/*.json"
                 when: always
             - store_artifacts:
                 path: << parameters.artifact_name >>.zip

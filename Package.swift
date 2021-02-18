@@ -28,7 +28,11 @@
              dependencies: ["MapboxCommon", "MapboxCoreMaps", "Turf", "MapboxMobileEvents"],
              path: "Mapbox/",
             resources: [.copy("Mapbox/MapboxMapsLocation/Pucks/IndicatorAssets.xcassets")]
-         )
+         ),
+        .testTarget(name: "MapboxMapsTests",
+                    dependencies: ["MapboxCommon", "MapboxCoreMaps", "Turf", "MapboxMobileEvents"],
+                    path: "Mapbox/MapboxMapsTests/"
+                    )
      ]
  )
 

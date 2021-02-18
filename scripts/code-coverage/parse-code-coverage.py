@@ -72,10 +72,12 @@ if __name__ == "__main__":
 
     # Git properties
     repo = git.Repo(gitInfoPath)
-    branch = repo.head.name
-    sha = repo.head.object.hexsha
+
+    # Get project name (see https://stackoverflow.com/a/63352532)
+    project = repo.remotes.origin.url.split('.git')[0].split('/')[-1]
+    branch  = repo.active_branch.name 
+    sha     = repo.head.object.hexsha
     message = repo.head.object.message
-    splitGitInfoPath = gitInfoPath.split("/")
 
     coverage_info = {}
     coverage_info["version"] = "1"
@@ -86,7 +88,7 @@ if __name__ == "__main__":
     report = {}
     report["version"]        = "1"
     report["created_at"]     = datetime.datetime.utcnow().isoformat()
-    report["project"]        = splitGitInfoPath[len(splitGitInfoPath)-1]
+    report["project"]        = project
     report["branch"]         = branch
     report["component"]      = component
     report["commit_sha"]     = sha

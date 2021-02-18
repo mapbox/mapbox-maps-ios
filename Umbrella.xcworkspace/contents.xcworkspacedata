@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:mapbox-gl-native-internal/build/ios/Mapbox GL Native.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:mapbox-maps-ios/Mapbox/MapboxMaps.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:mapbox-maps-ios/DebugApp/DebugApp.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:mapbox-maps-ios/Examples/Examples.xcodeproj">
+   </FileRef>
+</Workspace>

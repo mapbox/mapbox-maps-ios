@@ -23,6 +23,8 @@
 		0CE8ED88258928200066E56C /* race_car_model.gltf in Resources */ = {isa = PBXBuildFile; fileRef = 0CE8ED87258928200066E56C /* race_car_model.gltf */; };
 		0CE8ED8C2589285C0066E56C /* ModelExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE8ED8B2589285C0066E56C /* ModelExample.swift */; };
 		58A3C0C925C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */; };
+		73C155D125DEEB9200AFAE20 /* SnapshotterRuntimeStylingExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C155D025DEEB9200AFAE20 /* SnapshotterRuntimeStylingExample.swift */; };
+		73C155D925DEF32000AFAE20 /* JapanGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 73C155D825DEF32000AFAE20 /* JapanGeoJSON.geojson */; };
 		A4211CE62592549900D215B4 /* RestrictCoordinateBoundsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4211CE52592549900D215B4 /* RestrictCoordinateBoundsExample.swift */; };
 		CA252D782587DD9500A989CD /* MapboxMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA252D772587DD9500A989CD /* MapboxMaps.framework */; };
 		CA252D792587DD9500A989CD /* MapboxMaps.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CA252D772587DD9500A989CD /* MapboxMaps.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -143,6 +145,8 @@
 		0CE8ED8B2589285C0066E56C /* ModelExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelExample.swift; sourceTree = "<group>"; };
 		58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateGeoJSONLineExample.swift; sourceTree = "<group>"; };
 		666E0D4925664EE7000B8AF5 /* LayerPositionExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerPositionExample.swift; sourceTree = "<group>"; };
+		73C155D025DEEB9200AFAE20 /* SnapshotterRuntimeStylingExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotterRuntimeStylingExample.swift; sourceTree = "<group>"; };
+		73C155D825DEF32000AFAE20 /* JapanGeoJSON.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = JapanGeoJSON.geojson; sourceTree = "<group>"; };
 		A4211CE52592549900D215B4 /* RestrictCoordinateBoundsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictCoordinateBoundsExample.swift; sourceTree = "<group>"; };
 		A4AC5DEB2542CB2200995E4C /* CustomStyleURLExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomStyleURLExample.swift; sourceTree = "<group>"; };
 		C64ED3842540A2BE00ADADFB /* CameraAnimationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAnimationExample.swift; sourceTree = "<group>"; };
@@ -237,6 +241,7 @@
 				07DBDC91254C94C500F89304 /* AnimateLayerExample.swift */,
 				072C79EA25685D23006E47A7 /* SnapshotterExample.swift */,
 				07C1A60C257EF7CF00531205 /* SnapshotterCoreGraphicsExample.swift */,
+				73C155D025DEEB9200AFAE20 /* SnapshotterRuntimeStylingExample.swift */,
 				666E0D4925664EE7000B8AF5 /* LayerPositionExample.swift */,
 				077E3B2B2581810600564A3E /* ExternalVectorSourceExample.swift */,
 				0CE3D3BE25818626000585A2 /* ColorExpressionExample.swift */,
@@ -339,6 +344,7 @@
 				0CE8ED87258928200066E56C /* race_car_model.gltf */,
 				0C52BA9B25AFB5940054ECA8 /* arrow.gltf */,
 				0C78AC2C25BF71E40057F570 /* GradientLine.geojson */,
+				73C155D825DEF32000AFAE20 /* JapanGeoJSON.geojson */,
 			);
 			path = "Sample Data";
 			sourceTree = "<group>";
@@ -466,6 +472,7 @@
 				0C52BA9C25AFB5940054ECA8 /* arrow.gltf in Resources */,
 				07DC84422538B1F100F4AF14 /* Assets.xcassets in Resources */,
 				0CE8ED88258928200066E56C /* race_car_model.gltf in Resources */,
+				73C155D925DEF32000AFAE20 /* JapanGeoJSON.geojson in Resources */,
 				077C4EFA252F7E89007636F1 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -537,6 +544,7 @@
 				CADCF7262584990E0065C51B /* SnapshotterExample.swift in Sources */,
 				CADCF71D2584990E0065C51B /* CustomPointAnnotationExample.swift in Sources */,
 				CADCF7212584990E0065C51B /* PolygonAnnotationExample.swift in Sources */,
+				73C155D125DEEB9200AFAE20 /* SnapshotterRuntimeStylingExample.swift in Sources */,
 				CADCF7272584990E0065C51B /* FitCameraToGeometryExample.swift in Sources */,
 				CADCF7252584990E0065C51B /* CameraAnimationExample.swift in Sources */,
 				CADCF72A2584990E0065C51B /* CustomStyleURLExample.swift in Sources */,

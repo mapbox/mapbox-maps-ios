@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "MapboxMaps",
+    defaultLocalization: "en",
     platforms: [.iOS(.v11)],
     products: [
         .library(
@@ -29,7 +30,6 @@ let package = Package(
                 "MapView/Info.plist",
                 "Offline/Info.plist",
                 "Ornaments/Info.plist",
-                "Ornaments/OrnamentsLocalizable.strings",
                 "Snapshot/Info.plist",
                 "Style/Info.plist",
                 "Style/README.md",

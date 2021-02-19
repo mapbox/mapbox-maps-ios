@@ -367,8 +367,6 @@
 		1F4B7D7C2464C39000745F05 /* CameraLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC8DA53243BECE000A19318 /* CameraLayer.swift */; };
 		1F4B7D7D2464C39000745F05 /* CameraOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07729A5724623E9B00440187 /* CameraOptions.swift */; };
 		1F99DE8C252FA569004AE304 /* MapboxMapsFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F11C10F2421B05600F8397B /* MapboxMapsFoundation.framework */; };
-		1FECC9DD24744A5700B63910 /* OrnamentsLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5A96490724643BC8001FF05D /* OrnamentsLocalizable.strings */; };
-		1FECC9DE24744A5700B63910 /* OrnamentsLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5A96490724643BC8001FF05D /* OrnamentsLocalizable.strings */; };
 		1FECC9E02474519D00B63910 /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FECC9DF2474519D00B63910 /* Expression.swift */; };
 		1FECC9E12474519D00B63910 /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FECC9DF2474519D00B63910 /* Expression.swift */; };
 		1FF65A59244E33E10069B561 /* MapboxMapsLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FF65A50244E33E10069B561 /* MapboxMapsLocation.framework */; };
@@ -397,7 +395,6 @@
 		5A3593B9247FDA4800E67344 /* LayoutPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3593B8247FDA4800E67344 /* LayoutPosition.swift */; };
 		5A9648FD2462F07B001FF05D /* MapboxCompassOrnamentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9648FC2462F07B001FF05D /* MapboxCompassOrnamentView.swift */; };
 		5A9648FE246429C3001FF05D /* MapboxCompassOrnamentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9648FC2462F07B001FF05D /* MapboxCompassOrnamentView.swift */; };
-		5A96490824643BC8001FF05D /* OrnamentsLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5A96490724643BC8001FF05D /* OrnamentsLocalizable.strings */; };
 		A44EE619244F7140006FE97E /* QuickZoomGestureHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A44EE617244ED578006FE97E /* QuickZoomGestureHandlerTests.swift */; };
 		A4519DDB2432FF03007CF39A /* MapboxMapsStyleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4519DDA2432FF03007CF39A /* MapboxMapsStyleTests.swift */; };
 		A4519DDD2432FF03007CF39A /* MapboxMapsStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = A4519DCF2432FF03007CF39A /* MapboxMapsStyle.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -425,6 +422,8 @@
 		B51DE65B25D7038900A80AC9 /* Comparable+Clamped.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51DE62125D7032C00A80AC9 /* Comparable+Clamped.swift */; };
 		B51DE66E25D7039700A80AC9 /* Comparable+ClampedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51DE64725D7038300A80AC9 /* Comparable+ClampedTests.swift */; };
 		B51DE68125D7039700A80AC9 /* Comparable+ClampedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51DE64725D7038300A80AC9 /* Comparable+ClampedTests.swift */; };
+		B53A685B25E033AF008CB2AF /* OrnamentsLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B53A685E25E033AF008CB2AF /* OrnamentsLocalizable.strings */; };
+		B53A685C25E033AF008CB2AF /* OrnamentsLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B53A685E25E033AF008CB2AF /* OrnamentsLocalizable.strings */; };
 		B54B7F0A25DB192C003FD6CA /* MockCameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54B7F0925DB192C003FD6CA /* MockCameraManager.swift */; };
 		B54B7F0B25DB192C003FD6CA /* MockCameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54B7F0925DB192C003FD6CA /* MockCameraManager.swift */; };
 		B54B7F0C25DB192C003FD6CA /* MockCameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54B7F0925DB192C003FD6CA /* MockCameraManager.swift */; };
@@ -1081,12 +1080,10 @@
 		5A359243246448E600E67344 /* CompassDirectionFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassDirectionFormatter.swift; sourceTree = "<group>"; };
 		5A35924F246598F600E67344 /* CompassDirectionFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassDirectionFormatterTests.swift; sourceTree = "<group>"; };
 		5A3592AC246AD45500E67344 /* MapboxInfoButtonOrnament.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxInfoButtonOrnament.swift; sourceTree = "<group>"; };
-		5A3592B4246D524F00E67344 /* OrnamentsLocalizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = OrnamentsLocalizable.strings; sourceTree = "<group>"; };
 		5A3593792476DEB800E67344 /* MapboxCompassOrnamentViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxCompassOrnamentViewTests.swift; sourceTree = "<group>"; };
 		5A3593B5247FD9AC00E67344 /* LayoutVisibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutVisibility.swift; sourceTree = "<group>"; };
 		5A3593B8247FDA4800E67344 /* LayoutPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutPosition.swift; sourceTree = "<group>"; };
 		5A9648FC2462F07B001FF05D /* MapboxCompassOrnamentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxCompassOrnamentView.swift; sourceTree = "<group>"; };
-		5A96490724643BC8001FF05D /* OrnamentsLocalizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = OrnamentsLocalizable.strings; sourceTree = "<group>"; };
 		A43D7B5125196D1C00951460 /* Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
 		A44EE617244ED578006FE97E /* QuickZoomGestureHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickZoomGestureHandlerTests.swift; sourceTree = "<group>"; };
 		A4519DCD2432FF03007CF39A /* MapboxMapsStyle.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxMapsStyle.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1103,6 +1100,7 @@
 		B506A59E25E023E90097ADB7 /* Bundle+MapboxTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle+MapboxTests.swift"; sourceTree = "<group>"; };
 		B51DE62125D7032C00A80AC9 /* Comparable+Clamped.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Comparable+Clamped.swift"; sourceTree = "<group>"; };
 		B51DE64725D7038300A80AC9 /* Comparable+ClampedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Comparable+ClampedTests.swift"; sourceTree = "<group>"; };
+		B53A685D25E033AF008CB2AF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/OrnamentsLocalizable.strings; sourceTree = "<group>"; };
 		B54B7F0925DB192C003FD6CA /* MockCameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCameraManager.swift; sourceTree = "<group>"; };
 		B54B7F1F25DB1ABA003FD6CA /* Stub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stub.swift; sourceTree = "<group>"; };
 		C64994A5258D5ADD0052C21C /* LocationPuckManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationPuckManager.swift; sourceTree = "<group>"; };
@@ -1353,7 +1351,7 @@
 			children = (
 				07797F95242C21BC00229F7D /* MapboxMapsOrnaments.h */,
 				07797F96242C21BC00229F7D /* Info.plist */,
-				5A96490724643BC8001FF05D /* OrnamentsLocalizable.strings */,
+				B53A685E25E033AF008CB2AF /* OrnamentsLocalizable.strings */,
 				2B8637D72461992200698135 /* DistanceFormatter.swift */,
 				5A3592AC246AD45500E67344 /* MapboxInfoButtonOrnament.swift */,
 				0C1AF566244F6A80008D2A10 /* OrnamentConfig.swift */,
@@ -1361,7 +1359,6 @@
 				076C4521242D4DF800A5E0C4 /* OrnamentSupportableView.swift */,
 				5A3593722476AE3400E67344 /* Compass */,
 				2B8637DE2462F2EF00698135 /* ScaleBar */,
-				5A3592B4246D524F00E67344 /* OrnamentsLocalizable.strings */,
 			);
 			name = MapboxMapsOrnaments;
 			path = ../Sources/MapboxMaps/Ornaments;
@@ -2759,7 +2756,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FECC9DD24744A5700B63910 /* OrnamentsLocalizable.strings in Resources */,
+				B53A685C25E033AF008CB2AF /* OrnamentsLocalizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2795,7 +2792,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FECC9DE24744A5700B63910 /* OrnamentsLocalizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2818,7 +2814,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C64994AD258D5ADE0052C21C /* IndicatorAssets.xcassets in Resources */,
-				5A96490824643BC8001FF05D /* OrnamentsLocalizable.strings in Resources */,
+				B53A685B25E033AF008CB2AF /* OrnamentsLocalizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4141,6 +4137,17 @@
 			targetProxy = CA952ECF251C30B80099C080 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		B53A685E25E033AF008CB2AF /* OrnamentsLocalizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B53A685D25E033AF008CB2AF /* en */,
+			);
+			name = OrnamentsLocalizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		07797FA4242C21BC00229F7D /* Debug */ = {

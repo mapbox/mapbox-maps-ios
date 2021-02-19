@@ -17,7 +17,7 @@ targets:
       - path: "../../../Sources/MapboxMaps/MapView/Info.plist"
       - path: "../../../Sources/MapboxMaps/MapView/MapboxMaps.h"
     dependencies:
-      - framework: "dependencies/Core/MapboxCoreMaps.xcframework"
-      - framework: "dependencies/Turf/Turf.xcframework"
-      - framework: "dependencies/Common/MapboxCommon.xcframework"
-      - framework: "dependencies/Telemetry/MapboxMobileEvents.xcframework"
+      - framework: "Core/MapboxCoreMaps.xcframework"
+      - framework: "Turf/Turf.xcframework"
+      - framework: "Common/MapboxCommon.xcframework"
+      - framework: "Telemetry/MapboxMobileEvents.xcframework"

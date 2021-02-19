@@ -17,14 +17,14 @@ rm -rf artifacts
 mkdir artifacts
 
 step "Running download_xcframeworks.sh"
-sh download-dependency-xcframeworks.sh ${CORE_VERSION} ${COMMON_VERSION} ${TELEMETRY_VERSION}
+sh download-dependency-xcframeworks.sh ${CORE_VERSION} ${COMMON_VERSION} ${TELEMETRY_VERSION} artifacts
 
 step "Creating MapboxMapsPackager.xcodeproj"
 xcodegen -p artifacts/
 
 step "Running create_xcframeworks.sh"
 cd artifacts
-sh create-mapbox-maps-xcframework.sh
+sh ../create-mapbox-maps-xcframework.sh
 cd ..
 
 step "Cleaning up MapboxMapsPackager.xcodeproj"

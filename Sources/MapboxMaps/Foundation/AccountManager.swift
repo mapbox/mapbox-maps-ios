@@ -7,7 +7,7 @@ public class AccountManager {
     public static let shared = AccountManager()
 
     private init() {
-        if let accessToken = Bundle.main.object(forInfoDictionaryKey: "MBXAccessToken") as? String {
+        if let accessToken = Bundle.mapbox.object(forInfoDictionaryKey: "MBXAccessToken") as? String {
             self.accessToken = accessToken
         }
     }

@@ -7,4 +7,9 @@ import XCTest
 
 //swiftlint:disable explicit_top_level_acl explicit_acl
 class MapboxMapsSnapshotTests: XCTestCase {
+    func testLocalFontFamilyNameFromMainBundle() {
+        let fontName = MapSnapshotOptions.localFontFamilyNameFromMainBundle()
+
+        XCTAssertNotNil(fontName)
+    }
 }

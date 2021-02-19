@@ -16,16 +16,16 @@ TURF_VERSION=$(jq -r '.Turf' ./versions.json)
 rm -rf artifacts
 mkdir artifacts
 
-step "Running download_xcframeworks.sh"
+step "Running download-dependency-xcframeworks.sh"
 sh download-dependency-xcframeworks.sh ${CORE_VERSION} ${COMMON_VERSION} ${TELEMETRY_VERSION} artifacts
+
+step "Running create-turf-xcframework.sh"
+sh create-turf-xcframework.sh ${TURF_VERSION} artifacts
 
 step "Creating MapboxMapsPackager.xcodeproj"
 xcodegen -p artifacts/
 
-step "Running create_xcframeworks.sh"
+step "Running create-mapbox-maps-xcframework.sh"
 cd artifacts
 sh ../create-mapbox-maps-xcframework.sh
 cd ..
-
-step "Cleaning up MapboxMapsPackager.xcodeproj"
-rm -rf MapboxMapsPackager.xcodeproj

@@ -26,9 +26,6 @@ curl -n https://api.mapbox.com/downloads/v2/mobile-events/releases/ios/packages/
 step "Download MapboxCoreMaps.xcframework from https://api.mapbox.com/downloads/v2/mobile-maps-core/releases/ios/packages/${CORE_VERSION}/MapboxCoreMaps.xcframework.zip"
 curl -n https://api.mapbox.com/downloads/v2/mobile-maps-core/releases/ios/packages/${CORE_VERSION}/MapboxCoreMaps.xcframework.zip --output Core.zip
 
-step "Download Turf.xcframework from https://api.mapbox.com/downloads/v2/turf-swift/releases/ios/packages/2.0.0-alpha.1/Turf.xcframework.zip"
-curl -n https://api.mapbox.com/downloads/v2/turf-swift/releases/ios/packages/2.0.0-alpha.1/Turf.xcframework.zip --output Turf.zip
-
 step "Unzipping.."
 
 mkdir Common
@@ -42,9 +39,5 @@ rm -rf Telemetry.zip
 mkdir Core
 unzip Core.zip -d Core
 rm -rf Core.zip
-
-mkdir Turf
-unzip Turf.zip -d Turf
-rm -rf Turf.zip
 
 cd ..

@@ -48,6 +48,7 @@ let package = Package(
                 "Ornaments/Info.plist",
                 "Snapshot/Info.plist",
                 "Style/Info.plist",
+                "MapView/Integration Tests/HTTP/HTTPIntegrationTests.swift"
             ],
             resources: [
                 .copy("Foundation/GeoJSON/Fixtures/point.geojson"),

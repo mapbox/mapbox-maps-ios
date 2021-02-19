@@ -14,13 +14,29 @@ def parse_xcresult(xcresult_path):
 
 
 def xcresult_paths_from_zip(filepath):
+    print("Gathering from: " + filepath)
     directory = os.path.dirname(filepath)
 
     with zipfile.ZipFile(filepath,"r") as zip_ref:
         zip_ref.extractall(directory)
 
     test_runs = glob.iglob(directory+'/**/*.xcresult', recursive=True)
-    return [xcresult for xcresult in test_runs]
+    test_runs_array = [path for path in test_runs] 
+
+    results = []
+
+    # Coverage profdata too
+    for xcresult in test_runs_array:
+        xcresult_dir = os.path.dirname(xcresult)
+        stuff =  glob.iglob(xcresult_dir+'/**/Coverage.profdata', recursive=True)
+        coverages = [a for a in stuff]
+        try:
+            coverage = coverages[0]
+            results.append((xcresult, coverage))
+        except:
+            results.append((xcresult, None))
+
+    return results
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Gather xcresult folders under an output directory')
@@ -35,9 +51,19 @@ if __name__ == "__main__":
         results.extend(xcresults)
 
     for result in results:
-        newpath = os.path.join(args.outdir, os.path.basename(result))
+        xcresult = result[0]
+        basename = os.path.basename(xcresult)
+        stem = os.path.splitext(basename)[0]
+
+        newpath = os.path.join(args.outdir, basename)
         shutil.rmtree(newpath, ignore_errors=True) #, ignore_errors=False,
-        os.renames(result, newpath)
+        print("xcresult: " + newpath)
 
-        # parse_xcresult(newpath)
+        os.renames(xcresult, newpath)
 
+        coverage = result[1]
+        if coverage is not None:
+            newpath = os.path.join(args.outdir, stem + ".profdata")
+            shutil.rmtree(newpath, ignore_errors=True) #, ignore_errors=False,
+            os.renames(coverage, newpath)
+            print("coverage: " + newpath)

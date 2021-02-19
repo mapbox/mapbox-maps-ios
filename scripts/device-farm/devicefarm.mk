@@ -44,4 +44,5 @@ test:
 			-destination id=$(DEVICE_UDID) \
 			-xctestrun device.xctestrun \
 			-derivedDataPath $(BUILD_PATH) \
-			-resultBundlePath $(BUILD_PATH)/$$SCHEME.$$CONFIG.$$DATE.xcresult
+			-resultBundlePath $(BUILD_PATH)/$$SCHEME.$$CONFIG.$$DATE.xcresult \
+			-enableCodeCoverage YES

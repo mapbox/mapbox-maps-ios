@@ -6,77 +6,81 @@ import XCTest
 #endif
 
 //swiftlint:disable explicit_acl explicit_top_level_acl
-class QuickZoomGestureHandlerTest: XCTestCase {
+final class QuickZoomGestureHandlerTest: XCTestCase {
     var view: UIView!
     // swiftlint:disable weak_delegate
     var delegate: GestureHandlerDelegateMock!
+    var quickZoomHandler: QuickZoomGestureHandler!
 
     override func setUp() {
-        self.view = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-        self.delegate = GestureHandlerDelegateMock()
+        view = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        delegate = GestureHandlerDelegateMock()
+        quickZoomHandler = QuickZoomGestureHandler(for: view, withDelegate: delegate)
     }
 
     func testQuickZoomSetUp() {
-        let quickZoomHandler = QuickZoomGestureHandler(for: self.view, withDelegate: self.delegate)
         XCTAssert(quickZoomHandler.gestureRecognizer is UILongPressGestureRecognizer)
-
-        // swiftlint:disable force_cast
-        let quickZoom = quickZoomHandler.gestureRecognizer as! UILongPressGestureRecognizer
-        XCTAssertEqual(quickZoom.numberOfTapsRequired, 1)
+        guard let gestureRecognizer = quickZoomHandler.gestureRecognizer as? UILongPressGestureRecognizer else {
+            return
+        }
+        XCTAssertEqual(gestureRecognizer.numberOfTapsRequired, 1)
+        XCTAssertEqual(gestureRecognizer.minimumPressDuration, 0)
+        XCTAssertTrue(view.gestureRecognizers?.contains(gestureRecognizer) == true)
     }
 
-    func testQuickZoomBegan() {
-        let quickZoomHandler = QuickZoomGestureHandler(for: self.view, withDelegate: self.delegate)
-        let quickZoom = UILongPressGestureRecognizerMock()
-        quickZoomHandler.handleQuickZoom(quickZoom)
-        XCTAssertTrue(self.delegate.gestureBeganMethod.wasCalled)
-        XCTAssertEqual(self.delegate.gestureBeganMethod.type, GestureType.quickZoom)
+    func testWhenGestureBegins_InformsDelegateThatAQuickZoomGestureBegan() {
+        let mockGestureRecognizer = MockLongPressGestureRecognizer()
+        mockGestureRecognizer.mockState = .began
+
+        quickZoomHandler.handleQuickZoom(mockGestureRecognizer)
+
+        XCTAssertTrue(delegate.gestureBeganMethod.wasCalled)
+        XCTAssertEqual(delegate.gestureBeganMethod.type, GestureType.quickZoom)
     }
 
-    func testQuickZoomChanged() {
+    func testWhenGestureValueChanges_ProvidesTheNewZoomScaleAndAnchorToTheDelegate() {
+        let initialZoom = CGFloat.random(in: 0...24.5)
+        let mockGestureRecognizer = MockLongPressGestureRecognizer()
 
-        let quickZoomHandler = QuickZoomGestureHandler(for: self.view, withDelegate: self.delegate)
-        let quickZoom = UILongPressGestureRecognizerMock()
-        quickZoomHandler.handleQuickZoom(quickZoom)
+        // Send the began event
+        mockGestureRecognizer.mockState = .began
+        mockGestureRecognizer.locationStub.defaultReturnValue.y = 100
+        delegate.scaleForZoomStub.defaultReturnValue = initialZoom
+        quickZoomHandler.handleQuickZoom(mockGestureRecognizer)
 
-        quickZoom.mockState = .changed
-        quickZoomHandler.handleQuickZoom(quickZoom)
-        XCTAssertTrue(self.delegate.quickZoomChangedMethod.wasCalled)
+        // Send a changed event that should correspond to zooming in by 1 level
+        mockGestureRecognizer.mockState = .changed
+        mockGestureRecognizer.locationStub.defaultReturnValue.y = 175
+        quickZoomHandler.handleQuickZoom(mockGestureRecognizer)
 
-        let bounds = view.bounds
-        let anchor = CGPoint(x: bounds.midX, y: bounds.midY)
-        XCTAssertEqual(anchor.x, self.delegate.quickZoomChangedMethod.anchor?.x)
-        XCTAssertEqual(anchor.y, self.delegate.quickZoomChangedMethod.anchor?.y)
+        XCTAssertEqual(delegate.quickZoomChangedStub.invocations.count, 1)
+        XCTAssertEqual(delegate.quickZoomChangedStub.parameters.first?.newScale, initialZoom + 1)
+        XCTAssertEqual(delegate.quickZoomChangedStub.parameters.first?.anchor,
+                       CGPoint(x: view.bounds.midX, y: view.bounds.midY))
     }
 
-    func testQuickZoomEnded() {
-        let quickZoomHandler = QuickZoomGestureHandler(for: self.view, withDelegate: self.delegate)
-        let quickZoom = UILongPressGestureRecognizerMock()
+    func testQuickZoomEnded_InformsTheDelegate() {
+        let quickZoom = MockLongPressGestureRecognizer()
         quickZoom.mockState = .ended
         quickZoomHandler.handleQuickZoom(quickZoom)
 
-        XCTAssertTrue(self.delegate.quickZoomEndedMethod)
+        XCTAssertEqual(delegate.quickZoomEndedStub.invocations.count, 1)
     }
 }
 
-private class UILongPressGestureRecognizerMock: UILongPressGestureRecognizer {
-    var mockState: UIGestureRecognizer.State! = .began
-    var mockQuickZoomStart: CGFloat = 2.0
-    var mockQuickZoomChanged: CGFloat = 10.0
-
+private class MockLongPressGestureRecognizer: UILongPressGestureRecognizer {
+    var mockState = UIGestureRecognizer.State.began
     override var state: UIGestureRecognizer.State {
         get {
-            return self.mockState
-        } set {
-            self.state = newValue
+            mockState
+        }
+        set {
+            mockState = newValue
         }
     }
 
+    var locationStub = Stub<UIView?, CGPoint>(defaultReturnValue: .zero)
     override func location(in view: UIView?) -> CGPoint {
-        if self.state == .began {
-            return CGPoint(x: 0, y: mockQuickZoomStart)
-        } else {
-            return CGPoint(x: 0, y: mockQuickZoomChanged)
-        }
+        locationStub.call(with: view)
     }
 }

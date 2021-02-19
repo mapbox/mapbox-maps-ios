@@ -24,7 +24,7 @@ public extension Notification.Name {
 public class CameraManager {
 
     /// Used to set up camera specific configuration
-    public var mapCameraOptions: MapCameraOptions!
+    public internal(set) var mapCameraOptions: MapCameraOptions
 
     /// Used to update the map's camera options and pass them to the core Map.
     internal func updateMapCameraOptions(newOptions: MapCameraOptions) {
@@ -165,29 +165,36 @@ public class CameraManager {
      - Parameter completion: The completion block to execute after the transition has occurred.
      */
 
-    public func setCamera(to newCamera: CameraOptions,
-                             animated: Bool = false,
-                             duration: TimeInterval? = 0,
-                             completion: ((Bool) -> Void)? = nil) {
+    public func setCamera(to camera: CameraOptions,
+                          animated: Bool = false,
+                          duration: TimeInterval = 0,
+                          completion: ((Bool) -> Void)? = nil) {
         guard let mapView = mapView else {
             assertionFailure("MapView is nil.")
             completion?(false)
             return
         }
 
-        guard mapView.cameraView.camera != newCamera else {
+        let clampedCamera = CameraOptions(
+            center: camera.center,
+            padding: camera.padding,
+            anchor: camera.anchor,
+            zoom: camera.zoom?.clamped(to: mapCameraOptions.minimumZoomLevel...mapCameraOptions.maximumZoomLevel),
+            bearing: optimizeBearing(startBearing: mapView.bearing, endBearing: camera.bearing),
+            pitch: camera.pitch?.clamped(to: mapCameraOptions.minimumPitch...mapCameraOptions.maximumPitch))
+
+        guard mapView.cameraView.camera != clampedCamera else {
             completion?(true)
             return
         }
 
         let animation = {
-            mapView.cameraView.camera = newCamera
+            mapView.cameraView.camera = clampedCamera
         }
 
         performCameraAnimation(animated: animated, duration: duration, animation: animation, completion: completion)
     }
 
-    // swiftlint:disable function_parameter_count
     /**
      Transition the camera view to a new map camera based on individual camera properties,
      optionally animating the change and executing a completion block after the transition occurs.
@@ -209,28 +216,14 @@ public class CameraManager {
                           bearing: CLLocationDirection? = nil,
                           pitch: CGFloat? = nil,
                           animated: Bool = false,
-                          duration: TimeInterval? = nil,
+                          duration: TimeInterval = 0,
                           completion: ((Bool) -> Void)? = nil) {
-        guard let mapView = mapView else {
-            assertionFailure("MapView is nil.")
-            completion?(false)
-            return
-        }
-
-        let clampedZoom: CGFloat? = zoom?.clamp(withMax: mapCameraOptions.maximumZoomLevel,
-                                                andMin: mapCameraOptions.minimumZoomLevel)
-
-        let optimizedBearing = optimizeBearing(startBearing: mapView.bearing, endBearing: bearing)
-
         let newCamera = CameraOptions(center: centerCoordinate,
                                       padding: padding,
                                       anchor: anchor,
-                                      zoom: clampedZoom,
-                                      bearing: optimizedBearing,
+                                      zoom: zoom,
+                                      bearing: bearing,
                                       pitch: pitch)
-
-        guard mapView.cameraView.camera != newCamera else { return }
-
         setCamera(to: newCamera, animated: animated, duration: duration, completion: completion)
     }
     // swiftlint:enable function_parameter_count
@@ -250,9 +243,9 @@ public class CameraManager {
         - animation: closure to perform
         - completion: animation block called on completion
      */
-    fileprivate func performCameraAnimation(animated: Bool, duration: TimeInterval?, animation: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
+    fileprivate func performCameraAnimation(animated: Bool, duration: TimeInterval, animation: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
         if animated {
-            UIView.animate(withDuration: duration ?? 0,
+            UIView.animate(withDuration: duration,
                            delay: 0,
                            options: [.curveEaseOut, .allowUserInteraction],
                            animations: animation,
@@ -646,7 +639,7 @@ public class CameraManager {
         animationGroup.isRemovedOnCompletion = false
 
         /// Remove the animation group once the animation is done.
-        animationGroup.completionBlock = { [weak cameraLayer] finished in
+        animationGroup.completionBlock = { [weak cameraLayer] _ in
             cameraLayer?.removeAnimation(forKey: animationKey)
 
             // Temp?
@@ -698,19 +691,6 @@ extension MapboxAnimationGroup: CAAnimationDelegate {
         if let executeBlock = completionBlock {
             executeBlock(flag)
         }
-    }
-}
-
-internal extension CGFloat {
-    func clamp(withMax max: CGFloat, andMin min: CGFloat) -> CGFloat {
-        if self > max {
-            return max
-        }
-
-        if self < min {
-            return min
-        }
-        return self
     }
 }
 

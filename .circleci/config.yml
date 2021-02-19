@@ -286,8 +286,13 @@ jobs:
                 app-name: << parameters.app-name >>
                 configuration: Release
             - gather-xcresults # get xcresults here, may be zipped with more than one result
+            
+            - run:
+                name: Converting and uploading coverage
+                command: |
+                    make update-codecov-with-profdata SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
+
             - store-device-farm-artifacts
-            # TODO: Add code cov here
             - store-logs
             - report-failure:
                 report_failure: << parameters.report_failure >>
@@ -491,7 +496,7 @@ commands:
                 condition:
                     equal: ['MapboxMaps', << parameters.scheme >>]
                 steps:
-                  - code-coverage              
+                  - code-coverage
             - run:
                 name: Clean Build directory
                 command: |
@@ -551,10 +556,10 @@ commands:
             - run:
                 name: Zipping logs
                 command: |
-                    zip -r Logs.zip build/Logs
+                    zip -r build.zip build/Logs
                 when: always
             - store_artifacts:
-                path: Logs.zip
+                path: build.zip
 
     gather-xcresults:
         description: "Gathering results"
@@ -570,24 +575,22 @@ commands:
             - run:
                 name: Zipping device farm results
                 command: |
-                    zip -r DeviceFarmResults.zip build/DeviceFarmResults
-                    zip -r testruns.zip build/testruns
-                    zip -r DeviceRun.zip build/*.json
+                    zip -r build.zip build/DeviceFarmResults
+                    zip -r build.zip build/testruns
+                    zip -r build.zip build/*.json
                 when: always
             - store_artifacts:
-                path: DeviceFarmResults.zip
-            - store_artifacts:
-                path: testruns.zip
-            - store_artifacts:
-                path: DeviceRun.zip
+                path: build.zip
 
     code-coverage:
         description: "Upload code coverage report"
         steps:
             - run: 
                 name: "Upload code coverage report"
-                command: bash <(curl -sSfL https://codecov.io/bash) -X gcov -t $CODECOV_TOKEN -D ./ -J '^MapboxMaps$' || echo 'Codecov failed to upload'
-    
+                command: |
+                    curl -sSfL --retry 5 --connect-timeout 5 https://codecov.io/bash > /tmp/codecov.sh
+                    bash /tmp/codecov.sh -X gcov -t $CODECOV_TOKEN -D ./ -J '^MapboxMaps$' -F unit-tests || echo 'Codecov failed to upload'
+
     make-deps:
         steps:
             - run: make deps

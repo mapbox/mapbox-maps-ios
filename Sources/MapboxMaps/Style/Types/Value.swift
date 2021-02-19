@@ -18,13 +18,13 @@ public enum Value<T: Codable>: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
 
-        if let decodedExpression = try? container.decode(Expression.self) {
-            self = .expression(decodedExpression)
+        if let decodedConstant = try? container.decode(T.self) {
+            self = .constant(decodedConstant)
             return
         }
 
-        if let decodedConstant = try? container.decode(T.self) {
-            self = .constant(decodedConstant)
+        if let decodedExpression = try? container.decode(Expression.self) {
+            self = .expression(decodedExpression)
             return
         }
 
@@ -34,7 +34,6 @@ public enum Value<T: Codable>: Codable {
     }
 }
 
-
 extension Value: Equatable where T: Equatable {
-    
+
 }

@@ -74,10 +74,8 @@ public struct FlyToInterpolator {
 
         // Note that the source arguments are NOT clamped - these are assumed to be valid parameters
         let compilerWorkaround = sourceZoom
-        let destZoom    = (dest.zoom ?? compilerWorkaround).clamp(withMax: mapCameraOptions.maximumZoomLevel,
-                                                          andMin: mapCameraOptions.minimumZoomLevel)
-        destPitch   = (dest.pitch ?? sourcePitchParam).clamp(withMax: mapCameraOptions.maximumPitch,
-                                                            andMin: mapCameraOptions.minimumPitch)
+        let destZoom = (dest.zoom ?? compilerWorkaround).clamped(to: mapCameraOptions.minimumZoomLevel...mapCameraOptions.maximumZoomLevel)
+        destPitch = (dest.pitch ?? sourcePitchParam).clamped(to: mapCameraOptions.minimumPitch...mapCameraOptions.maximumPitch)
         destBearing = dest.bearing ?? sourceBearingParam
 
         // Unwrap

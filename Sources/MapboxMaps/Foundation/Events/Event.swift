@@ -1,6 +1,6 @@
 import Foundation
 
-typealias EventAttributes = [String: Any]
+internal typealias EventAttributes = [String: Any]
 
 public enum EventType {
     case custom(name: String)

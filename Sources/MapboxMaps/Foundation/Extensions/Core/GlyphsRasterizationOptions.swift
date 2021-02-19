@@ -1,7 +1,6 @@
 import Foundation
 import MapboxCoreMaps
 
-
 public extension GlyphsRasterizationOptions {
 
     /// Default fallback font

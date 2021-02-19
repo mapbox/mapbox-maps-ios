@@ -16,7 +16,6 @@ xcodebuild  -archivePath 'pkg/MapboxMaps-simulator.xcarchive' \
 		    -derivedDataPath .derivedDataPath-simulator \
 			archive \
 			ARCH=x86_64 \
-			ONLY_ACTIVE_ARCH=YES \
 			BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
 			SKIP_INSTALL=NO \
 			SUPPORTS_MACCATALYST=YES
@@ -33,7 +32,6 @@ xcodebuild  -archivePath 'pkg/MapboxMaps-device.xcarchive' \
 		    -derivedDataPath .derivedDataPath-device \
 			archive \
 			ARCH='armv7 arm64' \
-			ONLY_ACTIVE_ARCH=YES \
 			BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
 			SKIP_INSTALL=NO \
 			SUPPORTS_MACCATALYST=YES

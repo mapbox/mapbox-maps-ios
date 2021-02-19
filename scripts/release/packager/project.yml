@@ -3,6 +3,21 @@ targets:
   MapboxMaps:
     type: framework
     platform: iOS
+    settings:
+      base:
+        INFOPLIST_FILE: "../../../../Sources/MapboxMaps/MapView/Info.plist"
+        PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.MapboxMaps
+        INSTALL_PATH: $(LOCAL_LIBRARY_DIR)/Frameworks
+        SKIP_INSTALL: NO
+        TARGETED_DEVICE_FAMILY: 1,2
+        DYLIB_COMPATIBILITY_VERSION: 1
+        DYLIB_CURRENT_VERSION: 3
+        LD_RUNPATH_SEARCH_PATHS: $(inherited) @executable_path/Frameworks @loader_path/Frameworks
+        MACH_O_TYPE: mh_dylib
+        DEFINES_MODULE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.MapboxMaps
+        PRODUCT_NAME: $(TARGET_NAME:c99extidentifier)
+        CODE_SIGN_STYLE: Automatic
     configFiles: 
       Debug: "../../../Mapbox/Configurations/Mapbox.xcconfig"
       Release: "../../../Mapbox/Configurations/Mapbox.xcconfig"
@@ -12,7 +27,6 @@ targets:
           - "**/*.plist"
           - "**/*.h"
           - "*.xcodeproj"
-          - "/Configurations"
         includes: "*.swift"
       - path: "../../../Sources/MapboxMaps/MapView/Info.plist"
       - path: "../../../Sources/MapboxMaps/MapView/MapboxMaps.h"

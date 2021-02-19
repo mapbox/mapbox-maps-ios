@@ -66,12 +66,6 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
         rootViewController = nil
         window = nil
     }
-
-    private func skipIfSimulator() throws {
-        #if targetEnvironment(simulator)
-        throw XCTSkip("Skipping integration tests on Simulator")
-        #endif
-    }
 }
 
 // TODO: Cleanup & move the follow somewhere more appropriate

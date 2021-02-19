@@ -8,4 +8,4 @@ node_modules
 developer.xcconfig
 Carthage
 api-docs
-Tests/MapboxMapsTests/TestHelpers/MapboxAccessToken
+Tests/MapboxMapsTests/Helpers/MapboxAccessToken

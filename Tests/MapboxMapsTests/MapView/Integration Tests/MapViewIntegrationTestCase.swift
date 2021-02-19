@@ -23,8 +23,6 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
             throw XCTSkip("No valid Metal device (OS version or VM?)")
         }
 
-        try skipIfSimulator()
-
         let resourceOptions = ResourceOptions(accessToken: accessToken)
         let view = MapView(with: window.bounds, resourceOptions: resourceOptions)
 

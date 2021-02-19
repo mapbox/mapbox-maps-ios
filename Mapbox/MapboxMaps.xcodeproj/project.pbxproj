@@ -446,6 +446,8 @@
 		C64994AF258D5ADE0052C21C /* PuckLocationIndicatorLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64994A8258D5ADE0052C21C /* PuckLocationIndicatorLayer.swift */; };
 		C64994B0258D5ADE0052C21C /* PuckLocationIndicatorLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64994A8258D5ADE0052C21C /* PuckLocationIndicatorLayer.swift */; };
 		C64994C2259114550052C21C /* MapboxMapsStyle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4519DCD2432FF03007CF39A /* MapboxMapsStyle.framework */; };
+		C64B6FEA25E0479000C8E07E /* Bundle+Mapbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64B6FE925E0479000C8E07E /* Bundle+Mapbox.swift */; };
+		C64B6FEB25E0479000C8E07E /* Bundle+Mapbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64B6FE925E0479000C8E07E /* Bundle+Mapbox.swift */; };
 		C64ED306253F7CF500ADADFB /* LocationSupportableMapViewMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64ED305253F7CF500ADADFB /* LocationSupportableMapViewMock.swift */; };
 		C64ED307253F7CF500ADADFB /* LocationSupportableMapViewMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64ED305253F7CF500ADADFB /* LocationSupportableMapViewMock.swift */; };
 		C64ED308253F7CF500ADADFB /* LocationSupportableMapViewMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64ED305253F7CF500ADADFB /* LocationSupportableMapViewMock.swift */; };
@@ -1107,6 +1109,7 @@
 		C64994A6258D5ADE0052C21C /* Puck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Puck.swift; sourceTree = "<group>"; };
 		C64994A7258D5ADE0052C21C /* IndicatorAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = IndicatorAssets.xcassets; sourceTree = "<group>"; };
 		C64994A8258D5ADE0052C21C /* PuckLocationIndicatorLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PuckLocationIndicatorLayer.swift; sourceTree = "<group>"; };
+		C64B6FE925E0479000C8E07E /* Bundle+Mapbox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle+Mapbox.swift"; sourceTree = "<group>"; };
 		C64ED305253F7CF500ADADFB /* LocationSupportableMapViewMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSupportableMapViewMock.swift; sourceTree = "<group>"; };
 		C64ED320253F7E9100ADADFB /* LocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerTests.swift; sourceTree = "<group>"; };
 		C64ED33B253F819B00ADADFB /* LocationConsumerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationConsumerMock.swift; sourceTree = "<group>"; };
@@ -1404,6 +1407,7 @@
 		07855E29258BFCD90060A870 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				C64B6FE925E0479000C8E07E /* Bundle+Mapbox.swift */,
 				0782AFE5258BFD2300D5FCE5 /* CoreLocation.swift */,
 				0782AFFA258BFE5800D5FCE5 /* CoreGraphics.swift */,
 				07D7150325798CD70025BF61 /* UIImage.swift */,
@@ -3540,6 +3544,7 @@
 				0CD62F2024588737006421D1 /* AppleLocationProvider.swift in Sources */,
 				0782B010258C051900D5FCE5 /* ScreenCoordinate.swift in Sources */,
 				0782B11B258C1B9C00D5FCE5 /* Feature.swift in Sources */,
+				C64B6FEA25E0479000C8E07E /* Bundle+Mapbox.swift in Sources */,
 				0782AFE6258BFD2300D5FCE5 /* CoreLocation.swift in Sources */,
 				2B8637D52461601100698135 /* MapboxScaleBarOrnamentView.swift in Sources */,
 				0CD62F0824588505006421D1 /* QuickZoomGestureHandler.swift in Sources */,
@@ -3675,6 +3680,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C64B6FEB25E0479000C8E07E /* Bundle+Mapbox.swift in Sources */,
 				1F4B7D7D2464C39000745F05 /* CameraOptions.swift in Sources */,
 				CA355C08256EEA7C00FD1DB7 /* FlyToInterpolator.swift in Sources */,
 				0782B17C258C236B00D5FCE5 /* MBXGeometry.swift in Sources */,

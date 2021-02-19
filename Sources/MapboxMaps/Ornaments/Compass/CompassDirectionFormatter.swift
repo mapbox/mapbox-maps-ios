@@ -6,7 +6,7 @@ private enum Constants {
     static let localizableTableName = "OrnamentsLocalizable"
 
     static let shortStrings: [String] = {
-        let bundle = Bundle(for: CompassDirectionFormatter.self)
+        let bundle = Bundle.mapbox
         return [
             NSLocalizedString("COMPASS_N_SHORT",
                               tableName: Constants.localizableTableName,
@@ -172,7 +172,7 @@ private enum Constants {
     }()
 
     static let longStrings: [String] = {
-       let bundle = Bundle(for: CompassDirectionFormatter.self)
+        let bundle = Bundle.mapbox
        return [
             NSLocalizedString("COMPASS_N_LONG",
                               tableName: Constants.localizableTableName,

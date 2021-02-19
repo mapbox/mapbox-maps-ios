@@ -16,7 +16,7 @@ public extension ResourceOptions {
         self.init(__accessToken: accessToken,
                   baseURL: baseUrl,
                   cachePath: resolvedCachePath,
-                  assetPath: assetPath ?? Bundle.main.resourceURL?.path,
+                  assetPath: assetPath ?? Bundle.mapbox.resourceURL?.path,
                   tileStorePath: tileStorePath,
                   loadTilePacksFromNetwork: loadTilePacksFromNetwork,
                   cacheSize: NSNumber(value: cacheSize))
@@ -27,7 +27,7 @@ public extension ResourceOptions {
     }
 
     static func cacheURLIncludingSubdirectory(useSubdirectory: Bool) -> URL? {
-            guard let bundleIdentifier = Bundle.main.bundleIdentifier else { return nil }
+            guard let bundleIdentifier = Bundle.mapbox.bundleIdentifier else { return nil }
 
             var cacheDirectoryURL: URL
             do {

@@ -144,7 +144,7 @@ private extension PuckLocationIndicatorLayer {
         } else {
             // Add images to sprite sheet
             guard let locationDotInner = UIImage(named: "location-dot-inner",
-                                                 in: Bundle(for: PuckLocationIndicatorLayer.self),
+                                                 in: Bundle.mapbox,
                                                  compatibleWith: nil) else { return }
             let setStyleImageResult = style.setStyleImage(image: locationDotInner, with: "locationIndicatorLayerTopImage", scale: 44.0)
 
@@ -161,7 +161,7 @@ private extension PuckLocationIndicatorLayer {
             }
         } else {
             guard let locationDotOuter = UIImage(named: "location-dot-outer",
-                                                 in: Bundle(for: PuckLocationIndicatorLayer.self),
+                                                 in: Bundle.mapbox,
                                                  compatibleWith: nil) else { return }
             let setStyleImageResult = style.setStyleImage(image: locationDotOuter, with: "locationIndicatorLayerBearingImage", scale: 44.0)
 

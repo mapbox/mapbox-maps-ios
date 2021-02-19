@@ -38,7 +38,7 @@ public class MapboxCompassOrnamentView: UIButton {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.visibility = visibility
         alpha = visibility == .visible ? 1 : 0
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.mapbox
         self.accessibilityLabel = NSLocalizedString("COMPASS_A11Y_LABEL",
                                                     tableName: Constants.localizableTableName,
                                                     bundle: bundle,

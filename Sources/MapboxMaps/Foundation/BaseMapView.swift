@@ -192,7 +192,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
     }
 
     static func localFontFamilyNameFromMainBundle() -> String? {
-        let infoDictionaryObject = Bundle.main.object(forInfoDictionaryKey: "MBXIdeographicFontFamilyName")
+        let infoDictionaryObject = Bundle.mapbox.object(forInfoDictionaryKey: "MBXIdeographicFontFamilyName")
 
         if infoDictionaryObject is String {
             return infoDictionaryObject as? String

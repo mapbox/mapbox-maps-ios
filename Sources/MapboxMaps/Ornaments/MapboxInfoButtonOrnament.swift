@@ -30,7 +30,7 @@ internal class MapboxInfoButtonOrnament: UIView {
         translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(infoTapped), for: .primaryActionTriggered)
 
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.mapbox
         self.accessibilityLabel = NSLocalizedString("INFO_A11Y_LABEL",
                                                     tableName: Constants.localizableTableName,
                                                     bundle: bundle,
@@ -63,7 +63,7 @@ internal class MapboxInfoButtonOrnament: UIView {
             alert = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
         }
 
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.mapbox
 
         let telemetryTitle = NSLocalizedString("TELEMETRY_NAME",
                                                tableName: Constants.localizableTableName,
@@ -91,7 +91,7 @@ internal class MapboxInfoButtonOrnament: UIView {
     private func showTelemetryAlertController() {
         guard let viewController = self.parentViewController else { return }
         let alert: UIAlertController
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.mapbox
         let telemetryTitle = NSLocalizedString("TELEMETRY_TITLE",
                                                tableName: Constants.localizableTableName,
                                                bundle: bundle,

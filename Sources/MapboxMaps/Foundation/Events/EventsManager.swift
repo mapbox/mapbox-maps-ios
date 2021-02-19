@@ -9,7 +9,7 @@ internal class EventsManager: EventsListener {
     var telemetry: TelemetryProtocol!
 
     init(accessToken: String) {
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.mapbox
         var sdkVersionOptional = bundle.infoDictionary?["MGLSemanticVersionString"]
         if sdkVersionOptional == nil {
             sdkVersionOptional = bundle.infoDictionary?["CFBundleShortVersionString"]

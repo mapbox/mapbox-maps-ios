@@ -233,7 +233,7 @@ private extension LocationManager {
     }
 
     func requestLocationPermissions() {
-        if (Bundle.main.object(forInfoDictionaryKey: "NSLocationWhenInUseUsageDescription")) != nil {
+        if (Bundle.mapbox.object(forInfoDictionaryKey: "NSLocationWhenInUseUsageDescription")) != nil {
             locationProvider.requestWhenInUseAuthorization()
         }
     }

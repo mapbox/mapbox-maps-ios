@@ -394,9 +394,6 @@
 		5A9648FD2462F07B001FF05D /* MapboxCompassOrnamentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9648FC2462F07B001FF05D /* MapboxCompassOrnamentView.swift */; };
 		5A9648FE246429C3001FF05D /* MapboxCompassOrnamentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9648FC2462F07B001FF05D /* MapboxCompassOrnamentView.swift */; };
 		5A96490824643BC8001FF05D /* OrnamentsLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5A96490724643BC8001FF05D /* OrnamentsLocalizable.strings */; };
-		A43D019225DAD24500770BA0 /* MapboxMapsWrapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A43D018925DAD24500770BA0 /* MapboxMapsWrapper.framework */; };
-		A43D019725DAD24500770BA0 /* MapboxMapsWrapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43D019625DAD24500770BA0 /* MapboxMapsWrapperTests.swift */; };
-		A43D019925DAD24500770BA0 /* MapboxMapsWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = A43D018B25DAD24500770BA0 /* MapboxMapsWrapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A44EE619244F7140006FE97E /* QuickZoomGestureHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A44EE617244ED578006FE97E /* QuickZoomGestureHandlerTests.swift */; };
 		A4519DDB2432FF03007CF39A /* MapboxMapsStyleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4519DDA2432FF03007CF39A /* MapboxMapsStyleTests.swift */; };
 		A4519DDD2432FF03007CF39A /* MapboxMapsStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = A4519DCF2432FF03007CF39A /* MapboxMapsStyle.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -408,6 +405,17 @@
 		A4FE88C2255F366F00FBF117 /* MapboxAnimationGroupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E82010255A10A100926E90 /* MapboxAnimationGroupTests.swift */; };
 		A4FE8908255F368A00FBF117 /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC8DA51243BECC400A19318 /* CameraManager.swift */; };
 		A4FE8966255F369900FBF117 /* MapCameraOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C07948D2452331A0006A9C4 /* MapCameraOptions.swift */; };
+		B506A59F25E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506A59E25E023E90097ADB7 /* Bundle+MapboxTests.swift */; };
+		B506A5A025E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506A59E25E023E90097ADB7 /* Bundle+MapboxTests.swift */; };
+		B506A5A125E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506A59E25E023E90097ADB7 /* Bundle+MapboxTests.swift */; };
+		B506A5A225E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506A59E25E023E90097ADB7 /* Bundle+MapboxTests.swift */; };
+		B506A5A325E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506A59E25E023E90097ADB7 /* Bundle+MapboxTests.swift */; };
+		B506A5A425E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506A59E25E023E90097ADB7 /* Bundle+MapboxTests.swift */; };
+		B506A5A525E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506A59E25E023E90097ADB7 /* Bundle+MapboxTests.swift */; };
+		B506A5A625E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506A59E25E023E90097ADB7 /* Bundle+MapboxTests.swift */; };
+		B506A5A725E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506A59E25E023E90097ADB7 /* Bundle+MapboxTests.swift */; };
+		B506A5A825E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506A59E25E023E90097ADB7 /* Bundle+MapboxTests.swift */; };
+		B506A5A925E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506A59E25E023E90097ADB7 /* Bundle+MapboxTests.swift */; };
 		C64994A9258D5ADE0052C21C /* LocationPuckManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64994A5258D5ADD0052C21C /* LocationPuckManager.swift */; };
 		C64994AA258D5ADE0052C21C /* LocationPuckManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64994A5258D5ADD0052C21C /* LocationPuckManager.swift */; };
 		C64994AB258D5ADE0052C21C /* Puck.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64994A6258D5ADE0052C21C /* Puck.swift */; };
@@ -714,13 +722,6 @@
 			remoteGlobalIDString = 1F11C10E2421B05600F8397B;
 			remoteInfo = MapboxMaps;
 		};
-		A43D019325DAD24500770BA0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1FEE78BA2421884000337895 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A43D018825DAD24500770BA0;
-			remoteInfo = MapboxMapsWrapper;
-		};
 		A4C0117125664BD400787494 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1FEE78BA2421884000337895 /* Project object */;
@@ -940,7 +941,7 @@
 		0C708F1C24EB1EE2003CE791 /* HeatmapLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeatmapLayer.swift; sourceTree = "<group>"; };
 		0C708F1D24EB1EE2003CE791 /* RasterLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RasterLayer.swift; sourceTree = "<group>"; };
 		0C708F1E24EB1EE2003CE791 /* CircleLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleLayer.swift; sourceTree = "<group>"; };
-		0C708F3324EB1EFA003CE791 /* Layers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Layers.swift; path = MapboxMapsStyle/Layers.swift; sourceTree = SOURCE_ROOT; };
+		0C708F3324EB1EFA003CE791 /* Layers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layers.swift; sourceTree = "<group>"; };
 		0C708F4624EB23C6003CE791 /* ImageSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageSource.swift; sourceTree = "<group>"; };
 		0C708F4724EB23C6003CE791 /* RasterDemSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RasterDemSource.swift; sourceTree = "<group>"; };
 		0C708F4824EB23C6003CE791 /* VectorSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VectorSource.swift; sourceTree = "<group>"; };
@@ -1062,12 +1063,6 @@
 		5A3593B8247FDA4800E67344 /* LayoutPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutPosition.swift; sourceTree = "<group>"; };
 		5A9648FC2462F07B001FF05D /* MapboxCompassOrnamentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxCompassOrnamentView.swift; sourceTree = "<group>"; };
 		5A96490724643BC8001FF05D /* OrnamentsLocalizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = OrnamentsLocalizable.strings; sourceTree = "<group>"; };
-		A43D018925DAD24500770BA0 /* MapboxMapsWrapper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxMapsWrapper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A43D018B25DAD24500770BA0 /* MapboxMapsWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapboxMapsWrapper.h; sourceTree = "<group>"; };
-		A43D018C25DAD24500770BA0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A43D019125DAD24500770BA0 /* MapboxMapsWrapperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxMapsWrapperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A43D019625DAD24500770BA0 /* MapboxMapsWrapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxMapsWrapperTests.swift; sourceTree = "<group>"; };
-		A43D019825DAD24500770BA0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A43D7B5125196D1C00951460 /* Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
 		A44EE617244ED578006FE97E /* QuickZoomGestureHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickZoomGestureHandlerTests.swift; sourceTree = "<group>"; };
 		A4519DCD2432FF03007CF39A /* MapboxMapsStyle.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxMapsStyle.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1081,6 +1076,7 @@
 		A4BDC0CC244A23EB00AA9B64 /* QuickZoomGestureHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickZoomGestureHandler.swift; sourceTree = "<group>"; };
 		A4C786602440EAF0000CEF1E /* StyleURLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleURLTests.swift; sourceTree = "<group>"; };
 		A4E82010255A10A100926E90 /* MapboxAnimationGroupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxAnimationGroupTests.swift; sourceTree = "<group>"; };
+		B506A59E25E023E90097ADB7 /* Bundle+MapboxTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle+MapboxTests.swift"; sourceTree = "<group>"; };
 		C64994A5258D5ADD0052C21C /* LocationPuckManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationPuckManager.swift; sourceTree = "<group>"; };
 		C64994A6258D5ADE0052C21C /* Puck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Puck.swift; sourceTree = "<group>"; };
 		C64994A7258D5ADE0052C21C /* IndicatorAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = IndicatorAssets.xcassets; sourceTree = "<group>"; };
@@ -1265,21 +1261,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A43D018625DAD24500770BA0 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A43D018E25DAD24500770BA0 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A43D019225DAD24500770BA0 /* MapboxMapsWrapper.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A4519DCA2432FF03007CF39A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1355,7 +1336,8 @@
 				2B8637DE2462F2EF00698135 /* ScaleBar */,
 				5A3592B4246D524F00E67344 /* OrnamentsLocalizable.strings */,
 			);
-			path = MapboxMapsOrnaments;
+			name = MapboxMapsOrnaments;
+			path = ../Sources/MapboxMaps/Ornaments;
 			sourceTree = "<group>";
 		};
 		07797F9F242C21BC00229F7D /* MapboxMapsOrnamentsTests */ = {
@@ -1368,7 +1350,8 @@
 				076C4525242D59AD00A5E0C4 /* OrnamentSupportableViewMock.swift */,
 				07797FA2242C21BC00229F7D /* Info.plist */,
 			);
-			path = MapboxMapsOrnamentsTests;
+			name = MapboxMapsOrnamentsTests;
+			path = ../Tests/MapboxMapsTests/Ornaments;
 			sourceTree = "<group>";
 		};
 		0782B1A1258C24EC00D5FCE5 /* Turf */ = {
@@ -1415,7 +1398,8 @@
 				07C1B38C2446B0550044A3C6 /* MapboxMapsOffline.h */,
 				07C1B38D2446B0550044A3C6 /* Info.plist */,
 			);
-			path = MapboxMapsOffline;
+			name = MapboxMapsOffline;
+			path = ../Sources/MapboxMaps/Offline;
 			sourceTree = "<group>";
 		};
 		07C1B3962446B0550044A3C6 /* MapboxMapsOfflineTests */ = {
@@ -1424,7 +1408,8 @@
 				07C1B3972446B0550044A3C6 /* MapboxMapsOfflineTests.swift */,
 				07C1B3992446B0550044A3C6 /* Info.plist */,
 			);
-			path = MapboxMapsOfflineTests;
+			name = MapboxMapsOfflineTests;
+			path = ../Tests/MapboxMapsTests/Offline;
 			sourceTree = "<group>";
 		};
 		07C1B3CF2446B6F40044A3C6 /* MapboxMapsSnapshot */ = {
@@ -1435,7 +1420,8 @@
 				07C1B3D02446B6F40044A3C6 /* MapboxMapsSnapshot.h */,
 				07C1B3D12446B6F40044A3C6 /* Info.plist */,
 			);
-			path = MapboxMapsSnapshot;
+			name = MapboxMapsSnapshot;
+			path = ../Sources/MapboxMaps/Snapshot;
 			sourceTree = "<group>";
 		};
 		07C1B3DA2446B6F40044A3C6 /* MapboxMapsSnapshotTests */ = {
@@ -1444,7 +1430,8 @@
 				07C1B3DB2446B6F40044A3C6 /* MapboxMapsSnapshotTests.swift */,
 				07C1B3DD2446B6F40044A3C6 /* Info.plist */,
 			);
-			path = MapboxMapsSnapshotTests;
+			name = MapboxMapsSnapshotTests;
+			path = ../Tests/MapboxMapsTests/Snapshot;
 			sourceTree = "<group>";
 		};
 		07DA743A258409AF00AD0446 /* GeoJSON */ = {
@@ -1480,7 +1467,8 @@
 				07BA35CC251578DD003E1B55 /* AnnotationInteractionDelegate.swift */,
 				07A5DE832515576E00A27F8B /* AnnotationStyleDelegate.swift */,
 			);
-			path = MapboxMapsAnnotations;
+			name = MapboxMapsAnnotations;
+			path = ../Sources/MapboxMaps/Annotations;
 			sourceTree = "<group>";
 		};
 		07E4FD2424E4A35600D734D1 /* MapboxMapsAnnotationsTests */ = {
@@ -1496,7 +1484,8 @@
 				07EEFA9325018E5800352933 /* Extensions */,
 				07E4FD2724E4A35600D734D1 /* Info.plist */,
 			);
-			path = MapboxMapsAnnotationsTests;
+			name = MapboxMapsAnnotationsTests;
+			path = ../Tests/MapboxMapsTests/Annotations;
 			sourceTree = "<group>";
 		};
 		07EEFA9325018E5800352933 /* Extensions */ = {
@@ -1660,8 +1649,6 @@
 			isa = PBXGroup;
 			children = (
 				0CC6EEFB25C3263400BFB153 /* Layers */,
-				0CC6EF0825C3263400BFB153 /* Sources */,
-				0CC6EF0925C3263400BFB153 /* Light */,
 			);
 			path = IntegrationTests;
 			sourceTree = "<group>";
@@ -1683,20 +1670,6 @@
 				0CC6EF0725C3263400BFB153 /* RasterLayerIntegrationTests.swift */,
 			);
 			path = Layers;
-			sourceTree = "<group>";
-		};
-		0CC6EF0825C3263400BFB153 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Sources;
-			sourceTree = "<group>";
-		};
-		0CC6EF0925C3263400BFB153 /* Light */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Light;
 			sourceTree = "<group>";
 		};
 		0CC8BD29242405AA00288A9B /* GestureHandlers */ = {
@@ -1722,7 +1695,8 @@
 				0CD34FD0242AADDB00943687 /* MapboxMaps.h */,
 				0CD34FD1242AADDB00943687 /* Info.plist */,
 			);
-			path = MapboxMaps;
+			name = MapboxMaps;
+			path = ../Sources/MapboxMaps/MapView;
 			sourceTree = "<group>";
 		};
 		0CD34FDA242AADDB00943687 /* MapboxMapsTests */ = {
@@ -1734,7 +1708,8 @@
 				0CD34FDD242AADDB00943687 /* Info.plist */,
 				0C2CD9E225D19D30006D068F /* OptionsIntegrationTests.swift */,
 			);
-			path = MapboxMapsTests;
+			name = MapboxMapsTests;
+			path = ../Tests/MapboxMapsTests/MapView;
 			sourceTree = "<group>";
 		};
 		0CF0C42724EB1779000DC118 /* Enums */ = {
@@ -1758,7 +1733,8 @@
 				1F4B7D7A2464C36E00745F05 /* Camera */,
 				07625BB42587F273002EEBCC /* Events */,
 			);
-			path = MapboxMapsFoundation;
+			name = MapboxMapsFoundation;
+			path = ../Sources/MapboxMaps/Foundation;
 			sourceTree = "<group>";
 		};
 		1F11C11B2421B05600F8397B /* MapboxMapsFoundationTests */ = {
@@ -1772,7 +1748,8 @@
 				07182014256C1F6100F22489 /* Assets.xcassets */,
 				0CDFEAD725A77430008BC505 /* UtilsTests.swift */,
 			);
-			path = MapboxMapsFoundationTests;
+			name = MapboxMapsFoundationTests;
+			path = ../Tests/MapboxMapsTests/Foundation;
 			sourceTree = "<group>";
 		};
 		1F2AD7302421C462006592F4 /* MapboxMapsGestures */ = {
@@ -1786,7 +1763,8 @@
 				1F2AD7322421C462006592F4 /* Info.plist */,
 				0C1AF559244DF4DF008D2A10 /* GestureOptions.swift */,
 			);
-			path = MapboxMapsGestures;
+			name = MapboxMapsGestures;
+			path = ../Sources/MapboxMaps/Gestures;
 			sourceTree = "<group>";
 		};
 		1F2AD73B2421C462006592F4 /* MapboxMapsGesturesTests */ = {
@@ -1803,7 +1781,8 @@
 				079EC07A245207DA000EDC84 /* PitchGestureHandlerTests.swift */,
 				0765213C2457444600FDD209 /* GestureUtilitiesTests.swift */,
 			);
-			path = MapboxMapsGesturesTests;
+			name = MapboxMapsGesturesTests;
+			path = ../Tests/MapboxMapsTests/Gestures;
 			sourceTree = "<group>";
 		};
 		1F4B7D7A2464C36E00745F05 /* Camera */ = {
@@ -1843,8 +1822,6 @@
 				A4519DD92432FF03007CF39A /* MapboxMapsStyleTests */,
 				CA4453C62436E71500477B4F /* MapboxTestHost */,
 				CA9481542554AA3D00D93C3C /* TestHelpers */,
-				A43D018A25DAD24500770BA0 /* MapboxMapsWrapper */,
-				A43D019525DAD24500770BA0 /* MapboxMapsWrapperTests */,
 				1FEE78C42421884000337895 /* Products */,
 				1FEE79BC2421AC7C00337895 /* Frameworks */,
 			);
@@ -1874,8 +1851,6 @@
 				07E4FD2024E4A35600D734D1 /* MapboxMapsAnnotationsTests.xctest */,
 				CA54900D251C404B00F829A3 /* MapboxMapsTestsWithHost.xctest */,
 				CA0B374325C4BEAE00B3396E /* MapboxMapsHTTPTestsWithHost.xctest */,
-				A43D018925DAD24500770BA0 /* MapboxMapsWrapper.framework */,
-				A43D019125DAD24500770BA0 /* MapboxMapsWrapperTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1907,7 +1882,8 @@
 				1FF65A86245354E30069B561 /* LocationOptions.swift */,
 				0CECCCCC253491A80000FC64 /* LocationSupportableMapView.swift */,
 			);
-			path = MapboxMapsLocation;
+			name = MapboxMapsLocation;
+			path = ../Sources/MapboxMaps/Location;
 			sourceTree = "<group>";
 		};
 		1FF65A5C244E33E10069B561 /* MapboxMapsLocationTests */ = {
@@ -1919,7 +1895,8 @@
 				C64ED33B253F819B00ADADFB /* LocationConsumerMock.swift */,
 				0C2CDA2D25D1A51C006D068F /* LocationPuckTests.swift */,
 			);
-			path = MapboxMapsLocationTests;
+			name = MapboxMapsLocationTests;
+			path = ../Tests/MapboxMapsTests/Location;
 			sourceTree = "<group>";
 		};
 		2B8637DE2462F2EF00698135 /* ScaleBar */ = {
@@ -1957,24 +1934,6 @@
 			path = Compass;
 			sourceTree = "<group>";
 		};
-		A43D018A25DAD24500770BA0 /* MapboxMapsWrapper */ = {
-			isa = PBXGroup;
-			children = (
-				A43D018B25DAD24500770BA0 /* MapboxMapsWrapper.h */,
-				A43D018C25DAD24500770BA0 /* Info.plist */,
-			);
-			path = MapboxMapsWrapper;
-			sourceTree = "<group>";
-		};
-		A43D019525DAD24500770BA0 /* MapboxMapsWrapperTests */ = {
-			isa = PBXGroup;
-			children = (
-				A43D019625DAD24500770BA0 /* MapboxMapsWrapperTests.swift */,
-				A43D019825DAD24500770BA0 /* Info.plist */,
-			);
-			path = MapboxMapsWrapperTests;
-			sourceTree = "<group>";
-		};
 		A4519DCE2432FF03007CF39A /* MapboxMapsStyle */ = {
 			isa = PBXGroup;
 			children = (
@@ -1989,7 +1948,8 @@
 				0C708F5824EB2927003CE791 /* Sources.swift */,
 				0CBCF2D7254229630025F7B3 /* README.md */,
 			);
-			path = MapboxMapsStyle;
+			name = MapboxMapsStyle;
+			path = ../Sources/MapboxMaps/Style;
 			sourceTree = "<group>";
 		};
 		A4519DD92432FF03007CF39A /* MapboxMapsStyleTests */ = {
@@ -2005,7 +1965,8 @@
 				0C50AAE225BE8806007C0068 /* LightTests.swift */,
 				0C37B1E225CB05F000DCDD3D /* ColorTests.swift */,
 			);
-			path = MapboxMapsStyleTests;
+			name = MapboxMapsStyleTests;
+			path = ../Tests/MapboxMapsTests/Style;
 			sourceTree = "<group>";
 		};
 		A4FE887B255F364600FBF117 /* Camera */ = {
@@ -2098,9 +2059,11 @@
 		CA9481542554AA3D00D93C3C /* TestHelpers */ = {
 			isa = PBXGroup;
 			children = (
+				B506A59E25E023E90097ADB7 /* Bundle+MapboxTests.swift */,
 				CA9481552554AA9E00D93C3C /* TestConveniences.swift */,
 			);
-			path = TestHelpers;
+			name = TestHelpers;
+			path = ../Tests/MapboxMapsTests/Helpers;
 			sourceTree = "<group>";
 		};
 		CA99A86D2540CCFC00D16C78 /* Style */ = {
@@ -2210,14 +2173,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FF65A60244E33E10069B561 /* MapboxMapsLocation.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A43D018425DAD24500770BA0 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A43D019925DAD24500770BA0 /* MapboxMapsWrapper.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2546,42 +2501,6 @@
 			productReference = 1FF65A58244E33E10069B561 /* MapboxMapsLocationTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		A43D018825DAD24500770BA0 /* MapboxMapsWrapper */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A43D019E25DAD24500770BA0 /* Build configuration list for PBXNativeTarget "MapboxMapsWrapper" */;
-			buildPhases = (
-				A43D018425DAD24500770BA0 /* Headers */,
-				A43D018525DAD24500770BA0 /* Sources */,
-				A43D018625DAD24500770BA0 /* Frameworks */,
-				A43D018725DAD24500770BA0 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = MapboxMapsWrapper;
-			productName = MapboxMapsWrapper;
-			productReference = A43D018925DAD24500770BA0 /* MapboxMapsWrapper.framework */;
-			productType = "com.apple.product-type.framework";
-		};
-		A43D019025DAD24500770BA0 /* MapboxMapsWrapperTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A43D019F25DAD24500770BA0 /* Build configuration list for PBXNativeTarget "MapboxMapsWrapperTests" */;
-			buildPhases = (
-				A43D018D25DAD24500770BA0 /* Sources */,
-				A43D018E25DAD24500770BA0 /* Frameworks */,
-				A43D018F25DAD24500770BA0 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				A43D019425DAD24500770BA0 /* PBXTargetDependency */,
-			);
-			name = MapboxMapsWrapperTests;
-			productName = MapboxMapsWrapperTests;
-			productReference = A43D019125DAD24500770BA0 /* MapboxMapsWrapperTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		A4519DCC2432FF03007CF39A /* MapboxMapsStyle */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A4519DE22432FF03007CF39A /* Build configuration list for PBXNativeTarget "MapboxMapsStyle" */;
@@ -2750,12 +2669,6 @@
 						CreatedOnToolsVersion = 11.4;
 						LastSwiftMigration = 1200;
 					};
-					A43D018825DAD24500770BA0 = {
-						CreatedOnToolsVersion = 12.2;
-					};
-					A43D019025DAD24500770BA0 = {
-						CreatedOnToolsVersion = 12.2;
-					};
 					A4519DCC2432FF03007CF39A = {
 						CreatedOnToolsVersion = 11.4;
 						LastSwiftMigration = 1140;
@@ -2805,8 +2718,6 @@
 				A4519DCC2432FF03007CF39A /* MapboxMapsStyle */,
 				A4519DD42432FF03007CF39A /* MapboxMapsStyleTests */,
 				CA4453C42436E71500477B4F /* MapboxTestHost */,
-				A43D018825DAD24500770BA0 /* MapboxMapsWrapper */,
-				A43D019025DAD24500770BA0 /* MapboxMapsWrapperTests */,
 			);
 		};
 /* End PBXProject section */
@@ -2943,20 +2854,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1FF65A56244E33E10069B561 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A43D018725DAD24500770BA0 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A43D018F25DAD24500770BA0 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3435,6 +3332,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B506A5A725E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */,
 				076C4526242D59AD00A5E0C4 /* OrnamentSupportableViewMock.swift in Sources */,
 				CAF9A67D25828BBE007EF9EC /* DistanceFormatterTests.swift in Sources */,
 				07797FA1242C21BC00229F7D /* OrnamentManagerTests.swift in Sources */,
@@ -3454,6 +3352,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B506A5A625E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */,
 				07C1B3982446B0550044A3C6 /* MapboxMapsOfflineTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3471,6 +3370,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B506A5A825E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */,
 				07C1B3DC2446B6F40044A3C6 /* MapboxMapsSnapshotTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3500,6 +3400,7 @@
 				CAD4164F252D667B005FB636 /* AnnotationStyleDelegateMock.swift in Sources */,
 				CAD41652252D667B005FB636 /* AnnotationManagerTests.swift in Sources */,
 				CAD4164E252D667B005FB636 /* AnnotationSupportableMapMock.swift in Sources */,
+				B506A5A225E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */,
 				CAD41654252D667B005FB636 /* PolygonAnnotationTests.swift in Sources */,
 				CAD41651252D667B005FB636 /* PointAnnotationTests.swift in Sources */,
 			);
@@ -3708,6 +3609,7 @@
 				CADC7AA3251C4FC30082BA0A /* AnnotationSupportableMapMock.swift in Sources */,
 				CA548EDF251C3D4400F829A3 /* DistanceFormatterTests.swift in Sources */,
 				CA548EF7251C3D5500F829A3 /* Fixture.swift in Sources */,
+				B506A59F25E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */,
 				CA548EF8251C3D5500F829A3 /* PointTests.swift in Sources */,
 				C69F017425435C55001AB49B /* LocationProviderMock.swift in Sources */,
 				CA548E81251C3CD200F829A3 /* UIImage+CGColor.swift in Sources */,
@@ -3777,6 +3679,7 @@
 				07DA755C25840A4E00AD0446 /* GeometryCollectionTests.swift in Sources */,
 				07DA759B25840A5A00AD0446 /* FeatureCollectionTests.swift in Sources */,
 				CAA73A9E256F750B00E14EE0 /* FlyToTests.swift in Sources */,
+				B506A5A325E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */,
 				07DA757125840A5100AD0446 /* GeoJSONManagerTests.swift in Sources */,
 				0CDFEAD825A77430008BC505 /* UtilsTests.swift in Sources */,
 				07DA74B525840A3200AD0446 /* Geometry+MBXGeometryTests.swift in Sources */,
@@ -3812,6 +3715,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B506A5A425E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */,
 				0C71B4C7242C19DF0076D6C4 /* GestureSupportableViewMock.swift in Sources */,
 				079EC07C245208F5000EDC84 /* PitchGestureHandlerTests.swift in Sources */,
 				0C71B4CD242CE7000076D6C4 /* TapGestureHandlerTests.swift in Sources */,
@@ -3847,26 +3751,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B506A5A525E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */,
 				C64ED323253F7E9100ADADFB /* LocationManagerTests.swift in Sources */,
 				0C2CDA3025D1A51C006D068F /* LocationPuckTests.swift in Sources */,
 				C69F017625435C55001AB49B /* LocationProviderMock.swift in Sources */,
 				C64ED33E253F819B00ADADFB /* LocationConsumerMock.swift in Sources */,
 				C64ED308253F7CF500ADADFB /* LocationSupportableMapViewMock.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A43D018525DAD24500770BA0 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A43D018D25DAD24500770BA0 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A43D019725DAD24500770BA0 /* MapboxMapsWrapperTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3918,6 +3808,7 @@
 				0C5CFD7625BE25210001E753 /* GeoJsonSourceTests.swift in Sources */,
 				0C59ED2425CC6D7E00C72E7A /* ExpressionBuilderTests.swift in Sources */,
 				0C5CFDD625BE29BC0001E753 /* SouceProperties+Fixtures.swift in Sources */,
+				B506A5A925E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */,
 				0C9DE383252C299800880CC8 /* GeoJSONSourceDataTests.swift in Sources */,
 				0C5CFCDD25BB951B0001E753 /* ModelLayerTests.swift in Sources */,
 				A4C786612440EAF0000CEF1E /* StyleURLTests.swift in Sources */,
@@ -3952,6 +3843,7 @@
 			files = (
 				CA0B380C25C4C01400B3396E /* MapViewIntegrationTestCase.swift in Sources */,
 				CA0B380D25C4C01400B3396E /* IntegrationTestCase.swift in Sources */,
+				B506A5A125E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */,
 				CA0B37E725C4C00300B3396E /* HTTPIntegrationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3998,6 +3890,7 @@
 				0C5CFCF125BB951B0001E753 /* SkyLayerTests.swift in Sources */,
 				CA548FDE251C404B00F829A3 /* MapboxMapsStyleTests.swift in Sources */,
 				CA548FDF251C404B00F829A3 /* MapboxMapsSnapshotTests.swift in Sources */,
+				B506A5A025E023E90097ADB7 /* Bundle+MapboxTests.swift in Sources */,
 				0C5CFD7225BE25210001E753 /* ImageSourceTests.swift in Sources */,
 				0CC6EF0B25C3263400BFB153 /* ModelLayerIntegrationTests.swift in Sources */,
 				0CC6EF1A25C3263400BFB153 /* FillExtrusionLayerIntegrationTests.swift in Sources */,
@@ -4153,11 +4046,6 @@
 			target = 1F11C10E2421B05600F8397B /* MapboxMapsFoundation */;
 			targetProxy = 1FF65A71244F48E30069B561 /* PBXContainerItemProxy */;
 		};
-		A43D019425DAD24500770BA0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A43D018825DAD24500770BA0 /* MapboxMapsWrapper */;
-			targetProxy = A43D019325DAD24500770BA0 /* PBXContainerItemProxy */;
-		};
 		A4519DD82432FF03007CF39A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A4519DCC2432FF03007CF39A /* MapboxMapsStyle */;
@@ -4213,7 +4101,7 @@
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 				);
-				INFOPLIST_FILE = MapboxMapsOrnaments/Info.plist;
+				INFOPLIST_FILE = ../Sources/MapboxMaps/Ornaments/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4242,7 +4130,7 @@
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 				);
-				INFOPLIST_FILE = MapboxMapsOrnaments/Info.plist;
+				INFOPLIST_FILE = ../Sources/MapboxMaps/Ornaments/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4265,7 +4153,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = MapboxMapsOrnamentsTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/Ornaments/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -4283,7 +4171,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = MapboxMapsOrnamentsTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/Ornaments/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -4303,7 +4191,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 3;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MapboxMapsOffline/Info.plist;
+				INFOPLIST_FILE = ../Sources/MapboxMaps/Offline/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4324,7 +4212,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 3;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MapboxMapsOffline/Info.plist;
+				INFOPLIST_FILE = ../Sources/MapboxMaps/Offline/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4342,7 +4230,7 @@
 			baseConfigurationReference = 0C8CD15E24DAF6DD00DC3713 /* unitTests.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = MapboxMapsOfflineTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/Offline/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -4359,7 +4247,7 @@
 			baseConfigurationReference = 0C8CD15E24DAF6DD00DC3713 /* unitTests.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = MapboxMapsOfflineTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/Offline/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -4379,7 +4267,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 3;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MapboxMapsSnapshot/Info.plist;
+				INFOPLIST_FILE = ../Sources/MapboxMaps/Snapshot/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4404,7 +4292,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 3;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MapboxMapsSnapshot/Info.plist;
+				INFOPLIST_FILE = ../Sources/MapboxMaps/Snapshot/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4427,7 +4315,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = MapboxMapsSnapshotTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/Snapshot/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -4446,7 +4334,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = MapboxMapsSnapshotTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/Snapshot/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -4510,7 +4398,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = MapboxMapsAnnotations/Info.plist;
+				INFOPLIST_FILE = ../Sources/MapboxMaps/Annotations/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4571,7 +4459,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = MapboxMapsAnnotations/Info.plist;
+				INFOPLIST_FILE = ../Sources/MapboxMaps/Annotations/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4637,7 +4525,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = MapboxMapsAnnotationsTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/Annotations/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -4697,7 +4585,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = MapboxMapsAnnotationsTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/Annotations/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -4719,7 +4607,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 3;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MapboxMaps/Info.plist;
+				INFOPLIST_FILE = ../Sources/MapboxMaps/MapView/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4742,7 +4630,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 3;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MapboxMaps/Info.plist;
+				INFOPLIST_FILE = ../Sources/MapboxMaps/MapView/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4763,7 +4651,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = MapboxMapsTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/MapView/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -4781,7 +4669,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = MapboxMapsTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/MapView/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -4801,7 +4689,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 3;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MapboxMapsFoundation/Info.plist;
+				INFOPLIST_FILE = ../Sources/MapboxMaps/Foundation/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4822,7 +4710,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 3;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MapboxMapsFoundation/Info.plist;
+				INFOPLIST_FILE = ../Sources/MapboxMaps/Foundation/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4841,7 +4729,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = MapboxMapsFoundationTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/Foundation/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -4859,7 +4747,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = MapboxMapsFoundationTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/Foundation/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -4879,7 +4767,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 3;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MapboxMapsGestures/Info.plist;
+				INFOPLIST_FILE = ../Sources/MapboxMaps/Gestures/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4900,7 +4788,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 3;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MapboxMapsGestures/Info.plist;
+				INFOPLIST_FILE = ../Sources/MapboxMaps/Gestures/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4919,7 +4807,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = MapboxMapsGesturesTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/Gestures/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -4937,7 +4825,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = MapboxMapsGesturesTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/Gestures/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -5048,7 +4936,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = MapboxMapsLocation/Info.plist;
+				INFOPLIST_FILE = ../Sources/MapboxMaps/Location/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5114,7 +5002,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = MapboxMapsLocation/Info.plist;
+				INFOPLIST_FILE = ../Sources/MapboxMaps/Location/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5182,7 +5070,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = MapboxMapsLocationTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/Location/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -5243,281 +5131,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = MapboxMapsLocationTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/Location/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMapsLocationTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		A43D019A25DAD24500770BA0 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = MapboxMapsWrapper/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMapsWrapper;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		A43D019B25DAD24500770BA0 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = MapboxMapsWrapper/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMapsWrapper;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		A43D019C25DAD24500770BA0 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = MapboxMapsWrapperTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMapsWrapperTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		A43D019D25DAD24500770BA0 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = MapboxMapsWrapperTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMapsWrapperTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -5534,7 +5154,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 3;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MapboxMapsStyle/Info.plist;
+				INFOPLIST_FILE = ../Sources/MapboxMaps/Style/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5555,7 +5175,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 3;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MapboxMapsStyle/Info.plist;
+				INFOPLIST_FILE = ../Sources/MapboxMaps/Style/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5574,7 +5194,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = MapboxMapsStyleTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/Style/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -5592,7 +5212,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = MapboxMapsStyleTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/Style/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -5610,7 +5230,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = MapboxMapsTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/MapView/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -5629,7 +5249,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = MapboxMapsTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/MapView/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -5686,7 +5306,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = MapboxMapsTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/MapView/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -5705,7 +5325,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = MapboxMapsTests/Info.plist;
+				INFOPLIST_FILE = ../Tests/MapboxMapsTests/MapView/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -5870,24 +5490,6 @@
 			buildConfigurations = (
 				1FF65A63244E33E10069B561 /* Debug */,
 				1FF65A64244E33E10069B561 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A43D019E25DAD24500770BA0 /* Build configuration list for PBXNativeTarget "MapboxMapsWrapper" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A43D019A25DAD24500770BA0 /* Debug */,
-				A43D019B25DAD24500770BA0 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A43D019F25DAD24500770BA0 /* Build configuration list for PBXNativeTarget "MapboxMapsWrapperTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A43D019C25DAD24500770BA0 /* Debug */,
-				A43D019D25DAD24500770BA0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

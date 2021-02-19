@@ -1,0 +1,23 @@
+name: MapboxMapsPackager
+targets:
+  MapboxMaps:
+    type: framework
+    platform: iOS
+    configFiles: 
+      Debug: "../../../Mapbox/Configurations/Mapbox.xcconfig"
+      Release: "../../../Mapbox/Configurations/Mapbox.xcconfig"
+    sources: 
+      - path: "../../../Sources/MapboxMaps/"
+        excludes: 
+          - "**/*.plist"
+          - "**/*.h"
+          - "*.xcodeproj"
+          - "/Configurations"
+        includes: "*.swift"
+      - path: "../../../Sources/MapboxMaps/MapView/Info.plist"
+      - path: "../../../Sources/MapboxMaps/MapView/MapboxMaps.h"
+    dependencies:
+      - framework: "dependencies/Core/MapboxCoreMaps.xcframework"
+      - framework: "dependencies/Turf/Turf.xcframework"
+      - framework: "dependencies/Common/MapboxCommon.xcframework"
+      - framework: "dependencies/Telemetry/MapboxMobileEvents.xcframework"

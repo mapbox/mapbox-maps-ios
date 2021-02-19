@@ -7,34 +7,34 @@ function finish { >&2 echo -en "\033[0m"; }
 trap finish EXIT
 
 # Simulator
-step "Archiving iPhone simulator framework"
-xcodebuild  -archivePath 'pkg/MapboxMaps-simulator.xcarchive' \
-		    -project 'MapboxMapsPackager.xcodeproj' \
-		    -scheme MapboxMaps \
-		    -sdk iphonesimulator \
-		    -configuration Release \
-		    -derivedDataPath .derivedDataPath-simulator \
-			archive \
-			ARCH=x86_64 \
-			BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
-			SKIP_INSTALL=NO \
-			SUPPORTS_MACCATALYST=YES
+step "Archiving iPhone Simulator framework"
+xcodebuild -archivePath 'pkg/MapboxMaps-simulator.xcarchive' \
+		   -project 'MapboxMapsPackager.xcodeproj' \
+		   -scheme MapboxMaps \
+		   -sdk iphonesimulator \
+		   -configuration Release \
+		   -derivedDataPath .derivedDataPath-simulator \
+		   archive \
+		   ARCH=x86_64 \
+		   BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
+		   SKIP_INSTALL=NO \
+		   SUPPORTS_MACCATALYST=YES
 
 SIMULATOR_FRAMEWORK_PATH=$(find pkg/MapboxMaps-simulator.xcarchive -name MapboxMaps.framework)
 
 # Device
 step "Archiving iPhone device framework"
-xcodebuild  -archivePath 'pkg/MapboxMaps-device.xcarchive' \
-		    -project 'MapboxMapsPackager.xcodeproj' \
-		    -scheme MapboxMaps \
-		    -sdk iphoneos \
-		    -configuration Release \
-		    -derivedDataPath .derivedDataPath-device \
-			archive \
-			ARCH='armv7 arm64' \
-			BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
-			SKIP_INSTALL=NO \
-			SUPPORTS_MACCATALYST=YES
+xcodebuild -archivePath 'pkg/MapboxMaps-device.xcarchive' \
+		   -project 'MapboxMapsPackager.xcodeproj' \
+		   -scheme MapboxMaps \
+		   -sdk iphoneos \
+		   -configuration Release \
+		   -derivedDataPath .derivedDataPath-device \
+		   archive \
+		   ARCH='armv7 arm64' \
+		   BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
+		   SKIP_INSTALL=NO \
+		   SUPPORTS_MACCATALYST=YES
 
 DEVICE_FRAMEWORK_PATH=$(find pkg/MapboxMaps-device.xcarchive -name MapboxMaps.framework)
 

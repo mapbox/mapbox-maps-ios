@@ -33,6 +33,7 @@ import CoreLocation
     }
 }
 
+/// The `LocationConsumer` protocol defines a set of methods that a class must implement to consume location updates and track device location
 @objc public protocol LocationConsumer {
 
     /// Represents whether the locationConsumer is currently tracking

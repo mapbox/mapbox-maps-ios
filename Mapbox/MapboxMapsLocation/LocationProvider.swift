@@ -16,6 +16,12 @@ public protocol LocationProvider {
     /// Returns the latest heading update received, or nil if none is available.
     var heading: CLHeading? { get }
 
+    /**
+     Sets the delegate for `LocationProvider`
+
+     - Note: Calling this will override the delegate in `AppleLocationProvider` and is highly discouraged
+             Instead implement a LocationConsumer
+     */
     func setDelegate(_ delegate: LocationProviderDelegate)
 
     /// Requests permission to use the location services whenever the app is running.

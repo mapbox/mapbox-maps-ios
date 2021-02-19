@@ -105,9 +105,14 @@ public struct Examples {
         Example(title: "Draw on a static snapshot with Core Graphics",
                 description: """
                     Use the overlayHandler parameter to draw on top of a snapshot
-                    using Core Graphhics APIs.
+                    using Core Graphics APIs.
                 """,
                 type: SnapshotterCoreGraphicsExample.self),
+        Example(title: "Snapshot with runtime styling",
+                description: """
+                    Create a static, non-interactive snapshot from an existing map with runtime styling.
+                """,
+                type: SnapshotterRuntimeStylingExample.self),
         Example(title: "Use interpolate colors between zoom level",
                 description: """
                     Use an interpolate expression to style the background layer color depending on zoom level.

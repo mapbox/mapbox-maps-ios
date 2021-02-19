@@ -10,7 +10,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "MBX_ROOT=$(echo $WORKSPACE_PATH | rev | cut -d&apos;/&apos; -f4- | rev)&#10;&#10;cat ~/.mapbox &gt; &quot;$MBX_ROOT/Tests/MapboxMapsTests/TestHelpers/MapboxAccessToken&quot;&#10;">
+               scriptText = "TOKEN_FILE=~/.mapbox&#10;TOKEN_FILE_2=~/mapbox&#10;TOKEN=&quot;$(cat $TOKEN_FILE 2&gt;/dev/null || cat $TOKEN_FILE_2 2&gt;/dev/null)&quot;&#10;if [ &quot;$TOKEN&quot; ]; then&#10;  MBX_ROOT=$(echo &quot;$WORKSPACE_PATH&quot; | rev | cut -d&apos;/&apos; -f4- | rev)&#10;  echo $TOKEN &gt; &quot;$MBX_ROOT/Tests/MapboxMapsTests/TestHelpers/MapboxAccessToken&quot;&#10;fi&#10;">
                <EnvironmentBuildable>
                   <BuildableReference
                      BuildableIdentifier = "primary"

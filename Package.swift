@@ -58,7 +58,7 @@
                         .copy("MapboxMapsFoundationTests/GeoJSON/Fixtures/simple-line.geojson"),
                         .copy("MapboxMapsFoundationTests/GeoJSON/Fixtures/polygon.geojson"),
                         .copy("MapboxMapsFoundationTests/GeoJSON/Fixtures/multipolygon.geojson"),
-                        .copy("MapboxMapsTests/TestHelpers/MapboxAccessToken.token")
+                        .copy("TestHelpers/MapboxAccessToken")
                         ]
                     )
      ]

@@ -46,27 +46,32 @@ internal class IntegrationTestCase: XCTestCase {
     }
 
     private func setupAccessToken() throws {
-        // User defaults can override plist
-        if let token = UserDefaults.standard.string(forKey: "MBXAccessToken"),
-           token.starts(with: "pk.") {
-            print("Found access token from UserDefaults (command line parameter?)")
-            accessToken = token
-            return
+
+        func token() throws -> String {
+            // User defaults can override plist
+            if let token = UserDefaults.standard.string(forKey: "MBXAccessToken") {
+                print("Found access token from UserDefaults (command line parameter?)")
+                return token
+            } else if let token = Bundle.mapboxTests.infoDictionary?["MBXAccessToken"] as? String {
+                print("Found access token in Info.plist")
+                return token
+            } else if let url = Bundle.mapboxTests.url(forResource: "MapboxAccessToken", withExtension: nil),
+               let token = try? String(contentsOf: url) {
+                print("Found access token in MapboxAccessToken")
+                return token
+            } else {
+                throw XCTSkip("Mapbox access token not found")
+            }
         }
 
-        if let token = Bundle.mbx_current(for: type(of: self)).infoDictionary?["MBXAccessToken"] as? String,
-           token.starts(with: "pk.") {
-            print("Found access token in Info.plist")
-            accessToken = token
-            return
+        func validated(token: String) throws -> String {
+            if token.starts(with: "pk.") {
+                return token
+            } else {
+                throw XCTSkip("Mapbox access token is invalid")
+            }
         }
 
-        if let url = Bundle.mbx_current(for: type(of: self)).url(forResource: "MapboxAccessToken", withExtension: nil),
-           let token = try? String(contentsOf: url) {
-            print("Found access token in MapboxAccessToken")
-            accessToken = token.trimmingCharacters(in: .whitespacesAndNewlines)
-        }
-
-        throw XCTSkip("MBXAccessToken not found")
+        accessToken = try validated(token: token()).trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }

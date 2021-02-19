@@ -39,7 +39,7 @@ public class SnapshotterRuntimeStylingExample: UIViewController, ExampleProtocol
 
         // Add button to take snapshot
         let buttonText = "Take Snapshot"
-        let button = UIButton(frame: CGRect(x: mapView.bounds.width / 2 - 40, y: mapView.bounds.height - 100, width: 150, height: 40))
+        let button = UIButton(frame: CGRect(x: mapView.bounds.width / 2 - 60, y: mapView.bounds.height - 50, width: 150, height: 40))
         button.layer.cornerRadius = 15
         button.backgroundColor = UIColor.blue
         button.addTarget(self, action: #selector(startSnapshot), for: .touchUpInside)

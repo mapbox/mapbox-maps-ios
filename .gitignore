@@ -2,11 +2,9 @@
 /build
 /.build
 /Packages
-xcuserdata/
-/Mapbox/MapboxMaps.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+xcuserdata
 node_modules
 developer.xcconfig
 Carthage
 api-docs
-Package.resolved
-.swiftpm/
+MapboxAccessToken

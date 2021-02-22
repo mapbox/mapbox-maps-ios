@@ -19,7 +19,7 @@ Pod::Spec.new do |m|
   m.swift_version = '5.3'
 
   m.source_files = 'Sources/MapboxMaps/**/*.{swift,h}'
-  m.resources = 'Sources/MapboxMaps/Location/Pucks/IndicatorAssets.xcassets', 'Sources/MapboxMaps/Ornaments/en.lproj/OrnamentsLocalizable.strings'
+  m.resources = 'Sources/**/*.{xcassets,strings}'
 
   m.dependency 'MapboxCoreMaps', '10.0.0-beta.15'
   m.dependency 'MapboxCommon', '10.0.0-beta.11'

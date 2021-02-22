@@ -72,25 +72,25 @@ workflows:
 
     steve:
         jobs:
-            # - build-all-targets:
-            #     matrix:
-            #         parameters:
-            #             xcode: ["12.2.0"]
-            #             configuration: ["Debug", "Release"]
+            - build-all-targets:
+                matrix:
+                    parameters:
+                        xcode: ["12.2.0"]
+                        configuration: ["Debug", "Release"]
 
-            # - binary-size:
-            #     requires: 
-            #         - build-all-targets
+            - binary-size:
+                requires: 
+                    - build-all-targets
 
-            # - metrics:
-            #     requires: 
-            #         - build-all-targets
-            #     filters:
-            #         branches:
-            #             only: main
+            - metrics:
+                requires: 
+                    - build-all-targets
+                filters:
+                    branches:
+                        only: main
 
-            # - maps-unit-tests:
-            #     name: "Run Unit tests"
+            - maps-unit-tests:
+                name: "Run Unit tests"
 
             - run-tests-on-devices:
                 name: "Run MapboxTestHost tests on devices"
@@ -99,14 +99,14 @@ workflows:
                 scheme: "MapboxMapsTestsWithHost"
                 app-name: "MapboxTestHost"
 
-            # - run-tests-on-devices:
-            #     name: "Run Examples tests on devices"
-            #     device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
-            #     device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
-            #     scheme: "Examples"
-            #     app-name: "Examples"
+            - run-tests-on-devices:
+                name: "Run Examples tests on devices"
+                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
+                device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
+                scheme: "Examples"
+                app-name: "Examples"
 
-            # - create-xcframework
+            - create-xcframework
             
     public-beta:
         jobs:

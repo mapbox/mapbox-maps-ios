@@ -44,8 +44,8 @@ phases:
       - which xcodebuild
       - ls -laF `which xcodebuild`
       - ls /Applications
-      - sudo xcode-select -s /Applications/Xcode.app
-      - cd /tmp/test-root && xcodebuild test-without-building -destination id=$DEVICEFARM_DEVICE_UDID -xctestrun device.xctestrun -derivedDataPath $DEVICEFARM_LOG_DIR -resultBundlePath $DEVICEFARM_LOG_DIR/$SCHEME.$CONFIG.$DATE.xcresult -enableCodeCoverage YES
+      # - sudo xcode-select -s /Applications/Xcode.app
+      - cd /tmp/test-root && /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -destination id=$DEVICEFARM_DEVICE_UDID -xctestrun device.xctestrun -derivedDataPath $DEVICEFARM_LOG_DIR -resultBundlePath $DEVICEFARM_LOG_DIR/$SCHEME.$CONFIG.$DATE.xcresult -enableCodeCoverage YES
 
 # The artifacts phase lets you specify the location where your tests logs,
 # device logs will be stored. And also let you specify the location of your test

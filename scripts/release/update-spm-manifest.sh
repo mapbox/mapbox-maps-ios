@@ -4,13 +4,12 @@ set -euo pipefail
 
 #
 # Usage:
-#   ./scripts/release/update-spm-manifest.sh <maps version number> <maps xcframework checksum>
+#   ./scripts/release/update-spm-manifest.sh <maps version number>
 #
 
 MAPS_VERSION=${1}
-CHECKSUM=${2}
-COMMON_VERSION=`awk -F'MapboxCommon-ios.json" ==' '{ print $2 }' Cartfile`
-CORE_VERSION=`awk -F'MapboxCoreMaps.json" ==' '{ print $2 }' Cartfile`
+COMMON_VERSION=`awk -F'MapboxCommon-ios.json" ==' '{ printf $2 }' Cartfile`
+CORE_VERSION=`awk -F'MapboxCoreMaps-dynamic.json" ==' '{ printf $2 }' Cartfile`
 
 #
 # Checkout the release branch
@@ -19,8 +18,6 @@ git fetch origin main
 git checkout Release/v${MAPS_VERSION}
 
 # Update Package.swift
-sed -i '' s/"let version = \".*\""/"let version = \"${MAPS_VERSION}\""/ Package.swift
-sed -i '' s/"let checksum = \".*\""/"let checksum = \"${CHECKSUM}\""/ Package.swift
 sed -i '' s/"mapbox-common-ios.git\", .exact(\".*\")"/"mapbox-common-ios.git\", .exact(\"${COMMON_VERSION}\")"/ Package.swift
 sed -i '' s/"mapbox-core-maps-ios.git\", .exact(\".*\")"/"mapbox-core-maps-ios.git\", .exact(\"${CORE_VERSION}\")"/ Package.swift
 

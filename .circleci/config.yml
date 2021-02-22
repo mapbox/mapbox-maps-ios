@@ -357,7 +357,7 @@ jobs:
             - run:
                 name: Update Package Manifest & Podspec
                 command: |
-                    ./scripts/release/update-spm-manifest.sh ${VERSION} "$(cat MapboxMaps.xcframework.zip.checksum)"
+                    ./scripts/release/update-spm-manifest.sh ${VERSION}
                 when: on_success
             - slack/status:
                 fail_only: false

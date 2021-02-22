@@ -6,26 +6,27 @@ function step { >&2 echo -e "\033[1m\033[36m* $@\033[0m"; }
 function finish { >&2 echo -en "\033[0m"; }
 trap finish EXIT
 
-step "Reading from versions.json"
+step 'Reading from versions.json'
 
 CORE_VERSION=$(jq -r '.MapboxCoreMaps' ./versions.json)
 COMMON_VERSION=$(jq -r '.MapboxCommon' ./versions.json)
-TELEMETRY_VERSION=$(jq -r '.MapboxMobileEvents' ./versions.json)
+MME_VERSION=$(jq -r '.MapboxMobileEvents' ./versions.json)
 TURF_VERSION=$(jq -r '.Turf' ./versions.json)
 
+step 'Cleaning up dependencies directory'
 rm -rf artifacts
 mkdir artifacts
 
-step "Running download-dependency-xcframeworks.sh"
-sh download-dependency-xcframeworks.sh ${CORE_VERSION} ${COMMON_VERSION} ${TELEMETRY_VERSION} artifacts
+step 'Installing Dependencies'
+./download-dependency.sh MapboxCommon mapbox-common MapboxCommon "$COMMON_VERSION" artifacts
+./download-dependency.sh MapboxCoreMaps mobile-maps-core MapboxCoreMaps.xcframework "$CORE_VERSION" artifacts
+./build-dependency.sh MapboxMobileEvents 'https://github.com/mapbox/mapbox-events-ios.git' "$MME_VERSION" MapboxMobileEvents artifacts
+./build-dependency.sh Turf 'https://github.com/mapbox/turf-swift.git' "$TURF_VERSION" "Turf iOS" artifacts
 
-step "Running create-turf-xcframework.sh"
-sh create-turf-xcframework.sh ${TURF_VERSION} artifacts
-
-step "Creating MapboxMapsPackager.xcodeproj"
+step 'Creating MapboxMapsPackager.xcodeproj'
 xcodegen -p artifacts/
 
-step "Running create-mapbox-maps-xcframework.sh"
+step 'Running create-mapbox-maps-xcframework.sh'
 cd artifacts
-sh ../create-mapbox-maps-xcframework.sh
+../create-xcframework.sh MapboxMapsPackager.xcodeproj MapboxMaps MapboxMaps
 cd ..

@@ -12,19 +12,18 @@ Pod::Spec.new do |m|
   m.author = { 'Mapbox' => 'mobile@mapbox.com' }
   m.social_media_url = 'https://twitter.com/mapbox'
   m.documentation_url = 'https://docs.mapbox.com/ios/beta/maps/api-reference/'
-
-  m.source = { http: "https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/packages/#{maps_version.to_s}/MapboxMaps.xcframework.zip" }
-  m.vendored_frameworks = 'MapboxMaps.xcframework'
-
+  
+  m.source = { :git => 'https://github.com/mapbox/mapbox-maps-ios.git', :tag => maps_version }
   m.platform = :ios
   m.ios.deployment_target = '11.0'
   m.swift_version = '5.3'
-  m.requires_arc = true
-  m.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
 
-  m.dependency 'MapboxCoreMaps', '10.0.0-beta.14.1'
-  m.dependency 'MapboxCommon', '10.0.0-beta.9.1'
-  m.dependency 'MapboxMobileEvents', '0.10.7'
-  m.dependency 'Turf', '2.0.0-alpha.2'
+  m.source_files = 'Sources/MapboxMaps/**/*.{swift,h}'
+  m.resources = 'Sources/**/*.{xcassets,strings}'
+
+  m.dependency 'MapboxCoreMaps', '10.0.0-beta.15'
+  m.dependency 'MapboxCommon', '10.0.0-beta.11'
+  m.dependency 'MapboxMobileEvents', '0.10.8'
+  m.dependency 'Turf', '~> 1.2'
 
 end

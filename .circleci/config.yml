@@ -114,7 +114,7 @@ workflows:
                 name: "Public Beta Release"
                 filters:
                     branches:
-                        only: Release/*
+                        only: /nm\/.*/
 
             - ios-release-tag:
                 name: "iOS release"

@@ -40,6 +40,8 @@ phases:
     commands:
       # TODO: Investigate -resultBundlePath
       - xcodebuild -version
+      - which xcodebuild
+      - ls /Applications
       - cd /tmp/test-root && xcodebuild test-without-building -destination id=$DEVICEFARM_DEVICE_UDID -xctestrun device.xctestrun -derivedDataPath $DEVICEFARM_LOG_DIR -resultBundlePath $DEVICEFARM_LOG_DIR/$SCHEME.$CONFIG.$DATE.xcresult -enableCodeCoverage YES
 
 # The artifacts phase lets you specify the location where your tests logs,

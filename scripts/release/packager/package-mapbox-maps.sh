@@ -18,8 +18,8 @@ mkdir artifacts
 pushd artifacts
 
 step 'Installing Dependencies'
-../download-dependency.sh MapboxCommon mapbox-common MapboxCommon "$COMMON_VERSION"
-../download-dependency.sh MapboxCoreMaps mobile-maps-core MapboxCoreMaps.xcframework-dynamic "$CORE_VERSION"
+../download-dependency.sh mapbox-common MapboxCommon "$COMMON_VERSION"
+../download-dependency.sh mobile-maps-core MapboxCoreMaps.xcframework-dynamic "$CORE_VERSION"
 ../build-dependency.sh MapboxMobileEvents 'https://github.com/mapbox/mapbox-events-ios.git' "$MME_VERSION" MapboxMobileEvents
 ../build-dependency.sh Turf 'https://github.com/mapbox/turf-swift.git' "$TURF_VERSION" "Turf iOS"
 

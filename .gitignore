@@ -8,4 +8,3 @@ developer.xcconfig
 Carthage
 api-docs
 MapboxAccessToken
-.swiftpm/

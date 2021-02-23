@@ -72,6 +72,7 @@ workflows:
 
     steve:
         jobs:
+
             - build-all-targets:
                 matrix:
                     parameters:
@@ -92,12 +93,16 @@ workflows:
             - maps-unit-tests:
                 name: "Run Unit tests"
 
+            # Not on main
             - run-tests-on-devices:
                 name: "Run MapboxTestHost tests on devices"
                 device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
                 device-pool: $(AWS_DEVICE_FARM_1_PHONE_POOL)
                 scheme: "MapboxMapsTestsWithHost"
                 app-name: "MapboxTestHost"
+                filters:
+                    branches:
+                        ignore: main                
 
             - run-tests-on-devices:
                 name: "Run Examples tests on devices"
@@ -105,8 +110,36 @@ workflows:
                 device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
                 scheme: "Examples"
                 app-name: "Examples"
+                filters:
+                    branches:
+                        ignore: main                
 
             - create-xcframework
+
+            # On main
+            - run-tests-on-devices:
+                name: "Run MapboxTestHost tests on devices (main)"
+                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
+                device-pool: $(AWS_DEVICE_FARM_5_DEVICE_POOL)
+                scheme: "MapboxMapsTestsWithHost"
+                app-name: "MapboxTestHost"
+                device-tests-always-run: true
+                report_failure: true
+                filters:
+                    branches:
+                        only: main                
+
+            - run-tests-on-devices:
+                name: "Run Examples tests on devices (main)"
+                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
+                device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
+                scheme: "Examples"
+                app-name: "Examples"
+                device-tests-always-run: true
+                report_failure: true                
+                filters:
+                    branches:
+                        only: main
             
     public-beta:
         jobs:
@@ -262,10 +295,6 @@ jobs:
                 scheme: MapboxMapsStyle 
             - test-scheme:
                 scheme: MapboxMaps
-            # TODO: Parse xcresults for any tests that ran on Device
-            # - gather-xcresults
-            # - store-device-farm-artifacts
-            - store-logs 
             - report-failure:
                 report_failure: << parameters.report_failure >>
                 message: "maps-unit-tests"
@@ -290,7 +319,7 @@ jobs:
             - run:
                 name: Converting and uploading coverage
                 command: |
-                    make update-codecov-with-profdata SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
+                    make device-update-codecov-with-profdata SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
 
             - store-device-farm-artifacts
             - store-logs
@@ -332,7 +361,6 @@ jobs:
                 message: '<$CIRCLE_BUILD_URL|Release build for \`$VERSION\` started.>'
                 include_visit_job_action: true
             - make-deps
-            - run: pip3 install awscli
             - make-xcframework-zip
             - make-xcframeworks-bundle
             - run: 
@@ -375,7 +403,6 @@ jobs:
                 include_visit_job_action: true
             - checkout
             - make-deps
-            - run: pip3 install awscli
             - make-docs
             - run:
                 name: Run `npm ci`
@@ -496,11 +523,16 @@ commands:
                 condition:
                     equal: ['MapboxMaps', << parameters.scheme >>]
                 steps:
-                  - code-coverage
+                    - run:
+                        name: Converting and uploading coverage
+                        command: |
+                            make update-codecov-with-profdata SCHEME=<< parameters.scheme >>
+            - store-logs :
+                artifact_name: << parameters.scheme >>
             - run:
                 name: Clean Build directory
                 command: |
-                    rm -rf build/Build                
+                    rm -rf build
               
     ensure-text-exists-in-commit:
         parameters:
@@ -550,17 +582,6 @@ commands:
                     make test-with-device-farm SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=<< parameters.configuration >>
                 when: always
 
-    store-logs:
-        description: "Saving Logs as artifacts"
-        steps:
-            - run:
-                name: Zipping logs
-                command: |
-                    zip -r build.zip build/Logs
-                when: always
-            - store_artifacts:
-                path: build.zip
-
     gather-xcresults:
         description: "Gathering results"
         steps:
@@ -569,31 +590,46 @@ commands:
                     make gather-results
                 when: always
 
+    store-logs:
+        parameters:
+            artifact_name:
+                type: string
+                default: "build"
+        description: "Saving Logs as artifacts"
+        steps:
+            - run:
+                name: Zipping logs
+                command: |
+                   zip -r << parameters.artifact_name >>.zip build/Build/Products || echo "Skipping build/Build/Products"
+                   zip -r << parameters.artifact_name >>.zip build/Build/ProfileData || echo "Skipping build/Build/ProfileData"
+                   zip -r << parameters.artifact_name >>.zip build/Logs || echo "Skipping build/Logs"
+                when: always
+            - store_artifacts:
+                path: << parameters.artifact_name >>.zip
+
     store-device-farm-artifacts:
+        parameters:
+            artifact_name:
+                type: string
+                default: "build"
         description: "Saving Device Farm results as artifacts."
         steps:
             - run:
                 name: Zipping device farm results
                 command: |
-                    zip -r build.zip build/DeviceFarmResults
-                    zip -r build.zip build/testruns
-                    zip -r build.zip build/*.json
+                    zip -r << parameters.artifact_name >>.zip build/DeviceFarmResults || echo "Skipping build/DeviceFarmResults"
+                    zip -r << parameters.artifact_name >>.zip build/Payload || echo "Skipping build/Payload"
+                    zip -r << parameters.artifact_name >>.zip build/test-root || echo "Skipping build/test-root"
+                    zip -r << parameters.artifact_name >>.zip build/testruns || echo "Skipping build/testruns"
+                    zip -r << parameters.artifact_name >>.zip build/*.json || echo "Skipping build/*.json"
                 when: always
             - store_artifacts:
-                path: build.zip
-
-    code-coverage:
-        description: "Upload code coverage report"
-        steps:
-            - run: 
-                name: "Upload code coverage report"
-                command: |
-                    curl -sSfL --retry 5 --connect-timeout 5 https://codecov.io/bash > /tmp/codecov.sh
-                    bash /tmp/codecov.sh -X gcov -t $CODECOV_TOKEN -D ./ -J '^MapboxMaps$' -F unit-tests || echo 'Codecov failed to upload'
+                path: << parameters.artifact_name >>.zip
 
     make-deps:
         steps:
             - run: make deps
+            - run: pip3 install awscli gitpython requests python-dateutil
 
     make-docs:
         description: "Generate documentation"

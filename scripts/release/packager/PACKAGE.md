@@ -15,7 +15,7 @@ zipped archive of XCFrameworks.
 
 - Usage:
   ```
-  sh package-mapbox-maps.sh
+  ./package-mapbox-maps.sh
   ```
 - This is the master script and is the only one you should need to call.
 - It reads the dependency versions from `versions.json` and begins by
@@ -28,7 +28,7 @@ zipped archive of XCFrameworks.
 ### `download-dependency.sh`
 - Usage:
   ```
-  sh download-dependency.sh <SDK_REGISTRY_NAME> <SDK_REGISTRY_ARTIFACT> <VERSION>
+  ./download-dependency.sh <SDK_REGISTRY_NAME> <SDK_REGISTRY_ARTIFACT> <VERSION>
   ```
 - This script downloads `MapboxCoreMaps.xcframework`, `MapboxCommon.xcframework`
   and `MapboxMobileEvents.xcframework` from SDK Registry
@@ -38,7 +38,7 @@ zipped archive of XCFrameworks.
 
 - Usage:
   ```
-  sh build-dependency.sh <NAME> <GIT_REPO_URL> <GIT_TAG> <SCHEME>
+  ./build-dependency.sh <NAME> <GIT_REPO_URL> <GIT_TAG> <SCHEME>
   ```
 - This script clones a given repository, checks out a `git tag`, and builds the specified `scheme`.
 - Uses `xcodebuild`
@@ -49,7 +49,7 @@ zipped archive of XCFrameworks.
 
 - Usage:
   ```
-  sh create-xcframework.sh <PROJECT_PATH> <SCHEME> <PRODUCT_NAME>
+  ./create-xcframework.sh <PROJECT_PATH> <SCHEME> <PRODUCT_NAME>
   ```
 - Generic script to create an xcframework for a project located at the specified path.
 - Uses `xcodebuild`

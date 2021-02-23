@@ -13,10 +13,10 @@ VERSION=${3}
 mkdir .download
 pushd .download
 
-step "Download dependency from https://api.mapbox.com/downloads/v2/$SDK_REGISTRY_NAME/releases/ios/packages/$VERSION/$SDK_REGISTRY_ARTIFACT.zip"
+step "Download dependency at https://api.mapbox.com/downloads/v2/$SDK_REGISTRY_NAME/releases/ios/packages/$VERSION/$SDK_REGISTRY_ARTIFACT.zip"
 curl -n "https://api.mapbox.com/downloads/v2/$SDK_REGISTRY_NAME/releases/ios/packages/$VERSION/$SDK_REGISTRY_ARTIFACT.zip" --output tmp.zip
 
-step 'Unzipping...'
+step "Unzipping $SDK_REGISTRY_ARTIFACT.zip ..."
 unzip tmp.zip
 mv *.xcframework ../
 

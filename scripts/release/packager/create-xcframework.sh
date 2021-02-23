@@ -11,7 +11,7 @@ SCHEME=${2}
 PRODUCT=${3}
 
 # Create iOS Simulator Framework
-step 'Archiving iOS Simulator Framework'
+step "Archiving iOS Simulator Framework for $PRODUCT"
 xcodebuild archive \
   -project "$PROJECT" \
   -scheme "$SCHEME" \
@@ -26,7 +26,7 @@ xcodebuild archive \
 SIMULATOR_FRAMEWORK_PATH=$(find .create-xcframework/iOS-Simulator.xcarchive -name "$PRODUCT.framework")
 
 # Create iOS Device Framework
-step 'Archiving iOS Device Framework'
+step "Archiving iOS Device Framework for $PRODUCT"
 xcodebuild archive \
   -project "$PROJECT" \
   -scheme "$SCHEME" \
@@ -41,7 +41,7 @@ xcodebuild archive \
 DEVICE_FRAMEWORK_PATH=$(find .create-xcframework/iOS.xcarchive -name "$PRODUCT.framework")
 
 # Create XCFramework
-step 'Creating XCFramework'
+step "Creating $PRODUCT.xcframework"
 xcodebuild \
   -create-xcframework \
   -framework "$SIMULATOR_FRAMEWORK_PATH" \
@@ -49,5 +49,5 @@ xcodebuild \
   -output "$PRODUCT.xcframework"
 
 # Clean Up
-step 'Cleaning up artifacts'
+step "Cleaning up intermediate artifacts for $PRODUCT"
 rm -rf .create-xcframework

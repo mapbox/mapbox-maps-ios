@@ -8,17 +8,16 @@ import MapboxCommon
 public class TrackingModeExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
+    internal var cameraLocationConsumer: CameraLocationConsumer!
 
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
+        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions(), styleURL: StyleURL.streets)
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.view.addSubview(mapView)
 
-        let startingCoordinate = CLLocationCoordinate2D(latitude: 37.331, longitude: -122.03)
-        let cameraLocationConsumer = CameraLocationConsumer(shouldTrackLocation: true, mapView: mapView)
-
-        mapView.style.styleURL = StyleURL.streets
+        cameraLocationConsumer = CameraLocationConsumer(shouldTrackLocation: true, mapView: mapView)
 
         // Add user position icon to the map with location indicator layer
         mapView.update { (mapOptions) in
@@ -26,15 +25,15 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         }
 
         // Set initial camera settings
-        mapView.cameraManager.setCamera(centerCoordinate: startingCoordinate,
-                                                   zoom: 15.0)
+        mapView.cameraManager.setCamera(zoom: 15.0)
 
         // Allows the delegate to receive information about map events.
         mapView.on(.mapLoadingFinished) { [weak self] _ in
             guard let self = self else { return }
 
             // Register the location consumer with the map
-            self.mapView.locationManager.addLocationConsumer(newConsumer: cameraLocationConsumer)
+            // Note that the location manager holds weak references to consumers, which should be retained
+            self.mapView.locationManager.addLocationConsumer(newConsumer: self.cameraLocationConsumer)
 
             self.finish() // Needed for internal testing purposes.
         }
@@ -45,7 +44,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
 public class CameraLocationConsumer: LocationConsumer {
     public var shouldTrackLocation: Bool
 
-    let mapView: MapView
+    weak var mapView: MapView?
 
     init(shouldTrackLocation: Bool, mapView: MapView) {
         self.shouldTrackLocation = shouldTrackLocation
@@ -53,6 +52,6 @@ public class CameraLocationConsumer: LocationConsumer {
     }
 
     public func locationUpdate(newLocation: Location) {
-        mapView.cameraManager.setCamera(centerCoordinate: newLocation.coordinate, zoom: 15, animated: true, duration: 1.3)
+        mapView?.cameraManager.setCamera(centerCoordinate: newLocation.coordinate, zoom: 15, animated: true, duration: 1.3)
     }
 }

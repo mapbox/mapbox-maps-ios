@@ -6,7 +6,7 @@ import MapboxMapsFoundation
 #endif
 
 /// An object responsible for notifying the map view about location-related events,
-/// such as a change in the user’s location.
+/// such as a change in the device’s location.
 public class LocationManager: NSObject {
 
     /// Represents the latest location received from the location provider
@@ -29,6 +29,7 @@ public class LocationManager: NSObject {
     public private(set) var showUserLocation: Bool = false
 
     /// Property that has a list of items that will consume location events
+    /// The location manager holds weak references to these consumers, client code should retain these references
     public private(set) lazy var consumers: NSHashTable<LocationConsumer> = {
         let hashTable = NSHashTable<LocationConsumer>.weakObjects()
         return hashTable
@@ -74,6 +75,7 @@ public class LocationManager: NSObject {
         locationProvider.setDelegate(self)
     }
 
+    /// The location manager holds weak references to consumers, client code should retain these references
     public func addLocationConsumer(newConsumer consumer: LocationConsumer) {
         self.consumers.add(consumer)
     }

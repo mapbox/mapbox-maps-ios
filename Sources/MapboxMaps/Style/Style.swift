@@ -321,7 +321,7 @@ public class Style {
         case .success(let retrievedLayer):
             // Successfully retrieved the layer
             layer = retrievedLayer
-        case .failure(_):
+        case .failure:
 
             // Could not retrieve the layer
             return .failure(.getStyleLayerFailed(nil))

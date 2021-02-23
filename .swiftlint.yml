@@ -2,7 +2,8 @@ allow_zero_lintable_files: true
 excluded:
   - Carthage
   - Pods
-  - MapboxMapsStyle/Generated
+  - Sources/MapboxMaps/Style/Generated
+  - Tests/MapboxMapsTests/Style/Generated
 reporter: "xcode"
 opt_in_rules:
   - explicit_top_level_acl

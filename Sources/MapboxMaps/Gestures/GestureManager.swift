@@ -100,7 +100,7 @@ internal class GestureHandler {
     }
 }
 
-public protocol GestureManagerDelegate {
+public protocol GestureManagerDelegate: AnyObject {
 
     /// Informs the delegate that a gesture haas begun. Could be used to cancel camera tracking.
     func gestureBegan(for gestureType: GestureType)
@@ -143,7 +143,7 @@ public final class GestureManager: NSObject {
     /// The camera manager that responds to gestures.
     private let cameraManager: CameraManagerProtocol
 
-    public var delegate: GestureManagerDelegate?
+    public weak var delegate: GestureManagerDelegate?
 
     internal init(for view: UIView, options: GestureOptions, cameraManager: CameraManagerProtocol) {
         self.cameraManager = cameraManager

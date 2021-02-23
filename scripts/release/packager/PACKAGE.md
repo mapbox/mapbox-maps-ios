@@ -40,9 +40,9 @@ zipped archive of XCFrameworks.
   ```
   ./build-dependency.sh <NAME> <GIT_REPO_URL> <GIT_TAG> <SCHEME>
   ```
-- This script clones a given repository, checks out a `git tag`, and builds the specified `scheme`.
+- This script clones a given repository, checks out a `git tag`, and builds the specified `<SCHEME>`.
 - Uses `xcodebuild`
-- The `<NAME>` provided must match the name of the `.xcodeproj`.
+- The `<NAME>` provided must match the name of the `.xcodeproj` and the base name of the resulting .framework product built in the `<SCHEME>`
 - The `.xcodeproj` for the repository should be at the root of the repository.
 
 ### `create-xcframework.sh`

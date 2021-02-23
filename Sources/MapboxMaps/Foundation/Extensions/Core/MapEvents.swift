@@ -23,6 +23,7 @@ public extension MapEvents {
         case cameraDidChange
         case resourceRequest
 
+        // swiftlint:disable:next cyclomatic_complexity
         public init?(rawValue: String) {
             switch rawValue {
             case MapEvents.mapLoadingStarted :

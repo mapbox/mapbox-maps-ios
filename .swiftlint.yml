@@ -4,9 +4,6 @@ excluded:
   - Pods
   - Sources/MapboxMaps/Style/Generated
   - Tests/MapboxMapsTests/Style/Generated
-reporter: "xcode"
-opt_in_rules:
-  - explicit_top_level_acl
 disabled_rules:
   - comment_spacing
   - computed_accessors_order

@@ -5,6 +5,8 @@ import CoreLocation
 import MapboxMapsFoundation
 #endif
 
+// swiftlint:disable file_length
+
 public enum GestureType: Hashable {
     /// The pan gesture type
     case pan

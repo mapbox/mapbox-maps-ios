@@ -19,8 +19,8 @@ class CustomHttpService: HttpServiceInterface {
 
         // If the test sets an error, call the callback with immediately
         if let error = forcedError {
-            let expected = MBXExpected<HttpResponseData, HttpRequestError>(error: error)
-            let response = HttpResponse(request: request, result: expected as! MBXExpected<AnyObject, AnyObject>)
+            let expected = MBXExpected<AnyObject, AnyObject>(error: error)
+            let response = HttpResponse(request: request, result: expected)
             callback(response)
             requestCompletion?()
             return 0
@@ -44,7 +44,7 @@ class CustomHttpService: HttpServiceInterface {
             // `HttpResponse` takes an `MBXExpected` type. This is very similar to Swift's
             // `Result` type.
             // APIs using `MBXExpected` are prone to future changes.
-            let expected: MBXExpected<HttpResponseData, HttpRequestError>
+            let expected: MBXExpected<AnyObject, AnyObject>
 
             if let error = error {
                 // Map NSURLError to HttpRequestErrorType
@@ -72,7 +72,7 @@ class CustomHttpService: HttpServiceInterface {
                 expected = MBXExpected(error: requestError)
             }
 
-            let response = HttpResponse(request: request, result: expected as! MBXExpected<AnyObject, AnyObject>)
+            let response = HttpResponse(request: request, result: expected)
             callback(response)
             self.requestCompletion?()
         }

@@ -5,7 +5,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
 
     // MARK: - Test querying a rendered map for features.
 
-    /**
+    /*
      The purpose of this test is to ensure features are returned when querying
      a default style. It does this zooming into an area with dense features,
      and querying the center of the map to ensure there is a populated array of

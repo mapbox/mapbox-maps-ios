@@ -90,6 +90,9 @@ public struct Examples {
         Example(title: "Change the position of a layer",
                 description: "Adjust the position of a layer to be above or below other layers.",
                 type: LayerPositionExample.self),
+        Example(title: "Add a layer below labels",
+                description: "Add a new layer and position it below settlement labels.",
+                type: LayerBelowExample.self),
         Example(title: "Create a static map snapshot",
                 description: """
                     Create a static, non-interactive snapshot from an existing map.
@@ -153,6 +156,9 @@ public struct Examples {
                 type: AnimateGeoJSONLineExample.self),
         Example(title: "Use a map & annotations with SwiftUI",
                 description: "Use the UIViewRepresentable protocol to wrap a MapView in a SwiftUI view.",
-                type: SwiftUIExample.self)
+                type: SwiftUIExample.self),
+        Example(title: "Track Location Updates",
+                description: "Track a device's GPS updates with the camera and location provider",
+                type: TrackingModeExample.self)
     ]
 }

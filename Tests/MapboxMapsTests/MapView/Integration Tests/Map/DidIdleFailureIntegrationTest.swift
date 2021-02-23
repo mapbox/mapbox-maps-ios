@@ -40,8 +40,7 @@ internal struct ResourceEventResponse: Decodable {
     var etag: String?
     var error: ResourceEventResponseError?
 
-    enum CodingKeys: String, CodingKey
-    {
+    enum CodingKeys: String, CodingKey {
         case noContent = "no-content"
         case notModified = "not-modified"
         case mustRevalidate = "must-revalidate"
@@ -60,8 +59,7 @@ internal struct ResourceEventRequest: Decodable {
     var priority: String
     var loadingMethod: [String]
 
-    enum CodingKeys: String, CodingKey
-    {
+    enum CodingKeys: String, CodingKey {
         case url
         case kind
         case priority
@@ -75,8 +73,7 @@ internal struct ResourceEvent: Decodable {
     var response: ResourceEventResponse?
     var cancelled: Bool
 
-    enum CodingKeys: String, CodingKey
-    {
+    enum CodingKeys: String, CodingKey {
         case dataSource = "data-source"
         case request = "request"
         case response

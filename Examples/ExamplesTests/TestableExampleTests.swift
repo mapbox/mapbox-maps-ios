@@ -28,7 +28,7 @@ class TestableExampleTests: XCTestCase {
 
         let existingImpl = method_getImplementation(method)
 
-        for example in Examples.all  {
+        for example in Examples.all {
             // Add a method for this test, but using the same implementation
             let selectorName = "test\(example.type)"
             let testSelector = Selector((selectorName))

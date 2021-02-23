@@ -8,3 +8,5 @@ developer.xcconfig
 Carthage
 api-docs
 MapboxAccessToken
+scripts/release/packager/artifacts
+scripts/release/packager/build

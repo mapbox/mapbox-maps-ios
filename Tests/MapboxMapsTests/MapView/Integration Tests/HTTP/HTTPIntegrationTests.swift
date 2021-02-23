@@ -50,8 +50,7 @@ class CustomHttpService: HttpServiceInterface {
                 // Map NSURLError to HttpRequestErrorType
                 let requestError = HttpRequestError(type: .otherError, message: error.localizedDescription)
                 expected = MBXExpected(error: requestError)
-            }
-            else if let response = response as? HTTPURLResponse,
+            } else if let response = response as? HTTPURLResponse,
                     let data = data {
 
                 // Keys are expected to be lowercase
@@ -67,8 +66,7 @@ class CustomHttpService: HttpServiceInterface {
 
                 let responseData = HttpResponseData(headers: headers, code: Int64(response.statusCode), data: data)
                 expected = MBXExpected(value: responseData)
-            }
-            else {
+            } else {
                 // error
                 let requestError = HttpRequestError(type: .otherError, message: "Invalid response")
                 expected = MBXExpected(error: requestError)

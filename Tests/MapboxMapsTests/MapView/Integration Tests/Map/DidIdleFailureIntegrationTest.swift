@@ -118,8 +118,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
             let event: ResourceEvent
             do {
                 event = try JSONDecoder().decode(ResourceEvent.self, from: jsonData)
-            }
-            catch let error {
+            } catch let error {
                 try! Log.error(forMessage: "Failed to decode to ResourceEvent: \(error)", category: "Map")
                 return
             }
@@ -206,8 +205,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
         case .timedOut:
             if let error = eventError {
                 try! Log.error(forMessage: "Timed out, test had a resource error: \(error.reason) - \(error.message)", category: "Map")
-            }
-            else {
+            } else {
                 try! Log.error(forMessage: "Timed out, but no resource error", category: "Map")
             }
             fallthrough

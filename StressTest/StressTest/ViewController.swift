@@ -131,8 +131,7 @@ class ViewController: UIViewController {
         if step % 2 == 0 {
             if annotations.isEmpty {
                 addAnnotations(around: dest)
-            }
-            else {
+            } else {
                 removeAnnotations()
             }
         }
@@ -141,8 +140,7 @@ class ViewController: UIViewController {
         if step % 5 == 0 {
             if color == nil {
                 pushColorExpression()
-            }
-            else {
+            } else {
                 popColorExpression()
             }
         }
@@ -253,8 +251,7 @@ class ViewController: UIViewController {
             try mapView.__map.setStyleLayerPropertyForLayerId(land,
                                                               property: "background-color",
                                                               value: jsonObject)
-        }
-        catch let error {
+        } catch let error {
             print("Error setting background color: \(error)")
         }
     }
@@ -270,8 +267,7 @@ class ViewController: UIViewController {
                 try mapView.__map.setStyleLayerPropertyForLayerId(land,
                                                                   property: "background-color",
                                                                   value: color.value)
-            }
-            catch let error {
+            } catch let error {
                 print("Failed to reset the background color: \(error)")
             }
         }

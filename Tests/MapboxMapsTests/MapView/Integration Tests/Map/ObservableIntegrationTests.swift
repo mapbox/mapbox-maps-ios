@@ -1,7 +1,6 @@
 import XCTest
 import MapboxMaps
 
-
 class ObservableIntegrationTestsObserver: Observer {
     var peer: MBXPeerWrapper?
     var notificationHandler: (MapboxCoreMaps.Event) -> Void

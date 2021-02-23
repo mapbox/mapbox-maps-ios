@@ -84,8 +84,6 @@ internal struct ResourceEvent: Decodable {
     }
 }
 
-
-
 // Modified from MapViewIntegrationTestCase
 internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
 
@@ -167,7 +165,6 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
         rootViewController = nil
         window = nil
     }
-
 
     internal func testWaitForIdle() throws {
         guard

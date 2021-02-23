@@ -62,7 +62,7 @@ class TestableExampleTests: XCTestCase {
         switch result {
         case .completed:
             break
-            
+
         case .timedOut:
             // TODO: check if this is a failure
             print("Example timed out, was this intentional? Call finish() if possible.")

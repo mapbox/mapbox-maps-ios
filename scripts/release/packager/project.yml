@@ -1,11 +1,11 @@
-name: MapboxMapsPackager
+name: MapboxMaps
 targets:
   MapboxMaps:
     type: framework
     platform: iOS
     settings:
       base:
-        INFOPLIST_FILE: "../../../../Sources/MapboxMaps/MapView/Info.plist"
+        INFOPLIST_FILE: "Sources/MapboxMaps/MapView/Info.plist"
         PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.MapboxMaps
         INSTALL_PATH: $(LOCAL_LIBRARY_DIR)/Frameworks
         SKIP_INSTALL: NO
@@ -18,20 +18,20 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.MapboxMaps
         PRODUCT_NAME: $(TARGET_NAME:c99extidentifier)
         CODE_SIGN_STYLE: Automatic
+        BUILD_DIR: .build
     configFiles: 
-      Debug: "../../../Mapbox/Configurations/Mapbox.xcconfig"
-      Release: "../../../Mapbox/Configurations/Mapbox.xcconfig"
+      Debug: "Configurations/Mapbox.xcconfig"
+      Release: "Configurations/Mapbox.xcconfig"
     sources: 
-      - path: "../../../Sources/MapboxMaps/"
+      - path: "Sources/MapboxMaps/"
+        includes: "*.swift"
         excludes: 
           - "**/*.plist"
           - "**/*.h"
-          - "*.xcodeproj"
-        includes: "*.swift"
-      - path: "../../../Sources/MapboxMaps/MapView/Info.plist"
-      - path: "../../../Sources/MapboxMaps/MapView/MapboxMaps.h"
+      - path: "Sources/MapboxMaps/MapView/Info.plist"
+      - path: "Sources/MapboxMaps/MapView/MapboxMaps.h"
     dependencies:
-      - framework: "MapboxCoreMaps/MapboxCoreMaps.xcframework"
-      - framework: "Turf/Turf.xcframework"
-      - framework: "MapboxCommon/MapboxCommon.xcframework"
-      - framework: "MapboxMobileEvents/MapboxMobileEvents.xcframework"
+      - framework: "../MapboxCoreMaps.xcframework"
+      - framework: "../Turf.xcframework"
+      - framework: "../MapboxCommon.xcframework"
+      - framework: "../MapboxMobileEvents.xcframework"

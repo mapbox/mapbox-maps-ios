@@ -16,3 +16,4 @@ disabled_rules:
   - line_length
   - shorthand_operator
   - todo
+  - trailing_comma

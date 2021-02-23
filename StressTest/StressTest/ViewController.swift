@@ -194,7 +194,7 @@ class ViewController: UIViewController {
         }
     }
 
-    func flyTo(end: CLLocationCoordinate2D, completion: @escaping ()->Void) {
+    func flyTo(end: CLLocationCoordinate2D, completion: @escaping () -> Void) {
         let startOptions = mapView.cameraView.camera
         let start = startOptions.center!
 
@@ -278,7 +278,7 @@ class ViewController: UIViewController {
         color = nil
     }
 
-    func takeSnapshot(_ completion: @escaping ()->Void) {
+    func takeSnapshot(_ completion: @escaping () -> Void) {
         guard snapshotter == nil else {
             fatalError()
         }

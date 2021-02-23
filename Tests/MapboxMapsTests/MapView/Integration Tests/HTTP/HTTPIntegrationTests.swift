@@ -30,9 +30,9 @@ class CustomHttpService: HttpServiceInterface {
         var urlRequest = URLRequest(url: URL(string: request.url)!)
 
         let methodMap: [HttpMethod: String] = [
-            .get : "GET",
-            .head : "HEAD",
-            .post : "POST"
+            .get: "GET",
+            .head: "HEAD",
+            .post: "POST"
         ]
 
         urlRequest.httpMethod = methodMap[request.method]!

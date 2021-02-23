@@ -110,7 +110,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
                 return
             }
 
-            guard let eventData = resourceEvent.data as? [String:Any],
+            guard let eventData = resourceEvent.data as? [String: Any],
                   let jsonData = try? JSONSerialization.data(withJSONObject: eventData) else {
                 return
             }
@@ -179,7 +179,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
         mapView.cameraView.zoom = 8.0
 
         mapView.on(.mapLoadingError) { event in
-            let userInfo: [String:Any] = (event.data as? [String:Any]) ?? [:]
+            let userInfo: [String: Any] = (event.data as? [String: Any]) ?? [:]
             try! Log.error(forMessage: "Map failed to load with error: \(userInfo)", category: "Map")
             XCTFail("Failed to load map with \(userInfo)")
         }

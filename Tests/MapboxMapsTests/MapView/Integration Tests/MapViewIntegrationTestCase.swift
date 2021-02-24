@@ -39,7 +39,7 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
         view.on(.mapLoadingError) { [weak self] event in
             guard let self = self else { return }
 
-            let userInfo: [String:Any] = (event.data as? [String:Any]) ?? [:]
+            let userInfo: [String: Any] = (event.data as? [String: Any]) ?? [:]
             let error = NSError(domain: "MapLoadError", code: -1, userInfo: userInfo)
             self.didFailLoadingMap?(self.mapView!, error)
         }

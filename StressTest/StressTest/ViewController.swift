@@ -79,7 +79,7 @@ class ViewController: UIViewController {
         annotations.reserveCapacity(100)
 
         // Do any additional setup after loading the view.
-        resourceOptions = ResourceOptions(accessToken : AccountManager.shared.accessToken!)
+        resourceOptions = ResourceOptions(accessToken: AccountManager.shared.accessToken!)
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions, styleURL: .streets)
         view.addSubview(mapView)
         NSLayoutConstraint.activate([
@@ -131,8 +131,7 @@ class ViewController: UIViewController {
         if step % 2 == 0 {
             if annotations.isEmpty {
                 addAnnotations(around: dest)
-            }
-            else {
+            } else {
                 removeAnnotations()
             }
         }
@@ -141,8 +140,7 @@ class ViewController: UIViewController {
         if step % 5 == 0 {
             if color == nil {
                 pushColorExpression()
-            }
-            else {
+            } else {
                 popColorExpression()
             }
         }
@@ -194,7 +192,7 @@ class ViewController: UIViewController {
         }
     }
 
-    func flyTo(end: CLLocationCoordinate2D, completion: @escaping ()->Void) {
+    func flyTo(end: CLLocationCoordinate2D, completion: @escaping () -> Void) {
         let startOptions = mapView.cameraView.camera
         let start = startOptions.center!
 
@@ -253,8 +251,7 @@ class ViewController: UIViewController {
             try mapView.__map.setStyleLayerPropertyForLayerId(land,
                                                               property: "background-color",
                                                               value: jsonObject)
-        }
-        catch let error {
+        } catch let error {
             print("Error setting background color: \(error)")
         }
     }
@@ -270,15 +267,14 @@ class ViewController: UIViewController {
                 try mapView.__map.setStyleLayerPropertyForLayerId(land,
                                                                   property: "background-color",
                                                                   value: color.value)
-            }
-            catch let error {
+            } catch let error {
                 print("Failed to reset the background color: \(error)")
             }
         }
         color = nil
     }
 
-    func takeSnapshot(_ completion: @escaping ()->Void) {
+    func takeSnapshot(_ completion: @escaping () -> Void) {
         guard snapshotter == nil else {
             fatalError()
         }

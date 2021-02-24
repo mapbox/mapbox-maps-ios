@@ -40,8 +40,7 @@ internal struct ResourceEventResponse: Decodable {
     var etag: String?
     var error: ResourceEventResponseError?
 
-    enum CodingKeys: String, CodingKey
-    {
+    enum CodingKeys: String, CodingKey {
         case noContent = "no-content"
         case notModified = "not-modified"
         case mustRevalidate = "must-revalidate"
@@ -60,8 +59,7 @@ internal struct ResourceEventRequest: Decodable {
     var priority: String
     var loadingMethod: [String]
 
-    enum CodingKeys: String, CodingKey
-    {
+    enum CodingKeys: String, CodingKey {
         case url
         case kind
         case priority
@@ -75,16 +73,13 @@ internal struct ResourceEvent: Decodable {
     var response: ResourceEventResponse?
     var cancelled: Bool
 
-    enum CodingKeys: String, CodingKey
-    {
+    enum CodingKeys: String, CodingKey {
         case dataSource = "data-source"
         case request = "request"
         case response
         case cancelled
     }
 }
-
-
 
 // Modified from MapViewIntegrationTestCase
 internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
@@ -115,7 +110,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
                 return
             }
 
-            guard let eventData = resourceEvent.data as? [String:Any],
+            guard let eventData = resourceEvent.data as? [String: Any],
                   let jsonData = try? JSONSerialization.data(withJSONObject: eventData) else {
                 return
             }
@@ -123,8 +118,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
             let event: ResourceEvent
             do {
                 event = try JSONDecoder().decode(ResourceEvent.self, from: jsonData)
-            }
-            catch let error {
+            } catch let error {
                 try! Log.error(forMessage: "Failed to decode to ResourceEvent: \(error)", category: "Map")
                 return
             }
@@ -168,7 +162,6 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
         window = nil
     }
 
-
     internal func testWaitForIdle() throws {
         guard
             let mapView = mapView,
@@ -186,7 +179,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
         mapView.cameraView.zoom = 8.0
 
         mapView.on(.mapLoadingError) { event in
-            let userInfo: [String:Any] = (event.data as? [String:Any]) ?? [:]
+            let userInfo: [String: Any] = (event.data as? [String: Any]) ?? [:]
             try! Log.error(forMessage: "Map failed to load with error: \(userInfo)", category: "Map")
             XCTFail("Failed to load map with \(userInfo)")
         }
@@ -212,8 +205,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
         case .timedOut:
             if let error = eventError {
                 try! Log.error(forMessage: "Timed out, test had a resource error: \(error.reason) - \(error.message)", category: "Map")
-            }
-            else {
+            } else {
                 try! Log.error(forMessage: "Timed out, but no resource error", category: "Map")
             }
             fallthrough

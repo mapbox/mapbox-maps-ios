@@ -7,7 +7,7 @@ import MetalKit
 @testable import MapboxMapsFoundation
 #endif
 
-// swiftlint:disable explicit_top_level_acl explicit_acl
+// swiftlint:disable:next type_body_length
 class CameraManagerTests: XCTestCase {
 
     var mapView: BaseMapView!

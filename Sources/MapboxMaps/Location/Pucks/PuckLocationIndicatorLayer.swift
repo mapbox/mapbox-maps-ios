@@ -128,6 +128,7 @@ internal class PuckLocationIndicatorLayer: Puck {
 
 // MARK: Layer Creation Functions
 private extension PuckLocationIndicatorLayer {
+    // swiftlint:disable:next cyclomatic_complexity
     func createPreciseLocationIndicatorLayer(location: Location) throws {
         guard let style = self.locationSupportableMapView?.style else { return }
 

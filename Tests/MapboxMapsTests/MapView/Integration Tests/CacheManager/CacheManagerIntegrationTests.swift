@@ -2,11 +2,11 @@ import XCTest
 @testable import MapboxMaps
 
 class DeallocationObserver {
-    var observe: ()->Void
+    var observe: () -> Void
     deinit {
         observe()
     }
-    init(_ observe: @escaping ()->Void) {
+    init(_ observe: @escaping () -> Void) {
         self.observe = observe
     }
 }

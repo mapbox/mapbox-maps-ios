@@ -1,6 +1,8 @@
 import Turf
 import MapboxCommon
 
+// swiftlint:disable cyclomatic_complexity
+
 // MARK: - Geometry
 
 extension Geometry {

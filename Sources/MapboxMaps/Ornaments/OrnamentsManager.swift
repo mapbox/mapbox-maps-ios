@@ -189,6 +189,7 @@ internal class OrnamentsManager: NSObject {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     private func addToView(ornament: Ornament) {
         if ornament.view == nil {
             ornament.view = ornament.type.makeOrnament(for: self.view, visibility: ornament.visibility)

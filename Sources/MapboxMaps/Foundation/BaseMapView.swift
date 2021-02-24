@@ -3,6 +3,8 @@
 import UIKit
 import Turf
 
+// swiftlint:disable file_length
+
 public enum PreferredFPS: Int, Equatable {
     /// The default frame rate. This can be either 30 FPS or 60 FPS, depending on
     /// device capabilities.

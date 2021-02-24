@@ -27,7 +27,6 @@ internal class ExpressionTests: XCTestCase {
         }
     }
 
-    //swiftlint:disable statement_position
     internal func testExpressionValidity() {
         let sumExp = Exp(.sum) {
             10

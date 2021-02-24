@@ -2,7 +2,6 @@
 # Usage: ./upload-to-registry.sh </path/to/source/zip> <project> <version> <zipfile name>
 
 # Direct Download //s3://mapbox-api-downloads-production/v2/mobile-maps-ios/releases/ios/<version>/mapbox-maps-ios.zip
-# SPM/Pods //s3://mapbox-api-downloads-production/v2/mobile-maps-ios/releases/ios/<version>/packages/MapboxMaps.xcframework.zip
 
 set -euo pipefail
 

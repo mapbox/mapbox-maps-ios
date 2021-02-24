@@ -23,6 +23,8 @@ zipped archive of XCFrameworks.
   XCFrameworks (currently `Turf`).
 - It also creates a just-in-time Xcode project in order to create a binary
   XCFramework for `MapboxMaps`.
+- It will also then add the LICENSE.md and appropriate README.md to the package. 
+- Finally, it will zip that folder so everything will be in one bundle
 - NOTE: This script **MUST** be called from this directory
 
 ### `download-dependency.sh`

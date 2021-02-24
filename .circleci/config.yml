@@ -335,15 +335,15 @@ jobs:
                 commit-text: "[create xcframework]"
                 always-run: << parameters.create-xcframework-always-run >>
             - make-deps
-            # - make-docs
-            - make-xcframework-zip
-            - make-xcframeworks-bundle
+            - make-xcframework-bundle
             - danger
             - report-failure:
                 report_failure: << parameters.report_failure >>
                 message: "create-xcframework"
     
-    # This job was created for the public beta
+    # This job was created for the public beta and is responsible for building and uploading
+    # the xcframework bundle to S3. As well as making appropriate updates to Package Manifest and Podspec.
+    # Further, this job will also create a PR in api-downloads for SDK Registry access.
     ios-build-release:
         <<: *default-job
         steps:
@@ -361,16 +361,11 @@ jobs:
                 message: '<$CIRCLE_BUILD_URL|Release build for \`$VERSION\` started.>'
                 include_visit_job_action: true
             - make-deps
-            - make-xcframework-zip
-            - make-xcframeworks-bundle
+            - make-xcframework-bundle
             - run: 
-                name: Uploading to XCFramework to SDK Registry
+                name: Uploading direct download bundle to SDK Registry
                 command: |
-                    ./scripts/release/upload-to-registry.sh MapboxMaps.xcframework.zip mobile-maps-ios ${VERSION}/packages MapboxMaps.xcframework.zip
-            - run: 
-                name: Uploading to Direct Download to SDK Registry
-                command: |
-                    ./scripts/release/upload-to-registry.sh MapboxMaps.zip mobile-maps-ios ${VERSION} mapbox-maps-ios.zip
+                    ./scripts/release/upload-to-registry.sh MapboxMaps-dynamic.zip mobile-maps-ios ${VERSION} MapboxMaps-dynamic.zip
             - run:
                 name: Run `npm ci`
                 command: |
@@ -393,6 +388,8 @@ jobs:
                 failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` failed.>'
                 success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` succeeded!> :tada:'
 
+    # This job is triggered when a tag is pushed so we can tag a release. 
+    # This job is responsible for making docs, and creating a draft release on Github
     ios-release-tag:
         <<: *default-job
         steps:
@@ -420,14 +417,6 @@ jobs:
                 include_visit_job_action: true
                 failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` failed.>'
                 success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` succeeded!> :tada:'
-          
-    nightly-tests:
-        <<: *default-job
-        steps:
-            - checkout
-        #   - run: |
-        #       swift build -Xlinker -LSources/CMapbox/lib -Xswiftc "-lc++" -Xswiftc "-sdk" -Xswiftc "`xcrun --sdk iphonesimulator --show-sdk-path`" -Xswiftc "-target" -Xswiftc "x86_64-apple-ios12.1-simulator" -Xlinker "-framework" -Xlinker "GLKit"
-        #       swift package generate-xcodeproj
 
 # ======================================================================================================================        
 # Reusable commands
@@ -640,44 +629,25 @@ commands:
             - store_artifacts:
                 path: api-docs.zip
 
-    make-xcframework-zip:
-        description: "Create MapboxMaps.xcframework"
-        steps:
-            - run:
-                name: Creating MapboxMaps.xcframework
-                command: |
-                    make xcframework
-            - run:
-                name: Zipping xcframework
-                command: |
-                    cp -r build/Build/Products/XCFramework/MapboxMaps.xcframework ./
-                    zip -r MapboxMaps.xcframework.zip MapboxMaps.xcframework LICENSE.md
-                    swift package --package-path /Users/distiller/project/ compute-checksum MapboxMaps.xcframework.zip > MapboxMaps.xcframework.zip.checksum
-                    echo "Generating Checksum for MapboxMaps.xcframework.zip"
-                    cat MapboxMaps.xcframework.zip.checksum
-            - store_artifacts:
-                path: MapboxMaps.xcframework.zip
-            - store_artifacts:
-                path: MapboxMaps.xcframework.zip.checksum
-
-    make-xcframeworks-bundle:
-        # Requires make-xcframework-zip 
+    make-xcframework-bundle:
         description: "Create xcframework bundle"
         steps:
+            - run: 
+                name: Install xcframework dependencies
+                command: |
+                    brew install jq xcodegen
             - run:
                 name: Creating bundled artifact
                 command: |
-                    mkdir artifact
-                    cp scripts/release/README.md artifact
-                    cp -r build/Build/Products/XCFramework/MapboxMaps.xcframework artifact
-                    cp /Users/distiller/project/LICENSE.md artifact
-                    scripts/framework/make-xcframework.sh MapboxCommon Carthage/Build/iOS artifact
-                    scripts/framework/make-xcframework.sh MapboxCoreMaps Carthage/Build/iOS artifact
-                    scripts/framework/make-xcframework.sh MapboxMobileEvents Carthage/Build/iOS artifact
-                    scripts/framework/make-xcframework.sh Turf Carthage/Build/iOS artifact                    
-                    zip -r MapboxMaps.zip artifact
+                    echo "Navigating to packager script"
+                    cd scripts/release/packager
+                    ./package-mapbox-maps.sh
+                    echo "Moving zip to project root"
+                    mv MapboxMaps-dynamic.zip /Users/distiller/project/
+                    echo "Return to root of project"
+                    cd /Users/distiller/project/
             - store_artifacts:
-                path: MapboxMaps.zip
+                path: MapboxMaps-dynamic.zip
 
     report-failure:
         parameters:

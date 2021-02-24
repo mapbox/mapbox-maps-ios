@@ -31,11 +31,13 @@ final class MockCameraManager: CameraManagerProtocol {
                 completion: completion))
     }
 
+    //swiftlint:disable function_parameter_count
     func moveCamera(by offset: CGPoint?,
                     rotation: CGFloat?,
                     pitch: CGFloat?,
                     zoom: CGFloat?,
-                    animated: Bool) {
+                    animated: Bool,
+                    pitchedDrift: Bool) {
     }
 
     func cancelTransitions() {

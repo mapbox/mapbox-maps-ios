@@ -1,3 +1,39 @@
+## Breaking changes ⚠️
+* Updates Turf to v2.0.0-alpha.3 ([#133](https://github.com/mapbox/mapbox-maps-ios/pull/133))
+
+
+## Features ✨ and improvements 🏁
+* Added SwiftUI example. ([#78](https://github.com/mapbox/mapbox-maps-ios/pull/78))
+* Allow a developer to synchronously update a layer with one API call -- no longer have to retrieve and re-add a layer. ([#85](https://github.com/mapbox/mapbox-maps-ios/pull/85))
+* MapboxMaps can now be built and tested using Swift Package Manager ([#125](https://github.com/mapbox/mapbox-maps-ios/pull/125))
+
+
+## Bug fixes 🐞
+* Prevent pitch and zoom from exceeding limits. Also updates default maximum pitch to 85 degrees. ([#103](https://github.com/mapbox/mapbox-maps-ios/pull/103))
+* Fixed an issue where quick zoom did not work at higher zoom levels. Also made the duration argument of the setCamera methods non-optional with default of 0. ([#109](https://github.com/mapbox/mapbox-maps-ios/pull/109))
+* Breaking: GestureManager.delegate is now weak ([#134](https://github.com/mapbox/mapbox-maps-ios/pull/134))
+* Camera Pan Fix ([#120](https://github.com/mapbox/mapbox-maps-ios/pull/120))
+
+
+## Skipped (no entry needed)
+* Enable code coverage for Device Farm ([#67](https://github.com/mapbox/mapbox-maps-ios/pull/67))
+* Revert Examples scheme change from #125 ([#129](https://github.com/mapbox/mapbox-maps-ios/pull/129))
+* [CI] Script fixes ([#131](https://github.com/mapbox/mapbox-maps-ios/pull/131))
+* Upload code coverage ([#110](https://github.com/mapbox/mapbox-maps-ios/pull/110))
+* [scripts] Introduce packaging scripts to support binary distribution ([#124](https://github.com/mapbox/mapbox-maps-ios/pull/124))
+* Add script to select higher version of Xcode. ([#135](https://github.com/mapbox/mapbox-maps-ios/pull/135))
+
+
+## UNCATEGORIZED
+* Update Mapbox Common to v10.0.0-beta.11 and MapboxCoreMaps to v10.0.0-beta.15. ([#111](https://github.com/mapbox/mapbox-maps-ios/pull/111))
+* Enable Warnings As Errors ([#116](https://github.com/mapbox/mapbox-maps-ios/pull/116))
+* [cleanup] Delete unused MapViewController file ([#121](https://github.com/mapbox/mapbox-maps-ios/pull/121))
+* Consumption of MapboxMaps via Cocoapods will now build from source ([#118](https://github.com/mapbox/mapbox-maps-ios/pull/118))
+* [Example] Adds a "tracking mode" example ([#102](https://github.com/mapbox/mapbox-maps-ios/pull/102))
+* Update and document Tracking Mode Example ([#132](https://github.com/mapbox/mapbox-maps-ios/pull/132))
+* [build] Update automation for new package scripts ([#137](https://github.com/mapbox/mapbox-maps-ios/pull/137))
+
+
 # Changelog for Mapbox Maps SDK v10 for iOS
 
 Mapbox welcomes participation and contributions from everyone.

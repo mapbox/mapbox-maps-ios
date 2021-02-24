@@ -70,6 +70,20 @@ AWSTemplateFormatVersion: '2010-09-09',
                 }
               ]
             }
+          },
+          {
+            PolicyName: 'publish-metrics',
+            PolicyDocument: {
+              Statement: [
+                {
+                  Action: ['s3:PutObject'],
+                  Effect: 'Allow',
+                  Resource: ['arn:aws:s3:::mapbox-loading-dock/raw/mobile_staging.codecoverage_v2/*',
+                             'arn:aws:s3:::mapbox-loading-dock/raw/mobile.codecoverage/*',
+                             'arn:aws:s3:::mapbox-loading-dock/raw/mobile_staging.codecoverage/*']
+                }
+              ]
+            }
           }
         ]
       }

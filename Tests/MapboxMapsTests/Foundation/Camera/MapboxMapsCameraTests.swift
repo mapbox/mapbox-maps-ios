@@ -321,7 +321,7 @@ class CameraManagerTests: XCTestCase {
             bearing: bearing,
             animated: false)
 
-        let shiftedCenterCoordinate = cameraManager.shiftCenterCoordinate(by: offset, didFling: false)
+        let shiftedCenterCoordinate = cameraManager.shiftCenterCoordinate(by: offset, drift: false)
 
         XCTAssertGreaterThan(shiftedCenterCoordinate.longitude, 180, line: line)
     }
@@ -337,7 +337,7 @@ class CameraManagerTests: XCTestCase {
             bearing: bearing,
             animated: false)
 
-        let shiftedCenterCoordinate = cameraManager.shiftCenterCoordinate(by: offset, didFling: false)
+        let shiftedCenterCoordinate = cameraManager.shiftCenterCoordinate(by: offset, drift: false)
 
         XCTAssertLessThan(shiftedCenterCoordinate.longitude, -180, line: line)
     }

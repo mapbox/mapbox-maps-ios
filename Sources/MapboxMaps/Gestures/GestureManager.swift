@@ -125,7 +125,7 @@ internal protocol CameraManagerProtocol: AnyObject {
                     pitch: CGFloat?,
                     zoom: CGFloat?,
                     animated: Bool,
-                    didFling: Bool)
+                    drift: Bool)
 
     func cancelTransitions()
 }
@@ -313,12 +313,12 @@ extension GestureManager: GestureHandlerDelegate {
 
     // MapView has been panned
     internal func panned(by displacement: CGPoint) {
-        self.cameraManager.moveCamera(by: displacement, rotation: nil, pitch: nil, zoom: nil, animated: false, didFling: false)
+        self.cameraManager.moveCamera(by: displacement, rotation: nil, pitch: nil, zoom: nil, animated: false, drift: false)
     }
 
     // Pan has ended on the MapView with a residual `offset`
     internal func panEnded(with offset: CGPoint) {
-        self.cameraManager.moveCamera(by: offset, rotation: nil, pitch: nil, zoom: nil, animated: true, didFling: true)
+        self.cameraManager.moveCamera(by: offset, rotation: nil, pitch: nil, zoom: nil, animated: true, drift: true)
     }
 
     internal func cancelGestureTransitions() {

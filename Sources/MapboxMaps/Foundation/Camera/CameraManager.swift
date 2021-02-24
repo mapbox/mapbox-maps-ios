@@ -399,15 +399,15 @@ public class CameraManager {
      - Parameter pitch: The degrees to adjust the map's tilt by.
      - Parameter zoom: The amount to adjust the camera's zoom level by.
      - Parameter animated: Indicates  whether the camera changes should be animated.
-     - Parameter didFling: Indicates if the camera is experiencing a fling, which means the offset value needs to be manipulated
+     - Parameter drift: Indicates if the camera is experiencing a fling, which means the offset value needs to be manipulated
      */
-    public func moveCamera(by offset: CGPoint? = nil, rotation: CGFloat? = nil, pitch: CGFloat? = nil, zoom: CGFloat? = nil, animated: Bool = false, didFling: Bool = false) {
+    public func moveCamera(by offset: CGPoint? = nil, rotation: CGFloat? = nil, pitch: CGFloat? = nil, zoom: CGFloat? = nil, animated: Bool = false, drift: Bool = false) {
         guard let mapView = mapView else {
             assertionFailure("MapView is nil.")
             return
         }
 
-        let centerCoordinate = self.shiftCenterCoordinate(by: offset ?? .zero, didFling: didFling)
+        let centerCoordinate = self.shiftCenterCoordinate(by: offset ?? .zero, drift: drift)
 
         var newBearing: CGFloat = 0
         if let angle = rotation {
@@ -455,9 +455,9 @@ public class CameraManager {
     /**
      Return a new center coordinate shifted by a given offset value.
      - Parameter offset: The `CGPoint` value to shift the map's center by.
-     - Parameter didFling: Indicates if the camera is experiencing a fling, which means the offset value needs to be manipulated
+     - Parameter drift: Indicates if the camera is experiencing a fling, which means the offset value needs to be manipulated
      */
-    func shiftCenterCoordinate(by offset: CGPoint, didFling: Bool) -> CLLocationCoordinate2D {
+    func shiftCenterCoordinate(by offset: CGPoint, drift: Bool) -> CLLocationCoordinate2D {
         guard let mapView = mapView else {
             assertionFailure("MapView is nil.")
             return CLLocationCoordinate2D(latitude: 0, longitude: 0)
@@ -467,7 +467,7 @@ public class CameraManager {
         }
 
         var pitchFactor: CGFloat = mapView.pitch
-        if didFling {
+        if drift {
             if pitchFactor != 0.0 {
                 pitchFactor /= 10.0
                 pitchFactor += 1.5

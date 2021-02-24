@@ -37,3 +37,13 @@ step 'Building MapboxMaps.xcframework'
 rm -rf .xcode
 
 popd
+
+step 'Add License and README to bundle'
+cp ../../../LICENSE.md artifacts/
+cp ../README.md artifacts/
+
+step 'Zip Bundle'
+zip -r MapboxMaps-dynamic.zip artifacts
+
+step 'Delete Artifacts Directory'
+rm -rf artifacts

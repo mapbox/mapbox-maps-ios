@@ -547,7 +547,7 @@ public class CameraManager {
         // density of time steps at towards the start and end of the animation to avoid jiggling.
         let timeSteps = stride(from: 0.0, through: 1.0, by: 0.025)
         let keyTimes: [NSNumber] = Array(timeSteps).map {
-            NSNumber(floatLiteral: $0)
+            NSNumber(value: $0)
         }
 
         var animations: [CAAnimation] = []

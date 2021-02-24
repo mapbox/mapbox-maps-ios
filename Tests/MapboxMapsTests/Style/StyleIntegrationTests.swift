@@ -28,7 +28,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             let result1 = style.addLayer(layer: newBackgroundLayer)
 
             switch result1 {
-            case .success(_):
+            case .success:
                 expectation.fulfill()
             case .failure(let error):
                 XCTFail("Could not add background layer due to error: \(error)")
@@ -40,7 +40,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             }
 
             switch result2 {
-            case .success(_):
+            case .success:
                 expectation.fulfill()
             case .failure(let error):
                 XCTFail("Could not update background layer due to error: \(error)")

@@ -8,6 +8,14 @@ phases:
   # Farm are already installed.
   install:
     commands:
+      - XCODE_VERSION=$(xcodebuild -version |head -n 1|cut -d" " -f2|cut -d"." -f1)
+      - >-
+       if [ "$XCODE_VERSION" -lt 12 ];
+       then
+         echo "Xcode version is $XCODE_VERSION; switching to a higher version";
+         sudo /usr/bin/xcode-select --switch /Applications/Xcode.app/;
+         xcodebuild -version;
+       fi;
 
   # The pre-test phase includes commands that setup your test environment.
   pre_test:

@@ -19,8 +19,8 @@ class CustomHttpService: HttpServiceInterface {
 
         // If the test sets an error, call the callback with immediately
         if let error = forcedError {
-            let expected = MBXExpected<HttpResponseData, HttpRequestError>(error: error)
-            let response = HttpResponse(request: request, result: expected as! MBXExpected<AnyObject, AnyObject>)
+            let expected = MBXExpected<AnyObject, AnyObject>(error: error)
+            let response = HttpResponse(request: request, result: expected)
             callback(response)
             requestCompletion?()
             return 0
@@ -30,9 +30,9 @@ class CustomHttpService: HttpServiceInterface {
         var urlRequest = URLRequest(url: URL(string: request.url)!)
 
         let methodMap: [HttpMethod: String] = [
-            .get : "GET",
-            .head : "HEAD",
-            .post : "POST"
+            .get: "GET",
+            .head: "HEAD",
+            .post: "POST"
         ]
 
         urlRequest.httpMethod = methodMap[request.method]!
@@ -44,14 +44,13 @@ class CustomHttpService: HttpServiceInterface {
             // `HttpResponse` takes an `MBXExpected` type. This is very similar to Swift's
             // `Result` type.
             // APIs using `MBXExpected` are prone to future changes.
-            let expected: MBXExpected<HttpResponseData, HttpRequestError>
+            let expected: MBXExpected<AnyObject, AnyObject>
 
             if let error = error {
                 // Map NSURLError to HttpRequestErrorType
                 let requestError = HttpRequestError(type: .otherError, message: error.localizedDescription)
                 expected = MBXExpected(error: requestError)
-            }
-            else if let response = response as? HTTPURLResponse,
+            } else if let response = response as? HTTPURLResponse,
                     let data = data {
 
                 // Keys are expected to be lowercase
@@ -67,14 +66,13 @@ class CustomHttpService: HttpServiceInterface {
 
                 let responseData = HttpResponseData(headers: headers, code: Int64(response.statusCode), data: data)
                 expected = MBXExpected(value: responseData)
-            }
-            else {
+            } else {
                 // error
                 let requestError = HttpRequestError(type: .otherError, message: "Invalid response")
                 expected = MBXExpected(error: requestError)
             }
 
-            let response = HttpResponse(request: request, result: expected as! MBXExpected<AnyObject, AnyObject>)
+            let response = HttpResponse(request: request, result: expected)
             callback(response)
             self.requestCompletion?()
         }

@@ -8,7 +8,7 @@ class MapViewIntegrationTests: IntegrationTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-    
+
         guard let root = rootViewController?.view else {
             throw XCTSkip("No valid UIWindow or root view controller")
         }

@@ -457,7 +457,7 @@ public class CameraManager {
      - Parameter offset: The `CGPoint` value to shift the map's center by.
      - Parameter drift: Indicates if the camera is experiencing a fling, which means the offset value needs to be manipulated
      */
-    func shiftCenterCoordinate(by offset: CGPoint, drift: Bool) -> CLLocationCoordinate2D {
+    func shiftCenterCoordinate(by offset: CGPoint, drift: Bool = false) -> CLLocationCoordinate2D {
         guard let mapView = mapView else {
             assertionFailure("MapView is nil.")
             return CLLocationCoordinate2D(latitude: 0, longitude: 0)
@@ -466,9 +466,11 @@ public class CameraManager {
             return CLLocationCoordinate2D(latitude: 0, longitude: 0)
         }
 
+        /// Stop gap solution until we adopt the Drag API
         var pitchFactor: CGFloat = mapView.pitch
         if drift {
             if pitchFactor != 0.0 {
+                // These calculations are creating a multiplier for the offset to normalize the offset for pitched maps
                 pitchFactor /= 10.0
                 pitchFactor += 1.5
             } else {

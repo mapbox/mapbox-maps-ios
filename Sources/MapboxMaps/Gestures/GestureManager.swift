@@ -119,6 +119,7 @@ internal protocol CameraManagerProtocol: AnyObject {
                    duration: TimeInterval,
                    completion: ((Bool) -> Void)?)
 
+    //swiftlint:disable function_parameter_count
     func moveCamera(by offset: CGPoint?,
                     rotation: CGFloat?,
                     pitch: CGFloat?,

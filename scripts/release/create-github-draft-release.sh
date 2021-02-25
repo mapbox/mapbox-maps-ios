@@ -36,7 +36,7 @@ MESSAGE="### Dependency requirements:\n\
 Link to download binaries (append your own Mapbox access token [scoped with \`DOWNLOADS:READ\`](https://account.mapbox.com/)):\n\
 \n\
 \`\`\`\n\
-https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/<version>/MapboxMaps-dynamic.zip?access_token=<access-token>\n\
+https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/${TAG/#v}/MapboxMaps-dynamic.zip?access_token=<access-token>\n\
 \`\`\`"
 
 # Body that is passed to the POST request

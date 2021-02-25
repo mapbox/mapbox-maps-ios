@@ -154,9 +154,9 @@ public struct Examples {
         Example(title: "Animate a GeoJSON line",
                 description: "Update a map's style to animate a line over time.",
                 type: AnimateGeoJSONLineExample.self),
-//        Example(title: "Use a map & annotations with SwiftUI",
-//                description: "Use the UIViewRepresentable protocol to wrap a MapView in a SwiftUI view.",
-//                type: SwiftUIExample.self),
+        Example(title: "Use a map & annotations with SwiftUI",
+                description: "Use the UIViewRepresentable protocol to wrap a MapView in a SwiftUI view.",
+                type: SwiftUIExample.self),
         Example(title: "Track Location Updates",
                 description: "Track a device's GPS updates with the camera and location provider",
                 type: TrackingModeExample.self)

@@ -47,10 +47,9 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 
 ***What will this job do?***
 
-- Build our xcframework and our direct-download bundle
-- Include LICENSE.md in the zip files
-- Upload direct download and xcframework to S3
-- Store the checksum of the .xcframework.zip as a CI artifact
+- Build our direct-download bundle
+- Include LICENSE.md and README.md for bundle in the zip files
+- Upload direct download to S3
 - Update the existing podspec and package manifest and commit that to the release branch
 - Create a PR [here](https://github.com/mapbox/api-downloads/pulls) so that our SDK can be consumed
 - [ ] The API Downloads PR needs to be approved and merged before continuing. You do not need to merge your PR in `mapbox-maps-ios` yet.
@@ -58,7 +57,6 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 **2) Update Distribution & Changelog**
 
 - [ ] On your local `Release/{VERSION}` branch, pull the latest from remote release branch. CI will have committed changes to podspec and package manifest.
-    - [ ] You can verify the checksum by going to the CI Artifacts and getting the value from the `MapboxMaps.xcframework.zip.checksum`. 
 - [ ] This is where we need to verify SPM update was successful. Open a tester single view application. Go to the Swift Package Manager menu and add our repo `https://github.com/mapbox/mapbox-maps-ios.git`. For the branch, specify your current release branch. Then verify that you can load the SDK, and display a basic map on device to verify that the build is working.
     - ***Note that the api-downloads PR needs to be merged and sanity checks need to complete before downloads are available here***
 - [ ] Generate the changelog by running the following script `./scripts/release/generate_changelog.sh`
@@ -109,7 +107,5 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 ## 📣 Announcements
 
 - [ ] Tag the `@maps-ios` team in #mobile-maps-ios to notify the team about the completed release! 🎉
-
-// TODO: Slackbot alert from GitHub release?
 
 When all of the above is completed, you can then close this ticket.

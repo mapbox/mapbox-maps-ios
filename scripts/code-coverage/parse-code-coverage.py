@@ -93,18 +93,18 @@ if __name__ == "__main__":
     coverage_info = {}
     coverage_info["version"]    = "1"
     coverage_info["scheme"]     = scheme
-    coverage_info["build"]      = buildNumber
     coverage_info["totals"]     = parseReport(reportPath)
 
     report = {}
-    report["version"]        = "1"
-    report["created_at"]     = datetime.datetime.utcnow().isoformat()
-    report["project"]        = project
-    report["branch"]         = branch
-    report["component"]      = component
-    report["commit_sha"]     = sha
-    report["commit_message"] = message
     report["coverage"]       = coverage_info
+    report["created_at"]     = datetime.datetime.utcnow().isoformat()
+    report["commit_message"] = message
+    report["commit_sha"]     = sha
+    report["branch"]         = branch
+    report["project"]        = project
+    report["component"]      = component
+    report["version"]        = "1"
+    report["build_number"]   = buildNumber
 
     # Print the stats of current file
     print(json.dumps(report, indent=2))

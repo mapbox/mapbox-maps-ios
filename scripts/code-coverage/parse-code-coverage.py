@@ -66,19 +66,19 @@ if __name__ == "__main__":
 
     # Format
     # {
-    #   "version" : string (schema version),
-    #   "created_at" : <isoformat>,
-    #   "project" : string (github, e.g. mapbox-maps-ios)
-    #   "branch" : string
-    #   "component" : string (for modules, e.g. MapboxMaps)
-    #   "commit_sha" : string,
-    #   "commit_message" : string,
     #   "coverage" : {
     #     "version" : string,
     #     "scheme" : string,
     #     "totals" : <lcov JSON totals object>,
-    #     "build" : string(CI build number)
     #   },
+    #   "created_at" : <isoformat>,
+    #   "commit_message" : string,
+    #   "commit_sha" : string,
+    #   "branch" : string
+    #   "project" : string (github, e.g. mapbox-maps-ios)
+    #   "component" : string (module that's being checked, e.g. MapboxMaps)
+    #   "version" : string (schema version),
+    #   "build_number" : string (CI build number)
     # }
 
     # Git properties

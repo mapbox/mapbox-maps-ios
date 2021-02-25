@@ -45,8 +45,8 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
         self.snapshotter.style.styleURL = .light
         self.snapshotter.camera = mapView.cameraView.camera
 
-        self.snapshotter.on(.styleLoadingFinished) { _ in
-            self.startSnapshot()
+        self.snapshotter.on(.styleLoadingFinished) { [weak self] _ in
+            self?.startSnapshot()
         }
     }
 

@@ -14,8 +14,7 @@ COMMON_VERSION=$(jq -r '.MapboxCommon' scripts/release/packager/versions.json)
 #
 # Checkout the release branch
 #
-# BRANCH="Release/v${MAPS_VERSION}"
-BRANCH="nm/release_script_updates"
+BRANCH="Release/v${MAPS_VERSION}"
 git fetch origin main
 git checkout ${BRANCH}
 

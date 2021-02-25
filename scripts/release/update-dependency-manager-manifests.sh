@@ -4,7 +4,7 @@ set -euo pipefail
 
 #
 # Usage:
-#   ./scripts/release/update-spm-manifest.sh <maps version number>
+#   ./scripts/release/update-dependency-manager-manifests.sh <maps version number>
 #
 
 MAPS_VERSION=${1}

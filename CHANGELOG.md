@@ -38,6 +38,22 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+# 10.0.0-beta.14 - February 24, 2021
+
+## Breaking changes ⚠️
+* Updates Turf to v2.0.0-alpha.3 ([#133](https://github.com/mapbox/mapbox-maps-ios/pull/133))
+
+## Features ✨ and improvements 🏁
+* Added SwiftUI example. ([#78](https://github.com/mapbox/mapbox-maps-ios/pull/78))
+* Allow a developer to synchronously update a layer with one API call -- no longer have to retrieve and re-add a layer. ([#85](https://github.com/mapbox/mapbox-maps-ios/pull/85))
+* MapboxMaps can now be built and tested using Swift Package Manager ([#125](https://github.com/mapbox/mapbox-maps-ios/pull/125))
+
+## Bug fixes 🐞
+* Prevent pitch and zoom from exceeding limits. Also updates default maximum pitch to 85 degrees. ([#103](https://github.com/mapbox/mapbox-maps-ios/pull/103))
+* Fixed an issue where quick zoom did not work at higher zoom levels. Also made the duration argument of the setCamera methods non-optional with default of 0. ([#109](https://github.com/mapbox/mapbox-maps-ios/pull/109))
+* GestureManager.delegate is now weak ([#134](https://github.com/mapbox/mapbox-maps-ios/pull/134))
+* Using heuristic to provide pan drift when the map is pitched ([#120](https://github.com/mapbox/mapbox-maps-ios/pull/120))
+
 # 10.0.0-beta.13 - February 12, 2021
 
 ## Breaking changes ⚠️

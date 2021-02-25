@@ -1,4 +1,5 @@
 import UIKit
+import ObjectiveC
 
 public class ExampleTableViewController: UITableViewController {
 
@@ -112,17 +113,38 @@ extension ExampleTableViewController {
         exampleViewController.title = example.title
         exampleViewController.navigationItem.largeTitleDisplayMode = .never
 
-        let action = UIAction { (_) in
-            let alert = UIAlertController(title: "About this example", message: example.description, preferredStyle: .alert)
-            let action = UIAlertAction(title: "Got it", style: .default, handler: nil)
-            alert.addAction(action)
-            self.present(alert, animated: true, completion: nil)
-        }
-
-        let barButtonItem = UIBarButtonItem(title: "Info", image: nil, primaryAction: action, menu: nil)
+        let association = ExampleAssociation(example: example, viewController: exampleViewController)
+        objc_setAssociatedObject(exampleViewController, &ExampleAssociationHandle, association, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        let barButtonItem = UIBarButtonItem(title: "Info", style: .plain, target: association, action: #selector(ExampleAssociation.presentAlert))
 
         exampleViewController.navigationItem.setRightBarButton(barButtonItem, animated: false)
 
         return exampleViewController
+    }
+}
+
+private var ExampleAssociationHandle: UInt8 = 0
+internal class ExampleAssociation: NSObject {
+
+    internal let example: Example
+    internal weak var viewController: UIViewController?
+
+    internal init(example: Example, viewController: UIViewController) {
+        self.example = example
+        self.viewController = viewController
+        super.init()
+    }
+
+    @objc func presentAlert() {
+        guard let viewController = viewController else {
+            return
+        }
+
+        let alert = UIAlertController(title: "About this example",
+                                      message: example.description,
+                                      preferredStyle: .alert)
+        let action = UIAlertAction(title: "Got it", style: .default, handler: nil)
+        alert.addAction(action)
+        viewController.present(alert, animated: true, completion: nil)
     }
 }

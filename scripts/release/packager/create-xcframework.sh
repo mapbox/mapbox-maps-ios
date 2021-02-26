@@ -6,9 +6,20 @@ function step { >&2 echo -e "\033[1m\033[36m* $@\033[0m"; }
 function finish { >&2 echo -en "\033[0m"; }
 trap finish EXIT
 
-PROJECT=${1}
-SCHEME=${2}
-PRODUCT=${3}
+PRODUCT=${1}
+LINK_TYPE=${2}
+SCHEME=${3:-"$PRODUCT"}
+PROJECT=${4:-"$PRODUCT.xcodeproj"}
+
+if [ "$LINK_TYPE" = "DYNAMIC" ]; then
+    MACH_O_TYPE=mh_dylib
+elif [ "$LINK_TYPE" = "STATIC" ]; then
+    MACH_O_TYPE=staticlib
+else
+    echo "Error: Invalid link type: $LINK_TYPE"
+    echo "Usage: $0 [DYNAMIC|STATIC]"
+    exit 1
+fi
 
 # Create iOS Simulator Framework
 step "Archiving iOS Simulator Framework for $PRODUCT"
@@ -21,7 +32,9 @@ xcodebuild archive \
   BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
   SKIP_INSTALL=NO \
   ARCHS='x86_64 arm64' \
-  EXCLUDED_ARCHS=
+  EXCLUDED_ARCHS= \
+  MACH_O_TYPE="$MACH_O_TYPE" \
+  LLVM_LTO=NO
 
 SIMULATOR_FRAMEWORK_PATH=$(find .create-xcframework/iOS-Simulator.xcarchive -name "$PRODUCT.framework")
 
@@ -36,7 +49,9 @@ xcodebuild archive \
   BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
   SKIP_INSTALL=NO \
   ARCHS='arm64' \
-  EXCLUDED_ARCHS=
+  EXCLUDED_ARCHS= \
+  MACH_O_TYPE="$MACH_O_TYPE" \
+  LLVM_LTO=NO
 
 DEVICE_FRAMEWORK_PATH=$(find .create-xcframework/iOS.xcarchive -name "$PRODUCT.framework")
 

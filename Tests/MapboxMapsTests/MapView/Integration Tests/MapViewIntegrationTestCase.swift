@@ -66,6 +66,10 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
         rootViewController = nil
         window = nil
     }
+
+    override func wait(for expectations: [XCTestExpectation], timeout seconds: TimeInterval) {
+        super.wait(for: expectations, timeout: seconds * 5.0)
+    }
 }
 
 // TODO: Cleanup & move the follow somewhere more appropriate

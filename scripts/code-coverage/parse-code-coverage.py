@@ -11,7 +11,7 @@ import gzip
 import datetime
 
 scripts_dir = os.path.dirname(os.path.realpath(__file__))
-S3_DIRECTORY = "mobile_staging.codecoverage_v2"
+S3_DIRECTORY = "mobile_staging.codecoverage_v3"
 
 def parseReport(reportPath):
     with open(reportPath) as f:
@@ -66,19 +66,19 @@ if __name__ == "__main__":
 
     # Format
     # {
-    #   "version" : string (schema version),
-    #   "created_at" : <isoformat>,
-    #   "project" : string (github),
-    #   "branch" : string (default to main),
-    #   "component" : string (for modules),
-    #   "commit_sha" : string,
-    #   "commit_message" : string,
     #   "coverage" : {
     #     "version" : string,
     #     "scheme" : string,
-    #     "total" : <lcov JSON totals object>,
-    #     "build" : string(CI build number)
+    #     "totals" : <lcov JSON totals object>,
     #   },
+    #   "created_at" : <isoformat>,
+    #   "commit_message" : string,
+    #   "commit_sha" : string,
+    #   "branch" : string
+    #   "project" : string (github, e.g. mapbox-maps-ios)
+    #   "component" : string (module that's being checked, e.g. MapboxMaps)
+    #   "version" : string (schema version),
+    #   "build_number" : string (CI build number)
     # }
 
     # Git properties
@@ -92,37 +92,19 @@ if __name__ == "__main__":
 
     coverage_info = {}
     coverage_info["version"]    = "1"
-    coverage_info["component"]  = component
     coverage_info["scheme"]     = scheme
-    coverage_info["build"]      = buildNumber
     coverage_info["totals"]     = parseReport(reportPath)
 
-    build_info = {}
-    build_info["build"]     = buildNumber
-    build_info["project"]   = project
-    build_info["branch"]    = branch
-    build_info["sha"]       = sha
-    build_info["author"]    = repo.head.object.author.name
-    build_info["timestamp"] = repo.head.object.committed_date
-    build_info["message"]   = message
-
     report = {}
-    report["name"]      = project
-    report["version"]   = "2"
-    report["created"]   = datetime.datetime.utcnow().isoformat()    
-    report["build"]     = build_info
-    report["result"]    = coverage_info
-
-    # Pending format:
-    # report = {}
-    # report["version"]        = "1"
-    # report["created_at"]     = datetime.datetime.utcnow().isoformat()
-    # report["project"]        = project
-    # report["branch"]         = branch
-    # report["component"]      = component
-    # report["commit_sha"]     = sha
-    # report["commit_message"] = message
-    # report["coverage"]       = coverage_info
+    report["coverage"]       = coverage_info
+    report["created_at"]     = datetime.datetime.utcnow().isoformat()
+    report["commit_message"] = message
+    report["commit_sha"]     = sha
+    report["branch"]         = branch
+    report["project"]        = project
+    report["component"]      = component
+    report["version"]        = "3"
+    report["build_number"]   = buildNumber
 
     # Print the stats of current file
     print(json.dumps(report, indent=2))

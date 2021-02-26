@@ -111,7 +111,7 @@ public struct Examples {
         Example(title: "Snapshot with runtime styling",
                 description: """
                     Create a static, non-interactive snapshot from an existing map with runtime styling.
-                    Press the button to take the snapshot. 
+                    Press the button to take the snapshot.
                 """,
                 type: SnapshotterRuntimeStylingExample.self),
         Example(title: "Use interpolate colors between zoom level",

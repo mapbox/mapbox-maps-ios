@@ -39,12 +39,21 @@ public class SnapshotterRuntimeStylingExample: UIViewController, ExampleProtocol
 
         // Add button to take snapshot
         let buttonText = "Take Snapshot"
-        let button = UIButton(frame: CGRect(x: mapView.bounds.width / 2 - 60, y: mapView.bounds.height - 50, width: 150, height: 40))
+        let button = UIButton(frame: CGRect.zero)
+        button.sizeToFit()
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 15
         button.backgroundColor = UIColor.blue
         button.addTarget(self, action: #selector(startSnapshot), for: .touchUpInside)
         button.setTitle(buttonText, for: .normal)
-        view.addSubview(button)
+        mapView.addSubview(button)
+
+        NSLayoutConstraint.activate([
+            button.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: -40),
+            button.bottomAnchor.constraint(equalTo: mapView.bottomAnchor, constant: -10),
+            button.leadingAnchor.constraint(equalTo: mapView.leadingAnchor, constant: 120),
+            button.trailingAnchor.constraint(equalTo: mapView.trailingAnchor, constant: -100)
+        ])
     }
 
     // Parse geoJSON file to return FeatureCollection
@@ -117,6 +126,7 @@ public class SnapshotterRuntimeStylingExample: UIViewController, ExampleProtocol
             case .success(let image):
                 self.snapshotView.image = image
                 indicator.stopAnimating()
+                indicator.removeFromSuperview()
             case .failure(let error):
                 print("Error generating snapshot: \(error)")
             }

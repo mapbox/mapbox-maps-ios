@@ -316,12 +316,14 @@ jobs:
                 app-name: << parameters.app-name >>
                 configuration: Release
             - gather-xcresults # get xcresults here, may be zipped with more than one result
-            
+            - run:
+                  name: Symbolicate crash logs
+                  command: make symbolicate
+                  when: always
             - run:
                 name: Converting and uploading coverage
                 command: |
                     make device-update-codecov-with-profdata SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
-
             - store-device-farm-artifacts
             - store-logs
             - report-failure:

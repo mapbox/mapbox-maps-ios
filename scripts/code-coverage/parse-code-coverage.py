@@ -103,7 +103,7 @@ if __name__ == "__main__":
     report["branch"]         = branch
     report["project"]        = project
     report["component"]      = component
-    report["version"]        = "1"
+    report["version"]        = "3"
     report["build_number"]   = buildNumber
 
     # Print the stats of current file

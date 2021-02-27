@@ -26,7 +26,9 @@ extension Process {
             standardOutput = outputPipe
             launch()
             let data = outputPipe.fileHandleForReading.readDataToEndOfFile()
-            guard let outputData = String(data: data, encoding: String.Encoding.utf8) else { return "Error converting data" }
+            guard let outputData = String(data: data, encoding: String.Encoding.utf8) else {
+                fatalError("Error converting data")
+            }
             return outputData
         }
     }
@@ -67,8 +69,40 @@ struct Framework {
         self.info = try PropertyListDecoder().decode(InfoPlist.self, from: data)
     }
 
+    private static let lipoInfoRegex = try! NSRegularExpression(
+        pattern: "^(?:Non-fat file|Architectures in the fat file): [^:]*: ((?:[^ ]+ ?)+)", options: [])
 
     func extract(architectures: [String], to destination: URL) {
+        func parseArchitectures(fromLipoInfoOutput lipoInfoOutput: String) -> [String] {
+            let nsString = NSString(string: lipoInfoOutput)
+            let matches = Self.lipoInfoRegex.matches(in: lipoInfoOutput, options: [], range: NSRange(location: 0, length: nsString.length))
+            guard matches.count == 1, let match = matches.first, match.numberOfRanges == 2 else {
+                return []
+            }
+            return String(nsString.substring(with: match.range(at: 1))).components(separatedBy: " ")
+        }
+
+        // Use `lipo <binary> -info` to make sure the binary contains the requisite architectures
+        guard let lipoInfoOutput = launch(command: "lipo", arguments: [executable.path, "-info"]) else {
+            fatalError("Command 'lipo \(executable.path) -info' failed")
+        }
+
+        let availableArchs = parseArchitectures(fromLipoInfoOutput: lipoInfoOutput)
+        guard Set(architectures).isSubset(of: availableArchs) else {
+            fatalError("Framework \(url.path) contains architectures \(availableArchs), but the required archs are \(architectures).")
+        }
+
+        guard availableArchs.count > 1 else {
+            // not a universal binary, so just copy it to destination
+            do {
+                try fm.copyItem(at: executable, to: destination)
+            } catch {
+                fatalError("Error while copying \(executable.path) to \(destination.path): \(error)")
+            }
+            return
+        }
+
+        // universal binary, so extract the desired architectures
         let extractArgs = architectures.flatMap { ["-extract", $0] }
         let arguments = [executable.path] + extractArgs + ["-output", destination.path]
         launch(command: "lipo", arguments: arguments, streamOutput: true)

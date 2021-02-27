@@ -138,10 +138,14 @@ struct XCFramework {
                   .appendingPathComponent(library.libraryPath))
     }
 
-    init(url: URL) throws {
+    init(url: URL) {
         self.url = url
-        let data = try Data(contentsOf: url.appendingPathComponent("Info.plist"))
-        self.info = try PropertyListDecoder().decode(InfoPlist.self, from: data)
+        do {
+            let data = try Data(contentsOf: url.appendingPathComponent("Info.plist"))
+            self.info = try PropertyListDecoder().decode(InfoPlist.self, from: data)
+        } catch {
+            fatalError("\(#line): Could not create XCFramework object due to error: \(error)")
+        }
     }
 
     func createFatFramework(withBuildDirectory buildDirectory: URL, outputDirectory: URL) throws {
@@ -160,18 +164,21 @@ struct XCFramework {
 
         // Create framework
         let frameworkURL = outputURL.appendingPathComponent(name + ".framework")
-        try fm.createDirectory(at: frameworkURL, withIntermediateDirectories: false, attributes: nil)
-        try fm.copyItem(at: simulatorFramework.url.appendingPathComponent("Headers"), to: frameworkURL)
-        try fm.copyItem(at: simulatorFramework.url.appendingPathComponent("Modules"), to: frameworkURL)
-        try fm.copyItem(at: simulatorFramework.url.appendingPathComponent("Info.plist"), to: frameworkURL)
-        try fm.copyItem(at: combinedBinaryURL, to: frameworkURL)
+        do {
+            try fm.createDirectory(at: frameworkURL, withIntermediateDirectories: false, attributes: nil)
+            try fm.copyItem(at: simulatorFramework.url.appendingPathComponent("Headers"), to: frameworkURL)
+            try fm.copyItem(at: simulatorFramework.url.appendingPathComponent("Modules"), to: frameworkURL)
+            try fm.copyItem(at: simulatorFramework.url.appendingPathComponent("Info.plist"), to: frameworkURL)
+            try fm.copyItem(at: combinedBinaryURL, to: frameworkURL)
+        } catch {
+            fatalError("\(#line): Could not create fat framework due to error: \(error)")
+        }
     }
 
     func combineBinaries(atBinaryUrls binaryUrls:[URL], to output: URL) {
         let arguments = [ "-create"] + binaryUrls.map { $0.path } + ["-output", output.path]
         launch(command: "lipo", arguments: arguments, streamOutput: true)
     }
-
 
     struct InfoPlist: Decodable {
 
@@ -209,14 +216,6 @@ struct XCFramework {
                 }
             }
 
-//            init(from decoder: Decoder) throws {
-//                let container = try decoder.container(keyedBy: CodingKeys.self)
-//                self.libraryIdentifier = try container.decode(String.self, forKey: .libraryIdentifier)
-//                self.libraryPath = try container.decode(String.self, forKey: .libraryPath)
-//                self.supportedArchitectures = try container.decode([String].self, forKey: .supportedArchitectures)
-//                self.supportedPlatformVariant = try container.decodeIfPresent(String.self, forKey: .supportedPlatformVariant)
-//            }
-
             enum CodingKeys: String, CodingKey {
                 case libraryIdentifier = "LibraryIdentifier"
                 case libraryPath = "LibraryPath"
@@ -225,14 +224,22 @@ struct XCFramework {
             }
         }
     }
-
-
 }
 
 
-//func getListOfXcFrameworks(in directory: URL) -> [URL] {
-//
-//}
+func getListOfXcFrameworks(in directory: URL) -> [XCFramework] {
+    do {
+        let fileNames = try fm.contentsOfDirectory(atPath: directory.path)
+        let fileUrls = fileNames.map { directory.appendingPathComponent($0) }
+        let xcframeworkUrls = fileUrls.filter { $0.pathExtension == "xcframework" }
+        guard xcframeworkUrls.count > 0 else {
+            fatalError("\(#line): Could not find any xcframeworks.")
+        }
+        return xcframeworkUrls.map { XCFramework(url: $0) }
+    } catch {
+        fatalError("\(#line): Coud not read contents of directory due to error: \(error)")
+    }
+}
 
 
 

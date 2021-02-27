@@ -318,7 +318,7 @@ jobs:
             - gather-xcresults # get xcresults here, may be zipped with more than one result
             - run:
                   name: Symbolicate crash logs
-                  command: make symbolicate
+                  command: make symbolicate SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
                   when: always
             - run:
                 name: Converting and uploading coverage

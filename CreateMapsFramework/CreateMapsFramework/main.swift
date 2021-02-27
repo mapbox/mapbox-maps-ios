@@ -1,54 +1,34 @@
 import Foundation
 
+// MARK:- Create xcframework
 var artifactsPath = ""
 var args = CommandLine.arguments
 args.removeFirst()
 artifactsPath = args[0]
 
+let artifactsURL = URL(fileURLWithPath: artifactsPath)
+
 let fm = FileManager.default
 let currentDirectoryURL = URL(fileURLWithPath: fm.currentDirectoryPath)
 let scriptURL = URL(fileURLWithPath: CommandLine.arguments[0], relativeTo: currentDirectoryURL)
 let outputURL = currentDirectoryURL.appendingPathComponent("output/")
+let buildURL = currentDirectoryURL.appendingPathComponent("build/")
 
-extension Process {
-    @discardableResult
-    public func shell(command: String, streamOutput: Bool = false) -> String? {
-        launchPath = "/bin/bash"
-        arguments = ["-c", command]
-
-        if (streamOutput) {
-            standardOutput = FileHandle.standardOutput
-            launch()
-            waitUntilExit()
-            return nil
-        } else {
-            let outputPipe = Pipe()
-            standardOutput = outputPipe
-            launch()
-            let data = outputPipe.fileHandleForReading.readDataToEndOfFile()
-            guard let outputData = String(data: data, encoding: String.Encoding.utf8) else {
-                fatalError("Error converting data")
-            }
-            return outputData
-        }
-    }
+do {
+    try fm.createDirectory(at: outputURL, withIntermediateDirectories: true, attributes: nil)
+    try fm.createDirectory(at: buildURL, withIntermediateDirectories: true, attributes: nil)
+} catch {
+    fatalError("Could not create build/output directories due to error: \(error)")
 }
 
-@discardableResult
-public func launch(command: String, arguments: [String], streamOutput: Bool = false) -> String? {
-    let process = Process()
-    let command = "\(command) \(arguments.joined(separator: " "))"
-        .trimmingCharacters(in: .whitespacesAndNewlines)
-        .replacingOccurrences(of: "  ", with: " ")
-        .replacingOccurrences(of: "\n", with: "")
-    print("\u{001B}[0;32mRunning command:\u{001B}[0;33m \"\(command)\" \u{001B}[0;0m\n")
-    return process.shell(command: command, streamOutput: streamOutput)
+let xcframeworks = XCFramework.readListOfXcFrameworks(in: artifactsURL)
+
+for xcframework in xcframeworks {
+    print("Creating fat fromework from \(xcframework.name).xcframework")
+    xcframework.createFatFramework(withBuildDirectory: buildURL, outputDirectory: outputURL)
 }
 
-
-try? fm.createDirectory(at: outputURL, withIntermediateDirectories: true, attributes: nil)
-fm.changeCurrentDirectoryPath(artifactsPath)
-
+// MARK:- Data structures
 enum LibraryType {
     case device
     case simulator
@@ -144,11 +124,25 @@ struct XCFramework {
             let data = try Data(contentsOf: url.appendingPathComponent("Info.plist"))
             self.info = try PropertyListDecoder().decode(InfoPlist.self, from: data)
         } catch {
-            fatalError("\(#line): Could not create XCFramework object due to error: \(error)")
+            fatalError("Could not create XCFramework object due to error: \(error)")
         }
     }
 
-    func createFatFramework(withBuildDirectory buildDirectory: URL, outputDirectory: URL) throws {
+    static func readListOfXcFrameworks(in directory: URL) -> [XCFramework] {
+        do {
+            let fileNames = try fm.contentsOfDirectory(atPath: directory.path)
+            let fileUrls = fileNames.map { directory.appendingPathComponent($0) }
+            let xcframeworkUrls = fileUrls.filter { $0.pathExtension == "xcframework" }
+            guard xcframeworkUrls.count > 0 else {
+                fatalError("Could not find any xcframeworks.")
+            }
+            return xcframeworkUrls.map { XCFramework(url: $0) }
+        } catch {
+            fatalError("Could not read contents of directory due to error: \(error)")
+        }
+    }
+
+    func createFatFramework(withBuildDirectory buildDirectory: URL, outputDirectory: URL) {
 
         // Define intermediate build paths
         let extractedDeviceBinaryURL = buildDirectory.appendingPathComponent("\(name)-device")
@@ -171,7 +165,7 @@ struct XCFramework {
             try fm.copyItem(at: simulatorFramework.url.appendingPathComponent("Info.plist"), to: frameworkURL)
             try fm.copyItem(at: combinedBinaryURL, to: frameworkURL)
         } catch {
-            fatalError("\(#line): Could not create fat framework due to error: \(error)")
+            fatalError("Could not create fat framework due to error: \(error)")
         }
     }
 
@@ -226,22 +220,38 @@ struct XCFramework {
     }
 }
 
+// MARK:- Process management
+extension Process {
+    @discardableResult
+    public func shell(command: String, streamOutput: Bool = false) -> String? {
+        launchPath = "/bin/bash"
+        arguments = ["-c", command]
 
-func getListOfXcFrameworks(in directory: URL) -> [XCFramework] {
-    do {
-        let fileNames = try fm.contentsOfDirectory(atPath: directory.path)
-        let fileUrls = fileNames.map { directory.appendingPathComponent($0) }
-        let xcframeworkUrls = fileUrls.filter { $0.pathExtension == "xcframework" }
-        guard xcframeworkUrls.count > 0 else {
-            fatalError("\(#line): Could not find any xcframeworks.")
+        if (streamOutput) {
+            standardOutput = FileHandle.standardOutput
+            launch()
+            waitUntilExit()
+            return nil
+        } else {
+            let outputPipe = Pipe()
+            standardOutput = outputPipe
+            launch()
+            let data = outputPipe.fileHandleForReading.readDataToEndOfFile()
+            guard let outputData = String(data: data, encoding: String.Encoding.utf8) else {
+                fatalError("Error converting data")
+            }
+            return outputData
         }
-        return xcframeworkUrls.map { XCFramework(url: $0) }
-    } catch {
-        fatalError("\(#line): Coud not read contents of directory due to error: \(error)")
     }
 }
 
-
-
-
-
+@discardableResult
+public func launch(command: String, arguments: [String], streamOutput: Bool = false) -> String? {
+    let process = Process()
+    let command = "\(command) \(arguments.joined(separator: " "))"
+        .trimmingCharacters(in: .whitespacesAndNewlines)
+        .replacingOccurrences(of: "  ", with: " ")
+        .replacingOccurrences(of: "\n", with: "")
+    print("\u{001B}[0;32mRunning command:\u{001B}[0;33m \"\(command)\" \u{001B}[0;0m\n")
+    return process.shell(command: command, streamOutput: streamOutput)
+}

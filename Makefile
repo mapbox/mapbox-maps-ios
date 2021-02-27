@@ -293,13 +293,14 @@ $(DEVICE_FARM_UPLOAD_IPA): $(XCTESTRUN_PACKAGE) | $(DEVICE_TEST_PATH) $(PAYLOAD_
 	cd $(BUILD_DIR) && zip -r $(notdir $(DEVICE_FARM_UPLOAD_IPA)) Payload
 
 
-.PHONY: gather-results symbolicate
+.PHONY: gather-results
 gather-results:
 	python3 ./scripts/device-farm/extract-xcresult.py --outdir $(BUILD_DIR)/testruns
 
 
 # TODO: Add dSYM for associated tests
 # 			$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Plugins/$(TESTSCHEME).xctest.dSYM/Contents/Resources/DWARF/$(TESTSCHEME) \
+.PHONY: symbolicate
 symbolicate:
 	@echo Symbolicating crash reports
 	@export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer; \
@@ -307,7 +308,8 @@ symbolicate:
 	for CRASH in $${CRASHES[@]} ; \
 	do \
 		if [ ! -f $${CRASH}.symbolicated.txt ]; then \
-			printf . ; \
+			echo "Symbolicating $${CRASH}" . ; \
+			ls -la $(BUILT_DEVICE_PRODUCTS_DIR) || true ; \
 			/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/iOSSupport/Library/PrivateFrameworks/DVTFoundation.framework/Versions/A/Resources/symbolicatecrash \
 			$${CRASH} \
 			$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/$(APP_NAME) \

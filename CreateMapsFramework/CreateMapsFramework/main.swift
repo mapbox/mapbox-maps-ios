@@ -1,18 +1,23 @@
 import Foundation
 
-// MARK:- Create xcframework
-var artifactsPath = ""
-var args = CommandLine.arguments
-args.removeFirst()
-artifactsPath = args[0]
 
-let artifactsURL = URL(fileURLWithPath: artifactsPath)
-
+// MARK:- Parse arguments + Setup
+let args = CommandLine.arguments
 let fm = FileManager.default
+guard args.count == 2 else {
+    fatalError("Invalid arguments. Usage: \(args[0]) <path-to-bundle-zip>")
+}
 let currentDirectoryURL = URL(fileURLWithPath: fm.currentDirectoryPath)
-let scriptURL = URL(fileURLWithPath: CommandLine.arguments[0], relativeTo: currentDirectoryURL)
-let outputURL = currentDirectoryURL.appendingPathComponent("output/")
-let buildURL = currentDirectoryURL.appendingPathComponent("build/")
+
+let zipURL = URL(fileURLWithPath: args[1])
+let unzipDestinationURL = currentDirectoryURL.appendingPathComponent("MapboxMaps.unzipped")
+
+// Unzip file to destination
+unzip(file: zipURL, to: unzipDestinationURL)
+
+let artifactsURL = unzipDestinationURL.appendingPathComponent("artifacts")
+let outputURL = currentDirectoryURL.appendingPathComponent("MapboxMaps.Output")
+let buildURL = currentDirectoryURL.appendingPathComponent("MapboxMaps.Tmp")
 
 do {
     try fm.createDirectory(at: outputURL, withIntermediateDirectories: true, attributes: nil)
@@ -21,11 +26,23 @@ do {
     fatalError("Could not create build/output directories due to error: \(error)")
 }
 
+// MARK:- Create xcframework
+
 let xcframeworks = XCFramework.readListOfXcFrameworks(in: artifactsURL)
 
 for xcframework in xcframeworks {
     print("Creating fat fromework from \(xcframework.name).xcframework")
     xcframework.createFatFramework(withBuildDirectory: buildURL, outputDirectory: outputURL)
+}
+
+
+// MARK:- Cleanup
+do {
+    try fm.removeItem(at: unzipDestinationURL)
+    try fm.removeItem(at: buildURL)
+    try fm.removeItem(at: outputURL)
+} catch {
+    print("Could not clean up! Error: \(error)")
 }
 
 // MARK:- Data structures
@@ -59,7 +76,9 @@ struct Framework {
             guard matches.count == 1, let match = matches.first, match.numberOfRanges == 2 else {
                 return []
             }
-            return String(nsString.substring(with: match.range(at: 1))).components(separatedBy: " ")
+            
+            let archsString: [String] = String(nsString.substring(with: match.range(at: 1))).components(separatedBy: " ")
+            return archsString.map { $0.replacingOccurrences(of: "\n", with: "") }
         }
 
         // Use `lipo <binary> -info` to make sure the binary contains the requisite architectures
@@ -151,19 +170,32 @@ struct XCFramework {
 
         // Extract required architectures
         deviceFramework.extract(architectures: ["arm64"], to: extractedDeviceBinaryURL)
-        simulatorFramework.extract(architectures: ["arm64", "x86_64"], to: extractedSimulatorBinaryURL)
+        simulatorFramework.extract(architectures: ["x86_64"], to: extractedSimulatorBinaryURL)
 
         // Combine binaries
         combineBinaries(atBinaryUrls: [extractedDeviceBinaryURL, extractedSimulatorBinaryURL], to: combinedBinaryURL)
 
-        // Create framework
+        // Create framework and copy required directories
         let frameworkURL = outputURL.appendingPathComponent(name + ".framework")
         do {
+            print("Creating directory at \(frameworkURL.path).")
             try fm.createDirectory(at: frameworkURL, withIntermediateDirectories: false, attributes: nil)
-            try fm.copyItem(at: simulatorFramework.url.appendingPathComponent("Headers"), to: frameworkURL)
-            try fm.copyItem(at: simulatorFramework.url.appendingPathComponent("Modules"), to: frameworkURL)
-            try fm.copyItem(at: simulatorFramework.url.appendingPathComponent("Info.plist"), to: frameworkURL)
-            try fm.copyItem(at: combinedBinaryURL, to: frameworkURL)
+            
+            print("Copy 'Headers' from \(simulatorFramework.url.appendingPathComponent("Headers")) to \(frameworkURL.path).")
+            try fm.copyItem(at: simulatorFramework.url.appendingPathComponent("Headers"),
+                            to: frameworkURL.appendingPathComponent("Headers"))
+            
+            print("Copy 'Modules' from \(simulatorFramework.url.appendingPathComponent("Modules")) to \(frameworkURL.path).")
+            try fm.copyItem(at: simulatorFramework.url.appendingPathComponent("Modules"),
+                            to: frameworkURL.appendingPathComponent("Modules"))
+            
+            print("Copy 'Info.plist' from \(simulatorFramework.url.appendingPathComponent("Info.plist")) to \(frameworkURL.path).")
+            try fm.copyItem(at: simulatorFramework.url.appendingPathComponent("Info.plist"),
+                            to: frameworkURL.appendingPathComponent("Info.plist"))
+            
+            print("Copy combined binary from \(combinedBinaryURL) to \(frameworkURL.path).")
+            try fm.copyItem(at: combinedBinaryURL,
+                            to: frameworkURL.appendingPathComponent(name))
         } catch {
             fatalError("Could not create fat framework due to error: \(error)")
         }
@@ -254,4 +286,9 @@ public func launch(command: String, arguments: [String], streamOutput: Bool = fa
         .replacingOccurrences(of: "\n", with: "")
     print("\u{001B}[0;32mRunning command:\u{001B}[0;33m \"\(command)\" \u{001B}[0;0m\n")
     return process.shell(command: command, streamOutput: streamOutput)
+}
+
+func unzip(file zipFile: URL, to destination: URL) {
+    let arguments = [zipFile.path, "-d", destination.path]
+    launch(command: "unzip", arguments: arguments, streamOutput: false)
 }

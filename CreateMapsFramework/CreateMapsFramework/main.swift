@@ -1,23 +1,24 @@
 import Foundation
 
-
 // MARK:- Parse arguments + Setup
 let args = CommandLine.arguments
 let fm = FileManager.default
 guard args.count == 2 else {
-    fatalError("Invalid arguments. Usage: \(args[0]) <path-to-bundle-zip>")
+    prettyPrint("Invalid arguments.\nUsage: swift \(args[0]) <path-to-bundle-zip>", color: .red)
+    exit(1)
 }
-let currentDirectoryURL = URL(fileURLWithPath: fm.currentDirectoryPath)
 
+let currentDirectoryURL = URL(fileURLWithPath: fm.currentDirectoryPath)
 let zipURL = URL(fileURLWithPath: args[1])
 let unzipDestinationURL = currentDirectoryURL.appendingPathComponent("MapboxMaps.unzipped")
 
 // Unzip file to destination
 unzip(file: zipURL, to: unzipDestinationURL)
 
+// Setup directories
 let artifactsURL = unzipDestinationURL.appendingPathComponent("artifacts")
-let outputURL = currentDirectoryURL.appendingPathComponent("MapboxMaps.Output")
-let buildURL = currentDirectoryURL.appendingPathComponent("MapboxMaps.Tmp")
+let outputURL = currentDirectoryURL.appendingPathComponent("MapboxMapsFrameworks")
+let buildURL = currentDirectoryURL.appendingPathComponent("MapboxMapsFrameworks.tmp")
 
 do {
     try fm.createDirectory(at: outputURL, withIntermediateDirectories: true, attributes: nil)
@@ -27,23 +28,22 @@ do {
 }
 
 // MARK:- Create xcframework
-
-let xcframeworks = XCFramework.readListOfXcFrameworks(in: artifactsURL)
-
-for xcframework in xcframeworks {
-    print("Creating fat fromework from \(xcframework.name).xcframework")
+prettyPrint("\nFinding xcframeworks in \(zipURL.path)..", color: .green)
+for xcframework in XCFramework.readListOfXcFrameworks(in: artifactsURL) {
+    prettyPrint("\nCreating fat fromework from \(xcframework.name).xcframework", color:  .green)
     xcframework.createFatFramework(withBuildDirectory: buildURL, outputDirectory: outputURL)
 }
-
 
 // MARK:- Cleanup
 do {
     try fm.removeItem(at: unzipDestinationURL)
     try fm.removeItem(at: buildURL)
-    try fm.removeItem(at: outputURL)
 } catch {
-    print("Could not clean up! Error: \(error)")
+    prettyPrint("Could not clean up! Error: \(error)", color: .red)
+    exit(1)
 }
+
+prettyPrint("\nFrameworks successfully written to \(outputURL.path)", color: .green)
 
 // MARK:- Data structures
 enum LibraryType {
@@ -78,7 +78,8 @@ struct Framework {
             }
             
             let archsString: [String] = String(nsString.substring(with: match.range(at: 1))).components(separatedBy: " ")
-            return archsString.map { $0.replacingOccurrences(of: "\n", with: "") }
+            let sanitizedArchStrings = archsString.map { $0.replacingOccurrences(of: "\n", with: "") }
+            return sanitizedArchStrings
         }
 
         // Use `lipo <binary> -info` to make sure the binary contains the requisite architectures
@@ -104,7 +105,7 @@ struct Framework {
         // universal binary, so extract the desired architectures
         let extractArgs = architectures.flatMap { ["-extract", $0] }
         let arguments = [executable.path] + extractArgs + ["-output", destination.path]
-        launch(command: "lipo", arguments: arguments, streamOutput: true)
+        launch(command: "lipo", arguments: arguments)
     }
 
     struct InfoPlist: Decodable {
@@ -164,6 +165,7 @@ struct XCFramework {
     func createFatFramework(withBuildDirectory buildDirectory: URL, outputDirectory: URL) {
 
         // Define intermediate build paths
+        prettyPrint("- Extracting architectures and combining binaries..", color: .cyan)
         let extractedDeviceBinaryURL = buildDirectory.appendingPathComponent("\(name)-device")
         let extractedSimulatorBinaryURL = buildDirectory.appendingPathComponent("\(name)-simulator")
         let combinedBinaryURL = buildDirectory.appendingPathComponent("\(name)-combined")
@@ -175,35 +177,29 @@ struct XCFramework {
         // Combine binaries
         combineBinaries(atBinaryUrls: [extractedDeviceBinaryURL, extractedSimulatorBinaryURL], to: combinedBinaryURL)
 
+        
         // Create framework and copy required directories
         let frameworkURL = outputURL.appendingPathComponent(name + ".framework")
+        prettyPrint("- Copying fat binary, headers, modules to \(frameworkURL.path)..", color: .cyan)
         do {
-            print("Creating directory at \(frameworkURL.path).")
             try fm.createDirectory(at: frameworkURL, withIntermediateDirectories: false, attributes: nil)
-            
-            print("Copy 'Headers' from \(simulatorFramework.url.appendingPathComponent("Headers")) to \(frameworkURL.path).")
             try fm.copyItem(at: simulatorFramework.url.appendingPathComponent("Headers"),
                             to: frameworkURL.appendingPathComponent("Headers"))
-            
-            print("Copy 'Modules' from \(simulatorFramework.url.appendingPathComponent("Modules")) to \(frameworkURL.path).")
             try fm.copyItem(at: simulatorFramework.url.appendingPathComponent("Modules"),
                             to: frameworkURL.appendingPathComponent("Modules"))
-            
-            print("Copy 'Info.plist' from \(simulatorFramework.url.appendingPathComponent("Info.plist")) to \(frameworkURL.path).")
             try fm.copyItem(at: simulatorFramework.url.appendingPathComponent("Info.plist"),
                             to: frameworkURL.appendingPathComponent("Info.plist"))
-            
-            print("Copy combined binary from \(combinedBinaryURL) to \(frameworkURL.path).")
             try fm.copyItem(at: combinedBinaryURL,
                             to: frameworkURL.appendingPathComponent(name))
         } catch {
-            fatalError("Could not create fat framework due to error: \(error)")
+            prettyPrint("Could not create fat framework due to error: \(error)", color: .red)
+            exit(1)
         }
     }
 
     func combineBinaries(atBinaryUrls binaryUrls:[URL], to output: URL) {
         let arguments = [ "-create"] + binaryUrls.map { $0.path } + ["-output", output.path]
-        launch(command: "lipo", arguments: arguments, streamOutput: true)
+        launch(command: "lipo", arguments: arguments)
     }
 
     struct InfoPlist: Decodable {
@@ -284,11 +280,33 @@ public func launch(command: String, arguments: [String], streamOutput: Bool = fa
         .trimmingCharacters(in: .whitespacesAndNewlines)
         .replacingOccurrences(of: "  ", with: " ")
         .replacingOccurrences(of: "\n", with: "")
-    print("\u{001B}[0;32mRunning command:\u{001B}[0;33m \"\(command)\" \u{001B}[0;0m\n")
+    if streamOutput {
+        print("\u{001B}[0;32mRunning command:\u{001B}[0;33m \"\(command)\" \u{001B}[0;0m\n")
+    }
     return process.shell(command: command, streamOutput: streamOutput)
 }
 
 func unzip(file zipFile: URL, to destination: URL) {
     let arguments = [zipFile.path, "-d", destination.path]
     launch(command: "unzip", arguments: arguments, streamOutput: false)
+}
+
+// MARK:- Formatting
+
+func prettyPrint(_ string: String, color: Color) {
+    print(color.rawValue + string + Color.reset.rawValue)
+}
+
+enum Color: String {
+    case reset = "\u{001B}[0;0m"
+    case black = "\u{001B}[0;30m"
+    case red = "\u{001B}[0;31m"
+    case redBold = "\u{001B}[1;31m"
+    case green = "\u{001B}[0;32m"
+    case yellow = "\u{001B}[0;33m"
+    case blue = "\u{001B}[0;34m"
+    case magenta = "\u{001B}[0;35m"
+    case magentaBold = "\u{001B}[1;35m"
+    case cyan = "\u{001B}[0;36m"
+    case white = "\u{001B}[0;37m"
 }

@@ -29,7 +29,14 @@ do {
 
 // MARK:- Create xcframework
 prettyPrint("\nFinding xcframeworks in \(zipURL.path)..", color: .green)
-for xcframework in XCFramework.readListOfXcFrameworks(in: artifactsURL) {
+let xcframeworks = XCFramework.xcframeworks(in: artifactsURL)
+
+guard !xcframeworks.isEmpty else {
+    prettyPrint("Could not find xcframeworks in \(zipURL.path)", color: .red)
+    exit(1)
+}
+
+for xcframework in xcframeworks {
     prettyPrint("\nCreating fat fromework from \(xcframework.name).xcframework", color:  .green)
     xcframework.createFatFramework(withBuildDirectory: buildURL, outputDirectory: outputURL)
 }
@@ -148,14 +155,11 @@ struct XCFramework {
         }
     }
 
-    static func readListOfXcFrameworks(in directory: URL) -> [XCFramework] {
+    static func xcframeworks(in directory: URL) -> [XCFramework] {
         do {
             let fileNames = try fm.contentsOfDirectory(atPath: directory.path)
             let fileUrls = fileNames.map { directory.appendingPathComponent($0) }
             let xcframeworkUrls = fileUrls.filter { $0.pathExtension == "xcframework" }
-            guard xcframeworkUrls.count > 0 else {
-                fatalError("Could not find any xcframeworks.")
-            }
             return xcframeworkUrls.map { XCFramework(url: $0) }
         } catch {
             fatalError("Could not read contents of directory due to error: \(error)")
@@ -182,15 +186,10 @@ struct XCFramework {
         let frameworkURL = outputURL.appendingPathComponent(name + ".framework")
         prettyPrint("- Copying fat binary, headers, modules to \(frameworkURL.path)..", color: .cyan)
         do {
-            try fm.createDirectory(at: frameworkURL, withIntermediateDirectories: false, attributes: nil)
-            try fm.copyItem(at: simulatorFramework.url.appendingPathComponent("Headers"),
-                            to: frameworkURL.appendingPathComponent("Headers"))
-            try fm.copyItem(at: simulatorFramework.url.appendingPathComponent("Modules"),
-                            to: frameworkURL.appendingPathComponent("Modules"))
-            try fm.copyItem(at: simulatorFramework.url.appendingPathComponent("Info.plist"),
-                            to: frameworkURL.appendingPathComponent("Info.plist"))
-            try fm.copyItem(at: combinedBinaryURL,
-                            to: frameworkURL.appendingPathComponent(name))
+            try fm.copyItem(at: deviceFramework.url,
+                            to: frameworkURL)
+            _ = try fm.replaceItemAt(frameworkURL.appendingPathComponent(name),
+                                 withItemAt: combinedBinaryURL)
         } catch {
             prettyPrint("Could not create fat framework due to error: \(error)", color: .red)
             exit(1)

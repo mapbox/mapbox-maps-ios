@@ -4,11 +4,7 @@ import MapboxMobileEvents
 extension EventType.Maps {
     var typeString: String {
         switch self {
-        case .mapLoaded:
-            return MMEEventTypeMapLoad
-        case .mapPausedRendering:
-            return "map.pause"
-        case .mapResumedRendering:
+        case .loaded:
             return MMEEventTypeMapLoad
         }
     }

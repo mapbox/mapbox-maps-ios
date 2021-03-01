@@ -54,16 +54,9 @@ extension MapView {
     internal func setUpTelemetryLogging() {
         guard let validResourceOptions = resourceOptions else { return }
         self.eventsListener = EventsManager(accessToken: validResourceOptions.accessToken)
-        self.on(.renderMapFinished) { [weak self] _ in
-            self?.eventsListener?.push(event: .map(event: .mapPausedRendering))
-        }
-
-        self.on(.renderMapStarted) { [weak self] _ in
-            self?.eventsListener?.push(event: .map(event: .mapResumedRendering))
-        }
 
         self.on(.mapLoadingFinished) { [weak self] _ in
-            self?.eventsListener?.push(event: .map(event: .mapLoaded))
+            self?.eventsListener?.push(event: .map(event: .loaded))
         }
     }
 }

@@ -116,8 +116,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 
         let size = MapboxCoreMaps.Size(width: Float(frame.width), height: Float(frame.height))
 
-        let mapOptions = MapboxCoreMaps.MapOptions(__mapMode: nil,
-                                                   contextMode: nil,
+        let mapOptions = MapboxCoreMaps.MapOptions(__contextMode: nil,
                                                    constrainMode: nil,
                                                    viewportMode: nil,
                                                    orientation: nil,

@@ -120,13 +120,13 @@ internal class SwiftUIMapViewCoordinator {
 
     /// This `mapView` property needs to be weak because
     /// the map view takes a strong reference to the coordinator
-    /// when we make the coordinator observe the `.cameraDidChange`
+    /// when we make the coordinator observe the `.cameraChanged`
     /// event
     weak var mapView: MapView? {
         didSet {
-            /// The coordinator observes the `.cameraDidChange` event, and
+            /// The coordinator observes the `.cameraChanged` event, and
             /// whenever the camera changes, it updates the camera binding
-            mapView?.on(.cameraDidChange, handler: notify(for:))
+            mapView?.on(.cameraChanged, handler: notify(for:))
 
             /// The coordinator also observes the `.mapLoadingFinished` event
             /// so that it can sync annotations whenever the map reloads
@@ -147,7 +147,7 @@ internal class SwiftUIMapViewCoordinator {
         /// As the camera changes, we update the binding. SwiftUI
         /// will propagate this change to any other UI elements connected
         /// to the same binding.
-        case .cameraDidChange:
+        case .cameraChanged:
             camera.center = mapView.centerCoordinate
             camera.zoom = mapView.zoom
 
@@ -234,7 +234,7 @@ internal struct ContentView: View {
             ///
             /// Map to Slider:
             ///     - User interacts with the map, adjusting the zoom
-            ///     - Map sends the `.cameraDidChange` event, which is observed by the coordinator
+            ///     - Map sends the `.cameraChanged` event, which is observed by the coordinator
             ///     - The coordinator updates the value of the zoom on the `camera` binding
             ///     - SwiftUI updates the Slider accordingly
             Slider(value: $camera.zoom, in: 0...20)

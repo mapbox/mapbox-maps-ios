@@ -3,6 +3,7 @@ import Foundation
 // MARK:- Parse arguments + Setup
 let args = CommandLine.arguments
 let fm = FileManager.default
+
 guard args.count == 2 else {
     prettyPrint("Invalid arguments.\nUsage: swift \(args[0]) <path-to-bundle-zip>", color: .red)
     exit(1)
@@ -186,10 +187,27 @@ struct XCFramework {
         let frameworkURL = outputURL.appendingPathComponent(name + ".framework")
         prettyPrint("- Copying fat binary, headers, modules to \(frameworkURL.path)..", color: .cyan)
         do {
+
             try fm.copyItem(at: deviceFramework.url,
                             to: frameworkURL)
+            
             _ = try fm.replaceItemAt(frameworkURL.appendingPathComponent(name),
                                  withItemAt: combinedBinaryURL)
+
+            // Handle *.swiftmodule
+            var isDirectory: ObjCBool = false
+            let swiftModuleURL = frameworkURL.appendingPathComponent("Modules").appendingPathComponent(name + ".swiftmodule")
+            if fm.fileExists(atPath: swiftModuleURL.path, isDirectory: &isDirectory), isDirectory.boolValue == true {
+                // Copy *.swiftinterface & *.swiftdoc from simulator framework
+
+                let simulatorSwiftModuleURL = simulatorFramework.url.appendingPathComponent("Modules/\(name).swiftmodule")
+                let simulatorSwiftModuleContents = try fm.contentsOfDirectory(atPath: simulatorSwiftModuleURL.path)
+
+                for file in simulatorSwiftModuleContents where !fm.fileExists(atPath: swiftModuleURL.appendingPathComponent(file).path) {
+                    let fileURL = simulatorSwiftModuleURL.appendingPathComponent(file)
+                    try fm.copyItem(at: fileURL, to: swiftModuleURL.appendingPathComponent(file))
+                }
+            }
         } catch {
             prettyPrint("Could not create fat framework due to error: \(error)", color: .red)
             exit(1)

@@ -576,21 +576,21 @@ commands:
                 when: always
 
     gather-xcresults:
-        name: "Gathering results"
         steps:
             - run:
+                name: "Gathering results"
                 command: |
                     make gather-results
 
-    parse-xcresults:
-        name: "Parsing xcresults for errors"
+    parse-xcresults:        
         steps:
             - run:
+                name: "Parsing xcresults for errors"
                 command: |
                     RESULTS=`find build/testruns -name '*.xcresult'`
                     pushd scripts/xcparty && swift build
                     popd
-                    xargs ./scripts/xcparty/.build/debug/xcparty <<< "$RESULTS" | tee build/testruns/failures.txt
+                    xargs ./scripts/xcparty/.build/debug/xcparty \<<< "$RESULTS" | tee build/testruns/failures.txt
                 when: on_fail
 
     store-logs:

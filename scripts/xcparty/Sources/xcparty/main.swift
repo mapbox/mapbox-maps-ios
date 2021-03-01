@@ -15,12 +15,15 @@ struct TestFailure: Hashable {
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(testCase)
-        hasher.combine(message)
-        if let fileName = fileName {
+
+        if let fileName = fileName,
+           let startingLineNumber = startingLineNumber {
             hasher.combine(fileName)
-        }
-        if let startingLineNumber = startingLineNumber {
             hasher.combine(startingLineNumber)
+        } else if !message.contains("<external symbol>") {
+            // If no line information, try and use the message to differentiate.
+            // But only do this if 
+            hasher.combine(message)
         }
     }
 }
@@ -30,7 +33,7 @@ guard CommandLine.arguments.count >= 2 else {
     exit(1)
 }
 
-var failureDict = [String : Set<TestFailure>]()
+var failureDict = [String: Set<TestFailure>]()
 
 let currentDirectoryURL = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
 
@@ -66,7 +69,7 @@ for xcresultFile in CommandLine.arguments[1...] {
                     $0.components(separatedBy: "=")
                 }
 
-                let dict = params.reduce(into: [String:String]()) { (dict, keyValues) in
+                let dict = params.reduce(into: [String: String]()) { (dict, keyValues) in
                     if keyValues.count == 2 {
                         dict[keyValues[0]] = keyValues[1]
                     }
@@ -100,69 +103,3 @@ if failureDict.count == 0 {
         print("")
     }
 }
-
-
-
-//    print("\t\(failure.testCaseName)\n\t\t\(failure.message)")
-//    if let file = failure.documentLocationInCreatingWorkspace?.url {
-//        let url = URL(fileURLWithPath: file)
-//        if let file2 = url.pathComponents.last {
-//            print("\t\t\(file2)<<<<")
-//        }
-//    }
-//}
-
-
-//    resultFile.getTestPlanRunSummaries(id: invocationRecord?.issues.errorSummaries)
-
-//    guard let dict = NSDictionary(contentsOf: testSummaries) else {
-//        print("can't parse")
-//        exit(1)
-//    }
-//
-//    guard let testableSummaries = dict["TestableSummaries"] as? [[String:Any]],
-//          testableSummaries.count == 1 else {
-//        print("can't parse 2")
-//        exit(1)
-//    }
-//
-//    guard let tests = testableSummaries.first?["Tests"] as? [[String:Any]] else {
-//        print("can't parse 2")
-//        exit(1)
-//    }
-//
-//    guard let test = tests.first, tests.count == 1 else {
-//        print("can't find first")
-//        exit(1)
-//    }
-//    let indent = ""
-//    recurse(indent, tests: test)
-
-
-
-//}
-//else {
-//    print("v2")
-//    let resultFile = XCResultFile(url: fullpath)
-//    let invocationRecord = resultFile.getInvocationRecord()
-//    print("\(invocationRecord)")
-//}
-
-
-func recurse(_ indent: String, tests: [String:Any]) {
-
-    if let result = tests["TestStatus"] as? String,
-       let name = tests["TestName"] as? String {
-        print("\(indent)\(name) .... \(result)")
-    }
-
-    if let subtests = tests["Subtests"] as? [[String:Any]],
-       let name = tests["TestName"] as? String {
-
-        print("\(indent)\(name):")
-        for subtest in subtests {
-            recurse(indent+"\t", tests: subtest)
-        }
-    }
-}
-

@@ -580,6 +580,8 @@ commands:
             - run:
                 command: |
                     make gather-results
+                    RESULTS=`find build/testruns -name '*.xcresult'`
+                    cd scripts/xcparty && xargs swift run xcparty <<< "$RESULTS"                    
                 when: always
 
     store-logs:

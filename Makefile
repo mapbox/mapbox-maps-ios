@@ -297,6 +297,7 @@ $(DEVICE_FARM_UPLOAD_IPA): $(XCTESTRUN_PACKAGE) | $(DEVICE_TEST_PATH) $(PAYLOAD_
 gather-results:
 	python3 ./scripts/device-farm/extract-xcresult.py --outdir $(BUILD_DIR)/testruns
 
+# Although symbolicatecrash is supposed to work with a search directory, this call needed explicit paths
 .PHONY: symbolicate
 symbolicate:
 	@echo Symbolicating crash reports

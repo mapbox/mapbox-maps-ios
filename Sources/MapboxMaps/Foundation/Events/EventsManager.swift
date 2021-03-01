@@ -40,12 +40,7 @@ internal class EventsManager: EventsListener {
 
     private func process(mapEvent: EventType.Maps) {
         switch mapEvent {
-        case .mapLoaded:
-            telemetry?.turnstile()
-            telemetry?.send(event: mapEvent.typeString)
-        case .mapPausedRendering:
-            telemetry?.flush()
-        case .mapResumedRendering:
+        case .loaded:
             telemetry?.turnstile()
             telemetry?.send(event: mapEvent.typeString)
         }

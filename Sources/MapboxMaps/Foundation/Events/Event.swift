@@ -11,9 +11,7 @@ public enum EventType {
     case memoryWarning
 
     public enum Maps {
-        case mapLoaded
-        case mapResumedRendering
-        case mapPausedRendering
+        case loaded
     }
 
     public enum Metrics {

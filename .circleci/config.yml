@@ -316,6 +316,7 @@ jobs:
                 app-name: << parameters.app-name >>
                 configuration: Release
             - gather-xcresults # get xcresults here, may be zipped with more than one result
+            - parse-xcresults
             - run:
                   name: Symbolicate crash logs
                   command: make symbolicate SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
@@ -575,14 +576,22 @@ commands:
                 when: always
 
     gather-xcresults:
-        description: "Gathering results"
+        name: "Gathering results"
         steps:
             - run:
                 command: |
                     make gather-results
+
+    parse-xcresults:
+        name: "Parsing xcresults for errors"
+        steps:
+            - run:
+                command: |
                     RESULTS=`find build/testruns -name '*.xcresult'`
-                    cd scripts/xcparty && xargs swift run xcparty \<<< "$RESULTS"                    
-                when: always
+                    pushd scripts/xcparty && swift build
+                    popd
+                    xargs ./scripts/xcparty/.build/debug/xcparty <<< "$RESULTS" | tee build/testruns/failures.txt
+                when: on_fail
 
     store-logs:
         parameters:

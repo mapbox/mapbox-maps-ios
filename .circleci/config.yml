@@ -329,7 +329,7 @@ jobs:
             - store-logs
             - report-failure:
                 report_failure: << parameters.report_failure >>
-                message: "maps-device-unit-tests"
+                message: "`<< parameters.scheme >>` device tests"
     
     create-xcframework:
         <<: *default-job
@@ -686,4 +686,4 @@ commands:
                 include_visit_job_action: true
                 mentions: '$CIRCLE_USERNAME'
                 only_for_branches: main
-                failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL| \`<< parameters.message >>\` failed.>'
+                failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL| << parameters.message >> failed.>'

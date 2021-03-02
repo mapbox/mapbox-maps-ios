@@ -18,15 +18,15 @@ struct TestFailure: Hashable {
 
         // Same crash (with "external symbol") can have slightly different messages; this is an
         // attempt to match them.
-        if !message.contains("<external symbol>") {            
-            hasher.combine(message)            
+        if !message.contains("<external symbol>") {
+            hasher.combine(message)
         }
 
         if let fileName = fileName,
            let startingLineNumber = startingLineNumber {
             hasher.combine(fileName)
             hasher.combine(startingLineNumber)
-        } 
+        }
     }
 }
 

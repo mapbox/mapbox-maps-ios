@@ -1,6 +1,6 @@
 .DS_Store
 /build
-/.build
+.build
 /Packages
 xcuserdata
 node_modules
@@ -10,3 +10,4 @@ api-docs
 MapboxAccessToken
 scripts/release/packager/artifacts
 scripts/release/packager/build
+scripts/xcparty/.swiftpm

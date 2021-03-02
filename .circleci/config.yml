@@ -316,17 +316,20 @@ jobs:
                 app-name: << parameters.app-name >>
                 configuration: Release
             - gather-xcresults # get xcresults here, may be zipped with more than one result
-            
+            - parse-xcresults
+            - run:
+                  name: Symbolicate crash logs
+                  command: make symbolicate SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
+                  when: always
             - run:
                 name: Converting and uploading coverage
                 command: |
                     make device-update-codecov-with-profdata SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
-
             - store-device-farm-artifacts
             - store-logs
             - report-failure:
                 report_failure: << parameters.report_failure >>
-                message: "maps-device-unit-tests"
+                message: "`<< parameters.scheme >>` device tests"
     
     create-xcframework:
         <<: *default-job
@@ -573,12 +576,23 @@ commands:
                 when: always
 
     gather-xcresults:
-        description: "Gathering results"
         steps:
             - run:
+                name: "Gathering results"
                 command: |
                     make gather-results
                 when: always
+
+    parse-xcresults:        
+        steps:
+            - run:
+                name: "Parsing xcresults for errors"
+                command: |
+                    RESULTS=`find build/testruns -name '*.xcresult'`
+                    pushd scripts/xcparty && swift build
+                    popd
+                    xargs ./scripts/xcparty/.build/debug/xcparty \<<< "$RESULTS" | tee build/testruns/failures.txt
+                when: on_fail
 
     store-logs:
         parameters:
@@ -672,4 +686,4 @@ commands:
                 include_visit_job_action: true
                 mentions: '$CIRCLE_USERNAME'
                 only_for_branches: main
-                failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL| \`<< parameters.message >>\` failed.>'
+                failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL| << parameters.message >> failed.>'

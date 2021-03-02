@@ -297,6 +297,37 @@ $(DEVICE_FARM_UPLOAD_IPA): $(XCTESTRUN_PACKAGE) | $(DEVICE_TEST_PATH) $(PAYLOAD_
 gather-results:
 	python3 ./scripts/device-farm/extract-xcresult.py --outdir $(BUILD_DIR)/testruns
 
+# Although symbolicatecrash is supposed to work with a search directory, this call needed explicit paths
+.PHONY: symbolicate
+symbolicate:
+	@echo Symbolicating crash reports
+
+	@export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer; \
+	TEST_DSYMS=`find $(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Plugins -name *.xctest.dSYM | \
+		sed 's/\(.*\/\(.*\)\.xctest\.dSYM\)/\1\/Contents\/Resources\/DWARF\/\2/g' | \
+		tr '\n' ' '` ; \
+	CRASHES=`find $(DEVICE_TEST_PATH) -name Application_Crash_Report.ips` ; \
+	for CRASH in $${CRASHES[@]} ; \
+	do \
+		if [ ! -f $${CRASH}.symbolicated.txt ]; then \
+			echo "Symbolicating $${CRASH}" . ; \
+			ls -la $(BUILT_DEVICE_PRODUCTS_DIR) || true ; \
+			/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/iOSSupport/Library/PrivateFrameworks/DVTFoundation.framework/Versions/A/Resources/symbolicatecrash \
+				$${CRASH} \
+				$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/$(APP_NAME) \
+				$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app.dSYM/Contents/Resources/DWARF/$(APP_NAME) \
+				$(BUILT_DEVICE_PRODUCTS_DIR)/MapboxMaps.framework/Mapbox \
+				$(BUILT_DEVICE_PRODUCTS_DIR)/MapboxMaps.framework.dSYM/Contents/Resources/DWARF/MapboxMaps \
+				$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Frameworks/MapboxCoreMaps.framework/Mapbox \
+				$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Frameworks/MapboxCommon.framework/Mapbox \
+				$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Frameworks/MapboxMobileEvents.framework/MapboxMobileEvents \
+				$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Frameworks/Turf.framework/Mapbox \
+				$(TEST_DSYMS) \
+				-o $${CRASH}.symbolicated.txt ; \
+		fi ; \
+	done
+
+
 # Codecov.io appears to struggle with the raw coverage data from Xcode (in this Device Farm testing scenario). 
 # Explicitly converting it to an lcov format helps.
 #

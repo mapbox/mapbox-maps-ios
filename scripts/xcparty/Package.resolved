@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "XCResultKit",
+        "repositoryURL": "https://github.com/davidahouse/XCResultKit",
+        "state": {
+          "branch": null,
+          "revision": "2259be4e7e3c6e16b6d8e89c29df43b5cc098c9a",
+          "version": "0.8.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

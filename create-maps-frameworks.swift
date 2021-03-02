@@ -1,3 +1,5 @@
+#!/usr/bin/swift
+
 import Foundation
 
 // MARK:- Parse arguments + Setup

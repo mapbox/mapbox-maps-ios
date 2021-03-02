@@ -16,15 +16,17 @@ struct TestFailure: Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(testCase)
 
+        // Same crash (with "external symbol") can have slightly different messages; this is an
+        // attempt to match them.
+        if !message.contains("<external symbol>") {            
+            hasher.combine(message)            
+        }
+
         if let fileName = fileName,
            let startingLineNumber = startingLineNumber {
             hasher.combine(fileName)
             hasher.combine(startingLineNumber)
-        } else if !message.contains("<external symbol>") {
-            // If no line information, try and use the message to differentiate.
-            // But only do this if 
-            hasher.combine(message)
-        }
+        } 
     }
 }
 

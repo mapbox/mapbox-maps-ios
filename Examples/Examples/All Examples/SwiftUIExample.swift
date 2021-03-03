@@ -13,6 +13,7 @@ internal struct Camera {
 /// your app uses `SwiftUIMapView`, SwiftUI creates and manages a
 /// single instance of `MapView` behind the scenes so that if your map
 /// configuration changes, the underlying map view doesn't need to be recreated.
+@available(iOS 13.0, *)
 internal struct SwiftUIMapView: UIViewRepresentable {
 
     /// Bindings should be used for map values that can
@@ -104,6 +105,7 @@ internal struct SwiftUIMapView: UIViewRepresentable {
 }
 
 /// Here's our custom `Coordinator` implementation.
+@available(iOS 13.0, *)
 internal class SwiftUIMapViewCoordinator {
     /// It holds a binding to the camera
     @Binding private var camera: Camera
@@ -118,13 +120,13 @@ internal class SwiftUIMapViewCoordinator {
 
     /// This `mapView` property needs to be weak because
     /// the map view takes a strong reference to the coordinator
-    /// when we make the coordinator observe the `.cameraDidChange`
+    /// when we make the coordinator observe the `.cameraChanged`
     /// event
     weak var mapView: MapView? {
         didSet {
-            /// The coordinator observes the `.cameraDidChange` event, and
+            /// The coordinator observes the `.cameraChanged` event, and
             /// whenever the camera changes, it updates the camera binding
-            mapView?.on(.cameraDidChange, handler: notify(for:))
+            mapView?.on(.cameraChanged, handler: notify(for:))
 
             /// The coordinator also observes the `.mapLoadingFinished` event
             /// so that it can sync annotations whenever the map reloads
@@ -145,7 +147,7 @@ internal class SwiftUIMapViewCoordinator {
         /// As the camera changes, we update the binding. SwiftUI
         /// will propagate this change to any other UI elements connected
         /// to the same binding.
-        case .cameraDidChange:
+        case .cameraChanged:
             camera.center = mapView.centerCoordinate
             camera.zoom = mapView.zoom
 
@@ -188,6 +190,7 @@ internal class SwiftUIMapViewCoordinator {
 }
 
 /// Here's an example usage of `SwiftUIMapView`
+@available(iOS 13.0, *)
 internal struct ContentView: View {
 
     /// For demonstration purposes, this view has its own state for the camera and style URL.
@@ -231,7 +234,7 @@ internal struct ContentView: View {
             ///
             /// Map to Slider:
             ///     - User interacts with the map, adjusting the zoom
-            ///     - Map sends the `.cameraDidChange` event, which is observed by the coordinator
+            ///     - Map sends the `.cameraChanged` event, which is observed by the coordinator
             ///     - The coordinator updates the value of the zoom on the `camera` binding
             ///     - SwiftUI updates the Slider accordingly
             Slider(value: $camera.zoom, in: 0...20)
@@ -255,10 +258,25 @@ internal class SwiftUIExample: UIViewController, ExampleProtocol {
     }
 
     internal func setupHostingController() {
-        let hostingViewController = UIHostingController(rootView: ContentView())
-        addChild(hostingViewController)
-        hostingViewController.view.frame = view.frame
-        view.addSubview(hostingViewController.view)
-        hostingViewController.didMove(toParent: self)
+        if #available(iOS 13.0, *) {
+            let hostingViewController = UIHostingController(rootView: ContentView())
+            addChild(hostingViewController)
+            hostingViewController.view.frame = view.frame
+            view.addSubview(hostingViewController.view)
+            hostingViewController.didMove(toParent: self)
+        } else {
+            // Fallback on earlier versions
+            let label = UILabel()
+            label.text = "This example runs on iOS 13+"
+            label.font = UIFont.systemFont(ofSize: 20)
+            label.textColor = .white
+            label.sizeToFit()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(label)
+            NSLayoutConstraint.activate([
+                view.centerXAnchor.constraint(equalTo: label.centerXAnchor),
+                view.centerYAnchor.constraint(equalTo: label.centerYAnchor)
+            ])
+        }
     }
 }

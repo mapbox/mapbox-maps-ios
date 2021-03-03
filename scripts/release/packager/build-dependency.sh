@@ -9,7 +9,8 @@ trap finish EXIT
 NAME=${1}
 GIT_REPO_URL=${2}
 VERSION=${3}
-SCHEME=${4}
+LINK_TYPE=${4}
+SCHEME=${5:-"$NAME"}
 
 mkdir .build
 pushd .build
@@ -21,7 +22,7 @@ step "Checkout tag: $VERSION"
 git -C repo checkout "$VERSION"
 
 step "Build $NAME"
-../../create-xcframework.sh "repo/$NAME.xcodeproj" "$SCHEME" "$NAME"
+../../create-xcframework.sh "$NAME" "$LINK_TYPE" "$SCHEME" "repo/$NAME.xcodeproj"
 
 mv *.xcframework ../
 

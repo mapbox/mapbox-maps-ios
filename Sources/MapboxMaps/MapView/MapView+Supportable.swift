@@ -18,7 +18,7 @@ extension MapView: OrnamentSupportableView {
     }
 
     public func subscribeCameraChangeHandler(_ handler: @escaping (CameraOptions) -> Void) {
-        self.on(.cameraDidChange) { [weak self] _ in
+        self.on(.cameraChanged) { [weak self] _ in
             guard let validSelf = self else { return }
             handler(try! validSelf.__map.getCameraOptions(forPadding: nil))
         }

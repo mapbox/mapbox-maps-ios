@@ -12,7 +12,6 @@
 		077C4EFA252F7E89007636F1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 077C4EF8252F7E89007636F1 /* LaunchScreen.storyboard */; };
 		077C4F05252F7E89007636F1 /* ExamplesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077C4F04252F7E89007636F1 /* ExamplesTests.swift */; };
 		077C4F10252F7E89007636F1 /* ExamplesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077C4F0F252F7E89007636F1 /* ExamplesUITests.swift */; };
-		07A2E03D25CB64E20082BC31 /* SwiftUIExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A2E03C25CB64E20082BC31 /* SwiftUIExample.swift */; };
 		07B071D32547CFC3007F2865 /* GeoJSONSourceExample.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 07B071D22547CFC3007F2865 /* GeoJSONSourceExample.geojson */; };
 		07DC84422538B1F100F4AF14 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07DC84412538B1F100F4AF14 /* Assets.xcassets */; };
 		0C52BA9825AF8C880054ECA8 /* PuckModelLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C52BA9725AF8C880054ECA8 /* PuckModelLayerExample.swift */; };
@@ -28,6 +27,7 @@
 		A4211CE62592549900D215B4 /* RestrictCoordinateBoundsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4211CE52592549900D215B4 /* RestrictCoordinateBoundsExample.swift */; };
 		CA252D782587DD9500A989CD /* MapboxMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA252D772587DD9500A989CD /* MapboxMaps.framework */; };
 		CA252D792587DD9500A989CD /* MapboxMaps.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CA252D772587DD9500A989CD /* MapboxMaps.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CA4F1F7225E815CF00822D2A /* SwiftUIExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A2E03C25CB64E20082BC31 /* SwiftUIExample.swift */; };
 		CA86E81825BE7C2300E5A1D9 /* BuildingExtrusionsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA86E81725BE7C2200E5A1D9 /* BuildingExtrusionsExample.swift */; };
 		CA86E86925BF551F00E5A1D9 /* OfflineRegionManagerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA86E86825BF551F00E5A1D9 /* OfflineRegionManagerExample.swift */; };
 		CAC195B725AC098A00F69FEA /* CameraUIViewAnimationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC195B625AC098A00F69FEA /* CameraUIViewAnimationExample.swift */; };
@@ -55,7 +55,6 @@
 		CADCF736258499170065C51B /* ExampleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0746C15F252FADE4001638BD /* ExampleTableViewController.swift */; };
 		CADCF7392584991C0065C51B /* UIViewController+Children.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0746C152252FAA03001638BD /* UIViewController+Children.swift */; };
 		CADCF73C258499200065C51B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077C4EED252F7E88007636F1 /* AppDelegate.swift */; };
-		CADCF73F258499240065C51B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077C4EEF252F7E88007636F1 /* SceneDelegate.swift */; };
 		CADCF743258499570065C51B /* BasicMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADCF742258499570065C51B /* BasicMapExample.swift */; };
 		CADCF77E25854B2F0065C51B /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76A25854AEF0065C51B /* MapboxMobileEvents.framework */; };
 		CADCF77F25854B2F0065C51B /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76A25854AEF0065C51B /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -113,7 +112,6 @@
 		0773528E25438CCA00B48DB6 /* SelectAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectAnnotationExample.swift; sourceTree = "<group>"; };
 		077C4EEA252F7E88007636F1 /* Examples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Examples.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		077C4EED252F7E88007636F1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		077C4EEF252F7E88007636F1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		077C4EF9252F7E89007636F1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		077C4EFB252F7E89007636F1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		077C4F00252F7E89007636F1 /* ExamplesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExamplesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -294,7 +292,6 @@
 				0746C144252FA983001638BD /* Controllers */,
 				0746C151252FA9E1001638BD /* Extensions */,
 				077C4EED252F7E88007636F1 /* AppDelegate.swift */,
-				077C4EEF252F7E88007636F1 /* SceneDelegate.swift */,
 				07DC84412538B1F100F4AF14 /* Assets.xcassets */,
 				077C4EF8252F7E89007636F1 /* LaunchScreen.storyboard */,
 				077C4EFB252F7E89007636F1 /* Info.plist */,
@@ -539,7 +536,6 @@
 			files = (
 				CADCF73C258499200065C51B /* AppDelegate.swift in Sources */,
 				CADCF7392584991C0065C51B /* UIViewController+Children.swift in Sources */,
-				07A2E03D25CB64E20082BC31 /* SwiftUIExample.swift in Sources */,
 				CADCF7262584990E0065C51B /* SnapshotterExample.swift in Sources */,
 				CADCF71D2584990E0065C51B /* CustomPointAnnotationExample.swift in Sources */,
 				CADCF7212584990E0065C51B /* PolygonAnnotationExample.swift in Sources */,
@@ -560,12 +556,12 @@
 				0706C4A625B1181A008733C0 /* TerrainExample.swift in Sources */,
 				CADCF7282584990E0065C51B /* LineAnnotationExample.swift in Sources */,
 				CADCF72F2584990E0065C51B /* SnapshotterCoreGraphicsExample.swift in Sources */,
+				CA4F1F7225E815CF00822D2A /* SwiftUIExample.swift in Sources */,
 				CAC195B725AC098A00F69FEA /* CameraUIViewAnimationExample.swift in Sources */,
 				0C78AC2925BF70E40057F570 /* LineGradientExample.swift in Sources */,
 				CADCF72B2584990E0065C51B /* FlyToExample.swift in Sources */,
 				CADCF72D2584990E0065C51B /* GeoJSONSourceExample.swift in Sources */,
 				CADCF72E2584990E0065C51B /* MapViewExample.swift in Sources */,
-				CADCF73F258499240065C51B /* SceneDelegate.swift in Sources */,
 				58A3C0C925C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift in Sources */,
 				CADCF736258499170065C51B /* ExampleTableViewController.swift in Sources */,
 				A4211CE62592549900D215B4 /* RestrictCoordinateBoundsExample.swift in Sources */,
@@ -676,7 +672,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -733,7 +728,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -751,7 +745,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				INFOPLIST_FILE = Examples/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -772,7 +765,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				INFOPLIST_FILE = Examples/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -792,7 +784,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				INFOPLIST_FILE = ExamplesTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -814,7 +805,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				INFOPLIST_FILE = ExamplesTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

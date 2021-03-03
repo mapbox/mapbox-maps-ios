@@ -30,12 +30,12 @@ class MapViewIntegrationTests: IntegrationTestCase {
             let expectation = self.expectation(description: "wait for map")
 
             let resourceOptions = ResourceOptions(accessToken: accessToken)
-            let mapView = MapView(with: CGRect(origin: .zero, size: rootView.bounds.size), resourceOptions: resourceOptions, styleURL: .streets)
+            let mapView = MapView(with: rootView.bounds, resourceOptions: resourceOptions, styleURL: .streets)
             weakMapView = mapView
 
             rootView.addSubview(mapView)
 
-            mapView.on(.renderMapFinished) { [weak mapView] _ in
+            mapView.on(.mapLoadingFinished) { [weak mapView] _ in
                 let dest = CameraOptions(center: CLLocationCoordinate2D(latitude: 10, longitude: 10), zoom: 10)
                 mapView?.cameraManager.setCamera(to: dest, animated: true, duration: 5) { _ in
                     expectation.fulfill()

@@ -117,7 +117,7 @@ public class AnnotationManager: Observer {
 
     deinit {
         self.tapGesture = nil
-        try! self.mapView?.observable?.unsubscribe(for: self, events: [MapEvents.mapLoadingStarted])
+        try! self.mapView?.observable?.unsubscribe(for: self, events: [MapEvents.mapLoadingFinished])
     }
 
     /**
@@ -140,7 +140,7 @@ public class AnnotationManager: Observer {
         self.userInteractionEnabled = true
 
         configureTapGesture()
-        try! mapView.observable?.subscribe(for: self, events: [MapEvents.mapLoadingStarted])
+        try! mapView.observable?.subscribe(for: self, events: [MapEvents.mapLoadingFinished])
     }
 
     // MARK: - Public functions
@@ -618,7 +618,7 @@ public class AnnotationManager: Observer {
     }
 
     public func notify(for event: MapboxCoreMaps.Event) {
-        guard event.type == MapEvents.mapLoadingStarted else {
+        guard event.type == MapEvents.mapLoadingFinished else {
             return
         }
 

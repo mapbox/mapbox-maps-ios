@@ -5,7 +5,6 @@ import Foundation
 public extension MapEvents {
 
     enum EventKind: RawRepresentable, CaseIterable {
-        case mapLoadingStarted
         case mapLoadingFinished
         case mapLoadingError
         case mapIdle
@@ -14,20 +13,16 @@ public extension MapEvents {
         case styleImageMissing
         case styleImageRemoveUnused
         case sourceChanged
+        case sourceAdded
+        case sourceRemoved
         case renderFrameStarted
         case renderFrameFinished
-        case renderMapStarted
-        case renderMapFinished
-        case cameraWillChange
-        case cameraIsChanging
-        case cameraDidChange
+        case cameraChanged
         case resourceRequest
 
         // swiftlint:disable:next cyclomatic_complexity
         public init?(rawValue: String) {
             switch rawValue {
-            case MapEvents.mapLoadingStarted :
-                self = .mapLoadingStarted
             case MapEvents.mapLoadingFinished:
                 self = .mapLoadingFinished
             case MapEvents.mapLoadingError:
@@ -44,20 +39,16 @@ public extension MapEvents {
                 self = .styleImageRemoveUnused
             case MapEvents.sourceChanged:
                 self = .sourceChanged
+            case MapEvents.sourceAdded:
+                self = .sourceAdded
+            case MapEvents.sourceRemoved:
+                self = .sourceRemoved
             case MapEvents.renderFrameStarted:
                 self = .renderFrameStarted
             case MapEvents.renderFrameFinished:
                 self = .renderFrameFinished
-            case MapEvents.renderMapStarted:
-                self = .renderMapStarted
-            case MapEvents.renderMapFinished:
-                self = .renderMapFinished
-            case MapEvents.cameraWillChange:
-                self = .cameraWillChange
-            case MapEvents.cameraIsChanging:
-                self = .cameraIsChanging
-            case MapEvents.cameraDidChange:
-                self = .cameraDidChange
+            case MapEvents.cameraChanged:
+                self = .cameraChanged
             case MapEvents.resourceRequest:
                 self = .resourceRequest
             default:
@@ -67,8 +58,6 @@ public extension MapEvents {
 
         public var rawValue: String {
             switch self {
-            case .mapLoadingStarted:
-                return MapEvents.mapLoadingStarted
             case .mapLoadingFinished:
                 return MapEvents.mapLoadingFinished
             case .mapLoadingError:
@@ -85,20 +74,16 @@ public extension MapEvents {
                 return MapEvents.styleImageRemoveUnused
             case .sourceChanged:
                 return MapEvents.sourceChanged
+            case .sourceAdded:
+                return MapEvents.sourceAdded
+            case .sourceRemoved:
+                return MapEvents.sourceRemoved
             case .renderFrameStarted:
                 return MapEvents.renderFrameStarted
             case .renderFrameFinished:
                 return MapEvents.renderFrameFinished
-            case .renderMapStarted:
-                return MapEvents.renderMapStarted
-            case .renderMapFinished:
-                return MapEvents.renderMapFinished
-            case .cameraWillChange:
-                return MapEvents.cameraWillChange
-            case .cameraIsChanging:
-                return MapEvents.cameraIsChanging
-            case .cameraDidChange:
-                return MapEvents.cameraDidChange
+            case .cameraChanged:
+                return MapEvents.cameraChanged
             case .resourceRequest:
                 return MapEvents.resourceRequest
             }

@@ -26,7 +26,6 @@ Mapbox welcomes participation and contributions from everyone.
     * `EventType.Map.mapLoaded` -> `EventType.Map.loaded`
     * `MapEvents.EventKind.cameraDidChange` -> `MapEvents.EventKind.cameraChanged`
 
-
 ## Features ✨ and improvements 🏁
 * Maps SDK now supports a static bundle via direct download ([#149](https://github.com/mapbox/mapbox-maps-ios/pull/149))
 

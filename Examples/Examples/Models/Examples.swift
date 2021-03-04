@@ -15,6 +15,16 @@ public protocol ExampleProtocol {
     func finish()
 }
 
+fileprivate struct ExampleProtocolFinish {
+    static var postNotification: Void = {
+        // Lazy initialization to ensure that this is called once only.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            let center = CFNotificationCenterGetDarwinNotifyCenter()
+            CFNotificationCenterPostNotification(center, CFNotificationName(Example.finishNotificationName as CFString), nil, nil, true)
+        }
+    }()
+}
+
 extension ExampleProtocol {
     public func resourceOptions() -> ResourceOptions {
         guard let accessToken = AccountManager.shared.accessToken else {
@@ -30,10 +40,7 @@ extension ExampleProtocol {
     }
 
     public func finish() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-            let center = CFNotificationCenterGetDarwinNotifyCenter()
-            CFNotificationCenterPostNotification(center, CFNotificationName(Example.finishNotificationName as CFString), nil, nil, true)
-        }
+        _ = ExampleProtocolFinish.postNotification
     }
 }
 

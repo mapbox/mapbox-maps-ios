@@ -32,11 +32,8 @@ extension PreferredFPS {
         case .maximum:
             return 0
         case let .custom(value):
-            if value >= PreferredFPS.lowPower.fps && value <= PreferredFPS.maximum.fps {
-                return value
-            } else {
-                return 30
-            }
+            // TODO: Check that value is a valid FPS value
+            return value
         }
     }
 }

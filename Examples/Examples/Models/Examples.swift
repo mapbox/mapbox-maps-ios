@@ -61,7 +61,7 @@ public struct Examples {
                 description: "Set and use a custom map style URL.",
                 type: CustomStyleURLExample.self),
         Example(title: "Add a point annotation",
-                description: "Add the default point annotation on a map.",
+                description: "Add the default point annotation to a map.",
                 type: PointAnnotationExample.self),
         Example(title: "Add a point annotation using an image",
                 description: "Add a point annotation using a custom image on a map.",

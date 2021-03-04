@@ -7,6 +7,26 @@ Mapbox welcomes participation and contributions from everyone.
 ## Breaking changes ⚠️
 * Updates MapboxCoreMaps to v10.0.0.beta.16 and MapboxCommon to v10.0.0-beta.12 ([#152](https://github.com/mapbox/mapbox-maps-ios/pull/152))
 
+## New Events API
+* The above breaking change introduces the new Map Events API which will:
+    * Simplify the Map API and align it with other weakly typed interfaces (addStyleLayer, addStyleSource, etc.).
+    * Minimize the effort for addition of new events.
+    * Expose experimental events.
+    * Suppress events that a developer hasn't subscribed to.
+    * Automatically expose new events for Snapshotter (eliminating the need to modify MapObserver and MapSnapshotterObserver separately).
+* Events that have been removed:
+    * `mapResumedRendering`
+    * `mapPausedRendering`
+    * `mapLoadingStarted`
+    * `renderMapStarted` 
+    * `renderMapFinished`
+    * `cameraWillChange`
+    * `cameraIsChanging`
+* Events that have been renamed:
+    * `EventType.Map.mapLoaded` -> `EventType.Map.loaded`
+    * `MapEvents.EventKind.cameraDidChange` -> `MapEvents.EventKind.cameraChanged`
+
+
 ## Features ✨ and improvements 🏁
 * Maps SDK now supports a static bundle via direct download ([#149](https://github.com/mapbox/mapbox-maps-ios/pull/149))
 

@@ -4,18 +4,19 @@ set -euo pipefail
 
 #
 # Usage:
-#   ./scripts/release/update-spm-manifest.sh <maps version number>
+#   ./scripts/release/update-dependency-manager-manifests.sh <maps version number>
 #
 
 MAPS_VERSION=${1}
-COMMON_VERSION=`awk -F'MapboxCommon-ios.json" ==' '{ printf $2 }' Cartfile`
-CORE_VERSION=`awk -F'MapboxCoreMaps-dynamic.json" ==' '{ printf $2 }' Cartfile`
+CORE_VERSION=$(jq -r '.MapboxCoreMaps' scripts/release/packager/versions.json)
+COMMON_VERSION=$(jq -r '.MapboxCommon' scripts/release/packager/versions.json)
 
 #
 # Checkout the release branch
 #
+BRANCH="Release/v${MAPS_VERSION}"
 git fetch origin main
-git checkout Release/v${MAPS_VERSION}
+git checkout ${BRANCH}
 
 # Update Package.swift
 sed -i '' s/"mapbox-common-ios.git\", .exact(\".*\")"/"mapbox-common-ios.git\", .exact(\"${COMMON_VERSION}\")"/ Package.swift
@@ -31,4 +32,4 @@ sed -i '' s/"m.dependency 'MapboxCoreMaps', '.*'"/"m.dependency 'MapboxCoreMaps'
 #
 git add Package.swift MapboxMaps.podspec
 git commit -m "Update SPM configs for ${MAPS_VERSION} release"
-git push
+git push origin ${BRANCH}

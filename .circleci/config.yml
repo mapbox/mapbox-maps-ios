@@ -384,7 +384,7 @@ jobs:
             - run:
                 name: Update Package Manifest & Podspec
                 command: |
-                    ./scripts/release/update-spm-manifest.sh ${VERSION}
+                    ./scripts/release/update-dependency-manager-manifests.sh ${VERSION}
                 when: on_success
             - slack/status:
                 fail_only: false

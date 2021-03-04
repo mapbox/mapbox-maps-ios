@@ -14,12 +14,12 @@ public class LayerBelowExample: UIViewController, ExampleProtocol {
         self.view.addSubview(mapView)
 
         // Center the map over downtown Atlanta
-        let centerCoordinate = CLLocationCoordinate2D(latitude: 33.749909,
-                                                      longitude: -84.381546)
+        let centerCoordinate = CLLocationCoordinate2D(latitude: 35.137452,
+                                                      longitude: -88.137343)
 
         // Zoom to cover the whole Atlanta urban area
         mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
-                                        zoom: 8)
+                                        zoom: 4)
 
         // Allows the view controller to receive information about map events
         mapView.on(.mapLoadingFinished) { [weak self] _ in

@@ -77,7 +77,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
     /// Returns the camera view managed by this object.
     public var cameraView: CameraView!
 
-    public var preferredFPS: PreferredFPS = .normal {
+    internal var preferredFPS: PreferredFPS = .normal {
         didSet {
             self.updateDisplayLinkPreferredFramesPerSecond()
         }

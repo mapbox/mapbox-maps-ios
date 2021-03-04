@@ -18,11 +18,11 @@ public enum PreferredFPS: Equatable {
     /// The maximum supported frame rate; typically 60 FPS.
     case maximum
 
+    /// A custom frame rate. The default value is 30 FPS.
     case custom(Int)
 }
 
 extension PreferredFPS {
-
     public var fps : Int {
         switch self {
         case .lowPower:
@@ -32,7 +32,11 @@ extension PreferredFPS {
         case .maximum:
             return 0
         case let .custom(value):
-            return value
+            if value >= PreferredFPS.lowPower.fps && value <= PreferredFPS.maximum.fps {
+                return value
+            } else {
+                return 30
+            }
         }
     }
 }

@@ -23,7 +23,7 @@ public enum PreferredFPS: Equatable {
 }
 
 extension PreferredFPS {
-    public var fps : Int {
+    public var fps: Int {
         switch self {
         case .lowPower:
             return -1

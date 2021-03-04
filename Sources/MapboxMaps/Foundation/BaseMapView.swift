@@ -5,16 +5,36 @@ import Turf
 
 // swiftlint:disable file_length
 
-public enum PreferredFPS: Int, Equatable {
+public enum PreferredFPS: Equatable {
+    public typealias RawValue = Int
+
     /// The default frame rate. This can be either 30 FPS or 60 FPS, depending on
     /// device capabilities.
-    case normal = -1
+    case normal
 
     /// A conservative frame rate; typically 30 FPS.
-    case lowPower = 30
+    case lowPower
 
     /// The maximum supported frame rate; typically 60 FPS.
-    case maximum = 0
+    case maximum
+
+    case custom(Int)
+}
+
+extension PreferredFPS {
+
+    public var fps : Int {
+        switch self {
+        case .lowPower:
+            return -1
+        case .normal:
+            return 30
+        case .maximum:
+            return 0
+        case let .custom(value):
+            return value
+        }
+    }
 }
 
 open class ObserverConcrete: Observer {
@@ -248,7 +268,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
                 newFrameRate = preferredFPS
             }
 
-            displayLink.preferredFramesPerSecond = newFrameRate.rawValue
+            displayLink.preferredFramesPerSecond = newFrameRate.fps
         }
     }
 

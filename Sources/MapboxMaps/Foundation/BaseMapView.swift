@@ -6,8 +6,6 @@ import Turf
 // swiftlint:disable file_length
 
 public enum PreferredFPS: Equatable {
-    public typealias RawValue = Int
-
     /// The default frame rate. This can be either 30 FPS or 60 FPS, depending on
     /// device capabilities.
     case normal
@@ -26,9 +24,9 @@ extension PreferredFPS {
     public var fps: Int {
         switch self {
         case .lowPower:
-            return -1
-        case .normal:
             return 30
+        case .normal:
+            return -1
         case .maximum:
             return 0
         case let .custom(value):

@@ -15,7 +15,7 @@ public protocol ExampleProtocol {
     func finish()
 }
 
-fileprivate struct ExampleProtocolFinish {
+private struct ExampleProtocolFinish {
     static var postNotification: Void = {
         // Lazy initialization to ensure that this is called once only.
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {

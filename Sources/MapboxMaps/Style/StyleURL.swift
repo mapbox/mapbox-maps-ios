@@ -29,10 +29,13 @@ public enum StyleURL: Hashable, RawRepresentable {
     /// resource path.
     case custom(url: URL)
 
+    /// Underlying URL for the StyleURL
     public var url: URL {
         return rawValue
     }
-    
+
+    /// :nodoc:
+    /// `RawRepresentable` conformance
     public var rawValue: URL {
         switch self {
         case .streets:
@@ -52,6 +55,9 @@ public enum StyleURL: Hashable, RawRepresentable {
         }
     }
 
+    /// Create a StyleURL from a URL.
+    /// Returns nil if the URL is invalid.
+    /// - Parameter rawValue: URL to create style URL from.
     public init?(rawValue: URL) {
         switch rawValue {
         case Self.streetsURL:

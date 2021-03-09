@@ -9,7 +9,7 @@ import XCTest
 //swiftlint:disable explicit_top_level_acl explicit_acl
 class StyleURLTests: XCTestCase {
 
-    // MARK:- Tests
+    // MARK: - Tests
 
     func testCustomVersions() throws {
         checkCustomStyleURL(with: "mapbox://styles/mapbox/streets-v10")
@@ -36,7 +36,7 @@ class StyleURLTests: XCTestCase {
         checkInvalidStyleURL(with: "mapbox/styles/mapbox/streets-v11")
     }
 
-    // MARK:- Helpers
+    // MARK: - Helpers
 
     private func checkCustomStyleURL(with URLString: String, line: UInt = #line) {
         guard let sourceURL = URL(string: URLString) else {
@@ -78,7 +78,7 @@ class StyleURLTests: XCTestCase {
             return
         }
 
-        guard let _ = StyleURL(rawValue: sourceURL) else {
+        guard nil != StyleURL(rawValue: sourceURL) else {
             print("Invalid styleURL from URL: \(line)")
             return
         }

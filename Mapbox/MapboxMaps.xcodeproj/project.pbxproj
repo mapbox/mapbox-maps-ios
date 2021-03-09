@@ -339,7 +339,7 @@
 		0CD62F24245887CD006421D1 /* OrnamentSupportableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 076C4521242D4DF800A5E0C4 /* OrnamentSupportableView.swift */; };
 		0CD62F26245887D5006421D1 /* OrnamentConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1AF566244F6A80008D2A10 /* OrnamentConfig.swift */; };
 		0CD62F2C24588937006421D1 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4519DE42432FF14007CF39A /* Style.swift */; };
-		0CD62F2F24588954006421D1 /* MapboxStyleURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4519DE624330083007CF39A /* MapboxStyleURL.swift */; };
+		0CD62F2F24588954006421D1 /* StyleURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4519DE624330083007CF39A /* StyleURL.swift */; };
 		0CD62F392458CDD6006421D1 /* GestureUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0765213A245740BA00FDD209 /* GestureUtilities.swift */; };
 		0CDEA62625B0EAD40068B344 /* LocationConsumer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9640E02531056700CABD3E /* LocationConsumer.swift */; };
 		0CDFEAD825A77430008BC505 /* UtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CDFEAD725A77430008BC505 /* UtilsTests.swift */; };
@@ -399,7 +399,7 @@
 		A4519DDB2432FF03007CF39A /* MapboxMapsStyleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4519DDA2432FF03007CF39A /* MapboxMapsStyleTests.swift */; };
 		A4519DDD2432FF03007CF39A /* MapboxMapsStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = A4519DCF2432FF03007CF39A /* MapboxMapsStyle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A4519DE52432FF14007CF39A /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4519DE42432FF14007CF39A /* Style.swift */; };
-		A4519DE724330083007CF39A /* MapboxStyleURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4519DE624330083007CF39A /* MapboxStyleURL.swift */; };
+		A4519DE724330083007CF39A /* StyleURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4519DE624330083007CF39A /* StyleURL.swift */; };
 		A4C0116F25664BD400787494 /* MapboxMapsFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F11C10F2421B05600F8397B /* MapboxMapsFoundation.framework */; };
 		A4C786612440EAF0000CEF1E /* StyleURLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C786602440EAF0000CEF1E /* StyleURLTests.swift */; };
 		A4FE8893255F365B00FBF117 /* MapboxMapsCameraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC8DA47243BE4A400A19318 /* MapboxMapsCameraTests.swift */; };
@@ -1101,7 +1101,7 @@
 		A4519DDA2432FF03007CF39A /* MapboxMapsStyleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxMapsStyleTests.swift; sourceTree = "<group>"; };
 		A4519DDC2432FF03007CF39A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A4519DE42432FF14007CF39A /* Style.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
-		A4519DE624330083007CF39A /* MapboxStyleURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxStyleURL.swift; sourceTree = "<group>"; };
+		A4519DE624330083007CF39A /* StyleURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleURL.swift; sourceTree = "<group>"; };
 		A4BDC0CC244A23EB00AA9B64 /* QuickZoomGestureHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickZoomGestureHandler.swift; sourceTree = "<group>"; };
 		A4C786602440EAF0000CEF1E /* StyleURLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleURLTests.swift; sourceTree = "<group>"; };
 		A4E82010255A10A100926E90 /* MapboxAnimationGroupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxAnimationGroupTests.swift; sourceTree = "<group>"; };
@@ -1980,7 +1980,7 @@
 				A4519DD02432FF03007CF39A /* Info.plist */,
 				0CE8ED6025890F870066E56C /* ModelSource.swift */,
 				A4519DE42432FF14007CF39A /* Style.swift */,
-				A4519DE624330083007CF39A /* MapboxStyleURL.swift */,
+				A4519DE624330083007CF39A /* StyleURL.swift */,
 				0C708F3324EB1EFA003CE791 /* Layers.swift */,
 				0C708F5824EB2927003CE791 /* Sources.swift */,
 				0CBCF2D7254229630025F7B3 /* README.md */,
@@ -3497,7 +3497,7 @@
 				0742060324E4A5D0000A8932 /* PointAnnotation.swift in Sources */,
 				0C708F3124EB1EE2003CE791 /* CircleLayer.swift in Sources */,
 				0CD62F0724588501006421D1 /* PinchGestureHandler.swift in Sources */,
-				0CD62F2F24588954006421D1 /* MapboxStyleURL.swift in Sources */,
+				0CD62F2F24588954006421D1 /* StyleURL.swift in Sources */,
 				0782B17B258C236B00D5FCE5 /* MBXGeometry.swift in Sources */,
 				0CD62F26245887D5006421D1 /* OrnamentConfig.swift in Sources */,
 				0C3B1E9224DDADD000CC29E8 /* MapboxMobileEvents+TelemetryProtocol.swift in Sources */,
@@ -3827,7 +3827,7 @@
 			files = (
 				0C55010C2476D83A00AE019A /* Light.swift in Sources */,
 				0C708F5424EB23C7003CE791 /* RasterSource.swift in Sources */,
-				A4519DE724330083007CF39A /* MapboxStyleURL.swift in Sources */,
+				A4519DE724330083007CF39A /* StyleURL.swift in Sources */,
 				0C708F3524EB1EFA003CE791 /* Layers.swift in Sources */,
 				0C708F4C24EB23C7003CE791 /* ImageSource.swift in Sources */,
 				0C708F3224EB1EE2003CE791 /* CircleLayer.swift in Sources */,

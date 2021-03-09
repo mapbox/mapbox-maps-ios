@@ -339,7 +339,10 @@ jobs:
                 commit-text: "[create xcframework]"
                 always-run: << parameters.create-xcframework-always-run >>
             - make-deps
-            - make-xcframework-bundle
+            - make-xcframework-bundle:
+                bundle_style: "dynamic"
+            - make-xcframework-bundle:
+                bundle_style: "static"
             - danger
             - report-failure:
                 report_failure: << parameters.report_failure >>
@@ -365,11 +368,15 @@ jobs:
                 message: '<$CIRCLE_BUILD_URL|Release build for \`$VERSION\` started.>'
                 include_visit_job_action: true
             - make-deps
-            - make-xcframework-bundle
+            - make-xcframework-bundle:
+                bundle_style: "dynamic"
+            - make-xcframework-bundle:
+                bundle_style: "static"
             - run: 
-                name: Uploading direct download bundle to SDK Registry
+                name: Uploading direct download bundles (static & dynamic) to SDK Registry
                 command: |
                     ./scripts/release/upload-to-registry.sh MapboxMaps-dynamic.zip mobile-maps-ios ${VERSION} MapboxMaps-dynamic.zip
+                    ./scripts/release/upload-to-registry.sh MapboxMaps-static.zip mobile-maps-ios ${VERSION} MapboxMaps-static.zip
             - run:
                 name: Run `npm ci`
                 command: |
@@ -645,24 +652,28 @@ commands:
                 path: api-docs.zip
 
     make-xcframework-bundle:
-        description: "Create xcframework bundle"
+        parameters:
+            bundle_style:
+                type: string
+                default: "dynamic"
+        description: "Create << parameters.bundle_style >> xcframework bundle"
         steps:
             - run: 
                 name: Install xcframework dependencies
                 command: |
                     brew install jq xcodegen
             - run:
-                name: Creating bundled artifact
+                name: Creating << parameters.bundle_style >> bundled artifact
                 command: |
                     echo "Navigating to packager script"
                     cd scripts/release/packager
-                    ./package-mapbox-maps.sh
+                    ./package-mapbox-maps.sh << parameters.bundle_style >>
                     echo "Moving zip to project root"
-                    mv MapboxMaps-dynamic.zip /Users/distiller/project/
+                    mv MapboxMaps-<< parameters.bundle_style >>.zip /Users/distiller/project/
                     echo "Return to root of project"
                     cd /Users/distiller/project/
             - store_artifacts:
-                path: MapboxMaps-dynamic.zip
+                path: MapboxMaps-<< parameters.bundle_style >>.zip
 
     report-failure:
         parameters:

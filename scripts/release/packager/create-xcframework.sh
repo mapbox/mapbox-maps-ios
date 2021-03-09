@@ -11,13 +11,13 @@ LINK_TYPE=${2}
 SCHEME=${3:-"$PRODUCT"}
 PROJECT=${4:-"$PRODUCT.xcodeproj"}
 
-if [ "$LINK_TYPE" = "DYNAMIC" ]; then
+if [ "$LINK_TYPE" = "dynamic" ]; then
     MACH_O_TYPE=mh_dylib
-elif [ "$LINK_TYPE" = "STATIC" ]; then
+elif [ "$LINK_TYPE" = "static" ]; then
     MACH_O_TYPE=staticlib
 else
     echo "Error: Invalid link type: $LINK_TYPE"
-    echo "Usage: $0 [DYNAMIC|STATIC]"
+    echo "Usage: $0 [dynamic|static]"
     exit 1
 fi
 

@@ -29,8 +29,8 @@ PROJECT=$2
 VERSION=$3
 ZIP_FILENAME=$4
 
-S3_DESTINATION=s3://mapbox-api-downloads-production/v2/${PROJECT}/releases/ios/${VERSION}/${ZIP_FILENAME}
-DOWNLOAD_URL=https://api.mapbox.com/downloads/v2/${PROJECT}/releases/ios/${VERSION}/${ZIP_FILENAME}
+S3_DESTINATION=s3://mapbox-api-downloads-production/v2/${PROJECT}/releases/ios/${VERSION}/packages/${ZIP_FILENAME}
+DOWNLOAD_URL=https://api.mapbox.com/downloads/v2/${PROJECT}/releases/ios/packages/${VERSION}/${ZIP_FILENAME}
 
 step "Uploading ${SOURCE_ZIP} to ${S3_DESTINATION}"
 aws s3 cp ${SOURCE_ZIP} ${S3_DESTINATION} ${S3_ARGS:-}

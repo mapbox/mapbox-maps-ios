@@ -28,8 +28,10 @@ git checkout -b ${BRANCH_NAME}
 cat << EOF > config/${PROJECT_ROOT}/${VERSION}.yaml
 api-downloads: v2
 
-bundles:
-  ios: MapboxMaps-dynamic
+packages:
+  ios: 
+    - MapboxMaps-dynamic
+    - MapboxMaps-static
 EOF
 
 #

@@ -59,8 +59,7 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 - [ ] On your local `Release/{VERSION}` branch, pull the latest from remote release branch. CI will have committed changes to podspec and package manifest.
 - [ ] This is where we need to verify SPM update was successful. Open a tester single view application. Go to the Swift Package Manager menu and add our repo `https://github.com/mapbox/mapbox-maps-ios.git`. For the branch, specify your current release branch. Then verify that you can load the SDK, and display a basic map on device to verify that the build is working.
     - ***Note that the api-downloads PR needs to be merged and sanity checks need to complete before downloads are available here***
-- [ ] Generate the changelog by running the following script `./scripts/release/generate_changelog.sh`
-- [ ] Update the changelog as needed and push those changes
+- [ ] Generate the changelog manually by addding changes to the `CHANGELOG.md` file. Commit these changes have your release buddy review them. 
 
 **3) Create the Release Tag**
 

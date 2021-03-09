@@ -6,7 +6,7 @@ function step { >&2 echo -e "\033[1m\033[36m* $@\033[0m"; }
 function finish { >&2 echo -en "\033[0m"; }
 trap finish EXIT
 
-LINK_TYPE=${1:-"DYNAMIC"}
+LINK_TYPE=${1:-"dynamic"}
 
 step 'Reading from versions.json'
 CORE_VERSION=$(jq -r '.MapboxCoreMaps' ./versions.json)
@@ -20,19 +20,19 @@ mkdir artifacts
 pushd artifacts
 
 step 'Installing Dependencies'
-if [ "$LINK_TYPE" = "DYNAMIC" ]; then
+if [ "$LINK_TYPE" = "dynamic" ]; then
     COMMON_ARTIFACT=MapboxCommon
     CORE_ARTIFACT=MapboxCoreMaps.xcframework-dynamic
     ZIP_ARCHIVE_NAME="MapboxMaps-dynamic.zip"
     README_PATH=../README-dynamic.md
-elif [ "$LINK_TYPE" = "STATIC" ]; then
+elif [ "$LINK_TYPE" = "static" ]; then
     COMMON_ARTIFACT=MapboxCommon-static
     CORE_ARTIFACT=MapboxCoreMaps.xcframework-static
     ZIP_ARCHIVE_NAME="MapboxMaps-static.zip"
     README_PATH=../README-static.md
 else
     echo "Error: Invalid link type: $LINK_TYPE"
-    echo "Usage: $0 [DYNAMIC|STATIC]"
+    echo "Usage: $0 [dynamic|static]"
     exit 1
 fi
 

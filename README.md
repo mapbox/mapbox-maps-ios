@@ -22,7 +22,15 @@ In its current state, it's possible to create the end-to-end debuggable environm
    
    ![Screen Shot 2020-12-04 at 4 35 47 PM](https://user-images.githubusercontent.com/6844889/101218658-7bab3200-3651-11eb-9933-c1f8420695dd.png)
 
+## How to use the fat framework script
 
+* Download the zip bundle of the maps SDK from SDK Registry
+* Navigate to the root of thi directory. This is where the script is located.
+* Then run `./create-maps-frameworks.swift {Path_To_Zip_Bundle}`
+* This script does not care if the bundle is the static or dynamic bundle
+    * If you pass in a dynamic bundle, the result is a set of dynamic fat frameworks
+    * If you pass in a static bundle, the result is a set of static fat frameworks
+* The frameworks will be located in a directory called MapboxMapsFrameworks
 
 ### Known issues:
 - Currently this will work only for simulators. To make it work for devices you have to change the Cmake invocation in `generate-debuggable-environment.sh` to build for `iphoneos ` instead of `iphonesimulator` -- you may also have to change the symlinks.

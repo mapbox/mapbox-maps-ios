@@ -22,13 +22,11 @@ workflows:
                       parameters:
                           configuration: ["Debug", "Release"]
                           report_failure: [true]
-
             - maps-unit-tests:
                   matrix:
                       parameters:
                           configuration: ["Debug", "Release"]
                           report_failure: [true]
-
             - run-tests-on-devices:
                   name: "Run MapboxTestHost tests on devices"
                   device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
@@ -37,7 +35,6 @@ workflows:
                   app-name: "MapboxTestHost"
                   device-tests-always-run: true
                   report_failure: true
-
             - run-tests-on-devices:
                   name: "Run Examples tests on devices"
                   device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
@@ -46,33 +43,27 @@ workflows:
                   app-name: "Examples"
                   device-tests-always-run: true
                   report_failure: true
-
             - create-xcframework:
                   create-xcframework-always-run: true
                   report_failure: true
 
     steve:
         jobs:
-
             - build-all-targets:
                   matrix:
                       parameters:
                           configuration: ["Debug", "Release"]
-
             - binary-size:
                   requires:
                       - build-all-targets
-
             - metrics:
                   requires:
                       - build-all-targets
                   filters:
                       branches:
                           only: main
-
             - maps-unit-tests:
                   name: "Run Unit tests"
-
             # Not on main
             - run-tests-on-devices:
                   name: "Run MapboxTestHost tests on devices"
@@ -83,7 +74,6 @@ workflows:
                   filters:
                       branches:
                           ignore: main
-
             - run-tests-on-devices:
                   name: "Run Examples tests on devices"
                   device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
@@ -93,9 +83,7 @@ workflows:
                   filters:
                       branches:
                           ignore: main
-
             - create-xcframework
-
             # On main
             - run-tests-on-devices:
                   name: "Run MapboxTestHost tests on devices (main)"
@@ -108,7 +96,6 @@ workflows:
                   filters:
                       branches:
                           only: main
-
             - run-tests-on-devices:
                   name: "Run Examples tests on devices (main)"
                   device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
@@ -128,7 +115,6 @@ workflows:
                   filters:
                       branches:
                           only: /Release\/.*/
-
             - ios-release-tag:
                   name: "iOS release"
                   filters:
@@ -445,6 +431,7 @@ commands:
                   command: |
                       make build-for-testing-simulator SCHEME=<< parameters.scheme >>
                   no_output_timeout: 5m
+
     test-with-simulator:
         parameters:
             scheme:

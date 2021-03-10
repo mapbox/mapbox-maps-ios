@@ -13,11 +13,11 @@ public enum PreferredFPS: RawRepresentable, Equatable {
      */
     public init?(rawValue: Int) {
         switch rawValue {
-        case Self.lowPower.fps:
+        case Self.lowPower.rawValue:
             self = .lowPower
-        case Self.normal.fps:
+        case Self.normal.rawValue:
             self = .normal
-        case Self.maximum.fps:
+        case Self.maximum.rawValue:
             self = .maximum
         default:
             self = .custom(fps: rawValue)
@@ -39,8 +39,7 @@ public enum PreferredFPS: RawRepresentable, Equatable {
     /// A custom frame rate. The default value is 30 FPS.
     case custom(fps: Int)
 
-    /// :nodoc:
-    /// `RawRepresentable` conformance
+    /// The preferred frames per second as an `Int` value.
     public var rawValue: Int {
         switch self {
         case .lowPower:
@@ -55,10 +54,6 @@ public enum PreferredFPS: RawRepresentable, Equatable {
         }
     }
 
-    /// The preferred frames per second as an `Int` value.
-    public var fps: Int {
-        return rawValue
-    }
 }
 
 open class ObserverConcrete: Observer {

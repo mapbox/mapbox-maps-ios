@@ -22,7 +22,7 @@ workflows:
                       parameters:
                           configuration: ["Debug", "Release"]
                           report_failure: [true]
-            - maps-unit-tests:
+            - unit-test-sdk:
                   matrix:
                       parameters:
                           configuration: ["Debug", "Release"]
@@ -62,7 +62,7 @@ workflows:
                   filters:
                       branches:
                           only: main
-            - maps-unit-tests:
+            - unit-test-sdk:
                   name: "Run Unit tests"
             # Not on main
             - run-tests-on-devices:
@@ -225,33 +225,28 @@ jobs:
                   message: "metrics"
 
     # Run the tests in the MapboxTests scheme
-    maps-unit-tests:
+    unit-test-sdk:
         <<: *base-job
         steps:
             - checkout
             - access-token-configs
             - install-dependencies
-            - test-scheme:
-                  scheme: MapboxMapsAnnotations
-            - test-scheme:
-                  scheme: MapboxMapsFoundation
-            - test-scheme:
-                  scheme: MapboxMapsGestures
-            - test-scheme:
-                  scheme: MapboxMapsLocation
-            - test-scheme:
-                  scheme: MapboxMapsOffline
-            - test-scheme:
-                  scheme: MapboxMapsOrnaments
-            - test-scheme:
-                  scheme: MapboxMapsSnapshot
-            - test-scheme:
-                  scheme: MapboxMapsStyle
-            - test-scheme:
-                  scheme: MapboxMaps
+            - run:
+                  name: Build-for-testing scheme MapboxMaps for simulator
+                  command: make build-for-testing-simulator SCHEME=MapboxMaps
+                  no_output_timeout: 5m
+            - run:
+                  name: Testing scheme MapboxMaps with simulator
+                  command: make test-without-building-simulator SCHEME=MapboxMaps
+                  no_output_timeout: 5m
+            - run:
+                  name: Converting and uploading coverage
+                  command: make update-codecov-with-profdata SCHEME=MapboxMaps
+            - store-logs:
+                  artifact_name: MapboxMaps
             - report-failure:
                   report_failure: << parameters.report_failure >>
-                  message: "maps-unit-tests"
+                  message: "unit-test-sdk"
 
     # We may want to split this across multiple jobs, rather than multiple
     run-tests-on-devices:
@@ -404,26 +399,6 @@ commands:
                   command: make build-for-simulator SCHEME=<< parameters.scheme >>
                   no_output_timeout: 5m
 
-    build-for-testing-simulator:
-        parameters:
-            scheme:
-                type: string
-        steps:
-            - run:
-                  name: Build-for-testing scheme << parameters.scheme >> for simulator
-                  command: make build-for-testing-simulator SCHEME=<< parameters.scheme >>
-                  no_output_timeout: 5m
-
-    test-with-simulator:
-        parameters:
-            scheme:
-                type: string
-        steps:
-            - run:
-                  name: Testing scheme << parameters.scheme >> with simulator
-                  command: make test-without-building-simulator SCHEME=<< parameters.scheme >>
-                  no_output_timeout: 5m
-
     build-for-device:
         parameters:
             scheme:
@@ -441,30 +416,6 @@ commands:
                   command: |
                       brew install danger/tap/danger-swift
                       danger-swift ci
-
-    test-scheme:
-        parameters:
-            scheme:
-                type: string
-        steps:
-            - build-for-testing-simulator:
-                  scheme: << parameters.scheme >>
-            # These are split into 2, with the aim that we'll be able to reuse
-            # the build product and test on multiple simulators
-            - test-with-simulator:
-                  scheme: << parameters.scheme >>
-            - when:
-                  condition:
-                      equal: ['MapboxMaps', << parameters.scheme >>]
-                  steps:
-                      - run:
-                            name: Converting and uploading coverage
-                            command: make update-codecov-with-profdata SCHEME=<< parameters.scheme >>
-            - store-logs:
-                  artifact_name: << parameters.scheme >>
-            - run:
-                  name: Clean Build directory
-                  command: rm -rf build
 
     ensure-text-exists-in-commit:
         parameters:

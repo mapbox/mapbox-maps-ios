@@ -4,24 +4,6 @@ orbs:
   # https://circleci.com/orbs/registry/orb/circleci/slack
   slack: circleci/slack@3.4.2
 
-# ======================================================================================================================
-
-# Executors define the environment in which the steps of a job will be run, allowing you to reuse a single executor 
-# definition across multiple jobs. https://circleci.com/docs/2.0/configuration-reference/#executors-requires-version-21
-executors:
-    xcode-executor:
-        parameters:
-            xcode:
-                type: string
-                default: "12.2.0"
-        macos:
-            xcode: << parameters.xcode >>
-        environment:
-            HOMEBREW_NO_AUTO_UPDATE: 1
-            HOMEBREW_NO_INSTALL_CLEANUP: 1
-
-# ======================================================================================================================
-
 workflows:
 
     # Workflow that runs at midnight UTC every day 
@@ -37,14 +19,12 @@ workflows:
             - build-all-targets:
                 matrix:
                     parameters:                 
-                        xcode: ["12.2.0"]
                         configuration: ["Debug", "Release"]
                         report_failure: [true]
 
             - maps-unit-tests:
                 matrix:
                     parameters:
-                        xcode: ["12.2.0"]
                         configuration: ["Debug", "Release"]
                         report_failure: [true]
 
@@ -76,7 +56,6 @@ workflows:
             - build-all-targets:
                 matrix:
                     parameters:
-                        xcode: ["12.2.0"]
                         configuration: ["Debug", "Release"]
 
             - binary-size:
@@ -164,10 +143,9 @@ jobs:
     # This is a base job that can be merged into specific jobs. It uses anchors & aliases as described here
     # https://circleci.com/docs/2.0/writing-yaml/#merging-maps
     base-job: &base-job
+        macos:
+            xcode: "12.4.0"
         parameters:
-            xcode:
-                type: string
-                default: "12.2.0"
             device-farm-project:
                 type: string
                 default: $(AWS_DEVICE_FARM_PROJECT_MAPS)
@@ -192,10 +170,9 @@ jobs:
             app-name:
                 type: string
                 default: "MapboxTestHost"
-        executor:
-            name: xcode-executor
-            xcode: << parameters.xcode >>
         environment:
+            HOMEBREW_NO_AUTO_UPDATE: 1
+            HOMEBREW_NO_INSTALL_CLEANUP: 1
             AWS_DEVICE_FARM_DEVICE_POOL: << parameters.device-pool >>
             AWS_DEVICE_FARM_PROJECT: << parameters.device-farm-project >>
             CONFIGURATION: << parameters.configuration >>

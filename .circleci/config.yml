@@ -106,7 +106,9 @@ workflows:
             #       filters:
             #           branches:
             #               only: main
-            - create-xcframework
+            - create-xcframework:
+                  # TODO: Remove this - placed here for testing only
+                  create-xcframework-always-run: true
 
     # public-beta:
     #     jobs:

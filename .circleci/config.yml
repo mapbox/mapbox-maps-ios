@@ -2,8 +2,8 @@
 version: 2.1
 
 orbs:
-  # https://circleci.com/orbs/registry/orb/circleci/slack
-  slack: circleci/slack@3.4.2
+    # https://circleci.com/orbs/registry/orb/circleci/slack
+    slack: circleci/slack@3.4.2
 
 workflows:
 
@@ -11,137 +11,138 @@ workflows:
     nightly:
         triggers:
             - schedule:
-                cron: "0 6 * * *"
-                filters:
-                    branches:
-                        only:
-                            - main
+                  cron: "0 6 * * *"
+                  filters:
+                      branches:
+                          only:
+                              - main
         jobs:
             - build-all-targets:
-                matrix:
-                    parameters:
-                        configuration: ["Debug", "Release"]
-                        report_failure: [true]
+                  matrix:
+                      parameters:
+                          configuration: ["Debug", "Release"]
+                          report_failure: [true]
 
             - maps-unit-tests:
-                matrix:
-                    parameters:
-                        configuration: ["Debug", "Release"]
-                        report_failure: [true]
+                  matrix:
+                      parameters:
+                          configuration: ["Debug", "Release"]
+                          report_failure: [true]
 
             - run-tests-on-devices:
-                name: "Run MapboxTestHost tests on devices"
-                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
-                device-pool: $(AWS_DEVICE_FARM_5_DEVICE_POOL)
-                scheme: "MapboxMapsTestsWithHost"
-                app-name: "MapboxTestHost"
-                device-tests-always-run: true
-                report_failure: true
+                  name: "Run MapboxTestHost tests on devices"
+                  device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
+                  device-pool: $(AWS_DEVICE_FARM_5_DEVICE_POOL)
+                  scheme: "MapboxMapsTestsWithHost"
+                  app-name: "MapboxTestHost"
+                  device-tests-always-run: true
+                  report_failure: true
 
             - run-tests-on-devices:
-                name: "Run Examples tests on devices"
-                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
-                device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
-                scheme: "Examples"
-                app-name: "Examples"
-                device-tests-always-run: true
-                report_failure: true
+                  name: "Run Examples tests on devices"
+                  device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
+                  device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
+                  scheme: "Examples"
+                  app-name: "Examples"
+                  device-tests-always-run: true
+                  report_failure: true
 
             - create-xcframework:
-                create-xcframework-always-run: true
-                report_failure: true
+                  create-xcframework-always-run: true
+                  report_failure: true
 
     steve:
         jobs:
 
             - build-all-targets:
-                matrix:
-                    parameters:
-                        configuration: ["Debug", "Release"]
+                  matrix:
+                      parameters:
+                          configuration: ["Debug", "Release"]
 
             - binary-size:
-                requires:
-                    - build-all-targets
+                  requires:
+                      - build-all-targets
 
             - metrics:
-                requires:
-                    - build-all-targets
-                filters:
-                    branches:
-                        only: main
+                  requires:
+                      - build-all-targets
+                  filters:
+                      branches:
+                          only: main
 
             - maps-unit-tests:
-                name: "Run Unit tests"
+                  name: "Run Unit tests"
 
             # Not on main
             - run-tests-on-devices:
-                name: "Run MapboxTestHost tests on devices"
-                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
-                device-pool: $(AWS_DEVICE_FARM_1_PHONE_POOL)
-                scheme: "MapboxMapsTestsWithHost"
-                app-name: "MapboxTestHost"
-                filters:
-                    branches:
-                        ignore: main
+                  name: "Run MapboxTestHost tests on devices"
+                  device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
+                  device-pool: $(AWS_DEVICE_FARM_1_PHONE_POOL)
+                  scheme: "MapboxMapsTestsWithHost"
+                  app-name: "MapboxTestHost"
+                  filters:
+                      branches:
+                          ignore: main
 
             - run-tests-on-devices:
-                name: "Run Examples tests on devices"
-                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
-                device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
-                scheme: "Examples"
-                app-name: "Examples"
-                filters:
-                    branches:
-                        ignore: main
+                  name: "Run Examples tests on devices"
+                  device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
+                  device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
+                  scheme: "Examples"
+                  app-name: "Examples"
+                  filters:
+                      branches:
+                          ignore: main
 
             - create-xcframework
 
             # On main
             - run-tests-on-devices:
-                name: "Run MapboxTestHost tests on devices (main)"
-                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
-                device-pool: $(AWS_DEVICE_FARM_5_DEVICE_POOL)
-                scheme: "MapboxMapsTestsWithHost"
-                app-name: "MapboxTestHost"
-                device-tests-always-run: true
-                report_failure: true
-                filters:
-                    branches:
-                        only: main
+                  name: "Run MapboxTestHost tests on devices (main)"
+                  device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
+                  device-pool: $(AWS_DEVICE_FARM_5_DEVICE_POOL)
+                  scheme: "MapboxMapsTestsWithHost"
+                  app-name: "MapboxTestHost"
+                  device-tests-always-run: true
+                  report_failure: true
+                  filters:
+                      branches:
+                          only: main
 
             - run-tests-on-devices:
-                name: "Run Examples tests on devices (main)"
-                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
-                device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
-                scheme: "Examples"
-                app-name: "Examples"
-                device-tests-always-run: true
-                report_failure: true
-                filters:
-                    branches:
-                        only: main
+                  name: "Run Examples tests on devices (main)"
+                  device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
+                  device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
+                  scheme: "Examples"
+                  app-name: "Examples"
+                  device-tests-always-run: true
+                  report_failure: true
+                  filters:
+                      branches:
+                          only: main
 
     public-beta:
         jobs:
             - ios-build-release:
-                name: "Public Beta Release"
-                filters:
-                    branches:
-                        only: /Release\/.*/
+                  name: "Public Beta Release"
+                  filters:
+                      branches:
+                          only: /Release\/.*/
 
             - ios-release-tag:
-                name: "iOS release"
-                filters:
-                    tags:
-                        only: /.*/
-                    branches:
-                        ignore: /.*/
+                  name: "iOS release"
+                  filters:
+                      tags:
+                          only: /.*/
+                      branches:
+                          ignore: /.*/
 
-# ======================================================================================================================
+# ==============================================================================
 
 jobs:
 
-    # This is a base job that can be merged into specific jobs. It uses anchors & aliases as described here
+    # This is a base job that can be merged into specific jobs. It uses anchors
+    # & aliases as described here
     # https://circleci.com/docs/2.0/writing-yaml/#merging-maps
     base-job: &base-job
         macos:
@@ -190,64 +191,64 @@ jobs:
             - run: brew install swiftlint
             - run: swiftlint lint --strict
             - build-scheme:
-                scheme: MapboxMapsAnnotations
+                  scheme: MapboxMapsAnnotations
             - build-scheme:
-                scheme: MapboxMapsFoundation
+                  scheme: MapboxMapsFoundation
             - build-scheme:
-                scheme: MapboxMapsGestures
+                  scheme: MapboxMapsGestures
             - build-scheme:
-                scheme: MapboxMapsLocation
+                  scheme: MapboxMapsLocation
             - build-scheme:
-                scheme: MapboxMapsOffline
+                  scheme: MapboxMapsOffline
             - build-scheme:
-                scheme: MapboxMapsOrnaments
+                  scheme: MapboxMapsOrnaments
             - build-scheme:
-                scheme: MapboxMapsSnapshot
+                  scheme: MapboxMapsSnapshot
             - build-scheme:
-                scheme: MapboxMapsStyle
+                  scheme: MapboxMapsStyle
             - build-scheme:
-                scheme: MapboxMaps
+                  scheme: MapboxMaps
             - build-scheme:
-                scheme: DebugApp
+                  scheme: DebugApp
             - store-logs
             - report-failure:
-                report_failure: << parameters.report_failure >>
-                message: "build-all-targets"
+                  report_failure: << parameters.report_failure >>
+                  message: "build-all-targets"
 
     binary-size:
         <<: *base-job
         steps:
             - run:
-                name: Trigger binary size test
-                command: |
-                    if [ -n "${MOBILE_METRICS_TOKEN}" ]; then
-                        if [[ $CIRCLE_BRANCH == main ]]; then
-                            curl -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${MOBILE_METRICS_TOKEN}
-                        else
-                            curl -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\",\"SOURCE_COMPARE_BASELINE\":\"YES\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${MOBILE_METRICS_TOKEN}
-                        fi
-                    else
-                        echo "MOBILE_METRICS_TOKEN not provided"
-                    fi
+                  name: Trigger binary size test
+                  command: |
+                      if [ -n "${MOBILE_METRICS_TOKEN}" ]; then
+                          if [[ $CIRCLE_BRANCH == main ]]; then
+                              curl -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${MOBILE_METRICS_TOKEN}
+                          else
+                              curl -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\",\"SOURCE_COMPARE_BASELINE\":\"YES\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${MOBILE_METRICS_TOKEN}
+                          fi
+                      else
+                          echo "MOBILE_METRICS_TOKEN not provided"
+                      fi
 
     metrics:
         <<: *base-job
         steps:
             - run:
-                name: Trigger metrics
-                command: |
-                    if [ -n "${MOBILE_METRICS_TOKEN}" ]; then
-                        if [[ $CIRCLE_BRANCH == main ]]; then
-                            curl -X POST --header "Content-Type: application/json" --data "{\"parameters\":{\"run_ios_maps_v10_benchmark\":true,\"ci_ref\":${CIRCLE_BUILD_NUM}},\"branch\":\"master\"}" https://circleci.com/api/v2/project/github/mapbox/mobile-metrics/pipeline?circle-token=${MOBILE_METRICS_TOKEN}
-                        else
-                            echo "TODO: Triggering metrics from other branches"
-                        fi
-                    else
-                        echo "MOBILE_METRICS_TOKEN not provided"
-                    fi
+                  name: Trigger metrics
+                  command: |
+                      if [ -n "${MOBILE_METRICS_TOKEN}" ]; then
+                          if [[ $CIRCLE_BRANCH == main ]]; then
+                              curl -X POST --header "Content-Type: application/json" --data "{\"parameters\":{\"run_ios_maps_v10_benchmark\":true,\"ci_ref\":${CIRCLE_BUILD_NUM}},\"branch\":\"master\"}" https://circleci.com/api/v2/project/github/mapbox/mobile-metrics/pipeline?circle-token=${MOBILE_METRICS_TOKEN}
+                          else
+                              echo "TODO: Triggering metrics from other branches"
+                          fi
+                      else
+                          echo "MOBILE_METRICS_TOKEN not provided"
+                      fi
             - report-failure:
-                report_failure: << parameters.report_failure >>
-                message: "metrics"
+                  report_failure: << parameters.report_failure >>
+                  message: "metrics"
 
     # Run the tests in the MapboxTests scheme
     maps-unit-tests:
@@ -257,26 +258,26 @@ jobs:
             - access-token-configs
             - make-deps
             - test-scheme:
-                scheme: MapboxMapsAnnotations
+                  scheme: MapboxMapsAnnotations
             - test-scheme:
-                scheme: MapboxMapsFoundation
+                  scheme: MapboxMapsFoundation
             - test-scheme:
-                scheme: MapboxMapsGestures
+                  scheme: MapboxMapsGestures
             - test-scheme:
-                scheme: MapboxMapsLocation
+                  scheme: MapboxMapsLocation
             - test-scheme:
-                scheme: MapboxMapsOffline
+                  scheme: MapboxMapsOffline
             - test-scheme:
-                scheme: MapboxMapsOrnaments
+                  scheme: MapboxMapsOrnaments
             - test-scheme:
-                scheme: MapboxMapsSnapshot
+                  scheme: MapboxMapsSnapshot
             - test-scheme:
-                scheme: MapboxMapsStyle
+                  scheme: MapboxMapsStyle
             - test-scheme:
-                scheme: MapboxMaps
+                  scheme: MapboxMaps
             - report-failure:
-                report_failure: << parameters.report_failure >>
-                message: "maps-unit-tests"
+                  report_failure: << parameters.report_failure >>
+                  message: "maps-unit-tests"
 
     # We may want to split this across multiple jobs, rather than multiple
     run-tests-on-devices:
@@ -285,127 +286,129 @@ jobs:
             - checkout
             - access-token-configs
             - ensure-text-exists-in-commit:
-                commit-text: "[run device tests]"
-                always-run: << parameters.device-tests-always-run >>
+                  commit-text: "[run device tests]"
+                  always-run: << parameters.device-tests-always-run >>
             - run: make install-devicefarm-dependencies
             - make-deps
             - device-test-scheme:
-                scheme: << parameters.scheme >>
-                app-name: << parameters.app-name >>
-                configuration: Release
-            - gather-xcresults # get xcresults here, may be zipped with more than one result
+                  scheme: << parameters.scheme >>
+                  app-name: << parameters.app-name >>
+                  configuration: Release
+            # get xcresults here, may be zipped with more than one result
+            - gather-xcresults
             - parse-xcresults
             - run:
                   name: Symbolicate crash logs
                   command: make symbolicate SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
                   when: always
             - run:
-                name: Converting and uploading coverage
-                command: |
-                    make device-update-codecov-with-profdata SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
+                  name: Converting and uploading coverage
+                  command: |
+                      make device-update-codecov-with-profdata SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
             - store-device-farm-artifacts
             - store-logs
             - report-failure:
-                report_failure: << parameters.report_failure >>
-                message: "`<< parameters.scheme >>` device tests"
+                  report_failure: << parameters.report_failure >>
+                  message: "`<< parameters.scheme >>` device tests"
 
     create-xcframework:
         <<: *base-job
         steps:
             - checkout
             - ensure-text-exists-in-commit:
-                commit-text: "[create xcframework]"
-                always-run: << parameters.create-xcframework-always-run >>
+                  commit-text: "[create xcframework]"
+                  always-run: << parameters.create-xcframework-always-run >>
             - make-deps
             - make-xcframework-bundle:
-                bundle_style: "dynamic"
+                  bundle_style: "dynamic"
             - make-xcframework-bundle:
-                bundle_style: "static"
+                  bundle_style: "static"
             - danger
             - report-failure:
-                report_failure: << parameters.report_failure >>
-                message: "create-xcframework"
+                  report_failure: << parameters.report_failure >>
+                  message: "create-xcframework"
 
-    # This job was created for the public beta and is responsible for building and uploading
-    # the xcframework bundle to S3. As well as making appropriate updates to Package Manifest and Podspec.
-    # Further, this job will also create a PR in api-downloads for SDK Registry access.
+    # This job was created for the public beta and is responsible for building
+    # and uploading the xcframework bundle to S3. As well as making appropriate
+    # updates to Package Manifest and Podspec. Further, this job will also
+    # create a PR in api-downloads for SDK Registry access.
     ios-build-release:
         <<: *base-job
         steps:
             - checkout
             - ensure-text-exists-in-commit:
-                commit-text: "[release]"
-                always-run: << parameters.device-tests-always-run >>
+                  commit-text: "[release]"
+                  always-run: << parameters.device-tests-always-run >>
             - run:
-                name: Extract Version From Commit
-                command: |
-                    GIT_COMMIT_MSG=`git log --format=oneline -n 1`
-                    export VERSION=$(echo $GIT_COMMIT_MSG| cut -d' ' -f3)
-                    echo "export VERSION=$VERSION" >> $BASH_ENV
+                  name: Extract Version From Commit
+                  command: |
+                      GIT_COMMIT_MSG=`git log --format=oneline -n 1`
+                      export VERSION=$(echo $GIT_COMMIT_MSG| cut -d' ' -f3)
+                      echo "export VERSION=$VERSION" >> $BASH_ENV
             - slack/notify:
-                message: '<$CIRCLE_BUILD_URL|Release build for \`$VERSION\` started.>'
-                include_visit_job_action: true
+                  message: '<$CIRCLE_BUILD_URL|Release build for \`$VERSION\` started.>'
+                  include_visit_job_action: true
             - make-deps
             - make-xcframework-bundle:
-                bundle_style: "dynamic"
+                  bundle_style: "dynamic"
             - make-xcframework-bundle:
-                bundle_style: "static"
+                  bundle_style: "static"
             - run:
-                name: Uploading direct download bundles (static & dynamic) to SDK Registry
-                command: |
-                    ./scripts/release/upload-to-registry.sh MapboxMaps-dynamic.zip mobile-maps-ios ${VERSION} MapboxMaps-dynamic.zip
-                    ./scripts/release/upload-to-registry.sh MapboxMaps-static.zip mobile-maps-ios ${VERSION} MapboxMaps-static.zip
+                  name: Uploading direct download bundles (static & dynamic) to SDK Registry
+                  command: |
+                      ./scripts/release/upload-to-registry.sh MapboxMaps-dynamic.zip mobile-maps-ios ${VERSION} MapboxMaps-dynamic.zip
+                      ./scripts/release/upload-to-registry.sh MapboxMaps-static.zip mobile-maps-ios ${VERSION} MapboxMaps-static.zip
             - run:
-                name: Run `npm ci`
-                command: |
-                    echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-                    npm ci
-                when: always
+                  name: Run `npm ci`
+                  command: |
+                      echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+                      npm ci
+                  when: always
             - run:
-                name: Creating SDK Registry PR
-                command: |
-                    ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios ${VERSION}
-                when: always
+                  name: Creating SDK Registry PR
+                  command: |
+                      ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios ${VERSION}
+                  when: always
             - run:
-                name: Update Package Manifest & Podspec
-                command: |
-                    ./scripts/release/update-dependency-manager-manifests.sh ${VERSION}
-                when: on_success
+                  name: Update Package Manifest & Podspec
+                  command: |
+                      ./scripts/release/update-dependency-manager-manifests.sh ${VERSION}
+                  when: on_success
             - slack/status:
-                fail_only: false
-                include_visit_job_action: true
-                failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` failed.>'
-                success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` succeeded!> :tada:'
+                  fail_only: false
+                  include_visit_job_action: true
+                  failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` failed.>'
+                  success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` succeeded!> :tada:'
 
     # This job is triggered when a tag is pushed so we can tag a release.
-    # This job is responsible for making docs, and creating a draft release on Github
+    # It is responsible for making docs, and creating a draft release on Github
     ios-release-tag:
         <<: *base-job
         steps:
             - ensure-tag-is-semver-like:
-                tag: ${CIRCLE_TAG}
+                  tag: ${CIRCLE_TAG}
             - slack/notify:
-                message: '<$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` started.>'
-                include_visit_job_action: true
+                  message: '<$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` started.>'
+                  include_visit_job_action: true
             - checkout
             - make-deps
             - make-docs
             - run:
-                name: Run `npm ci`
-                command: |
-                    echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-                    npm ci
-                when: always
+                  name: Run `npm ci`
+                  command: |
+                      echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+                      npm ci
+                  when: always
             - run:
-                name: Create draft release on Github
-                command: |
-                    ./scripts/release/create-github-draft-release.sh ${CIRCLE_TAG}
-                when: always
+                  name: Create draft release on Github
+                  command: |
+                      ./scripts/release/create-github-draft-release.sh ${CIRCLE_TAG}
+                  when: always
             - slack/status:
-                fail_only: false
-                include_visit_job_action: true
-                failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` failed.>'
-                success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` succeeded!> :tada:'
+                  fail_only: false
+                  include_visit_job_action: true
+                  failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` failed.>'
+                  success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` succeeded!> :tada:'
 
 # ======================================================================================================================
 # Reusable commands
@@ -416,10 +419,10 @@ commands:
     access-token-configs:
         steps:
             - run:
-                name: Save mapbox access token to configs
-                command: |
-                    echo "MAPBOX_ACCESS_TOKEN = ${MAPBOX_ACCESS_TOKEN}" > ./developer.xcconfig
-                    echo "${MAPBOX_ACCESS_TOKEN}" > ~/.mapbox
+                  name: Save mapbox access token to configs
+                  command: |
+                      echo "MAPBOX_ACCESS_TOKEN = ${MAPBOX_ACCESS_TOKEN}" > ./developer.xcconfig
+                      echo "${MAPBOX_ACCESS_TOKEN}" > ~/.mapbox
 
     build-for-simulator:
         parameters:
@@ -427,10 +430,10 @@ commands:
                 type: string
         steps:
             - run:
-                name: Building scheme << parameters.scheme >> for simulator
-                command: |
-                    make build-for-simulator SCHEME=<< parameters.scheme >>
-                no_output_timeout: 5m
+                  name: Building scheme << parameters.scheme >> for simulator
+                  command: |
+                      make build-for-simulator SCHEME=<< parameters.scheme >>
+                  no_output_timeout: 5m
 
     build-for-testing-simulator:
         parameters:
@@ -438,20 +441,20 @@ commands:
                 type: string
         steps:
             - run:
-                name: Build-for-testing scheme << parameters.scheme >> for simulator
-                command: |
-                    make build-for-testing-simulator SCHEME=<< parameters.scheme >>
-                no_output_timeout: 5m
+                  name: Build-for-testing scheme << parameters.scheme >> for simulator
+                  command: |
+                      make build-for-testing-simulator SCHEME=<< parameters.scheme >>
+                  no_output_timeout: 5m
     test-with-simulator:
         parameters:
             scheme:
                 type: string
         steps:
             - run:
-                name: Testing scheme << parameters.scheme >> with simulator
-                command: |
-                    make test-without-building-simulator SCHEME=<< parameters.scheme >>
-                no_output_timeout: 5m
+                  name: Testing scheme << parameters.scheme >> with simulator
+                  command: |
+                      make test-without-building-simulator SCHEME=<< parameters.scheme >>
+                  no_output_timeout: 5m
 
     build-for-device:
         parameters:
@@ -459,10 +462,10 @@ commands:
                 type: string
         steps:
             - run:
-                name: Building scheme << parameters.scheme >> for device
-                command: |
-                    make build-for-device SCHEME=<< parameters.scheme >>
-                no_output_timeout: 5m
+                  name: Building scheme << parameters.scheme >> for device
+                  command: |
+                      make build-for-device SCHEME=<< parameters.scheme >>
+                  no_output_timeout: 5m
 
     build-scheme:
         parameters:
@@ -470,21 +473,21 @@ commands:
                 type: string
         steps:
             - build-for-simulator:
-                scheme: << parameters.scheme >>
+                  scheme: << parameters.scheme >>
             - build-for-device:
-                scheme: << parameters.scheme >>
+                  scheme: << parameters.scheme >>
             - run:
-                name: Clean Build directory
-                command: |
-                    rm -rf build/Build
+                  name: Clean Build directory
+                  command: |
+                      rm -rf build/Build
 
     danger:
         steps:
             - run:
-                name: Run Danger
-                command: |
-                    brew install danger/tap/danger-swift
-                    danger-swift ci
+                  name: Run Danger
+                  command: |
+                      brew install danger/tap/danger-swift
+                      danger-swift ci
 
     test-scheme:
         parameters:
@@ -492,25 +495,25 @@ commands:
                 type: string
         steps:
             - build-for-testing-simulator:
-                scheme: << parameters.scheme >>
-            # These are split into 2, with the aim that we'll be able to reuse the build product and test on multiple
-            # simulators
+                  scheme: << parameters.scheme >>
+            # These are split into 2, with the aim that we'll be able to reuse
+            # the build product and test on multiple simulators
             - test-with-simulator:
-                scheme: << parameters.scheme >>
+                  scheme: << parameters.scheme >>
             - when:
-                condition:
-                    equal: ['MapboxMaps', << parameters.scheme >>]
-                steps:
-                    - run:
-                        name: Converting and uploading coverage
-                        command: |
-                            make update-codecov-with-profdata SCHEME=<< parameters.scheme >>
-            - store-logs :
-                artifact_name: << parameters.scheme >>
+                  condition:
+                      equal: ['MapboxMaps', << parameters.scheme >>]
+                  steps:
+                      - run:
+                            name: Converting and uploading coverage
+                            command: |
+                                make update-codecov-with-profdata SCHEME=<< parameters.scheme >>
+            - store-logs:
+                  artifact_name: << parameters.scheme >>
             - run:
-                name: Clean Build directory
-                command: |
-                    rm -rf build
+                  name: Clean Build directory
+                  command: |
+                      rm -rf build
 
     ensure-text-exists-in-commit:
         parameters:
@@ -520,17 +523,17 @@ commands:
                 type: boolean
         steps:
             - run:
-                name: Checking for "<< parameters.commit-text >>" in commit message
-                command: |
-                    export RUN_JOB="$(git log -1 --pretty=%B | fgrep "<< parameters.commit-text >>" | wc -l)"
-                    if << parameters.always-run >>; then
-                        echo "Job configured to always run"
-                    elif [[ "$RUN_JOB" -ne "0" ]]; then
-                        echo "<< parameters.commit-text >> found."
-                    else
-                        echo "Skipping job"
-                        circleci-agent step halt
-                    fi
+                  name: Checking for "<< parameters.commit-text >>" in commit message
+                  command: |
+                      export RUN_JOB="$(git log -1 --pretty=%B | fgrep "<< parameters.commit-text >>" | wc -l)"
+                      if << parameters.always-run >>; then
+                          echo "Job configured to always run"
+                      elif [[ "$RUN_JOB" -ne "0" ]]; then
+                          echo "<< parameters.commit-text >> found."
+                      else
+                          echo "Skipping job"
+                          circleci-agent step halt
+                      fi
 
     ensure-tag-is-semver-like:
         parameters:
@@ -538,12 +541,12 @@ commands:
                 type: string
         steps:
             - run:
-                name: Checking << parameters.tag >> is SEMVER like
-                command: |
-                    if [[ ! << parameters.tag >> =~ ^v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
-                        echo "Skipping job"
-                        circleci-agent step halt
-                    fi
+                  name: Checking << parameters.tag >> is SEMVER like
+                  command: |
+                      if [[ ! << parameters.tag >> =~ ^v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+                          echo "Skipping job"
+                          circleci-agent step halt
+                      fi
 
     device-test-scheme:
         parameters:
@@ -555,29 +558,29 @@ commands:
                 type: string
         steps:
             - run:
-                name: Testing << parameters.scheme >> on AWS Device Farm
-                command: |
-                    make test-with-device-farm SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=<< parameters.configuration >>
-                when: always
+                  name: Testing << parameters.scheme >> on AWS Device Farm
+                  command: |
+                      make test-with-device-farm SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=<< parameters.configuration >>
+                  when: always
 
     gather-xcresults:
         steps:
             - run:
-                name: "Gathering results"
-                command: |
-                    make gather-results
-                when: always
+                  name: "Gathering results"
+                  command: |
+                      make gather-results
+                  when: always
 
     parse-xcresults:
         steps:
             - run:
-                name: "Parsing xcresults for errors"
-                command: |
-                    RESULTS=`find build/testruns -name '*.xcresult'`
-                    pushd scripts/xcparty && swift build
-                    popd
-                    xargs ./scripts/xcparty/.build/debug/xcparty \<<< "$RESULTS" | tee build/testruns/failures.txt
-                when: on_fail
+                  name: "Parsing xcresults for errors"
+                  command: |
+                      RESULTS=`find build/testruns -name '*.xcresult'`
+                      pushd scripts/xcparty && swift build
+                      popd
+                      xargs ./scripts/xcparty/.build/debug/xcparty \<<< "$RESULTS" | tee build/testruns/failures.txt
+                  when: on_fail
 
     store-logs:
         parameters:
@@ -587,14 +590,14 @@ commands:
         description: "Saving Logs as artifacts"
         steps:
             - run:
-                name: Zipping logs
-                command: |
-                   zip -r << parameters.artifact_name >>.zip build/Build/Products || echo "Skipping build/Build/Products"
-                   zip -r << parameters.artifact_name >>.zip build/Build/ProfileData || echo "Skipping build/Build/ProfileData"
-                   zip -r << parameters.artifact_name >>.zip build/Logs || echo "Skipping build/Logs"
-                when: always
+                  name: Zipping logs
+                  command: |
+                     zip -r << parameters.artifact_name >>.zip build/Build/Products || echo "Skipping build/Build/Products"
+                     zip -r << parameters.artifact_name >>.zip build/Build/ProfileData || echo "Skipping build/Build/ProfileData"
+                     zip -r << parameters.artifact_name >>.zip build/Logs || echo "Skipping build/Logs"
+                  when: always
             - store_artifacts:
-                path: << parameters.artifact_name >>.zip
+                  path: << parameters.artifact_name >>.zip
 
     store-device-farm-artifacts:
         parameters:
@@ -604,16 +607,16 @@ commands:
         description: "Saving Device Farm results as artifacts."
         steps:
             - run:
-                name: Zipping device farm results
-                command: |
-                    zip -r << parameters.artifact_name >>.zip build/DeviceFarmResults || echo "Skipping build/DeviceFarmResults"
-                    zip -r << parameters.artifact_name >>.zip build/Payload || echo "Skipping build/Payload"
-                    zip -r << parameters.artifact_name >>.zip build/test-root || echo "Skipping build/test-root"
-                    zip -r << parameters.artifact_name >>.zip build/testruns || echo "Skipping build/testruns"
-                    zip -r << parameters.artifact_name >>.zip build/*.json || echo "Skipping build/*.json"
-                when: always
+                  name: Zipping device farm results
+                  command: |
+                      zip -r << parameters.artifact_name >>.zip build/DeviceFarmResults || echo "Skipping build/DeviceFarmResults"
+                      zip -r << parameters.artifact_name >>.zip build/Payload || echo "Skipping build/Payload"
+                      zip -r << parameters.artifact_name >>.zip build/test-root || echo "Skipping build/test-root"
+                      zip -r << parameters.artifact_name >>.zip build/testruns || echo "Skipping build/testruns"
+                      zip -r << parameters.artifact_name >>.zip build/*.json || echo "Skipping build/*.json"
+                  when: always
             - store_artifacts:
-                path: << parameters.artifact_name >>.zip
+                  path: << parameters.artifact_name >>.zip
 
     make-deps:
         steps:
@@ -627,7 +630,7 @@ commands:
             - run: cd scripts/doc-generation && ./generate-docs.sh
             - run: zip -r api-docs.zip api-docs
             - store_artifacts:
-                path: api-docs.zip
+                  path: api-docs.zip
 
     make-xcframework-bundle:
         parameters:
@@ -637,21 +640,21 @@ commands:
         description: "Create << parameters.bundle_style >> xcframework bundle"
         steps:
             - run:
-                name: Install xcframework dependencies
-                command: |
-                    brew install jq xcodegen
+                  name: Install xcframework dependencies
+                  command: |
+                      brew install jq xcodegen
             - run:
-                name: Creating << parameters.bundle_style >> bundled artifact
-                command: |
-                    echo "Navigating to packager script"
-                    cd scripts/release/packager
-                    ./package-mapbox-maps.sh << parameters.bundle_style >>
-                    echo "Moving zip to project root"
-                    mv MapboxMaps-<< parameters.bundle_style >>.zip /Users/distiller/project/
-                    echo "Return to root of project"
-                    cd /Users/distiller/project/
+                  name: Creating << parameters.bundle_style >> bundled artifact
+                  command: |
+                      echo "Navigating to packager script"
+                      cd scripts/release/packager
+                      ./package-mapbox-maps.sh << parameters.bundle_style >>
+                      echo "Moving zip to project root"
+                      mv MapboxMaps-<< parameters.bundle_style >>.zip /Users/distiller/project/
+                      echo "Return to root of project"
+                      cd /Users/distiller/project/
             - store_artifacts:
-                path: MapboxMaps-<< parameters.bundle_style >>.zip
+                  path: MapboxMaps-<< parameters.bundle_style >>.zip
 
     report-failure:
         parameters:
@@ -663,16 +666,16 @@ commands:
                 default: ""
         steps:
             - run:
-                name: Detected failure, report to Slack? << parameters.report_failure >>
-                command: |
-                    if ! << parameters.report_failure >> ; then
-                        echo "Skipping Slack notification"
-                        circleci-agent step halt
-                    fi
-                when: on_fail
+                  name: Detected failure, report to Slack? << parameters.report_failure >>
+                  command: |
+                      if ! << parameters.report_failure >> ; then
+                          echo "Skipping Slack notification"
+                          circleci-agent step halt
+                      fi
+                  when: on_fail
             - slack/status:
-                fail_only: true
-                include_visit_job_action: true
-                mentions: '$CIRCLE_USERNAME'
-                only_for_branches: main
-                failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL| << parameters.message >> failed.>'
+                  fail_only: true
+                  include_visit_job_action: true
+                  mentions: '$CIRCLE_USERNAME'
+                  only_for_branches: main
+                  failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL| << parameters.message >> failed.>'

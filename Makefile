@@ -80,9 +80,7 @@ $(PAYLOAD_DIR) $(TEST_ROOT) $(DEVICE_TEST_PATH):
 # ----------------------------------------------------------------------------------------------------------------------
 # Simulators
 
-# x86_64 because CMapbox doesn't have i386 currently
 XCODE_BUILD_SIM = xcodebuild \
-	ARCHS=x86_64 \
 	ONLY_ACTIVE_ARCH=YES \
 	-sdk iphonesimulator \
 	-configuration $(CONFIGURATION) \

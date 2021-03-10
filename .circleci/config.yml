@@ -185,12 +185,10 @@ jobs:
         <<: *base-job
         steps:
             - checkout
-            - access-token-configs
+            - configure-mapbox-access-token
+            - configure-netrc
             - xcode-github-workaround
             - install-dependencies
-            - run:
-                  name: Run SwiftLint
-                  command: swiftlint lint --strict
             - run:
                   name: Building scheme MapboxMaps for simulator
                   command: make build-for-simulator SCHEME=MapboxMaps
@@ -208,7 +206,8 @@ jobs:
         <<: *base-job
         steps:
             - checkout
-            - access-token-configs
+            - configure-mapbox-access-token
+            - configure-netrc
             - xcode-github-workaround
             - install-dependencies
             - run:
@@ -268,7 +267,7 @@ jobs:
         <<: *base-job
         steps:
             - checkout
-            - access-token-configs
+            - configure-mapbox-access-token
             - ensure-text-exists-in-commit:
                   commit-text: "[run device tests]"
                   always-run: << parameters.device-tests-always-run >>
@@ -396,13 +395,19 @@ commands:
 
     # Configurable build/test commands
 
-    access-token-configs:
+    configure-mapbox-access-token:
         steps:
             - run:
-                  name: Save mapbox access token to configs
+                  name: Configure Mapbox Access Token
                   command: |
                       echo "MAPBOX_ACCESS_TOKEN = ${MAPBOX_ACCESS_TOKEN}" > ./developer.xcconfig
                       echo "${MAPBOX_ACCESS_TOKEN}" > ~/.mapbox
+
+    configure-netrc:
+        steps:
+            - run:
+                name: Configure .netrc
+                command: echo "\nmachine api.mapbox.com\nlogin mapbox\npassword $(SDK_REGISTRY_TOKEN)" >> ~/.netrc
 
     # See https://stackoverflow.com/a/58186048
     xcode-github-workaround:

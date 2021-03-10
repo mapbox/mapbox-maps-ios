@@ -300,6 +300,7 @@ jobs:
             - ensure-text-exists-in-commit:
                   commit-text: "[create xcframework]"
                   always-run: << parameters.create-xcframework-always-run >>
+            - configure-netrc
             - install-dependencies
             - make-xcframework-bundle:
                   bundle_style: "dynamic"

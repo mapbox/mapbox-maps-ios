@@ -17,7 +17,7 @@ workflows:
                           only:
                               - main
         jobs:
-            - build-all-targets:
+            - build-sdk:
                   matrix:
                       parameters:
                           configuration: ["Debug", "Release"]
@@ -49,16 +49,16 @@ workflows:
 
     steve:
         jobs:
-            - build-all-targets:
+            - build-sdk:
                   matrix:
                       parameters:
                           configuration: ["Debug", "Release"]
             - binary-size:
                   requires:
-                      - build-all-targets
+                      - build-sdk
             - metrics:
                   requires:
-                      - build-all-targets
+                      - build-sdk
                   filters:
                       branches:
                           only: main
@@ -168,7 +168,7 @@ jobs:
             # Don't run the default job
             - run: exit 1
 
-    build-all-targets:
+    build-sdk:
         <<: *base-job
         steps:
             - checkout
@@ -176,29 +176,11 @@ jobs:
             - install-dependencies
             - run: swiftlint lint --strict
             - build-scheme:
-                  scheme: MapboxMapsAnnotations
-            - build-scheme:
-                  scheme: MapboxMapsFoundation
-            - build-scheme:
-                  scheme: MapboxMapsGestures
-            - build-scheme:
-                  scheme: MapboxMapsLocation
-            - build-scheme:
-                  scheme: MapboxMapsOffline
-            - build-scheme:
-                  scheme: MapboxMapsOrnaments
-            - build-scheme:
-                  scheme: MapboxMapsSnapshot
-            - build-scheme:
-                  scheme: MapboxMapsStyle
-            - build-scheme:
                   scheme: MapboxMaps
-            - build-scheme:
-                  scheme: DebugApp
             - store-logs
             - report-failure:
                   report_failure: << parameters.report_failure >>
-                  message: "build-all-targets"
+                  message: "build-sdk"
 
     binary-size:
         <<: *base-job

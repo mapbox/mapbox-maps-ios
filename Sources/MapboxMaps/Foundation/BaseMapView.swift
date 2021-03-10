@@ -50,7 +50,7 @@ public enum PreferredFPS: RawRepresentable, Equatable {
         case .maximum:
             return 0
         case .custom(let fps):
-            // TODO: Check that value is a valid FPS value
+            // TODO: Check that value is a valid FPS value.
             return fps
         }
     }

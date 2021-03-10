@@ -11,35 +11,6 @@ ALWAYS_SEARCH_USER_PATHS = NO
 // for applications should those fail with this enabled.
 //APPLICATION_EXTENSION_API_ONLY = YES
 
-// Exclude i386 from simulator ARCHs because it's not present in libMapbox.a
-// Removed armv7 since it's also 32bit
-ARCHS[sdk=iphoneos*] = arm64
-ARCHS[sdk=iphonesimulator*] = x86_64
-
-// Why the long path here? It's because we want an xctestrun file *without*
-// absolute paths, i.e. relative to __TESTROOT__, so that the testrun file doesn't
-// have to be modified when running on Device Farm.
-//
-// When setting BUILD_DIR (e.g. to `../build`) and *not* setting the derivedDataPath 
-// (i.e. via the command line) the xctestrun file ends up with absolute paths -
-// because the two file locations are not simply related. No apparent combination 
-// of xcode build settings puts the xctestrun file in the parent directory of the 
-// built products. (For similar pain, see 
-// https://stanislaw.github.io/2016/02/28/xcodebuild-how-to-really-change-its-build-path.html )
-//
-// BUT by setting BUILD_DIR to "../build/Build/Products" *and* calling xcodebuild with
-// "-derivedDataPath ../build", we can force the xctestrun to have relative paths.
-//
-// Longer term it may be preferable NOT to override these build locations when 
-// either building with Xcode or xcodebuild, and instead query for the paths with 
-// something like
-//
-//    xcodebuild -showBuildSettings -scheme MapboxMaps | awk '/^    SYMROOT/ {print $3}'
-//
-// and then use that in the various build scripts.
-//
-BUILD_DIR = ../build/Build/Products
-
 // TODO: Move into developer config?
 DEVELOPMENT_TEAM = GJZR2MEM28
 

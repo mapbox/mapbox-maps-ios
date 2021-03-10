@@ -29,7 +29,7 @@ Pre-requisite: Valid `.netrc` file located on your machine at `~/.netrc`. Please
 
 Open `Package.swift` and build the MapboxMaps targets.
 
-In order to use the debug app, open Apps/MapboxMapsApps.xcworkspace and build and run the `DebugApp` target.
+In order to use the debug app, open Apps/Apps.xcworkspace and build and run the `DebugApp` target.
 
 ### Configuring the Maps SDK
 

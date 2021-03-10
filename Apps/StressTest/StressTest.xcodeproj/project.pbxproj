@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B5291E3F25F95CA400974866 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = B5291E3E25F95CA400974866 /* MapboxMaps */; };
 		CADCF8B1258551390065C51B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADCF8B0258551390065C51B /* AppDelegate.swift */; };
 		CADCF8B3258551390065C51B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADCF8B2258551390065C51B /* SceneDelegate.swift */; };
 		CADCF8B5258551390065C51B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADCF8B4258551390065C51B /* ViewController.swift */; };
@@ -15,16 +16,6 @@
 		CADCF8BD2585513B0065C51B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CADCF8BB2585513B0065C51B /* LaunchScreen.storyboard */; };
 		CADCF8C82585513C0065C51B /* StressTestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADCF8C72585513C0065C51B /* StressTestTests.swift */; };
 		CADCF8D32585513C0065C51B /* StressTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADCF8D22585513C0065C51B /* StressTestUITests.swift */; };
-		CADCF8EE258551630065C51B /* MapboxMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF8ED258551630065C51B /* MapboxMaps.framework */; };
-		CADCF8EF258551630065C51B /* MapboxMaps.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF8ED258551630065C51B /* MapboxMaps.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CADCF8F1258551680065C51B /* MapboxCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF8E5258551540065C51B /* MapboxCommon.framework */; };
-		CADCF8F2258551680065C51B /* MapboxCommon.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF8E5258551540065C51B /* MapboxCommon.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CADCF8F32585516A0065C51B /* MapboxCoreMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF8E7258551540065C51B /* MapboxCoreMaps.framework */; };
-		CADCF8F42585516A0065C51B /* MapboxCoreMaps.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF8E7258551540065C51B /* MapboxCoreMaps.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CADCF8F52585516B0065C51B /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF8E4258551540065C51B /* MapboxMobileEvents.framework */; };
-		CADCF8F62585516B0065C51B /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF8E4258551540065C51B /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CADCF8F72585516D0065C51B /* Turf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF8E6258551540065C51B /* Turf.framework */; };
-		CADCF8F82585516D0065C51B /* Turf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF8E6258551540065C51B /* Turf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,11 +42,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				CADCF8F62585516B0065C51B /* MapboxMobileEvents.framework in Embed Frameworks */,
-				CADCF8F2258551680065C51B /* MapboxCommon.framework in Embed Frameworks */,
-				CADCF8EF258551630065C51B /* MapboxMaps.framework in Embed Frameworks */,
-				CADCF8F42585516A0065C51B /* MapboxCoreMaps.framework in Embed Frameworks */,
-				CADCF8F82585516D0065C51B /* Turf.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -77,11 +63,6 @@
 		CADCF8CE2585513C0065C51B /* StressTestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StressTestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CADCF8D22585513C0065C51B /* StressTestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StressTestUITests.swift; sourceTree = "<group>"; };
 		CADCF8D42585513C0065C51B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CADCF8E4258551540065C51B /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MapboxMobileEvents.framework; sourceTree = "<group>"; };
-		CADCF8E5258551540065C51B /* MapboxCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MapboxCommon.framework; sourceTree = "<group>"; };
-		CADCF8E6258551540065C51B /* Turf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Turf.framework; sourceTree = "<group>"; };
-		CADCF8E7258551540065C51B /* MapboxCoreMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MapboxCoreMaps.framework; sourceTree = "<group>"; };
-		CADCF8ED258551630065C51B /* MapboxMaps.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MapboxMaps.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CADCF8FD258551D40065C51B /* unitTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = unitTests.xcconfig; sourceTree = "<group>"; };
 		CADCF8FF258551D40065C51B /* base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = base.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -91,11 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CADCF8EE258551630065C51B /* MapboxMaps.framework in Frameworks */,
-				CADCF8F52585516B0065C51B /* MapboxMobileEvents.framework in Frameworks */,
-				CADCF8F32585516A0065C51B /* MapboxCoreMaps.framework in Frameworks */,
-				CADCF8F1258551680065C51B /* MapboxCommon.framework in Frameworks */,
-				CADCF8F72585516D0065C51B /* Turf.framework in Frameworks */,
+				B5291E3F25F95CA400974866 /* MapboxMaps in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,16 +93,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B5291E3D25F95CA400974866 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		CADCF8A4258551390065C51B = {
 			isa = PBXGroup;
 			children = (
 				CADCF8FB258551D40065C51B /* Configurations */,
-				CADCF8E3258551540065C51B /* lib */,
 				CADCF8AF258551390065C51B /* StressTest */,
 				CADCF8C62585513C0065C51B /* StressTestTests */,
 				CADCF8D12585513C0065C51B /* StressTestUITests */,
 				CADCF8AE258551390065C51B /* Products */,
-				CADCF8EC258551630065C51B /* Frameworks */,
+				B5291E3D25F95CA400974866 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -171,26 +154,6 @@
 			path = StressTestUITests;
 			sourceTree = "<group>";
 		};
-		CADCF8E3258551540065C51B /* lib */ = {
-			isa = PBXGroup;
-			children = (
-				CADCF8E4258551540065C51B /* MapboxMobileEvents.framework */,
-				CADCF8E5258551540065C51B /* MapboxCommon.framework */,
-				CADCF8E6258551540065C51B /* Turf.framework */,
-				CADCF8E7258551540065C51B /* MapboxCoreMaps.framework */,
-			);
-			name = lib;
-			path = ../lib;
-			sourceTree = "<group>";
-		};
-		CADCF8EC258551630065C51B /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				CADCF8ED258551630065C51B /* MapboxMaps.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		CADCF8FB258551D40065C51B /* Configurations */ = {
 			isa = PBXGroup;
 			children = (
@@ -198,7 +161,7 @@
 				CADCF8FF258551D40065C51B /* base.xcconfig */,
 			);
 			name = Configurations;
-			path = ../Mapbox/Configurations;
+			path = ../../xcconfigs;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -218,6 +181,9 @@
 			dependencies = (
 			);
 			name = StressTest;
+			packageProductDependencies = (
+				B5291E3E25F95CA400974866 /* MapboxMaps */,
+			);
 			productName = StressTest;
 			productReference = CADCF8AD258551390065C51B /* StressTest.app */;
 			productType = "com.apple.product-type.application";
@@ -671,6 +637,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B5291E3E25F95CA400974866 /* MapboxMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MapboxMaps;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = CADCF8A5258551390065C51B /* Project object */;
 }

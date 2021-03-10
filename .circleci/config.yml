@@ -7,7 +7,7 @@ orbs:
 
 workflows:
 
-    # Workflow that runs at midnight UTC every day
+    # Runs daily at midnight UTC
     nightly:
         triggers:
             - schedule:
@@ -83,7 +83,6 @@ workflows:
                   filters:
                       branches:
                           ignore: main
-            - create-xcframework
             # On main
             - run-tests-on-devices:
                   name: "Run MapboxTestHost tests on devices (main)"
@@ -107,6 +106,7 @@ workflows:
                   filters:
                       branches:
                           only: main
+            - create-xcframework
 
     public-beta:
         jobs:
@@ -128,7 +128,7 @@ workflows:
 jobs:
 
     # This is a base job that can be merged into specific jobs. It uses anchors
-    # & aliases as described here
+    # and aliases as described here
     # https://circleci.com/docs/2.0/writing-yaml/#merging-maps
     base-job: &base-job
         macos:
@@ -396,7 +396,7 @@ jobs:
                   failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` failed.>'
                   success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` succeeded!> :tada:'
 
-# ======================================================================================================================
+# ==============================================================================
 # Reusable commands
 commands:
 

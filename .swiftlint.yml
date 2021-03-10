@@ -1,6 +1,5 @@
 allow_zero_lintable_files: true
 excluded:
-  - Carthage
   - Pods
   - Sources/MapboxMaps/Style/Generated
   - Tests/MapboxMapsTests/Style/Generated

@@ -159,14 +159,6 @@ RUN_CLANG_STATIC_ANALYZER = YES
 SWIFT_TREAT_WARNINGS_AS_ERRORS[config=Debug] = NO
 SWIFT_TREAT_WARNINGS_AS_ERRORS[config=Release] = YES
 
-
-// -----------------------------------------------------------------------------
-// Search paths
-
-FRAMEWORK_SEARCH_PATHS = $(inherited) $(PLATFORM_DIR)/Developer/Library/Frameworks $(PROJECT_DIR)/../lib/
-HEADER_SEARCH_PATHS = $(inherited)
-LIBRARY_SEARCH_PATHS = $(inherited)
-
 // -----------------------------------------------------------------------------
 // Custom
 

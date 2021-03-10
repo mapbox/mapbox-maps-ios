@@ -20,18 +20,6 @@ TEST_ROOT                 := $(BUILD_DIR)/test-root
 PAYLOAD_DIR               := $(BUILD_DIR)/Payload
 DEVICE_TEST_PATH          := $(BUILD_DIR)/DeviceFarmResults
 
-# Netrc
-NETRC_FILE=~/.netrc
-
-# See https://stackoverflow.com/a/7377522
-define NETRC
-machine api.mapbox.com
-login mapbox
-password $(SDK_REGISTRY_TOKEN)
-endef
-export NETRC
-
-
 # Disabled optional code signing for the time-being. Currently with the setup below, 
 # when build-for-testing unit tests on device **locally** (i.e. you need code-signing), 
 # the build can fail with
@@ -65,14 +53,6 @@ endif
 .PHONY: clean
 clean:
 	-rm -rf $(BUILD_DIR)
-
-
-.PHONY: distclean
-distclean: clean
-	-rm Cartfile.resolved
-	-rm -rf Carthage \
-			~/Library/Caches/carthage \
-			~/Library/Caches/org.carthage.kit
 
 $(PAYLOAD_DIR) $(TEST_ROOT) $(DEVICE_TEST_PATH):
 	-mkdir -p $@
@@ -385,17 +365,6 @@ device-update-codecov-with-profdata:
 install-devicefarm-dependencies:
 	brew install jq
 	pip3 install awscli requests
-
-$(NETRC_FILE):
-ifndef SDK_REGISTRY_TOKEN 
-	@echo SDK_REGISTRY_TOKEN not set.
-	exit 1
-endif
-	@echo "$$NETRC" > $(NETRC_FILE)
-
-.PHONY: deps
-deps: | $(NETRC_FILE)
-	XCODE_XCCONFIG_FILE=${PWD}/xcode-12.xcconfig carthage bootstrap --platform iOS --use-netrc --no-cache-builds
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Validation

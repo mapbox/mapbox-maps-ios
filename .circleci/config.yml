@@ -288,8 +288,7 @@ jobs:
                   when: always
             - run:
                   name: Converting and uploading coverage
-                  command: |
-                      make device-update-codecov-with-profdata SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
+                  command: make device-update-codecov-with-profdata SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
             - store-device-farm-artifacts
             - store-logs
             - report-failure:
@@ -351,13 +350,11 @@ jobs:
                   when: always
             - run:
                   name: Creating SDK Registry PR
-                  command: |
-                      ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios ${VERSION}
+                  command: ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios ${VERSION}
                   when: always
             - run:
                   name: Update Package Manifest & Podspec
-                  command: |
-                      ./scripts/release/update-dependency-manager-manifests.sh ${VERSION}
+                  command: ./scripts/release/update-dependency-manager-manifests.sh ${VERSION}
                   when: on_success
             - slack/status:
                   fail_only: false
@@ -386,8 +383,7 @@ jobs:
                   when: always
             - run:
                   name: Create draft release on Github
-                  command: |
-                      ./scripts/release/create-github-draft-release.sh ${CIRCLE_TAG}
+                  command: ./scripts/release/create-github-draft-release.sh ${CIRCLE_TAG}
                   when: always
             - slack/status:
                   fail_only: false
@@ -416,8 +412,7 @@ commands:
         steps:
             - run:
                   name: Building scheme << parameters.scheme >> for simulator
-                  command: |
-                      make build-for-simulator SCHEME=<< parameters.scheme >>
+                  command: make build-for-simulator SCHEME=<< parameters.scheme >>
                   no_output_timeout: 5m
 
     build-for-testing-simulator:
@@ -427,8 +422,7 @@ commands:
         steps:
             - run:
                   name: Build-for-testing scheme << parameters.scheme >> for simulator
-                  command: |
-                      make build-for-testing-simulator SCHEME=<< parameters.scheme >>
+                  command: make build-for-testing-simulator SCHEME=<< parameters.scheme >>
                   no_output_timeout: 5m
 
     test-with-simulator:
@@ -438,8 +432,7 @@ commands:
         steps:
             - run:
                   name: Testing scheme << parameters.scheme >> with simulator
-                  command: |
-                      make test-without-building-simulator SCHEME=<< parameters.scheme >>
+                  command: make test-without-building-simulator SCHEME=<< parameters.scheme >>
                   no_output_timeout: 5m
 
     build-for-device:
@@ -449,8 +442,7 @@ commands:
         steps:
             - run:
                   name: Building scheme << parameters.scheme >> for device
-                  command: |
-                      make build-for-device SCHEME=<< parameters.scheme >>
+                  command: make build-for-device SCHEME=<< parameters.scheme >>
                   no_output_timeout: 5m
 
     build-scheme:
@@ -492,14 +484,12 @@ commands:
                   steps:
                       - run:
                             name: Converting and uploading coverage
-                            command: |
-                                make update-codecov-with-profdata SCHEME=<< parameters.scheme >>
+                            command: make update-codecov-with-profdata SCHEME=<< parameters.scheme >>
             - store-logs:
                   artifact_name: << parameters.scheme >>
             - run:
                   name: Clean Build directory
-                  command: |
-                      rm -rf build
+                  command: rm -rf build
 
     ensure-text-exists-in-commit:
         parameters:
@@ -545,16 +535,14 @@ commands:
         steps:
             - run:
                   name: Testing << parameters.scheme >> on AWS Device Farm
-                  command: |
-                      make test-with-device-farm SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=<< parameters.configuration >>
+                  command: make test-with-device-farm SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=<< parameters.configuration >>
                   when: always
 
     gather-xcresults:
         steps:
             - run:
                   name: "Gathering results"
-                  command: |
-                      make gather-results
+                  command: make gather-results
                   when: always
 
     parse-xcresults:
@@ -627,8 +615,7 @@ commands:
         steps:
             - run:
                   name: Install xcframework dependencies
-                  command: |
-                      brew install jq xcodegen
+                  command: brew install jq xcodegen
             - run:
                   name: Creating << parameters.bundle_style >> bundled artifact
                   command: |

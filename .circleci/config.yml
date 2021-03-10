@@ -173,8 +173,7 @@ jobs:
         steps:
             - checkout
             - access-token-configs
-            - make-deps
-            - run: brew install swiftlint
+            - install-dependencies
             - run: swiftlint lint --strict
             - build-scheme:
                   scheme: MapboxMapsAnnotations
@@ -242,7 +241,7 @@ jobs:
         steps:
             - checkout
             - access-token-configs
-            - make-deps
+            - install-dependencies
             - test-scheme:
                   scheme: MapboxMapsAnnotations
             - test-scheme:
@@ -275,7 +274,7 @@ jobs:
                   commit-text: "[run device tests]"
                   always-run: << parameters.device-tests-always-run >>
             - run: make install-devicefarm-dependencies
-            - make-deps
+            - install-dependencies
             - device-test-scheme:
                   scheme: << parameters.scheme >>
                   app-name: << parameters.app-name >>
@@ -304,7 +303,7 @@ jobs:
             - ensure-text-exists-in-commit:
                   commit-text: "[create xcframework]"
                   always-run: << parameters.create-xcframework-always-run >>
-            - make-deps
+            - install-dependencies
             - make-xcframework-bundle:
                   bundle_style: "dynamic"
             - make-xcframework-bundle:
@@ -334,7 +333,7 @@ jobs:
             - slack/notify:
                   message: '<$CIRCLE_BUILD_URL|Release build for \`$VERSION\` started.>'
                   include_visit_job_action: true
-            - make-deps
+            - install-dependencies
             - make-xcframework-bundle:
                   bundle_style: "dynamic"
             - make-xcframework-bundle:
@@ -377,7 +376,7 @@ jobs:
                   message: '<$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` started.>'
                   include_visit_job_action: true
             - checkout
-            - make-deps
+            - install-dependencies
             - make-docs
             - run:
                   name: Run `npm ci`
@@ -605,10 +604,10 @@ commands:
             - store_artifacts:
                   path: << parameters.artifact_name >>.zip
 
-    make-deps:
+    install-dependencies:
         steps:
-            - run: make deps
             - run: pip3 install awscli gitpython requests python-dateutil
+            - run: brew install swiftlint
 
     make-docs:
         description: "Generate documentation"

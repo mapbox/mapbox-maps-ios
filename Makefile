@@ -1,6 +1,5 @@
 # ----------------------------------------------------------------------------------------------------------------------
 # Configurable varibles
-XCODE_WORKSPACE ?= MapboxMaps.xcworkspace
 
 # Default to Debug since Release will require testability. (See #157)
 CONFIGURATION    ?= Debug
@@ -85,7 +84,6 @@ $(PAYLOAD_DIR) $(TEST_ROOT) $(DEVICE_TEST_PATH):
 XCODE_BUILD_SIM = xcodebuild \
 	ARCHS=x86_64 \
 	ONLY_ACTIVE_ARCH=YES \
-	-workspace $(XCODE_WORKSPACE) \
 	-sdk iphonesimulator \
 	-configuration $(CONFIGURATION) \
 	-derivedDataPath $(BUILD_DIR) \
@@ -115,7 +113,6 @@ endif
 # Xcode build command for building for device. The CODE_SIGNING_* variables are so that no code signing occurs on CI - 
 # this is because AWS Device Farm re-signs the applications. This may need to change if a different provider is used.
 XCODE_BUILD_DEVICE = xcodebuild \
-	-workspace $(XCODE_WORKSPACE) \
 	-sdk iphoneos \
 	-configuration $(CONFIGURATION) \
 	-derivedDataPath $(BUILD_DIR) \

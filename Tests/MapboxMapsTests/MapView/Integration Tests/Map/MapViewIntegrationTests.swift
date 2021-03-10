@@ -52,10 +52,10 @@ class MapViewIntegrationTests: IntegrationTestCase {
     func testUpdatePreferredFPS() {
         let originalFPS = mapView.preferredFPS
         XCTAssertNotNil(originalFPS)
-        XCTAssertEqual(originalFPS.fps, 30)
+        XCTAssertEqual(originalFPS.fps, -1)
 
         let newFPS = 12
-        mapView.preferredFPS = .custom(newFPS)
+        mapView.preferredFPS = .custom(fps: newFPS)
         XCTAssertNotEqual(originalFPS, mapView.preferredFPS)
         XCTAssertEqual(mapView.preferredFPS.fps, newFPS)
     }

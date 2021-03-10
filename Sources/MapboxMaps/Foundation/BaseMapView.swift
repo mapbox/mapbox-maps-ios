@@ -5,7 +5,27 @@ import Turf
 
 // swiftlint:disable file_length
 
-public enum PreferredFPS: Equatable {
+public enum PreferredFPS: RawRepresentable, Equatable {
+
+    /**
+     Create a `PreferredFPS` value from an `Int`.
+     - Parameter rawValue: The `Int` value to use as the preferred frames per second.
+     */
+    public init?(rawValue: Int) {
+        switch rawValue {
+        case Self.lowPower.fps:
+            self = .lowPower
+        case Self.normal.fps:
+            self = .normal
+        case Self.maximum.fps:
+            self = .maximum
+        default:
+            self = .custom(fps: rawValue)
+        }
+    }
+
+    public typealias RawValue = Int
+
     /// The default frame rate. This can be either 30 FPS or 60 FPS, depending on
     /// device capabilities.
     case normal
@@ -17,11 +37,11 @@ public enum PreferredFPS: Equatable {
     case maximum
 
     /// A custom frame rate. The default value is 30 FPS.
-    case custom(Int)
-}
+    case custom(fps: Int)
 
-extension PreferredFPS {
-    public var fps: Int {
+    /// :nodoc:
+    /// `RawRepresentable` conformance
+    public var rawValue: Int {
         switch self {
         case .lowPower:
             return 30
@@ -29,10 +49,15 @@ extension PreferredFPS {
             return -1
         case .maximum:
             return 0
-        case let .custom(value):
+        case .custom(let fps):
             // TODO: Check that value is a valid FPS value
-            return value
+            return fps
         }
+    }
+
+    /// The preferred frames per second as an `Int` value.
+    public var fps: Int {
+        return rawValue
     }
 }
 
@@ -267,7 +292,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
                 newFrameRate = preferredFPS
             }
 
-            displayLink.preferredFramesPerSecond = newFrameRate.fps
+            displayLink.preferredFramesPerSecond = newFrameRate.rawValue
         }
     }
 

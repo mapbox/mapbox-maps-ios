@@ -174,9 +174,16 @@ jobs:
             - checkout
             - access-token-configs
             - install-dependencies
-            - run: swiftlint lint --strict
-            - build-scheme:
+            - run:
+                  name: Run SwiftLint
+                  command: swiftlint lint --strict
+            - build-for-simulator:
                   scheme: MapboxMaps
+            - build-for-device:
+                  scheme: MapboxMaps
+            - run:
+                  name: Clean Build directory
+                  command: rm -rf build/Build
             - store-logs
             - report-failure:
                   report_failure: << parameters.report_failure >>
@@ -426,20 +433,6 @@ commands:
                   name: Building scheme << parameters.scheme >> for device
                   command: make build-for-device SCHEME=<< parameters.scheme >>
                   no_output_timeout: 5m
-
-    build-scheme:
-        parameters:
-            scheme:
-                type: string
-        steps:
-            - build-for-simulator:
-                  scheme: << parameters.scheme >>
-            - build-for-device:
-                  scheme: << parameters.scheme >>
-            - run:
-                  name: Clean Build directory
-                  command: |
-                      rm -rf build/Build
 
     danger:
         steps:

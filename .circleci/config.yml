@@ -161,9 +161,9 @@ workflows:
 
 jobs:
 
-    # This is a default job that can be merged into specific jobs. It uses anchors & aliases as described here
+    # This is a base job that can be merged into specific jobs. It uses anchors & aliases as described here
     # https://circleci.com/docs/2.0/writing-yaml/#merging-maps
-    default-job: &default-job
+    base-job: &base-job
         parameters:
             xcode:
                 type: string
@@ -204,7 +204,7 @@ jobs:
             - run: exit 1
 
     build-all-targets:
-        <<: *default-job
+        <<: *base-job
         steps:
             - checkout
             - access-token-configs
@@ -237,7 +237,7 @@ jobs:
                 message: "build-all-targets"
             
     binary-size:
-        <<: *default-job
+        <<: *base-job
         steps:
             - run: 
                 name: Trigger binary size test
@@ -253,7 +253,7 @@ jobs:
                     fi
 
     metrics:
-        <<: *default-job
+        <<: *base-job
         steps:
             - run: 
                 name: Trigger metrics
@@ -273,7 +273,7 @@ jobs:
 
     # Run the tests in the MapboxTests scheme
     maps-unit-tests:
-        <<: *default-job    
+        <<: *base-job    
         steps:
             - checkout
             - access-token-configs
@@ -302,7 +302,7 @@ jobs:
 
     # We may want to split this across multiple jobs, rather than multiple
     run-tests-on-devices:
-        <<: *default-job
+        <<: *base-job
         steps:
             - checkout
             - access-token-configs
@@ -332,7 +332,7 @@ jobs:
                 message: "`<< parameters.scheme >>` device tests"
     
     create-xcframework:
-        <<: *default-job
+        <<: *base-job
         steps:
             - checkout
             - ensure-text-exists-in-commit:
@@ -352,7 +352,7 @@ jobs:
     # the xcframework bundle to S3. As well as making appropriate updates to Package Manifest and Podspec.
     # Further, this job will also create a PR in api-downloads for SDK Registry access.
     ios-build-release:
-        <<: *default-job
+        <<: *base-job
         steps:
             - checkout
             - ensure-text-exists-in-commit:
@@ -402,7 +402,7 @@ jobs:
     # This job is triggered when a tag is pushed so we can tag a release. 
     # This job is responsible for making docs, and creating a draft release on Github
     ios-release-tag:
-        <<: *default-job
+        <<: *base-job
         steps:
             - ensure-tag-is-semver-like:
                 tag: ${CIRCLE_TAG}

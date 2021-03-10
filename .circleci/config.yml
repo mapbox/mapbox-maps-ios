@@ -408,7 +408,7 @@ commands:
         steps:
             - run:
                 name: Configure .netrc
-                command: echo "\nmachine api.mapbox.com\nlogin mapbox\npassword $(SDK_REGISTRY_TOKEN)" >> ~/.netrc
+                command: echo "machine api.mapbox.com login mapbox password ${SDK_REGISTRY_TOKEN}" >> ~/.netrc
 
     # See https://stackoverflow.com/a/58186048
     xcode-github-workaround:

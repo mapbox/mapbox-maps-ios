@@ -64,7 +64,6 @@ XCODE_BUILD_SIM = xcodebuild \
 	ONLY_ACTIVE_ARCH=YES \
 	-sdk iphonesimulator \
 	-configuration $(CONFIGURATION) \
-	-derivedDataPath $(BUILD_DIR) \
 	-jobs $(JOBS)
 
 .PHONY: build-for-simulator
@@ -93,7 +92,6 @@ endif
 XCODE_BUILD_DEVICE = xcodebuild \
 	-sdk iphoneos \
 	-configuration $(CONFIGURATION) \
-	-derivedDataPath $(BUILD_DIR) \
 	-jobs $(JOBS) \
 	$(CODE_SIGNING)
 

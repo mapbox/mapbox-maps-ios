@@ -170,26 +170,63 @@ jobs:
             # Don't run the default job
             - run: exit 1
 
+    lint:
+        <<: *base-job
+        steps:
+            - checkout
+            - run:
+                  name: Install SwiftLint
+                  command: brew install swiftlint
+            - run:
+                  name: Run SwiftLint
+                  command: swiftlint lint --strict
+
     build-sdk:
         <<: *base-job
         steps:
             - checkout
             - access-token-configs
+            - xcode-github-workaround
             - install-dependencies
             - run:
                   name: Run SwiftLint
                   command: swiftlint lint --strict
-            - build-for-simulator:
-                  scheme: MapboxMaps
-            - build-for-device:
-                  scheme: MapboxMaps
             - run:
-                  name: Clean Build directory
-                  command: rm -rf build/Build
-            - store-logs
+                  name: Building scheme MapboxMaps for simulator
+                  command: make build-for-simulator SCHEME=MapboxMaps
+                  no_output_timeout: 5m
+            - run:
+                  name: Building scheme MapboxMaps for device
+                  command: make build-for-device SCHEME=MapboxMaps
+                  no_output_timeout: 5m
+            # - store-logs
             - report-failure:
                   report_failure: << parameters.report_failure >>
                   message: "build-sdk"
+
+    unit-test-sdk:
+        <<: *base-job
+        steps:
+            - checkout
+            - access-token-configs
+            - xcode-github-workaround
+            - install-dependencies
+            - run:
+                  name: Build-for-testing scheme MapboxMaps for simulator
+                  command: make build-for-testing-simulator SCHEME=MapboxMaps
+                  no_output_timeout: 5m
+            - run:
+                  name: Testing scheme MapboxMaps with simulator
+                  command: make test-without-building-simulator SCHEME=MapboxMaps
+                  no_output_timeout: 5m
+            - run:
+                  name: Converting and uploading coverage
+                  command: make update-codecov-with-profdata SCHEME=MapboxMaps
+            # - store-logs:
+                  artifact_name: MapboxMaps
+            - report-failure:
+                  report_failure: << parameters.report_failure >>
+                  message: "unit-test-sdk"
 
     binary-size:
         <<: *base-job
@@ -225,30 +262,6 @@ jobs:
             - report-failure:
                   report_failure: << parameters.report_failure >>
                   message: "metrics"
-
-    # Run the tests in the MapboxTests scheme
-    unit-test-sdk:
-        <<: *base-job
-        steps:
-            - checkout
-            - access-token-configs
-            - install-dependencies
-            - run:
-                  name: Build-for-testing scheme MapboxMaps for simulator
-                  command: make build-for-testing-simulator SCHEME=MapboxMaps
-                  no_output_timeout: 5m
-            - run:
-                  name: Testing scheme MapboxMaps with simulator
-                  command: make test-without-building-simulator SCHEME=MapboxMaps
-                  no_output_timeout: 5m
-            - run:
-                  name: Converting and uploading coverage
-                  command: make update-codecov-with-profdata SCHEME=MapboxMaps
-            - store-logs:
-                  artifact_name: MapboxMaps
-            - report-failure:
-                  report_failure: << parameters.report_failure >>
-                  message: "unit-test-sdk"
 
     # We may want to split this across multiple jobs, rather than multiple
     run-tests-on-devices:
@@ -391,25 +404,12 @@ commands:
                       echo "MAPBOX_ACCESS_TOKEN = ${MAPBOX_ACCESS_TOKEN}" > ./developer.xcconfig
                       echo "${MAPBOX_ACCESS_TOKEN}" > ~/.mapbox
 
-    build-for-simulator:
-        parameters:
-            scheme:
-                type: string
+    # See https://stackoverflow.com/a/58186048
+    xcode-github-workaround:
         steps:
             - run:
-                  name: Building scheme << parameters.scheme >> for simulator
-                  command: make build-for-simulator SCHEME=<< parameters.scheme >>
-                  no_output_timeout: 5m
-
-    build-for-device:
-        parameters:
-            scheme:
-                type: string
-        steps:
-            - run:
-                  name: Building scheme << parameters.scheme >> for device
-                  command: make build-for-device SCHEME=<< parameters.scheme >>
-                  no_output_timeout: 5m
+                  name: Work around Xcode's issue with GitHub's SSH fingerprint
+                  command: for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
 
     danger:
         steps:
@@ -523,7 +523,6 @@ commands:
     install-dependencies:
         steps:
             - run: pip3 install awscli gitpython requests python-dateutil
-            - run: brew install swiftlint
 
     make-docs:
         description: "Generate documentation"

@@ -20,7 +20,6 @@ XCTESTRUN_PACKAGE         := $(BUILD_DIR)/$(SCHEME)-$(CONFIGURATION)-testrun.zip
 TEST_ROOT                 := $(BUILD_DIR)/test-root
 PAYLOAD_DIR               := $(BUILD_DIR)/Payload
 DEVICE_TEST_PATH          := $(BUILD_DIR)/DeviceFarmResults
-BUILT_XCFRAMEWORK_PATH	  := $(BUILD_DIR)/Build/Products/XCFramework/MapboxMaps.xcframework
 
 # Netrc
 NETRC_FILE=~/.netrc
@@ -414,38 +413,3 @@ validate: $(CIRCLE_CI_CLI)
 
 $(CIRCLE_CI_CLI):
 	curl -fLSs https://circle.ci/cli | bash
-
-
-# # ----------------------------------------------------------------------------------------------------------------------
-# Create an XCFramework
-
-XCODE_ARCHIVE_SIM = xcodebuild archive \
-	-workspace $(XCODE_WORKSPACE) \
-	-scheme MapboxMaps \
-	-destination="iOS Simulator" \
-	-archivePath /tmp/xcf/iossimulator.xcarchive \
-	-derivedDataPath /tmp/iphoneos \
-	-sdk iphonesimulator \
-	SKIP_INSTALL=NO \
-	BUILD_LIBRARIES_FOR_DISTRIBUTION=YES 
-
-XCODE_ARCHIVE_DEVICE = xcodebuild archive \
-	-workspace $(XCODE_WORKSPACE) \
-	-scheme MapboxMaps \
-	-destination="iOS" \
-	-archivePath /tmp/xcf/ios.xcarchive \
-	-derivedDataPath /tmp/iphoneos \
-	-sdk iphoneos \
-	SKIP_INSTALL=NO \
-	BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
-	$(CODE_SIGNING)
-
-XCODE_CREATE_XCFRAMEWORK = xcodebuild \
-	-create-xcframework \
-	-framework /tmp/xcf/ios.xcarchive/Products/Library/Frameworks/MapboxMaps.framework \
-	-framework /tmp/xcf/iossimulator.xcarchive/Products/Library/Frameworks/MapboxMaps.framework \
-	-output $(BUILT_XCFRAMEWORK_PATH)
-
-.PHONY: xcframework
-xcframework:
-	set -o pipefail && $(XCODE_ARCHIVE_SIM) && $(XCODE_ARCHIVE_DEVICE) && $(XCODE_CREATE_XCFRAMEWORK)

@@ -20,8 +20,8 @@ targets:
         CODE_SIGN_STYLE: Automatic
         BUILD_DIR: .build
     configFiles: 
-      Debug: "Configurations/Mapbox.xcconfig"
-      Release: "Configurations/Mapbox.xcconfig"
+      Debug: "xcconfigs/Mapbox.xcconfig"
+      Release: "xcconfigs/Mapbox.xcconfig"
     sources: 
       - path: "Sources/MapboxMaps/"
         includes: "*.swift"

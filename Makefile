@@ -121,7 +121,7 @@ endif
 	# Build for testing
 	set -o pipefail && $(XCODE_BUILD_DEVICE) \
 		-scheme '$(SCHEME)' \
-		-xcconfig $(CURDIR)/Mapbox/Configurations/$(APP_NAME)_testhost.xcconfig \
+		-xcconfig $(CURDIR)/xcconfigs/$(APP_NAME)_testhost.xcconfig \
 		-enableCodeCoverage YES \
 		build-for-testing 
 

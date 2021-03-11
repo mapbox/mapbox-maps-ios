@@ -1,5 +1,6 @@
 import Foundation
 import Turf
+import CoreLocation
 
 #if canImport(MapboxMaps)
 @testable import MapboxMaps

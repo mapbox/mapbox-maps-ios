@@ -40,18 +40,16 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
 
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-         // The below line is used for internal testing purposes only.
-        self.finish()
     }
 
     func addModelAndTerrain() {
         try! mapView.__map.addStyleCustomLayer(forLayerId: "Custom",
                                                 layerHost: self,
-                                            layerPosition: nil)
+                                            layerPosition: LayerPosition(above: nil, below: "waterway-label", at: nil))
 
         var demSource = RasterDemSource()
         demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
-        demSource.tileSize = 512
+        demSource.tileSize = 514
         demSource.maxzoom = 14.0
         mapView.style.addSource(source: demSource, identifier: "mapbox-dem")
         let terrain = Terrain(sourceId: "mapbox-dem")
@@ -73,10 +71,8 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
             "hillshade-illumination-anchor": "map"
         ] as [ String: Any ]
 
-        let insertHillshadeBelow = try! map.styleLayerExists(forLayerId: "water") ?
-            LayerPosition(above: nil, below: "water", at: nil) : try! map.styleLayerExists(forLayerId: "hillshade") ?
-            LayerPosition(above: nil, below: "hillshade", at: nil) : nil
-        try! map.addStyleLayer(forProperties: properties, layerPosition: insertHillshadeBelow)
+        try! map.addStyleLayer(forProperties: properties,
+                               layerPosition: LayerPosition(above: nil, below: "water", at: nil))
     }
 
     public func renderingWillStart(_ metalDevice: MTLDevice, colorPixelFormat: UInt, depthStencilPixelFormat: UInt) {
@@ -84,7 +80,7 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
         scene = SCNScene()
         renderer.scene = scene
 
-        modelNode = SCNScene(named: "34M_17")?.rootNode
+        modelNode = SCNScene(named: "34M_17")?.rootNode.clone()
         scene.rootNode.addChildNode(modelNode)
 
         cameraNode = SCNNode()
@@ -173,53 +169,38 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
         transformSimd[3, 2] = m[14].doubleValue
         transformSimd[3, 3] = m[15].doubleValue
 
-        // Projection.project(for: modelOrigin, zoomScale: 1.0 / 512.0) corresponds to gl-js's
-        // mapboxgl.MercatorCoordinate.fromLngLat(). origin is in spherical mercator normalized to
-        // 0..1 for the width of the world. In other words, (x,y) E [0..1) is used to represent
-        // coordinates in one world copy, values of x +/- 1 represent wrap.
-        let origin = try! Projection.project(for: modelOrigin, zoomScale: 1.0 / 512.0)
-        let meterInMercatorCoordinateUnits = try! 1.0 / (512.0 * Projection.getMetersPerPixelAtLatitude(forLatitude: modelOrigin.latitude, zoom: 0))
-        let metersPerPixel = try! Projection.getMetersPerPixelAtLatitude(forLatitude: modelOrigin.latitude, zoom: parameters.zoom)
+        // Model is using metric unit system: scale x and y from meters to mercator and keep z is in meters.
+        let meterInMercatorCoordinateUnits = try! 1.0 / (Projection.getMetersPerPixelAtLatitude(forLatitude: modelOrigin.latitude, zoom: parameters.zoom))
+        let modelScale = makeScaleMatrix(xScale: meterInMercatorCoordinateUnits, yScale: -meterInMercatorCoordinateUnits, zScale: 1)
+
+        // Translate scaled model to model origin (in web mercator coordinates) and elevate to model origin's altitude (in meters).
+        let origin = try! Projection.project(for: modelOrigin, zoomScale: pow(2, parameters.zoom))
         var elevation = 0.0
         if let elevationData = parameters.elevationData, let elevationValue = elevationData.getElevationFor(self.modelOrigin) {
             elevation = elevationValue.doubleValue
         }
+        let translateModel = makeTranslationMatrix(tx: origin.x, ty: origin.y, tz: elevation)
 
-        // origin is in normalized MercatorCoordinates. Normalized refers to the
-        // world copy represented with (x, y) values in range [0..1], and corresponds
-        // to modelAsMercatorCoordinate in https://docs.mapbox.com/mapbox-gl-js/example/add-3d-model/
-        let transformModel = makeTranslationMatrix(tx: origin.x, ty: origin.y, tz: elevation * meterInMercatorCoordinateUnits)
+        let transform = transformSimd * translateModel * modelScale
 
-        // the same scale as in gl-js example, scale from meters to mercator.
-        let modelScale = makeScaleMatrix(xScale: meterInMercatorCoordinateUnits, yScale: -meterInMercatorCoordinateUnits, zScale: meterInMercatorCoordinateUnits)
-
-        // mercator scale is specific to gl-native example because gl-js's customLayerMatrix computes this
-        // internaly: https://github.com/mapbox/mapbox-gl-js/blob/main/src/geo/transform.js#L1316
-        // The mercatorMatrix can be used to transform points from mercator coordinates
-        // ([0, 0] nw, [1, 1] se) to GL coordinates.
-        let worldSize = pow(2, parameters.zoom) * 512.0
-        let mercatorMatrix = transformSimd * makeScaleMatrix(xScale: worldSize, yScale: worldSize, zScale: worldSize * metersPerPixel)
-
-        let transform = mercatorMatrix * transformModel * modelScale
-
-        var scnMat = SCNMatrix4()
-        scnMat.m11 = Float(transform[0, 0])
-        scnMat.m12 = Float(transform[0, 1])
-        scnMat.m13 = Float(transform[0, 2])
-        scnMat.m14 = Float(transform[0, 3])
-        scnMat.m21 = Float(transform[1, 0])
-        scnMat.m22 = Float(transform[1, 1])
-        scnMat.m23 = Float(transform[1, 2])
-        scnMat.m24 = Float(transform[1, 3])
-        scnMat.m31 = Float(transform[2, 0])
-        scnMat.m32 = Float(transform[2, 1])
-        scnMat.m33 = Float(transform[2, 2])
-        scnMat.m34 = Float(transform[2, 3])
-        scnMat.m41 = Float(transform[3, 0])
-        scnMat.m42 = Float(transform[3, 1])
-        scnMat.m43 = Float(transform[3, 2])
-        scnMat.m44 = Float(transform[3, 3])
-
+        let scnMat = SCNMatrix4(
+            m11: Float(transform[0, 0]),
+            m12: Float(transform[0, 1]),
+            m13: Float(transform[0, 2]),
+            m14: Float(transform[0, 3]),
+            m21: Float(transform[1, 0]),
+            m22: Float(transform[1, 1]),
+            m23: Float(transform[1, 2]),
+            m24: Float(transform[1, 3]),
+            m31: Float(transform[2, 0]),
+            m32: Float(transform[2, 1]),
+            m33: Float(transform[2, 2]),
+            m34: Float(transform[2, 3]),
+            m41: Float(transform[3, 0]),
+            m42: Float(transform[3, 1]),
+            m43: Float(transform[3, 2]),
+            m44: Float(transform[3, 3])
+        )
         cameraNode.camera!.projectionTransform = scnMat
 
         // flush automatic SceneKit transaction as SceneKit animation is not running and
@@ -241,6 +222,7 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
     }
 
     public func renderingWillEnd() {
-        // Unimplemented
+        // The below line is used for internal testing purposes only.
+        self.finish()
     }
 }

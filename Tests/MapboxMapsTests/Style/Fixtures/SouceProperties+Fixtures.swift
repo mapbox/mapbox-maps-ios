@@ -1,9 +1,11 @@
 import Foundation
+import Turf
+import CoreLocation
+
 #if canImport(MapboxMaps)
 @testable import MapboxMaps
 #else
 @testable import MapboxMapsStyle
-import Turf
 #endif
 
 internal extension Scheme {
@@ -23,12 +25,16 @@ extension GeoJSONSourceData: Equatable {
         switch (lhs, rhs) {
         case (let .url(lhsURL), let .url(rhsURL)):
             return lhsURL == rhsURL
+        case (let .feature(lhsFeature), let .feature(rhsFeature)):
+            // TODO: Fix temporary conformance to equatable for Turf features in tests
+            return lhsFeature.geometry.type == rhsFeature.geometry.type
         default:
             return false
         }
     }
 
     static func testSourceValue() -> GeoJSONSourceData {
-        return .url(URL(string: "some-url-string")!)
+        let point = Point(CLLocationCoordinate2D(latitude: 0, longitude: 0))
+        return .feature(.init(point))
     }
 }

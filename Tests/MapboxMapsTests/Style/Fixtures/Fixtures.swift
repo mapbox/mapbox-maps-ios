@@ -26,7 +26,7 @@ internal extension Array where Element == Double {
 
 internal extension Array where Element == [Double] {
     static func testSourceValue() -> [[Double]] {
-        return [[30.0, 30.0], [0.0, 0.0]]
+        return [[30.0, 30.0], [0.0, 0.0], [30.0, 30.0], [0.0, 0.0]]
     }
 }
 

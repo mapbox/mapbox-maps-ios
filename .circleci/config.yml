@@ -17,6 +17,7 @@ workflows:
     #                       only:
     #                           - main
     #     jobs:
+    #         - lint
     #         - build-sdk:
     #               matrix:
     #                   parameters:
@@ -49,6 +50,7 @@ workflows:
 
     steve:
         jobs:
+            - lint
             - build-sdk:
                   matrix:
                       parameters:
@@ -106,9 +108,7 @@ workflows:
             #       filters:
             #           branches:
             #               only: main
-            - create-xcframework:
-                  # TODO: Remove this - placed here for testing only
-                  create-xcframework-always-run: true
+            - create-xcframework
 
     # public-beta:
     #     jobs:
@@ -227,71 +227,71 @@ jobs:
                   report_failure: << parameters.report_failure >>
                   message: "unit-test-sdk"
 
-    binary-size:
-        <<: *base-job
-        steps:
-            - run:
-                  name: Trigger binary size test
-                  command: |
-                      if [ -n "${MOBILE_METRICS_TOKEN}" ]; then
-                          if [[ $CIRCLE_BRANCH == main ]]; then
-                              curl -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${MOBILE_METRICS_TOKEN}
-                          else
-                              curl -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\",\"SOURCE_COMPARE_BASELINE\":\"YES\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${MOBILE_METRICS_TOKEN}
-                          fi
-                      else
-                          echo "MOBILE_METRICS_TOKEN not provided"
-                      fi
+#     binary-size:
+#         <<: *base-job
+#         steps:
+#             - run:
+#                   name: Trigger binary size test
+#                   command: |
+#                       if [ -n "${MOBILE_METRICS_TOKEN}" ]; then
+#                           if [[ $CIRCLE_BRANCH == main ]]; then
+#                               curl -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${MOBILE_METRICS_TOKEN}
+#                           else
+#                               curl -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\",\"SOURCE_COMPARE_BASELINE\":\"YES\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${MOBILE_METRICS_TOKEN}
+#                           fi
+#                       else
+#                           echo "MOBILE_METRICS_TOKEN not provided"
+#                       fi
 
-    metrics:
-        <<: *base-job
-        steps:
-            - run:
-                  name: Trigger metrics
-                  command: |
-                      if [ -n "${MOBILE_METRICS_TOKEN}" ]; then
-                          if [[ $CIRCLE_BRANCH == main ]]; then
-                              curl -X POST --header "Content-Type: application/json" --data "{\"parameters\":{\"run_ios_maps_v10_benchmark\":true,\"ci_ref\":${CIRCLE_BUILD_NUM}},\"branch\":\"master\"}" https://circleci.com/api/v2/project/github/mapbox/mobile-metrics/pipeline?circle-token=${MOBILE_METRICS_TOKEN}
-                          else
-                              echo "TODO: Triggering metrics from other branches"
-                          fi
-                      else
-                          echo "MOBILE_METRICS_TOKEN not provided"
-                      fi
-            - report-failure:
-                  report_failure: << parameters.report_failure >>
-                  message: "metrics"
+#     metrics:
+#         <<: *base-job
+#         steps:
+#             - run:
+#                   name: Trigger metrics
+#                   command: |
+#                       if [ -n "${MOBILE_METRICS_TOKEN}" ]; then
+#                           if [[ $CIRCLE_BRANCH == main ]]; then
+#                               curl -X POST --header "Content-Type: application/json" --data "{\"parameters\":{\"run_ios_maps_v10_benchmark\":true,\"ci_ref\":${CIRCLE_BUILD_NUM}},\"branch\":\"master\"}" https://circleci.com/api/v2/project/github/mapbox/mobile-metrics/pipeline?circle-token=${MOBILE_METRICS_TOKEN}
+#                           else
+#                               echo "TODO: Triggering metrics from other branches"
+#                           fi
+#                       else
+#                           echo "MOBILE_METRICS_TOKEN not provided"
+#                       fi
+#             - report-failure:
+#                   report_failure: << parameters.report_failure >>
+#                   message: "metrics"
 
-    # We may want to split this across multiple jobs, rather than multiple
-    run-tests-on-devices:
-        <<: *base-job
-        steps:
-            - checkout
-            - configure-mapbox-access-token
-            - ensure-text-exists-in-commit:
-                  commit-text: "[run device tests]"
-                  always-run: << parameters.device-tests-always-run >>
-            - run: make install-devicefarm-dependencies
-            - install-dependencies
-            - device-test-scheme:
-                  scheme: << parameters.scheme >>
-                  app-name: << parameters.app-name >>
-                  configuration: Release
-            # get xcresults here, may be zipped with more than one result
-            - gather-xcresults
-            - parse-xcresults
-            - run:
-                  name: Symbolicate crash logs
-                  command: make symbolicate SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
-                  when: always
-            - run:
-                  name: Converting and uploading coverage
-                  command: make device-update-codecov-with-profdata SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
-            - store-device-farm-artifacts
-            - store-logs
-            - report-failure:
-                  report_failure: << parameters.report_failure >>
-                  message: "`<< parameters.scheme >>` device tests"
+#     # We may want to split this across multiple jobs, rather than multiple
+#     run-tests-on-devices:
+#         <<: *base-job
+#         steps:
+#             - checkout
+#             - configure-mapbox-access-token
+#             - ensure-text-exists-in-commit:
+#                   commit-text: "[run device tests]"
+#                   always-run: << parameters.device-tests-always-run >>
+#             - run: make install-devicefarm-dependencies
+#             - install-dependencies
+#             - device-test-scheme:
+#                   scheme: << parameters.scheme >>
+#                   app-name: << parameters.app-name >>
+#                   configuration: Release
+#             # get xcresults here, may be zipped with more than one result
+#             - gather-xcresults
+#             - parse-xcresults
+#             - run:
+#                   name: Symbolicate crash logs
+#                   command: make symbolicate SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
+#                   when: always
+#             - run:
+#                   name: Converting and uploading coverage
+#                   command: make device-update-codecov-with-profdata SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
+#             - store-device-farm-artifacts
+#             - store-logs
+#             - report-failure:
+#                   report_failure: << parameters.report_failure >>
+#                   message: "`<< parameters.scheme >>` device tests"
 
     create-xcframework:
         <<: *base-job
@@ -311,84 +311,84 @@ jobs:
                   report_failure: << parameters.report_failure >>
                   message: "create-xcframework"
 
-    # This job was created for the public beta and is responsible for building
-    # and uploading the xcframework bundle to S3. As well as making appropriate
-    # updates to Package Manifest and Podspec. Further, this job will also
-    # create a PR in api-downloads for SDK Registry access.
-    ios-build-release:
-        <<: *base-job
-        steps:
-            - checkout
-            - ensure-text-exists-in-commit:
-                  commit-text: "[release]"
-                  always-run: << parameters.device-tests-always-run >>
-            - run:
-                  name: Extract Version From Commit
-                  command: |
-                      GIT_COMMIT_MSG=`git log --format=oneline -n 1`
-                      export VERSION=$(echo $GIT_COMMIT_MSG| cut -d' ' -f3)
-                      echo "export VERSION=$VERSION" >> $BASH_ENV
-            - slack/notify:
-                  message: '<$CIRCLE_BUILD_URL|Release build for \`$VERSION\` started.>'
-                  include_visit_job_action: true
-            - install-dependencies
-            - make-xcframework-bundle:
-                  bundle_style: "dynamic"
-            - make-xcframework-bundle:
-                  bundle_style: "static"
-            - run:
-                  name: Uploading direct download bundles (static & dynamic) to SDK Registry
-                  command: |
-                      ./scripts/release/upload-to-registry.sh MapboxMaps-dynamic.zip mobile-maps-ios ${VERSION} MapboxMaps-dynamic.zip
-                      ./scripts/release/upload-to-registry.sh MapboxMaps-static.zip mobile-maps-ios ${VERSION} MapboxMaps-static.zip
-            - run:
-                  name: Run `npm ci`
-                  command: |
-                      echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-                      npm ci
-                  when: always
-            - run:
-                  name: Creating SDK Registry PR
-                  command: ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios ${VERSION}
-                  when: always
-            - run:
-                  name: Update Package Manifest & Podspec
-                  command: ./scripts/release/update-dependency-manager-manifests.sh ${VERSION}
-                  when: on_success
-            - slack/status:
-                  fail_only: false
-                  include_visit_job_action: true
-                  failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` failed.>'
-                  success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` succeeded!> :tada:'
+#     # This job was created for the public beta and is responsible for building
+#     # and uploading the xcframework bundle to S3. As well as making appropriate
+#     # updates to Package Manifest and Podspec. Further, this job will also
+#     # create a PR in api-downloads for SDK Registry access.
+#     ios-build-release:
+#         <<: *base-job
+#         steps:
+#             - checkout
+#             - ensure-text-exists-in-commit:
+#                   commit-text: "[release]"
+#                   always-run: << parameters.device-tests-always-run >>
+#             - run:
+#                   name: Extract Version From Commit
+#                   command: |
+#                       GIT_COMMIT_MSG=`git log --format=oneline -n 1`
+#                       export VERSION=$(echo $GIT_COMMIT_MSG| cut -d' ' -f3)
+#                       echo "export VERSION=$VERSION" >> $BASH_ENV
+#             - slack/notify:
+#                   message: '<$CIRCLE_BUILD_URL|Release build for \`$VERSION\` started.>'
+#                   include_visit_job_action: true
+#             - install-dependencies
+#             - make-xcframework-bundle:
+#                   bundle_style: "dynamic"
+#             - make-xcframework-bundle:
+#                   bundle_style: "static"
+#             - run:
+#                   name: Uploading direct download bundles (static & dynamic) to SDK Registry
+#                   command: |
+#                       ./scripts/release/upload-to-registry.sh MapboxMaps-dynamic.zip mobile-maps-ios ${VERSION} MapboxMaps-dynamic.zip
+#                       ./scripts/release/upload-to-registry.sh MapboxMaps-static.zip mobile-maps-ios ${VERSION} MapboxMaps-static.zip
+#             - run:
+#                   name: Run `npm ci`
+#                   command: |
+#                       echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+#                       npm ci
+#                   when: always
+#             - run:
+#                   name: Creating SDK Registry PR
+#                   command: ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios ${VERSION}
+#                   when: always
+#             - run:
+#                   name: Update Package Manifest & Podspec
+#                   command: ./scripts/release/update-dependency-manager-manifests.sh ${VERSION}
+#                   when: on_success
+#             - slack/status:
+#                   fail_only: false
+#                   include_visit_job_action: true
+#                   failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` failed.>'
+#                   success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` succeeded!> :tada:'
 
-    # This job is triggered when a tag is pushed so we can tag a release.
-    # It is responsible for making docs, and creating a draft release on Github
-    ios-release-tag:
-        <<: *base-job
-        steps:
-            - ensure-tag-is-semver-like:
-                  tag: ${CIRCLE_TAG}
-            - slack/notify:
-                  message: '<$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` started.>'
-                  include_visit_job_action: true
-            - checkout
-            - install-dependencies
-            - make-docs
-            - run:
-                  name: Run `npm ci`
-                  command: |
-                      echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-                      npm ci
-                  when: always
-            - run:
-                  name: Create draft release on Github
-                  command: ./scripts/release/create-github-draft-release.sh ${CIRCLE_TAG}
-                  when: always
-            - slack/status:
-                  fail_only: false
-                  include_visit_job_action: true
-                  failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` failed.>'
-                  success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` succeeded!> :tada:'
+#     # This job is triggered when a tag is pushed so we can tag a release.
+#     # It is responsible for making docs, and creating a draft release on Github
+#     ios-release-tag:
+#         <<: *base-job
+#         steps:
+#             - ensure-tag-is-semver-like:
+#                   tag: ${CIRCLE_TAG}
+#             - slack/notify:
+#                   message: '<$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` started.>'
+#                   include_visit_job_action: true
+#             - checkout
+#             - install-dependencies
+#             - make-docs
+#             - run:
+#                   name: Run `npm ci`
+#                   command: |
+#                       echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+#                       npm ci
+#                   when: always
+#             - run:
+#                   name: Create draft release on Github
+#                   command: ./scripts/release/create-github-draft-release.sh ${CIRCLE_TAG}
+#                   when: always
+#             - slack/status:
+#                   fail_only: false
+#                   include_visit_job_action: true
+#                   failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` failed.>'
+#                   success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` succeeded!> :tada:'
 
 # ==============================================================================
 # Reusable commands
@@ -417,150 +417,9 @@ commands:
                   name: Work around Xcode's issue with GitHub's SSH fingerprint
                   command: for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
 
-    danger:
-        steps:
-            - run:
-                  name: Run Danger
-                  command: |
-                      brew install danger/tap/danger-swift
-                      danger-swift ci
-
-    ensure-text-exists-in-commit:
-        parameters:
-            commit-text:
-                type: string
-            always-run:
-                type: boolean
-        steps:
-            - run:
-                  name: Checking for "<< parameters.commit-text >>" in commit message
-                  command: |
-                      export RUN_JOB="$(git log -1 --pretty=%B | fgrep "<< parameters.commit-text >>" | wc -l)"
-                      if << parameters.always-run >>; then
-                          echo "Job configured to always run"
-                      elif [[ "$RUN_JOB" -ne "0" ]]; then
-                          echo "<< parameters.commit-text >> found."
-                      else
-                          echo "Skipping job"
-                          circleci-agent step halt
-                      fi
-
-    ensure-tag-is-semver-like:
-        parameters:
-            tag:
-                type: string
-        steps:
-            - run:
-                  name: Checking << parameters.tag >> is SEMVER like
-                  command: |
-                      if [[ ! << parameters.tag >> =~ ^v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
-                          echo "Skipping job"
-                          circleci-agent step halt
-                      fi
-
-    device-test-scheme:
-        parameters:
-            scheme:
-                type: string
-            app-name:
-                type: string
-            configuration:
-                type: string
-        steps:
-            - run:
-                  name: Testing << parameters.scheme >> on AWS Device Farm
-                  command: make test-with-device-farm SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=<< parameters.configuration >>
-                  when: always
-
-    gather-xcresults:
-        steps:
-            - run:
-                  name: "Gathering results"
-                  command: make gather-results
-                  when: always
-
-    parse-xcresults:
-        steps:
-            - run:
-                  name: "Parsing xcresults for errors"
-                  command: |
-                      RESULTS=`find build/testruns -name '*.xcresult'`
-                      pushd scripts/xcparty && swift build
-                      popd
-                      xargs ./scripts/xcparty/.build/debug/xcparty \<<< "$RESULTS" | tee build/testruns/failures.txt
-                  when: on_fail
-
-    store-logs:
-        parameters:
-            artifact_name:
-                type: string
-                default: "build"
-        description: "Saving Logs as artifacts"
-        steps:
-            - run:
-                  name: Zipping logs
-                  command: |
-                     zip -r << parameters.artifact_name >>.zip build/Build/Products || echo "Skipping build/Build/Products"
-                     zip -r << parameters.artifact_name >>.zip build/Build/ProfileData || echo "Skipping build/Build/ProfileData"
-                     zip -r << parameters.artifact_name >>.zip build/Logs || echo "Skipping build/Logs"
-                  when: always
-            - store_artifacts:
-                  path: << parameters.artifact_name >>.zip
-
-    store-device-farm-artifacts:
-        parameters:
-            artifact_name:
-                type: string
-                default: "build"
-        description: "Saving Device Farm results as artifacts."
-        steps:
-            - run:
-                  name: Zipping device farm results
-                  command: |
-                      zip -r << parameters.artifact_name >>.zip build/DeviceFarmResults || echo "Skipping build/DeviceFarmResults"
-                      zip -r << parameters.artifact_name >>.zip build/Payload || echo "Skipping build/Payload"
-                      zip -r << parameters.artifact_name >>.zip build/test-root || echo "Skipping build/test-root"
-                      zip -r << parameters.artifact_name >>.zip build/testruns || echo "Skipping build/testruns"
-                      zip -r << parameters.artifact_name >>.zip build/*.json || echo "Skipping build/*.json"
-                  when: always
-            - store_artifacts:
-                  path: << parameters.artifact_name >>.zip
-
     install-dependencies:
         steps:
             - run: pip3 install awscli gitpython requests python-dateutil
-
-    make-docs:
-        description: "Generate documentation"
-        steps:
-            - run: git submodule update --init -- jazzy-theme
-            - run: cd scripts/doc-generation && ./generate-docs.sh
-            - run: zip -r api-docs.zip api-docs
-            - store_artifacts:
-                  path: api-docs.zip
-
-    make-xcframework-bundle:
-        parameters:
-            bundle_style:
-                type: string
-                default: "dynamic"
-        description: "Create << parameters.bundle_style >> xcframework bundle"
-        steps:
-            - run:
-                  name: Install xcframework dependencies
-                  command: brew install jq xcodegen
-            - run:
-                  name: Creating << parameters.bundle_style >> bundled artifact
-                  command: |
-                      echo "Navigating to packager script"
-                      cd scripts/release/packager
-                      ./package-mapbox-maps.sh << parameters.bundle_style >>
-                      echo "Moving zip to project root"
-                      mv MapboxMaps-<< parameters.bundle_style >>.zip /Users/distiller/project/
-                      echo "Return to root of project"
-                      cd /Users/distiller/project/
-            - store_artifacts:
-                  path: MapboxMaps-<< parameters.bundle_style >>.zip
 
     report-failure:
         parameters:
@@ -585,3 +444,145 @@ commands:
                   mentions: '$CIRCLE_USERNAME'
                   only_for_branches: main
                   failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL| << parameters.message >> failed.>'
+
+    danger:
+        steps:
+            - run:
+                  name: Install Danger
+                  command: brew install danger/tap/danger-swift
+            - run:
+                  name: Run Danger
+                  command: danger-swift ci
+
+    ensure-text-exists-in-commit:
+        parameters:
+            commit-text:
+                type: string
+            always-run:
+                type: boolean
+        steps:
+            - run:
+                  name: Checking for "<< parameters.commit-text >>" in commit message
+                  command: |
+                      export RUN_JOB="$(git log -1 --pretty=%B | fgrep "<< parameters.commit-text >>" | wc -l)"
+                      if << parameters.always-run >>; then
+                          echo "Job configured to always run"
+                      elif [[ "$RUN_JOB" -ne "0" ]]; then
+                          echo "<< parameters.commit-text >> found."
+                      else
+                          echo "Skipping job"
+                          circleci-agent step halt
+                      fi
+
+#     ensure-tag-is-semver-like:
+#         parameters:
+#             tag:
+#                 type: string
+#         steps:
+#             - run:
+#                   name: Checking << parameters.tag >> is SEMVER like
+#                   command: |
+#                       if [[ ! << parameters.tag >> =~ ^v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+#                           echo "Skipping job"
+#                           circleci-agent step halt
+#                       fi
+
+#     device-test-scheme:
+#         parameters:
+#             scheme:
+#                 type: string
+#             app-name:
+#                 type: string
+#             configuration:
+#                 type: string
+#         steps:
+#             - run:
+#                   name: Testing << parameters.scheme >> on AWS Device Farm
+#                   command: make test-with-device-farm SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=<< parameters.configuration >>
+#                   when: always
+
+#     gather-xcresults:
+#         steps:
+#             - run:
+#                   name: "Gathering results"
+#                   command: make gather-results
+#                   when: always
+
+#     parse-xcresults:
+#         steps:
+#             - run:
+#                   name: "Parsing xcresults for errors"
+#                   command: |
+#                       RESULTS=`find build/testruns -name '*.xcresult'`
+#                       pushd scripts/xcparty && swift build
+#                       popd
+#                       xargs ./scripts/xcparty/.build/debug/xcparty \<<< "$RESULTS" | tee build/testruns/failures.txt
+#                   when: on_fail
+
+#     store-logs:
+#         parameters:
+#             artifact_name:
+#                 type: string
+#                 default: "build"
+#         description: "Saving Logs as artifacts"
+#         steps:
+#             - run:
+#                   name: Zipping logs
+#                   command: |
+#                      zip -r << parameters.artifact_name >>.zip build/Build/Products || echo "Skipping build/Build/Products"
+#                      zip -r << parameters.artifact_name >>.zip build/Build/ProfileData || echo "Skipping build/Build/ProfileData"
+#                      zip -r << parameters.artifact_name >>.zip build/Logs || echo "Skipping build/Logs"
+#                   when: always
+#             - store_artifacts:
+#                   path: << parameters.artifact_name >>.zip
+
+#     store-device-farm-artifacts:
+#         parameters:
+#             artifact_name:
+#                 type: string
+#                 default: "build"
+#         description: "Saving Device Farm results as artifacts."
+#         steps:
+#             - run:
+#                   name: Zipping device farm results
+#                   command: |
+#                       zip -r << parameters.artifact_name >>.zip build/DeviceFarmResults || echo "Skipping build/DeviceFarmResults"
+#                       zip -r << parameters.artifact_name >>.zip build/Payload || echo "Skipping build/Payload"
+#                       zip -r << parameters.artifact_name >>.zip build/test-root || echo "Skipping build/test-root"
+#                       zip -r << parameters.artifact_name >>.zip build/testruns || echo "Skipping build/testruns"
+#                       zip -r << parameters.artifact_name >>.zip build/*.json || echo "Skipping build/*.json"
+#                   when: always
+#             - store_artifacts:
+#                   path: << parameters.artifact_name >>.zip
+
+#     make-docs:
+#         description: "Generate documentation"
+#         steps:
+#             - run: git submodule update --init -- jazzy-theme
+#             - run: cd scripts/doc-generation && ./generate-docs.sh
+#             - run: zip -r api-docs.zip api-docs
+#             - store_artifacts:
+#                   path: api-docs.zip
+
+    make-xcframework-bundle:
+        parameters:
+            bundle_style:
+                type: string
+                default: "dynamic"
+        description: "Create << parameters.bundle_style >> xcframework bundle"
+        steps:
+            - run:
+                  name: Install xcframework dependencies
+                  command: brew install jq xcodegen
+            - run:
+                  name: Creating << parameters.bundle_style >> bundled artifact
+                  command: |
+                      echo "Navigating to packager script"
+                      cd scripts/release/packager
+                      ./package-mapbox-maps.sh << parameters.bundle_style >>
+                      echo "Moving zip to project root"
+                      mv MapboxMaps-<< parameters.bundle_style >>.zip /Users/distiller/project/
+                      echo "Return to root of project"
+                      cd /Users/distiller/project/
+            - store_artifacts:
+                  path: MapboxMaps-<< parameters.bundle_style >>.zip

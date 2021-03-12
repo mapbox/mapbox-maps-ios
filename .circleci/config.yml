@@ -17,6 +17,7 @@ workflows:
               only:
                 - main
     jobs:
+      - swiftlint
       - build-all-targets:
           matrix:
             parameters:
@@ -49,6 +50,7 @@ workflows:
 
   steve:
     jobs:
+      - swiftlint
       - build-all-targets:
           matrix:
             parameters:
@@ -171,13 +173,19 @@ jobs:
       # Don't run the default job
       - run: exit 1
 
+  swiftlint:
+    <<: *base-job
+    steps:
+      - checkout
+      - run: brew install swiftlint
+      - run: swiftlint lint --strict
+
   build-all-targets:
     <<: *base-job
     steps:
       - checkout
       - access-token-configs
       - install-dependencies
-      - run: swiftlint lint --strict
       - build-scheme:
           scheme: MapboxMapsAnnotations
       - build-scheme:
@@ -272,19 +280,29 @@ jobs:
     <<: *base-job
     steps:
       - checkout
-      - access-token-configs
       - ensure-text-exists-in-commit:
           commit-text: "[run device tests]"
           always-run: << parameters.device-tests-always-run >>
+      - access-token-configs
       - run: make install-devicefarm-dependencies
       - install-dependencies
-      - device-test-scheme:
-          scheme: << parameters.scheme >>
-          app-name: << parameters.app-name >>
-          configuration: Release
+      - run:
+          name: Testing << parameters.scheme >> on AWS Device Farm
+          command: make test-with-device-farm SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
+          when: always
       # get xcresults here, may be zipped with more than one result
-      - gather-xcresults
-      - parse-xcresults
+      - run:
+          name: "Gathering results"
+          command: make gather-results
+          when: always
+      - run:
+          name: "Parsing xcresults for errors"
+          command: |
+            RESULTS=`find build/testruns -name '*.xcresult'`
+            pushd scripts/xcparty && swift build
+            popd
+            xargs ./scripts/xcparty/.build/debug/xcparty \<<< "$RESULTS" | tee build/testruns/failures.txt
+          when: on_fail
       - run:
           name: Symbolicate crash logs
           command: make symbolicate SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
@@ -310,7 +328,6 @@ jobs:
           bundle_style: "dynamic"
       - make-xcframework-bundle:
           bundle_style: "static"
-      - danger
       - report-failure:
           report_failure: << parameters.report_failure >>
           message: "create-xcframework"
@@ -370,8 +387,13 @@ jobs:
   ios-release-tag:
     <<: *base-job
     steps:
-      - ensure-tag-is-semver-like:
-          tag: ${CIRCLE_TAG}
+      - run:
+          name: Verify that tag $CIRCLE_TAG adheres to the Semantic Versioning format
+          command: |
+            if [[ ! "$CIRCLE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+              echo "Skipping job"
+              exit 1
+            fi
       - slack/notify:
           message: '<$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` started.>'
           include_visit_job_action: true
@@ -408,7 +430,7 @@ commands:
             echo "MAPBOX_ACCESS_TOKEN = ${MAPBOX_ACCESS_TOKEN}" > ./developer.xcconfig
             echo "${MAPBOX_ACCESS_TOKEN}" > ~/.mapbox
 
-  build-for-simulator:
+  build-scheme:
     parameters:
       scheme:
         type: string
@@ -417,70 +439,30 @@ commands:
           name: Building scheme << parameters.scheme >> for simulator
           command: make build-for-simulator SCHEME=<< parameters.scheme >>
           no_output_timeout: 5m
-
-  build-for-testing-simulator:
-    parameters:
-      scheme:
-        type: string
-    steps:
-      - run:
-          name: Build-for-testing scheme << parameters.scheme >> for simulator
-          command: make build-for-testing-simulator SCHEME=<< parameters.scheme >>
-          no_output_timeout: 5m
-
-  test-with-simulator:
-    parameters:
-      scheme:
-        type: string
-    steps:
-      - run:
-          name: Testing scheme << parameters.scheme >> with simulator
-          command: make test-without-building-simulator SCHEME=<< parameters.scheme >>
-          no_output_timeout: 5m
-
-  build-for-device:
-    parameters:
-      scheme:
-        type: string
-    steps:
       - run:
           name: Building scheme << parameters.scheme >> for device
           command: make build-for-device SCHEME=<< parameters.scheme >>
           no_output_timeout: 5m
-
-  build-scheme:
-    parameters:
-      scheme:
-        type: string
-    steps:
-      - build-for-simulator:
-          scheme: << parameters.scheme >>
-      - build-for-device:
-          scheme: << parameters.scheme >>
       - run:
           name: Clean Build directory
           command: |
             rm -rf build/Build
-
-  danger:
-    steps:
-      - run:
-          name: Run Danger
-          command: |
-            brew install danger/tap/danger-swift
-            danger-swift ci
 
   test-scheme:
     parameters:
       scheme:
         type: string
     steps:
-      - build-for-testing-simulator:
-          scheme: << parameters.scheme >>
-      # These are split into 2, with the aim that we'll be able to reuse
+      # Building and testing are split into 2, with the aim that we'll be able to reuse
       # the build product and test on multiple simulators
-      - test-with-simulator:
-          scheme: << parameters.scheme >>
+      - run:
+          name: Build-for-testing scheme << parameters.scheme >> for simulator
+          command: make build-for-testing-simulator SCHEME=<< parameters.scheme >>
+          no_output_timeout: 5m
+      - run:
+          name: Testing scheme << parameters.scheme >> with simulator
+          command: make test-without-building-simulator SCHEME=<< parameters.scheme >>
+          no_output_timeout: 5m
       - when:
           condition:
             equal: ['MapboxMaps', << parameters.scheme >>]
@@ -502,7 +484,7 @@ commands:
         type: boolean
     steps:
       - run:
-          name: Checking for "<< parameters.commit-text >>" in commit message
+          name: Check for "<< parameters.commit-text >>" in commit message
           command: |
             export RUN_JOB="$(git log -1 --pretty=%B | fgrep "<< parameters.commit-text >>" | wc -l)"
             if << parameters.always-run >>; then
@@ -514,57 +496,12 @@ commands:
               circleci-agent step halt
             fi
 
-  ensure-tag-is-semver-like:
-    parameters:
-      tag:
-        type: string
-    steps:
-      - run:
-          name: Checking << parameters.tag >> is SEMVER like
-          command: |
-            if [[ ! << parameters.tag >> =~ ^v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
-              echo "Skipping job"
-              circleci-agent step halt
-            fi
-
-  device-test-scheme:
-    parameters:
-      scheme:
-        type: string
-      app-name:
-        type: string
-      configuration:
-        type: string
-    steps:
-      - run:
-          name: Testing << parameters.scheme >> on AWS Device Farm
-          command: make test-with-device-farm SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=<< parameters.configuration >>
-          when: always
-
-  gather-xcresults:
-    steps:
-      - run:
-          name: "Gathering results"
-          command: make gather-results
-          when: always
-
-  parse-xcresults:
-    steps:
-      - run:
-          name: "Parsing xcresults for errors"
-          command: |
-            RESULTS=`find build/testruns -name '*.xcresult'`
-            pushd scripts/xcparty && swift build
-            popd
-            xargs ./scripts/xcparty/.build/debug/xcparty \<<< "$RESULTS" | tee build/testruns/failures.txt
-          when: on_fail
-
   store-logs:
     parameters:
       artifact_name:
         type: string
         default: "build"
-    description: "Saving Logs as artifacts"
+    description: "Save Logs as Artifacts"
     steps:
       - run:
           name: Zipping logs
@@ -581,7 +518,7 @@ commands:
       artifact_name:
         type: string
         default: "build"
-    description: "Saving Device Farm results as artifacts."
+    description: "Save Device Farm Results as Artifacts"
     steps:
       - run:
           name: Zipping device farm results
@@ -596,13 +533,13 @@ commands:
           path: << parameters.artifact_name >>.zip
 
   install-dependencies:
+    description: "Install Dependencies"
     steps:
       - run: make deps
       - run: pip3 install awscli gitpython requests python-dateutil
-      - run: brew install swiftlint
 
   make-docs:
-    description: "Generate documentation"
+    description: "Generate Documentation"
     steps:
       - run: git submodule update --init -- jazzy-theme
       - run: cd scripts/doc-generation && ./generate-docs.sh

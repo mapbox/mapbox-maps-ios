@@ -132,7 +132,7 @@ jobs:
   # https://circleci.com/docs/2.0/writing-yaml/#merging-maps
   base-job: &base-job
     macos:
-      xcode: "12.4.0"
+      xcode: "12.2.0"
     parameters:
       device-farm-project:
         type: string

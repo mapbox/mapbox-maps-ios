@@ -2,6 +2,4 @@
 extends: default
 
 rules:
-    indentation:
-        spaces: 4
     line-length: disable

@@ -207,7 +207,8 @@ jobs:
     test-something:
         <<: *default-job
         steps:
-            - run: echo "\\`ls\\`" 
+            - run: ls -laF
+            - run: echo "\\`ls -laF\\`" 
                    
     build-all-targets:
         <<: *default-job

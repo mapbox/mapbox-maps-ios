@@ -73,73 +73,74 @@ workflows:
     steve:
         jobs:
 
-            - build-all-targets:
-                matrix:
-                    parameters:
-                        xcode: ["12.2.0"]
-                        configuration: ["Debug", "Release"]
+            - test-something
+            # - build-all-targets:
+            #     matrix:
+            #         parameters:
+            #             xcode: ["12.2.0"]
+            #             configuration: ["Debug", "Release"]
 
-            - binary-size:
-                requires: 
-                    - build-all-targets
+            # - binary-size:
+            #     requires: 
+            #         - build-all-targets
 
-            - metrics:
-                requires: 
-                    - build-all-targets
-                filters:
-                    branches:
-                        only: main
+            # - metrics:
+            #     requires: 
+            #         - build-all-targets
+            #     filters:
+            #         branches:
+            #             only: main
 
-            - maps-unit-tests:
-                name: "Run Unit tests"
+            # - maps-unit-tests:
+            #     name: "Run Unit tests"
 
-            # Not on main
-            - run-tests-on-devices:
-                name: "Run MapboxTestHost tests on devices"
-                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
-                device-pool: $(AWS_DEVICE_FARM_1_PHONE_POOL)
-                scheme: "MapboxMapsTestsWithHost"
-                app-name: "MapboxTestHost"
-                filters:
-                    branches:
-                        ignore: main                
+            # # Not on main
+            # - run-tests-on-devices:
+            #     name: "Run MapboxTestHost tests on devices"
+            #     device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
+            #     device-pool: $(AWS_DEVICE_FARM_1_PHONE_POOL)
+            #     scheme: "MapboxMapsTestsWithHost"
+            #     app-name: "MapboxTestHost"
+            #     filters:
+            #         branches:
+            #             ignore: main                
 
-            - run-tests-on-devices:
-                name: "Run Examples tests on devices"
-                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
-                device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
-                scheme: "Examples"
-                app-name: "Examples"
-                filters:
-                    branches:
-                        ignore: main                
+            # - run-tests-on-devices:
+            #     name: "Run Examples tests on devices"
+            #     device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
+            #     device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
+            #     scheme: "Examples"
+            #     app-name: "Examples"
+            #     filters:
+            #         branches:
+            #             ignore: main                
 
-            - create-xcframework
+            # - create-xcframework
 
-            # On main
-            - run-tests-on-devices:
-                name: "Run MapboxTestHost tests on devices (main)"
-                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
-                device-pool: $(AWS_DEVICE_FARM_5_DEVICE_POOL)
-                scheme: "MapboxMapsTestsWithHost"
-                app-name: "MapboxTestHost"
-                device-tests-always-run: true
-                report_failure: true
-                filters:
-                    branches:
-                        only: main                
+            # # On main
+            # - run-tests-on-devices:
+            #     name: "Run MapboxTestHost tests on devices (main)"
+            #     device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
+            #     device-pool: $(AWS_DEVICE_FARM_5_DEVICE_POOL)
+            #     scheme: "MapboxMapsTestsWithHost"
+            #     app-name: "MapboxTestHost"
+            #     device-tests-always-run: true
+            #     report_failure: true
+            #     filters:
+            #         branches:
+            #             only: main                
 
-            - run-tests-on-devices:
-                name: "Run Examples tests on devices (main)"
-                device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
-                device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
-                scheme: "Examples"
-                app-name: "Examples"
-                device-tests-always-run: true
-                report_failure: true                
-                filters:
-                    branches:
-                        only: main
+            # - run-tests-on-devices:
+            #     name: "Run Examples tests on devices (main)"
+            #     device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
+            #     device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
+            #     scheme: "Examples"
+            #     app-name: "Examples"
+            #     device-tests-always-run: true
+            #     report_failure: true                
+            #     filters:
+            #         branches:
+            #             only: main
             
     public-beta:
         jobs:
@@ -203,6 +204,11 @@ jobs:
             # Don't run the default job
             - run: exit 1
 
+    test-something:
+        <<: *default-job
+        steps:
+            - run: echo "\\`ls\\`" 
+                   
     build-all-targets:
         <<: *default-job
         steps:

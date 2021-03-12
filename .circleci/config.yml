@@ -594,6 +594,7 @@ commands:
 
   install-dependencies:
     steps:
+      - run: make deps
       - run: pip3 install awscli gitpython requests python-dateutil
       - run: brew install swiftlint
 

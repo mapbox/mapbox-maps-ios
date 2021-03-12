@@ -17,6 +17,7 @@ workflows:
               only:
                 - main
     jobs:
+      - swiftlint
       - build-all-targets:
           matrix:
             parameters:
@@ -49,6 +50,7 @@ workflows:
 
   steve:
     jobs:
+      - swiftlint
       - build-all-targets:
           matrix:
             parameters:
@@ -171,13 +173,19 @@ jobs:
       # Don't run the default job
       - run: exit 1
 
+  swiftlint:
+    <<: *base-job
+    steps:
+      - checkout
+      - run: brew install swiftlint
+      - run: swiftlint lint --strict
+
   build-all-targets:
     <<: *base-job
     steps:
       - checkout
       - access-token-configs
       - install-dependencies
-      - run: swiftlint lint --strict
       - build-scheme:
           scheme: MapboxMapsAnnotations
       - build-scheme:
@@ -529,7 +537,6 @@ commands:
     steps:
       - run: make deps
       - run: pip3 install awscli gitpython requests python-dateutil
-      - run: brew install swiftlint
 
   make-docs:
     description: "Generate Documentation"

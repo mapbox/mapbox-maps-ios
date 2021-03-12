@@ -1,3 +1,4 @@
+---
 allow_zero_lintable_files: true
 excluded:
   - Carthage

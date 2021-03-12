@@ -1,3 +1,4 @@
+---
 codecov:
   require_ci_to_pass: false
   notify:
@@ -36,15 +37,11 @@ comment:
 
 # Explicit list of flags
 flags:
-  MapboxMaps:  
+  MapboxMaps:
     paths:
       - Mapbox/
-     carryforward: false
+    carryforward: false
   MapboxMapsTestsWithHost:
     paths:
       - Mapbox/
-     carryforward: false
-  MapboxMapsTestsWithHost:
-    paths:
-      - Mapbox/
-     carryforward: false
+    carryforward: false

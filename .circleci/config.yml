@@ -280,10 +280,10 @@ jobs:
     <<: *base-job
     steps:
       - checkout
-      - access-token-configs
       - ensure-text-exists-in-commit:
           commit-text: "[run device tests]"
           always-run: << parameters.device-tests-always-run >>
+      - access-token-configs
       - run: make install-devicefarm-dependencies
       - install-dependencies
       - run:

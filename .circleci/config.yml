@@ -329,7 +329,7 @@ jobs:
             - store-logs
             - report-failure:
                 report_failure: << parameters.report_failure >>
-                message: "`<< parameters.scheme >>` device tests"
+                message: "\`<< parameters.scheme >>\` device tests"
     
     create-xcframework:
         <<: *default-job

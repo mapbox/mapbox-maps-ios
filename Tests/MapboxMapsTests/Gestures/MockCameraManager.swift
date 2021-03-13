@@ -24,11 +24,10 @@ final class MockCameraManager: CameraManagerProtocol {
                    duration: TimeInterval,
                    completion: ((Bool) -> Void)?) {
         setCameraStub.call(
-            with: SetCameraParameters(
-                camera: camera,
-                animated: animated,
-                duration: duration,
-                completion: completion))
+            with: SetCameraParameters(camera: camera,
+                                      animated: animated,
+                                      duration: duration,
+                                      completion: completion))
     }
 
     //swiftlint:disable function_parameter_count

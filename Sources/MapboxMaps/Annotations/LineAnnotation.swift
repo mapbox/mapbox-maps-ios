@@ -59,7 +59,7 @@ public struct LineAnnotation: Annotation {
              the map view.
      */
     public init(coordinates: [CLLocationCoordinate2D]) {
-        self.identifier = UUID().uuidString
+        identifier = UUID().uuidString
         self.coordinates = coordinates
     }
 }

@@ -12,19 +12,19 @@ class OrnamentManagerTests: XCTestCase {
     var ornamentSupportableView: OrnamentSupportableViewMock!
 
     override func setUp() {
-        self.ornamentSupportableView = OrnamentSupportableViewMock(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        ornamentSupportableView = OrnamentSupportableViewMock(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
     }
 
     override func tearDown() {
-        self.ornamentSupportableView = nil
+        ornamentSupportableView = nil
     }
 
     func testInitializer() {
         let config = OrnamentConfig(ornamentPositions: [.mapboxLogoView: .bottomLeft],
                                     ornamentMargins: [.mapboxLogoView: CGPoint.zero], ornamentVisibility: [:],
                                     telemetryOptOutShownInApp: true)
-        let ornamentsManager = OrnamentsManager(for: self.ornamentSupportableView, withConfig: config)
-        XCTAssert(self.ornamentSupportableView.subviews.count == ornamentsManager.ornaments.count,
+        let ornamentsManager = OrnamentsManager(for: ornamentSupportableView, withConfig: config)
+        XCTAssert(ornamentSupportableView.subviews.count == ornamentsManager.ornaments.count,
                   "Wrong number of corresponding ornament subviews")
         XCTAssert(ornamentsManager.ornaments.count == 1, "Should have one ornament after initialization")
 
@@ -43,10 +43,10 @@ class OrnamentManagerTests: XCTestCase {
         let config = OrnamentConfig(ornamentPositions: [.mapboxLogoView: .bottomLeft],
                                     ornamentMargins: [.mapboxLogoView: CGPoint.zero], ornamentVisibility: [:],
                                     telemetryOptOutShownInApp: true)
-        let ornamentsManager = OrnamentsManager(for: self.ornamentSupportableView, withConfig: config)
+        let ornamentsManager = OrnamentsManager(for: ornamentSupportableView, withConfig: config)
         ornamentsManager.addOrnament(customOrnament, at: .topLeft)
 
-        XCTAssert(self.ornamentSupportableView.subviews.count == ornamentsManager.ornaments.count,
+        XCTAssert(ornamentSupportableView.subviews.count == ornamentsManager.ornaments.count,
                   "Wrong number of corresponding ornament subviews")
         XCTAssertTrue(ornamentsManager.ornaments.count == 2, "Ornament manager should add one ornament")
     }
@@ -56,19 +56,19 @@ class OrnamentManagerTests: XCTestCase {
         let config = OrnamentConfig(ornamentPositions: [.mapboxLogoView: .bottomLeft],
                                     ornamentMargins: [.mapboxLogoView: CGPoint.zero], ornamentVisibility: [:],
                                     telemetryOptOutShownInApp: true)
-        let ornamentsManager = OrnamentsManager(for: self.ornamentSupportableView, withConfig: config)
+        let ornamentsManager = OrnamentsManager(for: ornamentSupportableView, withConfig: config)
         ornamentsManager.addOrnament(customOrnament, at: .topLeft)
         ornamentsManager.removeOrnament(customOrnament)
 
-        XCTAssert(self.ornamentSupportableView.subviews.count == ornamentsManager.ornaments.count,
+        XCTAssert(ornamentSupportableView.subviews.count == ornamentsManager.ornaments.count,
                   "Wrong number of corresponding ornament subviews")
-        XCTAssertTrue(self.ornamentSupportableView.subviews.count == 1, "Ornament manager should remove one ornament")
+        XCTAssertTrue(ornamentSupportableView.subviews.count == 1, "Ornament manager should remove one ornament")
     }
 
     func testHeavyStateMutation() {
         // Given
         let config = OrnamentConfig(ornaments: [], telemetryOptOutShownInApp: true)
-        let ornamentsManager = OrnamentsManager(for: self.ornamentSupportableView, withConfig: config)
+        let ornamentsManager = OrnamentsManager(for: ornamentSupportableView, withConfig: config)
 
         // When we add three ornaments
         ornamentsManager.addOrnament(.mapboxLogoView, at: .bottomLeft, visibility: .visible)
@@ -76,17 +76,17 @@ class OrnamentManagerTests: XCTestCase {
         ornamentsManager.addOrnament(.compass, at: .centerLeft, visibility: .visible)
 
         // Then
-        XCTAssert(self.ornamentSupportableView.subviews.count == ornamentsManager.ornaments.count,
+        XCTAssert(ornamentSupportableView.subviews.count == ornamentsManager.ornaments.count,
                   "Wrong number of corresponding ornament subviews")
-        XCTAssertTrue(self.ornamentSupportableView.subviews.count == 3, "Ornament manager should add three ornaments")
+        XCTAssertTrue(ornamentSupportableView.subviews.count == 3, "Ornament manager should add three ornaments")
 
         // When we remove an ornament
         ornamentsManager.removeOrnament(at: .bottomLeft)
 
         // Then
-        XCTAssert(self.ornamentSupportableView.subviews.count == ornamentsManager.ornaments.count,
+        XCTAssert(ornamentSupportableView.subviews.count == ornamentsManager.ornaments.count,
                   "Wrong number of corresponding ornament subviews")
-        XCTAssertTrue(self.ornamentSupportableView.subviews.count == 2, "Ornament manager should add three ornaments")
+        XCTAssertTrue(ornamentSupportableView.subviews.count == 2, "Ornament manager should add three ornaments")
 
         // When we remove one more ornament
         ornamentsManager.removeOrnament(with: .mapboxScaleBar)
@@ -94,33 +94,35 @@ class OrnamentManagerTests: XCTestCase {
         ornamentsManager.removeOrnament(at: .bottomLeft)
 
         // Then
-        XCTAssert(self.ornamentSupportableView.subviews.count == ornamentsManager.ornaments.count,
+        XCTAssert(ornamentSupportableView.subviews.count == ornamentsManager.ornaments.count,
                   "Wrong number of corresponding ornament subviews")
-        XCTAssertTrue(self.ornamentSupportableView.subviews.count == 1, "Ornament manager should add three ornaments")
+        XCTAssertTrue(ornamentSupportableView.subviews.count == 1, "Ornament manager should add three ornaments")
 
         // When we set a config
         let newConfig = OrnamentConfig(ornamentPositions: [.mapboxLogoView: .bottomLeft, .mapboxScaleBar: .bottomRight],
-                                       ornamentMargins: [.mapboxLogoView: CGPoint.zero,
-                                                         .mapboxScaleBar: .defaultMargins], ornamentVisibility: [:])
+                                       ornamentMargins: [
+                                           .mapboxLogoView: CGPoint.zero,
+                                           .mapboxScaleBar: .defaultMargins
+                                       ], ornamentVisibility: [:])
         ornamentsManager.ornamentConfig = newConfig
 
         // Then
-        XCTAssert(self.ornamentSupportableView.subviews.count == ornamentsManager.ornaments.count,
+        XCTAssert(ornamentSupportableView.subviews.count == ornamentsManager.ornaments.count,
                   "Wrong number of corresponding ornament subviews")
-        XCTAssertTrue(self.ornamentSupportableView.subviews.count == 2, "Ornament manager should add three ornaments")
+        XCTAssertTrue(ornamentSupportableView.subviews.count == 2, "Ornament manager should add three ornaments")
     }
 
     func testLogoViewSizeWidth() {
         let config = OrnamentConfig(ornamentPositions: [.mapboxLogoView: .bottomLeft],
                                     ornamentMargins: [.mapboxLogoView: CGPoint.zero], ornamentVisibility: [:],
                                     telemetryOptOutShownInApp: true)
-        let ornamentsManager = OrnamentsManager(for: self.ornamentSupportableView, withConfig: config)
+        let ornamentsManager = OrnamentsManager(for: ornamentSupportableView, withConfig: config)
 
         if let logoView = ornamentsManager.ornaments.filter({ $0.type == .mapboxLogoView }).first {
-            self.ornamentSupportableView.setNeedsLayout()
-            self.ornamentSupportableView.layoutIfNeeded()
+            ornamentSupportableView.setNeedsLayout()
+            ornamentSupportableView.layoutIfNeeded()
 
-            let expectedWidth = self.ornamentSupportableView.frame.width * 0.25
+            let expectedWidth = ornamentSupportableView.frame.width * 0.25
 
             XCTAssertTrue(logoView.view?.frame.width == expectedWidth,
                           "Logo view width should be 25% of the map view's width")

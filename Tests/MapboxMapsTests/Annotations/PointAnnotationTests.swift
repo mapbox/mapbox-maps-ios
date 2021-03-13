@@ -26,7 +26,7 @@ class PointAnnotationTests: XCTestCase {
         // Given state from setUp()
 
         // When
-        let annotation = PointAnnotation(coordinate: self.defaultCoordinate)
+        let annotation = PointAnnotation(coordinate: defaultCoordinate)
 
         // Then
         XCTAssertNotNil(annotation.identifier)
@@ -40,10 +40,10 @@ class PointAnnotationTests: XCTestCase {
 
     func testPointAnnotationsHaveUniqueIdentifiers() {
         // Given
-        let annotation1 = PointAnnotation(coordinate: self.defaultCoordinate)
+        let annotation1 = PointAnnotation(coordinate: defaultCoordinate)
 
         // When
-        let annotation2 = PointAnnotation(coordinate: self.defaultCoordinate)
+        let annotation2 = PointAnnotation(coordinate: defaultCoordinate)
 
         // Then
         XCTAssertNotEqual(annotation1.identifier, annotation2.identifier)
@@ -51,7 +51,7 @@ class PointAnnotationTests: XCTestCase {
 
     func testUpdatingPointAnnotationImageProperty() {
         // Given
-        var annotation = PointAnnotation(coordinate: self.defaultCoordinate)
+        var annotation = PointAnnotation(coordinate: defaultCoordinate)
         let initialAnnotationImage = annotation.image
 
         // When

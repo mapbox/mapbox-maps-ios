@@ -20,10 +20,10 @@ class LocationProviderMock: LocationProvider {
     private weak var delegate: LocationProviderDelegate?
 
     init(options: LocationOptions) {
-        self.locationProviderOptions = options
-        self.authorizationStatus = .notDetermined
-        self.accuracyAuthorization = .fullAccuracy
-        self.headingOrientation = .unknown
+        locationProviderOptions = options
+        authorizationStatus = .notDetermined
+        accuracyAuthorization = .fullAccuracy
+        headingOrientation = .unknown
     }
 
     func setDelegate(_ delegate: LocationProviderDelegate) {
@@ -31,15 +31,15 @@ class LocationProviderMock: LocationProvider {
     }
 
     func requestAlwaysAuthorization() {
-        self.authorizationStatus = .authorizedAlways
+        authorizationStatus = .authorizedAlways
     }
 
     func requestWhenInUseAuthorization() {
-        self.authorizationStatus = .authorizedWhenInUse
+        authorizationStatus = .authorizedWhenInUse
     }
 
     func requestTemporaryFullAccuracyAuthorization(withPurposeKey purposeKey: String) {
-        self.accuracyAuthorization = .fullAccuracy
+        accuracyAuthorization = .fullAccuracy
     }
 
     func startUpdatingLocation() {

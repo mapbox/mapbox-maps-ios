@@ -28,7 +28,7 @@ extension Feature {
             break
         }
 
-        self.properties = feature.properties
+        properties = feature.properties
     }
 
     /// Initialize a `Turf.Feature` with a `Point`.

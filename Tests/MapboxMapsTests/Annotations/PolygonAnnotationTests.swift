@@ -44,10 +44,10 @@ class PolygonAnnotationTests: XCTestCase {
 
     func testPolygonAnnotationsHaveUniqueIdentifiers() {
         // Given
-        let annotation1 = PolygonAnnotation(coordinates: self.defaultCoordinates)
+        let annotation1 = PolygonAnnotation(coordinates: defaultCoordinates)
 
         // When
-        let annotation2 = PolygonAnnotation(coordinates: self.defaultCoordinates)
+        let annotation2 = PolygonAnnotation(coordinates: defaultCoordinates)
 
         // Then
         XCTAssertNotEqual(annotation1.identifier, annotation2.identifier)

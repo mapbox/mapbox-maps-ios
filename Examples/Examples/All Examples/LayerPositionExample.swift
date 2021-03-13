@@ -15,14 +15,14 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
 
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.view.addSubview(mapView)
+        view.addSubview(mapView)
 
         // Center the map over the United States.
         let centerCoordinate = CLLocationCoordinate2D(latitude: 40.58058466412761,
                                                       longitude: -97.734375)
 
         mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
-                                                  zoom: 3)
+                                        zoom: 3)
 
         // Allows the view controller to receive information about map events.
         mapView.on(.mapLoadingFinished) { [weak self] _ in
@@ -31,7 +31,7 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
         }
 
         // Add a button to change the position of layer
-        self.addLayerPostionChangeButton()
+        addLayerPostionChangeButton()
     }
 
     private func addLayerPostionChangeButton() {
@@ -44,11 +44,11 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
         button.layer.cornerRadius = 20
         button.clipsToBounds = true
         button.addTarget(self, action: #selector(onChangeButtonPress(sender:)), for: .touchUpInside)
-        self.view.addSubview(button)
+        view.addSubview(button)
         // Set button location
-        let horizontalConstraint = button.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor,
+        let horizontalConstraint = button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
                                                                   constant: -24)
-        let verticalConstraint = button.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+        let verticalConstraint = button.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         let widthConstraint = button.widthAnchor.constraint(equalToConstant: 200)
         let heightConstraint = button.heightAnchor.constraint(equalToConstant: 40)
         NSLayoutConstraint.activate([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
@@ -63,33 +63,33 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
             guard let self = self else { return }
             _ = self.mapView.style.removeStyleLayer(forLayerId: self.layer.id)
             _ = self.mapView.style.addLayer(layer: self.layer,
-                                                      layerPosition: LayerPosition(above: "state-label"))
+                                            layerPosition: LayerPosition(above: "state-label"))
         }))
 
         alert.addAction(UIAlertAction(title: "Below state label", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
             _ = self.mapView.style.removeStyleLayer(forLayerId: self.layer.id)
             _ = self.mapView.style.addLayer(layer: self.layer,
-                                                      layerPosition: LayerPosition(below: "state-label"))
+                                            layerPosition: LayerPosition(below: "state-label"))
         }))
 
         alert.addAction(UIAlertAction(title: "Above all", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
             _ = self.mapView.style.removeStyleLayer(forLayerId: self.layer.id)
             _ = self.mapView.style.addLayer(layer: self.layer,
-                                                      layerPosition: nil)
+                                            layerPosition: nil)
         }))
 
         alert.addAction(UIAlertAction(title: "Below all", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
             _ = self.mapView.style.removeStyleLayer(forLayerId: self.layer.id)
             _ = self.mapView.style.addLayer(layer: self.layer,
-                                                      layerPosition: LayerPosition(at: 0))
+                                            layerPosition: LayerPosition(at: 0))
         }))
 
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 
-        self.present(alert, animated: true)
+        present(alert, animated: true)
     }
 
     // Wait for the style to load before adding data to it.
@@ -115,6 +115,6 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
         _ = mapView.style.addLayer(layer: layer, layerPosition: nil)
 
         // The below line is used for internal testing purposes only.
-        self.finish()
+        finish()
     }
 }

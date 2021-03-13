@@ -37,11 +37,13 @@ public class Snapshotter: Observer {
     ///   - observer: Observer responsible for handling lifecycle events in a snapshot
     ///   - options: Options describing an intended snapshot
     public init(options: MapSnapshotOptions) {
-        self.mapSnapshotter = try! MapSnapshotter(options: options)
-        self.style = Style(with: mapSnapshotter)
-        try! self.mapSnapshotter.subscribe(for: self, events: [MapEvents.styleLoadingFinished,
-                                                          MapEvents.styleImageMissing,
-                                                          MapEvents.mapLoadingError])
+        mapSnapshotter = try! MapSnapshotter(options: options)
+        style = Style(with: mapSnapshotter)
+        try! mapSnapshotter.subscribe(for: self, events: [
+            MapEvents.styleLoadingFinished,
+            MapEvents.styleImageMissing,
+            MapEvents.mapLoadingError
+        ])
     }
 
     /// Reacting to snapshot events.
@@ -49,9 +51,9 @@ public class Snapshotter: Observer {
     ///   - eventType: The event type to react to.
     ///   - handler: The block of code to execute when the event occurs.
     public func on(_ eventType: MapEvents.EventKind, handler: @escaping (MapboxCoreMaps.Event) -> Void) {
-        var handlers: [(MapboxCoreMaps.Event) -> Void] = self.eventHandlers[eventType.rawValue] ?? []
+        var handlers: [(MapboxCoreMaps.Event) -> Void] = eventHandlers[eventType.rawValue] ?? []
         handlers.append(handler)
-        self.eventHandlers[eventType.rawValue] = handlers
+        eventHandlers[eventType.rawValue] = handlers
     }
 
     /// The size of the snapshot

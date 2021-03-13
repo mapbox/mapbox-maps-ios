@@ -34,7 +34,7 @@ public class CameraManager {
                                         maxPitch: newOptions.maximumPitch as NSNumber,
                                         minPitch: newOptions.minimumPitch as NSNumber)
         try! mapView?.__map.setBoundsFor(boundOptions)
-        self.mapCameraOptions = newOptions
+        mapCameraOptions = newOptions
     }
 
     /// The transition state of the `CameraManager`.
@@ -83,9 +83,9 @@ public class CameraManager {
 
         // Create a new camera options with adjusted values
         let options = try! mapView.__map.cameraForCoordinates(forCoordinates: coordinateLocations,
-                                                         padding: cameraOptions.__padding ?? defaultEdgeInsets,
-                                                         bearing: cameraOptions.__bearing,
-                                                         pitch: cameraOptions.__pitch)
+                                                              padding: cameraOptions.__padding ?? defaultEdgeInsets,
+                                                              bearing: cameraOptions.__bearing,
+                                                              pitch: cameraOptions.__pitch)
         // Create a new camera object with adjusted values
         return options
     }
@@ -107,9 +107,9 @@ public class CameraManager {
         }
 
         let cameraOptions = try! mapView.__map.cameraForCoordinateBounds(for: coordinateBounds,
-                                                                  padding: edgePadding.toMBXEdgeInsetsValue(),
-                                                                  bearing: NSNumber(value: Float(bearing)),
-                                                                  pitch: NSNumber(value: Float(pitch)))
+                                                                         padding: edgePadding.toMBXEdgeInsetsValue(),
+                                                                         bearing: NSNumber(value: Float(bearing)),
+                                                                         pitch: NSNumber(value: Float(pitch)))
 
         return cameraOptions
     }
@@ -134,9 +134,9 @@ public class CameraManager {
         let mbxGeometry = MBXGeometry(geometry: geometry)
 
         let cameraOptions = try! mapView.__map.cameraForGeometry(for: mbxGeometry,
-                                                            padding: edgePadding.toMBXEdgeInsetsValue(),
-                                                            bearing: NSNumber(value: Float(bearing)),
-                                                            pitch: NSNumber(value: Float(pitch)))
+                                                                 padding: edgePadding.toMBXEdgeInsetsValue(),
+                                                                 bearing: NSNumber(value: Float(bearing)),
+                                                                 pitch: NSNumber(value: Float(pitch)))
         return cameraOptions
     }
 
@@ -175,13 +175,12 @@ public class CameraManager {
             return
         }
 
-        let clampedCamera = CameraOptions(
-            center: camera.center,
-            padding: camera.padding,
-            anchor: camera.anchor,
-            zoom: camera.zoom?.clamped(to: mapCameraOptions.minimumZoomLevel...mapCameraOptions.maximumZoomLevel),
-            bearing: optimizeBearing(startBearing: mapView.bearing, endBearing: camera.bearing),
-            pitch: camera.pitch?.clamped(to: mapCameraOptions.minimumPitch...mapCameraOptions.maximumPitch))
+        let clampedCamera = CameraOptions(center: camera.center,
+                                          padding: camera.padding,
+                                          anchor: camera.anchor,
+                                          zoom: camera.zoom?.clamped(to: mapCameraOptions.minimumZoomLevel...mapCameraOptions.maximumZoomLevel),
+                                          bearing: optimizeBearing(startBearing: mapView.bearing, endBearing: camera.bearing),
+                                          pitch: camera.pitch?.clamped(to: mapCameraOptions.minimumPitch...mapCameraOptions.maximumPitch))
 
         guard mapView.cameraView.camera != clampedCamera else {
             completion?(true)
@@ -266,7 +265,7 @@ public class CameraManager {
         }
 
         let defaultOptions = try! mapView.__map.getStyleDefaultCamera()
-        self.setCamera(to: defaultOptions, completion: nil)
+        setCamera(to: defaultOptions, completion: nil)
     }
 
     /**
@@ -276,8 +275,8 @@ public class CameraManager {
      By default, this value is `false`.
      */
     public func resetNorth(_ animated: Bool = false) {
-        self.setCamera(bearing: CLLocationDirection(northBearing),
-                       animated: animated)
+        setCamera(bearing: CLLocationDirection(northBearing),
+                  animated: animated)
     }
     // MARK: Fitting the camera specified regions
     /**
@@ -292,10 +291,10 @@ public class CameraManager {
      */
     public func transitionCoordinateBounds(newCoordinateBounds: CoordinateBounds,
                                            animated: Bool = false) {
-        self.transitionCoordinateBounds(to: newCoordinateBounds,
-                               edgePadding: UIEdgeInsets.zero,
-                                  animated: animated,
-                                completion: nil)
+        transitionCoordinateBounds(to: newCoordinateBounds,
+                                   edgePadding: UIEdgeInsets.zero,
+                                   animated: animated,
+                                   completion: nil)
     }
 
     /**
@@ -313,18 +312,18 @@ public class CameraManager {
                                            animated: Bool = false,
                                            completion: (() -> Void)?) {
         let southeast = CLLocationCoordinate2D(latitude: newCoordinateBounds.northeast.latitude,
-                                       longitude: newCoordinateBounds.southwest.longitude)
+                                               longitude: newCoordinateBounds.southwest.longitude)
         let southwest = newCoordinateBounds.southwest
         let northwest = CLLocationCoordinate2D(latitude: newCoordinateBounds.southwest.latitude,
-                                       longitude: newCoordinateBounds.northeast.longitude)
+                                               longitude: newCoordinateBounds.northeast.longitude)
         let northeast = newCoordinateBounds.northeast
 
-        self.transitionVisibleCoordinates(to: [southeast, southwest, northwest, northeast],
-                                edgePadding: edgePadding,
-                                    bearing: 0,
-                                   duration: 0,
-                                   animated: animated,
-                                 completion: completion)
+        transitionVisibleCoordinates(to: [southeast, southwest, northwest, northeast],
+                                     edgePadding: edgePadding,
+                                     bearing: 0,
+                                     duration: 0,
+                                     animated: animated,
+                                     completion: completion)
     }
 
     /**
@@ -338,12 +337,12 @@ public class CameraManager {
     public func transitionVisibleCoordinates(newCoordinates: [CLLocationCoordinate2D],
                                              edgePadding: UIEdgeInsets,
                                              animated: Bool = false) {
-        self.transitionVisibleCoordinates(to: newCoordinates,
-                                edgePadding: edgePadding,
-                                    bearing: 0,
-                                   duration: 0,
-                                   animated: animated,
-                                 completion: nil)
+        transitionVisibleCoordinates(to: newCoordinates,
+                                     edgePadding: edgePadding,
+                                     bearing: 0,
+                                     duration: 0,
+                                     animated: animated,
+                                     completion: nil)
     }
 
     /**
@@ -378,9 +377,9 @@ public class CameraManager {
         let pitch = mapView.cameraView.pitch
 
         let cameraOptions = try! mapView.__map.cameraForCoordinates(forCoordinates: coordinates,
-                                                               padding: padding,
-                                                               bearing: NSNumber(value: Float(bearing)),
-                                                               pitch: NSNumber(value: Float(pitch)))
+                                                                    padding: padding,
+                                                                    bearing: NSNumber(value: Float(bearing)),
+                                                                    pitch: NSNumber(value: Float(pitch)))
 
         let animation = {
             mapView.cameraView.camera = cameraOptions
@@ -407,7 +406,7 @@ public class CameraManager {
             return
         }
 
-        let centerCoordinate = self.shiftCenterCoordinate(by: offset ?? .zero, pitchedDrift: pitchedDrift)
+        let centerCoordinate = shiftCenterCoordinate(by: offset ?? .zero, pitchedDrift: pitchedDrift)
 
         var newBearing: CGFloat = 0
         if let angle = rotation {
@@ -540,8 +539,8 @@ public class CameraManager {
         }
 
         guard let flyTo = FlyToInterpolator(from: mapView.cameraView.camera,
-                                      to: camera,
-                                      size: mapView.bounds.size) else {
+                                            to: camera,
+                                            size: mapView.bounds.size) else {
             completion?(false)
             assertionFailure("FlyToInterpolator could not be created.")
             return
@@ -712,8 +711,8 @@ extension MapboxAnimationGroup: CAAnimationDelegate {
 
 fileprivate extension CoordinateBounds {
     func contains(_ coordinates: [CLLocationCoordinate2D]) -> Bool {
-        let latitudeRange = self.southwest.latitude...self.northeast.latitude
-        let longitudeRange = self.southwest.longitude...self.northeast.longitude
+        let latitudeRange = southwest.latitude...northeast.latitude
+        let longitudeRange = southwest.longitude...northeast.longitude
 
         for coordinate in coordinates {
             if latitudeRange.contains(coordinate.latitude) || longitudeRange.contains(coordinate.longitude) {

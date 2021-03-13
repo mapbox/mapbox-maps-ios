@@ -46,18 +46,20 @@ internal class PuckLocationIndicatorLayer: Puck {
     // MARK: Initializers
     internal init(currentPuckStyle: PuckStyle, locationSupportableMapView: LocationSupportableMapView, viewModel: LocationIndicatorLayerViewModel?) {
         self.locationSupportableMapView = locationSupportableMapView
-        self.locationIndicatorLayerVM = viewModel
-        self.puckStyle = currentPuckStyle
+        locationIndicatorLayerVM = viewModel
+        puckStyle = currentPuckStyle
     }
 
     // MARK: Protocol Implementation
     internal func updateLocation(location: Location) {
         if let locationIndicatorLayer = self.locationIndicatorLayer,
-           let style = self.locationSupportableMapView?.style {
+           let style = locationSupportableMapView?.style {
 
-            let newLocation: [Double] = [location.coordinate.latitude,
-                                         location.coordinate.longitude,
-                                         location.internalLocation.altitude]
+            let newLocation: [Double] = [
+                location.coordinate.latitude,
+                location.coordinate.longitude,
+                location.internalLocation.altitude
+            ]
 
             var bearing: Double = 0.0
             if let latestBearing = location.heading {
@@ -65,11 +67,11 @@ internal class PuckLocationIndicatorLayer: Puck {
             }
 
             let expectedValueLocation = try! style.styleManager.setStyleLayerPropertyForLayerId(locationIndicatorLayer.id,
-                                                               property: "location",
-                                                               value: newLocation)
+                                                                                                property: "location",
+                                                                                                value: newLocation)
             let expectedValueBearing = try! style.styleManager.setStyleLayerPropertyForLayerId(locationIndicatorLayer.id,
-                                                               property: "bearing",
-                                                               value: bearing)
+                                                                                               property: "bearing",
+                                                                                               value: bearing)
 
             if expectedValueLocation.isError() {
                 try! Log.error(forMessage: "Error when updating location in location indicator layer: \(String(describing: expectedValueLocation.error))", category: "Location")
@@ -80,7 +82,7 @@ internal class PuckLocationIndicatorLayer: Puck {
             }
 
         } else {
-            self.updateStyle(puckStyle: self.puckStyle, location: location)
+            updateStyle(puckStyle: puckStyle, location: location)
         }
     }
 
@@ -106,14 +108,14 @@ internal class PuckLocationIndicatorLayer: Puck {
         setupLocationIndicatorLayer()
 
         // Ensure that location indicator layer gets reloaded whenever the style is changed
-        self.locationSupportableMapView?.subscribeStyleChangeHandler({ _ in
+        locationSupportableMapView?.subscribeStyleChangeHandler({ _ in
             setupLocationIndicatorLayer()
         })
     }
 
     internal func removePuck() {
         guard let locationIndicatorLayer = self.locationIndicatorLayer,
-              let style = self.locationSupportableMapView?.style
+              let style = locationSupportableMapView?.style
         else { return }
 
         let removeLayerResult = style.removeStyleLayer(forLayerId: locationIndicatorLayer.id)
@@ -130,7 +132,7 @@ internal class PuckLocationIndicatorLayer: Puck {
 private extension PuckLocationIndicatorLayer {
     // swiftlint:disable:next cyclomatic_complexity
     func createPreciseLocationIndicatorLayer(location: Location) throws {
-        guard let style = self.locationSupportableMapView?.style else { return }
+        guard let style = locationSupportableMapView?.style else { return }
 
         _ = style.removeStyleLayer(forLayerId: "approximate-puck")
         // Call customizationHandler to allow developers to granularly modify the layer
@@ -191,9 +193,11 @@ private extension PuckLocationIndicatorLayer {
 
         // Create and set Paint property
         var paint = LocationIndicatorLayer.Paint()
-        paint.location = .constant([location.coordinate.latitude,
-                                    location.coordinate.longitude,
-                                    location.internalLocation.altitude])
+        paint.location = .constant([
+            location.coordinate.latitude,
+            location.coordinate.longitude,
+            location.internalLocation.altitude
+        ])
         paint.locationTransition = StyleTransition(duration: 0, delay: 0)
         paint.topImageSize = locationIndicatorLayerVM?.scale ?? .constant(1.0)
         paint.bearingImageSize = locationIndicatorLayerVM?.scale ?? .constant(1.0)
@@ -214,11 +218,11 @@ private extension PuckLocationIndicatorLayer {
             throw layerError
         }
 
-        self.locationIndicatorLayer = layer
+        locationIndicatorLayer = layer
     }
 
     func createApproximateLocationIndicatorLayer(location: Location) throws {
-        guard let style = self.locationSupportableMapView?.style else { return }
+        guard let style = locationSupportableMapView?.style else { return }
         // TODO: Handle removal of precise indicator properly.
         _ = style.removeStyleLayer(forLayerId: "puck")
 
@@ -227,9 +231,11 @@ private extension PuckLocationIndicatorLayer {
 
         // Create and set Paint property
         var paint = LocationIndicatorLayer.Paint()
-        paint.location = .constant([location.coordinate.latitude,
-                                    location.coordinate.longitude,
-                                    location.internalLocation.altitude])
+        paint.location = .constant([
+            location.coordinate.latitude,
+            location.coordinate.longitude,
+            location.internalLocation.altitude
+        ])
         let exp = Exp(.interpolate) {
             Exp(.linear)
             Exp(.zoom)
@@ -252,6 +258,6 @@ private extension PuckLocationIndicatorLayer {
         if case .failure(let layerError) = addLayerResult {
             throw layerError
         }
-        self.locationIndicatorLayer = layer
+        locationIndicatorLayer = layer
     }
 }

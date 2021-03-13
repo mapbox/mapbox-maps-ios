@@ -14,11 +14,11 @@ public class CustomLayerExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        self.mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
+        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.view.addSubview(mapView)
+        view.addSubview(mapView)
 
-        self.mapView.on(.styleLoadingFinished) { [weak self] _ in
+        mapView.on(.styleLoadingFinished) { [weak self] _ in
             self?.addCustomLayer()
         }
     }
@@ -26,7 +26,7 @@ public class CustomLayerExample: UIViewController, ExampleProtocol {
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
          // The below line is used for internal testing purposes only.
-        self.finish()
+        finish()
     }
 
     internal func addCustomLayer() {
@@ -34,8 +34,8 @@ public class CustomLayerExample: UIViewController, ExampleProtocol {
         let layerPosition = LayerPosition(above: "water", below: nil, at: nil)
 
         try! mapView.__map.addStyleCustomLayer(forLayerId: "Custom",
-                                                layerHost: self,
-                                            layerPosition: layerPosition)
+                                               layerHost: self,
+                                               layerPosition: layerPosition)
     }
 }
 

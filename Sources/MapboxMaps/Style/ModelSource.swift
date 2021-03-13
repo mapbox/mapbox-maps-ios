@@ -28,6 +28,6 @@ public struct ModelSource: Source {
     public var models: [String: Model]?
 
     public init() {
-      self.type = .model
+      type = .model
     }
 }

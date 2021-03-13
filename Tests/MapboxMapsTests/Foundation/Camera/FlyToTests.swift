@@ -39,8 +39,8 @@ internal class FlyToTests: XCTestCase {
                                  pitch: 0)
 
         guard let flyTo = FlyToInterpolator(from: source,
-                                      to: dest,
-                                      size: CGSize(width: 1000.0, height: 1000.0)) else {
+                                            to: dest,
+                                            size: CGSize(width: 1000.0, height: 1000.0)) else {
             XCTFail("Failed to create interpolator")
             return
         }

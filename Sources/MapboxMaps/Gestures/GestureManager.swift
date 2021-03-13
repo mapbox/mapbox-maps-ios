@@ -151,15 +151,15 @@ public final class GestureManager: NSObject {
 
     internal init(for view: UIView, options: GestureOptions, cameraManager: CameraManagerProtocol) {
         self.cameraManager = cameraManager
-        self.gestureOptions = options
+        gestureOptions = options
         self.view = view
         super.init()
-        self.configureGestureHandlers(for: options)
+        configureGestureHandlers(for: options)
     }
 
     internal func updateGestureOptions(with newOptions: GestureOptions) {
-        self.gestureOptions = newOptions
-        self.configureGestureHandlers(for: newOptions)
+        gestureOptions = newOptions
+        configureGestureHandlers(for: newOptions)
     }
 
     // Loops through supported gestures and generate associated handlers that are to be kept alive
@@ -183,15 +183,15 @@ public final class GestureManager: NSObject {
         gestureHandlers = newGestureHandlerMap
 
         if let pitchHandler = gestureHandlers[.pitch], let panHandler = gestureHandlers[.pan] {
-            self.requireGestureToFail(allowedGesture: pitchHandler, failableGesture: panHandler)
+            requireGestureToFail(allowedGesture: pitchHandler, failableGesture: panHandler)
         }
 
         if let doubleTapHandler = gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 1)],
            let quickZoomHandler = gestureHandlers[.quickZoom] {
-            self.requireGestureToFail(allowedGesture: quickZoomHandler, failableGesture: doubleTapHandler)
+            requireGestureToFail(allowedGesture: quickZoomHandler, failableGesture: doubleTapHandler)
         }
 
-        self.registerAsDelegate()
+        registerAsDelegate()
     }
 
     internal func registerAsDelegate() {
@@ -215,13 +215,13 @@ extension GestureManager: UIGestureRecognizerDelegate {
         if let panGesture = gestureRecognizer as? UIPanGestureRecognizer {
             if panGesture.minimumNumberOfTouches == 2 {
 
-                let leftTouchPoint = panGesture.location(ofTouch: 0, in: self.view)
-                let rightTouchPoint = panGesture.location(ofTouch: 1, in: self.view)
+                let leftTouchPoint = panGesture.location(ofTouch: 0, in: view)
+                let rightTouchPoint = panGesture.location(ofTouch: 1, in: view)
 
                 guard let touchPointAngle = GestureUtilities.angleBetweenPoints(leftTouchPoint,
                                                                                 rightTouchPoint) else { return false }
 
-                let horizontalTiltTolerance = self.horizontalPitchTiltTolerance()
+                let horizontalTiltTolerance = horizontalPitchTiltTolerance()
 
                 // If the angle between the pan touchpoints is greater then the
                 // tolerance specified, don't start the gesture.
@@ -260,7 +260,7 @@ extension GestureManager: GestureContextProvider {
 
     internal func fetchPinchState() -> UIGestureRecognizer.State? {
 
-        guard let validPinchHandler = self.gestureHandlers[.pinch],
+        guard let validPinchHandler = gestureHandlers[.pinch],
             let validPinchRecognizer = validPinchHandler.gestureRecognizer as? UIPinchGestureRecognizer else {
                 return nil
         }
@@ -270,7 +270,7 @@ extension GestureManager: GestureContextProvider {
 
     internal func fetchPinchScale() -> CGFloat? {
 
-        guard let validPinchHandler = self.gestureHandlers[.pinch],
+        guard let validPinchHandler = gestureHandlers[.pinch],
             let validPinchRecognizer = validPinchHandler.gestureRecognizer as? UIPinchGestureRecognizer else {
                 return nil
         }
@@ -288,46 +288,44 @@ extension GestureManager: GestureHandlerDelegate {
     // MapView has been tapped a certain number of times
     internal func tapped(numberOfTaps: Int, numberOfTouches: Int) {
 
-        guard let mapView = self.cameraManager.mapView else {
+        guard let mapView = cameraManager.mapView else {
             return
         }
 
         // Single tapping twice with one finger will cause the map to zoom in
         if numberOfTaps == 2 && numberOfTouches == 1 {
-            cameraManager.setCamera(
-                to: CameraOptions(zoom: mapView.cameraView.zoom + 1.0),
-                animated: false,
-                duration: 0,
-                completion: nil)
+            cameraManager.setCamera(to: CameraOptions(zoom: mapView.cameraView.zoom + 1.0),
+                                    animated: false,
+                                    duration: 0,
+                                    completion: nil)
         }
 
         // Double tapping twice with two fingers will cause the map to zoom out
         if numberOfTaps == 2 && numberOfTouches == 2 {
-            cameraManager.setCamera(
-                to: CameraOptions(zoom: mapView.cameraView.zoom - 1.0),
-                animated: false,
-                duration: 0,
-                completion: nil)
+            cameraManager.setCamera(to: CameraOptions(zoom: mapView.cameraView.zoom - 1.0),
+                                    animated: false,
+                                    duration: 0,
+                                    completion: nil)
         }
     }
 
     // MapView has been panned
     internal func panned(by displacement: CGPoint) {
-        self.cameraManager.moveCamera(by: displacement, rotation: nil, pitch: nil, zoom: nil, animated: false, pitchedDrift: false)
+        cameraManager.moveCamera(by: displacement, rotation: nil, pitch: nil, zoom: nil, animated: false, pitchedDrift: false)
     }
 
     // Pan has ended on the MapView with a residual `offset`
     internal func panEnded(with offset: CGPoint) {
-        self.cameraManager.moveCamera(by: offset, rotation: nil, pitch: nil, zoom: nil, animated: true, pitchedDrift: true)
+        cameraManager.moveCamera(by: offset, rotation: nil, pitch: nil, zoom: nil, animated: true, pitchedDrift: true)
     }
 
     internal func cancelGestureTransitions() {
-        self.cameraManager.cancelTransitions()
+        cameraManager.cancelTransitions()
     }
 
     internal func gestureBegan(for gestureType: GestureType) {
-        self.cameraManager.cancelTransitions()
-        self.delegate?.gestureBegan(for: gestureType)
+        cameraManager.cancelTransitions()
+        delegate?.gestureBegan(for: gestureType)
     }
 
     internal func scaleForZoom() -> CGFloat {
@@ -335,33 +333,30 @@ extension GestureManager: GestureHandlerDelegate {
     }
 
     internal func pinchScaleChanged(with newScale: CGFloat, andAnchor anchor: CGPoint) {
-        cameraManager.setCamera(
-            to: CameraOptions(anchor: anchor, zoom: newScale),
-            animated: false,
-            duration: 0,
-            completion: nil)
+        cameraManager.setCamera(to: CameraOptions(anchor: anchor, zoom: newScale),
+                                animated: false,
+                                duration: 0,
+                                completion: nil)
     }
 
     internal func pinchEnded(with finalScale: CGFloat, andDrift possibleDrift: Bool, andAnchor anchor: CGPoint) {
-        cameraManager.setCamera(
-            to: CameraOptions(anchor: anchor, zoom: finalScale),
-            animated: false,
-            duration: 0,
-            completion: nil)
-        self.unrotateIfNeededForGesture(with: .ended)
+        cameraManager.setCamera(to: CameraOptions(anchor: anchor, zoom: finalScale),
+                                animated: false,
+                                duration: 0,
+                                completion: nil)
+        unrotateIfNeededForGesture(with: .ended)
     }
 
     internal func quickZoomChanged(with newScale: CGFloat, and anchor: CGPoint) {
         let zoom = max(newScale, cameraManager.mapCameraOptions.minimumZoomLevel)
-        cameraManager.setCamera(
-            to: CameraOptions(anchor: anchor, zoom: zoom),
-            animated: false,
-            duration: 0,
-            completion: nil)
+        cameraManager.setCamera(to: CameraOptions(anchor: anchor, zoom: zoom),
+                                animated: false,
+                                duration: 0,
+                                completion: nil)
     }
 
     internal func quickZoomEnded() {
-        self.unrotateIfNeededForGesture(with: .ended)
+        unrotateIfNeededForGesture(with: .ended)
     }
     internal func isRotationAllowed() -> Bool {
         guard let mapView = cameraManager.mapView else {
@@ -384,26 +379,24 @@ extension GestureManager: GestureHandlerDelegate {
         changedAngleInDegrees = changedAngleInDegrees.truncatingRemainder(dividingBy: 360.0)
 
         // Constraining `changedAngleInDegrees` to -30.0 to +30.0 degrees
-        if self.isRotationAllowed() == false && abs(pinchScale) < 10 {
+        if isRotationAllowed() == false && abs(pinchScale) < 10 {
             changedAngleInDegrees = changedAngleInDegrees < -30.0 ? -30.0 : changedAngleInDegrees
             changedAngleInDegrees = changedAngleInDegrees > 30.0 ? 30.0 : changedAngleInDegrees
         }
 
-        cameraManager.setCamera(
-            to: CameraOptions(bearing: CLLocationDirection(changedAngleInDegrees)),
-            animated: false,
-            duration: 0,
-            completion: nil)
+        cameraManager.setCamera(to: CameraOptions(bearing: CLLocationDirection(changedAngleInDegrees)),
+                                animated: false,
+                                duration: 0,
+                                completion: nil)
     }
 
     internal func rotationEnded(with finalAngle: CGFloat, and anchor: CGPoint, with pinchState: UIGestureRecognizer.State) {
         var finalAngleInDegrees = finalAngle * 180.0 / .pi * -1
         finalAngleInDegrees = finalAngleInDegrees.truncatingRemainder(dividingBy: 360.0)
-        cameraManager.setCamera(
-            to: CameraOptions(bearing: CLLocationDirection(finalAngleInDegrees)),
-            animated: false,
-            duration: 0,
-            completion: nil)
+        cameraManager.setCamera(to: CameraOptions(bearing: CLLocationDirection(finalAngleInDegrees)),
+                                animated: false,
+                                duration: 0,
+                                completion: nil)
     }
 
     internal func unrotateIfNeededForGesture(with pinchState: UIGestureRecognizer.State) {
@@ -416,12 +409,11 @@ extension GestureManager: GestureHandlerDelegate {
         if mapView.cameraView.bearing != 0.0
             && pinchState != .began
             && pinchState != .changed {
-            if mapView.cameraView.bearing != 0.0 && self.isRotationAllowed() == false {
-                cameraManager.setCamera(
-                    to: CameraOptions(bearing: 0),
-                    animated: false,
-                    duration: 0,
-                    completion: nil)
+            if mapView.cameraView.bearing != 0.0 && isRotationAllowed() == false {
+                cameraManager.setCamera(to: CameraOptions(bearing: 0),
+                                        animated: false,
+                                        duration: 0,
+                                        completion: nil)
             }
 
             // TODO: Add snapping behavior to "north" if bearing is less than some tolerance
@@ -444,11 +436,10 @@ extension GestureManager: GestureHandlerDelegate {
     }
 
     internal func pitchChanged(newPitch: CGFloat) {
-        cameraManager.setCamera(
-            to: CameraOptions(pitch: newPitch),
-            animated: false,
-            duration: 0,
-            completion: nil)
+        cameraManager.setCamera(to: CameraOptions(pitch: newPitch),
+                                animated: false,
+                                duration: 0,
+                                completion: nil)
     }
 
     internal func pitchEnded() {

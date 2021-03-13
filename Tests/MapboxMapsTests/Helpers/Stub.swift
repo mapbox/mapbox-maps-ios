@@ -26,9 +26,8 @@ final class Stub<ParametersType, ReturnType> {
     }
 
     func call(with parameters: ParametersType) -> ReturnType {
-        let invocation = Invocation(
-            parameters: parameters,
-            returnValue: returnValueQueue.isEmpty ? defaultReturnValue : returnValueQueue.removeFirst())
+        let invocation = Invocation(parameters: parameters,
+                                    returnValue: returnValueQueue.isEmpty ? defaultReturnValue : returnValueQueue.removeFirst())
         invocations.append(invocation)
         return invocation.returnValue
     }

@@ -4,7 +4,7 @@ extension NSValue {
 
     /// Converts the `CGPoint` value of an `NSValue` to a `CLLocationCoordinate2D`.
     func coordinateValue() -> CLLocationCoordinate2D {
-        let point = self.cgPointValue
+        let point = cgPointValue
         return CLLocationCoordinate2D(latitude: CLLocationDegrees(point.x), longitude: CLLocationDegrees(point.y))
     }
 

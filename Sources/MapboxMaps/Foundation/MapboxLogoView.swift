@@ -33,12 +33,12 @@ public class MapboxLogoView: UIView {
         let frame = CGRect(origin: .zero, size: logoSize.rawValue)
         self.logoSize = logoSize
         super.init(frame: frame)
-        self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = UIColor.clear
+        translatesAutoresizingMaskIntoConstraints = false
+        backgroundColor = UIColor.clear
     }
 
     public override func draw(_ rect: CGRect) {
-        self.drawMapboxLogoOrnamentViewFullCanvas(frame: rect, resizing: .aspectFit)
+        drawMapboxLogoOrnamentViewFullCanvas(frame: rect, resizing: .aspectFit)
     }
 
     public required init?(coder: NSCoder) {

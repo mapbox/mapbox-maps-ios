@@ -32,7 +32,7 @@ class GeoJSONManagerTests: XCTestCase {
         let potentialFeature: GeoJSONObject?
 
         // When
-        potentialFeature = try! GeoJSONManager.decodeUnknown(self.pointJSON)
+        potentialFeature = try! GeoJSONManager.decodeUnknown(pointJSON)
 
         // Then
         XCTAssertNotNil(potentialFeature)
@@ -45,7 +45,7 @@ class GeoJSONManagerTests: XCTestCase {
         let potentialFeatureCollection: GeoJSONObject?
 
         // When
-        potentialFeatureCollection = try! GeoJSONManager.decodeUnknown(self.collectionJSON)
+        potentialFeatureCollection = try! GeoJSONManager.decodeUnknown(collectionJSON)
 
         // Then
         XCTAssertNotNil(potentialFeatureCollection)
@@ -58,7 +58,7 @@ class GeoJSONManagerTests: XCTestCase {
         let potentialFeature: Feature?
 
         // When
-        potentialFeature = try! GeoJSONManager.decodeKnown(self.pointJSON)
+        potentialFeature = try! GeoJSONManager.decodeKnown(pointJSON)
 
         // Then
         XCTAssertNotNil(potentialFeature)
@@ -69,7 +69,7 @@ class GeoJSONManagerTests: XCTestCase {
         let potentialFeatureCollection: FeatureCollection?
 
         // When
-        potentialFeatureCollection = try! GeoJSONManager.decodeKnown(self.collectionJSON)
+        potentialFeatureCollection = try! GeoJSONManager.decodeKnown(collectionJSON)
 
         // Then
         XCTAssertNotNil(potentialFeatureCollection)

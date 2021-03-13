@@ -6,15 +6,15 @@ import CoreLocation
     public let internalLocation: CLLocation
 
     public var coordinate: CLLocationCoordinate2D {
-        return self.internalLocation.coordinate
+        return internalLocation.coordinate
     }
 
     public var course: CLLocationDirection {
-        return self.internalLocation.course
+        return internalLocation.course
     }
 
     public var horizontalAccuracy: CLLocationAccuracy {
-        return self.internalLocation.horizontalAccuracy
+        return internalLocation.horizontalAccuracy
     }
 
     public var headingDirection: CLLocationDirection? {
@@ -28,7 +28,7 @@ import CoreLocation
     }
 
     public init(with location: CLLocation, heading: CLHeading? = nil) {
-        self.internalLocation = location
+        internalLocation = location
         self.heading = heading
     }
 }

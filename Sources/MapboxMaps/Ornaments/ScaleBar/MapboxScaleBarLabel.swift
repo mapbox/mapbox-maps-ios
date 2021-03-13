@@ -18,6 +18,6 @@ public class MapboxScaleBarLabel: UILabel {
         shadowOffset = CGSize()
         super.drawText(in: rect)
 
-        self.shadowOffset = originalShadowOffset
+        shadowOffset = originalShadowOffset
     }
 }

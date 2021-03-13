@@ -14,7 +14,7 @@ extension MapView {
         setupCamera(for: self, options: mapOptions.camera)
 
         // Initialize/Configure style manager
-        setupStyle(with: self.__map)
+        setupStyle(with: __map)
 
         // Initialize/Configure gesture manager
         setupGestures(with: self, options: mapOptions.gestures, cameraManager: cameraManager)
@@ -32,7 +32,7 @@ extension MapView {
     /// Updates the map with new configuration options. Causes underlying structures to reload configuration synchronously.
     /// - Parameter update: A closure that is fed the current map options and manipulates it in some way.
     public func update(with updateMapOptions: (inout MapOptions) -> Void) {
-        updateMapOptions(&self.mapOptions) // This mutates the map options
+        updateMapOptions(&mapOptions) // This mutates the map options
 
         // Update the managers in order
         updateMapView(with: mapOptions.render)
@@ -46,17 +46,17 @@ extension MapView {
 
         // Set prefetch zoom delta
         let defaultPrefetchZoomDelta: UInt8 = 4
-        try! self.__map.setPrefetchZoomDeltaForDelta(renderOptions.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
-        self.metalView?.presentsWithTransaction = renderOptions.presentsWithTransaction
-        self.preferredFPS = renderOptions.preferredFramesPerSecond
+        try! __map.setPrefetchZoomDeltaForDelta(renderOptions.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
+        metalView?.presentsWithTransaction = renderOptions.presentsWithTransaction
+        preferredFPS = renderOptions.preferredFramesPerSecond
     }
 
     internal func updateMapView(with newOptions: RenderOptions) {
         // Set prefetch zoom delta
         let defaultPrefetchZoomDelta: UInt8 = 4
-        try! self.__map.setPrefetchZoomDeltaForDelta(newOptions.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
-        self.metalView?.presentsWithTransaction = newOptions.presentsWithTransaction
-        self.preferredFPS = newOptions.preferredFramesPerSecond
+        try! __map.setPrefetchZoomDeltaForDelta(newOptions.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
+        metalView?.presentsWithTransaction = newOptions.presentsWithTransaction
+        preferredFPS = newOptions.preferredFramesPerSecond
     }
 
     internal func setupGestures(with view: UIView, options: GestureOptions, cameraManager: CameraManager) {
@@ -77,7 +77,7 @@ extension MapView {
 
     internal func setupOrnaments(with view: OrnamentSupportableView, options: OrnamentOptions) {
         ornamentsManager = OrnamentsManager(for: view,
-                                                 withConfig: options.makeConfig())
+                                            withConfig: options.makeConfig())
     }
 
     internal func updateOrnaments(with newOptions: OrnamentOptions) {
@@ -87,7 +87,7 @@ extension MapView {
     internal func setupUserLocationManager(with locationSupportableMapView: LocationSupportableMapView, options: LocationOptions) {
 
         locationManager = LocationManager(locationOptions: options,
-                                           locationSupportableMapView: locationSupportableMapView)
+                                          locationSupportableMapView: locationSupportableMapView)
     }
 
     internal func updateUserLocationManager(with options: LocationOptions) {
@@ -99,6 +99,6 @@ extension MapView {
     }
 
     internal func setupStyle(with map: Map) {
-        self.style = Style(with: self.__map)
+        style = Style(with: __map)
     }
 }

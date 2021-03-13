@@ -50,7 +50,7 @@ internal class PuckModelLayer: Puck {
         self.locationSupportableMapView = locationSupportableMapView
         style = locationSupportableMapView.style
         puckStyle = currentPuckStyle
-        self.setup()
+        setup()
     }
 
     internal func setup() {
@@ -81,7 +81,7 @@ internal class PuckModelLayer: Puck {
         addStyle()
 
         // Re-apply source, layer if style is ever changed
-        self.locationSupportableMapView?.subscribeStyleChangeHandler({ (_) in
+        locationSupportableMapView?.subscribeStyleChangeHandler({ (_) in
             addStyle()
         })
     }

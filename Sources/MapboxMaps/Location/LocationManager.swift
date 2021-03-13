@@ -15,7 +15,7 @@ public class LocationManager: NSObject {
     /// Represents the style of the user location puck
     internal var currentPuckStyle: PuckStyle = .precise {
         didSet {
-            self.locationPuckManager?.changePuckStyle(newPuckStyle: currentPuckStyle)
+            locationPuckManager?.changePuckStyle(newPuckStyle: currentPuckStyle)
         }
     }
 
@@ -50,15 +50,15 @@ public class LocationManager: NSObject {
 
         self.locationOptions = locationOptions
         /// Sets the local options needed to configure the user location puck
-        self.showUserLocation = locationOptions.showUserLocation
+        showUserLocation = locationOptions.showUserLocation
 
         /// Allows location updates to be reflected on screen using delegate method
         self.locationSupportableMapView = locationSupportableMapView
 
         /// Sets our default `locationProvider`
-        self.locationProvider = AppleLocationProvider()
-        self.locationProvider.setDelegate(self)
-        self.locationProvider.locationProviderOptions = locationOptions
+        locationProvider = AppleLocationProvider()
+        locationProvider.setDelegate(self)
+        locationProvider.locationProviderOptions = locationOptions
 
         toggleUserLocationUpdates(showUserLocation: locationOptions.showUserLocation)
     }
@@ -77,11 +77,11 @@ public class LocationManager: NSObject {
 
     /// The location manager holds weak references to consumers, client code should retain these references
     public func addLocationConsumer(newConsumer consumer: LocationConsumer) {
-        self.consumers.add(consumer)
+        consumers.add(consumer)
     }
 
     public func removeLocationConsumer(consumer: LocationConsumer) {
-        self.consumers.remove(consumer)
+        consumers.remove(consumer)
     }
 
     internal func updateLocationOptions(with newOptions: LocationOptions) {
@@ -89,12 +89,12 @@ public class LocationManager: NSObject {
         guard newOptions != locationOptions else { return }
 
         // Update the location options
-        self.locationOptions = newOptions
-        self.locationProvider.locationProviderOptions = newOptions
+        locationOptions = newOptions
+        locationProvider.locationProviderOptions = newOptions
 
         if newOptions.showUserLocation != showUserLocation {
-            self.showUserLocation = newOptions.showUserLocation
-            toggleUserLocationUpdates(showUserLocation: self.showUserLocation)
+            showUserLocation = newOptions.showUserLocation
+            toggleUserLocationUpdates(showUserLocation: showUserLocation)
 
             if !newOptions.showUserLocation {
                 // If we should not show user location, then we should
@@ -126,7 +126,7 @@ extension LocationManager: LocationProviderDelegate {
         for consumer in consumers.allObjects {
             let location = Location(with: newLocation, heading: latestLocation?.heading)
             consumer.locationUpdate(newLocation: location)
-            self.latestLocation = location
+            latestLocation = location
         }
     }
 
@@ -136,18 +136,18 @@ extension LocationManager: LocationProviderDelegate {
         guard let validLatestLocation = latestLocation else { return }
 
         // Check if device orientation has changed and inform the location provider accordingly.
-        self.updateHeadingForCurrentDeviceOrientation()
+        updateHeadingForCurrentDeviceOrientation()
 
         for consumer in consumers.allObjects {
             let location = Location(with: validLatestLocation.internalLocation,
                                     heading: newHeading)
             consumer.locationUpdate(newLocation: location)
-            self.latestLocation = location
+            latestLocation = location
         }
     }
 
     public func updateHeadingForCurrentDeviceOrientation() {
-        if self.locationProvider != nil {
+        if locationProvider != nil {
 
             // note that right/left device and interface orientations
             // are opposites (see UIApplication.h)
@@ -167,8 +167,8 @@ extension LocationManager: LocationProviderDelegate {
             // Setting the location manager's heading orientation causes it to send
             // a heading event, which in turn makes us redraw, which kicks off a
             // loop... so don't do that. rdar://34059173
-            if self.locationProvider.headingOrientation != orientation {
-                self.locationProvider.headingOrientation = orientation
+            if locationProvider.headingOrientation != orientation {
+                locationProvider.headingOrientation = orientation
             }
         }
     }
@@ -193,7 +193,7 @@ extension LocationManager: LocationProviderDelegate {
             showUserLocation = false
         }
 
-        toggleUserLocationUpdates(showUserLocation: self.showUserLocation)
+        toggleUserLocationUpdates(showUserLocation: showUserLocation)
 
         if let delegate = self.delegate {
             delegate.locationManager?(self, didChangeAccuracyAuthorization: provider.accuracyAuthorization)
@@ -218,10 +218,10 @@ private extension LocationManager {
                 locationPuckManager.changePuckStyle(newPuckStyle: currentPuckStyle)
             } else {
                 let locationPuckManager = LocationPuckManager(shouldTrackLocation: true,
-                                                              locationSupportableMapView: self.locationSupportableMapView,
-                                                              currentPuckSource: self.locationOptions.locationPuck)
+                                                              locationSupportableMapView: locationSupportableMapView,
+                                                              currentPuckSource: locationOptions.locationPuck)
 
-                self.consumers.add(locationPuckManager)
+                consumers.add(locationPuckManager)
                 self.locationPuckManager = locationPuckManager
             }
         } else {

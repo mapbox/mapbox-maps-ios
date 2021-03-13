@@ -15,20 +15,20 @@ internal class PinchGestureHandler: GestureHandler {
     // Initialize the handler which creates the panGestureRecognizer and adds to the view
     override internal init(for view: UIView, withDelegate delegate: GestureHandlerDelegate) {
         super.init(for: view, withDelegate: delegate)
-        let pinch = UIPinchGestureRecognizer(target: self, action: #selector(self.handlePinch(_:)))
+        let pinch = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
         view.addGestureRecognizer(pinch)
-        self.gestureRecognizer = pinch
+        gestureRecognizer = pinch
     }
 
     @objc internal func handlePinch(_ pinchGestureRecognizer: UIPinchGestureRecognizer) {
 
-        self.delegate.cancelGestureTransitions()
-        let pinchCenterPoint = pinchGestureRecognizer.location(in: self.view)
+        delegate.cancelGestureTransitions()
+        let pinchCenterPoint = pinchGestureRecognizer.location(in: view)
 
         if pinchGestureRecognizer.state == .began {
 
-            self.scale = pow(2, self.delegate.scaleForZoom())
-            self.delegate.gestureBegan(for: .pinch)
+            scale = pow(2, delegate.scaleForZoom())
+            delegate.gestureBegan(for: .pinch)
 
             /**
              TODO: Handle a concurrent rotate gesture here.
@@ -37,8 +37,8 @@ internal class PinchGestureHandler: GestureHandler {
 
         } else if pinchGestureRecognizer.state == .changed {
 
-            let newScale = self.scale * pinchGestureRecognizer.scale
-            self.delegate.pinchScaleChanged(with: log2(newScale), andAnchor: pinchCenterPoint)
+            let newScale = scale * pinchGestureRecognizer.scale
+            delegate.pinchScaleChanged(with: log2(newScale), andAnchor: pinchCenterPoint)
 
         } else if pinchGestureRecognizer.state == .ended
             || pinchGestureRecognizer.state == .cancelled {
@@ -48,7 +48,7 @@ internal class PinchGestureHandler: GestureHandler {
                 velocity = 0
             }
 
-            let duration = ((velocity > 0) ? 1 : 0.25) * self.decelerationRate
+            let duration = ((velocity > 0) ? 1 : 0.25) * decelerationRate
             let scale = self.scale * pinchGestureRecognizer.scale
             var newScale = scale
 
@@ -58,13 +58,13 @@ internal class PinchGestureHandler: GestureHandler {
                 newScale += scale / (velocity * duration) * 0.1
             }
 
-            if newScale <= 0 || log2(newScale) < self.minZoom {
+            if newScale <= 0 || log2(newScale) < minZoom {
                 velocity = 0
             }
 
             let possibleDrift = velocity > 0.0 && duration > 0.0
 
-            self.delegate.pinchEnded(with: log2(newScale), andDrift: possibleDrift, andAnchor: pinchCenterPoint)
+            delegate.pinchEnded(with: log2(newScale), andDrift: possibleDrift, andAnchor: pinchCenterPoint)
         }
     }
 }

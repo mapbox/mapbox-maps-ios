@@ -13,20 +13,20 @@ class TapGestureHandlerTests: XCTestCase {
     var delegate: GestureHandlerDelegateMock!
 
     override func setUp() {
-        self.view = UIView()
-        self.delegate = GestureHandlerDelegateMock()
+        view = UIView()
+        delegate = GestureHandlerDelegateMock()
     }
 
     override func tearDown() {
-        self.view = nil
-        self.delegate = nil
+        view = nil
+        delegate = nil
     }
 
     func testSetupOfSingleTapSingleTouchGestureHandler() {
-        let tapGestureHandler = TapGestureHandler(for: self.view,
+        let tapGestureHandler = TapGestureHandler(for: view,
                                                   numberOfTapsRequired: 1,
                                                   numberOfTouchesRequired: 1,
-                                                  withDelegate: self.delegate)
+                                                  withDelegate: delegate)
 
         guard let validTapGestureRecognizer = tapGestureHandler.view?.gestureRecognizers?.first
                                               as? UITapGestureRecognizer else {
@@ -39,10 +39,10 @@ class TapGestureHandlerTests: XCTestCase {
     }
 
     func testSetupOfDoubleTapSingleTouchGestureHandler() {
-        let tapGestureHandler = TapGestureHandler(for: self.view,
+        let tapGestureHandler = TapGestureHandler(for: view,
                                                   numberOfTapsRequired: 2,
                                                   numberOfTouchesRequired: 1,
-                                                  withDelegate: self.delegate)
+                                                  withDelegate: delegate)
 
         guard let validTapGestureRecognizer = tapGestureHandler.view?.gestureRecognizers?.first
                                               as? UITapGestureRecognizer else {
@@ -55,10 +55,10 @@ class TapGestureHandlerTests: XCTestCase {
     }
 
     func testSetupOfDoubleTapDoubleTouchGestureHandler() {
-        let tapGestureHandler = TapGestureHandler(for: self.view,
+        let tapGestureHandler = TapGestureHandler(for: view,
                                                   numberOfTapsRequired: 2,
                                                   numberOfTouchesRequired: 2,
-                                                  withDelegate: self.delegate)
+                                                  withDelegate: delegate)
 
         guard let validTapGestureRecognizer = tapGestureHandler.view?.gestureRecognizers?.first
                                               as? UITapGestureRecognizer else {
@@ -71,10 +71,10 @@ class TapGestureHandlerTests: XCTestCase {
     }
 
     func testHandlerSingleTapSingleTouch() {
-        let tapGestureHandler = TapGestureHandler(for: self.view,
+        let tapGestureHandler = TapGestureHandler(for: view,
                                                   numberOfTapsRequired: 1,
                                                   numberOfTouchesRequired: 1,
-                                                  withDelegate: self.delegate)
+                                                  withDelegate: delegate)
 
         guard let tapGestureRecognizer = tapGestureHandler.view?.gestureRecognizers?.first
                                          as? UITapGestureRecognizer else {
@@ -83,18 +83,18 @@ class TapGestureHandlerTests: XCTestCase {
         }
 
         tapGestureHandler.handleTap(tapGestureRecognizer)
-        XCTAssertTrue(self.delegate.tapCalled)
-        XCTAssertTrue(self.delegate.tapCalledWithNumberOfTaps == 1,
+        XCTAssertTrue(delegate.tapCalled)
+        XCTAssertTrue(delegate.tapCalledWithNumberOfTaps == 1,
                       "Number of taps called does not match configured value")
-        XCTAssertTrue(self.delegate.tapCalledWithNumberOfTouches == 1,
+        XCTAssertTrue(delegate.tapCalledWithNumberOfTouches == 1,
                       "Number of touches called does not match configured value")
     }
 
     func testHandlerDoubleTapSingleTouch() {
-        let tapGestureHandler = TapGestureHandler(for: self.view,
+        let tapGestureHandler = TapGestureHandler(for: view,
                                                   numberOfTapsRequired: 2,
                                                   numberOfTouchesRequired: 1,
-                                                  withDelegate: self.delegate)
+                                                  withDelegate: delegate)
 
         guard let tapGestureRecognizer = tapGestureHandler.view?.gestureRecognizers?.first
                                          as? UITapGestureRecognizer else {
@@ -103,18 +103,18 @@ class TapGestureHandlerTests: XCTestCase {
         }
 
         tapGestureHandler.handleTap(tapGestureRecognizer)
-        XCTAssertTrue(self.delegate.tapCalled)
-        XCTAssertTrue(self.delegate.tapCalledWithNumberOfTaps == 2,
+        XCTAssertTrue(delegate.tapCalled)
+        XCTAssertTrue(delegate.tapCalledWithNumberOfTaps == 2,
                       "Number of taps called does not match configured value")
-        XCTAssertTrue(self.delegate.tapCalledWithNumberOfTouches == 1,
+        XCTAssertTrue(delegate.tapCalledWithNumberOfTouches == 1,
                       "Number of touches called does not match configured value")
     }
 
     func testHandlerDoubleTapDoubleTouch() {
-        let tapGestureHandler = TapGestureHandler(for: self.view,
+        let tapGestureHandler = TapGestureHandler(for: view,
                                                   numberOfTapsRequired: 2,
                                                   numberOfTouchesRequired: 2,
-                                                  withDelegate: self.delegate)
+                                                  withDelegate: delegate)
 
         guard let tapGestureRecognizer = tapGestureHandler.view?.gestureRecognizers?.first
                                          as? UITapGestureRecognizer else {
@@ -123,10 +123,10 @@ class TapGestureHandlerTests: XCTestCase {
         }
 
         tapGestureHandler.handleTap(tapGestureRecognizer)
-        XCTAssertTrue(self.delegate.tapCalled)
-        XCTAssertTrue(self.delegate.tapCalledWithNumberOfTaps == 2,
+        XCTAssertTrue(delegate.tapCalled)
+        XCTAssertTrue(delegate.tapCalledWithNumberOfTaps == 2,
                       "Number of taps called does not match configured value")
-        XCTAssertTrue(self.delegate.tapCalledWithNumberOfTouches == 2,
+        XCTAssertTrue(delegate.tapCalledWithNumberOfTouches == 2,
                       "Number of touches called does not match configured value")
     }
 }

@@ -17,7 +17,7 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
 
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.view.addSubview(mapView)
+        view.addSubview(mapView)
 
         let centerCoordinate = CLLocationCoordinate2D(latitude: 45.5076, longitude: -122.6736)
 
@@ -65,9 +65,9 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
         lineLayer.layout?.lineJoin = .round
 
         // Add the lineLayer to the map.
-        self.mapView.style.addSource(source: routeLineSource,
-                                     identifier: sourceIdentifier)
-        self.mapView.style.addLayer(layer: lineLayer)
+        mapView.style.addSource(source: routeLineSource,
+                                identifier: sourceIdentifier)
+        mapView.style.addLayer(layer: lineLayer)
 
     }
 

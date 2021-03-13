@@ -10,10 +10,10 @@ internal class QuickZoomGestureHandler: GestureHandler {
     override init(for view: UIView, withDelegate delegate: GestureHandlerDelegate) {
         super.init(for: view, withDelegate: delegate)
 
-        let quickZoom = UILongPressGestureRecognizer(target: self, action: #selector(self.handleQuickZoom(_:)))
+        let quickZoom = UILongPressGestureRecognizer(target: self, action: #selector(handleQuickZoom(_:)))
         quickZoom.numberOfTapsRequired = 1
         quickZoom.minimumPressDuration = 0
-        self.gestureRecognizer = quickZoom
+        gestureRecognizer = quickZoom
         view.addGestureRecognizer(quickZoom)
     }
 
@@ -26,11 +26,11 @@ internal class QuickZoomGestureHandler: GestureHandler {
         let touchPoint = gestureRecognizer.location(in: view)
 
         if gestureRecognizer.state == .began {
-            self.delegate.gestureBegan(for: .quickZoom)
-            self.quickZoomStart = touchPoint.y
-            self.scale = self.delegate.scaleForZoom()
+            delegate.gestureBegan(for: .quickZoom)
+            quickZoomStart = touchPoint.y
+            scale = delegate.scaleForZoom()
         } else if gestureRecognizer.state == .changed {
-            let distance = touchPoint.y - self.quickZoomStart
+            let distance = touchPoint.y - quickZoomStart
             let bounds = view.bounds
             let anchor = CGPoint(x: bounds.midX, y: bounds.midY)
 
@@ -38,9 +38,9 @@ internal class QuickZoomGestureHandler: GestureHandler {
 
             if newScale.isNaN { newScale = 0 }
 
-            self.delegate.quickZoomChanged(with: newScale, and: anchor)
+            delegate.quickZoomChanged(with: newScale, and: anchor)
         } else if gestureRecognizer.state == .ended || gestureRecognizer.state == .cancelled {
-            self.delegate.quickZoomEnded()
+            delegate.quickZoomEnded()
         }
     }
 }

@@ -13,17 +13,17 @@ class PitchGestureHandlerTests: XCTestCase {
     var delegate: GestureHandlerDelegateMock!
 
     override func setUp() {
-        self.view = UIView()
-        self.delegate = GestureHandlerDelegateMock()
+        view = UIView()
+        delegate = GestureHandlerDelegateMock()
     }
 
     override func tearDown() {
-        self.view = nil
-        self.delegate = nil
+        view = nil
+        delegate = nil
     }
 
     func testPitchSetUp() {
-        let pitchGestureHandler = PitchGestureHandler(for: self.view, withDelegate: self.delegate)
+        let pitchGestureHandler = PitchGestureHandler(for: view, withDelegate: delegate)
         XCTAssert(pitchGestureHandler.gestureRecognizer is UIPanGestureRecognizer)
 
         // swiftlint:disable force_cast
@@ -33,28 +33,28 @@ class PitchGestureHandlerTests: XCTestCase {
     }
 
     func testPitchBegan() {
-        let pitchGestureHandler = PitchGestureHandler(for: self.view, withDelegate: self.delegate)
+        let pitchGestureHandler = PitchGestureHandler(for: view, withDelegate: delegate)
         let pitch = UIPanGestureRecognizerMock()
         pitchGestureHandler.handlePitchGesture(pitch)
-        XCTAssertTrue(self.delegate.gestureBeganMethod.wasCalled)
-        XCTAssertEqual(self.delegate.gestureBeganMethod.type, GestureType.pitch)
+        XCTAssertTrue(delegate.gestureBeganMethod.wasCalled)
+        XCTAssertEqual(delegate.gestureBeganMethod.type, GestureType.pitch)
     }
 
     func testPitchChanged() {
-        let pitchHandler = PitchGestureHandler(for: self.view, withDelegate: self.delegate)
+        let pitchHandler = PitchGestureHandler(for: view, withDelegate: delegate)
         let pitch = UIPanGestureRecognizerMock()
         pitchHandler.dragGestureTranslation = CGPoint.zero
         pitchHandler.handlePitchGesture(pitch) // Start gesture to set it to .began
 
         pitch.mockState = .changed
         pitchHandler.handlePitchGesture(pitch)
-        XCTAssert(self.delegate.pitchChangedMethod.wasCalled)
+        XCTAssert(delegate.pitchChangedMethod.wasCalled)
         let mockPitch = pitch.mockPitchChanged
-        XCTAssertEqual(self.delegate.pitchChangedMethod.newPitch, mockPitch)
+        XCTAssertEqual(delegate.pitchChangedMethod.newPitch, mockPitch)
     }
 
     func testPitchWillNotTrigger() {
-        let pitchHandler = PitchGestureHandler(for: self.view, withDelegate: self.delegate)
+        let pitchHandler = PitchGestureHandler(for: view, withDelegate: delegate)
         let pitch = UIPanGestureRecognizerMock()
         pitchHandler.dragGestureTranslation = CGPoint.zero
         pitchHandler.handlePitchGesture(pitch) // Start gesture to set it to .began
@@ -63,17 +63,17 @@ class PitchGestureHandlerTests: XCTestCase {
         pitch.mockTouchPointA = CGPoint(x: 0, y: 0)
         pitch.mockTouchPointB = CGPoint(x: 100, y: 100)
         pitchHandler.handlePitchGesture(pitch)
-        XCTAssertFalse(self.delegate.pitchChangedMethod.wasCalled,
+        XCTAssertFalse(delegate.pitchChangedMethod.wasCalled,
                        "pitch gesture isn't triggered if touch points exceed 45°")
     }
 
     func testPitchEnded() {
-        let pitchHandler = PitchGestureHandler(for: self.view, withDelegate: self.delegate)
+        let pitchHandler = PitchGestureHandler(for: view, withDelegate: delegate)
         let pitch = UIPanGestureRecognizerMock()
         pitch.mockState = .ended
         pitchHandler.handlePitchGesture(pitch)
 
-        XCTAssertTrue(self.delegate.pitchEndedMethod)
+        XCTAssertTrue(delegate.pitchEndedMethod)
     }
 }
 
@@ -85,10 +85,8 @@ private class UIPanGestureRecognizerMock: UIPanGestureRecognizer {
     var mockTouchPointA = CGPoint(x: 0, y: 0)
     var mockTouchPointB = CGPoint(x: 100, y: 25)
     var mockTranslation: CGPoint {
-        return CGPoint(
-            x: (mockTouchPointB.x - mockTouchPointA.x),
-            y: (mockTouchPointB.y - mockTouchPointA.y)
-        )
+        return CGPoint(x: (mockTouchPointB.x - mockTouchPointA.x),
+                       y: (mockTouchPointB.y - mockTouchPointA.y))
     }
 
     override var numberOfTouches: Int {
@@ -105,13 +103,13 @@ private class UIPanGestureRecognizerMock: UIPanGestureRecognizer {
 
     override func location(ofTouch touchIndex: Int, in view: UIView?) -> CGPoint {
 
-        if self.state == .changed {
+        if state == .changed {
             if touchIndex == 0 {
-                return self.mockTouchPointA
+                return mockTouchPointA
             }
 
             if touchIndex == 1 {
-                return self.mockTouchPointB
+                return mockTouchPointB
             }
         }
 
@@ -119,6 +117,6 @@ private class UIPanGestureRecognizerMock: UIPanGestureRecognizer {
     }
 
     override func translation(in view: UIView?) -> CGPoint {
-        return self.mockTranslation
+        return mockTranslation
     }
 }

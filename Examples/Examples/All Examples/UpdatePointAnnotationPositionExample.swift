@@ -21,7 +21,7 @@ public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProt
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.cameraManager.setCamera(centerCoordinate: CLLocationCoordinate2D(latitude: 59.3, longitude: 8.06),
                                         zoom: 12)
-        self.view.addSubview(mapView)
+        view.addSubview(mapView)
 
         // Allows the view controller to receive information about map events.
         mapView.on(.mapLoadingFinished) { [weak self] _ in
@@ -44,7 +44,7 @@ public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProt
         pointAnnotation.coordinate = newCoordinate
 
         do {
-            try self.mapView.annotationManager.updateAnnotation(pointAnnotation)
+            try mapView.annotationManager.updateAnnotation(pointAnnotation)
         } catch let error {
             displayAlert(message: error.localizedDescription)
         }
@@ -55,6 +55,6 @@ public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProt
                                                 message: message,
                                                 preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
-        self.present(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
     }
 }

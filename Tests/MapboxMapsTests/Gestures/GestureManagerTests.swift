@@ -20,19 +20,17 @@ final class GestureManagerTests: XCTestCase {
 
     override func setUp() {
         let resourceOptions = ResourceOptions(accessToken: "")
-        mapView = BaseMapView(
-            with: CGRect(x: 0, y: 0, width: 100, height: 100),
-            resourceOptions: resourceOptions,
-            glyphsRasterizationOptions: GlyphsRasterizationOptions.default,
-            styleURL: nil)
+        mapView = BaseMapView(with: CGRect(x: 0, y: 0, width: 100, height: 100),
+                              resourceOptions: resourceOptions,
+                              glyphsRasterizationOptions: GlyphsRasterizationOptions.default,
+                              styleURL: nil)
         delegate = GestureHandlerDelegateMock()
         cameraManager = MockCameraManager()
         cameraManager.mapView = mapView
         initialGestureOptions = GestureOptions()
-        gestureManager = GestureManager(
-            for: mapView,
-            options: initialGestureOptions,
-            cameraManager: cameraManager)
+        gestureManager = GestureManager(for: mapView,
+                                        options: initialGestureOptions,
+                                        cameraManager: cameraManager)
     }
 
     func testInitializer() {
@@ -60,7 +58,7 @@ final class GestureManagerTests: XCTestCase {
 
         var options = GestureOptions()
         options.pitchEnabled = false
-        let gestureManager = GestureManager(for: self.mapView, options: options, cameraManager: self.cameraManager)
+        let gestureManager = GestureManager(for: mapView, options: options, cameraManager: cameraManager)
 
         options.pitchEnabled = true
         gestureManager.updateGestureOptions(with: options)

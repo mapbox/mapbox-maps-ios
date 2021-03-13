@@ -44,7 +44,7 @@ public struct ColorRepresentable: Codable, Equatable {
             // Renderer requires color components to be in the range of 0-255
             // So we must multply each component by 255 in order for the renderer
             // to honor the color.
-            self.colorRepresentation = Exp(.rgba) {
+            colorRepresentation = Exp(.rgba) {
                 Double(red * 255.0)
                 Double(green * 255.0)
                 Double(blue * 255.0)
@@ -71,7 +71,7 @@ public struct ColorRepresentable: Codable, Equatable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
-        self.colorRepresentation = try container.decode(Expression.self)
+        colorRepresentation = try container.decode(Expression.self)
     }
 }
 
@@ -82,7 +82,7 @@ extension UIColor: ValidExpressionArgument {
         var green: CGFloat = 0.0
         var blue: CGFloat = 0.0
         var alpha: CGFloat = 0.0
-        self.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        getRed(&red, green: &green, blue: &blue, alpha: &alpha)
 
         let rgbaExp = Exp(.rgba) {
             Double(red * 255.0)

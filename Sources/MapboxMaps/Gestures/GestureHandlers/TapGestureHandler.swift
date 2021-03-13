@@ -13,15 +13,15 @@ internal class TapGestureHandler: GestureHandler {
         super.init(for: view, withDelegate: delegate)
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self,
-                                               action: #selector(self.handleTap(_:)))
+                                                          action: #selector(handleTap(_:)))
         tapGestureRecognizer.numberOfTapsRequired = numberOfTaps
         tapGestureRecognizer.numberOfTouchesRequired = numberOfTouchesRequired
         view.addGestureRecognizer(tapGestureRecognizer)
-        self.gestureRecognizer = tapGestureRecognizer
+        gestureRecognizer = tapGestureRecognizer
     }
 
     // Calls view to process the tap gesture
     @objc internal func handleTap(_ tap: UITapGestureRecognizer) {
-        self.delegate.tapped(numberOfTaps: tap.numberOfTapsRequired, numberOfTouches: tap.numberOfTouchesRequired)
+        delegate.tapped(numberOfTaps: tap.numberOfTapsRequired, numberOfTouches: tap.numberOfTouchesRequired)
     }
 }

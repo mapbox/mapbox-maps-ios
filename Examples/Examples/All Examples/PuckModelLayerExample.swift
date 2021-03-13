@@ -10,11 +10,11 @@ public class PuckModelLayerExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        self.mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
+        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.view.addSubview(mapView)
+        view.addSubview(mapView)
 
-        self.mapView.on(.styleLoadingFinished) { [weak self] _ in
+        mapView.on(.styleLoadingFinished) { [weak self] _ in
             guard let self = self else { return }
             self.setupExample()
         }
@@ -23,12 +23,12 @@ public class PuckModelLayerExample: UIViewController, ExampleProtocol {
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
          // The below line is used for internal testing purposes only.
-        self.finish()
+        finish()
     }
 
     internal func setupExample() {
 
-        self.mapView.update { (mapOptions) in
+        mapView.update { (mapOptions) in
 
             mapOptions.location.showUserLocation = true
 
@@ -76,8 +76,8 @@ public class PuckModelLayerExample: UIViewController, ExampleProtocol {
         }
 
         let coordinate = CLLocationCoordinate2D(latitude: 39.085006, longitude: -77.150925)
-        self.mapView.cameraManager.setCamera(centerCoordinate: coordinate,
-                                             zoom: 14,
-                                             pitch: 80)
+        mapView.cameraManager.setCamera(centerCoordinate: coordinate,
+                                        zoom: 14,
+                                        pitch: 80)
     }
 }

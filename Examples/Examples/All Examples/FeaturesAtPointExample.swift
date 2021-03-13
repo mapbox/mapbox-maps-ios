@@ -12,14 +12,14 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
 
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.view.addSubview(mapView)
+        view.addSubview(mapView)
 
         // Center the map over the United States.
         let centerCoordinate = CLLocationCoordinate2D(latitude: 39.368279,
                                                       longitude: -97.646484)
 
         mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
-                                                  zoom: 2.4)
+                                        zoom: 2.4)
 
         // Allows the view controller to receive information about map events.
         mapView.on(.mapLoadingFinished) { [weak self] _ in
@@ -71,9 +71,9 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
     @objc public func findFeatures(_ sender: UITapGestureRecognizer) {
         let tapPoint = sender.location(in: mapView)
 
-        mapView.visibleFeatures( at: tapPoint,
-                                 styleLayers: ["US-states"],
-                                 completion: { [weak self] result in
+        mapView.visibleFeatures(at: tapPoint,
+                                styleLayers: ["US-states"],
+                                completion: { [weak self] result in
                                     switch result {
                                     case .success(let features):
                                         if let firstFeature = features.first?.properties,
@@ -94,6 +94,6 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
 
         alertController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
 
-        self.present(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
     }
 }

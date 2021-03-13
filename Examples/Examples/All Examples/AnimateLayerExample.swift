@@ -17,14 +17,14 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
 
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.view.addSubview(mapView)
+        view.addSubview(mapView)
 
         // Set the map's center coordinate and zoom level
         let centerCoordinate = CLLocationCoordinate2D(latitude: 37.8,
                                                       longitude: -96)
 
         mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
-                                                  zoom: 2)
+                                        zoom: 2)
 
         // Allows the view controller to receive information about map events.
         mapView.on(.mapLoadingFinished) { [weak self] _ in
@@ -117,7 +117,7 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
 
             // Update the airplane source layer with the new coordinate and bearing.
             _ = self.mapView.style.updateGeoJSON(for: self.airplaneSymbol.identifier,
-                                                           with: geoJSON)
+                                                 with: geoJSON)
 
             runCount += 1
 

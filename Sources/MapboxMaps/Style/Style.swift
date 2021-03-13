@@ -27,7 +27,7 @@ public class Style {
     public var styleURL: StyleURL = .streets {
         didSet {
             let uriString = styleURL.url.absoluteString
-            try! self.styleManager.setStyleURIForUri(uriString)
+            try! styleManager.setStyleURIForUri(uriString)
         }
     }
 
@@ -47,7 +47,7 @@ public class Style {
             let layerData = try JSONEncoder().encode(layer)
             //swiftlint:disable force_cast
             let layerJSON = try JSONSerialization.jsonObject(with: layerData) as! [String: AnyObject]
-            let expected = try! self.styleManager.addStyleLayer(forProperties: layerJSON, layerPosition: layerPosition)
+            let expected = try! styleManager.addStyleLayer(forProperties: layerJSON, layerPosition: layerPosition)
 
             if expected.isError() {
                 return .failure(.addStyleLayerFailed(expected.error as? String))
@@ -74,7 +74,7 @@ public class Style {
         // Get the layer properties from the map
         var layerProps: MBXExpected<AnyObject, AnyObject>?
         do {
-            layerProps = try self.styleManager.getStyleLayerProperties(forLayerId: layerID)
+            layerProps = try styleManager.getStyleLayerProperties(forLayerId: layerID)
         } catch {
             return .failure(.getStyleLayerFailed(nil))
         }
@@ -136,12 +136,12 @@ public class Style {
         }
 
         let expected = try! styleManager.addStyleImage(forImageId: identifier,
-                                              scale: 3.0,
-                                              image: mbxImage,
-                                                sdf: sdf,
-                                           stretchX: stretchX,
-                                           stretchY: stretchY,
-                                            content: imageContent)
+                                                       scale: 3.0,
+                                                       image: mbxImage,
+                                                       sdf: sdf,
+                                                       stretchX: stretchX,
+                                                       stretchY: stretchY,
+                                                       content: imageContent)
 
         return expected.isError() ? .failure(.addStyleImageFailed(expected.error as? String))
                                   : .success(true)
@@ -181,7 +181,7 @@ public class Style {
         do {
             let sourceData = try JSONEncoder().encode(source)
             let sourceDictionary = try JSONSerialization.jsonObject(with: sourceData)
-            let expected = try! self.styleManager.addStyleSource(forSourceId: identifier, properties: sourceDictionary)
+            let expected = try! styleManager.addStyleSource(forSourceId: identifier, properties: sourceDictionary)
 
             return expected.isValue() ? .success(true)
                                       : .failure(.addSourceFailed(expected.error as? String))
@@ -201,7 +201,7 @@ public class Style {
     public func getSource<T: Source>(identifier: String, type: T.Type) -> Result<T, SourceError> {
 
         // Get the source properties for a given identifier
-        let sourceProps = try! self.styleManager.getStyleSourceProperties(forSourceId: identifier)
+        let sourceProps = try! styleManager.getStyleSourceProperties(forSourceId: identifier)
 
         // If sourceProps represents an error, return early
         guard sourceProps.isValue(),
@@ -253,9 +253,9 @@ public class Style {
             return .failure(.setSourceProperty("Could not parse updated GeoJSON"))
         }
 
-        return self.updateSourceProperty(id: sourceIdentifier,
-                                         property: "data",
-                                         value: geoJSONDictionary)
+        return updateSourceProperty(id: sourceIdentifier,
+                                    property: "data",
+                                    value: geoJSONDictionary)
     }
 
     /// Sets a terrain on the style
@@ -313,7 +313,7 @@ public class Style {
     @discardableResult
     public func updateLayer<T: Layer>(id: String, type: T.Type, update: (inout T) -> Void) -> Result<Bool, LayerError> {
 
-        let result = self.getLayer(with: id, type: T.self)
+        let result = getLayer(with: id, type: T.self)
         var layer: T?
 
         // Fetch the layer from the style
@@ -339,7 +339,7 @@ public class Style {
             let value = try JSONSerialization.jsonObject(with: data, options: [])
 
             // Apply the changes to the layer properties to the style
-            try self.styleManager.setStyleLayerPropertiesForLayerId(id, properties: value)
+            try styleManager.setStyleLayerPropertiesForLayerId(id, properties: value)
             return .success(true)
         } catch {
             return .failure(.updateStyleLayerFailed(error))

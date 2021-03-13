@@ -17,7 +17,7 @@ public class CameraAnimationExample: UIViewController, ExampleProtocol {
         let resourceOptions = ResourceOptions(accessToken: accessToken)
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.view.addSubview(mapView)
+        view.addSubview(mapView)
 
         // Allows the delegate to receive information about map events.
         mapView.on(.mapLoadingFinished) { [weak self] _ in
@@ -34,9 +34,9 @@ public class CameraAnimationExample: UIViewController, ExampleProtocol {
                                           bearing: 180.0,
                                           pitch: 15.0)
 
-            self.mapView.cameraManager.setCamera( to: newCamera,
-                                                  animated: true,
-                                                  duration: 5.0) { _ in
+            self.mapView.cameraManager.setCamera(to: newCamera,
+                                                 animated: true,
+                                                 duration: 5.0) { _ in
                 // The below line is used for internal testing purposes only.
                 self.finish()
             }

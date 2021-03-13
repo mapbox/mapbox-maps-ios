@@ -24,14 +24,14 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
 
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.view.addSubview(mapView)
+        view.addSubview(mapView)
 
         // Set the center coordinate and zoom level over southern Iceland.
         let centerCoordinate = CLLocationCoordinate2D(latitude: 63.982738,
                                                       longitude: -16.741790)
 
         mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
-                                                  zoom: 12.0)
+                                        zoom: 12.0)
 
         // Allow the view controller to receive information about map events.
         mapView.on(.mapLoadingFinished) { [weak self] _ in
@@ -69,7 +69,7 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
         mapView.annotationManager.addAnnotation(pointAnnotation)
 
         // The below line is used for internal testing purposes only.
-        self.finish()
+        finish()
     }
 }
 

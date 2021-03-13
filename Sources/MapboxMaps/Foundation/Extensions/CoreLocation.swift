@@ -21,9 +21,9 @@ public extension CLLocationCoordinate2D {
          }
          */
 
-        let wrappedLongitude = Utils.wrap(forValue: self.longitude, min: -180.0, max: 180.0)
+        let wrappedLongitude = Utils.wrap(forValue: longitude, min: -180.0, max: 180.0)
 
-        return CLLocationCoordinate2D(latitude: self.latitude, longitude: wrappedLongitude)
+        return CLLocationCoordinate2D(latitude: latitude, longitude: wrappedLongitude)
     }
 
     /// Returns a new `CLLocationCoordinate` where the longitude is wrapped if
@@ -50,7 +50,7 @@ public extension CLLocationCoordinate2D {
 
     /// Convert a `CLLocationCoordinate` to a `NSValue` which wraps a `CGPoint`.
     internal func toValue() -> NSValue {
-        return NSValue(cgPoint: CGPoint(x: self.latitude, y: self.longitude))
+        return NSValue(cgPoint: CGPoint(x: latitude, y: longitude))
     }
 
     /// Convert an array of `CLLocationCoordinate`s to an array of `NSValue`s that wrap a `CGPoint`.

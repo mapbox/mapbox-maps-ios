@@ -28,9 +28,9 @@ internal class LocationManagerTests: XCTestCase {
     }
 
     func testLocationManagerDefaultInitialization() {
-        let locationManager = LocationManager(locationOptions: self.locationProviderOptionsMock,
-                                              locationSupportableMapView: self.locationSupportableMapMock)
-        locationManager.addLocationConsumer(newConsumer: self.locationConsumerMock)
+        let locationManager = LocationManager(locationOptions: locationProviderOptionsMock,
+                                              locationSupportableMapView: locationSupportableMapMock)
+        locationManager.addLocationConsumer(newConsumer: locationConsumerMock)
 
         XCTAssertNotNil(locationManager.consumers)
         XCTAssertNotNil(locationManager.locationSupportableMapView)

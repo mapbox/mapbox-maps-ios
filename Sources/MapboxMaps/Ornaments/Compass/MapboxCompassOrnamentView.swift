@@ -35,20 +35,20 @@ public class MapboxCompassOrnamentView: UIButton {
 
     required public init(visibility: OrnamentVisibility) {
         super.init(frame: .zero)
-        self.translatesAutoresizingMaskIntoConstraints = false
+        translatesAutoresizingMaskIntoConstraints = false
         self.visibility = visibility
         alpha = visibility == .visible ? 1 : 0
         let bundle = Bundle.mapboxMaps
-        self.accessibilityLabel = NSLocalizedString("COMPASS_A11Y_LABEL",
-                                                    tableName: Constants.localizableTableName,
-                                                    bundle: bundle,
-                                                    value: "Compass",
-                                                    comment: "Accessibility label")
-        self.accessibilityHint = NSLocalizedString("COMPASS_A11Y_HINT",
-                                                   tableName: Constants.localizableTableName,
-                                                   bundle: bundle,
-                                                   value: "Rotates the map to face due north",
-                                                   comment: "Accessibility hint")
+        accessibilityLabel = NSLocalizedString("COMPASS_A11Y_LABEL",
+                                               tableName: Constants.localizableTableName,
+                                               bundle: bundle,
+                                               value: "Compass",
+                                               comment: "Accessibility label")
+        accessibilityHint = NSLocalizedString("COMPASS_A11Y_HINT",
+                                              tableName: Constants.localizableTableName,
+                                              bundle: bundle,
+                                              value: "Rotates the map to face due north",
+                                              comment: "Accessibility hint")
 
         if let image = createCompassImage() {
             setImage(image, for: .normal)
@@ -58,7 +58,7 @@ public class MapboxCompassOrnamentView: UIButton {
             ])
         }
 
-        addTarget(self, action: #selector(self.didTap), for: .touchUpInside)
+        addTarget(self, action: #selector(didTap), for: .touchUpInside)
     }
 
     required internal init?(coder: NSCoder) {
@@ -222,15 +222,14 @@ public class MapboxCompassOrnamentView: UIButton {
                                                value: "N",
                                                comment: "Compass abbreviation for north")
         let north = NSAttributedString(string: northLocalized, attributes:
-            [NSAttributedString.Key.font: northFont,
-             NSAttributedString.Key.foregroundColor: UIColor.white
-        ])
-        let stringRect = CGRect(
-            x: (Constants.compassSize.width - north.size().width) / 2,
-            y: Constants.compassSize.height * 0.435,
-            width: north.size().width,
-            height: north.size().height
-        )
+            [
+                NSAttributedString.Key.font: northFont,
+                NSAttributedString.Key.foregroundColor: UIColor.white
+            ])
+        let stringRect = CGRect(x: (Constants.compassSize.width - north.size().width) / 2,
+                                y: Constants.compassSize.height * 0.435,
+                                width: north.size().width,
+                                height: north.size().height)
         north.draw(in: stringRect)
         let image = UIGraphicsGetImageFromCurrentImageContext()
 

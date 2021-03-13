@@ -174,7 +174,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         cameraView = CameraView(frame: frame, map: __map)
         addSubview(cameraView)
 
-        NSLayoutConstraint.activate([ 
+        NSLayoutConstraint.activate([
             cameraView.leftAnchor.constraint(equalTo: leftAnchor),
             cameraView.topAnchor.constraint(equalTo: topAnchor),
             cameraView.bottomAnchor.constraint(equalTo: bottomAnchor),

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,6 +14,7 @@
 		35F08DE82347987900768B9F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35F08DE62347987900768B9F /* LaunchScreen.storyboard */; };
 		35F08DF32347987900768B9F /* DebugAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F08DF22347987900768B9F /* DebugAppTests.swift */; };
 		35F08DFE2347987900768B9F /* DebugAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F08DFD2347987900768B9F /* DebugAppUITests.swift */; };
+		B569C20125FEBC2E008B0D92 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = B569C20025FEBC2E008B0D92 /* MapboxMaps */; };
 		CA72AEE0253CF2CE00BD2F81 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA72AEDF253CF2CE00BD2F81 /* MainViewController.swift */; };
 		CA72AEE4253D346B00BD2F81 /* ApplicationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA72AEE3253D346B00BD2F81 /* ApplicationTestCase.swift */; };
 /* End PBXBuildFile section */
@@ -73,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B569C20125FEBC2E008B0D92 /* MapboxMaps in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,6 +178,7 @@
 			);
 			name = DebugApp;
 			packageProductDependencies = (
+				B569C20025FEBC2E008B0D92 /* MapboxMaps */,
 			);
 			productName = DebugApp;
 			productReference = 35F08DD82347987700768B9F /* DebugApp.app */;
@@ -551,6 +554,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B569C20025FEBC2E008B0D92 /* MapboxMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MapboxMaps;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 35F08DD02347987700768B9F /* Project object */;
 }

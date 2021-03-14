@@ -63,7 +63,7 @@
 		35F08DF92347987900768B9F /* DebugAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DebugAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		35F08DFD2347987900768B9F /* DebugAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugAppUITests.swift; sourceTree = "<group>"; };
 		35F08DFF2347987900768B9F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CA56651F24479764006F392C /* base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = base.xcconfig; path = ../Mapbox/Configurations/base.xcconfig; sourceTree = SOURCE_ROOT; };
+		CA56651F24479764006F392C /* base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = base.xcconfig; sourceTree = "<group>"; };
 		CA72AEDF253CF2CE00BD2F81 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		CA72AEE3253D346B00BD2F81 /* ApplicationTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationTestCase.swift; sourceTree = "<group>"; };
 		CA72AEED253DE10600BD2F81 /* unitTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = unitTests.xcconfig; sourceTree = "<group>"; };
@@ -155,8 +155,7 @@
 				CA56651F24479764006F392C /* base.xcconfig */,
 				CA72AEED253DE10600BD2F81 /* unitTests.xcconfig */,
 			);
-			name = Configurations;
-			path = ../Mapbox/Configurations;
+			path = Configurations;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -4,4 +4,7 @@
    <FileRef
       location = "group:DebugApp/DebugApp.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:..">
+   </FileRef>
 </Workspace>

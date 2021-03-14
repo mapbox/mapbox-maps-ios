@@ -7,7 +7,7 @@ ignore:
   - "Examples/"
   - "Mapbox/*Tests/"
   - "docs"
-  - "DebugApp"
+  - "Apps/DebugApp"
   - "StressTest/"
   - "PCVD/"
   - "Mapbox/Test*"

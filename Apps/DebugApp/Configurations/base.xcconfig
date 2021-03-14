@@ -1,0 +1,175 @@
+// Common configurations used across projects and targets
+// Sorted alphabetically within sections
+
+// -----------------------------------------------------------------------------
+// Build System
+
+ALWAYS_SEARCH_USER_PATHS = NO
+
+// TODO: Re-enable APPLICATION_EXTENSION_API_ONLY
+// This should be enabled for the frameworks. It'll be necessary to add a config
+// for applications should those fail with this enabled.
+//APPLICATION_EXTENSION_API_ONLY = YES
+
+// Exclude i386 from simulator ARCHs because it's not present in libMapbox.a
+// Removed armv7 since it's also 32bit
+ARCHS[sdk=iphoneos*] = arm64
+ARCHS[sdk=iphonesimulator*] = x86_64
+
+// Why the long path here? It's because we want an xctestrun file *without*
+// absolute paths, i.e. relative to __TESTROOT__, so that the testrun file doesn't
+// have to be modified when running on Device Farm.
+//
+// When setting BUILD_DIR (e.g. to `../build`) and *not* setting the derivedDataPath 
+// (i.e. via the command line) the xctestrun file ends up with absolute paths -
+// because the two file locations are not simply related. No apparent combination 
+// of xcode build settings puts the xctestrun file in the parent directory of the 
+// built products. (For similar pain, see 
+// https://stanislaw.github.io/2016/02/28/xcodebuild-how-to-really-change-its-build-path.html )
+//
+// BUT by setting BUILD_DIR to "../build/Build/Products" *and* calling xcodebuild with
+// "-derivedDataPath ../build", we can force the xctestrun to have relative paths.
+//
+// Longer term it may be preferable NOT to override these build locations when 
+// either building with Xcode or xcodebuild, and instead query for the paths with 
+// something like
+//
+//    xcodebuild -showBuildSettings -scheme MapboxMaps | awk '/^    SYMROOT/ {print $3}'
+//
+// and then use that in the various build scripts.
+//
+BUILD_DIR = ../build/Build/Products
+
+// TODO: Move into developer config?
+DEVELOPMENT_TEAM = GJZR2MEM28
+
+ENABLE_TESTABILITY[config=Release] = NO
+ENABLE_TESTABILITY[config=Debug] = YES
+
+IPHONEOS_DEPLOYMENT_TARGET = 11.0
+MACOSX_DEPLOYMENT_TARGET =
+
+ONLY_ACTIVE_ARCH[config=Release] = NO
+ONLY_ACTIVE_ARCH[config=Debug] = YES
+
+SDKROOT = iphoneos
+SKIP_INSTALL = YES
+SUPPORTS_MACCATALYST = NO
+
+// -----------------------------------------------------------------------------
+// Swift
+
+SWIFT_VERSION = 5.0
+
+SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Debug] = DEBUG
+SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Release] = RELEASE
+
+SWIFT_OPTIMIZATION_LEVEL[config=Debug] = -Onone
+SWIFT_OPTIMIZATION_LEVEL[config=Release] = -O
+
+// -----------------------------------------------------------------------------
+// Clang
+
+CLANG_ANALYZER_GCD_PERFORMANCE = YES
+CLANG_ANALYZER_LOCALIZABILITY_EMPTY_CONTEXT = YES
+CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES
+CLANG_ANALYZER_NONNULL = YES
+CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES
+CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES
+CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE
+
+CLANG_CXX_LANGUAGE_STANDARD = compiler-default
+CLANG_CXX_LIBRARY = compiler-default
+
+CLANG_ENABLE_MODULES = YES
+CLANG_ENABLE_OBJC_ARC = YES
+CLANG_ENABLE_OBJC_WEAK = YES
+
+// Static analysis doesn't include Swift, so no harm enabling for those cases
+// where there may be some Obj-C
+CLANG_STATIC_ANALYZER_MODE[config=Debug] = shallow
+CLANG_STATIC_ANALYZER_MODE[config=Release] = deep
+
+CLANG_USE_OPTIMIZATION_PROFILE = NO
+
+CLANG_WARN__DUPLICATE_METHOD_MATCH = YES
+CLANG_WARN__DUPLICATE_METHOD_MATCH = YES
+CLANG_WARN_ASSIGN_ENUM = YES
+CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES
+CLANG_WARN_BOOL_CONVERSION = YES
+CLANG_WARN_COMMA = YES
+CLANG_WARN_CONSTANT_CONVERSION = YES
+CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES
+CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR
+CLANG_WARN_DOCUMENTATION_COMMENTS = YES
+CLANG_WARN_EMPTY_BODY = YES
+CLANG_WARN_ENUM_CONVERSION = YES
+CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES
+CLANG_WARN_INFINITE_RECURSION = YES
+CLANG_WARN_INT_CONVERSION = YES
+CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES
+CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES
+CLANG_WARN_OBJC_INTERFACE_IVARS = YES
+CLANG_WARN_OBJC_LITERAL_CONVERSION = YES
+CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES
+CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR
+CLANG_WARN_RANGE_LOOP_ANALYSIS = YES
+CLANG_WARN_SEMICOLON_BEFORE_METHOD_BODY = YES
+CLANG_WARN_STRICT_PROTOTYPES = YES
+CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES
+CLANG_WARN_SUSPICIOUS_MOVE = YES
+CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE
+CLANG_WARN_UNREACHABLE_CODE = YES
+
+ENABLE_STRICT_OBJC_MSGSEND = YES
+
+GCC_C_LANGUAGE_STANDARD = compiler-default
+
+GCC_DYNAMIC_NO_PIC = NO
+GCC_ENABLE_CPP_RTTI = NO
+
+GCC_NO_COMMON_BLOCKS = YES
+
+GCC_OPTIMIZATION_LEVEL[config=Debug] = 0
+GCC_OPTIMIZATION_LEVEL[config=Release] = s
+
+GCC_PREPROCESSOR_DEFINITIONS[config=Debug] = DEBUG=1 $(inherited)
+GCC_PREPROCESSOR_DEFINITIONS[config=Release] = RELEASE=1 $(inherited)
+
+GCC_TREAT_WARNINGS_AS_ERRORS = YES
+
+GCC_WARN_64_TO_32_BIT_CONVERSION = YES
+GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES
+GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR
+GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES
+GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES
+GCC_WARN_SHADOW = YES
+GCC_WARN_SIGN_COMPARE = YES
+GCC_WARN_UNDECLARED_SELECTOR = YES
+GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE
+GCC_WARN_UNKNOWN_PRAGMAS = YES
+GCC_WARN_UNUSED_FUNCTION = YES
+GCC_WARN_UNUSED_LABEL = YES
+GCC_WARN_UNUSED_VARIABLE = YES
+
+LD_GENERATE_MAP_FILE = YES
+
+RUN_CLANG_STATIC_ANALYZER = YES
+
+SWIFT_TREAT_WARNINGS_AS_ERRORS[config=Debug] = NO
+SWIFT_TREAT_WARNINGS_AS_ERRORS[config=Release] = YES
+
+
+// -----------------------------------------------------------------------------
+// Search paths
+
+FRAMEWORK_SEARCH_PATHS = $(inherited) $(PLATFORM_DIR)/Developer/Library/Frameworks $(PROJECT_DIR)/../lib/
+HEADER_SEARCH_PATHS = $(inherited)
+LIBRARY_SEARCH_PATHS = $(inherited)
+
+// -----------------------------------------------------------------------------
+// Custom
+
+CURRENT_COMMIT_HASH = deadbeef
+#include? "../../developer.xcconfig"
+

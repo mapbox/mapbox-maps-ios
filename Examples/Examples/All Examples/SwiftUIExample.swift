@@ -58,7 +58,7 @@ internal struct SwiftUIMapView: UIViewRepresentable {
 
     init(resourceOptions: ResourceOptions, camera: Binding<Camera>) {
         self.resourceOptions = resourceOptions
-        self._camera = camera
+        _camera = camera
     }
 
     /// The first time SwiftUI needs to render this view, it starts by invoking `makeCoordinator()`.
@@ -204,7 +204,8 @@ internal struct ContentView: View {
     @State private var annotations = [
         PointAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -75)),
         PointAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -75.001)),
-        PointAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -74.999))]
+        PointAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -74.999))
+    ]
 
     public var body: some View {
         VStack {

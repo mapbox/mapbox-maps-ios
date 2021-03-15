@@ -12,7 +12,7 @@ public class GeoJSONSourceExample: UIViewController, ExampleProtocol {
 
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.view.addSubview(mapView)
+        view.addSubview(mapView)
 
         // Set the center coordinate and zoom level.
         let centerCoordinate = CLLocationCoordinate2D(latitude: 18.239785,
@@ -96,6 +96,6 @@ public class GeoJSONSourceExample: UIViewController, ExampleProtocol {
         _ = mapView.style.addLayer(layer: polygonLayer, layerPosition: nil)
 
         // The below line is used for internal testing purposes only.
-        self.finish()
+        finish()
     }
 }

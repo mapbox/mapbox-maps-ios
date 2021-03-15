@@ -13,25 +13,25 @@ class PanGestureHandlerTests: XCTestCase {
     var delegate: GestureHandlerDelegateMock!
 
     override func setUp() {
-        self.view = UIView()
-        self.delegate = GestureHandlerDelegateMock()
+        view = UIView()
+        delegate = GestureHandlerDelegateMock()
     }
 
     override func tearDown() {
-        self.view = nil
-        self.delegate = nil
+        view = nil
+        delegate = nil
     }
 
     func testSetup() {
         let panGestureHandler = PanGestureHandler(for: view,
-                                                  withDelegate: self.delegate,
+                                                  withDelegate: delegate,
                                                   panScrollMode: .horizontalAndVertical)
         XCTAssertTrue(panGestureHandler.view?.gestureRecognizers?.first is UIPanGestureRecognizer)
     }
 
     func testHandlePan() {
         let panGestureHandler = PanGestureHandler(for: view,
-                                                  withDelegate: self.delegate,
+                                                  withDelegate: delegate,
                                                   panScrollMode: .horizontal)
         let panMock = UIPanGestureRecognizerMock()
         panGestureHandler.handlePan(panMock)

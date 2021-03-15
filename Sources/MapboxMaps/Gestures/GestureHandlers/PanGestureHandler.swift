@@ -11,27 +11,27 @@ internal class PanGestureHandler: GestureHandler {
     internal init(for view: UIView, withDelegate delegate: GestureHandlerDelegate, panScrollMode: PanScrollingMode) {
         super.init(for: view, withDelegate: delegate)
         let pan = UIPanGestureRecognizer(target: self,
-                                         action: #selector(self.handlePan(_:)))
+                                         action: #selector(handlePan(_:)))
         pan.maximumNumberOfTouches = 1
         view.addGestureRecognizer(pan)
-        self.gestureRecognizer = pan
-        self.scrollMode = panScrollMode
+        gestureRecognizer = pan
+        scrollMode = panScrollMode
     }
 
     // Handles the pan operation and calls the associated view
     @objc internal func handlePan(_ pan: UIPanGestureRecognizer) {
         switch pan.state {
         case .began:
-            self.delegate.gestureBegan(for: .pan)
+            delegate.gestureBegan(for: .pan)
         case .changed:
             let delta = pan.translation(in: pan.view).applyPanScrollingMode(panScrollingMode: scrollMode)
-            self.delegate.panned(by: delta)
+            delegate.panned(by: delta)
             pan.setTranslation(.zero, in: pan.view)
         case .ended, .cancelled:
             var velocity = pan.velocity(in: pan.view)
             let velocityHypot = sqrt(pow(velocity.x, 2) + pow(velocity.y, 2))
 
-            if self.decelerationRate == 0.0 || velocityHypot < 1000 {
+            if decelerationRate == 0.0 || velocityHypot < 1000 {
                 velocity = CGPoint.zero
             }
 
@@ -40,7 +40,7 @@ internal class PanGestureHandler: GestureHandler {
                                      y: velocity.y * decelerationRate / 4)
                                     .applyPanScrollingMode(panScrollingMode: scrollMode)
 
-                self.delegate.panEnded(with: offset)
+                delegate.panEnded(with: offset)
             }
         default:
             break

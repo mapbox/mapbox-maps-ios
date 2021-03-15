@@ -56,8 +56,8 @@ public class AnnotationManager: Observer {
     public var userInteractionEnabled: Bool {
         didSet {
             if !userInteractionEnabled {
-                self.tapGesture = nil
-            } else if userInteractionEnabled && self.tapGesture == nil {
+                tapGesture = nil
+            } else if userInteractionEnabled && tapGesture == nil {
                 configureTapGesture()
             }
         }
@@ -135,9 +135,9 @@ public class AnnotationManager: Observer {
         self.mapView = mapView
         self.styleDelegate = styleDelegate
         self.interactionDelegate = interactionDelegate
-        self.annotations = [:]
-        self.annotationFeatures = FeatureCollection(features: [])
-        self.userInteractionEnabled = true
+        annotations = [:]
+        annotationFeatures = FeatureCollection(features: [])
+        userInteractionEnabled = true
 
         configureTapGesture()
         try! mapView.observable?.subscribe(for: self, events: [MapEvents.mapLoadingFinished])
@@ -288,9 +288,9 @@ public class AnnotationManager: Observer {
 
             switch annotation.isSelected {
             case true:
-                self.interactionDelegate?.didSelectAnnotation(annotation: annotation)
+                interactionDelegate?.didSelectAnnotation(annotation: annotation)
             case false:
-                self.interactionDelegate?.didDeselectAnnotation(annotation: annotation)
+                interactionDelegate?.didDeselectAnnotation(annotation: annotation)
             }
         }
     }
@@ -302,9 +302,9 @@ public class AnnotationManager: Observer {
      */
     internal func createAnnotationSource() -> Result<Bool, AnnotationError> {
 
-        self.annotationSource = GeoJSONSource()
+        annotationSource = GeoJSONSource()
 
-        guard var sourceLayer = self.annotationSource else {
+        guard var sourceLayer = annotationSource else {
             return .failure(.addAnnotationFailed(nil))
         }
 
@@ -399,7 +399,7 @@ public class AnnotationManager: Observer {
             throw AnnotationError.addAnnotationFailed(nil)
         }
 
-        if self.annotationSource == nil {
+        if annotationSource == nil {
             if case .failure(let sourceError) = createAnnotationSource() {
                 throw AnnotationError.addAnnotationFailed(sourceError)
             }

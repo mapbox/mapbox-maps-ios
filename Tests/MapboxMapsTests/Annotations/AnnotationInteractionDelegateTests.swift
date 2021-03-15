@@ -20,17 +20,17 @@ class AnnotationInteractionDelegateTests: XCTestCase {
     var deselectionDelegateWasCalled: Bool = false
 
     override func setUp() {
-        self.annotationSupportableMapMock = AnnotationSupportableMapMock()
-        self.annotationSupportableStyleMock = AnnotationStyleDelegateMock()
-        self.selectionExpectation = expectation(description: "didSelectAnnotation was called")
+        annotationSupportableMapMock = AnnotationSupportableMapMock()
+        annotationSupportableStyleMock = AnnotationStyleDelegateMock()
+        selectionExpectation = expectation(description: "didSelectAnnotation was called")
         defaultCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     }
 
     override func tearDown() {
-        self.annotationSupportableMapMock = nil
-        self.annotationSupportableStyleMock = nil
-        self.selectionExpectation = nil
-        self.deselectionExpectation = nil
+        annotationSupportableMapMock = nil
+        annotationSupportableStyleMock = nil
+        selectionExpectation = nil
+        deselectionExpectation = nil
         defaultCoordinate = nil
     }
 
@@ -39,7 +39,7 @@ class AnnotationInteractionDelegateTests: XCTestCase {
         let annotationManager = AnnotationManager(for: annotationSupportableMapMock,
                                                   with: annotationSupportableStyleMock)
         annotationManager.interactionDelegate = self
-        let annotation = PointAnnotation(coordinate: self.defaultCoordinate)
+        let annotation = PointAnnotation(coordinate: defaultCoordinate)
         _ = annotationManager.addAnnotation(annotation)
         XCTAssertEqual(annotationManager.selectedAnnotations.count, 0)
 

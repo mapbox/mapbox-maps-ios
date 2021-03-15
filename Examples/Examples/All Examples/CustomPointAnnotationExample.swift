@@ -12,13 +12,13 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
 
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.view.addSubview(mapView)
+        view.addSubview(mapView)
 
         // Center the map camera over New York City
         let centerCoordinate = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
 
         mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
-                                                  zoom: 9.0)
+                                        zoom: 9.0)
 
         // Allows the delegate to receive information about map events.
         mapView.on(.mapLoadingFinished) { [weak self] _ in

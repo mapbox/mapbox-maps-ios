@@ -81,8 +81,8 @@ class MapboxMapsFoundationTests: XCTestCase {
     func testPointToCoordinateInSubViewEqualOrigins() {
         let subViewRect = CGRect(x: 0,
                                  y: 0,
-                             width: mapView.bounds.size.width / 2,
-                            height: mapView.bounds.size.height / 2)
+                                 width: mapView.bounds.size.width / 2,
+                                 height: mapView.bounds.size.height / 2)
         let subview = UIView(frame: subViewRect)
 
         mapView.addSubview(subview)
@@ -122,8 +122,8 @@ class MapboxMapsFoundationTests: XCTestCase {
         // Shift bounds down and right 1/2 of the map's size
         mapView.bounds = CGRect(x: mapView.frame.midX,
                                 y: mapView.frame.midY,
-                            width: mapView.frame.width,
-                           height: mapView.frame.height)
+                                width: mapView.frame.width,
+                                height: mapView.frame.height)
 
         let mapViewFrameCenterPoint = CGPoint(x: mapView.frame.midX, y: mapView.frame.midY)
         let mapViewFrameCenterCoordinate = mapView.coordinate(for: mapViewFrameCenterPoint, in: mapView)
@@ -146,8 +146,8 @@ class MapboxMapsFoundationTests: XCTestCase {
         // Shift bounds by some arbitrary offset
         mapView.bounds = CGRect(x: 30,
                                 y: -30,
-                            width: mapView.frame.width,
-                           height: mapView.frame.height)
+                                width: mapView.frame.width,
+                                height: mapView.frame.height)
 
         let mapViewFrameCenterPoint = CGPoint(x: mapView.frame.midX, y: mapView.frame.midY)
         let mapViewBoundsCenterPoint = CGPoint(x: mapView.bounds.midX, y: mapView.bounds.midY)

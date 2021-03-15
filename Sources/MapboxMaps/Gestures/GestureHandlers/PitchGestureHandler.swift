@@ -22,16 +22,16 @@ internal class PitchGestureHandler: GestureHandler {
     internal override init(for view: UIView, withDelegate delegate: GestureHandlerDelegate) {
         super.init(for: view, withDelegate: delegate)
 
-        let pitchGesture = UIPanGestureRecognizer(target: self, action: #selector(self.handlePitchGesture(_:)))
+        let pitchGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePitchGesture(_:)))
         pitchGesture.minimumNumberOfTouches = 2
         pitchGesture.maximumNumberOfTouches = 2
-        self.gestureRecognizer = pitchGesture
+        gestureRecognizer = pitchGesture
         view.addGestureRecognizer(pitchGesture)
     }
 
     @objc internal func handlePitchGesture(_ gesture: UIPanGestureRecognizer) {
 
-        let horizontalTiltTolerance = self.delegate.horizontalPitchTiltTolerance()
+        let horizontalTiltTolerance = delegate.horizontalPitchTiltTolerance()
 
         if gesture.numberOfTouches != 2 {
             gesture.state = .ended
@@ -49,9 +49,9 @@ internal class PitchGestureHandler: GestureHandler {
              but substracting one point from the 'y' translation forces an initial 90º angle
              making the gesture avoid the delay.
             */
-            self.dragGestureTranslation = CGPoint(x: gestureTranslation.x, y: gestureTranslation.y-1)
-            self.initialPitch = self.delegate.initialPitch()
-            self.delegate.gestureBegan(for: .pitch)
+            dragGestureTranslation = CGPoint(x: gestureTranslation.x, y: gestureTranslation.y-1)
+            initialPitch = delegate.initialPitch()
+            delegate.gestureBegan(for: .pitch)
 
         } else if gesture.state == .changed {
             let leftTouchPoint = gesture.location(ofTouch: 0, in: gesture.view)
@@ -68,10 +68,9 @@ internal class PitchGestureHandler: GestureHandler {
 
             // The angle between the translation at the start of the gesture
             // and the current changed translation
-            guard let gestureSlopeAngle = GestureUtilities.angleBetweenPoints(
-                                          self.dragGestureTranslation,
-                                          gestureTranslation) else { return }
-            self.dragGestureTranslation = gestureTranslation
+            guard let gestureSlopeAngle = GestureUtilities.angleBetweenPoints(dragGestureTranslation,
+                                                                              gestureTranslation) else { return }
+            dragGestureTranslation = gestureTranslation
 
             // If the angle between the pan touchpoints is less than
             // the tolerance specified AND the slope angle of the gesture's
@@ -79,11 +78,11 @@ internal class PitchGestureHandler: GestureHandler {
             if fabs(touchPointAngle) < horizontalTiltTolerance && fabs(gestureSlopeAngle) > 60 {
                 let verticalGestureTranslation = gestureTranslation.y
                 let slowDown = CGFloat(2.0)
-                let newPitch = self.initialPitch - ( verticalGestureTranslation / slowDown )
-                self.delegate.pitchChanged(newPitch: newPitch)
+                let newPitch = initialPitch - ( verticalGestureTranslation / slowDown )
+                delegate.pitchChanged(newPitch: newPitch)
             }
         } else if gesture.state == .ended || gesture.state == .cancelled {
-            self.delegate.pitchEnded()
+            delegate.pitchEnded()
         }
     }
 }

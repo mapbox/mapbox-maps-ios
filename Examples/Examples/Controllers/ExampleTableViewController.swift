@@ -15,7 +15,7 @@ public class ExampleTableViewController: UITableViewController {
 
     override public func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Examples"
+        title = "Examples"
 
         searchBar.delegate = self
 
@@ -93,7 +93,7 @@ extension ExampleTableViewController {
 
     internal func show(example: Example) {
         let exampleToDisplay = makeViewController(for: example)
-        self.navigationController?.pushViewController(exampleToDisplay, animated: true)
+        navigationController?.pushViewController(exampleToDisplay, animated: true)
     }
 
     public func filterContentForSearchText(_ searchText: String) {

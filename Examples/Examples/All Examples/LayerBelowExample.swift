@@ -11,7 +11,7 @@ public class LayerBelowExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
-        self.view.addSubview(mapView)
+        view.addSubview(mapView)
 
         // Center the map over downtown Atlanta
         let centerCoordinate = CLLocationCoordinate2D(latitude: 35.137452,
@@ -51,6 +51,6 @@ public class LayerBelowExample: UIViewController, ExampleProtocol {
         _ = mapView.style.addLayer(layer: layer, layerPosition: LayerPosition(below: "settlement-label"))
 
         // The below line is used for internal testing purposes only.
-        self.finish()
+        finish()
     }
 }

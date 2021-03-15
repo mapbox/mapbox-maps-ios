@@ -47,10 +47,12 @@ class CameraManagerTests: XCTestCase {
         let expectedCenter = CLLocationCoordinate2DMake(northeast.latitude - (latitudeDelta / 2),
                                                         southeast.longitude - (longitudeDelta / 2))
 
-        let camera = cameraManager.camera(for: [southwest,
-                                                northwest,
-                                                northeast,
-                                                southeast])
+        let camera = cameraManager.camera(for: [
+            southwest,
+            northwest,
+            northeast,
+            southeast
+        ])
 
         XCTAssertEqual(expectedCenter.latitude, camera.center!.latitude, accuracy: 0.25)
         XCTAssertEqual(expectedCenter.longitude, camera.center!.longitude, accuracy: 0.25)
@@ -110,7 +112,7 @@ class CameraManagerTests: XCTestCase {
                                                 northeast: CLLocationCoordinate2D(latitude: 10, longitude: 10))
 
         let allowedBounds = CoordinateBounds(southwest: CLLocationCoordinate2D(latitude: 2, longitude: 2),
-                                           northeast: CLLocationCoordinate2D(latitude: 4, longitude: 4))
+                                             northeast: CLLocationCoordinate2D(latitude: 4, longitude: 4))
 
         var cameraOptions = MapCameraOptions()
         cameraOptions.restrictedCoordinateBounds = restrictedBounds
@@ -313,13 +315,11 @@ class CameraManagerTests: XCTestCase {
     func verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing bearing: CLLocationDirection,
                                                                                offset: CGPoint,
                                                                                line: UInt = #line) {
-        cameraManager.setCamera(
-            centerCoordinate: CLLocationCoordinate2D(
-                latitude: 0,
-                longitude: 179.999),
-            zoom: 0,
-            bearing: bearing,
-            animated: false)
+        cameraManager.setCamera(centerCoordinate: CLLocationCoordinate2D(latitude: 0,
+                                                                         longitude: 179.999),
+                                zoom: 0,
+                                bearing: bearing,
+                                animated: false)
 
         let shiftedCenterCoordinate = cameraManager.shiftCenterCoordinate(by: offset, pitchedDrift: false)
 
@@ -329,13 +329,11 @@ class CameraManagerTests: XCTestCase {
     func verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing bearing: CLLocationDirection,
                                                                                offset: CGPoint,
                                                                                line: UInt = #line) {
-        cameraManager.setCamera(
-            centerCoordinate: CLLocationCoordinate2D(
-                latitude: 0,
-                longitude: -179.999),
-            zoom: 0,
-            bearing: bearing,
-            animated: false)
+        cameraManager.setCamera(centerCoordinate: CLLocationCoordinate2D(latitude: 0,
+                                                                         longitude: -179.999),
+                                zoom: 0,
+                                bearing: bearing,
+                                animated: false)
 
         let shiftedCenterCoordinate = cameraManager.shiftCenterCoordinate(by: offset, pitchedDrift: false)
 

@@ -10,11 +10,11 @@ public class ModelExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        self.mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
+        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.view.addSubview(mapView)
+        view.addSubview(mapView)
 
-        self.mapView.on(.styleLoadingFinished) { [weak self] _ in
+        mapView.on(.styleLoadingFinished) { [weak self] _ in
             guard let self = self else { return }
             self.setupExample()
         }
@@ -23,7 +23,7 @@ public class ModelExample: UIViewController, ExampleProtocol {
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
          // The below line is used for internal testing purposes only.
-        self.finish()
+        finish()
     }
 
     internal func setupExample() {
@@ -54,9 +54,9 @@ public class ModelExample: UIViewController, ExampleProtocol {
         mapView.style.addLayer(layer: skyLayer)
 
         let sanFrancisco = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
-        self.mapView.cameraManager.setCamera(centerCoordinate: sanFrancisco,
-                                             zoom: 19,
-                                             bearing: 0.0,
-                                             pitch: 80)
+        mapView.cameraManager.setCamera(centerCoordinate: sanFrancisco,
+                                        zoom: 19,
+                                        bearing: 0.0,
+                                        pitch: 80)
     }
 }

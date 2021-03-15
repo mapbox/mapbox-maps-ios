@@ -23,7 +23,7 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.style.styleURL = .dark
         mapView.cameraManager.setCamera(centerCoordinate: CLLocationCoordinate2D(latitude: 37.858, longitude: 138.472),
-                                                  zoom: 3.5)
+                                        zoom: 3.5)
 
         // Add the `MapViewController`'s view to the stack view as a
         // child view controller.
@@ -41,11 +41,11 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
         let options = MapSnapshotOptions(size: CGSize(width: view.bounds.size.width,
                                                       height: view.bounds.height / 2),
                                          resourceOptions: resourceOptions())
-        self.snapshotter = Snapshotter(options: options)
-        self.snapshotter.style.styleURL = .light
-        self.snapshotter.camera = mapView.cameraView.camera
+        snapshotter = Snapshotter(options: options)
+        snapshotter.style.styleURL = .light
+        snapshotter.camera = mapView.cameraView.camera
 
-        self.snapshotter.on(.styleLoadingFinished) { [weak self] _ in
+        snapshotter.on(.styleLoadingFinished) { [weak self] _ in
             self?.startSnapshot()
         }
     }

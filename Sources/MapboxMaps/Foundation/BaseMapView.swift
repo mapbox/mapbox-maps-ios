@@ -98,7 +98,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 
     internal var preferredFPS: PreferredFPS = .normal {
         didSet {
-            self.updateDisplayLinkPreferredFramesPerSecond()
+            updateDisplayLinkPreferredFramesPerSecond()
         }
     }
 
@@ -129,7 +129,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
     // MARK: Init
     public init(with frame: CGRect, resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions, styleURL: URL?) {
         super.init(frame: frame)
-        self.commonInit(resourceOptions: resourceOptions, glyphsRasterizationOptions: glyphsRasterizationOptions, styleURL: styleURL)
+        commonInit(resourceOptions: resourceOptions, glyphsRasterizationOptions: glyphsRasterizationOptions, styleURL: styleURL)
     }
 
     private func commonInit(resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions, styleURL: URL?) {
@@ -171,14 +171,15 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         let events = MapEvents.EventKind.allCases.map({ $0.rawValue })
         try! __map.subscribe(for: observerConcrete, events: events)
 
-        self.cameraView = CameraView(frame: frame, map: __map)
-        self.addSubview(cameraView)
+        cameraView = CameraView(frame: frame, map: __map)
+        addSubview(cameraView)
 
-        NSLayoutConstraint.activate([ self.cameraView.leftAnchor.constraint(equalTo: self.leftAnchor),
-                                      self.cameraView.topAnchor.constraint(equalTo: self.topAnchor),
-                                      self.cameraView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-                                      self.cameraView.rightAnchor.constraint(equalTo: self.rightAnchor)
-                                    ])
+        NSLayoutConstraint.activate([
+            cameraView.leftAnchor.constraint(equalTo: leftAnchor),
+            cameraView.topAnchor.constraint(equalTo: topAnchor),
+            cameraView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            cameraView.rightAnchor.constraint(equalTo: rightAnchor)
+        ])
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(willTerminate),
@@ -208,10 +209,10 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
             fatalError("Must provide access token to the MapView in Interface Builder / Storyboard")
         }
 
-        let ibStyleURL = BaseMapView.parseIBStringAsURL(ibString: self.styleURL__)
+        let ibStyleURL = BaseMapView.parseIBStringAsURL(ibString: styleURL__)
         let styleURL = ibStyleURL ?? URL(string: "mapbox://styles/mapbox/streets-v11")!
 
-        let baseURL = BaseMapView.parseIBString(ibString: self.baseURL__)
+        let baseURL = BaseMapView.parseIBString(ibString: baseURL__)
         let resourceOptions = ResourceOptions(accessToken: accessToken, baseUrl: baseURL)
 
         // TODO: Provide suitable default and configuration when setup from IB.
@@ -222,7 +223,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         let glyphsRasterizationOptions = GlyphsRasterizationOptions(rasterizationMode: rasterizationMode,
                                                                     fontFamily: localFontFamily)
 
-        self.commonInit(resourceOptions: resourceOptions, glyphsRasterizationOptions: glyphsRasterizationOptions, styleURL: styleURL)
+        commonInit(resourceOptions: resourceOptions, glyphsRasterizationOptions: glyphsRasterizationOptions, styleURL: styleURL)
     }
 
     public func on(_ eventType: MapEvents.EventKind, handler: @escaping (MapboxCoreMaps.Event) -> Void) {
@@ -246,32 +247,32 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 
     public override func layoutSubviews() {
         super.layoutSubviews()
-        let size = MapboxCoreMaps.Size(width: Float(self.bounds.size.width),
-                                       height: Float(self.bounds.size.height))
-        try! self.__map?.setSizeFor(size)
+        let size = MapboxCoreMaps.Size(width: Float(bounds.size.width),
+                                       height: Float(bounds.size.height))
+        try! __map?.setSizeFor(size)
     }
 
     func validateDisplayLink() {
-        if self.superview != nil
-            && self.window != nil
+        if superview != nil
+            && window != nil
             && displayLink == nil {
             let target = BaseMapViewProxy(mapView: self)
-            displayLink = self.window?.screen.displayLink(withTarget: target, selector: #selector(target.updateFromDisplayLink))
+            displayLink = window?.screen.displayLink(withTarget: target, selector: #selector(target.updateFromDisplayLink))
 
-            self.updateDisplayLinkPreferredFramesPerSecond()
+            updateDisplayLinkPreferredFramesPerSecond()
             displayLink?.add(to: .current, forMode: .common)
 
         }
     }
 
     @objc func updateFromDisplayLink(displayLink: CADisplayLink) {
-        if self.window == nil {
+        if window == nil {
             return
         }
 
         if needsDisplayRefresh {
             needsDisplayRefresh = false
-            self.displayCallback?()
+            displayCallback?()
         }
     }
 
@@ -294,7 +295,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
     open override func willMove(toWindow newWindow: UIWindow?) {
         super.willMove(toWindow: newWindow)
         if newWindow != nil {
-            self.validateDisplayLink()
+            validateDisplayLink()
         }
     }
 
@@ -302,7 +303,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         super.didMoveToWindow()
 
         if window != nil {
-            self.validateDisplayLink()
+            validateDisplayLink()
         } else {
             // TODO: Fix this up correctly.
             displayLink?.invalidate()
@@ -311,13 +312,13 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
     }
 
     open override func didMoveToSuperview() {
-        self.validateDisplayLink()
+        validateDisplayLink()
         super.didMoveToSuperview()
     }
 
     @objc func willTerminate() {
         if !dormant {
-            self.validateDisplayLink()
+            validateDisplayLink()
             dormant = true
         }
     }
@@ -336,8 +337,8 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
     // MARK: - MBXMetalViewProvider conformance
     public func getMetalView(for metalDevice: MTLDevice?) -> MTKView? {
 
-        let metalView = MTKView(frame: self.frame, device: metalDevice)
-        self.displayCallback = {
+        let metalView = MTKView(frame: frame, device: metalDevice)
+        displayCallback = {
             metalView.setNeedsDisplay()
         }
 
@@ -345,13 +346,13 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         metalView.autoResizeDrawable = true
         metalView.contentScaleFactor = UIScreen.main.scale
         metalView.contentMode = .center
-        metalView.isOpaque = self.isOpaque
-        metalView.layer.isOpaque = self.isOpaque
+        metalView.isOpaque = isOpaque
+        metalView.layer.isOpaque = isOpaque
         metalView.isPaused = true
         metalView.enableSetNeedsDisplay = true
         metalView.presentsWithTransaction = false
 
-        self.insertSubview(metalView, at: 0)
+        insertSubview(metalView, at: 0)
         self.metalView = metalView
 
         return metalView
@@ -368,8 +369,8 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
       */
     public func coordinate(for point: CGPoint, in view: UIView? = nil) -> CLLocationCoordinate2D {
         let view = view ?? self
-        let screenCoordinate = self.convert(point, from: view).screenCoordinate // Transform to view's coordinate space
-        return try! self.__map.coordinateForPixel(forPixel: screenCoordinate)
+        let screenCoordinate = convert(point, from: view).screenCoordinate // Transform to view's coordinate space
+        return try! __map.coordinateForPixel(forPixel: screenCoordinate)
     }
 
     /**
@@ -383,8 +384,8 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
       */
     public func point(for coordinate: CLLocationCoordinate2D, in view: UIView? = nil) -> CGPoint {
         let view = view ?? self
-        let point = try! self.__map.pixelForCoordinate(for: coordinate).point
-        let transformedPoint = self.convert(point, to: view)
+        let point = try! __map.pixelForCoordinate(for: coordinate).point
+        let transformedPoint = convert(point, to: view)
         return transformedPoint
     }
 
@@ -397,8 +398,8 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
     public func coordinateBounds(for view: UIView) -> CoordinateBounds {
         let rect = view.bounds
 
-        let topRight = self.coordinate(for: CGPoint(x: rect.maxX, y: rect.minY), in: view).wrap()
-        let bottomLeft = self.coordinate(for: CGPoint(x: rect.minX, y: rect.maxY), in: view).wrap()
+        let topRight = coordinate(for: CGPoint(x: rect.maxX, y: rect.minY), in: view).wrap()
+        let bottomLeft = coordinate(for: CGPoint(x: rect.minX, y: rect.maxY), in: view).wrap()
 
         let southwest = CLLocationCoordinate2D(latitude: bottomLeft.latitude, longitude: bottomLeft.longitude)
         let northeast = CLLocationCoordinate2D(latitude: topRight.latitude, longitude: topRight.longitude)
@@ -421,8 +422,8 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 
         var rect = CGRect.zero
 
-        let swPoint = self.point(for: southwest, in: view)
-        let nePoint = self.point(for: northeast, in: view)
+        let swPoint = point(for: southwest, in: view)
+        let nePoint = point(for: northeast, in: view)
 
         rect = CGRect(origin: swPoint, size: CGSize.zero)
 

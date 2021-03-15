@@ -15,42 +15,42 @@ class RotateGestureHandlerTests: XCTestCase {
     fileprivate var gestureManagerMock: GestureManagerMock!
 
     override func setUp() {
-        self.view = UIView()
-        self.delegate = GestureHandlerDelegateMock()
-        self.gestureManagerMock = GestureManagerMock()
+        view = UIView()
+        delegate = GestureHandlerDelegateMock()
+        gestureManagerMock = GestureManagerMock()
     }
 
     override func tearDown() {
-        self.view = nil
-        self.delegate = nil
-        self.gestureManagerMock = nil
+        view = nil
+        delegate = nil
+        gestureManagerMock = nil
     }
 
     func testSetup() {
-        let rotate = RotateGestureHandler(for: self.view,
-                                          withDelegate: self.delegate,
+        let rotate = RotateGestureHandler(for: view,
+                                          withDelegate: delegate,
                                           andContextProvider: GestureManagerMock())
         XCTAssert(rotate.gestureRecognizer is UIRotationGestureRecognizer)
     }
 
     func testRotationBegan() {
 
-        let rotateGestureHandler = RotateGestureHandler(for: self.view,
-                                                        withDelegate: self.delegate,
+        let rotateGestureHandler = RotateGestureHandler(for: view,
+                                                        withDelegate: delegate,
                                                         andContextProvider: gestureManagerMock)
 
         let rotationGestureRecognizerMock = UIRotationGestureRecognizerMock()
         rotateGestureHandler.handleRotate(rotationGestureRecognizerMock)
 
-        XCTAssert(self.delegate.cancelTransitionsCalled)
-        XCTAssert(self.delegate.gestureBeganMethod.wasCalled)
-        XCTAssert(self.delegate.rotationStartCalled)
+        XCTAssert(delegate.cancelTransitionsCalled)
+        XCTAssert(delegate.gestureBeganMethod.wasCalled)
+        XCTAssert(delegate.rotationStartCalled)
     }
 
     func testRotationChanged() {
 
-        let rotateGestureHandler = RotateGestureHandler(for: self.view,
-                                                        withDelegate: self.delegate,
+        let rotateGestureHandler = RotateGestureHandler(for: view,
+                                                        withDelegate: delegate,
                                                         andContextProvider: gestureManagerMock)
 
         let rotationGestureRecognizerMock = UIRotationGestureRecognizerMock()
@@ -58,23 +58,23 @@ class RotateGestureHandlerTests: XCTestCase {
         rotationGestureRecognizerMock.mockState = .changed
         rotateGestureHandler.handleRotate(rotationGestureRecognizerMock)
 
-        XCTAssert(self.delegate.cancelTransitionsCalled)
-        XCTAssert(self.delegate.rotationChangedMethod.wasCalled)
-        XCTAssert(self.delegate.rotationChangedMethod.newAngle! == 10.0)
+        XCTAssert(delegate.cancelTransitionsCalled)
+        XCTAssert(delegate.rotationChangedMethod.wasCalled)
+        XCTAssert(delegate.rotationChangedMethod.newAngle! == 10.0)
     }
 
     func testRotationEnded() {
 
-        let rotateGestureHandler = RotateGestureHandler(for: self.view,
-                                                        withDelegate: self.delegate,
+        let rotateGestureHandler = RotateGestureHandler(for: view,
+                                                        withDelegate: delegate,
                                                         andContextProvider: gestureManagerMock)
 
         let rotationGestureRecognizerMock = UIRotationGestureRecognizerMock()
         rotationGestureRecognizerMock.mockState = .ended
         rotateGestureHandler.handleRotate(rotationGestureRecognizerMock)
 
-        XCTAssert(self.delegate.cancelTransitionsCalled)
-        XCTAssert(self.delegate.rotationEndedMethod.wasCalled)
+        XCTAssert(delegate.cancelTransitionsCalled)
+        XCTAssert(delegate.rotationEndedMethod.wasCalled)
     }
 }
 
@@ -93,7 +93,7 @@ private class UIRotationGestureRecognizerMock: UIRotationGestureRecognizer {
 
     override var rotation: CGFloat {
         get {
-            return self.mockAngle
+            return mockAngle
         } set {
             self.rotation = newValue
         }

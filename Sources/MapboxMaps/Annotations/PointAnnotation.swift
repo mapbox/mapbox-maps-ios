@@ -75,7 +75,7 @@ public struct PointAnnotation: Annotation {
              the map view.
      */
     public init(coordinate: CLLocationCoordinate2D, image: UIImage? = nil) {
-        self.identifier = UUID().uuidString
+        identifier = UUID().uuidString
         self.coordinate = coordinate
         self.image = image
     }

@@ -12,14 +12,14 @@ public class ColorExpressionExample: UIViewController, ExampleProtocol {
 
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.view.addSubview(mapView)
+        view.addSubview(mapView)
 
         // Center the map over the United States.
         let centerCoordinate = CLLocationCoordinate2D(latitude: 40.58058466412761,
                                                       longitude: -97.734375)
 
         mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
-                                                  zoom: 3)
+                                        zoom: 3)
 
         // Allows the view controller to receive information about map events.
         mapView.on(.mapLoadingFinished) { [weak self] _ in
@@ -57,11 +57,11 @@ public class ColorExpressionExample: UIViewController, ExampleProtocol {
 
         if let jsonObject = try? exp.jsonObject() {
             try! mapView.__map.setStyleLayerPropertyForLayerId("land",
-                                                          property: "background-color",
-                                                          value: jsonObject)
+                                                               property: "background-color",
+                                                               value: jsonObject)
         }
 
         // The below line is used for internal testing purposes only.
-        self.finish()
+        finish()
     }
 }

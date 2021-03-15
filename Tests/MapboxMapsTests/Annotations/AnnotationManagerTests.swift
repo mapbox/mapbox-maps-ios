@@ -20,8 +20,8 @@ class AnnotationManagerTests: XCTestCase {
 
     override func setUp() {
         // Given
-        self.annotationSupportableMapMock = AnnotationSupportableMapMock()
-        self.annotationSupportableStyleMock = AnnotationStyleDelegateMock()
+        annotationSupportableMapMock = AnnotationSupportableMapMock()
+        annotationSupportableStyleMock = AnnotationStyleDelegateMock()
         annotationManager = AnnotationManager(for: annotationSupportableMapMock,
                                               with: annotationSupportableStyleMock)
 
@@ -29,9 +29,9 @@ class AnnotationManagerTests: XCTestCase {
     }
 
     override func tearDown() {
-        self.annotationSupportableMapMock = nil
-        self.annotationSupportableStyleMock = nil
-        self.annotationManager = nil
+        annotationSupportableMapMock = nil
+        annotationSupportableStyleMock = nil
+        annotationManager = nil
         defaultCoordinate = nil
     }
 
@@ -97,7 +97,7 @@ class AnnotationManagerTests: XCTestCase {
 
     func testAddingSingleAnnotation() {
         // Given
-        let annotation = PointAnnotation(coordinate: self.defaultCoordinate)
+        let annotation = PointAnnotation(coordinate: defaultCoordinate)
         let expectedAnnotationsCount = 1
 
         // When
@@ -111,8 +111,8 @@ class AnnotationManagerTests: XCTestCase {
 
     func testAddingMultipleAnnotations() {
         // Given
-        let annotation1 = PointAnnotation(coordinate: self.defaultCoordinate)
-        let annotation2 = PointAnnotation(coordinate: self.defaultCoordinate)
+        let annotation1 = PointAnnotation(coordinate: defaultCoordinate)
+        let annotation2 = PointAnnotation(coordinate: defaultCoordinate)
         let expectedAnnotationsCount = 2
 
         // When
@@ -127,7 +127,7 @@ class AnnotationManagerTests: XCTestCase {
 
     func testRemoveSingleAnnotation() {
         // Given
-        let annotation = PointAnnotation(coordinate: self.defaultCoordinate)
+        let annotation = PointAnnotation(coordinate: defaultCoordinate)
         let expectedAnnotationCount = 0
 
         // When
@@ -143,9 +143,9 @@ class AnnotationManagerTests: XCTestCase {
 
     func testRemoveMultipleAnnotations() {
         // Given
-        let annotation1 = PointAnnotation(coordinate: self.defaultCoordinate)
-        let annotation2 = PointAnnotation(coordinate: self.defaultCoordinate)
-        let annotation3 = PointAnnotation(coordinate: self.defaultCoordinate)
+        let annotation1 = PointAnnotation(coordinate: defaultCoordinate)
+        let annotation2 = PointAnnotation(coordinate: defaultCoordinate)
+        let annotation3 = PointAnnotation(coordinate: defaultCoordinate)
         let expectedAnnotationCount = 1
 
         // When
@@ -161,7 +161,7 @@ class AnnotationManagerTests: XCTestCase {
 
     func testUpdateAnnotation() {
         // Given
-        var annotation = PointAnnotation(coordinate: self.defaultCoordinate)
+        var annotation = PointAnnotation(coordinate: defaultCoordinate)
         annotationManager.addAnnotation(annotation)
 
         // When

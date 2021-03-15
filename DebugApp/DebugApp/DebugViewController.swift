@@ -24,11 +24,11 @@ public class DebugViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        self.mapView = MapView(with: view.bounds, resourceOptions: resourceOptions)
+        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions)
         mapView.update { (mapOptions) in
             mapOptions.location.showUserLocation = true
         }
 
-        self.view.addSubview(mapView)
+        view.addSubview(mapView)
     }
 }

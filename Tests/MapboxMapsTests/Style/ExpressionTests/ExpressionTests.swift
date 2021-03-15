@@ -97,7 +97,7 @@ internal class ExpressionTests: XCTestCase {
 
     internal func testPerformanceOfRoundtripExpressionConversion() throws {
         // This is an example of a performance test case.
-        self.measure {
+        measure {
             let expression = Exp(.interpolate) {
                 Exp(.linear)
                 Exp(.zoom)

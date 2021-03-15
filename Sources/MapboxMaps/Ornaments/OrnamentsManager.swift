@@ -59,7 +59,7 @@ public enum OrnamentType: Hashable {
                    let center = cameraOptions.center {
 
                     let metersPerPixel = try! Projection.getMetersPerPixelAtLatitude(forLatitude: center.latitude,
-                                                                                zoom: Double(zoom))
+                                                                                     zoom: Double(zoom))
                     scalebarView.metersPerPoint = metersPerPixel
                 }
             }
@@ -135,38 +135,38 @@ internal class OrnamentsManager: NSObject {
                               at position: OrnamentPosition,
                               visibility: OrnamentVisibility) {
         let ornament = Ornament(view: nil, type: ornamentType, position: position, visibility: visibility)
-        self.ornamentConfig = ornamentConfig.with(ornament: ornament)
+        ornamentConfig = ornamentConfig.with(ornament: ornament)
     }
 
     internal func addOrnament(_ ornamentView: UIView, at position: OrnamentPosition) {
         let ornament = Ornament(view: nil, type: .customOrnament(value: ornamentView), position: position)
-        self.ornamentConfig = ornamentConfig.with(ornament: ornament)
+        ornamentConfig = ornamentConfig.with(ornament: ornament)
     }
 
     internal func removeOrnament(_ ornamentView: UIView) {
-        self.ornamentConfig = OrnamentConfig(ornaments: ornaments.filter {
+        ornamentConfig = OrnamentConfig(ornaments: ornaments.filter {
             $0.view != ornamentView
         })
     }
 
     internal func removeOrnament(at position: OrnamentPosition) {
-        self.ornamentConfig = OrnamentConfig(ornaments: ornaments.filter {
+        ornamentConfig = OrnamentConfig(ornaments: ornaments.filter {
             $0.position != position
         })
     }
 
     internal func removeOrnament(with type: OrnamentType) {
-        self.ornamentConfig = OrnamentConfig(ornaments: ornaments.filter {
+        ornamentConfig = OrnamentConfig(ornaments: ornaments.filter {
             $0.type != type
         })
     }
 
     internal func add(ornament: Ornament) {
-        self.ornamentConfig = self.ornamentConfig.with(ornament: ornament)
+        ornamentConfig = ornamentConfig.with(ornament: ornament)
     }
 
     internal func remove(ornament: Ornament) {
-        self.ornamentConfig = self.ornamentConfig.without(ornament: ornament)
+        ornamentConfig = ornamentConfig.without(ornament: ornament)
     }
 
     internal func ornament(at position: OrnamentPosition) -> [Ornament] {
@@ -192,48 +192,48 @@ internal class OrnamentsManager: NSObject {
     // swiftlint:disable:next cyclomatic_complexity
     private func addToView(ornament: Ornament) {
         if ornament.view == nil {
-            ornament.view = ornament.type.makeOrnament(for: self.view, visibility: ornament.visibility)
+            ornament.view = ornament.type.makeOrnament(for: view, visibility: ornament.visibility)
         }
         guard let ornamentView = ornament.view else {
             assert(false, "Couldn't create view for an ornament")
             return
         }
         var constraints = [NSLayoutConstraint]()
-        self.view.addSubview(ornamentView)
+        view.addSubview(ornamentView)
 
         switch ornament.position {
         case .topLeft:
             constraints.append(contentsOf: [
-                ornamentView.leadingAnchor.constraint(equalTo: self.universalLayoutGuide.leadingAnchor,
+                ornamentView.leadingAnchor.constraint(equalTo: universalLayoutGuide.leadingAnchor,
                                                       constant: ornament.margins.x),
-                ornamentView.topAnchor.constraint(equalTo: self.universalLayoutGuide.topAnchor,
+                ornamentView.topAnchor.constraint(equalTo: universalLayoutGuide.topAnchor,
                                                   constant: ornament.margins.y)
             ])
         case .topCenter:
             print("top center")
         case .topRight:
             constraints.append(contentsOf: [
-                ornamentView.trailingAnchor.constraint(equalTo: self.universalLayoutGuide.trailingAnchor,
+                ornamentView.trailingAnchor.constraint(equalTo: universalLayoutGuide.trailingAnchor,
                                                        constant: -ornament.margins.x),
-                ornamentView.topAnchor.constraint(equalTo: self.universalLayoutGuide.topAnchor,
+                ornamentView.topAnchor.constraint(equalTo: universalLayoutGuide.topAnchor,
                                                   constant: ornament.margins.y)
             ])
         case .centerRight:
             print("center right")
         case .bottomRight:
             constraints.append(contentsOf: [
-                ornamentView.trailingAnchor.constraint(equalTo: self.universalLayoutGuide.trailingAnchor,
+                ornamentView.trailingAnchor.constraint(equalTo: universalLayoutGuide.trailingAnchor,
                                                        constant: -ornament.margins.x),
-                ornamentView.bottomAnchor.constraint(equalTo: self.universalLayoutGuide.bottomAnchor,
+                ornamentView.bottomAnchor.constraint(equalTo: universalLayoutGuide.bottomAnchor,
                                                      constant: -ornament.margins.y)
             ])
         case .bottomCenter:
             print("bottom center")
         case .bottomLeft:
             constraints.append(contentsOf: [
-                ornamentView.leadingAnchor.constraint(equalTo: self.universalLayoutGuide.leadingAnchor,
+                ornamentView.leadingAnchor.constraint(equalTo: universalLayoutGuide.leadingAnchor,
                                                       constant: ornament.margins.x),
-                ornamentView.bottomAnchor.constraint(equalTo: self.universalLayoutGuide.bottomAnchor,
+                ornamentView.bottomAnchor.constraint(equalTo: universalLayoutGuide.bottomAnchor,
                                                      constant: -ornament.margins.y)
             ])
         case .centerLeft:
@@ -248,7 +248,7 @@ internal class OrnamentsManager: NSObject {
          */
         if ornamentView is MapboxLogoView {
             constraints.append(contentsOf: [
-                ornamentView.widthAnchor.constraint(equalTo: self.universalLayoutGuide.widthAnchor, multiplier: 0.25),
+                ornamentView.widthAnchor.constraint(equalTo: universalLayoutGuide.widthAnchor, multiplier: 0.25),
                 ornamentView.heightAnchor.constraint(equalTo: ornamentView.widthAnchor, multiplier: 0.25)
             ])
         }
@@ -271,19 +271,19 @@ extension OrnamentsManager {
         } else {
             let layoutGuideIdentifier = "mapboxSafeAreaLayoutGuide"
             // If there's already a generated layout guide, return it
-            if let layoutGuide = self.view.layoutGuides.filter({ $0.identifier == layoutGuideIdentifier }).first {
+            if let layoutGuide = view.layoutGuides.filter({ $0.identifier == layoutGuideIdentifier }).first {
                 return layoutGuide
             } else {
                 // If not, then make a new one based off the view's edges.
                 let layoutGuide = UILayoutGuide()
                 layoutGuide.identifier = layoutGuideIdentifier
-                self.view.addLayoutGuide(layoutGuide)
+                view.addLayoutGuide(layoutGuide)
 
                 NSLayoutConstraint.activate([
-                    layoutGuide.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-                    layoutGuide.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-                    layoutGuide.topAnchor.constraint(equalTo: self.view.topAnchor),
-                    layoutGuide.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+                    layoutGuide.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                    layoutGuide.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                    layoutGuide.topAnchor.constraint(equalTo: view.topAnchor),
+                    layoutGuide.bottomAnchor.constraint(equalTo: view.bottomAnchor)
                 ])
 
                 return layoutGuide

@@ -14,18 +14,18 @@ public class CameraView: UIView {
 
     private var cameraLayer: CameraLayer {
         // swiftlint:disable force_cast
-        return self.layer as! CameraLayer
+        return layer as! CameraLayer
         // swiftlint:enable force_cast
     }
 
     public var camera: CameraOptions {
         get {
-            let camera = CameraOptions(center: self.centerCoordinate,
-                                       padding: self.padding,
-                                       anchor: self.anchor,
-                                       zoom: self.zoom,
-                                       bearing: CLLocationDirection(self.bearing),
-                                       pitch: self.pitch)
+            let camera = CameraOptions(center: centerCoordinate,
+                                       padding: padding,
+                                       anchor: anchor,
+                                       zoom: zoom,
+                                       bearing: CLLocationDirection(bearing),
+                                       pitch: pitch)
             return camera
         }
 
@@ -147,17 +147,17 @@ public class CameraView: UIView {
 
         // Sync default values from renderer
         let defaultCameraOptions = try! self.map.getCameraOptions(forPadding: nil)
-        self.zoom = defaultCameraOptions.zoom ?? 0.0
-        self.bearing = CGFloat(defaultCameraOptions.bearing ?? 0.0)
-        self.anchor = defaultCameraOptions.anchor ?? .zero
-        self.pitch = defaultCameraOptions.pitch ?? 0.0
-        self.padding = defaultCameraOptions.padding ?? .zero
+        zoom = defaultCameraOptions.zoom ?? 0.0
+        bearing = CGFloat(defaultCameraOptions.bearing ?? 0.0)
+        anchor = defaultCameraOptions.anchor ?? .zero
+        pitch = defaultCameraOptions.pitch ?? 0.0
+        padding = defaultCameraOptions.padding ?? .zero
 
         if let coordinate = defaultCameraOptions.center {
-            self.centerCoordinate = coordinate
+            centerCoordinate = coordinate
         }
 
-        self.translatesAutoresizingMaskIntoConstraints = false
+        translatesAutoresizingMaskIntoConstraints = false
     }
 
     public convenience init(frame: CGRect, map: Map, camera: CameraOptions) {
@@ -193,26 +193,26 @@ public class CameraView: UIView {
                                                      bearing: bearing,
                                                      pitch: pitch)
 
-            try! self.map.jumpTo(forCamera: updatedCameraOptions)
-            self.delegate?.cameraViewManipulated(for: self)
+            try! map.jumpTo(forCamera: updatedCameraOptions)
+            delegate?.cameraViewManipulated(for: self)
         }
     }
 }
 
 public extension EdgeInsets {
     func toUIEdgeInsetsValue() -> UIEdgeInsets {
-        return UIEdgeInsets(top: CGFloat(self.top),
-                            left: CGFloat(self.left),
-                            bottom: CGFloat(self.bottom),
-                            right: CGFloat(self.right))
+        return UIEdgeInsets(top: CGFloat(top),
+                            left: CGFloat(left),
+                            bottom: CGFloat(bottom),
+                            right: CGFloat(right))
     }
 }
 
 public extension UIEdgeInsets {
     func toMBXEdgeInsetsValue() -> EdgeInsets {
-        return EdgeInsets(top: Double(self.top),
-                          left: Double(self.left),
-                          bottom: Double(self.bottom),
-                          right: Double(self.right))
+        return EdgeInsets(top: Double(top),
+                          left: Double(left),
+                          bottom: Double(bottom),
+                          right: Double(right))
     }
 }

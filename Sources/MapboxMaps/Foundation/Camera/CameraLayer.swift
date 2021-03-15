@@ -28,13 +28,13 @@ public class CameraLayer: CALayer {
     public override init(layer: Any) {
         super.init(layer: layer)
         if let layer = layer as? CameraLayer {
-            self.zoom = layer.zoom
-            self.bearing = layer.bearing
-            self.centerCoordinateLatitude = layer.centerCoordinateLatitude
-            self.centerCoordinateLongitude = layer.centerCoordinateLongitude
-            self.anchor = layer.anchor
-            self.pitch = layer.pitch
-            self.padding = layer.padding
+            zoom = layer.zoom
+            bearing = layer.bearing
+            centerCoordinateLatitude = layer.centerCoordinateLatitude
+            centerCoordinateLongitude = layer.centerCoordinateLongitude
+            anchor = layer.anchor
+            pitch = layer.pitch
+            padding = layer.padding
         }
     }
 

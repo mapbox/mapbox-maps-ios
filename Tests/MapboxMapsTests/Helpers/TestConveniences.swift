@@ -12,9 +12,9 @@ extension String: Error {
         let invalidFileNameCharactersRegex = "[^a-zA-Z0-9_]+"
         let fullRange = startIndex..<endIndex
         let validName = replacingOccurrences(of: invalidFileNameCharactersRegex,
-                                           with: "-",
-                                        options: .regularExpression,
-                                          range: fullRange)
+                                             with: "-",
+                                             options: .regularExpression,
+                                             range: fullRange)
         return validName
     }
 }

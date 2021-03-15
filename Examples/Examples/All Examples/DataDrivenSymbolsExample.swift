@@ -12,13 +12,13 @@ public class DataDrivenSymbolsExample: UIViewController, ExampleProtocol {
 
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions(), styleURL: .outdoors)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.view.addSubview(mapView)
+        view.addSubview(mapView)
 
         // Set center location
         let centerCoordinate = CLLocationCoordinate2D(latitude: 37.761, longitude: -119.624)
 
         mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
-                                                  zoom: 10.0)
+                                        zoom: 10.0)
 
         // Allows the delegate to receive information about map events.
         mapView.on(.mapLoadingFinished) { [weak self] _ in
@@ -118,6 +118,6 @@ public class DataDrivenSymbolsExample: UIViewController, ExampleProtocol {
         _ = mapView.style.addLayer(layer: layer, layerPosition: nil)
 
         // The below line is used for internal testing purposes only.
-        self.finish()
+        finish()
     }
 }

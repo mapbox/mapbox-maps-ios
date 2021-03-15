@@ -53,15 +53,15 @@ public class LocationPuckManager: LocationConsumer {
     public init(shouldTrackLocation: Bool,
                 locationSupportableMapView: LocationSupportableMapView,
                 currentPuckSource: LocationPuck) {
-        self.currentPuckStyle = .precise
-        self.currentPuckBackend = currentPuckSource
+        currentPuckStyle = .precise
+        currentPuckBackend = currentPuckSource
         self.shouldTrackLocation = shouldTrackLocation
         self.locationSupportableMapView = locationSupportableMapView
     }
 
     /// LocationConsumer protocol method that will handle location updates
     public func locationUpdate(newLocation: Location) {
-        guard self.shouldTrackLocation else {
+        guard shouldTrackLocation else {
             removePuck()
             return
         }
@@ -73,22 +73,22 @@ public class LocationPuckManager: LocationConsumer {
             createPuck()
         }
 
-        self.latestLocation = newLocation
+        latestLocation = newLocation
     }
 
     internal func createPuck() {
         guard let locationSupportableMapView = self.locationSupportableMapView else { return }
         var puck: Puck
 
-        switch self.currentPuckBackend {
+        switch currentPuckBackend {
         case let .puck2D(viewModel):
-            puck = PuckLocationIndicatorLayer(currentPuckStyle: self.currentPuckStyle, locationSupportableMapView: locationSupportableMapView, viewModel: viewModel)
+            puck = PuckLocationIndicatorLayer(currentPuckStyle: currentPuckStyle, locationSupportableMapView: locationSupportableMapView, viewModel: viewModel)
         case let .puck3D(viewModel):
-            puck = PuckModelLayer(currentPuckStyle: self.currentPuckStyle, locationSupportableMapView: locationSupportableMapView, viewModel: viewModel)
+            puck = PuckModelLayer(currentPuckStyle: currentPuckStyle, locationSupportableMapView: locationSupportableMapView, viewModel: viewModel)
         }
 
-        if let location = self.latestLocation {
-            puck.updateStyle(puckStyle: self.currentPuckStyle, location: location)
+        if let location = latestLocation {
+            puck.updateStyle(puckStyle: currentPuckStyle, location: location)
         }
 
         self.puck = puck
@@ -103,15 +103,15 @@ public class LocationPuckManager: LocationConsumer {
 
     internal func changePuckBackend(newPuckBackend: LocationPuck) {
         removePuck()
-        self.currentPuckBackend = newPuckBackend
+        currentPuckBackend = newPuckBackend
         createPuck()
     }
 
     internal func changePuckStyle(newPuckStyle: PuckStyle) {
-        self.currentPuckStyle = newPuckStyle
+        currentPuckStyle = newPuckStyle
 
         if let puck = self.puck,
-           let location = self.latestLocation {
+           let location = latestLocation {
             puck.updateStyle(puckStyle: newPuckStyle, location: location)
         } else {
             createPuck()

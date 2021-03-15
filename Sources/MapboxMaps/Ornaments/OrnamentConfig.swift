@@ -73,16 +73,16 @@ public struct OrnamentConfig: Equatable {
     }
 
     internal init() {
-        self.ornaments = []
-        self.telemetryOptOutShownInApp = false
+        ornaments = []
+        telemetryOptOutShownInApp = false
     }
 
     internal func with(ornament: Ornament) -> OrnamentConfig {
-        return self.union(with: OrnamentConfig(ornaments: [ornament]))
+        return union(with: OrnamentConfig(ornaments: [ornament]))
     }
 
     internal func without(ornament: Ornament) -> OrnamentConfig {
-        return self.complement(with: OrnamentConfig(ornaments: [ornament]))
+        return complement(with: OrnamentConfig(ornaments: [ornament]))
     }
 
     internal func intersection(with config: OrnamentConfig) -> OrnamentConfig {
@@ -112,7 +112,7 @@ public struct OrnamentConfig: Equatable {
     }
 
     internal func symmetricDifference(with config: OrnamentConfig) -> OrnamentConfig {
-        return self.union(with: config).complement(with: self.intersection(with: config))
+        return union(with: config).complement(with: intersection(with: config))
     }
 
     internal func isValid() -> Bool {

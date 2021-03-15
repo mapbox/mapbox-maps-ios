@@ -22,9 +22,8 @@ class ExamplesTests: XCTestCase {
 
             // Check that example titles do not end in punctuation
             if let last = example.title.last {
-                XCTAssertTrue(
-                    CharacterSet(charactersIn: String(last)).isDisjoint(with: .punctuationCharacters),
-                    "Title for example '\(example.type)' should not end with punctuation.")
+                XCTAssertTrue(CharacterSet(charactersIn: String(last)).isDisjoint(with: .punctuationCharacters),
+                              "Title for example '\(example.type)' should not end with punctuation.")
             }
         }
     }

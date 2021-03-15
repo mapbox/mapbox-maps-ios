@@ -15,12 +15,12 @@ public class TerrainExample: UIViewController, ExampleProtocol {
 
         let resourceOptions = ResourceOptions(accessToken: accessToken)
 
-        self.mapView = MapView(with: view.bounds,
-                               resourceOptions: resourceOptions,
-                               styleURL: .custom(url: URL(string: "mapbox://styles/mapbox-map-design/ckhqrf2tz0dt119ny6azh975y")!))
+        mapView = MapView(with: view.bounds,
+                          resourceOptions: resourceOptions,
+                          styleURL: .custom(url: URL(string: "mapbox://styles/mapbox-map-design/ckhqrf2tz0dt119ny6azh975y")!))
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
-        self.view.addSubview(mapView)
+        view.addSubview(mapView)
 
         let centerCoordinate = CLLocationCoordinate2D(latitude: 32.6141, longitude: -114.34411)
         mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
@@ -28,7 +28,7 @@ public class TerrainExample: UIViewController, ExampleProtocol {
                                         bearing: 80,
                                         pitch: 85)
 
-        self.mapView.on(.styleLoadingFinished) { [weak self] _ in
+        mapView.on(.styleLoadingFinished) { [weak self] _ in
             self?.addTerrain()
         }
     }
@@ -38,18 +38,18 @@ public class TerrainExample: UIViewController, ExampleProtocol {
         demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
         demSource.tileSize = 512
         demSource.maxzoom = 14.0
-        _ = self.mapView.style.addSource(source: demSource, identifier: "mapbox-dem")
+        _ = mapView.style.addSource(source: demSource, identifier: "mapbox-dem")
 
         var terrain = Terrain(sourceId: "mapbox-dem")
         terrain.exaggeration = .constant(1.5)
 
-        _ = self.mapView.style.setTerrain(terrain)
+        _ = mapView.style.setTerrain(terrain)
 
         var skyLayer = SkyLayer(id: "sky-layer")
         skyLayer.paint?.skyType = .atmosphere
         skyLayer.paint?.skyAtmosphereSun = .constant([0.0, 0.0])
         skyLayer.paint?.skyAtmosphereSunIntensity = .constant(15.0)
 
-        _ = self.mapView.style.addLayer(layer: skyLayer)
+        _ = mapView.style.addLayer(layer: skyLayer)
     }
 }

@@ -90,9 +90,8 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
     let quickZoomChangedStub = Stub<QuickZoomChangedParameters, Void>()
     func quickZoomChanged(with newScale: CGFloat, and anchor: CGPoint) {
         quickZoomChangedStub.call(
-            with: QuickZoomChangedParameters(
-                newScale: newScale,
-                anchor: anchor))
+            with: QuickZoomChangedParameters(newScale: newScale,
+                                             anchor: anchor))
     }
 
     let quickZoomEndedStub = Stub<Void, Void>()

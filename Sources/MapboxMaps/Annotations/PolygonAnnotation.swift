@@ -63,7 +63,7 @@ public struct PolygonAnnotation: Annotation {
              the map view.
      */
     public init(coordinates: [CLLocationCoordinate2D], interiorPolygons: [[CLLocationCoordinate2D]]? = nil) {
-        self.identifier = UUID().uuidString
+        identifier = UUID().uuidString
         self.coordinates = coordinates
         self.interiorPolygons = interiorPolygons
     }

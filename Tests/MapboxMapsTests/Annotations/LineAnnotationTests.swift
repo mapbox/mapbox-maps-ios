@@ -31,7 +31,7 @@ class LineAnnotationTests: XCTestCase {
         // Given state from setUp()
 
         // When
-        let annotation = LineAnnotation(coordinates: self.defaultCoordinates)
+        let annotation = LineAnnotation(coordinates: defaultCoordinates)
 
         // Then
         XCTAssertNotNil(annotation.identifier)
@@ -43,10 +43,10 @@ class LineAnnotationTests: XCTestCase {
 
     func testPointAnnotationsHaveUniqueIdentifiers() {
         // Given
-        let annotation1 = LineAnnotation(coordinates: self.defaultCoordinates)
+        let annotation1 = LineAnnotation(coordinates: defaultCoordinates)
 
         // When
-        let annotation2 = LineAnnotation(coordinates: self.defaultCoordinates)
+        let annotation2 = LineAnnotation(coordinates: defaultCoordinates)
 
         // Then
         XCTAssertNotEqual(annotation1.identifier, annotation2.identifier)

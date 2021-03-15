@@ -14,11 +14,11 @@ internal class CustomStyleURLExample: UIViewController, ExampleProtocol {
             fatalError("Style URL is invalid")
         }
 
-        self.mapView = MapView(with: view.bounds, resourceOptions: resourceOptions(), styleURL: .custom(url: customStyleURL))
+        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions(), styleURL: .custom(url: customStyleURL))
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.view.addSubview(mapView)
+        view.addSubview(mapView)
 
-        self.mapView.on(.styleLoadingFinished) { [weak self] _ in
+        mapView.on(.styleLoadingFinished) { [weak self] _ in
             // The below line is used for internal testing purposes only.
             self?.finish()
         }

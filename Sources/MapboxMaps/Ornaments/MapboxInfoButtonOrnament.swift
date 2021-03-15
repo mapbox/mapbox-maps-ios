@@ -31,16 +31,16 @@ internal class MapboxInfoButtonOrnament: UIView {
         button.addTarget(self, action: #selector(infoTapped), for: .primaryActionTriggered)
 
         let bundle = Bundle.mapboxMaps
-        self.accessibilityLabel = NSLocalizedString("INFO_A11Y_LABEL",
-                                                    tableName: Constants.localizableTableName,
-                                                    bundle: bundle,
-                                                    value: "About this map",
-                                                    comment: "MapInfo Accessibility label")
-        self.accessibilityHint = NSLocalizedString("INFO_A11Y_HINT",
-                                                   tableName: Constants.localizableTableName,
-                                                   bundle: bundle,
-                                                   value: "Shows credits, a feedback form, and more",
-                                                   comment: "MapInfo Accessibility hint")
+        accessibilityLabel = NSLocalizedString("INFO_A11Y_LABEL",
+                                               tableName: Constants.localizableTableName,
+                                               bundle: bundle,
+                                               value: "About this map",
+                                               comment: "MapInfo Accessibility label")
+        accessibilityHint = NSLocalizedString("INFO_A11Y_HINT",
+                                              tableName: Constants.localizableTableName,
+                                              bundle: bundle,
+                                              value: "Shows credits, a feedback form, and more",
+                                              comment: "MapInfo Accessibility hint")
     }
 
     required internal init?(coder: NSCoder) {
@@ -49,7 +49,7 @@ internal class MapboxInfoButtonOrnament: UIView {
 
     @objc
     private func infoTapped() {
-        guard let viewController = self.parentViewController else { return }
+        guard let viewController = parentViewController else { return }
         let alert: UIAlertController
 
         let title = NSLocalizedString("SDK_NAME",
@@ -89,7 +89,7 @@ internal class MapboxInfoButtonOrnament: UIView {
 
     //swiftlint:disable function_body_length
     private func showTelemetryAlertController() {
-        guard let viewController = self.parentViewController else { return }
+        guard let viewController = parentViewController else { return }
         let alert: UIAlertController
         let bundle = Bundle.mapboxMaps
         let telemetryTitle = NSLocalizedString("TELEMETRY_TITLE",

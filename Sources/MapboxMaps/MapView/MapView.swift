@@ -53,9 +53,9 @@ open class MapView: BaseMapView, EventsEmitter {
 extension MapView {
     internal func setUpTelemetryLogging() {
         guard let validResourceOptions = resourceOptions else { return }
-        self.eventsListener = EventsManager(accessToken: validResourceOptions.accessToken)
+        eventsListener = EventsManager(accessToken: validResourceOptions.accessToken)
 
-        self.on(.mapLoadingFinished) { [weak self] _ in
+        on(.mapLoadingFinished) { [weak self] _ in
             self?.eventsListener?.push(event: .map(event: .loaded))
         }
     }

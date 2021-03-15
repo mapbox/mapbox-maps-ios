@@ -15,7 +15,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
 
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions(), styleURL: StyleURL.streets)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.view.addSubview(mapView)
+        view.addSubview(mapView)
 
         cameraLocationConsumer = CameraLocationConsumer(shouldTrackLocation: true, mapView: mapView)
 

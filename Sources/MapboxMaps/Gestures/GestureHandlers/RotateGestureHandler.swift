@@ -15,37 +15,37 @@ internal class RotateGestureHandler: GestureHandler {
                   andContextProvider contextProvider: GestureContextProvider) {
         super.init(for: view, withDelegate: delegate)
 
-        let rotate = UIRotationGestureRecognizer(target: self, action: #selector(self.handleRotate(_:)))
+        let rotate = UIRotationGestureRecognizer(target: self, action: #selector(handleRotate(_:)))
         view.addGestureRecognizer(rotate)
-        self.gestureRecognizer = rotate
+        gestureRecognizer = rotate
         self.contextProvider = contextProvider
     }
 
     @objc internal func handleRotate(_ rotate: UIRotationGestureRecognizer) {
 
-        self.delegate.cancelGestureTransitions()
-        let anchor = rotate.location(in: self.view)
+        delegate.cancelGestureTransitions()
+        let anchor = rotate.location(in: view)
 
         // TODO: Handle simultaneous zoom & rotate gestures
         if rotate.state == .began {
 
-            self.delegate.gestureBegan(for: .rotate)
-            self.initialAngle = self.delegate.rotationStartAngle()
+            delegate.gestureBegan(for: .rotate)
+            initialAngle = delegate.rotationStartAngle()
 
         } else if rotate.state == .changed {
 
-            let changedAngle = self.initialAngle + rotate.rotation
-            self.delegate.rotationChanged(with: changedAngle,
-                                          and: anchor,
-                                          and: self.contextProvider?.fetchPinchScale() ?? 0.0)
+            let changedAngle = initialAngle + rotate.rotation
+            delegate.rotationChanged(with: changedAngle,
+                                     and: anchor,
+                                     and: contextProvider?.fetchPinchScale() ?? 0.0)
 
         } else if rotate.state == .ended || rotate.state == .cancelled {
 
             // TODO: Handle "immediate" deceleration rates
-            let finalAngle = (self.initialAngle + rotate.rotation) + (rotate.velocity * self.decelerationRate * 0.1)
-            self.delegate.rotationEnded(with: finalAngle,
-                                        and: anchor,
-                                        with: self.contextProvider?.fetchPinchState() ??
+            let finalAngle = (initialAngle + rotate.rotation) + (rotate.velocity * decelerationRate * 0.1)
+            delegate.rotationEnded(with: finalAngle,
+                                   and: anchor,
+                                   with: contextProvider?.fetchPinchState() ??
                                               UIGestureRecognizer.State.possible)
 
         }

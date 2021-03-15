@@ -43,9 +43,11 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
             }
         }
 
-        let expectations = [styleLoadedExpectation,
-                            sourceAddedExpectation,
-                            styleLayerAddedExpectation]
+        let expectations = [
+            styleLoadedExpectation,
+            sourceAddedExpectation,
+            styleLayerAddedExpectation
+        ]
 
         wait(for: expectations, timeout: 5.0)
     }
@@ -96,10 +98,12 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
             }
         }
 
-        let expectations = [styleLoadedExpectation,
-                            sourceAddedExpectation,
-                            styleLayerAddedExpectation,
-                            retrieveUserInfoExpectation]
+        let expectations = [
+            styleLoadedExpectation,
+            sourceAddedExpectation,
+            styleLayerAddedExpectation,
+            retrieveUserInfoExpectation
+        ]
 
         wait(for: expectations, timeout: 5.0)
     }

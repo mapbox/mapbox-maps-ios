@@ -12,13 +12,13 @@ public class PointAnnotationExample: UIViewController, ExampleProtocol {
 
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.view.addSubview(mapView)
+        view.addSubview(mapView)
 
         // Center the map camera over Copenhagen.
         let centerCoordinate = CLLocationCoordinate2D(latitude: 55.665957, longitude: 12.550343)
 
         mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
-                                                  zoom: 8.0)
+                                        zoom: 8.0)
 
         // Allows the delegate to receive information about map events.
         mapView.on(.mapLoadingFinished) { [weak self] _ in

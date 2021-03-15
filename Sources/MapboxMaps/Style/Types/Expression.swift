@@ -56,7 +56,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
 
     public init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
-        self.elements = []
+        elements = []
         while !container.isAtEnd {
             let decodedElement = try container.decode(Element.self)
             elements.append(decodedElement)

@@ -13,7 +13,7 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         mapView.style.styleURL = .light
         let centerCoordinate = CLLocationCoordinate2D(latitude: 41.878781, longitude: -87.622088)
         mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
-                                                  zoom: 12)
+                                        zoom: 12)
         view.addSubview(mapView)
 
         // Allow the view controller to receive information about map events.
@@ -66,6 +66,6 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
                                                 preferredStyle: .alert)
         let dismissAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
         alertController.addAction(dismissAction)
-        self.present(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
     }
 }

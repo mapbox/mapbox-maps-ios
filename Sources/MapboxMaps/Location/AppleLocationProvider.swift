@@ -13,10 +13,10 @@ public class AppleLocationProvider: NSObject {
     private weak var delegate: LocationProviderDelegate?
 
     public override init() {
-        self.locationProvider = CLLocationManager()
-        self.privateLocationProviderOptions = LocationOptions()
+        locationProvider = CLLocationManager()
+        privateLocationProviderOptions = LocationOptions()
         super.init()
-        self.locationProvider.delegate = self
+        locationProvider.delegate = self
     }
 }
 
@@ -99,19 +99,19 @@ extension AppleLocationProvider: LocationProvider {
 
 extension AppleLocationProvider: CLLocationManagerDelegate {
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        self.delegate?.locationProvider(self, didUpdateLocations: locations)
+        delegate?.locationProvider(self, didUpdateLocations: locations)
     }
 
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading heading: CLHeading) {
-        self.delegate?.locationProvider(self, didUpdateHeading: heading)
+        delegate?.locationProvider(self, didUpdateHeading: heading)
     }
 
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        self.delegate?.locationProvider(self, didFailWithError: error)
+        delegate?.locationProvider(self, didFailWithError: error)
     }
 
     @available(iOS 14.0, *)
     public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        self.delegate?.locationProviderDidChangeAuthorization(self)
+        delegate?.locationProviderDidChangeAuthorization(self)
     }
 }

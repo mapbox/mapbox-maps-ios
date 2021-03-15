@@ -20,6 +20,7 @@ workflows:
       - swiftlint:
           xcode: "12.4.0"
       - build-sdk:
+          xcode: "12.4.0"
           matrix:
             parameters:
               configuration: ["Debug", "Release"]
@@ -28,6 +29,7 @@ workflows:
           report_failure: true
           xcode: "12.4.0"
       - unit-test-sdk:
+          xcode: "12.4.0"
           matrix:
             parameters:
               configuration: ["Debug", "Release"]
@@ -57,6 +59,7 @@ workflows:
       - swiftlint:
           xcode: "12.4.0"
       - build-sdk:
+          xcode: "12.4.0"
           matrix:
             parameters:
               configuration: ["Debug", "Release"]
@@ -73,6 +76,7 @@ workflows:
               only: main
       - unit-test-sdk:
           name: "Run Unit tests"
+          xcode: "12.4.0"
       # Not on main
       - run-tests-on-devices:
           name: "Run MapboxTestHost tests on devices"
@@ -192,16 +196,23 @@ jobs:
     steps:
       - checkout
       - access-token-configs
-      - install-dependencies
+      - configure-netrc
+      - xcode-github-workaround
+      - run:
+          name: Delete Xcode Workspace so we can build with SPM
+          command: rm -rf MapboxMaps.xcworkspace
       - run:
           name: Building MapboxMaps for simulator
-          command: make build-for-simulator SCHEME=MapboxMaps
+          command: make build-sdk-for-simulator
           no_output_timeout: 5m
       - run:
           name: Building MapboxMaps for device
-          command: make build-for-device SCHEME=MapboxMaps
+          command: make build-sdk-for-device
           no_output_timeout: 5m
-      - store-logs
+      - locate-derived-data-directory:
+          base_name: $(basename $(pwd))
+      - store-logs:
+          derived_data_path: $DERIVED_DATA_PATH
       - report-failure:
           report_failure: << parameters.report_failure >>
           message: "build-sdk"
@@ -214,15 +225,6 @@ jobs:
       - configure-netrc
       - xcode-github-workaround
       - run:
-          name: Locate derived data directory
-          command: |
-            xcodebuild \
-              -showBuildSettings \
-              -workspace Apps/Apps.xcworkspace \
-              -scheme DebugApp \
-              | sed -n 's:^ *BUILD_DIR = \(.*\)/Build/Products$:export DERIVED_DATA_PATH="\1":p' \
-              >> $BASH_ENV
-      - run:
           name: Building scheme DebugApp for simulator
           command: make build-app-for-simulator SCHEME=DebugApp
           no_output_timeout: 5m
@@ -230,6 +232,8 @@ jobs:
           name: Building scheme DebugApp for device
           command: make build-app-for-device SCHEME=DebugApp
           no_output_timeout: 5m
+      - locate-derived-data-directory:
+          base_name: Apps
       - store-logs:
           derived_data_path: $DERIVED_DATA_PATH
       - report-failure:
@@ -276,22 +280,29 @@ jobs:
     steps:
       - checkout
       - access-token-configs
-      - install-dependencies
+      - configure-netrc
+      - xcode-github-workaround
+      - run:
+          name: Delete Xcode Workspace so we can build with SPM
+          command: rm -rf MapboxMaps.xcworkspace
       # Building and testing are split into 2, with the aim that we'll be able to reuse
       # the build product and test on multiple simulators
       - run:
           name: Building MapboxMaps for simulator
-          command: make build-for-testing-simulator SCHEME=MapboxMaps
+          command: make build-sdk-for-testing-simulator
           no_output_timeout: 5m
       - run:
           name: Testing MapboxMaps with simulator
-          command: make test-without-building-simulator SCHEME=MapboxMaps
+          command: make test-sdk-without-building-simulator
           no_output_timeout: 5m
-      - run:
-          name: Converting and uploading coverage
-          command: make update-codecov-with-profdata SCHEME=MapboxMaps
+      - locate-derived-data-directory:
+          base_name: $(basename $(pwd))
+      # - run:
+      #     name: Converting and uploading coverage
+      #     command: make update-codecov-with-profdata SCHEME=MapboxMaps COVERAGE_ROOT_DIR="$DERIVED_DATA_PATH"
       - store-logs:
           artifact_name: MapboxMaps
+          derived_data_path: $DERIVED_DATA_PATH
       - report-failure:
           report_failure: << parameters.report_failure >>
           message: "unit-test-sdk"
@@ -586,3 +597,13 @@ commands:
       - run:
           name: Work around Xcode's issue with GitHub's SSH fingerprint
           command: for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
+
+  locate-derived-data-directory:
+    parameters:
+      base_name:
+        type: string
+    steps:
+      - run:
+          name: Locate derived data directory
+          command: |
+            echo "export DERIVED_DATA_PATH=\"$(find ~/Library/Developer/Xcode/DerivedData -name "<< parameters.base_name >>*" -depth 1)\"" >> $BASH_ENV

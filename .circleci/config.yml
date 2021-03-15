@@ -24,9 +24,8 @@ workflows:
               configuration: ["Debug", "Release"]
               report_failure: [true]
       - build-debug-app:
-          matrix:
-            parameters:
-              report_failure: [true]
+          report_failure: true
+          xcode: "12.4.0"
       - maps-unit-tests:
           matrix:
             parameters:
@@ -59,7 +58,8 @@ workflows:
           matrix:
             parameters:
               configuration: ["Debug", "Release"]
-      - build-debug-app
+      - build-debug-app:
+          xcode: "12.4.0"
       - binary-size:
           requires:
             - build-all-targets

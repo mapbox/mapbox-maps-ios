@@ -27,7 +27,7 @@ workflows:
       - build-debug-app:
           report_failure: true
           xcode: "12.4.0"
-      - maps-unit-tests:
+      - unit-test-sdk:
           matrix:
             parameters:
               configuration: ["Debug", "Release"]
@@ -71,7 +71,7 @@ workflows:
           filters:
             branches:
               only: main
-      - maps-unit-tests:
+      - unit-test-sdk:
           name: "Run Unit tests"
       # Not on main
       - run-tests-on-devices:
@@ -271,7 +271,7 @@ jobs:
           report_failure: << parameters.report_failure >>
           message: "metrics"
 
-  maps-unit-tests:
+  unit-test-sdk:
     <<: *base-job
     steps:
       - checkout
@@ -294,7 +294,7 @@ jobs:
           artifact_name: MapboxMaps
       - report-failure:
           report_failure: << parameters.report_failure >>
-          message: "maps-unit-tests"
+          message: "unit-test-sdk"
 
   # We may want to split this across multiple jobs, rather than multiple
   run-tests-on-devices:

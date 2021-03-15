@@ -23,6 +23,11 @@ workflows:
             parameters:
               configuration: ["Debug", "Release"]
               report_failure: [true]
+      - build-debug-app:
+          matrix:
+            parameters:
+              configuration: ["Debug", "Release"]
+              report_failure: [true]
       - maps-unit-tests:
           matrix:
             parameters:
@@ -52,6 +57,10 @@ workflows:
     jobs:
       - swiftlint
       - build-all-targets:
+          matrix:
+            parameters:
+              configuration: ["Debug", "Release"]
+      - build-debug-app:
           matrix:
             parameters:
               configuration: ["Debug", "Release"]
@@ -204,12 +213,38 @@ jobs:
           scheme: MapboxMapsStyle
       - build-scheme:
           scheme: MapboxMaps
-      - build-scheme:
-          scheme: DebugApp
       - store-logs
       - report-failure:
           report_failure: << parameters.report_failure >>
           message: "build-all-targets"
+
+  build-debug-app:
+    <<: *base-job
+    steps:
+      - checkout
+      - access-token-configs
+      - run:
+          name: Locate derived data directory
+          command: |
+            xcodebuild \
+              -showBuildSettings \
+              -workspace Apps/Apps.xcworkspace \
+              -scheme DebugApp \
+              | sed -n 's:^ *BUILD_DIR = \(.*\)/Build/Products$:export DERIVED_DATA_PATH="\1":p' \
+              >> $BASH_ENV
+      - run:
+          name: Building scheme DebugApp for simulator
+          command: make build-app-for-simulator SCHEME=DebugApp
+          no_output_timeout: 5m
+      - run:
+          name: Building scheme DebugApp for device
+          command: make build-app-for-device SCHEME=DebugApp
+          no_output_timeout: 5m
+      - store-logs:
+          derived_data_path: $DERIVED_DATA_PATH
+      - report-failure:
+          report_failure: << parameters.report_failure >>
+          message: "build-debug-app"
 
   binary-size:
     <<: *base-job
@@ -501,14 +536,18 @@ commands:
       artifact_name:
         type: string
         default: "build"
+      derived_data_path:
+        type: string
+        default: "build"
     description: "Save Logs as Artifacts"
     steps:
       - run:
           name: Zipping logs
           command: |
-           zip -r << parameters.artifact_name >>.zip build/Build/Products || echo "Skipping build/Build/Products"
-           zip -r << parameters.artifact_name >>.zip build/Build/ProfileData || echo "Skipping build/Build/ProfileData"
-           zip -r << parameters.artifact_name >>.zip build/Logs || echo "Skipping build/Logs"
+            cd "<< parameters.derived_data_path >>"
+            zip -r << parameters.artifact_name >>.zip Build/Products || echo "Skipping Build/Products"
+            zip -r << parameters.artifact_name >>.zip Build/ProfileData || echo "Skipping Build/ProfileData"
+            zip -r << parameters.artifact_name >>.zip Logs || echo "Skipping Logs"
           when: always
       - store_artifacts:
           path: << parameters.artifact_name >>.zip

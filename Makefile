@@ -82,9 +82,7 @@ $(PAYLOAD_DIR) $(TEST_ROOT) $(DEVICE_TEST_PATH):
 # ----------------------------------------------------------------------------------------------------------------------
 # Simulators
 
-# x86_64 because CMapbox doesn't have i386 currently
 XCODE_BUILD_SIM = xcodebuild \
-	ARCHS=x86_64 \
 	ONLY_ACTIVE_ARCH=YES \
 	-workspace $(XCODE_WORKSPACE) \
 	-sdk iphonesimulator \
@@ -103,6 +101,20 @@ build-for-testing-simulator:
 .PHONY: test-without-building-simulator
 test-without-building-simulator:
 	set -o pipefail && $(XCODE_BUILD_SIM) -scheme '$(SCHEME)' $(DESTINATIONS) test-without-building -enableCodeCoverage YES
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Simulators - Apps
+
+XCODE_BUILD_SIM_APPS = xcodebuild \
+	ONLY_ACTIVE_ARCH=YES \
+	-workspace Apps/Apps.xcworkspace \
+	-sdk iphonesimulator \
+	-configuration $(CONFIGURATION) \
+	-jobs $(JOBS)
+
+.PHONY: build-app-for-simulator
+build-app-for-simulator:
+	set -o pipefail && $(XCODE_BUILD_SIM_APPS) -scheme '$(SCHEME)' build
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Devices
@@ -165,6 +177,21 @@ endif
 
 	# Package as a zip
 	cd $(TEST_ROOT) && zip -r $@ -x.* .
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Devices - Apps
+
+XCODE_BUILD_DEVICE_APPS = xcodebuild \
+	ONLY_ACTIVE_ARCH=YES \
+	-workspace Apps/Apps.xcworkspace \
+	-sdk iphoneos \
+	-configuration $(CONFIGURATION) \
+	-jobs $(JOBS) \
+	$(CODE_SIGNING)
+
+.PHONY: build-app-for-device
+build-app-for-device:
+	set -o pipefail && $(XCODE_BUILD_DEVICE_APPS) -scheme '$(SCHEME)' build
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Device Farm

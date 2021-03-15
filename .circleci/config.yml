@@ -26,7 +26,6 @@ workflows:
       - build-debug-app:
           matrix:
             parameters:
-              configuration: ["Debug", "Release"]
               report_failure: [true]
       - maps-unit-tests:
           matrix:
@@ -60,10 +59,7 @@ workflows:
           matrix:
             parameters:
               configuration: ["Debug", "Release"]
-      - build-debug-app:
-          matrix:
-            parameters:
-              configuration: ["Debug", "Release"]
+      - build-debug-app
       - binary-size:
           requires:
             - build-all-targets

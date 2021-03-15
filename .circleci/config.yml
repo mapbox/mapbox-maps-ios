@@ -224,6 +224,7 @@ jobs:
       - checkout
       - access-token-configs
       - configure-netrc
+      - xcode-github-workaround
       - run:
           name: Locate derived data directory
           command: |
@@ -639,3 +640,10 @@ commands:
       - run:
           name: Configure .netrc
           command: echo "machine api.mapbox.com login mapbox password $SDK_REGISTRY_TOKEN" >> ~/.netrc
+
+  # See https://stackoverflow.com/a/58186048
+  xcode-github-workaround:
+    steps:
+      - run:
+          name: Work around Xcode's issue with GitHub's SSH fingerprint
+          command: for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts

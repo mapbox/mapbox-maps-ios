@@ -106,12 +106,11 @@ test-without-building-simulator:
 # Simulators - Apps
 
 XCODE_BUILD_SIM_APPS = xcodebuild \
-	ONLY_ACTIVE_ARCH=YES \
+	ONLY_ACTIVE_ARCH=NO \
 	-workspace Apps/Apps.xcworkspace \
 	-sdk iphonesimulator \
 	-configuration $(CONFIGURATION) \
-	-jobs $(JOBS) \
-	-destination 'platform=iOS Simulator,name=iPhone 12,OS=14.2'
+	-jobs $(JOBS)
 
 .PHONY: build-app-for-simulator
 build-app-for-simulator:
@@ -183,12 +182,11 @@ endif
 # Devices - Apps
 
 XCODE_BUILD_DEVICE_APPS = xcodebuild \
-	ONLY_ACTIVE_ARCH=YES \
+	ONLY_ACTIVE_ARCH=NO \
 	-workspace Apps/Apps.xcworkspace \
 	-sdk iphoneos \
 	-configuration $(CONFIGURATION) \
 	-jobs $(JOBS) \
-	-destination 'generic/platform=iOS' \
 	$(CODE_SIGNING)
 
 .PHONY: build-app-for-device

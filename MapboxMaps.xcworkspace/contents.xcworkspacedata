@@ -5,9 +5,6 @@
       location = "group:Mapbox/MapboxMaps.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:DebugApp/DebugApp.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:Examples/Examples.xcodeproj">
    </FileRef>
    <FileRef

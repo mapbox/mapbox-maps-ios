@@ -23,6 +23,9 @@ workflows:
             parameters:
               configuration: ["Debug", "Release"]
               report_failure: [true]
+      - build-debug-app:
+          report_failure: true
+          xcode: "12.4.0"
       - maps-unit-tests:
           matrix:
             parameters:
@@ -55,6 +58,8 @@ workflows:
           matrix:
             parameters:
               configuration: ["Debug", "Release"]
+      - build-debug-app:
+          xcode: "12.4.0"
       - binary-size:
           requires:
             - build-all-targets
@@ -204,12 +209,40 @@ jobs:
           scheme: MapboxMapsStyle
       - build-scheme:
           scheme: MapboxMaps
-      - build-scheme:
-          scheme: DebugApp
       - store-logs
       - report-failure:
           report_failure: << parameters.report_failure >>
           message: "build-all-targets"
+
+  build-debug-app:
+    <<: *base-job
+    steps:
+      - checkout
+      - access-token-configs
+      - configure-netrc
+      - xcode-github-workaround
+      - run:
+          name: Locate derived data directory
+          command: |
+            xcodebuild \
+              -showBuildSettings \
+              -workspace Apps/Apps.xcworkspace \
+              -scheme DebugApp \
+              | sed -n 's:^ *BUILD_DIR = \(.*\)/Build/Products$:export DERIVED_DATA_PATH="\1":p' \
+              >> $BASH_ENV
+      - run:
+          name: Building scheme DebugApp for simulator
+          command: make build-app-for-simulator SCHEME=DebugApp
+          no_output_timeout: 5m
+      - run:
+          name: Building scheme DebugApp for device
+          command: make build-app-for-device SCHEME=DebugApp
+          no_output_timeout: 5m
+      - store-logs:
+          derived_data_path: $DERIVED_DATA_PATH
+      - report-failure:
+          report_failure: << parameters.report_failure >>
+          message: "build-debug-app"
 
   binary-size:
     <<: *base-job
@@ -501,14 +534,19 @@ commands:
       artifact_name:
         type: string
         default: "build"
+      derived_data_path:
+        type: string
+        default: "build"
     description: "Save Logs as Artifacts"
     steps:
       - run:
           name: Zipping logs
           command: |
-           zip -r << parameters.artifact_name >>.zip build/Build/Products || echo "Skipping build/Build/Products"
-           zip -r << parameters.artifact_name >>.zip build/Build/ProfileData || echo "Skipping build/Build/ProfileData"
-           zip -r << parameters.artifact_name >>.zip build/Logs || echo "Skipping build/Logs"
+            export ZIP_FILE="$PWD/<< parameters.artifact_name >>.zip"
+            cd "<< parameters.derived_data_path >>"
+            zip -r "$ZIP_FILE" Build/Products || echo "Skipping Build/Products"
+            zip -r "$ZIP_FILE" Build/ProfileData || echo "Skipping Build/ProfileData"
+            zip -r "$ZIP_FILE" Logs || echo "Skipping Logs"
           when: always
       - store_artifacts:
           path: << parameters.artifact_name >>.zip
@@ -593,3 +631,16 @@ commands:
           mentions: '$CIRCLE_USERNAME'
           only_for_branches: main
           failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL| << parameters.message >> failed.>'
+
+  configure-netrc:
+    steps:
+      - run:
+          name: Configure .netrc
+          command: echo "machine api.mapbox.com login mapbox password $SDK_REGISTRY_TOKEN" >> ~/.netrc
+
+  # See https://stackoverflow.com/a/58186048
+  xcode-github-workaround:
+    steps:
+      - run:
+          name: Work around Xcode's issue with GitHub's SSH fingerprint
+          command: for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts

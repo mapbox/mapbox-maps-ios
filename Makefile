@@ -110,7 +110,8 @@ XCODE_BUILD_SIM_APPS = xcodebuild \
 	-workspace Apps/Apps.xcworkspace \
 	-sdk iphonesimulator \
 	-configuration $(CONFIGURATION) \
-	-jobs $(JOBS)
+	-jobs $(JOBS) \
+	-destination 'platform=iOS Simulator,name=iPhone 12,OS=14.2'
 
 .PHONY: build-app-for-simulator
 build-app-for-simulator:
@@ -187,6 +188,7 @@ XCODE_BUILD_DEVICE_APPS = xcodebuild \
 	-sdk iphoneos \
 	-configuration $(CONFIGURATION) \
 	-jobs $(JOBS) \
+	-destination 'generic/platform=iOS' \
 	$(CODE_SIGNING)
 
 .PHONY: build-app-for-device

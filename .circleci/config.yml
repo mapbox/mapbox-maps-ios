@@ -17,7 +17,8 @@ workflows:
               only:
                 - main
     jobs:
-      - swiftlint
+      - swiftlint:
+          xcode: "12.4.0"
       - build-all-targets:
           matrix:
             parameters:
@@ -53,7 +54,8 @@ workflows:
 
   steve:
     jobs:
-      - swiftlint
+      - swiftlint:
+          xcode: "12.4.0"
       - build-all-targets:
           matrix:
             parameters:

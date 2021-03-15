@@ -193,8 +193,14 @@ jobs:
       - checkout
       - access-token-configs
       - install-dependencies
-      - build-scheme:
-          scheme: MapboxMaps
+      - run:
+          name: Building MapboxMaps for simulator
+          command: make build-for-simulator SCHEME=MapboxMaps
+          no_output_timeout: 5m
+      - run:
+          name: Building MapboxMaps for device
+          command: make build-for-device SCHEME=MapboxMaps
+          no_output_timeout: 5m
       - store-logs
       - report-failure:
           report_failure: << parameters.report_failure >>
@@ -272,8 +278,21 @@ jobs:
       - checkout
       - access-token-configs
       - install-dependencies
-      - test-scheme:
-          scheme: MapboxMaps
+      # Building and testing are split into 2, with the aim that we'll be able to reuse
+      # the build product and test on multiple simulators
+      - run:
+          name: Building MapboxMaps for simulator
+          command: make build-for-testing-simulator SCHEME=MapboxMaps
+          no_output_timeout: 5m
+      - run:
+          name: Testing MapboxMaps with simulator
+          command: make test-without-building-simulator SCHEME=MapboxMaps
+          no_output_timeout: 5m
+      - run:
+          name: Converting and uploading coverage
+          command: make update-codecov-with-profdata SCHEME=MapboxMaps
+      - store-logs:
+          artifact_name: MapboxMaps
       - report-failure:
           report_failure: << parameters.report_failure >>
           message: "maps-unit-tests"
@@ -432,52 +451,6 @@ commands:
           command: |
             echo "MAPBOX_ACCESS_TOKEN = ${MAPBOX_ACCESS_TOKEN}" > ./developer.xcconfig
             echo "${MAPBOX_ACCESS_TOKEN}" > ~/.mapbox
-
-  build-scheme:
-    parameters:
-      scheme:
-        type: string
-    steps:
-      - run:
-          name: Building scheme << parameters.scheme >> for simulator
-          command: make build-for-simulator SCHEME=<< parameters.scheme >>
-          no_output_timeout: 5m
-      - run:
-          name: Building scheme << parameters.scheme >> for device
-          command: make build-for-device SCHEME=<< parameters.scheme >>
-          no_output_timeout: 5m
-      - run:
-          name: Clean Build directory
-          command: |
-            rm -rf build/Build
-
-  test-scheme:
-    parameters:
-      scheme:
-        type: string
-    steps:
-      # Building and testing are split into 2, with the aim that we'll be able to reuse
-      # the build product and test on multiple simulators
-      - run:
-          name: Build-for-testing scheme << parameters.scheme >> for simulator
-          command: make build-for-testing-simulator SCHEME=<< parameters.scheme >>
-          no_output_timeout: 5m
-      - run:
-          name: Testing scheme << parameters.scheme >> with simulator
-          command: make test-without-building-simulator SCHEME=<< parameters.scheme >>
-          no_output_timeout: 5m
-      - when:
-          condition:
-            equal: ['MapboxMaps', << parameters.scheme >>]
-          steps:
-            - run:
-                name: Converting and uploading coverage
-                command: make update-codecov-with-profdata SCHEME=<< parameters.scheme >>
-      - store-logs:
-          artifact_name: << parameters.scheme >>
-      - run:
-          name: Clean Build directory
-          command: rm -rf build
 
   ensure-text-exists-in-commit:
     parameters:

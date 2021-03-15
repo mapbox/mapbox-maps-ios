@@ -299,7 +299,9 @@ jobs:
           base_name: $(basename $(pwd))
       - run:
           name: Converting and uploading coverage
-          command: make update-codecov-with-profdata SCHEME=MapboxMaps BUILD_DIR="$DERIVED_DATA_PATH"
+          command: |
+            pip3 install awscli gitpython
+            make update-codecov-with-profdata SCHEME=MapboxMaps BUILD_DIR="$DERIVED_DATA_PATH"
       - store-logs:
           artifact_name: MapboxMaps
           derived_data_path: $DERIVED_DATA_PATH

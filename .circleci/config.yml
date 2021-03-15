@@ -546,10 +546,11 @@ commands:
       - run:
           name: Zipping logs
           command: |
+            export ZIP_FILE="$PWD/<< parameters.artifact_name >>.zip"
             cd "<< parameters.derived_data_path >>"
-            zip -r << parameters.artifact_name >>.zip Build/Products || echo "Skipping Build/Products"
-            zip -r << parameters.artifact_name >>.zip Build/ProfileData || echo "Skipping Build/ProfileData"
-            zip -r << parameters.artifact_name >>.zip Logs || echo "Skipping Logs"
+            zip -r "$ZIP_FILE" Build/Products || echo "Skipping Build/Products"
+            zip -r "$ZIP_FILE" Build/ProfileData || echo "Skipping Build/ProfileData"
+            zip -r "$ZIP_FILE" Logs || echo "Skipping Logs"
           when: always
       - store_artifacts:
           path: << parameters.artifact_name >>.zip

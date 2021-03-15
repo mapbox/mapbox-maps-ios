@@ -6,7 +6,6 @@ XCODE_WORKSPACE ?= MapboxMaps.xcworkspace
 CONFIGURATION    ?= Debug
 BUILD_DIR        ?= $(CURDIR)/build
 JOBS             ?= $(shell sysctl -n hw.ncpu)
-DESTINATIONS     ?= -destination 'platform=iOS Simulator,OS=latest,name=iPhone 11'
 APP_NAME         ?= $(SCHEME)
 
 # Circle
@@ -80,44 +79,53 @@ $(PAYLOAD_DIR) $(TEST_ROOT) $(DEVICE_TEST_PATH):
 	-mkdir -p $@
 
 # ----------------------------------------------------------------------------------------------------------------------
-# Simulators
+# Simulators - SDK
 
-XCODE_BUILD_SIM = xcodebuild \
-	ONLY_ACTIVE_ARCH=YES \
-	-workspace $(XCODE_WORKSPACE) \
+XCODE_BUILD_SIM_SDK = set -o pipefail && xcodebuild \
+	-scheme MapboxMaps \
 	-sdk iphonesimulator \
 	-configuration $(CONFIGURATION) \
-	-derivedDataPath $(BUILD_DIR) \
 	-jobs $(JOBS)
 
-.PHONY: build-for-simulator
-build-for-simulator:
-	set -o pipefail && $(XCODE_BUILD_SIM) -scheme '$(SCHEME)' build
+.PHONY: build-sdk-for-simulator
+build-sdk-for-simulator:
+	$(XCODE_BUILD_SIM_SDK) \
+		build \
+		ONLY_ACTIVE_ARCH=NO
 
-.PHONY: build-for-testing-simulator
-build-for-testing-simulator:
-	set -o pipefail && $(XCODE_BUILD_SIM) -scheme '$(SCHEME)' ENABLE_TESTABILITY=YES build-for-testing -enableCodeCoverage YES
+.PHONY: build-sdk-for-testing-simulator
+build-sdk-for-testing-simulator:
+	$(XCODE_BUILD_SIM_SDK) \
+		-destination 'platform=iOS Simulator,OS=latest,name=iPhone 11' \
+		-enableCodeCoverage YES \
+		build-for-testing \
+		ENABLE_TESTABILITY=YES \
+		ONLY_ACTIVE_ARCH=YES
 
-.PHONY: test-without-building-simulator
-test-without-building-simulator:
-	set -o pipefail && $(XCODE_BUILD_SIM) -scheme '$(SCHEME)' $(DESTINATIONS) test-without-building -enableCodeCoverage YES
+.PHONY: test-sdk-without-building-simulator
+test-sdk-without-building-simulator:
+	$(XCODE_BUILD_SIM_SDK) \
+		-destination 'platform=iOS Simulator,OS=latest,name=iPhone 11' \
+		-enableCodeCoverage YES \
+		test-without-building \
+		ONLY_ACTIVE_ARCH=YES
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Simulators - Apps
 
-XCODE_BUILD_SIM_APPS = xcodebuild \
-	ONLY_ACTIVE_ARCH=NO \
-	-workspace Apps/Apps.xcworkspace \
-	-sdk iphonesimulator \
-	-configuration $(CONFIGURATION) \
-	-jobs $(JOBS)
-
 .PHONY: build-app-for-simulator
 build-app-for-simulator:
-	set -o pipefail && $(XCODE_BUILD_SIM_APPS) -scheme '$(SCHEME)' build
+	set -o pipefail && xcodebuild \
+		-workspace Apps/Apps.xcworkspace \
+		-scheme '$(SCHEME)' \
+		-sdk iphonesimulator \
+		-configuration $(CONFIGURATION) \
+		-jobs $(JOBS) \
+		build \
+		ONLY_ACTIVE_ARCH=NO
 
 # ----------------------------------------------------------------------------------------------------------------------
-# Devices
+# Devices - SDK
 
 USB_DEVICE_ID := $(strip $(shell system_profiler SPUSBDataType | sed -n -E -e "/(iPhone|iPad)/,/Serial/s/ *Serial Number: *(.+)/\1/p" ))
 
@@ -135,9 +143,16 @@ XCODE_BUILD_DEVICE = xcodebuild \
 	-jobs $(JOBS) \
 	$(CODE_SIGNING)
 
-.PHONY: build-for-device
-build-for-device:
-	set -o pipefail && $(XCODE_BUILD_DEVICE) -scheme '$(SCHEME)' build 
+.PHONY: build-sdk-for-device
+build-sdk-for-device:
+	set -o pipefail && xcodebuild \
+		-scheme MapboxMaps \
+		-sdk iphoneos \
+		-configuration $(CONFIGURATION) \
+		-jobs $(JOBS) \
+		build \
+		ONLY_ACTIVE_ARCH=NO \
+		$(CODE_SIGNING)
 
 # Testing on device uses the generated `xctestrun` file that gets created. When
 # testing on device, this along with the binaries are packaged into a Payload and
@@ -367,7 +382,7 @@ symbolicate:
 # Root directory in which to search for "profdata" coverage files, from which we generate
 # the lcov data (both lcov and json formats)
 COVERAGE_ROOT_DIR ?= $(BUILD_DIR)/Build/ProfileData
-COVERAGE_MAPBOX_MAPS ?= $(BUILD_DIR)/Build/Products/$(CONFIGURATION)-iphonesimulator/MapboxMaps.framework/MapboxMaps
+COVERAGE_MAPBOX_MAPS ?= $(BUILD_DIR)/Build/Products/$(CONFIGURATION)-iphonesimulator/MapboxMaps.o
 COVERAGE_ARCH ?= x86_64
 
 .PHONY: update-codecov-with-profdata device-update-codecov-with-profdata

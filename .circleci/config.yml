@@ -19,7 +19,8 @@ workflows:
     jobs:
       - swiftlint:
           xcode: "12.4.0"
-      - build-all-targets:
+      - build-sdk:
+          xcode: "12.4.0"
           matrix:
             parameters:
               configuration: ["Debug", "Release"]
@@ -27,7 +28,8 @@ workflows:
       - build-debug-app:
           report_failure: true
           xcode: "12.4.0"
-      - maps-unit-tests:
+      - unit-test-sdk:
+          xcode: "12.4.0"
           matrix:
             parameters:
               configuration: ["Debug", "Release"]
@@ -56,7 +58,8 @@ workflows:
     jobs:
       - swiftlint:
           xcode: "12.4.0"
-      - build-all-targets:
+      - build-sdk:
+          xcode: "12.4.0"
           matrix:
             parameters:
               configuration: ["Debug", "Release"]
@@ -64,15 +67,16 @@ workflows:
           xcode: "12.4.0"
       - binary-size:
           requires:
-            - build-all-targets
+            - build-sdk
       - metrics:
           requires:
-            - build-all-targets
+            - build-sdk
           filters:
             branches:
               only: main
-      - maps-unit-tests:
+      - unit-test-sdk:
           name: "Run Unit tests"
+          xcode: "12.4.0"
       # Not on main
       - run-tests-on-devices:
           name: "Run MapboxTestHost tests on devices"
@@ -187,34 +191,31 @@ jobs:
       - run: brew install swiftlint
       - run: swiftlint lint --strict
 
-  build-all-targets:
+  build-sdk:
     <<: *base-job
     steps:
       - checkout
       - access-token-configs
-      - install-dependencies
-      - build-scheme:
-          scheme: MapboxMapsAnnotations
-      - build-scheme:
-          scheme: MapboxMapsFoundation
-      - build-scheme:
-          scheme: MapboxMapsGestures
-      - build-scheme:
-          scheme: MapboxMapsLocation
-      - build-scheme:
-          scheme: MapboxMapsOffline
-      - build-scheme:
-          scheme: MapboxMapsOrnaments
-      - build-scheme:
-          scheme: MapboxMapsSnapshot
-      - build-scheme:
-          scheme: MapboxMapsStyle
-      - build-scheme:
-          scheme: MapboxMaps
-      - store-logs
+      - configure-netrc
+      - xcode-github-workaround
+      - run:
+          name: Delete Xcode Workspace so we can build with SPM
+          command: rm -rf MapboxMaps.xcworkspace
+      - run:
+          name: Building MapboxMaps for simulator
+          command: make build-sdk-for-simulator
+          no_output_timeout: 5m
+      - run:
+          name: Building MapboxMaps for device
+          command: make build-sdk-for-device
+          no_output_timeout: 5m
+      - locate-derived-data-directory:
+          base_name: $(basename $(pwd))
+      - store-logs:
+          derived_data_path: $DERIVED_DATA_PATH
       - report-failure:
           report_failure: << parameters.report_failure >>
-          message: "build-all-targets"
+          message: "build-sdk"
 
   build-debug-app:
     <<: *base-job
@@ -224,15 +225,6 @@ jobs:
       - configure-netrc
       - xcode-github-workaround
       - run:
-          name: Locate derived data directory
-          command: |
-            xcodebuild \
-              -showBuildSettings \
-              -workspace Apps/Apps.xcworkspace \
-              -scheme DebugApp \
-              | sed -n 's:^ *BUILD_DIR = \(.*\)/Build/Products$:export DERIVED_DATA_PATH="\1":p' \
-              >> $BASH_ENV
-      - run:
           name: Building scheme DebugApp for simulator
           command: make build-app-for-simulator SCHEME=DebugApp
           no_output_timeout: 5m
@@ -240,6 +232,8 @@ jobs:
           name: Building scheme DebugApp for device
           command: make build-app-for-device SCHEME=DebugApp
           no_output_timeout: 5m
+      - locate-derived-data-directory:
+          base_name: Apps
       - store-logs:
           derived_data_path: $DERIVED_DATA_PATH
       - report-failure:
@@ -281,34 +275,39 @@ jobs:
           report_failure: << parameters.report_failure >>
           message: "metrics"
 
-  # Run the tests in the MapboxTests scheme
-  maps-unit-tests:
+  unit-test-sdk:
     <<: *base-job
     steps:
       - checkout
       - access-token-configs
-      - install-dependencies
-      - test-scheme:
-          scheme: MapboxMapsAnnotations
-      - test-scheme:
-          scheme: MapboxMapsFoundation
-      - test-scheme:
-          scheme: MapboxMapsGestures
-      - test-scheme:
-          scheme: MapboxMapsLocation
-      - test-scheme:
-          scheme: MapboxMapsOffline
-      - test-scheme:
-          scheme: MapboxMapsOrnaments
-      - test-scheme:
-          scheme: MapboxMapsSnapshot
-      - test-scheme:
-          scheme: MapboxMapsStyle
-      - test-scheme:
-          scheme: MapboxMaps
+      - configure-netrc
+      - xcode-github-workaround
+      - run:
+          name: Delete Xcode Workspace so we can build with SPM
+          command: rm -rf MapboxMaps.xcworkspace
+      # Building and testing are split into 2, with the aim that we'll be able to reuse
+      # the build product and test on multiple simulators
+      - run:
+          name: Building MapboxMaps for simulator
+          command: make build-sdk-for-testing-simulator
+          no_output_timeout: 5m
+      - run:
+          name: Testing MapboxMaps with simulator
+          command: make test-sdk-without-building-simulator
+          no_output_timeout: 5m
+      - locate-derived-data-directory:
+          base_name: $(basename $(pwd))
+      - run:
+          name: Converting and uploading coverage
+          command: |
+            pip3 install awscli gitpython
+            make update-codecov-with-profdata SCHEME=MapboxMaps BUILD_DIR="$DERIVED_DATA_PATH"
+      - store-logs:
+          artifact_name: MapboxMaps
+          derived_data_path: $DERIVED_DATA_PATH
       - report-failure:
           report_failure: << parameters.report_failure >>
-          message: "maps-unit-tests"
+          message: "unit-test-sdk"
 
   # We may want to split this across multiple jobs, rather than multiple
   run-tests-on-devices:
@@ -465,52 +464,6 @@ commands:
             echo "MAPBOX_ACCESS_TOKEN = ${MAPBOX_ACCESS_TOKEN}" > ./developer.xcconfig
             echo "${MAPBOX_ACCESS_TOKEN}" > ~/.mapbox
 
-  build-scheme:
-    parameters:
-      scheme:
-        type: string
-    steps:
-      - run:
-          name: Building scheme << parameters.scheme >> for simulator
-          command: make build-for-simulator SCHEME=<< parameters.scheme >>
-          no_output_timeout: 5m
-      - run:
-          name: Building scheme << parameters.scheme >> for device
-          command: make build-for-device SCHEME=<< parameters.scheme >>
-          no_output_timeout: 5m
-      - run:
-          name: Clean Build directory
-          command: |
-            rm -rf build/Build
-
-  test-scheme:
-    parameters:
-      scheme:
-        type: string
-    steps:
-      # Building and testing are split into 2, with the aim that we'll be able to reuse
-      # the build product and test on multiple simulators
-      - run:
-          name: Build-for-testing scheme << parameters.scheme >> for simulator
-          command: make build-for-testing-simulator SCHEME=<< parameters.scheme >>
-          no_output_timeout: 5m
-      - run:
-          name: Testing scheme << parameters.scheme >> with simulator
-          command: make test-without-building-simulator SCHEME=<< parameters.scheme >>
-          no_output_timeout: 5m
-      - when:
-          condition:
-            equal: ['MapboxMaps', << parameters.scheme >>]
-          steps:
-            - run:
-                name: Converting and uploading coverage
-                command: make update-codecov-with-profdata SCHEME=<< parameters.scheme >>
-      - store-logs:
-          artifact_name: << parameters.scheme >>
-      - run:
-          name: Clean Build directory
-          command: rm -rf build
-
   ensure-text-exists-in-commit:
     parameters:
       commit-text:
@@ -646,3 +599,13 @@ commands:
       - run:
           name: Work around Xcode's issue with GitHub's SSH fingerprint
           command: for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
+
+  locate-derived-data-directory:
+    parameters:
+      base_name:
+        type: string
+    steps:
+      - run:
+          name: Locate derived data directory
+          command: |
+            echo "export DERIVED_DATA_PATH=\"$(find ~/Library/Developer/Xcode/DerivedData -name "<< parameters.base_name >>*" -depth 1)\"" >> $BASH_ENV

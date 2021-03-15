@@ -233,14 +233,13 @@ class CameraManagerTests: XCTestCase {
         XCTAssertEqual(mapView.cameraView.localBearing, -212.957, accuracy: 0.001, "Check that the new bearing matches the expected value.")
         XCTAssertEqual(mapView.cameraView.localCenterCoordinate, CLLocationCoordinate2D(latitude: 0, longitude: 0))
 
-        
         cameraManager.moveCamera(by: .zero, pitch: 10, zoom: 10.0)
         XCTAssertEqual(mapView.cameraView.localPitch, -10)
         XCTAssertEqual(mapView.cameraView.localZoom, 10.0, accuracy: 0.001, "The value for zoom should be 10.0")
 
         cameraManager.moveCamera(by: CGPoint(x: -10, y: 10))
         XCTAssertEqual(mapView.cameraView.localCenterCoordinate.latitude, 7.013668, accuracy: 0.0001, "The new latitude should be approximately 7.013668")
-        XCTAssertEqual(mapView.cameraView.localCenterCoordinate.longitude,-352.96875, accuracy: 0.0001, "The new longitude should be approximately -352.96875")
+        XCTAssertEqual(mapView.cameraView.localCenterCoordinate.longitude, -352.96875, accuracy: 0.0001, "The new longitude should be approximately -352.96875")
     }
 
     func testOptimizeBearingClockwise() {

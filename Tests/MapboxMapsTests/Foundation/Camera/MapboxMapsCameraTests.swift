@@ -26,12 +26,12 @@ class CameraManagerTests: XCTestCase {
     func testZoom() {
         XCTAssertEqual(mapView.zoom, 0.0, "Camera's zoom should match Map's default zoom.")
 
-        mapView.cameraView.zoom = 5.0
-        XCTAssertEqual(mapView.zoom, 5.0, "Camera's zoom value is not initialized.")
+        mapView.zoom = 5.0
+        XCTAssertEqual(mapView.cameraView.localZoom, 5.0, "Camera's zoom value is not initialized.")
 
         cameraManager.setCamera(zoom: 10.0)
 
-        XCTAssertEqual(mapView.zoom, 10.0, "Camera manager did not set camera view zoom value.")
+        XCTAssertEqual(mapView.cameraView.localZoom, 10.0, "Camera manager did not set camera view zoom value.")
     }
 
     func testCameraForCoordinateArray() {
@@ -119,7 +119,7 @@ class CameraManagerTests: XCTestCase {
         let cameraManager = CameraManager(for: mapView, with: cameraOptions)
         let previousCenter = mapView.centerCoordinate
         cameraManager.transitionCoordinateBounds(newCoordinateBounds: allowedBounds)
-        let currentCenter = mapView.centerCoordinate
+        let currentCenter = mapView.cameraView.localCenterCoordinate
 
         // The bounds to set the camera view to falls within the restricted bounds,
         // so the center will change.
@@ -136,11 +136,11 @@ class CameraManagerTests: XCTestCase {
                                            bearing: 8,
                                            pitch: 9)
 
-        let originalCamera = mapView.cameraView.camera
+        let originalCamera = mapView.camera
 
         cameraManager.setCamera(to: expectedCamera, completion: nil)
 
-        let actualCamera = mapView.cameraView.camera
+        let actualCamera = mapView.cameraView.localCamera
 
         XCTAssertEqual(expectedCamera.center, actualCamera.center)
         XCTAssertEqual(expectedCamera.padding, actualCamera.padding)
@@ -162,7 +162,7 @@ class CameraManagerTests: XCTestCase {
 
         cameraManager.setCamera(to: expectedCamera)
 
-        XCTAssertEqual(mapView.cameraView.camera.zoom, cameraManager.mapCameraOptions.minimumZoomLevel)
+        XCTAssertEqual(mapView.cameraView.localZoom, cameraManager.mapCameraOptions.minimumZoomLevel, accuracy: 0.000001)
     }
 
     func testSetCameraEnforcesMaxZoom() {
@@ -171,7 +171,7 @@ class CameraManagerTests: XCTestCase {
 
         cameraManager.setCamera(to: expectedCamera)
 
-        XCTAssertEqual(mapView.cameraView.camera.zoom, cameraManager.mapCameraOptions.maximumZoomLevel)
+        XCTAssertEqual(mapView.cameraView.localZoom, cameraManager.mapCameraOptions.maximumZoomLevel, accuracy: 0.000001)
     }
 
     func testSetCameraEnforcesMinPitch() {
@@ -180,7 +180,7 @@ class CameraManagerTests: XCTestCase {
 
         cameraManager.setCamera(to: expectedCamera)
 
-        XCTAssertEqual(mapView.cameraView.camera.pitch, cameraManager.mapCameraOptions.minimumPitch)
+        XCTAssertEqual(mapView.cameraView.localPitch, cameraManager.mapCameraOptions.minimumPitch, accuracy: 0.000001)
     }
 
     func testSetCameraEnforcesMaxPitch() {
@@ -189,7 +189,7 @@ class CameraManagerTests: XCTestCase {
 
         cameraManager.setCamera(to: expectedCamera)
 
-        XCTAssertEqual(mapView.cameraView.camera.pitch, cameraManager.mapCameraOptions.maximumPitch)
+        XCTAssertEqual(mapView.cameraView.localPitch, cameraManager.mapCameraOptions.maximumPitch, accuracy: 0.000001)
     }
 
     func testSetCameraByComponentEnforcesMinZoom() {
@@ -197,7 +197,7 @@ class CameraManagerTests: XCTestCase {
 
         cameraManager.setCamera(zoom: -1)
 
-        XCTAssertEqual(mapView.cameraView.camera.zoom, cameraManager.mapCameraOptions.minimumZoomLevel)
+        XCTAssertEqual(mapView.cameraView.localZoom, cameraManager.mapCameraOptions.minimumZoomLevel, accuracy: 0.000001)
     }
 
     func testSetCameraByComponentEnforcesMaxZoom() {
@@ -205,7 +205,7 @@ class CameraManagerTests: XCTestCase {
 
         cameraManager.setCamera(zoom: 26)
 
-        XCTAssertEqual(mapView.cameraView.camera.zoom, cameraManager.mapCameraOptions.maximumZoomLevel)
+        XCTAssertEqual(mapView.cameraView.localZoom, cameraManager.mapCameraOptions.maximumZoomLevel, accuracy: 0.000001)
     }
 
     func testSetCameraByComponentEnforcesMinPitch() {
@@ -213,7 +213,7 @@ class CameraManagerTests: XCTestCase {
 
         cameraManager.setCamera(pitch: -1)
 
-        XCTAssertEqual(mapView.cameraView.camera.pitch, cameraManager.mapCameraOptions.minimumPitch)
+        XCTAssertEqual(mapView.cameraView.localPitch, cameraManager.mapCameraOptions.minimumPitch, accuracy: 0.000001)
     }
 
     func testSetCameraByComponentEnforcesMaxPitch() {
@@ -221,25 +221,25 @@ class CameraManagerTests: XCTestCase {
 
         cameraManager.setCamera(pitch: 61)
 
-        XCTAssertEqual(mapView.cameraView.camera.pitch, cameraManager.mapCameraOptions.maximumPitch)
+        XCTAssertEqual(mapView.cameraView.localPitch, cameraManager.mapCameraOptions.maximumPitch, accuracy: 0.000001)
     }
 
     func testMoveCamera() {
-        mapView.cameraView.zoom = 0.0
-        let initialCamera = mapView.cameraView.camera
+        mapView.zoom = 0.0
+        let initialCamera = mapView.camera
         cameraManager.moveCamera(rotation: 10)
 
-        XCTAssertNotEqual(initialCamera.bearing, mapView.bearing)
-        XCTAssertEqual(mapView.bearing, -212.957, accuracy: 0.001, "Check that the new bearing matches the expected value.")
-        XCTAssertEqual(mapView.centerCoordinate, CLLocationCoordinate2D(latitude: 0, longitude: 0))
+        XCTAssertNotEqual(initialCamera.bearing, mapView.cameraView.localBearing)
+        XCTAssertEqual(mapView.cameraView.localBearing, -212.957, accuracy: 0.001, "Check that the new bearing matches the expected value.")
+        XCTAssertEqual(mapView.cameraView.localCenterCoordinate, CLLocationCoordinate2D(latitude: 0, longitude: 0))
 
         cameraManager.moveCamera(by: .zero, pitch: 10, zoom: 10.0)
-        XCTAssertEqual(mapView.pitch, -10)
-        XCTAssertEqual(mapView.zoom, 10.0, accuracy: 0.001, "The value for zoom should be 10.0")
+        XCTAssertEqual(mapView.cameraView.localPitch, -10)
+        XCTAssertEqual(mapView.cameraView.localZoom, 10.0, accuracy: 0.001, "The value for zoom should be 10.0")
 
         cameraManager.moveCamera(by: CGPoint(x: -10, y: 10))
-        XCTAssertEqual(mapView.centerCoordinate.latitude, 7.013668, accuracy: 0.0001, "The new latitude should be approximately 7.013668")
-        XCTAssertEqual(mapView.centerCoordinate.longitude, 7.03125, accuracy: 0.0001, "The new longitude should be approximately 7.03125")
+        XCTAssertEqual(mapView.cameraView.localCenterCoordinate.latitude, 7.013668, accuracy: 0.0001, "The new latitude should be approximately 7.013668")
+        XCTAssertEqual(mapView.cameraView.localCenterCoordinate.longitude, 7.03125, accuracy: 0.0001, "The new longitude should be approximately 7.03125")
     }
 
     func testOptimizeBearingClockwise() {

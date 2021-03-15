@@ -223,6 +223,7 @@ jobs:
     steps:
       - checkout
       - access-token-configs
+      - configure-netrc
       - run:
           name: Locate derived data directory
           command: |
@@ -632,3 +633,9 @@ commands:
           mentions: '$CIRCLE_USERNAME'
           only_for_branches: main
           failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL| << parameters.message >> failed.>'
+
+  configure-netrc:
+    steps:
+      - run:
+          name: Configure .netrc
+          command: echo "machine api.mapbox.com login mapbox password $SDK_REGISTRY_TOKEN" >> ~/.netrc

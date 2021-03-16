@@ -6,7 +6,6 @@ codecov:
 ignore:
   - "Apps"
   - "docs"
-  - "Examples"
   - "PCVD"
   - "Tests"
 coverage:

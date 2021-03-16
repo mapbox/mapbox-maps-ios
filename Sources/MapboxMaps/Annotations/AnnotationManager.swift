@@ -130,6 +130,7 @@ public class AnnotationManager: Observer {
      */
     internal init(for mapView: AnnotationSupportableMap,
                   with styleDelegate: AnnotationStyleDelegate,
+                  options: AnnotationOptions,
                   interactionDelegate: AnnotationInteractionDelegate? = nil) {
 
         self.mapView = mapView
@@ -141,6 +142,9 @@ public class AnnotationManager: Observer {
 
         configureTapGesture()
         try! mapView.observable?.subscribe(for: self, events: [MapEvents.mapLoadingFinished])
+    }
+
+    internal func updateAnnotationOptions(with newOptions: AnnotationOptions) {
     }
 
     // MARK: - Public functions

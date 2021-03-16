@@ -67,13 +67,13 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
         let annotationSelectedColor = UIColor(hue: 0.831372549, saturation: 0.72, brightness: 0.59, alpha: 1.0)
         let annotationColor = UIColor.white
 
+        let stretchX = [ImageStretches(first: Float(32), second: Float(42))]
+        let stretchY = [ImageStretches(first: Float(26), second: Float(32))]
+        let imageContent = ImageContent(left: 32, top: 26, right: 47, bottom: 33)
+
         // Right-hand pin
         if let image =  UIImage(named: "AnnotationRightHanded") {
             let regularAnnotationImage = image.tint(annotationColor)
-
-            let stretchX = [ImageStretches(first: Float(32), second: Float(42))]
-            let stretchY = [ImageStretches(first: Float(26), second: Float(32))]
-            let imageContent = ImageContent(left: 32, top: 26, right: 47, bottom: 33)
 
             style.setStyleImage(image: regularAnnotationImage,
                                 with: "AnnotationRightHanded",
@@ -94,10 +94,6 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
         // Left-hand pin
         if let image =  UIImage(named: "AnnotationLeftHanded") {
             let regularAnnotationImage = image.tint(annotationColor)
-
-            let stretchX = [ImageStretches(first: Float(32), second: Float(42))]
-            let stretchY = [ImageStretches(first: Float(26), second: Float(32))]
-            let imageContent = ImageContent(left: 32, top: 26, right: 47, bottom: 33)
 
             style.setStyleImage(image: regularAnnotationImage,
                                 with: "AnnotationLeftHanded",
@@ -131,7 +127,7 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
             var featurePoint = Feature(Point(feature.coordinate))
 
             // set the feature attributes which will be used in styling the symbol style layer
-            featurePoint.properties = ["selected": feature.selected, "tailPosition": feature.tailPosition.rawValue, "text": feature.label, "imageName": feature.imageName, "sortOrder": feature.selected == true ? 1 : -index]
+            featurePoint.properties = ["selected": feature.selected, "tailPosition": feature.tailPosition.rawValue, "text": feature.label, "imageName": feature.imageName, "sortOrder": feature.selected == true ? index : -index]
 
             features.append(featurePoint)
         }
@@ -178,16 +174,17 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
             UIColor.black
         })
 
-        shapeLayer.layout?.textSize = .expression(
-            Exp(.interpolate) {
-                Exp(.linear)
-                Exp(.zoom)
-                13
-                16
-                15.5
-                20
-            }
-        )
+//        shapeLayer.layout?.textSize = .expression(
+//            Exp(.interpolate) {
+//                Exp(.linear)
+//                Exp(.zoom)
+//                13
+//                16
+//                15.5
+//                20
+//            }
+//        )
+        shapeLayer.layout?.textSize = .constant(16)
 
         shapeLayer.layout?.iconTextFit = .both
         shapeLayer.layout?.iconAllowOverlap = .constant(true)
@@ -195,18 +192,20 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
         shapeLayer.layout?.textJustify = .left
         shapeLayer.layout?.symbolZOrder = .auto
         shapeLayer.layout?.textFont = .constant(["DIN Pro Medium"])
-//        shapeLayer.layout?.iconTextFitPadding = .constant([-4.0, -4.0, -2.0, -4.0])
-        shapeLayer.layout?.symbolSortKey = .expression(Exp(.switchCase) {
-            Exp(.any) {
-                Exp(.get) {
-                    "selected"
-                }
-            }
-            1.0
-            0.0
-        })
 
         style.addLayer(layer: shapeLayer, layerPosition: nil)
+
+        let symbolSortKeyString =
+        """
+        ["get", "sortOrder"]
+        """
+
+        if let expressionData = symbolSortKeyString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
+
+            try! mapView.__map.setStyleLayerPropertyForLayerId(CustomPointAnnotationExample.annotations,
+                                                          property: "symbol-sort-key",
+                                                          value: expJSONObject)
+        }
 
         let expressionString =
         """
@@ -229,27 +228,27 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
                                                           value: expJSONObject)
         }
 
-        let offsetExpressionString =
-        """
-        [
-          "match",
-          ["get", "tailPosition"],
-          ["0"],
-          ["literal", [0.5, -1]],
-          ["literal", [-0.5, -1]]
-        ]
-        """
-
-        if let expressionData = offsetExpressionString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
-
-            try! mapView.__map.setStyleLayerPropertyForLayerId(CustomPointAnnotationExample.annotations,
-                                                          property: "icon-offset",
-                                                          value: expJSONObject)
-
-            try! mapView.__map.setStyleLayerPropertyForLayerId(CustomPointAnnotationExample.annotations,
-                                                          property: "text-offset",
-                                                          value: expJSONObject)
-        }
+//        let offsetExpressionString =
+//        """
+//        [
+//          "match",
+//          ["get", "tailPosition"],
+//          ["0"],
+//          ["literal", [0.5, -1]],
+//          ["literal", [-0.5, -1]]
+//        ]
+//        """
+//
+//        if let expressionData = offsetExpressionString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
+//
+//            try! mapView.__map.setStyleLayerPropertyForLayerId(CustomPointAnnotationExample.annotations,
+//                                                          property: "icon-offset",
+//                                                          value: expJSONObject)
+//
+//            try! mapView.__map.setStyleLayerPropertyForLayerId(CustomPointAnnotationExample.annotations,
+//                                                          property: "text-offset",
+//                                                          value: expJSONObject)
+//        }
     }
 }
 

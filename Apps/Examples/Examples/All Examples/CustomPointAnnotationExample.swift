@@ -173,18 +173,7 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
             UIColor.black
         })
 
-//        shapeLayer.layout?.textSize = .expression(
-//            Exp(.interpolate) {
-//                Exp(.linear)
-//                Exp(.zoom)
-//                13
-//                16
-//                15.5
-//                20
-//            }
-//        )
         shapeLayer.layout?.textSize = .constant(16)
-
         shapeLayer.layout?.iconTextFit = .both
         shapeLayer.layout?.iconAllowOverlap = .constant(true)
         shapeLayer.layout?.textAllowOverlap = .constant(true)
@@ -211,9 +200,11 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
         [
           "match",
           ["get", "tailPosition"],
-          ["0"],
+          [0],
           "bottom-left",
-          "bottom-right"
+          [1],
+          "bottom-right",
+          "center"
         ]
         """
 
@@ -227,27 +218,27 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
                                                           value: expJSONObject)
         }
 
-//        let offsetExpressionString =
-//        """
-//        [
-//          "match",
-//          ["get", "tailPosition"],
-//          ["0"],
-//          ["literal", [0.5, -1]],
-//          ["literal", [-0.5, -1]]
-//        ]
-//        """
-//
-//        if let expressionData = offsetExpressionString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
-//
-//            try! mapView.__map.setStyleLayerPropertyForLayerId(CustomPointAnnotationExample.annotations,
-//                                                          property: "icon-offset",
-//                                                          value: expJSONObject)
-//
-//            try! mapView.__map.setStyleLayerPropertyForLayerId(CustomPointAnnotationExample.annotations,
-//                                                          property: "text-offset",
-//                                                          value: expJSONObject)
-//        }
+        let offsetExpressionString =
+        """
+        [
+          "match",
+          ["get", "tailPosition"],
+          [0],
+          ["literal", [0.5, -1]],
+          ["literal", [-0.5, -1]]
+        ]
+        """
+
+        if let expressionData = offsetExpressionString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
+
+            try! mapView.__map.setStyleLayerPropertyForLayerId(CustomPointAnnotationExample.annotations,
+                                                          property: "icon-offset",
+                                                          value: expJSONObject)
+
+            try! mapView.__map.setStyleLayerPropertyForLayerId(CustomPointAnnotationExample.annotations,
+                                                          property: "text-offset",
+                                                          value: expJSONObject)
+        }
     }
 }
 

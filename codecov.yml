@@ -4,13 +4,11 @@ codecov:
   notify:
     wait_for_ci: false
 ignore:
-  - "Examples/"
-  - "Mapbox/*Tests/"
+  - "Apps"
   - "docs"
-  - "Apps/DebugApp"
-  - "StressTest/"
-  - "PCVD/"
-  - "Mapbox/Test*"
+  - "Examples"
+  - "PCVD"
+  - "Tests"
 coverage:
   status:
     project:
@@ -37,11 +35,11 @@ comment:
 
 # Explicit list of flags
 flags:
-  MapboxMaps:
+  mapbox_maps:
     paths:
-      - Mapbox/
+      - Sources/MapboxMaps
     carryforward: false
-  MapboxMapsTestsWithHost:
+  mapbox_maps_tests_with_host:
     paths:
-      - Mapbox/
+      - Sources/MapboxMaps
     carryforward: false

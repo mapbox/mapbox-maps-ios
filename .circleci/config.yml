@@ -195,9 +195,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
-      - access-token-configs
-      - configure-netrc
-      - xcode-github-workaround
+      - configure-environment
       - run:
           name: Delete Xcode Workspace so we can build with SPM
           command: rm -rf MapboxMaps.xcworkspace
@@ -221,9 +219,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
-      - access-token-configs
-      - configure-netrc
-      - xcode-github-workaround
+      - configure-environment
       - run:
           name: Building scheme DebugApp for simulator
           command: make build-app-for-simulator SCHEME=DebugApp
@@ -279,9 +275,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
-      - access-token-configs
-      - configure-netrc
-      - xcode-github-workaround
+      - configure-environment
       - run:
           name: Delete Xcode Workspace so we can build with SPM
           command: rm -rf MapboxMaps.xcworkspace
@@ -317,7 +311,7 @@ jobs:
       - ensure-text-exists-in-commit:
           commit-text: "[run device tests]"
           always-run: << parameters.device-tests-always-run >>
-      - access-token-configs
+      - inject-mapbox-public-token
       - run: make install-devicefarm-dependencies
       - install-dependencies
       - run:
@@ -454,12 +448,16 @@ jobs:
 # Reusable commands
 commands:
 
-  # Configurable build/test commands
+  configure-environment:
+    steps:
+      - add-github-to-known-hosts
+      - configure-netrc
+      - inject-mapbox-public-token
 
-  access-token-configs:
+  inject-mapbox-public-token:
     steps:
       - run:
-          name: Save mapbox access token to configs
+          name: Injecting Mapbox public token
           command: |
             echo "MAPBOX_ACCESS_TOKEN = ${MAPBOX_ACCESS_TOKEN}" > ./developer.xcconfig
             echo "${MAPBOX_ACCESS_TOKEN}" > ~/.mapbox
@@ -593,11 +591,12 @@ commands:
           name: Configure .netrc
           command: echo "machine api.mapbox.com login mapbox password $SDK_REGISTRY_TOKEN" >> ~/.netrc
 
+  # Work around Xcode's issue with GitHub's SSH fingerprint even when using HTTPS SPM URLs
   # See https://stackoverflow.com/a/58186048
-  xcode-github-workaround:
+  add-github-to-known-hosts:
     steps:
       - run:
-          name: Work around Xcode's issue with GitHub's SSH fingerprint
+          name: Add github.com to known_hosts
           command: for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
 
   locate-derived-data-directory:

@@ -332,7 +332,6 @@
 				077C4EE8252F7E88007636F1 /* Resources */,
 				077C4F3E252F7F9C007636F1 /* Embed Frameworks */,
 				0746C187252FB153001638BD /* Insert Mapbox access token */,
-				0746C193252FB370001638BD /* Lint with SwiftLint */,
 			);
 			buildRules = (
 			);
@@ -473,25 +472,8 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/../scripts/insert_access_token.sh\n";
-		};
-		0746C193252FB370001638BD /* Lint with SwiftLint */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Lint with SwiftLint";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if which swiftlint >/dev/null; then\n  echo \"Linting ${TARGET_NAME}...\"\n  swiftlint lint --config $SRCROOT/../.swiftlint.yml ${TARGET_NAME}\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "$SRCROOT/../../scripts/insert_access_token.sh\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 

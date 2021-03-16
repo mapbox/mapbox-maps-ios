@@ -304,7 +304,8 @@
 			children = (
 				077C4F4B252FA7CD007636F1 /* base.xcconfig */,
 			);
-			path = Configurations;
+			name = Configurations;
+			path = ../Configurations;
 			sourceTree = "<group>";
 		};
 		07B071D12547CF50007F2865 /* Sample Data */ = {

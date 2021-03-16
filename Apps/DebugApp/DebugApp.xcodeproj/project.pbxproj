@@ -155,7 +155,8 @@
 				CA56651F24479764006F392C /* base.xcconfig */,
 				CA72AEED253DE10600BD2F81 /* unitTests.xcconfig */,
 			);
-			path = Configurations;
+			name = Configurations;
+			path = ../Configurations;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

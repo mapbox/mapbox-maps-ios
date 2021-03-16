@@ -404,7 +404,7 @@ update-codecov-with-profdata:
 			-t $(CODECOV_TOKEN) \
 			-J '^MapboxMaps$$' \
 			-n $${RESULT}.lcov \
-			-F $(SCHEME) ; \
+			-F "$$(echo '$(SCHEME)' | sed 's/[[:upper:]]/_&/g;s/^_//' | tr '[:upper:]' '[:lower:]')" ; \
 		echo "Generating lcov JSON" ; \
 		xcrun llvm-cov export \
 			$(COVERAGE_MAPBOX_MAPS) \

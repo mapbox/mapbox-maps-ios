@@ -44,6 +44,7 @@ workflows:
           report_failure: true
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
+          xcode: "12.4.0"
           device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
           device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
@@ -89,6 +90,7 @@ workflows:
               ignore: main
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
+          xcode: "12.4.0"
           device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
           device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
@@ -110,6 +112,7 @@ workflows:
               only: main
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices (main)"
+          xcode: "12.4.0"
           device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
           device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"

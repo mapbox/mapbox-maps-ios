@@ -99,8 +99,8 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
                 highZoomWidth
             }
         )
-        lineLayer.layout?.lineCap = .round
-        lineLayer.layout?.lineJoin = .round
+        lineLayer.layout?.lineCap = .constant(.round)
+        lineLayer.layout?.lineJoin = .constant(.round)
 
         // Add the source and style layer to the map style.
         mapView.style.addSource(source: geoJSONSource, identifier: geoJSONDataSourceIdentifier)

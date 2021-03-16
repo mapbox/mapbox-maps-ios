@@ -42,7 +42,7 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         lineLayer.paint?.lineColor = .constant(lineColor)
         lineLayer.paint?.lineOpacity = .constant(0.6)
         lineLayer.paint?.lineWidth = .constant(2.0)
-        lineLayer.layout?.lineCap = .round
+        lineLayer.layout?.lineCap = .constant(.round)
 
         let addSourceResult = mapView.style.addSource(source: vectorSource, identifier: sourceIdentifier)
 

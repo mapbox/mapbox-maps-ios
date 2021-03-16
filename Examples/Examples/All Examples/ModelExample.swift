@@ -41,7 +41,7 @@ public class ModelExample: UIViewController, ExampleProtocol {
                                 identifier: "race-car-model-source")
 
         var modelLayer = ModelLayer(id: "race-car-model-layer")
-        modelLayer.layout?.visibility = .visible
+        modelLayer.layout?.visibility = .constant(.visible)
         modelLayer.paint?.modelOpacity = .constant(0.8)
         modelLayer.paint?.modelScale = .constant([5.0, 5.0, 5.0])
         modelLayer.source = "race-car-model-source"

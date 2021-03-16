@@ -62,7 +62,7 @@ class ModelLayerTests: XCTestCase {
     func testEncodingAndDecodingOfLayoutProperties() {
 
        var layer = ModelLayer(id: "test-id")	
-       layer.layout?.visibility = .visible
+       layer.layout?.visibility = .constant(.visible)
 
        var data: Data?
        do {
@@ -78,7 +78,7 @@ class ModelLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(ModelLayer.self, from: validData)
-           XCTAssert(decodedLayer.layout?.visibility == .visible)
+           XCTAssert(decodedLayer.layout?.visibility == .constant(.visible))
  
        } catch {
            XCTFail("Failed to decode ModelLayer")
@@ -109,7 +109,7 @@ class ModelLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(ModelLayer.self, from: validData)
-           XCTAssert(decodedLayer.layout?.visibility == .visible)
+           XCTAssert(decodedLayer.layout?.visibility == .constant(.visible))
        	   XCTAssert(layer.paint?.modelOpacity == Value<Double>.testConstantValue())
        	   XCTAssert(layer.paint?.modelRotation == Value<[Double]>.testConstantValue())
        	   XCTAssert(layer.paint?.modelScale == Value<[Double]>.testConstantValue())

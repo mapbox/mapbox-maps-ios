@@ -28,10 +28,10 @@ public struct SkyLayer: Layer {
     public struct Layout: Codable {
 
       /// Whether this layer is displayed.
-      public var visibility: Visibility?
+      public var visibility: Value<Visibility>?
       
       public init() {
-        self.visibility = .visible
+        self.visibility = .constant(.visible)
       }
 
        
@@ -75,7 +75,7 @@ public struct SkyLayer: Layer {
       public var skyOpacityTransition: StyleTransition?
             
       /// The type of the sky
-      public var skyType: SkyType?
+      public var skyType: Value<SkyType>?
       
 
       enum CodingKeys: String, CodingKey {

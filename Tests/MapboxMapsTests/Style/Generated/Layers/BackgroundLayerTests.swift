@@ -62,7 +62,7 @@ class BackgroundLayerTests: XCTestCase {
     func testEncodingAndDecodingOfLayoutProperties() {
 
        var layer = BackgroundLayer(id: "test-id")	
-       layer.layout?.visibility = .visible
+       layer.layout?.visibility = .constant(.visible)
 
        var data: Data?
        do {
@@ -78,7 +78,7 @@ class BackgroundLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(BackgroundLayer.self, from: validData)
-           XCTAssert(decodedLayer.layout?.visibility == .visible)
+           XCTAssert(decodedLayer.layout?.visibility == .constant(.visible))
  
        } catch {
            XCTFail("Failed to decode BackgroundLayer")
@@ -109,7 +109,7 @@ class BackgroundLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(BackgroundLayer.self, from: validData)
-           XCTAssert(decodedLayer.layout?.visibility == .visible)
+           XCTAssert(decodedLayer.layout?.visibility == .constant(.visible))
        	   XCTAssert(layer.paint?.backgroundColor == Value<ColorRepresentable>.testConstantValue())
        	   XCTAssert(layer.paint?.backgroundOpacity == Value<Double>.testConstantValue())
        	   XCTAssert(layer.paint?.backgroundPattern == Value<ResolvedImage>.testConstantValue())

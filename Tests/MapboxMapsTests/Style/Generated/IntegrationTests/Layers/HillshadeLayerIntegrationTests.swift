@@ -34,7 +34,7 @@ class HillshadeLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.layout?.visibility = .visible
+            layer.layout?.visibility = .constant(.visible)
 
             layer.paint?.hillshadeAccentColor = Value<ColorRepresentable>.testConstantValue()
             layer.paint?.hillshadeAccentColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -42,7 +42,7 @@ class HillshadeLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.hillshadeExaggerationTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.hillshadeHighlightColor = Value<ColorRepresentable>.testConstantValue()
             layer.paint?.hillshadeHighlightColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.hillshadeIlluminationAnchor = HillshadeIlluminationAnchor.testConstantValue()
+            layer.paint?.hillshadeIlluminationAnchor = Value<HillshadeIlluminationAnchor>.testConstantValue()
             layer.paint?.hillshadeIlluminationDirection = Value<Double>.testConstantValue()
             layer.paint?.hillshadeShadowColor = Value<ColorRepresentable>.testConstantValue()
             layer.paint?.hillshadeShadowColorTransition = StyleTransition(duration: 10.0, delay: 10.0)

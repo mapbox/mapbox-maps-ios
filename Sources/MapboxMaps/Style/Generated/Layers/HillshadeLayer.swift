@@ -28,10 +28,10 @@ public struct HillshadeLayer: Layer {
     public struct Layout: Codable {
 
       /// Whether this layer is displayed.
-      public var visibility: Visibility?
+      public var visibility: Value<Visibility>?
       
       public init() {
-        self.visibility = .visible
+        self.visibility = .constant(.visible)
       }
 
        
@@ -66,7 +66,7 @@ public struct HillshadeLayer: Layer {
       public var hillshadeHighlightColorTransition: StyleTransition?
             
       /// Direction of light source when map is rotated.
-      public var hillshadeIlluminationAnchor: HillshadeIlluminationAnchor?
+      public var hillshadeIlluminationAnchor: Value<HillshadeIlluminationAnchor>?
             
       /// The direction of the light source used to generate the hillshading with 0 as the top of the viewport if `hillshade-illumination-anchor` is set to `viewport` and due north if `hillshade-illumination-anchor` is set to `map`.
       public var hillshadeIlluminationDirection: Value<Double>?

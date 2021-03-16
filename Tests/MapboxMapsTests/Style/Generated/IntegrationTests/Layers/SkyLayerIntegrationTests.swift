@@ -34,7 +34,7 @@ class SkyLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.layout?.visibility = .visible
+            layer.layout?.visibility = .constant(.visible)
 
             layer.paint?.skyAtmosphereColor = Value<ColorRepresentable>.testConstantValue()
             layer.paint?.skyAtmosphereHaloColor = Value<ColorRepresentable>.testConstantValue()
@@ -43,7 +43,7 @@ class SkyLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.skyGradientRadius = Value<Double>.testConstantValue()
             layer.paint?.skyOpacity = Value<Double>.testConstantValue()
             layer.paint?.skyOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.skyType = SkyType.testConstantValue()
+            layer.paint?.skyType = Value<SkyType>.testConstantValue()
 
             // Add the layer
             let addResult = style.addLayer(layer: layer)

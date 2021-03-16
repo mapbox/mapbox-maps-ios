@@ -34,7 +34,7 @@ class LocationIndicatorLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.layout?.visibility = .visible
+            layer.layout?.visibility = .constant(.visible)
             layer.layout?.bearingImage = Value<ResolvedImage>.testConstantValue()
             layer.layout?.shadowImage = Value<ResolvedImage>.testConstantValue()
             layer.layout?.topImage = Value<ResolvedImage>.testConstantValue()

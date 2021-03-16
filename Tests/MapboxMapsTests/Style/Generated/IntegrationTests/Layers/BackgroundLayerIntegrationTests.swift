@@ -34,7 +34,7 @@ class BackgroundLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.layout?.visibility = .visible
+            layer.layout?.visibility = .constant(.visible)
 
             layer.paint?.backgroundColor = Value<ColorRepresentable>.testConstantValue()
             layer.paint?.backgroundColorTransition = StyleTransition(duration: 10.0, delay: 10.0)

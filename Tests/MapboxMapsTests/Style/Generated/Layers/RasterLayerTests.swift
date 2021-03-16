@@ -62,7 +62,7 @@ class RasterLayerTests: XCTestCase {
     func testEncodingAndDecodingOfLayoutProperties() {
 
        var layer = RasterLayer(id: "test-id")	
-       layer.layout?.visibility = .visible
+       layer.layout?.visibility = .constant(.visible)
 
        var data: Data?
        do {
@@ -78,7 +78,7 @@ class RasterLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(RasterLayer.self, from: validData)
-           XCTAssert(decodedLayer.layout?.visibility == .visible)
+           XCTAssert(decodedLayer.layout?.visibility == .constant(.visible))
  
        } catch {
            XCTFail("Failed to decode RasterLayer")
@@ -99,7 +99,7 @@ class RasterLayerTests: XCTestCase {
        layer.paint?.rasterHueRotateTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.paint?.rasterOpacity = Value<Double>.testConstantValue()
        layer.paint?.rasterOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.paint?.rasterResampling = RasterResampling.testConstantValue()
+       layer.paint?.rasterResampling = Value<RasterResampling>.testConstantValue()
        layer.paint?.rasterSaturation = Value<Double>.testConstantValue()
        layer.paint?.rasterSaturationTransition = StyleTransition(duration: 10.0, delay: 10.0)
 
@@ -117,14 +117,14 @@ class RasterLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(RasterLayer.self, from: validData)
-           XCTAssert(decodedLayer.layout?.visibility == .visible)
+           XCTAssert(decodedLayer.layout?.visibility == .constant(.visible))
        	   XCTAssert(layer.paint?.rasterBrightnessMax == Value<Double>.testConstantValue())
        	   XCTAssert(layer.paint?.rasterBrightnessMin == Value<Double>.testConstantValue())
        	   XCTAssert(layer.paint?.rasterContrast == Value<Double>.testConstantValue())
        	   XCTAssert(layer.paint?.rasterFadeDuration == Value<Double>.testConstantValue())
        	   XCTAssert(layer.paint?.rasterHueRotate == Value<Double>.testConstantValue())
        	   XCTAssert(layer.paint?.rasterOpacity == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.paint?.rasterResampling == RasterResampling.testConstantValue())
+       	   XCTAssert(layer.paint?.rasterResampling == Value<RasterResampling>.testConstantValue())
        	   XCTAssert(layer.paint?.rasterSaturation == Value<Double>.testConstantValue())
  
        } catch {

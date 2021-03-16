@@ -62,7 +62,7 @@ class FillLayerTests: XCTestCase {
     func testEncodingAndDecodingOfLayoutProperties() {
 
        var layer = FillLayer(id: "test-id")	
-       layer.layout?.visibility = .visible
+       layer.layout?.visibility = .constant(.visible)
        layer.layout?.fillSortKey = Value<Double>.testConstantValue()
 
        var data: Data?
@@ -79,7 +79,7 @@ class FillLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(FillLayer.self, from: validData)
-           XCTAssert(decodedLayer.layout?.visibility == .visible)
+           XCTAssert(decodedLayer.layout?.visibility == .constant(.visible))
        	   XCTAssert(layer.layout?.fillSortKey == Value<Double>.testConstantValue())
  
        } catch {
@@ -101,7 +101,7 @@ class FillLayerTests: XCTestCase {
        layer.paint?.fillPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.paint?.fillTranslate = Value<[Double]>.testConstantValue()
        layer.paint?.fillTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.paint?.fillTranslateAnchor = FillTranslateAnchor.testConstantValue()
+       layer.paint?.fillTranslateAnchor = Value<FillTranslateAnchor>.testConstantValue()
 
        var data: Data?
        do {
@@ -117,14 +117,14 @@ class FillLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(FillLayer.self, from: validData)
-           XCTAssert(decodedLayer.layout?.visibility == .visible)
+           XCTAssert(decodedLayer.layout?.visibility == .constant(.visible))
        	   XCTAssert(layer.paint?.fillAntialias == Value<Bool>.testConstantValue())
        	   XCTAssert(layer.paint?.fillColor == Value<ColorRepresentable>.testConstantValue())
        	   XCTAssert(layer.paint?.fillOpacity == Value<Double>.testConstantValue())
        	   XCTAssert(layer.paint?.fillOutlineColor == Value<ColorRepresentable>.testConstantValue())
        	   XCTAssert(layer.paint?.fillPattern == Value<ResolvedImage>.testConstantValue())
        	   XCTAssert(layer.paint?.fillTranslate == Value<[Double]>.testConstantValue())
-       	   XCTAssert(layer.paint?.fillTranslateAnchor == FillTranslateAnchor.testConstantValue())
+       	   XCTAssert(layer.paint?.fillTranslateAnchor == Value<FillTranslateAnchor>.testConstantValue())
  
        } catch {
            XCTFail("Failed to decode FillLayer")

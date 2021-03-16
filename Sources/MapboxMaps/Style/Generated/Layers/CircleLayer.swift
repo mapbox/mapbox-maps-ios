@@ -28,10 +28,10 @@ public struct CircleLayer: Layer {
     public struct Layout: Codable {
 
       /// Whether this layer is displayed.
-      public var visibility: Visibility?
+      public var visibility: Value<Visibility>?
       
       public init() {
-        self.visibility = .visible
+        self.visibility = .constant(.visible)
       }
 
             
@@ -70,10 +70,10 @@ public struct CircleLayer: Layer {
       public var circleOpacityTransition: StyleTransition?
             
       /// Orientation of circle when map is pitched.
-      public var circlePitchAlignment: CirclePitchAlignment?
+      public var circlePitchAlignment: Value<CirclePitchAlignment>?
             
       /// Controls the scaling behavior of the circle when the map is pitched.
-      public var circlePitchScale: CirclePitchScale?
+      public var circlePitchScale: Value<CirclePitchScale>?
             
       /// Circle radius.
       public var circleRadius: Value<Double>?
@@ -106,7 +106,7 @@ public struct CircleLayer: Layer {
       public var circleTranslateTransition: StyleTransition?
             
       /// Controls the frame of reference for `circle-translate`.
-      public var circleTranslateAnchor: CircleTranslateAnchor?
+      public var circleTranslateAnchor: Value<CircleTranslateAnchor>?
       
 
       enum CodingKeys: String, CodingKey {

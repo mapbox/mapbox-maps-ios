@@ -34,7 +34,7 @@ class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.layout?.visibility = .visible
+            layer.layout?.visibility = .constant(.visible)
 
             layer.paint?.fillExtrusionBase = Value<Double>.testConstantValue()
             layer.paint?.fillExtrusionBaseTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -47,7 +47,7 @@ class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.fillExtrusionPattern = Value<ResolvedImage>.testConstantValue()
             layer.paint?.fillExtrusionPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.fillExtrusionTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.fillExtrusionTranslateAnchor = FillExtrusionTranslateAnchor.testConstantValue()
+            layer.paint?.fillExtrusionTranslateAnchor = Value<FillExtrusionTranslateAnchor>.testConstantValue()
             layer.paint?.fillExtrusionVerticalGradient = Value<Bool>.testConstantValue()
 
             // Add the layer

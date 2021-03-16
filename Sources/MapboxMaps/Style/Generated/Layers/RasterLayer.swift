@@ -28,10 +28,10 @@ public struct RasterLayer: Layer {
     public struct Layout: Codable {
 
       /// Whether this layer is displayed.
-      public var visibility: Visibility?
+      public var visibility: Value<Visibility>?
       
       public init() {
-        self.visibility = .visible
+        self.visibility = .constant(.visible)
       }
 
        
@@ -81,7 +81,7 @@ public struct RasterLayer: Layer {
       public var rasterOpacityTransition: StyleTransition?
             
       /// The resampling/interpolation method to use for overscaling, also known as texture magnification filter
-      public var rasterResampling: RasterResampling?
+      public var rasterResampling: Value<RasterResampling>?
             
       /// Increase or reduce the saturation of the image.
       public var rasterSaturation: Value<Double>?

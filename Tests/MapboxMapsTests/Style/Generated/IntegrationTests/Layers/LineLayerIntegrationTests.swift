@@ -34,9 +34,9 @@ class LineLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.layout?.visibility = .visible
-            layer.layout?.lineCap = LineCap.testConstantValue()
-            layer.layout?.lineJoin = LineJoin.testConstantValue()
+            layer.layout?.visibility = .constant(.visible)
+            layer.layout?.lineCap = Value<LineCap>.testConstantValue()
+            layer.layout?.lineJoin = Value<LineJoin>.testConstantValue()
             layer.layout?.lineMiterLimit = Value<Double>.testConstantValue()
             layer.layout?.lineRoundLimit = Value<Double>.testConstantValue()
             layer.layout?.lineSortKey = Value<Double>.testConstantValue()
@@ -56,7 +56,7 @@ class LineLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.linePattern = Value<ResolvedImage>.testConstantValue()
             layer.paint?.linePatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.lineTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.lineTranslateAnchor = LineTranslateAnchor.testConstantValue()
+            layer.paint?.lineTranslateAnchor = Value<LineTranslateAnchor>.testConstantValue()
             layer.paint?.lineWidth = Value<Double>.testConstantValue()
             layer.paint?.lineWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
 

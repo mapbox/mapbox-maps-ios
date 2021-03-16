@@ -28,10 +28,10 @@ public struct FillExtrusionLayer: Layer {
     public struct Layout: Codable {
 
       /// Whether this layer is displayed.
-      public var visibility: Visibility?
+      public var visibility: Value<Visibility>?
       
       public init() {
-        self.visibility = .visible
+        self.visibility = .constant(.visible)
       }
 
        
@@ -84,7 +84,7 @@ public struct FillExtrusionLayer: Layer {
       public var fillExtrusionTranslateTransition: StyleTransition?
             
       /// Controls the frame of reference for `fill-extrusion-translate`.
-      public var fillExtrusionTranslateAnchor: FillExtrusionTranslateAnchor?
+      public var fillExtrusionTranslateAnchor: Value<FillExtrusionTranslateAnchor>?
             
       /// Whether to apply a vertical gradient to the sides of a fill-extrusion layer. If true, sides will be shaded slightly darker farther down.
       public var fillExtrusionVerticalGradient: Value<Bool>?

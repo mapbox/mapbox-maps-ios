@@ -34,7 +34,7 @@ class CircleLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.layout?.visibility = .visible
+            layer.layout?.visibility = .constant(.visible)
             layer.layout?.circleSortKey = Value<Double>.testConstantValue()
 
             layer.paint?.circleBlur = Value<Double>.testConstantValue()
@@ -43,8 +43,8 @@ class CircleLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.circleColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.circleOpacity = Value<Double>.testConstantValue()
             layer.paint?.circleOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.circlePitchAlignment = CirclePitchAlignment.testConstantValue()
-            layer.paint?.circlePitchScale = CirclePitchScale.testConstantValue()
+            layer.paint?.circlePitchAlignment = Value<CirclePitchAlignment>.testConstantValue()
+            layer.paint?.circlePitchScale = Value<CirclePitchScale>.testConstantValue()
             layer.paint?.circleRadius = Value<Double>.testConstantValue()
             layer.paint?.circleRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.circleStrokeColor = Value<ColorRepresentable>.testConstantValue()
@@ -54,7 +54,7 @@ class CircleLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.circleStrokeWidth = Value<Double>.testConstantValue()
             layer.paint?.circleStrokeWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.circleTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.circleTranslateAnchor = CircleTranslateAnchor.testConstantValue()
+            layer.paint?.circleTranslateAnchor = Value<CircleTranslateAnchor>.testConstantValue()
 
             // Add the layer
             let addResult = style.addLayer(layer: layer)

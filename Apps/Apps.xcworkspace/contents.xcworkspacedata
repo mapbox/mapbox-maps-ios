@@ -5,6 +5,9 @@
       location = "group:DebugApp/DebugApp.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:Examples/Examples.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:StressTest/StressTest.xcodeproj">
    </FileRef>
    <FileRef

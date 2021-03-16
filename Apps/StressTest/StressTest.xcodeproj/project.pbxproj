@@ -152,7 +152,8 @@
 				CADCF8FD258551D40065C51B /* unitTests.xcconfig */,
 				CADCF8FF258551D40065C51B /* base.xcconfig */,
 			);
-			path = Configurations;
+			name = Configurations;
+			path = ../Configurations;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

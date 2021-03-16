@@ -89,15 +89,15 @@ public class AnnotationManager: Observer {
     /**
      The default source layer identifier to be used by the `AnnotationManager`.
      */
-    internal let defaultSourceId = "com.mapbox.AnnotationManager.DefaultSourceLayer"
+    internal let defaultSourceId = "com.mapbox.AnnotationManager.DefaultSource"
 
     /**
      The default style layer identifiers to be used by the point, line, and polygon
      style layers managed by this class.
      */
-    internal let defaultSymbolLayerId = "com.mapbox.AnnotationManager.DefaultSymbolStylelayer"
-    internal let defaultLineLayerId = "com.mapbox.AnnotationManager.DefaultLineStylelayer"
-    internal let defaultPolygonLayerId = "com.mapbox.AnnotationManager.DefaultPolygonStylelayer"
+    internal let defaultSymbolLayerId = "com.mapbox.AnnotationManager.DefaultSymbolStyleLayer"
+    internal let defaultLineLayerId = "com.mapbox.AnnotationManager.DefaultLineStyleLayer"
+    internal let defaultPolygonLayerId = "com.mapbox.AnnotationManager.DefaultPolygonStyleLayer"
 
     /**
      The default style layers used to render point, line, and polygon

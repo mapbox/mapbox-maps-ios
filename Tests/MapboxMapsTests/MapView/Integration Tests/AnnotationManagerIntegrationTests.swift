@@ -22,7 +22,9 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
 
             // Given
             let annotation = PointAnnotation(coordinate: mapView.centerCoordinate)
-            let annotationManager = AnnotationManager(for: mapView, with: self)
+            let annotationManager = AnnotationManager(for: mapView,
+                                                      with: self,
+                                                      options: AnnotationOptions())
             annotationManager.addAnnotation(annotation)
 
             // When
@@ -71,7 +73,9 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
 
             // Given
             var annotation = PointAnnotation(coordinate: mapView.centerCoordinate)
-            let annotationManager = AnnotationManager(for: mapView, with: self)
+            let annotationManager = AnnotationManager(for: mapView,
+                                                      with: self,
+                                                      options: AnnotationOptions())
             annotation.userInfo = ["TestKey": true]
             annotationManager.addAnnotation(annotation)
 

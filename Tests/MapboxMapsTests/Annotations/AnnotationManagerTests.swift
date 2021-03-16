@@ -23,7 +23,8 @@ class AnnotationManagerTests: XCTestCase {
         annotationSupportableMapMock = AnnotationSupportableMapMock()
         annotationSupportableStyleMock = AnnotationStyleDelegateMock()
         annotationManager = AnnotationManager(for: annotationSupportableMapMock,
-                                              with: annotationSupportableStyleMock)
+                                              with: annotationSupportableStyleMock,
+                                              options: AnnotationOptions())
 
         defaultCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     }
@@ -35,6 +36,13 @@ class AnnotationManagerTests: XCTestCase {
         defaultCoordinate = nil
     }
 
+    // MARK: - Test adding point annotation
+    func testAnnotationOptions() {
+        let a = AnnotationOptions()
+        let b = AnnotationOptions()
+        XCTAssertEqual(a, b)
+    }
+    
     func testAnnotationManagerDefaultInitialization() {
         // Given / When
         let expectedInitialAnnotationsCount = 0

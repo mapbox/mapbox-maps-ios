@@ -62,7 +62,7 @@ class CircleLayerTests: XCTestCase {
     func testEncodingAndDecodingOfLayoutProperties() {
 
        var layer = CircleLayer(id: "test-id")	
-       layer.layout?.visibility = .visible
+       layer.layout?.visibility = .constant(.visible)
        layer.layout?.circleSortKey = Value<Double>.testConstantValue()
 
        var data: Data?
@@ -79,7 +79,7 @@ class CircleLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(CircleLayer.self, from: validData)
-           XCTAssert(decodedLayer.layout?.visibility == .visible)
+           XCTAssert(decodedLayer.layout?.visibility == .constant(.visible))
        	   XCTAssert(layer.layout?.circleSortKey == Value<Double>.testConstantValue())
  
        } catch {
@@ -96,8 +96,8 @@ class CircleLayerTests: XCTestCase {
        layer.paint?.circleColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.paint?.circleOpacity = Value<Double>.testConstantValue()
        layer.paint?.circleOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.paint?.circlePitchAlignment = CirclePitchAlignment.testConstantValue()
-       layer.paint?.circlePitchScale = CirclePitchScale.testConstantValue()
+       layer.paint?.circlePitchAlignment = Value<CirclePitchAlignment>.testConstantValue()
+       layer.paint?.circlePitchScale = Value<CirclePitchScale>.testConstantValue()
        layer.paint?.circleRadius = Value<Double>.testConstantValue()
        layer.paint?.circleRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.paint?.circleStrokeColor = Value<ColorRepresentable>.testConstantValue()
@@ -108,7 +108,7 @@ class CircleLayerTests: XCTestCase {
        layer.paint?.circleStrokeWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.paint?.circleTranslate = Value<[Double]>.testConstantValue()
        layer.paint?.circleTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.paint?.circleTranslateAnchor = CircleTranslateAnchor.testConstantValue()
+       layer.paint?.circleTranslateAnchor = Value<CircleTranslateAnchor>.testConstantValue()
 
        var data: Data?
        do {
@@ -124,18 +124,18 @@ class CircleLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(CircleLayer.self, from: validData)
-           XCTAssert(decodedLayer.layout?.visibility == .visible)
+           XCTAssert(decodedLayer.layout?.visibility == .constant(.visible))
        	   XCTAssert(layer.paint?.circleBlur == Value<Double>.testConstantValue())
        	   XCTAssert(layer.paint?.circleColor == Value<ColorRepresentable>.testConstantValue())
        	   XCTAssert(layer.paint?.circleOpacity == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.paint?.circlePitchAlignment == CirclePitchAlignment.testConstantValue())
-       	   XCTAssert(layer.paint?.circlePitchScale == CirclePitchScale.testConstantValue())
+       	   XCTAssert(layer.paint?.circlePitchAlignment == Value<CirclePitchAlignment>.testConstantValue())
+       	   XCTAssert(layer.paint?.circlePitchScale == Value<CirclePitchScale>.testConstantValue())
        	   XCTAssert(layer.paint?.circleRadius == Value<Double>.testConstantValue())
        	   XCTAssert(layer.paint?.circleStrokeColor == Value<ColorRepresentable>.testConstantValue())
        	   XCTAssert(layer.paint?.circleStrokeOpacity == Value<Double>.testConstantValue())
        	   XCTAssert(layer.paint?.circleStrokeWidth == Value<Double>.testConstantValue())
        	   XCTAssert(layer.paint?.circleTranslate == Value<[Double]>.testConstantValue())
-       	   XCTAssert(layer.paint?.circleTranslateAnchor == CircleTranslateAnchor.testConstantValue())
+       	   XCTAssert(layer.paint?.circleTranslateAnchor == Value<CircleTranslateAnchor>.testConstantValue())
  
        } catch {
            XCTFail("Failed to decode CircleLayer")

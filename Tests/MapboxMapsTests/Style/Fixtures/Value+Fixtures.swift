@@ -47,6 +47,18 @@ internal extension Value where T == Bool {
     }
 }
 
+internal extension Value where T == [TextAnchor] {
+    static func testConstantValue() -> Value<[TextAnchor]> {
+        return .constant([.bottom, .right])
+    }
+}
+
+internal extension Value where T == [TextWritingMode] {
+    static func testConstantValue() -> Value<[TextWritingMode]> {
+        return .constant([.horizontal, .vertical])
+    }
+}
+
 internal extension Array where Element == TextAnchor {
     static func testConstantValue() -> [TextAnchor] {
         return [.bottom, .right]

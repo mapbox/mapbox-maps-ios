@@ -61,8 +61,8 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
                 highZoomWidth
             }
         )
-        lineLayer.layout?.lineCap = .round
-        lineLayer.layout?.lineJoin = .round
+        lineLayer.layout?.lineCap = .constant(.round)
+        lineLayer.layout?.lineJoin = .constant(.round)
 
         // Add the lineLayer to the map.
         mapView.style.addSource(source: routeLineSource,

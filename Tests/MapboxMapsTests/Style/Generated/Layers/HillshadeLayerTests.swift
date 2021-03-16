@@ -62,7 +62,7 @@ class HillshadeLayerTests: XCTestCase {
     func testEncodingAndDecodingOfLayoutProperties() {
 
        var layer = HillshadeLayer(id: "test-id")	
-       layer.layout?.visibility = .visible
+       layer.layout?.visibility = .constant(.visible)
 
        var data: Data?
        do {
@@ -78,7 +78,7 @@ class HillshadeLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(HillshadeLayer.self, from: validData)
-           XCTAssert(decodedLayer.layout?.visibility == .visible)
+           XCTAssert(decodedLayer.layout?.visibility == .constant(.visible))
  
        } catch {
            XCTFail("Failed to decode HillshadeLayer")
@@ -94,7 +94,7 @@ class HillshadeLayerTests: XCTestCase {
        layer.paint?.hillshadeExaggerationTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.paint?.hillshadeHighlightColor = Value<ColorRepresentable>.testConstantValue()
        layer.paint?.hillshadeHighlightColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.paint?.hillshadeIlluminationAnchor = HillshadeIlluminationAnchor.testConstantValue()
+       layer.paint?.hillshadeIlluminationAnchor = Value<HillshadeIlluminationAnchor>.testConstantValue()
        layer.paint?.hillshadeIlluminationDirection = Value<Double>.testConstantValue()
        layer.paint?.hillshadeShadowColor = Value<ColorRepresentable>.testConstantValue()
        layer.paint?.hillshadeShadowColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -113,11 +113,11 @@ class HillshadeLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(HillshadeLayer.self, from: validData)
-           XCTAssert(decodedLayer.layout?.visibility == .visible)
+           XCTAssert(decodedLayer.layout?.visibility == .constant(.visible))
        	   XCTAssert(layer.paint?.hillshadeAccentColor == Value<ColorRepresentable>.testConstantValue())
        	   XCTAssert(layer.paint?.hillshadeExaggeration == Value<Double>.testConstantValue())
        	   XCTAssert(layer.paint?.hillshadeHighlightColor == Value<ColorRepresentable>.testConstantValue())
-       	   XCTAssert(layer.paint?.hillshadeIlluminationAnchor == HillshadeIlluminationAnchor.testConstantValue())
+       	   XCTAssert(layer.paint?.hillshadeIlluminationAnchor == Value<HillshadeIlluminationAnchor>.testConstantValue())
        	   XCTAssert(layer.paint?.hillshadeIlluminationDirection == Value<Double>.testConstantValue())
        	   XCTAssert(layer.paint?.hillshadeShadowColor == Value<ColorRepresentable>.testConstantValue())
  

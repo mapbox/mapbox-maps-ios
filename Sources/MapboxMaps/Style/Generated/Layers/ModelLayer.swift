@@ -28,10 +28,10 @@ public struct ModelLayer: Layer {
     public struct Layout: Codable {
 
       /// Whether this layer is displayed.
-      public var visibility: Visibility?
+      public var visibility: Value<Visibility>?
       
       public init() {
-        self.visibility = .visible
+        self.visibility = .constant(.visible)
       }
 
        

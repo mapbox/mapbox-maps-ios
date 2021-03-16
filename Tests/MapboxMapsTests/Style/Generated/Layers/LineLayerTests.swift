@@ -62,9 +62,9 @@ class LineLayerTests: XCTestCase {
     func testEncodingAndDecodingOfLayoutProperties() {
 
        var layer = LineLayer(id: "test-id")	
-       layer.layout?.visibility = .visible
-       layer.layout?.lineCap = LineCap.testConstantValue()
-       layer.layout?.lineJoin = LineJoin.testConstantValue()
+       layer.layout?.visibility = .constant(.visible)
+       layer.layout?.lineCap = Value<LineCap>.testConstantValue()
+       layer.layout?.lineJoin = Value<LineJoin>.testConstantValue()
        layer.layout?.lineMiterLimit = Value<Double>.testConstantValue()
        layer.layout?.lineRoundLimit = Value<Double>.testConstantValue()
        layer.layout?.lineSortKey = Value<Double>.testConstantValue()
@@ -83,9 +83,9 @@ class LineLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(LineLayer.self, from: validData)
-           XCTAssert(decodedLayer.layout?.visibility == .visible)
-       	   XCTAssert(layer.layout?.lineCap == LineCap.testConstantValue())
-       	   XCTAssert(layer.layout?.lineJoin == LineJoin.testConstantValue())
+           XCTAssert(decodedLayer.layout?.visibility == .constant(.visible))
+       	   XCTAssert(layer.layout?.lineCap == Value<LineCap>.testConstantValue())
+       	   XCTAssert(layer.layout?.lineJoin == Value<LineJoin>.testConstantValue())
        	   XCTAssert(layer.layout?.lineMiterLimit == Value<Double>.testConstantValue())
        	   XCTAssert(layer.layout?.lineRoundLimit == Value<Double>.testConstantValue())
        	   XCTAssert(layer.layout?.lineSortKey == Value<Double>.testConstantValue())
@@ -115,7 +115,7 @@ class LineLayerTests: XCTestCase {
        layer.paint?.linePatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.paint?.lineTranslate = Value<[Double]>.testConstantValue()
        layer.paint?.lineTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.paint?.lineTranslateAnchor = LineTranslateAnchor.testConstantValue()
+       layer.paint?.lineTranslateAnchor = Value<LineTranslateAnchor>.testConstantValue()
        layer.paint?.lineWidth = Value<Double>.testConstantValue()
        layer.paint?.lineWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
 
@@ -133,7 +133,7 @@ class LineLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(LineLayer.self, from: validData)
-           XCTAssert(decodedLayer.layout?.visibility == .visible)
+           XCTAssert(decodedLayer.layout?.visibility == .constant(.visible))
        	   XCTAssert(layer.paint?.lineBlur == Value<Double>.testConstantValue())
        	   XCTAssert(layer.paint?.lineColor == Value<ColorRepresentable>.testConstantValue())
        	   XCTAssert(layer.paint?.lineDasharray == Value<[Double]>.testConstantValue())
@@ -143,7 +143,7 @@ class LineLayerTests: XCTestCase {
        	   XCTAssert(layer.paint?.lineOpacity == Value<Double>.testConstantValue())
        	   XCTAssert(layer.paint?.linePattern == Value<ResolvedImage>.testConstantValue())
        	   XCTAssert(layer.paint?.lineTranslate == Value<[Double]>.testConstantValue())
-       	   XCTAssert(layer.paint?.lineTranslateAnchor == LineTranslateAnchor.testConstantValue())
+       	   XCTAssert(layer.paint?.lineTranslateAnchor == Value<LineTranslateAnchor>.testConstantValue())
        	   XCTAssert(layer.paint?.lineWidth == Value<Double>.testConstantValue())
  
        } catch {

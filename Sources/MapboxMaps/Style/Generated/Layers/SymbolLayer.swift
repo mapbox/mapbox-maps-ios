@@ -28,10 +28,10 @@ public struct SymbolLayer: Layer {
     public struct Layout: Codable {
 
       /// Whether this layer is displayed.
-      public var visibility: Visibility?
+      public var visibility: Value<Visibility>?
       
       public init() {
-        self.visibility = .visible
+        self.visibility = .constant(.visible)
       }
 
             
@@ -39,7 +39,7 @@ public struct SymbolLayer: Layer {
       public var iconAllowOverlap: Value<Bool>?
             
       /// Part of the icon placed closest to the anchor.
-      public var iconAnchor: IconAnchor?
+      public var iconAnchor: Value<IconAnchor>?
             
       /// If true, other symbols can be visible even if they collide with the icon.
       public var iconIgnorePlacement: Value<Bool>?
@@ -60,19 +60,19 @@ public struct SymbolLayer: Layer {
       public var iconPadding: Value<Double>?
             
       /// Orientation of icon when map is pitched.
-      public var iconPitchAlignment: IconPitchAlignment?
+      public var iconPitchAlignment: Value<IconPitchAlignment>?
             
       /// Rotates the icon clockwise.
       public var iconRotate: Value<Double>?
             
       /// In combination with `symbol-placement`, determines the rotation behavior of icons.
-      public var iconRotationAlignment: IconRotationAlignment?
+      public var iconRotationAlignment: Value<IconRotationAlignment>?
             
       /// Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by `icon-size`. 1 is the original size; 3 triples the size of the image.
       public var iconSize: Value<Double>?
             
       /// Scales the icon to fit around the associated text.
-      public var iconTextFit: IconTextFit?
+      public var iconTextFit: Value<IconTextFit>?
             
       /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
       public var iconTextFitPadding: Value<[Double]>?
@@ -81,7 +81,7 @@ public struct SymbolLayer: Layer {
       public var symbolAvoidEdges: Value<Bool>?
             
       /// Label placement relative to its geometry.
-      public var symbolPlacement: SymbolPlacement?
+      public var symbolPlacement: Value<SymbolPlacement>?
             
       /// Sorts features in ascending order based on this value. Features with lower sort keys are drawn and placed first.  When `icon-allow-overlap` or `text-allow-overlap` is `false`, features with a lower sort key will have priority during placement. When `icon-allow-overlap` or `text-allow-overlap` is set to `true`, features with a higher sort key will overlap over features with a lower sort key.
       public var symbolSortKey: Value<Double>?
@@ -90,13 +90,13 @@ public struct SymbolLayer: Layer {
       public var symbolSpacing: Value<Double>?
             
       /// Determines whether overlapping symbols in the same layer are rendered in the order that they appear in the data source or by their y-position relative to the viewport. To control the order and prioritization of symbols otherwise, use `symbol-sort-key`.
-      public var symbolZOrder: SymbolZOrder?
+      public var symbolZOrder: Value<SymbolZOrder>?
             
       /// If true, the text will be visible even if it collides with other previously drawn symbols.
       public var textAllowOverlap: Value<Bool>?
             
       /// Part of the text placed closest to the anchor.
-      public var textAnchor: TextAnchor?
+      public var textAnchor: Value<TextAnchor>?
             
       /// Value to use for a text label. If a plain `string` is provided, it will be treated as a `formatted` with default/inherited formatting options.
       public var textField: Value<String>?
@@ -108,7 +108,7 @@ public struct SymbolLayer: Layer {
       public var textIgnorePlacement: Value<Bool>?
             
       /// Text justification options.
-      public var textJustify: TextJustify?
+      public var textJustify: Value<TextJustify>?
             
       /// If true, the text may be flipped vertically to prevent it from being rendered upside-down.
       public var textKeepUpright: Value<Bool>?
@@ -135,7 +135,7 @@ public struct SymbolLayer: Layer {
       public var textPadding: Value<Double>?
             
       /// Orientation of text when map is pitched.
-      public var textPitchAlignment: TextPitchAlignment?
+      public var textPitchAlignment: Value<TextPitchAlignment>?
             
       /// Radial offset of text, in the direction of the symbol's anchor. Useful in combination with `text-variable-anchor`, which defaults to using the two-dimensional `text-offset` if present.
       public var textRadialOffset: Value<Double>?
@@ -144,19 +144,19 @@ public struct SymbolLayer: Layer {
       public var textRotate: Value<Double>?
             
       /// In combination with `symbol-placement`, determines the rotation behavior of the individual glyphs forming the text.
-      public var textRotationAlignment: TextRotationAlignment?
+      public var textRotationAlignment: Value<TextRotationAlignment>?
             
       /// Font size.
       public var textSize: Value<Double>?
             
       /// Specifies how to capitalize text, similar to the CSS `text-transform` property.
-      public var textTransform: TextTransform?
+      public var textTransform: Value<TextTransform>?
             
       /// To increase the chance of placing high-priority labels on the map, you can provide an array of `text-anchor` locations: the renderer will attempt to place the label at each location, in order, before moving onto the next label. Use `text-justify: auto` to choose justification based on anchor position. To apply an offset, use the `text-radial-offset` or the two-dimensional `text-offset`.
-      public var textVariableAnchor: [TextAnchor]?
+      public var textVariableAnchor: Value<[TextAnchor]>?
             
       /// The property allows control over a symbol's orientation. Note that the property values act as a hint, so that a symbol whose language doesn’t support the provided orientation will be laid out in its natural orientation. Example: English point symbol will be rendered horizontally even if array value contains single 'vertical' enum value. The order of elements in an array define priority order for the placement of an orientation variant.
-      public var textWritingMode: [TextWritingMode]?
+      public var textWritingMode: Value<[TextWritingMode]>?
        
       enum CodingKeys: String, CodingKey {
         case iconAllowOverlap = "icon-allow-overlap"
@@ -248,7 +248,7 @@ public struct SymbolLayer: Layer {
       public var iconTranslateTransition: StyleTransition?
             
       /// Controls the frame of reference for `icon-translate`.
-      public var iconTranslateAnchor: IconTranslateAnchor?
+      public var iconTranslateAnchor: Value<IconTranslateAnchor>?
             
       /// The color with which the text will be drawn.
       public var textColor: Value<ColorRepresentable>?
@@ -287,7 +287,7 @@ public struct SymbolLayer: Layer {
       public var textTranslateTransition: StyleTransition?
             
       /// Controls the frame of reference for `text-translate`.
-      public var textTranslateAnchor: TextTranslateAnchor?
+      public var textTranslateAnchor: Value<TextTranslateAnchor>?
       
 
       enum CodingKeys: String, CodingKey {

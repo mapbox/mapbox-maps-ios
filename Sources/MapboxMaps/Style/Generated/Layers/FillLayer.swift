@@ -28,10 +28,10 @@ public struct FillLayer: Layer {
     public struct Layout: Codable {
 
       /// Whether this layer is displayed.
-      public var visibility: Visibility?
+      public var visibility: Value<Visibility>?
       
       public init() {
-        self.visibility = .visible
+        self.visibility = .constant(.visible)
       }
 
             
@@ -85,7 +85,7 @@ public struct FillLayer: Layer {
       public var fillTranslateTransition: StyleTransition?
             
       /// Controls the frame of reference for `fill-translate`.
-      public var fillTranslateAnchor: FillTranslateAnchor?
+      public var fillTranslateAnchor: Value<FillTranslateAnchor>?
       
 
       enum CodingKeys: String, CodingKey {

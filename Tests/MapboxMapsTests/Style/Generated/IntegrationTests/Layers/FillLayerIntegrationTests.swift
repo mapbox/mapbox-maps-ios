@@ -34,7 +34,7 @@ class FillLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.layout?.visibility = .visible
+            layer.layout?.visibility = .constant(.visible)
             layer.layout?.fillSortKey = Value<Double>.testConstantValue()
 
             layer.paint?.fillAntialias = Value<Bool>.testConstantValue()
@@ -47,7 +47,7 @@ class FillLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.fillPattern = Value<ResolvedImage>.testConstantValue()
             layer.paint?.fillPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.fillTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.fillTranslateAnchor = FillTranslateAnchor.testConstantValue()
+            layer.paint?.fillTranslateAnchor = Value<FillTranslateAnchor>.testConstantValue()
 
             // Add the layer
             let addResult = style.addLayer(layer: layer)

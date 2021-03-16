@@ -28,18 +28,18 @@ public struct LineLayer: Layer {
     public struct Layout: Codable {
 
       /// Whether this layer is displayed.
-      public var visibility: Visibility?
+      public var visibility: Value<Visibility>?
       
       public init() {
-        self.visibility = .visible
+        self.visibility = .constant(.visible)
       }
 
             
       /// The display of line endings.
-      public var lineCap: LineCap?
+      public var lineCap: Value<LineCap>?
             
       /// The display of lines when joining.
-      public var lineJoin: LineJoin?
+      public var lineJoin: Value<LineJoin>?
             
       /// Used to automatically convert miter joins to bevel joins for sharp angles.
       public var lineMiterLimit: Value<Double>?
@@ -119,7 +119,7 @@ public struct LineLayer: Layer {
       public var lineTranslateTransition: StyleTransition?
             
       /// Controls the frame of reference for `line-translate`.
-      public var lineTranslateAnchor: LineTranslateAnchor?
+      public var lineTranslateAnchor: Value<LineTranslateAnchor>?
             
       /// Stroke thickness.
       public var lineWidth: Value<Double>?

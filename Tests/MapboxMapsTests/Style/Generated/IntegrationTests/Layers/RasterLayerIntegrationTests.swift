@@ -34,7 +34,7 @@ class RasterLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.layout?.visibility = .visible
+            layer.layout?.visibility = .constant(.visible)
 
             layer.paint?.rasterBrightnessMax = Value<Double>.testConstantValue()
             layer.paint?.rasterBrightnessMaxTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -47,7 +47,7 @@ class RasterLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.rasterHueRotateTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.paint?.rasterOpacity = Value<Double>.testConstantValue()
             layer.paint?.rasterOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.rasterResampling = RasterResampling.testConstantValue()
+            layer.paint?.rasterResampling = Value<RasterResampling>.testConstantValue()
             layer.paint?.rasterSaturation = Value<Double>.testConstantValue()
             layer.paint?.rasterSaturationTransition = StyleTransition(duration: 10.0, delay: 10.0)
 

@@ -49,7 +49,7 @@ public class ModelExample: UIViewController, ExampleProtocol {
         mapView.style.addLayer(layer: modelLayer)
 
         var skyLayer = SkyLayer(id: "my-sky")
-        skyLayer.paint?.skyType = .gradient
+        skyLayer.paint?.skyType = .constant(.gradient)
 
         mapView.style.addLayer(layer: skyLayer)
 

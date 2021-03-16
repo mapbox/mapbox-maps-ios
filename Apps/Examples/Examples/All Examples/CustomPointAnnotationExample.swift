@@ -18,7 +18,7 @@ fileprivate struct DebugFeature {
     var imageName: String
 }
 
-public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
+public class CustomPointAnnotationExample: UIViewController, ExampleProtocol, AnnotationInteractionDelegate {
 
     internal var mapView: MapView!
 
@@ -28,6 +28,9 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
+
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector((mapSymbolTap(sender:))))
+        mapView.addGestureRecognizer(tapGestureRecognizer)
 
         // Center the map camera over New York City
         let centerCoordinate = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
@@ -51,12 +54,38 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
             // Add the annotation to the map.
             self.mapView.annotationManager.addAnnotation(customPointAnnotation)
 
+            self.mapView.annotationManager.interactionDelegate = self
+
             self.updateAnnotationSymbolImages()
             let features = self.addDebugFeatures()
             self.addAnnotationSymbolLayer(features: features)
 
             // The below line is used for internal testing purposes only.
             self.finish()
+        }
+    }
+
+    public func didSelectAnnotation(annotation: Annotation) {
+        print("Selected PointAnnotation at: \(annotation.identifier)")
+    }
+
+    public func didDeselectAnnotation(annotation: Annotation) {
+        print("Delected PointAnnotation: \(annotation.identifier)")
+    }
+
+    @objc private func mapSymbolTap(sender: UITapGestureRecognizer) {
+        if sender.state == .recognized {
+            let annotationLayers: Set<String> = [CustomPointAnnotationExample.annotations]
+            mapView.visibleFeatures(at: sender.location(in: mapView),
+                                    styleLayers: annotationLayers,
+                                    filter: nil,
+                                    completion: { result in
+                                        if case .success(let features) = result {
+                                            if features.count == 0 { return }
+                                            guard let featureText = features[0].properties?["text"] as? String else { return }
+                                            print(featureText)
+                                        }
+                                    })
         }
     }
 

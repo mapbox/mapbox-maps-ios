@@ -42,7 +42,7 @@ workflows:
           app-name: "MapboxTestHost"
           device-tests-always-run: true
           report_failure: true
-      - run-tests-on-devices:
+      - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
           device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
           device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
@@ -87,7 +87,7 @@ workflows:
           filters:
             branches:
               ignore: main
-      - run-tests-on-devices:
+      - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
           device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
           device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
@@ -108,7 +108,7 @@ workflows:
           filters:
             branches:
               only: main
-      - run-tests-on-devices:
+      - run-app-tests-on-devices:
           name: "Run Examples tests on devices (main)"
           device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
           device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
@@ -327,9 +327,7 @@ jobs:
           name: "Parsing xcresults for errors"
           command: |
             RESULTS=`find build/testruns -name '*.xcresult'`
-            pushd scripts/xcparty && swift build
-            popd
-            xargs ./scripts/xcparty/.build/debug/xcparty \<<< "$RESULTS" | tee build/testruns/failures.txt
+            swift run --package-path scripts/xcparty \<<< "$RESULTS" | tee build/testruns/failures.txt
           when: on_fail
       - run:
           name: Symbolicate crash logs
@@ -340,6 +338,74 @@ jobs:
           command: make device-update-codecov-with-profdata SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
       - store-device-farm-artifacts
       - store-logs
+      - report-failure:
+          report_failure: << parameters.report_failure >>
+          message: "<< parameters.scheme >> device tests"
+
+  run-app-tests-on-devices:
+    <<: *base-job
+    steps:
+      - checkout
+      - ensure-text-exists-in-commit:
+          commit-text: "[run app device tests]"
+          always-run: << parameters.device-tests-always-run >>
+      - configure-environment
+      - run: make install-devicefarm-dependencies
+      # There's a command for this, but it only work if run *after* the build
+      # In this case, we need to determine the derived data path before building
+      - run:
+          name: Locate derived data directory
+          command: |
+            xcodebuild \
+              -showBuildSettings \
+              -workspace Apps/Apps.xcworkspace \
+              -scheme '<< parameters.scheme >>' \
+              | sed -n 's:^ *BUILD_DIR = \(.*\)/Build/Products$:export DERIVED_DATA_PATH="\1":p' \
+              >> $BASH_ENV
+      - run:
+          name: Testing << parameters.scheme >> on AWS Device Farm
+          command: |
+            make test-with-device-farm \
+              SCHEME=<< parameters.scheme >> \
+              APP_NAME=<< parameters.app-name >> \
+              CONFIGURATION=Release \
+              BUILD_DIR="$DERIVED_DATA_PATH" \
+              XCODE_WORKSPACE=Apps/Apps.xcworkspace
+          when: always
+      # get xcresults here, may be zipped with more than one result
+      - run:
+          name: "Gathering results"
+          command: make gather-results BUILD_DIR="$DERIVED_DATA_PATH"
+          when: always
+      - run:
+          name: "Parsing xcresults for errors"
+          command: |
+            RESULTS=`find "$DERIVED_DATA_PATH/testruns" -name '*.xcresult'`
+            swift run --package-path scripts/xcparty \<<< "$RESULTS" | tee build/testruns/failures.txt
+          when: on_fail
+      - run:
+          name: Symbolicate crash logs
+          command: |
+            make symbolicate \
+              SCHEME=<< parameters.scheme >> \
+              APP_NAME=<< parameters.app-name >> \
+              CONFIGURATION=Release \
+              BUILD_DIR="$DERIVED_DATA_PATH"
+          when: always
+      - run:
+          name: Converting and uploading coverage
+          command: |
+            # Debugging
+            ls "$DERIVED_DATA_PATH/Build/Products/Release-iphoneos"
+            make device-update-codecov-with-profdata \
+              SCHEME=<< parameters.scheme >> \
+              APP_NAME=<< parameters.app-name >> \
+              CONFIGURATION=Release \
+              BUILD_DIR="$DERIVED_DATA_PATH"
+      - store-device-farm-artifacts:
+          derived_data_path: $DERIVED_DATA_PATH
+      - store-logs:
+          derived_data_path: $DERIVED_DATA_PATH
       - report-failure:
           report_failure: << parameters.report_failure >>
           message: "<< parameters.scheme >> device tests"
@@ -509,16 +575,21 @@ commands:
       artifact_name:
         type: string
         default: "build"
+      derived_data_path:
+        type: string
+        default: "build"
     description: "Save Device Farm Results as Artifacts"
     steps:
       - run:
           name: Zipping device farm results
           command: |
-            zip -r << parameters.artifact_name >>.zip build/DeviceFarmResults || echo "Skipping build/DeviceFarmResults"
-            zip -r << parameters.artifact_name >>.zip build/Payload || echo "Skipping build/Payload"
-            zip -r << parameters.artifact_name >>.zip build/test-root || echo "Skipping build/test-root"
-            zip -r << parameters.artifact_name >>.zip build/testruns || echo "Skipping build/testruns"
-            zip -r << parameters.artifact_name >>.zip build/*.json || echo "Skipping build/*.json"
+            export ZIP_FILE="$PWD/<< parameters.artifact_name >>.zip"
+            cd "<< parameters.derived_data_path >>"
+            zip -r "$ZIP_FILE" DeviceFarmResults || echo "Skipping DeviceFarmResults"
+            zip -r "$ZIP_FILE" Payload || echo "Skipping Payload"
+            zip -r "$ZIP_FILE" test-root || echo "Skipping test-root"
+            zip -r "$ZIP_FILE" testruns || echo "Skipping testruns"
+            zip -r "$ZIP_FILE" *.json || echo "Skipping *.json"
           when: always
       - store_artifacts:
           path: << parameters.artifact_name >>.zip

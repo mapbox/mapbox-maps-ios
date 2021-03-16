@@ -171,4 +171,4 @@ As you can see the most useful case is to run within from the host application. 
 ## Application Testing
 
 ### Making an Example
-* Check out this [doc](https://github.com/mapbox/mapbox-maps-ios/blob/main/Examples/README.md) to get more information about adding examples to our project
+* Check out this [doc](https://github.com/mapbox/mapbox-maps-ios/blob/main/Apps/Examples/README.md) to get more information about adding examples to our project

@@ -99,6 +99,8 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
         }
     }
 
+    internal var pendingAnimatorCompletionBlocks: [(() -> Void)] = []
+
     /// Returns the camera view managed by this object.
     public var cameraView: CameraView!
 
@@ -332,6 +334,8 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
 
         if needsDisplayRefresh {
             needsDisplayRefresh = false
+            // execute completion blocks
+            // remove from list once executed
             self.cameraView.update()
             self.displayCallback?()
         }

@@ -691,6 +691,81 @@ public class CameraManager {
     }
 }
 
+// MARK: Camera Animation
+extension CameraManager: CameraAnimatorDelegate {
+    // pointer array for holding camera animators
+
+    // MARK: Animator Functions
+    func makeCameraAnimator(duration: TimeInterval,
+                            timingParameters parameters: UITimingCurveProvider,
+                            animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified) -> CameraAnimator {
+        let propertyAnimator = UIViewPropertyAnimator(duration: duration, timingParameters: parameters)
+        return CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
+    }
+
+    func makeCameraAnimator(duration: TimeInterval,
+                            curve: UIView.AnimationCurve,
+                            animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
+                            animations: (() -> Void)? = nil) -> CameraAnimator {
+        let propertyAnimator = UIViewPropertyAnimator(duration: duration, curve: curve, animations: animations)
+        return CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
+    }
+
+    func makeCameraAnimator(duration: TimeInterval,
+                            controlPoint1 point1: CGPoint,
+                            controlPoint2 point2: CGPoint,
+                            animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
+                            animations: (() -> Void)? = nil) -> CameraAnimator {
+        let propertyAnimator = UIViewPropertyAnimator(duration: duration, controlPoint1: point1, controlPoint2: point2, animations: animations)
+        return CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
+    }
+
+    func makeCameraAnimator(duration: TimeInterval,
+                            dampingRatio ratio: CGFloat,
+                            animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
+                            animations: (() -> Void)? = nil) -> CameraAnimator {
+        let propertyAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: ratio, animations: animations)
+        return CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
+    }
+
+    func runningCameraAnimator(withDuration duration: TimeInterval,
+                               delay: TimeInterval,
+                               options: UIView.AnimationOptions = [],
+                               animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
+                               animations: @escaping () -> Void,
+                               completion: ((UIViewAnimatingPosition) -> Void)? = nil) -> CameraAnimator {
+
+        let runningAnimator = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: duration,
+                                                                             delay: delay,
+                                                                             options: options,
+                                                                             animations: animations,
+                                                                             completion: completion)
+//        let runningAnimator = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: duration,
+//                                                                             delay: delay,
+//                                                                             options: options,
+//                                                                             animations: animations,
+//                                                                             completion: {
+//                                                                                /*
+//                                                                                call schedlue pending completion
+//                                                                                */
+//                                                                                schedulePendingCompletion(completion: completion)
+//                                                                             })
+
+        return CameraAnimator(delegate: self, propertyAnimator: runningAnimator, owner: animationOwner)
+    }
+
+    // MARK: Delegate Functions
+    func schedulePendingCompletion(completion: () -> Void) {
+/*
+         one responsibilty is that the completion is executed on the next tick of the display link
+         */
+    }
+
+    func animatorIsFinished(animator: CameraAnimator) {
+
+    }
+}
+
 internal class MapboxAnimationGroup: CAAnimationGroup {
     fileprivate var completionBlock: ((Bool) -> Void)?
 }

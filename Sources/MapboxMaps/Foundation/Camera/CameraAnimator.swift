@@ -61,7 +61,7 @@ public class CameraAnimator : NSObject {
 // MARK: CameraAnimatorDelegate Protocol
 internal protocol CameraAnimatorDelegate {
 
-    func schedulePendingCompletion(completion: () -> Void)
+    func schedulePendingCompletion(completion: @escaping () -> Void)
 
     func animatorIsFinished(animator: CameraAnimator)
 

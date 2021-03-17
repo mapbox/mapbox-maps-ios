@@ -755,10 +755,9 @@ extension CameraManager: CameraAnimatorDelegate {
     }
 
     // MARK: Delegate Functions
-    func schedulePendingCompletion(completion: () -> Void) {
-/*
-         one responsibilty is that the completion is executed on the next tick of the display link
-         */
+    func schedulePendingCompletion(completion: @escaping () -> Void) {
+        guard let mapView = mapView else { return }
+        mapView.pendingAnimatorCompletionBlocks.append(completion)
     }
 
     func animatorIsFinished(animator: CameraAnimator) {

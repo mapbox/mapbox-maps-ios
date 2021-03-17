@@ -83,6 +83,9 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     /// Resource options for this map view
     internal var resourceOptions: ResourceOptions?
 
+    /// List of completion blocks that need to be completed by the displayLink
+    internal var pendingAnimatorCompletionBlocks: [(() -> Void)] = []
+
     public var needsDisplayRefresh: Bool = false
     public var dormant: Bool = false
     public var displayCallback: (() -> Void)?
@@ -98,8 +101,6 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
             updateDisplayLinkPreferredFramesPerSecond()
         }
     }
-
-    internal var pendingAnimatorCompletionBlocks: [(() -> Void)] = []
 
     /// Returns the camera view managed by this object.
     public var cameraView: CameraView!
@@ -334,9 +335,13 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
 
         if needsDisplayRefresh {
             needsDisplayRefresh = false
-            // execute completion blocks
-            // remove from list once executed
             self.cameraView.update()
+
+            while !pendingAnimatorCompletionBlocks.isEmpty {
+                let completionBlock = pendingAnimatorCompletionBlocks.removeFirst()
+                completionBlock()
+            }
+
             self.displayCallback?()
         }
     }

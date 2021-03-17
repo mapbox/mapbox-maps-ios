@@ -78,6 +78,19 @@ public class DebugViewController: UIViewController {
          */
         mapView.on(.mapLoaded) { (event) in
             print("The map has finished loading... Event = \(event)")
+
+            let coordinate = CLLocationCoordinate2D(latitude: 39.085006, longitude: -77.150925)
+            self.mapView.cameraManager.setCamera(centerCoordinate: coordinate,
+                                                 zoom: 12)
+
+            UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 10, delay: 2, options: .curveLinear) {
+
+                let coordinate2 = CLLocationCoordinate2D(latitude: 39.085006, longitude: -78.12)
+                self.mapView.cameraManager.setCamera(centerCoordinate: coordinate2, zoom: 16)
+
+            } completion: { (_) in
+                print("Camera animation complete!!!")
+            }
         }
 
         /**

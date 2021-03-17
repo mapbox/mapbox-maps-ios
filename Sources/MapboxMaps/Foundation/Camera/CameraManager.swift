@@ -427,24 +427,22 @@ public class CameraManager {
         let animation = {
             // IMPORTANT: To trigger an immediate update, cameraView properties that are structs
             // should always be animated using the camera layer instead.
-            if let cameraLayer = mapView.cameraView.layer as? CameraLayer {
-                // Check whether each value has been updated before adding to the block
-                if offset != nil {
-                    cameraLayer.centerCoordinateLatitude = CGFloat(centerCoordinate.latitude)
-                    cameraLayer.centerCoordinateLongitude = CGFloat(centerCoordinate.longitude)
-                }
 
-                if rotation != nil {
-                    cameraLayer.bearing = newBearing
-                }
+            // Check whether each value has been updated before adding to the block
+            if offset != nil {
+                mapView.cameraView.centerCoordinate = centerCoordinate
+            }
 
-                if pitch != nil {
-                    cameraLayer.pitch = newPitch
-                }
+            if rotation != nil {
+                mapView.cameraView.bearing = newBearing
+            }
 
-                if zoom != nil {
-                    cameraLayer.zoom = newZoom
-                }
+            if pitch != nil {
+                mapView.cameraView.pitch = newPitch
+            }
+
+            if zoom != nil {
+                mapView.cameraView.zoom = newZoom
             }
         }
 
@@ -459,9 +457,6 @@ public class CameraManager {
     func shiftCenterCoordinate(by offset: CGPoint, pitchedDrift: Bool = false) -> CLLocationCoordinate2D {
         guard let mapView = mapView else {
             assertionFailure("MapView is nil.")
-            return CLLocationCoordinate2D(latitude: 0, longitude: 0)
-        }
-        guard let cameraLayer = mapView.cameraView.layer as? CameraLayer else {
             return CLLocationCoordinate2D(latitude: 0, longitude: 0)
         }
 
@@ -479,10 +474,10 @@ public class CameraManager {
             pitchFactor = 1.0 // We do not want divide by 0
         }
 
-        let cameraViewSize    = mapView.cameraView.frame.size
-        let cameraPadding     = mapView.cameraView.padding
-        let viewPortSize      = CGSize(width: cameraViewSize.width - cameraPadding.left - cameraPadding.right,
-                                       height: cameraViewSize.height - cameraPadding.top - cameraPadding.bottom)
+        let mapViewSize    = mapView.frame.size
+        let cameraPadding     = mapView.cameraView.localPadding
+        let viewPortSize      = CGSize(width: mapViewSize.width - cameraPadding.left - cameraPadding.right,
+                                       height: mapViewSize.height - cameraPadding.top - cameraPadding.bottom)
         let viewPortCenter    = CGPoint(x: (viewPortSize.width / 2) + cameraPadding.left,
                                         y: (viewPortSize.height / 2) + cameraPadding.top)
         let newViewPortCenter = CGPoint(x: viewPortCenter.x - (offset.x / pitchFactor), y: viewPortCenter.y - (offset.y / pitchFactor))
@@ -494,7 +489,7 @@ public class CameraManager {
 
         // First calculate the scalar projection of the offset onto the unit vector pointing due east.
         // offset.y is negated so that the two coordinate systems (iOS graphics, map bearing) match.
-        let bearingInRadians = CGFloat(mapView.bearing.toRadians())
+        let bearingInRadians = CGFloat(mapView.cameraView.localBearing.toRadians())
         let offsetAlongLongitudinalAxis = offset.x * cos(bearingInRadians) - offset.y * sin(bearingInRadians)
 
         // If the offset is negative, the map center needs to move east, suggesting that the new longitude
@@ -503,7 +498,7 @@ public class CameraManager {
         // that the new value is in the right direction relative to the old one.
         if offsetAlongLongitudinalAxis < 0 {
             newLong = centerCoordinate.longitude
-            while newLong < Double(cameraLayer.centerCoordinateLongitude) {
+            while newLong < Double(mapView.cameraView.localCenterCoordinate.longitude) {
                 newLong += 360
             }
             centerCoordinate = CLLocationCoordinate2D(latitude: centerCoordinate.latitude, longitude: newLong)
@@ -511,7 +506,7 @@ public class CameraManager {
         // If it's positive, the map center needs to move west, and the opposite antimeridian adjustment is required
         else if offsetAlongLongitudinalAxis > 0 {
             newLong = centerCoordinate.longitude
-            while newLong > Double(cameraLayer.centerCoordinateLongitude) {
+            while newLong > Double(mapView.cameraView.localCenterCoordinate.longitude) {
                 newLong -= 360
             }
             centerCoordinate = CLLocationCoordinate2D(latitude: centerCoordinate.latitude, longitude: newLong)

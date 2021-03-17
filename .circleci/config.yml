@@ -407,6 +407,7 @@ jobs:
       - run:
           name: Converting and uploading coverage
           command: |
+            pip3 install awscli gitpython
             make device-update-codecov-with-profdata \
               SCHEME=<< parameters.scheme >> \
               APP_NAME=<< parameters.app-name >> \

@@ -93,7 +93,7 @@
 
 /* Begin PBXFileReference section */
 		0333B84E25ED942600D667C9 /* SceneKitExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneKitExample.swift; sourceTree = "<group>"; };
-		03BB33F825EDA19200109B28 /* 34M_17.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; name = 34M_17.dae; path = ../../../../../Downloads/34M_17.dae; sourceTree = "<group>"; };
+		03BB33F825EDA19200109B28 /* 34M_17.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = 34M_17.dae; sourceTree = "<group>"; };
 		0706C4A525B1181A008733C0 /* TerrainExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerrainExample.swift; sourceTree = "<group>"; };
 		072C79EA25685D23006E47A7 /* SnapshotterExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotterExample.swift; sourceTree = "<group>"; };
 		073475D625AFAE520049B0B8 /* CustomLayerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLayerExample.swift; sourceTree = "<group>"; };

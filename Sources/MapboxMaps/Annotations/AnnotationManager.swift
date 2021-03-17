@@ -86,10 +86,23 @@ public class AnnotationManager: Observer {
      The source layer used by the annotation manager.
      */
     internal var annotationSource: GeoJSONSource?
+
     /**
-     The default source layer identifier to be used by the `AnnotationManager`.
+     Options used by the annotation manager.
+     */
+    internal var annotationOptions: AnnotationOptions
+
+    /**
+     The default source identifier, which will be used by the `AnnotationManager` by default.
      */
     internal let defaultSourceId = "com.mapbox.AnnotationManager.DefaultSource"
+
+    /**
+     The source identifier used by the `AnnotationManager`.
+     */
+    internal var sourceId: String {
+        return annotationOptions.sourceId ?? defaultSourceId
+    }
 
     /**
      The default style layer identifiers to be used by the point, line, and polygon
@@ -103,9 +116,9 @@ public class AnnotationManager: Observer {
      The default style layers used to render point, line, and polygon
      annotations on the map view.
      */
-    internal var defaultSymbolLayer: SymbolLayer?
-    internal var defaultLineLayer: LineLayer?
-    internal var defaultPolygonLayer: FillLayer?
+    internal var symbolLayer: SymbolLayer?
+    internal var lineLayer: LineLayer?
+    internal var fillLayer: FillLayer?
 
     /**
      The tap gesture recognizer used to respond to tap events.
@@ -136,6 +149,7 @@ public class AnnotationManager: Observer {
         self.mapView = mapView
         self.styleDelegate = styleDelegate
         self.interactionDelegate = interactionDelegate
+        self.annotationOptions = options
         annotations = [:]
         annotationFeatures = FeatureCollection(features: [])
         userInteractionEnabled = true
@@ -145,6 +159,8 @@ public class AnnotationManager: Observer {
     }
 
     internal func updateAnnotationOptions(with newOptions: AnnotationOptions) {
+        self.annotationOptions = newOptions
+        try! Log.warning(forMessage: "Updating annotation manager is not supported at this time.", category: "Annotations")
     }
 
     // MARK: - Public functions
@@ -247,7 +263,7 @@ public class AnnotationManager: Observer {
             return .failure(.removeAnnotationFailed("Failed to parse data from FeatureCollection"))
         }
 
-        let updateSourceExpectation = styleDelegate.updateSourceProperty(id: defaultSourceId,
+        let updateSourceExpectation = styleDelegate.updateSourceProperty(id: sourceId,
                                                                          property: "data",
                                                                          value: geoJSONDictionary)
 
@@ -299,6 +315,23 @@ public class AnnotationManager: Observer {
         }
     }
 
+    public func layerId<T: Annotation>(for annotationType: T.Type) -> String? {
+        switch annotationType {
+        case is PointAnnotation.Type:
+            return symbolLayer?.id
+
+        case is LineAnnotation.Type:
+            return lineLayer?.id
+
+        case is PolygonAnnotation.Type:
+            return fillLayer?.id
+
+        default:
+            try! Log.error(forMessage: "Type should be an annotation", category: "Annotations")
+            return nil
+        }
+    }
+
     // MARK: - Internal functions
 
     /**
@@ -314,7 +347,7 @@ public class AnnotationManager: Observer {
 
         sourceLayer.data = .featureCollection(annotationFeatures)
 
-        let addSourceExpectation = styleDelegate.addSource(source: sourceLayer, identifier: defaultSourceId)
+        let addSourceExpectation = styleDelegate.addSource(source: sourceLayer, identifier: sourceId)
 
         switch addSourceExpectation {
         case .success(let bool):
@@ -391,14 +424,14 @@ public class AnnotationManager: Observer {
      */
     internal func updateLayers(for annotation: Annotation) throws {
         let geoJSONDictionary = try GeoJSONManager.dictionaryFrom(annotationFeatures)
-        try updateSourceLayer(geoJSONDictionary: geoJSONDictionary)
+        try updateSource(geoJSONDictionary: geoJSONDictionary)
         try updateStyleLayer(for: annotation)
     }
 
     /**
      Creates or updates the data source layer for the annotations.
      */
-    internal func updateSourceLayer(geoJSONDictionary: [String: Any]?) throws {
+    internal func updateSource(geoJSONDictionary: [String: Any]?) throws {
         guard let geoJSON = geoJSONDictionary else {
             throw AnnotationError.addAnnotationFailed(nil)
         }
@@ -408,7 +441,7 @@ public class AnnotationManager: Observer {
                 throw AnnotationError.addAnnotationFailed(sourceError)
             }
         } else {
-            let updateSourceExpectation = styleDelegate.updateSourceProperty(id: defaultSourceId,
+            let updateSourceExpectation = styleDelegate.updateSourceProperty(id: sourceId,
                                                                              property: "data",
                                                                              value: geoJSON)
             if case .failure(let sourceError) = updateSourceExpectation {
@@ -452,96 +485,102 @@ public class AnnotationManager: Observer {
         }
 
         // Add the default symbol layer image.
-        if defaultSymbolLayer == nil {
-            // Add the default icon image to the sprite, but only once.
-            if styleDelegate.getStyleImage(with: PointAnnotation.defaultIconImageIdentifier) == nil {
-
-                let expectedDefaultImage = styleDelegate.setStyleImage(image: pointAnnotation.defaultAnnotationImage(),
-                                                                       with: PointAnnotation.defaultIconImageIdentifier,
-                                                                       sdf: false,
-                                                                       stretchX: [],
-                                                                       stretchY: [],
-                                                                       scale: 3.0,
-                                                                       imageContent: nil)
-
-                if case .failure(let imageError) = expectedDefaultImage {
-                    throw AnnotationError.addAnnotationFailed(imageError)
-                }
-            }
-
-            // Make the style layer for the first time.
-            var symbolLayer = SymbolLayer(id: defaultSymbolLayerId)
-            symbolLayer.source = defaultSourceId
-
-            /**
-             Create an expression that will use the `icon-image`
-             property associated with an annotation's `Feature`
-             to set the image.
-             */
-            symbolLayer.layout?.iconImage = .expression(Exp(.get) {
-                "icon-image"
-            })
-
-            /**
-             Since all annotation geometries share the same source,
-             render only the point geometries within the symbol layer.
-             */
-            symbolLayer.filter = Exp(.eq) {
-                "$type"
-                "Point"
-            }
-
-            let expectedLayer = styleDelegate.addLayer(layer: symbolLayer, layerPosition: nil)
-
-            if case .failure(let layerError) = expectedLayer {
-                throw AnnotationError.addAnnotationFailed(layerError)
-            }
-
-            defaultSymbolLayer = symbolLayer
+        guard symbolLayer == nil else {
+            return
         }
+
+        // Add the default icon image to the sprite, but only once.
+        if styleDelegate.getStyleImage(with: PointAnnotation.defaultIconImageIdentifier) == nil {
+
+            let expectedDefaultImage = styleDelegate.setStyleImage(image: pointAnnotation.defaultAnnotationImage(),
+                                                                   with: PointAnnotation.defaultIconImageIdentifier,
+                                                                   sdf: false,
+                                                                   stretchX: [],
+                                                                   stretchY: [],
+                                                                   scale: 3.0,
+                                                                   imageContent: nil)
+
+            if case .failure(let imageError) = expectedDefaultImage {
+                throw AnnotationError.addAnnotationFailed(imageError)
+            }
+        }
+
+        // Make the style layer for the first time.
+        var symbolLayer = SymbolLayer(id: defaultSymbolLayerId)
+        symbolLayer.source = sourceId
+
+        /**
+         Create an expression that will use the `icon-image`
+         property associated with an annotation's `Feature`
+         to set the image.
+         */
+        symbolLayer.layout?.iconImage = .expression(Exp(.get) {
+            "icon-image"
+        })
+
+        /**
+         Since all annotation geometries share the same source,
+         render only the point geometries within the symbol layer.
+         */
+        symbolLayer.filter = Exp(.eq) {
+            "$type"
+            "Point"
+        }
+
+        let expectedLayer = styleDelegate.addLayer(layer: symbolLayer, layerPosition: nil)
+
+        if case .failure(let layerError) = expectedLayer {
+            throw AnnotationError.addAnnotationFailed(layerError)
+        }
+
+        self.symbolLayer = symbolLayer
     }
 
     internal func updateLineStyleLayer() throws {
-        if defaultLineLayer == nil {
-            var lineLayer = LineLayer(id: defaultLineLayerId)
-            lineLayer.source = defaultSourceId
-
-            /**
-             Since all annotation geometries share the same source,
-             render only the line geometries within the line layer.
-             */
-            lineLayer.filter = Exp(.eq) {
-                "$type"
-                "LineString"
-            }
-
-            if case .failure(let layerError) = styleDelegate.addLayer(layer: lineLayer, layerPosition: nil) {
-                throw AnnotationError.addAnnotationFailed(layerError)
-            }
-
-            defaultLineLayer = lineLayer
+        guard lineLayer == nil else {
+            return
         }
+
+        var lineLayer = LineLayer(id: defaultLineLayerId)
+        lineLayer.source = sourceId
+
+        /**
+         Since all annotation geometries share the same source,
+         render only the line geometries within the line layer.
+         */
+        lineLayer.filter = Exp(.eq) {
+            "$type"
+            "LineString"
+        }
+
+        if case .failure(let layerError) = styleDelegate.addLayer(layer: lineLayer, layerPosition: nil) {
+            throw AnnotationError.addAnnotationFailed(layerError)
+        }
+
+        self.lineLayer = lineLayer
     }
 
     internal func updateFillStyleLayer() throws {
-        if defaultPolygonLayer == nil {
-            var fillLayer = FillLayer(id: defaultPolygonLayerId)
-            fillLayer.source = defaultSourceId
-            /**
-             Since all annotation geometries share the same source,
-             render only the polygon geometries within the fill layer.
-             */
-            fillLayer.filter = Exp(.eq) {
-                "$type"
-                "Polygon"
-            }
-
-            if case .failure(let layerError) = styleDelegate.addLayer(layer: fillLayer, layerPosition: nil) {
-                throw AnnotationError.addAnnotationFailed(layerError)
-            }
-
-            defaultPolygonLayer = fillLayer
+        guard fillLayer == nil else {
+            return
         }
+
+        var fillLayer = FillLayer(id: defaultPolygonLayerId)
+        fillLayer.source = sourceId
+        /**
+         Since all annotation geometries share the same source,
+         render only the polygon geometries within the fill layer.
+         */
+        fillLayer.filter = Exp(.eq) {
+            "$type"
+            "Polygon"
+        }
+
+        if case .failure(let layerError) = styleDelegate.addLayer(layer: fillLayer, layerPosition: nil) {
+            throw AnnotationError.addAnnotationFailed(layerError)
+        }
+
+        self.fillLayer = fillLayer
     }
 
     // MARK: - Annotation selection
@@ -629,8 +668,8 @@ public class AnnotationManager: Observer {
         // Reset the annotation source and default layers.
         annotations = [:]
         annotationSource = nil
-        defaultSymbolLayer = nil
-        defaultLineLayer = nil
-        defaultPolygonLayer = nil
+        symbolLayer = nil
+        lineLayer = nil
+        fillLayer = nil
     }
 }

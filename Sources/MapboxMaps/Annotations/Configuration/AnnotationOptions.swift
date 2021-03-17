@@ -7,13 +7,14 @@ public struct AnnotationSourceOptions: Equatable {
 
 /// Configuration options for the AnnotationManager
 public struct AnnotationOptions: Equatable {
-    /// The layer position for the AnnotationManager. Default is nil, which will position the layers
+    /// The identifier of the layer above the annotation layers. Default is nil, which will position the layers
     /// above existing layers.
-    public var layerPosition: LayerPosition? = nil
+    public var belowLayerId: String? = nil
 
-    /// The layer identifier for the layer used by the AnnotationManager. Default is nil, meaning a
-    /// default identifier will be used.
-    public var layerId: String? = nil
+    // TODO: Handle multiple layer Ids
+//    /// The layer identifier for the layer used by the AnnotationManager. Default is nil, meaning a
+//    /// default identifier will be used.
+//    public var layerId: String? = nil
 
     /// The source identifier for the layer used by the AnnotationManager. Default is nil, meaning a
     /// default identifier will be used.

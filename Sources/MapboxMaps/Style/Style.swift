@@ -61,6 +61,36 @@ public class Style {
     }
 
     /**
+     :nodoc:
+     Moves a `layer` to a new layer position in the style.
+     - Parameter layerId: The layer to move
+     - Parameter position: The new position to move the layer to
+     - Throws: `LayerError` on failure, or `NSError` with a _domain of "com.mapbox.bindgen"
+     */
+    public func _moveLayer(with layerId: String, to position: LayerPosition) throws {
+        let expectedProperties = try styleManager.getStyleLayerProperties(forLayerId: layerId)
+        if expectedProperties.isError() {
+            throw LayerError.getStyleLayerFailed(expectedProperties.error as? String)
+        }
+
+        if !(expectedProperties.value is [String: Any]) {
+            assertionFailure("Layer properties are not a valid type")
+        }
+
+        let expectedRemoval = try styleManager.removeStyleLayer(forLayerId: layerId)
+        if expectedRemoval.isError() {
+            throw LayerError.removeStyleLayerFailed(expectedRemoval.error as? String)
+        }
+
+        let expectedAddition = try styleManager.addStyleLayer(forProperties: expectedProperties.value as Any,
+                                                              layerPosition: position)
+
+        if expectedAddition.isError() {
+            throw LayerError.addStyleLayerFailed(expectedAddition.error as? String)
+        }
+    }
+
+    /**
      Gets a `layer` from the map
      - Parameter layerID: The id of the layer to be fetched
      - Parameter type: The type of the layer that will be fetched

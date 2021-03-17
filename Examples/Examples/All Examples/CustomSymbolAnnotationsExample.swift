@@ -101,7 +101,7 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
         let annotationSelectedColor = UIColor(hue: 0.831372549, saturation: 0.72, brightness: 0.59, alpha: 1.0)
         let annotationColor = UIColor.white
 
-        // Right-hand pin
+        // Centered pin
         if let image =  UIImage(named: "AnnotationCentered") {
             let stretchX = [ImageStretches(first: Float(20), second: Float(30)), ImageStretches(first: Float(90), second: Float(100))]
             let stretchY = [ImageStretches(first: Float(26), second: Float(32))]

@@ -48,6 +48,9 @@ public class CameraManager {
         }
     }
 
+    /// Pointer array for holding camera animators
+    public var cameraAnimators = NSPointerArray.weakObjects()
+
     /// May want to convert to an enum.
     fileprivate let northBearing: CGFloat = 0
 
@@ -693,14 +696,14 @@ public class CameraManager {
 
 // MARK: Camera Animation
 extension CameraManager: CameraAnimatorDelegate {
-    // pointer array for holding camera animators
-
     // MARK: Animator Functions
     func makeCameraAnimator(duration: TimeInterval,
                             timingParameters parameters: UITimingCurveProvider,
                             animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, timingParameters: parameters)
-        return CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
+        let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
+        cameraAnimators.addPointer(cameraAnimator.observationInfo)
+        return cameraAnimator
     }
 
     func makeCameraAnimator(duration: TimeInterval,
@@ -708,7 +711,9 @@ extension CameraManager: CameraAnimatorDelegate {
                             animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
                             animations: (() -> Void)? = nil) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, curve: curve, animations: animations)
-        return CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
+        let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
+        cameraAnimators.addPointer(cameraAnimator.observationInfo)
+        return cameraAnimator
     }
 
     func makeCameraAnimator(duration: TimeInterval,
@@ -717,7 +722,9 @@ extension CameraManager: CameraAnimatorDelegate {
                             animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
                             animations: (() -> Void)? = nil) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, controlPoint1: point1, controlPoint2: point2, animations: animations)
-        return CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
+        let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
+        cameraAnimators.addPointer(cameraAnimator.observationInfo)
+        return cameraAnimator
     }
 
     func makeCameraAnimator(duration: TimeInterval,
@@ -725,7 +732,9 @@ extension CameraManager: CameraAnimatorDelegate {
                             animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
                             animations: (() -> Void)? = nil) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: ratio, animations: animations)
-        return CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
+        let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
+        cameraAnimators.addPointer(cameraAnimator.observationInfo)
+        return cameraAnimator
     }
 
     func runningCameraAnimator(withDuration duration: TimeInterval,
@@ -761,7 +770,12 @@ extension CameraManager: CameraAnimatorDelegate {
     }
 
     func animatorIsFinished(animator: CameraAnimator) {
-
+        for index in 0..<cameraAnimators.count {
+            if cameraAnimators.pointer(at: index) == animator.observationInfo {
+                cameraAnimators.removePointer(at: index)
+                break
+            }
+        }
     }
 }
 

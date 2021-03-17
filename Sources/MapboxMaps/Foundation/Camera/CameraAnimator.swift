@@ -1,11 +1,11 @@
 import UIKit
 
 // MARK: CameraAnimator Class
-public class CameraAnimator : NSObject {
+public class CameraAnimator: NSObject {
 
-    internal let propertyAnimator: UIViewPropertyAnimator
+    private let propertyAnimator: UIViewPropertyAnimator
 
-    internal var delegate: CameraAnimatorDelegate?
+    private var delegate: CameraAnimatorDelegate?
 
     internal var owner: AnimationOwnerProtocol
 
@@ -17,29 +17,13 @@ public class CameraAnimator : NSObject {
         self.owner = owner
     }
 
-    public var state: UIViewAnimatingState {
-        get {
-            return propertyAnimator.state
-        }
-    }
+    public var state: UIViewAnimatingState { return propertyAnimator.state }
 
-    public var isRunning: Bool {
-        get {
-            return propertyAnimator.isRunning
-        }
-    }
+    public var isRunning: Bool { return propertyAnimator.isRunning }
 
-    public var isReversed: Bool {
-        get {
-            return propertyAnimator.isReversed
-        }
-    }
+    public var isReversed: Bool { return propertyAnimator.isReversed }
 
-    public var fractionComplete: CGFloat {
-        get {
-            return propertyAnimator.fractionComplete
-        }
-    }
+    public var fractionComplete: CGFloat { return propertyAnimator.fractionComplete }
 
     public func startAnimation() {
         propertyAnimator.startAnimation()
@@ -55,6 +39,9 @@ public class CameraAnimator : NSObject {
 
     public func stopAnimation(_ withoutFinishing: Bool) {
         propertyAnimator.stopAnimation(withoutFinishing)
+
+        // Need to let the delegate know that animation has stopped
+        delegate?.animatorIsFinished(animator: self)
     }
 
     public func addAnimations(_ animations: @escaping () -> Void, delayFactor: CGFloat) {
@@ -84,7 +71,7 @@ internal protocol CameraAnimatorDelegate {
 }
 
 // MARK: AnimationOwnerProtocol
-protocol AnimationOwnerProtocol {
+internal protocol AnimationOwnerProtocol {
     var id: String { get }
 }
 

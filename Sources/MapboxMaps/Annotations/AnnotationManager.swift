@@ -532,7 +532,7 @@ public class AnnotationManager: Observer {
             "Point"
         }
 
-        let expectedLayer = styleDelegate.addLayer(layer: symbolLayer, layerPosition: nil)
+        let expectedLayer = styleDelegate.addLayer(layer: symbolLayer, layerPosition: annotationOptions.layerPosition)
 
         if case .failure(let layerError) = expectedLayer {
             throw AnnotationError.addAnnotationFailed(layerError)
@@ -558,7 +558,7 @@ public class AnnotationManager: Observer {
             "LineString"
         }
 
-        if case .failure(let layerError) = styleDelegate.addLayer(layer: lineLayer, layerPosition: nil) {
+        if case .failure(let layerError) = styleDelegate.addLayer(layer: lineLayer, layerPosition: annotationOptions.layerPosition) {
             throw AnnotationError.addAnnotationFailed(layerError)
         }
 
@@ -581,7 +581,7 @@ public class AnnotationManager: Observer {
             "Polygon"
         }
 
-        if case .failure(let layerError) = styleDelegate.addLayer(layer: fillLayer, layerPosition: nil) {
+        if case .failure(let layerError) = styleDelegate.addLayer(layer: fillLayer, layerPosition: annotationOptions.layerPosition) {
             throw AnnotationError.addAnnotationFailed(layerError)
         }
 

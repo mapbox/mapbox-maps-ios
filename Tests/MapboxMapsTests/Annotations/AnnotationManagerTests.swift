@@ -41,6 +41,11 @@ class AnnotationManagerTests: XCTestCase {
         let a = AnnotationOptions()
         let b = AnnotationOptions()
         XCTAssertEqual(a, b)
+
+        // Test ergonomics
+        _ = AnnotationOptions(layerPosition: LayerPosition())
+        _ = AnnotationOptions(sourceId: "test")
+        _ = AnnotationOptions(sourceOptions: AnnotationSourceOptions())
     }
 
     func testAnnotationManagerDefaultInitialization() {

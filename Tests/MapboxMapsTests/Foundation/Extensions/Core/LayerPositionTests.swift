@@ -18,9 +18,9 @@ final class LayerPositionTests: XCTestCase {
         XCTAssertEqual(a, b)
         XCTAssertEqual(e, f)
 
-        XCTAssertNotEqual(a,c)
-        XCTAssertNotEqual(c,d)
-        XCTAssertNotEqual(d,e)
+        XCTAssertNotEqual(a, c)
+        XCTAssertNotEqual(c, d)
+        XCTAssertNotEqual(d, e)
 
         XCTAssertEqual(f.at, 3)
     }

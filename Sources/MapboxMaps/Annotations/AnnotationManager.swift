@@ -315,6 +315,11 @@ public class AnnotationManager: Observer {
         }
     }
 
+    /**
+     Returns the underlying layer identifier for the associated annotation type.
+     - Parameter annotationType: Type of annotation, for example, PointAnnotation.self
+     - Returns: Identifier (or nil, if there isn't a layer for that type)
+     */
     public func layerId<T: Annotation>(for annotationType: T.Type) -> String? {
         switch annotationType {
         case is PointAnnotation.Type:

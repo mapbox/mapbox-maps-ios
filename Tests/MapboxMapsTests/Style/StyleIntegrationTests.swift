@@ -103,8 +103,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
                 }
 
                 expectation.fulfill()
-            }
-            catch {
+            } catch {
                 XCTFail("_moveLayer failed with \(error)")
             }
         }

@@ -17,6 +17,7 @@ Fixes: < Link to related issues that will be fixed by this pull request, if they
  - [ ] Document any changes to public APIs.
  - [ ] Apply changelog label ('breaking change', 'bug :beetle:', 'build', 'docs', 'feature :green_apple:', 'performance :zap:', 'testing :100:') or use the label 'skip changelog'
  - [ ] Add an entry inside this element for inclusion in the `mapbox-maps-ios` changelog: `<changelog></changelog>`.
+ - [ ] Update the migration guide, API Docs, Markdown files - Readme, Developing, etc
 
 ### Summary of changes
 

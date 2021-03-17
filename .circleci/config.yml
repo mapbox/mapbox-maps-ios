@@ -315,7 +315,9 @@ jobs:
           commit-text: "[run device tests]"
           always-run: << parameters.device-tests-always-run >>
       - inject-mapbox-public-token
-      - run: make install-devicefarm-dependencies
+      - run:
+          name: Install Device Farm Dependencies
+          command: make install-devicefarm-dependencies
       - install-dependencies
       - run:
           name: Testing << parameters.scheme >> on AWS Device Farm
@@ -353,7 +355,9 @@ jobs:
           commit-text: "[run app device tests]"
           always-run: << parameters.device-tests-always-run >>
       - configure-environment
-      - run: make install-devicefarm-dependencies
+      - run:
+          name: Install Device Farm Dependencies
+          command: make install-devicefarm-dependencies
       # There's a command for this, but it only work if run *after* the build
       # In this case, we need to determine the derived data path before building
       - run:

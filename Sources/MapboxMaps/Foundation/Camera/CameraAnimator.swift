@@ -23,11 +23,23 @@ public class CameraAnimator : NSObject {
         }
     }
 
-    public var isRunning: Bool { get { return false } }
+    public var isRunning: Bool {
+        get {
+            return propertyAnimator.isRunning
+        }
+    }
 
-    public var isReversed: Bool { get { return false } }
+    public var isReversed: Bool {
+        get {
+            return propertyAnimator.isReversed
+        }
+    }
 
-    public var fractionComplete: CGFloat { get { return 0.0 } }
+    public var fractionComplete: CGFloat {
+        get {
+            return propertyAnimator.fractionComplete
+        }
+    }
 
     public func startAnimation() {
         propertyAnimator.startAnimation()
@@ -55,6 +67,10 @@ public class CameraAnimator : NSObject {
 
     public func addCompletion(_ completion: @escaping (UIViewAnimatingPosition) -> Void) {
         propertyAnimator.addCompletion(completion)
+    }
+
+    public func continueAnimation(withTimingParameters parameters: UITimingCurveProvider?, durationFactor: CGFloat) {
+        propertyAnimator.continueAnimation(withTimingParameters: parameters, durationFactor: durationFactor)
     }
 }
 

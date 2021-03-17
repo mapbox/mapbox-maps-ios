@@ -28,6 +28,8 @@
 		73C1558525DC775A00AFAE20 /* LayerBelowExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C1558425DC775A00AFAE20 /* LayerBelowExample.swift */; };
 		A4211CE62592549900D215B4 /* RestrictCoordinateBoundsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4211CE52592549900D215B4 /* RestrictCoordinateBoundsExample.swift */; };
 		B5327E9D260124C00095B6BD /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = B5327E9C260124C00095B6BD /* MapboxMaps */; };
+		B5327EBF260277930095B6BD /* Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5327EBE260277930095B6BD /* Example.swift */; };
+		B5327EC3260277AC0095B6BD /* ExampleProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5327EC2260277AC0095B6BD /* ExampleProtocol.swift */; };
 		CA4F1F7225E815CF00822D2A /* SwiftUIExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A2E03C25CB64E20082BC31 /* SwiftUIExample.swift */; };
 		CA86E81825BE7C2300E5A1D9 /* BuildingExtrusionsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA86E81725BE7C2200E5A1D9 /* BuildingExtrusionsExample.swift */; };
 		CAC195B725AC098A00F69FEA /* CameraUIViewAnimationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC195B625AC098A00F69FEA /* CameraUIViewAnimationExample.swift */; };
@@ -136,6 +138,8 @@
 		73C1558425DC775A00AFAE20 /* LayerBelowExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerBelowExample.swift; sourceTree = "<group>"; };
 		A4211CE52592549900D215B4 /* RestrictCoordinateBoundsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictCoordinateBoundsExample.swift; sourceTree = "<group>"; };
 		A4AC5DEB2542CB2200995E4C /* CustomStyleURLExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomStyleURLExample.swift; sourceTree = "<group>"; };
+		B5327EBE260277930095B6BD /* Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Example.swift; sourceTree = "<group>"; };
+		B5327EC2260277AC0095B6BD /* ExampleProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleProtocol.swift; sourceTree = "<group>"; };
 		C64ED3842540A2BE00ADADFB /* CameraAnimationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAnimationExample.swift; sourceTree = "<group>"; };
 		C64ED3882540BA0700ADADFB /* PointAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointAnnotationExample.swift; sourceTree = "<group>"; };
 		C64ED3C42540DD6E00ADADFB /* CustomPointAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPointAnnotationExample.swift; sourceTree = "<group>"; };
@@ -177,6 +181,8 @@
 		0746C143252FA97E001638BD /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B5327EBE260277930095B6BD /* Example.swift */,
+				B5327EC2260277AC0095B6BD /* ExampleProtocol.swift */,
 				0746C14D252FA9D4001638BD /* Examples.swift */,
 			);
 			path = Models;
@@ -485,6 +491,7 @@
 				CADCF71D2584990E0065C51B /* CustomPointAnnotationExample.swift in Sources */,
 				CADCF7212584990E0065C51B /* PolygonAnnotationExample.swift in Sources */,
 				CADCF7272584990E0065C51B /* FitCameraToGeometryExample.swift in Sources */,
+				B5327EC3260277AC0095B6BD /* ExampleProtocol.swift in Sources */,
 				CADCF7252584990E0065C51B /* CameraAnimationExample.swift in Sources */,
 				CADCF72A2584990E0065C51B /* CustomStyleURLExample.swift in Sources */,
 				CADCF7222584990E0065C51B /* ColorExpressionExample.swift in Sources */,
@@ -509,6 +516,7 @@
 				CADCF72D2584990E0065C51B /* GeoJSONSourceExample.swift in Sources */,
 				CADCF72E2584990E0065C51B /* MapViewExample.swift in Sources */,
 				58A3C0C925C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift in Sources */,
+				B5327EBF260277930095B6BD /* Example.swift in Sources */,
 				CADCF736258499170065C51B /* ExampleTableViewController.swift in Sources */,
 				A4211CE62592549900D215B4 /* RestrictCoordinateBoundsExample.swift in Sources */,
 				0C52BA9825AF8C880054ECA8 /* PuckModelLayerExample.swift in Sources */,

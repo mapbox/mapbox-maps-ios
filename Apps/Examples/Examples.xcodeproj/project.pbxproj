@@ -60,6 +60,7 @@
 		CADCF73C258499200065C51B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077C4EED252F7E88007636F1 /* AppDelegate.swift */; };
 		CADCF743258499570065C51B /* BasicMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADCF742258499570065C51B /* BasicMapExample.swift */; };
 		CAF9A9812583E49B007EF9EC /* TestableExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF9A9802583E49B007EF9EC /* TestableExampleTests.swift */; };
+		F46FF17B26025A40007CC0E0 /* CustomSymbolAnnotationsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46FF17A26025A3F007CC0E0 /* CustomSymbolAnnotationsExample.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -152,6 +153,7 @@
 		CADCF742258499570065C51B /* BasicMapExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicMapExample.swift; sourceTree = "<group>"; };
 		CAEF7554257AE02B0003EFF7 /* MapViewExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewExample.swift; sourceTree = "<group>"; };
 		CAF9A9802583E49B007EF9EC /* TestableExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestableExampleTests.swift; sourceTree = "<group>"; };
+		F46FF17A26025A3F007CC0E0 /* CustomSymbolAnnotationsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomSymbolAnnotationsExample.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -209,6 +211,7 @@
 		0746C182252FB0F4001638BD /* All Examples */ = {
 			isa = PBXGroup;
 			children = (
+				F46FF17A26025A3F007CC0E0 /* CustomSymbolAnnotationsExample.swift */,
 				07B071D12547CF50007F2865 /* Sample Data */,
 				CAEF7554257AE02B0003EFF7 /* MapViewExample.swift */,
 				CADCF742258499570065C51B /* BasicMapExample.swift */,
@@ -499,6 +502,7 @@
 				CADCF72A2584990E0065C51B /* CustomStyleURLExample.swift in Sources */,
 				CADCF7222584990E0065C51B /* ColorExpressionExample.swift in Sources */,
 				CADCF733258499130065C51B /* Examples.swift in Sources */,
+				F46FF17B26025A40007CC0E0 /* CustomSymbolAnnotationsExample.swift in Sources */,
 				CADCF743258499570065C51B /* BasicMapExample.swift in Sources */,
 				CADCF7232584990E0065C51B /* UpdatePointAnnotationPositionExample.swift in Sources */,
 				CADCF72C2584990E0065C51B /* PointAnnotationExample.swift in Sources */,

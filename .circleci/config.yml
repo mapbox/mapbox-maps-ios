@@ -585,7 +585,7 @@ commands:
     parameters:
       artifact_name:
         type: string
-        default: "build"
+        default: "DeviceFarm"
       derived_data_path:
         type: string
         default: "build"

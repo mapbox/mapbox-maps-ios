@@ -340,7 +340,12 @@ jobs:
           when: always
       - run:
           name: Converting and uploading coverage
-          command: make device-update-codecov-with-profdata SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
+          command: |
+            make device-update-codecov-with-profdata \
+              SCHEME=<< parameters.scheme >> \
+              APP_NAME=<< parameters.app-name >> \
+              CONFIGURATION=Release \
+              COVERAGE_MAPBOX_MAPS_DEVICE=build/Build/Products/Release-iphoneos/MapboxMaps.framework/MapboxMaps
       - store-device-farm-artifacts
       - store-logs
       - report-failure:
@@ -402,8 +407,6 @@ jobs:
       - run:
           name: Converting and uploading coverage
           command: |
-            # Debugging
-            ls "$DERIVED_DATA_PATH/Build/Products/Release-iphoneos"
             make device-update-codecov-with-profdata \
               SCHEME=<< parameters.scheme >> \
               APP_NAME=<< parameters.app-name >> \

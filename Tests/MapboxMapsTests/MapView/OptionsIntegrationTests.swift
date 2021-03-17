@@ -17,7 +17,6 @@ internal class OptionsIntegrationTest: MapViewIntegrationTestCase {
         newOptions.gestures.scrollEnabled = false
         newOptions.ornaments.showsScale = false
         newOptions.ornaments.showsCompass = false
-        newOptions.render.presentsWithTransaction = true
 
         mapView.update { (options) in
             options = newOptions

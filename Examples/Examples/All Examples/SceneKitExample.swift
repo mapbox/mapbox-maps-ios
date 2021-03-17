@@ -49,14 +49,14 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
 
         var demSource = RasterDemSource()
         demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
-        demSource.tileSize = 514
+        demSource.tileSize = 512
         demSource.maxzoom = 14.0
         mapView.style.addSource(source: demSource, identifier: "mapbox-dem")
         let terrain = Terrain(sourceId: "mapbox-dem")
         _ = self.mapView.style.setTerrain(terrain)
 
         var skyLayer = SkyLayer(id: "sky-layer")
-        skyLayer.paint?.skyType = .atmosphere
+        skyLayer.paint?.skyType = .constant(.atmosphere)
         skyLayer.paint?.skyAtmosphereSun = .constant([0, 0])
         skyLayer.paint?.skyAtmosphereSunIntensity = .constant(15.0)
 
@@ -147,6 +147,9 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
     }
 
     public func render(_ parameters: CustomLayerRenderParameters, mtlCommandBuffer: MTLCommandBuffer, mtlRenderPassDescriptor: MTLRenderPassDescriptor) {
+        guard let colorTexture = mtlRenderPassDescriptor.colorAttachments[0].texture else {
+            return
+        }
         let m = parameters.projectionMatrix
 
         // It is essential to use double precision for computation below: using simd instead
@@ -216,9 +219,8 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
             // the example here needs to provide CPU side occlusion implementation, too.
             // TODO: this is blocked on https://github.com/mapbox/mapbox-maps-ios/issues/155
         }
-        if let colorTexture = mtlRenderPassDescriptor.colorAttachments[0].texture {
-            renderer.render(withViewport: CGRect(x: 0, y: 0, width: CGFloat(colorTexture.width), height: CGFloat(colorTexture.height)), commandBuffer: mtlCommandBuffer, passDescriptor: mtlRenderPassDescriptor)
-        }
+        renderer.render(withViewport: CGRect(x: 0, y: 0, width: CGFloat(colorTexture.width), height: CGFloat(colorTexture.height)), commandBuffer: mtlCommandBuffer, passDescriptor: mtlRenderPassDescriptor)
+
     }
 
     public func renderingWillEnd() {

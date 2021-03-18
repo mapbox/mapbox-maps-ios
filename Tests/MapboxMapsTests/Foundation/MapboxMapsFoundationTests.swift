@@ -257,10 +257,10 @@ class MapboxMapsFoundationTests: XCTestCase {
         mapView.pendingAnimatorCompletionBlocks.append(secondCompletionBlock)
         XCTAssertEqual(mapView.pendingAnimatorCompletionBlocks.count, 2)
 
-        mapView.updateFromDisplayLink(displayLink: CADisplayLink())
-        XCTAssertEqual(mapView.pendingAnimatorCompletionBlocks.count, 0)
-
-        // This line of code should not warrant a crash
-        mapView.updateFromDisplayLink(displayLink: CADisplayLink())
+//        mapView.updateFromDisplayLink(displayLink: CADisplayLink())
+//        XCTAssertEqual(mapView.pendingAnimatorCompletionBlocks.count, 0)
+//
+//        // This line of code should not warrant a crash
+//        mapView.updateFromDisplayLink(displayLink: CADisplayLink())
     }
 }

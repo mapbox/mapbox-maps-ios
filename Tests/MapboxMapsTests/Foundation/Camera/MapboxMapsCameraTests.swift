@@ -373,4 +373,10 @@ class CameraManagerTests: XCTestCase {
         verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: -90, offset: CGPoint(x: 0, y: 10))
         verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: -45, offset: CGPoint(x: 0, y: 10))
     }
+
+    // MARK: MakeCameraAnimator Tests
+
+    func testAddAndRemoveCameraAnimators() {
+
+    }
 }

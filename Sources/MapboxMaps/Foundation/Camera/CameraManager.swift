@@ -49,7 +49,7 @@ public class CameraManager {
     }
 
     /// Pointer array for holding camera animators
-    public var cameraAnimators = NSHashTable<CameraAnimator>.weakObjects()
+    public internal(set) var cameraAnimators = NSHashTable<CameraAnimator>.weakObjects()
 
     /// May want to convert to an enum.
     fileprivate let northBearing: CGFloat = 0
@@ -785,7 +785,7 @@ extension CameraManager: CameraAnimatorDelegate {
      - Parameter completion: Completion block to be passed through for when an animation is stopped
      - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
      */
-    func runningCameraAnimator(withDuration duration: TimeInterval,
+    func runningCameraAnimator(duration: TimeInterval,
                                delay: TimeInterval,
                                options: UIView.AnimationOptions = [],
                                animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,

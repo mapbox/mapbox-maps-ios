@@ -15,4 +15,6 @@ public struct MapOptions: Equatable {
     public var location: LocationOptions = LocationOptions()
 
     public var render: RenderOptions = RenderOptions()
+
+    public var annotations: AnnotationOptions = AnnotationOptions()
 }

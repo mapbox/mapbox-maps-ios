@@ -3,7 +3,7 @@ import XCTest
 
 internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase {
 
-    // MARK: - Test adding point annotation
+    // MARK: - Integration tests
 
     /**
      The purpose of this test is to ensure that the appropriate source and style
@@ -22,7 +22,9 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
 
             // Given
             let annotation = PointAnnotation(coordinate: mapView.centerCoordinate)
-            let annotationManager = AnnotationManager(for: mapView, with: self)
+            let annotationManager = AnnotationManager(for: mapView,
+                                                      with: self,
+                                                      options: AnnotationOptions())
             annotationManager.addAnnotation(annotation)
 
             // When
@@ -52,7 +54,39 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
         wait(for: expectations, timeout: 5.0)
     }
 
-    // MARK: - Test adding userInfo to annotation still renders annotation
+    internal func testAddAnnotationAtSpecificLayerPosition() {
+        style?.styleURL = .streets
+
+        let styleLoadedExpectation = XCTestExpectation(description: "Wait for map to load style")
+
+        didFinishLoadingStyle = { mapView in
+
+            // Given
+            let annotation = PointAnnotation(coordinate: mapView.centerCoordinate)
+            let requiredIndex = 3
+            let position = LayerPosition(above: nil, below: nil, at: requiredIndex)
+            let annotationManager = AnnotationManager(for: mapView,
+                                                      with: self,
+                                                      options: AnnotationOptions(layerPosition: position))
+            annotationManager.addAnnotation(annotation)
+
+            guard let layerId = annotationManager.layerId(for: PointAnnotation.self) else {
+                XCTFail("Layer should exist")
+                return
+            }
+
+            // Get layer position
+            let layers = try! mapView.style.styleManager.getStyleLayers()
+            let layerIds = layers.map { $0.id }
+            let layerIndex = layerIds.firstIndex(of: layerId)
+            XCTAssertNotNil(layerIndex)
+            XCTAssertEqual(layerIndex, requiredIndex)
+
+            styleLoadedExpectation.fulfill()
+        }
+
+        wait(for: [styleLoadedExpectation], timeout: 5.0)
+    }
 
     /**
      The purpose of this test is to ensure that adding userInfo to the annotation
@@ -71,7 +105,9 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
 
             // Given
             var annotation = PointAnnotation(coordinate: mapView.centerCoordinate)
-            let annotationManager = AnnotationManager(for: mapView, with: self)
+            let annotationManager = AnnotationManager(for: mapView,
+                                                      with: self,
+                                                      options: AnnotationOptions())
             annotation.userInfo = ["TestKey": true]
             annotationManager.addAnnotation(annotation)
 

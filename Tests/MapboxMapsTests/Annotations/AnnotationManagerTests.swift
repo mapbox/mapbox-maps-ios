@@ -23,7 +23,8 @@ class AnnotationManagerTests: XCTestCase {
         annotationSupportableMapMock = AnnotationSupportableMapMock()
         annotationSupportableStyleMock = AnnotationStyleDelegateMock()
         annotationManager = AnnotationManager(for: annotationSupportableMapMock,
-                                              with: annotationSupportableStyleMock)
+                                              with: annotationSupportableStyleMock,
+                                              options: AnnotationOptions())
 
         defaultCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     }
@@ -35,6 +36,18 @@ class AnnotationManagerTests: XCTestCase {
         defaultCoordinate = nil
     }
 
+    // MARK: - Test adding point annotation
+    func testAnnotationOptions() {
+        let a = AnnotationOptions()
+        let b = AnnotationOptions()
+        XCTAssertEqual(a, b)
+
+        // Test ergonomics
+        _ = AnnotationOptions(layerPosition: LayerPosition())
+        _ = AnnotationOptions(sourceId: "test")
+        _ = AnnotationOptions(sourceOptions: AnnotationSourceOptions())
+    }
+
     func testAnnotationManagerDefaultInitialization() {
         // Given / When
         let expectedInitialAnnotationsCount = 0
@@ -44,9 +57,20 @@ class AnnotationManagerTests: XCTestCase {
         XCTAssertTrue(annotationManager.annotationFeatures.features.isEmpty)
         XCTAssertNotNil(annotationManager.tapGesture)
         XCTAssertNil(annotationManager.annotationSource)
-        XCTAssertNil(annotationManager.defaultSymbolLayer)
-        XCTAssertNil(annotationManager.defaultLineLayer)
-        XCTAssertNil(annotationManager.defaultPolygonLayer)
+        XCTAssertNil(annotationManager.symbolLayer)
+        XCTAssertNil(annotationManager.lineLayer)
+        XCTAssertNil(annotationManager.fillLayer)
+    }
+
+    func testLayerIdentifiers() {
+        let symbolLayerId = annotationManager.layerId(for: PointAnnotation.self)
+        XCTAssertNil(symbolLayerId)
+
+        let lineLayerId = annotationManager.layerId(for: LineAnnotation.self)
+        XCTAssertNil(lineLayerId)
+
+        let fillLayerId = annotationManager.layerId(for: PolygonAnnotation.self)
+        XCTAssertNil(fillLayerId)
     }
 
     func testAnnotationFeatureCollectionIsValid() {
@@ -186,5 +210,27 @@ class AnnotationManagerTests: XCTestCase {
 
         XCTAssertTrue(annotationManager.userInteractionEnabled)
         XCTAssertNotNil(annotationManager.tapGesture)
+    }
+
+    func testLayerIdentifiersAfterAddingAnnotation() {
+        annotationManager.addAnnotation(PointAnnotation(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0)))
+        let symbolLayerId = annotationManager.layerId(for: PointAnnotation.self)
+        XCTAssertEqual(symbolLayerId, annotationManager.defaultSymbolLayerId)
+
+        annotationManager.addAnnotation(LineAnnotation(coordinates: [
+            CLLocationCoordinate2D(latitude: 0, longitude: 0),
+            CLLocationCoordinate2D(latitude: 1, longitude: 1)
+        ]))
+        let lineLayerId = annotationManager.layerId(for: LineAnnotation.self)
+        XCTAssertEqual(lineLayerId, annotationManager.defaultLineLayerId)
+
+        annotationManager.addAnnotation(PolygonAnnotation(coordinates: [
+            CLLocationCoordinate2D(latitude: 0, longitude: 0),
+            CLLocationCoordinate2D(latitude: 0, longitude: 1),
+            CLLocationCoordinate2D(latitude: 1, longitude: 1),
+            CLLocationCoordinate2D(latitude: 1, longitude: 0)
+        ]))
+        let fillLayerId = annotationManager.layerId(for: PolygonAnnotation.self)
+        XCTAssertEqual(fillLayerId, annotationManager.defaultPolygonLayerId)
     }
 }

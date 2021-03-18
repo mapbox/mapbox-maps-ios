@@ -60,4 +60,54 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
 
         wait(for: [expectation], timeout: 5.0)
     }
+
+    internal func testMoveStyleLayer() throws {
+        guard
+            let style = style else {
+            XCTFail("There should be valid MapView and Style objects created by setUp.")
+            return
+        }
+
+        let expectation = XCTestExpectation(description: "Move style layer succeeded")
+        expectation.expectedFulfillmentCount = 2
+
+        style.styleURL = .streets
+
+        didFinishLoadingStyle = { _ in
+
+            let layers = try! style.styleManager.getStyleLayers()
+            let newBackgroundLayer = BackgroundLayer(id: "test-id")
+
+            let result = style.addLayer(layer: newBackgroundLayer)
+
+            switch result {
+            case .success:
+                expectation.fulfill()
+            case .failure(let error):
+                XCTFail("Could not add background layer due to error: \(error)")
+            }
+
+            // Move layer, repeatedly
+            do {
+                for step in stride(from: 0, to: layers.count, by: 3) {
+
+                    let newLayerPosition = LayerPosition(above: nil, below: nil, at: step)
+                    try style._moveLayer(with: "test-id", to: newLayerPosition)
+
+                    // Get layer position
+                    let layers = try style.styleManager.getStyleLayers()
+                    let layerIds = layers.map { $0.id }
+
+                    let position = layerIds.firstIndex(of: "test-id")
+                    XCTAssertEqual(position, step)
+                }
+
+                expectation.fulfill()
+            } catch {
+                XCTFail("_moveLayer failed with \(error)")
+            }
+        }
+
+        wait(for: [expectation], timeout: 5.0)
+    }
 }

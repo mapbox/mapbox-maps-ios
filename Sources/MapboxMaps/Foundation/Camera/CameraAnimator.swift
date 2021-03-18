@@ -37,11 +37,10 @@ public class CameraAnimator: NSObject {
         propertyAnimator.pauseAnimation()
     }
 
-    public func stopAnimation(_ withoutFinishing: Bool) {
-        propertyAnimator.stopAnimation(withoutFinishing)
-
-        // Need to let the delegate know that animation has stopped
-        delegate?.animatorIsFinished(animator: self)
+    public func stopAnimation() {
+        propertyAnimator.stopAnimation(false)
+        propertyAnimator.finishAnimation(at: .current)
+        delegate?.animatorIsFinished(forAnimator: self)
     }
 
     public func addAnimations(_ animations: @escaping () -> Void, delayFactor: CGFloat) {
@@ -53,7 +52,9 @@ public class CameraAnimator: NSObject {
     }
 
     public func addCompletion(_ completion: @escaping (UIViewAnimatingPosition) -> Void) {
-        propertyAnimator.addCompletion(completion)
+        propertyAnimator.addCompletion({ animatingPosition in
+            self.delegate?.schedulePendingCompletion(forAnimator: self, completion: completion, animatingPosition: animatingPosition)
+        })
     }
 
     public func continueAnimation(withTimingParameters parameters: UITimingCurveProvider?, durationFactor: CGFloat) {
@@ -64,9 +65,9 @@ public class CameraAnimator: NSObject {
 // MARK: CameraAnimatorDelegate Protocol
 internal protocol CameraAnimatorDelegate {
 
-    func schedulePendingCompletion(completion: @escaping () -> Void)
+    func schedulePendingCompletion(forAnimator animator: CameraAnimator, completion: @escaping (UIViewAnimatingPosition) -> Void, animatingPosition: UIViewAnimatingPosition)
 
-    func animatorIsFinished(animator: CameraAnimator)
+    func animatorIsFinished(forAnimator animator: CameraAnimator)
 
 }
 

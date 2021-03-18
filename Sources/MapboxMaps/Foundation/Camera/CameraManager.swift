@@ -49,7 +49,7 @@ public class CameraManager {
     }
 
     /// Pointer array for holding camera animators
-    public var cameraAnimators = NSPointerArray.weakObjects()
+    public var cameraAnimators = NSHashTable<CameraAnimator>.weakObjects()
 
     /// May want to convert to an enum.
     fileprivate let northBearing: CGFloat = 0
@@ -702,7 +702,7 @@ extension CameraManager: CameraAnimatorDelegate {
                             animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, timingParameters: parameters)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
-        cameraAnimators.addPointer(cameraAnimator.observationInfo)
+        cameraAnimators.add(cameraAnimator)
         return cameraAnimator
     }
 
@@ -712,7 +712,7 @@ extension CameraManager: CameraAnimatorDelegate {
                             animations: (() -> Void)? = nil) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, curve: curve, animations: animations)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
-        cameraAnimators.addPointer(cameraAnimator.observationInfo)
+        cameraAnimators.add(cameraAnimator)
         return cameraAnimator
     }
 
@@ -723,7 +723,7 @@ extension CameraManager: CameraAnimatorDelegate {
                             animations: (() -> Void)? = nil) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, controlPoint1: point1, controlPoint2: point2, animations: animations)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
-        cameraAnimators.addPointer(cameraAnimator.observationInfo)
+        cameraAnimators.add(cameraAnimator)
         return cameraAnimator
     }
 
@@ -733,7 +733,7 @@ extension CameraManager: CameraAnimatorDelegate {
                             animations: (() -> Void)? = nil) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: ratio, animations: animations)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
-        cameraAnimators.addPointer(cameraAnimator.observationInfo)
+        cameraAnimators.add(cameraAnimator)
         return cameraAnimator
     }
 
@@ -743,39 +743,34 @@ extension CameraManager: CameraAnimatorDelegate {
                                animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
                                animations: @escaping () -> Void,
                                completion: ((UIViewAnimatingPosition) -> Void)? = nil) -> CameraAnimator {
-
         let runningAnimator = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: duration,
                                                                              delay: delay,
                                                                              options: options,
                                                                              animations: animations,
-                                                                             completion: completion)
-//        let runningAnimator = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: duration,
-//                                                                             delay: delay,
-//                                                                             options: options,
-//                                                                             animations: animations,
-//                                                                             completion: {
-//                                                                                /*
-//                                                                                call schedlue pending completion
-//                                                                                */
-//                                                                                schedulePendingCompletion(completion: completion)
-//                                                                             })
+                                                                             completion: nil)
 
-        return CameraAnimator(delegate: self, propertyAnimator: runningAnimator, owner: animationOwner)
+        let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: runningAnimator, owner: animationOwner)
+
+        runningAnimator.addCompletion({ [weak self] animatingPosition in
+            guard let completion = completion,
+                  let validSelf = self
+            else { return }
+
+            validSelf.schedulePendingCompletion(forAnimator: cameraAnimator, completion: completion, animatingPosition: animatingPosition)
+        })
+        cameraAnimators.add(cameraAnimator)
+        return cameraAnimator
     }
 
     // MARK: Delegate Functions
-    func schedulePendingCompletion(completion: @escaping () -> Void) {
+    func schedulePendingCompletion(forAnimator animator: CameraAnimator, completion: @escaping AnimationCompletion, animatingPosition: UIViewAnimatingPosition) {
         guard let mapView = mapView else { return }
-        mapView.pendingAnimatorCompletionBlocks.append(completion)
+        mapView.pendingAnimatorCompletionBlocks.append((completion, animatingPosition))
+        cameraAnimators.remove(animator)
     }
 
-    func animatorIsFinished(animator: CameraAnimator) {
-        for index in 0..<cameraAnimators.count {
-            if cameraAnimators.pointer(at: index) == animator.observationInfo {
-                cameraAnimators.removePointer(at: index)
-                break
-            }
-        }
+    func animatorIsFinished(forAnimator animator: CameraAnimator) {
+        cameraAnimators.remove(animator)
     }
 }
 

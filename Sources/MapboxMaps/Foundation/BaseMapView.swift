@@ -72,6 +72,8 @@ open class ObserverConcrete: Observer {
     }
 }
 
+internal typealias AnimationCompletion = (UIViewAnimatingPosition) -> Void
+
 open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDelegate {
 
     /// The underlying renderer object responsible for rendering the map
@@ -84,7 +86,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     internal var resourceOptions: ResourceOptions?
 
     /// List of completion blocks that need to be completed by the displayLink
-    internal var pendingAnimatorCompletionBlocks: [(() -> Void)] = []
+    internal var pendingAnimatorCompletionBlocks: [(completion: AnimationCompletion, animatingPosition: UIViewAnimatingPosition)] = []
 
     public var needsDisplayRefresh: Bool = false
     public var dormant: Bool = false
@@ -339,7 +341,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
 
             while !pendingAnimatorCompletionBlocks.isEmpty {
                 let completionBlock = pendingAnimatorCompletionBlocks.removeFirst()
-                completionBlock()
+                completionBlock.completion(completionBlock.animatingPosition)
             }
 
             self.displayCallback?()

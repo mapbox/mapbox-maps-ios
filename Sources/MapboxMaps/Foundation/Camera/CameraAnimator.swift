@@ -23,7 +23,10 @@ public class CameraAnimator: NSObject {
 
     public var isReversed: Bool { return propertyAnimator.isReversed }
 
-    public var fractionComplete: CGFloat { return propertyAnimator.fractionComplete }
+    public var fractionComplete: CGFloat {
+        get { return propertyAnimator.fractionComplete }
+        set { propertyAnimator.fractionComplete = newValue }
+    }
 
     public func startAnimation() {
         propertyAnimator.startAnimation()

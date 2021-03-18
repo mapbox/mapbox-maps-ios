@@ -7,13 +7,13 @@ import XCTest
 #endif
 
 public class CameraAnimatorMock: CameraAnimatorDelegate {
-    func schedulePendingCompletion(forAnimator animator: CameraAnimator,
+    public func schedulePendingCompletion(forAnimator animator: CameraAnimator,
                                    completion: @escaping AnimationCompletion,
                                    animatingPosition: UIViewAnimatingPosition) {
         print("Mock stub")
     }
 
-    func animatorIsFinished(forAnimator animator: CameraAnimator) {
+    public func animatorIsFinished(forAnimator animator: CameraAnimator) {
         print("Mock stub")
     }
 

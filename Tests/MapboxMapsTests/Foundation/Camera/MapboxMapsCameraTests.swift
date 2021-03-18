@@ -377,6 +377,18 @@ class CameraManagerTests: XCTestCase {
     // MARK: MakeCameraAnimator Tests
 
     func testAddAndRemoveCameraAnimators() {
+        let firstAnimator = cameraManager.makeCameraAnimator(duration: 5.0, curve: .linear)
+        let secondAnimator = cameraManager.makeCameraAnimator(duration: 5.0, dampingRatio: 1.0)
+        let thirdAnimator = cameraManager.makeCameraAnimator(duration: 5.0, curve: .linear)
+        let fourthAnimator = cameraManager.makeCameraAnimator(duration: 5.0, controlPoint1: CGPoint(x: 0.0, y: 1.0), controlPoint2: CGPoint(x: 1.0, y: 0.0))
+        XCTAssertEqual(cameraManager.cameraAnimators.count, 4)
 
+        firstAnimator.stopAnimation()
+        XCTAssertEqual(cameraManager.cameraAnimators.count, 3)
+
+        secondAnimator.stopAnimation()
+        thirdAnimator.stopAnimation()
+        fourthAnimator.stopAnimation()
+        XCTAssertEqual(cameraManager.cameraAnimators.count, 0)
     }
 }

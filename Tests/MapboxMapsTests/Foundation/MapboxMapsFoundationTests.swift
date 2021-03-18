@@ -1,5 +1,6 @@
 import XCTest
 import CoreLocation
+import UIKit
 
 #if canImport(MapboxMaps)
 @testable import MapboxMaps
@@ -246,5 +247,20 @@ class MapboxMapsFoundationTests: XCTestCase {
          // TODO: Fix roundtrip image inconsistency - there's a small
          // amount of byte difference that can't be accounted for.
          // XCTAssertEqual(original.pngData(), roundtripped.pngData())
+    }
+
+    func testRemovalOfAnimationCompletionBlocks() {
+        let firstCompletionBlock = PendingAnimationCompletion(completion: { _ in }, animatingPosition: .end)
+        let secondCompletionBlock = PendingAnimationCompletion(completion: { _ in }, animatingPosition: .current)
+
+        mapView.pendingAnimatorCompletionBlocks.append(firstCompletionBlock)
+        mapView.pendingAnimatorCompletionBlocks.append(secondCompletionBlock)
+        XCTAssertEqual(mapView.pendingAnimatorCompletionBlocks.count, 2)
+
+        mapView.updateFromDisplayLink(displayLink: CADisplayLink())
+        XCTAssertEqual(mapView.pendingAnimatorCompletionBlocks.count, 0)
+
+        // This line of code should not warrant a crash
+        mapView.updateFromDisplayLink(displayLink: CADisplayLink())
     }
 }

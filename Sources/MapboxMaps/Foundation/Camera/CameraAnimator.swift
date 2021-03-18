@@ -54,7 +54,7 @@ public class CameraAnimator: NSObject {
         propertyAnimator.addAnimations(animations)
     }
 
-    public func addCompletion(_ completion: @escaping (UIViewAnimatingPosition) -> Void) {
+    public func addCompletion(_ completion: @escaping AnimationCompletion) {
         propertyAnimator.addCompletion({ animatingPosition in
             self.delegate?.schedulePendingCompletion(forAnimator: self, completion: completion, animatingPosition: animatingPosition)
         })
@@ -62,37 +62,5 @@ public class CameraAnimator: NSObject {
 
     public func continueAnimation(withTimingParameters parameters: UITimingCurveProvider?, durationFactor: CGFloat) {
         propertyAnimator.continueAnimation(withTimingParameters: parameters, durationFactor: durationFactor)
-    }
-}
-
-// MARK: CameraAnimatorDelegate Protocol
-internal protocol CameraAnimatorDelegate {
-
-    func schedulePendingCompletion(forAnimator animator: CameraAnimator, completion: @escaping (UIViewAnimatingPosition) -> Void, animatingPosition: UIViewAnimatingPosition)
-
-    func animatorIsFinished(forAnimator animator: CameraAnimator)
-
-}
-
-// MARK: AnimationOwnerProtocol
-internal protocol AnimationOwnerProtocol {
-    var id: String { get }
-}
-
-// MARK: AnimationOwner Enum
-public enum AnimationOwner: AnimationOwnerProtocol {
-    case gestures
-    case unspecified
-    case custom(id: String)
-
-    var id: String {
-        switch self {
-        case .gestures:
-            return "com.mapbox.maps.gestures"
-        case .unspecified:
-            return "com.mapbox.maps.unspecified"
-        case .custom(id: let  id):
-            return id
-        }
     }
 }

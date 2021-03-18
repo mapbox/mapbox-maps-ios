@@ -474,6 +474,8 @@
 		C64ED33C253F819B00ADADFB /* LocationConsumerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64ED33B253F819B00ADADFB /* LocationConsumerMock.swift */; };
 		C64ED33D253F819B00ADADFB /* LocationConsumerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64ED33B253F819B00ADADFB /* LocationConsumerMock.swift */; };
 		C64ED33E253F819B00ADADFB /* LocationConsumerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64ED33B253F819B00ADADFB /* LocationConsumerMock.swift */; };
+		C688B76F2603CF8700789263 /* CameraAnimationProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = C688B76E2603CF8700789263 /* CameraAnimationProtocols.swift */; };
+		C688B7702603CF8700789263 /* CameraAnimationProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = C688B76E2603CF8700789263 /* CameraAnimationProtocols.swift */; };
 		C69F011225431AF4001AB49B /* LocationManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69F011125431AF4001AB49B /* LocationManagerIntegrationTests.swift */; };
 		C69F0142254358B3001AB49B /* LocationManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69F011125431AF4001AB49B /* LocationManagerIntegrationTests.swift */; };
 		C69F015A254358C5001AB49B /* AnnotationManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07958C23253A2AE50043ECC0 /* AnnotationManagerIntegrationTests.swift */; };
@@ -1140,6 +1142,7 @@
 		C64ED305253F7CF500ADADFB /* LocationSupportableMapViewMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSupportableMapViewMock.swift; sourceTree = "<group>"; };
 		C64ED320253F7E9100ADADFB /* LocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerTests.swift; sourceTree = "<group>"; };
 		C64ED33B253F819B00ADADFB /* LocationConsumerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationConsumerMock.swift; sourceTree = "<group>"; };
+		C688B76E2603CF8700789263 /* CameraAnimationProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAnimationProtocols.swift; sourceTree = "<group>"; };
 		C69F011125431AF4001AB49B /* LocationManagerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerIntegrationTests.swift; sourceTree = "<group>"; };
 		C69F017325435C55001AB49B /* LocationProviderMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationProviderMock.swift; sourceTree = "<group>"; };
 		CA05A71E2551C89600ABF902 /* CacheManagerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManagerIntegrationTests.swift; sourceTree = "<group>"; };
@@ -1873,6 +1876,7 @@
 				0C07948D2452331A0006A9C4 /* MapCameraOptions.swift */,
 				CA355C06256EEA7C00FD1DB7 /* FlyToInterpolator.swift */,
 				C6359AD9260107E1009E8590 /* CameraAnimator.swift */,
+				C688B76E2603CF8700789263 /* CameraAnimationProtocols.swift */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -3559,6 +3563,7 @@
 				0C708F2124EB1EE2003CE791 /* FillExtrusionLayer.swift in Sources */,
 				0C26425524EECD14001FE2E3 /* AllExpressions.swift in Sources */,
 				0782B1A3258C250400D5FCE5 /* Geometry.swift in Sources */,
+				C688B76F2603CF8700789263 /* CameraAnimationProtocols.swift in Sources */,
 				0CD62F1024588530006421D1 /* GestureManager.swift in Sources */,
 				0742060324E4A5D0000A8932 /* PointAnnotation.swift in Sources */,
 				0C708F3124EB1EE2003CE791 /* CircleLayer.swift in Sources */,
@@ -3793,6 +3798,7 @@
 				0782B038258C14A400D5FCE5 /* NSNumber.swift in Sources */,
 				07625BDC2587F298002EEBCC /* EventsStringTokens.swift in Sources */,
 				07625C032587F29C002EEBCC /* MapboxMobileEvents+TelemetryProtocol.swift in Sources */,
+				C688B7702603CF8700789263 /* CameraAnimationProtocols.swift in Sources */,
 				0C95DBBC257A92F90018252C /* BaseMapView.swift in Sources */,
 				0C95DBD7257A937A0018252C /* ResourceOptions.swift in Sources */,
 				0782B077258C190C00D5FCE5 /* CoordinateBounds.swift in Sources */,

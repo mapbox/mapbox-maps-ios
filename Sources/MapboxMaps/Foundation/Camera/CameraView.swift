@@ -193,7 +193,7 @@ public class CameraView: UIView {
                                                      bearing: bearing,
                                                      pitch: pitch)
 
-            try! map.jumpTo(forCamera: updatedCameraOptions)
+            try! map.setCameraFor(updatedCameraOptions)
             delegate?.cameraViewManipulated(for: self)
         }
     }

@@ -332,6 +332,10 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         needsDisplayRefresh = true
     }
 
+    public func scheduleTask(forTask task: @escaping Task) {
+        fatalError("scheduleTask is not supported")
+    }
+
     public var peer: MBXPeerWrapper?
 
     // MARK: - MBXMetalViewProvider conformance

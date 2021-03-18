@@ -5,14 +5,14 @@ import Foundation
 public extension MapEvents {
 
     enum EventKind: RawRepresentable, CaseIterable {
-        case mapLoadingFinished
+        case mapLoaded
         case mapLoadingError
         case mapIdle
-        case styleLoadingFinished
-        case styleFullyLoaded
+        case styleDataLoaded
+        case styleLoaded
         case styleImageMissing
         case styleImageRemoveUnused
-        case sourceChanged
+        case sourceDataLoaded
         case sourceAdded
         case sourceRemoved
         case renderFrameStarted
@@ -23,22 +23,22 @@ public extension MapEvents {
         // swiftlint:disable:next cyclomatic_complexity
         public init?(rawValue: String) {
             switch rawValue {
-            case MapEvents.mapLoadingFinished:
-                self = .mapLoadingFinished
+            case MapEvents.mapLoaded:
+                self = .mapLoaded
             case MapEvents.mapLoadingError:
                 self = .mapLoadingError
             case MapEvents.mapIdle:
                 self = .mapIdle
-            case MapEvents.styleLoadingFinished:
-                self = .styleLoadingFinished
-            case MapEvents.styleFullyLoaded:
-                self = .styleFullyLoaded
+            case MapEvents.styleDataLoaded:
+                self = .styleDataLoaded
+            case MapEvents.styleLoaded:
+                self = .styleLoaded
             case MapEvents.styleImageMissing:
                 self = .styleImageMissing
             case MapEvents.styleImageRemoveUnused:
                 self = .styleImageRemoveUnused
-            case MapEvents.sourceChanged:
-                self = .sourceChanged
+            case MapEvents.sourceDataLoaded:
+                self = .sourceDataLoaded
             case MapEvents.sourceAdded:
                 self = .sourceAdded
             case MapEvents.sourceRemoved:
@@ -58,22 +58,22 @@ public extension MapEvents {
 
         public var rawValue: String {
             switch self {
-            case .mapLoadingFinished:
-                return MapEvents.mapLoadingFinished
+            case .mapLoaded:
+                return MapEvents.mapLoaded
             case .mapLoadingError:
                 return MapEvents.mapLoadingError
             case .mapIdle:
                 return MapEvents.mapIdle
-            case .styleLoadingFinished:
-                return MapEvents.styleLoadingFinished
-            case .styleFullyLoaded:
-                return MapEvents.styleFullyLoaded
+            case .styleDataLoaded:
+                return MapEvents.styleDataLoaded
+            case .styleLoaded:
+                return MapEvents.styleLoaded
             case .styleImageMissing:
                 return MapEvents.styleImageMissing
             case .styleImageRemoveUnused:
                 return MapEvents.styleImageRemoveUnused
-            case .sourceChanged:
-                return MapEvents.sourceChanged
+            case .sourceDataLoaded:
+                return MapEvents.sourceDataLoaded
             case .sourceAdded:
                 return MapEvents.sourceAdded
             case .sourceRemoved:

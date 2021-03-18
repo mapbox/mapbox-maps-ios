@@ -40,13 +40,16 @@ def xcresult_paths_from_zip(filepath):
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Gather xcresult folders under an output directory')
-    parser.add_argument('--outdir', default='testruns')
+    parser.add_argument('--output-dir', default='testruns')
+    parser.add_argument('--artifacts-dir', default='.')
 
     args = parser.parse_args()
 
     results = []
 
-    for filepath in glob.iglob('**/Customer_Artifacts.zip', recursive=True):
+    pathname = args.artifacts_dir + ("" if args.artifacts_dir.endswith('/') else "/") + '**/Customer_Artifacts.zip'
+
+    for filepath in glob.iglob(pathname, recursive=True):
         xcresults = xcresult_paths_from_zip(filepath)
         results.extend(xcresults)
 
@@ -55,7 +58,7 @@ if __name__ == "__main__":
         basename = os.path.basename(xcresult)
         stem = os.path.splitext(basename)[0]
 
-        newpath = os.path.join(args.outdir, basename)
+        newpath = os.path.join(args.output_dir, basename)
         shutil.rmtree(newpath, ignore_errors=True) #, ignore_errors=False,
         print("xcresult: " + newpath)
 
@@ -63,7 +66,7 @@ if __name__ == "__main__":
 
         coverage = result[1]
         if coverage is not None:
-            newpath = os.path.join(args.outdir, stem + ".profraw")
+            newpath = os.path.join(args.output_dir, stem + ".profraw")
             shutil.rmtree(newpath, ignore_errors=True) #, ignore_errors=False,
             os.renames(coverage, newpath)
             print("coverage: " + newpath)

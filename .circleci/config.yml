@@ -42,8 +42,9 @@ workflows:
           app-name: "MapboxTestHost"
           device-tests-always-run: true
           report_failure: true
-      - run-tests-on-devices:
+      - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
+          xcode: "12.4.0"
           device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
           device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
@@ -87,8 +88,9 @@ workflows:
           filters:
             branches:
               ignore: main
-      - run-tests-on-devices:
+      - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
+          xcode: "12.4.0"
           device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
           device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
@@ -108,8 +110,9 @@ workflows:
           filters:
             branches:
               only: main
-      - run-tests-on-devices:
+      - run-app-tests-on-devices:
           name: "Run Examples tests on devices (main)"
+          xcode: "12.4.0"
           device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
           device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
@@ -195,9 +198,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
-      - access-token-configs
-      - configure-netrc
-      - xcode-github-workaround
+      - configure-environment
       - run:
           name: Delete Xcode Workspace so we can build with SPM
           command: rm -rf MapboxMaps.xcworkspace
@@ -221,9 +222,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
-      - access-token-configs
-      - configure-netrc
-      - xcode-github-workaround
+      - configure-environment
       - run:
           name: Building scheme DebugApp for simulator
           command: make build-app-for-simulator SCHEME=DebugApp
@@ -279,9 +278,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
-      - access-token-configs
-      - configure-netrc
-      - xcode-github-workaround
+      - configure-environment
       - run:
           name: Delete Xcode Workspace so we can build with SPM
           command: rm -rf MapboxMaps.xcworkspace
@@ -317,8 +314,10 @@ jobs:
       - ensure-text-exists-in-commit:
           commit-text: "[run device tests]"
           always-run: << parameters.device-tests-always-run >>
-      - access-token-configs
-      - run: make install-devicefarm-dependencies
+      - inject-mapbox-public-token
+      - run:
+          name: Install Device Farm Dependencies
+          command: make install-devicefarm-dependencies
       - install-dependencies
       - run:
           name: Testing << parameters.scheme >> on AWS Device Farm
@@ -333,9 +332,7 @@ jobs:
           name: "Parsing xcresults for errors"
           command: |
             RESULTS=`find build/testruns -name '*.xcresult'`
-            pushd scripts/xcparty && swift build
-            popd
-            xargs ./scripts/xcparty/.build/debug/xcparty \<<< "$RESULTS" | tee build/testruns/failures.txt
+            xargs swift run --package-path scripts/xcparty \<<< "$RESULTS" | tee build/testruns/failures.txt
           when: on_fail
       - run:
           name: Symbolicate crash logs
@@ -343,9 +340,83 @@ jobs:
           when: always
       - run:
           name: Converting and uploading coverage
-          command: make device-update-codecov-with-profdata SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
+          command: |
+            make device-update-codecov-with-profdata \
+              SCHEME=<< parameters.scheme >> \
+              APP_NAME=<< parameters.app-name >> \
+              CONFIGURATION=Release \
+              COVERAGE_MAPBOX_MAPS_DEVICE=build/Build/Products/Release-iphoneos/MapboxMaps.framework/MapboxMaps
       - store-device-farm-artifacts
       - store-logs
+      - report-failure:
+          report_failure: << parameters.report_failure >>
+          message: "<< parameters.scheme >> device tests"
+
+  run-app-tests-on-devices:
+    <<: *base-job
+    steps:
+      - checkout
+      - ensure-text-exists-in-commit:
+          commit-text: "[run app device tests]"
+          always-run: << parameters.device-tests-always-run >>
+      - configure-environment
+      - run:
+          name: Install Device Farm Dependencies
+          command: make install-devicefarm-dependencies
+      # There's a command for this, but it only works if run *after* the build.
+      # In this case, we need to determine the derived data path *before* building.
+      - run:
+          name: Locate derived data directory
+          command: |
+            xcodebuild \
+              -showBuildSettings \
+              -workspace Apps/Apps.xcworkspace \
+              -scheme '<< parameters.scheme >>' \
+              | sed -n 's:^ *BUILD_DIR = \(.*\)/Build/Products$:export DERIVED_DATA_PATH="\1":p' \
+              >> $BASH_ENV
+      - run:
+          name: Testing << parameters.scheme >> on AWS Device Farm
+          command: |
+            make test-with-device-farm \
+              SCHEME=<< parameters.scheme >> \
+              APP_NAME=<< parameters.app-name >> \
+              CONFIGURATION=Release \
+              BUILD_DIR="$DERIVED_DATA_PATH" \
+              XCODE_WORKSPACE=Apps/Apps.xcworkspace
+          when: always
+      # get xcresults here, may be zipped with more than one result
+      - run:
+          name: "Gathering results"
+          command: make gather-results BUILD_DIR="$DERIVED_DATA_PATH"
+          when: always
+      - run:
+          name: "Parsing xcresults for errors"
+          command: |
+            RESULTS=`find "$DERIVED_DATA_PATH/testruns" -name '*.xcresult'`
+            xargs swift run --package-path scripts/xcparty \<<< "$RESULTS" | tee build/testruns/failures.txt
+          when: on_fail
+      - run:
+          name: Symbolicate crash logs
+          command: |
+            make symbolicate \
+              SCHEME=<< parameters.scheme >> \
+              APP_NAME=<< parameters.app-name >> \
+              CONFIGURATION=Release \
+              BUILD_DIR="$DERIVED_DATA_PATH"
+          when: always
+      - run:
+          name: Converting and uploading coverage
+          command: |
+            pip3 install awscli gitpython
+            make device-update-codecov-with-profdata \
+              SCHEME=<< parameters.scheme >> \
+              APP_NAME=<< parameters.app-name >> \
+              CONFIGURATION=Release \
+              BUILD_DIR="$DERIVED_DATA_PATH"
+      - store-device-farm-artifacts:
+          derived_data_path: $DERIVED_DATA_PATH
+      - store-logs:
+          derived_data_path: $DERIVED_DATA_PATH
       - report-failure:
           report_failure: << parameters.report_failure >>
           message: "<< parameters.scheme >> device tests"
@@ -454,12 +525,16 @@ jobs:
 # Reusable commands
 commands:
 
-  # Configurable build/test commands
+  configure-environment:
+    steps:
+      - add-github-to-known-hosts
+      - configure-netrc
+      - inject-mapbox-public-token
 
-  access-token-configs:
+  inject-mapbox-public-token:
     steps:
       - run:
-          name: Save mapbox access token to configs
+          name: Injecting Mapbox public token
           command: |
             echo "MAPBOX_ACCESS_TOKEN = ${MAPBOX_ACCESS_TOKEN}" > ./developer.xcconfig
             echo "${MAPBOX_ACCESS_TOKEN}" > ~/.mapbox
@@ -510,17 +585,22 @@ commands:
     parameters:
       artifact_name:
         type: string
+        default: "DeviceFarm"
+      derived_data_path:
+        type: string
         default: "build"
     description: "Save Device Farm Results as Artifacts"
     steps:
       - run:
           name: Zipping device farm results
           command: |
-            zip -r << parameters.artifact_name >>.zip build/DeviceFarmResults || echo "Skipping build/DeviceFarmResults"
-            zip -r << parameters.artifact_name >>.zip build/Payload || echo "Skipping build/Payload"
-            zip -r << parameters.artifact_name >>.zip build/test-root || echo "Skipping build/test-root"
-            zip -r << parameters.artifact_name >>.zip build/testruns || echo "Skipping build/testruns"
-            zip -r << parameters.artifact_name >>.zip build/*.json || echo "Skipping build/*.json"
+            export ZIP_FILE="$PWD/<< parameters.artifact_name >>.zip"
+            cd "<< parameters.derived_data_path >>"
+            zip -r "$ZIP_FILE" DeviceFarmResults || echo "Skipping DeviceFarmResults"
+            zip -r "$ZIP_FILE" Payload || echo "Skipping Payload"
+            zip -r "$ZIP_FILE" test-root || echo "Skipping test-root"
+            zip -r "$ZIP_FILE" testruns || echo "Skipping testruns"
+            zip -r "$ZIP_FILE" *.json || echo "Skipping *.json"
           when: always
       - store_artifacts:
           path: << parameters.artifact_name >>.zip
@@ -593,11 +673,12 @@ commands:
           name: Configure .netrc
           command: echo "machine api.mapbox.com login mapbox password $SDK_REGISTRY_TOKEN" >> ~/.netrc
 
+  # Work around Xcode's issue with GitHub's SSH fingerprint even when using HTTPS SPM URLs
   # See https://stackoverflow.com/a/58186048
-  xcode-github-workaround:
+  add-github-to-known-hosts:
     steps:
       - run:
-          name: Work around Xcode's issue with GitHub's SSH fingerprint
+          name: Add github.com to known_hosts
           command: for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
 
   locate-derived-data-directory:

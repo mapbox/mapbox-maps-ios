@@ -19,7 +19,7 @@ XCTESTRUN_PACKAGE         := $(BUILD_DIR)/$(SCHEME)-$(CONFIGURATION)-testrun.zip
 TEST_ROOT                 := $(BUILD_DIR)/test-root
 PAYLOAD_DIR               := $(BUILD_DIR)/Payload
 DEVICE_TEST_PATH          := $(BUILD_DIR)/DeviceFarmResults
-BUILT_XCFRAMEWORK_PATH	  := $(BUILD_DIR)/Build/Products/XCFramework/MapboxMaps.xcframework
+BUILT_XCFRAMEWORK_PATH    := $(BUILD_DIR)/Build/Products/XCFramework/MapboxMaps.xcframework
 
 # Netrc
 NETRC_FILE=~/.netrc
@@ -337,7 +337,7 @@ $(DEVICE_FARM_UPLOAD_IPA): $(XCTESTRUN_PACKAGE) | $(DEVICE_TEST_PATH) $(PAYLOAD_
 
 .PHONY: gather-results
 gather-results:
-	python3 ./scripts/device-farm/extract-xcresult.py --outdir $(BUILD_DIR)/testruns
+	python3 ./scripts/device-farm/extract-xcresult.py --artifacts-dir $(BUILD_DIR) --output-dir $(BUILD_DIR)/testruns
 
 # Although symbolicatecrash is supposed to work with a search directory, this call needed explicit paths
 .PHONY: symbolicate
@@ -385,7 +385,7 @@ COVERAGE_ROOT_DIR ?= $(BUILD_DIR)/Build/ProfileData
 COVERAGE_MAPBOX_MAPS ?= $(BUILD_DIR)/Build/Products/$(CONFIGURATION)-iphonesimulator/MapboxMaps.o
 COVERAGE_ARCH ?= x86_64
 
-.PHONY: update-codecov-with-profdata device-update-codecov-with-profdata
+.PHONY: update-codecov-with-profdata
 update-codecov-with-profdata:
 	curl -sSfL --retry 5 --connect-timeout 5 https://codecov.io/bash > /tmp/codecov.sh
 	@PROF_DATA=`find $(COVERAGE_ROOT_DIR) -regex '.*\.profraw'` ; \
@@ -420,11 +420,14 @@ update-codecov-with-profdata:
 	done
 	@echo "Done"
 
+COVERAGE_MAPBOX_MAPS_DEVICE ?= $(BUILT_DEVICE_PRODUCTS_DIR)/MapboxMaps.o
+
+.PHONY: device-update-codecov-with-profdata
 device-update-codecov-with-profdata:
 	make update-codecov-with-profdata \
 		COVERAGE_ARCH=arm64 \
 		COVERAGE_ROOT_DIR=$(BUILD_DIR)/testruns \
-		COVERAGE_MAPBOX_MAPS=$(BUILT_DEVICE_PRODUCTS_DIR)/MapboxMaps.framework/MapboxMaps
+		COVERAGE_MAPBOX_MAPS='$(COVERAGE_MAPBOX_MAPS_DEVICE)'
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Dependencies

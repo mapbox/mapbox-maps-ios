@@ -1,49 +1,6 @@
 import Foundation
 import MapboxMaps
 
-public struct Example {
-    public static let finishNotificationName = "com.mapbox.Examples.finish"
-
-    public var title: String
-    public var description: String
-    public var testTimeout: TimeInterval = 20.0
-    public var type: ExampleProtocol.Type
-}
-
-public protocol ExampleProtocol {
-    func resourceOptions() -> ResourceOptions
-    func finish()
-}
-
-private struct ExampleProtocolFinish {
-    static var postNotification: Void = {
-        // Lazy initialization to ensure that this is called once only.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-            let center = CFNotificationCenterGetDarwinNotifyCenter()
-            CFNotificationCenterPostNotification(center, CFNotificationName(Example.finishNotificationName as CFString), nil, nil, true)
-        }
-    }()
-}
-
-extension ExampleProtocol {
-    public func resourceOptions() -> ResourceOptions {
-        guard let accessToken = AccountManager.shared.accessToken else {
-            fatalError("Access token not set")
-        }
-
-        guard !accessToken.isEmpty else {
-            fatalError("Empty access token")
-        }
-
-        let resourceOptions = ResourceOptions(accessToken: accessToken)
-        return resourceOptions
-    }
-
-    public func finish() {
-        _ = ExampleProtocolFinish.postNotification
-    }
-}
-
 /**
  To add a new example, create a new `Example` struct
  and place it within the array below. Make sure

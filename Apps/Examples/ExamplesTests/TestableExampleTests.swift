@@ -48,33 +48,24 @@ class TestableExampleTests: XCTestCase {
             return
         }
 
-        guard let examplesTableViewController = navigationController.viewControllers.first as? ExampleTableViewController else {
-            XCTFail("First controller is not a ExampleTableViewController")
-            return
-        }
-
-        examplesTableViewController.show(example: example)
+        let exampleViewController = example.makeViewController()
 
         // Wait for the "finish" notification
-        let expectation = XCTDarwinNotificationExpectation(notificationName: Example.finishNotificationName)
+        let expectation = XCTNSNotificationExpectation(name: Example.finishNotificationName, object: exampleViewController)
+
+        navigationController.pushViewController(exampleViewController, animated: false)
 
         let result = XCTWaiter().wait(for: [expectation], timeout: example.testTimeout)
         switch result {
         case .completed:
             break
-
         case .timedOut:
             // TODO: check if this is a failure
             print("Example timed out, was this intentional? Call finish() if possible.")
-
         default:
             XCTFail("Expectation failed with \(result)")
         }
 
-        let popExpectation = self.expectation(description: "Pop to root controller")
-        navigationController.popToRootViewController(animated: true) {
-            popExpectation.fulfill()
-        }
-        wait(for: [popExpectation], timeout: 5.0)
+        navigationController.popToRootViewController(animated: false)
     }
 }

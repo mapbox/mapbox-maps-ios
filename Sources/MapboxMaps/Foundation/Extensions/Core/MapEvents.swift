@@ -2,6 +2,72 @@ import Foundation
 
 // MARK: - MapEvents
 
+/**
+* Simplified diagram for events emitted by the Map object.
+*
+* ┌─────────────┐               ┌─────────┐                   ┌──────────────┐
+* │ Application │               │   Map   │                   │ResourceLoader│
+* └──────┬──────┘               └────┬────┘                   └───────┬──────┘
+*        │                           │                                │
+*        ├───────setStyleURI────────▶│                                │
+*        │                           ├───────────get style───────────▶│
+*        │                           │                                │
+*        │                           │◀─────────style data────────────┤
+*        │                           │                                │
+*        │                           ├─parse style─┐                  │
+*        │                           │             │                  │
+*        │      StyleDataLoaded      ◀─────────────┘                  │
+*        │◀────{"type": "style"}─────┤                                │
+*        │                           ├─────────get sprite────────────▶│
+*        │                           │                                │
+*        │                           │◀────────sprite data────────────┤
+*        │                           │                                │
+*        │                           ├──────parse sprite───────┐      │
+*        │                           │                         │      │
+*        │      StyleDataLoaded      ◀─────────────────────────┘      │
+*        │◀───{"type": "sprite"}─────┤                                │
+*        │                           ├─────get source TileJSON(s)────▶│
+*        │                           │                                │
+*        │     SourceDataLoaded      │◀─────parse TileJSON data───────┤
+*        │◀──{"type": "metadata"}────┤                                │
+*        │                           │                                │
+*        │                           │                                │
+*        │      StyleDataLoaded      │                                │
+*        │◀───{"type": "sources"}────┤                                │
+*        │                           ├──────────get tiles────────────▶│
+*        │                           │                                │
+*        │◀───────StyleLoaded────────┤                                │
+*        │                           │                                │
+*        │     SourceDataLoaded      │◀─────────tile data─────────────┤
+*        │◀────{"type": "tile"}──────┤                                │
+*        │                           │                                │
+*        │                           │                                │
+*        │◀────RenderFrameStarted────┤                                │
+*        │                           ├─────render─────┐               │
+*        │                           │                │               │
+*        │                           ◀────────────────┘               │
+*        │◀───RenderFrameFinished────┤                                │
+*        │                           ├──render, all tiles loaded──┐   │
+*        │                           │                            │   │
+*        │                           ◀────────────────────────────┘   │
+*        │◀────────MapLoaded─────────┤                                │
+*        │                           │                                │
+*        │                           │                                │
+*        │◀─────────MapIdle──────────┤                                │
+*        │                    ┌ ─── ─┴─ ─── ┐                         │
+*        │                    │   offline   │                         │
+*        │                    └ ─── ─┬─ ─── ┘                         │
+*        │                           │                                │
+*        ├─────────setCamera────────▶│                                │
+*        │                           ├───────────get tiles───────────▶│
+*        │                           │                                │
+*        │                           │┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │
+*        │◀─────────MapIdle──────────┤   waiting for connectivity  │  │
+*        │                           ││  Map renders cached data      │
+*        │                           │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘  │
+*        │                           │                                │
+*
+*/
 public extension MapEvents {
 
     enum EventKind: RawRepresentable, CaseIterable {

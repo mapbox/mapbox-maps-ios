@@ -211,13 +211,13 @@
 		0746C182252FB0F4001638BD /* All Examples */ = {
 			isa = PBXGroup;
 			children = (
-				F46FF17A26025A3F007CC0E0 /* CustomSymbolAnnotationsExample.swift */,
 				07B071D12547CF50007F2865 /* Sample Data */,
 				CAEF7554257AE02B0003EFF7 /* MapViewExample.swift */,
 				CADCF742258499570065C51B /* BasicMapExample.swift */,
 				C64ED3842540A2BE00ADADFB /* CameraAnimationExample.swift */,
 				CAC195B625AC098A00F69FEA /* CameraUIViewAnimationExample.swift */,
 				A4AC5DEB2542CB2200995E4C /* CustomStyleURLExample.swift */,
+				F46FF17A26025A3F007CC0E0 /* CustomSymbolAnnotationsExample.swift */,
 				C64ED3882540BA0700ADADFB /* PointAnnotationExample.swift */,
 				C64ED3C42540DD6E00ADADFB /* CustomPointAnnotationExample.swift */,
 				C64ED3C82541CA3A00ADADFB /* LineAnnotationExample.swift */,

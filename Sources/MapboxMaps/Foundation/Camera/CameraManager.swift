@@ -48,7 +48,7 @@ public class CameraManager {
         }
     }
 
-    /// Pointer array for holding camera animators
+    /// Pointer HashTable for holding camera animators
     public internal(set) var cameraAnimators = NSHashTable<CameraAnimator>.weakObjects()
 
     /// May want to convert to an enum.
@@ -699,14 +699,14 @@ extension CameraManager: CameraAnimatorDelegate {
     // MARK: Animator Functions
 
     /**
-     Convenience to create a `CameraAnimation` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation.
+     Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation.
 
      - Parameter duration: The duration of the animation, in seconds.
      - Parameter timingParameters: The object providing the timing information. This object must adopt the `UITimingCurveProvider` protocol.
      - Parameter animationOwner: The `id` of what owns this animation.
      - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
      */
-    func makeCameraAnimator(duration: TimeInterval,
+    public func makeCameraAnimator(duration: TimeInterval,
                             timingParameters parameters: UITimingCurveProvider,
                             animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, timingParameters: parameters)
@@ -716,7 +716,7 @@ extension CameraManager: CameraAnimatorDelegate {
     }
 
     /**
-     Convenience to create a `CameraAnimation` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation
+     Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation
 
      - Parameter duration: The duration of the animation, in seconds.
      - Parameter curve: The UIKit timing curve to apply to the animation.
@@ -724,7 +724,7 @@ extension CameraManager: CameraAnimatorDelegate {
      - Parameter animations: The block containing the animations. This block has no return value and takes no parameters. Use this block to modify any animatable view properties. When you start the animations, those properties are animated from their current values to the new values using the specified animation parameters.
      - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
      */
-    func makeCameraAnimator(duration: TimeInterval,
+    public func makeCameraAnimator(duration: TimeInterval,
                             curve: UIView.AnimationCurve,
                             animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
                             animations: (() -> Void)? = nil) -> CameraAnimator {
@@ -735,7 +735,7 @@ extension CameraManager: CameraAnimatorDelegate {
     }
 
     /**
-     Convenience to create a `CameraAnimation` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation
+     Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation
 
      - Parameter duration: The duration of the animation, in seconds.
      - Parameter controlPoint1: The first control point for the cubic Bézier timing curve.
@@ -744,7 +744,7 @@ extension CameraManager: CameraAnimatorDelegate {
      - Parameter animations: The block containing the animations. This block has no return value and takes no parameters. Use this block to modify any animatable view properties. When you start the animations, those properties are animated from their current values to the new values using the specified animation parameters.
      - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
      */
-    func makeCameraAnimator(duration: TimeInterval,
+    public func makeCameraAnimator(duration: TimeInterval,
                             controlPoint1 point1: CGPoint,
                             controlPoint2 point2: CGPoint,
                             animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
@@ -756,7 +756,7 @@ extension CameraManager: CameraAnimatorDelegate {
     }
 
     /**
-     Convenience to create a `CameraAnimation` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation
+     Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation
 
      - Parameter duration: The duration of the animation, in seconds.
      - Parameter timingParameters: The type of `AnimationCurve` for the animation.
@@ -764,7 +764,7 @@ extension CameraManager: CameraAnimatorDelegate {
      - Parameter animations: The block containing the animations. This block has no return value and takes no parameters. Use this block to modify any animatable view properties. When you start the animations, those properties are animated from their current values to the new values using the specified animation parameters.
      - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
      */
-    func makeCameraAnimator(duration: TimeInterval,
+    public func makeCameraAnimator(duration: TimeInterval,
                             dampingRatio ratio: CGFloat,
                             animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
                             animations: (() -> Void)? = nil) -> CameraAnimator {
@@ -775,7 +775,7 @@ extension CameraManager: CameraAnimatorDelegate {
     }
 
     /**
-     Convenience to create a `CameraAnimation` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation
+     Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation
 
      - Parameter duration: The duration of the animation, in seconds.
      - Parameter delay: The number of seconds to wait before starting the animations. Specify 0 to begin the animations immediately.
@@ -785,7 +785,7 @@ extension CameraManager: CameraAnimatorDelegate {
      - Parameter completion: Completion block to be passed through for when an animation is stopped
      - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
      */
-    func runningCameraAnimator(duration: TimeInterval,
+    public func runningCameraAnimator(duration: TimeInterval,
                                delay: TimeInterval,
                                options: UIView.AnimationOptions = [],
                                animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
@@ -801,10 +801,10 @@ extension CameraManager: CameraAnimatorDelegate {
 
         runningAnimator.addCompletion({ [weak self] animatingPosition in
             guard let completion = completion,
-                  let validSelf = self
+                  let self = self
             else { return }
 
-            validSelf.schedulePendingCompletion(forAnimator: cameraAnimator, completion: completion, animatingPosition: animatingPosition)
+            self.schedulePendingCompletion(forAnimator: cameraAnimator, completion: completion, animatingPosition: animatingPosition)
         })
         cameraAnimators.add(cameraAnimator)
         return cameraAnimator

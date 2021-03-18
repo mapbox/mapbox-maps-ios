@@ -474,11 +474,14 @@
 		C64ED33C253F819B00ADADFB /* LocationConsumerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64ED33B253F819B00ADADFB /* LocationConsumerMock.swift */; };
 		C64ED33D253F819B00ADADFB /* LocationConsumerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64ED33B253F819B00ADADFB /* LocationConsumerMock.swift */; };
 		C64ED33E253F819B00ADADFB /* LocationConsumerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64ED33B253F819B00ADADFB /* LocationConsumerMock.swift */; };
-		C688B76F2603CF8700789263 /* CameraAnimationProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = C688B76E2603CF8700789263 /* CameraAnimationProtocols.swift */; };
-		C688B7702603CF8700789263 /* CameraAnimationProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = C688B76E2603CF8700789263 /* CameraAnimationProtocols.swift */; };
+		C688B76F2603CF8700789263 /* CameraAnimationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C688B76E2603CF8700789263 /* CameraAnimationDelegate.swift */; };
+		C688B7702603CF8700789263 /* CameraAnimationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C688B76E2603CF8700789263 /* CameraAnimationDelegate.swift */; };
 		C688B7852603DCF200789263 /* CameraAnimatorMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = C688B7832603DCF200789263 /* CameraAnimatorMocks.swift */; };
 		C688B7862603DCF200789263 /* CameraAnimatorMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = C688B7832603DCF200789263 /* CameraAnimatorMocks.swift */; };
 		C688B7AB2603DE3600789263 /* CameraAnimatorMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = C688B7832603DCF200789263 /* CameraAnimatorMocks.swift */; };
+		C688B7D32603ED5300789263 /* AnimationOwner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C688B7D22603ED5300789263 /* AnimationOwner.swift */; };
+		C688B7D42603ED5300789263 /* AnimationOwner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C688B7D22603ED5300789263 /* AnimationOwner.swift */; };
+		C688B7D52603ED5300789263 /* AnimationOwner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C688B7D22603ED5300789263 /* AnimationOwner.swift */; };
 		C69F011225431AF4001AB49B /* LocationManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69F011125431AF4001AB49B /* LocationManagerIntegrationTests.swift */; };
 		C69F0142254358B3001AB49B /* LocationManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69F011125431AF4001AB49B /* LocationManagerIntegrationTests.swift */; };
 		C69F015A254358C5001AB49B /* AnnotationManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07958C23253A2AE50043ECC0 /* AnnotationManagerIntegrationTests.swift */; };
@@ -1145,8 +1148,9 @@
 		C64ED305253F7CF500ADADFB /* LocationSupportableMapViewMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSupportableMapViewMock.swift; sourceTree = "<group>"; };
 		C64ED320253F7E9100ADADFB /* LocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerTests.swift; sourceTree = "<group>"; };
 		C64ED33B253F819B00ADADFB /* LocationConsumerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationConsumerMock.swift; sourceTree = "<group>"; };
-		C688B76E2603CF8700789263 /* CameraAnimationProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAnimationProtocols.swift; sourceTree = "<group>"; };
+		C688B76E2603CF8700789263 /* CameraAnimationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAnimationDelegate.swift; sourceTree = "<group>"; };
 		C688B7832603DCF200789263 /* CameraAnimatorMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAnimatorMocks.swift; sourceTree = "<group>"; };
+		C688B7D22603ED5300789263 /* AnimationOwner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationOwner.swift; sourceTree = "<group>"; };
 		C69F011125431AF4001AB49B /* LocationManagerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerIntegrationTests.swift; sourceTree = "<group>"; };
 		C69F017325435C55001AB49B /* LocationProviderMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationProviderMock.swift; sourceTree = "<group>"; };
 		CA05A71E2551C89600ABF902 /* CacheManagerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManagerIntegrationTests.swift; sourceTree = "<group>"; };
@@ -1880,7 +1884,8 @@
 				0C07948D2452331A0006A9C4 /* MapCameraOptions.swift */,
 				CA355C06256EEA7C00FD1DB7 /* FlyToInterpolator.swift */,
 				C6359AD9260107E1009E8590 /* CameraAnimator.swift */,
-				C688B76E2603CF8700789263 /* CameraAnimationProtocols.swift */,
+				C688B76E2603CF8700789263 /* CameraAnimationDelegate.swift */,
+				C688B7D22603ED5300789263 /* AnimationOwner.swift */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -3568,7 +3573,7 @@
 				0C708F2124EB1EE2003CE791 /* FillExtrusionLayer.swift in Sources */,
 				0C26425524EECD14001FE2E3 /* AllExpressions.swift in Sources */,
 				0782B1A3258C250400D5FCE5 /* Geometry.swift in Sources */,
-				C688B76F2603CF8700789263 /* CameraAnimationProtocols.swift in Sources */,
+				C688B76F2603CF8700789263 /* CameraAnimationDelegate.swift in Sources */,
 				0CD62F1024588530006421D1 /* GestureManager.swift in Sources */,
 				0742060324E4A5D0000A8932 /* PointAnnotation.swift in Sources */,
 				0C708F3124EB1EE2003CE791 /* CircleLayer.swift in Sources */,
@@ -3605,6 +3610,7 @@
 				0C708F1F24EB1EE2003CE791 /* BackgroundLayer.swift in Sources */,
 				0C88F22924F4223B00FC35F3 /* ExpressionOptions.swift in Sources */,
 				0782B037258C14A400D5FCE5 /* NSNumber.swift in Sources */,
+				C688B7D32603ED5300789263 /* AnimationOwner.swift in Sources */,
 				07BA35E825157A0E003E1B55 /* AnnotationSupportableMap.swift in Sources */,
 				0C55010B2476D83A00AE019A /* Light.swift in Sources */,
 				0CD34FE8242AAE0900943687 /* MapView+Managers.swift in Sources */,
@@ -3784,6 +3790,7 @@
 				0782AFFC258BFE5800D5FCE5 /* CoreGraphics.swift in Sources */,
 				1F4B7D7B2464C39000745F05 /* CameraView.swift in Sources */,
 				0782B11C258C1B9C00D5FCE5 /* Feature.swift in Sources */,
+				C688B7D42603ED5300789263 /* AnimationOwner.swift in Sources */,
 				07625BC82587F294002EEBCC /* EventsManager.swift in Sources */,
 				CAF9A6DE2582B041007EF9EC /* UIImage.swift in Sources */,
 				A4FE8908255F368A00FBF117 /* CameraManager.swift in Sources */,
@@ -3805,7 +3812,7 @@
 				0782B038258C14A400D5FCE5 /* NSNumber.swift in Sources */,
 				07625BDC2587F298002EEBCC /* EventsStringTokens.swift in Sources */,
 				07625C032587F29C002EEBCC /* MapboxMobileEvents+TelemetryProtocol.swift in Sources */,
-				C688B7702603CF8700789263 /* CameraAnimationProtocols.swift in Sources */,
+				C688B7702603CF8700789263 /* CameraAnimationDelegate.swift in Sources */,
 				0C95DBBC257A92F90018252C /* BaseMapView.swift in Sources */,
 				0C95DBD7257A937A0018252C /* ResourceOptions.swift in Sources */,
 				0782B077258C190C00D5FCE5 /* CoordinateBounds.swift in Sources */,
@@ -3837,6 +3844,7 @@
 				07DA74F325840A3B00AD0446 /* PointTests.swift in Sources */,
 				A4FE8893255F365B00FBF117 /* MapboxMapsCameraTests.swift in Sources */,
 				1F11C11D2421B05600F8397B /* MapboxMapsFoundationTests.swift in Sources */,
+				C688B7D52603ED5300789263 /* AnimationOwner.swift in Sources */,
 				07DA75B025840A5E00AD0446 /* Fixture.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

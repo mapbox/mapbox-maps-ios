@@ -9,7 +9,7 @@ public class CameraAnimator: NSObject {
     private let propertyAnimator: UIViewPropertyAnimator
 
     /// Delegate that conforms to `CameraAnimatorDelegate`.
-    private var delegate: CameraAnimatorDelegate?
+    private weak var delegate: CameraAnimatorDelegate?
 
     /// The ID of the owner of this `CameraAnimator`.
     internal var owner: AnimationOwnerProtocol
@@ -74,7 +74,7 @@ public class CameraAnimator: NSObject {
         propertyAnimator.addAnimations(animations)
     }
 
-    /// Add a completion block to the animator. This function will notifiy the delegate to schedule the completion block.
+    /// Add a completion block to the animator. 
     public func addCompletion(_ completion: @escaping AnimationCompletion) {
         propertyAnimator.addCompletion({ animatingPosition in
             self.delegate?.schedulePendingCompletion(forAnimator: self, completion: completion, animatingPosition: animatingPosition)

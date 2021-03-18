@@ -4,7 +4,7 @@ import UIKit
 public typealias AnimationCompletion = (UIViewAnimatingPosition) -> Void
 
 // MARK: CameraAnimatorDelegate Protocol
-internal protocol CameraAnimatorDelegate {
+internal protocol CameraAnimatorDelegate: class {
 
     /**
     This delegate function notifies that the completion block needs to be scheduled
@@ -24,27 +24,4 @@ internal protocol CameraAnimatorDelegate {
     */
     func animatorIsFinished(forAnimator animator: CameraAnimator)
 
-}
-
-// MARK: AnimationOwnerProtocol
-internal protocol AnimationOwnerProtocol {
-    var id: String { get }
-}
-
-// MARK: AnimationOwner Enum
-public enum AnimationOwner: AnimationOwnerProtocol {
-    case gestures
-    case unspecified
-    case custom(id: String)
-
-    var id: String {
-        switch self {
-        case .gestures:
-            return "com.mapbox.maps.gestures"
-        case .unspecified:
-            return "com.mapbox.maps.unspecified"
-        case .custom(id: let  id):
-            return id
-        }
-    }
 }

@@ -27,7 +27,7 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
                                         zoom: 2)
 
         // Allows the view controller to receive information about map events.
-        mapView.on(.mapLoadingFinished) { [weak self] _ in
+        mapView.on(.mapLoaded) { [weak self] _ in
             guard let self = self else { return }
             self.setupExample()
         }

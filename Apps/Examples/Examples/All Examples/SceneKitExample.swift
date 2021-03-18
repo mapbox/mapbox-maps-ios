@@ -33,7 +33,7 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
             mapOptions.render.presentsWithTransaction = true
         }
 
-        self.mapView.on(.styleLoadingFinished) { [weak self] _ in
+        self.mapView.on(.styleLoaded) { [weak self] _ in
             self?.addModelAndTerrain()
         }
     }

@@ -19,7 +19,7 @@ public class MapViewExample: UIViewController, ExampleProtocol {
 
         mapView.style.styleURL = StyleURL.custom(url: URL(string: "mapbox://styles/examples/cke97f49z5rlg19l310b7uu7j")!)
 
-        mapView.on(.styleLoadingFinished) { [weak self] _ in
+        mapView.on(.styleLoaded) { [weak self] _ in
             // The below line is used for internal testing purposes only.
             self?.finish()
         }

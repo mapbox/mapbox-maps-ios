@@ -34,7 +34,7 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
                                         zoom: 12.0)
 
         // Allow the view controller to receive information about map events.
-        mapView.on(.mapLoadingFinished) { [weak self] _ in
+        mapView.on(.mapLoaded) { [weak self] _ in
             guard let self = self else { return }
             self.setupExample()
         }

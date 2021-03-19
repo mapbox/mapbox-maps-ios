@@ -220,7 +220,6 @@ private extension LocationManager {
                 let locationPuckManager = LocationPuckManager(
                     locationSupportableMapView: locationSupportableMapView,
                     puckType: locationOptions.puckType)
-
                 consumers.add(locationPuckManager)
                 self.locationPuckManager = locationPuckManager
             }
@@ -229,7 +228,8 @@ private extension LocationManager {
             locationProvider.stopUpdatingHeading()
 
             if let locationPuckManager = self.locationPuckManager {
-                locationPuckManager.removePuck()
+                consumers.remove(locationPuckManager)
+                self.locationPuckManager = nil
             }
         }
     }

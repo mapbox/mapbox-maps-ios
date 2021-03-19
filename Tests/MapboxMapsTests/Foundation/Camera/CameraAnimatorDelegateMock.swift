@@ -6,7 +6,7 @@ import XCTest
 @testable import MapboxMapsFoundation
 #endif
 
-final class CameraAnimatorMock: CameraAnimatorDelegate {
+final class CameraAnimatorDelegateMock: CameraAnimatorDelegate {
 
     struct CameraAnimatorDelegateParameters {}
 

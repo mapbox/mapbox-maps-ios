@@ -9,7 +9,7 @@ import XCTest
 internal class CameraAnimatorTests: XCTestCase {
 
     // swiftlint:disable weak_delegate
-    var delegate: CameraAnimatorMock!
+    var delegate: CameraAnimatorDelegateMock!
     var cameraAnimator: CameraAnimator!
 
     override func setUp() {

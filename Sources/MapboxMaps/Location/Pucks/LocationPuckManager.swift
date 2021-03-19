@@ -29,10 +29,10 @@ public enum PuckType: Equatable {
 
 // MARK: LocationPuckManager
 /// An object that is responsible for managing the location indicator which can be view based, or layer based
-public class LocationPuckManager: LocationConsumer {
+internal class LocationPuckManager: LocationConsumer {
 
     /// LocationConsumer protocol property that establishes if tracking is active
-    public var shouldTrackLocation: Bool
+    internal var shouldTrackLocation: Bool
 
     /// Represents the latest location received from the location provider
     private var latestLocation: Location?
@@ -41,7 +41,7 @@ public class LocationPuckManager: LocationConsumer {
     private var puck: Puck?
 
     /// MapView that supports location events
-    weak var locationSupportableMapView: LocationSupportableMapView?
+    internal weak var locationSupportableMapView: LocationSupportableMapView?
 
     /// The current  puck style
     internal var currentPuckStyle: PuckStyle
@@ -49,7 +49,7 @@ public class LocationPuckManager: LocationConsumer {
     /// The current puck type
     internal var currentPuckType: PuckType
 
-    public init(shouldTrackLocation: Bool,
+    internal init(shouldTrackLocation: Bool,
                 locationSupportableMapView: LocationSupportableMapView,
                 currentPuckType: PuckType) {
         currentPuckStyle = .precise
@@ -59,7 +59,7 @@ public class LocationPuckManager: LocationConsumer {
     }
 
     /// LocationConsumer protocol method that will handle location updates
-    public func locationUpdate(newLocation: Location) {
+    internal func locationUpdate(newLocation: Location) {
         guard shouldTrackLocation else {
             removePuck()
             return

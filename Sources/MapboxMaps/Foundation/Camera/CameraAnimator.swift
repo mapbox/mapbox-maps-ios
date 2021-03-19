@@ -42,7 +42,7 @@ public class CameraAnimator: NSObject {
 
     // MARK: Functions
 
-    /// Starts the animation
+    /// Starts the animation.
     public func startAnimation() {
         propertyAnimator.startAnimation()
     }
@@ -52,12 +52,12 @@ public class CameraAnimator: NSObject {
         propertyAnimator.startAnimation(afterDelay: delay)
     }
 
-    /// Pauses the animation
+    /// Pauses the animation.
     public func pauseAnimation() {
         propertyAnimator.pauseAnimation()
     }
 
-    /// Stops the animation and notifies the delegate that the animation finished.
+    /// Stops the animation.
     public func stopAnimation() {
         propertyAnimator.stopAnimation(false)
         propertyAnimator.finishAnimation(at: .current)
@@ -81,7 +81,7 @@ public class CameraAnimator: NSObject {
         })
     }
 
-    /// Continue the animation with a timing parameter (`UITimingCurveProvider`) and duration factor (`CGFloat`)
+    /// Continue the animation with a timing parameter (`UITimingCurveProvider`) and duration factor (`CGFloat`).
     public func continueAnimation(withTimingParameters parameters: UITimingCurveProvider?, durationFactor: CGFloat) {
         propertyAnimator.continueAnimation(withTimingParameters: parameters, durationFactor: durationFactor)
     }

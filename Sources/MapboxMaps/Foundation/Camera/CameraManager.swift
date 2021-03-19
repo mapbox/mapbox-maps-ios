@@ -707,8 +707,8 @@ extension CameraManager: CameraAnimatorDelegate {
      - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
      */
     public func makeCameraAnimator(duration: TimeInterval,
-                            timingParameters parameters: UITimingCurveProvider,
-                            animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified) -> CameraAnimator {
+                                   timingParameters parameters: UITimingCurveProvider,
+                                   animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, timingParameters: parameters)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimators.add(cameraAnimator)
@@ -725,9 +725,9 @@ extension CameraManager: CameraAnimatorDelegate {
      - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
      */
     public func makeCameraAnimator(duration: TimeInterval,
-                            curve: UIView.AnimationCurve,
-                            animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
-                            animations: (() -> Void)? = nil) -> CameraAnimator {
+                                   curve: UIView.AnimationCurve,
+                                   animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
+                                   animations: (() -> Void)? = nil) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, curve: curve, animations: animations)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimators.add(cameraAnimator)
@@ -745,10 +745,10 @@ extension CameraManager: CameraAnimatorDelegate {
      - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
      */
     public func makeCameraAnimator(duration: TimeInterval,
-                            controlPoint1 point1: CGPoint,
-                            controlPoint2 point2: CGPoint,
-                            animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
-                            animations: (() -> Void)? = nil) -> CameraAnimator {
+                                   controlPoint1 point1: CGPoint,
+                                   controlPoint2 point2: CGPoint,
+                                   animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
+                                   animations: (() -> Void)? = nil) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, controlPoint1: point1, controlPoint2: point2, animations: animations)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimators.add(cameraAnimator)
@@ -765,9 +765,9 @@ extension CameraManager: CameraAnimatorDelegate {
      - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
      */
     public func makeCameraAnimator(duration: TimeInterval,
-                            dampingRatio ratio: CGFloat,
-                            animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
-                            animations: (() -> Void)? = nil) -> CameraAnimator {
+                                   dampingRatio ratio: CGFloat,
+                                   animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
+                                   animations: (() -> Void)? = nil) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: ratio, animations: animations)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimators.add(cameraAnimator)
@@ -786,11 +786,11 @@ extension CameraManager: CameraAnimatorDelegate {
      - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
      */
     public func runningCameraAnimator(duration: TimeInterval,
-                               delay: TimeInterval,
-                               options: UIView.AnimationOptions = [],
-                               animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
-                               animations: @escaping () -> Void,
-                               completion: AnimationCompletion? = nil) -> CameraAnimator {
+                                      delay: TimeInterval,
+                                      options: UIView.AnimationOptions = [],
+                                      animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
+                                      animations: @escaping () -> Void,
+                                      completion: AnimationCompletion? = nil) -> CameraAnimator {
         let runningAnimator = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: duration,
                                                                              delay: delay,
                                                                              options: options,

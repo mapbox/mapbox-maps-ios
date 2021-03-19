@@ -83,13 +83,8 @@ internal class LocationPuckManager: LocationConsumer {
         self.puck = puck
     }
 
-    internal func removePuck() {
-        puck?.removePuck()
-        puck = nil
-    }
-
     internal func changePuckType(to newPuckType: PuckType) {
-        removePuck()
+        puck = nil
         puckType = newPuckType
         createPuck()
     }

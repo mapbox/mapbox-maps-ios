@@ -132,7 +132,7 @@ internal class Puck2D: Puck {
         })
     }
 
-    internal func removePuck() {
+    private func removePuck() {
         guard let locationIndicatorLayer = self.locationIndicatorLayer,
               let style = locationSupportableMapView?.style
         else { return }

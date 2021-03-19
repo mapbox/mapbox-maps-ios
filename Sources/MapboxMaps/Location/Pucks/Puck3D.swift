@@ -118,7 +118,7 @@ internal class Puck3D: Puck {
     }
 
     /// This function will remove the puck from `mapView`
-    func removePuck() {
+    private func removePuck() {
         _ = style.removeStyleLayer(forLayerId: "puck-model-layer")
         try! style.styleManager.removeStyleSource(forSourceId: "puck-model-source")
     }

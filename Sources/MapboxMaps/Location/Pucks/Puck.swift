@@ -16,7 +16,4 @@ internal protocol Puck {
 
     /// This function will take in a new `PuckStyle` and change it accordingly
     func updateStyle(puckStyle: PuckStyle, location: Location)
-
-    /// This function will remove the puck from `mapView`
-    func removePuck()
 }

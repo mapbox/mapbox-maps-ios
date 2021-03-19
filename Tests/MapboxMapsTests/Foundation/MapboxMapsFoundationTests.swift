@@ -1,5 +1,6 @@
 import XCTest
 import CoreLocation
+import UIKit
 
 #if canImport(MapboxMaps)
 @testable import MapboxMaps

@@ -708,7 +708,7 @@ extension CameraManager: CameraAnimatorDelegate {
      */
     public func makeCameraAnimator(duration: TimeInterval,
                                    timingParameters parameters: UITimingCurveProvider,
-                                   animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified) -> CameraAnimator {
+                                   animationOwner: AnimationOwner = .unspecified) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, timingParameters: parameters)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimators.add(cameraAnimator)
@@ -726,7 +726,7 @@ extension CameraManager: CameraAnimatorDelegate {
      */
     public func makeCameraAnimator(duration: TimeInterval,
                                    curve: UIView.AnimationCurve,
-                                   animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
+                                   animationOwner: AnimationOwner = .unspecified,
                                    animations: (() -> Void)? = nil) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, curve: curve, animations: animations)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
@@ -747,7 +747,7 @@ extension CameraManager: CameraAnimatorDelegate {
     public func makeCameraAnimator(duration: TimeInterval,
                                    controlPoint1 point1: CGPoint,
                                    controlPoint2 point2: CGPoint,
-                                   animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
+                                   animationOwner: AnimationOwner = .unspecified,
                                    animations: (() -> Void)? = nil) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, controlPoint1: point1, controlPoint2: point2, animations: animations)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
@@ -766,7 +766,7 @@ extension CameraManager: CameraAnimatorDelegate {
      */
     public func makeCameraAnimator(duration: TimeInterval,
                                    dampingRatio ratio: CGFloat,
-                                   animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
+                                   animationOwner: AnimationOwner = .unspecified,
                                    animations: (() -> Void)? = nil) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: ratio, animations: animations)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
@@ -788,7 +788,7 @@ extension CameraManager: CameraAnimatorDelegate {
     public func runningCameraAnimator(duration: TimeInterval,
                                       delay: TimeInterval,
                                       options: UIView.AnimationOptions = [],
-                                      animationOwner: AnimationOwnerProtocol = AnimationOwner.unspecified,
+                                      animationOwner: AnimationOwner = .unspecified,
                                       animations: @escaping () -> Void,
                                       completion: AnimationCompletion? = nil) -> CameraAnimator {
         let runningAnimator = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: duration,
@@ -814,11 +814,17 @@ extension CameraManager: CameraAnimatorDelegate {
     func schedulePendingCompletion(forAnimator animator: CameraAnimator, completion: @escaping AnimationCompletion, animatingPosition: UIViewAnimatingPosition) {
         guard let mapView = mapView else { return }
         mapView.pendingAnimatorCompletionBlocks.append((completion, animatingPosition))
-        cameraAnimators.remove(animator)
+        removeAnimator(animator: animator)
     }
 
     func animatorIsFinished(forAnimator animator: CameraAnimator) {
-        cameraAnimators.remove(animator)
+        removeAnimator(animator: animator)
+    }
+
+    private func removeAnimator(animator: CameraAnimator) {
+        if cameraAnimators.contains(animator) {
+            cameraAnimators.remove(animator)
+        }
     }
 }
 

@@ -1,10 +1,5 @@
-// MARK: AnimationOwnerProtocol
-public protocol AnimationOwnerProtocol {
-    var id: String { get }
-}
-
 // MARK: AnimationOwner Enum
-public enum AnimationOwner: AnimationOwnerProtocol {
+public enum AnimationOwner {
     case gestures
     case unspecified
     case custom(id: String)

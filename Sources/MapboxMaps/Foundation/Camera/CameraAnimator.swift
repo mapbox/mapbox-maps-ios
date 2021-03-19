@@ -12,7 +12,7 @@ public class CameraAnimator: NSObject {
     private weak var delegate: CameraAnimatorDelegate?
 
     /// The ID of the owner of this `CameraAnimator`.
-    internal var owner: AnimationOwnerProtocol
+    internal var owner: AnimationOwner
 
     // MARK: Computed Properties
 
@@ -34,7 +34,7 @@ public class CameraAnimator: NSObject {
     // MARK: Initializer
     internal init(delegate: CameraAnimatorDelegate,
                   propertyAnimator: UIViewPropertyAnimator,
-                  owner: AnimationOwnerProtocol) {
+                  owner: AnimationOwner) {
         self.delegate = delegate
         self.propertyAnimator = propertyAnimator
         self.owner = owner

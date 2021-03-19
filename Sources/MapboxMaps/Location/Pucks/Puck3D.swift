@@ -21,7 +21,7 @@ public struct Puck3DConfiguration: Equatable {
     /// The rotation of the model in euler angles [lon, lat, z].
     public var modelRotation: Value<[Double]>?
 
-    /// Initialize a PuckModelLayerViewModel with a model, scale and rotation
+    /// Initialize a Puck3DConfiguration with a model, scale and rotation
     public init(model: Model, modelScale: Value<[Double]>? = nil, modelRotation: Value<[Double]>? = nil) {
         self.model = model
         self.modelScale = modelScale
@@ -29,7 +29,7 @@ public struct Puck3DConfiguration: Equatable {
     }
 }
 
-internal class PuckModelLayer: Puck {
+internal class Puck3D: Puck {
 
     // MARK: Properties
     internal var configuration: Puck3DConfiguration

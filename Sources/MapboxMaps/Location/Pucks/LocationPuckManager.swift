@@ -81,9 +81,9 @@ internal class LocationPuckManager: LocationConsumer {
 
         switch currentPuckType {
         case let .puck2D(configuration):
-            puck = PuckLocationIndicatorLayer(puckStyle: currentPuckStyle, locationSupportableMapView: locationSupportableMapView, configuration: configuration)
+            puck = Puck2D(puckStyle: currentPuckStyle, locationSupportableMapView: locationSupportableMapView, configuration: configuration)
         case let .puck3D(configuration):
-            puck = PuckModelLayer(puckStyle: currentPuckStyle, locationSupportableMapView: locationSupportableMapView, configuration: configuration)
+            puck = Puck3D(puckStyle: currentPuckStyle, locationSupportableMapView: locationSupportableMapView, configuration: configuration)
         }
 
         if let location = latestLocation {

@@ -32,7 +32,7 @@ public struct Puck2DConfiguration: Equatable {
     }
 }
 
-internal class PuckLocationIndicatorLayer: Puck {
+internal class Puck2D: Puck {
 
     // MARK: Properties
     internal var locationIndicatorLayer: LocationIndicatorLayer?
@@ -129,7 +129,8 @@ internal class PuckLocationIndicatorLayer: Puck {
 }
 
 // MARK: Layer Creation Functions
-private extension PuckLocationIndicatorLayer {
+
+private extension Puck2D {
     // swiftlint:disable:next cyclomatic_complexity
     func createPreciseLocationIndicatorLayer(location: Location) throws {
         guard let style = locationSupportableMapView?.style else { return }

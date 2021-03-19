@@ -13,14 +13,12 @@ final class CameraAnimatorMock: CameraAnimatorDelegate {
     let cameraAnimatorStub = Stub<CameraAnimatorDelegateParameters, Void>()
 
     public func schedulePendingCompletion(forAnimator animator: CameraAnimator,
-                                   completion: @escaping AnimationCompletion,
-                                   animatingPosition: UIViewAnimatingPosition) {
+                                          completion: @escaping AnimationCompletion,
+                                          animatingPosition: UIViewAnimatingPosition) {
         cameraAnimatorStub.call(with: CameraAnimatorDelegateParameters())
     }
 
     public func animatorIsFinished(forAnimator animator: CameraAnimator) {
         cameraAnimatorStub.call(with: CameraAnimatorDelegateParameters())
     }
-
-
 }

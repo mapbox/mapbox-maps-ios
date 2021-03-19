@@ -8,6 +8,7 @@ import XCTest
 
 internal class CameraAnimatorTests: XCTestCase {
 
+    // swiftlint:disable weak_delegate
     var delegate: CameraAnimatorMock!
     var cameraAnimator: CameraAnimator!
 
@@ -17,7 +18,7 @@ internal class CameraAnimatorTests: XCTestCase {
                                         propertyAnimator: UIViewPropertyAnimator(),
                                         owner: AnimationOwner.unspecified)
     }
-    
+
     func testStopAnimationCallsDelegate() {
         cameraAnimator.stopAnimation()
         XCTAssertEqual(delegate.cameraAnimatorStub.invocations.count, 1)

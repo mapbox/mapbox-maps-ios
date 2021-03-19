@@ -703,7 +703,7 @@ extension CameraManager: CameraAnimatorDelegate {
 
      - Parameter duration: The duration of the animation, in seconds.
      - Parameter timingParameters: The object providing the timing information. This object must adopt the `UITimingCurveProvider` protocol.
-     - Parameter animationOwner: The `id` of what owns this animation.
+     - Parameter animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
      - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
      */
     public func makeCameraAnimator(duration: TimeInterval,
@@ -720,7 +720,7 @@ extension CameraManager: CameraAnimatorDelegate {
 
      - Parameter duration: The duration of the animation, in seconds.
      - Parameter curve: The UIKit timing curve to apply to the animation.
-     - Parameter animationOwner: The `id` of what owns this animation.
+     - Parameter animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
      - Parameter animations: The block containing the animations. This block has no return value and takes no parameters. Use this block to modify any animatable view properties. When you start the animations, those properties are animated from their current values to the new values using the specified animation parameters.
      - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
      */
@@ -740,7 +740,7 @@ extension CameraManager: CameraAnimatorDelegate {
      - Parameter duration: The duration of the animation, in seconds.
      - Parameter controlPoint1: The first control point for the cubic Bézier timing curve.
      - Parameter controlPoint2: The second control point for the cubic Bézier timing curve.
-     - Parameter animationOwner: The `id` of what owns this animation.
+     - Parameter animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
      - Parameter animations: The block containing the animations. This block has no return value and takes no parameters. Use this block to modify any animatable view properties. When you start the animations, those properties are animated from their current values to the new values using the specified animation parameters.
      - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
      */
@@ -760,7 +760,7 @@ extension CameraManager: CameraAnimatorDelegate {
 
      - Parameter duration: The duration of the animation, in seconds.
      - Parameter timingParameters: The type of `AnimationCurve` for the animation.
-     - Parameter animationOwner: The `id` of what owns this animation.
+     - Parameter animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
      - Parameter animations: The block containing the animations. This block has no return value and takes no parameters. Use this block to modify any animatable view properties. When you start the animations, those properties are animated from their current values to the new values using the specified animation parameters.
      - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
      */
@@ -780,7 +780,7 @@ extension CameraManager: CameraAnimatorDelegate {
      - Parameter duration: The duration of the animation, in seconds.
      - Parameter delay: The number of seconds to wait before starting the animations. Specify 0 to begin the animations immediately.
      - Parameter options: The options to apply to the animations. You can specify most options, but transition-related options and options related to the animation direction are ignored.
-     - Parameter animationOwner: The `id` of what owns this animation.
+     - Parameter animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
      - Parameter animations: The block containing the animations. This block has no return value and takes no parameters. Use this block to modify any animatable view properties. When you start the animations, those properties are animated from their current values to the new values using the specified animation parameters.
      - Parameter completion: Completion block to be passed through for when an animation is stopped
      - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.

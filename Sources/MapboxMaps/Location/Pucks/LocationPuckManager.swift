@@ -44,16 +44,16 @@ internal class LocationPuckManager: LocationConsumer {
     internal weak var locationSupportableMapView: LocationSupportableMapView?
 
     /// The current  puck style
-    internal var currentPuckStyle: PuckStyle
+    internal var puckStyle: PuckStyle
 
     /// The current puck type
-    internal var currentPuckType: PuckType
+    internal var puckType: PuckType
 
     internal init(shouldTrackLocation: Bool,
-                locationSupportableMapView: LocationSupportableMapView,
-                currentPuckType: PuckType) {
-        currentPuckStyle = .precise
-        self.currentPuckType = currentPuckType
+                  locationSupportableMapView: LocationSupportableMapView,
+                  puckType: PuckType) {
+        puckStyle = .precise
+        self.puckType = puckType
         self.shouldTrackLocation = shouldTrackLocation
         self.locationSupportableMapView = locationSupportableMapView
     }
@@ -79,15 +79,15 @@ internal class LocationPuckManager: LocationConsumer {
         guard let locationSupportableMapView = self.locationSupportableMapView else { return }
         var puck: Puck
 
-        switch currentPuckType {
+        switch puckType {
         case let .puck2D(configuration):
-            puck = Puck2D(puckStyle: currentPuckStyle, locationSupportableMapView: locationSupportableMapView, configuration: configuration)
+            puck = Puck2D(puckStyle: puckStyle, locationSupportableMapView: locationSupportableMapView, configuration: configuration)
         case let .puck3D(configuration):
-            puck = Puck3D(puckStyle: currentPuckStyle, locationSupportableMapView: locationSupportableMapView, configuration: configuration)
+            puck = Puck3D(puckStyle: puckStyle, locationSupportableMapView: locationSupportableMapView, configuration: configuration)
         }
 
         if let location = latestLocation {
-            puck.updateStyle(puckStyle: currentPuckStyle, location: location)
+            puck.updateStyle(puckStyle: puckStyle, location: location)
         }
 
         self.puck = puck
@@ -102,12 +102,12 @@ internal class LocationPuckManager: LocationConsumer {
 
     internal func changePuckType(to newPuckType: PuckType) {
         removePuck()
-        currentPuckType = newPuckType
+        puckType = newPuckType
         createPuck()
     }
 
     internal func changePuckStyle(to newPuckStyle: PuckStyle) {
-        currentPuckStyle = newPuckStyle
+        puckStyle = newPuckStyle
 
         if let puck = self.puck,
            let location = latestLocation {

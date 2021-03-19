@@ -1,9 +1,8 @@
 import UIKit
 import MapboxMaps
 
-@objc(PuckModelLayerExample)
-
-public class PuckModelLayerExample: UIViewController, ExampleProtocol {
+@objc(Custom3DPuckExample)
+public class Custom3DPuckExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
 
@@ -72,7 +71,7 @@ public class PuckModelLayerExample: UIViewController, ExampleProtocol {
             }
 
             let puckModelLayerViewModel = PuckModelLayerViewModel(model: myModel, modelScale: .expression(scalingExpression))
-            mapOptions.location.locationPuck = .puck3D(puckModelLayerViewModel)
+            mapOptions.location.puckType = .puck3D(puckModelLayerViewModel)
         }
 
         let coordinate = CLLocationCoordinate2D(latitude: 39.085006, longitude: -77.150925)

@@ -8,7 +8,7 @@ import MapboxMapsFoundation
 import MapboxMapsStyle
 #endif
 
-internal class LocationPuckTests: XCTestCase {
+internal class PuckTypeTests: XCTestCase {
 
     var image: UIImage? {
         if #available(iOS 13.0, *) {
@@ -26,46 +26,46 @@ internal class LocationPuckTests: XCTestCase {
         return Model(uri: URL(string: "some-other-url"), position: [1.0, 2.0])
     }
 
-    func testLocationPuck2DAreEqual() throws {
+    func testPuck2DEqual() throws {
 
         let vm1 = LocationIndicatorLayerViewModel(topImage: image, scale: .constant(10))
-        let puck1 = LocationPuck.puck2D(vm1)
+        let puck1 = PuckType.puck2D(vm1)
 
         let vm2 = LocationIndicatorLayerViewModel(topImage: image, scale: .constant(10))
-        let puck2 = LocationPuck.puck2D(vm2)
+        let puck2 = PuckType.puck2D(vm2)
 
         XCTAssertEqual(puck1, puck2)
     }
 
-    func testLocationPuck2DAreNotEqual() throws {
+    func testPuck2DNotEqual() throws {
 
         let vm1 = LocationIndicatorLayerViewModel(topImage: image, scale: .constant(12))
-        let puck1 = LocationPuck.puck2D(vm1)
+        let puck1 = PuckType.puck2D(vm1)
 
         let vm2 = LocationIndicatorLayerViewModel(topImage: image, scale: .constant(10))
-        let puck2 = LocationPuck.puck2D(vm2)
+        let puck2 = PuckType.puck2D(vm2)
 
         XCTAssertNotEqual(puck1, puck2)
     }
 
-    func testLocationPuck3DAreEqual() throws {
+    func testPuck3DEqual() throws {
 
         let vm1 = PuckModelLayerViewModel(model: model1, modelScale: .constant([0.1, 0.2]), modelRotation: .constant([0.3, 0.4]))
-        let puck1 = LocationPuck.puck3D(vm1)
+        let puck1 = PuckType.puck3D(vm1)
 
         let vm2 = PuckModelLayerViewModel(model: model1, modelScale: .constant([0.1, 0.2]), modelRotation: .constant([0.3, 0.4]))
-        let puck2 = LocationPuck.puck3D(vm2)
+        let puck2 = PuckType.puck3D(vm2)
 
         XCTAssertEqual(puck1, puck2)
     }
 
-    func testLocationPuck3DAreNotEqual() throws {
+    func testPuck3DNotEqual() throws {
 
         let vm1 = PuckModelLayerViewModel(model: model1, modelScale: .constant([0.1, 0.2]), modelRotation: .constant([0.3, 0.4]))
-        let puck1 = LocationPuck.puck3D(vm1)
+        let puck1 = PuckType.puck3D(vm1)
 
         let vm2 = PuckModelLayerViewModel(model: model2, modelScale: .constant([0.1, 0.3]), modelRotation: .constant([0.4, 0.5]))
-        let puck2 = LocationPuck.puck3D(vm2)
+        let puck2 = PuckType.puck3D(vm2)
 
         XCTAssertNotEqual(puck1, puck2)
     }

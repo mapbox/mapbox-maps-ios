@@ -17,15 +17,14 @@ internal enum PuckStyle {
     case precise
 }
 
-// MARK: PuckBackend
-/// This enum represents the different backends that can be used for Pucks
-public enum LocationPuck: Equatable {
-    /// Backed by `LocationIndicatorLayer`. Optionally provide `LocationIndicatorViewModel` to granularly modify the puck's styling.
+// MARK: PuckType
+/// This enum represents the different types of pucks
+public enum PuckType: Equatable {
+    /// A 2-dimensional puck. Optionally provide `LocationIndicatorViewModel` to configure the puck's appearance.
     case puck2D(LocationIndicatorLayerViewModel? = nil)
 
-    /// Backed by `ModelLayer`.
+    /// A 3-dimensional puck. Provide a `PuckModelLayerViewModel` to configure the puck's appearance.
     case puck3D(PuckModelLayerViewModel)
-
 }
 
 // MARK: LocationPuckManager
@@ -44,17 +43,17 @@ public class LocationPuckManager: LocationConsumer {
     /// MapView that supports location events
     weak var locationSupportableMapView: LocationSupportableMapView?
 
-    /// Stores the current  puck style
+    /// The current  puck style
     internal var currentPuckStyle: PuckStyle
 
-    /// Stores the current backend that should be used to render the puck
-    internal var currentPuckBackend: LocationPuck
+    /// The current puck type
+    internal var currentPuckType: PuckType
 
     public init(shouldTrackLocation: Bool,
                 locationSupportableMapView: LocationSupportableMapView,
-                currentPuckSource: LocationPuck) {
+                currentPuckType: PuckType) {
         currentPuckStyle = .precise
-        currentPuckBackend = currentPuckSource
+        self.currentPuckType = currentPuckType
         self.shouldTrackLocation = shouldTrackLocation
         self.locationSupportableMapView = locationSupportableMapView
     }
@@ -80,7 +79,7 @@ public class LocationPuckManager: LocationConsumer {
         guard let locationSupportableMapView = self.locationSupportableMapView else { return }
         var puck: Puck
 
-        switch currentPuckBackend {
+        switch currentPuckType {
         case let .puck2D(viewModel):
             puck = PuckLocationIndicatorLayer(currentPuckStyle: currentPuckStyle, locationSupportableMapView: locationSupportableMapView, viewModel: viewModel)
         case let .puck3D(viewModel):
@@ -101,13 +100,13 @@ public class LocationPuckManager: LocationConsumer {
         self.puck = nil
     }
 
-    internal func changePuckBackend(newPuckBackend: LocationPuck) {
+    internal func changePuckType(to newPuckType: PuckType) {
         removePuck()
-        currentPuckBackend = newPuckBackend
+        currentPuckType = newPuckType
         createPuck()
     }
 
-    internal func changePuckStyle(newPuckStyle: PuckStyle) {
+    internal func changePuckStyle(to newPuckStyle: PuckStyle) {
         currentPuckStyle = newPuckStyle
 
         if let puck = self.puck,

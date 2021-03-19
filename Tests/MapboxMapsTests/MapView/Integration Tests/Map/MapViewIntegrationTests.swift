@@ -68,6 +68,19 @@ class MapViewIntegrationTests: IntegrationTestCase {
         XCTAssertEqual(mapView.preferredFPS.rawValue, mapView.displayLink?.preferredFramesPerSecond)
     }
 
+    func testAnimatorCompletionBlocksAreRemoved() {
+        let firstCompletion = PendingAnimationCompletion(completion: {_ in}, animatingPosition: .end)
+        let secondCompletion = PendingAnimationCompletion(completion: {_ in}, animatingPosition: .current)
+
+        mapView.pendingAnimatorCompletionBlocks.append(firstCompletion)
+        mapView.pendingAnimatorCompletionBlocks.append(secondCompletion)
+        mapView.needsDisplayRefresh = true
+        XCTAssertEqual(mapView.pendingAnimatorCompletionBlocks.count, 2)
+
+        mapView.updateFromDisplayLink(displayLink: CADisplayLink())
+        XCTAssertEqual(mapView.pendingAnimatorCompletionBlocks.count, 0)
+    }
+
     func testUpdateFromDisplayLinkWhenNil() {
         mapView.displayLink = nil
         mapView.preferredFPS = .maximum

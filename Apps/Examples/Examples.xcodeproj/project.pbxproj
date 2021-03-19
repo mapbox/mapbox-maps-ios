@@ -22,7 +22,6 @@
 		0C78AC2F25BF72C70057F570 /* GradientLine.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 0C78AC2C25BF71E40057F570 /* GradientLine.geojson */; };
 		0CC4ECEA25B8AD3000F998B8 /* CustomLocationIndicatorLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC4ECE925B8AD3000F998B8 /* CustomLocationIndicatorLayerExample.swift */; };
 		0CE8ED88258928200066E56C /* race_car_model.gltf in Resources */ = {isa = PBXBuildFile; fileRef = 0CE8ED87258928200066E56C /* race_car_model.gltf */; };
-		0CE8ED8C2589285C0066E56C /* ModelExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE8ED8B2589285C0066E56C /* ModelExample.swift */; };
 		58A3C0C925C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */; };
 		73694BD325D4B2CE0064F636 /* TrackingModeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73694BD225D4B2CE0064F636 /* TrackingModeExample.swift */; };
 		73C1558525DC775A00AFAE20 /* LayerBelowExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C1558425DC775A00AFAE20 /* LayerBelowExample.swift */; };
@@ -132,7 +131,6 @@
 		0CE3D3BE25818626000585A2 /* ColorExpressionExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExpressionExample.swift; sourceTree = "<group>"; };
 		0CE3D3C225818786000585A2 /* FlyToExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyToExample.swift; sourceTree = "<group>"; };
 		0CE8ED87258928200066E56C /* race_car_model.gltf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = race_car_model.gltf; sourceTree = "<group>"; };
-		0CE8ED8B2589285C0066E56C /* ModelExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelExample.swift; sourceTree = "<group>"; };
 		58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateGeoJSONLineExample.swift; sourceTree = "<group>"; };
 		666E0D4925664EE7000B8AF5 /* LayerPositionExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerPositionExample.swift; sourceTree = "<group>"; };
 		73694BD225D4B2CE0064F636 /* TrackingModeExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingModeExample.swift; sourceTree = "<group>"; };
@@ -234,7 +232,6 @@
 				077E3B8F2581966300564A3E /* FitCameraToGeometryExample.swift */,
 				077E3B932581987B00564A3E /* UpdatePointAnnotationPositionExample.swift */,
 				A4211CE52592549900D215B4 /* RestrictCoordinateBoundsExample.swift */,
-				0CE8ED8B2589285C0066E56C /* ModelExample.swift */,
 				073475D625AFAE520049B0B8 /* CustomLayerExample.swift */,
 				0333B84E25ED942600D667C9 /* SceneKitExample.swift */,
 				0C52BA9725AF8C880054ECA8 /* PuckModelLayerExample.swift */,
@@ -524,7 +521,6 @@
 				A4211CE62592549900D215B4 /* RestrictCoordinateBoundsExample.swift in Sources */,
 				0C52BA9825AF8C880054ECA8 /* PuckModelLayerExample.swift in Sources */,
 				CADCF7292584990E0065C51B /* FeaturesAtPointExample.swift in Sources */,
-				0CE8ED8C2589285C0066E56C /* ModelExample.swift in Sources */,
 				B54B46BA2603B1270029EFA0 /* OfflineRegionManagerExample.swift in Sources */,
 				73C1558525DC775A00AFAE20 /* LayerBelowExample.swift in Sources */,
 				CADCF71E2584990E0065C51B /* ExternalVectorSourceExample.swift in Sources */,

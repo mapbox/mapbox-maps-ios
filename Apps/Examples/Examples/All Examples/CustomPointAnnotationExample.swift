@@ -21,7 +21,7 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
                                         zoom: 9.0)
 
         // Allows the delegate to receive information about map events.
-        mapView.on(.mapLoadingFinished) { [weak self] _ in
+        mapView.on(.mapLoaded) { [weak self] _ in
 
             guard let self = self else { return }
 

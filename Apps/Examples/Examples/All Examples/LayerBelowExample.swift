@@ -22,7 +22,7 @@ public class LayerBelowExample: UIViewController, ExampleProtocol {
                                         zoom: 4)
 
         // Allows the view controller to receive information about map events
-        mapView.on(.mapLoadingFinished) { [weak self] _ in
+        mapView.on(.mapLoaded) { [weak self] _ in
             self?.setupExample()
         }
     }

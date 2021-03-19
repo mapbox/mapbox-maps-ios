@@ -25,7 +25,7 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
                                         zoom: 11.0)
 
         // Wait for the map to load its style before adding data.
-        mapView.on(.mapLoadingFinished) { [weak self] _ in
+        mapView.on(.mapLoaded) { [weak self] _ in
 
             guard let self = self else { return }
             self.addLine()

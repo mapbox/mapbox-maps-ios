@@ -332,9 +332,17 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
         needsDisplayRefresh = true
     }
 
+    /// :nodoc:
+    public func scheduleTask(forTask task: @escaping Task) {
+        fatalError("scheduleTask is not supported")
+    }
+
+    /// :nodoc:
     public var peer: MBXPeerWrapper?
 
     // MARK: - MBXMetalViewProvider conformance
+
+    /// :nodoc:
     public func getMetalView(for metalDevice: MTLDevice?) -> MTKView? {
 
         let metalView = MTKView(frame: frame, device: metalDevice)

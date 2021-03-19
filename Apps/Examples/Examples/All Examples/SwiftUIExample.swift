@@ -99,7 +99,7 @@ internal struct SwiftUIMapView: UIViewRepresentable {
         }
 
         /// The coordinator needs to manager annotations because
-        /// they need to be applied *after* `.mapLoadingFinished`
+        /// they need to be applied *after* `.mapLoaded`
         context.coordinator.annotations = annotations
     }
 }
@@ -128,9 +128,9 @@ internal class SwiftUIMapViewCoordinator {
             /// whenever the camera changes, it updates the camera binding
             mapView?.on(.cameraChanged, handler: notify(for:))
 
-            /// The coordinator also observes the `.mapLoadingFinished` event
+            /// The coordinator also observes the `.mapLoaded` event
             /// so that it can sync annotations whenever the map reloads
-            mapView?.on(.mapLoadingFinished, handler: notify(for:))
+            mapView?.on(.mapLoaded, handler: notify(for:))
         }
     }
 
@@ -152,7 +152,7 @@ internal class SwiftUIMapViewCoordinator {
             camera.zoom = mapView.zoom
 
         /// When the map reloads, we need to re-sync the annotations
-        case .mapLoadingFinished:
+        case .mapLoaded:
             initialMapLoadComplete = true
             syncAnnotations()
 

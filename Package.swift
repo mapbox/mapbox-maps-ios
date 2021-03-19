@@ -13,15 +13,14 @@ let package = Package(
             targets: ["MapboxMaps"]),
     ],
     dependencies: [
-        .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .exact("10.0.0-beta.12")),
-        .package(name: "MapboxCoreMaps", url: "https://github.com/mapbox/mapbox-core-maps-ios.git", .exact("10.0.0-beta.16")),
+        .package(name: "MapboxCoreMaps", url: "https://github.com/mapbox/mapbox-core-maps-ios.git", .exact("10.0.0-beta.17")),
         .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", .exact("0.10.8")),
         .package(name: "Turf", url: "https://github.com/mapbox/turf-swift.git", .exact("2.0.0-alpha.3")),
     ],
     targets: [
         .target(
             name: "MapboxMaps",
-            dependencies: ["MapboxCommon", "MapboxCoreMaps", "Turf", "MapboxMobileEvents"],
+            dependencies: ["MapboxCoreMaps", "Turf", "MapboxMobileEvents"],
             exclude: [
                 "Annotations/Info.plist",
                 "Foundation/Info.plist",

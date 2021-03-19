@@ -40,7 +40,7 @@ public class Snapshotter: Observer {
         mapSnapshotter = try! MapSnapshotter(options: options)
         style = Style(with: mapSnapshotter)
         try! mapSnapshotter.subscribe(for: self, events: [
-            MapEvents.styleLoadingFinished,
+            MapEvents.styleLoaded,
             MapEvents.styleImageMissing,
             MapEvents.mapLoadingError
         ])
@@ -72,15 +72,10 @@ public class Snapshotter: Observer {
     /// Camera configuration for the snapshot
     public var camera: CameraOptions {
         get {
-            return try! mapSnapshotter.getCameraOptions()
+            return try! mapSnapshotter.getCameraOptions(forPadding: nil)
         } set(newValue) {
-            try! mapSnapshotter.setCameraOptionsForCamera(newValue)
+            try! mapSnapshotter.setCameraFor(newValue)
         }
-    }
-
-    /// Rectangular bounds to which the snapshot is restricted
-    public var bounds: CoordinateBounds {
-        return try! mapSnapshotter.getRegion()
     }
 
     /// In the tile mode, the snapshotter fetches the still image of a single tile.

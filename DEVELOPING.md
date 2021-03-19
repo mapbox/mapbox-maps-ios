@@ -124,7 +124,8 @@ To run device tests there are few options:
 
 1. Run via Xcode: test (Cmd-U) the `MapboxTestsWithHost` scheme.
 
-2. Trigger via CI by adding `[run device tests]` to a git commit message. These tests also run "nightly".
+2. Trigger via CI by adding `[run device tests]` to a git commit message. These tests also run "nightly". 
+(Examples can also be run as tests on CI by adding `[run app device tests]`.) 
 
 3. Trigger tests on AWS Device Farm from the command line by running `make test-with-device-farm SCHEME=MapboxMapsTestsWithHost APP_NAME=MapboxTestHost`. This requires certain environment variables to be set; please see the makefile for these.
 

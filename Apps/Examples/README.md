@@ -74,7 +74,7 @@ To add a new example, go through the following steps:
        }
        
        // Allows the delegate to receive information about map events.
-       mapView.on(.mapLoadingFinished) { [weak self] _ in
+       mapView.on(.mapLoaded) { [weak self] _ in
            guard let self = self else { return }
            self.finish() // Needed for internal testing purposes.
        }

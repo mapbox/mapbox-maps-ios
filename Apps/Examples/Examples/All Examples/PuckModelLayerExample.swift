@@ -14,7 +14,7 @@ public class PuckModelLayerExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.on(.styleLoadingFinished) { [weak self] _ in
+        mapView.on(.styleLoaded) { [weak self] _ in
             guard let self = self else { return }
             self.setupExample()
         }

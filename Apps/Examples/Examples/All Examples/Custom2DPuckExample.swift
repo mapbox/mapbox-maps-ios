@@ -30,9 +30,9 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         mapView.update { (mapOptions) in
             mapOptions.location.showUserLocation = true
 
-            // Granularly style the location puck with a `LocationIndicatorLayerViewModel`
-            let locationIndicatorLayerVM = LocationIndicatorLayerViewModel(topImage: UIImage(named: "star"))
-            mapOptions.location.puckType = .puck2D(locationIndicatorLayerVM)
+            // Granularly configure the location puck with a `Puck2DConfiguration`
+            let configuration = Puck2DConfiguration(topImage: UIImage(named: "star"))
+            mapOptions.location.puckType = .puck2D(configuration)
         }
 
         let coordinate = CLLocationCoordinate2D(latitude: 39.085006, longitude: -77.150925)

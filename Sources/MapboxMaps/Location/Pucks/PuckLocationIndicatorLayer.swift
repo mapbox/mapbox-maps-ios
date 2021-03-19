@@ -10,7 +10,7 @@ import MapboxMapsFoundation
 import MapboxMapsStyle
 #endif
 
-public struct LocationIndicatorLayerViewModel: Equatable {
+public struct Puck2DConfiguration: Equatable {
 
     /// Image to use as the top of the location indicator.
     public var topImage: UIImage?
@@ -36,7 +36,7 @@ internal class PuckLocationIndicatorLayer: Puck {
 
     // MARK: Properties
     internal var locationIndicatorLayer: LocationIndicatorLayer?
-    internal var locationIndicatorLayerVM: LocationIndicatorLayerViewModel?
+    internal var configuration: Puck2DConfiguration?
 
     // MARK: Protocol Properties
     internal var puckStyle: PuckStyle
@@ -44,10 +44,10 @@ internal class PuckLocationIndicatorLayer: Puck {
     internal weak var locationSupportableMapView: LocationSupportableMapView?
 
     // MARK: Initializers
-    internal init(currentPuckStyle: PuckStyle, locationSupportableMapView: LocationSupportableMapView, viewModel: LocationIndicatorLayerViewModel?) {
+    internal init(puckStyle: PuckStyle, locationSupportableMapView: LocationSupportableMapView, configuration: Puck2DConfiguration?) {
+        self.puckStyle = puckStyle
         self.locationSupportableMapView = locationSupportableMapView
-        locationIndicatorLayerVM = viewModel
-        puckStyle = currentPuckStyle
+        self.configuration = configuration
     }
 
     // MARK: Protocol Implementation
@@ -138,7 +138,7 @@ private extension PuckLocationIndicatorLayer {
         // Call customizationHandler to allow developers to granularly modify the layer
 
         // Add images to sprite sheet
-        if let validTopImage = locationIndicatorLayerVM?.topImage {
+        if let validTopImage = configuration?.topImage {
             let setStyleImageResult = style.setStyleImage(image: validTopImage, with: "locationIndicatorLayerTopImage", scale: 44.0)
 
             if case .failure(let imageError) = setStyleImageResult {
@@ -156,7 +156,7 @@ private extension PuckLocationIndicatorLayer {
             }
         }
 
-        if let validBearingImage = locationIndicatorLayerVM?.bearingImage {
+        if let validBearingImage = configuration?.bearingImage {
             let setStyleImageResult = style.setStyleImage(image: validBearingImage, with: "locationIndicatorLayerBearingImage", scale: 44.0)
 
             if case .failure(let imageError) = setStyleImageResult {
@@ -173,7 +173,7 @@ private extension PuckLocationIndicatorLayer {
             }
         }
 
-        if let validShadowImage = locationIndicatorLayerVM?.shadowImage {
+        if let validShadowImage = configuration?.shadowImage {
             let setStyleImageResultInner = style.setStyleImage(image: validShadowImage, with: "locationIndicatorLayerShadowImage", scale: 44.0)
 
             if case .failure(let imageError) = setStyleImageResultInner {
@@ -199,9 +199,9 @@ private extension PuckLocationIndicatorLayer {
             location.internalLocation.altitude
         ])
         paint.locationTransition = StyleTransition(duration: 0, delay: 0)
-        paint.topImageSize = locationIndicatorLayerVM?.scale ?? .constant(1.0)
-        paint.bearingImageSize = locationIndicatorLayerVM?.scale ?? .constant(1.0)
-        paint.shadowImageSize = locationIndicatorLayerVM?.scale ?? .constant(1.0)
+        paint.topImageSize = configuration?.scale ?? .constant(1.0)
+        paint.bearingImageSize = configuration?.scale ?? .constant(1.0)
+        paint.shadowImageSize = configuration?.scale ?? .constant(1.0)
         paint.accuracyRadius = .constant(location.horizontalAccuracy)
 
         paint.emphasisCircleRadiusTransition = StyleTransition(duration: 0, delay: 0)

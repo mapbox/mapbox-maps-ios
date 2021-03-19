@@ -70,8 +70,8 @@ public class Custom3DPuckExample: UIViewController, ExampleProtocol {
                 }
             }
 
-            let puckModelLayerViewModel = PuckModelLayerViewModel(model: myModel, modelScale: .expression(scalingExpression))
-            mapOptions.location.puckType = .puck3D(puckModelLayerViewModel)
+            let configuration = Puck3DConfiguration(model: myModel, modelScale: .expression(scalingExpression))
+            mapOptions.location.puckType = .puck3D(configuration)
         }
 
         let coordinate = CLLocationCoordinate2D(latitude: 39.085006, longitude: -77.150925)

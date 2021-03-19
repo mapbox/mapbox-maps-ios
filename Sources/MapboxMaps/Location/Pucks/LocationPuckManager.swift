@@ -20,11 +20,11 @@ internal enum PuckStyle {
 // MARK: PuckType
 /// This enum represents the different types of pucks
 public enum PuckType: Equatable {
-    /// A 2-dimensional puck. Optionally provide `LocationIndicatorViewModel` to configure the puck's appearance.
-    case puck2D(LocationIndicatorLayerViewModel? = nil)
+    /// A 2-dimensional puck. Optionally provide `Puck2DConfiguration` to configure the puck's appearance.
+    case puck2D(Puck2DConfiguration? = nil)
 
-    /// A 3-dimensional puck. Provide a `PuckModelLayerViewModel` to configure the puck's appearance.
-    case puck3D(PuckModelLayerViewModel)
+    /// A 3-dimensional puck. Provide a `Puck3DConfiguration` to configure the puck's appearance.
+    case puck3D(Puck3DConfiguration)
 }
 
 // MARK: LocationPuckManager
@@ -80,10 +80,10 @@ internal class LocationPuckManager: LocationConsumer {
         var puck: Puck
 
         switch currentPuckType {
-        case let .puck2D(viewModel):
-            puck = PuckLocationIndicatorLayer(currentPuckStyle: currentPuckStyle, locationSupportableMapView: locationSupportableMapView, viewModel: viewModel)
-        case let .puck3D(viewModel):
-            puck = PuckModelLayer(currentPuckStyle: currentPuckStyle, locationSupportableMapView: locationSupportableMapView, viewModel: viewModel)
+        case let .puck2D(configuration):
+            puck = PuckLocationIndicatorLayer(puckStyle: currentPuckStyle, locationSupportableMapView: locationSupportableMapView, configuration: configuration)
+        case let .puck3D(configuration):
+            puck = PuckModelLayer(puckStyle: currentPuckStyle, locationSupportableMapView: locationSupportableMapView, configuration: configuration)
         }
 
         if let location = latestLocation {

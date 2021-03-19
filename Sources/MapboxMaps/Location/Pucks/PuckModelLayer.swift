@@ -10,7 +10,7 @@ import MapboxMapsFoundation
 import MapboxMapsStyle
 #endif
 
-public struct PuckModelLayerViewModel: Equatable {
+public struct Puck3DConfiguration: Equatable {
 
     /// The model to use as the locaiton puck
     public var model: Model
@@ -32,7 +32,7 @@ public struct PuckModelLayerViewModel: Equatable {
 internal class PuckModelLayer: Puck {
 
     // MARK: Properties
-    internal var puckModelLayerVM: PuckModelLayerViewModel
+    internal var configuration: Puck3DConfiguration
     internal var modelLayer: ModelLayer
     internal var modelSource: ModelSource
     internal var initialPuckOrientation: [Double]?
@@ -43,13 +43,13 @@ internal class PuckModelLayer: Puck {
     public var style: Style!
 
     // MARK: Initializers
-    internal init(currentPuckStyle: PuckStyle, locationSupportableMapView: LocationSupportableMapView, viewModel: PuckModelLayerViewModel) {
+    internal init(puckStyle: PuckStyle, locationSupportableMapView: LocationSupportableMapView, configuration: Puck3DConfiguration) {
+        self.puckStyle = puckStyle
+        self.locationSupportableMapView = locationSupportableMapView
+        self.configuration = configuration
         modelLayer = ModelLayer(id: "puck-model-layer")
         modelSource = ModelSource()
-        puckModelLayerVM = viewModel
-        self.locationSupportableMapView = locationSupportableMapView
         style = locationSupportableMapView.style
-        puckStyle = currentPuckStyle
         setup()
     }
 
@@ -58,14 +58,14 @@ internal class PuckModelLayer: Puck {
         modelLayer.source = "puck-model-source"
 
         // Set the model to the source
-        modelSource.models = ["puck-model": puckModelLayerVM.model]
-        initialPuckOrientation = puckModelLayerVM.model.orientation
+        modelSource.models = ["puck-model": configuration.model]
+        initialPuckOrientation = configuration.model.orientation
 
-        if let validModelScale = puckModelLayerVM.modelScale {
+        if let validModelScale = configuration.modelScale {
             modelLayer.paint?.modelScale = validModelScale
         }
 
-        if let validModelRotation = puckModelLayerVM.modelRotation {
+        if let validModelRotation = configuration.modelRotation {
             modelLayer.paint?.modelRotation = validModelRotation
         }
 

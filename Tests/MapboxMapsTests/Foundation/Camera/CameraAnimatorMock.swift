@@ -6,15 +6,20 @@ import XCTest
 @testable import MapboxMapsFoundation
 #endif
 
-public class CameraAnimatorMock: CameraAnimatorDelegate {
+final class CameraAnimatorMock: CameraAnimatorDelegate {
+
+    struct CameraAnimatorDelegateParameters {}
+
+    let cameraAnimatorStub = Stub<CameraAnimatorDelegateParameters, Void>()
+
     public func schedulePendingCompletion(forAnimator animator: CameraAnimator,
                                    completion: @escaping AnimationCompletion,
                                    animatingPosition: UIViewAnimatingPosition) {
-        print("Mock stub")
+        cameraAnimatorStub.call(with: CameraAnimatorDelegateParameters())
     }
 
     public func animatorIsFinished(forAnimator animator: CameraAnimator) {
-        print("Mock stub")
+        cameraAnimatorStub.call(with: CameraAnimatorDelegateParameters())
     }
 
 

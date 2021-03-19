@@ -150,7 +150,6 @@ internal class Puck2D: Puck {
 // MARK: Layer Creation Functions
 
 private extension Puck2D {
-    // swiftlint:disable:next cyclomatic_complexity
     func createPreciseLocationIndicatorLayer(location: Location) throws {
         guard let style = locationSupportableMapView?.style else { return }
 

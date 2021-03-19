@@ -1,4 +1,5 @@
 // This file is generated.
+// swiftlint:disable nesting
 
 import Foundation
 import MapboxCoreMaps
@@ -29,42 +30,40 @@ internal struct ModelLayer: Layer {
 
       /// Whether this layer is displayed.
       internal var visibility: Value<Visibility>?
-      
+
       internal init() {
         self.visibility = .constant(.visible)
       }
 
-       
       enum CodingKeys: String, CodingKey {
-        case visibility = "visibility"
+        case visibility
       }
     }
 
     /// Changes to a paint property are cheap and happen synchronously.
     internal var paint: ModelLayer.Paint?
-  
+
     internal struct Paint: Codable {
 
       internal init() {}
-          
+
       /// The opacity of the model layer.
       internal var modelOpacity: Value<Double>?
-      
+
       /// Transition options for `modelOpacity`.
       internal var modelOpacityTransition: StyleTransition?
-            
+
       /// The rotation of the model in euler angles [lon, lat, z].
       internal var modelRotation: Value<[Double]>?
-      
+
       /// Transition options for `modelRotation`.
       internal var modelRotationTransition: StyleTransition?
-            
+
       /// The scale of the model.
       internal var modelScale: Value<[Double]>?
-            
+
       /// The translation of the model [lon, lat, z]
       internal var modelTranslation: Value<[Double]>?
-      
 
       enum CodingKeys: String, CodingKey {
         case modelOpacity = "model-opacity"

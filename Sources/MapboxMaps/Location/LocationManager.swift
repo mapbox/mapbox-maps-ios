@@ -218,7 +218,6 @@ private extension LocationManager {
                 locationPuckManager.changePuckStyle(to: currentPuckStyle)
             } else {
                 let locationPuckManager = LocationPuckManager(
-                    shouldTrackLocation: true,
                     locationSupportableMapView: locationSupportableMapView,
                     puckType: locationOptions.puckType)
 

@@ -7,13 +7,7 @@ import UIKit
 #endif
 
 internal class LocationConsumerMock: LocationConsumer {
-    var shouldTrackLocation: Bool
-
     func locationUpdate(newLocation: Location) {
         print("location updated")
-    }
-
-    init(shouldTrackLocation: Bool) {
-        self.shouldTrackLocation = shouldTrackLocation
     }
 }

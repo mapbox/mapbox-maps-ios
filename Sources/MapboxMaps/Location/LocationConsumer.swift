@@ -33,13 +33,8 @@ import CoreLocation
     }
 }
 
-/// The `LocationConsumer` protocol defines a set of methods that a class must implement to consume location updates and track device location
+/// The `LocationConsumer` protocol defines a method that a class must implement to consume location updates from LocationManager
 @objc public protocol LocationConsumer {
-
-    /// Represents whether the locationConsumer is currently tracking
-    /// Set this to `false` to stop tracking
-    /// Set this to `true` to start tracking
-    var shouldTrackLocation: Bool { get set }
 
     /// New location update received
     func locationUpdate(newLocation: Location)

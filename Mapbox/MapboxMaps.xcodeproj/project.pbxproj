@@ -110,11 +110,11 @@
 		0C26425624EECD14001FE2E3 /* AllExpressions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C26425424EECD14001FE2E3 /* AllExpressions.swift */; };
 		0C2CD9E325D19D30006D068F /* OptionsIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2CD9E225D19D30006D068F /* OptionsIntegrationTests.swift */; };
 		0C2CD9F625D19D75006D068F /* OptionsIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2CD9E225D19D30006D068F /* OptionsIntegrationTests.swift */; };
-		0C2CDA2E25D1A51C006D068F /* LocationPuckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2CDA2D25D1A51C006D068F /* LocationPuckTests.swift */; };
-		0C2CDA2F25D1A51C006D068F /* LocationPuckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2CDA2D25D1A51C006D068F /* LocationPuckTests.swift */; };
-		0C2CDA3025D1A51C006D068F /* LocationPuckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2CDA2D25D1A51C006D068F /* LocationPuckTests.swift */; };
-		0C31F7AA25AF87AB00DCFB28 /* PuckModelLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C31F7A925AF87AB00DCFB28 /* PuckModelLayer.swift */; };
-		0C31F7AB25AF87AB00DCFB28 /* PuckModelLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C31F7A925AF87AB00DCFB28 /* PuckModelLayer.swift */; };
+		0C2CDA2E25D1A51C006D068F /* PuckTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2CDA2D25D1A51C006D068F /* PuckTypeTests.swift */; };
+		0C2CDA2F25D1A51C006D068F /* PuckTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2CDA2D25D1A51C006D068F /* PuckTypeTests.swift */; };
+		0C2CDA3025D1A51C006D068F /* PuckTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2CDA2D25D1A51C006D068F /* PuckTypeTests.swift */; };
+		0C31F7AA25AF87AB00DCFB28 /* Puck3D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C31F7A925AF87AB00DCFB28 /* Puck3D.swift */; };
+		0C31F7AB25AF87AB00DCFB28 /* Puck3D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C31F7A925AF87AB00DCFB28 /* Puck3D.swift */; };
 		0C32C9AE25F979680057ED31 /* GeoJsonSourceIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C32C9A925F979680057ED31 /* GeoJsonSourceIntegrationTests.swift */; };
 		0C32C9B025F979680057ED31 /* RasterDemSourceIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C32C9AA25F979680057ED31 /* RasterDemSourceIntegrationTests.swift */; };
 		0C32C9B225F979680057ED31 /* RasterSourceIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C32C9AB25F979680057ED31 /* RasterSourceIntegrationTests.swift */; };
@@ -283,8 +283,6 @@
 		0C9DE383252C299800880CC8 /* GeoJSONSourceDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9DE382252C299800880CC8 /* GeoJSONSourceDataTests.swift */; };
 		0C9DE39B252C2A1F00880CC8 /* GeoJSONSourceDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9DE382252C299800880CC8 /* GeoJSONSourceDataTests.swift */; };
 		0C9DE3B3252C2A1F00880CC8 /* GeoJSONSourceDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9DE382252C299800880CC8 /* GeoJSONSourceDataTests.swift */; };
-		0CA3DD5F257AAE3B00B12C8F /* ModelLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA3DD5D257AAE3B00B12C8F /* ModelLayer.swift */; };
-		0CA3DD60257AAE3B00B12C8F /* ModelLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA3DD5D257AAE3B00B12C8F /* ModelLayer.swift */; };
 		0CA3DD61257AAE3B00B12C8F /* SkyLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA3DD5E257AAE3B00B12C8F /* SkyLayer.swift */; };
 		0CA3DD62257AAE3B00B12C8F /* SkyLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA3DD5E257AAE3B00B12C8F /* SkyLayer.swift */; };
 		0CAC3CAA2534E8CC00D031E7 /* ResourceOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAC3CA92534E8CC00D031E7 /* ResourceOptions.swift */; };
@@ -431,6 +429,8 @@
 		B51DE65B25D7038900A80AC9 /* Comparable+Clamped.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51DE62125D7032C00A80AC9 /* Comparable+Clamped.swift */; };
 		B51DE66E25D7039700A80AC9 /* Comparable+ClampedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51DE64725D7038300A80AC9 /* Comparable+ClampedTests.swift */; };
 		B51DE68125D7039700A80AC9 /* Comparable+ClampedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51DE64725D7038300A80AC9 /* Comparable+ClampedTests.swift */; };
+		B52050A8260538240003E5BB /* ModelLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52050A7260538240003E5BB /* ModelLayer.swift */; };
+		B52050A9260538240003E5BB /* ModelLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52050A7260538240003E5BB /* ModelLayer.swift */; };
 		B53A685B25E033AF008CB2AF /* OrnamentsLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B53A685E25E033AF008CB2AF /* OrnamentsLocalizable.strings */; };
 		B53A685C25E033AF008CB2AF /* OrnamentsLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B53A685E25E033AF008CB2AF /* OrnamentsLocalizable.strings */; };
 		B54B7F0A25DB192C003FD6CA /* MockCameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54B7F0925DB192C003FD6CA /* MockCameraManager.swift */; };
@@ -458,8 +458,8 @@
 		C64994AC258D5ADE0052C21C /* Puck.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64994A6258D5ADE0052C21C /* Puck.swift */; };
 		C64994AD258D5ADE0052C21C /* IndicatorAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C64994A7258D5ADE0052C21C /* IndicatorAssets.xcassets */; };
 		C64994AE258D5ADE0052C21C /* IndicatorAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C64994A7258D5ADE0052C21C /* IndicatorAssets.xcassets */; };
-		C64994AF258D5ADE0052C21C /* PuckLocationIndicatorLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64994A8258D5ADE0052C21C /* PuckLocationIndicatorLayer.swift */; };
-		C64994B0258D5ADE0052C21C /* PuckLocationIndicatorLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64994A8258D5ADE0052C21C /* PuckLocationIndicatorLayer.swift */; };
+		C64994AF258D5ADE0052C21C /* Puck2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64994A8258D5ADE0052C21C /* Puck2D.swift */; };
+		C64994B0258D5ADE0052C21C /* Puck2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64994A8258D5ADE0052C21C /* Puck2D.swift */; };
 		C64994C2259114550052C21C /* MapboxMapsStyle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4519DCD2432FF03007CF39A /* MapboxMapsStyle.framework */; };
 		C64B6FEA25E0479000C8E07E /* Bundle+MapboxMaps.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64B6FE925E0479000C8E07E /* Bundle+MapboxMaps.swift */; };
 		C64B6FEB25E0479000C8E07E /* Bundle+MapboxMaps.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64B6FE925E0479000C8E07E /* Bundle+MapboxMaps.swift */; };
@@ -938,8 +938,8 @@
 		0C1AF566244F6A80008D2A10 /* OrnamentConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrnamentConfig.swift; sourceTree = "<group>"; };
 		0C26425424EECD14001FE2E3 /* AllExpressions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllExpressions.swift; sourceTree = "<group>"; };
 		0C2CD9E225D19D30006D068F /* OptionsIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsIntegrationTests.swift; sourceTree = "<group>"; };
-		0C2CDA2D25D1A51C006D068F /* LocationPuckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPuckTests.swift; sourceTree = "<group>"; };
-		0C31F7A925AF87AB00DCFB28 /* PuckModelLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuckModelLayer.swift; sourceTree = "<group>"; };
+		0C2CDA2D25D1A51C006D068F /* PuckTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuckTypeTests.swift; sourceTree = "<group>"; };
+		0C31F7A925AF87AB00DCFB28 /* Puck3D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Puck3D.swift; sourceTree = "<group>"; };
 		0C32C9A925F979680057ED31 /* GeoJsonSourceIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoJsonSourceIntegrationTests.swift; sourceTree = "<group>"; };
 		0C32C9AA25F979680057ED31 /* RasterDemSourceIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RasterDemSourceIntegrationTests.swift; sourceTree = "<group>"; };
 		0C32C9AB25F979680057ED31 /* RasterSourceIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RasterSourceIntegrationTests.swift; sourceTree = "<group>"; };
@@ -1015,12 +1015,11 @@
 		0C9640E02531056700CABD3E /* LocationConsumer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationConsumer.swift; sourceTree = "<group>"; };
 		0C9DE368252C263600880CC8 /* GeoJSONSourceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoJSONSourceData.swift; sourceTree = "<group>"; };
 		0C9DE382252C299800880CC8 /* GeoJSONSourceDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoJSONSourceDataTests.swift; sourceTree = "<group>"; };
-		0CA3DD5D257AAE3B00B12C8F /* ModelLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelLayer.swift; sourceTree = "<group>"; };
 		0CA3DD5E257AAE3B00B12C8F /* SkyLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkyLayer.swift; sourceTree = "<group>"; };
 		0CAC3CA92534E8CC00D031E7 /* ResourceOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceOptions.swift; sourceTree = "<group>"; };
 		0CAC3CC22534E90500D031E7 /* MapSnapshotOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSnapshotOptions.swift; sourceTree = "<group>"; };
 		0CBCF28D25409F030025F7B3 /* ResolvedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResolvedImage.swift; sourceTree = "<group>"; };
-		0CBCF2D7254229630025F7B3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		0CBCF2D7254229630025F7B3 /* STYLE_README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = STYLE_README.md; path = ../../../Mapbox/STYLE_README.md; sourceTree = "<group>"; };
 		0CC6EEFC25C3263400BFB153 /* ModelLayerIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelLayerIntegrationTests.swift; sourceTree = "<group>"; };
 		0CC6EEFD25C3263400BFB153 /* BackgroundLayerIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundLayerIntegrationTests.swift; sourceTree = "<group>"; };
 		0CC6EEFE25C3263400BFB153 /* CircleLayerIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleLayerIntegrationTests.swift; sourceTree = "<group>"; };
@@ -1126,13 +1125,14 @@
 		B506A59E25E023E90097ADB7 /* Bundle+MapboxMapsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle+MapboxMapsTests.swift"; sourceTree = "<group>"; };
 		B51DE62125D7032C00A80AC9 /* Comparable+Clamped.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Comparable+Clamped.swift"; sourceTree = "<group>"; };
 		B51DE64725D7038300A80AC9 /* Comparable+ClampedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Comparable+ClampedTests.swift"; sourceTree = "<group>"; };
+		B52050A7260538240003E5BB /* ModelLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelLayer.swift; sourceTree = "<group>"; };
 		B53A685D25E033AF008CB2AF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/OrnamentsLocalizable.strings; sourceTree = "<group>"; };
 		B54B7F0925DB192C003FD6CA /* MockCameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCameraManager.swift; sourceTree = "<group>"; };
 		B54B7F1F25DB1ABA003FD6CA /* Stub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stub.swift; sourceTree = "<group>"; };
 		C64994A5258D5ADD0052C21C /* LocationPuckManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationPuckManager.swift; sourceTree = "<group>"; };
 		C64994A6258D5ADE0052C21C /* Puck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Puck.swift; sourceTree = "<group>"; };
 		C64994A7258D5ADE0052C21C /* IndicatorAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = IndicatorAssets.xcassets; sourceTree = "<group>"; };
-		C64994A8258D5ADE0052C21C /* PuckLocationIndicatorLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PuckLocationIndicatorLayer.swift; sourceTree = "<group>"; };
+		C64994A8258D5ADE0052C21C /* Puck2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Puck2D.swift; sourceTree = "<group>"; };
 		C64B6FE925E0479000C8E07E /* Bundle+MapboxMaps.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle+MapboxMaps.swift"; sourceTree = "<group>"; };
 		C64ED305253F7CF500ADADFB /* LocationSupportableMapViewMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSupportableMapViewMock.swift; sourceTree = "<group>"; };
 		C64ED320253F7E9100ADADFB /* LocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerTests.swift; sourceTree = "<group>"; };
@@ -1672,7 +1672,6 @@
 		0C708F1424EB1EE2003CE791 /* Layers */ = {
 			isa = PBXGroup;
 			children = (
-				0CA3DD5D257AAE3B00B12C8F /* ModelLayer.swift */,
 				0CA3DD5E257AAE3B00B12C8F /* SkyLayer.swift */,
 				0C708F1524EB1EE2003CE791 /* BackgroundLayer.swift */,
 				0C708F1624EB1EE2003CE791 /* FillExtrusionLayer.swift */,
@@ -1967,7 +1966,7 @@
 				C64ED305253F7CF500ADADFB /* LocationSupportableMapViewMock.swift */,
 				C64ED320253F7E9100ADADFB /* LocationManagerTests.swift */,
 				C64ED33B253F819B00ADADFB /* LocationConsumerMock.swift */,
-				0C2CDA2D25D1A51C006D068F /* LocationPuckTests.swift */,
+				0C2CDA2D25D1A51C006D068F /* PuckTypeTests.swift */,
 			);
 			name = MapboxMapsLocationTests;
 			path = ../Tests/MapboxMapsTests/Location;
@@ -2015,12 +2014,13 @@
 				0C5501042476D83A00AE019A /* Generated */,
 				A4519DCF2432FF03007CF39A /* MapboxMapsStyle.h */,
 				A4519DD02432FF03007CF39A /* Info.plist */,
+				B52050A7260538240003E5BB /* ModelLayer.swift */,
 				0CE8ED6025890F870066E56C /* ModelSource.swift */,
 				A4519DE42432FF14007CF39A /* Style.swift */,
 				A4519DE624330083007CF39A /* StyleURL.swift */,
 				0C708F3324EB1EFA003CE791 /* Layers.swift */,
 				0C708F5824EB2927003CE791 /* Sources.swift */,
-				0CBCF2D7254229630025F7B3 /* README.md */,
+				0CBCF2D7254229630025F7B3 /* STYLE_README.md */,
 				0C3574EE25DD8D5C0085D775 /* StyleErrors.swift */,
 			);
 			name = MapboxMapsStyle;
@@ -2068,8 +2068,8 @@
 				C64994A7258D5ADE0052C21C /* IndicatorAssets.xcassets */,
 				C64994A5258D5ADD0052C21C /* LocationPuckManager.swift */,
 				C64994A6258D5ADE0052C21C /* Puck.swift */,
-				C64994A8258D5ADE0052C21C /* PuckLocationIndicatorLayer.swift */,
-				0C31F7A925AF87AB00DCFB28 /* PuckModelLayer.swift */,
+				C64994A8258D5ADE0052C21C /* Puck2D.swift */,
+				0C31F7A925AF87AB00DCFB28 /* Puck3D.swift */,
 			);
 			path = Pucks;
 			sourceTree = "<group>";
@@ -3523,8 +3523,7 @@
 				0CE8ED6125890F870066E56C /* ModelSource.swift in Sources */,
 				C64994A9258D5ADE0052C21C /* LocationPuckManager.swift in Sources */,
 				5A35924524644C5E00E67344 /* CompassDirectionFormatter.swift in Sources */,
-				0CA3DD5F257AAE3B00B12C8F /* ModelLayer.swift in Sources */,
-				0C31F7AA25AF87AB00DCFB28 /* PuckModelLayer.swift in Sources */,
+				0C31F7AA25AF87AB00DCFB28 /* Puck3D.swift in Sources */,
 				07D7150425798CD70025BF61 /* UIImage.swift in Sources */,
 				0C708F2324EB1EE2003CE791 /* SymbolLayer.swift in Sources */,
 				C64994AB258D5ADE0052C21C /* Puck.swift in Sources */,
@@ -3545,7 +3544,7 @@
 				0CC9937E25D46B7100650CC1 /* RenderOptions.swift in Sources */,
 				0C3B1E9024DDADD000CC29E8 /* EventsManager.swift in Sources */,
 				0C708F4B24EB23C7003CE791 /* ImageSource.swift in Sources */,
-				C64994AF258D5ADE0052C21C /* PuckLocationIndicatorLayer.swift in Sources */,
+				C64994AF258D5ADE0052C21C /* Puck2D.swift in Sources */,
 				07A8A3D1251C4CA6004281CF /* Annotation.swift in Sources */,
 				0782B04C258C14FC00D5FCE5 /* Int.swift in Sources */,
 				0C708F5924EB2927003CE791 /* Sources.swift in Sources */,
@@ -3625,6 +3624,7 @@
 				0706C49225B1128A008733C0 /* Terrain.swift in Sources */,
 				0C88F22624F04D1600FC35F3 /* ExpressionBuilder.swift in Sources */,
 				1FECC9E02474519D00B63910 /* Expression.swift in Sources */,
+				B52050A8260538240003E5BB /* ModelLayer.swift in Sources */,
 				0CD62F1124588532006421D1 /* GestureHandlerDelegate.swift in Sources */,
 				07D71591257994430025BF61 /* MapboxLogoView.swift in Sources */,
 				0782B061258C16B200D5FCE5 /* Utils.swift in Sources */,
@@ -3671,7 +3671,7 @@
 				0C5CFCE725BB951B0001E753 /* LineLayerTests.swift in Sources */,
 				0CC6EF2225C3263400BFB153 /* SkyLayerIntegrationTests.swift in Sources */,
 				CA548F24251C3D7200F829A3 /* PitchGestureHandlerTests.swift in Sources */,
-				0C2CDA2E25D1A51C006D068F /* LocationPuckTests.swift in Sources */,
+				0C2CDA2E25D1A51C006D068F /* PuckTypeTests.swift in Sources */,
 				CAC1964325AEAFD500F69FEA /* GlyphsRasterizationOptionsTests.swift in Sources */,
 				0C5CFDAE25BE28D20001E753 /* Fixtures.swift in Sources */,
 				C69F011225431AF4001AB49B /* LocationManagerIntegrationTests.swift in Sources */,
@@ -3863,7 +3863,7 @@
 			files = (
 				1FF65A77244F77070069B561 /* LocationProviderDelegate.swift in Sources */,
 				1FF65A68244E34000069B561 /* LocationManager.swift in Sources */,
-				C64994B0258D5ADE0052C21C /* PuckLocationIndicatorLayer.swift in Sources */,
+				C64994B0258D5ADE0052C21C /* Puck2D.swift in Sources */,
 				C64994AC258D5ADE0052C21C /* Puck.swift in Sources */,
 				C64994AA258D5ADE0052C21C /* LocationPuckManager.swift in Sources */,
 				1FF65A79244F78540069B561 /* AppleLocationProvider.swift in Sources */,
@@ -3872,7 +3872,7 @@
 				1FF65A6E244E53F50069B561 /* LocationPermissionsDelegate.swift in Sources */,
 				1FF65A87245354E30069B561 /* LocationOptions.swift in Sources */,
 				1FF65A75244F6E320069B561 /* LocationProvider.swift in Sources */,
-				0C31F7AB25AF87AB00DCFB28 /* PuckModelLayer.swift in Sources */,
+				0C31F7AB25AF87AB00DCFB28 /* Puck3D.swift in Sources */,
 				0CECCCCE253491A80000FC64 /* LocationSupportableMapView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3884,7 +3884,7 @@
 				B506A5A525E023E90097ADB7 /* Bundle+MapboxMapsTests.swift in Sources */,
 				C64ED323253F7E9100ADADFB /* LocationManagerTests.swift in Sources */,
 				B54B7F2525DB1ABA003FD6CA /* Stub.swift in Sources */,
-				0C2CDA3025D1A51C006D068F /* LocationPuckTests.swift in Sources */,
+				0C2CDA3025D1A51C006D068F /* PuckTypeTests.swift in Sources */,
 				C69F017625435C55001AB49B /* LocationProviderMock.swift in Sources */,
 				C64ED33E253F819B00ADADFB /* LocationConsumerMock.swift in Sources */,
 				C64ED308253F7CF500ADADFB /* LocationSupportableMapViewMock.swift in Sources */,
@@ -3896,6 +3896,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C55010C2476D83A00AE019A /* Light.swift in Sources */,
+				B52050A9260538240003E5BB /* ModelLayer.swift in Sources */,
 				0C708F5424EB23C7003CE791 /* RasterSource.swift in Sources */,
 				A4519DE724330083007CF39A /* StyleURL.swift in Sources */,
 				0C708F3524EB1EFA003CE791 /* Layers.swift in Sources */,
@@ -3924,7 +3925,6 @@
 				B5F38B3525E071B200F46B08 /* Bundle+MapboxMaps.swift in Sources */,
 				0C708F2C24EB1EE2003CE791 /* FillLayer.swift in Sources */,
 				0CE8ED6225890F870066E56C /* ModelSource.swift in Sources */,
-				0CA3DD60257AAE3B00B12C8F /* ModelLayer.swift in Sources */,
 				0C708F5224EB23C7003CE791 /* GeojsonSource.swift in Sources */,
 				0C708F2424EB1EE2003CE791 /* SymbolLayer.swift in Sources */,
 				0C708F5724EB24B1003CE791 /* SourceProperties.swift in Sources */,
@@ -4047,7 +4047,7 @@
 				CA548FE8251C404B00F829A3 /* OrnamentSupportableViewMock.swift in Sources */,
 				C64ED322253F7E9100ADADFB /* LocationManagerTests.swift in Sources */,
 				CA9481572554AA9E00D93C3C /* TestConveniences.swift in Sources */,
-				0C2CDA2F25D1A51C006D068F /* LocationPuckTests.swift in Sources */,
+				0C2CDA2F25D1A51C006D068F /* PuckTypeTests.swift in Sources */,
 				CA548FE9251C404B00F829A3 /* GeometryCollectionTests.swift in Sources */,
 				0C5CFCD925BB951B0001E753 /* CircleLayerTests.swift in Sources */,
 				0C5CFCE525BB951B0001E753 /* HeatmapLayerTests.swift in Sources */,

@@ -24,8 +24,8 @@ public struct LocationOptions: Equatable {
     /// Sets if the location manager should show the user location on screen or not
     public var showUserLocation: Bool = false
 
-    /// Sets the type of backend that should be used for the PuckView
-    public var locationPuck: LocationPuck = .puck2D()
+    /// Sets the type of puck that should be used
+    public var puckType: PuckType = .puck2D()
 
     public init() {}
 

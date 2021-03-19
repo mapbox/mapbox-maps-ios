@@ -15,7 +15,7 @@ public class LocationManager: NSObject {
     /// Represents the style of the user location puck
     internal var currentPuckStyle: PuckStyle = .precise {
         didSet {
-            locationPuckManager?.changePuckStyle(newPuckStyle: currentPuckStyle)
+            locationPuckManager?.changePuckStyle(to: currentPuckStyle)
         }
     }
 
@@ -103,9 +103,9 @@ public class LocationManager: NSObject {
             }
         }
 
-        if newOptions.locationPuck != locationOptions.locationPuck {
+        if newOptions.puckType != locationOptions.puckType {
             if let locationPuckManager = self.locationPuckManager {
-                locationPuckManager.changePuckBackend(newPuckBackend: newOptions.locationPuck)
+                locationPuckManager.changePuckType(to: newOptions.puckType)
             }
         }
     }
@@ -215,12 +215,11 @@ private extension LocationManager {
 
             if let locationPuckManager = self.locationPuckManager {
                 // This serves as a reset and handles the case if permissions were changed for accuracy
-                locationPuckManager.changePuckStyle(newPuckStyle: currentPuckStyle)
+                locationPuckManager.changePuckStyle(to: currentPuckStyle)
             } else {
-                let locationPuckManager = LocationPuckManager(shouldTrackLocation: true,
-                                                              locationSupportableMapView: locationSupportableMapView,
-                                                              currentPuckSource: locationOptions.locationPuck)
-
+                let locationPuckManager = LocationPuckManager(
+                    locationSupportableMapView: locationSupportableMapView,
+                    puckType: locationOptions.puckType)
                 consumers.add(locationPuckManager)
                 self.locationPuckManager = locationPuckManager
             }
@@ -229,7 +228,8 @@ private extension LocationManager {
             locationProvider.stopUpdatingHeading()
 
             if let locationPuckManager = self.locationPuckManager {
-                locationPuckManager.removePuck()
+                consumers.remove(locationPuckManager)
+                self.locationPuckManager = nil
             }
         }
     }

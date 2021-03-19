@@ -17,7 +17,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        cameraLocationConsumer = CameraLocationConsumer(shouldTrackLocation: true, mapView: mapView)
+        cameraLocationConsumer = CameraLocationConsumer(mapView: mapView)
 
         // Add user position icon to the map with location indicator layer
         mapView.update { (mapOptions) in
@@ -42,12 +42,9 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
 
 // Create class which conforms to LocationConsumer, update the camera's centerCoordinate when a locationUpdate is received
 public class CameraLocationConsumer: LocationConsumer {
-    public var shouldTrackLocation: Bool
-
     weak var mapView: MapView?
 
-    init(shouldTrackLocation: Bool, mapView: MapView) {
-        self.shouldTrackLocation = shouldTrackLocation
+    init(mapView: MapView) {
         self.mapView = mapView
     }
 

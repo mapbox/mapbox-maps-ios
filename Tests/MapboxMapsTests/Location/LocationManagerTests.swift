@@ -16,7 +16,7 @@ internal class LocationManagerTests: XCTestCase {
     override func setUp() {
         locationSupportableMapMock = LocationSupportableMapViewMock()
         locationProviderOptionsMock = LocationOptions()
-        locationConsumerMock = LocationConsumerMock(shouldTrackLocation: false)
+        locationConsumerMock = LocationConsumerMock()
         super.setUp()
     }
 

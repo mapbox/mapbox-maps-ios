@@ -21,7 +21,7 @@ internal enum PuckStyle {
 /// This enum represents the different types of pucks
 public enum PuckType: Equatable {
     /// A 2-dimensional puck. Optionally provide `Puck2DConfiguration` to configure the puck's appearance.
-    case puck2D(Puck2DConfiguration? = nil)
+    case puck2D(Puck2DConfiguration = Puck2DConfiguration())
 
     /// A 3-dimensional puck. Provide a `Puck3DConfiguration` to configure the puck's appearance.
     case puck3D(Puck3DConfiguration)

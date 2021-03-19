@@ -24,11 +24,26 @@ public struct Puck2DConfiguration: Equatable {
     /// The size of the images, as a scale factor applied to the size of the specified image.
     public var scale: Value<Double>?
 
-    public init(topImage: UIImage? = nil, bearingImage: UIImage? = nil, shadowImage: UIImage? = nil, scale: Value<Double>? = nil) {
+    public init(topImage: UIImage? = nil,
+                bearingImage: UIImage? = nil,
+                shadowImage: UIImage? = nil,
+                scale: Value<Double>? = nil) {
         self.topImage = topImage
         self.bearingImage = bearingImage
         self.shadowImage = shadowImage
         self.scale = scale
+    }
+
+    internal var resolvedTopImage: UIImage? {
+        topImage ?? UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)
+    }
+
+    internal var resolvedBearingImage: UIImage? {
+        bearingImage ?? UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)
+    }
+
+    internal var resolvedScale: Value<Double> {
+        scale ?? .constant(1.0)
     }
 }
 
@@ -36,7 +51,7 @@ internal class Puck2D: Puck {
 
     // MARK: Properties
     internal var locationIndicatorLayer: LocationIndicatorLayer?
-    internal var configuration: Puck2DConfiguration?
+    internal var configuration: Puck2DConfiguration
 
     // MARK: Protocol Properties
     internal var puckStyle: PuckStyle
@@ -44,7 +59,7 @@ internal class Puck2D: Puck {
     internal weak var locationSupportableMapView: LocationSupportableMapView?
 
     // MARK: Initializers
-    internal init(puckStyle: PuckStyle, locationSupportableMapView: LocationSupportableMapView, configuration: Puck2DConfiguration?) {
+    internal init(puckStyle: PuckStyle, locationSupportableMapView: LocationSupportableMapView, configuration: Puck2DConfiguration) {
         self.puckStyle = puckStyle
         self.locationSupportableMapView = locationSupportableMapView
         self.configuration = configuration
@@ -139,45 +154,19 @@ private extension Puck2D {
         // Call customizationHandler to allow developers to granularly modify the layer
 
         // Add images to sprite sheet
-        if let validTopImage = configuration?.topImage {
-            let setStyleImageResult = style.setStyleImage(image: validTopImage, with: "locationIndicatorLayerTopImage", scale: 44.0)
-
-            if case .failure(let imageError) = setStyleImageResult {
-                throw imageError
-            }
-        } else {
-            // Add images to sprite sheet
-            guard let locationDotInner = UIImage(named: "location-dot-inner",
-                                                 in: .mapboxMaps,
-                                                 compatibleWith: nil) else { return }
-            let setStyleImageResult = style.setStyleImage(image: locationDotInner, with: "locationIndicatorLayerTopImage", scale: 44.0)
-
-            if case .failure(let imageError) = setStyleImageResult {
-                throw imageError
-            }
+        guard let topImage = configuration.resolvedTopImage, let bearingImage = configuration.resolvedBearingImage else {
+            return
+        }
+        if case let .failure(imageError) = style.setStyleImage(image: topImage, with: "locationIndicatorLayerTopImage", scale: 44.0) {
+            throw imageError
+        }
+        if case let .failure(imageError) = style.setStyleImage(image: bearingImage, with: "locationIndicatorLayerBearingImage", scale: 44.0) {
+            throw imageError
         }
 
-        if let validBearingImage = configuration?.bearingImage {
-            let setStyleImageResult = style.setStyleImage(image: validBearingImage, with: "locationIndicatorLayerBearingImage", scale: 44.0)
-
-            if case .failure(let imageError) = setStyleImageResult {
-                throw imageError
-            }
-        } else {
-            guard let locationDotOuter = UIImage(named: "location-dot-outer",
-                                                 in: .mapboxMaps,
-                                                 compatibleWith: nil) else { return }
-            let setStyleImageResult = style.setStyleImage(image: locationDotOuter, with: "locationIndicatorLayerBearingImage", scale: 44.0)
-
-            if case .failure(let imageError) = setStyleImageResult {
-                throw imageError
-            }
-        }
-
-        if let validShadowImage = configuration?.shadowImage {
+        if let validShadowImage = configuration.shadowImage {
             let setStyleImageResultInner = style.setStyleImage(image: validShadowImage, with: "locationIndicatorLayerShadowImage", scale: 44.0)
-
-            if case .failure(let imageError) = setStyleImageResultInner {
+            if case let .failure(imageError) = setStyleImageResultInner {
                 throw imageError
             }
         }
@@ -200,9 +189,9 @@ private extension Puck2D {
             location.internalLocation.altitude
         ])
         paint.locationTransition = StyleTransition(duration: 0, delay: 0)
-        paint.topImageSize = configuration?.scale ?? .constant(1.0)
-        paint.bearingImageSize = configuration?.scale ?? .constant(1.0)
-        paint.shadowImageSize = configuration?.scale ?? .constant(1.0)
+        paint.topImageSize = configuration.resolvedScale
+        paint.bearingImageSize = configuration.resolvedScale
+        paint.shadowImageSize = configuration.resolvedScale
         paint.accuracyRadius = .constant(location.horizontalAccuracy)
 
         paint.emphasisCircleRadiusTransition = StyleTransition(duration: 0, delay: 0)

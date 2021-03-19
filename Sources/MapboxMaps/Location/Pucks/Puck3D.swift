@@ -53,6 +53,10 @@ internal class Puck3D: Puck {
         setup()
     }
 
+    deinit {
+        removePuck()
+    }
+
     internal func setup() {
 
         modelLayer.source = "puck-model-source"

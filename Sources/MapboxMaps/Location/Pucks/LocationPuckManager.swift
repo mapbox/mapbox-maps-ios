@@ -53,10 +53,6 @@ internal class LocationPuckManager: LocationConsumer {
         self.locationSupportableMapView = locationSupportableMapView
     }
 
-    deinit {
-        puck?.removePuck()
-    }
-
     /// LocationConsumer protocol method that will handle location updates
     internal func locationUpdate(newLocation: Location) {
         if let puck = self.puck {

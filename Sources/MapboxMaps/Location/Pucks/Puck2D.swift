@@ -65,6 +65,10 @@ internal class Puck2D: Puck {
         self.configuration = configuration
     }
 
+    deinit {
+        removePuck()
+    }
+
     // MARK: Protocol Implementation
     internal func updateLocation(location: Location) {
         if let locationIndicatorLayer = self.locationIndicatorLayer,

@@ -69,7 +69,7 @@ workflows:
       - binary-size:
           requires:
             - build-sdk
-      - build-metrics:
+      - trigger-metrics-build:
           requires:
             - build-sdk
       - metrics:
@@ -258,7 +258,7 @@ jobs:
               echo "MOBILE_METRICS_TOKEN not provided"
             fi
 
-  build-metrics:
+  trigger-metrics-build:
     <<: *base-job
     steps:
       - run:

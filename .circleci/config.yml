@@ -69,6 +69,9 @@ workflows:
       - binary-size:
           requires:
             - build-sdk
+      - build-metrics:
+          requires:
+            - build-sdk
       - metrics:
           requires:
             - build-sdk
@@ -251,6 +254,18 @@ jobs:
               else
                 curl -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\",\"SOURCE_COMPARE_BASELINE\":\"YES\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${MOBILE_METRICS_TOKEN}
               fi
+            else
+              echo "MOBILE_METRICS_TOKEN not provided"
+            fi
+
+  build-metrics:
+    <<: *base-job
+    steps:
+      - run:
+          name: Build metrics tests
+          command: |
+            if [ -n "${MOBILE_METRICS_TOKEN}" ]; then
+                curl -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/jrex/bump-for-breaking-changes?circle-token=${MOBILE_METRICS_TOKEN}
             else
               echo "MOBILE_METRICS_TOKEN not provided"
             fi

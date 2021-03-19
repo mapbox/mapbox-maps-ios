@@ -41,13 +41,13 @@ internal class LocationPuckManager: LocationConsumer {
     private var puck: Puck?
 
     /// MapView that supports location events
-    internal weak var locationSupportableMapView: LocationSupportableMapView?
+    internal private(set) weak var locationSupportableMapView: LocationSupportableMapView?
 
     /// The current  puck style
-    internal var puckStyle: PuckStyle
+    internal private(set) var puckStyle: PuckStyle
 
     /// The current puck type
-    internal var puckType: PuckType
+    internal private(set) var puckType: PuckType
 
     internal init(shouldTrackLocation: Bool,
                   locationSupportableMapView: LocationSupportableMapView,

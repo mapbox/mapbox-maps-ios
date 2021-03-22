@@ -25,6 +25,12 @@ public class CameraAnimator: NSObject {
     /// Boolean that represents if the animation is running normally or in reverse.
     public var isReversed: Bool { return propertyAnimator.isReversed }
 
+    /// A Boolean value that indicates whether a completed animation remains in the active state.
+    public var pausesOnCompletion: Bool {
+        get { return propertyAnimator.pausesOnCompletion}
+        set { propertyAnimator.pausesOnCompletion = newValue }
+    }
+
     /// Value that represents what percentage of the animation has been completed.
     public var fractionComplete: CGFloat {
         get { return propertyAnimator.fractionComplete }

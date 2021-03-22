@@ -66,7 +66,7 @@ workflows:
               configuration: ["Debug", "Release"]
       - build-debug-app:
           xcode: "12.4.0"
-      - binary-size:
+      - trigger-binary-size:
           requires:
             - build-sdk
       - trigger-metrics-build:
@@ -242,7 +242,7 @@ jobs:
           report_failure: << parameters.report_failure >>
           message: "build-debug-app"
 
-  binary-size:
+  trigger-binary-size:
     <<: *base-job
     steps:
       - run:
@@ -250,9 +250,9 @@ jobs:
           command: |
             if [ -n "${MOBILE_METRICS_TOKEN}" ]; then
               if [[ $CIRCLE_BRANCH == main ]]; then
-                curl -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${MOBILE_METRICS_TOKEN}
+                curl -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/jrex/bump-for-breaking-changes?circle-token=${MOBILE_METRICS_TOKEN}
               else
-                curl -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\",\"SOURCE_COMPARE_BASELINE\":\"YES\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${MOBILE_METRICS_TOKEN}
+                curl -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-binary-size\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\",\"SOURCE_COMPARE_BASELINE\":\"YES\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/jrex/bump-for-breaking-changes?circle-token=${MOBILE_METRICS_TOKEN}
               fi
             else
               echo "MOBILE_METRICS_TOKEN not provided"
@@ -274,7 +274,7 @@ jobs:
     <<: *base-job
     steps:
       - run:
-          # TODO: main by default, other branches on demand
+          # TODO: main by default (this is set as a filter), other commits on-demand
           name: Trigger metrics
           command: |
             if [ -n "${MOBILE_METRICS_TOKEN}" ]; then

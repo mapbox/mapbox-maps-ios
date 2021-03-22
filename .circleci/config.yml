@@ -72,12 +72,12 @@ workflows:
       - trigger-metrics-build:
           requires:
             - build-sdk
-      - metrics:
+      - trigger-metrics-collection:
           requires:
             - build-sdk
-          filters:
-            branches:
-              only: main
+          # filters:
+          #   branches:
+          #     only: main
       - unit-test-sdk:
           name: "Run Unit tests"
           xcode: "12.4.0"
@@ -265,23 +265,20 @@ jobs:
           name: Build metrics tests
           command: |
             if [ -n "${MOBILE_METRICS_TOKEN}" ]; then
-                curl -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/jrex/bump-for-breaking-changes?circle-token=${MOBILE_METRICS_TOKEN}
+              curl -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/jrex/bump-for-breaking-changes?circle-token=${MOBILE_METRICS_TOKEN}
             else
               echo "MOBILE_METRICS_TOKEN not provided"
             fi
 
-  metrics:
+  trigger-metrics-collection:
     <<: *base-job
     steps:
       - run:
+          # TODO: main by default, other branches on demand
           name: Trigger metrics
           command: |
             if [ -n "${MOBILE_METRICS_TOKEN}" ]; then
-              if [[ $CIRCLE_BRANCH == main ]]; then
-                curl -X POST --header "Content-Type: application/json" --data "{\"parameters\":{\"run_ios_maps_v10_benchmark\":true,\"ci_ref\":${CIRCLE_BUILD_NUM}},\"branch\":\"master\"}" https://circleci.com/api/v2/project/github/mapbox/mobile-metrics/pipeline?circle-token=${MOBILE_METRICS_TOKEN}
-              else
-                echo "TODO: Triggering metrics from other branches"
-              fi
+              curl -X POST --header "Content-Type: application/json" --data "{\"parameters\":{\"run_ios_maps_v10_benchmark\":true,\"ci_ref\":${CIRCLE_BUILD_NUM},\"mapbox_hash":\"${CIRCLE_SHA1}\"},\"branch\":\"jrex/bump-for-breaking-changes\"}" https://circleci.com/api/v2/project/github/mapbox/mobile-metrics/pipeline?circle-token=${MOBILE_METRICS_TOKEN}
             else
               echo "MOBILE_METRICS_TOKEN not provided"
             fi

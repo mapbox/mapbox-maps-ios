@@ -247,10 +247,20 @@ public class CameraManager {
      */
     fileprivate func performCameraAnimation(animated: Bool, duration: TimeInterval, animation: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
         if animated {
-            let animator = UIViewPropertyAnimator(duration: duration, curve: .easeOut) {
-                animation()
+            let animator = makeRunningCameraAnimator(duration: duration,
+                                                     delay: 0,
+                                                     options: [.allowUserInteraction, .curveEaseOut],
+                                                     animationOwner: .unspecified,
+                                                     animations: animation) { (position) in
+                // Think about how we're calling completion.
+                /*
+                 Where is this method being called and why?
+                 Should method accept position and duration?
+                 Animator will immediately fall out of scope, this won't execute. Should hold reference to animator.
+                 */
+                completion(true)
             }
-            animator.startAnimation()
+            //
         } else {
             animation()
             completion?(true)
@@ -784,7 +794,7 @@ extension CameraManager: CameraAnimatorDelegate {
      - Parameter completion: Completion block to be passed through for when an animation is stopped
      - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
      */
-    public func runningCameraAnimator(duration: TimeInterval,
+    public func makeRunningCameraAnimator(duration: TimeInterval,
                                       delay: TimeInterval,
                                       options: UIView.AnimationOptions = [],
                                       animationOwner: AnimationOwner = .unspecified,

@@ -44,7 +44,7 @@ class MapboxAnimationGroupTests: XCTestCase, CAAnimationDelegate {
         weak var weakAnimation: MapboxAnimationGroup?
         autoreleasepool {
             let animationExpectation = self.expectation(description: "Animation should be nil")
-            cameraManager.fly(to: newCamera) {_ in
+            _ = cameraManager.flyTo(to: newCamera) {_ in
                 animationExpectation.fulfill()
             }
 

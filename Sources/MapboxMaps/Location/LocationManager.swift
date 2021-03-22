@@ -89,6 +89,7 @@ public class LocationManager: NSObject {
         guard newOptions != locationOptions else { return }
 
         // Update the location options
+        let previousOptions = locationOptions
         locationOptions = newOptions
         locationProvider.locationProviderOptions = newOptions
 
@@ -103,7 +104,7 @@ public class LocationManager: NSObject {
             }
         }
 
-        if newOptions.puckType != locationOptions.puckType {
+        if newOptions.puckType != previousOptions?.puckType {
             if let locationPuckManager = self.locationPuckManager {
                 locationPuckManager.changePuckType(to: newOptions.puckType)
             }

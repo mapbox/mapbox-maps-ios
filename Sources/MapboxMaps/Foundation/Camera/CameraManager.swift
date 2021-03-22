@@ -232,8 +232,8 @@ public class CameraManager {
 
     public func cancelTransitions() {
         transitionState = .canceled
-        if let mapView = mapView {
-            mapView.cameraView.layer.removeAllAnimations()
+        for animator in cameraAnimators.allObjects {
+            animator.stopAnimation()
         }
     }
 
@@ -247,11 +247,10 @@ public class CameraManager {
      */
     fileprivate func performCameraAnimation(animated: Bool, duration: TimeInterval, animation: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
         if animated {
-            UIView.animate(withDuration: duration,
-                           delay: 0,
-                           options: [.curveEaseOut, .allowUserInteraction],
-                           animations: animation,
-                           completion: completion)
+            let animator = UIViewPropertyAnimator(duration: duration, curve: .easeOut) {
+                animation()
+            }
+            animator.startAnimation()
         } else {
             animation()
             completion?(true)

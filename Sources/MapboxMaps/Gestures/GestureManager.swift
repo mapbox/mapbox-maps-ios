@@ -112,6 +112,8 @@ internal protocol CameraManagerProtocol: AnyObject {
 
     var mapView: BaseMapView? { get }
 
+    var cameraAnimators : NSHashTable<CameraAnimator> { get set }
+
     var mapCameraOptions: MapCameraOptions { get }
 
     func setCamera(to camera: CameraOptions,
@@ -324,6 +326,7 @@ extension GestureManager: GestureHandlerDelegate {
     }
 
     internal func gestureBegan(for gestureType: GestureType) {
+
         cameraManager.cancelTransitions()
         delegate?.gestureBegan(for: gestureType)
     }

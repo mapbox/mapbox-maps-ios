@@ -245,22 +245,20 @@ public class CameraManager {
         - animation: closure to perform
         - completion: animation block called on completion
      */
-    fileprivate func performCameraAnimation(animated: Bool, duration: TimeInterval, animation: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
+    fileprivate func performCameraAnimation(animated: Bool, duration: TimeInterval, animation: @escaping () -> Void, allowUserInteraction: Bool = true, completion: ((Bool) -> Void)? = nil) {
         if animated {
-            animator = makeRunningCameraAnimator(duration: duration,
+            var options: UIView.AnimationOptions = [.curveEaseOut]
+            if allowUserInteraction {
+                options = [.curveEaseOut, .allowUserInteraction]
+            }
+
+            let animator = makeRunningCameraAnimator(duration: duration,
                                                      delay: 0,
-                                                     options: [.allowUserInteraction, .curveEaseOut],
+                                                     options: options,
                                                      animationOwner: .unspecified,
                                                      animations: animation) { (position) in
-                // Think about how we're calling completion.
-                /*
-                 Where is this method being called and why?
-                 Should method accept position and duration?
-                 Animator will immediately fall out of scope, this won't execute. Should hold reference to animator. -> where?
-                 */
                 completion?(true)
             }
-            //
         } else {
             animation()
             completion?(true)

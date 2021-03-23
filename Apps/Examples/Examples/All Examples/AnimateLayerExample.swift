@@ -73,7 +73,7 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
         var lineLayer = LineLayer(id: "line-layer")
         lineLayer.source = airplaneRoute.identifier
         lineLayer.paint?.lineColor = .constant(ColorRepresentable(color: UIColor.red))
-        lineLayer.paint?.lineWidth = .constant(3.0)
+        lineLayer.paint?.lineWidth = 3.0
         lineLayer.layout?.lineCap = .constant(.round)
 
         // Define the source data and style layer for the airplane symbol.
@@ -84,8 +84,8 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
         // "airport-15" is the name the image that belongs in the style's sprite by default.
         airplaneSymbolLayer.layout?.iconImage = .constant(.name("airport-15"))
         airplaneSymbolLayer.layout?.iconRotationAlignment = .constant(.map)
-        airplaneSymbolLayer.layout?.iconAllowOverlap = .constant(true)
-        airplaneSymbolLayer.layout?.iconIgnorePlacement = .constant(true)
+        airplaneSymbolLayer.layout?.iconAllowOverlap = true
+        airplaneSymbolLayer.layout?.iconIgnorePlacement = true
         // Get the "bearing" property from the point's feature dictionary,
         // and use that value to determine the rotation angle of the airplane icon.
         airplaneSymbolLayer.layout?.iconRotate = .expression(Exp(.get) {

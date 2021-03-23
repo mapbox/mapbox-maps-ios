@@ -58,7 +58,7 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
         var skyLayer = SkyLayer(id: "sky-layer")
         skyLayer.paint?.skyType = .constant(.atmosphere)
         skyLayer.paint?.skyAtmosphereSun = .constant([0, 0])
-        skyLayer.paint?.skyAtmosphereSunIntensity = .constant(15.0)
+        skyLayer.paint?.skyAtmosphereSunIntensity = 15.0
 
         _ = self.mapView.style.addLayer(layer: skyLayer)
 

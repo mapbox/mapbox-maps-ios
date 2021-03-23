@@ -35,5 +35,36 @@ public enum Value<T: Codable>: Codable {
 }
 
 extension Value: Equatable where T: Equatable {
+}
 
+extension Value: ExpressibleByFloatLiteral where T == FloatLiteralType {
+    public init(floatLiteral value: FloatLiteralType) {
+        self = .constant(value)
+    }
+}
+
+extension Value: ExpressibleByStringLiteral, ExpressibleByExtendedGraphemeClusterLiteral, ExpressibleByUnicodeScalarLiteral where T == StringLiteralType {
+    public init(stringLiteral value: StringLiteralType) {
+        self = .constant(value)
+    }
+
+    public init(extendedGraphemeClusterLiteral value: StringLiteralType) {
+        self = .constant(String(value))
+    }
+
+    public init(unicodeScalarLiteral value: StringLiteralType) {
+        self = .constant(String(value))
+    }
+}
+
+extension Value: ExpressibleByIntegerLiteral where T == IntegerLiteralType {
+    public init(integerLiteral value: IntegerLiteralType) {
+        self = .constant(value)
+    }
+}
+
+extension Value: ExpressibleByBooleanLiteral where T == BooleanLiteralType {
+    public init(booleanLiteral value: BooleanLiteralType) {
+        self = .constant(value)
+    }
 }

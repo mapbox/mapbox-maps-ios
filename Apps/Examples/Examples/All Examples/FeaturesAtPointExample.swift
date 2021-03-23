@@ -47,7 +47,7 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
 
         // Apply basic styling to the fill layer.
         fillLayer.paint?.fillColor = .constant(ColorRepresentable(color: UIColor.blue))
-        fillLayer.paint?.fillOpacity = .constant(0.3)
+        fillLayer.paint?.fillOpacity = 0.3
         fillLayer.paint?.fillOutlineColor = .constant(ColorRepresentable(color: UIColor.black))
 
         // Add the data source and style layer to the map.

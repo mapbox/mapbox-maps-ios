@@ -43,7 +43,7 @@ public struct Puck2DConfiguration: Equatable {
     }
 
     internal var resolvedScale: Value<Double> {
-        scale ?? .constant(1.0)
+        scale ?? 1.0
     }
 }
 

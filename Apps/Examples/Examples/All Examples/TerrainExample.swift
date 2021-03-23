@@ -41,14 +41,14 @@ public class TerrainExample: UIViewController, ExampleProtocol {
         _ = mapView.style.addSource(source: demSource, identifier: "mapbox-dem")
 
         var terrain = Terrain(sourceId: "mapbox-dem")
-        terrain.exaggeration = .constant(1.5)
+        terrain.exaggeration = 1.5
 
         _ = mapView.style.setTerrain(terrain)
 
         var skyLayer = SkyLayer(id: "sky-layer")
         skyLayer.paint?.skyType = .constant(.atmosphere)
         skyLayer.paint?.skyAtmosphereSun = .constant([0.0, 0.0])
-        skyLayer.paint?.skyAtmosphereSunIntensity = .constant(15.0)
+        skyLayer.paint?.skyAtmosphereSunIntensity = 15.0
 
         _ = mapView.style.addLayer(layer: skyLayer)
     }

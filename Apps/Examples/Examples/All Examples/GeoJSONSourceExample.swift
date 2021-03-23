@@ -68,8 +68,8 @@ public class GeoJSONSourceExample: UIViewController, ExampleProtocol {
         }
         circleLayer.source = geoJSONDataSourceIdentifier
         circleLayer.paint?.circleColor = .constant(ColorRepresentable(color: UIColor.yellow))
-        circleLayer.paint?.circleOpacity = .constant(0.6)
-        circleLayer.paint?.circleRadius = .constant(8.0)
+        circleLayer.paint?.circleOpacity = 0.6
+        circleLayer.paint?.circleRadius = 8.0
         // Follow the same steps to create a line layer
         var lineLayer = LineLayer(id: "line-layer")
         lineLayer.filter = Exp(.eq) {
@@ -78,7 +78,7 @@ public class GeoJSONSourceExample: UIViewController, ExampleProtocol {
         }
         lineLayer.source = geoJSONDataSourceIdentifier
         lineLayer.paint?.lineColor = .constant(ColorRepresentable(color: UIColor.red))
-        lineLayer.paint?.lineWidth = .constant(1.4)
+        lineLayer.paint?.lineWidth = 1.4
         // Follow the same steps to create a polygon (fill) layer
         var polygonLayer = FillLayer(id: "fill-layer")
         polygonLayer.filter = Exp(.eq) {
@@ -87,7 +87,7 @@ public class GeoJSONSourceExample: UIViewController, ExampleProtocol {
         }
         polygonLayer.source = geoJSONDataSourceIdentifier
         polygonLayer.paint?.fillColor = .constant(ColorRepresentable(color: UIColor.green))
-        polygonLayer.paint?.fillOpacity = .constant(0.3)
+        polygonLayer.paint?.fillOpacity = 0.3
         polygonLayer.paint?.fillOutlineColor = .constant(ColorRepresentable(color: UIColor.purple))
         // Add the source and style layers to the map style.
         _ = mapView.style.addSource(source: geoJSONSource, identifier: geoJSONDataSourceIdentifier)

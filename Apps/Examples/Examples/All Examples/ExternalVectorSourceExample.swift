@@ -40,8 +40,8 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         lineLayer.sourceLayer = "mapillary-sequences"
         let lineColor = ColorRepresentable(color: UIColor(red: 0.21, green: 0.69, blue: 0.43, alpha: 1.00))
         lineLayer.paint?.lineColor = .constant(lineColor)
-        lineLayer.paint?.lineOpacity = .constant(0.6)
-        lineLayer.paint?.lineWidth = .constant(2.0)
+        lineLayer.paint?.lineOpacity = 0.6
+        lineLayer.paint?.lineWidth = 2.0
         lineLayer.layout?.lineCap = .constant(.round)
 
         let addSourceResult = mapView.style.addSource(source: vectorSource, identifier: sourceIdentifier)

@@ -44,7 +44,7 @@ public class FitCameraToGeometryExample: UIViewController, ExampleProtocol {
         source.data = .feature(polygonFeature)
 
         var polygonLayer = FillLayer(id: "triangle-style")
-        polygonLayer.paint?.fillOpacity = .constant(0.5)
+        polygonLayer.paint?.fillOpacity = 0.5
         polygonLayer.paint?.fillColor = .constant(ColorRepresentable(color: .gray))
         polygonLayer.source = sourceIdentifier
 

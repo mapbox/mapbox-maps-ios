@@ -7,7 +7,7 @@ import UIKit
 
 internal extension Value where T == Double {
     static func testConstantValue() -> Value<Double> {
-        return .constant(1.0)
+        return 1.0
     }
 }
 
@@ -19,7 +19,7 @@ internal extension Value where T == [Double] {
 
 internal extension Value where T == String {
     static func testConstantValue() -> Value<String> {
-        return .constant("some string")
+        return "some string"
     }
 }
 
@@ -43,7 +43,7 @@ internal extension Value where T == ColorRepresentable {
 
 internal extension Value where T == Bool {
     static func testConstantValue() -> Value<Bool> {
-        return .constant(true)
+        return true
     }
 }
 

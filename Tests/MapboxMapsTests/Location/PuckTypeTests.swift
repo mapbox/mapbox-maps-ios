@@ -28,10 +28,10 @@ internal class PuckTypeTests: XCTestCase {
 
     func testPuck2DEqual() throws {
 
-        let config1 = Puck2DConfiguration(topImage: image, scale: .constant(10))
+        let config1 = Puck2DConfiguration(topImage: image, scale: 10)
         let puck1 = PuckType.puck2D(config1)
 
-        let config2 = Puck2DConfiguration(topImage: image, scale: .constant(10))
+        let config2 = Puck2DConfiguration(topImage: image, scale: 10)
         let puck2 = PuckType.puck2D(config2)
 
         XCTAssertEqual(puck1, puck2)
@@ -39,10 +39,10 @@ internal class PuckTypeTests: XCTestCase {
 
     func testPuck2DNotEqual() throws {
 
-        let config1 = Puck2DConfiguration(topImage: image, scale: .constant(12))
+        let config1 = Puck2DConfiguration(topImage: image, scale: 12)
         let puck1 = PuckType.puck2D(config1)
 
-        let config2 = Puck2DConfiguration(topImage: image, scale: .constant(10))
+        let config2 = Puck2DConfiguration(topImage: image, scale: 10)
         let puck2 = PuckType.puck2D(config2)
 
         XCTAssertNotEqual(puck1, puck2)

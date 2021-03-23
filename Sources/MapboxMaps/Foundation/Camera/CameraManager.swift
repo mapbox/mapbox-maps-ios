@@ -232,8 +232,12 @@ public class CameraManager {
 
     public func cancelTransitions() {
         transitionState = .canceled
+        // Both of these are empty when I print them
+        print(cameraAnimators.allObjects)
+        print(mapView?.pendingAnimatorCompletionBlocks)
+        mapView?.pendingAnimatorCompletionBlocks.removeAll()
         for animator in cameraAnimators.allObjects {
-            animator.stopAnimation()
+            removeAnimator(animator: animator)
         }
     }
 

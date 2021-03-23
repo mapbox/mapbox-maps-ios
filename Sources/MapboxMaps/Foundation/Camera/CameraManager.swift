@@ -525,142 +525,58 @@ public class CameraManager {
     /// the user find his or her bearings even after traversing a great distance.
     ///
     /// - Parameters:
-    ///   - camera: The camera at the end of the animation. Any camera parameters that are nil will not be animated.
+    ///   - camera: The camera options at the end of the animation. Any camera parameters that are nil will not be animated.
     ///   - duration: Duration of the animation, measured in seconds. If nil, a suitable calculated duration is used.
-    ///   - timingFunction: Timing function, defaults to "ease out"
     ///   - completion: Completion handler called when the animation stops
-    public func fly(to camera: CameraOptions, duration: TimeInterval? = nil, timingFunction: CAMediaTimingFunction = CAMediaTimingFunction(name: .easeOut), completion: ((Bool) -> Void)? = nil) {
+    public func flyTo(to camera: CameraOptions,
+                      duration: TimeInterval? = nil,
+                      completion: AnimationCompletion? = nil) -> CameraAnimator? {
+
         guard let mapView = mapView else {
-            assertionFailure("MapView is nil.")
-            completion?(false)
-            return
+            return nil
         }
 
-        guard let flyTo = FlyToInterpolator(from: mapView.cameraView.camera,
-                                            to: camera,
-                                            size: mapView.bounds.size) else {
-            completion?(false)
-            assertionFailure("FlyToInterpolator could not be created.")
-            return
+        guard let interpolator = FlyToInterpolator(from: mapView.camera,
+                                                   to: camera,
+                                                   size: mapView.bounds.size) else {
+            return nil
         }
 
-        var time = duration ?? -1.0
-
-        // If there was no duration specified, or a negative argument, use a default
-        if time < 0.0 {
-            time = flyTo.duration()
-        }
-
-        guard time > 0.0 else {
-            setCamera(to: camera, completion: completion)
-            return
-        }
+        // If there was no duration specified, use a default
+        let time: TimeInterval = duration ?? interpolator.duration()
 
         // TODO: Consider timesteps based on the flyTo curve, for example, it would be beneficial to have a higher
         // density of time steps at towards the start and end of the animation to avoid jiggling.
         let timeSteps = stride(from: 0.0, through: 1.0, by: 0.025)
-        let keyTimes: [NSNumber] = Array(timeSteps).map {
-            NSNumber(value: $0)
-        }
+        let keyTimes: [Double] = Array(timeSteps)
 
-        var animations: [CAAnimation] = []
+        let animator = makeCameraAnimator(duration: time, curve: .linear) {
 
-        if camera.zoom != nil {
-            let zoomLevels: [Double] = keyTimes.map { (number) -> Double in
-                return flyTo.zoom(at: number.doubleValue)
+            UIView.animateKeyframes(withDuration: 0, delay: 0, options: []) {
+
+                for keyTime in keyTimes {
+                    let interpolatedCoordinate = interpolator.coordinate(at: keyTime)
+                    let interpolatedZoom = interpolator.zoom(at: keyTime)
+                    let interpolatedBearing = interpolator.bearing(at: keyTime)
+                    let interpolatedPitch = interpolator.pitch(at: keyTime)
+
+                    UIView.addKeyframe(withRelativeStartTime: keyTime, relativeDuration: 0.025) {
+                        self.mapView?.cameraView.centerCoordinate = interpolatedCoordinate
+                        self.mapView?.cameraView.zoom = CGFloat(interpolatedZoom)
+                        self.mapView?.cameraView.bearing = CGFloat(interpolatedBearing)
+                        self.mapView?.cameraView.pitch = CGFloat(interpolatedPitch)
+                    }
+                }
             }
-
-            let zoomAnimation = CAKeyframeAnimation(keyPath: "zoom")
-            zoomAnimation.keyTimes              = keyTimes
-            zoomAnimation.values                = zoomLevels
-            zoomAnimation.duration              = time
-            zoomAnimation.isAdditive            = false
-            zoomAnimation.calculationMode       = .cubic
-            zoomAnimation.isRemovedOnCompletion = false
-            zoomAnimation.fillMode              = .forwards
-
-            animations.append(zoomAnimation)
         }
 
-        if camera.center != nil {
-            let coords: [CLLocationCoordinate2D] = keyTimes.map { (number) -> CLLocationCoordinate2D in
-                return flyTo.coordinate(at: number.doubleValue)
-            }
-
-            let latitudes = coords.map {
-                $0.latitude
-            }
-
-            let longitudes = coords.map {
-                $0.longitude
-            }
-
-            let centerAnimationLatitude = CAKeyframeAnimation(keyPath: "centerCoordinateLatitude")
-            centerAnimationLatitude.keyTimes              = keyTimes
-            centerAnimationLatitude.values                = latitudes
-            centerAnimationLatitude.duration              = time
-            centerAnimationLatitude.isAdditive            = false
-            centerAnimationLatitude.calculationMode       = .cubic
-            centerAnimationLatitude.isRemovedOnCompletion = false
-            centerAnimationLatitude.fillMode              = .forwards
-
-            let centerAnimationLongitude = CAKeyframeAnimation(keyPath: "centerCoordinateLongitude")
-            centerAnimationLongitude.keyTimes              = keyTimes
-            centerAnimationLongitude.values                = longitudes
-            centerAnimationLongitude.duration              = time
-            centerAnimationLongitude.isAdditive            = false
-            centerAnimationLongitude.calculationMode       = .cubic
-            centerAnimationLongitude.isRemovedOnCompletion = false
-            centerAnimationLongitude.fillMode              = .forwards
-
-            animations.append(contentsOf: [centerAnimationLatitude, centerAnimationLongitude])
+        if let completion = completion {
+            animator.addCompletion(completion)
         }
 
-        if camera.bearing != nil {
-            // Note - these are NOT using CAKeyframeAnimation
-            let bearingAnimation = CABasicAnimation(keyPath: "bearing")
-            bearingAnimation.toValue               = flyTo.destBearing
-            bearingAnimation.duration              = time
-            bearingAnimation.beginTime             = 0.0
-            bearingAnimation.isRemovedOnCompletion = false
-            bearingAnimation.fillMode              = .forwards
+        animator.startAnimation()
 
-            animations.append(bearingAnimation)
-        }
-
-        if camera.pitch != nil {
-            let pitchAnimation = CABasicAnimation(keyPath: "pitch")
-            pitchAnimation.toValue               = flyTo.destPitch
-            pitchAnimation.duration              = time
-            pitchAnimation.beginTime             = 0.0
-            pitchAnimation.isRemovedOnCompletion = false
-            pitchAnimation.fillMode              = .forwards
-
-            animations.append(pitchAnimation)
-        }
-
-        let animationKey = String( camera.hashValue)
-        let cameraLayer = mapView.cameraView.layer
-        let animationGroup = MapboxAnimationGroup()
-        animationGroup.duration       = time
-        animationGroup.animations     = animations
-        animationGroup.fillMode       = .forwards
-        animationGroup.timingFunction = timingFunction
-
-        /// Setting `isRemovedOnCompletion` to `true` causes
-        /// the camera to reset at the end of the animation.
-        animationGroup.isRemovedOnCompletion = false
-
-        /// Remove the animation group once the animation is done.
-        animationGroup.completionBlock = { [weak cameraLayer] _ in
-            cameraLayer?.removeAnimation(forKey: animationKey)
-
-            // Temp?
-            self.setCamera(to: camera, completion: completion)
-        }
-
-        animationGroup.delegate = animationGroup
-        cameraLayer.add(animationGroup, forKey: animationKey)
+        return animator
     }
 
     /**
@@ -824,19 +740,6 @@ extension CameraManager: CameraAnimatorDelegate {
     private func removeAnimator(animator: CameraAnimator) {
         if cameraAnimators.contains(animator) {
             cameraAnimators.remove(animator)
-        }
-    }
-}
-
-internal class MapboxAnimationGroup: CAAnimationGroup {
-    fileprivate var completionBlock: ((Bool) -> Void)?
-}
-
-extension MapboxAnimationGroup: CAAnimationDelegate {
-    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-
-        if let executeBlock = completionBlock {
-            executeBlock(flag)
         }
     }
 }

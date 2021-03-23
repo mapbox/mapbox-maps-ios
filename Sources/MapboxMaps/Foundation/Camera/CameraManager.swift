@@ -574,6 +574,8 @@ public class CameraManager {
             animator.addCompletion(completion)
         }
 
+        animator.startAnimation()
+
         return animator
     }
 

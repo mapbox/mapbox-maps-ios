@@ -28,8 +28,6 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
     internal func setupExample() {
 
         mapView.update { (mapOptions) in
-            mapOptions.location.showUserLocation = true
-
             // Granularly configure the location puck with a `Puck2DConfiguration`
             let configuration = Puck2DConfiguration(topImage: UIImage(named: "star"))
             mapOptions.location.puckType = .puck2D(configuration)

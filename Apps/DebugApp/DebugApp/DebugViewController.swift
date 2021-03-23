@@ -26,7 +26,7 @@ public class DebugViewController: UIViewController {
 
         mapView = MapView(with: view.bounds, resourceOptions: resourceOptions)
         mapView.update { (mapOptions) in
-            mapOptions.location.showUserLocation = true
+            mapOptions.location.puckType = .puck2D()
         }
 
         view.addSubview(mapView)

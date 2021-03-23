@@ -21,11 +21,8 @@ public struct LocationOptions: Equatable {
     /// The default value is `other`.
     public var activityType: CLActivityType = .other
 
-    /// Sets if the location manager should show the user location on screen or not
-    public var showUserLocation: Bool = false
-
     /// Sets the type of puck that should be used
-    public var puckType: PuckType = .puck2D()
+    public var puckType: PuckType?
 
     public init() {}
 

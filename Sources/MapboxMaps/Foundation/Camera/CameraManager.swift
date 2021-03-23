@@ -247,7 +247,7 @@ public class CameraManager {
      */
     fileprivate func performCameraAnimation(animated: Bool, duration: TimeInterval, animation: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
         if animated {
-            let animator = makeRunningCameraAnimator(duration: duration,
+            animator = makeRunningCameraAnimator(duration: duration,
                                                      delay: 0,
                                                      options: [.allowUserInteraction, .curveEaseOut],
                                                      animationOwner: .unspecified,
@@ -256,9 +256,9 @@ public class CameraManager {
                 /*
                  Where is this method being called and why?
                  Should method accept position and duration?
-                 Animator will immediately fall out of scope, this won't execute. Should hold reference to animator.
+                 Animator will immediately fall out of scope, this won't execute. Should hold reference to animator. -> where?
                  */
-                completion(true)
+                completion?(true)
             }
             //
         } else {

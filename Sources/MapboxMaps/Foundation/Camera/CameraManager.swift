@@ -744,19 +744,6 @@ extension CameraManager: CameraAnimatorDelegate {
     }
 }
 
-internal class MapboxAnimationGroup: CAAnimationGroup {
-    fileprivate var completionBlock: ((Bool) -> Void)?
-}
-
-extension MapboxAnimationGroup: CAAnimationDelegate {
-    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-
-        if let executeBlock = completionBlock {
-            executeBlock(flag)
-        }
-    }
-}
-
 fileprivate extension CoordinateBounds {
     func contains(_ coordinates: [CLLocationCoordinate2D]) -> Bool {
         let latitudeRange = southwest.latitude...northeast.latitude

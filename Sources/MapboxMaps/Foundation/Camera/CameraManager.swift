@@ -536,13 +536,13 @@ public class CameraManager {
             return nil
         }
 
-        guard let interpolator = FlyToInterpolator(from: mapView.cameraView.camera,
+        guard let interpolator = FlyToInterpolator(from: mapView.camera,
                                                    to: camera,
                                                    size: mapView.bounds.size) else {
             return nil
         }
 
-        // If there was no duration specified, or a negative argument, use a default
+        // If there was no duration specified, use a default
         let time: TimeInterval = duration ?? interpolator.duration()
 
         // TODO: Consider timesteps based on the flyTo curve, for example, it would be beneficial to have a higher

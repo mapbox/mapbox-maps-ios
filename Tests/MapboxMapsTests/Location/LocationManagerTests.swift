@@ -35,51 +35,40 @@ internal class LocationManagerTests: XCTestCase {
         XCTAssertNotNil(locationManager.consumers)
         XCTAssertNotNil(locationManager.locationSupportableMapView)
         XCTAssertNil(locationManager.delegate)
-        XCTAssertFalse(locationManager.showUserLocation)
-    }
-
-    func testLocationManagerShowUserLocationDefaultIsFalse() {
-        let locationOptions = LocationOptions()
-        XCTAssertFalse(locationOptions.showUserLocation)
     }
 
     func testLocationManagerPuckTypeModified() {
         var locationOptions = LocationOptions()
         locationOptions.puckType = .puck2D(Puck2DConfiguration(scale: .constant(1.0)))
-        locationOptions.showUserLocation = true
         let locationManager = LocationManager(locationOptions: locationOptions,
                                               locationSupportableMapView: locationSupportableMapMock)
 
         var locationOptions2 = LocationOptions()
         locationOptions2.puckType = .puck2D(Puck2DConfiguration(scale: .constant(2.0)))
-        locationOptions2.showUserLocation = true
         locationManager.updateLocationOptions(with: locationOptions2)
         XCTAssertEqual(locationManager.locationPuckManager?.puckType, locationOptions2.puckType)
     }
 
-    func testLocationManagerShowUserLocationIsDisabled() {
+    func testLocationManagerPuckTypeSetToNil() {
         var locationOptions = LocationOptions()
-        locationOptions.puckType = .puck2D(Puck2DConfiguration(scale: .constant(1.0)))
-        locationOptions.showUserLocation = true
+        locationOptions.puckType = .puck2D()
         let locationManager = LocationManager(locationOptions: locationOptions,
                                               locationSupportableMapView: locationSupportableMapMock)
 
         var locationOptions2 = LocationOptions()
-        locationOptions2.showUserLocation = false
+        locationOptions2.puckType = nil
         locationManager.updateLocationOptions(with: locationOptions2)
         XCTAssertNil(locationManager.locationPuckManager)
     }
 
-    func testLocationManagerShowUserLocationIsEnabled() {
+    func testLocationManagerPuckTypeSetToNonNil() {
         var locationOptions = LocationOptions()
-        locationOptions.puckType = .puck2D(Puck2DConfiguration(scale: .constant(1.0)))
-        locationOptions.showUserLocation = false
+        locationOptions.puckType = nil
         let locationManager = LocationManager(locationOptions: locationOptions,
                                               locationSupportableMapView: locationSupportableMapMock)
 
         var locationOptions2 = LocationOptions()
-        locationOptions2.puckType = .puck2D(Puck2DConfiguration(scale: .constant(2.0)))
-        locationOptions2.showUserLocation = true
+        locationOptions2.puckType = .puck2D()
         locationManager.updateLocationOptions(with: locationOptions2)
         XCTAssertNotNil(locationManager.locationPuckManager)
         XCTAssertEqual(locationManager.locationPuckManager?.puckType, locationOptions2.puckType)

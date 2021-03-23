@@ -28,9 +28,6 @@ public class Custom3DPuckExample: UIViewController, ExampleProtocol {
     internal func setupExample() {
 
         mapView.update { (mapOptions) in
-
-            mapOptions.location.showUserLocation = true
-
             // Fetch the `gltf` asset
             let uri = Bundle.main.url(forResource: "race_car_model",
                                       withExtension: "gltf")

@@ -35,8 +35,8 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
         tapCalledWithNumberOfTaps = numberOfTaps
         tapCalledWithNumberOfTouches = numberOfTouches
     }
-
-    public func panned(by displacement: CGPoint) {
+    
+    public func panned(from startPoint: CGPoint, to endPoint: CGPoint) {
         pannedCalled = true
     }
 

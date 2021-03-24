@@ -433,7 +433,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
         metalView.layer.isOpaque = isOpaque
         metalView.isPaused = true
         metalView.enableSetNeedsDisplay = true
-        metalView.presentsWithTransaction = false
+        metalView.presentsWithTransaction = true
 
         insertSubview(metalView, at: 0)
         self.metalView = metalView

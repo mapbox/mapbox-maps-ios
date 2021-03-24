@@ -218,9 +218,7 @@ public class CameraView: UIView {
             }
 
             if targetCamera.center != currentCamera.center {
-                
                 diffedCamera.center = targetCamera.center
-//                print("** currentCamera center: \(currentCamera.center) interpolated center: \(targetCamera.center!)")
             }
 
             if targetCamera.anchor != currentCamera.anchor {

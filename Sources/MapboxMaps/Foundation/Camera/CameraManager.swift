@@ -216,14 +216,19 @@ public class CameraManager {
      */
     fileprivate func performCameraAnimation(duration: TimeInterval, animation: @escaping () -> Void, completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
         var animator: CameraAnimator?
-        animator = makeRunningCameraAnimator(duration: duration,
-                                             delay: 0,
-                                             options: [.allowUserInteraction, .curveEaseOut],
-                                             animationOwner: .unspecified,
-                                             animations: animation) { (position) in
-            completion?(position)
+        
+        animator = makeCameraAnimator(duration: duration, curve: .easeOut)
+        animator?.addAnimations(animation)
+        
+        animator?.addCompletion({ (position) in
+            if let validCompletion = completion, let validAnimator = animator {
+                self.schedulePendingCompletion(forAnimator: validAnimator, completion: validCompletion, animatingPosition: position)
+            }
+            
             animator = nil
-        }
+        })
+        
+        animator?.startAnimation()
     }
 
     /**
@@ -353,139 +358,6 @@ public class CameraManager {
         
         
         setCamera(to: cameraOptions, animated: animated, duration: duration, completion: completion)
-    }
-
-    /**
-     Moves the camera by given values with an optional animation.
-
-     - Parameter offset: The `CGPoint` value to shift the map's center by.
-     - Parameter rotation: The angle to rotate the camera by.
-     - Parameter pitch: The degrees to adjust the map's tilt by.
-     - Parameter zoom: The amount to adjust the camera's zoom level by.
-     - Parameter animated: Indicates  whether the camera changes should be animated.
-     - Parameter pitchedDrift: This hack indicates that the calling function wants to simulate drift. Therefore we need to do some additional calculations
-     */
-    public func moveCamera(by offset: CGPoint? = nil, rotation: CGFloat? = nil, pitch: CGFloat? = nil, zoom: CGFloat? = nil, animated: Bool = false, pitchedDrift: Bool = false) {
-        guard let mapView = mapView else {
-            assertionFailure("MapView is nil.")
-            return
-        }
-
-//        print("** Inside move camera -- offset: \(offset) , rotation: \(rotation) , pitch: \(pitch) , zoom: \(zoom), pitchedDrift: \(pitchedDrift) , animated: \(animated) ")
-        let centerCoordinate = shiftCenterCoordinate(by: offset ?? .zero, pitchedDrift: pitchedDrift)
-        
-        print("** from localCenterCoodinate: \(mapView.cameraView.localCenterCoordinate) ---> to shifted center coordinate: \(centerCoordinate)")
-
-        var newBearing: CGFloat = 0
-        if let angle = rotation {
-            newBearing = angle * 180.0 / .pi * -1
-            newBearing = newBearing.truncatingRemainder(dividingBy: 360.0)
-        }
-
-        var newPitch: CGFloat = 0
-        if let pitchAngle = pitch {
-            newPitch = mapView.pitch - pitchAngle
-        }
-
-        var newZoom: CGFloat = 0
-        if let zoomDelta = zoom {
-            newZoom = mapView.zoom + zoomDelta
-        }
-
-        let animation = {
-            // Check whether each value has been updated before adding to the block
-            if offset != nil {
-                mapView.centerCoordinate = centerCoordinate
-            }
-
-            if rotation != nil {
-                mapView.bearing = CLLocationDirection(newBearing)
-            }
-
-            if pitch != nil {
-                mapView.pitch = newPitch
-            }
-
-            if zoom != nil {
-                mapView.zoom = newZoom
-            }
-        }
-        
-        if animated {
-            performCameraAnimation(duration: Double(mapCameraOptions.decelerationRate), animation: animation)
-        } else {
-            animation()
-        }
-    }
-
-    /**
-     Return a new center coordinate shifted by a given offset value.
-     - Parameter offset: The `CGPoint` value to shift the map's center by.
-     - Parameter pitchedDrift: This hack indicates that the calling function wants to simulate drift. Therefore we need to do some additional calculations
-     */
-    func shiftCenterCoordinate(by offset: CGPoint, pitchedDrift: Bool = false) -> CLLocationCoordinate2D {
-        guard let mapView = mapView else {
-            assertionFailure("MapView is nil.")
-            return CLLocationCoordinate2D(latitude: 0, longitude: 0)
-        }
-
-        /// Stop gap solution until we land on a fix all
-        var pitchFactor: CGFloat = mapView.cameraView.localPitch
-        if pitchedDrift {
-            if pitchFactor != 0.0 {
-                // These calculations are creating a multiplier for the offset to normalize the offset for pitched maps
-                pitchFactor /= 10.0
-                pitchFactor += 1.5
-            } else {
-                pitchFactor = 1.0 // We do not want divide by 0
-            }
-        } else {
-            pitchFactor = 1.0 // We do not want divide by 0
-        }
-
-        let mapViewSize    = mapView.frame.size
-        let cameraPadding     = mapView.cameraView.localPadding
-        let viewPortSize      = CGSize(width: mapViewSize.width - cameraPadding.left - cameraPadding.right,
-                                       height: mapViewSize.height - cameraPadding.top - cameraPadding.bottom)
-        let viewPortCenter    = CGPoint(x: (viewPortSize.width / 2) + cameraPadding.left,
-                                        y: (viewPortSize.height / 2) + cameraPadding.top)
-        let newViewPortCenter = CGPoint(x: viewPortCenter.x - (offset.x / pitchFactor), y: viewPortCenter.y - (offset.y / pitchFactor))
-        var centerCoordinate  = mapView.coordinate(for: newViewPortCenter)
-
-        var newLong: Double
-
-        // This logic is to prevent a rubber band effect when a pan's drift takes you across the antimeridian.
-
-        // First calculate the scalar projection of the offset onto the unit vector pointing due east.
-        // offset.y is negated so that the two coordinate systems (iOS graphics, map bearing) match.
-        let bearingInRadians = CGFloat(mapView.cameraView.localBearing.toRadians())
-        
-        
-        let offsetAlongLongitudinalAxis = offset.x * cos(bearingInRadians) - offset.y * sin(bearingInRadians)
-        
-        print("** Inside shiftCenterCoordinate -- bearingInRadians: \(bearingInRadians), centerCoordinate (prior to antimeridian correction): \(centerCoordinate) , localCenterCoordinate: \(mapView.cameraView.localCenterCoordinate) , offsetAlongLongitudinalAxis : \(offsetAlongLongitudinalAxis)")
-
-        // If the offset is negative, the map center needs to move east, suggesting that the new longitude
-        // should be greater than the old one. However, if the antimeridian was crossed, the new longitude
-        // will actually be less than the old one at this point. To deal with that, we'll add 360 to ensure
-        // that the new value is in the right direction relative to the old one.
-        if offsetAlongLongitudinalAxis < 0 {
-            newLong = centerCoordinate.longitude
-            while newLong < Double(mapView.cameraView.localCenterCoordinate.longitude) {
-                newLong += 360
-            }
-            centerCoordinate = CLLocationCoordinate2D(latitude: centerCoordinate.latitude, longitude: newLong)
-        }
-        // If it's positive, the map center needs to move west, and the opposite antimeridian adjustment is required
-        else if offsetAlongLongitudinalAxis > 0 {
-            newLong = centerCoordinate.longitude
-            while newLong > Double(mapView.cameraView.localCenterCoordinate.longitude) {
-                newLong -= 360
-            }
-            centerCoordinate = CLLocationCoordinate2D(latitude: centerCoordinate.latitude, longitude: newLong)
-        }
-
-        return centerCoordinate
     }
 
     /// Moves the viewpoint to a different location using a transition animation that
@@ -656,42 +528,6 @@ extension CameraManager: CameraAnimatorDelegate {
                                    animations: (() -> Void)? = nil) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: ratio, animations: animations)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
-        cameraAnimators.add(cameraAnimator)
-        return cameraAnimator
-    }
-
-    /**
-     Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation
-
-     - Parameter duration: The duration of the animation, in seconds.
-     - Parameter delay: The number of seconds to wait before starting the animations. Specify 0 to begin the animations immediately.
-     - Parameter options: The options to apply to the animations. You can specify most options, but transition-related options and options related to the animation direction are ignored.
-     - Parameter animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
-     - Parameter animations: The block containing the animations. This block has no return value and takes no parameters. Use this block to modify any animatable view properties. When you start the animations, those properties are animated from their current values to the new values using the specified animation parameters.
-     - Parameter completion: Completion block to be passed through for when an animation is stopped
-     - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
-     */
-    public func makeRunningCameraAnimator(duration: TimeInterval,
-                                      delay: TimeInterval,
-                                      options: UIView.AnimationOptions = [],
-                                      animationOwner: AnimationOwner = .unspecified,
-                                      animations: @escaping () -> Void,
-                                      completion: AnimationCompletion? = nil) -> CameraAnimator {
-        let runningAnimator = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: duration,
-                                                                             delay: delay,
-                                                                             options: options,
-                                                                             animations: animations,
-                                                                             completion: nil)
-
-        let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: runningAnimator, owner: animationOwner)
-
-        runningAnimator.addCompletion({ [weak self] animatingPosition in
-            guard let completion = completion,
-                  let self = self
-            else { return }
-
-            self.schedulePendingCompletion(forAnimator: cameraAnimator, completion: completion, animatingPosition: animatingPosition)
-        })
         cameraAnimators.add(cameraAnimator)
         return cameraAnimator
     }

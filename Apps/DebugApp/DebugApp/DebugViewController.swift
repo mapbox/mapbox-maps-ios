@@ -80,13 +80,14 @@ public class DebugViewController: UIViewController {
         mapView.on(.mapLoaded) { (event) in
             print("The map has finished loading... Event = \(event)")
             
-//            let initialCenter = CLLocationCoordinate2D(latitude: 39.01305735102963, longitude: -77.01570412528032)
-//            self.mapView.cameraManager.setCamera(centerCoordinate: initialCenter, zoom: 12)
-//            
-//            self.runningAnimator = self.mapView.cameraManager.makeRunningCameraAnimator(duration: 10, delay: 2, animations: {
-//                
-//                self.mapView.cameraManager.setCamera(centerCoordinate: CLLocationCoordinate2D(latitude: 36.0893334370578, longitude: -78.06549948618996), zoom: 12)
-//            })
+            let initialCenter = CLLocationCoordinate2D(latitude: 39.01305735102963, longitude: -77.01570412528032)
+            self.mapView.cameraManager.setCamera(centerCoordinate: initialCenter, zoom: 12)
+            
+            self.runningAnimator = self.mapView.cameraManager.makeCameraAnimator(duration: 10, curve: .linear) {
+                self.mapView.cameraManager.setCamera(centerCoordinate: CLLocationCoordinate2D(latitude: 36.0893334370578, longitude: -78.06549948618996), zoom: 12)
+            }
+            
+            self.runningAnimator!.startAnimation(afterDelay: 2)
         }
 
         /**

@@ -344,7 +344,7 @@ jobs:
           name: "Parsing xcresults for errors"
           command: |
             RESULTS=`find build/testruns -name '*.xcresult'`
-            xargs swift run --package-path scripts/xcparty \<<< "$RESULTS" | tee build/testruns/failures.txt
+            xargs swift run --package-path scripts/xcparty xcparty \<<< "$RESULTS" | tee build/testruns/failures.txt
           when: on_fail
       - run:
           name: Symbolicate crash logs
@@ -405,7 +405,7 @@ jobs:
           name: "Parsing xcresults for errors"
           command: |
             RESULTS=`find "$DERIVED_DATA_PATH/testruns" -name '*.xcresult'`
-            xargs swift run --package-path scripts/xcparty \<<< "$RESULTS" | tee build/testruns/failures.txt
+            xargs swift run --package-path scripts/xcparty xcparty \<<< "$RESULTS" | tee build/testruns/failures.txt
           when: on_fail
       - run:
           name: Symbolicate crash logs

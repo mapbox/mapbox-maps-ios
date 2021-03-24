@@ -105,7 +105,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     }
 
     /// Returns the camera view managed by this object.
-    public var cameraView: CameraView!
+    var cameraView: CameraView!
 
     /// The map's current camera
     public var camera: CameraOptions {

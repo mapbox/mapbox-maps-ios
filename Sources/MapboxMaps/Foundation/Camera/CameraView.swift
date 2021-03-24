@@ -197,7 +197,7 @@ public class CameraView: UIView {
         let currentCamera = delegate.camera
 
         // Get the latest interpolated values of the camera properties (if they exist)
-        let targetCamera = localCamera
+        let targetCamera = localCamera.wrap()
 
         // Apply targetCamera options only if they are different from currentCamera options
         if currentCamera != targetCamera {
@@ -231,5 +231,18 @@ public class CameraView: UIView {
 
             delegate.jumpTo(camera: diffedCamera)
         }
+    }
+}
+
+fileprivate extension CameraOptions {
+
+    func wrap() -> CameraOptions {
+        return CameraOptions(center: self.center?.wrap(),
+                             padding: self.padding,
+                             anchor: self.anchor,
+                             zoom: self.zoom,
+                             bearing: self.bearing,
+                             pitch: self.pitch)
+
     }
 }

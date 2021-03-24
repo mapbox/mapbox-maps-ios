@@ -39,7 +39,7 @@ public class LocationManager: NSObject {
     /// Only created if `showsUserLocation` is `true`
     internal var locationPuckManager: LocationPuckManager?
 
-    internal var locationOptions: LocationOptions
+    public private(set) var locationOptions: LocationOptions
 
     internal init(locationOptions: LocationOptions,
                   locationSupportableMapView: LocationSupportableMapView) {

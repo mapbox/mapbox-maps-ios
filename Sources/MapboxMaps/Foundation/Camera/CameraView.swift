@@ -28,7 +28,7 @@ internal protocol CameraViewDelegate: class {
 }
 
 /// A view that represents a camera view port.
-public class CameraView: UIView {
+internal class CameraView: UIView {
 
     public var camera: CameraOptions {
         get {

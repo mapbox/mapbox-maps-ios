@@ -52,7 +52,7 @@ extension GestureManager: GestureHandlerDelegate {
 
             cameraManager.setCamera(to: driftCameraOptions,
                                     animated: true,
-                                    duration: Double(UIScrollView.DecelerationRate.normal.rawValue),
+                                    duration: Double(cameraManager.mapCameraOptions.decelerationRate),
                                     completion: nil)
         }
         try! cameraManager.mapView?.__map.dragEnd()

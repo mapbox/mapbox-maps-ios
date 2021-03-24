@@ -3,7 +3,6 @@ import UIKit
 import Turf
 
 /// An object that manages a camera's view lifecycle.
-// swiftlint:disable type_body_length
 public class CameraManager {
 
     /// Used to set up camera specific configuration

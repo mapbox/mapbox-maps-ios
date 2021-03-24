@@ -1,7 +1,7 @@
 // swiftlint:disable identifier_name
 
 /// "fly-to" interpolator object that implements an “optimal path” animation
-public struct FlyToInterpolator {
+internal struct FlyToInterpolator {
 
     /// Returns the visible span on the ground, measured in pixels with respect to the initial scale.
     /// Assumes an angular field of view of 2 arctan ½ ≈ 53°.
@@ -51,7 +51,7 @@ public struct FlyToInterpolator {
     ///   - dest: End camera (parameters ARE clamped to properties from MapCameraOptions)
     ///   - mapCameraOptions: Camera-specific capabilities of the map, for example, min-zoom, max-pitch
     ///   - size: Map View size in points
-    public init?(from source: CameraOptions, to dest: CameraOptions, with mapCameraOptions: MapCameraOptions = MapCameraOptions(), size: CGSize) {
+    internal init?(from source: CameraOptions, to dest: CameraOptions, with mapCameraOptions: MapCameraOptions = MapCameraOptions(), size: CGSize) {
         // Initial conditions
         guard let sourcePaddingParam   = source.padding,
               let sourceCoord     = source.center,
@@ -206,7 +206,7 @@ public struct FlyToInterpolator {
     ///
     /// - Parameter fraction: Parameter between 0 and 1. 0 represents the start position, 1 the end position.
     /// - Returns: coordinate
-    public func coordinate(at fraction: Double) -> CLLocationCoordinate2D {
+    internal func coordinate(at fraction: Double) -> CLLocationCoordinate2D {
         // s: The distance traveled along the flight path, measured in
         // ρ-screenfuls.
         let s = fraction * S

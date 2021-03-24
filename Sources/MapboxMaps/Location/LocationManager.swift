@@ -13,7 +13,7 @@ public class LocationManager: NSObject {
     public private(set) var latestLocation: Location?
 
     /// Represents the style of the user location puck
-    internal var currentPuckStyle: PuckStyle = .precise {
+    private var currentPuckStyle: PuckStyle = .precise {
         didSet {
             locationPuckManager?.changePuckStyle(to: currentPuckStyle)
         }
@@ -24,9 +24,6 @@ public class LocationManager: NSObject {
 
     /// Making variable `public private(set)` to have direct access to auth functions
     public private(set) var locationProvider: LocationProvider!
-
-    /// Property that will determine if user location visuals should be displayed or not
-    public private(set) var showUserLocation: Bool = false
 
     /// Property that has a list of items that will consume location events
     /// The location manager holds weak references to these consumers, client code should retain these references
@@ -42,25 +39,24 @@ public class LocationManager: NSObject {
     /// Only created if `showsUserLocation` is `true`
     internal var locationPuckManager: LocationPuckManager?
 
-    internal var locationOptions: LocationOptions!
+    internal var locationOptions: LocationOptions
 
     internal init(locationOptions: LocationOptions,
                   locationSupportableMapView: LocationSupportableMapView) {
-        super.init()
-
-        self.locationOptions = locationOptions
         /// Sets the local options needed to configure the user location puck
-        showUserLocation = locationOptions.showUserLocation
+        self.locationOptions = locationOptions
 
         /// Allows location updates to be reflected on screen using delegate method
         self.locationSupportableMapView = locationSupportableMapView
+
+        super.init()
 
         /// Sets our default `locationProvider`
         locationProvider = AppleLocationProvider()
         locationProvider.setDelegate(self)
         locationProvider.locationProviderOptions = locationOptions
 
-        toggleUserLocationUpdates(showUserLocation: locationOptions.showUserLocation)
+        syncUserLocationUpdating()
     }
 
     public func overrideLocationProvider(with customLocationProvider: LocationProvider) {
@@ -89,24 +85,16 @@ public class LocationManager: NSObject {
         guard newOptions != locationOptions else { return }
 
         // Update the location options
+        let previousOptions = locationOptions
         locationOptions = newOptions
         locationProvider.locationProviderOptions = newOptions
 
-        if newOptions.showUserLocation != showUserLocation {
-            showUserLocation = newOptions.showUserLocation
-            toggleUserLocationUpdates(showUserLocation: showUserLocation)
-
-            if !newOptions.showUserLocation {
-                // If we should not show user location, then we should
-                // not try and change source or style below
-                return
-            }
+        if newOptions.puckType != previousOptions.puckType {
+            syncUserLocationUpdating()
         }
 
-        if newOptions.puckType != locationOptions.puckType {
-            if let locationPuckManager = self.locationPuckManager {
-                locationPuckManager.changePuckType(to: newOptions.puckType)
-            }
+        if let puckType = newOptions.puckType, puckType != previousOptions.puckType {
+            locationPuckManager?.changePuckType(to: puckType)
         }
     }
 
@@ -188,12 +176,9 @@ extension LocationManager: LocationProviderDelegate {
                     self.currentPuckStyle = .precise
                 }
             }
-            showUserLocation = locationOptions.showUserLocation
-        } else {
-            showUserLocation = false
         }
 
-        toggleUserLocationUpdates(showUserLocation: showUserLocation)
+        syncUserLocationUpdating()
 
         if let delegate = self.delegate {
             delegate.locationManager?(self, didChangeAccuracyAuthorization: provider.accuracyAuthorization)
@@ -203,8 +188,8 @@ extension LocationManager: LocationProviderDelegate {
 
 // MARK: Private helper functions that only the Location Manager needs access to
 private extension LocationManager {
-    func toggleUserLocationUpdates(showUserLocation: Bool) {
-        if showUserLocation {
+    func syncUserLocationUpdating() {
+        if let puckType = locationOptions.puckType {
             /// Get permissions if needed
             if locationProvider.authorizationStatus == .notDetermined {
                 requestLocationPermissions()
@@ -213,13 +198,13 @@ private extension LocationManager {
             locationProvider.startUpdatingLocation()
             locationProvider.startUpdatingHeading()
 
-            if let locationPuckManager = self.locationPuckManager {
+            if let locationPuckManager = locationPuckManager {
                 // This serves as a reset and handles the case if permissions were changed for accuracy
                 locationPuckManager.changePuckStyle(to: currentPuckStyle)
             } else {
                 let locationPuckManager = LocationPuckManager(
                     locationSupportableMapView: locationSupportableMapView,
-                    puckType: locationOptions.puckType)
+                    puckType: puckType)
                 consumers.add(locationPuckManager)
                 self.locationPuckManager = locationPuckManager
             }
@@ -227,7 +212,7 @@ private extension LocationManager {
             locationProvider.stopUpdatingLocation()
             locationProvider.stopUpdatingHeading()
 
-            if let locationPuckManager = self.locationPuckManager {
+            if let locationPuckManager = locationPuckManager {
                 consumers.remove(locationPuckManager)
                 self.locationPuckManager = nil
             }

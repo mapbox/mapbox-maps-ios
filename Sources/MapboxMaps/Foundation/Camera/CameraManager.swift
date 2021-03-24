@@ -474,7 +474,9 @@ extension CameraManager: CameraAnimatorDelegate {
      - Parameter duration: The duration of the animation, in seconds.
      - Parameter curve: The UIKit timing curve to apply to the animation.
      - Parameter animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
-     - Parameter animations: The block containing the animations. This block has no return value and takes no parameters. Use this block to modify any animatable view properties. When you start the animations, those properties are animated from their current values to the new values using the specified animation parameters.
+     - Parameter animations: The block containing the animations. This block has no return value and takes no parameters.
+                             Use this block to modify any animatable view properties. When you start the animations,
+                             those properties are animated from their current values to the new values using the specified animation parameters.
      - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
      */
     public func makeCameraAnimator(duration: TimeInterval,
@@ -494,7 +496,9 @@ extension CameraManager: CameraAnimatorDelegate {
      - Parameter controlPoint1: The first control point for the cubic Bézier timing curve.
      - Parameter controlPoint2: The second control point for the cubic Bézier timing curve.
      - Parameter animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
-     - Parameter animations: The block containing the animations. This block has no return value and takes no parameters. Use this block to modify any animatable view properties. When you start the animations, those properties are animated from their current values to the new values using the specified animation parameters.
+     - Parameter animations: The block containing the animations. This block has no return value and takes no parameters.
+                             Use this block to modify any animatable view properties. When you start the animations,
+                             those properties are animated from their current values to the new values using the specified animation parameters.
      - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
      */
     public func makeCameraAnimator(duration: TimeInterval,
@@ -514,7 +518,9 @@ extension CameraManager: CameraAnimatorDelegate {
      - Parameter duration: The duration of the animation, in seconds.
      - Parameter timingParameters: The type of `AnimationCurve` for the animation.
      - Parameter animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
-     - Parameter animations: The block containing the animations. This block has no return value and takes no parameters. Use this block to modify any animatable view properties. When you start the animations, those properties are animated from their current values to the new values using the specified animation parameters.
+     - Parameter animations: The block containing the animations. This block has no return value and takes no parameters.
+                             Use this block to modify any animatable view properties. When you start the animations,
+                             those properties are animated from their current values to the new values using the specified animation parameters.
      - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
      */
     public func makeCameraAnimator(duration: TimeInterval,

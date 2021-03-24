@@ -11,7 +11,7 @@ public extension CLLocationCoordinate2D {
         CLLocation(latitude: latitude, longitude: longitude)
     }
 
-    /// Returns a new `CLLocationCoordinate` value with a new latitude constrained within 360 degrees.
+    /// Returns a new `CLLocationCoordinate` value with a new longitude constrained to [-180, +180] degrees.
     func wrap() -> CLLocationCoordinate2D {
         /**
          mbgl::geo.hpp equivalent:

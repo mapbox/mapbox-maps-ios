@@ -2,25 +2,7 @@
 import UIKit
 import Turf
 
-/// Camera Manager transition states.
-public enum TransitionState: String {
-    /// A  state for when it's possible to initiate a transition.
-    case possible
-
-    /// A state for when a transition is ongoing.
-    case transitioning
-
-    /// A state for when a transition was canceled.
-    case canceled
-}
-
-public extension Notification.Name {
-    /// Posted by the SDK when CameraManager changes its transitionState property.
-    static let cameraManagerTransitionState = Notification.Name("com.mapbox.cameraManagerTransitionState")
-}
-
 /// An object that manages a camera's view lifecycle.
-// swiftlint:disable type_body_length
 public class CameraManager {
 
     /// Used to set up camera specific configuration
@@ -35,17 +17,6 @@ public class CameraManager {
                                         minPitch: newOptions.minimumPitch as NSNumber)
         try! mapView?.__map.setBoundsFor(boundOptions)
         mapCameraOptions = newOptions
-    }
-
-    /// The transition state of the `CameraManager`.
-    public var transitionState: TransitionState = .possible {
-        didSet {
-            if transitionState == .canceled {
-                transitionState = .possible
-            }
-            let userInfo = ["transitionState": transitionState.rawValue]
-            NotificationCenter.default.post(name: .cameraManagerTransitionState, object: self, userInfo: userInfo)
-        }
     }
 
     /// Pointer HashTable for holding camera animators
@@ -158,43 +129,39 @@ public class CameraManager {
     }
 
     // MARK: Setting a new camera
-    /**
-     Transition the camera view to a new map camera, optionally animating the change
-     and executing a completion block after the transition occurs.
-     
-     - Parameter newCamera: The new map camera the viewport will transition to.
-     - Parameter animated: A boolean indicating if the change should be animated.
-                           By default, this value is `false`
-     - Parameter completion: The completion block to execute after the transition has occurred.
-     */
 
-    public func setCamera(to camera: CameraOptions,
-                          animated: Bool = false,
-                          duration: TimeInterval = 0,
-                          completion: ((Bool) -> Void)? = nil) {
+    /// Transition the map's viewport to a new camera.
+    /// - Parameter targetCamera: The target camera to transition to.
+    /// - Parameter animated: Set to `true` if transition should be animated. `false` by default.
+    /// - Parameter duration: Controls the duration of the animation transition. Must be greater than zero if `animated` is true.
+    /// - Parameter completion: The completion block to be called after an animated transition. Only called if `animated` is true.
+    public func setCamera(to targetCamera: CameraOptions, animated: Bool = false, duration: TimeInterval = 0, completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
         guard let mapView = mapView else {
             assertionFailure("MapView is nil.")
-            completion?(false)
             return
         }
 
-        let clampedCamera = CameraOptions(center: camera.center,
-                                          padding: camera.padding,
-                                          anchor: camera.anchor,
-                                          zoom: camera.zoom?.clamped(to: mapCameraOptions.minimumZoomLevel...mapCameraOptions.maximumZoomLevel),
-                                          bearing: optimizeBearing(startBearing: mapView.bearing, endBearing: camera.bearing),
-                                          pitch: camera.pitch?.clamped(to: mapCameraOptions.minimumPitch...mapCameraOptions.maximumPitch))
+        let clampedCamera = CameraOptions(center: targetCamera.center,
+                                          padding: targetCamera.padding,
+                                          anchor: targetCamera.anchor,
+                                          zoom: targetCamera.zoom?.clamped(to: mapCameraOptions.minimumZoomLevel...mapCameraOptions.maximumZoomLevel),
+                                          bearing: optimizeBearing(startBearing: mapView.bearing, endBearing: targetCamera.bearing),
+                                          pitch: targetCamera.pitch?.clamped(to: mapCameraOptions.minimumPitch...mapCameraOptions.maximumPitch))
 
-        guard mapView.cameraView.camera != clampedCamera else {
-            completion?(true)
+        // Return early if the cameraView's camera is already at `clampedCamera`
+        guard mapView.camera != clampedCamera else {
             return
         }
 
-        let animation = {
-            mapView.cameraView.camera = clampedCamera
+        let transitionBlock = {
+            mapView.camera = clampedCamera
         }
 
-        performCameraAnimation(animated: animated, duration: duration, animation: animation, completion: completion)
+        if animated && duration > 0 {
+            performCameraAnimation(duration: duration, animation: transitionBlock, completion: completion)
+        } else {
+            transitionBlock()
+        }
     }
 
     /**
@@ -219,21 +186,21 @@ public class CameraManager {
                           pitch: CGFloat? = nil,
                           animated: Bool = false,
                           duration: TimeInterval = 0,
-                          completion: ((Bool) -> Void)? = nil) {
+                          completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
         let newCamera = CameraOptions(center: centerCoordinate,
                                       padding: padding,
                                       anchor: anchor,
                                       zoom: zoom,
                                       bearing: bearing,
                                       pitch: pitch)
+
         setCamera(to: newCamera, animated: animated, duration: duration, completion: completion)
     }
     // swiftlint:enable function_parameter_count
 
     public func cancelTransitions() {
-        transitionState = .canceled
-        if let mapView = mapView {
-            mapView.cameraView.layer.removeAllAnimations()
+        for animator in cameraAnimators.allObjects where animator.state == .active {
+            animator.stopAnimation()
         }
     }
 
@@ -245,17 +212,18 @@ public class CameraManager {
         - animation: closure to perform
         - completion: animation block called on completion
      */
-    fileprivate func performCameraAnimation(animated: Bool, duration: TimeInterval, animation: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
-        if animated {
-            UIView.animate(withDuration: duration,
-                           delay: 0,
-                           options: [.curveEaseOut, .allowUserInteraction],
-                           animations: animation,
-                           completion: completion)
-        } else {
-            animation()
-            completion?(true)
-        }
+    fileprivate func performCameraAnimation(duration: TimeInterval, animation: @escaping () -> Void, completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
+        var animator: CameraAnimator?
+
+        animator = makeCameraAnimator(duration: duration, curve: .easeOut)
+        animator?.addAnimations(animation)
+
+        animator?.addCompletion({ (position) in
+            completion?(position)
+            animator = nil
+        })
+
+        animator?.startAnimation()
     }
 
     /**
@@ -313,7 +281,7 @@ public class CameraManager {
     public func transitionCoordinateBounds(to newCoordinateBounds: CoordinateBounds,
                                            edgePadding: UIEdgeInsets,
                                            animated: Bool = false,
-                                           completion: (() -> Void)?) {
+                                           completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
         let southeast = CLLocationCoordinate2D(latitude: newCoordinateBounds.northeast.latitude,
                                                longitude: newCoordinateBounds.southwest.longitude)
         let southwest = newCoordinateBounds.southwest
@@ -356,17 +324,16 @@ public class CameraManager {
      - Parameter newCoordinates: The array of coordinates that will be displayed within the viewport.
      - Parameter edgePadding: The padding the viewport will adjust itself by after transitioning to the new viewport.
      - Parameter animated: A boolean indicating if the change should be animated. Defaults to `false`.
-     - Parameter completion: An optional function to execute after the transition has occurred.
+     - Parameter completion: An optional closure to execute after the transition has occurred.
      */
     public func transitionVisibleCoordinates(to newCoordinates: [CLLocationCoordinate2D],
                                              edgePadding: UIEdgeInsets,
                                              bearing: CLLocationDirection,
                                              duration: TimeInterval,
                                              animated: Bool = false,
-                                             completion: (() -> Void)?) {
+                                             completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
         guard let mapView = mapView else {
             assertionFailure("MapView is nil.")
-            completion?()
             return
         }
 
@@ -375,147 +342,16 @@ public class CameraManager {
         if mapCameraOptions.restrictedCoordinateBounds?.contains(newCoordinates) == false { return }
 
         let padding = edgePadding.toMBXEdgeInsetsValue()
-        let bearing = bearing >= 0 ? CGFloat(bearing) : mapView.cameraView.bearing
+        let bearing = bearing >= 0 ? CLLocationDirection(CGFloat(bearing)) : mapView.bearing
         let coordinates = newCoordinates.map { CLLocation(latitude: $0.latitude, longitude: $0.longitude)}
-        let pitch = mapView.cameraView.pitch
+        let pitch = mapView.pitch
 
         let cameraOptions = try! mapView.__map.cameraForCoordinates(forCoordinates: coordinates,
                                                                     padding: padding,
                                                                     bearing: NSNumber(value: Float(bearing)),
                                                                     pitch: NSNumber(value: Float(pitch)))
 
-        let animation = {
-            mapView.cameraView.camera = cameraOptions
-        }
-
-        performCameraAnimation(animated: animated, duration: duration, animation: animation) { _ in
-            completion?()
-        }
-    }
-
-    /**
-     Moves the camera by given values with an optional animation.
-
-     - Parameter offset: The `CGPoint` value to shift the map's center by.
-     - Parameter rotation: The angle to rotate the camera by.
-     - Parameter pitch: The degrees to adjust the map's tilt by.
-     - Parameter zoom: The amount to adjust the camera's zoom level by.
-     - Parameter animated: Indicates  whether the camera changes should be animated.
-     - Parameter pitchedDrift: This hack indicates that the calling function wants to simulate drift. Therefore we need to do some additional calculations
-     */
-    public func moveCamera(by offset: CGPoint? = nil, rotation: CGFloat? = nil, pitch: CGFloat? = nil, zoom: CGFloat? = nil, animated: Bool = false, pitchedDrift: Bool = false) {
-        guard let mapView = mapView else {
-            assertionFailure("MapView is nil.")
-            return
-        }
-
-        let centerCoordinate = shiftCenterCoordinate(by: offset ?? .zero, pitchedDrift: pitchedDrift)
-
-        var newBearing: CGFloat = 0
-        if let angle = rotation {
-            newBearing = angle * 180.0 / .pi * -1
-            newBearing = newBearing.truncatingRemainder(dividingBy: 360.0)
-        }
-
-        var newPitch: CGFloat = 0
-        if let pitchAngle = pitch {
-            newPitch = mapView.pitch - pitchAngle
-        }
-
-        var newZoom: CGFloat = 0
-        if let zoomDelta = zoom {
-            newZoom = mapView.zoom + zoomDelta
-        }
-
-        let animation = {
-            // IMPORTANT: To trigger an immediate update, cameraView properties that are structs
-            // should always be animated using the camera layer instead.
-
-            // Check whether each value has been updated before adding to the block
-            if offset != nil {
-                mapView.cameraView.centerCoordinate = centerCoordinate
-            }
-
-            if rotation != nil {
-                mapView.cameraView.bearing = newBearing
-            }
-
-            if pitch != nil {
-                mapView.cameraView.pitch = newPitch
-            }
-
-            if zoom != nil {
-                mapView.cameraView.zoom = newZoom
-            }
-        }
-
-        performCameraAnimation(animated: animated, duration: Double(mapCameraOptions.decelerationRate), animation: animation)
-    }
-
-    /**
-     Return a new center coordinate shifted by a given offset value.
-     - Parameter offset: The `CGPoint` value to shift the map's center by.
-     - Parameter pitchedDrift: This hack indicates that the calling function wants to simulate drift. Therefore we need to do some additional calculations
-     */
-    func shiftCenterCoordinate(by offset: CGPoint, pitchedDrift: Bool = false) -> CLLocationCoordinate2D {
-        guard let mapView = mapView else {
-            assertionFailure("MapView is nil.")
-            return CLLocationCoordinate2D(latitude: 0, longitude: 0)
-        }
-
-        /// Stop gap solution until we land on a fix all
-        var pitchFactor: CGFloat = mapView.pitch
-        if pitchedDrift {
-            if pitchFactor != 0.0 {
-                // These calculations are creating a multiplier for the offset to normalize the offset for pitched maps
-                pitchFactor /= 10.0
-                pitchFactor += 1.5
-            } else {
-                pitchFactor = 1.0 // We do not want divide by 0
-            }
-        } else {
-            pitchFactor = 1.0 // We do not want divide by 0
-        }
-
-        let mapViewSize    = mapView.frame.size
-        let cameraPadding     = mapView.cameraView.localPadding
-        let viewPortSize      = CGSize(width: mapViewSize.width - cameraPadding.left - cameraPadding.right,
-                                       height: mapViewSize.height - cameraPadding.top - cameraPadding.bottom)
-        let viewPortCenter    = CGPoint(x: (viewPortSize.width / 2) + cameraPadding.left,
-                                        y: (viewPortSize.height / 2) + cameraPadding.top)
-        let newViewPortCenter = CGPoint(x: viewPortCenter.x - (offset.x / pitchFactor), y: viewPortCenter.y - (offset.y / pitchFactor))
-        var centerCoordinate  = mapView.coordinate(for: newViewPortCenter)
-
-        var newLong: Double
-
-        // This logic is to prevent a rubber band effect when a pan's drift takes you across the antimeridian.
-
-        // First calculate the scalar projection of the offset onto the unit vector pointing due east.
-        // offset.y is negated so that the two coordinate systems (iOS graphics, map bearing) match.
-        let bearingInRadians = CGFloat(mapView.cameraView.localBearing.toRadians())
-        let offsetAlongLongitudinalAxis = offset.x * cos(bearingInRadians) - offset.y * sin(bearingInRadians)
-
-        // If the offset is negative, the map center needs to move east, suggesting that the new longitude
-        // should be greater than the old one. However, if the antimeridian was crossed, the new longitude
-        // will actually be less than the old one at this point. To deal with that, we'll add 360 to ensure
-        // that the new value is in the right direction relative to the old one.
-        if offsetAlongLongitudinalAxis < 0 {
-            newLong = centerCoordinate.longitude
-            while newLong < Double(mapView.cameraView.localCenterCoordinate.longitude) {
-                newLong += 360
-            }
-            centerCoordinate = CLLocationCoordinate2D(latitude: centerCoordinate.latitude, longitude: newLong)
-        }
-        // If it's positive, the map center needs to move west, and the opposite antimeridian adjustment is required
-        else if offsetAlongLongitudinalAxis > 0 {
-            newLong = centerCoordinate.longitude
-            while newLong > Double(mapView.cameraView.localCenterCoordinate.longitude) {
-                newLong -= 360
-            }
-            centerCoordinate = CLLocationCoordinate2D(latitude: centerCoordinate.latitude, longitude: newLong)
-        }
-
-        return centerCoordinate
+        setCamera(to: cameraOptions, animated: animated, duration: duration, completion: completion)
     }
 
     /// Moves the viewpoint to a different location using a transition animation that
@@ -690,57 +526,10 @@ extension CameraManager: CameraAnimatorDelegate {
         return cameraAnimator
     }
 
-    /**
-     Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation
-
-     - Parameter duration: The duration of the animation, in seconds.
-     - Parameter delay: The number of seconds to wait before starting the animations. Specify 0 to begin the animations immediately.
-     - Parameter options: The options to apply to the animations. You can specify most options, but transition-related options and options related to the animation direction are ignored.
-     - Parameter animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
-     - Parameter animations: The block containing the animations. This block has no return value and takes no parameters. Use this block to modify any animatable view properties. When you start the animations, those properties are animated from their current values to the new values using the specified animation parameters.
-     - Parameter completion: Completion block to be passed through for when an animation is stopped
-     - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
-     */
-    public func runningCameraAnimator(duration: TimeInterval,
-                                      delay: TimeInterval,
-                                      options: UIView.AnimationOptions = [],
-                                      animationOwner: AnimationOwner = .unspecified,
-                                      animations: @escaping () -> Void,
-                                      completion: AnimationCompletion? = nil) -> CameraAnimator {
-        let runningAnimator = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: duration,
-                                                                             delay: delay,
-                                                                             options: options,
-                                                                             animations: animations,
-                                                                             completion: nil)
-
-        let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: runningAnimator, owner: animationOwner)
-
-        runningAnimator.addCompletion({ [weak self] animatingPosition in
-            guard let completion = completion,
-                  let self = self
-            else { return }
-
-            self.schedulePendingCompletion(forAnimator: cameraAnimator, completion: completion, animatingPosition: animatingPosition)
-        })
-        cameraAnimators.add(cameraAnimator)
-        return cameraAnimator
-    }
-
     // MARK: CameraAnimatorDelegate functions
     func schedulePendingCompletion(forAnimator animator: CameraAnimator, completion: @escaping AnimationCompletion, animatingPosition: UIViewAnimatingPosition) {
         guard let mapView = mapView else { return }
         mapView.pendingAnimatorCompletionBlocks.append((completion, animatingPosition))
-        removeAnimator(animator: animator)
-    }
-
-    func animatorIsFinished(forAnimator animator: CameraAnimator) {
-        removeAnimator(animator: animator)
-    }
-
-    private func removeAnimator(animator: CameraAnimator) {
-        if cameraAnimators.contains(animator) {
-            cameraAnimators.remove(animator)
-        }
     }
 }
 

@@ -19,11 +19,6 @@ internal class CameraAnimatorTests: XCTestCase {
                                         owner: .unspecified)
     }
 
-    func testStopAnimationCallsDelegate() {
-        cameraAnimator.stopAnimation()
-        XCTAssertEqual(delegate.cameraAnimatorStub.invocations.count, 1)
-    }
-
     func testAddCompletionSchedulesACompletion() {
         cameraAnimator.addCompletion({ _ in
             XCTAssertEqual(self.delegate.cameraAnimatorStub.invocations.count, 1)

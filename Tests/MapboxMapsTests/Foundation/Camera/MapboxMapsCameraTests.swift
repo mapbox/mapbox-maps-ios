@@ -7,7 +7,6 @@ import MetalKit
 @testable import MapboxMapsFoundation
 #endif
 
-// swiftlint:disable:next type_body_length
 class CameraManagerTests: XCTestCase {
 
     var mapView: BaseMapView!
@@ -224,24 +223,6 @@ class CameraManagerTests: XCTestCase {
         XCTAssertEqual(mapView.cameraView.localPitch, cameraManager.mapCameraOptions.maximumPitch, accuracy: 0.000001)
     }
 
-    func testMoveCamera() {
-        mapView.zoom = 0.0
-        let initialCamera = mapView.camera
-        cameraManager.moveCamera(rotation: 10)
-
-        XCTAssertNotEqual(initialCamera.bearing, mapView.cameraView.localBearing)
-        XCTAssertEqual(mapView.cameraView.localBearing, -212.957, accuracy: 0.001, "Check that the new bearing matches the expected value.")
-        XCTAssertEqual(mapView.cameraView.localCenterCoordinate, CLLocationCoordinate2D(latitude: 0, longitude: 0))
-
-        cameraManager.moveCamera(by: .zero, pitch: 10, zoom: 10.0)
-        XCTAssertEqual(mapView.cameraView.localPitch, -10)
-        XCTAssertEqual(mapView.cameraView.localZoom, 10.0, accuracy: 0.001, "The value for zoom should be 10.0")
-
-        cameraManager.moveCamera(by: CGPoint(x: -10, y: 10))
-        XCTAssertEqual(mapView.cameraView.localCenterCoordinate.latitude, 7.013668, accuracy: 0.0001, "The new latitude should be approximately 7.013668")
-        XCTAssertEqual(mapView.cameraView.localCenterCoordinate.longitude, -352.96875, accuracy: 0.0001, "The new longitude should be approximately -352.96875")
-    }
-
     func testOptimizeBearingClockwise() {
         let startBearing = 0.0
         let endBearing = 90.0
@@ -312,83 +293,16 @@ class CameraManagerTests: XCTestCase {
         XCTAssertEqual(optimizedBearing, 200)
     }
 
-    func verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing bearing: CLLocationDirection,
-                                                                               offset: CGPoint,
-                                                                               line: UInt = #line) {
-        cameraManager.setCamera(centerCoordinate: CLLocationCoordinate2D(latitude: 0,
-                                                                         longitude: 179.999),
-                                zoom: 0,
-                                bearing: bearing,
-                                animated: false)
-
-        let shiftedCenterCoordinate = cameraManager.shiftCenterCoordinate(by: offset, pitchedDrift: false)
-
-        XCTAssertGreaterThan(shiftedCenterCoordinate.longitude, 180, line: line)
-    }
-
-    func verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing bearing: CLLocationDirection,
-                                                                               offset: CGPoint,
-                                                                               line: UInt = #line) {
-        cameraManager.setCamera(centerCoordinate: CLLocationCoordinate2D(latitude: 0,
-                                                                         longitude: -179.999),
-                                zoom: 0,
-                                bearing: bearing,
-                                animated: false)
-
-        let shiftedCenterCoordinate = cameraManager.shiftCenterCoordinate(by: offset, pitchedDrift: false)
-
-        XCTAssertLessThan(shiftedCenterCoordinate.longitude, -180, line: line)
-    }
-
-    func testShiftCenterCoordinateHandlesAntimeridianCrossingWhileHeadingEast() {
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: 0, offset: CGPoint(x: -10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: 45, offset: CGPoint(x: -10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: 135, offset: CGPoint(x: 10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: 180, offset: CGPoint(x: 10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: -180, offset: CGPoint(x: 10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: -135, offset: CGPoint(x: 10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: -45, offset: CGPoint(x: -10, y: 0))
-
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: 45, offset: CGPoint(x: 0, y: 10))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: 90, offset: CGPoint(x: 0, y: 10))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: 135, offset: CGPoint(x: 0, y: 10))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: -135, offset: CGPoint(x: 0, y: -10))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: -90, offset: CGPoint(x: 0, y: -10))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: -45, offset: CGPoint(x: 0, y: -10))
-    }
-
-    func testShiftCenterCoordinateHandlesAntimeridianCrossingWhileHeadingWest() {
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: 0, offset: CGPoint(x: 10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: 45, offset: CGPoint(x: 10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: 135, offset: CGPoint(x: -10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: 180, offset: CGPoint(x: -10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: -180, offset: CGPoint(x: -10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: -135, offset: CGPoint(x: -10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: -45, offset: CGPoint(x: 10, y: 0))
-
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: 45, offset: CGPoint(x: 0, y: -10))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: 90, offset: CGPoint(x: 0, y: -10))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: 135, offset: CGPoint(x: 0, y: -10))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: -135, offset: CGPoint(x: 0, y: 10))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: -90, offset: CGPoint(x: 0, y: 10))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: -45, offset: CGPoint(x: 0, y: 10))
-    }
-
     // MARK: MakeCameraAnimator Tests
 
-    func testAddAndRemoveCameraAnimators() {
+    func testAddCameraAnimators() {
         let firstAnimator = cameraManager.makeCameraAnimator(duration: 5.0, curve: .linear)
         let secondAnimator = cameraManager.makeCameraAnimator(duration: 5.0, dampingRatio: 1.0)
         let thirdAnimator = cameraManager.makeCameraAnimator(duration: 5.0, curve: .linear)
         let fourthAnimator = cameraManager.makeCameraAnimator(duration: 5.0, controlPoint1: CGPoint(x: 0.0, y: 1.0), controlPoint2: CGPoint(x: 1.0, y: 0.0))
-        XCTAssertEqual(cameraManager.cameraAnimators.count, 4)
-
-        firstAnimator.stopAnimation()
-        XCTAssertEqual(cameraManager.cameraAnimators.count, 3)
-
-        secondAnimator.stopAnimation()
-        thirdAnimator.stopAnimation()
-        fourthAnimator.stopAnimation()
-        XCTAssertEqual(cameraManager.cameraAnimators.count, 0)
+        XCTAssertTrue(cameraManager.cameraAnimators.contains(firstAnimator))
+        XCTAssertTrue(cameraManager.cameraAnimators.contains(secondAnimator))
+        XCTAssertTrue(cameraManager.cameraAnimators.contains(thirdAnimator))
+        XCTAssertTrue(cameraManager.cameraAnimators.contains(fourthAnimator))
     }
 }

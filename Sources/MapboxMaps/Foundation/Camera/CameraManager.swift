@@ -39,8 +39,8 @@ public class CameraManager {
      Note: This method does not set the map's camera to the new values. You must call
      `setCamera` in order for the changes to take effect.
 
-    - Parameter array: Array of coordinates that should fit within the new viewport.
-    - Returns: A `Camera` object that contains all coordinates within the viewport.
+     - Parameter array: Array of coordinates that should fit within the new viewport.
+     - Returns: A `Camera` object that contains all coordinates within the viewport.
     */
     public func camera(for coordinates: [CLLocationCoordinate2D]) -> CameraOptions {
         guard let mapView = mapView else {
@@ -174,8 +174,7 @@ public class CameraManager {
      - Parameter zoom: The new zoom level the viewport will transition to.
      - Parameter bearing: The bearing the viewport will rotate to.
      - Parameter pitch: The new pitch the viewport will transition to.
-     - Parameter animated: A boolean indicating if the change should be animated.
-                           By default, this value is `false`
+     - Parameter animated: A boolean indicating if the change should be animated. By default, this value is `false`
      - Parameter completion: The completion block to execute after the transition has occurred.
      */
     public func setCamera(centerCoordinate: CLLocationCoordinate2D? = nil,
@@ -206,11 +205,10 @@ public class CameraManager {
 
     /** Private func to perform camera animation
 
-        - Parameters:
-        - animated: Whether the transition should be animated
-        - duration: If animated, how long the animation takes
-        - animation: closure to perform
-        - completion: animation block called on completion
+        - Parameter animated: Whether the transition should be animated
+        - Parameter duration: If animated, how long the animation takes
+        - Parameter animation: closure to perform
+        - Parameter completion: animation block called on completion
      */
     fileprivate func performCameraAnimation(duration: TimeInterval, animation: @escaping () -> Void, completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
         var animator: CameraAnimator?
@@ -249,7 +247,9 @@ public class CameraManager {
         setCamera(bearing: CLLocationDirection(northBearing),
                   animated: animated)
     }
+
     // MARK: Fitting the camera specified regions
+
     /**
      Transitions the viewport to fit a given set of new coordinate bounds,
      optionally animating the change.
@@ -354,16 +354,17 @@ public class CameraManager {
         setCamera(to: cameraOptions, animated: animated, duration: duration, completion: completion)
     }
 
-    /// Moves the viewpoint to a different location using a transition animation that
-    /// evokes powered flight and an optional transition duration and timing function
-    ///
-    /// The transition animation seamlessly incorporates zooming and panning to help
-    /// the user find his or her bearings even after traversing a great distance.
-    ///
-    /// - Parameters:
-    ///   - camera: The camera options at the end of the animation. Any camera parameters that are nil will not be animated.
-    ///   - duration: Duration of the animation, measured in seconds. If nil, a suitable calculated duration is used.
-    ///   - completion: Completion handler called when the animation stops
+    /**
+     Moves the viewpoint to a different location using a transition animation that
+     evokes powered flight and an optional transition duration and timing function
+
+     The transition animation seamlessly incorporates zooming and panning to help
+     the user find his or her bearings even after traversing a great distance.
+
+     - Parameter camera: The camera options at the end of the animation. Any camera parameters that are nil will not be animated.
+     - Parameter duration: Duration of the animation, measured in seconds. If nil, a suitable calculated duration is used.
+     - Parameter completion: Completion handler called when the animation stops
+     */
     public func flyTo(to camera: CameraOptions,
                       duration: TimeInterval? = nil,
                       completion: AnimationCompletion? = nil) -> CameraAnimator? {

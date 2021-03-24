@@ -45,7 +45,7 @@ public class CameraAnimator: NSObject {
         self.propertyAnimator = propertyAnimator
         self.owner = owner
     }
-    
+
     deinit {
         if propertyAnimator?.state == .active {
             propertyAnimator?.stopAnimation(false)

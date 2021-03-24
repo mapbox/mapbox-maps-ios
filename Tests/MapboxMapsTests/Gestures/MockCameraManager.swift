@@ -18,9 +18,9 @@ final class MockCameraManager: CameraManagerProtocol {
         var duration: TimeInterval
         var completion: ((UIViewAnimatingPosition) -> Void)?
     }
-    
+
     let setCameraStub = Stub<SetCameraParameters, Void>()
-    
+
     func setCamera(to camera: CameraOptions,
                    animated: Bool,
                    duration: TimeInterval,
@@ -31,7 +31,7 @@ final class MockCameraManager: CameraManagerProtocol {
                                       duration: duration,
                                       completion: completion))
     }
-    
+
     func cancelTransitions() {
     }
 }

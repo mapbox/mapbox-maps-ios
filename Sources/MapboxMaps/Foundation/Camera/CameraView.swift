@@ -234,9 +234,8 @@ public class CameraView: UIView {
     }
 }
 
-
 fileprivate extension CameraOptions {
-    
+
     func wrap() -> CameraOptions {
         return CameraOptions(center: self.center?.wrap(),
                              padding: self.padding,
@@ -244,6 +243,6 @@ fileprivate extension CameraOptions {
                              zoom: self.zoom,
                              bearing: self.bearing,
                              pitch: self.pitch)
-        
+
     }
 }

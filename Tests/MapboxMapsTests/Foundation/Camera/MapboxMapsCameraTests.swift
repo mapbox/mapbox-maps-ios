@@ -7,7 +7,6 @@ import MetalKit
 @testable import MapboxMapsFoundation
 #endif
 
-// swiftlint:disable:next type_body_length
 class CameraManagerTests: XCTestCase {
 
     var mapView: BaseMapView!

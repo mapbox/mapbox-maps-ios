@@ -153,12 +153,11 @@ public class CameraManager {
         guard mapView.camera != clampedCamera else {
             return
         }
-        
-        
+
         let transitionBlock = {
             mapView.camera = clampedCamera
         }
-        
+
         if animated && duration > 0 {
             performCameraAnimation(duration: duration, animation: transitionBlock, completion: completion)
         } else {
@@ -195,7 +194,7 @@ public class CameraManager {
                                       zoom: zoom,
                                       bearing: bearing,
                                       pitch: pitch)
-        
+
         setCamera(to: newCamera, animated: animated, duration: duration, completion: completion)
     }
     // swiftlint:enable function_parameter_count
@@ -216,18 +215,15 @@ public class CameraManager {
      */
     fileprivate func performCameraAnimation(duration: TimeInterval, animation: @escaping () -> Void, completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
         var animator: CameraAnimator?
-        
+
         animator = makeCameraAnimator(duration: duration, curve: .easeOut)
         animator?.addAnimations(animation)
-        
+
         animator?.addCompletion({ (position) in
-            if let validCompletion = completion, let validAnimator = animator {
-                self.schedulePendingCompletion(forAnimator: validAnimator, completion: validCompletion, animatingPosition: position)
-            }
-            
+            completion?(position)
             animator = nil
         })
-        
+
         animator?.startAnimation()
     }
 
@@ -355,8 +351,7 @@ public class CameraManager {
                                                                     padding: padding,
                                                                     bearing: NSNumber(value: Float(bearing)),
                                                                     pitch: NSNumber(value: Float(pitch)))
-        
-        
+
         setCamera(to: cameraOptions, animated: animated, duration: duration, completion: completion)
     }
 
@@ -386,7 +381,7 @@ public class CameraManager {
 
         // If there was no duration specified, use a default
         let time: TimeInterval = duration ?? interpolator.duration()
-        
+
         // TODO: Consider timesteps based on the flyTo curve, for example, it would be beneficial to have a higher
         // density of time steps at towards the start and end of the animation to avoid jiggling.
         let timeSteps = stride(from: 0.0, through: 1.0, by: 0.025)

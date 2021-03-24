@@ -26,30 +26,30 @@ extension GestureManager: GestureHandlerDelegate {
                                     completion: nil)
         }
     }
-    
+
     internal func panBegan(at point: CGPoint) {
         try! cameraManager.mapView?.__map.dragStart(forPoint: point.screenCoordinate)
     }
 
     // MapView has been panned
     internal func panned(from startPoint: CGPoint, to endPoint: CGPoint) {
-        
+
         if let cameraOptions = try! cameraManager.mapView?.__map.getDragCameraOptionsFor(fromPoint: startPoint.screenCoordinate, toPoint: endPoint.screenCoordinate) {
-            
+
             cameraManager.setCamera(to: cameraOptions,
                                     animated: false,
                                     duration: 0,
                                     completion: nil)
-            
+
         }
     }
 
     // Pan has ended on the MapView with a residual `offset`
     func panEnded(at endPoint: CGPoint, shouldDriftTo driftEndPoint: CGPoint) {
-    
+
         if endPoint != driftEndPoint,
            let driftCameraOptions = try! cameraManager.mapView?.__map.getDragCameraOptionsFor(fromPoint: endPoint.screenCoordinate, toPoint: driftEndPoint.screenCoordinate) {
-            
+
             cameraManager.setCamera(to: driftCameraOptions,
                                     animated: true,
                                     duration: Double(UIScrollView.DecelerationRate.normal.rawValue),

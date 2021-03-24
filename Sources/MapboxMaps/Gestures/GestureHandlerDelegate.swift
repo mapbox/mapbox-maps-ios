@@ -6,7 +6,7 @@ internal protocol GestureHandlerDelegate: class {
 
     // View has been tapped with a number of taps and number of finger touches
     func tapped(numberOfTaps: Int, numberOfTouches: Int)
-    
+
     func panBegan(at point: CGPoint)
 
     // View has been panned
@@ -59,7 +59,7 @@ internal protocol GestureHandlerDelegate: class {
 internal extension GestureHandlerDelegate {
 
     func tapped(numberOfTaps: Int, numberOfTouches: Int) {}
-    
+
     func panBegan(at point: CGPoint) {}
 
     // View has been panned

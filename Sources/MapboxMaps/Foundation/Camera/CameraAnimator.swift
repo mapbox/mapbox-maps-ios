@@ -67,11 +67,11 @@ public class CameraAnimator: NSObject {
     public func stopAnimation() {
         propertyAnimator.stopAnimation(false)
         propertyAnimator.finishAnimation(at: .current)
-        delegate?.animatorIsFinished(forAnimator: self)
     }
 
     /// Add animations block to the animator with a `delayFactor`.
     public func addAnimations(_ animations: @escaping () -> Void, delayFactor: CGFloat) {
+        // if this cameraAnimator is not in the list of CameraAnimators held by the `CameraManager` then add it to that list??
         propertyAnimator.addAnimations(animations, delayFactor: delayFactor)
     }
 

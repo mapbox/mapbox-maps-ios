@@ -16,12 +16,4 @@ internal protocol CameraAnimatorDelegate: class {
     func schedulePendingCompletion(forAnimator animator: CameraAnimator,
                                    completion: @escaping AnimationCompletion,
                                    animatingPosition: UIViewAnimatingPosition)
-
-    /**
-    This delegate function notifies that the animation is finished
-
-    - Parameter animator: The current animator that this delegate function is being called from
-    */
-    func animatorIsFinished(forAnimator animator: CameraAnimator)
-
 }

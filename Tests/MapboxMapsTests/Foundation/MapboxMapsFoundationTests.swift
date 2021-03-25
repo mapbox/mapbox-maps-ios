@@ -1,6 +1,5 @@
 import XCTest
 import CoreLocation
-import UIKit
 
 #if canImport(MapboxMaps)
 @testable import MapboxMaps
@@ -187,6 +186,29 @@ class MapboxMapsFoundationTests: XCTestCase {
                                 height: rect.height + abs(point.x))
 
         XCTAssertEqual(expectedRect, actualRect)
+    }
+
+    func testRectToCoordinateBounds() {
+        let convertedBounds = mapView.cameraView.visibleCoordinateBounds
+        let convertedBounds2 = mapView.coordinateBounds(for: mapView)
+
+        XCTAssertEqual(convertedBounds.southwest.latitude, convertedBounds2.southwest.latitude, accuracy: accuracy)
+        XCTAssertEqual(convertedBounds.southwest.longitude, convertedBounds2.southwest.longitude, accuracy: accuracy)
+        XCTAssertEqual(convertedBounds.northeast.latitude, convertedBounds2.northeast.latitude, accuracy: accuracy)
+        XCTAssertEqual(convertedBounds.northeast.longitude, convertedBounds2.northeast.longitude, accuracy: accuracy)
+
+        // Test southwest points are equal
+        let southwestBoundsPoint = mapView.point(for: convertedBounds.southwest, in: mapView)
+        let southwestFramePoint = CGPoint(x: mapView.bounds.minX, y: mapView.bounds.maxY)
+        XCTAssertEqual(southwestBoundsPoint.x, southwestFramePoint.x, accuracy: 0.01)
+        XCTAssertEqual(southwestBoundsPoint.y, southwestFramePoint.y, accuracy: 0.01)
+
+        // Test northeast points are equal
+        let northeastBoundsPoint = mapView.point(for: convertedBounds.northeast, in: mapView)
+        let northeastFramePoint = CGPoint(x: mapView.bounds.maxX, y: mapView.bounds.minY)
+
+        XCTAssertEqual(northeastBoundsPoint.x, northeastFramePoint.x, accuracy: 0.01)
+        XCTAssertEqual(northeastBoundsPoint.y, northeastFramePoint.y, accuracy: 0.01)
     }
 
     func testCoordinateBoundsToRect() {

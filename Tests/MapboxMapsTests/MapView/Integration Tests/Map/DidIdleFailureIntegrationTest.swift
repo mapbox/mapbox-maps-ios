@@ -175,8 +175,8 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
 
         style.styleURL = .streets
 
-        mapView.centerCoordinate = CLLocationCoordinate2D(latitude: 42.0, longitude: -71.0)
-        mapView.zoom = 8.0
+        mapView.cameraView.centerCoordinate = CLLocationCoordinate2D(latitude: 42.0, longitude: -71.0)
+        mapView.cameraView.zoom = 8.0
 
         mapView.on(.mapLoadingError) { event in
             let userInfo: [String: Any] = (event.data as? [String: Any]) ?? [:]

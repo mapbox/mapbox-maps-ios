@@ -3,7 +3,7 @@
 import UIKit
 import Turf
 
-// swiftlint:disable file_length type_body_length
+// swiftlint:disable file_length
 
 public enum PreferredFPS: RawRepresentable, Equatable {
 
@@ -72,9 +72,7 @@ open class ObserverConcrete: Observer {
     }
 }
 
-internal typealias PendingAnimationCompletion = (completion: AnimationCompletion, animatingPosition: UIViewAnimatingPosition)
-
-open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDelegate {
+open class BaseMapView: UIView, MapClient, MBMMetalViewProvider {
 
     /// The underlying renderer object responsible for rendering the map
     public var __map: Map!
@@ -84,9 +82,6 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
 
     /// Resource options for this map view
     internal var resourceOptions: ResourceOptions?
-
-    /// List of completion blocks that need to be completed by the displayLink
-    internal var pendingAnimatorCompletionBlocks: [PendingAnimationCompletion] = []
 
     public var needsDisplayRefresh: Bool = false
     public var dormant: Bool = false
@@ -98,110 +93,43 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     @IBInspectable var baseURL__: String = ""
     @IBInspectable var accessToken__: String = ""
 
+    /// Returns the camera view managed by this object.
+    public var cameraView: CameraView!
+
     internal var preferredFPS: PreferredFPS = .normal {
         didSet {
             updateDisplayLinkPreferredFramesPerSecond()
         }
     }
 
-    /// Returns the camera view managed by this object.
-    var cameraView: CameraView!
-
-    /// The map's current camera
-    public var camera: CameraOptions {
-        get {
-            do {
-                let options = try __map.getCameraOptions(forPadding: nil)
-                return options
-            } catch {
-                fatalError("Could not retrieve camera options due to error: \(error)")
-            }
-        } set {
-            cameraView.camera = newValue
-        }
-    }
-
     /// The map's current center coordinate.
     public var centerCoordinate: CLLocationCoordinate2D {
-        get {
-            guard let center = camera.center else {
-                fatalError("Center is nil in camera options")
-            }
-            return center
-        } set {
-            cameraView.centerCoordinate = newValue
-        }
+        // cameraView.centerCoordinate is allowed to exceed [-180, 180]
+        // so that core animation interpolation works correctly when
+        // crossing the antimeridian. We wrap here to hide that implementation
+        // detail when accessing centerCoordinate via BaseMapView
+        return cameraView.centerCoordinate.wrap()
     }
 
-    /// The map's  zoom level.
+    /// The map's current zoom level.
     public var zoom: CGFloat {
-        get {
-            guard let zoom = camera.zoom else {
-                fatalError("Zoom is nil in camera options")
-            }
-            return CGFloat(zoom)
-        } set {
-            cameraView.zoom = newValue
-        }
+        return cameraView.zoom
     }
 
-    /// The map's bearing, measured clockwise from 0° north.
+    /// The map's current bearing, measured clockwise from 0° north.
     public var bearing: CLLocationDirection {
-        get {
-            guard let bearing = camera.bearing else {
-                fatalError("Bearing is nil in camera options")
-            }
-            return CLLocationDirection(bearing)
-        } set {
-            cameraView.bearing = CGFloat(newValue)
-        }
+        return CLLocationDirection(cameraView.bearing)
     }
 
-    /// The map's pitch, falling within a range of 0 to 60.
+    /// The map's current pitch, falling within a range of 0 to 60.
     public var pitch: CGFloat {
-        get {
-            guard let pitch = camera.pitch else {
-                fatalError("Pitch is nil in camera options")
-            }
-
-            return pitch
-        } set {
-            cameraView.pitch = newValue
-        }
-    }
-
-    /// The map's camera padding
-    public var padding: UIEdgeInsets {
-        get {
-            return camera.padding ?? .zero
-        } set {
-            cameraView.padding = newValue
-        }
-    }
-
-    public var anchor: CGPoint {
-        get {
-            // TODO: Evaluate whether we should get the anchor from CameraView or not
-            return cameraView.anchor
-        } set {
-            cameraView.anchor = newValue
-        }
-    }
-
-    func jumpTo(camera: CameraOptions) {
-        do {
-            try __map.setCameraFor(camera)
-        } catch {
-            fatalError("Exception raised when jumping to new camera options: \(camera). Error: \(error)")
-        }
+        return cameraView.pitch
     }
 
     // MARK: Init
     public init(with frame: CGRect, resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions, styleURL: URL?) {
         super.init(frame: frame)
-        self.commonInit(resourceOptions: resourceOptions,
-                        glyphsRasterizationOptions: glyphsRasterizationOptions,
-                        styleURL: styleURL)
+        commonInit(resourceOptions: resourceOptions, glyphsRasterizationOptions: glyphsRasterizationOptions, styleURL: styleURL)
     }
 
     private func commonInit(resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions, styleURL: URL?) {
@@ -243,8 +171,15 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
         let events = MapEvents.EventKind.allCases.map({ $0.rawValue })
         try! __map.subscribe(for: observerConcrete, events: events)
 
-        self.cameraView = CameraView(delegate: self)
-        self.addSubview(cameraView)
+        cameraView = CameraView(frame: frame, map: __map)
+        addSubview(cameraView)
+
+        NSLayoutConstraint.activate([
+            cameraView.leftAnchor.constraint(equalTo: leftAnchor),
+            cameraView.topAnchor.constraint(equalTo: topAnchor),
+            cameraView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            cameraView.rightAnchor.constraint(equalTo: rightAnchor)
+        ])
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(willTerminate),
@@ -337,17 +272,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
 
         if needsDisplayRefresh {
             needsDisplayRefresh = false
-            self.cameraView.update()
-
-            /// This executes the series of scheduled animation completion blocks and also removes them from the list
-            while !pendingAnimatorCompletionBlocks.isEmpty {
-                let pendingCompletion = pendingAnimatorCompletionBlocks.removeFirst()
-                let completion = pendingCompletion.completion
-                let animatingPosition = pendingCompletion.animatingPosition
-                completion(animatingPosition)
-            }
-
-            self.displayCallback?()
+            displayCallback?()
         }
     }
 
@@ -433,7 +358,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
         metalView.layer.isOpaque = isOpaque
         metalView.isPaused = true
         metalView.enableSetNeedsDisplay = true
-        metalView.presentsWithTransaction = true
+        metalView.presentsWithTransaction = false
 
         insertSubview(metalView, at: 0)
         self.metalView = metalView

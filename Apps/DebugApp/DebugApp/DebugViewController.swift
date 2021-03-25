@@ -11,7 +11,6 @@ import Turf
 public class DebugViewController: UIViewController {
 
     internal var mapView: MapView!
-    internal var runningAnimator: CameraAnimator?
 
     var resourceOptions: ResourceOptions {
         guard let accessToken = AccountManager.shared.accessToken else {
@@ -79,9 +78,18 @@ public class DebugViewController: UIViewController {
          */
         mapView.on(.mapLoaded) { (event) in
             print("The map has finished loading... Event = \(event)")
+        }
 
-            let initialCenter = CLLocationCoordinate2D(latitude: 39.01305735102963, longitude: -77.01570412528032)
-            self.mapView.cameraManager.setCamera(centerCoordinate: initialCenter, zoom: 12)
+        /**
+         The closure is called whenever the map view is entering an idle state,
+         and no more drawing will be necessary until new data is loaded or there
+         is some interaction with the map.
+
+         - All currently requested tiles have been rendered
+         - All fade/transition animations have completed
+         */
+        mapView.on(.mapIdle) { (event) in
+            print("The map is idle... Event = \(event)")
         }
 
         /**

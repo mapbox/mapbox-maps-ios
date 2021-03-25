@@ -22,20 +22,12 @@ internal class PanGestureHandler: GestureHandler {
     @objc internal func handlePan(_ pan: UIPanGestureRecognizer) {
         switch pan.state {
         case .began:
-
-            let point = pan.location(in: pan.view)
-            delegate.panBegan(at: point)
             delegate.gestureBegan(for: .pan)
-
         case .changed:
-            let start = pan.location(in: pan.view)
             let delta = pan.translation(in: pan.view).applyPanScrollingMode(panScrollingMode: scrollMode)
-            let end = CGPoint(x: start.x + delta.x, y: start.y + delta.y)
-            delegate.panned(from: start, to: end)
+            delegate.panned(by: delta)
             pan.setTranslation(.zero, in: pan.view)
-
         case .ended, .cancelled:
-            let endPoint = pan.location(in: pan.view)
             var velocity = pan.velocity(in: pan.view)
             let velocityHypot = sqrt(pow(velocity.x, 2) + pow(velocity.y, 2))
 
@@ -43,17 +35,13 @@ internal class PanGestureHandler: GestureHandler {
                 velocity = CGPoint.zero
             }
 
-            var driftOffset = CGPoint.zero
             if velocity != CGPoint.zero { // There is a potential drift after the gesture has ended
-                driftOffset = CGPoint(x: velocity.x * decelerationRate / 4,
+                let offset = CGPoint(x: velocity.x * decelerationRate / 4,
                                      y: velocity.y * decelerationRate / 4)
                                     .applyPanScrollingMode(panScrollingMode: scrollMode)
+
+                delegate.panEnded(with: offset)
             }
-
-            let driftEndPoint = CGPoint(x: endPoint.x + driftOffset.x,
-                                        y: endPoint.y + driftOffset.y)
-
-            delegate.panEnded(at: endPoint, shouldDriftTo: driftEndPoint)
         default:
             break
         }

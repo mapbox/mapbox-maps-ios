@@ -42,7 +42,7 @@ public class FlyToExample: UIViewController, ExampleProtocol {
                                 pitch: 50)
 
         mapView.cameraManager.setCamera(to: start) { _ in
-            _ = self.mapView.cameraManager.flyTo(to: end) { [weak self] _ in
+            self.mapView.cameraManager.fly(to: end) { [weak self] _ in
                 print("Camera fly-to finished")
                 // The below line is used for internal testing purposes only.
                 self?.finish()

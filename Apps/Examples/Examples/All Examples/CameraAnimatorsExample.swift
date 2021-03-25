@@ -1,9 +1,9 @@
 import UIKit
 import MapboxMaps
 
-@objc(CameraAnimationExample2)
+@objc(CameraAnimatorsExample)
 
-public class CameraUIViewAnimationExample: UIViewController, ExampleProtocol {
+public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
 

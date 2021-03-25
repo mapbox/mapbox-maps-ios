@@ -7,6 +7,10 @@ public class CameraUIViewAnimationExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
 
+    // Store the CameraAnimators so that the do not fall out of scope.
+    var bearingAnimator: CameraAnimator?
+    var centerAnimator: CameraAnimator?
+    var zoomAnimator: CameraAnimator?
     override public func viewDidLoad() {
         super.viewDidLoad()
 
@@ -27,37 +31,45 @@ public class CameraUIViewAnimationExample: UIViewController, ExampleProtocol {
 
             guard let self = self else { return }
 
-            // The following dispatch group is used to coordinate the completion of
-            // this example. This is useful in the case where the durations and delays
-            // are changed.
-            let group = DispatchGroup()
-            group.enter()
-            group.enter()
-            group.enter()
-
-            // Center the map camera over New York City.
-            UIView.animate(withDuration: 4.0, delay: 2.0, options: [.beginFromCurrentState, .allowUserInteraction, .curveLinear]) {
+            // Rotate the map 180º over the course of four seconds.
+            self.bearingAnimator = self.mapView.cameraManager.makeCameraAnimator(duration: 4,
+                                                                                    curve: .linear,
+                                                                           animationOwner: .custom(id: "bearing-animator"),
+                                                                               animations: {
                 self.mapView.bearing = 180.0
-            } completion: { _ in
-                group.leave()
-            }
+            })
+            self.bearingAnimator?.addCompletion({ _ in
+                self.bearingAnimator = nil
+            })
+            self.bearingAnimator?.startAnimation()
 
-            UIView.animate(withDuration: 4.0, delay: 1.0, options: [.beginFromCurrentState, .allowUserInteraction, .curveLinear]) {
+            // Center the map over New York City.
+            self.centerAnimator = self.mapView.cameraManager.makeCameraAnimator(duration: 4,
+                                                                                curve: .linear,
+                                                                                animationOwner: .custom(id: "center-animator"),
+                                                                                animations: {
                 self.mapView.centerCoordinate = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
-            } completion: { _ in
-                group.leave()
-            }
+            })
+            self.centerAnimator?.addCompletion({ _ in
+                self.centerAnimator = nil
+            })
+            // Start the animation after a one second delay.
+            self.centerAnimator?.startAnimation(afterDelay: 1)
 
-            UIView.animate(withDuration: 4.0, delay: 3.0, options: [.beginFromCurrentState, .allowUserInteraction, .curveLinear]) {
+            // Zoom in to zoom level 10 after a two second delay.
+            self.zoomAnimator = self.mapView.cameraManager.makeCameraAnimator(duration: 3,
+                                                                                 curve: .linear,
+                                                                        animationOwner: .custom(id: "zoom-animator"), animations: {
                 self.mapView.zoom = 10.0
-            } completion: { _ in
-                group.leave()
-            }
+            })
+            self.zoomAnimator?.addCompletion({ _ in
+                self.zoomAnimator = nil
+            })
+            self.zoomAnimator?.startAnimation(afterDelay: 2)
 
-            // Wait until all animations are complete before finishing
-            group.notify(queue: DispatchQueue.main) {
-                self.finish()
-            }
+            // For internal testing purposes only.
+            self.finish()
+
         }
     }
 }

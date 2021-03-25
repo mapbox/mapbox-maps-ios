@@ -140,7 +140,7 @@ public class CameraManager {
                                           padding: targetCamera.padding,
                                           anchor: targetCamera.anchor,
                                           zoom: targetCamera.zoom?.clamped(to: mapCameraOptions.minimumZoomLevel...mapCameraOptions.maximumZoomLevel),
-                                          bearing: optimizeBearing(startBearing: mapView.bearing, endBearing: targetCamera.bearing),
+                                          bearing: optimizeBearing(startBearing: mapView.cameraView.localBearing, endBearing: targetCamera.bearing),
                                           pitch: targetCamera.pitch?.clamped(to: mapCameraOptions.minimumPitch...mapCameraOptions.maximumPitch))
 
         // Return early if the cameraView's camera is already at `clampedCamera`

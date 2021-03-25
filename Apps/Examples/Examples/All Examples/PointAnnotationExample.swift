@@ -26,7 +26,7 @@ public class PointAnnotationExample: UIViewController, ExampleProtocol {
             guard let self = self else { return }
 
             // Create the point annotation, which will be rendered with the default red pin.
-            let centerCoordinate = self.mapView.cameraView.centerCoordinate
+            let centerCoordinate = self.mapView.centerCoordinate
             let pointAnnotation = PointAnnotation(coordinate: centerCoordinate)
 
             // Add the annotation to the map.

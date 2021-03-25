@@ -7,7 +7,6 @@ import MetalKit
 @testable import MapboxMapsFoundation
 #endif
 
-// swiftlint:disable:next type_body_length
 class CameraManagerTests: XCTestCase {
 
     var mapView: BaseMapView!
@@ -26,12 +25,12 @@ class CameraManagerTests: XCTestCase {
     func testZoom() {
         XCTAssertEqual(mapView.zoom, 0.0, "Camera's zoom should match Map's default zoom.")
 
-        mapView.cameraView.zoom = 5.0
-        XCTAssertEqual(mapView.zoom, 5.0, "Camera's zoom value is not initialized.")
+        mapView.zoom = 5.0
+        XCTAssertEqual(mapView.cameraView.localZoom, 5.0, "Camera's zoom value is not initialized.")
 
         cameraManager.setCamera(zoom: 10.0)
 
-        XCTAssertEqual(mapView.zoom, 10.0, "Camera manager did not set camera view zoom value.")
+        XCTAssertEqual(mapView.cameraView.localZoom, 10.0, "Camera manager did not set camera view zoom value.")
     }
 
     func testCameraForCoordinateArray() {
@@ -98,7 +97,7 @@ class CameraManagerTests: XCTestCase {
         let coordinateBounds = CoordinateBounds(southwest: southwest, northeast: northeast)
 
         let camera = cameraManager.camera(for: coordinateBounds)
-        cameraManager.fly(to: camera, completion: nil)
+        _ = cameraManager.flyTo(to: camera, completion: nil)
 
         XCTAssertNotNil(mapView.cameraView.camera)
 
@@ -119,7 +118,7 @@ class CameraManagerTests: XCTestCase {
         let cameraManager = CameraManager(for: mapView, with: cameraOptions)
         let previousCenter = mapView.centerCoordinate
         cameraManager.transitionCoordinateBounds(newCoordinateBounds: allowedBounds)
-        let currentCenter = mapView.centerCoordinate
+        let currentCenter = mapView.cameraView.localCenterCoordinate
 
         // The bounds to set the camera view to falls within the restricted bounds,
         // so the center will change.
@@ -136,11 +135,11 @@ class CameraManagerTests: XCTestCase {
                                            bearing: 8,
                                            pitch: 9)
 
-        let originalCamera = mapView.cameraView.camera
+        let originalCamera = mapView.camera
 
         cameraManager.setCamera(to: expectedCamera, completion: nil)
 
-        let actualCamera = mapView.cameraView.camera
+        let actualCamera = mapView.cameraView.localCamera
 
         XCTAssertEqual(expectedCamera.center, actualCamera.center)
         XCTAssertEqual(expectedCamera.padding, actualCamera.padding)
@@ -162,7 +161,7 @@ class CameraManagerTests: XCTestCase {
 
         cameraManager.setCamera(to: expectedCamera)
 
-        XCTAssertEqual(mapView.cameraView.camera.zoom, cameraManager.mapCameraOptions.minimumZoomLevel)
+        XCTAssertEqual(mapView.cameraView.localZoom, cameraManager.mapCameraOptions.minimumZoomLevel, accuracy: 0.000001)
     }
 
     func testSetCameraEnforcesMaxZoom() {
@@ -171,7 +170,7 @@ class CameraManagerTests: XCTestCase {
 
         cameraManager.setCamera(to: expectedCamera)
 
-        XCTAssertEqual(mapView.cameraView.camera.zoom, cameraManager.mapCameraOptions.maximumZoomLevel)
+        XCTAssertEqual(mapView.cameraView.localZoom, cameraManager.mapCameraOptions.maximumZoomLevel, accuracy: 0.000001)
     }
 
     func testSetCameraEnforcesMinPitch() {
@@ -180,7 +179,7 @@ class CameraManagerTests: XCTestCase {
 
         cameraManager.setCamera(to: expectedCamera)
 
-        XCTAssertEqual(mapView.cameraView.camera.pitch, cameraManager.mapCameraOptions.minimumPitch)
+        XCTAssertEqual(mapView.cameraView.localPitch, cameraManager.mapCameraOptions.minimumPitch, accuracy: 0.000001)
     }
 
     func testSetCameraEnforcesMaxPitch() {
@@ -189,7 +188,7 @@ class CameraManagerTests: XCTestCase {
 
         cameraManager.setCamera(to: expectedCamera)
 
-        XCTAssertEqual(mapView.cameraView.camera.pitch, cameraManager.mapCameraOptions.maximumPitch)
+        XCTAssertEqual(mapView.cameraView.localPitch, cameraManager.mapCameraOptions.maximumPitch, accuracy: 0.000001)
     }
 
     func testSetCameraByComponentEnforcesMinZoom() {
@@ -197,7 +196,7 @@ class CameraManagerTests: XCTestCase {
 
         cameraManager.setCamera(zoom: -1)
 
-        XCTAssertEqual(mapView.cameraView.camera.zoom, cameraManager.mapCameraOptions.minimumZoomLevel)
+        XCTAssertEqual(mapView.cameraView.localZoom, cameraManager.mapCameraOptions.minimumZoomLevel, accuracy: 0.000001)
     }
 
     func testSetCameraByComponentEnforcesMaxZoom() {
@@ -205,7 +204,7 @@ class CameraManagerTests: XCTestCase {
 
         cameraManager.setCamera(zoom: 26)
 
-        XCTAssertEqual(mapView.cameraView.camera.zoom, cameraManager.mapCameraOptions.maximumZoomLevel)
+        XCTAssertEqual(mapView.cameraView.localZoom, cameraManager.mapCameraOptions.maximumZoomLevel, accuracy: 0.000001)
     }
 
     func testSetCameraByComponentEnforcesMinPitch() {
@@ -213,7 +212,7 @@ class CameraManagerTests: XCTestCase {
 
         cameraManager.setCamera(pitch: -1)
 
-        XCTAssertEqual(mapView.cameraView.camera.pitch, cameraManager.mapCameraOptions.minimumPitch)
+        XCTAssertEqual(mapView.cameraView.localPitch, cameraManager.mapCameraOptions.minimumPitch, accuracy: 0.000001)
     }
 
     func testSetCameraByComponentEnforcesMaxPitch() {
@@ -221,25 +220,7 @@ class CameraManagerTests: XCTestCase {
 
         cameraManager.setCamera(pitch: 61)
 
-        XCTAssertEqual(mapView.cameraView.camera.pitch, cameraManager.mapCameraOptions.maximumPitch)
-    }
-
-    func testMoveCamera() {
-        mapView.cameraView.zoom = 0.0
-        let initialCamera = mapView.cameraView.camera
-        cameraManager.moveCamera(rotation: 10)
-
-        XCTAssertNotEqual(initialCamera.bearing, mapView.bearing)
-        XCTAssertEqual(mapView.bearing, -212.957, accuracy: 0.001, "Check that the new bearing matches the expected value.")
-        XCTAssertEqual(mapView.centerCoordinate, CLLocationCoordinate2D(latitude: 0, longitude: 0))
-
-        cameraManager.moveCamera(by: .zero, pitch: 10, zoom: 10.0)
-        XCTAssertEqual(mapView.pitch, -10)
-        XCTAssertEqual(mapView.zoom, 10.0, accuracy: 0.001, "The value for zoom should be 10.0")
-
-        cameraManager.moveCamera(by: CGPoint(x: -10, y: 10))
-        XCTAssertEqual(mapView.centerCoordinate.latitude, 7.013668, accuracy: 0.0001, "The new latitude should be approximately 7.013668")
-        XCTAssertEqual(mapView.centerCoordinate.longitude, 7.03125, accuracy: 0.0001, "The new longitude should be approximately 7.03125")
+        XCTAssertEqual(mapView.cameraView.localPitch, cameraManager.mapCameraOptions.maximumPitch, accuracy: 0.000001)
     }
 
     func testOptimizeBearingClockwise() {
@@ -312,65 +293,16 @@ class CameraManagerTests: XCTestCase {
         XCTAssertEqual(optimizedBearing, 200)
     }
 
-    func verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing bearing: CLLocationDirection,
-                                                                               offset: CGPoint,
-                                                                               line: UInt = #line) {
-        cameraManager.setCamera(centerCoordinate: CLLocationCoordinate2D(latitude: 0,
-                                                                         longitude: 179.999),
-                                zoom: 0,
-                                bearing: bearing,
-                                animated: false)
+    // MARK: MakeCameraAnimator Tests
 
-        let shiftedCenterCoordinate = cameraManager.shiftCenterCoordinate(by: offset, pitchedDrift: false)
-
-        XCTAssertGreaterThan(shiftedCenterCoordinate.longitude, 180, line: line)
-    }
-
-    func verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing bearing: CLLocationDirection,
-                                                                               offset: CGPoint,
-                                                                               line: UInt = #line) {
-        cameraManager.setCamera(centerCoordinate: CLLocationCoordinate2D(latitude: 0,
-                                                                         longitude: -179.999),
-                                zoom: 0,
-                                bearing: bearing,
-                                animated: false)
-
-        let shiftedCenterCoordinate = cameraManager.shiftCenterCoordinate(by: offset, pitchedDrift: false)
-
-        XCTAssertLessThan(shiftedCenterCoordinate.longitude, -180, line: line)
-    }
-
-    func testShiftCenterCoordinateHandlesAntimeridianCrossingWhileHeadingEast() {
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: 0, offset: CGPoint(x: -10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: 45, offset: CGPoint(x: -10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: 135, offset: CGPoint(x: 10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: 180, offset: CGPoint(x: 10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: -180, offset: CGPoint(x: 10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: -135, offset: CGPoint(x: 10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: -45, offset: CGPoint(x: -10, y: 0))
-
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: 45, offset: CGPoint(x: 0, y: 10))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: 90, offset: CGPoint(x: 0, y: 10))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: 135, offset: CGPoint(x: 0, y: 10))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: -135, offset: CGPoint(x: 0, y: -10))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: -90, offset: CGPoint(x: 0, y: -10))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingEast(forBearing: -45, offset: CGPoint(x: 0, y: -10))
-    }
-
-    func testShiftCenterCoordinateHandlesAntimeridianCrossingWhileHeadingWest() {
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: 0, offset: CGPoint(x: 10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: 45, offset: CGPoint(x: 10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: 135, offset: CGPoint(x: -10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: 180, offset: CGPoint(x: -10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: -180, offset: CGPoint(x: -10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: -135, offset: CGPoint(x: -10, y: 0))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: -45, offset: CGPoint(x: 10, y: 0))
-
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: 45, offset: CGPoint(x: 0, y: -10))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: 90, offset: CGPoint(x: 0, y: -10))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: 135, offset: CGPoint(x: 0, y: -10))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: -135, offset: CGPoint(x: 0, y: 10))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: -90, offset: CGPoint(x: 0, y: 10))
-        verifyShiftCenterCoordinateHandlesAntimeridianCrossingWhenHeadingWest(forBearing: -45, offset: CGPoint(x: 0, y: 10))
+    func testAddCameraAnimators() {
+        let firstAnimator = cameraManager.makeCameraAnimator(duration: 5.0, curve: .linear)
+        let secondAnimator = cameraManager.makeCameraAnimator(duration: 5.0, dampingRatio: 1.0)
+        let thirdAnimator = cameraManager.makeCameraAnimator(duration: 5.0, curve: .linear)
+        let fourthAnimator = cameraManager.makeCameraAnimator(duration: 5.0, controlPoint1: CGPoint(x: 0.0, y: 1.0), controlPoint2: CGPoint(x: 1.0, y: 0.0))
+        XCTAssertTrue(cameraManager.cameraAnimators.contains(firstAnimator))
+        XCTAssertTrue(cameraManager.cameraAnimators.contains(secondAnimator))
+        XCTAssertTrue(cameraManager.cameraAnimators.contains(thirdAnimator))
+        XCTAssertTrue(cameraManager.cameraAnimators.contains(fourthAnimator))
     }
 }

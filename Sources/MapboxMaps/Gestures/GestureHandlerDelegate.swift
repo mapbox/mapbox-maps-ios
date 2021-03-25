@@ -7,11 +7,13 @@ internal protocol GestureHandlerDelegate: class {
     // View has been tapped with a number of taps and number of finger touches
     func tapped(numberOfTaps: Int, numberOfTouches: Int)
 
+    func panBegan(at point: CGPoint)
+
     // View has been panned
-    func panned(by displacement: CGPoint)
+    func panned(from startPoint: CGPoint, to: CGPoint)
 
     // Pan on the view has ended with a residual offset
-    func panEnded(with offset: CGPoint)
+    func panEnded(at endPoint: CGPoint, shouldDriftTo driftEndPoint: CGPoint)
 
     // Cancel any gesture transitions that are happening
     func cancelGestureTransitions()
@@ -58,9 +60,13 @@ internal extension GestureHandlerDelegate {
 
     func tapped(numberOfTaps: Int, numberOfTouches: Int) {}
 
-    func panned(by displacement: CGPoint) {}
+    func panBegan(at point: CGPoint) {}
 
-    func panEnded(with offset: CGPoint) {}
+    // View has been panned
+    func panned(from startPoint: CGPoint, to endPoint: CGPoint) {}
+
+    // Pan on the view has ended (with a potential drift)
+    func panEnded(at endPoint: CGPoint, shouldDriftTo driftEndPoint: CGPoint) {}
 
     func cancelGestureTransitions() {}
 

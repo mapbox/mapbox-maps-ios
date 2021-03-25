@@ -28,9 +28,9 @@ internal protocol CameraViewDelegate: class {
 }
 
 /// A view that represents a camera view port.
-public class CameraView: UIView {
+internal class CameraView: UIView {
 
-    public var camera: CameraOptions {
+    internal var camera: CameraOptions {
         get {
             return delegate.camera
         }
@@ -62,7 +62,7 @@ public class CameraView: UIView {
     }
 
     /// The camera's zoom. Animatable.
-    @objc dynamic public var zoom: CGFloat {
+    @objc dynamic internal var zoom: CGFloat {
         get {
             return delegate.zoom
         }
@@ -72,7 +72,7 @@ public class CameraView: UIView {
     }
 
     /// The camera's bearing. Animatable.
-    @objc dynamic public var bearing: CGFloat {
+    @objc dynamic internal var bearing: CGFloat {
         get {
             return CGFloat(delegate.bearing)
         }
@@ -83,7 +83,7 @@ public class CameraView: UIView {
     }
 
     /// Coordinate at the center of the camera. Animatable.
-    @objc dynamic public var centerCoordinate: CLLocationCoordinate2D {
+    @objc dynamic internal var centerCoordinate: CLLocationCoordinate2D {
         get {
             return delegate.centerCoordinate
         }
@@ -94,7 +94,7 @@ public class CameraView: UIView {
     }
 
     /// The camera's padding. Animatable.
-    @objc dynamic public var padding: UIEdgeInsets {
+    @objc dynamic internal var padding: UIEdgeInsets {
         get {
             return delegate.padding
         }
@@ -107,7 +107,7 @@ public class CameraView: UIView {
     }
 
     /// The camera's pitch. Animatable.
-    @objc dynamic public var pitch: CGFloat {
+    @objc dynamic internal var pitch: CGFloat {
         get {
             return delegate.pitch
         }
@@ -117,7 +117,7 @@ public class CameraView: UIView {
     }
 
     /// The screen coordinate that the map rotates, pitches and zooms around. Setting this also affects the horizontal vanishing point when pitched. Animatable.
-    @objc dynamic public var anchor: CGPoint {
+    @objc dynamic internal var anchor: CGPoint {
         get {
             return layer.presentation()?.anchorPoint ?? layer.anchorPoint
         }

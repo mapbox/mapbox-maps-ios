@@ -21,8 +21,8 @@ internal class ExampleIntegrationTest: MapViewIntegrationTestCase {
 
         style.styleURL = .streets
 
-        mapView.cameraView.centerCoordinate = CLLocationCoordinate2D(latitude: 42.0, longitude: -71.0)
-        mapView.cameraView.zoom = 8.0
+        mapView.centerCoordinate = CLLocationCoordinate2D(latitude: 42.0, longitude: -71.0)
+        mapView.zoom = 8.0
 
         didFinishLoadingStyle = { _ in
             expectation.fulfill()

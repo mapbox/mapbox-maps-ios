@@ -38,9 +38,6 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
                                                                                animations: {
                 self.mapView.bearing = 180.0
             })
-            self.bearingAnimator?.addCompletion({ _ in
-                self.bearingAnimator = nil
-            })
             self.bearingAnimator?.startAnimation()
 
             // Center the map over New York City.
@@ -50,9 +47,6 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
                                                                                 animations: {
                 self.mapView.centerCoordinate = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
             })
-            self.centerAnimator?.addCompletion({ _ in
-                self.centerAnimator = nil
-            })
             // Start the animation after a one second delay.
             self.centerAnimator?.startAnimation(afterDelay: 1)
 
@@ -61,9 +55,6 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
                                                                                  curve: .linear,
                                                                         animationOwner: .custom(id: "zoom-animator"), animations: {
                 self.mapView.zoom = 10.0
-            })
-            self.zoomAnimator?.addCompletion({ _ in
-                self.zoomAnimator = nil
             })
             self.zoomAnimator?.startAnimation(afterDelay: 2)
 

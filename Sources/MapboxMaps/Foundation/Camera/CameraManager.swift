@@ -196,6 +196,19 @@ public class CameraManager {
             animator.stopAnimation()
         }
     }
+    
+    fileprivate func cancelAnimators(withID id: String) {
+        for animator in cameraAnimators.allObjects {
+            switch animator.owner {
+            case .custom(let customId):
+                if customId == id {
+                    animator.stopAnimation()
+                }
+            default:
+                print("")
+            }
+        }
+    }
 
     /// Private func to perform camera animation
     /// - Parameters:
@@ -203,11 +216,12 @@ public class CameraManager {
     ///   - animation: closure to perform
     ///   - completion: animation block called on completion
     fileprivate func performCameraAnimation(duration: TimeInterval, animation: @escaping () -> Void, completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
+        cancelAnimators(withID: "internal-set-camera")
         var animator: CameraAnimator?
-
-        animator = makeCameraAnimator(duration: duration, curve: .easeOut)
-        animator?.addAnimations(animation)
-
+        animator = makeCameraAnimator(duration: duration,
+                                      curve: .easeOut,
+                                      animationOwner: .custom(id: "internal-set-camera"),
+                                      animations: animation)
         animator?.addCompletion({ (position) in
             completion?(position)
             animator = nil

@@ -342,9 +342,12 @@ public class CameraManager {
 
     /// Moves the viewpoint to a different location using a transition animation that
     /// evokes powered flight and an optional transition duration and timing function
-
-    /// The transition animation seamlessly incorporates zooming and panning to help
+    /// It seamlessly incorporates zooming and panning to help
     /// the user find his or her bearings even after traversing a great distance.
+    ///
+    /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. If a `CameraAnimator` is destroyed, before the animation is finished,
+    /// the animation will be interrupted and completion handlers will be called.
+    ///
     /// - Parameters:
     ///   - camera: The camera options at the end of the animation. Any camera parameters that are nil will not be animated.
     ///   - duration: Duration of the animation, measured in seconds. If nil, a suitable calculated duration is used.
@@ -436,7 +439,9 @@ extension CameraManager: CameraAnimatorDelegate {
 
     /// Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation.
     ///
-    /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. When a `CameraAnimator` is destroyed, the animation will not execute.
+    /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. If a `CameraAnimator` is destroyed, before the animation is finished,
+    /// the animation will be interrupted and completion handlers will be called.
+    ///
     /// - Parameters:
     ///   - duration: The duration of the animation, in seconds.
     ///   - timingParameters: The object providing the timing information. This object must adopt the `UITimingCurveProvider` protocol.
@@ -453,7 +458,9 @@ extension CameraManager: CameraAnimatorDelegate {
 
     /// Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation.
     ///
-    /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. When a `CameraAnimator` is destroyed, the animation will not execute.
+    /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. If a `CameraAnimator` is destroyed, before the animation is finished,
+    /// the animation will be interrupted and completion handlers will be called.
+    ///
     /// - Parameters:
     ///   - duration: The duration of the animation, in seconds.
     ///   - curve: The UIKit timing curve to apply to the animation.
@@ -474,7 +481,9 @@ extension CameraManager: CameraAnimatorDelegate {
 
     /// Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation.
     ///
-    /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. When a `CameraAnimator` is destroyed, the animation will not execute.
+    /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. If a `CameraAnimator` is destroyed, before the animation is finished,
+    /// the animation will be interrupted and completion handlers will be called.
+    ///
     /// - Parameters:
     ///   - duration: The duration of the animation, in seconds.
     ///   - controlPoint1: The first control point for the cubic Bézier timing curve.
@@ -495,20 +504,11 @@ extension CameraManager: CameraAnimatorDelegate {
         return cameraAnimator
     }
 
-    /**
-     Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation
-
-     - Parameter duration: The duration of the animation, in seconds.
-     - Parameter timingParameters: The type of `AnimationCurve` for the animation.
-     - Parameter animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
-     - Parameter animations: The block containing the animations. This block has no return value and takes no parameters.
-                             Use this block to modify any animatable view properties. When you start the animations,
-                             those properties are animated from their current values to the new values using the specified animation parameters.
-     - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
-     */
     /// Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation.
     ///
-    /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. When a `CameraAnimator` is destroyed, the animation will not execute.
+    /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. If a `CameraAnimator` is destroyed, before the animation is finished,
+    /// the animation will be interrupted and completion handlers will be called.
+    ///
     /// - Parameters:
     ///   - duration: The duration of the animation, in seconds.
     ///   - dampingRatio: The damping ratio to apply to the initial acceleration and oscillation. To smoothly decelerate the animation without oscillation, specify a value of 1.

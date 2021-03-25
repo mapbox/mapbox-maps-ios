@@ -47,7 +47,6 @@ public class CameraAnimator: NSObject {
     }
 
     deinit {
-        print("about to deinit animator")
         propertyAnimator.stopAnimation(false)
         propertyAnimator.finishAnimation(at: .current)
     }

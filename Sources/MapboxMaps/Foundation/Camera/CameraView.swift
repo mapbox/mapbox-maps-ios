@@ -112,7 +112,7 @@ internal class CameraView: UIView {
             return delegate.pitch
         }
         set {
-            layer.zPosition = newValue
+            layer.transform.m11 = newValue
         }
     }
 
@@ -142,7 +142,7 @@ internal class CameraView: UIView {
     }
 
     internal var localPitch: CGFloat {
-        return layer.presentation()?.zPosition ?? layer.zPosition
+        return layer.presentation()?.transform.m11 ?? layer.transform.m11
     }
 
     internal var localAnchorPoint: CGPoint {

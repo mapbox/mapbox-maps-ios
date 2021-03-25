@@ -14,7 +14,7 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
         }
 
         animator.addCompletion { [unowned self] (_) in
-//            self.pitchAnimator.startAnimation()
+            self.pitchAnimator.startAnimation()
         }
 
         return animator
@@ -58,17 +58,12 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
 
         // Center the map over New York City.
         let newYork = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
-        mapView.zoom = 15
-        mapView.cameraManager.setCamera(centerCoordinate: newYork, bearing: 358.0316467285156)
-
+        mapView.cameraManager.setCamera(centerCoordinate: newYork)
 
         // Allows the delegate to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in
             guard let self = self else { return }
-            let cameraOptions = CameraOptions(center: newYork, bearing: CLLocationDirection(0.7362971305847168))
-            self.mapView.cameraManager.setCamera(to: cameraOptions, animated: true, duration: 0.5, completion: nil)
-            
-            
+            self.zoomAnimator.startAnimation(afterDelay: 1)
             self.finish()
         }
     }

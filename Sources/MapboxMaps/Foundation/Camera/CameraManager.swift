@@ -252,7 +252,6 @@ public class CameraManager {
                                    completion: nil)
     }
 
-
     /// Transitions the viewport to fit a given set of new coordinate bounds,
     /// specifying a custom edge padding, an optional animation change, and an optional
     /// completion block to execute after the transition occurs.
@@ -280,7 +279,6 @@ public class CameraManager {
                                      animated: animated,
                                      completion: completion)
     }
-
 
     /// Transitions the viewport to fit a given array of new coordinates, specifying
     /// a custom edge padding an optional animation change.

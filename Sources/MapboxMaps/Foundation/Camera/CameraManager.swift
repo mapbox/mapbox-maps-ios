@@ -33,15 +33,12 @@ public class CameraManager {
     }
 
     // MARK: Camera creation
-    /**
-     Creates a new `Camera` object to fit a given array of coordinates.
-    
-     Note: This method does not set the map's camera to the new values. You must call
-     `setCamera` in order for the changes to take effect.
 
-     - Parameter array: Array of coordinates that should fit within the new viewport.
-     - Returns: A `Camera` object that contains all coordinates within the viewport.
-    */
+    /// Creates a new `Camera` object to fit a given array of coordinates.
+    ///
+    /// Note: This method does not set the map's camera to the new values. You must call
+    /// - Parameter coordinates: Array of coordinates that should fit within the new viewport.
+    /// - Returns: A `Camera` object that contains all coordinates within the viewport.
     public func camera(for coordinates: [CLLocationCoordinate2D]) -> CameraOptions {
         guard let mapView = mapView else {
             assertionFailure("MapView is nil.")
@@ -64,14 +61,13 @@ public class CameraManager {
         return options
     }
 
-    /**
-     Returns the camera that best fits the given coordinate bounds, with optional edge
-     padding, bearing, and pitch values.
-     - Parameter coordinateBounds: The coordinate bounds that will be displayed within the viewport.
-     - Parameter edgePadding: The new padding to be used by the camera. By default, this value is `UIEdgeInsets.zero`.
-     - Parameter bearing: The new bearing to be used by the camera. By default, this value is `0`.
-     - Parameter pitch: The new pitch to be used by the camera. By default, this value is `0`.
-     */
+    /// Returns the camera that best fits the given coordinate bounds, with optional edge padding, bearing, and pitch values.
+    /// - Parameters:
+    ///   - coordinateBounds: The coordinate bounds that will be displayed within the viewport.
+    ///   - edgePadding: The new padding to be used by the camera. By default, this value is `UIEdgeInsets.zero`.
+    ///   - bearing: The new bearing to be used by the camera. By default, this value is `0`.
+    ///   - pitch: The new pitch to be used by the camera. By default, this value is `0`.
+    /// - Returns: A set of options `CameraOptions` that represents properties of the Camera.
     public func camera(for coordinateBounds: CoordinateBounds,
                        edgePadding: UIEdgeInsets = UIEdgeInsets.zero,
                        bearing: CGFloat = 0.0,
@@ -88,14 +84,13 @@ public class CameraManager {
         return cameraOptions
     }
 
-    /**
-     Returns the camera that best fits the given geometry, with optional edge
-     padding, bearing, and pitch values.
-     - Parameter geometry: The geoemtry that will be displayed within the viewport.
-     - Parameter edgePadding: The new padding to be used by the camera. By default, this value is `UIEdgeInsets.zero`.
-     - Parameter bearing: The new bearing to be used by the camera. By default, this value is `0`.
-     - Parameter pitch: The new pitch to be used by the camera. By default, this value is `0`.
-     */
+    /// Returns the camera that best fits the given geometry, with optional edge padding, bearing, and pitch values.
+    /// - Parameters:
+    ///   - geometry: The geoemtry that will be displayed within the viewport.
+    ///   - edgePadding: The new padding to be used by the camera. By default, this value is `UIEdgeInsets.zero`.
+    ///   - bearing: The new bearing to be used by the camera. By default, this value is `0`.
+    ///   - pitch: The new pitch to be used by the camera. By default, this value is `0`.
+    /// - Returns: A set of options `CameraOptions` that represents properties of the Camera.
     public func camera(fitting geometry: Geometry,
                        edgePadding: UIEdgeInsets = UIEdgeInsets.zero,
                        bearing: CGFloat = 0.0,
@@ -114,10 +109,9 @@ public class CameraManager {
         return cameraOptions
     }
 
-    /**
-     Returns the coordinate bounds for a given `Camera` object's viewport.
-     - Parameter camera: The camera that the coordinate bounds will be returned for.
-     */
+    /// Returns the coordinate bounds for a given `Camera` object's viewport.
+    /// - Parameter camera: The camera that the coordinate bounds will be returned for.
+    /// - Returns: `CoordinateBounds` for the given `Camera`
     public func coordinateBounds(for camera: CameraOptions) -> CoordinateBounds {
         guard let mapView = mapView else {
             assertionFailure("MapView is nil.")
@@ -131,10 +125,11 @@ public class CameraManager {
     // MARK: Setting a new camera
 
     /// Transition the map's viewport to a new camera.
-    /// - Parameter targetCamera: The target camera to transition to.
-    /// - Parameter animated: Set to `true` if transition should be animated. `false` by default.
-    /// - Parameter duration: Controls the duration of the animation transition. Must be greater than zero if `animated` is true.
-    /// - Parameter completion: The completion block to be called after an animated transition. Only called if `animated` is true.
+    /// - Parameters:
+    ///   - targetCamera: The target camera to transition to.
+    ///   - animated: Set to `true` if transition should be animated. `false` by default.
+    ///   - duration: Controls the duration of the animation transition. Must be greater than zero if `animated` is true.
+    ///   - completion: The completion block to be called after an animated transition. Only called if `animated` is true.
     public func setCamera(to targetCamera: CameraOptions, animated: Bool = false, duration: TimeInterval = 0, completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
         guard let mapView = mapView else {
             assertionFailure("MapView is nil.")
@@ -164,19 +159,18 @@ public class CameraManager {
         }
     }
 
-    /**
-     Transition the camera view to a new map camera based on individual camera properties,
-     optionally animating the change and executing a completion block after the transition occurs.
-
-     - Parameter center: The new center coordinate the viewport will transition to.
-     - Parameter padding: The new edge insets the viewport will use to to apply padding.
-     - Parameter anchor: The new anchor point the viewport will use.
-     - Parameter zoom: The new zoom level the viewport will transition to.
-     - Parameter bearing: The bearing the viewport will rotate to.
-     - Parameter pitch: The new pitch the viewport will transition to.
-     - Parameter animated: A boolean indicating if the change should be animated. By default, this value is `false`
-     - Parameter completion: The completion block to execute after the transition has occurred.
-     */
+    /// Transition the camera view to a new map camera based on individual camera properties,
+    /// optionally animating the change and executing a completion block after the transition occurs.
+    /// - Parameters:
+    ///   - centerCoordinate: The new center coordinate the viewport will transition to.
+    ///   - padding: The new edge insets the viewport will use to to apply padding.
+    ///   - anchor: The new anchor point the viewport will use.
+    ///   - zoom: The new zoom level the viewport will transition to.
+    ///   - bearing: The bearing the viewport will rotate to.
+    ///   - pitch: The new pitch the viewport will transition to.
+    ///   - animated: A boolean indicating if the change should be animated. By default, this value is `false`
+    ///   - duration: The `TimeInterval` for the animation to be completed
+    ///   - completion: The completion block to execute after the transition has occurred.
     public func setCamera(centerCoordinate: CLLocationCoordinate2D? = nil,
                           padding: UIEdgeInsets? = nil,
                           anchor: CGPoint? = nil,
@@ -203,13 +197,11 @@ public class CameraManager {
         }
     }
 
-    /** Private func to perform camera animation
-
-        - Parameter animated: Whether the transition should be animated
-        - Parameter duration: If animated, how long the animation takes
-        - Parameter animation: closure to perform
-        - Parameter completion: animation block called on completion
-     */
+    /// Private func to perform camera animation
+    /// - Parameters:
+    ///   - duration: If animated, how long the animation takes
+    ///   - animation: closure to perform
+    ///   - completion: animation block called on completion
     fileprivate func performCameraAnimation(duration: TimeInterval, animation: @escaping () -> Void, completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
         var animator: CameraAnimator?
 
@@ -224,9 +216,7 @@ public class CameraManager {
         animator?.startAnimation()
     }
 
-    /**
-     Reset the map's camera to the default style camera.
-     */
+    /// Reset the map's camera to the default style camera.
     public func resetPosition() {
         guard let mapView = mapView else {
             assertionFailure("MapView is nil.")
@@ -237,12 +227,8 @@ public class CameraManager {
         setCamera(to: defaultOptions, completion: nil)
     }
 
-    /**
-     Resets the map rotation to a north bearing of `0` degrees.
-
-     - Parameter animated: A boolean indicating if the change should be animated.
-     By default, this value is `false`.
-     */
+    /// Resets the map rotation to a north bearing of `0` degrees.
+    /// - Parameter animated: A boolean indicating if the change should be animated. By default, this value is `false`.
     public func resetNorth(_ animated: Bool = false) {
         setCamera(bearing: CLLocationDirection(northBearing),
                   animated: animated)
@@ -250,16 +236,14 @@ public class CameraManager {
 
     // MARK: Fitting the camera specified regions
 
-    /**
-     Transitions the viewport to fit a given set of new coordinate bounds,
-     optionally animating the change.
-     
-     This method also accounts for any `UIEdgeInsets` that may have been set
-     through the the `CameraView`'s `padding` property.
-     
-     - Parameter newCoordinateBounds: The coordinate bounds that will be displayed within the viewport.
-     - Parameter animated: A boolean indicating if the change should be animated. Defaults to `false`.
-     */
+    /// Transitions the viewport to fit a given set of new coordinate bounds,
+    /// optionally animating the change.
+    ///
+    /// This method also accounts for any `UIEdgeInsets` that may have been set
+    /// through the the `CameraView`'s `padding` property.
+    /// - Parameters:
+    ///   - newCoordinateBounds: The coordinate bounds that will be displayed within the viewport.
+    ///   - animated: A boolean indicating if the change should be animated. Defaults to `false`.
     public func transitionCoordinateBounds(newCoordinateBounds: CoordinateBounds,
                                            animated: Bool = false) {
         transitionCoordinateBounds(to: newCoordinateBounds,
@@ -268,16 +252,15 @@ public class CameraManager {
                                    completion: nil)
     }
 
-    /**
-     Transitions the viewport to fit a given set of new coordinate bounds,
-     specifying a custom edge padding, an optional animation change, and an optional
-     completion block to execute after the transition occurs.
-     
-     - Parameter newCoordinateBounds: The new coordinate bounds that will be displayed within the viewport.
-     - Parameter edgePadding: The padding the viewport will adjust itself by after transitioning to the new viewport.
-     - Parameter animated: A boolean indicating if the change should be animated. Defaults to `false`.
-     - Parameter completion: An optional function to execute after the transition has occurred.
-     */
+    /// Transitions the viewport to fit a given set of new coordinate bounds,
+    /// specifying a custom edge padding, an optional animation change, and an optional
+    /// completion block to execute after the transition occurs.
+    ///
+    /// - Parameters:
+    ///   - newCoordinateBounds: The new coordinate bounds that will be displayed within the viewport.
+    ///   - edgePadding: The padding the viewport will adjust itself by after transitioning to the new viewport.
+    ///   - animated: A boolean indicating if the change should be animated. Defaults to `false`.
+    ///   - completion: An optional function to execute after the transition has occurred.
     public func transitionCoordinateBounds(to newCoordinateBounds: CoordinateBounds,
                                            edgePadding: UIEdgeInsets,
                                            animated: Bool = false,
@@ -297,14 +280,14 @@ public class CameraManager {
                                      completion: completion)
     }
 
-    /**
-     Transitions the viewport to fit a given array of new coordinates, specifying
-     a custom edge padding an optional animation change.
-     
-     - Parameter newCoordinates: The coordinate bounds that will be displayed within the viewport.
-     - Parameter edgePadding: The padding the viewport will adjust itself by after transitioning to the new viewport.
-     - Parameter animated: A boolean indicating if the change should be animated. Defaults to `false`.
-     */
+    /// Transitions the viewport to fit a given array of new coordinates, specifying
+    /// a custom edge padding an optional animation change.
+    ///
+    /// - Parameters:
+    ///   - newCoordinates: The coordinate bounds that will be displayed within the viewport.
+    ///   - edgePadding: The padding the viewport will adjust itself by after transitioning to the new viewport.
+    ///   - animated: A boolean indicating if the change should be animated. Defaults to `false`.
+
     public func transitionVisibleCoordinates(newCoordinates: [CLLocationCoordinate2D],
                                              edgePadding: UIEdgeInsets,
                                              animated: Bool = false) {
@@ -316,16 +299,17 @@ public class CameraManager {
                                      completion: nil)
     }
 
-    /**
-     Transitions the viewport to fit a given array of new coordinates, specifying
-     a custom edge padding, an optional animation change, and an optional
-     completion block to execute after the transition occurs.
-     
-     - Parameter newCoordinates: The array of coordinates that will be displayed within the viewport.
-     - Parameter edgePadding: The padding the viewport will adjust itself by after transitioning to the new viewport.
-     - Parameter animated: A boolean indicating if the change should be animated. Defaults to `false`.
-     - Parameter completion: An optional closure to execute after the transition has occurred.
-     */
+    /// Transitions the viewport to fit a given array of new coordinates, specifying
+    /// a custom edge padding, an optional animation change, and an optional
+    /// completion block to execute after the transition occurs.
+    ///
+    /// - Parameters:
+    ///   - newCoordinates: The array of coordinates that will be displayed within the viewport.
+    ///   - edgePadding: The padding the viewport will adjust itself by after transitioning to the new viewport.
+    ///   - bearing: The bearing the viewport will adjust itself after transitioning to the new viewport
+    ///   - animated: A boolean indicating if the change should be animated. Defaults to `false`.
+    ///   - completion: An optional closure to execute after the transition has occurred.
+
     public func transitionVisibleCoordinates(to newCoordinates: [CLLocationCoordinate2D],
                                              edgePadding: UIEdgeInsets,
                                              bearing: CLLocationDirection,
@@ -354,17 +338,19 @@ public class CameraManager {
         setCamera(to: cameraOptions, animated: animated, duration: duration, completion: completion)
     }
 
-    /**
-     Moves the viewpoint to a different location using a transition animation that
-     evokes powered flight and an optional transition duration and timing function
-
-     The transition animation seamlessly incorporates zooming and panning to help
-     the user find his or her bearings even after traversing a great distance.
-
-     - Parameter camera: The camera options at the end of the animation. Any camera parameters that are nil will not be animated.
-     - Parameter duration: Duration of the animation, measured in seconds. If nil, a suitable calculated duration is used.
-     - Parameter completion: Completion handler called when the animation stops
-     */
+    /// Moves the viewpoint to a different location using a transition animation that
+    /// evokes powered flight and an optional transition duration and timing function
+    /// It seamlessly incorporates zooming and panning to help
+    /// the user find his or her bearings even after traversing a great distance.
+    ///
+    /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. If a `CameraAnimator` is destroyed, before the animation is finished,
+    /// the animation will be interrupted and completion handlers will be called.
+    ///
+    /// - Parameters:
+    ///   - camera: The camera options at the end of the animation. Any camera parameters that are nil will not be animated.
+    ///   - duration: Duration of the animation, measured in seconds. If nil, a suitable calculated duration is used.
+    ///   - completion: Completion handler called when the animation stops
+    /// - Returns: The optional `CameraAnimator` that will execute the FlyTo animation
     public func flyTo(to camera: CameraOptions,
                       duration: TimeInterval? = nil,
                       completion: AnimationCompletion? = nil) -> CameraAnimator? {
@@ -416,13 +402,11 @@ public class CameraManager {
         return animator
     }
 
-    /**
-    This function optimizes the bearing for set camera so that it is taking the shortest path
-
-    - Parameter startBearting: The current or start bearing of the map viewport
-    - Parameter endBearting: The bearing of where the map viewport should end at
-    - Returns: A `CLLocationDirection` that represents the correct final bearing accounting for positive and negatives
-    */
+    /// This function optimizes the bearing for set camera so that it is taking the shortest path.
+    /// - Parameters:
+    ///   - startBearing: The current or start bearing of the map viewport.
+    ///   - endBearing: The bearing of where the map viewport should end at.
+    /// - Returns: A `CLLocationDirection` that represents the correct final bearing accounting for positive and negatives.
     internal func optimizeBearing(startBearing: CLLocationDirection?, endBearing: CLLocationDirection?) -> CLLocationDirection? {
         // This modulus is required to account for larger values
         guard
@@ -451,14 +435,16 @@ public class CameraManager {
 extension CameraManager: CameraAnimatorDelegate {
     // MARK: Animator Functions
 
-    /**
-     Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation.
-
-     - Parameter duration: The duration of the animation, in seconds.
-     - Parameter timingParameters: The object providing the timing information. This object must adopt the `UITimingCurveProvider` protocol.
-     - Parameter animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
-     - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
-     */
+    /// Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation.
+    ///
+    /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. If a `CameraAnimator` is destroyed, before the animation is finished,
+    /// the animation will be interrupted and completion handlers will be called.
+    ///
+    /// - Parameters:
+    ///   - duration: The duration of the animation, in seconds.
+    ///   - timingParameters: The object providing the timing information. This object must adopt the `UITimingCurveProvider` protocol.
+    ///   - animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
+    /// - Returns: A class that represents an animator with the provided configuration.
     public func makeCameraAnimator(duration: TimeInterval,
                                    timingParameters parameters: UITimingCurveProvider,
                                    animationOwner: AnimationOwner = .unspecified) -> CameraAnimator {
@@ -468,17 +454,19 @@ extension CameraManager: CameraAnimatorDelegate {
         return cameraAnimator
     }
 
-    /**
-     Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation
-
-     - Parameter duration: The duration of the animation, in seconds.
-     - Parameter curve: The UIKit timing curve to apply to the animation.
-     - Parameter animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
-     - Parameter animations: The block containing the animations. This block has no return value and takes no parameters.
-                             Use this block to modify any animatable view properties. When you start the animations,
-                             those properties are animated from their current values to the new values using the specified animation parameters.
-     - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
-     */
+    /// Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation.
+    ///
+    /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. If a `CameraAnimator` is destroyed, before the animation is finished,
+    /// the animation will be interrupted and completion handlers will be called.
+    ///
+    /// - Parameters:
+    ///   - duration: The duration of the animation, in seconds.
+    ///   - curve: The UIKit timing curve to apply to the animation.
+    ///   - animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
+    ///   - animations: The block containing the animations. This block has no return value and takes no parameters.
+    ///                 Use this block to modify any animatable view properties. When you start the animations,
+    ///                 those properties are animated from their current values to the new values using the specified animation parameters.
+    /// - Returns: A class that represents an animator with the provided configuration.
     public func makeCameraAnimator(duration: TimeInterval,
                                    curve: UIView.AnimationCurve,
                                    animationOwner: AnimationOwner = .unspecified,
@@ -489,18 +477,20 @@ extension CameraManager: CameraAnimatorDelegate {
         return cameraAnimator
     }
 
-    /**
-     Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation
-
-     - Parameter duration: The duration of the animation, in seconds.
-     - Parameter controlPoint1: The first control point for the cubic Bézier timing curve.
-     - Parameter controlPoint2: The second control point for the cubic Bézier timing curve.
-     - Parameter animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
-     - Parameter animations: The block containing the animations. This block has no return value and takes no parameters.
-                             Use this block to modify any animatable view properties. When you start the animations,
-                             those properties are animated from their current values to the new values using the specified animation parameters.
-     - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
-     */
+    /// Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation.
+    ///
+    /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. If a `CameraAnimator` is destroyed, before the animation is finished,
+    /// the animation will be interrupted and completion handlers will be called.
+    ///
+    /// - Parameters:
+    ///   - duration: The duration of the animation, in seconds.
+    ///   - controlPoint1: The first control point for the cubic Bézier timing curve.
+    ///   - controlPoint2: The second control point for the cubic Bézier timing curve.
+    ///   - animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
+    ///   - animations: The block containing the animations. This block has no return value and takes no parameters.
+    ///                 Use this block to modify any animatable view properties. When you start the animations,
+    ///                 those properties are animated from their current values to the new values using the specified animation parameters.
+    /// - Returns: A class that represents an animator with the provided configuration.
     public func makeCameraAnimator(duration: TimeInterval,
                                    controlPoint1 point1: CGPoint,
                                    controlPoint2 point2: CGPoint,
@@ -512,17 +502,20 @@ extension CameraManager: CameraAnimatorDelegate {
         return cameraAnimator
     }
 
-    /**
-     Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation
-
-     - Parameter duration: The duration of the animation, in seconds.
-     - Parameter timingParameters: The type of `AnimationCurve` for the animation.
-     - Parameter animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
-     - Parameter animations: The block containing the animations. This block has no return value and takes no parameters.
-                             Use this block to modify any animatable view properties. When you start the animations,
-                             those properties are animated from their current values to the new values using the specified animation parameters.
-     - Returns `CameraAnimator`: A class that represents an animator with the provided configuration.
-     */
+    /// Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation.
+    ///
+    /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. If a `CameraAnimator` is destroyed, before the animation is finished,
+    /// the animation will be interrupted and completion handlers will be called.
+    ///
+    /// - Parameters:
+    ///   - duration: The duration of the animation, in seconds.
+    ///   - dampingRatio: The damping ratio to apply to the initial acceleration and oscillation. To smoothly decelerate the animation without oscillation, specify a value of 1.
+    ///                   Specify values closer to 0 to create less damping and more oscillation.
+    ///   - animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
+    ///   - animations: The block containing the animations. This block has no return value and takes no parameters.
+    ///                 Use this block to modify any animatable view properties. When you start the animations,
+    ///                 those properties are animated from their current values to the new values using the specified animation parameters.
+    /// - Returns: A class that represents an animator with the provided configuration.
     public func makeCameraAnimator(duration: TimeInterval,
                                    dampingRatio ratio: CGFloat,
                                    animationOwner: AnimationOwner = .unspecified,

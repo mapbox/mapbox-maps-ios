@@ -59,7 +59,7 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
     public func setupExample() {
 
         // Create the point annotation, which will be rendered with the default red pin.
-        let coordinate = mapView.cameraView.centerCoordinate
+        let coordinate = mapView.centerCoordinate
         let pointAnnotation = PointAnnotation(coordinate: coordinate)
 
         // Allow the view controller to accept annotation selection events.

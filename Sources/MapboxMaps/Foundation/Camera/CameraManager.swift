@@ -369,6 +369,9 @@ public class CameraManager {
         guard let mapView = mapView else {
             return nil
         }
+        
+        // Stop the `internalCameraAnimator` before beginning a `flyTo`
+        internalCameraAnimator?.stopAnimation()
 
         guard let interpolator = FlyToInterpolator(from: mapView.camera,
                                                    to: camera,

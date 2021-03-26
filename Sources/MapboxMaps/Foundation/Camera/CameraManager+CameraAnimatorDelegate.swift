@@ -2,10 +2,10 @@ import UIKit
 
 // MARK: Camera Animation
 extension CameraManager: CameraAnimatorDelegate {
-    
+
     // MARK: Animator Functions
 
-    /// Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation.
+    /// Convenience to create a `CameraAnimator` and will add it to a list of `CameraAnimators` to track the lifecycle of that animation.
     ///
     /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. If a `CameraAnimator` is destroyed, before the animation is finished,
     /// the animation will be interrupted and completion handlers will be called.
@@ -24,7 +24,7 @@ extension CameraManager: CameraAnimatorDelegate {
         return cameraAnimator
     }
 
-    /// Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation.
+    /// Convenience to create a `CameraAnimator` and will add it to a list of `CameraAnimators` to track the lifecycle of that animation.
     ///
     /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. If a `CameraAnimator` is destroyed, before the animation is finished,
     /// the animation will be interrupted and completion handlers will be called.
@@ -47,7 +47,7 @@ extension CameraManager: CameraAnimatorDelegate {
         return cameraAnimator
     }
 
-    /// Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation.
+    /// Convenience to create a `CameraAnimator` and will add it to a list of `CameraAnimators` to track the lifecycle of that animation.
     ///
     /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. If a `CameraAnimator` is destroyed, before the animation is finished,
     /// the animation will be interrupted and completion handlers will be called.
@@ -72,7 +72,7 @@ extension CameraManager: CameraAnimatorDelegate {
         return cameraAnimator
     }
 
-    /// Convenience to create a `CameraAnimator` and will add it to a List of `CameraAnimators` to track the lifecycle of that animation.
+    /// Convenience to create a `CameraAnimator` and will add it to a list of `CameraAnimators` to track the lifecycle of that animation.
     ///
     /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. If a `CameraAnimator` is destroyed, before the animation is finished,
     /// the animation will be interrupted and completion handlers will be called.

@@ -21,7 +21,7 @@ public class CameraManager {
 
     /// Pointer HashTable for holding camera animators
     public internal(set) var cameraAnimators = NSHashTable<CameraAnimator>.weakObjects()
-    
+
     /// Internal camera animator used for animated transition
     internal var internalCameraAnimator: CameraAnimator?
 
@@ -206,16 +206,16 @@ public class CameraManager {
     ///   - animation: closure to perform
     ///   - completion: animation block called on completion
     fileprivate func performCameraAnimation(duration: TimeInterval, animation: @escaping () -> Void, completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
-        
+
         // Stop previously running animations
         internalCameraAnimator?.stopAnimation()
-        
+
         // Make a new camera animator for the new properties
         internalCameraAnimator = makeCameraAnimator(duration: duration,
                                       curve: .easeOut,
                                       animationOwner: .custom(id: "com.mapbox.maps.cameraManager"),
                                       animations: animation)
-        
+
         // Add completion
         internalCameraAnimator?.addCompletion({ [weak self] (position) in
             completion?(position)

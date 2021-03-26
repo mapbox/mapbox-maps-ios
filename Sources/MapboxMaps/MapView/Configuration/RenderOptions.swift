@@ -22,7 +22,7 @@ public struct RenderOptions: Equatable {
     ///
     ///  The default value of this property is `true`.
     public var prefetchesTiles: Bool = true
-    
+
     /// A Boolean value that indicates whether the underlying `CAMetalLayer` of the `MapView`
     /// presents its content using a CoreAnimation transaction
     ///

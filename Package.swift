@@ -60,6 +60,7 @@ let package = Package(
                 .copy("Foundation/GeoJSON/Fixtures/polygon.geojson"),
                 .copy("Foundation/GeoJSON/Fixtures/multipolygon.geojson"),
                 .copy("Helpers/MapboxAccessToken"),
+                .copy("Snapshot/Snapshot Asset.png"),
             ]
         )
     ]

@@ -79,9 +79,10 @@ public class DebugViewController: UIViewController {
          */
         mapView.on(.mapLoaded) { (event) in
             print("The map has finished loading... Event = \(event)")
-
-            let initialCenter = CLLocationCoordinate2D(latitude: 39.01305735102963, longitude: -77.01570412528032)
-            self.mapView.cameraManager.setCamera(centerCoordinate: initialCenter, zoom: 12)
+            
+            
+            
+            self.runTest()
         }
 
         /**
@@ -100,6 +101,45 @@ public class DebugViewController: UIViewController {
             }
 
             print("The map failed to load.. \(type) = \(message)")
+        }
+    }
+    
+    static var counter = 0
+    
+    func runTest() {
+        let bearings: [(Double, Double)] = [
+            (330.7222595214844, 344.0169982910156),
+            (332.0651550292969, 357.12646484375),
+            (334.2096252441406, 359.3537292480469),
+            (336.25244140625, -0.0),
+            (337.7581481933594, 347.4563903808594),
+            (339.7362365722656, 355.0942077636719),
+            (339.7362365722656, -0.0),
+            (339.7362365722656, 358.5126037597656),
+            (339.7362365722656, -0.0),
+            (339.7362365722656, 359.1885986328125),
+            (339.7362365722656, 359.3114929199219),
+            (339.7362365722656, 359.5973205566406),
+            (339.2138671875, 359.5579833984375),
+            (336.46484375, 358.6362609863281),
+            (335.15325927734375, -0.0),
+            (332.86944580078125, 359.4662170410156)
+        ]
+        
+        let initialCenter = CLLocationCoordinate2D(latitude: 39.01305735102963, longitude: -77.01570412528032)
+        let co1 = CameraOptions(center: initialCenter, zoom: 16, bearing: bearings[Self.counter].0, pitch: 30)
+        self.mapView.cameraManager.setCamera(to: co1)
+        
+        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] (timer) in
+            let co = CameraOptions(center: initialCenter, zoom: 16, bearing: bearings[Self.counter].0, pitch: 30)
+            if Self.counter == bearings.count - 1 {
+                Self.counter = 0
+            } else {
+                Self.counter += 1
+            }
+            
+            self?.mapView.cameraManager.setCamera(to: co, animated: true, duration: 1)
+            print("newbearing = \(co.bearing!), currentMapBearing = \(self!.mapView.bearing)")
         }
     }
 }

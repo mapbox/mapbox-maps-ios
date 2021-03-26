@@ -15,10 +15,7 @@ public class FlyToExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        // Center the map over the United States.
-        let centerCoordinate = CLLocationCoordinate2D(latitude: 40.58058466412761,
-                                                      longitude: -97.734375)
-
+        // Center the map over San Francisco.
         mapView.cameraManager.setCamera(centerCoordinate: .sanfrancisco,
                                         zoom: 15)
 
@@ -40,7 +37,7 @@ public class FlyToExample: UIViewController, ExampleProtocol {
                                 pitch: 50)
 
         
-        flyToAnimator = self.mapView.cameraManager.flyTo(to: end) { [weak self] _ in
+        flyToAnimator = self.mapView.cameraManager.fly(to: end) { [weak self] _ in
             print("Camera fly-to finished")
             // The below line is used for internal testing purposes only.
             self?.flyToAnimator = nil

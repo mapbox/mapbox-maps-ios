@@ -362,7 +362,7 @@ public class CameraManager {
     ///   - duration: Duration of the animation, measured in seconds. If nil, a suitable calculated duration is used.
     ///   - completion: Completion handler called when the animation stops
     /// - Returns: The optional `CameraAnimator` that will execute the FlyTo animation
-    public func flyTo(to camera: CameraOptions,
+    public func fly(to camera: CameraOptions,
                       duration: TimeInterval? = nil,
                       completion: AnimationCompletion? = nil) -> CameraAnimator? {
 

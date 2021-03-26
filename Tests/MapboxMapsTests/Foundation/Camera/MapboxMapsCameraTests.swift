@@ -97,7 +97,7 @@ class CameraManagerTests: XCTestCase {
         let coordinateBounds = CoordinateBounds(southwest: southwest, northeast: northeast)
 
         let camera = cameraManager.camera(for: coordinateBounds)
-        _ = cameraManager.flyTo(to: camera, completion: nil)
+        _ = cameraManager.fly(to: camera, completion: nil)
 
         XCTAssertNotNil(mapView.cameraView.camera)
 

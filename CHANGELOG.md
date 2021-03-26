@@ -1,6 +1,19 @@
 # Changelog for Mapbox Maps SDK v10 for iOS
 
 Mapbox welcomes participation and contributions from everyone.
+## Breaking changes ⚠️
+* The `CameraManager.moveCamera` method has been removed. ([#217](https://github.com/mapbox/mapbox-maps-ios/pull/217))
+* `UIView.animate` is no longer supported. Instead, use `CameraAnimators`. ([#217](https://github.com/mapbox/mapbox-maps-ios/pull/217))
+* Developers should make camera changes directly to `MapView`'s camera properties. Previously, changes could be applied to `MapView.cameraView`. ([#217](https://github.com/mapbox/mapbox-maps-ios/pull/217))
+* `CameraAnimator` objects are managed by developers and should be stored in by developers to prevent the animations from falling out of scope. 
+
+## Features ✨ and improvements 🏁
+* Introduced the platform-driven Drag API for shifting the map’s camera.  ([#217](https://github.com/mapbox/mapbox-maps-ios/pull/217))
+* Introduced `CameraAnimator`, a UIViewPropertyAnimator-based class for animating camera changes. These animators should be created using `CameraManager.makeCameraAnimator` methods. ([#217](https://github.com/mapbox/mapbox-maps-ios/pull/217))
+* Gesture-driven camera changes have been updated to use camera animators. ([#217](https://github.com/mapbox/mapbox-maps-ios/pull/217))
+* The `AnimatorOwner` enum has been added to track owners for individual animators. ([#217](https://github.com/mapbox/mapbox-maps-ios/pull/217))
+* `CameraManager.fly(to:)` is now built on camera animators. `zoom`, `pitch`, `bearing`, and `centerCoordinate` keyframes are supported. ([#217](https://github.com/mapbox/mapbox-maps-ios/pull/217))
+
 
 # 10.0.0-beta.15 - March 4, 2021
 

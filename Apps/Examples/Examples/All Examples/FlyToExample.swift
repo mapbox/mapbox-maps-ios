@@ -30,20 +30,18 @@ public class FlyToExample: UIViewController, ExampleProtocol {
     // Wait for the style to load before adding data to it.
     public func setupExample() {
 
-
         let end = CameraOptions(center: .boston,
                                 zoom: 15,
                                 bearing: 180,
                                 pitch: 50)
 
-        
         flyToAnimator = self.mapView.cameraManager.fly(to: end) { [weak self] _ in
             print("Camera fly-to finished")
             // The below line is used for internal testing purposes only.
             self?.flyToAnimator = nil
             self?.finish()
         }
-        
+
     }
 }
 

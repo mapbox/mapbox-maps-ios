@@ -363,13 +363,13 @@ public class CameraManager {
     ///   - completion: Completion handler called when the animation stops
     /// - Returns: The optional `CameraAnimator` that will execute the FlyTo animation
     public func fly(to camera: CameraOptions,
-                      duration: TimeInterval? = nil,
-                      completion: AnimationCompletion? = nil) -> CameraAnimator? {
+                    duration: TimeInterval? = nil,
+                    completion: AnimationCompletion? = nil) -> CameraAnimator? {
 
         guard let mapView = mapView else {
             return nil
         }
-        
+
         // Stop the `internalCameraAnimator` before beginning a `flyTo`
         internalCameraAnimator?.stopAnimation()
 

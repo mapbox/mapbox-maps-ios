@@ -205,19 +205,19 @@ internal class CameraView: UIView {
             // Diff the targetCamera with the currentCamera and apply diffed camera properties to map
             let diffedCamera = CameraOptions()
 
-            if targetCamera.zoom != currentCamera.zoom {
+            if targetCamera.zoom != currentCamera.zoom, let targetZoom = targetCamera.zoom, !targetZoom.isNaN {
                 diffedCamera.zoom = targetCamera.zoom
             }
 
-            if targetCamera.bearing != currentCamera.bearing {
+            if targetCamera.bearing != currentCamera.bearing, let targetBearing = targetCamera.bearing, !targetBearing.isNaN {
                 diffedCamera.bearing = targetCamera.bearing
             }
 
-            if targetCamera.pitch != currentCamera.pitch {
+            if targetCamera.pitch != currentCamera.pitch, let targetPitch = targetCamera.pitch, !targetPitch.isNaN {
                 diffedCamera.pitch = targetCamera.pitch
             }
 
-            if targetCamera.center != currentCamera.center {
+            if targetCamera.center != currentCamera.center, let targetCenter = targetCamera.center, !targetCenter.latitude.isNaN, !targetCenter.longitude.isNaN {
                 diffedCamera.center = targetCamera.center
             }
 

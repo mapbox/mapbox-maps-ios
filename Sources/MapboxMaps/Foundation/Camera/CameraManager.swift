@@ -362,13 +362,16 @@ public class CameraManager {
     ///   - duration: Duration of the animation, measured in seconds. If nil, a suitable calculated duration is used.
     ///   - completion: Completion handler called when the animation stops
     /// - Returns: The optional `CameraAnimator` that will execute the FlyTo animation
-    public func flyTo(to camera: CameraOptions,
-                      duration: TimeInterval? = nil,
-                      completion: AnimationCompletion? = nil) -> CameraAnimator? {
+    public func fly(to camera: CameraOptions,
+                    duration: TimeInterval? = nil,
+                    completion: AnimationCompletion? = nil) -> CameraAnimator? {
 
         guard let mapView = mapView else {
             return nil
         }
+
+        // Stop the `internalCameraAnimator` before beginning a `flyTo`
+        internalCameraAnimator?.stopAnimation()
 
         guard let interpolator = FlyToInterpolator(from: mapView.camera,
                                                    to: camera,

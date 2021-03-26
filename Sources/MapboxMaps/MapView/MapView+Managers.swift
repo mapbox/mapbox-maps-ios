@@ -49,6 +49,7 @@ extension MapView {
         let defaultPrefetchZoomDelta: UInt8 = 4
         try! self.__map.setPrefetchZoomDeltaForDelta(renderOptions.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
         self.preferredFPS = renderOptions.preferredFramesPerSecond
+        metalView?.presentsWithTransaction = renderOptions.presentsWithTransaction
     }
 
     internal func updateMapView(with newOptions: RenderOptions) {
@@ -56,6 +57,7 @@ extension MapView {
         let defaultPrefetchZoomDelta: UInt8 = 4
         try! self.__map.setPrefetchZoomDeltaForDelta(newOptions.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
         self.preferredFPS = newOptions.preferredFramesPerSecond
+        metalView?.presentsWithTransaction = newOptions.presentsWithTransaction
     }
 
     internal func setupGestures(with view: UIView, options: GestureOptions, cameraManager: CameraManager) {

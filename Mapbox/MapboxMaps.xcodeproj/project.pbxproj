@@ -161,6 +161,7 @@
 		2B8637D52461601100698135 /* MapboxScaleBarOrnamentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8637D42461601100698135 /* MapboxScaleBarOrnamentView.swift */; };
 		2B8637E32462F5AE00698135 /* MapboxScaleBarLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8637E22462F5AE00698135 /* MapboxScaleBarLabel.swift */; };
 		2B8637E62463F36400698135 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8637D72461992200698135 /* DistanceFormatter.swift */; };
+		58AB5817265718FC00A232D4 /* Snapshot Asset.png in Resources */ = {isa = PBXBuildFile; fileRef = 58AB5812265718E300A232D4 /* Snapshot Asset.png */; };
 		5A35924524644C5E00E67344 /* CompassDirectionFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A359243246448E600E67344 /* CompassDirectionFormatter.swift */; };
 		5A3592B3246C1FA000E67344 /* MapboxInfoButtonOrnament.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3592AC246AD45500E67344 /* MapboxInfoButtonOrnament.swift */; };
 		5A9648FE246429C3001FF05D /* MapboxCompassOrnamentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9648FC2462F07B001FF05D /* MapboxCompassOrnamentView.swift */; };
@@ -432,7 +433,7 @@
 		07B82A652548C1320048D0F2 /* FeatureQueryingTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureQueryingTest.swift; sourceTree = "<group>"; };
 		07BA35CC251578DD003E1B55 /* AnnotationInteractionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationInteractionDelegate.swift; sourceTree = "<group>"; };
 		07BF0C5E24F4875F00754DB2 /* Geometry+MBXGeometryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Geometry+MBXGeometryTests.swift"; sourceTree = "<group>"; };
-		07C1B3DB2446B6F40044A3C6 /* MapboxMapsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxMapsSnapshotTests.swift; sourceTree = "<group>"; };
+		07C1B3DB2446B6F40044A3C6 /* MapboxMapsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MapboxMapsSnapshotTests.swift; path = ../Tests/MapboxMapsTests/Snapshot/MapboxMapsSnapshotTests.swift; sourceTree = SOURCE_ROOT; };
 		07D2C7DA2523EBE60025C2BA /* PolygonAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolygonAnnotation.swift; sourceTree = "<group>"; };
 		07D2C80B2523ECC40025C2BA /* PolygonAnnotationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolygonAnnotationTests.swift; sourceTree = "<group>"; };
 		07D7150325798CD70025BF61 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
@@ -596,6 +597,7 @@
 		2B863850246D337200698135 /* polygon.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = polygon.geojson; sourceTree = "<group>"; };
 		2B863851246D337200698135 /* featurecollection.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = featurecollection.geojson; sourceTree = "<group>"; };
 		2B86385D246D3BA700698135 /* GeoJSONManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoJSONManagerTests.swift; sourceTree = "<group>"; };
+		58AB5812265718E300A232D4 /* Snapshot Asset.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Snapshot Asset.png"; sourceTree = "<group>"; };
 		5A359243246448E600E67344 /* CompassDirectionFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassDirectionFormatter.swift; sourceTree = "<group>"; };
 		5A35924F246598F600E67344 /* CompassDirectionFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassDirectionFormatterTests.swift; sourceTree = "<group>"; };
 		5A3592AC246AD45500E67344 /* MapboxInfoButtonOrnament.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxInfoButtonOrnament.swift; sourceTree = "<group>"; };
@@ -923,6 +925,7 @@
 		07C1B3DA2446B6F40044A3C6 /* MapboxMapsSnapshotTests */ = {
 			isa = PBXGroup;
 			children = (
+				58AB5812265718E300A232D4 /* Snapshot Asset.png */,
 				07C1B3DB2446B6F40044A3C6 /* MapboxMapsSnapshotTests.swift */,
 			);
 			name = MapboxMapsSnapshotTests;
@@ -1879,6 +1882,7 @@
 				CA549001251C404B00F829A3 /* featurecollection-no-properties.geojson in Resources */,
 				CA549002251C404B00F829A3 /* geometry-collection.geojson in Resources */,
 				CA549003251C404B00F829A3 /* simple-line.geojson in Resources */,
+				58AB5817265718FC00A232D4 /* Snapshot Asset.png in Resources */,
 				CA549004251C404B00F829A3 /* multipolygon.geojson in Resources */,
 				CA19C344263B412700748F1A /* empty-style-chicago.json in Resources */,
 				07E816DA256D72E500ACFA73 /* Assets.xcassets in Resources */,
@@ -2437,6 +2441,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMaps;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = NO;
+				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2460,6 +2465,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMaps;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = NO;
+				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2585,6 +2591,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				COMPRESS_PNG_FILES = NO;
 				INFOPLIST_FILE = ../Tests/MapboxMapsTests/MapView/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2593,6 +2600,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MapboxTestHost.app/MapboxTestHost";
 			};
@@ -2604,6 +2612,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				COMPRESS_PNG_FILES = NO;
 				INFOPLIST_FILE = ../Tests/MapboxMapsTests/MapView/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2612,6 +2621,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MapboxTestHost.app/MapboxTestHost";
 			};

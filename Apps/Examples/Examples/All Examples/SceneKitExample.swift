@@ -29,9 +29,6 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
                      bearing: 180,
                        pitch: 60
         )
-        self.mapView.update { (mapOptions) in
-            mapOptions.render.presentsWithTransaction = true
-        }
 
         self.mapView.on(.styleLoaded) { [weak self] _ in
             self?.addModelAndTerrain()

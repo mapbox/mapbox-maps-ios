@@ -32,7 +32,7 @@
 		B54B46BA2603B1270029EFA0 /* OfflineRegionManagerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54B46B92603B1270029EFA0 /* OfflineRegionManagerExample.swift */; };
 		CA4F1F7225E815CF00822D2A /* SwiftUIExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A2E03C25CB64E20082BC31 /* SwiftUIExample.swift */; };
 		CA86E81825BE7C2300E5A1D9 /* BuildingExtrusionsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA86E81725BE7C2200E5A1D9 /* BuildingExtrusionsExample.swift */; };
-		CAC195B725AC098A00F69FEA /* CameraUIViewAnimationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC195B625AC098A00F69FEA /* CameraUIViewAnimationExample.swift */; };
+		CAC195B725AC098A00F69FEA /* CameraAnimatorsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC195B625AC098A00F69FEA /* CameraAnimatorsExample.swift */; };
 		CADCF71D2584990E0065C51B /* CustomPointAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64ED3C42540DD6E00ADADFB /* CustomPointAnnotationExample.swift */; };
 		CADCF71E2584990E0065C51B /* ExternalVectorSourceExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077E3B2B2581810600564A3E /* ExternalVectorSourceExample.swift */; };
 		CADCF71F2584990E0065C51B /* DataDrivenSymbolsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69F01EC2543646A001AB49B /* DataDrivenSymbolsExample.swift */; };
@@ -146,7 +146,7 @@
 		C64ED3C82541CA3A00ADADFB /* LineAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineAnnotationExample.swift; sourceTree = "<group>"; };
 		C69F01EC2543646A001AB49B /* DataDrivenSymbolsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataDrivenSymbolsExample.swift; sourceTree = "<group>"; };
 		CA86E81725BE7C2200E5A1D9 /* BuildingExtrusionsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingExtrusionsExample.swift; sourceTree = "<group>"; };
-		CAC195B625AC098A00F69FEA /* CameraUIViewAnimationExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraUIViewAnimationExample.swift; sourceTree = "<group>"; };
+		CAC195B625AC098A00F69FEA /* CameraAnimatorsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimatorsExample.swift; sourceTree = "<group>"; };
 		CADCF742258499570065C51B /* BasicMapExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicMapExample.swift; sourceTree = "<group>"; };
 		CAEF7554257AE02B0003EFF7 /* MapViewExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewExample.swift; sourceTree = "<group>"; };
 		CAF9A9802583E49B007EF9EC /* TestableExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestableExampleTests.swift; sourceTree = "<group>"; };
@@ -211,7 +211,7 @@
 				CAEF7554257AE02B0003EFF7 /* MapViewExample.swift */,
 				CADCF742258499570065C51B /* BasicMapExample.swift */,
 				C64ED3842540A2BE00ADADFB /* CameraAnimationExample.swift */,
-				CAC195B625AC098A00F69FEA /* CameraUIViewAnimationExample.swift */,
+				CAC195B625AC098A00F69FEA /* CameraAnimatorsExample.swift */,
 				A4AC5DEB2542CB2200995E4C /* CustomStyleURLExample.swift */,
 				C64ED3882540BA0700ADADFB /* PointAnnotationExample.swift */,
 				C64ED3C42540DD6E00ADADFB /* CustomPointAnnotationExample.swift */,
@@ -509,7 +509,7 @@
 				CADCF7282584990E0065C51B /* LineAnnotationExample.swift in Sources */,
 				CADCF72F2584990E0065C51B /* SnapshotterCoreGraphicsExample.swift in Sources */,
 				CA4F1F7225E815CF00822D2A /* SwiftUIExample.swift in Sources */,
-				CAC195B725AC098A00F69FEA /* CameraUIViewAnimationExample.swift in Sources */,
+				CAC195B725AC098A00F69FEA /* CameraAnimatorsExample.swift in Sources */,
 				0C78AC2925BF70E40057F570 /* LineGradientExample.swift in Sources */,
 				CADCF72B2584990E0065C51B /* FlyToExample.swift in Sources */,
 				0333B84F25ED942600D667C9 /* SceneKitExample.swift in Sources */,

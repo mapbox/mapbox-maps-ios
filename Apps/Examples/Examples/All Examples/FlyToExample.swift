@@ -6,6 +6,7 @@ import MapboxMaps
 public class FlyToExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
+    internal var flyToAnimator: CameraAnimator?
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -14,12 +15,9 @@ public class FlyToExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        // Center the map over the United States.
-        let centerCoordinate = CLLocationCoordinate2D(latitude: 40.58058466412761,
-                                                      longitude: -97.734375)
-
-        mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
-                                        zoom: 3)
+        // Center the map over San Francisco.
+        mapView.cameraManager.setCamera(centerCoordinate: .sanfrancisco,
+                                        zoom: 15)
 
         // Allows the view controller to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in
@@ -31,23 +29,19 @@ public class FlyToExample: UIViewController, ExampleProtocol {
 
     // Wait for the style to load before adding data to it.
     public func setupExample() {
-        let start = CameraOptions(center: .sanfrancisco,
-                                  zoom: 15,
-                                  bearing: 0,
-                                  pitch: 0)
 
         let end = CameraOptions(center: .boston,
                                 zoom: 15,
                                 bearing: 180,
                                 pitch: 50)
 
-        mapView.cameraManager.setCamera(to: start) { _ in
-            self.mapView.cameraManager.fly(to: end) { [weak self] _ in
-                print("Camera fly-to finished")
-                // The below line is used for internal testing purposes only.
-                self?.finish()
-            }
+        flyToAnimator = self.mapView.cameraManager.fly(to: end) { [weak self] _ in
+            print("Camera fly-to finished")
+            // The below line is used for internal testing purposes only.
+            self?.flyToAnimator = nil
+            self?.finish()
         }
+
     }
 }
 

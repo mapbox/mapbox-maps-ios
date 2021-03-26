@@ -101,16 +101,16 @@ public protocol Layer: Codable, StyleEncodable, StyleDecodable {
 /// Information about a layer
 public struct LayerInfo {
     /// The identifier of the layer
-    var id: String
+    public var id: String
 
     /// The type of the layer
-    var type: LayerType
+    public var type: LayerType
 }
 
-public extension Layer {
+extension Layer {
     /// Initializes a Layer given a JSON dictionary
     /// - Throws: Errors occurring during decoding
-    init(jsonObject: [String: Any]) throws {
+    public init(jsonObject: [String: Any]) throws {
         let layerData = try JSONSerialization.data(withJSONObject: jsonObject)
         self = try JSONDecoder().decode(Self.self, from: layerData)
     }

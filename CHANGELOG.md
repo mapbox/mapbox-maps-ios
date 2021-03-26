@@ -1,6 +1,13 @@
 # Changelog for Mapbox Maps SDK v10 for iOS
 
 Mapbox welcomes participation and contributions from everyone.
+## Breaking changes ⚠️
+* The `CameraManager.moveCamera` method has been removed. ([#217](https://github.com/mapbox/mapbox-maps-ios/pull/217))
+* `UIView.animate` is no longer supported. Instead, use `CameraAnimators`. ([#217](https://github.com/mapbox/mapbox-maps-ios/pull/217))
+
+## Features ✨ and improvements 🏁
+* Introduced the platform-driven Drag API for shifting the map’s camera.  ([#217](https://github.com/mapbox/mapbox-maps-ios/pull/217))
+* Introduced `CameraAnimator`, a UIViewPropertyAnimator-based class for animating camera changes. ([#217](https://github.com/mapbox/mapbox-maps-ios/pull/217))
 
 # 10.0.0-beta.15 - March 4, 2021
 

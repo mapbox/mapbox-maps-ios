@@ -59,4 +59,46 @@ internal class FlyToTests: XCTestCase {
         XCTAssertEqual(d2.longitude, s2.longitude, accuracy: 0.00001)
     }
     // swiftlint:enable identifier_name
+
+    func testForValidValues() {
+        let source = CameraOptions(center: CLLocationCoordinate2D(latitude: 50, longitude: 50),
+                                   padding: .zero,
+                                   zoom: 14,
+                                   bearing: 0,
+                                   pitch: 0)
+        let dest = CameraOptions(center: CLLocationCoordinate2D(latitude: 50.5, longitude: 50.5),
+                                   zoom: 18,
+                                   bearing: 90,
+                                   pitch: 45)
+
+        guard let flyTo = FlyToInterpolator(from: source, to: dest, size: CGSize(width: 500.0, height: 500.0)) else {
+            XCTFail("Failed to create interpolator")
+            return
+        }
+
+        let duration = flyTo.duration()
+        XCTAssert(duration > 0)
+
+        for t: Double in stride(from: 0, to: 1, by: 0.005) {
+
+            // coordinate is bounded
+            let coordinate = flyTo.coordinate(at: t)
+            XCTAssert(coordinate.latitude >= source.center!.latitude)
+            XCTAssert(coordinate.latitude <= dest.center!.latitude)
+            XCTAssert(coordinate.longitude >= source.center!.longitude)
+            XCTAssert(coordinate.longitude <= dest.center!.longitude)
+
+            // Zoom doesn't go below start or end
+            let zoom = CGFloat(flyTo.zoom(at: t))
+            XCTAssert(zoom <= max(source.zoom!, dest.zoom!), "t=\(t) zoom=\(zoom)")
+
+            let bearing = CLLocationDirection(flyTo.bearing(at: t))
+            XCTAssert(bearing >= source.bearing!, "t=\(t) bearing=\(bearing)")
+            XCTAssert(bearing <= dest.bearing!, "t=\(t) bearing=\(bearing)")
+
+            let pitch = CGFloat(flyTo.pitch(at: t))
+            XCTAssert(pitch >= source.pitch!, "t=\(t) pitch=\(pitch)")
+            XCTAssert(pitch <= dest.pitch!, "t=\(t) pitch=\(pitch)")
+        }
+    }
 }

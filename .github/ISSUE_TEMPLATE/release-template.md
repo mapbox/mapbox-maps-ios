@@ -110,6 +110,6 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 
 ## 📣 Announcements
 
-- [ ] Tag the `@maps-ios` team in #mobile-maps-ios to notify the team about the completed release! 🎉
+- [ ] Announce the release in #sdk-releases and in #maps-sdk to notify the team about the completed release! 🎉
 
 When all of the above is completed, you can then close this ticket.

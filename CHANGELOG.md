@@ -2,12 +2,6 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## Unreleased
-
-### Breaking changes ⚠️
-
-### Features ✨ and improvements 🏁
-
 ## 10.0.0-beta.16 - March 29, 2021
 
 ### Breaking changes ⚠️

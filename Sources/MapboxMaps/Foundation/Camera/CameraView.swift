@@ -165,6 +165,9 @@ internal class CameraView: UIView {
                              bearing: localBearing,
                              pitch: localPitch)
     }
+    
+    // Cache of camera options that the last `jumpTo` was called with.
+    internal var cachedDiffedCamera: CameraOptions?
 
     private unowned var delegate: CameraViewDelegate!
 
@@ -228,8 +231,15 @@ internal class CameraView: UIView {
             if targetCamera.padding != currentCamera.padding {
                 diffedCamera.padding = targetCamera.padding
             }
-
+            
+            if let cachedDiffedCamera = cachedDiffedCamera, diffedCamera == cachedDiffedCamera {
+                // Return early if we previously set the same value of diffed camera
+                // The camera is "idling".
+                return
+            }
+            
             delegate.jumpTo(camera: diffedCamera)
+            cachedDiffedCamera = diffedCamera
         }
     }
 }

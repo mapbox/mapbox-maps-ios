@@ -478,7 +478,7 @@ jobs:
           name: Uploading direct download bundles (static & dynamic) to SDK Registry
           command: |
             ./scripts/release/upload-to-registry.sh MapboxMaps-dynamic.zip mobile-maps-ios ${VERSION} MapboxMaps-dynamic.zip
-            ./scripts/release/upload-to-registry.sh MapboxMaps-static.zip mobile-maps-ios ${VERSION} MapboxMaps-static.zip
+            ./scripts/release/upload-to-registry.sh MapboxMaps-static.zip mobile-maps-ios-static ${VERSION} MapboxMaps-static.zip
       - run:
           name: Run `npm ci`
           command: |

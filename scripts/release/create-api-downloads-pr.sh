@@ -29,8 +29,7 @@ cat << EOF > config/${PROJECT_ROOT}/${VERSION}.yaml
 api-downloads: v2
 
 bundles:
-  ios: 
-    - MapboxMaps
+  ios: MapboxMaps
 EOF
 
 #
@@ -41,8 +40,7 @@ cat << EOF > config/${PROJECT_ROOT}-static/${VERSION}.yaml
 api-downloads: v2
 
 bundles:
-  ios: 
-    - MapboxMaps-static
+  ios: MapboxMaps-static
 EOF
 
 #

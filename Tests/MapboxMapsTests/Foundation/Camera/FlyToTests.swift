@@ -50,20 +50,21 @@ internal class FlyToTests: XCTestCase {
         let d1 = flyTo.coordinate(at: 0.5)
         let d2 = flyTo.coordinate(at: 1.0)
 
-        XCTAssertEqual(d0.latitude, s0.latitude, accuracy: 0.00001)
-        XCTAssertEqual(d0.longitude, s0.longitude, accuracy: 0.00001)
+        let epsilon = 0.0001
+        XCTAssertEqual(d0.latitude, s0.latitude, accuracy: epsilon)
+        XCTAssertEqual(d0.longitude, s0.longitude, accuracy: epsilon)
 
-        XCTAssertEqual(d1.latitude, (s0.latitude+s2.latitude)/2, accuracy: 0.00001)
-        XCTAssertEqual(d1.longitude, (s0.longitude+s2.longitude)/2, accuracy: 0.00001)
+        XCTAssertEqual(d1.latitude, (s0.latitude+s2.latitude)/2, accuracy: epsilon)
+        XCTAssertEqual(d1.longitude, (s0.longitude+s2.longitude)/2, accuracy: epsilon)
 
-        XCTAssertEqual(d2.latitude, s2.latitude, accuracy: 0.00001)
-        XCTAssertEqual(d2.longitude, s2.longitude, accuracy: 0.00001)
+        XCTAssertEqual(d2.latitude, s2.latitude, accuracy: epsilon)
+        XCTAssertEqual(d2.longitude, s2.longitude, accuracy: epsilon)
     }
     // swiftlint:enable identifier_name
 
     func testForValidValues() {
 
-        let epsilon: CLLocationDegrees = 0.00001
+        let epsilon: CLLocationDegrees = 0.0001
 
         for _ in 0..<10 {
 

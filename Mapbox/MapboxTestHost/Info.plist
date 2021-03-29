@@ -17,7 +17,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>10.0.0</string>
 	<key>CFBundleVersion</key>
-	<string>5</string>
+	<string>6</string>
 	<key>CFBundleDisplayName</key>
 	<string>Test Host</string>
 	<key>LSRequiresIPhoneOS</key>

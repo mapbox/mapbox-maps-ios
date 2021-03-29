@@ -22,15 +22,26 @@ echo "Checking out to ${TMPDIR}"
 git checkout -b ${BRANCH_NAME}
 
 #
-# Add config file
+# Add config file for dynamic
 #
 
 cat << EOF > config/${PROJECT_ROOT}/${VERSION}.yaml
 api-downloads: v2
 
-packages:
+bundles:
   ios: 
-    - MapboxMaps-dynamic
+    - MapboxMaps
+EOF
+
+#
+# Add config file for static
+#
+
+cat << EOF > config/${PROJECT_ROOT}-static/${VERSION}.yaml
+api-downloads: v2
+
+bundles:
+  ios: 
     - MapboxMaps-static
 EOF
 

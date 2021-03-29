@@ -35,14 +35,8 @@ MESSAGE="### Dependency requirements:\n\
 \n\
 Link to download binaries (append your own Mapbox access token [scoped with \`DOWNLOADS:READ\`](https://account.mapbox.com/)):\n\
 \n\
-#### Dynamic Bundle\n\
 \`\`\`\n\
-https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/packages/${TAG/#v}/MapboxMaps-dynamic.zip?access_token=<access-token>\n\
-\`\`\`\n\
-\n\
-#### Static Bundle\n\
-\`\`\`\n\
-https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/packages/${TAG/#v}/MapboxMaps-static.zip?access_token=<access-token>\n\
+https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/${TAG/#v}/MapboxMaps.zip?access_token=<access-token>\n\
 \`\`\`"
 
 # Body that is passed to the POST request

@@ -23,7 +23,7 @@ step 'Installing Dependencies'
 if [ "$LINK_TYPE" = "dynamic" ]; then
     COMMON_ARTIFACT=MapboxCommon
     CORE_ARTIFACT=MapboxCoreMaps.xcframework-dynamic
-    ZIP_ARCHIVE_NAME="MapboxMaps-dynamic.zip"
+    ZIP_ARCHIVE_NAME="MapboxMaps.zip"
     README_PATH=../README-dynamic.md
 elif [ "$LINK_TYPE" = "static" ]; then
     COMMON_ARTIFACT=MapboxCommon-static

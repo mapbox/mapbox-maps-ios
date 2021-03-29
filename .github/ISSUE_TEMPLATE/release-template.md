@@ -94,6 +94,8 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 - [ ] Create a `maps-{VERSION}` branch in [ios-sdk](https://github.com/mapbox/ios-sdk).
 - [ ] Add the new version (without a v prefix) as the first element in the [src/data/ios-maps-sdk-version.json](https://github.com/mapbox/ios-sdk/blob/publisher-production/src/data/ios-maps-sdk-versions.json).
 - [ ] While the beta docs site is live and for subsequent stable releases, add the version without the v to [src/constants.json](https://github.com/mapbox/ios-sdk/blob/ios/maps-v10.0.0-beta.13.1/src/constants.json#L6) as the value for `VERSION_IOS_MAPS_SDK_V10`.
+- [ ] Make sure the API Docs changes are live in production before continuing https://docs.mapbox.com/ios/maps/api/{version_without_v_prefix}/index.html
+  - This is necessary because the CI checks triggered by the next step depend on them.
 - [ ] Commit and push these changes, then open a PR.
 - [ ] Ask your docs buddy to review it. Merge once approved!
 

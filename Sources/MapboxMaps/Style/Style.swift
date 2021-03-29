@@ -40,14 +40,11 @@ public class Style {
                 success case. Else, returns a `LayerError` in the `Result` failure case.
      */
     @discardableResult
-    public func addLayer<T: Layer>(layer: T, layerPosition: LayerPosition? = nil) -> Result<Bool, LayerError> {
-
+    public func addLayer(layer: Layer, layerPosition: LayerPosition? = nil) -> Result<Bool, LayerError> {
         // Attempt to encode the provided layer into JSON and apply it to the map
         do {
-            let layerData = try JSONEncoder().encode(layer)
-            //swiftlint:disable force_cast
-            let layerJSON = try JSONSerialization.jsonObject(with: layerData) as! [String: AnyObject]
-            let expected = try! styleManager.addStyleLayer(forProperties: layerJSON, layerPosition: layerPosition)
+            let layerJSON = try layer.jsonObject()
+            let expected = try styleManager.addStyleLayer(forProperties: layerJSON, layerPosition: layerPosition)
 
             if expected.isError() {
                 return .failure(.addStyleLayerFailed(expected.error as? String))
@@ -56,7 +53,12 @@ public class Style {
             }
         } catch {
             // Return failure if we run into an issue
-            return .failure(.layerEncodingFailed(error))
+            switch error {
+            case let error as LayerError:
+                return .failure(error)
+            default:
+                return .failure(.layerEncodingFailed(error))
+            }
         }
     }
 
@@ -205,13 +207,12 @@ public class Style {
                 success case. Else, returns a `SourceError` in the `Result` failure case.
      */
     @discardableResult
-    public func addSource<T: Source>(source: T, identifier: String) -> Result<Bool, SourceError> {
+    public func addSource(source: Source, identifier: String) -> Result<Bool, SourceError> {
 
         // Attempt to encode the provided source into JSON and apply it to the map
         do {
-            let sourceData = try JSONEncoder().encode(source)
-            let sourceDictionary = try JSONSerialization.jsonObject(with: sourceData)
-            let expected = try! styleManager.addStyleSource(forSourceId: identifier, properties: sourceDictionary)
+            let sourceDictionary = try source.jsonObject()
+            let expected = try styleManager.addStyleSource(forSourceId: identifier, properties: sourceDictionary)
 
             return expected.isValue() ? .success(true)
                                       : .failure(.addSourceFailed(expected.error as? String))

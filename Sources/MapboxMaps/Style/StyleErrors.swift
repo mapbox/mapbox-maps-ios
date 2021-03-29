@@ -2,6 +2,10 @@ import Foundation
 
 // MARK: - Style error types
 
+public enum StyleEncodingError: Error {
+    case invalidJSONObject
+}
+
 /// All source related errors
 public enum SourceError: Error {
     /// The source could not be encoded to JSON
@@ -26,7 +30,7 @@ public enum SourceError: Error {
 /// Error enum for all layer-related errors
 public enum LayerError: Error {
     /// The layer provided to the map in `addLayer()` could not be encoded
-    case layerEncodingFailed(Error)
+    case layerEncodingFailed(Error?)
 
     /// The layer retrieved from the map could not be decoded.
     case layerDecodingFailed(Error)

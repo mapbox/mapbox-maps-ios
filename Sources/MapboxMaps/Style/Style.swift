@@ -366,8 +366,7 @@ public class Style {
         update(&validLayer)
 
         do {
-            let data = try JSONEncoder().encode(validLayer)
-            let value = try JSONSerialization.jsonObject(with: data, options: [])
+            let value = try validLayer.jsonObject()
 
             // Apply the changes to the layer properties to the style
             try styleManager.setStyleLayerPropertiesForLayerId(id, properties: value)

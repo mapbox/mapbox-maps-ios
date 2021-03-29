@@ -25,7 +25,7 @@ class AnnotationStyleDelegateMock: AnnotationStyleDelegate {
         return Image(uiImage: UIImage())
     }
 
-    func addSource<T>(source: T, identifier: String) -> Result<Bool, SourceError> where T: Source {
+    func addSource(source: Source, identifier: String) -> Result<Bool, SourceError> {
         return .success(true)
     }
 
@@ -34,7 +34,7 @@ class AnnotationStyleDelegateMock: AnnotationStyleDelegate {
         return .success(true)
     }
 
-    func addLayer<T>(layer: T, layerPosition: LayerPosition?) -> Result<Bool, LayerError> where T: Layer {
+    func addLayer(layer: Layer, layerPosition: LayerPosition?) -> Result<Bool, LayerError> {
         return .success(true)
     }
 }

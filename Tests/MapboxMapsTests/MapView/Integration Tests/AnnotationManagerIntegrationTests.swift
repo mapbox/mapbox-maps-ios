@@ -172,7 +172,7 @@ extension AnnotationManagerIntegrationTestCase: AnnotationStyleDelegate {
         return style.getStyleImage(with: identifier)
     }
 
-    func addSource<T>(source: T, identifier: String) -> Result<Bool, SourceError> where T: Source {
+    func addSource(source: Source, identifier: String) -> Result<Bool, SourceError> {
         guard let style = style else {
             XCTFail("No style available")
             return .failure(.addSourceFailed(nil))
@@ -190,7 +190,7 @@ extension AnnotationManagerIntegrationTestCase: AnnotationStyleDelegate {
         return style.updateSourceProperty(id: id, property: property, value: value)
     }
 
-    func addLayer<T>(layer: T, layerPosition: LayerPosition?) -> Result<Bool, LayerError> where T: Layer {
+    func addLayer(layer: Layer, layerPosition: LayerPosition?) -> Result<Bool, LayerError> {
         guard let style = style else {
             XCTFail("No style available")
             return .failure(.addStyleLayerFailed(nil))

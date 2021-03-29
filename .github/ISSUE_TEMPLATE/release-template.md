@@ -82,12 +82,15 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 - [ ] Navigate to the [CircleCI job page](https://app.circleci.com/pipelines/github/mapbox/mapbox-maps-ios), and download the `api-docs.zip` artifact.
 
 - [ ] In the `mapbox-maps-ios` repo, `git checkout origin publisher-staging`. This is the branch that houses our API-Docs. Make a new branch off this one `git checkout -b Release/{version}_docs`
-  - If you would like to test your API docs before publishing them, target the `publisher-staging` branch first, then once your PR lands there, cherry-pick your commit to a branch based on `publisher-production`.
-- [ ] Unzip the `api-docs.zip` and move the new docs into our repo. 
+- [ ] Unzip the `api-docs.zip` and move the new docs into our repo. This should result in a new top-level folder named after the version, but without the 'v' prefix.
 - [ ] Commit and push those changes.
-- [ ] Make a pull request targeting the branch `publisher-production`.
+- [ ] Make a pull request targeting the branch `publisher-staging`.
 - [ ] Share this with @mapbox/docs to approve.
-- [ ] Merge the PR in `mapbox-maps-ios`. Cherry-pick to the `publisher-production`
+- [ ] Merge the PR in `mapbox-maps-ios`.
+- [ ] Preview the docs at the staging URL: https://docs.tilestream.net/ios/maps/api/{version_without_v_prefix}/index.html
+- [ ] Create a PR to merge `publisher-staging` into `publisher-production`.
+- [ ] Share the PR with @mapbox-docs to approve.
+- [ ] Merge the PR.
 - [ ] Create a `maps-{VERSION}` branch in [ios-sdk](https://github.com/mapbox/ios-sdk).
 - [ ] Add the new version (without a v prefix) as the first element in the [src/data/ios-maps-sdk-version.json](https://github.com/mapbox/ios-sdk/blob/publisher-production/src/data/ios-maps-sdk-versions.json).
 - [ ] While the beta docs site is live and for subsequent stable releases, add the version without the v to [src/constants.json](https://github.com/mapbox/ios-sdk/blob/ios/maps-v10.0.0-beta.13.1/src/constants.json#L6) as the value for `VERSION_IOS_MAPS_SDK_V10`.

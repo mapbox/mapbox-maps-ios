@@ -30,7 +30,7 @@ api-downloads: v2
 
 bundles:
   ios: 
-    - MapboxMaps-dynamic
+    - MapboxMaps
 EOF
 
 #

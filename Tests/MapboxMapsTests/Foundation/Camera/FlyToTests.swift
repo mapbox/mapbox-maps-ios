@@ -78,7 +78,7 @@ internal class FlyToTests: XCTestCase {
                 longitude: CLLocationDegrees.random(in: 180..<360)
             )
 
-            let source = CameraOptions(center:sourceCoord,
+            let source = CameraOptions(center: sourceCoord,
                                        padding: .zero,
                                        zoom: 14,
                                        bearing: 0,

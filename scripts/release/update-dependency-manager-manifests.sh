@@ -31,5 +31,5 @@ sed -i '' s/"m.dependency 'MapboxCoreMaps', '.*'"/"m.dependency 'MapboxCoreMaps'
 # Commit to the release branch
 #
 git add Package.swift MapboxMaps.podspec
-git commit -m "Update SPM configs for ${MAPS_VERSION} release"
+git commit -m "Update package manager configs for ${MAPS_VERSION} release"
 git push origin ${BRANCH}

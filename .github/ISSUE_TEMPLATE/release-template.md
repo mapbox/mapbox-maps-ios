@@ -69,7 +69,8 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
         - an api-docs.zip
 	- The completion of this job will make our api-docs which will be found in ci artifacts. It will also publish a GitHub draft release
 - [ ] Push the release to CocoaPods via `$ pod trunk push`
-- [ ] Update the information in the draft release with the correct changelog, versions, etc
+- [ ] Update the information in the draft release with the correct changelog, versions, etc.
+- [ ] Uncheck the prerelease box.
 - [ ] Have your release buddy review the draft release, and save the draft. You will publish it in a later step.
 
 **4) Confirm everything works as expected**

@@ -10,7 +10,7 @@ Mapbox welcomes participation and contributions from everyone.
 * `UIView.animate` is no longer supported. Instead, use `CameraAnimators`. ([#217](https://github.com/mapbox/mapbox-maps-ios/pull/217))
 * Developers should make camera changes directly to `MapView`'s camera
   properties. Previously, changes could be applied to `MapView.cameraView`. ([#217](https://github.com/mapbox/mapbox-maps-ios/pull/217))
-* `CameraAnimator` objects are managed by developers and should be stored in by
+* `CameraAnimator` objects are managed by developers and should be stored by
   developers to prevent the animations from falling out of scope.
 * `LocationOptions.showUserLocation` has been removed. Use
   `LocationOptions.puckType` instead, setting it to `nil` if you do not want to

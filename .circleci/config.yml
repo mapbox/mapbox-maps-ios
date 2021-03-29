@@ -443,8 +443,12 @@ jobs:
       - install-dependencies
       - make-xcframework-bundle:
           bundle_style: "dynamic"
+      - store_artifacts:
+          path: MapboxMaps.zip
       - make-xcframework-bundle:
           bundle_style: "static"
+      - store_artifacts:
+          path: MapboxMaps-static.zip
       - report-failure:
           report_failure: << parameters.report_failure >>
           message: "create-xcframework"
@@ -472,8 +476,12 @@ jobs:
       - install-dependencies
       - make-xcframework-bundle:
           bundle_style: "dynamic"
+      - store_artifacts:
+          path: MapboxMaps.zip
       - make-xcframework-bundle:
           bundle_style: "static"
+      - store_artifacts:
+          path: MapboxMaps-static.zip
       - run:
           name: Uploading direct download bundles (static & dynamic) to SDK Registry
           command: |
@@ -649,11 +657,9 @@ commands:
             cd scripts/release/packager
             ./package-mapbox-maps.sh << parameters.bundle_style >>
             echo "Moving zip to project root"
-            mv MapboxMaps-<< parameters.bundle_style >>.zip /Users/distiller/project/
+            mv MapboxMaps*.zip /Users/distiller/project/
             echo "Return to root of project"
             cd /Users/distiller/project/
-      - store_artifacts:
-          path: MapboxMaps-<< parameters.bundle_style >>.zip
 
   report-failure:
     parameters:

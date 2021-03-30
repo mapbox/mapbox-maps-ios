@@ -110,4 +110,65 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
 
         wait(for: [expectation], timeout: 5.0)
     }
+
+    func testGetLayers() {
+        guard
+            let mapView = mapView, let style = style else {
+            XCTFail("There should be valid MapView and Style objects created by setUp.")
+            return
+        }
+
+        didFinishLoadingStyle = { _ in
+            let layers = try! mapView.__map.getStyleLayers()
+
+            let expectation = XCTestExpectation(description: "Getting style layers succeeded")
+            expectation.expectedFulfillmentCount = layers.count
+            do {
+                for layer in layers {
+                    var layerType : Layer.Type
+                    switch layer.type {
+                    case "line":
+                        layerType = LineLayer.self
+                    case "symbol":
+                        layerType = SymbolLayer.self
+                    case "fill":
+                        layerType = FillLayer.self
+                    case "background":
+                        layerType = BackgroundLayer.self
+                    default:
+                        print("Unable to match type for layer of type \(layer.type)")
+                    }
+//
+                    let layerResponse = style.getLayer(with: layer.id, type: layerType.self)
+                    XCTAssert(layerResponse == .success, "Failed to retrieve layer with id \(layer.id)")
+
+//                     var result : Any
+//                     switch layer.type {
+//                     case "line":
+//                         result = style.getLayer(with: layer.id, type: LineLayer.self)
+//                     case "symbol":
+//                         result = style.getLayer(with: layer.id, type: SymbolLayer.self)
+//                     case "fill":
+//                         result = style.getLayer(with: layer.id, type: FillLayer.self)
+//                     case "background":
+//                         result = style.getLayer(with: layer.id, type: BackgroundLayer.self)
+//                     default:
+//                         print("Unable to match type for layer of type \(layer.type)")
+//                     }
+//                     switch result as! Result{
+//                     case .success:
+//                         expectation.fulfill()
+//                     default:
+//                         XCTFail("Failed to get layer with id \(layer.id)")
+//                     }
+
+                }
+            } catch {
+                XCTFail("Failed to get layer")
+            }
+
+        }
+        wait(for: [expectation], timeout: 5.0)
+    }
+
 }

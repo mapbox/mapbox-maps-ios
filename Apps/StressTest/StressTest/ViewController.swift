@@ -193,7 +193,7 @@ class ViewController: UIViewController {
     }
 
     func flyTo(end: CLLocationCoordinate2D, completion: @escaping () -> Void) {
-        let startOptions = mapView.cameraView.camera
+        let startOptions = mapView.camera
         let start = startOptions.center!
 
         let lineAnnotation = LineAnnotation(coordinates: [start, end])
@@ -204,9 +204,11 @@ class ViewController: UIViewController {
 
         let endOptions = CameraOptions(center: end, zoom: 17)
 
-        mapView.cameraManager.fly(to: endOptions) { _ in
-            print("Removing line annotation")
+        var animator: CameraAnimator?
+        animator = mapView.cameraManager.fly(to: endOptions) { _ in
+            print("Removing line annotation for animator \(String(describing: animator))")
             self.mapView.annotationManager.removeAnnotation(lineAnnotation)
+            animator = nil
             completion()
         }
     }
@@ -287,7 +289,7 @@ class ViewController: UIViewController {
         print("Creating snapshotter")
         let snapshotter = Snapshotter(options: options)
         snapshotter.style.styleURL = .light
-        snapshotter.camera = mapView.cameraView.camera
+        snapshotter.camera = mapView.camera
 
         snapshotter.on(.styleLoaded) { [weak self] _ in
             guard let snapshotter = self?.snapshotter else {

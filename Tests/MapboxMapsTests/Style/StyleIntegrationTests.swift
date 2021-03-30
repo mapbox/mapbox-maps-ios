@@ -119,7 +119,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         }
 
         let expectation = XCTestExpectation(description: "Getting style layers succeeded")
-        expectation.expectedFulfillmentCount = 111
+        expectation.expectedFulfillmentCount = 111 // The current number of layers
         didFinishLoadingStyle = { _ in
             let layers = try! mapView.__map.getStyleLayers()
             do {
@@ -133,7 +133,6 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
                         default:
                             XCTFail("Failed to get layer with id \(layer.id), error \(result)")
                         }
-                     }
                      case "symbol":
                         let result = style.getLayer(with: layer.id, type: SymbolLayer.self)
                         switch result {

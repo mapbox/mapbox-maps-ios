@@ -118,78 +118,52 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             return
         }
 
-        var expectation: XCTestExpectation
+        let expectation = XCTestExpectation(description: "Getting style layers succeeded")
+        expectation.expectedFulfillmentCount = 111
         didFinishLoadingStyle = { _ in
             let layers = try! mapView.__map.getStyleLayers()
-
-            expectation = XCTestExpectation(description: "Getting style layers succeeded")
-            expectation.expectedFulfillmentCount = layers.count
             do {
                 for layer in layers {
-//                    var layerType : Layer
-//                    switch layer.type {
-//                    case "line":
-//                        layerType = LineLayer.self as! Layer
-//                    case "symbol":
-//                        layerType = SymbolLayer.self as! Layer
-//                    case "fill":
-//                        layerType = FillLayer.self as! Layer
-//                    case "background":
-//                        layerType = BackgroundLayer.self as! Layer
-//                    default:
-//                        print("Unable to match type for layer of type \(layer.type)")
-//                    }
-//
-                    let layerResponse = style.getLayer(with: layer.id, type: getLayerClass(type: layer.type).self) // Cannot convert value of type 'Layer' to expected argument type 'T.Type'
-
-                    // let layerResponse = style.getLayer(with: layer.id, type: getLayerClass(type: layer.type).self as! T.Type) // Cannot find type 'T' in scope
-                    switch layerResponse {
-                    case .success:
-                        expectation.fulfill()
-                    default:
-                        XCTFail("Failed to get layer with id \(layer.id)")
-                    }
-                    
-//                     var result : Any
-//                     switch layer.type {
-//                     case "line":
-//                         result = style.getLayer(with: layer.id, type: LineLayer.self)
-//                     case "symbol":
-//                         result = style.getLayer(with: layer.id, type: SymbolLayer.self)
-//                     case "fill":
-//                         result = style.getLayer(with: layer.id, type: FillLayer.self)
-//                     case "background":
-//                         result = style.getLayer(with: layer.id, type: BackgroundLayer.self)
-//                     default:
-//                         print("Unable to match type for layer of type \(layer.type)")
-//                     }
-//                     switch result as! Result{
-//                     case .success:
-//                         expectation.fulfill()
-//                     default:
-//                         XCTFail("Failed to get layer with id \(layer.id)")
-//                     }
-
+                     switch layer.type {
+                     case "line":
+                        let result = style.getLayer(with: layer.id, type: LineLayer.self)
+                        switch result {
+                        case .success:
+                            expectation.fulfill()
+                        default:
+                            XCTFail("Failed to get layer with id \(layer.id), error \(result)")
+                        }
+                     }
+                     case "symbol":
+                        let result = style.getLayer(with: layer.id, type: SymbolLayer.self)
+                        switch result {
+                        case .success:
+                            expectation.fulfill()
+                        default:
+                            XCTFail("Failed to get layer with id \(layer.id), error \(result)")
+                        } // getting 17 failures
+                     case "fill":
+                        let result = style.getLayer(with: layer.id, type: FillLayer.self)
+                        switch result {
+                        case .success:
+                            expectation.fulfill()
+                        default:
+                            XCTFail("Failed to get layer with id \(layer.id)")
+                        }
+                     case "background":
+                        let result = style.getLayer(with: layer.id, type: BackgroundLayer.self)
+                        switch result {
+                        case .success:
+                            expectation.fulfill()
+                        default:
+                            XCTFail("Failed to get layer with id \(layer.id), error \(result)")
+                        }
+                     default:
+                         print("Unable to match type for layer of type \(layer.type)")
+                     }
                 }
-            } catch {
-                XCTFail("Failed to get layer")
             }
         }
         wait(for: [expectation], timeout: 5.0)
-    }
-
-    func getLayerClass(type: String) -> Layer {
-        switch type {
-        case "line":
-            return LineLayer as! Layer
-        case "symbol":
-            return SymbolLayer.self as! Layer
-        case "fill":
-            return FillLayer.self as! Layer
-        case "background":
-            return BackgroundLayer.self as! Layer
-        default:
-            XCTFail("Could not convert \(type)to Layer")
-        }
     }
 }

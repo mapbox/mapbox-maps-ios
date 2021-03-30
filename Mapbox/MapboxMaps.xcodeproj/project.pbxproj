@@ -189,6 +189,7 @@
 		B5B55D51260E4D4500EBB589 /* GestureManager+GestureHandlerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B55D50260E4D4500EBB589 /* GestureManager+GestureHandlerDelegate.swift */; };
 		B5B55D5F260E4D7B00EBB589 /* CameraAnimatorDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B55D56260E4D7500EBB589 /* CameraAnimatorDelegateMock.swift */; };
 		B5B55D60260E4D7B00EBB589 /* CameraAnimatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B55D55260E4D7500EBB589 /* CameraAnimatorTests.swift */; };
+		B5DDE9602613ACB400998840 /* StyleEncodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DDE95F2613ACB400998840 /* StyleEncodable.swift */; };
 		C64994A9258D5ADE0052C21C /* LocationPuckManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64994A5258D5ADD0052C21C /* LocationPuckManager.swift */; };
 		C64994AB258D5ADE0052C21C /* Puck.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64994A6258D5ADE0052C21C /* Puck.swift */; };
 		C64994AD258D5ADE0052C21C /* IndicatorAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C64994A7258D5ADE0052C21C /* IndicatorAssets.xcassets */; };
@@ -251,7 +252,7 @@
 		CA548FF6251C404B00F829A3 /* PointTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B863832246D300500698135 /* PointTests.swift */; };
 		CA548FF7251C404B00F829A3 /* UIImage+CGColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EEFA8925018B8800352933 /* UIImage+CGColor.swift */; };
 		CA548FFA251C404B00F829A3 /* CompassDirectionFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A35924F246598F600E67344 /* CompassDirectionFormatterTests.swift */; };
-		CA548FFB251C404B00F829A3 /* StyleURLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C786602440EAF0000CEF1E /* StyleURLTests.swift */; };
+		CA548FFB251C404B00F829A3 /* StyleURITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C786602440EAF0000CEF1E /* StyleURITests.swift */; };
 		CA548FFC251C404B00F829A3 /* PanGestureHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C71B4C8242C1ACA0076D6C4 /* PanGestureHandlerTests.swift */; };
 		CA548FFD251C404B00F829A3 /* QuickZoomGestureHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A44EE617244ED578006FE97E /* QuickZoomGestureHandlerTests.swift */; };
 		CA548FFF251C404B00F829A3 /* MapboxMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CD34FCE242AADDB00943687 /* MapboxMaps.framework */; };
@@ -581,7 +582,7 @@
 		A4519DDC2432FF03007CF39A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A4519DE42432FF14007CF39A /* Style.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
 		A4BDC0CC244A23EB00AA9B64 /* QuickZoomGestureHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickZoomGestureHandler.swift; sourceTree = "<group>"; };
-		A4C786602440EAF0000CEF1E /* StyleURLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleURLTests.swift; sourceTree = "<group>"; };
+		A4C786602440EAF0000CEF1E /* StyleURITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleURITests.swift; sourceTree = "<group>"; };
 		B506A59E25E023E90097ADB7 /* Bundle+MapboxMapsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle+MapboxMapsTests.swift"; sourceTree = "<group>"; };
 		B51DE62125D7032C00A80AC9 /* Comparable+Clamped.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Comparable+Clamped.swift"; sourceTree = "<group>"; };
 		B51DE64725D7038300A80AC9 /* Comparable+ClampedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Comparable+ClampedTests.swift"; sourceTree = "<group>"; };
@@ -600,6 +601,7 @@
 		B5B55D50260E4D4500EBB589 /* GestureManager+GestureHandlerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "GestureManager+GestureHandlerDelegate.swift"; sourceTree = "<group>"; };
 		B5B55D55260E4D7500EBB589 /* CameraAnimatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimatorTests.swift; sourceTree = "<group>"; };
 		B5B55D56260E4D7500EBB589 /* CameraAnimatorDelegateMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimatorDelegateMock.swift; sourceTree = "<group>"; };
+		B5DDE95F2613ACB400998840 /* StyleEncodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleEncodable.swift; sourceTree = "<group>"; };
 		C64994A5258D5ADD0052C21C /* LocationPuckManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationPuckManager.swift; sourceTree = "<group>"; };
 		C64994A6258D5ADE0052C21C /* Puck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Puck.swift; sourceTree = "<group>"; };
 		C64994A7258D5ADE0052C21C /* IndicatorAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = IndicatorAssets.xcassets; sourceTree = "<group>"; };
@@ -1322,6 +1324,7 @@
 		A4519DCE2432FF03007CF39A /* MapboxMapsStyle */ = {
 			isa = PBXGroup;
 			children = (
+				B5DDE95F2613ACB400998840 /* StyleEncodable.swift */,
 				A4519DCF2432FF03007CF39A /* MapboxMapsStyle.h */,
 				0CBCF2D7254229630025F7B3 /* STYLE_README.md */,
 				A4519DD02432FF03007CF39A /* Info.plist */,
@@ -1345,7 +1348,7 @@
 				0C59ED2025CC6D5400C72E7A /* ExpressionTests */,
 				0C5CFD1825BB961B0001E753 /* Fixtures */,
 				0C5CFCC425BB951A0001E753 /* Generated */,
-				A4C786602440EAF0000CEF1E /* StyleURLTests.swift */,
+				A4C786602440EAF0000CEF1E /* StyleURITests.swift */,
 				A4519DDC2432FF03007CF39A /* Info.plist */,
 				0C9DE382252C299800880CC8 /* GeoJSONSourceDataTests.swift */,
 				0C50AAE225BE8806007C0068 /* LightTests.swift */,
@@ -1884,6 +1887,7 @@
 				5A3592B3246C1FA000E67344 /* MapboxInfoButtonOrnament.swift in Sources */,
 				0CD62F1D24588715006421D1 /* LocationPermissionsDelegate.swift in Sources */,
 				0C708F1F24EB1EE2003CE791 /* BackgroundLayer.swift in Sources */,
+				B5DDE9602613ACB400998840 /* StyleEncodable.swift in Sources */,
 				0C88F22924F4223B00FC35F3 /* ExpressionOptions.swift in Sources */,
 				0782B037258C14A400D5FCE5 /* NSNumber.swift in Sources */,
 				07BA35E825157A0E003E1B55 /* AnnotationSupportableMap.swift in Sources */,
@@ -2071,7 +2075,7 @@
 				C64ED307253F7CF500ADADFB /* LocationSupportableMapViewMock.swift in Sources */,
 				CA548FFA251C404B00F829A3 /* CompassDirectionFormatterTests.swift in Sources */,
 				0CDFEB0D25A7745A008BC505 /* UtilsTests.swift in Sources */,
-				CA548FFB251C404B00F829A3 /* StyleURLTests.swift in Sources */,
+				CA548FFB251C404B00F829A3 /* StyleURITests.swift in Sources */,
 				CA2E4A1B2538D3530096DEDE /* MapViewIntegrationTestCase.swift in Sources */,
 				0C32CA2A25F982300057ED31 /* ImageSourceTests.swift in Sources */,
 				0C5CFCD625BB951B0001E753 /* FillExtrusionLayerTests.swift in Sources */,

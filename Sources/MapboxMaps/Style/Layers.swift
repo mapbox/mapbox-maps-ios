@@ -41,7 +41,7 @@ public enum LayerType: String, Codable {
     case model = "model"
 }
 
-public protocol Layer: Codable {
+public protocol Layer: Codable, StyleEncodable {
     /// Unique layer name
     var id: String { get set }
 

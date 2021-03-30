@@ -35,4 +35,4 @@ public enum SourceType: String, Codable {
     }
 }
 
-public protocol Source: Codable { }
+public protocol Source: Codable, StyleEncodable { }

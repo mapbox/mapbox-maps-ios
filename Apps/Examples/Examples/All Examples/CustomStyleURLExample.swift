@@ -14,7 +14,7 @@ internal class CustomStyleURLExample: UIViewController, ExampleProtocol {
             fatalError("Style URL is invalid")
         }
 
-        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions(), styleURL: .custom(url: customStyleURL))
+        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions(), styleURI: .custom(url: customStyleURL))
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 

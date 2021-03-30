@@ -29,16 +29,16 @@ internal struct SwiftUIMapView: UIViewRepresentable {
     /// can simply be exposed as a private var paired with a
     /// builder-style method. When you use `SwiftUIMapView`, you
     /// have the option to customize it by calling the builder method.
-    /// For example, with `styleURL`, you might say
-    private var styleURL = StyleURI.streets
+    /// For example, with `styleURI`, you might say
+    private var styleURI = StyleURI.streets
 
-    /// This is the builder-style method for setting `styleURL`.
+    /// This is the builder-style method for setting `styleURI`.
     /// It returns an updated `SwiftUIMapView` value that
-    /// has the specified `styleURL`. This approach allows you
+    /// has the specified `styleURI`. This approach allows you
     /// to chain these customizers — a common pattern in SwiftUI.
-    func styleURL(_ styleURL: StyleURI) -> Self {
+    func styleURI(_ styleURI: StyleURI) -> Self {
         var updated = self
-        updated.styleURL = styleURL
+        updated.styleURI = styleURI
         return updated
     }
 
@@ -51,7 +51,7 @@ internal struct SwiftUIMapView: UIViewRepresentable {
         return updated
     }
 
-    /// Unlike `styleURL`, there's no good default value for `resourceOptions`
+    /// Unlike `styleURI`, there's no good default value for `resourceOptions`
     /// because it's the value that contains your Mapbox access token. For that reason,
     /// it's declared here as a `let` and is a required parameter in the initializer.
     private let resourceOptions: ResourceOptions
@@ -73,7 +73,7 @@ internal struct SwiftUIMapView: UIViewRepresentable {
 
     /// After SwiftUI creates the coordinator, it creates the underlying `UIView`, in this case a `MapView`.
     /// This method should create the `MapView`, and make sure that it is configured to be in sync
-    /// with the current settings of `SwiftUIMapView` (in this example, just the `camera` and `styleURL`).
+    /// with the current settings of `SwiftUIMapView` (in this example, just the `camera` and `styleURI`).
     func makeUIView(context: UIViewRepresentableContext<SwiftUIMapView>) -> MapView {
         let mapView = MapView(with: .zero, resourceOptions: resourceOptions)
         updateUIView(mapView, context: context)
@@ -94,8 +94,8 @@ internal struct SwiftUIMapView: UIViewRepresentable {
                                         animated: false)
         /// Since changing the style causes annotations to be removed from the map
         /// we only call the setter if the value has changed.
-        if mapView.style.styleURI != styleURL {
-            mapView.style.styleURI = styleURL
+        if mapView.style.styleURI != styleURI {
+            mapView.style.styleURI = styleURI
         }
 
         /// The coordinator needs to manager annotations because
@@ -197,7 +197,7 @@ internal struct ContentView: View {
     /// In your app, these values could be constants defined directly in `body` or could come
     /// from a model object.
     @State private var camera = Camera(center: CLLocationCoordinate2D(latitude: 40, longitude: -75), zoom: 14)
-    @State private var styleURL = StyleURI.streets
+    @State private var styleURI = StyleURI.streets
 
     /// Each time you create an annotation, it is assigned a UUID. For this reason, it's not a great
     /// idea to actually create annotations inside of `body` which may be called repeatedly
@@ -215,10 +215,10 @@ internal struct ContentView: View {
                 /// Here, we pass the camera state variable into `SwiftUIMapView` as a binding
                 camera: $camera)
 
-                /// Here's an example usage of the builder method to set `styleURL`.
+                /// Here's an example usage of the builder method to set `styleURI`.
                 /// Note that in this case, we just need the current value, so we write
-                /// `styleURL`, not `$styleURL`
-                .styleURL(styleURL)
+                /// `styleURI`, not `$styleURI`
+                .styleURI(styleURI)
 
                 /// Since these methods use the builder pattern, we can chain them together
                 .annotations(annotations)
@@ -240,8 +240,8 @@ internal struct ContentView: View {
             ///     - SwiftUI updates the Slider accordingly
             Slider(value: $camera.zoom, in: 0...20)
 
-            /// The picker is bound to `styleURL`.
-            Picker(selection: $styleURL, label: Text("Map Style")) {
+            /// The picker is bound to `styleURI`.
+            Picker(selection: $styleURI, label: Text("Map Style")) {
                 Text("Streets").tag(StyleURI.streets)
                 Text("Dark").tag(StyleURI.dark)
             }.pickerStyle(SegmentedPickerStyle())

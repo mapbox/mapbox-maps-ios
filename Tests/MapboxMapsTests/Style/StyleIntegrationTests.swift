@@ -126,22 +126,23 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             expectation.expectedFulfillmentCount = layers.count
             do {
                 for layer in layers {
-                    var layerType : Layer.Type
-                    switch layer.type {
-                    case "line":
-                        layerType = LineLayer.self
-                    case "symbol":
-                        layerType = SymbolLayer.self
-                    case "fill":
-                        layerType = FillLayer.self
-                    case "background":
-                        layerType = BackgroundLayer.self
-                    default:
-                        print("Unable to match type for layer of type \(layer.type)")
-                    }
+//                    var layerType : Layer
+//                    switch layer.type {
+//                    case "line":
+//                        layerType = LineLayer.self as! Layer
+//                    case "symbol":
+//                        layerType = SymbolLayer.self as! Layer
+//                    case "fill":
+//                        layerType = FillLayer.self as! Layer
+//                    case "background":
+//                        layerType = BackgroundLayer.self as! Layer
+//                    default:
+//                        print("Unable to match type for layer of type \(layer.type)")
+//                    }
 //
-                    let layerResponse = style.getLayer(with: layer.id, type: layerType.self)
+                    let layerResponse = style.getLayer(with: layer.id, type: getLayerClass(type: layer.type).self) // Cannot convert value of type 'Layer' to expected argument type 'T.Type'
 
+                    // let layerResponse = style.getLayer(with: layer.id, type: getLayerClass(type: layer.type).self as! T.Type) // Cannot find type 'T' in scope
                     switch layerResponse {
                     case .success:
                         expectation.fulfill()
@@ -175,5 +176,20 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             }
         }
         wait(for: [expectation], timeout: 5.0)
+    }
+
+    func getLayerClass(type: String) -> Layer {
+        switch type {
+        case "line":
+            return LineLayer as! Layer
+        case "symbol":
+            return SymbolLayer.self as! Layer
+        case "fill":
+            return FillLayer.self as! Layer
+        case "background":
+            return BackgroundLayer.self as! Layer
+        default:
+            XCTFail("Could not convert \(type)to Layer")
+        }
     }
 }

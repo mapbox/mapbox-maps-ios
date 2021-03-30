@@ -25,7 +25,7 @@ class LocationIndicatorLayerIntegrationTests: MapViewIntegrationTestCase {
         let successfullyRetrievedLayerExpectation = XCTestExpectation(description: "Successfully retrieved LocationIndicatorLayer from Map")
         successfullyRetrievedLayerExpectation.expectedFulfillmentCount = 1
 
-        style.styleURL = .streets
+        style.styleURI = .streets
 
         didFinishLoadingStyle = { _ in
 

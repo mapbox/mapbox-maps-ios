@@ -15,7 +15,7 @@ class MapViewIntegrationTests: IntegrationTestCase {
         rootView = root
 
         let resourceOptions = ResourceOptions(accessToken: accessToken)
-        mapView = MapView(with: rootView.bounds, resourceOptions: resourceOptions, styleURL: .streets)
+        mapView = MapView(with: rootView.bounds, resourceOptions: resourceOptions, styleURI: .streets)
         rootView.addSubview(mapView)
     }
 
@@ -30,7 +30,7 @@ class MapViewIntegrationTests: IntegrationTestCase {
             let expectation = self.expectation(description: "wait for map")
 
             let resourceOptions = ResourceOptions(accessToken: accessToken)
-            let mapView = MapView(with: rootView.bounds, resourceOptions: resourceOptions, styleURL: .streets)
+            let mapView = MapView(with: rootView.bounds, resourceOptions: resourceOptions, styleURI: .streets)
             weakMapView = mapView
 
             rootView.addSubview(mapView)

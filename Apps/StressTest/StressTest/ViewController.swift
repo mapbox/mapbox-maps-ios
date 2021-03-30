@@ -46,7 +46,7 @@ class ViewController: UIViewController {
 
     // Cycle each fly-to set through these styles
     var styleStep = 0
-    var styles: [(StyleURL, String?)] = {
+    var styles: [(StyleURI, String?)] = {
         return [
             (.streets, "land"),
             (.outdoors, "land"),
@@ -80,7 +80,7 @@ class ViewController: UIViewController {
 
         // Do any additional setup after loading the view.
         resourceOptions = ResourceOptions(accessToken: AccountManager.shared.accessToken!)
-        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions, styleURL: .streets)
+        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions, styleURI: .streets)
         view.addSubview(mapView)
         NSLayoutConstraint.activate([
             mapView.leftAnchor.constraint(equalTo: view.leftAnchor),
@@ -101,7 +101,7 @@ class ViewController: UIViewController {
             self.flyToNextCoordinate()
         }
 
-        mapView.style.styleURL = styles[styleStep].0
+        mapView.style.styleURI = styles[styleStep].0
     }
 
     func flyToNextCoordinate() {
@@ -119,7 +119,7 @@ class ViewController: UIViewController {
             removeAnnotations()
 
             // Change the style
-            mapView.style.styleURL = styles[styleStep].0
+            mapView.style.styleURI = styles[styleStep].0
             print("Changing style to \(styles[styleStep].0)")
 
             return
@@ -288,7 +288,7 @@ class ViewController: UIViewController {
 
         print("Creating snapshotter")
         let snapshotter = Snapshotter(options: options)
-        snapshotter.style.styleURL = .light
+        snapshotter.style.styleURI = .light
         snapshotter.camera = mapView.camera
 
         snapshotter.on(.styleLoaded) { [weak self] _ in

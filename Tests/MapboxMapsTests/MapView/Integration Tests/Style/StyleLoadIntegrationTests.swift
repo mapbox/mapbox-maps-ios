@@ -6,43 +6,43 @@ class StyleLoadIntegrationTests: MapViewIntegrationTestCase {
 
     // MARK: - Tests
 
-    func testLoadingDarkStyleURL() {
+    func testLoadingDarkStyleURI() {
         loadAndIdle(for: .dark)
     }
 
-    func testLoadingLightStyleURL() {
+    func testLoadingLightStyleURI() {
         loadAndIdle(for: .light)
     }
 
-    func testLoadingOutdoorsStyleURL() {
+    func testLoadingOutdoorsStyleURI() {
         loadAndIdle(for: .outdoors)
     }
 
-    func testLoadingSatelliteStyleURL() {
+    func testLoadingSatelliteStyleURI() {
         loadAndIdle(for: .satellite)
     }
 
-    func testLoadingSatelliteStreetsStyleURL() {
+    func testLoadingSatelliteStreetsStyleURI() {
         loadAndIdle(for: .satelliteStreets)
     }
 
-    func testLoadingStreetsStyleURL() {
+    func testLoadingStreetsStyleURI() {
         loadAndIdle(for: .streets)
     }
 
-    func testLoadingBlueprintStyleURL() {
+    func testLoadingBlueprintStyleURI() {
         loadAndIdle(for: .custom(url: URL(string: "mapbox://styles/mapbox-map-design/ck40ed2go56yr1cp7bbsalr1c")!))
     }
 
     // MARK: - Helpers
 
-    private func loadAndIdle(for styleURL: StyleURL) {
+    private func loadAndIdle(for styleURI: StyleURI) {
         guard let style = style else {
             XCTFail("Should have a valid Style object")
             return
         }
 
-        let expectation = self.expectation(description: "Wait for \(styleURL) to load")
+        let expectation = self.expectation(description: "Wait for \(styleURI) to load")
         expectation.expectedFulfillmentCount = 2
 
         didFinishLoadingStyle = { _ in
@@ -53,7 +53,7 @@ class StyleLoadIntegrationTests: MapViewIntegrationTestCase {
             expectation.fulfill()
         }
 
-        style.styleURL = styleURL
+        style.styleURI = styleURI
         wait(for: [expectation], timeout: 5)
     }
 }

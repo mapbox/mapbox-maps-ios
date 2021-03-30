@@ -2,7 +2,7 @@ import Foundation
 
 /// Enum representing the latest version of the Mapbox styles (as of publication). In addition,
 /// you can provide a custom URL or earlier version of a Mapbox style by using the `.custom` case.
-public enum StyleURL: Hashable, RawRepresentable {
+public enum StyleURI: Hashable, RawRepresentable {
     public typealias RawValue = URL
 
     /// Mapbox Streets is a general-purpose style with detailed road and transit networks.
@@ -29,7 +29,7 @@ public enum StyleURL: Hashable, RawRepresentable {
     /// resource path.
     case custom(url: URL)
 
-    /// Underlying URL for the StyleURL
+    /// Underlying URL for the StyleURI
     public var url: URL {
         return rawValue
     }
@@ -39,38 +39,38 @@ public enum StyleURL: Hashable, RawRepresentable {
     public var rawValue: URL {
         switch self {
         case .streets:
-            return Self.streetsURL
+            return Self.streetsURI
         case .outdoors:
-            return Self.outdoorsURL
+            return Self.outdoorsURI
         case .light:
-            return Self.lightURL
+            return Self.lightURI
         case .dark:
-            return Self.darkURL
+            return Self.darkURI
         case .satellite:
-            return Self.satelliteURL
+            return Self.satelliteURI
         case .satelliteStreets:
-            return Self.satelliteStreetsURL
+            return Self.satelliteStreetsURI
         case .custom(let url):
             return url
         }
     }
 
-    /// Create a StyleURL from a URL.
-    /// Returns nil if the URL is invalid.
-    /// - Parameter rawValue: URL to create style URL from.
+    /// Create a StyleURI from a URL.
+    /// Returns nil if the URI is invalid.
+    /// - Parameter rawValue: URL to create style URI from.
     public init?(rawValue: URL) {
         switch rawValue {
-        case Self.streetsURL:
+        case Self.streetsURI:
             self = .streets
-        case Self.outdoorsURL:
+        case Self.outdoorsURI:
             self = .outdoors
-        case Self.lightURL:
+        case Self.lightURI:
             self = .light
-        case Self.darkURL:
+        case Self.darkURI:
             self = .dark
-        case Self.satelliteURL:
+        case Self.satelliteURI:
             self = .satellite
-        case Self.satelliteStreetsURL:
+        case Self.satelliteStreetsURI:
             self = .satelliteStreets
         default:
             guard rawValue.scheme != nil else {
@@ -80,12 +80,12 @@ public enum StyleURL: Hashable, RawRepresentable {
         }
     }
 
-    private static let streetsURL          = URL(string: "mapbox://styles/mapbox/streets-v11")!
-    private static let outdoorsURL         = URL(string: "mapbox://styles/mapbox/outdoors-v11")!
-    private static let lightURL            = URL(string: "mapbox://styles/mapbox/light-v10")!
-    private static let darkURL             = URL(string: "mapbox://styles/mapbox/dark-v10")!
-    private static let satelliteURL        = URL(string: "mapbox://styles/mapbox/satellite-v9")!
-    private static let satelliteStreetsURL = URL(string: "mapbox://styles/mapbox/satellite-streets-v11")!
+    private static let streetsURI          = URL(string: "mapbox://styles/mapbox/streets-v11")!
+    private static let outdoorsURI         = URL(string: "mapbox://styles/mapbox/outdoors-v11")!
+    private static let lightURI            = URL(string: "mapbox://styles/mapbox/light-v10")!
+    private static let darkURI             = URL(string: "mapbox://styles/mapbox/dark-v10")!
+    private static let satelliteURI        = URL(string: "mapbox://styles/mapbox/satellite-v9")!
+    private static let satelliteStreetsURI = URL(string: "mapbox://styles/mapbox/satellite-streets-v11")!
 
     /// :nodoc:
     /// Hashable conformance

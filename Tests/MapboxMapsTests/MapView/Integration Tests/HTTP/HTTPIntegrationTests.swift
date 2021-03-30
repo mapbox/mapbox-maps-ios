@@ -123,7 +123,7 @@ class HTTPIntegrationTests: MapViewIntegrationTestCase {
             serviceExpectation.fulfill()
         }
 
-        style.styleURL = .streets
+        style.styleURI = .streets
 
         wait(for: [serviceExpectation], timeout: 5.0)
     }
@@ -144,7 +144,7 @@ class HTTPIntegrationTests: MapViewIntegrationTestCase {
             serviceExpectation.fulfill()
         }
 
-        style.styleURL = .streets
+        style.styleURI = .streets
 
         didFailLoadingMap = { (_, error2) in
             XCTAssertNotNil(error2)

@@ -118,10 +118,11 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             return
         }
 
+        var expectation: XCTestExpectation
         didFinishLoadingStyle = { _ in
             let layers = try! mapView.__map.getStyleLayers()
 
-            let expectation = XCTestExpectation(description: "Getting style layers succeeded")
+            expectation = XCTestExpectation(description: "Getting style layers succeeded")
             expectation.expectedFulfillmentCount = layers.count
             do {
                 for layer in layers {
@@ -140,8 +141,14 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
                     }
 //
                     let layerResponse = style.getLayer(with: layer.id, type: layerType.self)
-                    XCTAssert(layerResponse == .success, "Failed to retrieve layer with id \(layer.id)")
 
+                    switch layerResponse {
+                    case .success:
+                        expectation.fulfill()
+                    default:
+                        XCTFail("Failed to get layer with id \(layer.id)")
+                    }
+                    
 //                     var result : Any
 //                     switch layer.type {
 //                     case "line":
@@ -166,9 +173,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             } catch {
                 XCTFail("Failed to get layer")
             }
-
         }
         wait(for: [expectation], timeout: 5.0)
     }
-
 }

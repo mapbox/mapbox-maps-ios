@@ -23,7 +23,7 @@ class RasterSourceIntegrationTests: MapViewIntegrationTestCase {
         let successfullyRetrievedSourceExpectation = XCTestExpectation(description: "Successfully retrieved RasterSource from Map")
         successfullyRetrievedSourceExpectation.expectedFulfillmentCount = 1
 
-        style.styleURL = .streets
+        style.styleURI = .streets
 
         didFinishLoadingStyle = { _ in
             var source = RasterSource()

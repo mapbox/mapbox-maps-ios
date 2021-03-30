@@ -94,7 +94,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     private var observerConcrete: ObserverConcrete!
     @objc dynamic internal var displayLink: CADisplayLink?
 
-    @IBInspectable var styleURL__: String = ""
+    @IBInspectable var styleURI__: String = ""
     @IBInspectable var baseURL__: String = ""
     @IBInspectable var accessToken__: String = ""
 
@@ -197,14 +197,14 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     }
 
     // MARK: Init
-    public init(with frame: CGRect, resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions, styleURL: URL?) {
+    public init(with frame: CGRect, resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions, styleURI: URL?) {
         super.init(frame: frame)
         self.commonInit(resourceOptions: resourceOptions,
                         glyphsRasterizationOptions: glyphsRasterizationOptions,
-                        styleURL: styleURL)
+                        styleURI: styleURI)
     }
 
-    private func commonInit(resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions, styleURL: URL?) {
+    private func commonInit(resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions, styleURI: URL?) {
 
         if MTLCreateSystemDefaultDevice() == nil {
             // Check if we're running on a simulator on iOS 11 or 12
@@ -251,8 +251,8 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
                                                name: UIApplication.willTerminateNotification,
                                                object: nil)
 
-        if let validStyleURL = styleURL {
-            try! __map?.setStyleURIForUri(validStyleURL.absoluteString)
+        if let validStyleURI = styleURI {
+            try! __map?.setStyleURIForUri(validStyleURI.absoluteString)
         }
 
     }
@@ -274,8 +274,8 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
             fatalError("Must provide access token to the MapView in Interface Builder / Storyboard")
         }
 
-        let ibStyleURL = BaseMapView.parseIBStringAsURL(ibString: styleURL__)
-        let styleURL = ibStyleURL ?? URL(string: "mapbox://styles/mapbox/streets-v11")!
+        let ibStyleURI = BaseMapView.parseIBStringAsURL(ibString: styleURI__)
+        let styleURI = ibStyleURI ?? URL(string: "mapbox://styles/mapbox/streets-v11")!
 
         let baseURL = BaseMapView.parseIBString(ibString: baseURL__)
         let resourceOptions = ResourceOptions(accessToken: accessToken, baseUrl: baseURL)
@@ -288,7 +288,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
         let glyphsRasterizationOptions = GlyphsRasterizationOptions(rasterizationMode: rasterizationMode,
                                                                     fontFamily: localFontFamily)
 
-        commonInit(resourceOptions: resourceOptions, glyphsRasterizationOptions: glyphsRasterizationOptions, styleURL: styleURL)
+        commonInit(resourceOptions: resourceOptions, glyphsRasterizationOptions: glyphsRasterizationOptions, styleURI: styleURI)
     }
 
     public func on(_ eventType: MapEvents.EventKind, handler: @escaping (MapboxCoreMaps.Event) -> Void) {

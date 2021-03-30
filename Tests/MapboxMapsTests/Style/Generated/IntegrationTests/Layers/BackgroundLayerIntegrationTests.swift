@@ -25,7 +25,7 @@ class BackgroundLayerIntegrationTests: MapViewIntegrationTestCase {
         let successfullyRetrievedLayerExpectation = XCTestExpectation(description: "Successfully retrieved BackgroundLayer from Map")
         successfullyRetrievedLayerExpectation.expectedFulfillmentCount = 1
 
-        style.styleURL = .streets
+        style.styleURI = .streets
 
         didFinishLoadingStyle = { _ in
             var layer = BackgroundLayer(id: "test-id")

@@ -18,7 +18,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         let expectation = XCTestExpectation(description: "Manipulating style succeeded")
         expectation.expectedFulfillmentCount = 3
 
-        style.styleURL = .streets
+        style.styleURI = .streets
 
         didFinishLoadingStyle = { _ in
 
@@ -71,7 +71,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         let expectation = XCTestExpectation(description: "Move style layer succeeded")
         expectation.expectedFulfillmentCount = 2
 
-        style.styleURL = .streets
+        style.styleURI = .streets
 
         didFinishLoadingStyle = { _ in
 

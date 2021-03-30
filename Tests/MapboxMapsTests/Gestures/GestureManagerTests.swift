@@ -23,7 +23,7 @@ final class GestureManagerTests: XCTestCase {
         mapView = BaseMapView(with: CGRect(x: 0, y: 0, width: 100, height: 100),
                               resourceOptions: resourceOptions,
                               glyphsRasterizationOptions: GlyphsRasterizationOptions.default,
-                              styleURL: nil)
+                              styleURI: nil)
         delegate = GestureHandlerDelegateMock()
         cameraManager = MockCameraManager()
         cameraManager.mapView = mapView

@@ -17,7 +17,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                                                   longitude: -122.341647)
 
     internal func testQueryAtPoint() {
-        style?.styleURL = .streets
+        style?.styleURI = .streets
 
         let featureQueryExpectation = XCTestExpectation(description: "Wait for features to be queried.")
 
@@ -51,7 +51,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
     }
 
     internal func testQueryInRectWithFilter() {
-        style?.styleURL = .streets
+        style?.styleURI = .streets
 
         let featureQueryExpectation = XCTestExpectation(description: "Wait for features to be queried.")
 

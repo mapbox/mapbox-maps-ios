@@ -28,7 +28,7 @@ class MapboxMapsFoundationTests: XCTestCase {
         mapView = BaseMapView(with: CGRect(x: 10, y: 10, width: 100, height: 100),
                               resourceOptions: resourceOptions,
                               glyphsRasterizationOptions: GlyphsRasterizationOptions.default,
-                              styleURL: nil)
+                              styleURI: nil)
     }
 
     override func tearDown() {

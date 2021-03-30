@@ -12,7 +12,7 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
      to ensure the correct layers exist.
      */
     internal func testAddAnnotation() {
-        style?.styleURL = .streets
+        style?.styleURI = .streets
 
         let styleLoadedExpectation = XCTestExpectation(description: "Wait for map to load style")
         let sourceAddedExpectation = XCTestExpectation(description: "Annotation source layer added")
@@ -55,7 +55,7 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
     }
 
     internal func testAddAnnotationAtSpecificLayerPosition() {
-        style?.styleURL = .streets
+        style?.styleURI = .streets
 
         let styleLoadedExpectation = XCTestExpectation(description: "Wait for map to load style")
 
@@ -94,7 +94,7 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
      that information at another instance.
      */
     internal func testAddUserInfoToAnnotation() {
-        style?.styleURL = .streets
+        style?.styleURI = .streets
 
         let styleLoadedExpectation = XCTestExpectation(description: "Wait for map to load style")
         let sourceAddedExpectation = XCTestExpectation(description: "Annotation source layer added")

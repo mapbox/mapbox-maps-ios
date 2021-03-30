@@ -19,7 +19,7 @@ internal class ExampleIntegrationTest: MapViewIntegrationTestCase {
         let expectation = XCTestExpectation(description: "Wait for map to idle")
         expectation.expectedFulfillmentCount = 2
 
-        style.styleURL = .streets
+        style.styleURI = .streets
 
         mapView.centerCoordinate = CLLocationCoordinate2D(latitude: 42.0, longitude: -71.0)
         mapView.zoom = 8.0

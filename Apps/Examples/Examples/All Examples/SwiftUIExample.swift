@@ -30,13 +30,13 @@ internal struct SwiftUIMapView: UIViewRepresentable {
     /// builder-style method. When you use `SwiftUIMapView`, you
     /// have the option to customize it by calling the builder method.
     /// For example, with `styleURL`, you might say
-    private var styleURL = StyleURL.streets
+    private var styleURL = StyleURI.streets
 
     /// This is the builder-style method for setting `styleURL`.
     /// It returns an updated `SwiftUIMapView` value that
     /// has the specified `styleURL`. This approach allows you
     /// to chain these customizers — a common pattern in SwiftUI.
-    func styleURL(_ styleURL: StyleURL) -> Self {
+    func styleURL(_ styleURL: StyleURI) -> Self {
         var updated = self
         updated.styleURL = styleURL
         return updated
@@ -94,8 +94,8 @@ internal struct SwiftUIMapView: UIViewRepresentable {
                                         animated: false)
         /// Since changing the style causes annotations to be removed from the map
         /// we only call the setter if the value has changed.
-        if mapView.style.styleURL != styleURL {
-            mapView.style.styleURL = styleURL
+        if mapView.style.styleURI != styleURL {
+            mapView.style.styleURI = styleURL
         }
 
         /// The coordinator needs to manager annotations because
@@ -197,7 +197,7 @@ internal struct ContentView: View {
     /// In your app, these values could be constants defined directly in `body` or could come
     /// from a model object.
     @State private var camera = Camera(center: CLLocationCoordinate2D(latitude: 40, longitude: -75), zoom: 14)
-    @State private var styleURL = StyleURL.streets
+    @State private var styleURL = StyleURI.streets
 
     /// Each time you create an annotation, it is assigned a UUID. For this reason, it's not a great
     /// idea to actually create annotations inside of `body` which may be called repeatedly
@@ -242,8 +242,8 @@ internal struct ContentView: View {
 
             /// The picker is bound to `styleURL`.
             Picker(selection: $styleURL, label: Text("Map Style")) {
-                Text("Streets").tag(StyleURL.streets)
-                Text("Dark").tag(StyleURL.dark)
+                Text("Streets").tag(StyleURI.streets)
+                Text("Dark").tag(StyleURI.dark)
             }.pickerStyle(SegmentedPickerStyle())
         }
     }

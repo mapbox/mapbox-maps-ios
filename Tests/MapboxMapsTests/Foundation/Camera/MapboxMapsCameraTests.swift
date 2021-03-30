@@ -18,7 +18,7 @@ class CameraManagerTests: XCTestCase {
         mapView = BaseMapView(with: CGRect(x: 0, y: 0, width: 100, height: 100),
                               resourceOptions: resourceOptions,
                               glyphsRasterizationOptions: GlyphsRasterizationOptions.default,
-                              styleURL: nil)
+                              styleURI: nil)
         cameraManager = CameraManager(for: mapView, with: MapCameraOptions())
     }
 

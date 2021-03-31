@@ -1,8 +1,9 @@
-import Foundation
-import MapboxCoreMaps
-
 public protocol StyleEncodable {
     func jsonObject() throws -> [String: AnyObject]
+}
+
+public protocol StyleDecodable {
+    init(jsonObject: [String: AnyObject]) throws
 }
 
 public extension StyleEncodable where Self: Encodable {

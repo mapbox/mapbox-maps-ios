@@ -41,7 +41,7 @@ public enum LayerType: String, Codable {
     case model = "model"
 }
 
-public protocol Layer: Codable, StyleEncodable {
+public protocol Layer: Codable, StyleEncodable, StyleDecodable {
     /// Unique layer name
     var id: String { get set }
 
@@ -66,6 +66,15 @@ public protocol Layer: Codable, StyleEncodable {
 
     /// The maximum zoom level for the layer. At zoom levels equal to or greater than the maxzoom, the layer will be hidden.
     var maxZoom: Double? { get set }
+}
+
+public extension Layer {
+    /// Initializes a Layer given a JSON dictionary
+    /// - Throws: Errors occurring during decoding
+    init(jsonObject: [String: AnyObject]) throws {
+        let layerData = try JSONSerialization.data(withJSONObject: jsonObject)
+        self = try JSONDecoder().decode(Self.self, from: layerData)
+    }
 }
 
 public extension LayerPosition {

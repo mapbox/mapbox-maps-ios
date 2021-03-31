@@ -148,7 +148,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
                             let layerProperties = try! mapView.__map.getStyleLayerProperties(forLayerId: layer.id)
                             print("Failed: \(layerProperties.value)")
                             XCTFail("Failed to get symbol layer with id \(layer.id), error \(result)")
-                        } // getting 17 failures
+                        } // getting 6 failures
                     case .fill:
                         let result = style.getLayer(with: layer.id, type: FillLayer.self)
                         switch result {

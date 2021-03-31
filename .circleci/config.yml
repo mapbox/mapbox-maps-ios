@@ -547,10 +547,11 @@ commands:
 
   configure-environment:
     steps:
-      # CircleCI's checkout step configures git so that it will always clone from github.com via SSH. They also
-      # seed the known_hosts file, however the value they're using doesn't seem to work for xcodebuild when it
-      # is resolving the Swift package graph. This step reverts CircleCI's git configuration change so that
-      # xcodebuild can clone Swift packages via HTTPS.
+      # CircleCI's checkout step configures git so that it will always clone
+      # from github.com via SSH. It also seeds the known_hosts file, however the
+      # value it uses doesn't seem to work for xcodebuild when it is resolving
+      # the Swift package graph. This step reverts CircleCI's git configuration
+      # change so that xcodebuild can clone Swift packages via HTTPS.
       - run:
           name: Allow cloning from github.com via HTTPS
           command: git config --global --unset url."ssh://git@github.com".insteadOf

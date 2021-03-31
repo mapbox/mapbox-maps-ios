@@ -28,10 +28,8 @@ public enum Formatted: Codable {
 
         if let validFormattedElements = try? container.decode([Element].self) {
             self = .format(validFormattedElements)
-            return
-        } else if let validString = try? container.decode(String.self){
+        } else if let validString = try? container.decode(String.self) {
             self = .string(validString)
-            return
         } else {
             let context = DecodingError.Context(codingPath: decoder.codingPath,
                                             debugDescription: "Failed to decode Formatted")
@@ -61,13 +59,10 @@ public enum Formatted: Codable {
 
             if let validString = try? container.decode(String.self), validString == Expression.Operator.format.rawValue {
                 self = .format
-                return
             } else if let validString = try? container.decode(Value<String>.self) {
                 self = .substring(validString)
-                return
             } else if let validOptions = try? container.decode(FormatOptions.self) {
                 self = .formatOptions(validOptions)
-                return
             } else {
                 let context = DecodingError.Context(codingPath: decoder.codingPath,
                                                 debugDescription: "Failed to decode FormattedElement")

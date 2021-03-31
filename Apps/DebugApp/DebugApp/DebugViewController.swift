@@ -81,10 +81,8 @@ public class DebugViewController: UIViewController {
             print("The map has finished loading... Event = \(event)")
             guard let self = self else { return }
 
-            try! self.mapView.__map.setStyleLayerPropertyForLayerId("country-label", property: "text-field", value: "MY_COUNTRY")
-
             do {
-                _ = try self.mapView.style.getLayer(with: "country-label", type: SymbolLayer.self).get()
+                _ = try self.mapView.style.getLayer(with: "airport-label", type: SymbolLayer.self).get()
             } catch {
                 print(error)
             }

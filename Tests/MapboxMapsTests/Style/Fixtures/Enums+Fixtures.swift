@@ -106,6 +106,13 @@ extension Value where T == TextJustify {
     }
 
 }
+// MARK: TEXT_FIELD
+extension Value where T == Formatted {
+
+    static func testConstantValue() -> Value<Formatted> {
+        return .constant(.format([.substring(.constant("hello")), .formatOptions(.init(fontScale: 2, textColor: .purple))]))
+    }
+}
 // MARK: TEXT_PITCH_ALIGNMENT
 
 extension Value where T == TextPitchAlignment {

@@ -1,7 +1,12 @@
+// MARK: Formatted Enum
 public enum Formatted: Codable {
     case format([Element])
     case string(String)
 
+    // MARK: Initializer
+
+    /// Initializer to create an array of `Formatted` elements.
+    /// - Parameter formattedDictionary: Dictionary that maps a constant string to a set of format options.
     public init(with formattedDictionary: [String: FormatOptions]) {
         var formattedElements: [Element] = [.format]
 
@@ -12,6 +17,8 @@ public enum Formatted: Codable {
         self = .format(formattedElements)
     }
 
+    /// Initializer to create Formatted type from a `String`.
+    /// - Parameter string: String representation of `Formatted` type.
     public init(with string: String) {
         self = .string(string)
     }
@@ -43,6 +50,7 @@ public enum Formatted: Codable {
         }
     }
 
+    // MARK: Element Enum
     public enum Element: Codable {
         case format
         case substring(Value<String>)

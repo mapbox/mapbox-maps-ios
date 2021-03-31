@@ -99,8 +99,8 @@ public struct SymbolLayer: Layer {
       public var textAnchor: Value<TextAnchor>?
             
       /// Value to use for a text label. If a plain `string` is provided, it will be treated as a `formatted` with default/inherited formatting options.
-      public var textField: Value<String>?
-            
+      public var textField: Value<Formatted>?
+
       /// Font stack to use for displaying text.
       public var textFont: Value<[String]>?
             

@@ -36,3 +36,14 @@ public enum SourceType: String, Codable {
 }
 
 public protocol Source: Codable, StyleEncodable, StyleDecodable { }
+
+public extension Source {
+    /// Initializes a Source given a JSON dictionary
+    /// - Throws: Errors occurring during decoding
+    init(jsonObject: [String : AnyObject]) throws {
+        let sourceData = try JSONSerialization.data(withJSONObject: jsonObject)
+        self = try JSONDecoder().decode(Self.self, from: sourceData)
+    }
+}
+
+

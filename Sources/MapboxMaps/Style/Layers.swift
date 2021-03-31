@@ -68,6 +68,15 @@ public protocol Layer: Codable, StyleEncodable, StyleDecodable {
     var maxZoom: Double? { get set }
 }
 
+public extension Layer {
+    /// Initializes a Layer given a JSON dictionary
+    /// - Throws: Errors occurring during decoding
+    init(jsonObject: [String : AnyObject]) throws {
+        let layerData = try JSONSerialization.data(withJSONObject: jsonObject)
+        self = try JSONDecoder().decode(Self.self, from: layerData)
+    }
+}
+
 public extension LayerPosition {
     convenience init(above: String? = nil, below: String? = nil, at: Int? = nil) {
         self.init(__above: above, below: below, at: at?.NSNumber)

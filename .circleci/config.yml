@@ -547,9 +547,16 @@ commands:
 
   configure-environment:
     steps:
-      # - add-github-to-known-hosts
-      - allow-cloning-from-github-with-https
-      - configure-netrc
+      # CircleCI's checkout step configures git so that it will always clone from github.com via SSH. They also
+      # seed the known_hosts file, however the value they're using doesn't seem to work for xcodebuild when it
+      # is resolving the Swift package graph. This step reverts CircleCI's git configuration change so that
+      # xcodebuild can clone Swift packages via HTTPS.
+      - run:
+          name: Allow cloning from github.com via HTTPS
+          command: git config --global --unset url."ssh://git@github.com".insteadOf
+      - run:
+          name: Configure .netrc
+          command: echo "machine api.mapbox.com login mapbox password $SDK_REGISTRY_TOKEN" >> ~/.netrc
       - inject-mapbox-public-token
 
   inject-mapbox-public-token:
@@ -685,26 +692,6 @@ commands:
           mentions: '$CIRCLE_USERNAME'
           only_for_branches: main
           failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL| << parameters.message >> failed.>'
-
-  configure-netrc:
-    steps:
-      - run:
-          name: Configure .netrc
-          command: echo "machine api.mapbox.com login mapbox password $SDK_REGISTRY_TOKEN" >> ~/.netrc
-
-  # Work around Xcode's issue with GitHub's SSH fingerprint even when using HTTPS SPM URLs
-  # See https://stackoverflow.com/a/58186048
-  add-github-to-known-hosts:
-    steps:
-      - run:
-          name: Add github.com to known_hosts
-          command: for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
-
-  allow-cloning-from-github-with-https:
-    steps:
-      - run:
-          name: Revert CircleCI's global git config that forces all cloning from github.com to be via SSH
-          command: git config --global --unset url."ssh://git@github.com".insteadOf
 
   locate-derived-data-directory:
     parameters:

@@ -97,9 +97,30 @@ public class Style {
      - Returns: The fully formed `layer` object of type equal to `type` is returned as
                 part of the `Result`s success case if the operation is successful.
                 Else, returns a `LayerError` as part of the `Result` failure case.
-
      */
-    public func getLayer<T: Layer>(with layerID: String, type: T.Type) -> Result<T, LayerError> {
+    public func getLayer<T: Layer>(with layerID: String, type: T.Type = T.self) -> Result<T, LayerError> {
+        let layerResult = _layer(with: layerID, type: type)
+        switch layerResult {
+        case .success(let layer):
+            return .success(layer as! T)
+        case .failure(let error):
+            return .failure(error)
+        }
+    }
+
+    /**
+     Gets a `layer` from the map.
+
+     This function is useful if you do not know the concrete type of the layer
+     you are fetching, or don't need to know for your situation.
+
+     - Parameter layerID: The id of the layer to be fetched
+     - Parameter type: The type of the layer that will be fetched
+     - Returns: The fully formed `layer` object of type equal to `type` is returned as
+                part of the `Result`s success case if the operation is successful.
+                Else, returns a `LayerError` as part of the `Result` failure case.
+     */
+    public func _layer(with layerID: String, type: Layer.Type) -> Result<Layer, LayerError> {
 
         // Get the layer properties from the map
         var layerProps: MBXExpected<AnyObject, AnyObject>?
@@ -111,14 +132,13 @@ public class Style {
 
         // If layerProps represents an error, return early
         guard let validLayerProps = layerProps, validLayerProps.isValue(),
-            let validValue = validLayerProps.value else {
+              let validValue = validLayerProps.value as? [String: AnyObject] else {
             return .failure(.getStyleLayerFailed(layerProps?.error as? String))
         }
 
         // Decode the layer properties into a layer object
         do {
-            let layerData = try JSONSerialization.data(withJSONObject: validValue)
-            let layer = try JSONDecoder().decode(type, from: layerData)
+            let layer = try type.init(jsonObject: validValue)
             return .success(layer)
         } catch {
             return .failure(.layerDecodingFailed(error))
@@ -227,22 +247,42 @@ public class Style {
                 as part of the `Result`s success case if the operation is successful.
                 Else, returns a `SourceError` as part of the `Result` failure case.
      */
-    public func getSource<T: Source>(identifier: String, type: T.Type) -> Result<T, SourceError> {
+    public func getSource<T: Source>(identifier: String, type: T.Type = T.self) -> Result<T, SourceError> {
+        let sourceResult = _source(identifier: identifier, type: type)
+        switch sourceResult {
+        case .success(let source):
+            return .success(source as! T)
+        case .failure(let error):
+            return .failure(error)
+        }
+    }
 
+    /**
+     Retrieves a source from the map
+
+     This function is useful if you do not know the concrete type of the source
+     you are fetching, or don't need to know for your situation.
+
+     - Parameter identifier: The id of the source to retrieve
+     - Parameter type: The type of the source
+     - Returns: The fully formed `source` object of type equal to `type` is returned
+                as part of the `Result`s success case if the operation is successful.
+                Else, returns a `SourceError` as part of the `Result` failure case.
+     */
+    public func _source(identifier: String, type: Source.Type) -> Result<Source, SourceError> {
         // Get the source properties for a given identifier
         let sourceProps = try! styleManager.getStyleSourceProperties(forSourceId: identifier)
 
         // If sourceProps represents an error, return early
         guard sourceProps.isValue(),
-            let validValue = sourceProps.value else {
-                return .failure(.getSourceFailed(sourceProps.error as? String))
+              let validValue = sourceProps.value as? [String: AnyObject] else {
+            return .failure(.getSourceFailed(sourceProps.error as? String))
         }
 
         // Decode the source properties into a source object
         do {
-            let sourceData = try JSONSerialization.data(withJSONObject: validValue)
-                let source = try JSONDecoder().decode(type, from: sourceData)
-                return .success(source)
+            let source = try type.init(jsonObject: validValue)
+            return .success(source)
         } catch {
             return .failure(.sourceDecodingFailed(error))
         }
@@ -342,8 +382,8 @@ public class Style {
     @discardableResult
     public func updateLayer<T: Layer>(id: String, type: T.Type, update: (inout T) -> Void) -> Result<Bool, LayerError> {
 
-        let result = getLayer(with: id, type: T.self)
-        var layer: T?
+        let result: Result<T, LayerError> = getLayer(with: id, type: T.self)
+        var layer: T
 
         // Fetch the layer from the style
         switch result {
@@ -356,15 +396,11 @@ public class Style {
             return .failure(.getStyleLayerFailed(nil))
         }
 
-        guard var validLayer = layer else {
-            return .failure(.retrievedLayerIsNil)
-        }
-
         // Call closure to update the retrieved layer
-        update(&validLayer)
+        update(&layer)
 
         do {
-            let value = try validLayer.jsonObject()
+            let value = try layer.jsonObject()
 
             // Apply the changes to the layer properties to the style
             try styleManager.setStyleLayerPropertiesForLayerId(id, properties: value)

@@ -121,8 +121,10 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         expectation.expectedFulfillmentCount = 111 // The current number of layers
 
         didFinishLoadingStyle = { _ in
+            try! self.mapView?.__map.setStyleLayerPropertyForLayerId("settlement-label", property: "text-field", value: "OOPS")
             let layers = try! mapView.__map.getStyleLayers()
             do {
+                var failures : [Any] = []
                 for layer in layers {
                     let type = LayerType(rawValue: layer.type)
                     switch type {
@@ -138,8 +140,13 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
                         let result = style.getLayer(with: layer.id, type: SymbolLayer.self)
                         switch result {
                         case .success:
+                            let layerProperties = try! mapView.__map.getStyleLayerProperties(forLayerId: layer.id)
+                            print("Success: \(layerProperties.value)")
                             expectation.fulfill()
                         default:
+                            failures.append(result)
+                            let layerProperties = try! mapView.__map.getStyleLayerProperties(forLayerId: layer.id)
+                            print("Failed: \(layerProperties.value)")
                             XCTFail("Failed to get symbol layer with id \(layer.id), error \(result)")
                         } // getting 17 failures
                     case .fill:
@@ -162,6 +169,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
                          print("Unable to match type for layer of type \(layer.type)")
                      }
                 }
+                print(failures)
             }
         }
         wait(for: [expectation], timeout: 5.0)

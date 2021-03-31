@@ -547,7 +547,7 @@ commands:
 
   configure-environment:
     steps:
-      - add-github-to-known-hosts
+      # - add-github-to-known-hosts
       - configure-netrc
       - inject-mapbox-public-token
 

@@ -80,24 +80,14 @@ public class DebugViewController: UIViewController {
         mapView.on(.mapLoaded) { [weak self] (event) in
             print("The map has finished loading... Event = \(event)")
             guard let self = self else { return }
-            
+
             try! self.mapView.__map.setStyleLayerPropertyForLayerId("country-label", property: "text-field", value: "MY_COUNTRY")
-            
-            let stylePropertyValue = try! self.mapView.__map.getStyleLayerProperty(forLayerId: "country-label", property: "text-field")
-            
-            
+
             do {
-                print(stylePropertyValue.value)
-                let layerData = try JSONSerialization.data(withJSONObject: stylePropertyValue.value)
-                let textField: Value<Formatted> = try JSONDecoder().decode(Value<Formatted>.self, from: layerData)
-                
-                print(textField)
+                _ = try self.mapView.style.getLayer(with: "country-label", type: SymbolLayer.self).get()
             } catch {
-                print("Error decoding: \(error)")
+                print(error)
             }
-            
-            
-            
         }
 
         /**
@@ -119,52 +109,3 @@ public class DebugViewController: UIViewController {
         }
     }
 }
-
-
-typealias Formatted = [FormattedElement]
-    
-enum FormattedElement: Codable {
-
-    case format
-    case substring(String)
-    case formatOptions(FormatOptions)
-    
-    init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        
-        if let validString = try? container.decode(String.self), validString == Expression.Operator.format.rawValue {
-            self = .format
-            return
-        }
-        
-        if let validString = try? container.decode(String.self) {
-            self = .substring(validString)
-            return
-        }
-        
-        if let validOptions = try? container.decode(FormatOptions.self) {
-            self = .formatOptions(validOptions)
-            return
-        }
-                
-        let context = DecodingError.Context(codingPath: decoder.codingPath,
-                                            debugDescription: "Failed to decode Formatted")
-        throw DecodingError.dataCorrupted(context)
-    }
-    
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        
-        switch self {
-        case .format:
-            try container.encode(Expression.Operator.format.rawValue)
-        case .substring(let substring):
-            try container.encode(substring)
-        case .formatOptions(let options):
-            try container.encode(options)
-        }
-    }
-}
-    
-
-

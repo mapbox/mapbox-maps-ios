@@ -23,7 +23,7 @@ class RasterDemSourceIntegrationTests: MapViewIntegrationTestCase {
         let successfullyRetrievedSourceExpectation = XCTestExpectation(description: "Successfully retrieved RasterDemSource from Map")
         successfullyRetrievedSourceExpectation.expectedFulfillmentCount = 1
 
-        style.styleURI = .streets
+        style.styleURL = .streets
 
         didFinishLoadingStyle = { _ in
             var source = RasterDemSource()

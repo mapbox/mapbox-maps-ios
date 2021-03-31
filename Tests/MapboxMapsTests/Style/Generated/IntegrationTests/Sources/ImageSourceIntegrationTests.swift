@@ -23,7 +23,7 @@ class ImageSourceIntegrationTests: MapViewIntegrationTestCase {
         let successfullyRetrievedSourceExpectation = XCTestExpectation(description: "Successfully retrieved ImageSource from Map")
         successfullyRetrievedSourceExpectation.expectedFulfillmentCount = 1
 
-        style.styleURI = .streets
+        style.styleURL = .streets
 
         didFinishLoadingStyle = { _ in
             var source = ImageSource()

@@ -102,7 +102,9 @@ public class Style {
         let layerResult = _layer(with: layerID, type: type)
         switch layerResult {
         case .success(let layer):
+            // swiftlint:disable force_cast
             return .success(layer as! T)
+            // swiftlint:enable force_cast
         case .failure(let error):
             return .failure(error)
         }
@@ -251,7 +253,9 @@ public class Style {
         let sourceResult = _source(identifier: identifier, type: type)
         switch sourceResult {
         case .success(let source):
+            // swiftlint:disable force_cast
             return .success(source as! T)
+            // swiftlint:enable force_cast
         case .failure(let error):
             return .failure(error)
         }

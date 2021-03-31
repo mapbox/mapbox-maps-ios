@@ -548,6 +548,7 @@ commands:
   configure-environment:
     steps:
       # - add-github-to-known-hosts
+      - allow-cloning-from-github-with-https
       - configure-netrc
       - inject-mapbox-public-token
 
@@ -698,6 +699,12 @@ commands:
       - run:
           name: Add github.com to known_hosts
           command: for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
+
+  allow-cloning-from-github-with-https:
+    steps:
+      - run:
+          name: Revert CircleCI's global git config that forces all cloning from github.com to be via SSH
+          command: git config --global --unset url."ssh://git@github.com".insteadOf
 
   locate-derived-data-directory:
     parameters:

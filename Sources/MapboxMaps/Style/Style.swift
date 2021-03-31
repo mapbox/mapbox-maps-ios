@@ -3,6 +3,7 @@ import Turf
 import MapboxMapsFoundation
 #endif
 
+//swiftlint:disable file_length
 public class Style {
     public private(set) weak var styleManager: StyleManager!
 

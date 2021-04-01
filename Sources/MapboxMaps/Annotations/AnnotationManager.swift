@@ -17,9 +17,7 @@ import MapboxMapsFoundation
 
  All annotations added with this class belong to a single source and style layer.
  */
-public class AnnotationManager: Observer {
-
-    public var peer: MBXPeerWrapper?
+public class AnnotationManager {
 
     // MARK: - Public properties
 
@@ -130,7 +128,6 @@ public class AnnotationManager: Observer {
 
     deinit {
         self.tapGesture = nil
-        try! self.mapView?.observable?.unsubscribe(for: self, events: [MapEvents.mapLoaded])
     }
 
     /**
@@ -155,7 +152,15 @@ public class AnnotationManager: Observer {
         userInteractionEnabled = true
 
         configureTapGesture()
-        try! mapView.observable?.subscribe(for: self, events: [MapEvents.mapLoaded])
+        mapView.on(.mapLoaded) { [weak self] _ in
+            // Reset the annotation source and default layers.
+            guard let self = self else { return }
+            self.annotations = [:]
+            self.annotationSource = nil
+            self.symbolLayer = nil
+            self.lineLayer = nil
+            self.fillLayer = nil
+        }
     }
 
     internal func updateAnnotationOptions(with newOptions: AnnotationOptions) {
@@ -663,18 +668,5 @@ public class AnnotationManager: Observer {
         case removeAnnotationFailed(String?)
         // Updating the annotation failed.
         case updateAnnotationFailed(Error?)
-    }
-
-    public func notify(for event: MapboxCoreMaps.Event) {
-        guard event.type == MapEvents.mapLoaded else {
-            return
-        }
-
-        // Reset the annotation source and default layers.
-        annotations = [:]
-        annotationSource = nil
-        symbolLayer = nil
-        lineLayer = nil
-        fillLayer = nil
     }
 }

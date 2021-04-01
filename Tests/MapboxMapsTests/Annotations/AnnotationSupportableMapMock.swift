@@ -14,10 +14,6 @@ import MapboxMapsStyle
 //swiftlint:disable explicit_acl explicit_top_level_acl
 class AnnotationSupportableMapMock: UIView, AnnotationSupportableMap {
 
-    var observable: Observable? {
-        nil
-    }
-
     func visibleFeatures(in rect: CGRect,
                          styleLayers: Set<String>?,
                          filter: Expression?,
@@ -26,5 +22,8 @@ class AnnotationSupportableMapMock: UIView, AnnotationSupportableMap {
         let coord = CLLocationCoordinate2D(latitude: 0, longitude: 0)
         let feature = Feature(Point.init(coord))
         completion(.success([feature]))
+    }
+    
+    func on(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) {
     }
 }

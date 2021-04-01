@@ -11,11 +11,11 @@ import MapboxMapsFoundation
 #endif
 
 public protocol AnnotationSupportableMap: UIView {
-    var observable: Observable? { get }
     func visibleFeatures(in rect: CGRect,
                          styleLayers: Set<String>?,
                          filter: Expression?,
                          completion: @escaping (Result<[Feature], BaseMapView.QueryRenderedFeaturesError>) -> Void)
+    func on(_ eventType: MapEvents.EventKind, handler: @escaping (MapboxCoreMaps.Event) -> Void)
 }
 
 extension BaseMapView: AnnotationSupportableMap {

@@ -141,12 +141,10 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
                         switch result {
                         case .success:
                             let layerProperties = try! mapView.__map.getStyleLayerProperties(forLayerId: layer.id)
-                            print("Success: \(layerProperties.value)")
                             expectation.fulfill()
                         default:
-                            failures.append(result)
                             let layerProperties = try! mapView.__map.getStyleLayerProperties(forLayerId: layer.id)
-                            print("Failed: \(layerProperties.value)")
+                            failures.append(layerProperties.value)
                             XCTFail("Failed to get symbol layer with id \(layer.id), error \(result)")
                         } // getting 6 failures
                     case .fill:

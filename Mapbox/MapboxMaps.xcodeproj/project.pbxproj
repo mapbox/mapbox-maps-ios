@@ -221,7 +221,7 @@
 		CA4AE033252D654800183075 /* LineAnnotationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07980EE7251D673E00730DB7 /* LineAnnotationTests.swift */; };
 		CA4AE07B252D655000183075 /* PolygonAnnotationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D2C80B2523ECC40025C2BA /* PolygonAnnotationTests.swift */; };
 		CA4AE0DB252D655A00183075 /* AnnotationInteractionDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07163339252546C80014A772 /* AnnotationInteractionDelegateTests.swift */; };
-		CA4AE123252D656600183075 /* AnnotationStyleDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A5DEB625155B9500A27F8B /* AnnotationStyleDelegateMock.swift */; };
+		CA4AE123252D656600183075 /* MockAnnotationStyleDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A5DEB625155B9500A27F8B /* MockAnnotationStyleDelegate.swift */; };
 		CA548FD3251C404B00F829A3 /* PolygonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B863836246D300500698135 /* PolygonTests.swift */; };
 		CA548FD4251C404B00F829A3 /* MapboxMapsCameraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC8DA47243BE4A400A19318 /* MapboxMapsCameraTests.swift */; };
 		CA548FD5251C404B00F829A3 /* MapboxCompassOrnamentViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3593792476DEB800E67344 /* MapboxCompassOrnamentViewTests.swift */; };
@@ -275,7 +275,7 @@
 		CAC1960B25AE98F400F69FEA /* GlyphsRasterizationOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC1960A25AE98F400F69FEA /* GlyphsRasterizationOptions.swift */; };
 		CAC1965525AEAFD900F69FEA /* GlyphsRasterizationOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC1961F25AEAE6600F69FEA /* GlyphsRasterizationOptionsTests.swift */; };
 		CAD7BA0625A368DE00E64C78 /* ExampleIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAD7BA0425A368DE00E64C78 /* ExampleIntegrationTest.swift */; };
-		CADC7AD3251C51070082BA0A /* AnnotationSupportableMapMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07BA363025157B09003E1B55 /* AnnotationSupportableMapMock.swift */; };
+		CADC7AD3251C51070082BA0A /* MockAnnotationSupportableMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07BA363025157B09003E1B55 /* MockAnnotationSupportableMap.swift */; };
 		CADCF76E25854B090065C51B /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76025854AB00065C51B /* MapboxMobileEvents.framework */; };
 		CADCF76F25854B090065C51B /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76025854AB00065C51B /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CADCF77025854B090065C51B /* MapboxCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76125854AB00065C51B /* MapboxCommon.framework */; };
@@ -379,11 +379,11 @@
 		079EC07A245207DA000EDC84 /* PitchGestureHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchGestureHandlerTests.swift; sourceTree = "<group>"; };
 		07A0BC9D2582F15B00B8E109 /* GeoJSONManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoJSONManager.swift; sourceTree = "<group>"; };
 		07A5DE832515576E00A27F8B /* AnnotationStyleDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationStyleDelegate.swift; sourceTree = "<group>"; };
-		07A5DEB625155B9500A27F8B /* AnnotationStyleDelegateMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationStyleDelegateMock.swift; sourceTree = "<group>"; };
+		07A5DEB625155B9500A27F8B /* MockAnnotationStyleDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAnnotationStyleDelegate.swift; sourceTree = "<group>"; };
 		07B82A652548C1320048D0F2 /* FeatureQueryingTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureQueryingTest.swift; sourceTree = "<group>"; };
 		07BA35CC251578DD003E1B55 /* AnnotationInteractionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationInteractionDelegate.swift; sourceTree = "<group>"; };
 		07BA35E625157A0E003E1B55 /* AnnotationSupportableMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationSupportableMap.swift; sourceTree = "<group>"; };
-		07BA363025157B09003E1B55 /* AnnotationSupportableMapMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationSupportableMapMock.swift; sourceTree = "<group>"; };
+		07BA363025157B09003E1B55 /* MockAnnotationSupportableMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAnnotationSupportableMap.swift; sourceTree = "<group>"; };
 		07BF0C5E24F4875F00754DB2 /* Geometry+MBXGeometryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Geometry+MBXGeometryTests.swift"; sourceTree = "<group>"; };
 		07C1B38C2446B0550044A3C6 /* MapboxMapsOffline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapboxMapsOffline.h; sourceTree = "<group>"; };
 		07C1B38D2446B0550044A3C6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -862,8 +862,8 @@
 				07980EE7251D673E00730DB7 /* LineAnnotationTests.swift */,
 				07D2C80B2523ECC40025C2BA /* PolygonAnnotationTests.swift */,
 				07163339252546C80014A772 /* AnnotationInteractionDelegateTests.swift */,
-				07BA363025157B09003E1B55 /* AnnotationSupportableMapMock.swift */,
-				07A5DEB625155B9500A27F8B /* AnnotationStyleDelegateMock.swift */,
+				07BA363025157B09003E1B55 /* MockAnnotationSupportableMap.swift */,
+				07A5DEB625155B9500A27F8B /* MockAnnotationStyleDelegate.swift */,
 				07EEFA9325018E5800352933 /* Extensions */,
 				07E4FD2724E4A35600D734D1 /* Info.plist */,
 			);
@@ -2015,7 +2015,7 @@
 				CA548FE3251C404B00F829A3 /* GestureUtilitiesTests.swift in Sources */,
 				B51DE68125D7039700A80AC9 /* Comparable+ClampedTests.swift in Sources */,
 				CA548FE4251C404B00F829A3 /* GestureManagerTests.swift in Sources */,
-				CA4AE123252D656600183075 /* AnnotationStyleDelegateMock.swift in Sources */,
+				CA4AE123252D656600183075 /* MockAnnotationStyleDelegate.swift in Sources */,
 				0C5CFD4125BBA06D0001E753 /* Enums+Fixtures.swift in Sources */,
 				CA548FE6251C404B00F829A3 /* GestureSupportableViewMock.swift in Sources */,
 				0CC6EF2C25C3263400BFB153 /* RasterLayerIntegrationTests.swift in Sources */,
@@ -2053,7 +2053,7 @@
 				CA548FF1251C404B00F829A3 /* RotateGestureHandlerTests.swift in Sources */,
 				CA4AE033252D654800183075 /* LineAnnotationTests.swift in Sources */,
 				0C37B1E425CB05F000DCDD3D /* ColorTests.swift in Sources */,
-				CADC7AD3251C51070082BA0A /* AnnotationSupportableMapMock.swift in Sources */,
+				CADC7AD3251C51070082BA0A /* MockAnnotationSupportableMap.swift in Sources */,
 				0C32CA2125F982300057ED31 /* RasterDemSourceTests.swift in Sources */,
 				CA548FF4251C404B00F829A3 /* DistanceFormatterTests.swift in Sources */,
 				CAED9FB1258C69DB003CCEFE /* MapViewTests.swift in Sources */,

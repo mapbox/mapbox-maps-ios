@@ -247,9 +247,9 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
                 self = .array(validArray)
                 return
             }
-        
+
             // Attempt to decode an "empty" json if all else fails
-            if let _ = try? container.decode(Empty.self) {
+            if let dict = try? container.decode([String: String].self), dict.isEmpty {
                 self = .null
                 return
             }
@@ -259,9 +259,4 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
             throw DecodingError.dataCorrupted(context)
         }
     }
-}
-
-// Structure to represent an empty json
-struct Empty: Codable {
-    
 }

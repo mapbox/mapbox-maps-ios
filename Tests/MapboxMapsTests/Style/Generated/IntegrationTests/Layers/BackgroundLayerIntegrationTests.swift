@@ -28,6 +28,7 @@ class BackgroundLayerIntegrationTests: MapViewIntegrationTestCase {
         style.styleURI = .streets
 
         didFinishLoadingStyle = { _ in
+
             var layer = BackgroundLayer(id: "test-id")
             layer.source = "some-source"
             layer.sourceLayer = nil

@@ -10,8 +10,8 @@ import CoreLocation
 //swiftlint:disable explicit_acl explicit_top_level_acl
 class AnnotationInteractionDelegateTests: XCTestCase {
 
-    var annotationSupportableMapMock: AnnotationSupportableMapMock!
-    var annotationSupportableStyleMock: AnnotationStyleDelegateMock!
+    var annotationSupportableMapMock: MockAnnotationSupportableMap!
+    var annotationSupportableStyleMock: MockAnnotationStyleDelegate!
     var defaultCoordinate: CLLocationCoordinate2D!
 
     var selectionExpectation: XCTestExpectation?
@@ -20,8 +20,8 @@ class AnnotationInteractionDelegateTests: XCTestCase {
     var deselectionDelegateWasCalled: Bool = false
 
     override func setUp() {
-        annotationSupportableMapMock = AnnotationSupportableMapMock()
-        annotationSupportableStyleMock = AnnotationStyleDelegateMock()
+        annotationSupportableMapMock = MockAnnotationSupportableMap()
+        annotationSupportableStyleMock = MockAnnotationStyleDelegate()
         selectionExpectation = expectation(description: "didSelectAnnotation was called")
         defaultCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     }

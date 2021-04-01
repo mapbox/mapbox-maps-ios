@@ -2,6 +2,15 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### Breaking changes ⚠️
+
+- `AnnotationManager` no longer conforms to `Observer` and no longer has a `peer` ([#246](https://github.com/mapbox/mapbox-maps-ios/pull/246))
+- `AnnotationSupportableMap` is now internal ([#246](https://github.com/mapbox/mapbox-maps-ios/pull/246))
+
+### Bug fixes 🐞
+
+- Fixes an issue that could cause issues with annotations including causing them to not be selectable ([#246](https://github.com/mapbox/mapbox-maps-ios/pull/246))
+
 ## 10.0.0-beta.16 - March 29, 2021
 
 ### Breaking changes ⚠️

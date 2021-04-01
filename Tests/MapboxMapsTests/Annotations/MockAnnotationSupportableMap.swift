@@ -1,22 +1,9 @@
 import UIKit
-import CoreLocation
 import Turf
-import MapboxCoreMaps
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsAnnotations
-@testable import MapboxMapsFoundation
-import MapboxMapsStyle
-#endif
 
 //swiftlint:disable explicit_acl explicit_top_level_acl
-class AnnotationSupportableMapMock: UIView, AnnotationSupportableMap {
-
-    var observable: Observable? {
-        nil
-    }
+final class MockAnnotationSupportableMap: UIView, AnnotationSupportableMap {
 
     func visibleFeatures(in rect: CGRect,
                          styleLayers: Set<String>?,
@@ -26,5 +13,14 @@ class AnnotationSupportableMapMock: UIView, AnnotationSupportableMap {
         let coord = CLLocationCoordinate2D(latitude: 0, longitude: 0)
         let feature = Feature(Point.init(coord))
         completion(.success([feature]))
+    }
+
+    struct OnParameters {
+        var eventType: MapEvents.EventKind
+        var handler: (Event) -> Void
+    }
+    let onStub = Stub<OnParameters, Void>()
+    func on(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) {
+        return onStub.call(with: OnParameters(eventType: eventType, handler: handler))
     }
 }

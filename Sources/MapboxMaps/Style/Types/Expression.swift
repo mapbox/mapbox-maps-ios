@@ -245,6 +245,13 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
 
             if let validArray = try? container.decode([Double].self) {
                 self = .array(validArray)
+                return
+            }
+        
+            // Attempt to decode an "empty" json if all else fails
+            if let _ = try? container.decode(Empty.self) {
+                self = .null
+                return
             }
 
             let context = DecodingError.Context(codingPath: decoder.codingPath,
@@ -252,4 +259,9 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
             throw DecodingError.dataCorrupted(context)
         }
     }
+}
+
+// Structure to represent an empty json
+struct Empty: Codable {
+    
 }

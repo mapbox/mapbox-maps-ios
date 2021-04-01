@@ -6,7 +6,7 @@ public enum Formatted: Codable {
     // MARK: Initializer
 
     /// Initializer to create an array of `Formatted` elements.
-    /// - Parameter formattedDictionary: Dictionary that maps a constant string to a set of format options.
+    /// - Parameter formattedDictionary: Dictionary that maps a substring to a set of format options.
     public init(with formattedDictionary: [String: FormatOptions]) {
         var formattedElements: [Element] = [.format]
 
@@ -51,6 +51,7 @@ public enum Formatted: Codable {
     // MARK: Element Enum
     public enum Element: Codable {
         case format
+        case step
         case substring(Value<String>)
         case formatOptions(FormatOptions)
 
@@ -59,6 +60,8 @@ public enum Formatted: Codable {
 
             if let validString = try? container.decode(String.self), validString == Expression.Operator.format.rawValue {
                 self = .format
+            } else if let validString = try? container.decode(String.self), validString == Expression.Operator.step.rawValue {
+                self = .step
             } else if let validString = try? container.decode(Value<String>.self) {
                 self = .substring(validString)
             } else if let validOptions = try? container.decode(FormatOptions.self) {
@@ -76,6 +79,8 @@ public enum Formatted: Codable {
             switch self {
             case .format:
                 try container.encode(Expression.Operator.format.rawValue)
+            case .step:
+                try container.encode(Expression.Operator.step.rawValue)
             case .substring(let substring):
                 try container.encode(substring)
             case .formatOptions(let options):

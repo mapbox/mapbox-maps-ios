@@ -2,38 +2,30 @@ import XCTest
 import CoreLocation
 import Turf
 
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsAnnotations
-@testable import MapboxMapsFoundation
-#endif
 
 //swiftlint:disable explicit_acl explicit_top_level_acl
-class AnnotationManagerTests: XCTestCase {
+final class AnnotationManagerTests: XCTestCase {
 
-    var annotationSupportableMapMock: AnnotationSupportableMapMock!
-    var annotationSupportableStyleMock: AnnotationStyleDelegateMock!
+    var annotationSupportableMap: MockAnnotationSupportableMap!
+    var annotationSupportableStyle: MockAnnotationStyleDelegate!
     var annotationManager: AnnotationManager!
 
-    var defaultCoordinate: CLLocationCoordinate2D!
+    let defaultCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
 
     override func setUp() {
         // Given
-        annotationSupportableMapMock = AnnotationSupportableMapMock()
-        annotationSupportableStyleMock = AnnotationStyleDelegateMock()
-        annotationManager = AnnotationManager(for: annotationSupportableMapMock,
-                                              with: annotationSupportableStyleMock,
+        annotationSupportableMap = MockAnnotationSupportableMap()
+        annotationSupportableStyle = MockAnnotationStyleDelegate()
+        annotationManager = AnnotationManager(for: annotationSupportableMap,
+                                              with: annotationSupportableStyle,
                                               options: AnnotationOptions())
-
-        defaultCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     }
 
     override func tearDown() {
-        annotationSupportableMapMock = nil
-        annotationSupportableStyleMock = nil
+        annotationSupportableMap = nil
+        annotationSupportableStyle = nil
         annotationManager = nil
-        defaultCoordinate = nil
     }
 
     // MARK: - Test adding point annotation
@@ -60,6 +52,8 @@ class AnnotationManagerTests: XCTestCase {
         XCTAssertNil(annotationManager.symbolLayer)
         XCTAssertNil(annotationManager.lineLayer)
         XCTAssertNil(annotationManager.fillLayer)
+        XCTAssertEqual(annotationSupportableMap.onStub.invocations.count, 1)
+        XCTAssertEqual(annotationSupportableMap.onStub.parameters.first?.eventType, .mapLoaded)
     }
 
     func testLayerIdentifiers() {

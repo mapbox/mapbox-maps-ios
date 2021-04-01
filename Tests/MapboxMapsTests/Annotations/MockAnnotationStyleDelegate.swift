@@ -1,15 +1,8 @@
 import UIKit
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsAnnotations
-@testable import MapboxMapsStyle
-import MapboxCoreMaps
-#endif
 
 //swiftlint:disable explicit_acl explicit_top_level_acl
-class AnnotationStyleDelegateMock: AnnotationStyleDelegate {
+final class MockAnnotationStyleDelegate: AnnotationStyleDelegate {
     //swiftlint:disable function_parameter_count
     func setStyleImage(image: UIImage,
                        with identifier: String,

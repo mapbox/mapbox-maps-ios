@@ -14,7 +14,7 @@ final class MockAnnotationSupportableMap: UIView, AnnotationSupportableMap {
         let feature = Feature(Point.init(coord))
         completion(.success([feature]))
     }
-    
+
     struct OnParameters {
         var eventType: MapEvents.EventKind
         var handler: (Event) -> Void

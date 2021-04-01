@@ -24,7 +24,6 @@ class FormattedElementTests: XCTestCase {
         }
     }
 
-
     func testStringInit() {
         let formatted = Formatted(with: "some test string")
 

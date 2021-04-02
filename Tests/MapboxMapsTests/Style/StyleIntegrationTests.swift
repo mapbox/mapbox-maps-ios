@@ -124,6 +124,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             do {
                 for layer in layers {
                     let type = LayerType(rawValue: layer.type)
+                    // swiftlint:disable:next cyclomatic_complexity
                     switch type {
                     case .line:
                         let result = style.getLayer(with: layer.id, type: LineLayer.self)
@@ -157,9 +158,9 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
                         default:
                             XCTFail("Failed to get background layer with id \(layer.id), error \(result)")
                         }
-                     default:
-                         print("Unable to match type for layer of type \(layer.type)")
-                     }
+                    default:
+                        print("Unable to match type for layer of type \(layer.type)")
+                    }
                 }
             }
         }

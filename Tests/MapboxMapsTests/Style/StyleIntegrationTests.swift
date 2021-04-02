@@ -111,6 +111,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         wait(for: [expectation], timeout: 5.0)
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func testDecodingOfAllLayersInStreetsv11() {
         guard let mapView = mapView, let style = style else {
             XCTFail("There should be valid MapView and Style objects created by setUp.")
@@ -124,7 +125,6 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             do {
                 for layer in layers {
                     let type = LayerType(rawValue: layer.type)
-                    // swiftlint:disable:next cyclomatic_complexity
                     switch type {
                     case .line:
                         let result = style.getLayer(with: layer.id, type: LineLayer.self)

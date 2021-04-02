@@ -111,9 +111,8 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         wait(for: [expectation], timeout: 5.0)
     }
 
-    func testGetLayers() {
-        guard
-            let mapView = mapView, let style = style else {
+    func testDecodingOfAllLayersInStreetsv11() {
+        guard let mapView = mapView, let style = style else {
             XCTFail("There should be valid MapView and Style objects created by setUp.")
             return
         }

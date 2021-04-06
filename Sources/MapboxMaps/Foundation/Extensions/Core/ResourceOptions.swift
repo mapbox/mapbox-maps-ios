@@ -51,7 +51,6 @@ extension ResourceOptions {
         cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent(bundleIdentifier)
         cacheDirectoryURL.appendPathComponent(".mapbox")
 
-
         do {
             try FileManager.default.createDirectory(at: cacheDirectoryURL,
                                                     withIntermediateDirectories: true,

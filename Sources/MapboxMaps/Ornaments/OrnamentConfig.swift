@@ -17,10 +17,10 @@ internal class Ornament: Equatable {
     }
 
     internal init(view: UIView?,
-                type: OrnamentType,
-                position: OrnamentPosition,
-                margins: OrnamentMargins,
-                visibility: OrnamentVisibility) {
+                  type: OrnamentType,
+                  position: OrnamentPosition,
+                  margins: OrnamentMargins,
+                  visibility: OrnamentVisibility) {
         self.view = view
         self.type = type
         self.position = position

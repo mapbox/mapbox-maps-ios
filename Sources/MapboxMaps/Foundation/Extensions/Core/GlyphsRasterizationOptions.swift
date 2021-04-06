@@ -21,7 +21,7 @@ extension GlyphsRasterizationOptions {
     ///   - fontFamilies: Array of fonts, used for glyph rendering. Defaults to an appropriate
     ///   system font
     public convenience init(rasterizationMode: GlyphsRasterizationMode,
-                     fontFamilies: [String] = []) {
+                            fontFamilies: [String] = []) {
         let fontFamilies = fontFamilies.isEmpty ? Self.fallbackFontFamilyName : fontFamilies.joined(separator: "\n")
         self.init(rasterizationMode: rasterizationMode, fontFamily: fontFamilies)
     }

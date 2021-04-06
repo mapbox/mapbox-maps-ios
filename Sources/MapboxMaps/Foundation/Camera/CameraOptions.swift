@@ -18,11 +18,11 @@ extension CameraOptions {
                will use to render the map's viewport.
     */
     public convenience init(center: CLLocationCoordinate2D? = nil,
-                     padding: UIEdgeInsets? = nil,
-                     anchor: CGPoint? = nil,
-                     zoom: CGFloat? = nil,
-                     bearing: CLLocationDirection? = nil,
-                     pitch: CGFloat? = nil) {
+                            padding: UIEdgeInsets? = nil,
+                            anchor: CGPoint? = nil,
+                            zoom: CGFloat? = nil,
+                            bearing: CLLocationDirection? = nil,
+                            pitch: CGFloat? = nil) {
         self.init(__center: center?.location,
                   padding: padding?.toMBXEdgeInsetsValue(),
                   anchor: anchor?.screenCoordinate,

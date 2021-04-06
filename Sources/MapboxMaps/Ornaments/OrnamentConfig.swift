@@ -1,13 +1,13 @@
 import UIKit
 
-public typealias OrnamentMargins = CGPoint
+internal typealias OrnamentMargins = CGPoint
 
-public class Ornament: Equatable {
-    public var view: UIView?
-    public let type: OrnamentType
-    public let position: OrnamentPosition
-    public let margins: OrnamentMargins
-    public let visibility: OrnamentVisibility
+internal class Ornament: Equatable {
+    internal var view: UIView?
+    internal let type: OrnamentType
+    internal let position: OrnamentPosition
+    internal let margins: OrnamentMargins
+    internal let visibility: OrnamentVisibility
 
     convenience internal init(view: UIView?,
                               type: OrnamentType,
@@ -16,7 +16,7 @@ public class Ornament: Equatable {
         self.init(view: view, type: type, position: position, margins: .defaultMargins, visibility: visibility)
     }
 
-    public init(view: UIView?,
+    internal init(view: UIView?,
                 type: OrnamentType,
                 position: OrnamentPosition,
                 margins: OrnamentMargins,
@@ -28,12 +28,12 @@ public class Ornament: Equatable {
         self.visibility = visibility
     }
 
-    public static func == (lhs: Ornament, rhs: Ornament) -> Bool {
+    internal static func == (lhs: Ornament, rhs: Ornament) -> Bool {
         return lhs.type == rhs.type && lhs.position == rhs.position && lhs.margins == rhs.margins
     }
 }
 
-public struct OrnamentConfig: Equatable {
+internal struct OrnamentConfig: Equatable {
     internal let ornaments: [Ornament]
 
     /**

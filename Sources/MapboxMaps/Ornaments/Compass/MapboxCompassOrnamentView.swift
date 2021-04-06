@@ -5,7 +5,7 @@ import UIKit
 import MapboxMapsFoundation
 #endif
 
-public class MapboxCompassOrnamentView: UIButton {
+internal class MapboxCompassOrnamentView: UIButton {
     private enum Constants {
         static let localizableTableName = "OrnamentsLocalizable"
         static let compassSize = CGSize(width: 40, height: 40)
@@ -25,7 +25,7 @@ public class MapboxCompassOrnamentView: UIButton {
     private var lineColor: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
     private let directionFormatter = CompassDirectionFormatter()
     /// Should be in range [-pi; pi]
-    public var currentBearing: CLLocationDirection = 0 {
+    internal var currentBearing: CLLocationDirection = 0 {
         didSet {
             let adjustedBearing = currentBearing.truncatingRemainder(dividingBy: 360)
             updateVisibility()
@@ -33,7 +33,7 @@ public class MapboxCompassOrnamentView: UIButton {
         }
     }
 
-    required public init(visibility: OrnamentVisibility) {
+    required internal init(visibility: OrnamentVisibility) {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         self.visibility = visibility

@@ -336,11 +336,11 @@ private enum Constants {
     }()
 }
 
-public class CompassDirectionFormatter {
+internal class CompassDirectionFormatter {
     private static let longStrings: [String] = []
-    public var unitStyle: Formatter.UnitStyle = .medium
+    internal var unitStyle: Formatter.UnitStyle = .medium
 
-    public func string(from direction: CLLocationDirection) -> String {
+    internal func string(from direction: CLLocationDirection) -> String {
         assert(Constants.shortStrings.count == Constants.longStrings.count,
                "The numbers of short and long strings should be the same")
         let stringsCount = Constants.shortStrings.count

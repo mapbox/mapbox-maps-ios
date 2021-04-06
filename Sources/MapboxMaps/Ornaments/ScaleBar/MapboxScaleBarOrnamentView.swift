@@ -5,13 +5,13 @@ import CoreLocation
 import MapboxMapsFoundation
 #endif
 
-public class MapboxScaleBarOrnamentView: UIView {
+internal class MapboxScaleBarOrnamentView: UIView {
 
-    public typealias Row = (distance: CLLocationDistance, numberOfBars: UInt)
+    internal typealias Row = (distance: CLLocationDistance, numberOfBars: UInt)
 
     // MARK: - Properties
 
-    public var metersPerPoint: CLLocationDistance = 1 {
+    internal var metersPerPoint: CLLocationDistance = 1 {
         didSet {
             guard metersPerPoint != oldValue else {
                 return
@@ -105,7 +105,7 @@ public class MapboxScaleBarOrnamentView: UIView {
         return Locale(identifier: Bundle.main.preferredLocalizations.first!).usesMetricSystem
     }
 
-    public override var intrinsicContentSize: CGSize {
+    internal override var intrinsicContentSize: CGSize {
         // Size is calculated elsewhere - since 'intrinsicContentSize' is part of the
         // constraint system, this should be done in 'updateConstraints'
         guard size.width >= 0 else {
@@ -116,7 +116,7 @@ public class MapboxScaleBarOrnamentView: UIView {
 
     // MARK: - Initialization
 
-    override public init(frame: CGRect) {
+    override internal init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
     }
@@ -149,7 +149,7 @@ public class MapboxScaleBarOrnamentView: UIView {
     // current 'row', which in turn determines the "actualWidth". To obtain the full
     // width of the scale bar, we also need to include some space for the "last"
     // label
-    public override func updateConstraints() {
+    internal override func updateConstraints() {
         guard !isHidden && needsRecalculateSize else {
             super.updateConstraints()
             return
@@ -185,7 +185,7 @@ public class MapboxScaleBarOrnamentView: UIView {
         super.updateConstraints() // This calls intrinsicContentSize
     }
 
-    public override func layoutSubviews() {
+    internal override func layoutSubviews() {
         super.layoutSubviews()
 
         guard needsRecalculateSize else {

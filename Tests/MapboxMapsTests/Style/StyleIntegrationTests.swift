@@ -131,7 +131,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
                     continue
                 }
 
-                let result = style._layer(with: layer.id, type: type.type)
+                let result = style._layer(with: layer.id, type: type.layerType)
 
                 switch result {
                 case .success:

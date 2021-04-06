@@ -39,6 +39,36 @@ public enum LayerType: String, Codable {
 
     /// Layer used for a 3D model
     case model = "model"
+
+    /// The associated Swift struct type
+    public var type: Layer.Type {
+        switch self {
+        case .fill:
+            return FillLayer.self
+        case .line:
+            return LineLayer.self
+        case .symbol:
+            return SymbolLayer.self
+        case .circle:
+            return CircleLayer.self
+        case .heatmap:
+            return HeatmapLayer.self
+        case .fillExtrusion:
+            return FillExtrusionLayer.self
+        case .raster:
+            return RasterLayer.self
+        case .hillshade:
+            return HillshadeLayer.self
+        case .background:
+            return BackgroundLayer.self
+        case .locationIndicator:
+            return LocationIndicatorLayer.self
+        case .sky:
+            return SkyLayer.self
+        case .model:
+            return ModelLayer.self
+        }
+    }
 }
 
 public protocol Layer: Codable, StyleEncodable, StyleDecodable {

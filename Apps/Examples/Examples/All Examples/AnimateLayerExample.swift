@@ -23,8 +23,8 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
         let centerCoordinate = CLLocationCoordinate2D(latitude: 37.8,
                                                       longitude: -96)
 
-        mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
-                                        zoom: 2)
+        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate,
+                                                          zoom: 2))
 
         // Allows the view controller to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in

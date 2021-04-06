@@ -1,9 +1,9 @@
 import UIKit
 
 // swiftlint:disable function_body_length file_length type_body_length
-public class MapboxLogoView: UIView {
+public class LogoView: UIView {
 
-    public enum MapboxLogoSize: RawRepresentable {
+    public enum LogoSize: RawRepresentable {
         case regular
         case compact
 
@@ -27,9 +27,9 @@ public class MapboxLogoView: UIView {
         }
     }
 
-    internal var logoSize: MapboxLogoSize
+    internal var logoSize: LogoSize
 
-    public init(logoSize: MapboxLogoSize) {
+    public init(logoSize: LogoSize) {
         let frame = CGRect(origin: .zero, size: logoSize.rawValue)
         self.logoSize = logoSize
         super.init(frame: frame)

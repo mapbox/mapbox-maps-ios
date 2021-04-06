@@ -16,8 +16,8 @@ public class LineAnnotationExample: UIViewController, ExampleProtocol {
 
         let centerCoordinate = CLLocationCoordinate2D(latitude: 39.7128, longitude: -75.0060)
 
-        mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
-                                        zoom: 5.0)
+        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate,
+                                                          zoom: 5.0))
 
         // Allows the delegate to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in

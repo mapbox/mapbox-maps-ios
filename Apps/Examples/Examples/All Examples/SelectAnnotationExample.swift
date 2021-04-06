@@ -30,8 +30,8 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
         let centerCoordinate = CLLocationCoordinate2D(latitude: 63.982738,
                                                       longitude: -16.741790)
 
-        mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
-                                        zoom: 12.0)
+        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate,
+                                                          zoom: 12.0))
 
         // Allow the view controller to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in

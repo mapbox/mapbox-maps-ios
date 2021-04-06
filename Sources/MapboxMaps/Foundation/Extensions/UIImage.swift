@@ -2,13 +2,13 @@ import UIKit
 
 // MARK: - UIImage
 
-public extension UIImage {
+extension UIImage {
 
     /// Initialize a `UIImage` with an internal `Image` type, using a givens scale.
     /// - Parameters:
     ///   - mbxImage: The internal `Image` type to use for the `UIImage`.
     ///   - scale: The scale of the new `UIImage`.
-    convenience init?(mbxImage: Image, scale: CGFloat = UIScreen.main.scale) {
+    internal convenience init?(mbxImage: Image, scale: CGFloat = UIScreen.main.scale) {
         let cgImage = mbxImage.cgImage().takeUnretainedValue()
 
         let size = CGSize(width: CGFloat(CGFloat(mbxImage.width) / scale),

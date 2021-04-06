@@ -151,7 +151,7 @@ public class Snapshotter: Observer {
 
                         // Composite the logo on the snapshot,
                         // only after everything else has been drawn.
-                        let logoView = MapboxLogoView(logoSize: .regular)
+                        let logoView = LogoView(logoSize: .regular)
                         let logoPadding = CGFloat(10.0)
                         let logoOrigin = CGPoint(x: logoPadding,
                                                  y: uiImage.size.height - logoView.frame.size.height - logoPadding)
@@ -189,7 +189,7 @@ public class Snapshotter: Observer {
 
     internal func compositeLogo(for snapshotImage: UIImage) -> UIImage {
         let rect = CGRect(origin: .zero, size: snapshotImage.size)
-        let logoView = MapboxLogoView(logoSize: .regular)
+        let logoView = LogoView(logoSize: .regular)
 
         let renderer = UIGraphicsImageRenderer(size: snapshotImage.size)
 

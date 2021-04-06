@@ -4,15 +4,15 @@ import CoreGraphics
 import MapboxCoreMaps
 
 // MARK: - CLLocationCoordinate2D
-public extension CLLocationCoordinate2D {
+extension CLLocationCoordinate2D {
 
     /// Converts a `CLLocationCoordinate` to a `CLLocation`.
-    var location: CLLocation {
+    internal var location: CLLocation {
         CLLocation(latitude: latitude, longitude: longitude)
     }
 
     /// Returns a new `CLLocationCoordinate` value with a new longitude constrained to [-180, +180] degrees.
-    func wrap() -> CLLocationCoordinate2D {
+    internal func wrap() -> CLLocationCoordinate2D {
         /**
          mbgl::geo.hpp equivalent:
 
@@ -30,7 +30,7 @@ public extension CLLocationCoordinate2D {
     /// the distance from start to end longitudes is between a half and full
     /// world, ensuring that the shortest path is taken.
     /// - Parameter end: The coordinate to possibly wrap, if needed.
-    func unwrapForShortestPath(_ end: CLLocationCoordinate2D) -> CLLocationCoordinate2D {
+    internal func unwrapForShortestPath(_ end: CLLocationCoordinate2D) -> CLLocationCoordinate2D {
         let delta = fabs(end.longitude - longitude)
 
         if delta <= 180.0 || delta >= 360 {
@@ -62,10 +62,10 @@ public extension CLLocationCoordinate2D {
 }
 
 // MARK: - CLLocationDirection
-public extension CLLocationDirection {
+extension CLLocationDirection {
 
     /// Converts a `CLLocationDirection` to an `NSNumber` containing a `Double`.
-    var NSNumber: NSNumber {
+    internal var NSNumber: NSNumber {
         Foundation.NSNumber(value: Double(self))
     }
 }

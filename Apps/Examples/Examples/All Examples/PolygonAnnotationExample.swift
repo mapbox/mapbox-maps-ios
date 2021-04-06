@@ -15,8 +15,8 @@ public class PolygonAnnotationExample: UIViewController, ExampleProtocol {
 
         let centerCoordinate = CLLocationCoordinate2D(latitude: 25.04579, longitude: -88.90136)
 
-        mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
-                                        zoom: 5.0)
+        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate,
+                                                          zoom: 5.0))
 
         // Allows the delegate to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in

@@ -23,12 +23,12 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
         self.mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.view.addSubview(mapView)
-        mapView.cameraManager.setCamera(
-            centerCoordinate: self.modelOrigin,
-                        zoom: 18,
-                     bearing: 180,
-                       pitch: 60
-        )
+
+        let camera = CameraOptions(center: self.modelOrigin,
+                                   zoom: 18,
+                                   bearing: 180,
+                                   pitch: 60)
+        mapView.cameraManager.setCamera(to: camera)
 
         self.mapView.on(.styleLoaded) { [weak self] _ in
             self?.addModelAndTerrain()

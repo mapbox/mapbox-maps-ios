@@ -23,10 +23,10 @@ public class TerrainExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         let centerCoordinate = CLLocationCoordinate2D(latitude: 32.6141, longitude: -114.34411)
-        mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
-                                        zoom: 13.1,
-                                        bearing: 80,
-                                        pitch: 85)
+        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate,
+                                                          zoom: 13.1,
+                                                          bearing: 80,
+                                                          pitch: 85))
 
         mapView.on(.styleLoaded) { [weak self] _ in
             self?.addTerrain()

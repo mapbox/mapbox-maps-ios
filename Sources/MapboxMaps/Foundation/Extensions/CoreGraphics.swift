@@ -4,10 +4,10 @@ import CoreGraphics
 import MapboxCoreMaps
 
 // MARK: - CGPoint
-public extension CGPoint {
+extension CGPoint {
 
     /// Converts a `CGPoint` to an internal `ScreenCoordinate` type.
-    var screenCoordinate: ScreenCoordinate {
+    internal var screenCoordinate: ScreenCoordinate {
         ScreenCoordinate(x: Double(x), y: Double(y))
     }
 
@@ -20,17 +20,17 @@ public extension CGPoint {
     ///               represents the end position.
     /// - Returns: A `CGPoint` that represents the fractional point along the path
     ///            between the source and destination points.
-    static func interpolate(origin: CGPoint, destination: CGPoint, fraction: CGFloat) -> CGPoint {
+    internal static func interpolate(origin: CGPoint, destination: CGPoint, fraction: CGFloat) -> CGPoint {
         return CGPoint(x: origin.x + fraction * (destination.x - origin.x),
                        y: origin.y + fraction * (destination.y - origin.y))
     }
 }
 
 // MARK: - CGFloat
-public extension CGFloat {
+extension CGFloat {
 
     /// Converts a `CGFloat` to a `NSValue` which wraps a `Double`.
-    var NSNumber: NSNumber {
+    internal var NSNumber: NSNumber {
         Foundation.NSNumber(value: Double(self))
     }
 }
@@ -41,7 +41,7 @@ extension CGRect {
     /// Returns a new `CGRect` whose origin is a given `CGPoint` value.
     /// - Parameter originPoint: The `CGPoint` which acts as the origin of the new `CGRect`.
     /// - Note: This method is the equivalent of `MGLExtendRect` in pre-v10.0.0 versions of the SDK.
-    func extend(from originPoint: CGPoint) -> CGRect {
+    internal func extend(from originPoint: CGPoint) -> CGRect {
 
         var rect = self
 

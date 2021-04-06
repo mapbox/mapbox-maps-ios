@@ -12,8 +12,8 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.style.styleURI = .light
         let centerCoordinate = CLLocationCoordinate2D(latitude: 41.878781, longitude: -87.622088)
-        mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
-                                        zoom: 12)
+        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate,
+                                                          zoom: 12))
         view.addSubview(mapView)
 
         // Allow the view controller to receive information about map events.

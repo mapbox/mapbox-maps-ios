@@ -41,7 +41,7 @@ public enum LayerType: String, Codable {
     case model = "model"
 
     /// The associated Swift struct type
-    public var type: Layer.Type {
+    public var layerType: Layer.Type {
         switch self {
         case .fill:
             return FillLayer.self

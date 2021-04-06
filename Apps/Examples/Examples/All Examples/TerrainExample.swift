@@ -15,7 +15,7 @@ public class TerrainExample: UIViewController, ExampleProtocol {
 
         let resourceOptions = ResourceOptions(accessToken: accessToken)
 
-        mapView = MapView(with: view.bounds,
+        mapView = MapView(frame: view.bounds,
                           resourceOptions: resourceOptions,
                           styleURI: .custom(url: URL(string: "mapbox://styles/mapbox-map-design/ckhqrf2tz0dt119ny6azh975y")!))
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]

@@ -75,7 +75,7 @@ internal struct SwiftUIMapView: UIViewRepresentable {
     /// This method should create the `MapView`, and make sure that it is configured to be in sync
     /// with the current settings of `SwiftUIMapView` (in this example, just the `camera` and `styleURI`).
     func makeUIView(context: UIViewRepresentableContext<SwiftUIMapView>) -> MapView {
-        let mapView = MapView(with: .zero, resourceOptions: resourceOptions)
+        let mapView = MapView(frame: .zero, resourceOptions: resourceOptions)
         updateUIView(mapView, context: context)
 
         /// Additionally, this is your opportunity to connect the coordinator to the map view. In this example

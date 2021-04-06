@@ -17,7 +17,7 @@ public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProt
         }
 
         let resourceOptions = ResourceOptions(accessToken: accessToken)
-        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions)
+        mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.cameraManager.setCamera(centerCoordinate: CLLocationCoordinate2D(latitude: 59.3, longitude: 8.06),
                                         zoom: 12)
@@ -40,7 +40,8 @@ public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProt
     }
 
     @objc public func updatePosition(_ sender: UITapGestureRecognizer) {
-        let newCoordinate = mapView.coordinate(for: sender.location(in: mapView))
+        let screenCoordinate = mapView.convert(sender.location(in: mapView), to: mapView).screenCoordinate
+        let newCoordinate = try! mapView.__map.coordinateForPixel(forPixel: screenCoordinate)
         pointAnnotation.coordinate = newCoordinate
 
         do {

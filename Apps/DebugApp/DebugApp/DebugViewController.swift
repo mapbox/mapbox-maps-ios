@@ -25,7 +25,7 @@ public class DebugViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions)
+        mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions)
         mapView.update { (mapOptions) in
             mapOptions.location.puckType = .puck2D()
         }

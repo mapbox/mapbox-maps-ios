@@ -13,7 +13,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions(), styleURI: StyleURI.streets)
+        mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions(), styleURI: StyleURI.streets)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 

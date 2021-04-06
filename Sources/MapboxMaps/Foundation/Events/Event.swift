@@ -27,10 +27,6 @@ public enum EventType {
     }
 }
 
-public protocol EventsEmitter {
-    var eventsListener: EventsListener! { get set }
-}
-
-public protocol EventsListener: AnyObject {
+internal protocol EventsListener: AnyObject {
     func push(event: EventType)
 }

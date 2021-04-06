@@ -1,7 +1,7 @@
 import Foundation
 import Turf
 
-open class MapView: BaseMapView, EventsEmitter {
+open class MapView: BaseMapView {
 
     /// The `mapOptions` structure is the interface for consumers to configure the map.
     /// It's initialized on the creation of the `MapView` with a set of sane, default values.
@@ -27,10 +27,10 @@ open class MapView: BaseMapView, EventsEmitter {
     public internal(set) var annotationManager: AnnotationManager!
 
     /// A reference to the `EventsManager` used for dispatching telemetry.
-    public var eventsListener: EventsListener!
+    internal var eventsListener: EventsListener!
 
-    public init(with frame: CGRect, resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions.default, styleURI: StyleURI? = .streets) {
-        super.init(with: frame, resourceOptions: resourceOptions, glyphsRasterizationOptions: glyphsRasterizationOptions, styleURI: styleURI?.url)
+    public init(frame: CGRect, resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions.default, styleURI: StyleURI? = .streets) {
+        super.init(frame: frame, resourceOptions: resourceOptions, glyphsRasterizationOptions: glyphsRasterizationOptions, styleURI: styleURI?.url)
         initialize()
     }
 

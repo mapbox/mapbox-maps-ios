@@ -9,7 +9,7 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions(), styleURI: .light)
+        mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions(), styleURI: .light)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 

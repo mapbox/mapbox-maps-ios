@@ -15,7 +15,7 @@ public class SnapshotterCoreGraphicsExample: UIViewController, ExampleProtocol {
 
         // TODO: Fix crash that occurs when omitting MapViewController.
         let testRect = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
-        mapView = MapView(with: testRect, resourceOptions: resourceOptions())
+        mapView = MapView(frame: testRect, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
         // Add the `UIImageView` that will eventually render the snapshot.

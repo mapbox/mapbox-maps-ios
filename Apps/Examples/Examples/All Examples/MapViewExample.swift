@@ -7,7 +7,7 @@ public class MapViewExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        let mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
+        let mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
         NSLayoutConstraint.activate([

@@ -111,56 +111,33 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         wait(for: [expectation], timeout: 5.0)
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
     func testDecodingOfAllLayersInStreetsv11() {
         guard let mapView = mapView, let style = style else {
             XCTFail("There should be valid MapView and Style objects created by setUp.")
             return
         }
+        let expectedLayerCount = 111 // The current number of layers
+
         let expectation = XCTestExpectation(description: "Getting style layers succeeded")
-        expectation.expectedFulfillmentCount = 111 // The current number of layers
+        expectation.expectedFulfillmentCount = expectedLayerCount
 
         didFinishLoadingStyle = { _ in
             let layers = try! mapView.__map.getStyleLayers()
-            do {
-                for layer in layers {
-                    let type = LayerType(rawValue: layer.type)
-                    switch type {
-                    case .line:
-                        let result = style.getLayer(with: layer.id, type: LineLayer.self)
-                        switch result {
-                        case .success:
-                            expectation.fulfill()
-                        default:
-                            XCTFail("Failed to get line layer with id \(layer.id), error \(result)")
-                        }
-                    case .symbol:
-                        let result = style.getLayer(with: layer.id, type: SymbolLayer.self)
-                        switch result {
-                        case .success:
-                            expectation.fulfill()
-                        default:
-                            XCTFail("Failed to get symbol layer with id \(layer.id), error \(result)")
-                        }
-                    case .fill:
-                        let result = style.getLayer(with: layer.id, type: FillLayer.self)
-                        switch result {
-                        case .success:
-                            expectation.fulfill()
-                        default:
-                            XCTFail("Failed to get fill layer with id \(layer.id)")
-                        }
-                    case .background:
-                        let result = style.getLayer(with: layer.id, type: BackgroundLayer.self)
-                        switch result {
-                        case .success:
-                            expectation.fulfill()
-                        default:
-                            XCTFail("Failed to get background layer with id \(layer.id), error \(result)")
-                        }
-                    default:
-                        print("Unable to match type for layer of type \(layer.type)")
-                    }
+            XCTAssertEqual(layers.count, expectedLayerCount)
+
+            for layer in layers {
+                guard let type = LayerType(rawValue: layer.type) else {
+                    XCTFail("Failed to create LayerType from \(layer.type)")
+                    continue
+                }
+
+                let result = style._layer(with: layer.id, type: type.layerType)
+
+                switch result {
+                case .success:
+                    expectation.fulfill()
+                default:
+                    XCTFail("Failed to get line layer with id \(layer.id), error \(result)")
                 }
             }
         }

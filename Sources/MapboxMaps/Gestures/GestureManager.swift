@@ -117,7 +117,7 @@ internal protocol CameraManagerProtocol: AnyObject {
                    duration: TimeInterval,
                    completion: ((UIViewAnimatingPosition) -> Void)?)
 
-    func cancelTransitions()
+    func cancelAnimations()
 }
 
 extension CameraManager: CameraManagerProtocol { }

@@ -2,7 +2,7 @@ import Foundation
 import CoreLocation
 import UIKit
 
-public extension CameraOptions {
+extension CameraOptions {
 
     /**
     The `CameraOptions` object contains information about the current state of the camera.
@@ -17,7 +17,7 @@ public extension CameraOptions {
     - Returns: A `CameraOptions` object that contains all configuration information the `CameraView`
                will use to render the map's viewport.
     */
-    convenience init(center: CLLocationCoordinate2D? = nil,
+    public convenience init(center: CLLocationCoordinate2D? = nil,
                      padding: UIEdgeInsets? = nil,
                      anchor: CGPoint? = nil,
                      zoom: CGFloat? = nil,
@@ -31,7 +31,7 @@ public extension CameraOptions {
                   pitch: pitch?.NSNumber)
     }
 
-    var center: CLLocationCoordinate2D? {
+    public var center: CLLocationCoordinate2D? {
         get {
             return __center?.coordinate
         }
@@ -40,7 +40,7 @@ public extension CameraOptions {
         }
     }
 
-    var padding: UIEdgeInsets? {
+    public var padding: UIEdgeInsets? {
         get {
             return __padding?.toUIEdgeInsetsValue()
         }
@@ -49,7 +49,7 @@ public extension CameraOptions {
         }
     }
 
-    var anchor: CGPoint? {
+    public var anchor: CGPoint? {
         get {
             return __anchor?.point
         }
@@ -58,7 +58,7 @@ public extension CameraOptions {
         }
     }
 
-    var zoom: CGFloat? {
+    public var zoom: CGFloat? {
         get {
             return __zoom?.CGFloat
         }
@@ -67,7 +67,7 @@ public extension CameraOptions {
         }
     }
 
-    var bearing: CLLocationDirection? {
+    public var bearing: CLLocationDirection? {
         get {
             return __bearing?.CLLocationDirection
         }
@@ -76,7 +76,7 @@ public extension CameraOptions {
         }
     }
 
-    var pitch: CGFloat? {
+    public var pitch: CGFloat? {
         get {
             return __pitch?.CGFloat
         }
@@ -84,9 +84,8 @@ public extension CameraOptions {
             __pitch = newValue?.NSNumber
         }
     }
-}
 
-extension CameraOptions {
+    // MARK: Equals function
     public static func == (lhs: CameraOptions, rhs: CameraOptions) -> Bool {
         return lhs.center == rhs.center &&
                lhs.padding == rhs.padding &&

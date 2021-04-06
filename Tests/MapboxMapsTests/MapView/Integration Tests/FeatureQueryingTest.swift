@@ -23,8 +23,8 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
 
         didFinishLoadingStyle = { mapView in
             let cameraManager = CameraManager(for: mapView, with: MapCameraOptions())
-            cameraManager.setCamera(centerCoordinate: self.centerCoordinate,
-                                    zoom: 15.0)
+            cameraManager.setCamera(to: CameraOptions(center: self.centerCoordinate,
+                                    zoom: 15.0))
         }
 
         didBecomeIdle = { mapView in
@@ -57,8 +57,8 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
 
         didFinishLoadingStyle = { mapView in
             let cameraManager = CameraManager(for: mapView, with: MapCameraOptions())
-            cameraManager.setCamera(centerCoordinate: self.centerCoordinate,
-                                    zoom: 15.0)
+            cameraManager.setCamera(to: CameraOptions(center: self.centerCoordinate,
+                                    zoom: 15.0))
         }
 
         didBecomeIdle = { mapView in

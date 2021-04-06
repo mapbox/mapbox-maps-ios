@@ -32,9 +32,9 @@ public class CameraAnimator: NSObject {
     }
 
     /// Value that represents what percentage of the animation has been completed.
-    public var fractionComplete: CGFloat {
-        get { return propertyAnimator.fractionComplete }
-        set { propertyAnimator.fractionComplete = newValue }
+    public var fractionComplete: Double {
+        get { return Double(propertyAnimator.fractionComplete) }
+        set { propertyAnimator.fractionComplete = CGFloat(newValue) }
     }
 
     // MARK: Initializer
@@ -75,9 +75,9 @@ public class CameraAnimator: NSObject {
     }
 
     /// Add animations block to the animator with a `delayFactor`.
-    public func addAnimations(_ animations: @escaping () -> Void, delayFactor: CGFloat) {
+    public func addAnimations(_ animations: @escaping () -> Void, delayFactor: Double) {
         // if this cameraAnimator is not in the list of CameraAnimators held by the `CameraManager` then add it to that list
-        propertyAnimator.addAnimations(animations, delayFactor: delayFactor)
+        propertyAnimator.addAnimations(animations, delayFactor: CGFloat(delayFactor))
     }
 
     /// Add animations block to the animator.
@@ -94,7 +94,7 @@ public class CameraAnimator: NSObject {
     }
 
     /// Continue the animation with a timing parameter (`UITimingCurveProvider`) and duration factor (`CGFloat`).
-    public func continueAnimation(withTimingParameters parameters: UITimingCurveProvider?, durationFactor: CGFloat) {
-        propertyAnimator.continueAnimation(withTimingParameters: parameters, durationFactor: durationFactor)
+    public func continueAnimation(withTimingParameters parameters: UITimingCurveProvider?, durationFactor: Double) {
+        propertyAnimator.continueAnimation(withTimingParameters: parameters, durationFactor: CGFloat(durationFactor))
     }
 }

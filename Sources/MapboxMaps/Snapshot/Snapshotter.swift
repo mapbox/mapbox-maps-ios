@@ -30,7 +30,7 @@ public class Snapshotter: Observer {
     }
 
     /// A `style` object that can be manipulated to set different styles for a snapshot
-    public private(set) var style: Style
+    public let style: Style
 
     /// Initialize a `Snapshotter` instance
     /// - Parameters:

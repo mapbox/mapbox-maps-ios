@@ -118,4 +118,55 @@ internal class ExpressionTests: XCTestCase {
         }
     }
 
+    internal func testExpressionDecodingOnEmptyJSON() throws {
+
+        let jsonString =
+        """
+        [ "format",
+          {
+          }
+        ]
+        """
+
+        let data = jsonString.data(using: .utf8)
+        XCTAssertNotNil(data)
+
+        do {
+            let decodedExpression = try JSONDecoder().decode(Expression.self, from: data!)
+            verifyExpressionOperator(for: decodedExpression, toMatch: .format)
+            verifyExpressionArgument(for: decodedExpression,
+                                     toMatch: .option(.format(FormatOptions())),
+                                     at: 1)
+        } catch {
+            XCTFail("Could not decode empty json as format expression")
+        }
+    }
+
+    // MARK: - Helpers
+    internal func verifyExpressionOperator(for expression: Expression, toMatch type: Expression.Operator) {
+
+        guard let op = expression.elements.first, case let .op(validOp) = op else {
+            XCTFail("There was no valid operator in the first element of the expression array")
+            return
+        }
+
+        XCTAssertEqual(validOp, type)
+    }
+
+    internal func verifyExpressionArgument(for expression: Expression, toMatch argument: Expression.Argument, at index: Int) {
+
+        guard let op = expression.elements.first, case .op = op else {
+            XCTFail("There was no valid operator in the first element of the expression array")
+            return
+        }
+
+        let arg = expression.elements[index]
+        guard case let .argument(validArg) = arg else {
+            XCTFail("There was no valid argument in the element at index = \(index) of the expression array")
+            return
+        }
+        print(validArg)
+
+        XCTAssertEqual(validArg, argument)
+    }
 }

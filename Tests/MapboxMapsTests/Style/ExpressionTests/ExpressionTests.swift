@@ -7,26 +7,6 @@ import XCTest
 
 internal class ExpressionTests: XCTestCase {
 
-    internal func testRoundtripExpressionConversion() throws {
-        let expression = Exp(.interpolate) {
-            Exp(.linear)
-            Exp(.zoom)
-            0
-            UIColor.red
-            14
-            UIColor.blue
-        }
-
-        do {
-            let expressionAsJSON = try expression.jsonObject()
-            let expressionAgain = Expression(from: expressionAsJSON)
-            XCTAssert(expressionAgain != nil)
-            XCTAssert(expression == expressionAgain!)
-        } catch {
-            XCTFail("Failed to convert expression to JSON and back")
-        }
-    }
-
     internal func testExpressionValidity() {
         let sumExp = Exp(.sum) {
             10

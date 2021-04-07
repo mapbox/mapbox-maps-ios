@@ -110,4 +110,37 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
 
         wait(for: [expectation], timeout: 5.0)
     }
+
+    func testDecodingOfAllLayersInStreetsv11() {
+        guard let mapView = mapView, let style = style else {
+            XCTFail("There should be valid MapView and Style objects created by setUp.")
+            return
+        }
+        let expectedLayerCount = 111 // The current number of layers
+
+        let expectation = XCTestExpectation(description: "Getting style layers succeeded")
+        expectation.expectedFulfillmentCount = expectedLayerCount
+
+        didFinishLoadingStyle = { _ in
+            let layers = try! mapView.__map.getStyleLayers()
+            XCTAssertEqual(layers.count, expectedLayerCount)
+
+            for layer in layers {
+                guard let type = LayerType(rawValue: layer.type) else {
+                    XCTFail("Failed to create LayerType from \(layer.type)")
+                    continue
+                }
+
+                let result = style._layer(with: layer.id, type: type.layerType)
+
+                switch result {
+                case .success:
+                    expectation.fulfill()
+                default:
+                    XCTFail("Failed to get line layer with id \(layer.id), error \(result)")
+                }
+            }
+        }
+        wait(for: [expectation], timeout: 5.0)
+    }
 }

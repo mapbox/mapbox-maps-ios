@@ -69,7 +69,8 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
         - an api-docs.zip
 	- The completion of this job will make our api-docs which will be found in ci artifacts. It will also publish a GitHub draft release
 - [ ] Push the release to CocoaPods via `$ pod trunk push`
-- [ ] Update the information in the draft release with the correct changelog, versions, etc
+- [ ] Update the information in the draft release with the correct changelog, versions, etc.
+- [ ] Uncheck the prerelease box.
 - [ ] Have your release buddy review the draft release, and save the draft. You will publish it in a later step.
 
 **4) Confirm everything works as expected**
@@ -82,15 +83,20 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 - [ ] Navigate to the [CircleCI job page](https://app.circleci.com/pipelines/github/mapbox/mapbox-maps-ios), and download the `api-docs.zip` artifact.
 
 - [ ] In the `mapbox-maps-ios` repo, `git checkout origin publisher-staging`. This is the branch that houses our API-Docs. Make a new branch off this one `git checkout -b Release/{version}_docs`
-  - If you would like to test your API docs before publishing them, target the `publisher-staging` branch first, then once your PR lands there, cherry-pick your commit to a branch based on `publisher-production`.
-- [ ] Unzip the `api-docs.zip` and move the new docs into our repo. 
+- [ ] Unzip the `api-docs.zip` and move the new docs into our repo. This should result in a new top-level folder named after the version, but without the 'v' prefix.
 - [ ] Commit and push those changes.
-- [ ] Make a pull request targeting the branch `publisher-production`.
+- [ ] Make a pull request targeting the branch `publisher-staging`.
 - [ ] Share this with @mapbox/docs to approve.
-- [ ] Merge the PR in `mapbox-maps-ios`. Cherry-pick to the `publisher-production`
+- [ ] Merge the PR in `mapbox-maps-ios`.
+- [ ] Preview the docs at the staging URL: https://docs.tilestream.net/ios/maps/api/{version_without_v_prefix}/index.html
+- [ ] Create a PR to merge `publisher-staging` into `publisher-production`.
+- [ ] Share the PR with @mapbox-docs to approve.
+- [ ] Merge the PR.
 - [ ] Create a `maps-{VERSION}` branch in [ios-sdk](https://github.com/mapbox/ios-sdk).
 - [ ] Add the new version (without a v prefix) as the first element in the [src/data/ios-maps-sdk-version.json](https://github.com/mapbox/ios-sdk/blob/publisher-production/src/data/ios-maps-sdk-versions.json).
 - [ ] While the beta docs site is live and for subsequent stable releases, add the version without the v to [src/constants.json](https://github.com/mapbox/ios-sdk/blob/ios/maps-v10.0.0-beta.13.1/src/constants.json#L6) as the value for `VERSION_IOS_MAPS_SDK_V10`.
+- [ ] Make sure the API Docs changes are live in production before continuing https://docs.mapbox.com/ios/maps/api/{version_without_v_prefix}/index.html
+  - This is necessary because the CI checks triggered by the next step depend on them.
 - [ ] Commit and push these changes, then open a PR.
 - [ ] Ask your docs buddy to review it. Merge once approved!
 
@@ -105,6 +111,6 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 
 ## 📣 Announcements
 
-- [ ] Tag the `@maps-ios` team in #mobile-maps-ios to notify the team about the completed release! 🎉
+- [ ] Announce the release in #sdk-releases and in #maps-sdk to notify the team about the completed release! 🎉
 
 When all of the above is completed, you can then close this ticket.

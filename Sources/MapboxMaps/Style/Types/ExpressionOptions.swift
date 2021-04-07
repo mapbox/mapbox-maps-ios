@@ -59,7 +59,7 @@ public struct FormatOptions: Codable, Equatable, ValidExpressionArgument {
         case textFont = "text-font"
         case textColor = "text-color"
     }
-    
+
     public var expressionElements: [Expression.Element] {
         return [.argument(.option(.format(self)))]
     }
@@ -87,7 +87,7 @@ public struct NumberFormatOptions: Codable, Equatable, ValidExpressionArgument {
 
     /// Maximum number of fractional digits to include.
     public var maxFractionDigits: Int?
-    
+
     public var expressionElements: [Expression.Element] {
         return [.argument(.option(.numberFormat(self)))]
     }
@@ -124,7 +124,7 @@ public struct CollatorOptions: Codable, Equatable, ValidExpressionArgument {
         case caseSensitive = "case-sensitive"
         case diacriticSensitive = "diacritic-sensitive"
     }
-    
+
     public var expressionElements: [Expression.Element] {
         return [.argument(.option(.collator(self)))]
     }

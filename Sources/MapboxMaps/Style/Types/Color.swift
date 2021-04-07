@@ -75,7 +75,7 @@ public struct ColorRepresentable: Codable, Equatable {
     }
 }
 
-extension UIColor: ValidExpressionArgument {
+extension UIColor: ExpressionArgumentConvertible {
 
     public var expressionElements: [Expression.Element] {
         var red: CGFloat = 0.0

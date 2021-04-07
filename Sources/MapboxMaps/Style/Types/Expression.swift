@@ -5,7 +5,7 @@ public typealias Exp = Expression
 public struct Expression: Codable, CustomStringConvertible, Equatable {
 
     /// The individual elements of the expression in an array
-    public var elements: [Element]
+    internal var elements: [Element]
 
     // swiftlint:disable identifier_name
     public init(_ op: Expression.Operator,
@@ -18,17 +18,6 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
 
         elements.insert(.op(op), at: 0)
         self.init(with: elements)
-    }
-
-    /// Attempts to create an Expression from a jsonObject.
-    public init?(from jsonObject: Any) {
-        do {
-            let data = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
-            let exp = try JSONDecoder().decode(Expression.self, from: data)
-            self = exp
-        } catch {
-            return nil
-        }
     }
 
     /// Returns a jsonObject representation of this expression if serialization is successful,  throws otherwise
@@ -148,7 +137,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
                 return "\(exp)"
             case .option(let option):
                 return "\(option)"
-            case .array(let array):
+            case .numberArray(let array):
                 return "\(array)"
             }
         }
@@ -167,7 +156,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
                 return true
             case (.expression(let lhsExpression), .expression(let rhsExpression)):
                 return lhsExpression == rhsExpression
-            case (.array(let lhsArray), .array(let rhsArray)):
+            case (.numberArray(let lhsArray), .numberArray(let rhsArray)):
                 return lhsArray == rhsArray
             default:
                 return false
@@ -215,7 +204,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
                 self = .null
             } else {
                 let context = DecodingError.Context(codingPath: decoder.codingPath,
-                                                debugDescription: "Failed to decode ExpressionArgument")
+                                                    debugDescription: "Failed to decode ExpressionArgument")
                 throw DecodingError.dataCorrupted(context)
             }
         }

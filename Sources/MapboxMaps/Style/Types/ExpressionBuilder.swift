@@ -4,7 +4,7 @@ import UIKit
 @_functionBuilder
 public struct ExpressionBuilder {
 
-    public static func buildBlock(_ arguments: ValidExpressionArgument...) -> Expression {
+    public static func buildBlock(_ arguments: ExpressionArgumentConvertible...) -> Expression {
 
         var expressionElements = [Expression.Element]()
 
@@ -16,72 +16,72 @@ public struct ExpressionBuilder {
     }
 }
 
-public protocol ValidExpressionArgument {
+public protocol ExpressionArgumentConvertible {
     var expressionElements: [Expression.Element] { get }
 }
 
-extension Int: ValidExpressionArgument {
+extension Int: ExpressionArgumentConvertible {
     public var expressionElements: [Expression.Element] {
         return [.argument(.number(Double(self)))]
     }
 }
 
-extension UInt: ValidExpressionArgument {
+extension UInt: ExpressionArgumentConvertible {
     public var expressionElements: [Expression.Element] {
         return [.argument(.number(Double(self)))]
     }
 }
 
-extension Double: ValidExpressionArgument {
+extension Double: ExpressionArgumentConvertible {
     public var expressionElements: [Expression.Element] {
         return [.argument(.number(Double(self)))]
     }
 }
 
-extension String: ValidExpressionArgument {
+extension String: ExpressionArgumentConvertible {
     public var expressionElements: [Expression.Element] {
         return [.argument(.string(self))]
     }
 }
 
-extension Bool: ValidExpressionArgument {
+extension Bool: ExpressionArgumentConvertible {
     public var expressionElements: [Expression.Element] {
         return [.argument(.boolean(self))]
     }
 }
 
-extension Array: ValidExpressionArgument where Element == Double {
+extension Array: ExpressionArgumentConvertible where Element == Double {
     public var expressionElements: [Expression.Element] {
-        return [.argument(.array(self))]
+        return [.argument(.numberArray(self))]
     }
 }
 
-extension Expression.Element: ValidExpressionArgument {
+extension Expression.Element: ExpressionArgumentConvertible {
     public var expressionElements: [Expression.Element] {
         return [self]
     }
 }
 
-extension Expression: ValidExpressionArgument {
+extension Expression: ExpressionArgumentConvertible {
     public var expressionElements: [Expression.Element] {
         return [.argument(.expression(self))]
     }
 }
 
-extension Expression.Argument: ValidExpressionArgument {
+extension Expression.Argument: ExpressionArgumentConvertible {
     public var expressionElements: [Expression.Element] {
         return [.argument(self)]
     }
 }
 
-extension Expression.Operator: ValidExpressionArgument {
+extension Expression.Operator: ExpressionArgumentConvertible {
     public var expressionElements: [Expression.Element] {
         return [.op(self)]
     }
 }
 
-extension Dictionary: ValidExpressionArgument where Key == Double,
-                                                    Value: ValidExpressionArgument {
+extension Dictionary: ExpressionArgumentConvertible where Key == Double,
+                                                    Value: ExpressionArgumentConvertible {
     public var expressionElements: [Expression.Element] {
         var elements = [Expression.Element]()
         for key in Array(keys).sorted(by: <) {

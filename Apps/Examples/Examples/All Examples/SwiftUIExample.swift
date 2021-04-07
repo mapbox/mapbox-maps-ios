@@ -209,7 +209,7 @@ internal struct ContentView: View {
     public var body: some View {
         VStack {
             SwiftUIMapView(
-                resourceOptions: ResourceOptions(accessToken: AccountManager.shared.accessToken!),
+                resourceOptions: ResourceOptions(accessToken: CredentialsManager.default.accessToken!),
 
                 /// Here, we pass the camera state variable into `SwiftUIMapView` as a binding
                 camera: $camera)

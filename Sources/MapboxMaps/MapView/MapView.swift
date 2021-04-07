@@ -29,8 +29,8 @@ open class MapView: BaseMapView {
     /// A reference to the `EventsManager` used for dispatching telemetry.
     internal var eventsListener: EventsListener!
 
-    public init(frame: CGRect, resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions.default, styleURI: StyleURI? = .streets) {
-        super.init(frame: frame, resourceOptions: resourceOptions, glyphsRasterizationOptions: glyphsRasterizationOptions, styleURI: styleURI?.rawValue)
+    public init(frame: CGRect, mapboxOptions: MapboxOptions = MapboxOptions(), styleURI: StyleURI? = .streets) {
+        super.init(frame: frame, mapboxOptions: mapboxOptions, styleURI: styleURI?.url)
         initialize()
     }
 

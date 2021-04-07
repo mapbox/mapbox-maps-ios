@@ -8,7 +8,7 @@ public protocol ExampleProtocol: AnyObject {
 
 extension ExampleProtocol {
     public func resourceOptions() -> ResourceOptions {
-        guard let accessToken = AccountManager.shared.accessToken else {
+        guard let accessToken = CredentialsManager.default.accessToken else {
             fatalError("Access token not set")
         }
 

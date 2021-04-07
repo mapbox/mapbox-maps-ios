@@ -186,14 +186,13 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     }
 
     // MARK: Init
-    public init(frame: CGRect, resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions, styleURI: URL?) {
+    public init(frame: CGRect, mapboxOptions: MapboxOptions, styleURI: URL?) {
         super.init(frame: frame)
-        self.commonInit(resourceOptions: resourceOptions,
-                        glyphsRasterizationOptions: glyphsRasterizationOptions,
+        self.commonInit(mapboxOptions: mapboxOptions,
                         styleURI: styleURI)
     }
 
-    private func commonInit(resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions, styleURI: URL?) {
+    private func commonInit(mapboxOptions: MapboxOptions, styleURI: URL?) {
 
         if MTLCreateSystemDefaultDevice() == nil {
             // Check if we're running on a simulator on iOS 11 or 12
@@ -211,21 +210,10 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
             }
         }
 
-        self.resourceOptions = resourceOptions
+        self.resourceOptions = mapboxOptions.resourceOptions
         observerConcrete = ObserverConcrete()
 
-        let size = MapboxCoreMaps.Size(width: Float(frame.width), height: Float(frame.height))
-
-        let mapOptions = MapboxCoreMaps.MapOptions(__contextMode: nil,
-                                                   constrainMode: nil,
-                                                   viewportMode: nil,
-                                                   orientation: nil,
-                                                   crossSourceCollisions: nil,
-                                                   size: size,
-                                                   pixelRatio: Float(UIScreen.main.scale),
-                                                   glyphsRasterizationOptions: glyphsRasterizationOptions)
-
-        __map = Map(client: self, mapOptions: mapOptions, resourceOptions: resourceOptions)
+        __map = Map(client: self, mapOptions: mapboxOptions.mapOptions, resourceOptions: mapboxOptions.resourceOptions)
 
         __map?.createRenderer()
 
@@ -259,9 +247,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     open override func awakeFromNib() {
         super.awakeFromNib()
 
-        guard let accessToken = BaseMapView.parseIBString(ibString: accessToken__) else {
-            fatalError("Must provide access token to the MapView in Interface Builder / Storyboard")
-        }
+        let accessToken = BaseMapView.parseIBString(ibString: accessToken__) ?? CredentialsManager.default.accessToken
 
         let ibStyleURI = BaseMapView.parseIBStringAsURL(ibString: styleURI__)
         let styleURI = ibStyleURI ?? URL(string: "mapbox://styles/mapbox/streets-v11")!
@@ -277,7 +263,15 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
         let glyphsRasterizationOptions = GlyphsRasterizationOptions(rasterizationMode: rasterizationMode,
                                                                     fontFamily: localFontFamily)
 
-        commonInit(resourceOptions: resourceOptions, glyphsRasterizationOptions: glyphsRasterizationOptions, styleURI: styleURI)
+        let mapOptions = MapboxCoreMaps.MapOptions(size: bounds.size,
+                                                   pixelRatio: UIScreen.main.scale,
+                                                   glyphsRasterizationOptions: glyphsRasterizationOptions)
+
+        let mapboxOptions = MapboxOptions(resourceOptions: resourceOptions,
+                                          mapOptions: mapOptions,
+                                          renderOptions: RenderOptions())
+
+        commonInit(mapboxOptions: mapboxOptions, styleURI: styleURI)
     }
 
     public func on(_ eventType: MapEvents.EventKind, handler: @escaping (MapboxCoreMaps.Event) -> Void) {

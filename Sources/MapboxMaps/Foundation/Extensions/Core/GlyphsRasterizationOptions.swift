@@ -4,16 +4,16 @@ import MapboxCoreMaps
 extension GlyphsRasterizationOptions {
 
     /// Default fallback font
-    internal static var fallbackFontFamilyName: String = {
+    internal static let fallbackFontFamilyName: String =
         UIFont.systemFont(ofSize: 0, weight: .regular).familyName
-    }()
+    
 
     /// Default GlyphsRasterizationOptions. RasterizationMode defaults to
     /// `.ideographsRasterizedLocally` i.e. ideographic symbols are rasterized locally (not loaded
     /// from the server) using an appropriate system font.
-    public static var `default`: GlyphsRasterizationOptions = {
+    public static let `default`: GlyphsRasterizationOptions =
         GlyphsRasterizationOptions(rasterizationMode: .ideographsRasterizedLocally)
-    }()
+
 
     /// Convenience initializer
     /// - Parameters:

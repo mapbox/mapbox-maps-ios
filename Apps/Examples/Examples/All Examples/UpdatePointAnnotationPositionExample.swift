@@ -12,7 +12,7 @@ public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProt
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        guard let accessToken = AccountManager.shared.accessToken else {
+        guard let accessToken = CredentialsManager.default.accessToken else {
             fatalError("Access token not set")
         }
 

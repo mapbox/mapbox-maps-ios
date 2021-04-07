@@ -79,8 +79,9 @@ class ViewController: UIViewController {
         annotations.reserveCapacity(100)
 
         // Do any additional setup after loading the view.
-        resourceOptions = ResourceOptions(accessToken: AccountManager.shared.accessToken!)
+        resourceOptions = ResourceOptions(accessToken: CredentialsManager.default.accessToken!)
         mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions, styleURI: .streets)
+
         view.addSubview(mapView)
         NSLayoutConstraint.activate([
             mapView.leftAnchor.constraint(equalTo: view.leftAnchor),

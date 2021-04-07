@@ -33,4 +33,6 @@ public struct RenderOptions: Equatable {
     /// If, however, the `MapView` is overlaid with a `UIKit` element which must be pinned to a
     /// particular lat-long, then setting this to `true` will result in better synchronization and less jitter.
     public var presentsWithTransaction: Bool = true
+
+    public init() {}
 }

@@ -93,8 +93,8 @@ internal struct SwiftUIMapView: UIViewRepresentable {
                                         animated: false)
         /// Since changing the style causes annotations to be removed from the map
         /// we only call the setter if the value has changed.
-        if mapView.style.styleURI != styleURI {
-            mapView.style.styleURI = styleURI
+        if mapView.style.uri != styleURI {
+            mapView.style.uri = styleURI
         }
 
         /// The coordinator needs to manager annotations because

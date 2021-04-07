@@ -12,7 +12,7 @@ internal class LocationManagerIntegrationTestCase: MapViewIntegrationTestCase {
         will update the existing `locationManager`
      */
     internal func testOverrideLocationProvider() {
-        style?.styleURI = .outdoors
+        style?.uri = .outdoors
 
         let locationManagerOverrideProvider = XCTestExpectation(description: "Checks that a new location provider can be set successfully")
 

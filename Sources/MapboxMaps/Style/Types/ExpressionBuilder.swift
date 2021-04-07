@@ -76,7 +76,7 @@ extension Expression.Argument: ExpressionArgumentConvertible {
 
 extension Expression.Operator: ExpressionArgumentConvertible {
     public var expressionElements: [Expression.Element] {
-        return [.op(self)]
+        return [.operator(self)]
     }
 }
 

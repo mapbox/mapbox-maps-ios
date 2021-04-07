@@ -29,11 +29,6 @@ public enum StyleURI: Hashable, RawRepresentable {
     /// resource path.
     case custom(url: URL)
 
-    /// Underlying URL for the StyleURI
-    public var url: URL {
-        return rawValue
-    }
-
     /// :nodoc:
     /// `RawRepresentable` conformance
     public var rawValue: URL {

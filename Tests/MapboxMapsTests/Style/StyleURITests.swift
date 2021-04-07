@@ -55,7 +55,7 @@ class StyleURITests: XCTestCase {
         }
 
         XCTAssertEqual(destURL, sourceURL, line: line)
-        XCTAssertEqual(destURL, styleURI.url, line: line)
+        XCTAssertEqual(destURL, styleURI.rawValue.absoluteURL, line: line)
     }
 
     private func checkDefaultStyleURI(with URLString: String, expected: StyleURI, line: UInt = #line) {

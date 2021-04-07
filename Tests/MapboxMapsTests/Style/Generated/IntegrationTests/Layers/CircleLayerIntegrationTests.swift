@@ -25,7 +25,7 @@ class CircleLayerIntegrationTests: MapViewIntegrationTestCase {
         let successfullyRetrievedLayerExpectation = XCTestExpectation(description: "Successfully retrieved CircleLayer from Map")
         successfullyRetrievedLayerExpectation.expectedFulfillmentCount = 1
 
-        style.styleURI = .streets
+        style.uri = .streets
 
         didFinishLoadingStyle = { _ in
 

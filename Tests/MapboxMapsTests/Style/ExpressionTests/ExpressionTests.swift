@@ -13,7 +13,7 @@ internal class ExpressionTests: XCTestCase {
             12
         }
 
-        if case let Exp.Element.op(sumOp) = sumExp.elements[0],
+        if case let Exp.Element.operator(sumOp) = sumExp.elements[0],
            sumOp.rawValue == Exp.Operator.sum.rawValue { } else {
             XCTFail("First element is not the 'sum' expression operator")
         }
@@ -35,7 +35,7 @@ internal class ExpressionTests: XCTestCase {
     // Validates basic expression semantics
     internal func expressionValidator(exp: Exp) {
         if exp.elements.count == 1 {
-            if case Exp.Element.op(_) = exp.elements[0] {
+            if case Exp.Element.operator(_) = exp.elements[0] {
                 // First element is an operator
             } else {
                 XCTFail("In an expression with one element, the element MUST be an operator")
@@ -44,7 +44,7 @@ internal class ExpressionTests: XCTestCase {
 
         if exp.elements.count > 1 {
 
-            if case Exp.Element.op(_) = exp.elements[0] {
+            if case Exp.Element.operator(_) = exp.elements[0] {
                 // First element is an operator
             } else {
                 XCTFail("In all expressions, the first element MUST be an operator")

@@ -10,7 +10,7 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
 
         mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        mapView.style.styleURI = .light
+        mapView.style.uri = .light
         let centerCoordinate = CLLocationCoordinate2D(latitude: 41.878781, longitude: -87.622088)
         mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate,
                                                           zoom: 12))

@@ -42,7 +42,7 @@ public class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
     }
 
     internal func setupExample() {
-        let offlineRegionDef = OfflineRegionGeometryDefinition(styleURL: mapView.style.styleURI.url.absoluteString,
+        let offlineRegionDef = OfflineRegionGeometryDefinition(styleURL: mapView.style.uri.rawValue.absoluteURL.absoluteString,
                                                                geometry: MBXGeometry(coordinate: coord),
                                                                minZoom: zoom - 2,
                                                                maxZoom: zoom + 2,

@@ -25,7 +25,7 @@ class HillshadeLayerIntegrationTests: MapViewIntegrationTestCase {
         let successfullyRetrievedLayerExpectation = XCTestExpectation(description: "Successfully retrieved HillshadeLayer from Map")
         successfullyRetrievedLayerExpectation.expectedFulfillmentCount = 1
 
-        style.styleURI = .streets
+        style.uri = .streets
 
         didFinishLoadingStyle = { _ in
 

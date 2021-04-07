@@ -30,7 +30,7 @@ open class MapView: BaseMapView {
     internal var eventsListener: EventsListener!
 
     public init(frame: CGRect, resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions.default, styleURI: StyleURI? = .streets) {
-        super.init(frame: frame, resourceOptions: resourceOptions, glyphsRasterizationOptions: glyphsRasterizationOptions, styleURI: styleURI?.url)
+        super.init(frame: frame, resourceOptions: resourceOptions, glyphsRasterizationOptions: glyphsRasterizationOptions, styleURI: styleURI?.rawValue)
         initialize()
     }
 

@@ -4,38 +4,38 @@ import MapboxCoreMaps
 /// Layer rendering types
 public enum LayerType: String, Codable {
     /// A filled polygon with an optional stroked border.
-    case fill = "fill"
+    case fill
 
     /// A stroked line.
-    case line = "line"
+    case line
 
     /// An icon or a text label.
-    case symbol = "symbol"
+    case symbol
 
     /// A filled circle.
-    case circle = "circle"
+    case circle
 
     /// A heatmap.
-    case heatmap = "heatmap"
+    case heatmap
 
     /// An extruded (3D) polygon.
     case fillExtrusion = "fill-extrusion"
 
     /// Raster map textures such as satellite imagery.
-    case raster = "raster"
+    case raster
 
     /// Client-side hillshading visualization based on DEM data.
     /// Currently, the implementation only supports Mapbox Terrain RGB and Mapzen Terrarium tiles.
-    case hillshade = "hillshade"
+    case hillshade
 
     /// The background color or pattern of the map.
-    case background = "background"
+    case background
 
     /// Layer representing the location indicator
     case locationIndicator = "location-indicator"
 
     /// Layer representing the sky
-    case sky = "sky"
+    case sky
 
     /// Layer used for a 3D model
     case model = "model"
@@ -104,11 +104,5 @@ public extension Layer {
     init(jsonObject: [String: AnyObject]) throws {
         let layerData = try JSONSerialization.data(withJSONObject: jsonObject)
         self = try JSONDecoder().decode(Self.self, from: layerData)
-    }
-}
-
-public extension LayerPosition {
-    convenience init(above: String? = nil, below: String? = nil, at: Int? = nil) {
-        self.init(__above: above, below: below, at: at?.NSNumber)
     }
 }

@@ -101,7 +101,7 @@ class ViewController: UIViewController {
             self.flyToNextCoordinate()
         }
 
-        mapView.style.styleURI = styles[styleStep].0
+        mapView.style.uri = styles[styleStep].0
     }
 
     func flyToNextCoordinate() {
@@ -119,7 +119,7 @@ class ViewController: UIViewController {
             removeAnnotations()
 
             // Change the style
-            mapView.style.styleURI = styles[styleStep].0
+            mapView.style.uri = styles[styleStep].0
             print("Changing style to \(styles[styleStep].0)")
 
             return
@@ -288,7 +288,7 @@ class ViewController: UIViewController {
 
         print("Creating snapshotter")
         let snapshotter = Snapshotter(options: options)
-        snapshotter.style.styleURI = .light
+        snapshotter.style.uri = .light
         snapshotter.camera = mapView.camera
 
         snapshotter.on(.styleLoaded) { [weak self] _ in

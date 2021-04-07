@@ -7,7 +7,7 @@ import MapboxMapsFoundation
 public class Style {
     public private(set) weak var styleManager: StyleManager!
 
-    public init(with styleManager: StyleManager) {
+    internal init(with styleManager: StyleManager) {
         self.styleManager = styleManager
     }
 
@@ -23,9 +23,9 @@ public class Style {
      receiver will use the default style and this property will
      automatically be set to that style’s URL.
      */
-    public var styleURI: StyleURI = .streets {
+    public var uri: StyleURI = .streets {
         didSet {
-            let uriString = styleURI.url.absoluteString
+            let uriString = uri.rawValue.absoluteString
             try! styleManager.setStyleURIForUri(uriString)
         }
     }

@@ -16,7 +16,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
             elements = []
         }
 
-        elements.insert(.op(op), at: 0)
+        elements.insert(.operator(op), at: 0)
         self.init(with: elements)
     }
 
@@ -58,12 +58,12 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
      */
     public indirect enum Element: Codable, CustomStringConvertible, Equatable {
 
-        case op(Operator)
+        case `operator`(Operator)
         case argument(Argument)
 
         public var description: String {
             switch self {
-            case .op(let op):
+            case .operator(let op):
                 return op.rawValue
             case .argument(let arg):
                 return "\(arg)"
@@ -72,7 +72,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
 
         public static func == (lhs: Expression.Element, rhs: Expression.Element) -> Bool {
             switch (lhs, rhs) {
-            case (.op(let lhsOp), .op(let rhsOp)):
+            case (.operator(let lhsOp), .operator(let rhsOp)):
                 return lhsOp.rawValue == rhsOp.rawValue
             case (.argument(let lhsArg), .argument(let rhsArg)):
                 return lhsArg == rhsArg
@@ -85,7 +85,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
             var container = encoder.singleValueContainer()
 
             switch self {
-            case .op(let op):
+            case .operator(let op):
                 try container.encode(op)
             case .argument(let argument):
                 try container.encode(argument)
@@ -96,7 +96,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
             let container = try decoder.singleValueContainer()
 
             if let validOp = try? container.decode(Operator.self) {
-                self = .op(validOp)
+                self = .operator(validOp)
                 return
             }
 

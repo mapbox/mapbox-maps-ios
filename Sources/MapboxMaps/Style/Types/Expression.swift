@@ -130,7 +130,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
         case string(String)
         case boolean(Bool)
         case array([Double])
-        case option(ExpressionOption)
+        case option(Option)
         case null
         case expression(Expression)
 
@@ -161,8 +161,8 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
                 return lhsString == rhsString
             case (.boolean(let lhsBool), .boolean(let rhsBool)):
                 return lhsBool == rhsBool
-            case (.option, .option):
-                return false // TODO: handle equality of options
+            case (.option(let lhsOption), .option(let rhsOption)):
+                return lhsOption == rhsOption
             case (.null, .null):
                 return true
             case (.expression(let lhsExpression), .expression(let rhsExpression)):
@@ -187,21 +187,9 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
             case .boolean(let boolean):
                 try container.encode(boolean)
             case .option(let option):
-                if let formatOptions = option as? FormatOptions {
-                    try container.encode(formatOptions)
-                }
-
-                if let numberFormatOption = option as? NumberFormatOptions {
-                    try container.encode(numberFormatOption)
-                }
-
-                if let collatorOption = option as? CollatorOptions {
-                    try container.encode(collatorOption)
-                }
-
+                try container.encode(option)
             case .null:
                 try container.encodeNil()
-
             case .array(let array):
                 try container.encode(array)
             }
@@ -213,43 +201,23 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
 
             if let validString = try? container.decode(String.self) {
                 self = .string(validString)
-                return
-            }
-
-            if let validNumber = try? container.decode(Double.self) {
+            } else if let validNumber = try? container.decode(Double.self) {
                 self = .number(validNumber)
-                return
-            }
-
-            if let validBoolean = try? container.decode(Bool.self) {
+            } else if let validBoolean = try? container.decode(Bool.self) {
                 self = .boolean(validBoolean)
-                return
-            }
-
-            if let validExpression = try? container.decode(Expression.self) {
+            } else if let validExpression = try? container.decode(Expression.self) {
                 self = .expression(validExpression)
-                return
-            }
-
-            if let validCollatorOption = try? container.decode(CollatorOptions.self) {
-                self = .option(validCollatorOption)
-            }
-
-            if let validFormatOption = try? container.decode(FormatOptions.self) {
-                self = .option(validFormatOption)
-            }
-
-            if let validNumberFormatOption = try? container.decode(NumberFormatOptions.self) {
-                self = .option(validNumberFormatOption)
-            }
-
-            if let validArray = try? container.decode([Double].self) {
+            } else if let validOption = try? container.decode(Option.self) {
+                self = .option(validOption)
+            } else if let validArray = try? container.decode([Double].self) {
                 self = .array(validArray)
-            }
-
-            let context = DecodingError.Context(codingPath: decoder.codingPath,
+            } else if let dict = try? container.decode([String: String].self), dict.isEmpty {
+                self = .null
+            } else {
+                let context = DecodingError.Context(codingPath: decoder.codingPath,
                                                 debugDescription: "Failed to decode ExpressionArgument")
-            throw DecodingError.dataCorrupted(context)
+                throw DecodingError.dataCorrupted(context)
+            }
         }
     }
 }

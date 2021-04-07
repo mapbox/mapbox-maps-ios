@@ -1,14 +1,49 @@
 import UIKit
 
-public protocol ExpressionOption: ValidExpressionArgument, Codable { }
+extension Expression {
 
-extension ExpressionOption {
-    public var expressionElements: [Expression.Element] {
-        return [.argument(.option(self))]
+    public enum Option: Codable, Equatable {
+        case format(FormatOptions)
+        case numberFormat(NumberFormatOptions)
+        case collator(CollatorOptions)
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.singleValueContainer()
+
+            if let validFormatOptions = try? container.decode(FormatOptions.self) {
+                self = .format(validFormatOptions)
+
+            } else if let validNumberFormatOptions = try? container.decode(NumberFormatOptions.self) {
+                self = .numberFormat(validNumberFormatOptions)
+
+            } else if let validCollatorOptions = try? container.decode(CollatorOptions.self) {
+                self = .collator(validCollatorOptions)
+
+            } else {
+                let context = DecodingError.Context(codingPath: decoder.codingPath,
+                                                    debugDescription: "Failed to decode ExpressionOption")
+                throw DecodingError.dataCorrupted(context)
+            }
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.singleValueContainer()
+
+            switch self {
+            case .collator(let option):
+                try container.encode(option)
+            case .format(let option):
+                try container.encode(option)
+            case .numberFormat(let option):
+                try container.encode(option)
+            }
+        }
+
     }
+
 }
 
-public struct FormatOptions: ExpressionOption {
+public struct FormatOptions: Codable, Equatable, ValidExpressionArgument {
 
     /// Applies a scaling factor on text-size as specified by the root layout property.
     public var fontScale: Double?
@@ -19,16 +54,17 @@ public struct FormatOptions: ExpressionOption {
     /// Overrides the color specified by the root paint property.
     public var textColor: ColorRepresentable?
 
-    /// Internal facing, serializable representative of `textColor`
-    private var textColorInternal: ColorRepresentable?
-
     internal enum CodingKeys: String, CodingKey {
         case fontScale = "font-scale"
         case textFont = "text-font"
         case textColor = "text-color"
     }
 
-    public init(fontScale: Double?, textFont: [String]?, textColor: UIColor?) {
+    public var expressionElements: [Expression.Element] {
+        return [.argument(.option(.format(self)))]
+    }
+
+    public init(fontScale: Double? = nil, textFont: [String]? = nil, textColor: UIColor? = nil) {
         self.fontScale = fontScale
         self.textFont = textFont
 
@@ -38,7 +74,7 @@ public struct FormatOptions: ExpressionOption {
     }
 }
 
-public struct NumberFormatOptions: ExpressionOption {
+public struct NumberFormatOptions: Codable, Equatable, ValidExpressionArgument {
 
     /// Specifies the locale to use, as a BCP 47 language tag.
     public var locale: String?
@@ -51,6 +87,10 @@ public struct NumberFormatOptions: ExpressionOption {
 
     /// Maximum number of fractional digits to include.
     public var maxFractionDigits: Int?
+
+    public var expressionElements: [Expression.Element] {
+        return [.argument(.option(.numberFormat(self)))]
+    }
 
     internal enum CodingKeys: String, CodingKey {
         case locale = "locale"
@@ -67,7 +107,7 @@ public struct NumberFormatOptions: ExpressionOption {
     }
 }
 
-public struct CollatorOptions: ExpressionOption {
+public struct CollatorOptions: Codable, Equatable, ValidExpressionArgument {
 
     /// Whether comparison option is case sensitive.
     public var caseSensitive: Bool?
@@ -83,6 +123,10 @@ public struct CollatorOptions: ExpressionOption {
         case locale = "locale"
         case caseSensitive = "case-sensitive"
         case diacriticSensitive = "diacritic-sensitive"
+    }
+
+    public var expressionElements: [Expression.Element] {
+        return [.argument(.option(.collator(self)))]
     }
 
     public init(caseSensitive: Bool?, diacriticSensitive: Bool?, locale: String?) {

@@ -6,23 +6,22 @@ private let defaultOrnamentsMargin = CGPoint(x: 8.0, y: 8.0)
 public struct OrnamentOptions: Equatable {
 
     /// Scale Bar options
-    public var showsScale: Bool = true
     public var scaleBarPosition: OrnamentPosition = .topLeft
     public var scaleBarMargins: CGPoint = defaultOrnamentsMargin
+    public var scaleBarVisibility: OrnamentVisibility = .adaptive
 
     /// Compass options
-    public var showsCompass: Bool = true
     public var compassViewPosition: OrnamentPosition = .topRight
     public var compassViewMargins: CGPoint = defaultOrnamentsMargin
     public var compassVisiblity: OrnamentVisibility = .adaptive
 
     /// Logo view options
-    public private(set) var showsLogoView: Bool = true
+    public var _showsLogoView: Bool = true
     public var logoViewPosition: OrnamentPosition = .bottomLeft
     public var logoViewMargins: CGPoint = defaultOrnamentsMargin
 
     /// Attribution options
-    public private(set) var showsAttributionButton: Bool = true
+    public var _showsAttributionButton: Bool = true
     public var attributionButtonPosition: OrnamentPosition = .bottomRight
     public var attributionButtonMargins: CGPoint = defaultOrnamentsMargin
 
@@ -33,23 +32,23 @@ public struct OrnamentOptions: Equatable {
         var supportedOrnamentMargins: [OrnamentType: OrnamentMargins] = [:]
         var ornamentVisibility: [OrnamentType: OrnamentVisibility] = [:]
 
-        if showsScale {
+        if scaleBarVisibility != .hidden {
             supportedOrnaments[.mapboxScaleBar] = scaleBarPosition
             supportedOrnamentMargins[.mapboxScaleBar] = scaleBarMargins
         }
 
-        if showsCompass {
+        if compassVisiblity != .hidden {
             supportedOrnaments[.compass] = compassViewPosition
             supportedOrnamentMargins[.compass] = compassViewMargins
             ornamentVisibility[.compass] = compassVisiblity
         }
 
-        if showsLogoView {
+        if _showsLogoView {
             supportedOrnaments[.mapboxLogoView] = logoViewPosition
             supportedOrnamentMargins[.mapboxLogoView] = logoViewMargins
         }
 
-        if showsAttributionButton {
+        if _showsAttributionButton {
             supportedOrnaments[.infoButton] = attributionButtonPosition
             supportedOrnamentMargins[.infoButton] = attributionButtonMargins
         }

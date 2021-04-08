@@ -85,7 +85,7 @@ extension CGSize {
 
 extension MapboxCoreMaps.MapOptions {
     /// TODO: docs
-    public convenience init(contextMode: ContextMode? = nil,
+    public convenience init(//contextMode: ContextMode? = nil,
                             constrainMode: ConstrainMode? = nil,
                             viewportMode: ViewportMode? = nil,
                             orientation: NorthOrientation? = nil,
@@ -94,7 +94,7 @@ extension MapboxCoreMaps.MapOptions {
                             pixelRatio: CGFloat,
                             glyphsRasterizationOptions: GlyphsRasterizationOptions) {
 
-        self.init(__contextMode: contextMode?.number,
+        self.init(__contextMode: nil,//contextMode?.number,
                   constrainMode: constrainMode?.number,
                   viewportMode: viewportMode?.number,
                   orientation: orientation?.number,
@@ -107,10 +107,10 @@ extension MapboxCoreMaps.MapOptions {
     /// The map context mode. This can be used for optimizations, if we know
     /// that the drawing context is not shared with other code.
 
-    // TODO: Is this valid for metal??
-    internal var contextMode: ContextMode? {
-        return __contextMode?.intValueAsRawRepresentable()
-    }
+//    // TODO: Is this valid for metal??
+//    internal var contextMode: ContextMode? {
+//        return __contextMode?.intValueAsRawRepresentable()
+//    }
 
     /// The map constrain mode. This can be used to limit the map to wrap around
     /// the globe horizontally. Defaults to `.heightOnly`.

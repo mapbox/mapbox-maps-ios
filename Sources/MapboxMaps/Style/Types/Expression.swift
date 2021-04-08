@@ -9,7 +9,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
 
     // swiftlint:disable identifier_name
     public init(_ op: Expression.Operator,
-                @ExpressionBuilder content: () -> Expression = { Expression(with: [.argument(.null)])}) {
+                @FunctionBuilder content: () -> Expression = { Expression(with: [.argument(.null)])}) {
         var elements = content().elements
 
         if elements.count == 1 && elements[0] == .argument(.null) {
@@ -18,13 +18,6 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
 
         elements.insert(.operator(op), at: 0)
         self.init(with: elements)
-    }
-
-    /// Returns a jsonObject representation of this expression if serialization is successful,  throws otherwise
-    public func jsonObject() throws -> Any {
-        let data = try JSONEncoder().encode(self)
-        let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
-        return jsonObject
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -118,7 +111,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
         case number(Double)
         case string(String)
         case boolean(Bool)
-        case array([Double])
+        case numberArray([Double])
         case option(Option)
         case null
         case expression(Expression)
@@ -179,7 +172,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
                 try container.encode(option)
             case .null:
                 try container.encodeNil()
-            case .array(let array):
+            case .numberArray(let array):
                 try container.encode(array)
             }
         }
@@ -199,7 +192,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
             } else if let validOption = try? container.decode(Option.self) {
                 self = .option(validOption)
             } else if let validArray = try? container.decode([Double].self) {
-                self = .array(validArray)
+                self = .numberArray(validArray)
             } else if let dict = try? container.decode([String: String].self), dict.isEmpty {
                 self = .null
             } else {

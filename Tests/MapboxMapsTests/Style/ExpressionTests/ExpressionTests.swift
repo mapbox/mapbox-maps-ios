@@ -75,29 +75,6 @@ internal class ExpressionTests: XCTestCase {
         expressionValidator(exp: expression)
     }
 
-    internal func testPerformanceOfRoundtripExpressionConversion() throws {
-        // This is an example of a performance test case.
-        measure {
-            let expression = Exp(.interpolate) {
-                Exp(.linear)
-                Exp(.zoom)
-                0
-                UIColor.red
-                14
-                UIColor.blue
-            }
-
-            do {
-                let expressionAsJSON = try expression.jsonObject()
-                let expressionAgain = Expression(from: expressionAsJSON)
-                XCTAssert(expressionAgain != nil)
-                XCTAssert(expression == expressionAgain!)
-            } catch {
-                XCTFail("Failed to convert expression to JSON and back")
-            }
-        }
-    }
-
     internal func testExpressionDecodingOnEmptyJSON() throws {
 
         let jsonString =
@@ -125,7 +102,7 @@ internal class ExpressionTests: XCTestCase {
     // MARK: - Helpers
     internal func verifyExpressionOperator(for expression: Expression, toMatch type: Expression.Operator) {
 
-        guard let op = expression.elements.first, case let .op(validOp) = op else {
+        guard let op = expression.elements.first, case let .operator(validOp) = op else {
             XCTFail("There was no valid operator in the first element of the expression array")
             return
         }
@@ -135,7 +112,7 @@ internal class ExpressionTests: XCTestCase {
 
     internal func verifyExpressionArgument(for expression: Expression, toMatch argument: Expression.Argument, at index: Int) {
 
-        guard let op = expression.elements.first, case .op = op else {
+        guard let op = expression.elements.first, case .operator = op else {
             XCTFail("There was no valid operator in the first element of the expression array")
             return
         }

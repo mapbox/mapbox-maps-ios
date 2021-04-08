@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 
 @_functionBuilder
-public struct ExpressionBuilder {
+public struct FunctionBuilder {
 
     public static func buildBlock(_ arguments: ExpressionArgumentConvertible...) -> Expression {
 

@@ -2,25 +2,17 @@ import Foundation
 
 // MARK: - ResourceOptions
 
-extension ResourceOptions {
-    /// Intializer for `ResourceOptions`
-    /// - Parameters:
-    ///   - accessToken: Your mapbox access API token.
-    ///   - baseUrl: The base URL.
-    ///   - cachePath: The path to the cache.
-    ///   - assetPath: The path to the assets.
-    ///   - tileStorePath: The path to the tile store.
-    ///   - loadTilePacksFromNetwork: Detemines if tiles pack should or should not be avoided from the network.
-    ///   - cacheSize: The size of the cache.
-    public convenience init(accessToken: String,
-                            baseUrl: String? = nil,
-                            cachePath: String? = nil,
-                            assetPath: String? = nil,
-                            tileStorePath: String? = nil,
-                            loadTilePacksFromNetwork: NSNumber? = nil,
-                            cacheSize: UInt64 = (1024*1024*10)) {
+public extension ResourceOptions {
+    convenience init(accessToken: String,
+                     baseUrl: String? = nil,
+                     cachePath: String? = nil,
+                     assetPath: String? = nil,
+                     tileStorePath: String? = nil,
+                     loadTilePacksFromNetwork: NSNumber? = nil,
+                     cacheSize: UInt64 = (1024*1024*10)) {
+        precondition(accessToken.count > 0)
 
-        let cacheURL = ResourceOptions.cacheURLIncludingSubdirectory()
+        let cacheURL = ResourceOptions.cacheURLIncludingSubdirectory(useSubdirectory: true)
         let resolvedCachePath = cachePath == nil ? cacheURL?.path : cachePath
         self.init(__accessToken: accessToken,
                   baseURL: baseUrl,

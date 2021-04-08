@@ -19,11 +19,7 @@ import Foundation
 public class CredentialsManager {
 
     /// Access token
-    public var accessToken: String {
-        didSet {
-            precondition(accessToken.count > 0)
-        }
-    }
+    public var accessToken: String
 
     /// Default instance
     public static let `default` = CredentialsManager()
@@ -40,11 +36,8 @@ public class CredentialsManager {
         if let accessToken = accessToken {
             self.accessToken = accessToken
         }
-        else if let accessToken = Self.defaultAccessToken() {
-            self.accessToken = accessToken
-        }
         else {
-            fatalError("No valid access token found")
+            self.accessToken = Self.defaultAccessToken() ?? ""
         }
     }
 
@@ -92,19 +85,19 @@ extension CGSize {
 
 extension MapboxCoreMaps.MapOptions {
     /// TODO: docs
-    public convenience init(//contextMode: ContextMode? = nil,
-                            //constrainMode: ConstrainMode? = nil,
-                            //viewportMode: ViewportMode? = nil,
-                            //orientation: NorthOrientation? = nil,
+    public convenience init(contextMode: ContextMode? = nil,
+                            constrainMode: ConstrainMode? = nil,
+                            viewportMode: ViewportMode? = nil,
+                            orientation: NorthOrientation? = nil,
                             crossSourceCollisions: Bool = true,
                             size: CGSize?,
                             pixelRatio: CGFloat,
                             glyphsRasterizationOptions: GlyphsRasterizationOptions) {
 
-        self.init(__contextMode: nil, //contextMode?.number,
-                  constrainMode: nil, //constrainMode?.number,
-                  viewportMode: nil, //viewportMode?.number,
-                  orientation: nil, //orientation?.number,
+        self.init(__contextMode: contextMode?.number,
+                  constrainMode: constrainMode?.number,
+                  viewportMode: viewportMode?.number,
+                  orientation: orientation?.number,
                   crossSourceCollisions: crossSourceCollisions.number,
                   size: size?.mbmSize,
                   pixelRatio: Float(pixelRatio),
@@ -172,15 +165,29 @@ public struct MapboxOptions {
     public let mapOptions: MapboxCoreMaps.MapOptions
     public let renderOptions: RenderOptions
 
-    // Maybe?
-    /*
+/*
+    // Option 2
+    public init(resourceOptions: ResourceOptions = ResourceOptions.default,
+                mapOptions: MapboxCoreMaps.MapOptions = MapboxCoreMaps.MapOptions.default,
+                renderOptions: RenderOptions = RenderOptions()) {
+        self.resourceOptions = resourceOptions
+        self.mapOptions = mapOptions
+        self.renderOptions = renderOptions
+    }
+*/
+
+    // Option 3
     public init(credentialsManager: CredentialsManager = CredentialsManager.default,
+                crossSourceCollisions: Bool = true,
+                size: CGSize? = nil,
+                pixelRatio: CGFloat = UIScreen.main.scale,
+                glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions.default,
                 renderOptions: RenderOptions = RenderOptions()) {
 
         let resourceOptions = ResourceOptions(accessToken: credentialsManager.accessToken)
-        let mapOptions = MapboxCoreMaps.MapOptions(size: nil,
-                                                   pixelRatio: UIScreen.main.scale,
-                                                   glyphsRasterizationOptions: GlyphsRasterizationOptions.default)
+        let mapOptions = MapboxCoreMaps.MapOptions(size: size,
+                                                   pixelRatio: pixelRatio,
+                                                   glyphsRasterizationOptions: glyphsRasterizationOptions)
 
         self.init(resourceOptions: resourceOptions,
                   mapOptions: mapOptions,
@@ -194,16 +201,4 @@ public struct MapboxOptions {
         self.mapOptions = mapOptions
         self.renderOptions = renderOptions
     }
- */
-
-    // Or
-    public init(resourceOptions: ResourceOptions = ResourceOptions.default,
-                mapOptions: MapboxCoreMaps.MapOptions = MapboxCoreMaps.MapOptions.default,
-                renderOptions: RenderOptions = RenderOptions()) {
-        self.resourceOptions = resourceOptions
-        self.mapOptions = mapOptions
-        self.renderOptions = renderOptions
-    }
-
-
 }

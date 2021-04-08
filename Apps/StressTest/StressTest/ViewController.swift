@@ -246,7 +246,8 @@ class ViewController: UIViewController {
         }
 
         do {
-            let jsonObject = try exp.jsonObject()
+            let data = try JSONEncoder().encode(exp.self)
+            let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
             color = try mapView.__map.getStyleLayerProperty(forLayerId: land, property: "background-color")
 
             print("Setting background color expression")

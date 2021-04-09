@@ -5,15 +5,12 @@ import Foundation
     func mapInitOptions() -> Any
 }
 
-extension MapInitOptionsDataSource {
-    public func mapInitOptions() -> Any {
-        return MapInitOptions.default
+public struct MapInitOptions: Equatable {
+    //asdf
+    public static var `default`: MapInitOptions {
+        MapInitOptions(resourceOptions: ResourceOptions.default,
+                       mapOptions: MapOptions.default)
     }
-}
-
-public struct MapInitOptions {
-    public static let `default` = MapInitOptions(resourceOptions: ResourceOptions.default,
-                                                 mapOptions: MapOptions.default)
 
     public let resourceOptions: ResourceOptions
     public let mapOptions: MapOptions

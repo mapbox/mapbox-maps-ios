@@ -55,3 +55,31 @@ public class CredentialsManager {
         return nil
     }
 }
+
+extension CredentialsManager: Equatable {
+    public static func == (lhs: CredentialsManager, rhs: CredentialsManager) -> Bool {
+        return lhs.accessToken == rhs.accessToken
+    }
+}
+
+extension CredentialsManager: CustomStringConvertible, CustomDebugStringConvertible {
+
+    private func obfuscatedAccessToken() -> String {
+        let offset = min(4, accessToken.count)
+        let startIndex = accessToken.index(accessToken.startIndex, offsetBy: offset)
+        let result = accessToken.replacingCharacters(in: startIndex...,
+                                                     with: String(repeating: "◻︎", count: accessToken.count - offset))
+        return result
+    }
+
+    /// :nodoc:
+    public var description: String {
+        return "CredentialsManager: \(obfuscatedAccessToken())"
+    }
+
+    /// :nodoc:
+    public var debugDescription: String {
+        let address = Unmanaged.passUnretained(self).toOpaque()
+        return "CredentialsManager @ \(address): \(obfuscatedAccessToken())"
+    }
+}

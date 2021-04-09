@@ -234,7 +234,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
 
     /// Outlet that can be used when initializing a MapView with a Storyboard or
     /// a nib.
-    @IBOutlet public weak var mapInitOptionsDataSource: MapInitOptionsDataSource?
+    @IBOutlet @objc public weak var mapInitOptionsDataSource: MapInitOptionsDataSource?
 
     class internal func parseIBString(ibString: String) -> String? {
         let parsedString = ibString.trimmingCharacters(in: .whitespacesAndNewlines)

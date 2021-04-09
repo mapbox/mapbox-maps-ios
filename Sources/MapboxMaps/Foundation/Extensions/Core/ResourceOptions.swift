@@ -4,7 +4,10 @@ import Foundation
 
 extension ResourceOptions {
 
-    public static let `default` = ResourceOptions(accessToken: CredentialsManager.default.accessToken)
+    //asdf
+    public static var `default`: ResourceOptions {
+        ResourceOptions(accessToken: CredentialsManager.default.accessToken)
+    }
 
     public convenience init(accessToken: String,
                      baseUrl: String? = nil,
@@ -58,5 +61,20 @@ extension ResourceOptions {
         cacheDirectoryURL.setTemporaryResourceValue(true, forKey: .isExcludedFromBackupKey)
 
         return cacheDirectoryURL.appendingPathComponent("cache.db")
+    }
+
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? ResourceOptions else {
+            return false
+        }
+
+        return
+            (accessToken == other.accessToken) &&
+            (baseURL == other.baseURL) &&
+            (cachePath == other.cachePath) &&
+            (assetPath == other.assetPath) &&
+            (tileStorePath == other.tileStorePath) &&
+            (loadTilePacksFromNetwork == other.loadTilePacksFromNetwork) &&
+            (cacheSize == other.cacheSize)
     }
 }

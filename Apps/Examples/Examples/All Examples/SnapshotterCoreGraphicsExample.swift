@@ -12,7 +12,7 @@ public class SnapshotterCoreGraphicsExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         let mapInitOptions = MapInitOptions()
-        
+
         // TODO: Fix crash that occurs when omitting MapViewController.
         let testRect = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
         mapView = MapView(frame: testRect, mapInitOptions: mapInitOptions)

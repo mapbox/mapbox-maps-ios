@@ -88,7 +88,10 @@ class MapInitOptionsTests: XCTestCase {
             return
         }
 
-        let dataSourceReturnValue = self.dataSourceReturnValue as! MapInitOptions
+        guard let dataSourceReturnValue = self.dataSourceReturnValue as? MapInitOptions else {
+            XCTFail("dataSourceReturnValue not a MapInitOptions")
+            return
+        }
 
         // Check that the dataSource in MapView is correctly wired, so that the
         // expected options are returned

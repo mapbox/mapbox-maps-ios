@@ -51,8 +51,7 @@ public class CredentialsManager {
     internal init(internal accessToken: String?) {
         if let accessToken = accessToken {
             self.accessToken = accessToken
-        }
-        else {
+        } else {
             self.accessToken = Self.defaultAccessToken() ?? ""
         }
     }

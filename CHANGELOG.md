@@ -46,7 +46,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 - #### Expressions
     * `ExpressionBuilder` has been renamed to `FunctionBuilder`.
-    * `init(from: jsonObject)` and `public func jsonObject()` have been deprecated.
+    * `init(from: jsonObject)` and `public func jsonObject()` have been removed.
     * `Element.op` has been renamed to `Element.operator`.
     * `Argument.array` has been renamed to `Argument.numberArray`.
     * `ValidExpressionArgument` has been renamed to `ExpressionArgumentConvertible`

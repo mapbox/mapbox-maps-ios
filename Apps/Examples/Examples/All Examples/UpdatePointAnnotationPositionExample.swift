@@ -17,10 +17,10 @@ public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProt
         }
 
         let resourceOptions = ResourceOptions(accessToken: accessToken)
-        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions)
+        mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        mapView.cameraManager.setCamera(centerCoordinate: CLLocationCoordinate2D(latitude: 59.3, longitude: 8.06),
-                                        zoom: 12)
+        mapView.cameraManager.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 59.3, longitude: 8.06),
+                                                          zoom: 12))
         view.addSubview(mapView)
 
         // Allows the view controller to receive information about map events.

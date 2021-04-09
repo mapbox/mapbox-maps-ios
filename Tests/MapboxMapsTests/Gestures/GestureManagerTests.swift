@@ -20,7 +20,7 @@ final class GestureManagerTests: XCTestCase {
 
     override func setUp() {
         let resourceOptions = ResourceOptions(accessToken: "")
-        mapView = BaseMapView(with: CGRect(x: 0, y: 0, width: 100, height: 100),
+        mapView = BaseMapView(frame: CGRect(x: 0, y: 0, width: 100, height: 100),
                               resourceOptions: resourceOptions,
                               glyphsRasterizationOptions: GlyphsRasterizationOptions.default,
                               styleURI: nil)

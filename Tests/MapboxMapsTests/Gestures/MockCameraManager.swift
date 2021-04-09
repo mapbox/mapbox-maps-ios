@@ -32,6 +32,6 @@ final class MockCameraManager: CameraManagerProtocol {
                                       completion: completion))
     }
 
-    func cancelTransitions() {
+    func cancelAnimations() {
     }
 }

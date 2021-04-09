@@ -13,7 +13,7 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
+        mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
@@ -21,8 +21,8 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
         let centerCoordinate = CLLocationCoordinate2D(latitude: 40.58058466412761,
                                                       longitude: -97.734375)
 
-        mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
-                                        zoom: 3)
+        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate,
+                                                          zoom: 3))
 
         // Allows the view controller to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in

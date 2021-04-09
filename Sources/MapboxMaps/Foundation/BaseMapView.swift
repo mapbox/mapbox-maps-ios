@@ -88,9 +88,9 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     /// List of completion blocks that need to be completed by the displayLink
     internal var pendingAnimatorCompletionBlocks: [PendingAnimationCompletion] = []
 
-    public var needsDisplayRefresh: Bool = false
-    public var dormant: Bool = false
-    public var displayCallback: (() -> Void)?
+    internal var needsDisplayRefresh: Bool = false
+    internal var dormant: Bool = false
+    internal var displayCallback: (() -> Void)?
     private var observerConcrete: ObserverConcrete!
     @objc dynamic internal var displayLink: CADisplayLink?
 
@@ -197,7 +197,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     }
 
     // MARK: Init
-    public init(with frame: CGRect, resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions, styleURI: URL?) {
+    public init(frame: CGRect, resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions, styleURI: URL?) {
         super.init(frame: frame)
         self.commonInit(resourceOptions: resourceOptions,
                         glyphsRasterizationOptions: glyphsRasterizationOptions,

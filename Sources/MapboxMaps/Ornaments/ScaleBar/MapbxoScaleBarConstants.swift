@@ -3,18 +3,18 @@ import UIKit
 
 extension MapboxScaleBarOrnamentView {
     struct Constants {
-        public static let primaryColor: UIColor = #colorLiteral(red: 0.07058823529, green: 0.1764705882, blue: 0.06666666667, alpha: 1)
-        public static let secondaryColor: UIColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
-        public static let borderWidth: CGFloat = 1
+        internal static let primaryColor: UIColor = #colorLiteral(red: 0.07058823529, green: 0.1764705882, blue: 0.06666666667, alpha: 1)
+        internal static let secondaryColor: UIColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
+        internal static let borderWidth: CGFloat = 1
 
-        public static let feetPerMile: Double = 5280
-        public static let feetPerMeter: Double = 3.28084
+        internal static let feetPerMile: Double = 5280
+        internal static let feetPerMeter: Double = 3.28084
 
-        public static let barHeight: CGFloat = 4
-        public static let scaleBarLabelWidthHint: CGFloat = 30.0
-        public static let scaleBarMinimumBarWidth: CGFloat = 30.0 // Arbitrary
+        internal static let barHeight: CGFloat = 4
+        internal static let scaleBarLabelWidthHint: CGFloat = 30.0
+        internal static let scaleBarMinimumBarWidth: CGFloat = 30.0 // Arbitrary
 
-        public static let metricTable: [Row] = [
+        internal static let metricTable: [Row] = [
             (distance: 1, numberOfBars: 2),
             (distance: 2, numberOfBars: 2),
             (distance: 4, numberOfBars: 2),
@@ -44,7 +44,7 @@ extension MapboxScaleBarOrnamentView {
             (distance: 800000, numberOfBars: 2)
         ]
 
-        public static let imperialTable: [Row] = [
+        internal static let imperialTable: [Row] = [
             (distance: 4, numberOfBars: 2),
             (distance: 6, numberOfBars: 2),
             (distance: 10, numberOfBars: 2),

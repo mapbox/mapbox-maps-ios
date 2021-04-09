@@ -10,15 +10,15 @@ public class PointAnnotationExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
+        mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
         // Center the map camera over Copenhagen.
         let centerCoordinate = CLLocationCoordinate2D(latitude: 55.665957, longitude: 12.550343)
 
-        mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
-                                        zoom: 8.0)
+        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate,
+                                                          zoom: 8.0))
 
         // Allows the delegate to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in

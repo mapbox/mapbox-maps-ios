@@ -103,7 +103,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
         }
 
         let resourceOptions = ResourceOptions(accessToken: accessToken)
-        let view = MapView(with: window.bounds, resourceOptions: resourceOptions)
+        let view = MapView(frame: window.bounds, resourceOptions: resourceOptions)
 
         let observer = ObservableIntegrationTestsObserver(with: { [weak self] (resourceEvent) in
             guard let self = self else {
@@ -173,7 +173,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
         let expectation = XCTestExpectation(description: "Wait for map to idle")
         expectation.expectedFulfillmentCount = 2
 
-        style.styleURI = .streets
+        style.uri = .streets
 
         mapView.centerCoordinate = CLLocationCoordinate2D(latitude: 42.0, longitude: -71.0)
         mapView.zoom = 8.0

@@ -1,8 +1,8 @@
 import UIKit
 
-public class MapboxScaleBarLabel: UILabel {
+internal class MapboxScaleBarLabel: UILabel {
 
-    override public func drawText(in rect: CGRect) {
+    override internal func drawText(in rect: CGRect) {
         let originalShadowOffset = shadowOffset
         let context = UIGraphicsGetCurrentContext()
 

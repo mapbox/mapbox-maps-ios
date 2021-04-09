@@ -5,7 +5,7 @@ public typealias Exp = Expression
 public struct Expression: Codable, CustomStringConvertible, Equatable {
 
     /// The individual elements of the expression in an array
-    public var elements: [Element]
+    internal var elements: [Element]
 
     // swiftlint:disable identifier_name
     public init(_ op: Expression.Operator,
@@ -16,26 +16,8 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
             elements = []
         }
 
-        elements.insert(.op(op), at: 0)
+        elements.insert(.operator(op), at: 0)
         self.init(with: elements)
-    }
-
-    /// Attempts to create an Expression from a jsonObject.
-    public init?(from jsonObject: Any) {
-        do {
-            let data = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
-            let exp = try JSONDecoder().decode(Expression.self, from: data)
-            self = exp
-        } catch {
-            return nil
-        }
-    }
-
-    /// Returns a jsonObject representation of this expression if serialization is successful,  throws otherwise
-    public func jsonObject() throws -> Any {
-        let data = try JSONEncoder().encode(self)
-        let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
-        return jsonObject
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -69,12 +51,12 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
      */
     public indirect enum Element: Codable, CustomStringConvertible, Equatable {
 
-        case op(Operator)
+        case `operator`(Operator)
         case argument(Argument)
 
         public var description: String {
             switch self {
-            case .op(let op):
+            case .operator(let op):
                 return op.rawValue
             case .argument(let arg):
                 return "\(arg)"
@@ -83,7 +65,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
 
         public static func == (lhs: Expression.Element, rhs: Expression.Element) -> Bool {
             switch (lhs, rhs) {
-            case (.op(let lhsOp), .op(let rhsOp)):
+            case (.operator(let lhsOp), .operator(let rhsOp)):
                 return lhsOp.rawValue == rhsOp.rawValue
             case (.argument(let lhsArg), .argument(let rhsArg)):
                 return lhsArg == rhsArg
@@ -96,7 +78,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
             var container = encoder.singleValueContainer()
 
             switch self {
-            case .op(let op):
+            case .operator(let op):
                 try container.encode(op)
             case .argument(let argument):
                 try container.encode(argument)
@@ -107,7 +89,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
             let container = try decoder.singleValueContainer()
 
             if let validOp = try? container.decode(Operator.self) {
-                self = .op(validOp)
+                self = .operator(validOp)
                 return
             }
 
@@ -129,7 +111,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
         case number(Double)
         case string(String)
         case boolean(Bool)
-        case array([Double])
+        case numberArray([Double])
         case option(Option)
         case null
         case expression(Expression)
@@ -148,7 +130,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
                 return "\(exp)"
             case .option(let option):
                 return "\(option)"
-            case .array(let array):
+            case .numberArray(let array):
                 return "\(array)"
             }
         }
@@ -167,7 +149,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
                 return true
             case (.expression(let lhsExpression), .expression(let rhsExpression)):
                 return lhsExpression == rhsExpression
-            case (.array(let lhsArray), .array(let rhsArray)):
+            case (.numberArray(let lhsArray), .numberArray(let rhsArray)):
                 return lhsArray == rhsArray
             default:
                 return false
@@ -190,7 +172,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
                 try container.encode(option)
             case .null:
                 try container.encodeNil()
-            case .array(let array):
+            case .numberArray(let array):
                 try container.encode(array)
             }
         }
@@ -210,12 +192,12 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
             } else if let validOption = try? container.decode(Option.self) {
                 self = .option(validOption)
             } else if let validArray = try? container.decode([Double].self) {
-                self = .array(validArray)
+                self = .numberArray(validArray)
             } else if let dict = try? container.decode([String: String].self), dict.isEmpty {
                 self = .null
             } else {
                 let context = DecodingError.Context(codingPath: decoder.codingPath,
-                                                debugDescription: "Failed to decode ExpressionArgument")
+                                                    debugDescription: "Failed to decode ExpressionArgument")
                 throw DecodingError.dataCorrupted(context)
             }
         }

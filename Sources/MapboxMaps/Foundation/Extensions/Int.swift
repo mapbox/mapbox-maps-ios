@@ -1,10 +1,10 @@
 import Foundation
 
 // MARK: - Int
-public extension Int {
+extension Int {
 
     /// Wraps an `Int` within a `NSNumber` value.
-    var NSNumber: NSNumber {
+    internal var NSNumber: NSNumber {
         Foundation.NSNumber(value: Int(self))
     }
 }

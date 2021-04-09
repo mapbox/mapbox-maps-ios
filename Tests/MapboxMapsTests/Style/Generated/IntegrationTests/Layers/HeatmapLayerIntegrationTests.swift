@@ -25,7 +25,7 @@ class HeatmapLayerIntegrationTests: MapViewIntegrationTestCase {
         let successfullyRetrievedLayerExpectation = XCTestExpectation(description: "Successfully retrieved HeatmapLayer from Map")
         successfullyRetrievedLayerExpectation.expectedFulfillmentCount = 1
 
-        style.styleURI = .streets
+        style.uri = .streets
 
         didFinishLoadingStyle = { _ in
 

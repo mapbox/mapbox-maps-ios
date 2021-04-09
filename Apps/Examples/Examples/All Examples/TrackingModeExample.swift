@@ -13,7 +13,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions(), styleURI: StyleURI.streets)
+        mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions(), styleURI: StyleURI.streets)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
@@ -25,7 +25,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         }
 
         // Set initial camera settings
-        mapView.cameraManager.setCamera(zoom: 15.0)
+        mapView.cameraManager.setCamera(to: CameraOptions(zoom: 15.0))
 
         // Allows the delegate to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in
@@ -49,6 +49,8 @@ public class CameraLocationConsumer: LocationConsumer {
     }
 
     public func locationUpdate(newLocation: Location) {
-        mapView?.cameraManager.setCamera(centerCoordinate: newLocation.coordinate, zoom: 15, animated: true, duration: 1.3)
+        mapView?.cameraManager.setCamera(to: CameraOptions(center: newLocation.coordinate, zoom: 15),
+                                         animated: true,
+                                         duration: 1.3)
     }
 }

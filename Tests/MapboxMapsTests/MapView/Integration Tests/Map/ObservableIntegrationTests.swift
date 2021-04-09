@@ -48,7 +48,7 @@ class ObservableIntegrationTests: MapViewIntegrationTestCase {
 
         try! mapView.__map.subscribe(for: observer, events: ["resource-request"])
 
-        style.styleURI = .streets
+        style.uri = .streets
 
         let styleLoadExpectation = XCTestExpectation(description: "Style should have been loaded")
 

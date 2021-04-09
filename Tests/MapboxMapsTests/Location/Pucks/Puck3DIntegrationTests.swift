@@ -12,7 +12,7 @@ final class Puck3DIntegrationTests: XCTestCase {
 
     func testPuck3DDeinitializationDoesNotCrash() {
         autoreleasepool {
-            let mapView = MapView(with: .zero, resourceOptions: resourceOptions)
+            let mapView = MapView(frame: .zero, resourceOptions: resourceOptions)
             mapView.update { (options) in
                 options.location.puckType = .puck3D(
                     Puck3DConfiguration(

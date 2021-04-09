@@ -7,6 +7,42 @@ Mapbox welcomes participation and contributions from everyone.
 - `AnnotationManager` no longer conforms to `Observer` and no longer has a `peer` ([#246](https://github.com/mapbox/mapbox-maps-ios/pull/246))
 - `AnnotationSupportableMap` is now internal ([#246](https://github.com/mapbox/mapbox-maps-ios/pull/246))
 
+- #### MapView
+    * Initializer has been changed to `public init(frame: CGRect, resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions.default, styleURI: StyleURI? = .streets)`.
+    * `OrnamentSupportableMapView` is not internal.
+
+- #### Ornaments
+    * `LayoutPosition` has been deprecated in favor of `OrnamentPosition`.
+    * `LayoutVisibility` has been depracted in favor of `OrnamentVisibility`.
+    * `showsLogoView` has been renamed to `_showsLogoView`.
+    * `showsCompass` and `showsScale` have been deprecated. Visibility properties can be used to set how the Compass and Scale Bar should be shown.
+
+- #### Foundation
+    * `cancelTransitions` has been renamed to `cancelAnimations`.
+    * [`setCamera()`](https://github.com/mapbox/mapbox-maps-ios/pull/250/files#diff-8fa667141ac423a208a6e7036ed759e7e52fc6940bd58834c1935c2c6ead9c65L177) with individual parameters has been deprecated in favor of [`setCamera(to targetCamera: CameraOptions...)`](https://github.com/mapbox/mapbox-maps-ios/blob/edbf08e37975c81c7ee1cbc4bb046c48d522d306/Sources/MapboxMaps/Foundation/Camera/CameraManager.swift#L140) which requires `CameraOptions`.
+    * The following camera convenience functions have been removed:
+        * `public func transitionCoordinateBounds(newCoordinateBounds: CoordinateBounds, animated: Bool = false)`
+        * `public func transitionCoordinateBounds(to newCoordinateBounds: CoordinateBounds, edgePadding: UIEdgeInsets, animated: Bool = false, completion: ((UIViewAnimatingPosition) -> Void)? = nil)`
+        * `public func transitionVisibleCoordinates(newCoordinates: [CLLocationCoordinate2D], edgePadding: UIEdgeInsets, animated: Bool = false)`
+        * `public func transitionVisibleCoordinates(to newCoordinates: [CLLocationCoordinate2D], edgePadding: UIEdgeInsets, bearing: CLLocationDirection, duration: TimeInterval, animated: Bool = false, completion: ((UIViewAnimatingPosition) -> Void)? = nil)`
+        * `public func resetPosition()`
+        * `public func resetNorth(_ animated: Bool = false)`
+    * In `CameraAnimator`, `fractionComplete` is now of type `Double` and `delayFactor` now returns a `Double`.
+    * `MapboxLogoView` has been renamed to `LogoView`.
+    * `MapboxLogoSize` has been renamed to `LogoSize`.
+
+- #### Style
+    * Initializer is now marked as internal.
+    * `styleUri` has been renamed to `uri`.
+    * The `url` property from `StyleURL` has been removed.
+
+- #### Expressions
+    * `init(from: jsonObject)` and `public func jsonObject()` have been removed.
+    * `Element.op` has been renamed to `Element.operator`.
+    * `Argument.array` has been renamed to `Argument.numberArray`.
+    * `ValidExpressionArgument` has been renamed to `ExpressionArgumentConvertible`
+
+
 ### Bug fixes 🐞
 
 - Fixes an issue that could cause issues with annotations including causing them to not be selectable ([#246](https://github.com/mapbox/mapbox-maps-ios/pull/246))

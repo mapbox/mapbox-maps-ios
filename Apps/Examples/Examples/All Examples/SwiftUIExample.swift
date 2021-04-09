@@ -75,7 +75,7 @@ internal struct SwiftUIMapView: UIViewRepresentable {
     /// This method should create the `MapView`, and make sure that it is configured to be in sync
     /// with the current settings of `SwiftUIMapView` (in this example, just the `camera` and `styleURI`).
     func makeUIView(context: UIViewRepresentableContext<SwiftUIMapView>) -> MapView {
-        let mapView = MapView(with: .zero, resourceOptions: resourceOptions)
+        let mapView = MapView(frame: .zero, resourceOptions: resourceOptions)
         updateUIView(mapView, context: context)
 
         /// Additionally, this is your opportunity to connect the coordinator to the map view. In this example
@@ -89,13 +89,12 @@ internal struct SwiftUIMapView: UIViewRepresentable {
     /// If your `SwiftUIMapView` is reconfigured externally, SwiftUI will invoke `updateUIView(_:context:)`
     /// to give you an opportunity to re-sync the state of the underlying map view.
     func updateUIView(_ mapView: MapView, context: Context) {
-        mapView.cameraManager.setCamera(centerCoordinate: camera.center,
-                                        zoom: camera.zoom,
+        mapView.cameraManager.setCamera(to: CameraOptions(center: camera.center, zoom: camera.zoom),
                                         animated: false)
         /// Since changing the style causes annotations to be removed from the map
         /// we only call the setter if the value has changed.
-        if mapView.style.styleURI != styleURI {
-            mapView.style.styleURI = styleURI
+        if mapView.style.uri != styleURI {
+            mapView.style.uri = styleURI
         }
 
         /// The coordinator needs to manager annotations because

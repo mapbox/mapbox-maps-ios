@@ -2,7 +2,7 @@ import Foundation
 
 internal typealias EventAttributes = [String: Any]
 
-public enum EventType {
+internal enum EventType {
     case custom(name: String)
     case map(event: Maps)
     case metrics(event: Metrics)
@@ -10,27 +10,23 @@ public enum EventType {
     case offlineStorage(event: OfflineStorage)
     case memoryWarning
 
-    public enum Maps {
+    internal enum Maps {
         case loaded
     }
 
-    public enum Metrics {
+    internal enum Metrics {
         case performance(metrics: [String: Any])
     }
 
-    public enum Snapshot {
+    internal enum Snapshot {
         case initialized
     }
 
-    public enum OfflineStorage {
+    internal enum OfflineStorage {
         case downloadStarted(attributes: [String: Any])
     }
 }
 
-public protocol EventsEmitter {
-    var eventsListener: EventsListener! { get set }
-}
-
-public protocol EventsListener: AnyObject {
+internal protocol EventsListener: AnyObject {
     func push(event: EventType)
 }

@@ -43,7 +43,7 @@ extension Expression {
 
 }
 
-public struct FormatOptions: Codable, Equatable, ValidExpressionArgument {
+public struct FormatOptions: Codable, Equatable, ExpressionArgumentConvertible {
 
     /// Applies a scaling factor on text-size as specified by the root layout property.
     public var fontScale: Double?
@@ -74,7 +74,7 @@ public struct FormatOptions: Codable, Equatable, ValidExpressionArgument {
     }
 }
 
-public struct NumberFormatOptions: Codable, Equatable, ValidExpressionArgument {
+public struct NumberFormatOptions: Codable, Equatable, ExpressionArgumentConvertible {
 
     /// Specifies the locale to use, as a BCP 47 language tag.
     public var locale: String?
@@ -107,7 +107,7 @@ public struct NumberFormatOptions: Codable, Equatable, ValidExpressionArgument {
     }
 }
 
-public struct CollatorOptions: Codable, Equatable, ValidExpressionArgument {
+public struct CollatorOptions: Codable, Equatable, ExpressionArgumentConvertible {
 
     /// Whether comparison option is case sensitive.
     public var caseSensitive: Bool?

@@ -15,7 +15,7 @@ public class TerrainExample: UIViewController, ExampleProtocol {
 
         let resourceOptions = ResourceOptions(accessToken: accessToken)
 
-        mapView = MapView(with: view.bounds,
+        mapView = MapView(frame: view.bounds,
                           resourceOptions: resourceOptions,
                           styleURI: .custom(url: URL(string: "mapbox://styles/mapbox-map-design/ckhqrf2tz0dt119ny6azh975y")!))
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -23,10 +23,10 @@ public class TerrainExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         let centerCoordinate = CLLocationCoordinate2D(latitude: 32.6141, longitude: -114.34411)
-        mapView.cameraManager.setCamera(centerCoordinate: centerCoordinate,
-                                        zoom: 13.1,
-                                        bearing: 80,
-                                        pitch: 85)
+        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate,
+                                                          zoom: 13.1,
+                                                          bearing: 80,
+                                                          pitch: 85))
 
         mapView.on(.styleLoaded) { [weak self] _ in
             self?.addTerrain()

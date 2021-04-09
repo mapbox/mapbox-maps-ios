@@ -50,7 +50,7 @@ public enum OrnamentType: Hashable {
     internal func makeOrnament(for view: OrnamentSupportableView, visibility: OrnamentVisibility = .visible) -> UIView {
         switch self {
         case .mapboxLogoView:
-            return MapboxLogoView(logoSize: .regular)
+            return LogoView(logoSize: .regular)
         case .mapboxScaleBar:
             let scalebarView = MapboxScaleBarOrnamentView()
 
@@ -246,7 +246,7 @@ internal class OrnamentsManager: NSObject {
          also make the watermark seem disproportionally large on an iPad.
          Consider using size classes to figure out height/width instead.
          */
-        if ornamentView is MapboxLogoView {
+        if ornamentView is LogoView {
             constraints.append(contentsOf: [
                 ornamentView.widthAnchor.constraint(equalTo: universalLayoutGuide.widthAnchor, multiplier: 0.25),
                 ornamentView.heightAnchor.constraint(equalTo: ornamentView.widthAnchor, multiplier: 0.25)

@@ -50,7 +50,7 @@ extension BaseMapView: AnnotationSupportableMap {
 
         if let exp = filter {
             do {
-                jsonExpression = try exp.jsonObject()
+                jsonExpression = try jsonObject(exp: exp)
             } catch {
                 completion(.failure(.invalidFilter(error)))
                 return
@@ -101,7 +101,7 @@ extension BaseMapView: AnnotationSupportableMap {
 
         if let exp = filter {
             do {
-                jsonExpression = try exp.jsonObject()
+                jsonExpression = try jsonObject(exp: exp)
             } catch {
                 completion(.failure(.invalidFilter(error)))
                 return
@@ -130,5 +130,11 @@ extension BaseMapView: AnnotationSupportableMap {
                 return
             }
         })
+    }
+
+    private func jsonObject(exp: Expression) throws -> Any {
+        let data = try JSONEncoder().encode(exp.self)
+        let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
+        return jsonObject
     }
 }

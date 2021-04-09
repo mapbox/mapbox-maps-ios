@@ -5,7 +5,7 @@ import CoreLocation
 import MapboxMapsFoundation
 #endif
 
-public enum GestureType: Hashable {
+internal enum GestureType: Hashable {
     /// The pan gesture type
     case pan
 
@@ -100,7 +100,7 @@ internal class GestureHandler {
     }
 }
 
-public protocol GestureManagerDelegate: AnyObject {
+internal protocol GestureManagerDelegate: AnyObject {
 
     /// Informs the delegate that a gesture haas begun. Could be used to cancel camera tracking.
     func gestureBegan(for gestureType: GestureType)
@@ -117,7 +117,7 @@ internal protocol CameraManagerProtocol: AnyObject {
                    duration: TimeInterval,
                    completion: ((UIViewAnimatingPosition) -> Void)?)
 
-    func cancelTransitions()
+    func cancelAnimations()
 }
 
 extension CameraManager: CameraManagerProtocol { }
@@ -136,7 +136,7 @@ public final class GestureManager: NSObject {
     /// The camera manager that responds to gestures.
     internal let cameraManager: CameraManagerProtocol
 
-    public weak var delegate: GestureManagerDelegate?
+    internal weak var delegate: GestureManagerDelegate?
 
     internal init(for view: UIView, options: GestureOptions, cameraManager: CameraManagerProtocol) {
         self.cameraManager = cameraManager

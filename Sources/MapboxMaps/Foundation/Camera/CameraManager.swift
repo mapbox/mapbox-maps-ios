@@ -1,4 +1,3 @@
-// swiftlint:disable file_length type_body_length
 import UIKit
 import Turf
 
@@ -20,7 +19,12 @@ public class CameraManager {
     }
 
     /// Pointer HashTable for holding camera animators
-    public internal(set) var cameraAnimators = NSHashTable<CameraAnimator>.weakObjects()
+    internal var cameraAnimators = NSHashTable<CameraAnimator>.weakObjects()
+
+    /// List of animators currently alive
+    public var cameraAnimatorsList: [CameraAnimator] {
+        return cameraAnimators.allObjects
+    }
 
     /// Internal camera animator used for animated transition
     internal var internalCameraAnimator: CameraAnimator?
@@ -28,7 +32,7 @@ public class CameraManager {
     /// May want to convert to an enum.
     fileprivate let northBearing: CGFloat = 0
 
-    public weak var mapView: BaseMapView?
+    internal weak var mapView: BaseMapView?
 
     public init(for mapView: BaseMapView, with mapCameraOptions: MapCameraOptions) {
         self.mapView = mapView
@@ -133,7 +137,10 @@ public class CameraManager {
     ///   - animated: Set to `true` if transition should be animated. `false` by default.
     ///   - duration: Controls the duration of the animation transition. Must be greater than zero if `animated` is true.
     ///   - completion: The completion block to be called after an animated transition. Only called if `animated` is true.
-    public func setCamera(to targetCamera: CameraOptions, animated: Bool = false, duration: TimeInterval = 0, completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
+    public func setCamera(to targetCamera: CameraOptions,
+                          animated: Bool = false,
+                          duration: TimeInterval = 0,
+                          completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
         guard let mapView = mapView else {
             assertionFailure("MapView is nil.")
             return
@@ -162,39 +169,7 @@ public class CameraManager {
         }
     }
 
-    /// Transition the camera view to a new map camera based on individual camera properties,
-    /// optionally animating the change and executing a completion block after the transition occurs.
-    /// - Parameters:
-    ///   - centerCoordinate: The new center coordinate the viewport will transition to.
-    ///   - padding: The new edge insets the viewport will use to to apply padding.
-    ///   - anchor: The new anchor point the viewport will use.
-    ///   - zoom: The new zoom level the viewport will transition to.
-    ///   - bearing: The bearing the viewport will rotate to.
-    ///   - pitch: The new pitch the viewport will transition to.
-    ///   - animated: A boolean indicating if the change should be animated. By default, this value is `false`
-    ///   - duration: The `TimeInterval` for the animation to be completed
-    ///   - completion: The completion block to execute after the transition has occurred.
-    public func setCamera(centerCoordinate: CLLocationCoordinate2D? = nil,
-                          padding: UIEdgeInsets? = nil,
-                          anchor: CGPoint? = nil,
-                          zoom: CGFloat? = nil,
-                          bearing: CLLocationDirection? = nil,
-                          pitch: CGFloat? = nil,
-                          animated: Bool = false,
-                          duration: TimeInterval = 0,
-                          completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
-        let newCamera = CameraOptions(center: centerCoordinate,
-                                      padding: padding,
-                                      anchor: anchor,
-                                      zoom: zoom,
-                                      bearing: bearing,
-                                      pitch: pitch)
-
-        setCamera(to: newCamera, animated: animated, duration: duration, completion: completion)
-    }
-    // swiftlint:enable function_parameter_count
-
-    public func cancelTransitions() {
+    public func cancelAnimations() {
         for animator in cameraAnimators.allObjects where animator.state == .active {
             animator.stopAnimation()
         }
@@ -224,128 +199,6 @@ public class CameraManager {
 
         // Start animation
         internalCameraAnimator?.startAnimation()
-    }
-
-    /// Reset the map's camera to the default style camera.
-    public func resetPosition() {
-        guard let mapView = mapView else {
-            assertionFailure("MapView is nil.")
-            return
-        }
-
-        let defaultOptions = try! mapView.__map.getStyleDefaultCamera()
-        setCamera(to: defaultOptions, completion: nil)
-    }
-
-    /// Resets the map rotation to a north bearing of `0` degrees.
-    /// - Parameter animated: A boolean indicating if the change should be animated. By default, this value is `false`.
-    public func resetNorth(_ animated: Bool = false) {
-        setCamera(bearing: CLLocationDirection(northBearing),
-                  animated: animated)
-    }
-
-    // MARK: Fitting the camera specified regions
-
-    /// Transitions the viewport to fit a given set of new coordinate bounds,
-    /// optionally animating the change.
-    ///
-    /// This method also accounts for any `UIEdgeInsets` that may have been set
-    /// through the the `CameraView`'s `padding` property.
-    /// - Parameters:
-    ///   - newCoordinateBounds: The coordinate bounds that will be displayed within the viewport.
-    ///   - animated: A boolean indicating if the change should be animated. Defaults to `false`.
-    public func transitionCoordinateBounds(newCoordinateBounds: CoordinateBounds,
-                                           animated: Bool = false) {
-        transitionCoordinateBounds(to: newCoordinateBounds,
-                                   edgePadding: UIEdgeInsets.zero,
-                                   animated: animated,
-                                   completion: nil)
-    }
-
-    /// Transitions the viewport to fit a given set of new coordinate bounds,
-    /// specifying a custom edge padding, an optional animation change, and an optional
-    /// completion block to execute after the transition occurs.
-    ///
-    /// - Parameters:
-    ///   - newCoordinateBounds: The new coordinate bounds that will be displayed within the viewport.
-    ///   - edgePadding: The padding the viewport will adjust itself by after transitioning to the new viewport.
-    ///   - animated: A boolean indicating if the change should be animated. Defaults to `false`.
-    ///   - completion: An optional function to execute after the transition has occurred.
-    public func transitionCoordinateBounds(to newCoordinateBounds: CoordinateBounds,
-                                           edgePadding: UIEdgeInsets,
-                                           animated: Bool = false,
-                                           completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
-        let southeast = CLLocationCoordinate2D(latitude: newCoordinateBounds.northeast.latitude,
-                                               longitude: newCoordinateBounds.southwest.longitude)
-        let southwest = newCoordinateBounds.southwest
-        let northwest = CLLocationCoordinate2D(latitude: newCoordinateBounds.southwest.latitude,
-                                               longitude: newCoordinateBounds.northeast.longitude)
-        let northeast = newCoordinateBounds.northeast
-
-        transitionVisibleCoordinates(to: [southeast, southwest, northwest, northeast],
-                                     edgePadding: edgePadding,
-                                     bearing: 0,
-                                     duration: 0,
-                                     animated: animated,
-                                     completion: completion)
-    }
-
-    /// Transitions the viewport to fit a given array of new coordinates, specifying
-    /// a custom edge padding an optional animation change.
-    ///
-    /// - Parameters:
-    ///   - newCoordinates: The coordinate bounds that will be displayed within the viewport.
-    ///   - edgePadding: The padding the viewport will adjust itself by after transitioning to the new viewport.
-    ///   - animated: A boolean indicating if the change should be animated. Defaults to `false`.
-
-    public func transitionVisibleCoordinates(newCoordinates: [CLLocationCoordinate2D],
-                                             edgePadding: UIEdgeInsets,
-                                             animated: Bool = false) {
-        transitionVisibleCoordinates(to: newCoordinates,
-                                     edgePadding: edgePadding,
-                                     bearing: 0,
-                                     duration: 0,
-                                     animated: animated,
-                                     completion: nil)
-    }
-
-    /// Transitions the viewport to fit a given array of new coordinates, specifying
-    /// a custom edge padding, an optional animation change, and an optional
-    /// completion block to execute after the transition occurs.
-    ///
-    /// - Parameters:
-    ///   - newCoordinates: The array of coordinates that will be displayed within the viewport.
-    ///   - edgePadding: The padding the viewport will adjust itself by after transitioning to the new viewport.
-    ///   - bearing: The bearing the viewport will adjust itself after transitioning to the new viewport
-    ///   - animated: A boolean indicating if the change should be animated. Defaults to `false`.
-    ///   - completion: An optional closure to execute after the transition has occurred.
-
-    public func transitionVisibleCoordinates(to newCoordinates: [CLLocationCoordinate2D],
-                                             edgePadding: UIEdgeInsets,
-                                             bearing: CLLocationDirection,
-                                             duration: TimeInterval,
-                                             animated: Bool = false,
-                                             completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
-        guard let mapView = mapView else {
-            assertionFailure("MapView is nil.")
-            return
-        }
-
-        // Don't set visible coordinate bounds if the coordinates are
-        // outside of the range of bounds specified in the MapCameraOptions.
-        if mapCameraOptions.restrictedCoordinateBounds?.contains(newCoordinates) == false { return }
-
-        let padding = edgePadding.toMBXEdgeInsetsValue()
-        let bearing = bearing >= 0 ? CLLocationDirection(CGFloat(bearing)) : mapView.bearing
-        let coordinates = newCoordinates.map { CLLocation(latitude: $0.latitude, longitude: $0.longitude)}
-        let pitch = mapView.pitch
-
-        let cameraOptions = try! mapView.__map.cameraForCoordinates(forCoordinates: coordinates,
-                                                                    padding: padding,
-                                                                    bearing: NSNumber(value: Float(bearing)),
-                                                                    pitch: NSNumber(value: Float(pitch)))
-
-        setCamera(to: cameraOptions, animated: animated, duration: duration, completion: completion)
     }
 
     /// Moves the viewpoint to a different location using a transition animation that

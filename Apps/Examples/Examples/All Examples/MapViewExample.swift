@@ -7,7 +7,7 @@ public class MapViewExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        let mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
+        let mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
         NSLayoutConstraint.activate([
@@ -17,7 +17,7 @@ public class MapViewExample: UIViewController, ExampleProtocol {
             mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
 
-        mapView.style.styleURI = StyleURI.custom(url: URL(string: "mapbox://styles/examples/cke97f49z5rlg19l310b7uu7j")!)
+        mapView.style.uri = StyleURI.custom(url: URL(string: "mapbox://styles/examples/cke97f49z5rlg19l310b7uu7j")!)
 
         mapView.on(.styleLoaded) { [weak self] _ in
             // The below line is used for internal testing purposes only.

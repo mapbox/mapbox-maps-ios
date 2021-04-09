@@ -15,8 +15,6 @@ internal class OptionsIntegrationTest: MapViewIntegrationTestCase {
         newOptions.location.activityType = .automotiveNavigation
         newOptions.camera.animationDuration = 0.1
         newOptions.gestures.scrollEnabled = false
-        newOptions.ornaments.showsScale = false
-        newOptions.ornaments.showsCompass = false
 
         mapView.update { (options) in
             options = newOptions
@@ -25,7 +23,7 @@ internal class OptionsIntegrationTest: MapViewIntegrationTestCase {
         XCTAssertEqual(mapView.gestureManager.gestureOptions, newOptions.gestures)
         XCTAssertEqual(mapView.cameraManager.mapCameraOptions, newOptions.camera)
         XCTAssertEqual(mapView.locationManager.locationOptions, newOptions.location)
-        XCTAssertFalse(
+        XCTAssertTrue(
             mapView.ornamentsManager.ornamentConfig.ornaments.contains {
                 $0.type == .compass || $0.type == .mapboxScaleBar
             }

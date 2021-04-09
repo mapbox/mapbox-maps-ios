@@ -3,11 +3,11 @@ import CoreLocation
 
 extension MapView: OrnamentSupportableView {
     // User has tapped on an ornament
-    public func tapped() {
+    internal func tapped() {
 
     }
 
-    public func compassTapped() {
+    internal func compassTapped() {
         // Don't have access to CameraManager, so calling UIView.animate directly.
         UIView.animate(withDuration: 0.3,
                        delay: 0.0,
@@ -17,7 +17,7 @@ extension MapView: OrnamentSupportableView {
         }, completion: nil)
     }
 
-    public func subscribeCameraChangeHandler(_ handler: @escaping (CameraOptions) -> Void) {
+    internal func subscribeCameraChangeHandler(_ handler: @escaping (CameraOptions) -> Void) {
         on(.cameraChanged) { [weak self] _ in
             guard let validSelf = self else { return }
             handler(try! validSelf.__map.getCameraOptions(forPadding: nil))

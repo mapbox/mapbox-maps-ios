@@ -15,7 +15,7 @@ class CameraManagerTests: XCTestCase {
 
     override func setUp() {
         resourceOptions = ResourceOptions(accessToken: "pk.feedcafedeadbeefbadebede")
-        mapView = BaseMapView(with: CGRect(x: 0, y: 0, width: 100, height: 100),
+        mapView = BaseMapView(frame: CGRect(x: 0, y: 0, width: 100, height: 100),
                               resourceOptions: resourceOptions,
                               glyphsRasterizationOptions: GlyphsRasterizationOptions.default,
                               styleURI: nil)
@@ -28,7 +28,7 @@ class CameraManagerTests: XCTestCase {
         mapView.zoom = 5.0
         XCTAssertEqual(mapView.cameraView.localZoom, 5.0, "Camera's zoom value is not initialized.")
 
-        cameraManager.setCamera(zoom: 10.0)
+        cameraManager.setCamera(to: CameraOptions(zoom: 10.0))
 
         XCTAssertEqual(mapView.cameraView.localZoom, 10.0, "Camera manager did not set camera view zoom value.")
     }
@@ -58,73 +58,6 @@ class CameraManagerTests: XCTestCase {
         XCTAssertEqual(camera.bearing, 0)
         XCTAssertEqual(camera.padding, UIEdgeInsets.zero)
         XCTAssertEqual(camera.pitch, 0)
-    }
-
-    // The default bounds returned by getBounds() matches the coordinate bounds for one world. Disabling 
-//    func testDefaultCameraBoundsRestrictionIsNil() {
-//        let cameraManager = CameraManager(for: mapView, with: MapCameraOptions())
-//
-//        let restrictedBounds = cameraManager.mapCameraOptions.restrictedCoordinateBounds
-//        XCTAssertNil(restrictedBounds, "Default camera options don't have set bounds restriction.")
-//    }
-
-    func testCameraOptionRestrictedBoundsRejectsBounds() {
-        let restrictedBounds = CoordinateBounds(southwest: CLLocationCoordinate2D(latitude: 0, longitude: 0),
-                                                northeast: CLLocationCoordinate2D(latitude: 10, longitude: 10))
-
-        let outOfBounds = CoordinateBounds(southwest: CLLocationCoordinate2D(latitude: -10, longitude: -10),
-                                           northeast: CLLocationCoordinate2D(latitude: -5, longitude: -5))
-
-        var cameraOptions = MapCameraOptions()
-        cameraOptions.restrictedCoordinateBounds = restrictedBounds
-        let cameraManager = CameraManager(for: mapView, with: cameraOptions)
-        let previousCenter = mapView.centerCoordinate
-        cameraManager.transitionCoordinateBounds(newCoordinateBounds: outOfBounds)
-        let currentCenter = mapView.centerCoordinate
-
-        // The bounds to set the camera view to falls outside the restricted bounds,
-        // so the center won't change since the call to `transitionVisibleCoordinateBounds(to:)` won't complete.
-        XCTAssertEqual(previousCenter.latitude, currentCenter.latitude, "Camera view center latitude did not change.")
-        XCTAssertEqual(previousCenter.longitude,
-                       currentCenter.longitude,
-                       "Camera view center longitude did not change.")
-    }
-
-    func testCameraForCoordinateBounds() {
-        let cameraManager = CameraManager(for: mapView, with: MapCameraOptions())
-        let southwest = CLLocationCoordinate2D(latitude: -10, longitude: -10)
-        let northeast = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-        let coordinateBounds = CoordinateBounds(southwest: southwest, northeast: northeast)
-
-        let camera = cameraManager.camera(for: coordinateBounds)
-        _ = cameraManager.fly(to: camera, completion: nil)
-
-        XCTAssertNotNil(mapView.cameraView.camera)
-
-        // Failing. See https://github.com/mapbox/mapbox-maps-internal/issues/396
-//        XCTAssertEqual(mapView.cameraView.centerCoordinate.latitude, camera.centerCoordinate.latitude)
-//        XCTAssertEqual(mapView.cameraView.centerCoordinate.longitude, camera.centerCoordinate.longitude)
-    }
-
-    func testCameraOptionRestrictedBoundsAcceptsBounds() {
-        let restrictedBounds = CoordinateBounds(southwest: CLLocationCoordinate2D(latitude: 0, longitude: 0),
-                                                northeast: CLLocationCoordinate2D(latitude: 10, longitude: 10))
-
-        let allowedBounds = CoordinateBounds(southwest: CLLocationCoordinate2D(latitude: 2, longitude: 2),
-                                             northeast: CLLocationCoordinate2D(latitude: 4, longitude: 4))
-
-        var cameraOptions = MapCameraOptions()
-        cameraOptions.restrictedCoordinateBounds = restrictedBounds
-        let cameraManager = CameraManager(for: mapView, with: cameraOptions)
-        let previousCenter = mapView.centerCoordinate
-        cameraManager.transitionCoordinateBounds(newCoordinateBounds: allowedBounds)
-        let currentCenter = mapView.cameraView.localCenterCoordinate
-
-        // The bounds to set the camera view to falls within the restricted bounds,
-        // so the center will change.
-        XCTAssertNotEqual(previousCenter.latitude, currentCenter.latitude, "Camera view center latitude was changed.")
-        XCTAssertNotEqual(previousCenter.longitude, currentCenter.longitude,
-                          "Camera view center longitude was changed.")
     }
 
     func testSetCamera() {
@@ -194,7 +127,7 @@ class CameraManagerTests: XCTestCase {
     func testSetCameraByComponentEnforcesMinZoom() {
         cameraManager.mapCameraOptions.minimumZoomLevel = CGFloat.random(in: 0..<cameraManager.mapCameraOptions.maximumZoomLevel)
 
-        cameraManager.setCamera(zoom: -1)
+        cameraManager.setCamera(to: CameraOptions(zoom: -1))
 
         XCTAssertEqual(mapView.cameraView.localZoom, cameraManager.mapCameraOptions.minimumZoomLevel, accuracy: 0.000001)
     }
@@ -202,7 +135,7 @@ class CameraManagerTests: XCTestCase {
     func testSetCameraByComponentEnforcesMaxZoom() {
         cameraManager.mapCameraOptions.maximumZoomLevel = CGFloat.random(in: cameraManager.mapCameraOptions.minimumZoomLevel...25.5)
 
-        cameraManager.setCamera(zoom: 26)
+        cameraManager.setCamera(to: CameraOptions(zoom: 26))
 
         XCTAssertEqual(mapView.cameraView.localZoom, cameraManager.mapCameraOptions.maximumZoomLevel, accuracy: 0.000001)
     }
@@ -210,7 +143,7 @@ class CameraManagerTests: XCTestCase {
     func testSetCameraByComponentEnforcesMinPitch() {
         cameraManager.mapCameraOptions.minimumPitch = CGFloat.random(in: 0..<cameraManager.mapCameraOptions.maximumPitch)
 
-        cameraManager.setCamera(pitch: -1)
+        cameraManager.setCamera(to: CameraOptions(pitch: -1))
 
         XCTAssertEqual(mapView.cameraView.localPitch, cameraManager.mapCameraOptions.minimumPitch, accuracy: 0.000001)
     }
@@ -218,7 +151,7 @@ class CameraManagerTests: XCTestCase {
     func testSetCameraByComponentEnforcesMaxPitch() {
         cameraManager.mapCameraOptions.maximumPitch = CGFloat.random(in: cameraManager.mapCameraOptions.minimumPitch...60)
 
-        cameraManager.setCamera(pitch: 61)
+        cameraManager.setCamera(to: CameraOptions(pitch: 61))
 
         XCTAssertEqual(mapView.cameraView.localPitch, cameraManager.mapCameraOptions.maximumPitch, accuracy: 0.000001)
     }

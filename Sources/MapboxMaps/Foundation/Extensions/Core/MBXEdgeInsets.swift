@@ -1,6 +1,6 @@
 import Foundation
 
-public extension EdgeInsets {
+internal extension EdgeInsets {
     func toUIEdgeInsetsValue() -> UIEdgeInsets {
         return UIEdgeInsets(top: CGFloat(self.top),
                             left: CGFloat(self.left),
@@ -9,7 +9,7 @@ public extension EdgeInsets {
     }
 }
 
-public extension UIEdgeInsets {
+internal extension UIEdgeInsets {
     func toMBXEdgeInsetsValue() -> EdgeInsets {
         return EdgeInsets(top: Double(self.top),
                           left: Double(self.left),

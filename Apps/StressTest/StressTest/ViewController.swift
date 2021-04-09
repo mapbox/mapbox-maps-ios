@@ -80,7 +80,7 @@ class ViewController: UIViewController {
 
         // Do any additional setup after loading the view.
         resourceOptions = ResourceOptions(accessToken: AccountManager.shared.accessToken!)
-        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions, styleURI: .streets)
+        mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions, styleURI: .streets)
         view.addSubview(mapView)
         NSLayoutConstraint.activate([
             mapView.leftAnchor.constraint(equalTo: view.leftAnchor),
@@ -101,7 +101,7 @@ class ViewController: UIViewController {
             self.flyToNextCoordinate()
         }
 
-        mapView.style.styleURI = styles[styleStep].0
+        mapView.style.uri = styles[styleStep].0
     }
 
     func flyToNextCoordinate() {
@@ -119,7 +119,7 @@ class ViewController: UIViewController {
             removeAnnotations()
 
             // Change the style
-            mapView.style.styleURI = styles[styleStep].0
+            mapView.style.uri = styles[styleStep].0
             print("Changing style to \(styles[styleStep].0)")
 
             return
@@ -246,7 +246,8 @@ class ViewController: UIViewController {
         }
 
         do {
-            let jsonObject = try exp.jsonObject()
+            let data = try JSONEncoder().encode(exp.self)
+            let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
             color = try mapView.__map.getStyleLayerProperty(forLayerId: land, property: "background-color")
 
             print("Setting background color expression")
@@ -288,7 +289,7 @@ class ViewController: UIViewController {
 
         print("Creating snapshotter")
         let snapshotter = Snapshotter(options: options)
-        snapshotter.style.styleURI = .light
+        snapshotter.style.uri = .light
         snapshotter.camera = mapView.camera
 
         snapshotter.on(.styleLoaded) { [weak self] _ in

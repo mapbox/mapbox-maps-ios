@@ -18,7 +18,7 @@ public class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         print("This example uses a deprecated API, and will be removed in a future release.")
-        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions(), styleURI: .light)
+        mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions(), styleURI: .light)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
@@ -42,7 +42,7 @@ public class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
     }
 
     internal func setupExample() {
-        let offlineRegionDef = OfflineRegionGeometryDefinition(styleURL: mapView.style.styleURI.url.absoluteString,
+        let offlineRegionDef = OfflineRegionGeometryDefinition(styleURL: mapView.style.uri.rawValue.absoluteURL.absoluteString,
                                                                geometry: MBXGeometry(coordinate: coord),
                                                                minZoom: zoom - 2,
                                                                maxZoom: zoom + 2,

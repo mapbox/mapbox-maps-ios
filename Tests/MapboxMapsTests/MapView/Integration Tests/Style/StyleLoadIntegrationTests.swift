@@ -53,7 +53,7 @@ class StyleLoadIntegrationTests: MapViewIntegrationTestCase {
             expectation.fulfill()
         }
 
-        style.styleURI = styleURI
+        style.uri = styleURI
         wait(for: [expectation], timeout: 5)
     }
 }

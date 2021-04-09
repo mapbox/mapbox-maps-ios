@@ -17,14 +17,14 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                                                   longitude: -122.341647)
 
     internal func testQueryAtPoint() {
-        style?.styleURI = .streets
+        style?.uri = .streets
 
         let featureQueryExpectation = XCTestExpectation(description: "Wait for features to be queried.")
 
         didFinishLoadingStyle = { mapView in
             let cameraManager = CameraManager(for: mapView, with: MapCameraOptions())
-            cameraManager.setCamera(centerCoordinate: self.centerCoordinate,
-                                    zoom: 15.0)
+            cameraManager.setCamera(to: CameraOptions(center: self.centerCoordinate,
+                                    zoom: 15.0))
         }
 
         didBecomeIdle = { mapView in
@@ -51,14 +51,14 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
     }
 
     internal func testQueryInRectWithFilter() {
-        style?.styleURI = .streets
+        style?.uri = .streets
 
         let featureQueryExpectation = XCTestExpectation(description: "Wait for features to be queried.")
 
         didFinishLoadingStyle = { mapView in
             let cameraManager = CameraManager(for: mapView, with: MapCameraOptions())
-            cameraManager.setCamera(centerCoordinate: self.centerCoordinate,
-                                    zoom: 15.0)
+            cameraManager.setCamera(to: CameraOptions(center: self.centerCoordinate,
+                                    zoom: 15.0))
         }
 
         didBecomeIdle = { mapView in

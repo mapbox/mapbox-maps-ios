@@ -4,12 +4,12 @@ import UIKit
 public struct ColorRepresentable: Codable, Equatable {
 
     /// Expression representation of a `UIColor` used by the renderer
-    public let colorRepresentation: Expression?
+    internal let colorRepresentation: Expression?
 
     /// `UIColor` instance represented by this `ColorRepresentable`
-    public var uiColor: UIColor? {
+    internal var uiColor: UIColor? {
 
-        if case let .op(rgbaOp) = colorRepresentation?.elements[0],
+        if case let .operator(rgbaOp) = colorRepresentation?.elements[0],
            rgbaOp == .rgba, // operator must be `rgba`
            case let .argument(.number(red)) = colorRepresentation?.elements[1],    // red
            case let .argument(.number(green)) = colorRepresentation?.elements[2],  // green
@@ -75,7 +75,7 @@ public struct ColorRepresentable: Codable, Equatable {
     }
 }
 
-extension UIColor: ValidExpressionArgument {
+extension UIColor: ExpressionArgumentConvertible {
 
     public var expressionElements: [Expression.Element] {
         var red: CGFloat = 0.0

@@ -10,10 +10,10 @@ public class BasicMapExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(with: view.bounds, resourceOptions: resourceOptions())
+        mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions())
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.update { (mapOptions) in
-            mapOptions.ornaments.showsScale = true
+            mapOptions.ornaments.scaleBarVisibility = .visible
         }
 
         view.addSubview(mapView)

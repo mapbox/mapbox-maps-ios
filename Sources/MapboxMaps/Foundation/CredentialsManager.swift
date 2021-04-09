@@ -22,17 +22,33 @@ public class CredentialsManager {
     public var accessToken: String
 
     /// Default instance
-    public static let `default` = CredentialsManager()
+    ///
+    /// This shared instance is used by the default initializers
+    /// for `ResourceOptions` and `MapInitOptions`.
+    ///
+    /// The application's Info.plist will be searched for a valid access token
+    /// under the key `MBXAccessToken`
+    ///
+    /// A valid access token must be provided or found.
+    public static var `default` = CredentialsManager(internal: nil)
 
     /// Initializes a CredentialsManager with an access token.
+    ///
+    /// Use the shared `CredentialsManager.default` to set a globally shared
+    /// access token.
+    ///
+    /// - Parameter accessToken: access token
+    public convenience init(accessToken: String) {
+        self.init(internal: accessToken)
+    }
+
+    /// Initializes a CredentialsManager with an optional access token.
     ///
     /// If the supplied token is nil (which is the case for the `default`) then
     /// we will search for an access token in the application's Info.plist.
     ///
-    /// A valid access token must be provided or found.
-    ///
     /// - Parameter accessToken: access token or nil
-    public init(accessToken: String? = nil) {
+    internal init(internal accessToken: String?) {
         if let accessToken = accessToken {
             self.accessToken = accessToken
         }

@@ -21,7 +21,7 @@ extension MapboxCoreMaps.MapOptions {
                             crossSourceCollisions: Bool = true,
                             size: CGSize? = nil,
                             pixelRatio: CGFloat = UIScreen.main.scale,
-                            glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions()) {
+                            glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions(fontFamilies: [])) {
 
         self.init(__contextMode: nil,
                   constrainMode: constrainMode.NSNumber,

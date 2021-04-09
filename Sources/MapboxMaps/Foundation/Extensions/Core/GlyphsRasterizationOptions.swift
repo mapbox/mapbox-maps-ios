@@ -16,9 +16,20 @@ extension GlyphsRasterizationOptions {
     ///     family (or array of) under the key `MBXIdeographicFontFamilyName`
     ///     in the application's Info.plist. If one is not found, then a system
     ///     font is returned.
+    ///
+    /// - Note:
+    ///     Calling `GlyphsRasterizationOptions()` will currently not call this
+    ///     initializer. TODO: mark underlying initializer with NS_UNAVAILABLE
+
     public convenience init(rasterizationMode: GlyphsRasterizationMode = .ideographsRasterizedLocally,
-                            fontFamilies: [String] = _defaultFontFamilies()) {
-        let fontFamilies = fontFamilies.joined(separator: "\n")
+                            fontFamilies: [String] = []) {
+        let resolvedFamilies: [String]
+        if fontFamilies.isEmpty {
+            resolvedFamilies = Self._defaultFontFamilies()
+        } else {
+            resolvedFamilies = fontFamilies
+        }
+        let fontFamilies = resolvedFamilies.joined(separator: "\n")
         self.init(rasterizationMode: rasterizationMode, fontFamily: fontFamilies)
     }
 

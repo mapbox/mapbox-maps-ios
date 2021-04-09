@@ -19,11 +19,6 @@ class MapInitOptionsTests: XCTestCase {
         dataSourceReturnValue = false
     }
 
-    func testAccessTokenIsObfuscated() {
-        CredentialsManager.default.accessToken = "pk.HelloWorld"
-        XCTAssertEqual(CredentialsManager.default.description, "CredentialsManager: pk.H◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎")
-    }
-
     func testDefaultMapInitOptionsAreOverridden() {
         do {
             let updatedMapInitOptions = MapInitOptions()

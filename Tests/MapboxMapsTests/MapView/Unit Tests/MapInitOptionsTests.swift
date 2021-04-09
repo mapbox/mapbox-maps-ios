@@ -1,6 +1,5 @@
 import XCTest
-import MapboxMaps
-import MapboxCoreMaps
+@testable import MapboxMaps
 
 class MapInitOptionsTests: XCTestCase {
 

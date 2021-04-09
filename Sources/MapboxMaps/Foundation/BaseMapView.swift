@@ -92,7 +92,11 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     private var observerConcrete: ObserverConcrete!
     @objc dynamic internal var displayLink: CADisplayLink?
 
-    @IBInspectable var styleURI__: String = ""
+    @IBInspectable internal var styleURI__: String = ""
+
+    /// Outlet that can be used when initializing a MapView with a Storyboard or
+    /// a nib.
+    @IBOutlet internal weak var mapInitOptionsDataSource: MapInitOptionsDataSource?
 
     internal var preferredFPS: PreferredFPS = .normal {
         didSet {
@@ -247,10 +251,6 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
         }
 
     }
-
-    /// Outlet that can be used when initializing a MapView with a Storyboard or
-    /// a nib.
-    @IBOutlet public weak var mapInitOptionsDataSource: MapInitOptionsDataSource?
 
     class internal func parseIBString(ibString: String) -> String? {
         let parsedString = ibString.trimmingCharacters(in: .whitespacesAndNewlines)

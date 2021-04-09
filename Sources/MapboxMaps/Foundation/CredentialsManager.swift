@@ -79,7 +79,7 @@ extension CredentialsManager: Equatable {
 
 extension CredentialsManager: CustomStringConvertible, CustomDebugStringConvertible {
 
-    private func obfuscatedAccessToken() -> String {
+    private func redactedAccessToken() -> String {
         let offset = min(4, accessToken.count)
         let startIndex = accessToken.index(accessToken.startIndex, offsetBy: offset)
         let result = accessToken.replacingCharacters(in: startIndex...,
@@ -89,12 +89,12 @@ extension CredentialsManager: CustomStringConvertible, CustomDebugStringConverti
 
     /// :nodoc:
     public var description: String {
-        return "CredentialsManager: \(obfuscatedAccessToken())"
+        return "CredentialsManager: \(redactedAccessToken())"
     }
 
     /// :nodoc:
     public var debugDescription: String {
         let address = Unmanaged.passUnretained(self).toOpaque()
-        return "CredentialsManager @ \(address): \(obfuscatedAccessToken())"
+        return "CredentialsManager @ \(address): \(redactedAccessToken())"
     }
 }

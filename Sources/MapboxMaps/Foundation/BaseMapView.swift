@@ -93,8 +93,6 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     @objc dynamic internal var displayLink: CADisplayLink?
 
     @IBInspectable var styleURI__: String = ""
-    @IBInspectable var baseURL__: String = ""
-    @IBInspectable var accessToken__: String = ""
 
     internal var preferredFPS: PreferredFPS = .normal {
         didSet {
@@ -186,13 +184,13 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     }
 
     // MARK: Init
-    public init(frame: CGRect, mapboxOptions: MapboxOptions, styleURI: URL?) {
+    public init(frame: CGRect, mapInitOptions: MapInitOptions, styleURI: URL?) {
         super.init(frame: frame)
-        self.commonInit(mapboxOptions: mapboxOptions,
+        self.commonInit(mapInitOptions: mapInitOptions,
                         styleURI: styleURI)
     }
 
-    private func commonInit(mapboxOptions: MapboxOptions, styleURI: URL?) {
+    private func commonInit(mapInitOptions: MapInitOptions, styleURI: URL?) {
 
         if MTLCreateSystemDefaultDevice() == nil {
             // Check if we're running on a simulator on iOS 11 or 12
@@ -210,10 +208,10 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
             }
         }
 
-        self.resourceOptions = mapboxOptions.resourceOptions
+        self.resourceOptions = mapInitOptions.resourceOptions
         observerConcrete = ObserverConcrete()
 
-        __map = Map(client: self, mapOptions: mapboxOptions.mapOptions, resourceOptions: mapboxOptions.resourceOptions)
+        __map = Map(client: self, mapOptions: mapInitOptions.mapOptions, resourceOptions: mapInitOptions.resourceOptions)
 
         __map?.createRenderer()
 
@@ -234,6 +232,10 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
 
     }
 
+    /// Outlet that can be used when initializing a MapView with a Storyboard or
+    /// a nib.
+    @IBOutlet public weak var mapInitOptionsDataSource: MapInitOptionsDataSource?
+
     class internal func parseIBString(ibString: String) -> String? {
         let parsedString = ibString.trimmingCharacters(in: .whitespacesAndNewlines)
         return Array(parsedString).count > 0 ? parsedString : nil
@@ -247,50 +249,19 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     open override func awakeFromNib() {
         super.awakeFromNib()
 
-        let accessToken = BaseMapView.parseIBString(ibString: accessToken__) ?? CredentialsManager.default.accessToken
+        let mapInitOptions = mapInitOptionsDataSource?.mapInitOptions() as? MapInitOptions ??
+            MapInitOptions.default
 
         let ibStyleURI = BaseMapView.parseIBStringAsURL(ibString: styleURI__)
         let styleURI = ibStyleURI ?? URL(string: "mapbox://styles/mapbox/streets-v11")!
 
-        let baseURL = BaseMapView.parseIBString(ibString: baseURL__)
-        let resourceOptions = ResourceOptions(accessToken: accessToken, baseUrl: baseURL)
-
-        // TODO: Provide suitable default and configuration when setup from IB.
-        let localFontFamily = Self.localFontFamilyNameFromMainBundle()
-        let rasterizationMode: GlyphsRasterizationMode = localFontFamily != nil ? .ideographsRasterizedLocally
-                                                                                : .noGlyphsRasterizedLocally
-
-        let glyphsRasterizationOptions = GlyphsRasterizationOptions(rasterizationMode: rasterizationMode,
-                                                                    fontFamily: localFontFamily)
-
-        let mapOptions = MapboxCoreMaps.MapOptions(size: bounds.size,
-                                                   pixelRatio: UIScreen.main.scale,
-                                                   glyphsRasterizationOptions: glyphsRasterizationOptions)
-
-        let mapboxOptions = MapboxOptions(resourceOptions: resourceOptions,
-                                          mapOptions: mapOptions,
-                                          renderOptions: RenderOptions())
-
-        commonInit(mapboxOptions: mapboxOptions, styleURI: styleURI)
+        commonInit(mapInitOptions: mapInitOptions, styleURI: styleURI)
     }
 
     public func on(_ eventType: MapEvents.EventKind, handler: @escaping (MapboxCoreMaps.Event) -> Void) {
         var handlers: [(MapboxCoreMaps.Event) -> Void] = observerConcrete.eventHandlers[eventType.rawValue] ?? []
         handlers.append(handler)
         observerConcrete.eventHandlers[eventType.rawValue] = handlers
-    }
-
-    static func localFontFamilyNameFromMainBundle() -> String? {
-        let infoDictionaryObject = Bundle.main.infoDictionary?["MBXIdeographicFontFamilyName"]
-
-        if infoDictionaryObject is String {
-            return infoDictionaryObject as? String
-        } else if infoDictionaryObject is [String],
-            let infoDictionaryObjectArray = infoDictionaryObject as? [String] {
-            return infoDictionaryObjectArray.joined(separator: "\n")
-        }
-
-        return nil
     }
 
     public override func layoutSubviews() {

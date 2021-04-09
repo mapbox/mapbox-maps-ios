@@ -24,7 +24,9 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
         }
 
         let resourceOptions = ResourceOptions(accessToken: accessToken)
-        let view = MapView(frame: window.bounds, resourceOptions: resourceOptions)
+        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions,
+                                            mapOptions: MapOptions.default)
+        let view = MapView(frame: window.bounds, mapInitOptions: mapInitOptions)
 
         view.on(.styleLoaded) { [weak self] _ in
             guard let self = self else { return }

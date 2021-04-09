@@ -54,10 +54,10 @@ internal struct SwiftUIMapView: UIViewRepresentable {
     /// Unlike `styleURI`, there's no good default value for `resourceOptions`
     /// because it's the value that contains your Mapbox access token. For that reason,
     /// it's declared here as a `let` and is a required parameter in the initializer.
-    private let resourceOptions: ResourceOptions
+    private let mapInitOptions: MapInitOptions
 
-    init(resourceOptions: ResourceOptions, camera: Binding<Camera>) {
-        self.resourceOptions = resourceOptions
+    init(mapInitOptions: MapInitOptions, camera: Binding<Camera>) {
+        self.mapInitOptions = mapInitOptions
         _camera = camera
     }
 
@@ -75,7 +75,7 @@ internal struct SwiftUIMapView: UIViewRepresentable {
     /// This method should create the `MapView`, and make sure that it is configured to be in sync
     /// with the current settings of `SwiftUIMapView` (in this example, just the `camera` and `styleURI`).
     func makeUIView(context: UIViewRepresentableContext<SwiftUIMapView>) -> MapView {
-        let mapView = MapView(frame: .zero, resourceOptions: resourceOptions)
+        let mapView = MapView(frame: .zero, mapInitOptions: mapInitOptions)
         updateUIView(mapView, context: context)
 
         /// Additionally, this is your opportunity to connect the coordinator to the map view. In this example
@@ -209,7 +209,7 @@ internal struct ContentView: View {
     public var body: some View {
         VStack {
             SwiftUIMapView(
-                resourceOptions: ResourceOptions(accessToken: CredentialsManager.default.accessToken!),
+                mapInitOptions: MapInitOptions.default,
 
                 /// Here, we pass the camera state variable into `SwiftUIMapView` as a binding
                 camera: $camera)

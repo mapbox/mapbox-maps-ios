@@ -10,7 +10,7 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions(), styleURI: .light)
+        mapView = MapView(frame: view.bounds, styleURI: .light)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 

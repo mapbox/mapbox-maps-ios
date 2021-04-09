@@ -2,15 +2,19 @@ import Foundation
 
 // MARK: - ResourceOptions
 
-public extension ResourceOptions {
-    convenience init(accessToken: String,
+extension ResourceOptions {
+
+    public static let `default` = ResourceOptions(accessToken: CredentialsManager.default.accessToken)
+
+    public convenience init(accessToken: String,
                      baseUrl: String? = nil,
                      cachePath: String? = nil,
                      assetPath: String? = nil,
                      tileStorePath: String? = nil,
                      loadTilePacksFromNetwork: NSNumber? = nil,
                      cacheSize: UInt64 = (1024*1024*10)) {
-        precondition(accessToken.count > 0)
+        // TODO: Validate token
+//      precondition(accessToken.count > 0)
 
         let cacheURL = ResourceOptions.cacheURLIncludingSubdirectory(useSubdirectory: true)
         let resolvedCachePath = cachePath == nil ? cacheURL?.path : cachePath

@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 import MapboxMaps
 
+@available(*, deprecated)
 @objc(OfflineRegionManagerExample)
 public class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
 
@@ -18,7 +19,7 @@ public class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         print("This example uses a deprecated API, and will be removed in a future release.")
-        mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions(), styleURI: .light)
+        mapView = MapView(frame: view.bounds, styleURI: .light)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
@@ -50,7 +51,7 @@ public class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
                                                                glyphsRasterizationMode: .noGlyphsRasterizedLocally)
 
         // Please note - this is using a deprecated API, and will be removed in a future release.
-        offlineManager = OfflineRegionManager(resourceOptions: resourceOptions())
+        offlineManager = OfflineRegionManager(resourceOptions: ResourceOptions.default)
         offlineManager.createOfflineRegion(for: offlineRegionDef, callback: { [weak self] (expected: MBXExpected<AnyObject, AnyObject>?) in
             guard let expected = expected else {
                 print("No offline region created. Unexpected result.")

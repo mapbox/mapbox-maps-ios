@@ -7,7 +7,7 @@ class MapViewTests: XCTestCase {
     func testMapViewIsReleased() throws {
         weak var weakMapView: MapView?
         autoreleasepool {
-            let mapView = MapView(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)), resourceOptions: ResourceOptions())
+            let mapView = MapView(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)))
             weakMapView = mapView
         }
         XCTAssertNil(weakMapView)
@@ -16,7 +16,7 @@ class MapViewTests: XCTestCase {
     func testDisplayLink() throws {
         weak var weakMapView: MapView?
         autoreleasepool {
-            let mapView = MapView(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)), resourceOptions: ResourceOptions())
+            let mapView = MapView(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)))
             weakMapView = mapView
 
             do {

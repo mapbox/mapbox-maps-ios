@@ -3,26 +3,41 @@ import MapboxCoreMaps
 
 extension GlyphsRasterizationOptions {
 
-    /// Default fallback font
-    internal static let fallbackFontFamilyName: String =
-        UIFont.systemFont(ofSize: 0, weight: .regular).familyName
-    
-
     /// Default GlyphsRasterizationOptions. RasterizationMode defaults to
     /// `.ideographsRasterizedLocally` i.e. ideographic symbols are rasterized locally (not loaded
     /// from the server) using an appropriate system font.
     public static let `default`: GlyphsRasterizationOptions =
         GlyphsRasterizationOptions(rasterizationMode: .ideographsRasterizedLocally)
 
-
     /// Convenience initializer
     /// - Parameters:
     ///   - rasterizationMode: Rasterization mode
-    ///   - fontFamilies: Array of fonts, used for glyph rendering. Defaults to an appropriate
-    ///   system font
+    ///   - fontFamilies: Array of fonts, used for glyph rendering.Defaults to
+    ///                   an appropriate system font.
+    ///
+    /// - Note:
+    ///     If `fontFamilies` is not provided, the SDK wil first look for a font
+    ///     family (or array of) under the key `MBXIdeographicFontFamilyName`
+    ///     in the application's Info.plist. If one is not found, then a system
+    ///     font is returned.
     public convenience init(rasterizationMode: GlyphsRasterizationMode,
-                            fontFamilies: [String] = []) {
-        let fontFamilies = fontFamilies.isEmpty ? Self.fallbackFontFamilyName : fontFamilies.joined(separator: "\n")
+                            fontFamilies: [String] = _defaultFontFamilies()) {
+        let fontFamilies = fontFamilies.joined(separator: "\n")
         self.init(rasterizationMode: rasterizationMode, fontFamily: fontFamilies)
     }
+
+    /// Return the default font family/families
+    public static func _defaultFontFamilies() -> [String] {
+        switch Bundle.main.infoDictionary?["MBXIdeographicFontFamilyName"] {
+        case let family as String:
+            return [family]
+        case let families as [String]:
+            return families
+        default:
+            return [fallbackFontFamilyName]
+        }
+    }
+
+    internal static let fallbackFontFamilyName =
+        UIFont.systemFont(ofSize: 0, weight: .regular).familyName
 }

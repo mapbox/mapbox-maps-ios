@@ -6,7 +6,7 @@ open class MapView: BaseMapView {
     /// The `mapOptions` structure is the interface for consumers to configure the map.
     /// It's initialized on the creation of the `MapView` with a set of sane, default values.
     /// To synchronously update the `mapOptions` please call `updateMapOptions(with newOptions: MapOptions)`
-    internal var mapOptions: MapOptions = MapOptions()
+    internal var mapConfig: MapConfig = MapConfig()
 
     /// The `gestureManager` will be responsible for all gestures on the map
     public internal(set) var gestureManager: GestureManager!
@@ -29,8 +29,8 @@ open class MapView: BaseMapView {
     /// A reference to the `EventsManager` used for dispatching telemetry.
     internal var eventsListener: EventsListener!
 
-    public init(frame: CGRect, mapboxOptions: MapboxOptions = MapboxOptions(), styleURI: StyleURI? = .streets) {
-        super.init(frame: frame, mapboxOptions: mapboxOptions, styleURI: styleURI?.url)
+    public init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions.default, styleURI: StyleURI? = .streets) {
+        super.init(frame: frame, mapInitOptions: mapInitOptions, styleURI: styleURI?.url)
         initialize()
     }
 

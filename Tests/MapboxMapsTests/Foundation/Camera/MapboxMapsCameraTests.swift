@@ -11,13 +11,14 @@ class CameraManagerTests: XCTestCase {
 
     var mapView: BaseMapView!
     var cameraManager: CameraManager!
-    var resourceOptions: ResourceOptions!
+    var mapInitOptions: MapInitOptions!
 
     override func setUp() {
-        resourceOptions = ResourceOptions(accessToken: "pk.feedcafedeadbeefbadebede")
+        mapInitOptions = MapInitOptions(resourceOptions: ResourceOptions(accessToken: "pk.feedcafedeadbeefbadebede"),
+                                        mapOptions: MapOptions.default)
+
         mapView = BaseMapView(frame: CGRect(x: 0, y: 0, width: 100, height: 100),
-                              resourceOptions: resourceOptions,
-                              glyphsRasterizationOptions: GlyphsRasterizationOptions.default,
+                              mapInitOptions: mapInitOptions,
                               styleURI: nil)
         cameraManager = CameraManager(for: mapView, with: MapCameraOptions())
     }

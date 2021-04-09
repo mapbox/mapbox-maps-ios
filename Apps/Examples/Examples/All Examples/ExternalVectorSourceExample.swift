@@ -8,7 +8,7 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions())
+        mapView = MapView(frame: view.bounds)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.style.uri = .light
         let centerCoordinate = CLLocationCoordinate2D(latitude: 41.878781, longitude: -87.622088)

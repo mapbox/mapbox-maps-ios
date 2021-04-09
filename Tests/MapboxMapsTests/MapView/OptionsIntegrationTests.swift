@@ -10,19 +10,19 @@ internal class OptionsIntegrationTest: MapViewIntegrationTestCase {
             return
         }
 
-        var newOptions = MapboxMaps.MapOptions()
-        newOptions.location.puckType = nil
-        newOptions.location.activityType = .automotiveNavigation
-        newOptions.camera.animationDuration = 0.1
-        newOptions.gestures.scrollEnabled = false
+        var newConfig = MapboxMaps.MapConfig()
+        newConfig.location.puckType = nil
+        newConfig.location.activityType = .automotiveNavigation
+        newConfig.camera.animationDuration = 0.1
+        newConfig.gestures.scrollEnabled = false
 
         mapView.update { (options) in
-            options = newOptions
+            options = newConfig
         }
 
-        XCTAssertEqual(mapView.gestureManager.gestureOptions, newOptions.gestures)
-        XCTAssertEqual(mapView.cameraManager.mapCameraOptions, newOptions.camera)
-        XCTAssertEqual(mapView.locationManager.locationOptions, newOptions.location)
+        XCTAssertEqual(mapView.gestureManager.gestureOptions, newConfig.gestures)
+        XCTAssertEqual(mapView.cameraManager.mapCameraOptions, newConfig.camera)
+        XCTAssertEqual(mapView.locationManager.locationOptions, newConfig.location)
         XCTAssertTrue(
             mapView.ornamentsManager.ornamentConfig.ornaments.contains {
                 $0.type == .compass || $0.type == .mapboxScaleBar

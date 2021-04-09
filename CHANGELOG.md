@@ -28,9 +28,6 @@ Mapbox welcomes participation and contributions from everyone.
         * `public func resetPosition()`
         * `public func resetNorth(_ animated: Bool = false)`
     * In `CameraAnimator`, `fractionComplete` is now of type `Double` and `delayFactor` now returns a `Double`.
-    * `EventType` is internal.
-    * `MBXEdgeInsets` extension is internal.
-    * `ScreenCoordinate` extension is internal.
     * `MapboxLogoView` has been renamed to `LogoView`.
     * `MapboxLogoSize` has been renamed to `LogoSize`.
 
@@ -40,7 +37,6 @@ Mapbox welcomes participation and contributions from everyone.
     * The `url` property from `StyleURL` has been removed.
 
 - #### Expressions
-    * `ExpressionBuilder` has been renamed to `FunctionBuilder`.
     * `init(from: jsonObject)` and `public func jsonObject()` have been removed.
     * `Element.op` has been renamed to `Element.operator`.
     * `Argument.array` has been renamed to `Argument.numberArray`.

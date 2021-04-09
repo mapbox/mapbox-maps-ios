@@ -9,7 +9,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
 
     // swiftlint:disable identifier_name
     public init(_ op: Expression.Operator,
-                @FunctionBuilder content: () -> Expression = { Expression(with: [.argument(.null)])}) {
+                @ExpressionBuilder content: () -> Expression = { Expression(with: [.argument(.null)])}) {
         var elements = content().elements
 
         if elements.count == 1 && elements[0] == .argument(.null) {

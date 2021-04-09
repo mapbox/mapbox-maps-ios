@@ -11,7 +11,7 @@ extension ResourceOptions {
     ///   - assetPath: The path to the assets.
     ///   - tileStorePath: The path to the tile store.
     ///   - loadTilePacksFromNetwork: Detemines if tiles pack should or should not be avoided from the network.
-    ///   - cacheSize: The size of the cahce.
+    ///   - cacheSize: The size of the cache.
     public convenience init(accessToken: String,
                             baseUrl: String? = nil,
                             cachePath: String? = nil,

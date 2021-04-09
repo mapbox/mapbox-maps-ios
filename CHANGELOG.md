@@ -8,7 +8,7 @@ Mapbox welcomes participation and contributions from everyone.
 - `AnnotationSupportableMap` is now internal ([#246](https://github.com/mapbox/mapbox-maps-ios/pull/246))
 
 - #### MapView
-    * Initializer has been change to `public init(frame: CGRect, resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions.default, styleURI: StyleURI? = .streets)`.
+    * Initializer has been changed to `public init(frame: CGRect, resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions.default, styleURI: StyleURI? = .streets)`.
     * The following 4 functions have been removed: 
         * `public func coordinate(for point: CGPoint, in view: UIView? = nil) -> CLLocationCoordinate2D`
         * `public func point(for coordinate: CLLocationCoordinate2D, in view: UIView? = nil) -> CGPoint`
@@ -20,19 +20,19 @@ Mapbox welcomes participation and contributions from everyone.
     * `LayoutPosition` has been deprecated in favor of `OrnamentPosition`.
     * `LayoutVisibility` has been depracted in favor of `OrnamentVisibility`.
     * `showsLogoView` has been renamed to `_showsLogoView`.
-    * `showsCompass` and `showsScale` have been depracted. You should now use the visibility properties to set how the Compass and Scale Bar should be shown.
+    * `showsCompass` and `showsScale` have been deprecated. Visibility properties can be used to set how the Compass and Scale Bar should be shown.
 
 - #### Foundation
     * `cancelTransitions` has been renamed to `cancelAnimations`.
-    * [`setCamera()`](https://github.com/mapbox/mapbox-maps-ios/pull/250/files#diff-8fa667141ac423a208a6e7036ed759e7e52fc6940bd58834c1935c2c6ead9c65L177) with individual params,has been deprecated in favor of [this](https://github.com/mapbox/mapbox-maps-ios/blob/edbf08e37975c81c7ee1cbc4bb046c48d522d306/Sources/MapboxMaps/Foundation/Camera/CameraManager.swift#L140) one that requires `CameraOptions`.
-    * The following camera convenience functions have been deprecated:
+    * [`setCamera()`](https://github.com/mapbox/mapbox-maps-ios/pull/250/files#diff-8fa667141ac423a208a6e7036ed759e7e52fc6940bd58834c1935c2c6ead9c65L177) with individual parameters has been deprecated in favor of [`setCamera(to targetCamera: CameraOptions...)`](https://github.com/mapbox/mapbox-maps-ios/blob/edbf08e37975c81c7ee1cbc4bb046c48d522d306/Sources/MapboxMaps/Foundation/Camera/CameraManager.swift#L140) which requires `CameraOptions`.
+    * The following camera convenience functions have been removed:
         * `public func transitionCoordinateBounds(newCoordinateBounds: CoordinateBounds, animated: Bool = false)`
         * `public func transitionCoordinateBounds(to newCoordinateBounds: CoordinateBounds, edgePadding: UIEdgeInsets, animated: Bool = false, completion: ((UIViewAnimatingPosition) -> Void)? = nil)`
         * `public func transitionVisibleCoordinates(newCoordinates: [CLLocationCoordinate2D], edgePadding: UIEdgeInsets, animated: Bool = false)`
         * `public func transitionVisibleCoordinates(to newCoordinates: [CLLocationCoordinate2D], edgePadding: UIEdgeInsets, bearing: CLLocationDirection, duration: TimeInterval, animated: Bool = false, completion: ((UIViewAnimatingPosition) -> Void)? = nil)`
         * `public func resetPosition()`
         * `public func resetNorth(_ animated: Bool = false)`
-    * In `CameraAnimator`, `fractionComplete` is now of type `Double`, and `delayFactor` now returns a `Double`.
+    * In `CameraAnimator`, `fractionComplete` is now of type `Double` and `delayFactor` now returns a `Double`.
     * `EventType` is internal.
     * `MBXEdgeInsets` extension is internal.
     * `ScreenCoordinate` extension is internal.

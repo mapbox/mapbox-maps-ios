@@ -29,7 +29,13 @@ open class MapView: BaseMapView {
     /// A reference to the `EventsManager` used for dispatching telemetry.
     internal var eventsListener: EventsListener!
 
-    public init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions.default, styleURI: StyleURI? = .streets) {
+    /// Initialize a MapView
+    /// - Parameters:
+    ///   - frame: frame for the MapView.
+    ///   - mapInitOptions: `MapInitOptions`; default uses `CredentialsManager.default`
+    ///         to retrieve a shared default access token.
+    ///   - styleURI: `StyleURI` to initialize the map with, or nil.
+    public init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions(), styleURI: StyleURI? = .streets) {
         super.init(frame: frame, mapInitOptions: mapInitOptions, styleURI: styleURI?.url)
         initialize()
     }

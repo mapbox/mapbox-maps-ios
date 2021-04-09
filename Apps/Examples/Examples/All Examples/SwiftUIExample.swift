@@ -209,7 +209,7 @@ internal struct ContentView: View {
     public var body: some View {
         VStack {
             SwiftUIMapView(
-                mapInitOptions: MapInitOptions.default,
+                mapInitOptions: MapInitOptions(),
 
                 /// Here, we pass the camera state variable into `SwiftUIMapView` as a binding
                 camera: $camera)

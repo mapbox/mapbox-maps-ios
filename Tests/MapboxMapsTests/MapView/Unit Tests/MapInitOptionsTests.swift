@@ -25,13 +25,17 @@ class MapInitOptionsTests: XCTestCase {
     }
 
     func testDefaultMapInitOptionsAreOverridden() {
-        _ = MapInitOptions.default
+        do {
+            let updatedMapInitOptions = MapInitOptions()
+            XCTAssertNotEqual(updatedMapInitOptions.resourceOptions.accessToken, "pk.aaaaaa")
+        }
 
         CredentialsManager.default.accessToken = "pk.aaaaaa"
 
-        let updatedMapInitOptions = MapInitOptions.default
-
-        XCTAssertEqual(updatedMapInitOptions.resourceOptions.accessToken, "pk.aaaaaa")
+        do {
+            let updatedMapInitOptions = MapInitOptions()
+            XCTAssertEqual(updatedMapInitOptions.resourceOptions.accessToken, "pk.aaaaaa")
+        }
     }
 
     func testOverridingDefaultCredentialsManagerAccessToken() {
@@ -40,7 +44,7 @@ class MapInitOptionsTests: XCTestCase {
         let mapView = MapView(with: .zero)
         let resourceOptions = try! mapView.__map.getResourceOptions()
 
-        XCTAssertEqual(resourceOptions, ResourceOptions.default)
+        XCTAssertEqual(resourceOptions, ResourceOptions(accessToken: CredentialsManager.default.accessToken))
         XCTAssertEqual(resourceOptions.accessToken, CredentialsManager.default.accessToken)
     }
 
@@ -51,8 +55,7 @@ class MapInitOptionsTests: XCTestCase {
         XCTAssertNotEqual(credentialsManager, CredentialsManager.default)
 
         let mapInitOptions = MapInitOptions(
-            resourceOptions: ResourceOptions(accessToken: credentialsManager.accessToken),
-            mapOptions: MapOptions.default)
+            resourceOptions: ResourceOptions(accessToken: credentialsManager.accessToken))
 
         let mapView = MapView(with: .zero, mapInitOptions: mapInitOptions)
         let resourceOptions = try! mapView.__map.getResourceOptions()
@@ -65,8 +68,7 @@ class MapInitOptionsTests: XCTestCase {
         let credentialsManager = CredentialsManager(accessToken: "pk.dddddd")
 
         dataSourceReturnValue = MapInitOptions(
-            resourceOptions: ResourceOptions(accessToken: credentialsManager.accessToken),
-            mapOptions: MapOptions.default)
+            resourceOptions: ResourceOptions(accessToken: credentialsManager.accessToken))
 
         // Load view from a nib, where the map view's datasource is the file's owner,
         // i.e. this test.
@@ -129,7 +131,7 @@ class MapInitOptionsTests: XCTestCase {
         // Now check the resource options from the initialized MapView
         let resourceOptions = try! mapView.__map.getResourceOptions()
 
-        XCTAssertEqual(resourceOptions, ResourceOptions.default)
+        XCTAssertEqual(resourceOptions, ResourceOptions(accessToken: CredentialsManager.default.accessToken))
         XCTAssertEqual(resourceOptions.accessToken, CredentialsManager.default.accessToken)
     }
 }

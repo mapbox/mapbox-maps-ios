@@ -14,8 +14,7 @@ class CameraManagerTests: XCTestCase {
     var mapInitOptions: MapInitOptions!
 
     override func setUp() {
-        mapInitOptions = MapInitOptions(resourceOptions: ResourceOptions(accessToken: "pk.feedcafedeadbeefbadebede"),
-                                        mapOptions: MapOptions.default)
+        mapInitOptions = MapInitOptions(resourceOptions: ResourceOptions(accessToken: "pk.feedcafedeadbeefbadebede"))
 
         mapView = BaseMapView(frame: CGRect(x: 0, y: 0, width: 100, height: 100),
                               mapInitOptions: mapInitOptions,

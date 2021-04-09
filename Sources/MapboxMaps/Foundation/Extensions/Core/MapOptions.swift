@@ -8,20 +8,20 @@ extension MapboxCoreMaps.MapOptions {
     /// conjunction.
     ///
     /// - Parameters:
-    ///   - constrainMode: The map constrain mode, defaults to `.heightOnly`.
-    ///   - viewportMode: The viewport mode, defaults to `.default`.
-    ///   - orientation: The view orientation, defaults to North pointing `.upwards`.
-    ///   - crossSourceCollisions: Whether cross-source symbol collision detection should be enabled.
-    ///   - size: Size of the map, if nil, a default size will be used.
-    ///   - pixelRatio: Pixel scale of the map view; typically this should.
+    ///   - constrainMode: The map constrain mode; default is `.heightOnly`.
+    ///   - viewportMode: The viewport mode; default is `.default`.
+    ///   - orientation: The view orientation; default is `.upwards`.
+    ///   - crossSourceCollisions: Whether cross-source symbol collision detection should be enabled; default is `true`
+    ///   - size: Size of the map, if nil (the default), a minimal default size will be used.
+    ///   - pixelRatio: Pixel scale of the map view; default is thee main screen's scale.
     ///   - glyphsRasterizationOptions: A `GlyphsRasterizationOptions` object.
     public convenience init(constrainMode: ConstrainMode = .heightOnly,
                             viewportMode: ViewportMode = .default,
                             orientation: NorthOrientation = .upwards,
                             crossSourceCollisions: Bool = true,
-                            size: CGSize?,
-                            pixelRatio: CGFloat,
-                            glyphsRasterizationOptions: GlyphsRasterizationOptions) {
+                            size: CGSize? = nil,
+                            pixelRatio: CGFloat = UIScreen.main.scale,
+                            glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions()) {
 
         self.init(__contextMode: nil,
                   constrainMode: constrainMode.NSNumber,
@@ -69,10 +69,4 @@ extension MapboxCoreMaps.MapOptions {
 
         return CGSize(width: Double(size.width), height: Double(size.height))
     }
-
-    /// A default MapOptions that uses the main screen's scale, and default
-    /// `GlyphsRasterizationOptions`.
-    public static let `default` = MapboxCoreMaps.MapOptions(size: nil,
-                                                            pixelRatio: UIScreen.main.scale,
-                                                            glyphsRasterizationOptions: GlyphsRasterizationOptions.default)
 }

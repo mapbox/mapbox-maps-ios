@@ -24,8 +24,7 @@ class MapboxMapsFoundationTests: XCTestCase {
         /**
          Test with offset bounds
          */
-        let mapInitOptions = MapInitOptions(resourceOptions: ResourceOptions(accessToken: "a1b2c3"),
-                                            mapOptions: MapOptions.default)
+        let mapInitOptions = MapInitOptions(resourceOptions: ResourceOptions(accessToken: "a1b2c3"))
 
         mapView = BaseMapView(frame: CGRect(x: 10, y: 10, width: 100, height: 100),
                               mapInitOptions: mapInitOptions,

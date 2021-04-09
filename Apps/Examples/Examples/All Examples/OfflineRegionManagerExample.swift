@@ -51,7 +51,7 @@ public class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
                                                                glyphsRasterizationMode: .noGlyphsRasterizedLocally)
 
         // Please note - this is using a deprecated API, and will be removed in a future release.
-        offlineManager = OfflineRegionManager(resourceOptions: ResourceOptions.default)
+        offlineManager = OfflineRegionManager(resourceOptions: resourceOptions())
         offlineManager.createOfflineRegion(for: offlineRegionDef, callback: { [weak self] (expected: MBXExpected<AnyObject, AnyObject>?) in
             guard let expected = expected else {
                 print("No offline region created. Unexpected result.")

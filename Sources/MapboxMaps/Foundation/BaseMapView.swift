@@ -250,7 +250,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
         super.awakeFromNib()
 
         let mapInitOptions = mapInitOptionsDataSource?.mapInitOptions() as? MapInitOptions ??
-            MapInitOptions.default
+            MapInitOptions()
 
         let ibStyleURI = BaseMapView.parseIBStringAsURL(ibString: styleURI__)
         let styleURI = ibStyleURI ?? URL(string: "mapbox://styles/mapbox/streets-v11")!

@@ -19,7 +19,7 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
         stackView.spacing = 12.0
 
         let testRect = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height / 2)
-        let mapInitOptions = MapInitOptions.default
+        let mapInitOptions = MapInitOptions()
         mapView = MapView(frame: testRect, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.style.uri = .dark

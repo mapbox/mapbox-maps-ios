@@ -15,8 +15,7 @@ class MapViewIntegrationTests: IntegrationTestCase {
         rootView = root
 
         let resourceOptions = ResourceOptions(accessToken: accessToken)
-        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions,
-                                            mapOptions: MapOptions.default)
+        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
         mapView = MapView(frame: rootView.bounds, mapInitOptions: mapInitOptions, styleURI: .streets)
         rootView.addSubview(mapView)
     }
@@ -33,9 +32,13 @@ class MapViewIntegrationTests: IntegrationTestCase {
 
             let resourceOptions = ResourceOptions(accessToken: accessToken)
 <<<<<<< HEAD
+<<<<<<< HEAD
             let mapView = MapView(frame: rootView.bounds, resourceOptions: resourceOptions, styleURI: .streets)
 =======
             let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions, mapOptions: MapOptions.default)
+=======
+            let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
+>>>>>>> Update for default initializers.
             let mapView = MapView(with: rootView.bounds, mapInitOptions: mapInitOptions, styleURI: .streets)
 >>>>>>> Rename MapboxOptions to MapInitOptions
             weakMapView = mapView

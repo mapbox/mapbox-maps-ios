@@ -440,6 +440,80 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
 
         return metalView
     }
+
+    // MARK: Conversion utilities
+    /**
+      Converts a point in a given view’s coordinate system to a geographic coordinate.
+
+      - Parameter point: The point to convert.
+      - Parameter view: An optional view the `point` is relative to.
+                        Omitting this value assumes the point is relative to the `MapView`.
+      - Returns: A CLLocationCoordinate that represents the geographic location of the point.
+      */
+    public func coordinate(for point: CGPoint, in view: UIView? = nil) -> CLLocationCoordinate2D {
+        let view = view ?? self
+        let screenCoordinate = convert(point, from: view).screenCoordinate // Transform to view's coordinate space
+        return try! __map.coordinateForPixel(forPixel: screenCoordinate)
+    }
+
+    /**
+      Converts a map coordinate to a `CGPoint`, relative to the map view.
+
+      - Parameter coordinate: The coordinate to convert.
+      - Parameter view: An optional view the resulting point will be relative to.
+                        Omitting this value assumes resulting `CGPoint` will be expressed
+                        relative to the `MapView`.
+      - Returns: A `CGPoint` relative to the `UIView`.
+      */
+    public func point(for coordinate: CLLocationCoordinate2D, in view: UIView? = nil) -> CGPoint {
+        let view = view ?? self
+        let point = try! __map.pixelForCoordinate(for: coordinate).point
+        let transformedPoint = convert(point, to: view)
+        return transformedPoint
+    }
+
+    /**
+     Transforms a view's frame into a set of coordinate bounds.
+
+     - Parameter view: The `UIView` whose bounds will be transformed into a set of map coordinate bounds.
+     - Returns: A `CoordinateBounds` object that represents the southwest and northeast corners of the view's bounds.
+     */
+    public func coordinateBounds(for view: UIView) -> CoordinateBounds {
+        let rect = view.bounds
+
+        let topRight = coordinate(for: CGPoint(x: rect.maxX, y: rect.minY), in: view).wrap()
+        let bottomLeft = coordinate(for: CGPoint(x: rect.minX, y: rect.maxY), in: view).wrap()
+
+        let southwest = CLLocationCoordinate2D(latitude: bottomLeft.latitude, longitude: bottomLeft.longitude)
+        let northeast = CLLocationCoordinate2D(latitude: topRight.latitude, longitude: topRight.longitude)
+
+        return CoordinateBounds(southwest: southwest, northeast: northeast)
+    }
+
+    /**
+     Transforms a set of map coordinate bounds to a `CGRect`.
+
+     - Parameter view: An optional `UIView` whose coordinate space the resulting `CGRect` will be relative to.
+                       Omitting this value assumes the resulting `CGRect` will be expressed
+                       relative to the `MapView`.
+     - Returns: A `CGRect` whose corners represent the vertices of a set of `CoordinateBounds`.
+     */
+    public func rect(for coordinateBounds: CoordinateBounds, in view: UIView? = nil) -> CGRect {
+        let view = view ?? self
+        let southwest = coordinateBounds.southwest.wrap()
+        let northeast = coordinateBounds.northeast.wrap()
+
+        var rect = CGRect.zero
+
+        let swPoint = point(for: southwest, in: view)
+        let nePoint = point(for: northeast, in: view)
+
+        rect = CGRect(origin: swPoint, size: CGSize.zero)
+
+        rect = rect.extend(from: nePoint)
+
+        return rect
+    }
 }
 
 private class BaseMapViewProxy: NSObject {

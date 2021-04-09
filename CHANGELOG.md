@@ -9,11 +9,6 @@ Mapbox welcomes participation and contributions from everyone.
 
 - #### MapView
     * Initializer has been changed to `public init(frame: CGRect, resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions.default, styleURI: StyleURI? = .streets)`.
-    * The following 4 functions have been removed: 
-        * `public func coordinate(for point: CGPoint, in view: UIView? = nil) -> CLLocationCoordinate2D`
-        * `public func point(for coordinate: CLLocationCoordinate2D, in view: UIView? = nil) -> CGPoint`
-        * `public func coordinateBounds(for view: UIView) -> CoordinateBounds`
-        * `public func rect(for coordinateBounds: CoordinateBounds, in view: UIView? = nil) -> CGRect`
     * `OrnamentSupportableMapView` is not internal.
 
 - #### Ornaments

@@ -386,7 +386,7 @@ public class AnnotationManager {
         case let line as LineAnnotation:
             feature = Feature(LineString(line.coordinates))
         case let polygon as PolygonAnnotation:
-            var turfPolygon: Polygon
+            var turfPolygon: Turf.Polygon
 
             if let holes = polygon.interiorPolygons {
                 let outerRing = Ring(coordinates: polygon.coordinates)

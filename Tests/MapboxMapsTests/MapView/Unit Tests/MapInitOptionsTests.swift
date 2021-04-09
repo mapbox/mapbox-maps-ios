@@ -36,7 +36,7 @@ class MapInitOptionsTests: XCTestCase {
     func testOverridingDefaultCredentialsManagerAccessToken() {
         CredentialsManager.default.accessToken = "pk.bbbbbb"
 
-        let mapView = MapView(with: .zero)
+        let mapView = MapView(frame: .zero)
         let resourceOptions = try! mapView.__map.getResourceOptions()
 
         XCTAssertEqual(resourceOptions, ResourceOptions(accessToken: CredentialsManager.default.accessToken))
@@ -52,7 +52,7 @@ class MapInitOptionsTests: XCTestCase {
         let mapInitOptions = MapInitOptions(
             resourceOptions: ResourceOptions(accessToken: credentialsManager.accessToken))
 
-        let mapView = MapView(with: .zero, mapInitOptions: mapInitOptions)
+        let mapView = MapView(frame: .zero, mapInitOptions: mapInitOptions)
         let resourceOptions = try! mapView.__map.getResourceOptions()
 
         XCTAssertEqual(resourceOptions, mapInitOptions.resourceOptions)

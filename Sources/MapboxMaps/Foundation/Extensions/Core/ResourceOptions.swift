@@ -28,7 +28,7 @@ extension ResourceOptions {
         // TODO: Validate token
 //      precondition(accessToken.count > 0)
 
-        let cacheURL = ResourceOptions.cacheURLIncludingSubdirectory(useSubdirectory: true)
+        let cacheURL = ResourceOptions.cacheURLIncludingSubdirectory()
         let resolvedCachePath = cachePath == nil ? cacheURL?.path : cachePath
         self.init(__accessToken: accessToken,
                   baseURL: baseUrl,

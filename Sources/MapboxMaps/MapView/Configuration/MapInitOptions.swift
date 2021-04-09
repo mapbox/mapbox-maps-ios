@@ -26,7 +26,9 @@ public struct MapInitOptions: Equatable {
     ///   - mapOptions: `MapOptions`; see `GlyphsRasterizationOptions` for the default
     ///         used for glyph rendering.
     public init(resourceOptions: ResourceOptions = ResourceOptions(accessToken: CredentialsManager.default.accessToken),
-                mapOptions: MapOptions = MapOptions()) {
+                mapOptions: MapOptions = MapOptions(constrainMode: .heightOnly)) {
+        // TODO: Update above to use MapOptions() once super.init has been marked
+        // with NS_UNAVAILABLE.
         self.resourceOptions = resourceOptions
         self.mapOptions = mapOptions
     }

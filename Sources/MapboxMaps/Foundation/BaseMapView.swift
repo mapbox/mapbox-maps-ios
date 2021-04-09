@@ -211,7 +211,23 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
         self.resourceOptions = mapInitOptions.resourceOptions
         observerConcrete = ObserverConcrete()
 
-        __map = Map(client: self, mapOptions: mapInitOptions.mapOptions, resourceOptions: mapInitOptions.resourceOptions)
+        let resolvedMapOptions: MapOptions
+
+        if mapInitOptions.mapOptions.size == nil {
+            // Update using the view's size
+            let other = mapInitOptions.mapOptions
+            resolvedMapOptions = MapOptions(__contextMode: other.__contextMode,
+                                            constrainMode: other.__constrainMode,
+                                            viewportMode: other.__viewportMode,
+                                            orientation: other.__orientation,
+                                            crossSourceCollisions: other.__crossSourceCollisions,
+                                            size: bounds.size.mbmSize,
+                                            pixelRatio: other.pixelRatio,
+                                            glyphsRasterizationOptions: other.glyphsRasterizationOptions)
+        } else {
+            resolvedMapOptions = mapInitOptions.mapOptions
+        }
+        __map = Map(client: self, mapOptions: resolvedMapOptions, resourceOptions: mapInitOptions.resourceOptions)
 
         __map?.createRenderer()
 

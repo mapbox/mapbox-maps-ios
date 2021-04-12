@@ -84,14 +84,17 @@ extension CameraOptions {
             __pitch = newValue?.NSNumber
         }
     }
-
-    // MARK: Equals function
-    public static func == (lhs: CameraOptions, rhs: CameraOptions) -> Bool {
-        return lhs.center == rhs.center &&
-               lhs.padding == rhs.padding &&
-               lhs.anchor == rhs.anchor &&
-               lhs.zoom == rhs.zoom &&
-               lhs.bearing == rhs.bearing &&
-               lhs.pitch == rhs.pitch
+    
+    override open func isEqual(_ object: Any?) -> Bool {
+        guard let otherCameraOption = object as? CameraOptions else {
+            return false
+        }
+        
+        return center == otherCameraOption.center &&
+               padding == otherCameraOption.padding &&
+               anchor == otherCameraOption.anchor &&
+               zoom == otherCameraOption.zoom &&
+               bearing == otherCameraOption.bearing &&
+               pitch == otherCameraOption.pitch
     }
 }

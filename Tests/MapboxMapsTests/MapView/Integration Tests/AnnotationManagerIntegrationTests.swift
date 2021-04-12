@@ -29,7 +29,7 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
 
             // When
             let sourceResult = self.style?.getSource(identifier: annotationManager.defaultSourceId, type: GeoJSONSource.self)
-            let styleLayer = try! self.mapView?.__map.getStyleLayerProperties(forLayerId: annotationManager.defaultSymbolLayerId)
+            let styleLayer = self.mapView?.__map.getStyleLayerProperties(forLayerId: annotationManager.defaultSymbolLayerId)
             // ❓ Core SDK call to get style layer works, but not Style API line below
             // let styleLayer = self.style?.getLayer(with: annotationManager.defaultSymbolLayerId, type: SymbolLayer.self)
 
@@ -76,7 +76,7 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
             }
 
             // Get layer position
-            let layers = try! mapView.style.styleManager.getStyleLayers()
+            let layers = mapView.style.styleManager.getStyleLayers()
             let layerIds = layers.map { $0.id }
             let layerIndex = layerIds.firstIndex(of: layerId)
             XCTAssertNotNil(layerIndex)
@@ -113,7 +113,7 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
 
             // When
             let sourceResult = self.style?.getSource(identifier: annotationManager.defaultSourceId, type: GeoJSONSource.self)
-            let styleLayer = try! self.mapView?.__map.getStyleLayerProperties(forLayerId: annotationManager.defaultSymbolLayerId)
+            let styleLayer = self.mapView?.__map.getStyleLayerProperties(forLayerId: annotationManager.defaultSymbolLayerId)
             // ❓ Core SDK call to get style layer works, but not Style API line below
             // let styleLayer = self.style?.getLayer(with: annotationManager.defaultSymbolLayerId, type: SymbolLayer.self)
 

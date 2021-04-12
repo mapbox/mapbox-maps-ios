@@ -2,7 +2,6 @@ import XCTest
 import MapboxMaps
 
 class ObservableIntegrationTestsObserver: Observer {
-    var peer: MBXPeerWrapper?
     var notificationHandler: (MapboxCoreMaps.Event) -> Void
 
     init(with notificationHandler: @escaping (MapboxCoreMaps.Event) -> Void) {
@@ -46,7 +45,7 @@ class ObservableIntegrationTests: MapViewIntegrationTestCase {
             eventExpectation.fulfill()
         }
 
-        try! mapView.__map.subscribe(for: observer, events: ["resource-request"])
+        mapView.__map.subscribe(for: observer, events: ["resource-request"])
 
         style.uri = .streets
 
@@ -58,6 +57,6 @@ class ObservableIntegrationTests: MapViewIntegrationTestCase {
 
         wait(for: [styleLoadExpectation, eventExpectation], timeout: 5.0)
 
-        try! mapView.__map.unsubscribe(for: observer)
+        mapView.__map.unsubscribe(for: observer)
     }
 }

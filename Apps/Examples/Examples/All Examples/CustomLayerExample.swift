@@ -6,7 +6,6 @@ import MapboxMaps
 public class CustomLayerExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
-    public var peer: MBXPeerWrapper?
 
     var depthStencilState: MTLDepthStencilState!
     var pipelineState: MTLRenderPipelineState!
@@ -33,10 +32,10 @@ public class CustomLayerExample: UIViewController, ExampleProtocol {
         // Position the custom layer above the water layer and below all other layers.
         let layerPosition = LayerPosition(above: "water", below: nil, at: nil)
 
-        try! mapView.__map.addStyleCustomLayer(forLayerId: "Custom",
-                                               layerHost: self,
-                                               layerPosition: layerPosition)
-    }
+        mapView.__map.addStyleCustomLayer(forLayerId: "Custom",
+                                          layerHost: self,
+                                          layerPosition: layerPosition)
+}
 }
 
 extension CustomLayerExample: CustomLayerHost {

@@ -50,29 +50,25 @@ public class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
                                                                glyphsRasterizationMode: .noGlyphsRasterizedLocally)
 
         // Please note - this is using a deprecated API, and will be removed in a future release.
-        do {
-            offlineManager = try OfflineRegionManager(resourceOptions: resourceOptions())
-            try offlineManager.createOfflineRegion(for: offlineRegionDef, callback: { [weak self] (expected: MBXExpected<AnyObject, AnyObject>?) in
-                guard let expected = expected else {
-                    print("No offline region created. Unexpected result.")
-                    return
-                }
+        offlineManager = OfflineRegionManager(resourceOptions: resourceOptions())
+        offlineManager.createOfflineRegion(for: offlineRegionDef, callback: { [weak self] (expected: MBXExpected<AnyObject, AnyObject>?) in
+            guard let expected = expected else {
+                print("No offline region created. Unexpected result.")
+                return
+            }
 
-                guard !expected.isError() else {
-                    print("Error creating offline region: \(String(describing: expected.error))")
-                    return
-                }
+            guard !expected.isError() else {
+                print("Error creating offline region: \(String(describing: expected.error))")
+                return
+            }
 
-                guard let region = expected.value as? OfflineRegion else {
-                    print("Unexpected value: \(type(of: expected.value))")
-                    return
-                }
+            guard let region = expected.value as? OfflineRegion else {
+                print("Unexpected value: \(type(of: expected.value))")
+                return
+            }
 
-                self?.startDownload(for: region)
-            })
-        } catch let error {
-            print("Failed to create offline region: \(error)")
-        }
+            self?.startDownload(for: region)
+        })
     }
 
     func startDownload(for region: OfflineRegion) {
@@ -89,12 +85,8 @@ public class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
             }
         }
 
-        do {
-            try region.setOfflineRegionObserverFor(observer)
-            try region.setOfflineRegionDownloadStateFor(.active)
-        } catch let error {
-            print("Failed to start download: \(error)")
-        }
+        region.setOfflineRegionObserverFor(observer)
+        region.setOfflineRegionDownloadStateFor(.active)
     }
 }
 
@@ -110,12 +102,11 @@ public class OfflineRegionExampleObserver: OfflineRegionObserver {
 
     public func responseError(forError error: ResponseError) {
         print("Offline region download failed: \(error.reason), \(error.message)")
-        try! offlineRegion?.setOfflineRegionDownloadStateFor(.inactive)
+        offlineRegion?.setOfflineRegionDownloadStateFor(.inactive)
     }
 
     public func mapboxTileCountLimitExceeded(forLimit limit: UInt64) {
         print("Mapbox tile count max (\(limit)) has been exceeded!")
     }
 
-    public var peer: MBXPeerWrapper?
 }

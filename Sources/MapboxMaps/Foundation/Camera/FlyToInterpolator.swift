@@ -81,8 +81,8 @@ internal struct FlyToInterpolator {
         // Unwrap
         let sourceCoordUnwrapped = sourceCoord.unwrapForShortestPath(destCoord)
 
-        let sourcePointTemp = try! Projection.project(for: sourceCoordUnwrapped, zoomScale: Double(sourceScale))
-        let destPointTemp   = try! Projection.project(for: destCoord, zoomScale: Double(sourceScale))
+        let sourcePointTemp = Projection.project(for: sourceCoordUnwrapped, zoomScale: Double(sourceScale))
+        let destPointTemp   = Projection.project(for: destCoord, zoomScale: Double(sourceScale))
         sourcePoint         = CGPoint(x: sourcePointTemp.x, y: sourcePointTemp.y)
         destPoint           = CGPoint(x: destPointTemp.x, y: destPointTemp.y)
 
@@ -218,7 +218,7 @@ internal struct FlyToInterpolator {
 
         let position = MercatorCoordinate(x: Double(interpolated.x), y: Double(interpolated.y))
 
-        return try! Projection.unproject(for: position, zoomScale: Double(sourceScale))
+        return Projection.unproject(for: position, zoomScale: Double(sourceScale))
     }
 
     /// Calculates the zoom level given a fraction in [0,1].

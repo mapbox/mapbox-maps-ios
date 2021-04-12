@@ -7,7 +7,6 @@ import MapboxMaps
 public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost {
 
     internal var mapView: MapView!
-    public var peer: MBXPeerWrapper?
 
     let modelOrigin = CLLocationCoordinate2D(latitude: -35.39847, longitude: 148.9819)
     var renderer: SCNRenderer!
@@ -40,9 +39,9 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
     }
 
     func addModelAndTerrain() {
-        try! mapView.__map.addStyleCustomLayer(forLayerId: "Custom",
-                                                layerHost: self,
-                                            layerPosition: LayerPosition(above: nil, below: "waterway-label", at: nil))
+        mapView.__map.addStyleCustomLayer(forLayerId: "Custom",
+                                          layerHost: self,
+                                          layerPosition: LayerPosition(above: nil, below: "waterway-label", at: nil))
 
         var demSource = RasterDemSource()
         demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
@@ -68,8 +67,8 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
             "hillshade-illumination-anchor": "map"
         ] as [ String: Any ]
 
-        try! map.addStyleLayer(forProperties: properties,
-                               layerPosition: LayerPosition(above: nil, below: "water", at: nil))
+        map.addStyleLayer(forProperties: properties,
+                          layerPosition: LayerPosition(above: nil, below: "water", at: nil))
     }
 
     public func renderingWillStart(_ metalDevice: MTLDevice, colorPixelFormat: UInt, depthStencilPixelFormat: UInt) {
@@ -170,11 +169,11 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
         transformSimd[3, 3] = m[15].doubleValue
 
         // Model is using metric unit system: scale x and y from meters to mercator and keep z is in meters.
-        let meterInMercatorCoordinateUnits = try! 1.0 / (Projection.getMetersPerPixelAtLatitude(forLatitude: modelOrigin.latitude, zoom: parameters.zoom))
+        let meterInMercatorCoordinateUnits = 1.0 / (Projection.getMetersPerPixelAtLatitude(forLatitude: modelOrigin.latitude, zoom: parameters.zoom))
         let modelScale = makeScaleMatrix(xScale: meterInMercatorCoordinateUnits, yScale: -meterInMercatorCoordinateUnits, zScale: 1)
 
         // Translate scaled model to model origin (in web mercator coordinates) and elevate to model origin's altitude (in meters).
-        let origin = try! Projection.project(for: modelOrigin, zoomScale: pow(2, parameters.zoom))
+        let origin = Projection.project(for: modelOrigin, zoomScale: pow(2, parameters.zoom))
         var elevation = 0.0
         if let elevationData = parameters.elevationData, let elevationValue = elevationData.getElevationFor(self.modelOrigin) {
             elevation = elevationValue.doubleValue

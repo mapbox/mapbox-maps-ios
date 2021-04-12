@@ -17,10 +17,10 @@ final class MockAnnotationSupportableMap: UIView, AnnotationSupportableMap {
 
     struct OnParameters {
         var eventType: MapEvents.EventKind
-        var handler: (Event) -> Void
+        var handler: (MapboxCoreMaps.Event) -> Void
     }
     let onStub = Stub<OnParameters, Void>()
-    func on(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) {
+    func on(_ eventType: MapEvents.EventKind, handler: @escaping (MapboxCoreMaps.Event) -> Void) {
         return onStub.call(with: OnParameters(eventType: eventType, handler: handler))
     }
 }

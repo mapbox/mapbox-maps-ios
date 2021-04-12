@@ -62,7 +62,7 @@ extension BaseMapView: AnnotationSupportableMap {
         let screenBox = ScreenBox(min: ScreenCoordinate(x: Double(rect.minX), y: Double(rect.minY)),
                                   max: ScreenCoordinate(x: Double(rect.maxX), y: Double(rect.maxY)))
 
-        try! __map.queryRenderedFeatures(for: screenBox, options: queryOptions, callback: { (expected: MBXExpected?) in
+        __map.queryRenderedFeatures(for: screenBox, options: queryOptions, callback: { (expected: MBXExpected?) in
 
             guard let validExpected = expected else {
                 completion(.failure(.unknown))
@@ -113,7 +113,7 @@ extension BaseMapView: AnnotationSupportableMap {
         let screenPoint = ScreenCoordinate(x: Double(point.x),
                                            y: Double(point.y))
 
-        try! __map.queryRenderedFeatures(forPixel: screenPoint, options: queryOptions, callback: { (expected: MBXExpected?) in
+        __map.queryRenderedFeatures(forPixel: screenPoint, options: queryOptions, callback: { (expected: MBXExpected?) in
 
             guard let validExpected = expected else {
                 completion(.failure(.unknown))

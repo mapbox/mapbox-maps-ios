@@ -59,8 +59,8 @@ let package = Package(
                 .copy("Foundation/GeoJSON/Fixtures/simple-line.geojson"),
                 .copy("Foundation/GeoJSON/Fixtures/polygon.geojson"),
                 .copy("Foundation/GeoJSON/Fixtures/multipolygon.geojson"),
-                .copy("Resources/MapInitOptionsTests.xib"),
                 .copy("Helpers/MapboxAccessToken"),
+                .process("Resources/MapInitOptionsTests.xib"),
             ]
         )
     ]

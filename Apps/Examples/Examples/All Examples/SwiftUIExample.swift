@@ -51,7 +51,7 @@ internal struct SwiftUIMapView: UIViewRepresentable {
         return updated
     }
 
-    /// Unlike `styleURI`, there's no good default value for `resourceOptions`
+    /// Unlike `styleURI`, there's no good default value for `mapInitOptions`
     /// because it's the value that contains your Mapbox access token. For that reason,
     /// it's declared here as a `let` and is a required parameter in the initializer.
     private let mapInitOptions: MapInitOptions

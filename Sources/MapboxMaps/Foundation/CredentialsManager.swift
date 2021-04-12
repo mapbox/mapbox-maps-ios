@@ -18,8 +18,23 @@ import Foundation
 ///     ```
 public class CredentialsManager {
 
-    /// Access token
-    public var accessToken: String
+    private var bundle: Bundle
+
+    /// Backing property for accessToken
+    private var _accessToken: String?
+
+    /// Access token.
+    ///
+    /// This property has "null resettable" behavior; if you set `accessToken`
+    /// to `nil`, we will return the application's default access token.
+    public var accessToken: String! {
+        get {
+            return _accessToken ?? defaultAccessToken() //?? ""
+        }
+        set {
+            _accessToken = newValue
+        }
+    }
 
     /// Default instance
     ///
@@ -30,41 +45,46 @@ public class CredentialsManager {
     /// under the key `MBXAccessToken`
     ///
     /// A valid access token must be provided or found.
-    public static var `default` = CredentialsManager(internal: nil)
+    public private(set) static var `default` = CredentialsManager(accessToken: nil)
 
     /// Initializes a CredentialsManager with an access token.
     ///
+    /// If the supplied token is nil (which is the case for the `default`) then
+    /// we will search for an access token in the application's Info.plist.
+
     /// Use the shared `CredentialsManager.default` to set a globally shared
     /// access token.
     ///
-    /// - Parameter accessToken: access token
-    public convenience init(accessToken: String) {
-        self.init(internal: accessToken)
+    /// - Parameter accessToken: access token or nil
+    public convenience init(accessToken: String?) {
+        self.init(accessToken: accessToken, for: .main)
     }
 
     /// Initializes a CredentialsManager with an optional access token.
     ///
-    /// If the supplied token is nil (which is the case for the `default`) then
-    /// we will search for an access token in the application's Info.plist.
-    ///
-    /// - Parameter accessToken: access token or nil
-    internal init(internal accessToken: String?) {
-        if let accessToken = accessToken {
-            self.accessToken = accessToken
-        } else {
-            self.accessToken = Self.defaultAccessToken() ?? ""
-        }
+    /// - Parameters:
+    ///     - accessToken: access token or nil
+    ///     - bundle: Bundle to search for an access token (used if access token
+    ///         is nil).
+    internal init(accessToken: String?, for bundle: Bundle) {
+        self._accessToken = accessToken
+        self.bundle = bundle
     }
 
-    internal static func defaultAccessToken() -> String? {
+    internal func defaultAccessToken() -> String? {
         // Check User defaults
         if let accessToken = UserDefaults.standard.string(forKey: "MBXAccessToken") {
             print("Found access token from UserDefaults (command line parameter?)")
             return accessToken
         }
         // Check application plist
-        else if let accessToken = Bundle.main.infoDictionary?["MBXAccessToken"] as? String {
+        else if let accessToken = bundle.infoDictionary?["MBXAccessToken"] as? String {
             return accessToken
+        }
+        // Check for a bundled file
+        else if let url = bundle.url(forResource: "MapboxAccessToken", withExtension: nil),
+                let token = try? String(contentsOf: url) {
+            return token
         }
 
         return nil

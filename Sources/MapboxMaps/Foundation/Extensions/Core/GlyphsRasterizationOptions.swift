@@ -19,13 +19,13 @@ extension GlyphsRasterizationOptions {
     ///
     /// - Note:
     ///     Calling `GlyphsRasterizationOptions()` will currently not call this
-    ///     initializer. TODO: mark underlying initializer with NS_UNAVAILABLE
+    ///     initializer.
 
     public convenience init(rasterizationMode: GlyphsRasterizationMode = .ideographsRasterizedLocally,
                             fontFamilies: [String] = []) {
         let resolvedFamilies: [String]
         if fontFamilies.isEmpty {
-            resolvedFamilies = Self._defaultFontFamilies()
+            resolvedFamilies = Self.defaultFontFamilies()
         } else {
             resolvedFamilies = fontFamilies
         }
@@ -34,7 +34,7 @@ extension GlyphsRasterizationOptions {
     }
 
     /// Return the default font family/families
-    public static func _defaultFontFamilies() -> [String] {
+    internal static func defaultFontFamilies() -> [String] {
         switch Bundle.main.infoDictionary?["MBXIdeographicFontFamilyName"] {
         case let family as String:
             return [family]

@@ -25,7 +25,6 @@ extension ResourceOptions {
                             tileStorePath: String? = nil,
                             loadTilePacksFromNetwork: Bool = true,
                             cacheSize: UInt64 = (1024*1024*10)) {
-        // TODO: Validate token
 //      precondition(accessToken.count > 0)
 
         let cacheURL = ResourceOptions.cacheURLIncludingSubdirectory()
@@ -43,11 +42,6 @@ extension ResourceOptions {
     public var cacheSize: UInt64? {
         __cacheSize?.uint64Value
     }
-
-// TODO:
-//    public var loadTilePacksFromNetwork: Bool {
-//        __loadTilePacksFromNetwork?.boolValue
-//    }
 
     private static func cacheURLIncludingSubdirectory() -> URL? {
         guard let bundleIdentifier = Bundle.main.bundleIdentifier else { return nil }
@@ -78,9 +72,14 @@ extension ResourceOptions {
         return cacheDirectoryURL.appendingPathComponent("cache.db")
     }
 
-    // :nodoc:
+    /// :nodoc:
     public override func isEqual(_ object: Any?) -> Bool {
+
         guard let other = object as? ResourceOptions else {
+            return false
+        }
+
+        guard type(of: self) == type(of: other) else {
             return false
         }
 
@@ -92,5 +91,18 @@ extension ResourceOptions {
             (tileStorePath == other.tileStorePath) &&
             (loadTilePacksFromNetwork == other.loadTilePacksFromNetwork) &&
             (cacheSize == other.cacheSize)
+    }
+
+    /// :nodoc:
+    open override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(accessToken)
+        hasher.combine(baseURL)
+        hasher.combine(cachePath)
+        hasher.combine(assetPath)
+        hasher.combine(tileStorePath)
+        hasher.combine(loadTilePacksFromNetwork)
+        hasher.combine(cacheSize)
+        return hasher.finalize()
     }
 }

@@ -497,10 +497,10 @@ jobs:
           name: Creating SDK Registry PR
           command: ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios ${VERSION}
           when: always
-      - run:
-          name: Update Package Manifest & Podspec
-          command: ./scripts/release/update-dependency-manager-manifests.sh ${VERSION}
-          when: on_success
+      # - run:
+      #     name: Update Package Manifest & Podspec
+      #     command: ./scripts/release/update-dependency-manager-manifests.sh ${VERSION}
+      #     when: on_success
       - slack/status:
           fail_only: false
           include_visit_job_action: true

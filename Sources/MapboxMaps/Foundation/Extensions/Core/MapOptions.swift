@@ -1,5 +1,3 @@
-import MapboxCoreMaps
-
 extension MapboxCoreMaps.MapOptions {
     /// Initialize a `MapOptions` object that is used when initializing a Map.
     ///
@@ -23,12 +21,20 @@ extension MapboxCoreMaps.MapOptions {
                             pixelRatio: CGFloat = UIScreen.main.scale,
                             glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions(fontFamilies: [])) {
 
+        let mbmSize: Size?
+
+        if let size = size {
+            mbmSize = Size(width: Float(size.width), height: Float(size.height))
+        } else {
+            mbmSize = nil
+        }
+
         self.init(__contextMode: nil,
                   constrainMode: constrainMode.NSNumber,
                   viewportMode: viewportMode.NSNumber,
                   orientation: orientation.NSNumber,
                   crossSourceCollisions: crossSourceCollisions.NSNumber,
-                  size: size?.mbmSize,
+                  size: mbmSize,
                   pixelRatio: Float(pixelRatio),
                   glyphsRasterizationOptions: glyphsRasterizationOptions)
     }

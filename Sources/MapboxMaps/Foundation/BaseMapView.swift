@@ -225,7 +225,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
                                             viewportMode: other.__viewportMode,
                                             orientation: other.__orientation,
                                             crossSourceCollisions: other.__crossSourceCollisions,
-                                            size: bounds.size.mbmSize,
+                                            size: Size(width: Float(bounds.width), height: Float(bounds.height)),
                                             pixelRatio: other.pixelRatio,
                                             glyphsRasterizationOptions: other.glyphsRasterizationOptions)
         } else {

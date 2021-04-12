@@ -5,98 +5,38 @@ import Turf
 
 // swiftlint:disable file_length type_body_length
 
-public enum PreferredFPS: RawRepresentable, Equatable {
-
-    /**
-     Create a `PreferredFPS` value from an `Int`.
-     - Parameter rawValue: The `Int` value to use as the preferred frames per second.
-     */
-    public init?(rawValue: Int) {
-        switch rawValue {
-        case Self.lowPower.rawValue:
-            self = .lowPower
-        case Self.normal.rawValue:
-            self = .normal
-        case Self.maximum.rawValue:
-            self = .maximum
-        default:
-            self = .custom(fps: rawValue)
-        }
-    }
-
-    public typealias RawValue = Int
-
-    /// The default frame rate. This can be either 30 FPS or 60 FPS, depending on
-    /// device capabilities.
-    case normal
-
-    /// A conservative frame rate; typically 30 FPS.
-    case lowPower
-
-    /// The maximum supported frame rate; typically 60 FPS.
-    case maximum
-
-    /// A custom frame rate. The default value is 30 FPS.
-    case custom(fps: Int)
-
-    /// The preferred frames per second as an `Int` value.
-    public var rawValue: Int {
-        switch self {
-        case .lowPower:
-            return 30
-        case .normal:
-            return -1
-        case .maximum:
-            return 0
-        case .custom(let fps):
-            // TODO: Check that value is a valid FPS value.
-            return fps
-        }
-    }
-
-}
-
-open class ObserverConcrete: Observer {
-
-    /// Map of event types to subscribed event handlers
-    internal var eventHandlers: [String: [(MapboxCoreMaps.Event) -> Void]] = [:]
-
-    /// Notify correct handler
-    public func notify(for event: MapboxCoreMaps.Event) {
-        let handlers = eventHandlers[event.type]
-        handlers?.forEach({ (handler) in
-            handler(event)
-        })
-    }
-}
-
 internal typealias PendingAnimationCompletion = (completion: AnimationCompletion, animatingPosition: UIViewAnimatingPosition)
 
-open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDelegate {
+open class BaseMapView: UIView, CameraViewDelegate {
 
     /// The underlying renderer object responsible for rendering the map
-    public var __map: Map!
+    public private(set) var __map: Map!
+
+    private let mapClient = DelegatingMapClient()
+    private let observer = DelegatingObserver()
 
     /// The underlying metal view that is used to render the map
-    internal var metalView: MTKView?
+    internal private(set) var metalView: MTKView?
 
     /// Resource options for this map view
-    internal var resourceOptions: ResourceOptions?
+    internal private(set) var resourceOptions: ResourceOptions?
 
     /// List of completion blocks that need to be completed by the displayLink
     internal var pendingAnimatorCompletionBlocks: [PendingAnimationCompletion] = []
 
-    internal var needsDisplayRefresh: Bool = false
-    internal var dormant: Bool = false
-    internal var displayCallback: (() -> Void)?
-    private var observerConcrete: ObserverConcrete!
+    /// Map of event types to subscribed event handlers
+    private var eventHandlers: [String: [(MapboxCoreMaps.Event) -> Void]] = [:]
+
+    private var needsDisplayRefresh: Bool = false
+    private var dormant: Bool = false
+    private var displayCallback: (() -> Void)?
     @objc dynamic internal var displayLink: CADisplayLink?
 
-    @IBInspectable internal var styleURI__: String = ""
+    @IBInspectable private var styleURI__: String = ""
 
     /// Outlet that can be used when initializing a MapView with a Storyboard or
     /// a nib.
-    @IBOutlet internal weak var mapInitOptionsProvider: MapInitOptionsProvider?
+    @IBOutlet internal private(set) weak var mapInitOptionsProvider: MapInitOptionsProvider?
 
     internal var preferredFPS: PreferredFPS = .normal {
         didSet {
@@ -105,7 +45,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     }
 
     /// Returns the camera view managed by this object.
-    var cameraView: CameraView!
+    internal private(set) var cameraView: CameraView!
 
     /// The map's current camera
     public var camera: CameraOptions {
@@ -195,25 +135,9 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     }
 
     private func commonInit(mapInitOptions: MapInitOptions, styleURI: URL?) {
-
-        if MTLCreateSystemDefaultDevice() == nil {
-            // Check if we're running on a simulator on iOS 11 or 12
-            var loggedWarning = false
-
-            #if targetEnvironment(simulator)
-            if !ProcessInfo().isOperatingSystemAtLeast(OperatingSystemVersion(majorVersion: 13, minorVersion: 0, patchVersion: 0)) {
-                Log.warning(forMessage: "Metal rendering is not supported on iOS versions < iOS 13. Please test on device or on iOS version >= 13.", category: "MapView")
-                loggedWarning = true
-            }
-            #endif
-
-            if !loggedWarning {
-                Log.error(forMessage: "No suitable Metal device or simulator can be found.", category: "MapView")
-            }
-        }
+        checkForMetalSupport()
 
         self.resourceOptions = mapInitOptions.resourceOptions
-        observerConcrete = ObserverConcrete()
 
         let resolvedMapOptions: MapOptions
 
@@ -231,12 +155,14 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
         } else {
             resolvedMapOptions = mapInitOptions.mapOptions
         }
-        __map = Map(client: self, mapOptions: resolvedMapOptions, resourceOptions: mapInitOptions.resourceOptions)
+        mapClient.delegate = self
+        __map = Map(client: mapClient, mapOptions: resolvedMapOptions, resourceOptions: mapInitOptions.resourceOptions)
 
         __map?.createRenderer()
 
+        observer.delegate = self
         let events = MapEvents.EventKind.allCases.map({ $0.rawValue })
-        __map.subscribe(for: observerConcrete, events: events)
+        __map.subscribe(for: observer, events: events)
 
         self.cameraView = CameraView(delegate: self)
         self.addSubview(cameraView)
@@ -249,7 +175,23 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
         if let validStyleURI = styleURI {
             __map?.setStyleURIForUri(validStyleURI.absoluteString)
         }
+    }
 
+    private func checkForMetalSupport() {
+        guard MTLCreateSystemDefaultDevice() == nil else {
+            return
+        }
+
+        // Metal is unavailable on older simulators
+        #if targetEnvironment(simulator)
+        guard ProcessInfo().isOperatingSystemAtLeast(OperatingSystemVersion(majorVersion: 13, minorVersion: 0, patchVersion: 0)) else {
+            Log.warning(forMessage: "Metal rendering is not supported on iOS versions < iOS 13. Please test on device or on iOS version >= 13.", category: "MapView")
+            return
+        }
+        #endif
+
+        // Metal is unavailable for a different reason
+        Log.error(forMessage: "No suitable Metal device or simulator can be found.", category: "MapView")
     }
 
     class internal func parseIBString(ibString: String) -> String? {
@@ -269,15 +211,15 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
             MapInitOptions()
 
         let ibStyleURI = BaseMapView.parseIBStringAsURL(ibString: styleURI__)
-        let styleURI = ibStyleURI ?? URL(string: "mapbox://styles/mapbox/streets-v11")!
+        let styleURI = ibStyleURI ?? StyleURI.streets.rawValue
 
         commonInit(mapInitOptions: mapInitOptions, styleURI: styleURI)
     }
 
     public func on(_ eventType: MapEvents.EventKind, handler: @escaping (MapboxCoreMaps.Event) -> Void) {
-        var handlers: [(MapboxCoreMaps.Event) -> Void] = observerConcrete.eventHandlers[eventType.rawValue] ?? []
+        var handlers = eventHandlers[eventType.rawValue] ?? []
         handlers.append(handler)
-        observerConcrete.eventHandlers[eventType.rawValue] = handlers
+        eventHandlers[eventType.rawValue] = handlers
     }
 
     public override func layoutSubviews() {
@@ -372,42 +314,6 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
         super.init(coder: coder)
     }
 
-    // MARK: MBXMapClient conformance
-    public func scheduleRepaint() {
-        needsDisplayRefresh = true
-    }
-
-    /// :nodoc:
-    public func scheduleTask(forTask task: @escaping Task) {
-        fatalError("scheduleTask is not supported")
-    }
-
-    // MARK: - MBXMetalViewProvider conformance
-
-    /// :nodoc:
-    public func getMetalView(for metalDevice: MTLDevice?) -> MTKView? {
-
-        let metalView = MTKView(frame: frame, device: metalDevice)
-        displayCallback = {
-            metalView.setNeedsDisplay()
-        }
-
-        metalView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
-        metalView.autoResizeDrawable = true
-        metalView.contentScaleFactor = UIScreen.main.scale
-        metalView.contentMode = .center
-        metalView.isOpaque = isOpaque
-        metalView.layer.isOpaque = isOpaque
-        metalView.isPaused = true
-        metalView.enableSetNeedsDisplay = true
-        metalView.presentsWithTransaction = true
-
-        insertSubview(metalView, at: 0)
-        self.metalView = metalView
-
-        return metalView
-    }
-
     // MARK: Conversion utilities
     /**
       Converts a point in a given view’s coordinate system to a geographic coordinate.
@@ -480,6 +386,48 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
         rect = rect.extend(from: nePoint)
 
         return rect
+    }
+}
+
+extension BaseMapView: DelegatingObserverDelegate {
+    /// Notify correct handler
+    internal func notify(for event: MapboxCoreMaps.Event) {
+        let handlers = eventHandlers[event.type]
+        handlers?.forEach { (handler) in
+            handler(event)
+        }
+    }
+}
+
+extension BaseMapView: DelegatingMapClientDelegate {
+    internal func scheduleRepaint() {
+        needsDisplayRefresh = true
+    }
+
+    internal func scheduleTask(forTask task: @escaping Task) {
+        fatalError("scheduleTask is not supported")
+    }
+
+    internal func getMetalView(for metalDevice: MTLDevice?) -> MTKView? {
+        let metalView = MTKView(frame: frame, device: metalDevice)
+        displayCallback = {
+            metalView.setNeedsDisplay()
+        }
+
+        metalView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        metalView.autoResizeDrawable = true
+        metalView.contentScaleFactor = UIScreen.main.scale
+        metalView.contentMode = .center
+        metalView.isOpaque = isOpaque
+        metalView.layer.isOpaque = isOpaque
+        metalView.isPaused = true
+        metalView.enableSetNeedsDisplay = true
+        metalView.presentsWithTransaction = true
+
+        insertSubview(metalView, at: 0)
+        self.metalView = metalView
+
+        return metalView
     }
 }
 

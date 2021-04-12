@@ -9,24 +9,16 @@ import MapboxMapsStyle
 #endif
 
 // MARK: - Snapshotter
-public class Snapshotter: Observer {
+public class Snapshotter {
 
     /// Internal `MapboxCoreMaps.MBXMapSnapshotter` object that takes care of
     /// rendering a snapshot.
     internal var mapSnapshotter: MapSnapshotter
-    // TODO: Conformance to the `Observer` protocol requires this to be public,
-    // consider reviewing if this can be changed internally to `internal`.
+
+    private let observer = DelegatingObserver()
 
     /// Map of event types to subscribed event handlers
-    internal var eventHandlers: [String: [(MapboxCoreMaps.Event) -> Void]] = [:]
-
-    /// Notify correct handler
-    public func notify(for event: MapboxCoreMaps.Event) {
-        let handlers = eventHandlers[event.type]
-        handlers?.forEach({ (handler) in
-            handler(event)
-        })
-    }
+    private var eventHandlers: [String: [(MapboxCoreMaps.Event) -> Void]] = [:]
 
     /// A `style` object that can be manipulated to set different styles for a snapshot
     public let style: Style
@@ -38,7 +30,8 @@ public class Snapshotter: Observer {
     public init(options: MapSnapshotOptions) {
         mapSnapshotter = MapSnapshotter(options: options)
         style = Style(with: mapSnapshotter)
-        mapSnapshotter.subscribe(for: self, events: [
+        observer.delegate = self
+        mapSnapshotter.subscribe(for: observer, events: [
             MapEvents.styleLoaded,
             MapEvents.styleImageMissing,
             MapEvents.mapLoadingError
@@ -214,5 +207,15 @@ public class Snapshotter: Observer {
          }
 
         return compositeImage
+    }
+}
+
+extension Snapshotter: DelegatingObserverDelegate {
+    /// Notify correct handler
+    internal func notify(for event: MapboxCoreMaps.Event) {
+        let handlers = eventHandlers[event.type]
+        handlers?.forEach { (handler) in
+            handler(event)
+        }
     }
 }

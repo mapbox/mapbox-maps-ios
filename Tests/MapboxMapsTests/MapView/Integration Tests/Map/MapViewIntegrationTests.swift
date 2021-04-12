@@ -76,7 +76,7 @@ class MapViewIntegrationTests: IntegrationTestCase {
 
         mapView.pendingAnimatorCompletionBlocks.append(firstCompletion)
         mapView.pendingAnimatorCompletionBlocks.append(secondCompletion)
-        mapView.needsDisplayRefresh = true
+        mapView.scheduleRepaint()
         XCTAssertEqual(mapView.pendingAnimatorCompletionBlocks.count, 2)
 
         mapView.updateFromDisplayLink(displayLink: CADisplayLink())

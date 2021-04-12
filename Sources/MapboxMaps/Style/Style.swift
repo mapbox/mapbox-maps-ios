@@ -423,12 +423,16 @@ public class Style {
  */
 public struct StyleTransition: Codable {
 
-    /// Time allotted for transitions to complete.
+    /// Time allotted for transitions to complete in milliseconds.
     public var duration: TimeInterval = 0
 
-    /// Length of time before a transition begins.
+    /// Length of time before a transition begins in milliseconds.
     public var delay: TimeInterval = 0
 
+    /// Initiralizer for `StyleTransition`
+    /// - Parameters:
+    ///   - duration: Time for transition in milliseconds.
+    ///   - delay: Time before transition begins in milliseconds.
     public init(duration: TimeInterval, delay: TimeInterval) {
         self.duration = duration
         self.delay = delay

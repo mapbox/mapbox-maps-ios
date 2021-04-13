@@ -47,4 +47,27 @@ extension GlyphsRasterizationOptions {
 
     internal static let fallbackFontFamilyName =
         UIFont.systemFont(ofSize: 0, weight: .regular).familyName
+
+    /// :nodoc:
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? GlyphsRasterizationOptions else {
+            return false
+        }
+
+        guard type(of: self) == type(of: other) else {
+            return false
+        }
+
+        return
+            (rasterizationMode == other.rasterizationMode) &&
+            (fontFamily == other.fontFamily)
+    }
+
+    /// :nodoc:
+    open override var hash: Int {
+        var hasher = Hasher()
+        rasterizationMode.hash(into: &hasher)
+        fontFamily.hash(into: &hasher)
+        return hasher.finalize()
+    }
 }

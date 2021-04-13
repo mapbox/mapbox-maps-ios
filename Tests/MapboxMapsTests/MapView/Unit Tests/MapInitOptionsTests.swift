@@ -25,4 +25,27 @@ class MapInitOptionsTests: XCTestCase {
         // `init` is not being called.
         XCTAssert(updatedMapInitOptions.mapOptions.constrainMode != .none)
     }
+
+    func testEquality() {
+        let a = MapInitOptions()
+        let b = MapInitOptions()
+        XCTAssertEqual(a, b)
+
+        let options = ResourceOptions(accessToken: "1234")
+        let c = MapInitOptions(resourceOptions: options,
+                               mapOptions: MapOptions(constrainMode: .heightOnly))
+        XCTAssertNotEqual(a, c)
+    }
+
+    func testHashable() {
+        var set = Set<MapInitOptions>()
+
+        let a = MapInitOptions()
+        set.insert(a)
+
+        let b = MapInitOptions()
+        set.insert(b)
+
+        XCTAssert(set.count == 1)
+    }
 }

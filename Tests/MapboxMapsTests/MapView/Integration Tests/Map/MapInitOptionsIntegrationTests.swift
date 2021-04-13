@@ -3,11 +3,11 @@ import XCTest
 
 class MapInitOptionsIntegrationTests: XCTestCase {
 
-    private var dataSourceReturnValue: Any = false
+    private var dataSourceReturnValue: MapInitOptions?
 
     override func tearDown() {
         super.tearDown()
-        dataSourceReturnValue = false
+        dataSourceReturnValue = nil
     }
 
     func testOptionsWithCustomCredentialsManager() {
@@ -43,13 +43,8 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         let mapView = objects.compactMap { $0 as? MapView }.first { $0.tag == 1 }!
         XCTAssertNotNil(mapView.mapInitOptionsDataSource)
 
-        guard let optionsFromDataSource = mapView.mapInitOptionsDataSource?.mapInitOptions() as? MapInitOptions else {
+        guard let optionsFromDataSource = mapView.mapInitOptionsDataSource?.mapInitOptions() else {
             XCTFail("MapInitOptions not returned from data source")
-            return
-        }
-
-        guard let dataSourceReturnValue = self.dataSourceReturnValue as? MapInitOptions else {
-            XCTFail("dataSourceReturnValue not a MapInitOptions")
             return
         }
 
@@ -60,12 +55,11 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         // Now check the resource options from the initialized MapView
         let resourceOptions = try! mapView.__map.getResourceOptions()
 
-        XCTAssertEqual(resourceOptions, dataSourceReturnValue.resourceOptions)
+        XCTAssertEqual(resourceOptions, dataSourceReturnValue?.resourceOptions)
         XCTAssertEqual(resourceOptions.accessToken, credentialsManager.accessToken)
     }
 
     func testDefaultOptionsAreUsedWhenNibDoesntSetDataSource() {
-        XCTAssert(dataSourceReturnValue is Bool )
         CredentialsManager.default.accessToken = "pk.eeeeee"
 
         // Load view from a nib, where the map view's datasource is nil
@@ -89,7 +83,7 @@ class MapInitOptionsIntegrationTests: XCTestCase {
 extension MapInitOptionsIntegrationTests: MapInitOptionsDataSource {
     // This needs to return Any, since MapInitOptions is a struct, and this is
     // an objc delegate.
-    public func mapInitOptions() -> Any {
+    public func mapInitOptions() -> MapInitOptions? {
         return dataSourceReturnValue
     }
 }

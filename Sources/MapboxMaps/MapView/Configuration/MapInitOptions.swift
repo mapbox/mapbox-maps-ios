@@ -2,14 +2,14 @@ import Foundation
 
 @objc public protocol MapInitOptionsDataSource {
     /// When you implement this method you should return a `MapInitOptions`.
-    func mapInitOptions() -> Any
+    func mapInitOptions() -> MapInitOptions?
 }
 
 /// Options used when initializing `MapView`.
 ///
 /// Contains the `ResourceOptions`, `MapOptions` (including `GlyphsRasterizationOptions`)
 /// that are required to initialize a `MapView`.
-public struct MapInitOptions: Equatable {
+public final class MapInitOptions: NSObject {
 
     /// Associated `ResourceOptions`
     public let resourceOptions: ResourceOptions
@@ -29,5 +29,24 @@ public struct MapInitOptions: Equatable {
                 mapOptions: MapOptions = MapOptions(constrainMode: .heightOnly)) {
         self.resourceOptions = resourceOptions
         self.mapOptions = mapOptions
+    }
+
+    /// :nodoc:
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? MapInitOptions else {
+            return false
+        }
+
+        return
+            (resourceOptions == other.resourceOptions) &&
+            (mapOptions == other.mapOptions)
+    }
+
+    /// :nodoc:
+    public override var hash: Int {
+        var hasher = Hasher()
+        resourceOptions.hash(into: &hasher)
+        mapOptions.hash(into: &hasher)
+        return hasher.finalize()
     }
 }

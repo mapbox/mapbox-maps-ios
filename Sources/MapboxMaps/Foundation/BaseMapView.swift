@@ -265,7 +265,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     open override func awakeFromNib() {
         super.awakeFromNib()
 
-        let mapInitOptions = mapInitOptionsDataSource?.mapInitOptions() as? MapInitOptions ??
+        let mapInitOptions = mapInitOptionsDataSource?.mapInitOptions() ??
             MapInitOptions()
 
         let ibStyleURI = BaseMapView.parseIBStringAsURL(ibString: styleURI__)

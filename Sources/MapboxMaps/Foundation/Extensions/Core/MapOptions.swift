@@ -75,4 +75,36 @@ extension MapboxCoreMaps.MapOptions {
 
         return CGSize(width: Double(size.width), height: Double(size.height))
     }
+
+    /// :nodoc:
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? MapOptions else {
+            return false
+        }
+
+        guard type(of: self) == type(of: other) else {
+            return false
+        }
+
+        return
+            (constrainMode == other.constrainMode) &&
+            (viewportMode == other.viewportMode) &&
+            (orientation == other.orientation) &&
+            (crossSourceCollisions == other.crossSourceCollisions) &&
+            (size == other.size) &&
+            (pixelRatio == other.pixelRatio) &&
+            (glyphsRasterizationOptions == other.glyphsRasterizationOptions)
+    }
+
+    /// :nodoc:
+    open override var hash: Int {
+        var hasher = Hasher()
+        constrainMode.hash(into: &hasher)
+        viewportMode.hash(into: &hasher)
+        orientation.hash(into: &hasher)
+        crossSourceCollisions.hash(into: &hasher)
+        pixelRatio.hash(into: &hasher)
+        glyphsRasterizationOptions.hash(into: &hasher)
+        return hasher.finalize()
+    }
 }

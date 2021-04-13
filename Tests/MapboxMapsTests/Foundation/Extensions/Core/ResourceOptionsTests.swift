@@ -28,7 +28,7 @@ class ResourceOptionsTests: XCTestCase {
         XCTAssertNotEqual(c.hashValue, 0)
         XCTAssertNotEqual(a.hashValue, c.hashValue)
 
-        XCTAssertEqual(a.hash, a.hashValue)
+        XCTAssertEqual(a.hashValue, a.hashValue)
     }
 
     func testAccessTokenFromDefaultInit() {

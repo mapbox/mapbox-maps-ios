@@ -14,7 +14,7 @@ internal protocol AnnotationSupportableMap: UIView {
     func visibleFeatures(in rect: CGRect,
                          styleLayers: Set<String>?,
                          filter: Expression?,
-                         completion: @escaping (Result<[Feature], BaseMapView.QueryRenderedFeaturesError>) -> Void)
+                         completion: @escaping (Result<[QueriedFeature], BaseMapView.QueryRenderedFeaturesError>) -> Void)
     func on(_ eventType: MapEvents.EventKind, handler: @escaping (MapboxCoreMaps.Event) -> Void)
 }
 
@@ -39,7 +39,7 @@ extension BaseMapView: AnnotationSupportableMap {
     public func visibleFeatures(in rect: CGRect,
                                 styleLayers: Set<String>? = nil,
                                 filter: Expression? = nil,
-                                completion: @escaping (Result<[Feature], QueryRenderedFeaturesError>) -> Void) {
+                                completion: @escaping (Result<[QueriedFeature], QueryRenderedFeaturesError>) -> Void) {
 
         var styleLayerIdentifiers: [String]?
         var jsonExpression: Any?
@@ -74,8 +74,8 @@ extension BaseMapView: AnnotationSupportableMap {
                 return
             }
 
-            if let mbxFeatures = validExpected.value as? [MBXFeature] {
-                completion(.success(mbxFeatures.compactMap({ Feature($0) })))
+            if let mbxFeatures = validExpected.value as? [QueriedFeature] {
+                completion(.success(mbxFeatures))
                 return
             }
         })
@@ -90,7 +90,7 @@ extension BaseMapView: AnnotationSupportableMap {
     public func visibleFeatures(at point: CGPoint,
                                 styleLayers: Set<String>? = nil,
                                 filter: Expression? = nil,
-                                completion: @escaping (Result<[Feature], QueryRenderedFeaturesError>) -> Void) {
+                                completion: @escaping (Result<[QueriedFeature], QueryRenderedFeaturesError>) -> Void) {
 
         var styleLayerIdentifiers: [String]?
         var jsonExpression: Any?
@@ -125,8 +125,8 @@ extension BaseMapView: AnnotationSupportableMap {
                 return
             }
 
-            if let mbxFeatures = validExpected.value as? [MBXFeature] {
-                completion(.success(mbxFeatures.compactMap({ Feature($0) })))
+            if let mbxFeatures = validExpected.value as? [QueriedFeature] {
+                completion(.success(mbxFeatures))
                 return
             }
         })

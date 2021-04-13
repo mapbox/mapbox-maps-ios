@@ -126,16 +126,12 @@ public class Style {
     public func _layer(with layerID: String, type: Layer.Type) -> Result<Layer, LayerError> {
 
         // Get the layer properties from the map
-        var layerProps: MBXExpected<AnyObject, AnyObject>?
+        let layerProps = styleManager.getStyleLayerProperties(forLayerId: layerID)
 
-        styleManager.getStyleLayerProperties(forLayerId: layerID)
-
-        // If layerProps represents an error, return early
-        guard let validLayerProps = layerProps, validLayerProps.isValue(),
-              let validValue = validLayerProps.value as? [String: AnyObject] else {
-            return .failure(.getStyleLayerFailed(layerProps?.error as? String))
+        guard layerProps.isValue(),
+              let validValue = layerProps.value as? [String: AnyObject] else {
+            return .failure(.getStyleLayerFailed(layerProps.error as? String))
         }
-
         // Decode the layer properties into a layer object
         do {
             let layer = try type.init(jsonObject: validValue)

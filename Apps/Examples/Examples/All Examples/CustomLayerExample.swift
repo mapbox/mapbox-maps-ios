@@ -35,7 +35,7 @@ public class CustomLayerExample: UIViewController, ExampleProtocol {
         mapView.__map.addStyleCustomLayer(forLayerId: "Custom",
                                           layerHost: self,
                                           layerPosition: layerPosition)
-}
+    }
 }
 
 extension CustomLayerExample: CustomLayerHost {

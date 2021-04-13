@@ -635,7 +635,7 @@ public class AnnotationManager {
                                     if case .success(let features) = result {
                                         if features.count == 0 { return }
 
-                                        guard let featureIdentifier = features[0].identifier?.value as? String else { return }
+                                        guard let featureIdentifier = features[0].feature.identifier as? String else { return }
 
                                         /**
                                          If the found feature identifier exists in the internal

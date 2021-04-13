@@ -8,11 +8,12 @@ final class MockAnnotationSupportableMap: UIView, AnnotationSupportableMap {
     func visibleFeatures(in rect: CGRect,
                          styleLayers: Set<String>?,
                          filter: Expression?,
-                         completion: @escaping (Result<[Feature], BaseMapView.QueryRenderedFeaturesError>) -> Void) {
+                         completion: @escaping (Result<[QueriedFeature], BaseMapView.QueryRenderedFeaturesError>) -> Void) {
 
         let coord = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-        let feature = Feature(Point.init(coord))
-        completion(.success([feature]))
+        let feature = MBXFeature()
+        let quriedFeature = QueriedFeature(feature: feature, source: "SourceID", sourceLayer: nil, state: true)
+        completion(.success([quriedFeature]))
     }
 
     struct OnParameters {

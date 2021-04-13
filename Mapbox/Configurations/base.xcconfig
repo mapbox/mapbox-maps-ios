@@ -157,7 +157,7 @@ LD_GENERATE_MAP_FILE = YES
 RUN_CLANG_STATIC_ANALYZER = YES
 
 SWIFT_TREAT_WARNINGS_AS_ERRORS[config=Debug] = NO
-SWIFT_TREAT_WARNINGS_AS_ERRORS[config=Release] = YES
+SWIFT_TREAT_WARNINGS_AS_ERRORS[config=Release] = NO
 
 
 // -----------------------------------------------------------------------------

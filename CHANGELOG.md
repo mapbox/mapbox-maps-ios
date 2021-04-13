@@ -2,6 +2,8 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## 10.0.0-beta.17 - April 13, 2021
+
 ### Breaking changes ⚠️
 
 - `AnnotationManager` no longer conforms to `Observer` and no longer has a `peer` ([#246](https://github.com/mapbox/mapbox-maps-ios/pull/246))
@@ -9,6 +11,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 - #### MapView
     * Initializer has been changed to `public init(frame: CGRect, resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions.default, styleURI: StyleURI? = .streets)`.
+    * `StyleURL` has been renamed to `StyleURI`
     * `OrnamentSupportableMapView` is not internal.
 
 - #### Ornaments
@@ -33,7 +36,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 - #### Style
     * Initializer is now marked as internal.
-    * `styleUri` has been renamed to `uri`.
+    * `styleUri` property has been renamed to `uri`.
     * The `url` property from `StyleURL` has been removed.
 
 - #### Expressions
@@ -45,7 +48,9 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Bug fixes 🐞
 
-- Fixes an issue that could cause issues with annotations including causing them to not be selectable ([#246](https://github.com/mapbox/mapbox-maps-ios/pull/246))
+* Fixes an issue that could prevent annotations from being selectable. ([#246](https://github.com/mapbox/mapbox-maps-ios/pull/246))
+* Fixes an issue where some JSON layers are not be decoded correctly. ([#248](https://github.com/mapbox/mapbox-maps-ios/pull/248))
+* Fixes an issue where the location puck was not animating. ([#256](https://github.com/mapbox/mapbox-maps-ios/pull/256))
 
 ## 10.0.0-beta.16 - March 29, 2021
 

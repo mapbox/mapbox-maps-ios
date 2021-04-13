@@ -73,12 +73,15 @@ public class CredentialsManager {
 
     internal func defaultAccessToken() -> String? {
         // Check User defaults
+        #if DEBUG
         if let accessToken = UserDefaults.standard.string(forKey: "MBXAccessToken") {
             print("Found access token from UserDefaults (command line parameter?)")
             return accessToken
         }
+        #endif
+
         // Check application plist
-        else if let accessToken = bundle.infoDictionary?["MBXAccessToken"] as? String {
+        if let accessToken = bundle.infoDictionary?["MBXAccessToken"] as? String {
             return accessToken
         }
         // Check for a bundled file

@@ -137,7 +137,7 @@ internal class SwiftUIMapViewCoordinator {
         _camera = camera
     }
 
-    func notify(for event: MapboxCoreMaps.Event) {
+    func notify(for event: Event) {
         guard let typedEvent = MapEvents.EventKind(rawValue: event.type),
               let mapView = mapView else {
             return

@@ -16,7 +16,6 @@ public class Snapshotter: Observer {
     internal var mapSnapshotter: MapSnapshotter
     // TODO: Conformance to the `Observer` protocol requires this to be public,
     // consider reviewing if this can be changed internally to `internal`.
-    public var peer: MBXPeerWrapper?
 
     /// Map of event types to subscribed event handlers
     internal var eventHandlers: [String: [(MapboxCoreMaps.Event) -> Void]] = [:]
@@ -37,9 +36,9 @@ public class Snapshotter: Observer {
     ///   - observer: Observer responsible for handling lifecycle events in a snapshot
     ///   - options: Options describing an intended snapshot
     public init(options: MapSnapshotOptions) {
-        mapSnapshotter = try! MapSnapshotter(options: options)
+        mapSnapshotter = MapSnapshotter(options: options)
         style = Style(with: mapSnapshotter)
-        try! mapSnapshotter.subscribe(for: self, events: [
+        mapSnapshotter.subscribe(for: self, events: [
             MapEvents.styleLoaded,
             MapEvents.styleImageMissing,
             MapEvents.mapLoadingError
@@ -59,31 +58,31 @@ public class Snapshotter: Observer {
     /// The size of the snapshot
     public var snapshotSize: CGSize {
         get {
-            let mbxSize = try! mapSnapshotter.getSize()
+            let mbxSize = mapSnapshotter.getSize()
             let size = CGSize(width: CGFloat(mbxSize.width),
                               height: CGFloat(mbxSize.height))
             return size
         } set(newSize) {
             let mbxSize = MapboxCoreMaps.Size(width: Float(newSize.width), height: Float(newSize.height))
-            try! mapSnapshotter.setSizeFor(mbxSize)
+            mapSnapshotter.setSizeFor(mbxSize)
         }
     }
 
     /// Camera configuration for the snapshot
     public var camera: CameraOptions {
         get {
-            return try! mapSnapshotter.getCameraOptions(forPadding: nil)
+            return mapSnapshotter.getCameraOptions(forPadding: nil)
         } set(newValue) {
-            try! mapSnapshotter.setCameraFor(newValue)
+            mapSnapshotter.setCameraFor(newValue)
         }
     }
 
     /// In the tile mode, the snapshotter fetches the still image of a single tile.
     public var tileMode: Bool {
         get {
-            return try! mapSnapshotter.isInTileMode()
+            return mapSnapshotter.isInTileMode()
         } set(newValue) {
-            try! mapSnapshotter.setTileModeForSet(newValue)
+            mapSnapshotter.setTileModeForSet(newValue)
         }
     }
 
@@ -100,7 +99,7 @@ public class Snapshotter: Observer {
     public func start(overlayHandler: SnapshotOverlayHandler?,
                       completion: @escaping (Result<UIImage, SnapshotError>) -> Void) {
 
-        try! mapSnapshotter.start { (expected) in
+        mapSnapshotter.start { (expected) in
             guard let validExpected = expected else {
                 completion(.failure(.unknown))
                 return
@@ -111,7 +110,7 @@ public class Snapshotter: Observer {
             }
 
             if validExpected.isValue(), let snapshot = validExpected.value as? MapSnapshot {
-                let mbxImage = try! snapshot.image()
+                let mbxImage = snapshot.image()
                 let scale = UIScreen.main.scale
 
                 if let uiImage = UIImage(mbxImage: mbxImage, scale: scale) {
@@ -127,14 +126,14 @@ public class Snapshotter: Observer {
                         }
 
                         let pointForCoordinate = { (coordinate: CLLocationCoordinate2D) -> CGPoint in
-                            let screenCoordinate = try! snapshot.screenCoordinate(for: coordinate)
+                            let screenCoordinate = snapshot.screenCoordinate(for: coordinate)
                             return CGPoint(x: screenCoordinate.x, y: screenCoordinate.y)
                         }
 
                         let coordinateForPoint = { (point: CGPoint) -> CLLocationCoordinate2D in
                             // TODO: Fix circular dependency issues with MapboxMapsStyle/Foundation in order to use point.screenCoordinate extension
                             let screenCoordinate = ScreenCoordinate(x: Double(point.x), y: Double(point.y))
-                            return try! snapshot.coordinate(for: screenCoordinate)
+                            return snapshot.coordinate(for: screenCoordinate)
                         }
 
                         // Apply the overlay, if provided.
@@ -177,7 +176,7 @@ public class Snapshotter: Observer {
      method is called with error parameter set.
      */
     public func cancel() {
-        try! mapSnapshotter.cancel()
+        mapSnapshotter.cancel()
     }
 
     public enum SnapshotError: Error {

@@ -14,7 +14,7 @@ public class CameraManager {
                                         minZoom: newOptions.minimumZoomLevel as NSNumber,
                                         maxPitch: newOptions.maximumPitch as NSNumber,
                                         minPitch: newOptions.minimumPitch as NSNumber)
-        try! mapView?.__map.setBoundsFor(boundOptions)
+        mapView?.__map.setBoundsFor(boundOptions)
         mapCameraOptions = newOptions
     }
 
@@ -60,10 +60,10 @@ public class CameraManager {
         let defaultEdgeInsets = EdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 
         // Create a new camera options with adjusted values
-        let options = try! mapView.__map.cameraForCoordinates(forCoordinates: coordinateLocations,
-                                                              padding: cameraOptions.__padding ?? defaultEdgeInsets,
-                                                              bearing: cameraOptions.__bearing,
-                                                              pitch: cameraOptions.__pitch)
+        let options = mapView.__map.cameraForCoordinates(forCoordinates: coordinateLocations,
+                                                         padding: cameraOptions.__padding ?? defaultEdgeInsets,
+                                                         bearing: cameraOptions.__bearing,
+                                                         pitch: cameraOptions.__pitch)
         // Create a new camera object with adjusted values
         return options
     }
@@ -83,10 +83,10 @@ public class CameraManager {
             return CameraOptions()
         }
 
-        let cameraOptions = try! mapView.__map.cameraForCoordinateBounds(for: coordinateBounds,
-                                                                         padding: edgePadding.toMBXEdgeInsetsValue(),
-                                                                         bearing: NSNumber(value: Float(bearing)),
-                                                                         pitch: NSNumber(value: Float(pitch)))
+        let cameraOptions = mapView.__map.cameraForCoordinateBounds(for: coordinateBounds,
+                                                                    padding: edgePadding.toMBXEdgeInsetsValue(),
+                                                                    bearing: NSNumber(value: Float(bearing)),
+                                                                    pitch: NSNumber(value: Float(pitch)))
 
         return cameraOptions
     }
@@ -109,10 +109,10 @@ public class CameraManager {
 
         let mbxGeometry = MBXGeometry(geometry: geometry)
 
-        let cameraOptions = try! mapView.__map.cameraForGeometry(for: mbxGeometry,
-                                                                 padding: edgePadding.toMBXEdgeInsetsValue(),
-                                                                 bearing: NSNumber(value: Float(bearing)),
-                                                                 pitch: NSNumber(value: Float(pitch)))
+        let cameraOptions = mapView.__map.cameraForGeometry(for: mbxGeometry,
+                                                            padding: edgePadding.toMBXEdgeInsetsValue(),
+                                                            bearing: NSNumber(value: Float(bearing)),
+                                                            pitch: NSNumber(value: Float(pitch)))
         return cameraOptions
     }
 
@@ -125,7 +125,7 @@ public class CameraManager {
             return CoordinateBounds()
         }
 
-        let coordinateBounds = try! mapView.__map.coordinateBoundsForCamera(forCamera: camera)
+        let coordinateBounds = mapView.__map.coordinateBoundsForCamera(forCamera: camera)
         return coordinateBounds
     }
 

@@ -47,7 +47,7 @@ class CacheManagerIntegrationTests: IntegrationTestCase {
                                           loadTilePacksFromNetwork: nil,
                                           cacheSize: defaultCacheSize as NSNumber)
 
-        cm = try! CacheManager(options: resourceOptions!)
+        cm = CacheManager(options: resourceOptions!)
         return cm
     }
 
@@ -67,7 +67,7 @@ class CacheManagerIntegrationTests: IntegrationTestCase {
         // Forces a revalidation of the tiles in the ambient cache and downloads
         // a fresh version of the tiles from the tile server.
 
-        try! cm.invalidateAmbientCache { expected in
+        cm.invalidateAmbientCache { expected in
             guard let expected = expected else {
                 XCTFail("Should have a valid expected result")
                 return
@@ -86,7 +86,7 @@ class CacheManagerIntegrationTests: IntegrationTestCase {
 
         let expectation = self.expectation(description: "Clear ambient cache")
 
-        try! cm.clearAmbientCache { expected in
+        cm.clearAmbientCache { expected in
             guard let expected = expected else {
                 XCTFail("Should have a valid expected result")
                 return
@@ -110,7 +110,7 @@ class CacheManagerIntegrationTests: IntegrationTestCase {
         setupCacheManager()
         let expectation = self.expectation(description: "Set maximum size")
 
-        try! cm.setMaximumAmbientCacheSizeForSize(1024*1024*2) { [weak cm, weak self] expected in
+        cm.setMaximumAmbientCacheSizeForSize(1024*1024*2) { [weak cm, weak self] expected in
             guard let self = self else {
                 fatalError("Invalid test setup")
             }
@@ -124,7 +124,7 @@ class CacheManagerIntegrationTests: IntegrationTestCase {
             XCTAssertNil(expected.value, "Currently the 'success' value is nil")
 
             // Reset back to default
-            try! cm?.setMaximumAmbientCacheSizeForSize(self.defaultCacheSize) { expected in
+            cm?.setMaximumAmbientCacheSizeForSize(self.defaultCacheSize) { expected in
                 guard let expected = expected else {
                     XCTFail("Should have a valid expected result")
                     return
@@ -148,7 +148,7 @@ class CacheManagerIntegrationTests: IntegrationTestCase {
         autoreleasepool {
             cacheManager = setupCacheManager()
 
-            try! cm.clearAmbientCache { _ in
+            cm.clearAmbientCache { _ in
                 expectation.fulfill()
             }
 

@@ -85,19 +85,19 @@ internal class Puck2D: Puck {
                 bearing = latestBearing.trueHeading
             }
 
-            let expectedValueLocation = try! style.styleManager.setStyleLayerPropertyForLayerId(locationIndicatorLayer.id,
-                                                                                                property: "location",
-                                                                                                value: newLocation)
-            let expectedValueBearing = try! style.styleManager.setStyleLayerPropertyForLayerId(locationIndicatorLayer.id,
-                                                                                               property: "bearing",
-                                                                                               value: bearing)
+            let expectedValueLocation = style.styleManager.setStyleLayerPropertyForLayerId(locationIndicatorLayer.id,
+                                                                                           property: "location",
+                                                                                           value: newLocation)
+            let expectedValueBearing = style.styleManager.setStyleLayerPropertyForLayerId(locationIndicatorLayer.id,
+                                                                                          property: "bearing",
+                                                                                          value: bearing)
 
             if expectedValueLocation.isError() {
-                try! Log.error(forMessage: "Error when updating location in location indicator layer: \(String(describing: expectedValueLocation.error))", category: "Location")
+                Log.error(forMessage: "Error when updating location in location indicator layer: \(String(describing: expectedValueLocation.error))", category: "Location")
             }
 
             if expectedValueBearing.isError() {
-                try! Log.error(forMessage: "Error when updating location in location indicator layer: \(String(describing: expectedValueBearing.error))", category: "Location")
+                Log.error(forMessage: "Error when updating location in location indicator layer: \(String(describing: expectedValueBearing.error))", category: "Location")
             }
 
         } else {
@@ -119,7 +119,7 @@ internal class Puck2D: Puck {
                     try self.createApproximateLocationIndicatorLayer(location: location)
                 }
             } catch {
-                try! Log.error(forMessage: "Error when creating location indicator layer: \(error)", category: "Location")
+                Log.error(forMessage: "Error when creating location indicator layer: \(error)", category: "Location")
             }
         }
 
@@ -140,7 +140,7 @@ internal class Puck2D: Puck {
         let removeLayerResult = style.removeStyleLayer(forLayerId: locationIndicatorLayer.id)
 
         if case .failure(let layerError) = removeLayerResult {
-            try! Log.error(forMessage: "Error when removing location indicator layer: \(layerError)", category: "Location")
+            Log.error(forMessage: "Error when removing location indicator layer: \(layerError)", category: "Location")
         }
 
         self.locationIndicatorLayer = nil

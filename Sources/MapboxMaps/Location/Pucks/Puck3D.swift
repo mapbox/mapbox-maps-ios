@@ -123,6 +123,6 @@ internal class Puck3D: Puck {
             return
         }
         _ = style.removeStyleLayer(forLayerId: "puck-model-layer")
-        try! style.styleManager.removeStyleSource(forSourceId: "puck-model-source")
+        style.styleManager.removeStyleSource(forSourceId: "puck-model-source")
     }
 }

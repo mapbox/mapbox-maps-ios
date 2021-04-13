@@ -1,7 +1,5 @@
 import UIKit
 import MapboxMaps
-import MapboxCoreMaps
-import MapboxCommon
 
 @objc(TrackingModeExample)
 

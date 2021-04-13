@@ -75,7 +75,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
 
         didFinishLoadingStyle = { _ in
 
-            let layers = try! style.styleManager.getStyleLayers()
+            let layers = style.styleManager.getStyleLayers()
             let newBackgroundLayer = BackgroundLayer(id: "test-id")
 
             let result = style.addLayer(layer: newBackgroundLayer)
@@ -95,7 +95,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
                     try style._moveLayer(with: "test-id", to: newLayerPosition)
 
                     // Get layer position
-                    let layers = try style.styleManager.getStyleLayers()
+                    let layers = style.styleManager.getStyleLayers()
                     let layerIds = layers.map { $0.id }
 
                     let position = layerIds.firstIndex(of: "test-id")
@@ -122,7 +122,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         expectation.expectedFulfillmentCount = expectedLayerCount
 
         didFinishLoadingStyle = { _ in
-            let layers = try! mapView.__map.getStyleLayers()
+            let layers = mapView.__map.getStyleLayers()
             XCTAssertEqual(layers.count, expectedLayerCount)
 
             for layer in layers {

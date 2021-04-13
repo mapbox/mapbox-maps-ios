@@ -26,7 +26,7 @@ public class Style {
     public var uri: StyleURI = .streets {
         didSet {
             let uriString = uri.rawValue.absoluteString
-            try! styleManager.setStyleURIForUri(uriString)
+            styleManager.setStyleURIForUri(uriString)
         }
     }
 
@@ -43,7 +43,7 @@ public class Style {
         // Attempt to encode the provided layer into JSON and apply it to the map
         do {
             let layerJSON = try layer.jsonObject()
-            let expected = try styleManager.addStyleLayer(forProperties: layerJSON, layerPosition: layerPosition)
+            let expected = styleManager.addStyleLayer(forProperties: layerJSON, layerPosition: layerPosition)
 
             if expected.isError() {
                 return .failure(.addStyleLayerFailed(expected.error as? String))
@@ -69,7 +69,7 @@ public class Style {
      - Throws: `LayerError` on failure, or `NSError` with a _domain of "com.mapbox.bindgen"
      */
     public func _moveLayer(with layerId: String, to position: LayerPosition) throws {
-        let expectedProperties = try styleManager.getStyleLayerProperties(forLayerId: layerId)
+        let expectedProperties = styleManager.getStyleLayerProperties(forLayerId: layerId)
         if expectedProperties.isError() {
             throw LayerError.getStyleLayerFailed(expectedProperties.error as? String)
         }
@@ -78,12 +78,12 @@ public class Style {
             assertionFailure("Layer properties are not a valid type")
         }
 
-        let expectedRemoval = try styleManager.removeStyleLayer(forLayerId: layerId)
+        let expectedRemoval = styleManager.removeStyleLayer(forLayerId: layerId)
         if expectedRemoval.isError() {
             throw LayerError.removeStyleLayerFailed(expectedRemoval.error as? String)
         }
 
-        let expectedAddition = try styleManager.addStyleLayer(forProperties: expectedProperties.value as Any,
+        let expectedAddition = styleManager.addStyleLayer(forProperties: expectedProperties.value as Any,
                                                               layerPosition: position)
 
         if expectedAddition.isError() {
@@ -126,19 +126,12 @@ public class Style {
     public func _layer(with layerID: String, type: Layer.Type) -> Result<Layer, LayerError> {
 
         // Get the layer properties from the map
-        var layerProps: MBXExpected<AnyObject, AnyObject>?
-        do {
-            layerProps = try styleManager.getStyleLayerProperties(forLayerId: layerID)
-        } catch {
-            return .failure(.getStyleLayerFailed(nil))
-        }
+        let layerProps = styleManager.getStyleLayerProperties(forLayerId: layerID)
 
-        // If layerProps represents an error, return early
-        guard let validLayerProps = layerProps, validLayerProps.isValue(),
-              let validValue = validLayerProps.value as? [String: AnyObject] else {
-            return .failure(.getStyleLayerFailed(layerProps?.error as? String))
+        guard layerProps.isValue(),
+              let validValue = layerProps.value as? [String: AnyObject] else {
+            return .failure(.getStyleLayerFailed(layerProps.error as? String))
         }
-
         // Decode the layer properties into a layer object
         do {
             let layer = try type.init(jsonObject: validValue)
@@ -188,13 +181,13 @@ public class Style {
             return .failure(.convertingImageFailed(nil))
         }
 
-        let expected = try! styleManager.addStyleImage(forImageId: identifier,
-                                                       scale: 3.0,
-                                                       image: mbxImage,
-                                                       sdf: sdf,
-                                                       stretchX: stretchX,
-                                                       stretchY: stretchY,
-                                                       content: imageContent)
+        let expected = styleManager.addStyleImage(forImageId: identifier,
+                                                  scale: 3.0,
+                                                  image: mbxImage,
+                                                  sdf: sdf,
+                                                  stretchX: stretchX,
+                                                  stretchY: stretchY,
+                                                  content: imageContent)
 
         return expected.isError() ? .failure(.addStyleImageFailed(expected.error as? String))
                                   : .success(true)
@@ -202,7 +195,7 @@ public class Style {
 
     public func getStyleImage(with identifier: String) -> Image? {
         // TODO: Send back UIImage, not MBX Image
-        return try! styleManager.getStyleImage(forImageId: identifier)
+        return styleManager.getStyleImage(forImageId: identifier)
     }
 
     /**
@@ -212,7 +205,7 @@ public class Style {
                 Otherwise, this will return a `LayerError` as part of the `Result` failure case.
      */
     public func removeStyleLayer(forLayerId: String) -> Result<Bool, LayerError> {
-        let expected = try! styleManager.removeStyleLayer(forLayerId: forLayerId)
+        let expected = styleManager.removeStyleLayer(forLayerId: forLayerId)
 
         return expected.isError() ? .failure(.removeStyleLayerFailed(expected.error as? String))
                                   : .success(true)
@@ -233,7 +226,7 @@ public class Style {
         // Attempt to encode the provided source into JSON and apply it to the map
         do {
             let sourceDictionary = try source.jsonObject()
-            let expected = try styleManager.addStyleSource(forSourceId: identifier, properties: sourceDictionary)
+            let expected = styleManager.addStyleSource(forSourceId: identifier, properties: sourceDictionary)
 
             return expected.isValue() ? .success(true)
                                       : .failure(.addSourceFailed(expected.error as? String))
@@ -276,7 +269,7 @@ public class Style {
      */
     public func _source(identifier: String, type: Source.Type) -> Result<Source, SourceError> {
         // Get the source properties for a given identifier
-        let sourceProps = try! styleManager.getStyleSourceProperties(forSourceId: identifier)
+        let sourceProps = styleManager.getStyleSourceProperties(forSourceId: identifier)
 
         // If sourceProps represents an error, return early
         guard sourceProps.isValue(),
@@ -304,7 +297,7 @@ public class Style {
      */
     @discardableResult
     public func updateSourceProperty(id: String, property: String, value: [String: Any]) -> Result<Bool, SourceError> {
-        let expectation = try! styleManager.setStyleSourcePropertyForSourceId(id, property: property, value: value)
+        let expectation = styleManager.setStyleSourcePropertyForSourceId(id, property: property, value: value)
 
         return expectation.isValue() ? .success(true)
                                      : .failure(.setSourceProperty(expectation.error as? String))
@@ -340,7 +333,7 @@ public class Style {
         do {
             let terrainData = try JSONEncoder().encode(terrain)
             let terrainDictionary = try JSONSerialization.jsonObject(with: terrainData)
-            let expectation = try styleManager.setStyleTerrainForProperties(terrainDictionary)
+            let expectation = styleManager.setStyleTerrainForProperties(terrainDictionary)
 
             return expectation.isValue() ? .success(true)
                                          : .failure(.addTerrainFailed(expectation.error as? String))
@@ -356,7 +349,7 @@ public class Style {
                 success case. Else, returns a `SourceError` in the `Result` failure case.
      */
     public func removeSource(for sourceID: String) -> Result<Bool, SourceError> {
-        let expected = try! styleManager.removeStyleSource(forSourceId: sourceID)
+        let expected = styleManager.removeStyleSource(forSourceId: sourceID)
 
         return expected.isError() ? .failure(.removeSourceFailed(expected.error as? String))
                                   : .success(true)
@@ -369,7 +362,7 @@ public class Style {
         do {
             let lightData = try JSONEncoder().encode(light)
             let lightDictionary = try JSONSerialization.jsonObject(with: lightData)
-            let expectation = try styleManager.setStyleTerrainForProperties(lightDictionary)
+            let expectation = styleManager.setStyleTerrainForProperties(lightDictionary)
 
             return expectation.isValue() ? .success(true)
                                          : .failure(.addLightFailed(expectation.error as? String))
@@ -408,7 +401,7 @@ public class Style {
             let value = try layer.jsonObject()
 
             // Apply the changes to the layer properties to the style
-            try styleManager.setStyleLayerPropertiesForLayerId(id, properties: value)
+            styleManager.setStyleLayerPropertiesForLayerId(id, properties: value)
             return .success(true)
         } catch {
             return .failure(.updateStyleLayerFailed(error))

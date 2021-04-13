@@ -58,8 +58,6 @@ public enum PreferredFPS: RawRepresentable, Equatable {
 
 open class ObserverConcrete: Observer {
 
-    public var peer: MBXPeerWrapper?
-
     /// Map of event types to subscribed event handlers
     internal var eventHandlers: [String: [(MapboxCoreMaps.Event) -> Void]] = [:]
 
@@ -110,12 +108,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     /// The map's current camera
     public var camera: CameraOptions {
         get {
-            do {
-                let options = try __map.getCameraOptions(forPadding: nil)
-                return options
-            } catch {
-                fatalError("Could not retrieve camera options due to error: \(error)")
-            }
+            return __map.getCameraOptions(forPadding: nil)
         } set {
             cameraView.camera = newValue
         }
@@ -189,11 +182,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     }
 
     func jumpTo(camera: CameraOptions) {
-        do {
-            try __map.setCameraFor(camera)
-        } catch {
-            fatalError("Exception raised when jumping to new camera options: \(camera). Error: \(error)")
-        }
+        __map.setCameraFor(camera)
     }
 
     // MARK: Init
@@ -212,13 +201,13 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
 
             #if targetEnvironment(simulator)
             if !ProcessInfo().isOperatingSystemAtLeast(OperatingSystemVersion(majorVersion: 13, minorVersion: 0, patchVersion: 0)) {
-                try! Log.warning(forMessage: "Metal rendering is not supported on iOS versions < iOS 13. Please test on device or on iOS version >= 13.", category: "MapView")
+                Log.warning(forMessage: "Metal rendering is not supported on iOS versions < iOS 13. Please test on device or on iOS version >= 13.", category: "MapView")
                 loggedWarning = true
             }
             #endif
 
             if !loggedWarning {
-                try! Log.error(forMessage: "No suitable Metal device or simulator can be found.", category: "MapView")
+                Log.error(forMessage: "No suitable Metal device or simulator can be found.", category: "MapView")
             }
         }
 
@@ -236,12 +225,12 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
                                                    pixelRatio: Float(UIScreen.main.scale),
                                                    glyphsRasterizationOptions: glyphsRasterizationOptions)
 
-        __map = try! Map(client: self, mapOptions: mapOptions, resourceOptions: resourceOptions)
+        __map = Map(client: self, mapOptions: mapOptions, resourceOptions: resourceOptions)
 
-        try! __map?.createRenderer()
+        __map?.createRenderer()
 
         let events = MapEvents.EventKind.allCases.map({ $0.rawValue })
-        try! __map.subscribe(for: observerConcrete, events: events)
+        __map.subscribe(for: observerConcrete, events: events)
 
         self.cameraView = CameraView(delegate: self)
         self.addSubview(cameraView)
@@ -252,7 +241,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
                                                object: nil)
 
         if let validStyleURI = styleURI {
-            try! __map?.setStyleURIForUri(validStyleURI.absoluteString)
+            __map?.setStyleURIForUri(validStyleURI.absoluteString)
         }
 
     }
@@ -314,7 +303,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
         super.layoutSubviews()
         let size = MapboxCoreMaps.Size(width: Float(bounds.size.width),
                                        height: Float(bounds.size.height))
-        try! __map?.setSizeFor(size)
+        __map?.setSizeFor(size)
     }
 
     func validateDisplayLink() {
@@ -412,9 +401,6 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
         fatalError("scheduleTask is not supported")
     }
 
-    /// :nodoc:
-    public var peer: MBXPeerWrapper?
-
     // MARK: - MBXMetalViewProvider conformance
 
     /// :nodoc:
@@ -453,7 +439,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     public func coordinate(for point: CGPoint, in view: UIView? = nil) -> CLLocationCoordinate2D {
         let view = view ?? self
         let screenCoordinate = convert(point, from: view).screenCoordinate // Transform to view's coordinate space
-        return try! __map.coordinateForPixel(forPixel: screenCoordinate)
+        return __map.coordinateForPixel(forPixel: screenCoordinate)
     }
 
     /**
@@ -467,7 +453,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
       */
     public func point(for coordinate: CLLocationCoordinate2D, in view: UIView? = nil) -> CGPoint {
         let view = view ?? self
-        let point = try! __map.pixelForCoordinate(for: coordinate).point
+        let point = __map.pixelForCoordinate(for: coordinate).point
         let transformedPoint = convert(point, to: view)
         return transformedPoint
     }

@@ -119,7 +119,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
             do {
                 event = try JSONDecoder().decode(ResourceEvent.self, from: jsonData)
             } catch let error {
-                try! Log.error(forMessage: "Failed to decode to ResourceEvent: \(error)", category: "Map")
+                Log.error(forMessage: "Failed to decode to ResourceEvent: \(error)", category: "Map")
                 return
             }
 
@@ -130,7 +130,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
             self.hadResourceEventError?(self.mapView!, eventError)
         })
 
-        try! view.__map.subscribe(for: observer, events: ["resource-request"])
+        view.__map.subscribe(for: observer, events: ["resource-request"])
 
         self.observer = observer
 
@@ -149,7 +149,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
     internal override func tearDownWithError() throws {
 
         if let observer = observer {
-            try! mapView?.__map.unsubscribe(for: observer, events: ["resource-request"])
+            mapView?.__map.unsubscribe(for: observer, events: ["resource-request"])
         }
 
         mapView?.removeFromSuperview()
@@ -180,7 +180,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
 
         mapView.on(.mapLoadingError) { event in
             let userInfo: [String: Any] = (event.data as? [String: Any]) ?? [:]
-            try! Log.error(forMessage: "Map failed to load with error: \(userInfo)", category: "Map")
+            Log.error(forMessage: "Map failed to load with error: \(userInfo)", category: "Map")
             XCTFail("Failed to load map with \(userInfo)")
         }
 
@@ -204,9 +204,9 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
 
         case .timedOut:
             if let error = eventError {
-                try! Log.error(forMessage: "Timed out, test had a resource error: \(error.reason) - \(error.message)", category: "Map")
+                Log.error(forMessage: "Timed out, test had a resource error: \(error.reason) - \(error.message)", category: "Map")
             } else {
-                try! Log.error(forMessage: "Timed out, but no resource error", category: "Map")
+                Log.error(forMessage: "Timed out, but no resource error", category: "Map")
             }
             fallthrough
 

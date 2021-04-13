@@ -165,7 +165,7 @@ public class AnnotationManager {
 
     internal func updateAnnotationOptions(with newOptions: AnnotationOptions) {
         self.annotationOptions = newOptions
-        try! Log.warning(forMessage: "Updating annotation manager is not supported at this time.", category: "Annotations")
+        Log.warning(forMessage: "Updating annotation manager is not supported at this time.", category: "Annotations")
     }
 
     // MARK: - Public functions
@@ -337,7 +337,7 @@ public class AnnotationManager {
             return fillLayer?.id
 
         default:
-            try! Log.error(forMessage: "Type should be an annotation", category: "Annotations")
+            Log.error(forMessage: "Type should be an annotation", category: "Annotations")
             return nil
         }
     }
@@ -635,7 +635,7 @@ public class AnnotationManager {
                                     if case .success(let features) = result {
                                         if features.count == 0 { return }
 
-                                        guard let featureIdentifier = features[0].identifier?.value as? String else { return }
+                                        guard let featureIdentifier = features[0].feature.identifier as? String else { return }
 
                                         /**
                                          If the found feature identifier exists in the internal

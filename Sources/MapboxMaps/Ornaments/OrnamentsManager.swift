@@ -58,7 +58,7 @@ public enum OrnamentType: Hashable {
                 if let zoom = cameraOptions.zoom,
                    let center = cameraOptions.center {
 
-                    let metersPerPixel = try! Projection.getMetersPerPixelAtLatitude(forLatitude: center.latitude,
+                    let metersPerPixel = Projection.getMetersPerPixelAtLatitude(forLatitude: center.latitude,
                                                                                      zoom: Double(zoom))
                     scalebarView.metersPerPoint = metersPerPixel
                 }

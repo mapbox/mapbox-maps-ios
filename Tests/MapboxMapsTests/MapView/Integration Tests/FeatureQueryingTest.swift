@@ -78,8 +78,9 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                     if case .success(let unfilteredFeatures) = unfilteredFeatures,
                        case .success(let filteredFeatures) = filteredFeatures {
 
-                        let expectedFilteredFeatures = unfilteredFeatures.filter { feature in
-                            return feature.geometry.type == .Point
+                        let expectedFilteredFeatures = unfilteredFeatures.filter { queriedFeature in
+                            // `MBXGeometryType(1)` is equal to `GemoetryType`, `point`
+                            return queriedFeature.feature.geometry.geometryType == MBXGeometryType(1)
                         }
 
                         // Then

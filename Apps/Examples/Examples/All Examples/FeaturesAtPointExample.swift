@@ -75,8 +75,8 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
                                 styleLayers: ["US-states"],
                                 completion: { [weak self] result in
                                     switch result {
-                                    case .success(let features):
-                                        if let firstFeature = features.first?.properties,
+                                    case .success(let queriedfeatures):
+                                        if let firstFeature = queriedfeatures.first?.feature.properties,
                                            let stateName = firstFeature["STATE_NAME"] as? String {
                                             self?.showAlert(with: "You selected \(stateName)")
                                         }

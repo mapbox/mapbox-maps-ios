@@ -48,9 +48,9 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Bug fixes 🐞
 
-* Fixes an issue that could prevent annotations from being selectable ([#246](https://github.com/mapbox/mapbox-maps-ios/pull/246)).
-* Fixes an issue where some JSON layers are not be decoded correctly ([#248](https://github.com/mapbox/mapbox-maps-ios/pull/248)).
-* Fixes an issue where the location puck was not animating ([#256](https://github.com/mapbox/mapbox-maps-ios/pull/256)).
+* Fixes an issue that could prevent annotations from being selectable. ([#246](https://github.com/mapbox/mapbox-maps-ios/pull/246))
+* Fixes an issue where some JSON layers are not be decoded correctly. ([#248](https://github.com/mapbox/mapbox-maps-ios/pull/248))
+* Fixes an issue where the location puck was not animating. ([#256](https://github.com/mapbox/mapbox-maps-ios/pull/256))
 
 ## 10.0.0-beta.16 - March 29, 2021
 

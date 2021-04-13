@@ -3,11 +3,11 @@ import XCTest
 
 class MapInitOptionsIntegrationTests: XCTestCase {
 
-    private var dataSourceReturnValue: MapInitOptions?
+    private var providerReturnValue: MapInitOptions!
 
     override func tearDown() {
         super.tearDown()
-        dataSourceReturnValue = nil
+        providerReturnValue = nil
     }
 
     func testOptionsWithCustomCredentialsManager() {
@@ -20,70 +20,82 @@ class MapInitOptionsIntegrationTests: XCTestCase {
             resourceOptions: ResourceOptions(accessToken: credentialsManager.accessToken))
 
         let mapView = MapView(frame: .zero, mapInitOptions: mapInitOptions)
-        let resourceOptions = try! mapView.__map.getResourceOptions()
+        let resourceOptions = mapView.__map.getResourceOptions()
 
         XCTAssertEqual(resourceOptions, mapInitOptions.resourceOptions)
         XCTAssertEqual(resourceOptions.accessToken, credentialsManager.accessToken)
     }
 
-    func testOptionsAreSetFromNibDataSource() {
+    func testOptionsAreSetFromNibProvider() {
+        CredentialsManager.default.accessToken = "pk.aaaaaa"
         let credentialsManager = CredentialsManager(accessToken: "pk.dddddd")
 
-        dataSourceReturnValue = MapInitOptions(
+        // Provider should return a custom MapInitOptions
+        providerReturnValue = MapInitOptions(
             resourceOptions: ResourceOptions(accessToken: credentialsManager.accessToken))
 
-        // Load view from a nib, where the map view's datasource is the file's owner,
+        // Load views from a nib, where the map view's provider is the file's owner,
         // i.e. this test.
         let nib = UINib(nibName: "MapInitOptionsTests", bundle: .mapboxMapsTests)
 
-        // Instantiate the view. The nib contains two MapViews, one has their
-        // mapInitOptionsDataSource outlet connected to this test object (view
+        // Instantiate the map views. The nib contains two MapViews, one has their
+        // mapInitOptionsProvider outlet connected to this test object (view
         // tag == 1), the other is nil (tag == 2)
         let objects = nib.instantiate(withOwner: self, options: nil)
-        let mapView = objects.compactMap { $0 as? MapView }.first { $0.tag == 1 }!
-        XCTAssertNotNil(mapView.mapInitOptionsDataSource)
+        let mapViews = objects.compactMap { $0 as? MapView }
 
-        guard let optionsFromDataSource = mapView.mapInitOptionsDataSource?.mapInitOptions() else {
-            XCTFail("MapInitOptions not returned from data source")
-            return
-        }
+        // Check MapView 1 -- connected in IB
+        let mapView = mapViews.first { $0.tag == 1 }!
+        XCTAssertNotNil(mapView.mapInitOptionsProvider)
 
-        // Check that the dataSource in MapView is correctly wired, so that the
+        let optionsFromProvider = mapView.mapInitOptionsProvider!.mapInitOptions()
+
+        // Check that the provider in the MapView is correctly wired, so that the
         // expected options are returned
-        XCTAssertEqual(optionsFromDataSource, dataSourceReturnValue)
+        XCTAssertEqual(optionsFromProvider, providerReturnValue)
 
         // Now check the resource options from the initialized MapView
-        let resourceOptions = try! mapView.__map.getResourceOptions()
+        let resourceOptions = mapView.__map.getResourceOptions()
 
-        XCTAssertEqual(resourceOptions, dataSourceReturnValue?.resourceOptions)
+        XCTAssertEqual(resourceOptions, providerReturnValue.resourceOptions)
         XCTAssertEqual(resourceOptions.accessToken, credentialsManager.accessToken)
     }
 
-    func testDefaultOptionsAreUsedWhenNibDoesntSetDataSource() {
+
+    func testDefaultOptionsAreUsedWhenNibDoesntSetProvider() {
         CredentialsManager.default.accessToken = "pk.eeeeee"
 
-        // Load view from a nib, where the map view's datasource is nil
+        // Although this test checks that a MapView (#2) isn't connected to a
+        // Provider, the first MapView will still be instantiated, so a return
+        // value is still required.
+        providerReturnValue = MapInitOptions(
+            resourceOptions: ResourceOptions(accessToken: "do-not-use"))
+
+        // Load view from a nib, where the map view's provider is nil
         let nib = UINib(nibName: "MapInitOptionsTests", bundle: .mapboxMapsTests)
 
         // Instantiate the view. The nib contains two MapViews, one has their
-        // mapInitOptionsDataSource outlet connected to this test object (view
+        // mapInitOptionsProvider outlet connected to this test object (view
         // tag == 1), the other is nil (tag == 2)
         let objects = nib.instantiate(withOwner: self, options: nil)
+
+        // Check MapView 2 -- Not connected in IB
         let mapView = objects.compactMap { $0 as? MapView }.first { $0.tag == 2 }!
-        XCTAssertNil(mapView.mapInitOptionsDataSource)
+        XCTAssertNil(mapView.mapInitOptionsProvider)
 
         // Now check the resource options from the initialized MapView
-        let resourceOptions = try! mapView.__map.getResourceOptions()
+        let resourceOptions = mapView.__map.getResourceOptions()
 
+        // The map should use the default MapInitOptions
         XCTAssertEqual(resourceOptions, ResourceOptions(accessToken: CredentialsManager.default.accessToken))
         XCTAssertEqual(resourceOptions.accessToken, CredentialsManager.default.accessToken)
     }
 }
 
-extension MapInitOptionsIntegrationTests: MapInitOptionsDataSource {
+extension MapInitOptionsIntegrationTests: MapInitOptionsProvider {
     // This needs to return Any, since MapInitOptions is a struct, and this is
     // an objc delegate.
-    public func mapInitOptions() -> MapInitOptions? {
-        return dataSourceReturnValue
+    public func mapInitOptions() -> MapInitOptions {
+        return providerReturnValue
     }
 }

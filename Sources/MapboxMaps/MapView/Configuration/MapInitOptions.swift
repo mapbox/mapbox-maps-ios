@@ -1,7 +1,7 @@
 import Foundation
 
-@objc public protocol MapInitOptionsDataSource {
-    func mapInitOptions() -> MapInitOptions?
+@objc public protocol MapInitOptionsProvider {
+    func mapInitOptions() -> MapInitOptions
 }
 
 /// Options used when initializing `MapView`.

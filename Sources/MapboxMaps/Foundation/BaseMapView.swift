@@ -96,7 +96,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
 
     /// Outlet that can be used when initializing a MapView with a Storyboard or
     /// a nib.
-    @IBOutlet internal weak var mapInitOptionsDataSource: MapInitOptionsDataSource?
+    @IBOutlet internal weak var mapInitOptionsProvider: MapInitOptionsProvider?
 
     internal var preferredFPS: PreferredFPS = .normal {
         didSet {
@@ -265,7 +265,7 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     open override func awakeFromNib() {
         super.awakeFromNib()
 
-        let mapInitOptions = mapInitOptionsDataSource?.mapInitOptions() ??
+        let mapInitOptions = mapInitOptionsProvider?.mapInitOptions() ??
             MapInitOptions()
 
         let ibStyleURI = BaseMapView.parseIBStringAsURL(ibString: styleURI__)

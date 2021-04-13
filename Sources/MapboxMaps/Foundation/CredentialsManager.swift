@@ -29,7 +29,7 @@ public class CredentialsManager {
     /// to `nil`, we will return the application's default access token.
     public var accessToken: String! {
         get {
-            return _accessToken ?? defaultAccessToken() //?? ""
+            return _accessToken ?? defaultAccessToken()
         }
         set {
             _accessToken = newValue

@@ -99,12 +99,12 @@ extension MapboxCoreMaps.MapOptions {
     /// :nodoc:
     open override var hash: Int {
         var hasher = Hasher()
-        constrainMode.hash(into: &hasher)
-        viewportMode.hash(into: &hasher)
-        orientation.hash(into: &hasher)
-        crossSourceCollisions.hash(into: &hasher)
-        pixelRatio.hash(into: &hasher)
-        glyphsRasterizationOptions.hash(into: &hasher)
+        hasher.combine(constrainMode)
+        hasher.combine(viewportMode)
+        hasher.combine(orientation)
+        hasher.combine(crossSourceCollisions)
+        hasher.combine(pixelRatio)
+        hasher.combine(glyphsRasterizationOptions)
         return hasher.finalize()
     }
 }

@@ -1,7 +1,6 @@
 import Foundation
 
 @objc public protocol MapInitOptionsDataSource {
-    /// When you implement this method you should return a `MapInitOptions`.
     func mapInitOptions() -> MapInitOptions?
 }
 
@@ -45,8 +44,8 @@ public final class MapInitOptions: NSObject {
     /// :nodoc:
     public override var hash: Int {
         var hasher = Hasher()
-        resourceOptions.hash(into: &hasher)
-        mapOptions.hash(into: &hasher)
+        hasher.combine(resourceOptions)
+        hasher.combine(mapOptions)
         return hasher.finalize()
     }
 }

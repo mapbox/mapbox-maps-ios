@@ -96,13 +96,13 @@ extension ResourceOptions {
     /// :nodoc:
     open override var hash: Int {
         var hasher = Hasher()
-        accessToken.hash(into: &hasher)
-        baseURL?.hash(into: &hasher)
-        cachePath?.hash(into: &hasher)
-        assetPath?.hash(into: &hasher)
-        tileStorePath?.hash(into: &hasher)
-        loadTilePacksFromNetwork.hash(into: &hasher)
-        cacheSize?.hash(into: &hasher)
+        hasher.combine(accessToken)
+        hasher.combine(baseURL)
+        hasher.combine(cachePath)
+        hasher.combine(assetPath)
+        hasher.combine(tileStorePath)
+        hasher.combine(loadTilePacksFromNetwork)
+        hasher.combine(cacheSize)
         return hasher.finalize()
     }
 }

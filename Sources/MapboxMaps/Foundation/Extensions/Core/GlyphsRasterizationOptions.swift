@@ -66,8 +66,8 @@ extension GlyphsRasterizationOptions {
     /// :nodoc:
     open override var hash: Int {
         var hasher = Hasher()
-        rasterizationMode.hash(into: &hasher)
-        fontFamily.hash(into: &hasher)
+        hasher.combine(rasterizationMode)
+        hasher.combine(fontFamily)
         return hasher.finalize()
     }
 }

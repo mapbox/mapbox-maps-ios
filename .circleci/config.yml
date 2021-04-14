@@ -206,7 +206,10 @@ jobs:
     steps:
       - checkout
       - run:
-          name: depsvalidator
+          name: build depsvalidator
+          command: swift build --package-path scripts/depsvalidator
+      - run:
+          name: run depsvalidator
           command: swift run --package-path scripts/depsvalidator depsvalidator
 
   build-sdk:

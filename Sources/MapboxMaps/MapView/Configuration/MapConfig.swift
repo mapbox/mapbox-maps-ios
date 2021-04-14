@@ -1,7 +1,7 @@
 import Foundation
 
-/// `MapOptions` is the structure used to configure the map with a set of capabilities
-public struct MapOptions: Equatable {
+/// `MapConfig` is the structure used to configure the map with a set of capabilities
+public struct MapConfig: Equatable {
     /// Used to configure the gestures on the map
     public var gestures: GestureOptions = GestureOptions()
 
@@ -17,4 +17,6 @@ public struct MapOptions: Equatable {
     public var render: RenderOptions = RenderOptions()
 
     public var annotations: AnnotationOptions = AnnotationOptions()
+
+    public init() {}
 }

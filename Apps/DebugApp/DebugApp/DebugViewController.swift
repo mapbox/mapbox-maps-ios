@@ -13,19 +13,10 @@ public class DebugViewController: UIViewController {
     internal var mapView: MapView!
     internal var runningAnimator: CameraAnimator?
 
-    var resourceOptions: ResourceOptions {
-        guard let accessToken = AccountManager.shared.accessToken else {
-            fatalError("Access token not set")
-        }
-
-        let resourceOptions = ResourceOptions(accessToken: accessToken)
-        return resourceOptions
-    }
-
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions)
+        mapView = MapView(frame: view.bounds)
         mapView.update { (mapOptions) in
             mapOptions.location.puckType = .puck2D()
         }

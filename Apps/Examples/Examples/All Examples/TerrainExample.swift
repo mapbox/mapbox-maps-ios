@@ -9,14 +9,7 @@ public class TerrainExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        guard let accessToken = AccountManager.shared.accessToken else {
-            fatalError("Access token not set")
-        }
-
-        let resourceOptions = ResourceOptions(accessToken: accessToken)
-
         mapView = MapView(frame: view.bounds,
-                          resourceOptions: resourceOptions,
                           styleURI: .custom(url: URL(string: "mapbox://styles/mapbox-map-design/ckhqrf2tz0dt119ny6azh975y")!))
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 

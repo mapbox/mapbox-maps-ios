@@ -92,9 +92,11 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     private var observerConcrete: ObserverConcrete!
     @objc dynamic internal var displayLink: CADisplayLink?
 
-    @IBInspectable var styleURI__: String = ""
-    @IBInspectable var baseURL__: String = ""
-    @IBInspectable var accessToken__: String = ""
+    @IBInspectable internal var styleURI__: String = ""
+
+    /// Outlet that can be used when initializing a MapView with a Storyboard or
+    /// a nib.
+    @IBOutlet internal weak var mapInitOptionsProvider: MapInitOptionsProvider?
 
     internal var preferredFPS: PreferredFPS = .normal {
         didSet {
@@ -186,14 +188,13 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     }
 
     // MARK: Init
-    public init(frame: CGRect, resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions, styleURI: URL?) {
+    public init(frame: CGRect, mapInitOptions: MapInitOptions, styleURI: URL?) {
         super.init(frame: frame)
-        self.commonInit(resourceOptions: resourceOptions,
-                        glyphsRasterizationOptions: glyphsRasterizationOptions,
+        self.commonInit(mapInitOptions: mapInitOptions,
                         styleURI: styleURI)
     }
 
-    private func commonInit(resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions, styleURI: URL?) {
+    private func commonInit(mapInitOptions: MapInitOptions, styleURI: URL?) {
 
         if MTLCreateSystemDefaultDevice() == nil {
             // Check if we're running on a simulator on iOS 11 or 12
@@ -211,21 +212,26 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
             }
         }
 
-        self.resourceOptions = resourceOptions
+        self.resourceOptions = mapInitOptions.resourceOptions
         observerConcrete = ObserverConcrete()
 
-        let size = MapboxCoreMaps.Size(width: Float(frame.width), height: Float(frame.height))
+        let resolvedMapOptions: MapOptions
 
-        let mapOptions = MapboxCoreMaps.MapOptions(__contextMode: nil,
-                                                   constrainMode: nil,
-                                                   viewportMode: nil,
-                                                   orientation: nil,
-                                                   crossSourceCollisions: nil,
-                                                   size: size,
-                                                   pixelRatio: Float(UIScreen.main.scale),
-                                                   glyphsRasterizationOptions: glyphsRasterizationOptions)
-
-        __map = Map(client: self, mapOptions: mapOptions, resourceOptions: resourceOptions)
+        if mapInitOptions.mapOptions.size == nil {
+            // Update using the view's size
+            let other = mapInitOptions.mapOptions
+            resolvedMapOptions = MapOptions(__contextMode: other.__contextMode,
+                                            constrainMode: other.__constrainMode,
+                                            viewportMode: other.__viewportMode,
+                                            orientation: other.__orientation,
+                                            crossSourceCollisions: other.__crossSourceCollisions,
+                                            size: Size(width: Float(bounds.width), height: Float(bounds.height)),
+                                            pixelRatio: other.pixelRatio,
+                                            glyphsRasterizationOptions: other.glyphsRasterizationOptions)
+        } else {
+            resolvedMapOptions = mapInitOptions.mapOptions
+        }
+        __map = Map(client: self, mapOptions: resolvedMapOptions, resourceOptions: mapInitOptions.resourceOptions)
 
         __map?.createRenderer()
 
@@ -259,44 +265,19 @@ open class BaseMapView: UIView, MapClient, MBMMetalViewProvider, CameraViewDeleg
     open override func awakeFromNib() {
         super.awakeFromNib()
 
-        guard let accessToken = BaseMapView.parseIBString(ibString: accessToken__) else {
-            fatalError("Must provide access token to the MapView in Interface Builder / Storyboard")
-        }
+        let mapInitOptions = mapInitOptionsProvider?.mapInitOptions() ??
+            MapInitOptions()
 
         let ibStyleURI = BaseMapView.parseIBStringAsURL(ibString: styleURI__)
         let styleURI = ibStyleURI ?? URL(string: "mapbox://styles/mapbox/streets-v11")!
 
-        let baseURL = BaseMapView.parseIBString(ibString: baseURL__)
-        let resourceOptions = ResourceOptions(accessToken: accessToken, baseUrl: baseURL)
-
-        // TODO: Provide suitable default and configuration when setup from IB.
-        let localFontFamily = Self.localFontFamilyNameFromMainBundle()
-        let rasterizationMode: GlyphsRasterizationMode = localFontFamily != nil ? .ideographsRasterizedLocally
-                                                                                : .noGlyphsRasterizedLocally
-
-        let glyphsRasterizationOptions = GlyphsRasterizationOptions(rasterizationMode: rasterizationMode,
-                                                                    fontFamily: localFontFamily)
-
-        commonInit(resourceOptions: resourceOptions, glyphsRasterizationOptions: glyphsRasterizationOptions, styleURI: styleURI)
+        commonInit(mapInitOptions: mapInitOptions, styleURI: styleURI)
     }
 
     public func on(_ eventType: MapEvents.EventKind, handler: @escaping (MapboxCoreMaps.Event) -> Void) {
         var handlers: [(MapboxCoreMaps.Event) -> Void] = observerConcrete.eventHandlers[eventType.rawValue] ?? []
         handlers.append(handler)
         observerConcrete.eventHandlers[eventType.rawValue] = handlers
-    }
-
-    static func localFontFamilyNameFromMainBundle() -> String? {
-        let infoDictionaryObject = Bundle.main.infoDictionary?["MBXIdeographicFontFamilyName"]
-
-        if infoDictionaryObject is String {
-            return infoDictionaryObject as? String
-        } else if infoDictionaryObject is [String],
-            let infoDictionaryObjectArray = infoDictionaryObject as? [String] {
-            return infoDictionaryObjectArray.joined(separator: "\n")
-        }
-
-        return nil
     }
 
     public override func layoutSubviews() {

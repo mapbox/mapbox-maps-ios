@@ -10,7 +10,7 @@ public class LayerBelowExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions())
+        mapView = MapView(frame: view.bounds)
         view.addSubview(mapView)
 
         // Center the map over downtown Atlanta

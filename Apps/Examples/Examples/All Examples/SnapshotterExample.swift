@@ -19,7 +19,8 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
         stackView.spacing = 12.0
 
         let testRect = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height / 2)
-        mapView = MapView(frame: testRect, resourceOptions: resourceOptions())
+        let mapInitOptions = MapInitOptions()
+        mapView = MapView(frame: testRect, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.style.uri = .dark
         mapView.cameraManager.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 37.858, longitude: 138.472),
@@ -40,7 +41,7 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
         // token, size, map style, and camera.
         let options = MapSnapshotOptions(size: CGSize(width: view.bounds.size.width,
                                                       height: view.bounds.height / 2),
-                                         resourceOptions: resourceOptions())
+                                         resourceOptions: mapInitOptions.resourceOptions)
         snapshotter = Snapshotter(options: options)
         snapshotter.style.uri = .light
         snapshotter.camera = mapView.camera

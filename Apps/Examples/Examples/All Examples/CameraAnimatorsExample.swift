@@ -47,12 +47,7 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        guard let accessToken = AccountManager.shared.accessToken else {
-            fatalError("Access token not set")
-        }
-
-        let resourceOptions = ResourceOptions(accessToken: accessToken)
-        mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions)
+        mapView = MapView(frame: view.bounds)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 

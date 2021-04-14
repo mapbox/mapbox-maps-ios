@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 import MapboxMaps
 
+@available(*, deprecated)
 @objc(OfflineRegionManagerExample)
 public class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
 
@@ -18,7 +19,7 @@ public class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         print("This example uses a deprecated API, and will be removed in a future release.")
-        mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions(), styleURI: .light)
+        mapView = MapView(frame: view.bounds, styleURI: .light)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 

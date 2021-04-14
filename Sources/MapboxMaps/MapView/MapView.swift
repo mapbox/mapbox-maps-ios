@@ -6,7 +6,7 @@ open class MapView: BaseMapView {
     /// The `mapOptions` structure is the interface for consumers to configure the map.
     /// It's initialized on the creation of the `MapView` with a set of sane, default values.
     /// To synchronously update the `mapOptions` please call `updateMapOptions(with newOptions: MapOptions)`
-    internal var mapOptions: MapOptions = MapOptions()
+    internal var mapConfig: MapConfig = MapConfig()
 
     /// The `gestureManager` will be responsible for all gestures on the map
     public internal(set) var gestureManager: GestureManager!
@@ -29,8 +29,14 @@ open class MapView: BaseMapView {
     /// A reference to the `EventsManager` used for dispatching telemetry.
     internal var eventsListener: EventsListener!
 
-    public init(frame: CGRect, resourceOptions: ResourceOptions, glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions.default, styleURI: StyleURI? = .streets) {
-        super.init(frame: frame, resourceOptions: resourceOptions, glyphsRasterizationOptions: glyphsRasterizationOptions, styleURI: styleURI?.rawValue)
+    /// Initialize a MapView
+    /// - Parameters:
+    ///   - frame: frame for the MapView.
+    ///   - mapInitOptions: `MapInitOptions`; default uses `CredentialsManager.default`
+    ///         to retrieve a shared default access token.
+    ///   - styleURI: `StyleURI` to initialize the map with, or nil.
+    public init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions(), styleURI: StyleURI? = .streets) {
+        super.init(frame: frame, mapInitOptions: mapInitOptions, styleURI: styleURI?.rawValue)
         initialize()
     }
 

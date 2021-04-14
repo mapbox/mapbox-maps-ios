@@ -68,7 +68,7 @@ class ViewController: UIViewController {
 
     var annotations: [PointAnnotation] = []
     var color: StylePropertyValue?
-    var resourceOptions: ResourceOptions!
+    var mapInitOptions: MapInitOptions!
     var snapshotter: Snapshotter?
     var peer: MBXPeerWrapper?
     var logHandle: OSLog!
@@ -79,8 +79,8 @@ class ViewController: UIViewController {
         annotations.reserveCapacity(100)
 
         // Do any additional setup after loading the view.
-        resourceOptions = ResourceOptions(accessToken: AccountManager.shared.accessToken!)
-        mapView = MapView(frame: view.bounds, resourceOptions: resourceOptions, styleURI: .streets)
+        mapInitOptions = MapInitOptions()
+        mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions, styleURI: .streets)
         view.addSubview(mapView)
         NSLayoutConstraint.activate([
             mapView.leftAnchor.constraint(equalTo: view.leftAnchor),
@@ -285,7 +285,7 @@ class ViewController: UIViewController {
         // Configure the snapshotter object with its default access
         // token, size, map style, and camera.
         let options = MapSnapshotOptions(size: CGSize(width: 300, height: 300),
-                                         resourceOptions: resourceOptions)
+                                         resourceOptions: mapInitOptions.resourceOptions)
 
         print("Creating snapshotter")
         let snapshotter = Snapshotter(options: options)

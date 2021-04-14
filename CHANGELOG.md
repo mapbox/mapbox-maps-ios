@@ -2,6 +2,19 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+### Breaking changes ⚠️
+
+- #### `MapView`
+  * The initializer has changed to `public init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions(), styleURI: StyleURI? = .streets)`.
+  * `MapOptions` has been renamed `MapConfig`. A new `MapOptions` has been introduced; its properties are required to initialize the underlying map object.
+  * A `MapInitOptions` configuration struct has been introduced. It currently wraps both `ResourceOptions` and `MapOptions` and is used when initializing a `MapView`.
+  * `baseURL` and `accessToken` can no longer be set from a nib or storyboard. Instead a new `MapInitOptionsProvider` protocol and an `IBOutlet` on `MapView` has been introduced to allow a customer `MapInitOptions` to be provided to the `MapView`. This provider is not used when initializing a `MapView` programmatically.
+
+- #### Foundation
+  * `AccountManager` has been removed. A new `CredentialsManager` replaces it. You can use `CredentialsManager.default` to set a global access token.
+
 ## 10.0.0-beta.17 - April 13, 2021
 
 ### Breaking changes ⚠️

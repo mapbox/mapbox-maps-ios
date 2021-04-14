@@ -103,7 +103,8 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
         }
 
         let resourceOptions = ResourceOptions(accessToken: accessToken)
-        let view = MapView(frame: window.bounds, resourceOptions: resourceOptions)
+        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
+        let view = MapView(frame: window.bounds, mapInitOptions: mapInitOptions)
 
         let observer = ObservableIntegrationTestsObserver(with: { [weak self] (resourceEvent) in
             guard let self = self else {

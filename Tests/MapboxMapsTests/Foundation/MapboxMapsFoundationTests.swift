@@ -24,10 +24,10 @@ class MapboxMapsFoundationTests: XCTestCase {
         /**
          Test with offset bounds
          */
-        let resourceOptions = ResourceOptions(accessToken: "a1b2c3")
+        let mapInitOptions = MapInitOptions(resourceOptions: ResourceOptions(accessToken: "a1b2c3"))
+
         mapView = BaseMapView(frame: CGRect(x: 10, y: 10, width: 100, height: 100),
-                              resourceOptions: resourceOptions,
-                              glyphsRasterizationOptions: GlyphsRasterizationOptions.default,
+                              mapInitOptions: mapInitOptions,
                               styleURI: nil)
     }
 

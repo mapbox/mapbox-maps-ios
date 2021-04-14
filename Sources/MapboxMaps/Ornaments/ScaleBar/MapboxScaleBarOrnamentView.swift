@@ -11,6 +11,12 @@ internal class MapboxScaleBarOrnamentView: UIView {
 
     // MARK: - Properties
 
+    internal var visibility: OrnamentVisibility = .adaptive {
+        didSet {
+            updateVisibility()
+        }
+    }
+
     internal var metersPerPoint: CLLocationDistance = 1 {
         didSet {
             guard metersPerPoint != oldValue else {
@@ -343,19 +349,27 @@ internal class MapboxScaleBarOrnamentView: UIView {
     }
 
     private func updateVisibility() {
-        let maximumDistance: CLLocationDistance = Double(maximumWidth) * unitsPerPoint
-        let allowedDistance = isMetricLocale ?
-                              Constants.metricTable.last!.distance : Constants.imperialTable.last!.distance
-        let alpha: CGFloat = maximumDistance > allowedDistance ? 0 : 1
+        switch visibility {
+//        case .visible:
+//            self.alpha = 1
+        case .hidden:
+            self.alpha = 0
+        default:
+            let maximumDistance: CLLocationDistance = Double(maximumWidth) * unitsPerPoint
+            let allowedDistance = isMetricLocale ?
+                                  Constants.metricTable.last!.distance : Constants.imperialTable.last!.distance
+            let alpha: CGFloat = maximumDistance > allowedDistance ? 0 : 1
 
-        if alpha != self.alpha {
-            UIView.animate(withDuration: 0.2,
-                           delay: 0,
-                           options: .beginFromCurrentState,
-                           animations: {
-                            self.alpha = alpha
-            },
-                           completion: nil)
+            if alpha != self.alpha {
+                UIView.animate(withDuration: 0.2,
+                               delay: 0,
+                               options: .beginFromCurrentState,
+                               animations: {
+                                self.alpha = alpha
+                },
+                               completion: nil)
+            }
         }
+
     }
 }

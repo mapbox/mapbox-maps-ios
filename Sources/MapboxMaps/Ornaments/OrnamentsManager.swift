@@ -185,7 +185,21 @@ internal class OrnamentsManager: NSObject {
 
     private func removeFromView(ornaments: [Ornament]) {
         ornaments.forEach {
+            if $0.view == nil {
+                if $0.type == .compass {
+                    let compass = view.subviews.filter { $0.isKind(of: MapboxCompassOrnamentView.self) }.first as? MapboxCompassOrnamentView
+                    compass?.visibility = .hidden
+                    $0.view = compass
+                }
+                if $0.type == .mapboxScaleBar {
+                    let scaleBar = view.subviews.filter { $0.isKind(of: MapboxScaleBarOrnamentView.self) }.first as? MapboxScaleBarOrnamentView
+                    scaleBar?.visibility = .hidden
+                    $0.view = scaleBar
+                }
+            }
+
             removeFromView(ornament: $0)
+
         }
     }
 
@@ -253,6 +267,9 @@ internal class OrnamentsManager: NSObject {
             ])
         }
 
+        if let compassView = ornamentView as? MapboxCompassOrnamentView {
+            compassView.visibility = ornament.visibility
+        }
         NSLayoutConstraint.activate(constraints)
     }
 

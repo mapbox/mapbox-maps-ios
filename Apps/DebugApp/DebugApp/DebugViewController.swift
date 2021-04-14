@@ -21,13 +21,15 @@ public class DebugViewController: UIViewController {
             mapOptions.location.puckType = .puck2D()
         }
 
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        mapView.addGestureRecognizer(tap)
         view.addSubview(mapView)
 
         /**
          The closure is called when style data has been loaded. This is called
          multiple times. Use the event data to determine what kind of style data
          has been loaded.
-         
+
          When the type is `style` this event most closely matches
          `-[MGLMapViewDelegate mapView:didFinishLoadingStyle:]` in SDK versions
          prior to v10.
@@ -88,6 +90,18 @@ public class DebugViewController: UIViewController {
             }
 
             print("The map failed to load.. \(type) = \(message)")
+        }
+    }
+
+    @objc func handleTap() {
+        mapView.update {
+            let visibility = $0.ornaments.scaleBarVisibility
+            if visibility == .adaptive || visibility == .hidden {
+                $0.ornaments.scaleBarVisibility = .visible
+            } else {
+                $0.ornaments.scaleBarVisibility = .hidden
+            }
+
         }
     }
 }

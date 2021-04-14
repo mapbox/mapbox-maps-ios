@@ -1,1 +1,1 @@
-./../Carthage/Build/iOS/MapboxCommon.framework
+./../../mapbox-gl-native-internal/build/ios/lib/Debug/MapboxCommon.framework

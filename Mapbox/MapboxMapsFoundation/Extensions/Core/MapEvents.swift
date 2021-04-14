@@ -25,8 +25,6 @@ public extension MapEvents {
 
         public init?(rawValue: String) {
             switch rawValue {
-            case MapEvents.mapLoadingStarted :
-                self = .mapLoadingStarted
             case MapEvents.mapLoadingFinished:
                 self = .mapLoadingFinished
             case MapEvents.mapLoadingError:
@@ -45,15 +43,6 @@ public extension MapEvents {
                 self = .renderFrameStarted
             case MapEvents.renderFrameFinished:
                 self = .renderFrameFinished
-            case MapEvents.renderMapStarted:
-                self = .renderMapStarted
-            case MapEvents.renderMapFinished:
-                self = .renderMapFinished
-            case MapEvents.cameraWillChange:
-                self = .cameraWillChange
-            case MapEvents.cameraIsChanging:
-                self = .cameraIsChanging
-            case MapEvents.cameraDidChange:
                 self = .cameraDidChange
             case MapEvents.resourceRequest:
                 self = .resourceRequest
@@ -65,7 +54,7 @@ public extension MapEvents {
         public var rawValue: String {
             switch self {
             case .mapLoadingStarted:
-                return MapEvents.mapLoadingStarted
+                return MapEvents.mapLoadingFinished
             case .mapLoadingFinished:
                 return MapEvents.mapLoadingFinished
             case .mapLoadingError:
@@ -85,15 +74,15 @@ public extension MapEvents {
             case .renderFrameFinished:
                 return MapEvents.renderFrameFinished
             case .renderMapStarted:
-                return MapEvents.renderMapStarted
+                return MapEvents.renderFrameStarted
             case .renderMapFinished:
-                return MapEvents.renderMapFinished
+                return MapEvents.renderFrameFinished
             case .cameraWillChange:
-                return MapEvents.cameraWillChange
+                return MapEvents.cameraChanged
             case .cameraIsChanging:
-                return MapEvents.cameraIsChanging
+                return MapEvents.cameraChanged
             case .cameraDidChange:
-                return MapEvents.cameraDidChange
+                return MapEvents.cameraChanged
             case .resourceRequest:
                 return MapEvents.resourceRequest
             }

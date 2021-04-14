@@ -349,12 +349,9 @@ internal class MapboxScaleBarOrnamentView: UIView {
     }
 
     private func updateVisibility() {
-        switch visibility {
-//        case .visible:
-//            self.alpha = 1
-        case .hidden:
+        if visibility == .hidden {
             self.alpha = 0
-        default:
+        } else {
             let maximumDistance: CLLocationDistance = Double(maximumWidth) * unitsPerPoint
             let allowedDistance = isMetricLocale ?
                                   Constants.metricTable.last!.distance : Constants.imperialTable.last!.distance
@@ -370,6 +367,5 @@ internal class MapboxScaleBarOrnamentView: UIView {
                                completion: nil)
             }
         }
-
     }
 }

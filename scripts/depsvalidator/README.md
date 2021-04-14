@@ -39,10 +39,10 @@ dependencies:
 
 - `manifests`: An array of manifest declarations.
   - `type`: The type of manifest. Must be one of the values listed above.
-  - `path`: [optional] The path to the manifest, relative to the path of the
+  - `path` [optional]: The path to the manifest, relative to the path of the
     config file. By default, depsvalidator will look in the same directory as
     the config file. The default path for JSON manifests is `versions.json`.
-  - `omit_for`: [optional] An array of dependency names which should not be
+  - `omit_for` [optional]: An array of dependency names which should not be
     expected in the manifest. The name must match the name of one of the
     dependencies listed in this config file.
 - `dependencies`: An array of dependency declarations.
@@ -51,7 +51,7 @@ dependencies:
     dependency for specific package managers. Keys are one of the values shown
     above. Values are the correct name for that package manager.
 
-It is permissible for there to be more than one manifest of a given type. For
+It is permissible to have more than one manifest of a given type. For
 example, if your repository hosts a Swift package and an Xcode workspace that
 uses Swift packages, you'll likely have two Package.resolved files (one in the
 repo root, and one at
@@ -75,6 +75,13 @@ validates:
 3. The dependency version requirement is satisfied by the corresponding pinned
    dependency version.
 
+### CI Usage
+
+DepsValidator can be used in CI workflows to help maintain a consistent set of
+versions in a repo's main branch. Configure your CI workflow for pull requests
+to run the validate subcommand. The job should fail if depsvalidator exits with
+a non-0 exit code.
+
 ## Developing
 
 DepsValidator itself is built using Swift and Swift Package Manager. It can be
@@ -85,7 +92,8 @@ from Xcode, specify `--config-file={path_to_config_file}` in the scheme's launch
 arguments. Optionally, specify either the `validate` or `dump` subcommand as
 well.
 
-DepsValidator uses SwiftLint. Install and run it from the command line.
+DepsValidator uses [SwiftLint](https://github.com/realm/SwiftLint). Install and
+run it from the command line.
 
 ### Ideas
 

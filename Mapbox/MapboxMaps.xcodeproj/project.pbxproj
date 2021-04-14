@@ -183,6 +183,7 @@
 		B5A6921D262754DF00A03412 /* MockDelegatingObserverDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A69218262754DF00A03412 /* MockDelegatingObserverDelegate.swift */; };
 		B5A6921E262754DF00A03412 /* DelegatingMapClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A69219262754DF00A03412 /* DelegatingMapClientTests.swift */; };
 		B5A6921F262754DF00A03412 /* CredentialsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A6921A262754DF00A03412 /* CredentialsManagerTests.swift */; };
+		B5A6922B2627566A00A03412 /* MapInitOptionsTests.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5A6922A2627566A00A03412 /* MapInitOptionsTests.xib */; };
 		B5B55D44260E4D1500EBB589 /* CameraAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B55D40260E4D1500EBB589 /* CameraAnimator.swift */; };
 		B5B55D45260E4D1500EBB589 /* AnimationOwner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B55D41260E4D1500EBB589 /* AnimationOwner.swift */; };
 		B5B55D46260E4D1500EBB589 /* CameraAnimationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B55D42260E4D1500EBB589 /* CameraAnimationDelegate.swift */; };
@@ -607,6 +608,7 @@
 		B5A69218262754DF00A03412 /* MockDelegatingObserverDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockDelegatingObserverDelegate.swift; sourceTree = "<group>"; };
 		B5A69219262754DF00A03412 /* DelegatingMapClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DelegatingMapClientTests.swift; sourceTree = "<group>"; };
 		B5A6921A262754DF00A03412 /* CredentialsManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CredentialsManagerTests.swift; sourceTree = "<group>"; };
+		B5A6922A2627566A00A03412 /* MapInitOptionsTests.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapInitOptionsTests.xib; sourceTree = "<group>"; };
 		B5B55D40260E4D1500EBB589 /* CameraAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimator.swift; sourceTree = "<group>"; };
 		B5B55D41260E4D1500EBB589 /* AnimationOwner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationOwner.swift; sourceTree = "<group>"; };
 		B5B55D42260E4D1500EBB589 /* CameraAnimationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimationDelegate.swift; sourceTree = "<group>"; };
@@ -1257,6 +1259,7 @@
 				A4519DD92432FF03007CF39A /* MapboxMapsStyleTests */,
 				CA4453C62436E71500477B4F /* MapboxTestHost */,
 				CA9481542554AA3D00D93C3C /* TestHelpers */,
+				B5A692292627566A00A03412 /* Resources */,
 				1FEE78C42421884000337895 /* Products */,
 				1FEE79BC2421AC7C00337895 /* Frameworks */,
 			);
@@ -1409,6 +1412,15 @@
 				B53B8761260D73D600C86BAA /* Puck3DIntegrationTests.swift */,
 			);
 			path = Pucks;
+			sourceTree = "<group>";
+		};
+		B5A692292627566A00A03412 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B5A6922A2627566A00A03412 /* MapInitOptionsTests.xib */,
+			);
+			name = Resources;
+			path = ../Tests/MapboxMapsTests/Resources;
 			sourceTree = "<group>";
 		};
 		C69F017225435BAE001AB49B /* Mocks */ = {
@@ -1747,6 +1759,7 @@
 				CA549006251C404B00F829A3 /* polygon.geojson in Resources */,
 				CA549007251C404B00F829A3 /* point.geojson in Resources */,
 				CA549008251C404B00F829A3 /* multipoint.geojson in Resources */,
+				B5A6922B2627566A00A03412 /* MapInitOptionsTests.xib in Resources */,
 				CA549009251C404B00F829A3 /* multiline.geojson in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

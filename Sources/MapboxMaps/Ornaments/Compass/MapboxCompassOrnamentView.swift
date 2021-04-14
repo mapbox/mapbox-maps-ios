@@ -27,9 +27,11 @@ internal class MapboxCompassOrnamentView: UIButton {
     /// Should be in range [-pi; pi]
     internal var currentBearing: CLLocationDirection = 0 {
         didSet {
-            let adjustedBearing = currentBearing.truncatingRemainder(dividingBy: 360)
-            updateVisibility()
-            self.transform = CGAffineTransform(rotationAngle: -adjustedBearing.toRadians())
+            if oldValue != currentBearing {
+                let adjustedBearing = currentBearing.truncatingRemainder(dividingBy: 360)
+                updateVisibility()
+                self.transform = CGAffineTransform(rotationAngle: -adjustedBearing.toRadians())
+            }
         }
     }
 

@@ -16,70 +16,17 @@ final class Validate: ParsableCommand {
         for dependency in config.dependencies {
             print("\(dependency.name):")
             do {
-                // Ensure that all of the semantic version requirements are equivalent.
-                // Skip this step if there are none.
-                let versionRequirements = try Set(config.semanticVersionRequirements(for: dependency))
-                if !versionRequirements.isEmpty {
-                    guard versionRequirements.count == 1 else {
-                        success = false
-
-                        // If there were differing semantic version requirements, print them out
-                        let versionRequirementsString = versionRequirements
-                            .map { "'\($0.description)'" }
-                            .joined(separator: ", ")
-                        print("  Inconsistent version requirements: \(versionRequirementsString)")
-
-                        // Also print out which manifests contained each version requirement
-                        let groupedManifests = try config.manifestsGroupedBySemanticVersionRequirement(for: dependency)
-                        for (semanticVersionRequirement, manifests) in groupedManifests {
-                            print("    Manifests with '\(semanticVersionRequirement)':")
-                            for manifest in manifests {
-                                print("      - \(manifest.url.relativePath)")
-                            }
-                        }
-                        continue
-                    }
+                if try validateSemanticVersionRequirements(for: dependency, in: config),
+                   try validateSemanticVersions(for: dependency, in: config),
+                   try validateRequirementsSatisfiedByVersions(for: dependency, in: config) {
+                    print("  OK")
+                } else {
+                    success = false
                 }
-                // Ensure that all of the semantic versions are equivalent.
-                // Skip this step if there are none.
-                let versions = try Set(config.semanticVersions(for: dependency))
-                if !versions.isEmpty {
-                    guard versions.count == 1 else {
-                        success = false
-
-                        // If there were differing semantic versions, print them out
-                        let versionsString = versions
-                            .map { "'\($0.description)'" }
-                            .joined(separator: ", ")
-                        print("  Inconsistent pinned versions: \(versionsString)")
-
-                        // Also print out which manifests contained each version
-                        let groupedManifests = try config.manifestsGroupedBySemanticVersion(for: dependency)
-                        for (semanticVersion, manifests) in groupedManifests {
-                            print("    Manifests with '\(semanticVersion)':")
-                            for manifest in manifests {
-                                print("      - \(manifest.url.relativePath)")
-                            }
-                        }
-                        continue
-                    }
-                }
-                // Ensure that the semantic version requirement is satisfied by the semantic version.
-                // Skip this step if we do not have one of each.
-                if let versionRequirement = versionRequirements.first,
-                   let version = versions.first {
-                    guard versionRequirement.isSatisfied(by: version) else {
-                        success = false
-                        print("  Pinned version '\(version)' does not satisfy requirement '\(versionRequirement)'")
-                        continue
-                    }
-                }
-                // If we made it here, this dependency passed validation
-                print("  OK")
             } catch {
                 // Print any parsing issues
-                success = false
                 print("  Encountered an error while parsing dependency versions: '\(error)'")
+                success = false
             }
         }
         // After checking each dependency, print success (and implicitly exit 0) or exit with failure and no additional
@@ -89,6 +36,73 @@ final class Validate: ParsableCommand {
         } else {
             throw ExitCode.failure
         }
+    }
+
+    // Ensure that all of the semantic version requirements are equivalent.
+    // Does nothing if there are none.
+    private func validateSemanticVersionRequirements(for dependency: Config.Dependency,
+                                                     in config: Config) throws -> Bool {
+        let versionRequirements = try Set(config.semanticVersionRequirements(for: dependency))
+        // There's only an error if there's more than 1 version requirement
+        guard versionRequirements.count > 1 else {
+            return true
+        }
+        // If there were differing semantic version requirements, print them out
+        let versionRequirementsString = versionRequirements
+            .map { "'\($0.description)'" }
+            .joined(separator: ", ")
+        print("  Inconsistent version requirements: \(versionRequirementsString)")
+
+        // Also print out which manifests contained each version requirement
+        let groupedManifests = try config.manifestsGroupedBySemanticVersionRequirement(for: dependency)
+        for (semanticVersionRequirement, manifests) in groupedManifests {
+            print("    Manifests with '\(semanticVersionRequirement)':")
+            for manifest in manifests {
+                print("      - \(manifest.url.relativePath)")
+            }
+        }
+        return false
+    }
+
+    // Ensure that all of the semantic versions are equivalent.
+    // Does nothing if there are none.
+    private func validateSemanticVersions(for dependency: Config.Dependency,
+                                          in config: Config) throws -> Bool {
+        let versions = try Set(config.semanticVersions(for: dependency))
+        // There's only an error if there's more than 1 version
+        guard versions.count > 1 else {
+            return true
+        }
+        // If there were differing semantic versions, print them out
+        let versionsString = versions
+            .map { "'\($0.description)'" }
+            .joined(separator: ", ")
+        print("  Inconsistent pinned versions: \(versionsString)")
+
+        // Also print out which manifests contained each version
+        let groupedManifests = try config.manifestsGroupedBySemanticVersion(for: dependency)
+        for (semanticVersion, manifests) in groupedManifests {
+            print("    Manifests with '\(semanticVersion)':")
+            for manifest in manifests {
+                print("      - \(manifest.url.relativePath)")
+            }
+        }
+        return false
+    }
+
+    private func validateRequirementsSatisfiedByVersions(for dependency: Config.Dependency,
+                                                         in config: Config) throws -> Bool {
+        // Ensure that the semantic version requirement is satisfied by the semantic version.
+        // Skip this step if we do not have one of each. A previous validation step ensures that
+        // there is not more than one requirement or more than one version, so that is not
+        // verified here.
+        guard let versionRequirement = try config.semanticVersionRequirements(for: dependency).first,
+              let version = try config.semanticVersions(for: dependency).first,
+              !versionRequirement.isSatisfied(by: version) else {
+            return true
+        }
+        print("  Pinned version '\(version)' does not satisfy requirement '\(versionRequirement)'")
+        return false
     }
 }
 

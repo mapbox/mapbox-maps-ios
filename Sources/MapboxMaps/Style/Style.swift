@@ -427,7 +427,14 @@ public struct StyleTransition: Codable {
     ///   - duration: Time for transition in milliseconds.
     ///   - delay: Time before transition begins in milliseconds.
     public init(duration: TimeInterval, delay: TimeInterval) {
-        self.duration = duration
-        self.delay = delay
+        self.duration = duration * 1000
+        self.delay = delay * 1000
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        duration = try container.decode(Double.self, forKey: .duration) * 1000
+        delay = try container.decode(Double.self, forKey: .delay) * 1000
     }
 }

@@ -61,7 +61,6 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         XCTAssertEqual(resourceOptions.accessToken, credentialsManager.accessToken)
     }
 
-
     func testDefaultOptionsAreUsedWhenNibDoesntSetProvider() {
         CredentialsManager.default.accessToken = "pk.eeeeee"
 

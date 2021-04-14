@@ -199,7 +199,6 @@ internal class OrnamentsManager: NSObject {
             }
 
             removeFromView(ornament: $0)
-
         }
     }
 
@@ -266,7 +265,6 @@ internal class OrnamentsManager: NSObject {
                 ornamentView.heightAnchor.constraint(equalTo: ornamentView.widthAnchor, multiplier: 0.25)
             ])
         }
-
         if let compassView = ornamentView as? MapboxCompassOrnamentView {
             compassView.visibility = ornament.visibility
         }

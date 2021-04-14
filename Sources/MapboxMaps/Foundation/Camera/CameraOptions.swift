@@ -84,17 +84,28 @@ extension CameraOptions {
             __pitch = newValue?.NSNumber
         }
     }
-    
+
     override open func isEqual(_ object: Any?) -> Bool {
         guard let otherCameraOption = object as? CameraOptions else {
             return false
         }
-        
+
         return center == otherCameraOption.center &&
                padding == otherCameraOption.padding &&
                anchor == otherCameraOption.anchor &&
                zoom == otherCameraOption.zoom &&
                bearing == otherCameraOption.bearing &&
                pitch == otherCameraOption.pitch
+    }
+
+    open override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(center)
+        hasher.combine(padding)
+        hasher.combine(zoom)
+        hasher.combine(anchor)
+        hasher.combine(bearing)
+        hasher.combine(pitch)
+        return hasher.finalize()
     }
 }

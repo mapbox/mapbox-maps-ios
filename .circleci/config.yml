@@ -19,6 +19,8 @@ workflows:
     jobs:
       - swiftlint:
           xcode: "12.4.0"
+      - depsvalidator:
+          xcode: "12.4.0"
       - build-sdk:
           xcode: "12.4.0"
           matrix:
@@ -58,6 +60,8 @@ workflows:
   steve:
     jobs:
       - swiftlint:
+          xcode: "12.4.0"
+      - depsvalidator:
           xcode: "12.4.0"
       - build-sdk:
           xcode: "12.4.0"
@@ -196,6 +200,17 @@ jobs:
       - checkout
       - run: brew install swiftlint
       - run: swiftlint lint --strict
+
+  depsvalidator:
+    <<: *base-job
+    steps:
+      - checkout
+      - run:
+          name: build depsvalidator
+          command: swift build --package-path scripts/depsvalidator
+      - run:
+          name: run depsvalidator
+          command: swift run --package-path scripts/depsvalidator depsvalidator
 
   build-sdk:
     <<: *base-job

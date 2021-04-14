@@ -3,7 +3,7 @@
 import UIKit
 import Turf
 
-// swiftlint:disable file_length type_body_length
+// swiftlint:disable file_length
 
 internal typealias PendingAnimationCompletion = (completion: AnimationCompletion, animatingPosition: UIViewAnimatingPosition)
 

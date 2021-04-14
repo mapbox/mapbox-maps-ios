@@ -416,6 +416,11 @@ public class Style {
  */
 public struct StyleTransition: Codable {
 
+    public enum CodingKeys: String, CodingKey {
+        case duration
+        case delay
+    }
+
     /// Time allotted for transitions to complete in milliseconds.
     public var duration: TimeInterval = 0
 
@@ -427,8 +432,8 @@ public struct StyleTransition: Codable {
     ///   - duration: Time for transition in milliseconds.
     ///   - delay: Time before transition begins in milliseconds.
     public init(duration: TimeInterval, delay: TimeInterval) {
-        self.duration = duration * 1000
-        self.delay = delay * 1000
+        self.duration = duration
+        self.delay = delay
     }
 
     public init(from decoder: Decoder) throws {
@@ -436,5 +441,10 @@ public struct StyleTransition: Codable {
 
         duration = try container.decode(Double.self, forKey: .duration) * 1000
         delay = try container.decode(Double.self, forKey: .delay) * 1000
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(self)
     }
 }

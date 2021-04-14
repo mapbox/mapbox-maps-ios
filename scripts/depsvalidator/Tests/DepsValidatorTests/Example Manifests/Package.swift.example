@@ -1,0 +1,27 @@
+// swift-tools-version:5.3
+import PackageDescription
+
+let package = Package(
+    name: "MyLibrary",
+    products: [
+        .library(
+            name: "MyLibrary",
+            targets: ["MyLibrary"]),
+    ],
+    dependencies: [
+        .package(name: "A", url: "https://github.com/mapbox/a.git", from: "1.0.0"),
+        .package(name: "B", url: "https://github.com/mapbox/b.git", .branch("abranch")),
+        .package(name: "C", url: "https://github.com/mapbox/c.git", .exact("1.2.0")),
+        .package(name: "D", url: "https://github.com/mapbox/d.git", .revision("abcdef")),
+        .package(name: "E", url: "https://github.com/mapbox/e.git", .upToNextMajor(from: "1.2.0")),
+        .package(name: "F", url: "https://github.com/mapbox/f.git", .upToNextMinor(from: "1.2.0")),
+    ],
+    targets: [
+        .target(
+            name: "MyLibrary",
+            dependencies: []),
+        .testTarget(
+            name: "MyLibraryTests",
+            dependencies: ["MyLibrary"]),
+    ]
+)

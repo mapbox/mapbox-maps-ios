@@ -1,0 +1,27 @@
+---
+manifests:
+  - type: Cartfile
+  - type: Cartfile.resolved
+  - type: Package.swift
+    omit_for:
+      - MapboxCommon
+  - type: Package.resolved
+  - type: Package.resolved
+    path: Apps/Apps.xcworkspace/xcshareddata/swiftpm/Package.resolved
+  - type: Podspec
+    path: MapboxMaps.podspec
+  - type: JSON
+    path: scripts/release/packager/versions.json
+dependencies:
+  - name: MapboxCoreMaps
+    variations:
+      Carthage: MapboxCoreMaps-dynamic
+  - name: MapboxCommon
+    variations:
+      Carthage: MapboxCommon-ios
+  - name: Turf
+    variations:
+      Carthage: turf-swift
+  - name: MapboxMobileEvents
+    variations:
+      Carthage: mapbox-events-ios

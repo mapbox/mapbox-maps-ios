@@ -5,6 +5,7 @@ excluded:
   - Pods
   - Sources/MapboxMaps/Style/Generated
   - Tests/MapboxMapsTests/Style/Generated
+  - scripts/depsvalidator/.build
 disabled_rules:
   - comment_spacing
   - computed_accessors_order

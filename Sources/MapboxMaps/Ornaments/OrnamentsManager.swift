@@ -193,7 +193,7 @@ internal class OrnamentsManager: NSObject {
                 }
                 if $0.type == .mapboxScaleBar {
                     let scaleBar = view.subviews.filter { $0.isKind(of: MapboxScaleBarOrnamentView.self) }.first as? MapboxScaleBarOrnamentView
-                    scaleBar?.visibility = .hidden
+                    scaleBar?.isHidden = true
                     $0.view = scaleBar
                 }
             }

@@ -11,12 +11,6 @@ internal class MapboxScaleBarOrnamentView: UIView {
 
     // MARK: - Properties
 
-    internal var visibility: OrnamentVisibility = .adaptive {
-        didSet {
-            updateVisibility()
-        }
-    }
-
     internal var metersPerPoint: CLLocationDistance = 1 {
         didSet {
             guard metersPerPoint != oldValue else {
@@ -349,9 +343,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
     }
 
     private func updateVisibility() {
-        if visibility == .hidden {
-            self.alpha = 0
-        } else {
+        if !isHidden {
             let maximumDistance: CLLocationDistance = Double(maximumWidth) * unitsPerPoint
             let allowedDistance = isMetricLocale ?
                                   Constants.metricTable.last!.distance : Constants.imperialTable.last!.distance

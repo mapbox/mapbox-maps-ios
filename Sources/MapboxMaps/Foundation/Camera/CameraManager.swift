@@ -18,13 +18,7 @@ public class CameraManager {
         mapCameraOptions = newOptions
     }
 
-    /// Pointer HashTable for holding camera animators
-    internal var cameraAnimators = NSHashTable<CameraAnimator>.weakObjects()
-
-    /// List of animators currently alive
-    public var cameraAnimatorsList: [CameraAnimator] {
-        return cameraAnimators.allObjects
-    }
+    
 
     /// Internal camera animator used for animated transition
     internal var internalCameraAnimator: CameraAnimator?
@@ -55,7 +49,7 @@ public class CameraManager {
         let coordinateLocations = coordinates.map { CLLocation(latitude: $0.latitude, longitude: $0.longitude) }
 
         // Construct new camera options with current values
-        let cameraOptions = mapView.cameraView.camera
+        let cameraOptions = mapView.camera
 
         let defaultEdgeInsets = EdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 
@@ -150,7 +144,7 @@ public class CameraManager {
                                           padding: targetCamera.padding,
                                           anchor: targetCamera.anchor,
                                           zoom: targetCamera.zoom?.clamped(to: mapCameraOptions.minimumZoomLevel...mapCameraOptions.maximumZoomLevel),
-                                          bearing: optimizeBearing(startBearing: mapView.cameraView.localBearing, endBearing: targetCamera.bearing),
+                                          bearing: targetCamera.bearing,
                                           pitch: targetCamera.pitch?.clamped(to: mapCameraOptions.minimumPitch...mapCameraOptions.maximumPitch))
 
         // Return early if the cameraView's camera is already at `clampedCamera`
@@ -158,19 +152,21 @@ public class CameraManager {
             return
         }
 
-        let transitionBlock = {
-            mapView.camera = clampedCamera
-        }
+
 
         if animated && duration > 0 {
-            performCameraAnimation(duration: duration, animation: transitionBlock, completion: completion)
+            let animation = { (camera: inout CameraOptions) in
+                camera = clampedCamera
+            }
+            performCameraAnimation(duration: duration, animation: animation, completion: completion)
         } else {
-            transitionBlock()
+            self.mapView?.__map.setCameraFor(clampedCamera)
         }
     }
 
     public func cancelAnimations() {
-        for animator in cameraAnimators.allObjects where animator.state == .active {
+        guard let validMapView = mapView else { return }
+        for animator in validMapView.cameraAnimators.allObjects where animator.state == .active {
             animator.stopAnimation()
         }
     }
@@ -180,7 +176,7 @@ public class CameraManager {
     ///   - duration: If animated, how long the animation takes
     ///   - animation: closure to perform
     ///   - completion: animation block called on completion
-    fileprivate func performCameraAnimation(duration: TimeInterval, animation: @escaping () -> Void, completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
+    fileprivate func performCameraAnimation(duration: TimeInterval, animation: @escaping (inout CameraOptions) -> Void, completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
 
         // Stop previously running animations
         internalCameraAnimator?.stopAnimation()
@@ -240,24 +236,25 @@ public class CameraManager {
         let timeSteps = stride(from: 0.0, through: 1.0, by: 0.025)
         let keyTimes: [Double] = Array(timeSteps)
 
-        let animator = makeCameraAnimator(duration: time, curve: .linear) {
-
-            UIView.animateKeyframes(withDuration: 0, delay: 0, options: []) {
-
-                for keyTime in keyTimes {
-                    let interpolatedCoordinate = interpolator.coordinate(at: keyTime)
-                    let interpolatedZoom = interpolator.zoom(at: keyTime)
-                    let interpolatedBearing = interpolator.bearing(at: keyTime)
-                    let interpolatedPitch = interpolator.pitch(at: keyTime)
-
-                    UIView.addKeyframe(withRelativeStartTime: keyTime, relativeDuration: 0.025) {
-                        self.mapView?.cameraView.centerCoordinate = interpolatedCoordinate
-                        self.mapView?.cameraView.zoom = CGFloat(interpolatedZoom)
-                        self.mapView?.cameraView.bearing = CGFloat(interpolatedBearing)
-                        self.mapView?.cameraView.pitch = CGFloat(interpolatedPitch)
-                    }
-                }
-            }
+        let animator = makeCameraAnimator(duration: time, curve: .linear) { (camerOptions) in
+            
+// TODO: Fix flyTo
+//            UIView.animateKeyframes(withDuration: 0, delay: 0, options: []) {
+//
+//                for keyTime in keyTimes {
+//                    let interpolatedCoordinate = interpolator.coordinate(at: keyTime)
+//                    let interpolatedZoom = interpolator.zoom(at: keyTime)
+//                    let interpolatedBearing = interpolator.bearing(at: keyTime)
+//                    let interpolatedPitch = interpolator.pitch(at: keyTime)
+//
+//                    UIView.addKeyframe(withRelativeStartTime: keyTime, relativeDuration: 0.025) {
+//                        camerOptions.center = interpolatedCoordinate
+//                        camerOptions.zoom = CGFloat(interpolatedZoom)
+//                        camerOptions.bearing = interpolatedBearing
+//                        camerOptions.pitch = CGFloat(interpolatedPitch)
+//                    }
+//                }
+//            }
         }
 
         if let completion = completion {

@@ -13,6 +13,9 @@ public class CameraAnimator: NSObject {
 
     /// The ID of the owner of this `CameraAnimator`.
     internal var owner: AnimationOwner
+    
+    /// The `CameraView` owned by this animator
+    internal var cameraView: CameraView
 
     // MARK: Computed Properties
 
@@ -44,23 +47,29 @@ public class CameraAnimator: NSObject {
         self.delegate = delegate
         self.propertyAnimator = propertyAnimator
         self.owner = owner
+        
+        // Set up the short lived camera view
+        cameraView = CameraView()
+        delegate.addToViewHeirarchy(view: cameraView)
     }
 
     deinit {
         propertyAnimator.stopAnimation(false)
         propertyAnimator.finishAnimation(at: .current)
+        cameraView.removeFromSuperview()
     }
 
     // MARK: Functions
 
     /// Starts the animation.
     public func startAnimation() {
+        
+        guard let renderedCamera = delegate?.camera else {
+            fatalError("Rendered camera options cannot be nil when starting an animation")
+        }
+        
+        cameraView.syncFromValuesWithRenderer(renderedCameraOptions: renderedCamera)
         propertyAnimator.startAnimation()
-    }
-
-    /// Starts the animation after a `delay` which is of type `TimeInterval`.
-    public func startAnimation(afterDelay delay: TimeInterval) {
-        propertyAnimator.startAnimation(afterDelay: delay)
     }
 
     /// Pauses the animation.
@@ -75,14 +84,28 @@ public class CameraAnimator: NSObject {
     }
 
     /// Add animations block to the animator with a `delayFactor`.
-    public func addAnimations(_ animations: @escaping () -> Void, delayFactor: Double) {
-        // if this cameraAnimator is not in the list of CameraAnimators held by the `CameraManager` then add it to that list
-        propertyAnimator.addAnimations(animations, delayFactor: CGFloat(delayFactor))
+    public func addAnimations(_ animations: @escaping (inout CameraOptions) -> Void, delayFactor: Double) {
+        guard let delegate = delegate else {  return }
+        var cameraOptions = delegate.camera
+        
+        propertyAnimator.addAnimations({ [weak self] in
+            guard let self = self else { return }
+            animations(&cameraOptions) // The animation block will provide the "to" values
+            self.cameraView.animate(to: cameraOptions)
+        }, delayFactor: CGFloat(delayFactor))
     }
 
     /// Add animations block to the animator.
-    public func addAnimations(_ animations: @escaping () -> Void) {
-        propertyAnimator.addAnimations(animations)
+    public func addAnimations(_ animations: @escaping (inout CameraOptions) -> Void) {
+        guard let delegate = delegate else {  return }
+        var cameraOptions = delegate.camera
+        
+        propertyAnimator.addAnimations { [weak self] in
+            guard let self = self else { return }
+            animations(&cameraOptions) // The animation block will provide the "to" values
+            self.cameraView.animate(to: cameraOptions)
+            
+        }
     }
 
     /// Add a completion block to the animator. 
@@ -97,4 +120,74 @@ public class CameraAnimator: NSObject {
     public func continueAnimation(withTimingParameters parameters: UITimingCurveProvider?, durationFactor: Double) {
         propertyAnimator.continueAnimation(withTimingParameters: parameters, durationFactor: CGFloat(durationFactor))
     }
+    
+    // Cache of camera options that the last `jumpTo` was called with.
+    internal var cachedDiffedCamera: CameraOptions?
+    
+    
+    internal func update() {
+
+        // Retrieve currently rendered camera
+        guard propertyAnimator.state == .active, let currentCamera = delegate?.camera else {
+            return
+        }
+
+        // Get the latest interpolated values of the camera properties (if they exist)
+        let targetCamera = cameraView.localCamera.wrap()
+
+        // Apply targetCamera options only if they are different from currentCamera options
+        if currentCamera != targetCamera {
+
+            // Diff the targetCamera with the currentCamera and apply diffed camera properties to map
+            let diffedCamera = CameraOptions()
+
+            if targetCamera.zoom != currentCamera.zoom, let targetZoom = targetCamera.zoom, !targetZoom.isNaN {
+                diffedCamera.zoom = targetCamera.zoom
+            }
+
+            if targetCamera.bearing != currentCamera.bearing, let targetBearing = targetCamera.bearing, !targetBearing.isNaN {
+                diffedCamera.bearing = targetCamera.bearing
+            }
+
+            if targetCamera.pitch != currentCamera.pitch, let targetPitch = targetCamera.pitch, !targetPitch.isNaN {
+                diffedCamera.pitch = targetCamera.pitch
+            }
+
+            if targetCamera.center != currentCamera.center, let targetCenter = targetCamera.center, !targetCenter.latitude.isNaN, !targetCenter.longitude.isNaN {
+                diffedCamera.center = targetCamera.center
+            }
+
+            if targetCamera.anchor != currentCamera.anchor {
+                diffedCamera.anchor = targetCamera.anchor
+            }
+
+            if targetCamera.padding != currentCamera.padding {
+                diffedCamera.padding = targetCamera.padding
+            }
+
+//            if let cachedDiffedCamera = cachedDiffedCamera, diffedCamera == cachedDiffedCamera {
+//                // Return early if we previously set the same value of diffed camera
+//                // The camera is "idling".
+//                return
+//            }
+
+            delegate?.jumpTo(camera: diffedCamera)
+//            cachedDiffedCamera = diffedCamera
+        }
+    }
 }
+
+
+fileprivate extension CameraOptions {
+
+    func wrap() -> CameraOptions {
+        return CameraOptions(center: self.center?.wrap(),
+                             padding: self.padding,
+                             anchor: self.anchor,
+                             zoom: self.zoom,
+                             bearing: self.bearing,
+                             pitch: self.pitch)
+
+    }
+}
+

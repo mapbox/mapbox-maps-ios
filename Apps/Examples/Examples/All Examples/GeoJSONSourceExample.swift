@@ -17,8 +17,9 @@ public class GeoJSONSourceExample: UIViewController, ExampleProtocol {
         // Set the center coordinate and zoom level.
         let centerCoordinate = CLLocationCoordinate2D(latitude: 18.239785,
                                                       longitude: -66.302490)
-        mapView.centerCoordinate = centerCoordinate
-        mapView.zoom = 6.9
+        
+        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate,
+                                                          zoom: 6.9))
 
         // Allow the view controller to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in

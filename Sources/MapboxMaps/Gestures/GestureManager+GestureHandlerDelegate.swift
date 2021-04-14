@@ -102,14 +102,14 @@ extension GestureManager: GestureHandlerDelegate {
             return false
         }
 
-        return mapView.cameraView.zoom >= cameraManager.mapCameraOptions.minimumZoomLevel
+        return mapView.zoom >= cameraManager.mapCameraOptions.minimumZoomLevel
     }
 
     internal func rotationStartAngle() -> CGFloat {
         guard let mapView = cameraManager.mapView else {
             return 0
         }
-        return (mapView.cameraView.bearing * .pi) / 180.0 * -1
+        return CGFloat((mapView.bearing * .pi) / 180.0 * -1)
     }
 
     internal func rotationChanged(with changedAngle: CGFloat, and anchor: CGPoint, and pinchScale: CGFloat) {
@@ -145,10 +145,10 @@ extension GestureManager: GestureHandlerDelegate {
 
         // Avoid contention with in-progress gestures
         // let toleranceForSnappingToNorth: CGFloat = 7.0
-        if mapView.cameraView.bearing != 0.0
+        if mapView.bearing != 0.0
             && pinchState != .began
             && pinchState != .changed {
-            if mapView.cameraView.bearing != 0.0 && isRotationAllowed() == false {
+            if mapView.bearing != 0.0 && isRotationAllowed() == false {
                 cameraManager.setCamera(to: CameraOptions(bearing: 0),
                                         animated: false,
                                         duration: 0,
@@ -167,7 +167,7 @@ extension GestureManager: GestureHandlerDelegate {
         guard let mapView = cameraManager.mapView else {
             return 0
         }
-        return mapView.cameraView.pitch
+        return mapView.pitch
     }
 
     internal func horizontalPitchTiltTolerance() -> Double {

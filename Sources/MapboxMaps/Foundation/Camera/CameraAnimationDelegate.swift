@@ -5,6 +5,12 @@ public typealias AnimationCompletion = (UIViewAnimatingPosition) -> Void
 
 // MARK: CameraAnimatorDelegate Protocol
 internal protocol CameraAnimatorDelegate: class {
+    
+    var camera: CameraOptions { get }
+    
+    func jumpTo(camera: CameraOptions)
+    
+    func addToViewHeirarchy(view: CameraView)
 
     /**
     This delegate function notifies that the completion block needs to be scheduled

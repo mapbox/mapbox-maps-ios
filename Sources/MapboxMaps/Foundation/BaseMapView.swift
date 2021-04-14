@@ -7,7 +7,7 @@ import Turf
 
 internal typealias PendingAnimationCompletion = (completion: AnimationCompletion, animatingPosition: UIViewAnimatingPosition)
 
-open class BaseMapView: UIView, CameraViewDelegate {
+open class BaseMapView: UIView {
 
     /// The underlying renderer object responsible for rendering the map
     public private(set) var __map: Map!
@@ -23,6 +23,14 @@ open class BaseMapView: UIView, CameraViewDelegate {
 
     /// List of completion blocks that need to be completed by the displayLink
     internal var pendingAnimatorCompletionBlocks: [PendingAnimationCompletion] = []
+    
+    /// Pointer HashTable for holding camera animators
+    internal var cameraAnimators = NSHashTable<CameraAnimator>.weakObjects()
+
+    /// List of animators currently alive
+    public var cameraAnimatorsList: [CameraAnimator] {
+        return cameraAnimators.allObjects
+    }
 
     /// Map of event types to subscribed event handlers
     private var eventHandlers: [String: [(MapboxCoreMaps.Event) -> Void]] = [:]
@@ -44,83 +52,47 @@ open class BaseMapView: UIView, CameraViewDelegate {
         }
     }
 
-    /// Returns the camera view managed by this object.
-    internal private(set) var cameraView: CameraView!
-
     /// The map's current camera
     public var camera: CameraOptions {
-        get {
-            return __map.getCameraOptions(forPadding: nil)
-        } set {
-            cameraView.camera = newValue
-        }
+        return __map.getCameraOptions(forPadding: nil)
     }
 
     /// The map's current center coordinate.
     public var centerCoordinate: CLLocationCoordinate2D {
-        get {
-            guard let center = camera.center else {
-                fatalError("Center is nil in camera options")
-            }
-            return center
-        } set {
-            cameraView.centerCoordinate = newValue
+        guard let center = camera.center else {
+            fatalError("Center is nil in camera options")
         }
+        return center
     }
 
     /// The map's  zoom level.
     public var zoom: CGFloat {
-        get {
-            guard let zoom = camera.zoom else {
-                fatalError("Zoom is nil in camera options")
-            }
-            return CGFloat(zoom)
-        } set {
-            cameraView.zoom = newValue
+        guard let zoom = camera.zoom else {
+            fatalError("Zoom is nil in camera options")
         }
+        return CGFloat(zoom)
     }
 
     /// The map's bearing, measured clockwise from 0° north.
     public var bearing: CLLocationDirection {
-        get {
-            guard let bearing = camera.bearing else {
-                fatalError("Bearing is nil in camera options")
-            }
-            return CLLocationDirection(bearing)
-        } set {
-            cameraView.bearing = CGFloat(newValue)
+        guard let bearing = camera.bearing else {
+            fatalError("Bearing is nil in camera options")
         }
+        return CLLocationDirection(bearing)
     }
 
     /// The map's pitch, falling within a range of 0 to 60.
     public var pitch: CGFloat {
-        get {
-            guard let pitch = camera.pitch else {
-                fatalError("Pitch is nil in camera options")
-            }
-
-            return pitch
-        } set {
-            cameraView.pitch = newValue
+        guard let pitch = camera.pitch else {
+            fatalError("Pitch is nil in camera options")
         }
+
+        return pitch
     }
 
     /// The map's camera padding
     public var padding: UIEdgeInsets {
-        get {
-            return camera.padding ?? .zero
-        } set {
-            cameraView.padding = newValue
-        }
-    }
-
-    public var anchor: CGPoint {
-        get {
-            // TODO: Evaluate whether we should get the anchor from CameraView or not
-            return cameraView.anchor
-        } set {
-            cameraView.anchor = newValue
-        }
+        return camera.padding ?? .zero
     }
 
     func jumpTo(camera: CameraOptions) {
@@ -163,9 +135,6 @@ open class BaseMapView: UIView, CameraViewDelegate {
         observer.delegate = self
         let events = MapEvents.EventKind.allCases.map({ $0.rawValue })
         __map.subscribe(for: observer, events: events)
-
-        self.cameraView = CameraView(delegate: self)
-        self.addSubview(cameraView)
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(willTerminate),
@@ -249,7 +218,10 @@ open class BaseMapView: UIView, CameraViewDelegate {
 
         if needsDisplayRefresh {
             needsDisplayRefresh = false
-            self.cameraView.update()
+            
+            for animator in cameraAnimatorsList {
+                animator.update()
+            }
 
             /// This executes the series of scheduled animation completion blocks and also removes them from the list
             while !pendingAnimatorCompletionBlocks.isEmpty {

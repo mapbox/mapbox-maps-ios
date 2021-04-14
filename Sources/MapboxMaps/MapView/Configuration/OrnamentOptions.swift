@@ -13,7 +13,7 @@ public struct OrnamentOptions: Equatable {
     /// Compass options
     public var compassViewPosition: OrnamentPosition = .topRight
     public var compassViewMargins: CGPoint = defaultOrnamentsMargin
-    public var compassVisiblity: OrnamentVisibility = .adaptive
+    public var compassVisibility: OrnamentVisibility = .adaptive
 
     /// Logo view options
     public var _showsLogoView: Bool = true
@@ -35,12 +35,13 @@ public struct OrnamentOptions: Equatable {
         if scaleBarVisibility != .hidden {
             supportedOrnaments[.mapboxScaleBar] = scaleBarPosition
             supportedOrnamentMargins[.mapboxScaleBar] = scaleBarMargins
+            ornamentVisibility[.mapboxScaleBar] = scaleBarVisibility
         }
 
-        if compassVisiblity != .hidden {
+        if compassVisibility != .hidden {
             supportedOrnaments[.compass] = compassViewPosition
             supportedOrnamentMargins[.compass] = compassViewMargins
-            ornamentVisibility[.compass] = compassVisiblity
+            ornamentVisibility[.compass] = compassVisibility
         }
 
         if _showsLogoView {

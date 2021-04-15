@@ -182,7 +182,7 @@ open class BaseMapView: UIView, CameraViewDelegate {
                                                object: nil)
 
         if let validStyleURI = styleURI {
-            mapboxMap.__map.setStyleURIForUri(validStyleURI.absoluteString)
+            mapboxMap.__map.setStyleURIForUri(validStyleURI.path)
         }
     }
 

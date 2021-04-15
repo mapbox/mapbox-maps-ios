@@ -30,6 +30,7 @@
 		B5327EBF260277930095B6BD /* Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5327EBE260277930095B6BD /* Example.swift */; };
 		B5327EC3260277AC0095B6BD /* ExampleProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5327EC2260277AC0095B6BD /* ExampleProtocol.swift */; };
 		B54B46BA2603B1270029EFA0 /* OfflineRegionManagerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54B46B92603B1270029EFA0 /* OfflineRegionManagerExample.swift */; };
+		CA03F10F26268DF700673961 /* OfflineManagerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA03F10E26268DF700673961 /* OfflineManagerExample.swift */; };
 		CA4F1F7225E815CF00822D2A /* SwiftUIExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A2E03C25CB64E20082BC31 /* SwiftUIExample.swift */; };
 		CA86E81825BE7C2300E5A1D9 /* BuildingExtrusionsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA86E81725BE7C2200E5A1D9 /* BuildingExtrusionsExample.swift */; };
 		CAC195B725AC098A00F69FEA /* CameraAnimatorsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC195B625AC098A00F69FEA /* CameraAnimatorsExample.swift */; };
@@ -145,6 +146,7 @@
 		C64ED3C42540DD6E00ADADFB /* CustomPointAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPointAnnotationExample.swift; sourceTree = "<group>"; };
 		C64ED3C82541CA3A00ADADFB /* LineAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineAnnotationExample.swift; sourceTree = "<group>"; };
 		C69F01EC2543646A001AB49B /* DataDrivenSymbolsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataDrivenSymbolsExample.swift; sourceTree = "<group>"; };
+		CA03F10E26268DF700673961 /* OfflineManagerExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineManagerExample.swift; sourceTree = "<group>"; };
 		CA86E81725BE7C2200E5A1D9 /* BuildingExtrusionsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingExtrusionsExample.swift; sourceTree = "<group>"; };
 		CAC195B625AC098A00F69FEA /* CameraAnimatorsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimatorsExample.swift; sourceTree = "<group>"; };
 		CADCF742258499570065C51B /* BasicMapExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicMapExample.swift; sourceTree = "<group>"; };
@@ -207,6 +209,7 @@
 		0746C182252FB0F4001638BD /* All Examples */ = {
 			isa = PBXGroup;
 			children = (
+				CA03F10E26268DF700673961 /* OfflineManagerExample.swift */,
 				07B071D12547CF50007F2865 /* Sample Data */,
 				CAEF7554257AE02B0003EFF7 /* MapViewExample.swift */,
 				CADCF742258499570065C51B /* BasicMapExample.swift */,
@@ -485,6 +488,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CA03F10F26268DF700673961 /* OfflineManagerExample.swift in Sources */,
 				CADCF73C258499200065C51B /* AppDelegate.swift in Sources */,
 				CADCF7392584991C0065C51B /* UIViewController+Children.swift in Sources */,
 				CADCF7262584990E0065C51B /* SnapshotterExample.swift in Sources */,

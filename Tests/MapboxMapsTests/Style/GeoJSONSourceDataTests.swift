@@ -25,7 +25,7 @@ class GeoJSONSourceDataTests: XCTestCase {
 
         if let validData = decodedSource?.data,
            case let GeoJSONSourceData.url(url) = validData {
-            XCTAssert(url.absoluteString == "./lines.geojson")
+            XCTAssert(url.path == "./lines.geojson")
         } else {
             XCTFail("Failed to read decoded geojson fixture.")
         }

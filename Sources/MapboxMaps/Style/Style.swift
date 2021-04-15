@@ -416,7 +416,7 @@ public class Style {
  */
 public struct StyleTransition: Codable {
 
-    public enum CodingKeys: String, CodingKey {
+    internal enum CodingKeys: String, CodingKey {
         case duration
         case delay
     }
@@ -439,12 +439,14 @@ public struct StyleTransition: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        duration = try container.decode(Double.self, forKey: .duration) * 1000
-        delay = try container.decode(Double.self, forKey: .delay) * 1000
+        duration = try container.decode(Double.self, forKey: .duration) / 1000
+        delay = try container.decode(Double.self, forKey: .delay) / 1000
     }
 
     public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(self)
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        duration = try container.encode(Double.self, forKey: .duration) * 1000
+        delay = try container.encode(Double.self, forKey: .delay) * 1000
     }
 }

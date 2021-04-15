@@ -1,7 +1,7 @@
 import UIKit
 import CoreLocation
 
-// Represents the
+// Represents a change in a camera property due to an animation
 internal enum AnimatingCameraChanges: Hashable {
     
     case center(start: CLLocationCoordinate2D, end: CLLocationCoordinate2D)
@@ -15,6 +15,48 @@ internal enum AnimatingCameraChanges: Hashable {
     case padding(start: UIEdgeInsets, end: UIEdgeInsets)
     
     case zoom(start: CGFloat, end: CGFloat)
+    
+    internal static func diffChangesToCameraOptions(from renderedCameraOptions: CameraOptions,
+                                             to animatedCameraOptions: CameraOptions) -> Set<AnimatingCameraChanges> {
+        
+        var changes = Set<AnimatingCameraChanges>()
+        
+        if let startCenter = renderedCameraOptions.center,
+           let endCenter = animatedCameraOptions.center,
+           startCenter != endCenter {
+            changes.insert(.center(start: startCenter, end: endCenter))
+        }
+        
+        if let startBearing = renderedCameraOptions.bearing,
+           let endBearing = animatedCameraOptions.bearing,
+           startBearing != endBearing {
+            changes.insert(.bearing(start: startBearing, end: endBearing))
+        }
+        
+        if let startPitch = renderedCameraOptions.pitch,
+           let endPitch = animatedCameraOptions.pitch,
+           startPitch != endPitch {
+            changes.insert(.pitch(start: startPitch, end: endPitch))
+        }
+        
+        if let endAnchor = animatedCameraOptions.anchor { // Special case for anchor???
+            changes.insert(.anchor(end: endAnchor))
+        }
+        
+        if let startPadding = renderedCameraOptions.padding,
+           let endPadding = animatedCameraOptions.padding,
+           startPadding != endPadding {
+            changes.insert(.padding(start: startPadding, end: endPadding))
+        }
+        
+        if let startZoom = renderedCameraOptions.zoom,
+           let endZoom = animatedCameraOptions.zoom,
+           startZoom != endZoom {
+            changes.insert(.zoom(start: startZoom, end: endZoom))
+        }
+        
+        return changes
+    }
     
     func hash(into hasher: inout Hasher) {
         switch self {
@@ -43,6 +85,8 @@ internal enum AnimatingCameraChanges: Hashable {
             hasher.combine(end)
         }
     }
+    
+    
 }
 
 // MARK: CameraAnimator Class
@@ -62,10 +106,8 @@ public class CameraAnimator: NSObject {
     /// The `CameraView` owned by this animator
     internal var cameraView: CameraView
     
-    /// Represents the set of properties
+    /// The set of properties being animated by this renderer
     internal var animatingChanges: Set<AnimatingCameraChanges>?
-    
-    internal var targetCameraOptionsAfterAnimation: CameraOptions?
 
     // MARK: Computed Properties
 
@@ -165,56 +207,14 @@ public class CameraAnimator: NSObject {
             guard let self = self else { return }
             
             var cameraOptions = renderedCameraOptions
-            userProvidedAnimation(&cameraOptions) // The animation block will mutate the "rendered" camera options and provide
-                                                  // the "to" values of the animation
+            userProvidedAnimation(&cameraOptions) // The `userProvidedAnimation` block will mutate the "rendered" camera options and provide the "to" values of the animation
             
-//            self.targetCameraOptionsAfterAnimation = cameraOptions
+            self.animatingChanges = AnimatingCameraChanges.diffChangesToCameraOptions(from: renderedCameraOptions,
+                                                                    to: cameraOptions)
             self.cameraView.animate(to: cameraOptions)
         }
     }
     
-    internal func diffChangesToCameraOptions(from renderedCameraOptions: CameraOptions,
-                                             to animatedCameraOptions: CameraOptions) -> Set<AnimatingCameraChanges> {
-        
-        var changes = Set<AnimatingCameraChanges>()
-        
-        if let startCenter = renderedCameraOptions.center,
-           let endCenter = animatedCameraOptions.center,
-           startCenter != endCenter {
-            changes.insert(.center(start: startCenter, end: endCenter))
-        }
-        
-        if let startBearing = renderedCameraOptions.bearing,
-           let endBearing = animatedCameraOptions.bearing,
-           startBearing != endBearing {
-            changes.insert(.bearing(start: startBearing, end: endBearing))
-        }
-        
-        if let startPitch = renderedCameraOptions.pitch,
-           let endPitch = animatedCameraOptions.pitch,
-           startPitch != endPitch {
-            changes.insert(.pitch(start: startPitch, end: endPitch))
-        }
-        
-        if let endAnchor = animatedCameraOptions.anchor { // Special case for anchor???
-            changes.insert(.anchor(end: endAnchor))
-        }
-        
-        if let startPadding = renderedCameraOptions.padding,
-           let endPadding = animatedCameraOptions.padding,
-           startPadding != endPadding {
-            changes.insert(.padding(start: startPadding, end: endPadding))
-        }
-        
-        if let startZoom = renderedCameraOptions.zoom,
-           let endZoom = animatedCameraOptions.zoom,
-           startZoom != endZoom {
-            changes.insert(.zoom(start: startZoom, end: endZoom))
-        }
-        
-        return changes
-    }
-
     /// Add a completion block to the animator. 
     public func addCompletion(_ completion: @escaping AnimationCompletion) {
         propertyAnimator.addCompletion({ [weak self] animatingPosition in

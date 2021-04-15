@@ -95,10 +95,6 @@ open class BaseMapView: UIView {
         return camera.padding ?? .zero
     }
 
-    func jumpTo(camera: CameraOptions) {
-        __map.setCameraFor(camera)
-    }
-
     // MARK: Init
     public init(frame: CGRect, mapInitOptions: MapInitOptions, styleURI: URL?) {
         super.init(frame: frame)
@@ -219,8 +215,9 @@ open class BaseMapView: UIView {
         if needsDisplayRefresh {
             needsDisplayRefresh = false
             
+            // To figure out: How do you handle multiple animators animating multiple properties at the same time??
             for animator in cameraAnimatorsList {
-                animator.update()
+                animator.update() // Should this return a `CameraOption` ?? 
             }
 
             /// This executes the series of scheduled animation completion blocks and also removes them from the list

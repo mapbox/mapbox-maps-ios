@@ -68,8 +68,28 @@ public class DebugViewController: UIViewController {
          map and ensures that these layers would only be shown after the map has
          been fully rendered.
          */
-        mapView.on(.mapLoaded) { (event) in
+        mapView.on(.mapLoaded) { [weak self] (event) in
+            guard let self = self else { return }
             print("The map has finished loading... Event = \(event)")
+            let newYork = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
+            self.mapView.cameraManager.setCamera(to: CameraOptions(center: newYork,
+                                                                   zoom: 12))
+            
+            
+            var animator: CameraAnimator?
+            animator = self.mapView.cameraManager.makeCameraAnimator(duration: 10.0, curve: .linear)
+            
+            animator?.addAnimations { (camera) in
+                camera.zoom = 20
+            }
+            
+            animator?.addCompletion { (_) in
+                animator = nil
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                animator?.startAnimation()
+            }
         }
 
         /**

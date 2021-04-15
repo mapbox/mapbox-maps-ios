@@ -1,4 +1,49 @@
 import UIKit
+import CoreLocation
+
+// Represents the
+internal enum AnimatingCameraChanges: Hashable {
+    
+    case center(start: CLLocationCoordinate2D, end: CLLocationCoordinate2D)
+    
+    case bearing(start: Double, end: Double)
+    
+    case pitch(start: CGFloat, end: CGFloat)
+    
+    case anchor(end: CGPoint)
+    
+    case padding(start: UIEdgeInsets, end: UIEdgeInsets)
+    
+    case zoom(start: CGFloat, end: CGFloat)
+    
+    func hash(into hasher: inout Hasher) {
+        switch self {
+        case .center(start: let start, end: let end):
+            hasher.combine("center")
+            hasher.combine(start)
+            hasher.combine(end)
+        case .anchor(end: let endAnchor):
+            hasher.combine("anchor")
+            hasher.combine(endAnchor)
+        case .bearing(start: let start, end: let end):
+            hasher.combine("bearing")
+            hasher.combine(start)
+            hasher.combine(end)
+        case .zoom(start: let start, end: let end):
+            hasher.combine("zoom")
+            hasher.combine(start)
+            hasher.combine(end)
+        case .pitch(start: let start, end: let end):
+            hasher.combine("pitch")
+            hasher.combine(start)
+            hasher.combine(end)
+        case .padding(start: let start, end: let end):
+            hasher.combine("padding")
+            hasher.combine(start)
+            hasher.combine(end)
+        }
+    }
+}
 
 // MARK: CameraAnimator Class
 public class CameraAnimator: NSObject {
@@ -16,6 +61,11 @@ public class CameraAnimator: NSObject {
     
     /// The `CameraView` owned by this animator
     internal var cameraView: CameraView
+    
+    /// Represents the set of properties
+    internal var animatingChanges: Set<AnimatingCameraChanges>?
+    
+    internal var targetCameraOptionsAfterAnimation: CameraOptions?
 
     // MARK: Computed Properties
 
@@ -71,6 +121,13 @@ public class CameraAnimator: NSObject {
         cameraView.syncFromValuesWithRenderer(renderedCameraOptions: renderedCamera)
         propertyAnimator.startAnimation()
     }
+    
+    public func startAnimation(afterDelay delay: TimeInterval) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+            guard let self = self else { return }
+            self.startAnimation()
+        }
+    }
 
     /// Pauses the animation.
     public func pauseAnimation() {
@@ -85,27 +142,77 @@ public class CameraAnimator: NSObject {
 
     /// Add animations block to the animator with a `delayFactor`.
     public func addAnimations(_ animations: @escaping (inout CameraOptions) -> Void, delayFactor: Double) {
-        guard let delegate = delegate else {  return }
-        var cameraOptions = delegate.camera
-        
-        propertyAnimator.addAnimations({ [weak self] in
-            guard let self = self else { return }
-            animations(&cameraOptions) // The animation block will provide the "to" values
-            self.cameraView.animate(to: cameraOptions)
-        }, delayFactor: CGFloat(delayFactor))
+        let wrappedAnimations = wrapAnimationsBlock(animations)
+        propertyAnimator.addAnimations(wrappedAnimations,
+                                       delayFactor: CGFloat(delayFactor))
     }
 
     /// Add animations block to the animator.
     public func addAnimations(_ animations: @escaping (inout CameraOptions) -> Void) {
-        guard let delegate = delegate else {  return }
-        var cameraOptions = delegate.camera
+        let wrappedAnimations = wrapAnimationsBlock(animations)
+        propertyAnimator.addAnimations(wrappedAnimations)
+    }
+    
+    internal func wrapAnimationsBlock(_ userProvidedAnimation: @escaping (inout CameraOptions) -> Void) -> () -> Void {
         
-        propertyAnimator.addAnimations { [weak self] in
-            guard let self = self else { return }
-            animations(&cameraOptions) // The animation block will provide the "to" values
-            self.cameraView.animate(to: cameraOptions)
-            
+        guard let delegate = delegate else {
+            fatalError("Delegate MUST not be nil when adding animations")
         }
+        
+        let renderedCameraOptions = delegate.camera
+        
+        return { [weak self] in
+            guard let self = self else { return }
+            
+            var cameraOptions = renderedCameraOptions
+            userProvidedAnimation(&cameraOptions) // The animation block will mutate the "rendered" camera options and provide
+                                                  // the "to" values of the animation
+            
+//            self.targetCameraOptionsAfterAnimation = cameraOptions
+            self.cameraView.animate(to: cameraOptions)
+        }
+    }
+    
+    internal func diffChangesToCameraOptions(from renderedCameraOptions: CameraOptions,
+                                             to animatedCameraOptions: CameraOptions) -> Set<AnimatingCameraChanges> {
+        
+        var changes = Set<AnimatingCameraChanges>()
+        
+        if let startCenter = renderedCameraOptions.center,
+           let endCenter = animatedCameraOptions.center,
+           startCenter != endCenter {
+            changes.insert(.center(start: startCenter, end: endCenter))
+        }
+        
+        if let startBearing = renderedCameraOptions.bearing,
+           let endBearing = animatedCameraOptions.bearing,
+           startBearing != endBearing {
+            changes.insert(.bearing(start: startBearing, end: endBearing))
+        }
+        
+        if let startPitch = renderedCameraOptions.pitch,
+           let endPitch = animatedCameraOptions.pitch,
+           startPitch != endPitch {
+            changes.insert(.pitch(start: startPitch, end: endPitch))
+        }
+        
+        if let endAnchor = animatedCameraOptions.anchor { // Special case for anchor???
+            changes.insert(.anchor(end: endAnchor))
+        }
+        
+        if let startPadding = renderedCameraOptions.padding,
+           let endPadding = animatedCameraOptions.padding,
+           startPadding != endPadding {
+            changes.insert(.padding(start: startPadding, end: endPadding))
+        }
+        
+        if let startZoom = renderedCameraOptions.zoom,
+           let endZoom = animatedCameraOptions.zoom,
+           startZoom != endZoom {
+            changes.insert(.zoom(start: startZoom, end: endZoom))
+        }
+        
+        return changes
     }
 
     /// Add a completion block to the animator. 
@@ -121,66 +228,20 @@ public class CameraAnimator: NSObject {
         propertyAnimator.continueAnimation(withTimingParameters: parameters, durationFactor: CGFloat(durationFactor))
     }
     
-    // Cache of camera options that the last `jumpTo` was called with.
-    internal var cachedDiffedCamera: CameraOptions?
-    
-    
     internal func update() {
 
-        // Retrieve currently rendered camera
-        guard propertyAnimator.state == .active, let currentCamera = delegate?.camera else {
-            return
-        }
+        // Only call jumpTo if this animator is currently "active"
+        guard propertyAnimator.state == .active else { return }
 
-        // Get the latest interpolated values of the camera properties (if they exist)
-        let targetCamera = cameraView.localCamera.wrap()
-
-        // Apply targetCamera options only if they are different from currentCamera options
-        if currentCamera != targetCamera {
-
-            // Diff the targetCamera with the currentCamera and apply diffed camera properties to map
-            let diffedCamera = CameraOptions()
-
-            if targetCamera.zoom != currentCamera.zoom, let targetZoom = targetCamera.zoom, !targetZoom.isNaN {
-                diffedCamera.zoom = targetCamera.zoom
-            }
-
-            if targetCamera.bearing != currentCamera.bearing, let targetBearing = targetCamera.bearing, !targetBearing.isNaN {
-                diffedCamera.bearing = targetCamera.bearing
-            }
-
-            if targetCamera.pitch != currentCamera.pitch, let targetPitch = targetCamera.pitch, !targetPitch.isNaN {
-                diffedCamera.pitch = targetCamera.pitch
-            }
-
-            if targetCamera.center != currentCamera.center, let targetCenter = targetCamera.center, !targetCenter.latitude.isNaN, !targetCenter.longitude.isNaN {
-                diffedCamera.center = targetCamera.center
-            }
-
-            if targetCamera.anchor != currentCamera.anchor {
-                diffedCamera.anchor = targetCamera.anchor
-            }
-
-            if targetCamera.padding != currentCamera.padding {
-                diffedCamera.padding = targetCamera.padding
-            }
-
-//            if let cachedDiffedCamera = cachedDiffedCamera, diffedCamera == cachedDiffedCamera {
-//                // Return early if we previously set the same value of diffed camera
-//                // The camera is "idling".
-//                return
-//            }
-
-            delegate?.jumpTo(camera: diffedCamera)
-//            cachedDiffedCamera = diffedCamera
-        }
+        // Get the latest interpolated values of the camera properties and set them on the map
+        delegate?.jumpTo(camera: cameraView.localCamera.clampCenter())
     }
 }
 
 
 fileprivate extension CameraOptions {
 
-    func wrap() -> CameraOptions {
+    func clampCenter() -> CameraOptions {
         return CameraOptions(center: self.center?.wrap(),
                              padding: self.padding,
                              anchor: self.anchor,

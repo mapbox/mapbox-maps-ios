@@ -14,6 +14,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 - #### Foundation
   * `AccountManager` has been removed. A new `CredentialsManager` replaces it. You can use `CredentialsManager.default` to set a global access token.
+  * MapboxCoreMaps protocol conformances have been encapsulated. ([#265](https://github.com/mapbox/mapbox-maps-ios/pull/265))
+      * `ObserverConcrete` has been removed.
+      * `BaseMapView` no longer conforms to `MapClient` or `MBMMetalViewProvider`, and the methods they required are now internal.
+      * The setter for `BaseMapView.__map` is now private
+      * `Snapshotter` no longer conforms to `Observer`, and the method it required is now internal.
 
 ## 10.0.0-beta.17 - April 13, 2021
 

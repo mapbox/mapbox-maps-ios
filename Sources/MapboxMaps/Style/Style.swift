@@ -182,7 +182,7 @@ public class Style {
         }
 
         let expected = styleManager.addStyleImage(forImageId: identifier,
-                                                  scale: 3.0,
+                                                  scale: Float(image.scale),
                                                   image: mbxImage,
                                                   sdf: sdf,
                                                   stretchX: stretchX,

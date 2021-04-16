@@ -30,7 +30,7 @@ extension CameraOptions {
                   bearing: bearing?.NSNumber,
                   pitch: pitch?.NSNumber)
     }
-    
+
     internal convenience init(with cameraOptions: CameraOptions) {
         self.init(__center: cameraOptions.center?.location,
                   padding: cameraOptions.padding?.toMBXEdgeInsetsValue(),

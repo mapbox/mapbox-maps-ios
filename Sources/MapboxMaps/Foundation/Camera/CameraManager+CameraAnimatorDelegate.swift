@@ -43,11 +43,11 @@ extension CameraManager: CameraAnimatorDelegate {
                                    animations: ((inout CameraOptions) -> Void)? = nil) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, curve: curve)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
-        
+
         if let animations = animations {
             cameraAnimator.addAnimations(animations)
         }
-        
+
         mapView?.cameraAnimators.add(cameraAnimator)
         return cameraAnimator
     }
@@ -73,7 +73,7 @@ extension CameraManager: CameraAnimatorDelegate {
                                    animations: ((inout CameraOptions) -> Void)? = nil) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, controlPoint1: point1, controlPoint2: point2)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
-        
+
         if let animations = animations {
             cameraAnimator.addAnimations(animations)
         }
@@ -113,31 +113,30 @@ extension CameraManager: CameraAnimatorDelegate {
         guard let mapView = mapView else { return }
         mapView.pendingAnimatorCompletionBlocks.append((completion, animatingPosition))
     }
-    
+
     var camera: CameraOptions {
         guard let validMapView = mapView else {
             fatalError("MapView cannot be nil.")
         }
-        
+
         return validMapView.camera
     }
-    
-    
+
     func jumpTo(camera: CameraOptions) {
         guard let validMapView = mapView else {
             fatalError("MapView cannot be nil.")
         }
-        
+
         validMapView.__map.setCameraFor(camera)
     }
-    
+
     func addViewToViewHeirarchy(_ view: CameraView) {
-        
+
         guard let validMapView = mapView else {
             fatalError("MapView cannot be nil.")
         }
-        
+
         validMapView.addSubview(view)
-        
+
     }
 }

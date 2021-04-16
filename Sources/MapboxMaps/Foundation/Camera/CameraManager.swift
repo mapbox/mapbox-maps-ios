@@ -18,8 +18,6 @@ public class CameraManager {
         mapCameraOptions = newOptions
     }
 
-    
-
     /// Internal camera animator used for animated transition
     internal var internalCameraAnimator: CameraAnimator?
 
@@ -152,8 +150,6 @@ public class CameraManager {
             return
         }
 
-
-
         if animated && duration > 0 {
             let animation = { (camera: inout CameraOptions) in
                 camera = clampedCamera
@@ -236,8 +232,8 @@ public class CameraManager {
         let timeSteps = stride(from: 0.0, through: 1.0, by: 0.025)
         let keyTimes: [Double] = Array(timeSteps)
 
-        let animator = makeCameraAnimator(duration: time, curve: .linear) { (camerOptions) in
-            
+        let animator = makeCameraAnimator(duration: time, curve: .linear) { (_) in
+
 // TODO: Fix flyTo
 //            UIView.animateKeyframes(withDuration: 0, delay: 0, options: []) {
 //

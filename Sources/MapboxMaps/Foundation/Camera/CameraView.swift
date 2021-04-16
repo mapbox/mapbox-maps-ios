@@ -2,7 +2,7 @@ import UIKit
 
 /// A view that represents a camera view port.
 internal class CameraView: UIView {
-    
+
     internal var localCenterCoordinate: CLLocationCoordinate2D {
         let proxyCoord = layer.presentation()?.position ?? layer.position
         return CLLocationCoordinate2D(latitude: CLLocationDegrees(proxyCoord.y),
@@ -56,29 +56,28 @@ internal class CameraView: UIView {
         if let zoom = cameraOptions.zoom {
             layer.opacity = Float(zoom)
         }
-        
+
         if let bearing = cameraOptions.bearing {
             layer.cornerRadius = CGFloat(bearing)
         }
-        
+
         if let centerCoordinate = cameraOptions.center {
             layer.position = CGPoint(x: centerCoordinate.longitude, y: centerCoordinate.latitude)
         }
-        
+
         if let padding = cameraOptions.padding {
             layer.bounds = CGRect(x: padding.left,
                                   y: padding.right,
                                   width: padding.bottom,
                                   height: padding.top)
         }
-        
+
         if let pitch = cameraOptions.pitch {
             layer.transform.m11 = pitch
         }
-        
+
         if let anchor = cameraOptions.anchor {
             layer.anchorPoint = anchor
         }
     }
 }
-

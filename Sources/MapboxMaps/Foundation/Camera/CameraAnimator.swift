@@ -14,10 +14,10 @@ public class CameraAnimator: NSObject {
 
     /// The ID of the owner of this `CameraAnimator`.
     internal var owner: AnimationOwner
-    
+
     /// The `CameraView` owned by this animator
     internal var cameraView: CameraView
-    
+
     /// The set of properties being animated by this renderer
     internal var propertiesBeingAnimated: Set<AnimatableCameraProperty>?
 
@@ -51,7 +51,7 @@ public class CameraAnimator: NSObject {
         self.delegate = delegate
         self.propertyAnimator = propertyAnimator
         self.owner = owner
-        
+
         // Set up the short lived camera view
         cameraView = CameraView()
         delegate.addViewToViewHeirarchy(cameraView)
@@ -67,15 +67,15 @@ public class CameraAnimator: NSObject {
 
     /// Starts the animation.
     public func startAnimation() {
-        
+
         guard let renderedCamera = delegate?.camera else {
             fatalError("Rendered camera options cannot be nil when starting an animation")
         }
-    
+
         cameraView.syncLayer(to: renderedCamera) // Set up the "from" values for the interpoloation
         propertyAnimator.startAnimation()
     }
-    
+
     public func startAnimation(afterDelay delay: TimeInterval) {
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
             guard let self = self else { return }
@@ -106,28 +106,28 @@ public class CameraAnimator: NSObject {
         let wrappedAnimations = wrapAnimationsBlock(animations)
         propertyAnimator.addAnimations(wrappedAnimations)
     }
-    
+
     internal func wrapAnimationsBlock(_ userProvidedAnimation: @escaping (inout CameraOptions) -> Void) -> () -> Void {
-        
+
         guard let delegate = delegate else {
             fatalError("Delegate MUST not be nil when adding animations")
         }
-        
+
         let renderedCameraOptions = delegate.camera
-        
+
         return { [weak self] in
             guard let self = self else { return }
-            
+
             var cameraOptions = CameraOptions(with: renderedCameraOptions)
             userProvidedAnimation(&cameraOptions) // The `userProvidedAnimation` block will mutate the "rendered" camera options and provide the "to" values of the animation
-            
+
             // To consider: Should we throw a FatalError() if we detect that multiple CameraAnimators are manipulating the same camera property??
             self.propertiesBeingAnimated = AnimatableCameraProperty.diffChangesToCameraOptions(from: renderedCameraOptions,
                                                                     to: cameraOptions)
             self.cameraView.syncLayer(to: cameraOptions)
         }
     }
-    
+
     /// Add a completion block to the animator. 
     public func addCompletion(_ completion: @escaping AnimationCompletion) {
         propertyAnimator.addCompletion({ [weak self] animatingPosition in
@@ -140,8 +140,7 @@ public class CameraAnimator: NSObject {
     public func continueAnimation(withTimingParameters parameters: UITimingCurveProvider?, durationFactor: Double) {
         propertyAnimator.continueAnimation(withTimingParameters: parameters, durationFactor: CGFloat(durationFactor))
     }
-    
-    
+
     internal func update() {
 
         // Only call jumpTo if this animator is currently "active" and there are known changes to animate.
@@ -150,41 +149,39 @@ public class CameraAnimator: NSObject {
               propertiesBeingAnimated.count > 0, let delegate = delegate else {
             return
         }
-        
-        let propertiesBeingAnimatedNames = propertiesBeingAnimated.map { $0.name }
-        
+
         let cameraOptions = CameraOptions()
         let interpolatedCamera = cameraView.localCamera
-    
-        if propertiesBeingAnimatedNames.contains(AnimatableCameraProperty.center().name) {
+        let propertiesBeingAnimatedNames = propertiesBeingAnimated.map { $0.name }
+
+        if propertiesBeingAnimatedNames.contains("center") {
             cameraOptions.center = interpolatedCamera.center?.wrap()
         }
-        
-        if propertiesBeingAnimatedNames.contains(AnimatableCameraProperty.bearing().name) {
+
+        if propertiesBeingAnimatedNames.contains("bearing") {
             cameraOptions.bearing = interpolatedCamera.bearing
         }
-        
+
         // To consider: should we flag here if anchor and center is being animated??
-        if propertiesBeingAnimatedNames.contains(AnimatableCameraProperty.anchor().name) {
+        if propertiesBeingAnimatedNames.contains("anchor") {
             cameraOptions.anchor = interpolatedCamera.anchor
         }
-        
-        if propertiesBeingAnimatedNames.contains(AnimatableCameraProperty.padding().name) {
+
+        if propertiesBeingAnimatedNames.contains("padding") {
             cameraOptions.padding = interpolatedCamera.padding
         }
-        
-        if propertiesBeingAnimatedNames.contains(AnimatableCameraProperty.zoom().name) {
+
+        if propertiesBeingAnimatedNames.contains("zoom") {
             cameraOptions.zoom = interpolatedCamera.zoom
         }
-        
-        if propertiesBeingAnimatedNames.contains(AnimatableCameraProperty.pitch().name) {
+
+        if propertiesBeingAnimatedNames.contains("pitch") {
             cameraOptions.pitch = interpolatedCamera.pitch
         }
 
         delegate.jumpTo(camera: cameraOptions)
     }
 }
-
 
 fileprivate extension CameraOptions {
 
@@ -198,4 +195,3 @@ fileprivate extension CameraOptions {
 
     }
 }
-

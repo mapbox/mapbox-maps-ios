@@ -4,7 +4,6 @@ import UIKit
 import Turf
 
 // swiftlint:disable file_length
-
 internal typealias PendingAnimationCompletion = (completion: AnimationCompletion, animatingPosition: UIViewAnimatingPosition)
 
 open class BaseMapView: UIView {
@@ -23,7 +22,7 @@ open class BaseMapView: UIView {
 
     /// List of completion blocks that need to be completed by the displayLink
     internal var pendingAnimatorCompletionBlocks: [PendingAnimationCompletion] = []
-    
+
     /// Pointer HashTable for holding camera animators
     internal var cameraAnimators = NSHashTable<CameraAnimator>.weakObjects()
 
@@ -214,7 +213,7 @@ open class BaseMapView: UIView {
 
         if needsDisplayRefresh {
             needsDisplayRefresh = false
-            
+
             // To figure out: How do you handle multiple animators animating multiple properties at the same time??
             for animator in cameraAnimatorsList {
                 animator.update() // Should this return a `CameraOption` ?? 

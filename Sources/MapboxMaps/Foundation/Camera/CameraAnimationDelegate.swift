@@ -5,11 +5,11 @@ public typealias AnimationCompletion = (UIViewAnimatingPosition) -> Void
 
 // MARK: CameraAnimatorDelegate Protocol
 internal protocol CameraAnimatorDelegate: class {
-    
+
     var camera: CameraOptions { get }
-    
+
     func jumpTo(camera: CameraOptions)
-    
+
     func addViewToViewHeirarchy(_ view: CameraView)
 
     /**

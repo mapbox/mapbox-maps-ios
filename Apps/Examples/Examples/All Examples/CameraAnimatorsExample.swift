@@ -53,7 +53,7 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
 
         // Center the map over New York City.
         let newYork = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
-        
+
         mapView.on(.styleLoaded) { [weak self] _ in
             guard let self = self else { return }
             self.mapView.cameraManager.setCamera(to: CameraOptions(center: newYork))
@@ -62,7 +62,7 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
         // Allows the delegate to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in
             guard let self = self else { return }
-            
+
             self.zoomAnimator.startAnimation(afterDelay: 1)
             self.finish()
         }

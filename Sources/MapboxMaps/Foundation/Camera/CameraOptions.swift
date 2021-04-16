@@ -30,6 +30,15 @@ extension CameraOptions {
                   bearing: bearing?.NSNumber,
                   pitch: pitch?.NSNumber)
     }
+    
+    internal convenience init(with cameraOptions: CameraOptions) {
+        self.init(__center: cameraOptions.center?.location,
+                  padding: cameraOptions.padding?.toMBXEdgeInsetsValue(),
+                  anchor: cameraOptions.anchor?.screenCoordinate,
+                  zoom: cameraOptions.zoom?.NSNumber,
+                  bearing: cameraOptions.bearing?.NSNumber,
+                  pitch: cameraOptions.pitch?.NSNumber)
+    }
 
     public var center: CLLocationCoordinate2D? {
         get {

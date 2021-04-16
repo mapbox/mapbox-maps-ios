@@ -52,7 +52,7 @@ internal class CameraView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func syncLayer(to cameraOptions: CameraOptions) {
+    internal func syncLayer(to cameraOptions: CameraOptions) {
         if let zoom = cameraOptions.zoom {
             layer.opacity = Float(zoom)
         }
@@ -79,15 +79,6 @@ internal class CameraView: UIView {
         if let anchor = cameraOptions.anchor {
             layer.anchorPoint = anchor
         }
-    }
-
-    
-    internal func animate(to newCamera: CameraOptions) {
-        syncLayer(to: newCamera)
-    }
-    
-    internal func syncFromValuesWithRenderer(renderedCameraOptions: CameraOptions) {
-        syncLayer(to: renderedCameraOptions)
     }
 }
 

@@ -1,94 +1,6 @@
 import UIKit
 import CoreLocation
 
-// Represents a change in a camera property due to an animation
-internal enum AnimatingCameraChanges: Hashable {
-    
-    case center(start: CLLocationCoordinate2D, end: CLLocationCoordinate2D)
-    
-    case bearing(start: Double, end: Double)
-    
-    case pitch(start: CGFloat, end: CGFloat)
-    
-    case anchor(end: CGPoint)
-    
-    case padding(start: UIEdgeInsets, end: UIEdgeInsets)
-    
-    case zoom(start: CGFloat, end: CGFloat)
-    
-    internal static func diffChangesToCameraOptions(from renderedCameraOptions: CameraOptions,
-                                             to animatedCameraOptions: CameraOptions) -> Set<AnimatingCameraChanges> {
-        
-        var changes = Set<AnimatingCameraChanges>()
-        
-        if let startCenter = renderedCameraOptions.center,
-           let endCenter = animatedCameraOptions.center,
-           startCenter != endCenter {
-            changes.insert(.center(start: startCenter, end: endCenter))
-        }
-        
-        if let startBearing = renderedCameraOptions.bearing,
-           let endBearing = animatedCameraOptions.bearing,
-           startBearing != endBearing {
-            changes.insert(.bearing(start: startBearing, end: endBearing))
-        }
-        
-        if let startPitch = renderedCameraOptions.pitch,
-           let endPitch = animatedCameraOptions.pitch,
-           startPitch != endPitch {
-            changes.insert(.pitch(start: startPitch, end: endPitch))
-        }
-        
-        if let endAnchor = animatedCameraOptions.anchor { // Special case for anchor???
-            changes.insert(.anchor(end: endAnchor))
-        }
-        
-        if let startPadding = renderedCameraOptions.padding,
-           let endPadding = animatedCameraOptions.padding,
-           startPadding != endPadding {
-            changes.insert(.padding(start: startPadding, end: endPadding))
-        }
-        
-        if let startZoom = renderedCameraOptions.zoom,
-           let endZoom = animatedCameraOptions.zoom,
-           startZoom != endZoom {
-            changes.insert(.zoom(start: startZoom, end: endZoom))
-        }
-        
-        return changes
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        switch self {
-        case .center(start: let start, end: let end):
-            hasher.combine("center")
-            hasher.combine(start)
-            hasher.combine(end)
-        case .anchor(end: let endAnchor):
-            hasher.combine("anchor")
-            hasher.combine(endAnchor)
-        case .bearing(start: let start, end: let end):
-            hasher.combine("bearing")
-            hasher.combine(start)
-            hasher.combine(end)
-        case .zoom(start: let start, end: let end):
-            hasher.combine("zoom")
-            hasher.combine(start)
-            hasher.combine(end)
-        case .pitch(start: let start, end: let end):
-            hasher.combine("pitch")
-            hasher.combine(start)
-            hasher.combine(end)
-        case .padding(start: let start, end: let end):
-            hasher.combine("padding")
-            hasher.combine(start)
-            hasher.combine(end)
-        }
-    }
-    
-    
-}
-
 // MARK: CameraAnimator Class
 public class CameraAnimator: NSObject {
 
@@ -107,7 +19,7 @@ public class CameraAnimator: NSObject {
     internal var cameraView: CameraView
     
     /// The set of properties being animated by this renderer
-    internal var animatingChanges: Set<AnimatingCameraChanges>?
+    internal var propertiesBeingAnimated: Set<AnimatableCameraProperty>?
 
     // MARK: Computed Properties
 
@@ -142,7 +54,7 @@ public class CameraAnimator: NSObject {
         
         // Set up the short lived camera view
         cameraView = CameraView()
-        delegate.addToViewHeirarchy(view: cameraView)
+        delegate.addViewToViewHeirarchy(cameraView)
     }
 
     deinit {
@@ -159,8 +71,8 @@ public class CameraAnimator: NSObject {
         guard let renderedCamera = delegate?.camera else {
             fatalError("Rendered camera options cannot be nil when starting an animation")
         }
-        
-        cameraView.syncFromValuesWithRenderer(renderedCameraOptions: renderedCamera)
+    
+        cameraView.syncLayer(to: renderedCamera) // Set up the "from" values for the interpoloation
         propertyAnimator.startAnimation()
     }
     
@@ -206,12 +118,13 @@ public class CameraAnimator: NSObject {
         return { [weak self] in
             guard let self = self else { return }
             
-            var cameraOptions = renderedCameraOptions
+            var cameraOptions = CameraOptions(with: renderedCameraOptions)
             userProvidedAnimation(&cameraOptions) // The `userProvidedAnimation` block will mutate the "rendered" camera options and provide the "to" values of the animation
             
-            self.animatingChanges = AnimatingCameraChanges.diffChangesToCameraOptions(from: renderedCameraOptions,
+            // To consider: Should we throw a FatalError() if we detect that multiple CameraAnimators are manipulating the same camera property??
+            self.propertiesBeingAnimated = AnimatableCameraProperty.diffChangesToCameraOptions(from: renderedCameraOptions,
                                                                     to: cameraOptions)
-            self.cameraView.animate(to: cameraOptions)
+            self.cameraView.syncLayer(to: cameraOptions)
         }
     }
     
@@ -228,13 +141,47 @@ public class CameraAnimator: NSObject {
         propertyAnimator.continueAnimation(withTimingParameters: parameters, durationFactor: CGFloat(durationFactor))
     }
     
+    
     internal func update() {
 
-        // Only call jumpTo if this animator is currently "active"
-        guard propertyAnimator.state == .active else { return }
+        // Only call jumpTo if this animator is currently "active" and there are known changes to animate.
+        guard propertyAnimator.state == .active,
+              let propertiesBeingAnimated = propertiesBeingAnimated,
+              propertiesBeingAnimated.count > 0, let delegate = delegate else {
+            return
+        }
+        
+        let propertiesBeingAnimatedNames = propertiesBeingAnimated.map { $0.name }
+        
+        let cameraOptions = CameraOptions()
+        let interpolatedCamera = cameraView.localCamera
+    
+        if propertiesBeingAnimatedNames.contains(AnimatableCameraProperty.center().name) {
+            cameraOptions.center = interpolatedCamera.center?.wrap()
+        }
+        
+        if propertiesBeingAnimatedNames.contains(AnimatableCameraProperty.bearing().name) {
+            cameraOptions.bearing = interpolatedCamera.bearing
+        }
+        
+        // To consider: should we flag here if anchor and center is being animated??
+        if propertiesBeingAnimatedNames.contains(AnimatableCameraProperty.anchor().name) {
+            cameraOptions.anchor = interpolatedCamera.anchor
+        }
+        
+        if propertiesBeingAnimatedNames.contains(AnimatableCameraProperty.padding().name) {
+            cameraOptions.padding = interpolatedCamera.padding
+        }
+        
+        if propertiesBeingAnimatedNames.contains(AnimatableCameraProperty.zoom().name) {
+            cameraOptions.zoom = interpolatedCamera.zoom
+        }
+        
+        if propertiesBeingAnimatedNames.contains(AnimatableCameraProperty.pitch().name) {
+            cameraOptions.pitch = interpolatedCamera.pitch
+        }
 
-        // Get the latest interpolated values of the camera properties and set them on the map
-        delegate?.jumpTo(camera: cameraView.localCamera.clampCenter())
+        delegate.jumpTo(camera: cameraOptions)
     }
 }
 

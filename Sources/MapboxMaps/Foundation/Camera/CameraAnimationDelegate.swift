@@ -10,7 +10,7 @@ internal protocol CameraAnimatorDelegate: class {
     
     func jumpTo(camera: CameraOptions)
     
-    func addToViewHeirarchy(view: CameraView)
+    func addViewToViewHeirarchy(_ view: CameraView)
 
     /**
     This delegate function notifies that the completion block needs to be scheduled

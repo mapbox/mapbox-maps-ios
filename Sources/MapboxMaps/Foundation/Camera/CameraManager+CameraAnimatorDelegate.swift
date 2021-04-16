@@ -131,7 +131,7 @@ extension CameraManager: CameraAnimatorDelegate {
         validMapView.__map.setCameraFor(camera)
     }
     
-    func addToViewHeirarchy(view: CameraView) {
+    func addViewToViewHeirarchy(_ view: CameraView) {
         
         guard let validMapView = mapView else {
             fatalError("MapView cannot be nil.")

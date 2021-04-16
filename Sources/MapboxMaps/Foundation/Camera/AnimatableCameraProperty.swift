@@ -27,6 +27,7 @@ internal enum AnimatableCameraProperty: Hashable {
             changes.insert(.center(start: startCenter, end: endCenter))
         }
 
+        // To consider: should we potentially "optimize" the bearing here?
         if let startBearing = renderedCameraOptions.bearing,
            let endBearing = animatedCameraOptions.bearing,
            startBearing != endBearing {
@@ -39,7 +40,8 @@ internal enum AnimatableCameraProperty: Hashable {
             changes.insert(.pitch(start: startPitch, end: endPitch))
         }
 
-        if let endAnchor = animatedCameraOptions.anchor { // Special case for anchor???
+        // To consider: Special case for anchor?
+        if let endAnchor = animatedCameraOptions.anchor {
             changes.insert(.anchor(end: endAnchor))
         }
 

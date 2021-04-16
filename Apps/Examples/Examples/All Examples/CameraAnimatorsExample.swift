@@ -6,6 +6,9 @@ import MapboxMaps
 public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
+    
+    // Coordinate in New York City
+    let newYork = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
 
     // Store the CameraAnimators so that the do not fall out of scope.
     lazy var zoomAnimator: CameraAnimator = {
@@ -14,6 +17,7 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
         }
 
         animator.addCompletion { [unowned self] (_) in
+            print("Animating camera pitch from 0 degrees -> 55 degrees")
             self.pitchAnimator.startAnimation()
         }
 
@@ -26,6 +30,7 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
         }
 
         animator.addCompletion { [unowned self] (_) in
+            print("Animating camera bearing from 0 degrees -> 45 degrees")
             self.bearingAnimator.startAnimation()
         }
 
@@ -52,17 +57,18 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Center the map over New York City.
-        let newYork = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
+        
 
         mapView.on(.styleLoaded) { [weak self] _ in
             guard let self = self else { return }
-            self.mapView.cameraManager.setCamera(to: CameraOptions(center: newYork))
+            self.mapView.cameraManager.setCamera(to: CameraOptions(center: self.newYork))
         }
 
         // Allows the delegate to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in
             guard let self = self else { return }
 
+            print("Animating zoom from zoom lvl 3 -> zoom lvl 14")
             self.zoomAnimator.startAnimation(afterDelay: 1)
             self.finish()
         }

@@ -19,7 +19,23 @@ public class CameraAnimator: NSObject {
     internal var cameraView: CameraView
 
     /// The set of properties being animated by this renderer
-    internal var propertiesBeingAnimated: Set<AnimatableCameraProperty>?
+    internal var propertiesBeingAnimated = Set<AnimatableCameraProperty>() {
+        didSet {
+
+            let propertyNames = propertiesBeingAnimated.map { $0.name }
+            
+            // Guard against situation where "center" and "anchor" are being animated, as this is unsupported
+            if propertyNames.contains("center") && propertyNames.contains("anchor") {
+                fatalError("Animating center and anchor of the map camera is unsupported.")
+            }
+            
+            // To consider: Should we assert here if we detect that there is another cameraAnimator animating the same set of properties??
+            
+            // To consider: Can we use this as a source of truth for whether an animation is "in progress" or not?
+            
+            // To consider: Could we use this as a hook to set `isUserAnimationInProgress` in `MBMMap` ??
+        }
+    }
 
     // MARK: Computed Properties
 
@@ -121,19 +137,24 @@ public class CameraAnimator: NSObject {
             var cameraOptions = CameraOptions(with: renderedCameraOptions)
             userProvidedAnimation(&cameraOptions) // The `userProvidedAnimation` block will mutate the "rendered" camera options and provide the "to" values of the animation
 
-            // To consider: Should we throw a FatalError() if we detect that multiple CameraAnimators are manipulating the same camera property??
             self.propertiesBeingAnimated = AnimatableCameraProperty.diffChangesToCameraOptions(from: renderedCameraOptions,
-                                                                    to: cameraOptions)
+                                                                                               to: cameraOptions)
             self.cameraView.syncLayer(to: cameraOptions)
         }
     }
 
     /// Add a completion block to the animator. 
     public func addCompletion(_ completion: @escaping AnimationCompletion) {
-        propertyAnimator.addCompletion({ [weak self] animatingPosition in
-            guard let self = self else { return }
-            self.delegate?.schedulePendingCompletion(forAnimator: self, completion: completion, animatingPosition: animatingPosition)
-        })
+        let wrappedCompletion = wrapCompletion(completion)
+        propertyAnimator.addCompletion(wrappedCompletion)
+    }
+    
+    internal func wrapCompletion(_ completion: @escaping AnimationCompletion) -> (UIViewAnimatingPosition) -> Void {
+        return { [weak self] animationPosition in
+            guard let self = self, let delegate = self.delegate else { return }
+            self.propertiesBeingAnimated.removeAll() // Clear out the set maintaining the properties being animated by this animator -- since the animation is complete if we are here.
+            delegate.schedulePendingCompletion(forAnimator: self, completion: completion, animatingPosition: animationPosition)
+        }
     }
 
     /// Continue the animation with a timing parameter (`UITimingCurveProvider`) and duration factor (`CGFloat`).
@@ -145,53 +166,40 @@ public class CameraAnimator: NSObject {
 
         // Only call jumpTo if this animator is currently "active" and there are known changes to animate.
         guard propertyAnimator.state == .active,
-              let propertiesBeingAnimated = propertiesBeingAnimated,
-              propertiesBeingAnimated.count > 0, let delegate = delegate else {
+              propertiesBeingAnimated.count > 0,
+              let delegate = delegate else {
             return
         }
 
         let cameraOptions = CameraOptions()
         let interpolatedCamera = cameraView.localCamera
-        let propertiesBeingAnimatedNames = propertiesBeingAnimated.map { $0.name }
+        let namesOfPropertiesBeingAnimated = propertiesBeingAnimated.map { $0.name }
 
-        if propertiesBeingAnimatedNames.contains("center") {
-            cameraOptions.center = interpolatedCamera.center?.wrap()
+        if namesOfPropertiesBeingAnimated.contains("center") {
+            cameraOptions.center = interpolatedCamera.center?.wrap() // Wrap to [-180, +180]
         }
 
-        if propertiesBeingAnimatedNames.contains("bearing") {
+        if namesOfPropertiesBeingAnimated.contains("bearing") {
             cameraOptions.bearing = interpolatedCamera.bearing
         }
 
         // To consider: should we flag here if anchor and center is being animated??
-        if propertiesBeingAnimatedNames.contains("anchor") {
+        if namesOfPropertiesBeingAnimated.contains("anchor") {
             cameraOptions.anchor = interpolatedCamera.anchor
         }
 
-        if propertiesBeingAnimatedNames.contains("padding") {
+        if namesOfPropertiesBeingAnimated.contains("padding") {
             cameraOptions.padding = interpolatedCamera.padding
         }
 
-        if propertiesBeingAnimatedNames.contains("zoom") {
+        if namesOfPropertiesBeingAnimated.contains("zoom") {
             cameraOptions.zoom = interpolatedCamera.zoom
         }
 
-        if propertiesBeingAnimatedNames.contains("pitch") {
+        if namesOfPropertiesBeingAnimated.contains("pitch") {
             cameraOptions.pitch = interpolatedCamera.pitch
         }
 
         delegate.jumpTo(camera: cameraOptions)
-    }
-}
-
-fileprivate extension CameraOptions {
-
-    func clampCenter() -> CameraOptions {
-        return CameraOptions(center: self.center?.wrap(),
-                             padding: self.padding,
-                             anchor: self.anchor,
-                             zoom: self.zoom,
-                             bearing: self.bearing,
-                             pitch: self.pitch)
-
     }
 }

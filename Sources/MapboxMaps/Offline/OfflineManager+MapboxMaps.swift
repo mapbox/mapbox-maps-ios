@@ -31,14 +31,14 @@ extension MapboxCoreMaps.OfflineManager {
                               completion: @escaping (Result<StylePack, StylePackError>) -> Void)
     -> Cancelable {
         if let progress = progress {
-            return __loadStylePack(forStyleURL: styleURI.rawValue.path,
+            return __loadStylePack(forStyleURI: styleURI.rawValue.absoluteString,
                          loadOptions: loadOptions,
                          onProgress: progress,
                          onFinished: coreAPIClosureAdapter(for: completion, type: StylePack.self))
         }
         // An overloaded version that does not report progess of the loading operation.
         else {
-            return __loadStylePack(forStyleURL: styleURI.rawValue.path,
+            return __loadStylePack(forStyleURI: styleURI.rawValue.absoluteString,
                              loadOptions: loadOptions,
                              onFinished: coreAPIClosureAdapter(for: completion, type: StylePack.self))
         }
@@ -68,7 +68,7 @@ extension MapboxCoreMaps.OfflineManager {
     */
     // TODO: docs
     public func stylePack(for styleURI: StyleURI, completion: @escaping (Result<StylePack, StylePackError>) -> Void) {
-        __getStylePack(forStyleURL: styleURI.rawValue.path,
+        __getStylePack(forStyleURI: styleURI.rawValue.path,
                        callback: coreAPIClosureAdapter(for: completion, type: StylePack.self))
     }
 
@@ -83,7 +83,7 @@ extension MapboxCoreMaps.OfflineManager {
     // TODO: docs
     public func stylePackMetadata(for styleURI: StyleURI,
                                   completion: @escaping (Result<AnyObject, StylePackError>) -> Void) {
-        __getStylePackMetadata(forStyleURL: styleURI.rawValue.path,
+        __getStylePackMetadata(forStyleURI: styleURI.rawValue.absoluteString,
                                callback: coreAPIClosureAdapter(for: completion, type: AnyObject.self))
     }
 
@@ -98,6 +98,6 @@ extension MapboxCoreMaps.OfflineManager {
     */
     // TODO: docs
     public func removeStylePack(for styleURI: StyleURI) {
-        removeStylePack(forStyleURL: styleURI.rawValue.path)
+        removeStylePack(forStyleURI: styleURI.rawValue.absoluteString)
     }
 }

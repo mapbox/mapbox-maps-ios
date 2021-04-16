@@ -25,7 +25,7 @@ public class Style {
      */
     public var uri: StyleURI = .streets {
         didSet {
-            let uriString = uri.rawValue.path
+            let uriString = uri.rawValue.absoluteString
             styleManager.setStyleURIForUri(uriString)
         }
     }

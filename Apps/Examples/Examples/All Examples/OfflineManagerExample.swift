@@ -27,9 +27,10 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
 
     private let tokyoCoord = CLLocationCoordinate2D(latitude: 35.682027, longitude: 139.769305)
     private let tokyoZoom = 12
-    private var tileStore: TileStore?
 
-    private lazy var tileStorePath: String = {
+    private var tileStore: TileStore = {
+//        return TileStore.getInstance()
+
         guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
             fatalError()
         }
@@ -40,16 +41,14 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
                                                          appropriateFor: nil,
                                                          create: true)
         cacheDirectoryURL.appendPathComponent("tile-store")
-        return cacheDirectoryURL.path
+
+        return TileStore.getInstanceForPath(cacheDirectoryURL.path)
     }()
 
+
     private lazy var mapInitOptions: MapInitOptions = {
-
-//        let tileStore = TileStore.getInstance()
-//        tileStore.
-
         var resourceOptions = ResourceOptions(accessToken: CredentialsManager.default.accessToken,
-                                              tileStorePath: tileStorePath)
+                                              tileStore: tileStore)
 
         return MapInitOptions(resourceOptions: resourceOptions,
                               mapOptions: MapOptions(constrainMode: .heightOnly))
@@ -131,8 +130,6 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         let satelliteDescriptor = offlineManager.createTilesetDescriptor(for: satelliteTilesetDescriptorOptions)
 
         // 3 Load offline region
-        tileStore = TileStore.getInstanceForPath(mapInitOptions.resourceOptions.tileStorePath!)
-
         let tileLoadOptions = TileLoadOptions(criticalPriority: false, acceptExpired: true, networkRestriction: .none)
 
         let offlineRegionLoadOptions = TileRegionLoadOptions(
@@ -147,7 +144,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
             tileLoadOptions: tileLoadOptions,
             averageBytesPerSecond: nil)
 
-        tileStore?.loadTileRegion(forId: "my_region5",
+        tileStore.loadTileRegion(forId: "my_region5",
                                   loadOptions: offlineRegionLoadOptions) { (progress) in
             guard let progress = progress else {
                 return

@@ -44,7 +44,7 @@ extension TilesetDescriptorOptions {
                             maxZoom: UInt8,
                             pixelRatio: Float = Float(UIScreen.main.scale),
                             stylePackOptions: StylePackLoadOptions?) {
-        self.init(styleURL: styleURI.rawValue.path,
+        self.init(styleURI: styleURI.rawValue.absoluteString,
                   minZoom: minZoom,
                   maxZoom: maxZoom,
                   pixelRatio: pixelRatio,

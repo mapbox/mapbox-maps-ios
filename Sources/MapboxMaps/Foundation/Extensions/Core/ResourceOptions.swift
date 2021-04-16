@@ -22,9 +22,10 @@ extension ResourceOptions {
                             baseUrl: String? = nil,
                             cachePath: String? = nil,
                             assetPath: String? = nil,
-                            tileStorePath: String? = nil,
-                            loadTilePacksFromNetwork: Bool = true,
-                            cacheSize: UInt64 = (1024*1024*10)) {
+                            cacheSize: UInt64 = (1024*1024*10),
+                            tileStore: TileStore? = nil,
+                            tileStoreEnabled: Bool = true,
+                            loadTilePacksFromNetwork: Bool = true) {
 //      precondition(accessToken.count > 0)
 
         let cacheURL = ResourceOptions.cacheURLIncludingSubdirectory()
@@ -33,9 +34,11 @@ extension ResourceOptions {
                   baseURL: baseUrl,
                   cachePath: resolvedCachePath,
                   assetPath: assetPath ?? Bundle.main.resourceURL?.path,
-                  tileStorePath: tileStorePath,
-                  loadTilePacksFromNetwork: loadTilePacksFromNetwork.NSNumber,
-                  cacheSize: NSNumber(value: cacheSize))
+                  cacheSize: NSNumber(value: cacheSize),
+                  tileStore: tileStore,
+                  tileStoreEnabled: tileStoreEnabled,
+                  loadTilePacksFromNetwork: loadTilePacksFromNetwork
+                  )
     }
 
     /// The size of the cache in bytes
@@ -83,14 +86,18 @@ extension ResourceOptions {
             return false
         }
 
-        return
-            (accessToken == other.accessToken) &&
-            (baseURL == other.baseURL) &&
-            (cachePath == other.cachePath) &&
-            (assetPath == other.assetPath) &&
-            (tileStorePath == other.tileStorePath) &&
-            (loadTilePacksFromNetwork == other.loadTilePacksFromNetwork) &&
-            (cacheSize == other.cacheSize)
+        return (accessToken == other.accessToken)
+            && ((baseURL == other.baseURL)
+                    || (baseURL == nil)
+                    || (other.baseURL == nil))
+            && (cachePath == other.cachePath)
+            && (assetPath == other.assetPath)
+            && (cacheSize == other.cacheSize)
+            && ((tileStore == other.tileStore)
+                    || (tileStore == nil)
+                    || (other.tileStore == nil))
+            && (isTileStoreEnabled == other.isTileStoreEnabled)
+            && (isLoadTilePacksFromNetwork == other.isLoadTilePacksFromNetwork)
     }
 
     /// :nodoc:
@@ -100,9 +107,10 @@ extension ResourceOptions {
         hasher.combine(baseURL)
         hasher.combine(cachePath)
         hasher.combine(assetPath)
-        hasher.combine(tileStorePath)
-        hasher.combine(loadTilePacksFromNetwork)
         hasher.combine(cacheSize)
+        hasher.combine(tileStore)
+        hasher.combine(isTileStoreEnabled)
+        hasher.combine(isLoadTilePacksFromNetwork)
         return hasher.finalize()
     }
 }

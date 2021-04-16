@@ -39,13 +39,10 @@ class CacheManagerIntegrationTests: IntegrationTestCase {
     @discardableResult private func setupCacheManager() -> CacheManager {
         let assetURL = Bundle.main.resourceURL
 
-        resourceOptions = ResourceOptions(__accessToken: accessToken,
-                                          baseURL: nil,
+        resourceOptions = ResourceOptions(accessToken: accessToken,
                                           cachePath: cacheURL.path,
                                           assetPath: assetURL?.path,
-                                          tileStorePath: nil,
-                                          loadTilePacksFromNetwork: nil,
-                                          cacheSize: defaultCacheSize as NSNumber)
+                                          cacheSize: defaultCacheSize)
 
         cm = CacheManager(options: resourceOptions!)
         return cm

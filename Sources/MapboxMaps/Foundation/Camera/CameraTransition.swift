@@ -2,7 +2,7 @@ import UIKit
 import CoreLocation
 
 // Represents a change in a camera property due to an animation
-internal enum AnimatableCameraProperty: Hashable {
+internal enum CameraTransition: Hashable {
 
     case center(start: CLLocationCoordinate2D, end: CLLocationCoordinate2D)
 
@@ -10,16 +10,16 @@ internal enum AnimatableCameraProperty: Hashable {
 
     case pitch(start: CGFloat, end: CGFloat)
 
-    case anchor(end: CGPoint)
+    case anchor(start: CGPoint, end: CGPoint)
 
     case padding(start: UIEdgeInsets, end: UIEdgeInsets)
 
     case zoom(start: CGFloat, end: CGFloat)
 
     internal static func diffChangesToCameraOptions(from renderedCameraOptions: CameraOptions,
-                                                    to animatedCameraOptions: CameraOptions) -> Set<AnimatableCameraProperty> {
+                                                    to animatedCameraOptions: CameraOptions) -> Set<CameraTransition> {
 
-        var changes = Set<AnimatableCameraProperty>()
+        var changes = Set<CameraTransition>()
 
         if let startCenter = renderedCameraOptions.center,
            let endCenter = animatedCameraOptions.center,

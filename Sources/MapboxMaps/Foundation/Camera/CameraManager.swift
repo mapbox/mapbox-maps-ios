@@ -234,7 +234,7 @@ public class CameraManager {
 
         let animator = makeCameraAnimator(duration: time, curve: .linear) { (_) in
 
-// TODO: Fix flyTo
+// To consider: How to handle glfly 
 //            UIView.animateKeyframes(withDuration: 0, delay: 0, options: []) {
 //
 //                for keyTime in keyTimes {

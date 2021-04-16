@@ -19,7 +19,7 @@ public class CameraAnimator: NSObject {
     internal var cameraView: CameraView
 
     /// The set of properties being animated by this renderer
-    internal var propertiesBeingAnimated = Set<AnimatableCameraProperty>() {
+    internal var propertiesBeingAnimated = Set<CameraTransition>() {
         didSet {
 
             let propertyNames = propertiesBeingAnimated.map { $0.name }
@@ -137,7 +137,7 @@ public class CameraAnimator: NSObject {
             var cameraOptions = CameraOptions(with: renderedCameraOptions)
             userProvidedAnimation(&cameraOptions) // The `userProvidedAnimation` block will mutate the "rendered" camera options and provide the "to" values of the animation
 
-            self.propertiesBeingAnimated = AnimatableCameraProperty.diffChangesToCameraOptions(from: renderedCameraOptions,
+            self.propertiesBeingAnimated = CameraTransition.diffChangesToCameraOptions(from: renderedCameraOptions,
                                                                                                to: cameraOptions)
             self.cameraView.syncLayer(to: cameraOptions)
         }

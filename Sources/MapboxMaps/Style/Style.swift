@@ -181,9 +181,8 @@ public class Style {
             return .failure(.convertingImageFailed(nil))
         }
 
-        let screenScale = Float(UIScreen.main.scale)
         let expected = styleManager.addStyleImage(forImageId: identifier,
-                                                  scale: screenScale,
+                                                  scale: image.scale,
                                                   image: mbxImage,
                                                   sdf: sdf,
                                                   stretchX: stretchX,

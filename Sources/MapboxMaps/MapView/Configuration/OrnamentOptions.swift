@@ -16,12 +16,12 @@ public struct OrnamentOptions: Equatable {
     public var compassVisibility: OrnamentVisibility = .adaptive
 
     /// Logo view options
-    public var _showsLogoView: Bool = true
+    public var _logoViewIsVisible: Bool = true
     public var logoViewPosition: OrnamentPosition = .bottomLeft
     public var logoViewMargins: CGPoint = defaultOrnamentsMargin
 
     /// Attribution options
-    public var _showsAttributionButton: Bool = true
+    public var _attributionButtonIsVisible: Bool = true
     public var attributionButtonPosition: OrnamentPosition = .bottomRight
     public var attributionButtonMargins: CGPoint = defaultOrnamentsMargin
 
@@ -43,12 +43,12 @@ public struct OrnamentOptions: Equatable {
             ornamentVisibility[.compass] = compassVisibility
         }
 
-        if _showsLogoView {
+        if _logoViewIsVisible {
             supportedOrnaments[.mapboxLogoView] = logoViewPosition
             supportedOrnamentMargins[.mapboxLogoView] = logoViewMargins
         }
 
-        if _showsAttributionButton {
+        if _attributionButtonIsVisible {
             supportedOrnaments[.infoButton] = attributionButtonPosition
             supportedOrnamentMargins[.infoButton] = attributionButtonMargins
         }

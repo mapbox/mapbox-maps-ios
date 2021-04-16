@@ -39,7 +39,7 @@ public enum OrnamentVisibility: String, Equatable {
     case visible
 }
 
-public enum OrnamentType: Hashable {
+internal enum OrnamentType: Hashable {
     case mapboxLogoView
     case mapboxScaleBar
     case compass

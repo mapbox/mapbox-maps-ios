@@ -48,7 +48,8 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
 
     private lazy var mapInitOptions: MapInitOptions = {
         var resourceOptions = ResourceOptions(accessToken: CredentialsManager.default.accessToken,
-                                              tileStore: tileStore)
+                                              tileStore: tileStore,
+                                              tileStoreEnabled: true)
 
         return MapInitOptions(resourceOptions: resourceOptions,
                               mapOptions: MapOptions(constrainMode: .heightOnly))

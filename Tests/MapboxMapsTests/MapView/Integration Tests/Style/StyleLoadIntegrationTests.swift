@@ -46,14 +46,16 @@ class StyleLoadIntegrationTests: MapViewIntegrationTestCase {
         expectation.expectedFulfillmentCount = 2
 
         didFinishLoadingStyle = { _ in
+            print("Loaded style \(styleURI)")
             expectation.fulfill()
         }
 
         didBecomeIdle = { _ in
+            print("Idled")
             expectation.fulfill()
         }
 
         style.uri = styleURI
-        wait(for: [expectation], timeout: 5)
+        wait(for: [expectation], timeout: 10)
     }
 }

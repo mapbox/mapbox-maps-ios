@@ -24,9 +24,16 @@ extension ResourceOptions {
                             assetPath: String? = nil,
                             cacheSize: UInt64 = (1024*1024*10),
                             tileStore: TileStore? = nil,
-                            tileStoreEnabled: Bool = true,
-                            loadTilePacksFromNetwork: Bool = true) {
+                            tileStoreEnabled: Bool = false,
+                            loadTilePacksFromNetwork: Bool = false) {
 //      precondition(accessToken.count > 0)
+
+        // Update the TileStore with the access token from the ResourceOptions
+        // TODO: Should we tie the default CredentialsManager to the default TileStore?
+        if tileStoreEnabled {
+            let tileStore = tileStore ?? TileStore.getInstance()
+            tileStore.setOptionForKey("mapbox-access-token", value: accessToken)
+        }
 
         let cacheURL = ResourceOptions.cacheURLIncludingSubdirectory()
         let resolvedCachePath = cachePath == nil ? cacheURL?.path : cachePath

@@ -321,11 +321,11 @@ jobs:
           no_output_timeout: 5m
       - locate-derived-data-directory:
           base_name: $(basename $(pwd))
-      - run:
-          name: Converting and uploading coverage
-          command: |
-            pip3 install awscli gitpython
-            make update-codecov-with-profdata SCHEME=MapboxMaps BUILD_DIR="$DERIVED_DATA_PATH"
+      # - run:
+      #     name: Converting and uploading coverage
+      #     command: |
+      #       pip3 install awscli gitpython
+      #       make update-codecov-with-profdata SCHEME=MapboxMaps BUILD_DIR="$DERIVED_DATA_PATH"
       - store-logs:
           artifact_name: MapboxMaps
           derived_data_path: $DERIVED_DATA_PATH
@@ -365,14 +365,14 @@ jobs:
           name: Symbolicate crash logs
           command: make symbolicate SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
           when: always
-      - run:
-          name: Converting and uploading coverage
-          command: |
-            make device-update-codecov-with-profdata \
-              SCHEME=<< parameters.scheme >> \
-              APP_NAME=<< parameters.app-name >> \
-              CONFIGURATION=Release \
-              COVERAGE_MAPBOX_MAPS_DEVICE=build/Build/Products/Release-iphoneos/MapboxMaps.framework/MapboxMaps
+      # - run:
+      #     name: Converting and uploading coverage
+      #     command: |
+      #       make device-update-codecov-with-profdata \
+      #         SCHEME=<< parameters.scheme >> \
+      #         APP_NAME=<< parameters.app-name >> \
+      #         CONFIGURATION=Release \
+      #         COVERAGE_MAPBOX_MAPS_DEVICE=build/Build/Products/Release-iphoneos/MapboxMaps.framework/MapboxMaps
       - store-device-farm-artifacts
       - store-logs
       - report-failure:
@@ -431,15 +431,15 @@ jobs:
               CONFIGURATION=Release \
               BUILD_DIR="$DERIVED_DATA_PATH"
           when: always
-      - run:
-          name: Converting and uploading coverage
-          command: |
-            pip3 install awscli gitpython
-            make device-update-codecov-with-profdata \
-              SCHEME=<< parameters.scheme >> \
-              APP_NAME=<< parameters.app-name >> \
-              CONFIGURATION=Release \
-              BUILD_DIR="$DERIVED_DATA_PATH"
+      # - run:
+      #     name: Converting and uploading coverage
+      #     command: |
+      #       pip3 install awscli gitpython
+      #       make device-update-codecov-with-profdata \
+      #         SCHEME=<< parameters.scheme >> \
+      #         APP_NAME=<< parameters.app-name >> \
+      #         CONFIGURATION=Release \
+      #         BUILD_DIR="$DERIVED_DATA_PATH"
       - store-device-farm-artifacts:
           derived_data_path: $DERIVED_DATA_PATH
       - store-logs:

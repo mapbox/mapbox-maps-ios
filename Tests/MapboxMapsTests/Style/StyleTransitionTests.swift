@@ -3,14 +3,10 @@ import XCTest
 @testable import MapboxMaps
 
 class StyleTransitionTests: XCTestCase {
+    let jsonString = "{\"delay\":500,\"duration\":1000}"
 
     func testDecodeHasCorrectConversion() {
-        let jsonString = """
-        {
-            "duration": 1000,
-            "delay": 500
-        }
-        """
+
 
         let jsonData = jsonString.data(using: .utf8)!
         let decodedTransition = try! JSONDecoder().decode(StyleTransition.self, from: jsonData)
@@ -25,10 +21,8 @@ class StyleTransitionTests: XCTestCase {
     func testEncodeHasCorrectConversion() {
         let transition = StyleTransition(duration: 1.0, delay: 0.5)
         let encodedTransition = try! JSONEncoder().encode(transition)
+        let dataString = String(data: encodedTransition, encoding: .utf8)
 
-        let decodedTransition = try! JSONDecoder().decode(StyleTransition.self, from: encodedTransition)
-
-        XCTAssertEqual(transition.duration, decodedTransition.duration, "Duration should be equal to 1.0")
-        XCTAssertEqual(transition.delay, decodedTransition.delay, "Delay should be equal to 0.5")
+        XCTAssertEqual(dataString, jsonString)
     }
 }

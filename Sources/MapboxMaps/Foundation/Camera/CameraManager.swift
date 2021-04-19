@@ -151,8 +151,13 @@ public class CameraManager {
         }
 
         if animated && duration > 0 {
-            let animation = { (camera: inout CameraOptions) in
-                camera = clampedCamera
+            let animation = { (transition: inout CameraTransition) in
+                transition.center.toValue = clampedCamera.center
+                transition.padding.toValue = clampedCamera.padding
+                transition.anchor.toValue = clampedCamera.anchor
+                transition.zoom.toValue = clampedCamera.zoom
+                transition.bearing.toValue = clampedCamera.bearing
+                transition.pitch.toValue = clampedCamera.pitch
             }
             performCameraAnimation(duration: duration, animation: animation, completion: completion)
         } else {
@@ -172,7 +177,7 @@ public class CameraManager {
     ///   - duration: If animated, how long the animation takes
     ///   - animation: closure to perform
     ///   - completion: animation block called on completion
-    fileprivate func performCameraAnimation(duration: TimeInterval, animation: @escaping (inout CameraOptions) -> Void, completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
+    fileprivate func performCameraAnimation(duration: TimeInterval, animation: @escaping CameraAnimation, completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
 
         // Stop previously running animations
         internalCameraAnimator?.stopAnimation()

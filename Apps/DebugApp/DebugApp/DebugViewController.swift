@@ -76,11 +76,26 @@ public class DebugViewController: UIViewController {
                                                                    zoom: 12))
 
             var animator: CameraAnimator?
-            animator = self.mapView.cameraManager.makeCameraAnimator(duration: 10.0, curve: .linear)
-
-            animator?.addAnimations { (camera) in
-                camera.zoom = 20
+            animator = self.mapView.cameraManager.makeCameraAnimator(duration: 10.0, curve: .linear) { (transition) in
+                transition.center.toValue = someCoordinate
             }
+
+            animator?.addAnimations { (transition) in
+                transition.center.toValue = someCoordinate
+                
+            }
+            
+            animator?.addAnimations { (transition) in
+                transition.zoom.toValue = 14
+            }
+            
+            animator?.addAnimations({ (transtion) in
+                transtion.pitch.toValue = 55
+            }, delayFactor: 0.5)
+            
+//            animator.startAnimation { () -> Camera
+//                
+//            }
 
             animator?.addCompletion { (_) in
                 animator = nil

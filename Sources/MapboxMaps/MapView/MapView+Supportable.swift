@@ -9,10 +9,8 @@ extension MapView: OrnamentSupportableView {
 
     internal func compassTapped() {
         var animator: CameraAnimator?
-        animator = cameraManager.makeCameraAnimator(duration: 0.3, curve: .easeOut)
-
-        animator?.addAnimations({ (cameraOptions) in
-            cameraOptions.bearing = 0.0
+        animator = cameraManager.makeCameraAnimator(duration: 0.3, curve: .easeOut, animations: { (transition) in
+            transition.bearing.toValue = 0
         })
 
         animator?.addCompletion({ (_) in

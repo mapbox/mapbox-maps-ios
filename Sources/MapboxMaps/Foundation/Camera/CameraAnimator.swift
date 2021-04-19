@@ -1,11 +1,11 @@
 import UIKit
 import CoreLocation
 
+public typealias CameraAnimation = (inout CameraTransition) -> Void
+
 // MARK: CameraAnimator Class
 public class CameraAnimator: NSObject {
-
-    // MARK: Stored Properties
-
+    
     /// Instance of the property animator that will run animations.
     private var propertyAnimator: UIViewPropertyAnimator
 
@@ -17,27 +17,12 @@ public class CameraAnimator: NSObject {
 
     /// The `CameraView` owned by this animator
     internal var cameraView: CameraView
-
-    /// The set of properties being animated by this renderer
-    internal var propertiesBeingAnimated = Set<CameraTransition>() {
-        didSet {
-
-            let propertyNames = propertiesBeingAnimated.map { $0.name }
-            
-            // Guard against situation where "center" and "anchor" are being animated, as this is unsupported
-            if propertyNames.contains("center") && propertyNames.contains("anchor") {
-                fatalError("Animating center and anchor of the map camera is unsupported.")
-            }
-            
-            // To consider: Should we assert here if we detect that there is another cameraAnimator animating the same set of properties??
-            
-            // To consider: Can we use this as a source of truth for whether an animation is "in progress" or not?
-            
-            // To consider: Could we use this as a hook to set `isUserAnimationInProgress` in `MBMMap` ??
-        }
-    }
-
-    // MARK: Computed Properties
+    
+    /// Represents the animation that this animator is attempting to execute
+    internal var animation: CameraAnimation?
+    
+    /// Defines the transition that will occur to the `CameraOptions` of the renderer due to this animator
+    internal var transition: CameraTransition?
 
     /// The state from of the animator.
     public var state: UIViewAnimatingState { return propertyAnimator.state }
@@ -81,17 +66,36 @@ public class CameraAnimator: NSObject {
 
     // MARK: Functions
 
-    /// Starts the animation.
+    /// Starts the animation if this animator is in `inactive` state. Also used to resume a "paused" animation.
     public func startAnimation() {
-
-        guard let renderedCamera = delegate?.camera else {
-            fatalError("Rendered camera options cannot be nil when starting an animation")
+    
+        if self.state != .active {
+            
+            guard let delegate = delegate else {
+                fatalError("CameraAnimator delegate cannot be nil when starting an animation")
+            }
+            
+            guard let animation = animation else {
+                fatalError("Animation cannot be nil when starting an animation")
+            }
+                
+            var cameraTransition = CameraTransition(with: delegate.camera, initialAnchor: delegate.anchorAfterPadding())
+            animation(&cameraTransition)
+            
+            propertyAnimator.addAnimations { [weak self] in
+                guard let self = self else { return }
+                self.cameraView.syncLayer(to: cameraTransition.toCameraOptions) // Set up the "to" values for the interpolation
+            }
+    
+            cameraView.syncLayer(to: cameraTransition.fromCameraOptions) // Set up the "from" values for the interpoloation
+            transition = cameraTransition // Store the mutated camera transition
         }
-
-        cameraView.syncLayer(to: renderedCamera) // Set up the "from" values for the interpoloation
+       
         propertyAnimator.startAnimation()
     }
-
+    
+    /// Starts the animation after a delay
+    /// - Parameter delay: Delay (in seconds) after which the animation should start
     public func startAnimation(afterDelay delay: TimeInterval) {
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
             guard let self = self else { return }
@@ -110,37 +114,9 @@ public class CameraAnimator: NSObject {
         propertyAnimator.finishAnimation(at: .current)
     }
 
-    /// Add animations block to the animator with a `delayFactor`.
-    public func addAnimations(_ animations: @escaping (inout CameraOptions) -> Void, delayFactor: Double) {
-        let wrappedAnimations = wrapAnimationsBlock(animations)
-        propertyAnimator.addAnimations(wrappedAnimations,
-                                       delayFactor: CGFloat(delayFactor))
-    }
-
     /// Add animations block to the animator.
-    public func addAnimations(_ animations: @escaping (inout CameraOptions) -> Void) {
-        let wrappedAnimations = wrapAnimationsBlock(animations)
-        propertyAnimator.addAnimations(wrappedAnimations)
-    }
-
-    internal func wrapAnimationsBlock(_ userProvidedAnimation: @escaping (inout CameraOptions) -> Void) -> () -> Void {
-
-        guard let delegate = delegate else {
-            fatalError("Delegate MUST not be nil when adding animations")
-        }
-
-        let renderedCameraOptions = delegate.camera
-
-        return { [weak self] in
-            guard let self = self else { return }
-
-            var cameraOptions = CameraOptions(with: renderedCameraOptions)
-            userProvidedAnimation(&cameraOptions) // The `userProvidedAnimation` block will mutate the "rendered" camera options and provide the "to" values of the animation
-
-            self.propertiesBeingAnimated = CameraTransition.diffChangesToCameraOptions(from: renderedCameraOptions,
-                                                                                               to: cameraOptions)
-            self.cameraView.syncLayer(to: cameraOptions)
-        }
+    internal func addAnimations(_ animations: @escaping CameraAnimation) {
+        animation = animations
     }
 
     /// Add a completion block to the animator. 
@@ -152,7 +128,7 @@ public class CameraAnimator: NSObject {
     internal func wrapCompletion(_ completion: @escaping AnimationCompletion) -> (UIViewAnimatingPosition) -> Void {
         return { [weak self] animationPosition in
             guard let self = self, let delegate = self.delegate else { return }
-            self.propertiesBeingAnimated.removeAll() // Clear out the set maintaining the properties being animated by this animator -- since the animation is complete if we are here.
+            self.transition = nil // Clear out the set maintaining the properties being animated by this animator -- since the animation is complete if we are here.
             delegate.schedulePendingCompletion(forAnimator: self, completion: completion, animatingPosition: animationPosition)
         }
     }
@@ -166,37 +142,35 @@ public class CameraAnimator: NSObject {
 
         // Only call jumpTo if this animator is currently "active" and there are known changes to animate.
         guard propertyAnimator.state == .active,
-              propertiesBeingAnimated.count > 0,
+              let transition = transition,
               let delegate = delegate else {
             return
         }
 
         let cameraOptions = CameraOptions()
         let interpolatedCamera = cameraView.localCamera
-        let namesOfPropertiesBeingAnimated = propertiesBeingAnimated.map { $0.name }
 
-        if namesOfPropertiesBeingAnimated.contains("center") {
-            cameraOptions.center = interpolatedCamera.center?.wrap() // Wrap to [-180, +180]
+        if transition.center.toValue != nil {
+            cameraOptions.center = interpolatedCamera.center?.wrap() // Wraps to [-180, +180]
         }
 
-        if namesOfPropertiesBeingAnimated.contains("bearing") {
+        if transition.bearing.toValue != nil {
             cameraOptions.bearing = interpolatedCamera.bearing
         }
-
-        // To consider: should we flag here if anchor and center is being animated??
-        if namesOfPropertiesBeingAnimated.contains("anchor") {
+        
+        if transition.anchor.toValue != nil {
             cameraOptions.anchor = interpolatedCamera.anchor
         }
 
-        if namesOfPropertiesBeingAnimated.contains("padding") {
+        if transition.padding.toValue != nil {
             cameraOptions.padding = interpolatedCamera.padding
         }
 
-        if namesOfPropertiesBeingAnimated.contains("zoom") {
+        if transition.zoom.toValue != nil {
             cameraOptions.zoom = interpolatedCamera.zoom
         }
 
-        if namesOfPropertiesBeingAnimated.contains("pitch") {
+        if transition.pitch.toValue != nil {
             cameraOptions.pitch = interpolatedCamera.pitch
         }
 

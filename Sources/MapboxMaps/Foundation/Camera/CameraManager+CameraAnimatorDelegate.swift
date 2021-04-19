@@ -17,9 +17,11 @@ extension CameraManager: CameraAnimatorDelegate {
     /// - Returns: A class that represents an animator with the provided configuration.
     public func makeCameraAnimator(duration: TimeInterval,
                                    timingParameters parameters: UITimingCurveProvider,
-                                   animationOwner: AnimationOwner = .unspecified) -> CameraAnimator {
+                                   animationOwner: AnimationOwner = .unspecified,
+                                   animations: @escaping CameraAnimation) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, timingParameters: parameters)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
+        cameraAnimator.addAnimations(animations)
         mapView?.cameraAnimators.add(cameraAnimator)
         return cameraAnimator
     }
@@ -40,14 +42,10 @@ extension CameraManager: CameraAnimatorDelegate {
     public func makeCameraAnimator(duration: TimeInterval,
                                    curve: UIView.AnimationCurve,
                                    animationOwner: AnimationOwner = .unspecified,
-                                   animations: ((inout CameraOptions) -> Void)? = nil) -> CameraAnimator {
+                                   animations: @escaping CameraAnimation) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, curve: curve)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
-
-        if let animations = animations {
-            cameraAnimator.addAnimations(animations)
-        }
-
+        cameraAnimator.addAnimations(animations)
         mapView?.cameraAnimators.add(cameraAnimator)
         return cameraAnimator
     }
@@ -70,13 +68,10 @@ extension CameraManager: CameraAnimatorDelegate {
                                    controlPoint1 point1: CGPoint,
                                    controlPoint2 point2: CGPoint,
                                    animationOwner: AnimationOwner = .unspecified,
-                                   animations: ((inout CameraOptions) -> Void)? = nil) -> CameraAnimator {
+                                   animations: @escaping CameraAnimation) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, controlPoint1: point1, controlPoint2: point2)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
-
-        if let animations = animations {
-            cameraAnimator.addAnimations(animations)
-        }
+        cameraAnimator.addAnimations(animations)
         mapView?.cameraAnimators.add(cameraAnimator)
         return cameraAnimator
     }
@@ -98,12 +93,10 @@ extension CameraManager: CameraAnimatorDelegate {
     public func makeCameraAnimator(duration: TimeInterval,
                                    dampingRatio ratio: CGFloat,
                                    animationOwner: AnimationOwner = .unspecified,
-                                   animations: ((inout CameraOptions) -> Void)? = nil) -> CameraAnimator {
+                                   animations: @escaping CameraAnimation) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: ratio)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
-        if let animations = animations {
-            cameraAnimator.addAnimations(animations)
-        }
+        cameraAnimator.addAnimations(animations)
         mapView?.cameraAnimators.add(cameraAnimator)
         return cameraAnimator
     }
@@ -138,5 +131,18 @@ extension CameraManager: CameraAnimatorDelegate {
 
         validMapView.addSubview(view)
 
+    }
+    
+    func anchorAfterPadding() -> CGPoint {
+        
+        guard let validMapView = mapView else {
+            fatalError("MapView cannot be nil.")
+        }
+        let paddding = validMapView.padding
+        let xAfterPadding = validMapView.center.x + paddding.left - paddding.right
+        let yAfterPadding = validMapView.center.y + paddding.top - paddding.bottom
+        let anchor = CGPoint(x: xAfterPadding, y: yAfterPadding)
+        
+        return anchor
     }
 }

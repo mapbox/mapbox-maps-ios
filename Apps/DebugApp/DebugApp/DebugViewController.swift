@@ -74,28 +74,15 @@ public class DebugViewController: UIViewController {
             let newYork = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
             self.mapView.cameraManager.setCamera(to: CameraOptions(center: newYork,
                                                                    zoom: 12))
+            
+            let brooklyn = CLLocationCoordinate2D(latitude:  40.680902, longitude: -73.968663)
 
             var animator: CameraAnimator?
-            animator = self.mapView.cameraManager.makeCameraAnimator(duration: 10.0, curve: .linear) { (transition) in
-                transition.center.toValue = someCoordinate
-            }
-
-            animator?.addAnimations { (transition) in
-                transition.center.toValue = someCoordinate
+            animator = self.mapView.cameraManager.makeCameraAnimator(duration: 10.0, curve: .easeInOut) { (transition) in
                 
+                transition.zoom.toValue = 18
+                transition.pitch.toValue = 55
             }
-            
-            animator?.addAnimations { (transition) in
-                transition.zoom.toValue = 14
-            }
-            
-            animator?.addAnimations({ (transtion) in
-                transtion.pitch.toValue = 55
-            }, delayFactor: 0.5)
-            
-//            animator.startAnimation { () -> Camera
-//                
-//            }
 
             animator?.addCompletion { (_) in
                 animator = nil

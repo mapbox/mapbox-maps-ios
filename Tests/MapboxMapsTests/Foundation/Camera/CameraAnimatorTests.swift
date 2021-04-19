@@ -21,7 +21,7 @@ internal class CameraAnimatorTests: XCTestCase {
 
     func testAddCompletionSchedulesACompletion() {
         cameraAnimator.addCompletion({ _ in
-            XCTAssertEqual(self.delegate.cameraAnimatorStub.invocations.count, 1)
+            XCTAssertEqual(self.delegate.schedulePendingCompletionStub.invocations.count, 1)
         })
     }
 

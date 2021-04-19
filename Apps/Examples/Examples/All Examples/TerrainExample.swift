@@ -16,13 +16,28 @@ public class TerrainExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         let centerCoordinate = CLLocationCoordinate2D(latitude: 32.6141, longitude: -114.34411)
-        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate,
-                                                          zoom: 13.1,
-                                                          bearing: 80,
-                                                          pitch: 85))
+
 
         mapView.on(.styleLoaded) { [weak self] _ in
+            
+            self?.mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate,
+                                                              zoom: 10,
+                                                              bearing: 80))
+            
             self?.addTerrain()
+        }
+        
+        mapView.on(.mapLoaded) { [weak self](_) in
+            var animator = self?.mapView.cameraManager.makeCameraAnimator(duration: 10, curve: .easeInOut, animations: { (transition) in
+                transition.zoom.toValue = 14.5
+                transition.pitch.toValue = 85
+            })
+            
+            animator?.addCompletion({ (_) in
+                animator = nil
+            })
+            
+            animator?.startAnimation()
         }
     }
 
@@ -34,7 +49,7 @@ public class TerrainExample: UIViewController, ExampleProtocol {
         _ = mapView.style.addSource(source: demSource, identifier: "mapbox-dem")
 
         var terrain = Terrain(sourceId: "mapbox-dem")
-        terrain.exaggeration = .constant(1.5)
+        terrain.exaggeration = .constant(2.0)
 
         _ = mapView.style.setTerrain(terrain)
 

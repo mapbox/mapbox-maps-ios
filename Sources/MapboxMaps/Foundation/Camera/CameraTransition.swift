@@ -35,11 +35,11 @@ public struct CameraTransition {
     
     internal init(with renderedCameraOptions: CameraOptions, initialAnchor: CGPoint) {
         
-        guard let renderedCenter    = renderedCameraOptions.center,
-              let renderedZoom      = renderedCameraOptions.zoom,
-              let renderedPadding   = renderedCameraOptions.padding,
-              let renderedPitch     = renderedCameraOptions.pitch,
-              let renderedBearing   = renderedCameraOptions.bearing else {
+        guard let renderedCenter = renderedCameraOptions.center,
+              let renderedZoom = renderedCameraOptions.zoom,
+              let renderedPadding = renderedCameraOptions.padding,
+              let renderedPitch = renderedCameraOptions.pitch,
+              let renderedBearing = renderedCameraOptions.bearing else {
             fatalError("Values in rendered CameraOptions cannot be nil")
         }
         

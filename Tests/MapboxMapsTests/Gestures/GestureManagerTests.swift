@@ -90,14 +90,6 @@ final class GestureManagerTests: XCTestCase {
                                                         shouldRecognizeSimultaneouslyWith: tapGestureRecognizer))
     }
 
-    func testScaleForZoom() {
-        mapView.cameraView.zoom = CGFloat.random(in: 0...22)
-
-        let scale = gestureManager.scaleForZoom()
-
-        XCTAssertEqual(scale, mapView.cameraView.zoom)
-    }
-
     func testPinchScaleChanged_SetsCamera() {
         let zoom = CGFloat.random(in: 0...22)
 

@@ -7,6 +7,85 @@ import MetalKit
 @testable import MapboxMapsFoundation
 #endif
 
+
+internal class CameraManagerIntegrationTests: MapViewIntegrationTestCase {
+    
+    var cameraManager: CameraManager {
+        guard let mapView = mapView else {
+            fatalError("MapView must not be nil")
+        }
+        return mapView.cameraManager
+    }
+    
+    func testSetCameraEnforcesMinZoom() {
+        
+        guard let mapView = mapView else {
+            XCTFail("MapView must not be nil")
+            return
+        }
+        
+        mapView.update(with: { (config) in
+            config.camera.minimumZoomLevel = CGFloat.random(in: 0..<cameraManager.mapCameraOptions.maximumZoomLevel)
+        })
+
+        let expectedCamera = CameraOptions(zoom: -1)
+        cameraManager.setCamera(to: expectedCamera)
+        XCTAssertEqual(mapView.zoom, cameraManager.mapCameraOptions.minimumZoomLevel, accuracy: 0.000001)
+    }
+
+    func testSetCameraEnforcesMaxZoom() {
+        
+        guard let mapView = mapView else {
+            XCTFail("MapView must not be nil")
+            return
+        }
+        
+        mapView.update(with: { (config) in
+            config.camera.maximumZoomLevel = CGFloat.random(in: cameraManager.mapCameraOptions.minimumZoomLevel...25.5)
+        })
+
+        let expectedCamera = CameraOptions(zoom: 26)
+        cameraManager.setCamera(to: expectedCamera)
+        XCTAssertEqual(mapView.zoom, cameraManager.mapCameraOptions.maximumZoomLevel, accuracy: 0.000001)
+    }
+
+    func testSetCameraEnforcesMinPitch() {
+        
+        guard let mapView = mapView else {
+            XCTFail("MapView must not be nil")
+            return
+        }
+        
+        mapView.update(with: { (config) in
+            config.camera.minimumPitch = CGFloat.random(in: 0..<cameraManager.mapCameraOptions.maximumPitch)
+        })
+
+        let expectedCamera = CameraOptions(pitch: -1)
+        cameraManager.setCamera(to: expectedCamera)
+        XCTAssertEqual(mapView.pitch, cameraManager.mapCameraOptions.minimumPitch, accuracy: 0.000001)
+    }
+
+    func testSetCameraEnforcesMaxPitch() {
+        
+        guard let mapView = mapView else {
+            XCTFail("MapView must not be nil")
+            return
+        }
+        
+        mapView.update(with: { (config) in
+            config.camera.maximumPitch = CGFloat.random(in: cameraManager.mapCameraOptions.minimumPitch...85)
+        })
+
+        let expectedCamera = CameraOptions(pitch: 86)
+
+        cameraManager.setCamera(to: expectedCamera)
+
+        XCTAssertEqual(mapView.pitch, cameraManager.mapCameraOptions.maximumPitch, accuracy: 0.000001)
+    }
+
+}
+
+
 class CameraManagerTests: XCTestCase {
 
     var mapView: BaseMapView!
@@ -22,16 +101,6 @@ class CameraManagerTests: XCTestCase {
         cameraManager = CameraManager(for: mapView, with: MapCameraOptions())
     }
 
-    func testZoom() {
-        XCTAssertEqual(mapView.zoom, 0.0, "Camera's zoom should match Map's default zoom.")
-
-        mapView.zoom = 5.0
-        XCTAssertEqual(mapView.cameraView.localZoom, 5.0, "Camera's zoom value is not initialized.")
-
-        cameraManager.setCamera(to: CameraOptions(zoom: 10.0))
-
-        XCTAssertEqual(mapView.cameraView.localZoom, 10.0, "Camera manager did not set camera view zoom value.")
-    }
 
     func testCameraForCoordinateArray() {
         // A 1:1 square
@@ -60,101 +129,7 @@ class CameraManagerTests: XCTestCase {
         XCTAssertEqual(camera.pitch, 0)
     }
 
-    func testSetCamera() {
-        let expectedCamera = CameraOptions(center: CLLocationCoordinate2D(latitude: 50, longitude: 50),
-                                           padding: UIEdgeInsets(top: 1, left: 2, bottom: 3, right: 4),
-                                           anchor: CGPoint(x: 5, y: 6),
-                                           zoom: 7,
-                                           bearing: 8,
-                                           pitch: 9)
-
-        let originalCamera = mapView.camera
-
-        cameraManager.setCamera(to: expectedCamera, completion: nil)
-
-        let actualCamera = mapView.cameraView.localCamera
-
-        XCTAssertEqual(expectedCamera.center, actualCamera.center)
-        XCTAssertEqual(expectedCamera.padding, actualCamera.padding)
-        XCTAssertEqual(expectedCamera.anchor, actualCamera.anchor)
-        XCTAssertEqual(expectedCamera.zoom, actualCamera.zoom)
-        XCTAssertEqual(expectedCamera.bearing, actualCamera.bearing)
-        XCTAssertEqual(expectedCamera.pitch, actualCamera.pitch)
-        XCTAssertNotEqual(originalCamera.center, actualCamera.center)
-        XCTAssertNotEqual(originalCamera.padding, actualCamera.padding)
-        XCTAssertNotEqual(originalCamera.anchor, actualCamera.anchor)
-        XCTAssertNotEqual(originalCamera.zoom, actualCamera.zoom)
-        XCTAssertNotEqual(originalCamera.bearing, actualCamera.bearing)
-        XCTAssertNotEqual(originalCamera.pitch, actualCamera.pitch)
-    }
-
-    func testSetCameraEnforcesMinZoom() {
-        cameraManager.mapCameraOptions.minimumZoomLevel = CGFloat.random(in: 0..<cameraManager.mapCameraOptions.maximumZoomLevel)
-        let expectedCamera = CameraOptions(zoom: -1)
-
-        cameraManager.setCamera(to: expectedCamera)
-
-        XCTAssertEqual(mapView.cameraView.localZoom, cameraManager.mapCameraOptions.minimumZoomLevel, accuracy: 0.000001)
-    }
-
-    func testSetCameraEnforcesMaxZoom() {
-        cameraManager.mapCameraOptions.maximumZoomLevel = CGFloat.random(in: cameraManager.mapCameraOptions.minimumZoomLevel...25.5)
-        let expectedCamera = CameraOptions(zoom: 26)
-
-        cameraManager.setCamera(to: expectedCamera)
-
-        XCTAssertEqual(mapView.cameraView.localZoom, cameraManager.mapCameraOptions.maximumZoomLevel, accuracy: 0.000001)
-    }
-
-    func testSetCameraEnforcesMinPitch() {
-        cameraManager.mapCameraOptions.minimumPitch = CGFloat.random(in: 0..<cameraManager.mapCameraOptions.maximumPitch)
-        let expectedCamera = CameraOptions(pitch: -1)
-
-        cameraManager.setCamera(to: expectedCamera)
-
-        XCTAssertEqual(mapView.cameraView.localPitch, cameraManager.mapCameraOptions.minimumPitch, accuracy: 0.000001)
-    }
-
-    func testSetCameraEnforcesMaxPitch() {
-        cameraManager.mapCameraOptions.maximumPitch = CGFloat.random(in: cameraManager.mapCameraOptions.minimumPitch...60)
-        let expectedCamera = CameraOptions(pitch: 61)
-
-        cameraManager.setCamera(to: expectedCamera)
-
-        XCTAssertEqual(mapView.cameraView.localPitch, cameraManager.mapCameraOptions.maximumPitch, accuracy: 0.000001)
-    }
-
-    func testSetCameraByComponentEnforcesMinZoom() {
-        cameraManager.mapCameraOptions.minimumZoomLevel = CGFloat.random(in: 0..<cameraManager.mapCameraOptions.maximumZoomLevel)
-
-        cameraManager.setCamera(to: CameraOptions(zoom: -1))
-
-        XCTAssertEqual(mapView.cameraView.localZoom, cameraManager.mapCameraOptions.minimumZoomLevel, accuracy: 0.000001)
-    }
-
-    func testSetCameraByComponentEnforcesMaxZoom() {
-        cameraManager.mapCameraOptions.maximumZoomLevel = CGFloat.random(in: cameraManager.mapCameraOptions.minimumZoomLevel...25.5)
-
-        cameraManager.setCamera(to: CameraOptions(zoom: 26))
-
-        XCTAssertEqual(mapView.cameraView.localZoom, cameraManager.mapCameraOptions.maximumZoomLevel, accuracy: 0.000001)
-    }
-
-    func testSetCameraByComponentEnforcesMinPitch() {
-        cameraManager.mapCameraOptions.minimumPitch = CGFloat.random(in: 0..<cameraManager.mapCameraOptions.maximumPitch)
-
-        cameraManager.setCamera(to: CameraOptions(pitch: -1))
-
-        XCTAssertEqual(mapView.cameraView.localPitch, cameraManager.mapCameraOptions.minimumPitch, accuracy: 0.000001)
-    }
-
-    func testSetCameraByComponentEnforcesMaxPitch() {
-        cameraManager.mapCameraOptions.maximumPitch = CGFloat.random(in: cameraManager.mapCameraOptions.minimumPitch...60)
-
-        cameraManager.setCamera(to: CameraOptions(pitch: 61))
-
-        XCTAssertEqual(mapView.cameraView.localPitch, cameraManager.mapCameraOptions.maximumPitch, accuracy: 0.000001)
-    }
+    
 
     func testOptimizeBearingClockwise() {
         let startBearing = 0.0
@@ -224,18 +199,5 @@ class CameraManagerTests: XCTestCase {
         // -160 should be returned because it is the shortest path from starting at 180
         optimizedBearing = cameraManager.optimizeBearing(startBearing: 180, endBearing: -520)
         XCTAssertEqual(optimizedBearing, 200)
-    }
-
-    // MARK: MakeCameraAnimator Tests
-
-    func testAddCameraAnimators() {
-        let firstAnimator = cameraManager.makeCameraAnimator(duration: 5.0, curve: .linear)
-        let secondAnimator = cameraManager.makeCameraAnimator(duration: 5.0, dampingRatio: 1.0)
-        let thirdAnimator = cameraManager.makeCameraAnimator(duration: 5.0, curve: .linear)
-        let fourthAnimator = cameraManager.makeCameraAnimator(duration: 5.0, controlPoint1: CGPoint(x: 0.0, y: 1.0), controlPoint2: CGPoint(x: 1.0, y: 0.0))
-        XCTAssertTrue(cameraManager.cameraAnimators.contains(firstAnimator))
-        XCTAssertTrue(cameraManager.cameraAnimators.contains(secondAnimator))
-        XCTAssertTrue(cameraManager.cameraAnimators.contains(thirdAnimator))
-        XCTAssertTrue(cameraManager.cameraAnimators.contains(fourthAnimator))
     }
 }

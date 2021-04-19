@@ -6,8 +6,6 @@ class StyleTransitionTests: XCTestCase {
     let jsonString = "{\"delay\":500,\"duration\":1000}"
 
     func testDecodeHasCorrectConversion() {
-
-
         let jsonData = jsonString.data(using: .utf8)!
         let decodedTransition = try! JSONDecoder().decode(StyleTransition.self, from: jsonData)
         let comparingTransition = StyleTransition(duration: 1.0, delay: 0.5)

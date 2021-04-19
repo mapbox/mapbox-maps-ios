@@ -52,7 +52,7 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
                                         zoom: 15.0)
 
         // Allows the delegate to receive information about map events.
-        mapView.on(.mapLoadingFinished) { [weak self] _ in
+        mapView.on(.mapLoaded) { [weak self] _ in
             guard let self = self else { return }
 
             self.updateAnnotationSymbolImages()
@@ -179,7 +179,7 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
             DebugFeature(coordinate: CLLocationCoordinate2DMake(40.707918, -74.006008), highlighted: false, sortOrder: 0, tailPosition: .right, label: "Cliff & John - Righthand Stem", imageName: "AnnotationRightHanded"),
             DebugFeature(coordinate: CLLocationCoordinate2DMake(40.716281, -74.004526), highlighted: true, sortOrder: 1, tailPosition: .right, label: "Broadway & Worth - Right Highlighted", imageName: "AnnotationRightHanded-Highlighted"),
             DebugFeature(coordinate: CLLocationCoordinate2DMake(40.710194, -74.004248), highlighted: true, sortOrder: 1, tailPosition: .left, label: "Spruce & Gold - Left Highlighted", imageName: "AnnotationLeftHanded-Highlighted"),
-            DebugFeature(coordinate: CLLocationCoordinate2DMake(40.7128, -74.0060), highlighted: true, sortOrder: 2, tailPosition: .center, label: "City Hall - Centered Highlighted", imageName: "AnnotationCentered-Highlighted"),
+            DebugFeature(coordinate: CLLocationCoordinate2DMake(40.7128, -74.0060), highlighted: true, sortOrder: 2, tailPosition: .center, label: "الرياض", imageName: "AnnotationCentered-Highlighted"),
             DebugFeature(coordinate: CLLocationCoordinate2DMake(40.711427, -74.008614), highlighted: false, sortOrder: 3, tailPosition: .center, label: "Broadway & Vesey - Centered Stem", imageName: "AnnotationCentered")
         ]
 

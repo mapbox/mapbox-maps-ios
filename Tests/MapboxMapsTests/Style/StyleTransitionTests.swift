@@ -1,12 +1,7 @@
 import XCTest
 
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsStyle
-#endif
 
-//swiftlint:disable explicit_top_level_acl explicit_acl
 class StyleTransitionTests: XCTestCase {
 
     func testDecodeHasCorrectConversion() {
@@ -17,15 +12,14 @@ class StyleTransitionTests: XCTestCase {
         }
         """
 
-        if let jsonData = jsonString.data(using: .utf8) {
-            let decodedTransition = try! JSONDecoder().decode(StyleTransition.self, from: jsonData)
-            let comparingTransition = StyleTransition(duration: 1.0, delay: 0.5)
+        let jsonData = jsonString.data(using: .utf8)!
+        let decodedTransition = try! JSONDecoder().decode(StyleTransition.self, from: jsonData)
+        let comparingTransition = StyleTransition(duration: 1.0, delay: 0.5)
 
-            XCTAssertEqual(comparingTransition.duration, decodedTransition.duration, "Duration should be equal to 1.0")
-            XCTAssertNotEqual(decodedTransition.duration, 1000, "Duration should be equal to 1.0")
-            XCTAssertEqual(comparingTransition.delay, decodedTransition.delay, "Delay should be equal to 0.5")
-            XCTAssertNotEqual(decodedTransition.delay, 500, "Duration should be equal to 1.0")
-        }
+        XCTAssertEqual(comparingTransition.duration, 1.0, "Duration should be equal to 1.0")
+        XCTAssertEqual(decodedTransition.duration, 1.0, "Duration should be equal to 1.0")
+        XCTAssertEqual(comparingTransition.delay, 0.5, "Delay should be equal to 0.5")
+        XCTAssertEqual(decodedTransition.delay, 0.5, "Delay should be equal to 0.5")
     }
 
     func testEncodeHasCorrectConversion() {

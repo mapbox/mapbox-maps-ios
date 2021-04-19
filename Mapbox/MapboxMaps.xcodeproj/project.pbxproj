@@ -193,6 +193,7 @@
 		B5B55D5F260E4D7B00EBB589 /* CameraAnimatorDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B55D56260E4D7500EBB589 /* CameraAnimatorDelegateMock.swift */; };
 		B5B55D60260E4D7B00EBB589 /* CameraAnimatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B55D55260E4D7500EBB589 /* CameraAnimatorTests.swift */; };
 		B5DDE9602613ACB400998840 /* StyleEncodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DDE95F2613ACB400998840 /* StyleEncodable.swift */; };
+		C6334944262E28C300D17701 /* StyleTransitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6334943262E28C300D17701 /* StyleTransitionTests.swift */; };
 		C64994A9258D5ADE0052C21C /* LocationPuckManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64994A5258D5ADD0052C21C /* LocationPuckManager.swift */; };
 		C64994AB258D5ADE0052C21C /* Puck.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64994A6258D5ADE0052C21C /* Puck.swift */; };
 		C64994AD258D5ADE0052C21C /* IndicatorAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C64994A7258D5ADE0052C21C /* IndicatorAssets.xcassets */; };
@@ -618,6 +619,7 @@
 		B5B55D55260E4D7500EBB589 /* CameraAnimatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimatorTests.swift; sourceTree = "<group>"; };
 		B5B55D56260E4D7500EBB589 /* CameraAnimatorDelegateMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimatorDelegateMock.swift; sourceTree = "<group>"; };
 		B5DDE95F2613ACB400998840 /* StyleEncodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleEncodable.swift; sourceTree = "<group>"; };
+		C6334943262E28C300D17701 /* StyleTransitionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleTransitionTests.swift; sourceTree = "<group>"; };
 		C64994A5258D5ADD0052C21C /* LocationPuckManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationPuckManager.swift; sourceTree = "<group>"; };
 		C64994A6258D5ADE0052C21C /* Puck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Puck.swift; sourceTree = "<group>"; };
 		C64994A7258D5ADE0052C21C /* IndicatorAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = IndicatorAssets.xcassets; sourceTree = "<group>"; };
@@ -1381,6 +1383,7 @@
 		A4519DD92432FF03007CF39A /* MapboxMapsStyleTests */ = {
 			isa = PBXGroup;
 			children = (
+				C6334943262E28C300D17701 /* StyleTransitionTests.swift */,
 				0C59ED2025CC6D5400C72E7A /* ExpressionTests */,
 				0C5CFD1825BB961B0001E753 /* Fixtures */,
 				0C5CFCC425BB951A0001E753 /* Generated */,
@@ -2122,6 +2125,7 @@
 				CAA73A9D256F750B00E14EE0 /* FlyToTests.swift in Sources */,
 				B53B8763260D73D600C86BAA /* Puck3DIntegrationTests.swift in Sources */,
 				CAD7BA0625A368DE00E64C78 /* ExampleIntegrationTest.swift in Sources */,
+				C6334944262E28C300D17701 /* StyleTransitionTests.swift in Sources */,
 				CA99A8702540CD1900D16C78 /* StyleLoadIntegrationTests.swift in Sources */,
 				CA548FF5251C404B00F829A3 /* Fixture.swift in Sources */,
 				0C5CFCD325BB951B0001E753 /* RasterLayerTests.swift in Sources */,

@@ -20,10 +20,6 @@ public class CameraManager {
 
     /// Internal camera animator used for animated transition
     internal var internalAnimator: CameraAnimatorProtocol?
-    
-    internal var internalCameraAnimator: CameraAnimator? {
-        return internalAnimator as? CameraAnimator
-    }
 
     /// May want to convert to an enum.
     fileprivate let northBearing: CGFloat = 0
@@ -187,19 +183,23 @@ public class CameraManager {
         internalAnimator?.stopAnimation()
 
         // Make a new camera animator for the new properties
-        internalAnimator = makeCameraAnimator(duration: duration,
-                                      curve: .easeOut,
-                                      animationOwner: .custom(id: "com.mapbox.maps.cameraManager"),
-                                      animations: animation)
+        
+        let cameraAnimator = makeCameraAnimator(duration: duration,
+                                                curve: .easeOut,
+                                                animationOwner: .custom(id: "com.mapbox.maps.cameraManager"),
+                                                animations: animation)
 
         // Add completion
-        internalCameraAnimator?.addCompletion({ [weak self] (position) in
+        cameraAnimator.addCompletion({ [weak self] (position) in
             completion?(position)
             self?.internalAnimator = nil
         })
 
         // Start animation
-        internalCameraAnimator?.startAnimation()
+        cameraAnimator.startAnimation()
+        
+        // Store the animator in order to keep it alive
+        internalAnimator = cameraAnimator
     }
     
     /// Moves the viewpoint to a different location using a transition animation that
@@ -216,6 +216,7 @@ public class CameraManager {
     ///   - duration: Duration of the animation, measured in seconds. If nil, a suitable calculated duration is used.
     ///   - completion: Completion handler called when the animation stops
     /// - Returns: The optional `CameraAnimator` that will execute the FlyTo animation
+    @discardableResult
     public func fly(to camera: CameraOptions,
                     duration: TimeInterval? = nil,
                     completion: AnimationCompletion? = nil) -> CameraAnimatorProtocol? {
@@ -224,8 +225,8 @@ public class CameraManager {
             return nil
         }
 
-        // Stop the `internalCameraAnimator` before beginning a `flyTo`
-        internalCameraAnimator?.stopAnimation()
+        // Stop the `internalAnimator` before beginning a `flyTo`
+        internalAnimator?.stopAnimation()
 
         let flyToAnimator = FlyToAnimator(delegate: self)
         mapView.cameraAnimatorsHashTable.add(flyToAnimator)
@@ -235,6 +236,7 @@ public class CameraManager {
                                              duration: duration,
                                              screenFullSize: mapView.bounds.size)
         
+        flyToAnimator.addCompletion(completion)
         flyToAnimator.startAnimation()
         internalAnimator = flyToAnimator
         

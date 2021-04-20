@@ -19,7 +19,7 @@ public struct CameraTransition {
     /// Represents a change to the bearing of the map.
     public var bearing: Change<Double>
     
-    /// Ensures that bearing transitions are optimized to take the shortest path
+    /// Ensures that bearing transitions are optimized to take the shortest path.
     public var shouldOptimizeBearingPath: Bool = true
 
     /// Represents a change to the pitch of the map.

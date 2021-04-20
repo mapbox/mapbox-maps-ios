@@ -18,6 +18,8 @@ internal class FlyToAnimator: NSObject, CameraAnimatorProtocol {
     
     internal var finalCameraOptions: CameraOptions?
     
+    internal var animationCompletion: AnimationCompletion?
+    
     internal init(delegate: CameraAnimatorDelegate,
                   owner: AnimationOwner = .custom(id: "fly-to")) {
         
@@ -54,9 +56,9 @@ internal class FlyToAnimator: NSObject, CameraAnimatorProtocol {
     }
     
     func stopAnimation() {
-        print("Stop animation called!")
         state = .stopped
         flyToInterpolator = nil
+        scheduleCompletionIfNecessary(position: .current) // `current` represents an interrupted animation.
     }
     
     func startAnimation() {
@@ -70,8 +72,16 @@ internal class FlyToAnimator: NSObject, CameraAnimatorProtocol {
         endTime = startTime?.addingTimeInterval(animationDuration)
     }
     
-    func addCompletion() {
-        
+    func addCompletion(_ completion: AnimationCompletion?) {
+        animationCompletion = completion
+    }
+    
+    func scheduleCompletionIfNecessary(position: UIViewAnimatingPosition) {
+        if let delegate = delegate, let animationCompletion = animationCompletion {
+            delegate.schedulePendingCompletion(forAnimator: self,
+                                                completion: animationCompletion,
+                                                animatingPosition: position)
+        }
     }
     
     func update() {
@@ -90,7 +100,7 @@ internal class FlyToAnimator: NSObject, CameraAnimatorProtocol {
         guard currentTime <= endTime else {
             flyToInterpolator = nil
             state = .stopped
-            
+            self.scheduleCompletionIfNecessary(position: .end)
             return
         }
         

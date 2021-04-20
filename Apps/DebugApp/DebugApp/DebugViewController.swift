@@ -77,12 +77,11 @@ public class DebugViewController: UIViewController {
             print("The map has finished loading... Event = \(event)")
             let sanFrancisco = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
             
-            self.runningAnimator = self.mapView.cameraManager.fly(to: CameraOptions(center: sanFrancisco, zoom: 18))
-            
-//            DispatchQueue.main.asyncAfter(deadline: .now()+2) { [weak self] in
-//                self?.runningAnimator?.stopAnimation()
-//            }
-
+            self.runningAnimator = self.mapView.cameraManager.fly(to: CameraOptions(center: sanFrancisco, zoom: 18), completion: { [weak self] (position) in
+                
+                let newYork = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
+                self?.mapView.cameraManager.fly(to: CameraOptions(center: newYork))
+            })
         }
 
         /**

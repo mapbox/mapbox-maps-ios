@@ -24,6 +24,18 @@ Mapbox welcomes participation and contributions from everyone.
   * The `BaseMapView.__map` property has been moved to `BaseMapView.mapboxMap.__map`. ([#280](https://github.com/mapbox/mapbox-maps-ios/pull/280))
   * A `CameraOptions` struct has been introduced. This shadows the class of the same name from MapboxCoreMaps and. This avoids unintended sharing and better reflects the intended value semantics of the `CameraOptions` concept. ([#284](https://github.com/mapbox/mapbox-maps-ios/pull/284))
 
+  * ResourceOptions contains a tile store instance (TileStore API). Tile store usage is enabled by default, the resource option `tileStoreEnabled` flag is introduced to disable it.
+
+- Updates dependencies to MapboxCoreMaps 10.0.0-beta.20 and MapboxCommon 11.0.1
+
+### Features ✨ and improvements 🏁
+
+- Introduced the `OfflineManager` API that manages style packs and produces tileset descriptors for use with the tile store. The `OfflineManager` and `TileStore` APIs are used in conjunction to download offline regions and associated "style packs". These new APIs replace the deprecated `OfflineRegionManager`. Please see the new `OfflineManager` guide for more details.
+
+### Bug fixes 🐞
+
+- Fixed a crash in line layer rendering, where the uniform buffer size had an incorrect value.
+
 ## 10.0.0-beta.17 - April 13, 2021
 
 ### Breaking changes ⚠️

@@ -25,7 +25,7 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
                                           zoom: 15.5,
                                           bearing: -17.6,
                                           pitch: 45)
-        mapView.cameraManager.setCamera(to: cameraOptions)
+        mapView.camera.setCamera(to: cameraOptions)
 
         // The below lines are used for internal testing purposes only.
         DispatchQueue.main.asyncAfter(deadline: .now()+5.0) {

@@ -30,7 +30,7 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
         let centerCoordinate = CLLocationCoordinate2D(latitude: 63.982738,
                                                       longitude: -16.741790)
 
-        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate,
+        mapView.camera.setCamera(to: CameraOptions(center: centerCoordinate,
                                                           zoom: 12.0))
 
         // Allow the view controller to receive information about map events.
@@ -63,10 +63,10 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
         let pointAnnotation = PointAnnotation(coordinate: coordinate)
 
         // Allow the view controller to accept annotation selection events.
-        mapView.annotationManager.interactionDelegate = self
+        mapView.annotations.interactionDelegate = self
 
         // Add the annotation to the map.
-        mapView.annotationManager.addAnnotation(pointAnnotation)
+        mapView.annotations.addAnnotation(pointAnnotation)
 
         // The below line is used for internal testing purposes only.
         finish()

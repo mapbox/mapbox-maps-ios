@@ -14,7 +14,7 @@ public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProt
 
         mapView = MapView(frame: view.bounds)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        mapView.cameraManager.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 59.3, longitude: 8.06),
+        mapView.camera.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 59.3, longitude: 8.06),
                                                           zoom: 12))
         view.addSubview(mapView)
 
@@ -30,7 +30,7 @@ public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProt
 
     public func addPointAnnotation() {
         pointAnnotation = PointAnnotation(coordinate: mapView.centerCoordinate)
-        mapView.annotationManager.addAnnotation(pointAnnotation)
+        mapView.annotations.addAnnotation(pointAnnotation)
         mapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(updatePosition)))
     }
 
@@ -39,7 +39,7 @@ public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProt
         pointAnnotation.coordinate = newCoordinate
 
         do {
-            try mapView.annotationManager.updateAnnotation(pointAnnotation)
+            try mapView.annotations.updateAnnotation(pointAnnotation)
         } catch let error {
             displayAlert(message: error.localizedDescription)
         }

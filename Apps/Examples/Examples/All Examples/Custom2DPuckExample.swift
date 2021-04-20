@@ -34,7 +34,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         }
 
         let coordinate = CLLocationCoordinate2D(latitude: 39.085006, longitude: -77.150925)
-        mapView.cameraManager.setCamera(to: CameraOptions(center: coordinate,
+        mapView.camera.setCamera(to: CameraOptions(center: coordinate,
                                                           zoom: 14,
                                                           pitch: 0))
     }

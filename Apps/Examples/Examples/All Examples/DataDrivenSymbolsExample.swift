@@ -17,7 +17,7 @@ public class DataDrivenSymbolsExample: UIViewController, ExampleProtocol {
         // Set center location
         let centerCoordinate = CLLocationCoordinate2D(latitude: 37.761, longitude: -119.624)
 
-        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate,
+        mapView.camera.setCamera(to: CameraOptions(center: centerCoordinate,
                                                           zoom: 10.0))
 
         // Allows the delegate to receive information about map events.

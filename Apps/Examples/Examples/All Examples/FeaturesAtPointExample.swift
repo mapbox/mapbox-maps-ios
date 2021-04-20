@@ -18,7 +18,7 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
         let centerCoordinate = CLLocationCoordinate2D(latitude: 39.368279,
                                                       longitude: -97.646484)
 
-        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate,
+        mapView.camera.setCamera(to: CameraOptions(center: centerCoordinate,
                                                           zoom: 2.4))
 
         // Allows the view controller to receive information about map events.

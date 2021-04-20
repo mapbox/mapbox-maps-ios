@@ -29,7 +29,7 @@ public class CameraAnimationExample: UIViewController, ExampleProtocol {
                                           bearing: 180.0,
                                           pitch: 15.0)
 
-            self.mapView.cameraManager.setCamera(to: newCamera,
+            self.mapView.camera.setCamera(to: newCamera,
                                                  animated: true,
                                                  duration: 5.0) { _ in
                 // The below line is used for internal testing purposes only.

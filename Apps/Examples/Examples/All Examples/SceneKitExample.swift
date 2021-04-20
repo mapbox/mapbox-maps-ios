@@ -27,7 +27,7 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
                                    zoom: 18,
                                    bearing: 180,
                                    pitch: 60)
-        mapView.cameraManager.setCamera(to: camera)
+        mapView.camera.setCamera(to: camera)
 
         self.mapView.on(.styleLoaded) { [weak self] _ in
             self?.addModelAndTerrain()

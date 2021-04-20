@@ -21,7 +21,7 @@ internal class OptionsIntegrationTest: MapViewIntegrationTestCase {
         }
 
         XCTAssertEqual(mapView.gestures.gestureOptions, newConfig.gestures)
-        XCTAssertEqual(mapView.cameraManager.mapCameraOptions, newConfig.camera)
+        XCTAssertEqual(mapView.camera.mapCameraOptions, newConfig.camera)
         XCTAssertEqual(mapView.location.locationOptions, newConfig.location)
         XCTAssertTrue(
             mapView.ornaments.ornamentConfig.ornaments.contains {

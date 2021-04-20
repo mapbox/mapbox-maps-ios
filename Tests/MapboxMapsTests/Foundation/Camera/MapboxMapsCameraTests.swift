@@ -68,7 +68,7 @@ class CameraManagerTests: XCTestCase {
                                            bearing: 8,
                                            pitch: 9)
 
-        let originalCamera = mapView.camera
+        let originalCamera = mapView.cameraOptions
 
         cameraManager.setCamera(to: expectedCamera, completion: nil)
 

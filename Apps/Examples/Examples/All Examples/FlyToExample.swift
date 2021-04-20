@@ -16,7 +16,7 @@ public class FlyToExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Center the map over San Francisco.
-        mapView.cameraManager.setCamera(to: CameraOptions(center: .sanfrancisco,
+        mapView.camera.setCamera(to: CameraOptions(center: .sanfrancisco,
                                                           zoom: 15))
 
         // Allows the view controller to receive information about map events.
@@ -35,7 +35,7 @@ public class FlyToExample: UIViewController, ExampleProtocol {
                                 bearing: 180,
                                 pitch: 50)
 
-        flyToAnimator = self.mapView.cameraManager.fly(to: end) { [weak self] _ in
+        flyToAnimator = self.mapView.camera.fly(to: end) { [weak self] _ in
             print("Camera fly-to finished")
             // The below line is used for internal testing purposes only.
             self?.flyToAnimator = nil

@@ -23,7 +23,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         }
 
         // Set initial camera settings
-        mapView.cameraManager.setCamera(to: CameraOptions(zoom: 15.0))
+        mapView.camera.setCamera(to: CameraOptions(zoom: 15.0))
 
         // Allows the delegate to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in
@@ -47,7 +47,7 @@ public class CameraLocationConsumer: LocationConsumer {
     }
 
     public func locationUpdate(newLocation: Location) {
-        mapView?.cameraManager.setCamera(to: CameraOptions(center: newLocation.coordinate, zoom: 15),
+        mapView?.camera.setCamera(to: CameraOptions(center: newLocation.coordinate, zoom: 15),
                                          animated: true,
                                          duration: 1.3)
     }

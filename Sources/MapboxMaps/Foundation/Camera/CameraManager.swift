@@ -154,12 +154,12 @@ public class CameraManager {
                                           pitch: targetCamera.pitch?.clamped(to: mapCameraOptions.minimumPitch...mapCameraOptions.maximumPitch))
 
         // Return early if the cameraView's camera is already at `clampedCamera`
-        guard mapView.camera != clampedCamera else {
+        guard mapView.cameraOptions != clampedCamera else {
             return
         }
 
         let transitionBlock = {
-            mapView.camera = clampedCamera
+            mapView.cameraOptions = clampedCamera
         }
 
         if animated && duration > 0 {
@@ -226,7 +226,7 @@ public class CameraManager {
         // Stop the `internalCameraAnimator` before beginning a `flyTo`
         internalCameraAnimator?.stopAnimation()
 
-        guard let interpolator = FlyToInterpolator(from: mapView.camera,
+        guard let interpolator = FlyToInterpolator(from: mapView.cameraOptions,
                                                    to: camera,
                                                    size: mapView.bounds.size) else {
             return nil

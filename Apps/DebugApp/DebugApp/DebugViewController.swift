@@ -79,9 +79,9 @@ public class DebugViewController: UIViewController {
             
             self.runningAnimator = self.mapView.cameraManager.fly(to: CameraOptions(center: sanFrancisco, zoom: 18))
             
-            DispatchQueue.main.asyncAfter(deadline: .now()+2) { [weak self] in
-                self?.runningAnimator?.stopAnimation()
-            }
+//            DispatchQueue.main.asyncAfter(deadline: .now()+2) { [weak self] in
+//                self?.runningAnimator?.stopAnimation()
+//            }
 
         }
 

@@ -87,12 +87,12 @@ extension MapView {
 
     internal func setupUserLocationManager(with locationSupportableMapView: LocationSupportableMapView, options: LocationOptions) {
 
-        locationManager = LocationManager(locationOptions: options,
+        location = LocationManager(locationOptions: options,
                                           locationSupportableMapView: locationSupportableMapView)
     }
 
     internal func updateUserLocationManager(with options: LocationOptions) {
-        locationManager.updateLocationOptions(with: mapConfig.location)
+        location.updateLocationOptions(with: mapConfig.location)
     }
 
     internal func setupAnnotationManager(with annotationSupportableMap: AnnotationSupportableMap, and style: Style, options: AnnotationOptions) {

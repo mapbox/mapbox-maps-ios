@@ -8,19 +8,19 @@ open class MapView: BaseMapView {
     /// To synchronously update the `mapOptions` please call `updateMapOptions(with newOptions: MapOptions)`
     internal var mapConfig: MapConfig = MapConfig()
 
-    /// The `gestures` property will be responsible for all gestures on the map
+    /// The `gestures` property will be responsible for all gestures on the map.
     public internal(set) var gestures: GestureManager!
 
-    /// The `ornaments` property will be responsible for all ornaments on the map
+    /// The `ornaments` property will be responsible for all ornaments on the map.
     internal var ornaments: OrnamentsManager!
 
-    /// The `cameraManager` that manages a camera's view lifecycle.
+    /// The `cameraManager` that manages a camera's view lifecycle..
     public internal(set) var cameraManager: CameraManager!
 
-    /// The `locationManager` that handles location events of the map
-    public internal(set) var locationManager: LocationManager!
+    /// The `location` property handles location events of the map.
+    public internal(set) var location: LocationManager!
 
-    /// The `style` object supports run time styling
+    /// The `style` object supports run time styling.
     public internal(set) var style: Style!
 
     /// Controls the addition/removal of annotations to the map.

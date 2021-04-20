@@ -240,7 +240,7 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
         shapeLayer.layout?.textAllowOverlap = .constant(true)
         shapeLayer.layout?.textJustify = .constant(.left)
         shapeLayer.layout?.symbolZOrder = .constant(.auto)
-        shapeLayer.layout?.textFont = .constant(["DIN Pro Medium"])
+        shapeLayer.layout?.textFont = .constant(["DIN Pro Medium", "Noto Sans CJK JP Medium", "Open Sans Regular"])
 
         style.addLayer(layer: shapeLayer, layerPosition: nil)
 

@@ -167,7 +167,7 @@ public class CameraManager {
 
     public func cancelAnimations() {
         guard let validMapView = mapView else { return }
-        for animator in validMapView.cameraAnimators.allObjects where animator.state == .active {
+        for animator in validMapView.cameraAnimatorsHashTable.allObjects where animator.state == .active {
             animator.stopAnimation()
         }
     }

@@ -24,10 +24,10 @@ open class BaseMapView: UIView {
     internal var pendingAnimatorCompletionBlocks: [PendingAnimationCompletion] = []
 
     /// Pointer HashTable for holding camera animators
-    internal var cameraAnimators = NSHashTable<CameraAnimator>.weakObjects()
+    internal var cameraAnimatorsHashTable = NSHashTable<CameraAnimator>.weakObjects()
 
     /// List of animators currently alive
-    public var cameraAnimatorsList: [CameraAnimator] {
+    public var cameraAnimators: [CameraAnimator] {
         return cameraAnimators.allObjects
     }
 
@@ -215,7 +215,7 @@ open class BaseMapView: UIView {
             needsDisplayRefresh = false
 
             // To figure out: How do you handle multiple animators animating multiple properties at the same time??
-            for animator in cameraAnimatorsList {
+            for animator in cameraAnimators {
                 animator.update() // Should this return a `CameraOption` ?? 
             }
 

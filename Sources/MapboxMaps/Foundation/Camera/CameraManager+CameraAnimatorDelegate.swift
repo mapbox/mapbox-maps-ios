@@ -22,7 +22,7 @@ extension CameraManager: CameraAnimatorDelegate {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, timingParameters: parameters)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimator.addAnimations(animations)
-        mapView?.cameraAnimators.add(cameraAnimator)
+        mapView?.cameraAnimatorsHashTable.add(cameraAnimator)
         return cameraAnimator
     }
 
@@ -72,7 +72,7 @@ extension CameraManager: CameraAnimatorDelegate {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, controlPoint1: point1, controlPoint2: point2)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimator.addAnimations(animations)
-        mapView?.cameraAnimators.add(cameraAnimator)
+        mapView?.cameraAnimatorsHashTable.add(cameraAnimator)
         return cameraAnimator
     }
 
@@ -97,7 +97,7 @@ extension CameraManager: CameraAnimatorDelegate {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: ratio)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimator.addAnimations(animations)
-        mapView?.cameraAnimators.add(cameraAnimator)
+        mapView?.cameraAnimatorsHashTable.add(cameraAnimator)
         return cameraAnimator
     }
 

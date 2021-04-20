@@ -168,6 +168,7 @@
 		B52050A8260538240003E5BB /* ModelLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52050A7260538240003E5BB /* ModelLayer.swift */; };
 		B521FC93262F626900B9A446 /* MapboxMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = B521FC92262F626900B9A446 /* MapboxMap.swift */; };
 		B521FC98262F627300B9A446 /* Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = B521FC97262F627300B9A446 /* Size.swift */; };
+		B521FC9D262F665C00B9A446 /* SizeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B521FC9C262F665C00B9A446 /* SizeTests.swift */; };
 		B529341C2624E9D6003B181C /* PreferredFPS.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52934192624E9D6003B181C /* PreferredFPS.swift */; };
 		B529341D2624E9D6003B181C /* DelegatingMapClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B529341A2624E9D6003B181C /* DelegatingMapClient.swift */; };
 		B529341E2624E9D6003B181C /* DelegatingObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B529341B2624E9D6003B181C /* DelegatingObserver.swift */; };
@@ -598,6 +599,7 @@
 		B52050A7260538240003E5BB /* ModelLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelLayer.swift; sourceTree = "<group>"; };
 		B521FC92262F626900B9A446 /* MapboxMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapboxMap.swift; sourceTree = "<group>"; };
 		B521FC97262F627300B9A446 /* Size.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Size.swift; sourceTree = "<group>"; };
+		B521FC9C262F665C00B9A446 /* SizeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeTests.swift; sourceTree = "<group>"; };
 		B52934192624E9D6003B181C /* PreferredFPS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferredFPS.swift; sourceTree = "<group>"; };
 		B529341A2624E9D6003B181C /* DelegatingMapClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DelegatingMapClient.swift; sourceTree = "<group>"; };
 		B529341B2624E9D6003B181C /* DelegatingObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DelegatingObserver.swift; sourceTree = "<group>"; };
@@ -1478,6 +1480,7 @@
 			children = (
 				CA03F0962624FDED00673961 /* ResourceOptionsTests.swift */,
 				CA0C42942602BF000054D9D0 /* LayerPositionTests.swift */,
+				B521FC9C262F665C00B9A446 /* SizeTests.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -2147,6 +2150,7 @@
 				CA548FFB251C404B00F829A3 /* StyleURITests.swift in Sources */,
 				CA2E4A1B2538D3530096DEDE /* MapViewIntegrationTestCase.swift in Sources */,
 				0C32CA2A25F982300057ED31 /* ImageSourceTests.swift in Sources */,
+				B521FC9D262F665C00B9A446 /* SizeTests.swift in Sources */,
 				0C5CFCD625BB951B0001E753 /* FillExtrusionLayerTests.swift in Sources */,
 				B54B7F2125DB1ABA003FD6CA /* Stub.swift in Sources */,
 				0C01C0B925486E7200E4AA46 /* ExpressionTests.swift in Sources */,

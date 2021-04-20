@@ -11,8 +11,8 @@ open class MapView: BaseMapView {
     /// The `gestures` property will be responsible for all gestures on the map
     public internal(set) var gestures: GestureManager!
 
-    /// The `ornamentsManager` will be responsible for all ornaments on the map
-    internal var ornamentsManager: OrnamentsManager!
+    /// The `ornaments` property will be responsible for all ornaments on the map
+    internal var ornaments: OrnamentsManager!
 
     /// The `cameraManager` that manages a camera's view lifecycle.
     public internal(set) var cameraManager: CameraManager!

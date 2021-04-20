@@ -19,7 +19,11 @@ public class CameraManager {
     }
 
     /// Internal camera animator used for animated transition
-    internal var internalCameraAnimator: CameraAnimator?
+    internal var internalAnimator: CameraAnimatorProtocol?
+    
+    internal var internalCameraAnimator: CameraAnimator? {
+        return internalAnimator as? CameraAnimator
+    }
 
     /// May want to convert to an enum.
     fileprivate let northBearing: CGFloat = 0
@@ -167,7 +171,7 @@ public class CameraManager {
 
     public func cancelAnimations() {
         guard let validMapView = mapView else { return }
-        for animator in validMapView.cameraAnimatorsHashTable.allObjects where animator.state == .active {
+        for animator in validMapView.cameraAnimatorsHashTable.allObjects where animator.state == UIViewAnimatingState.active {
             animator.stopAnimation()
         }
     }
@@ -180,10 +184,10 @@ public class CameraManager {
     fileprivate func performCameraAnimation(duration: TimeInterval, animation: @escaping CameraAnimation, completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
 
         // Stop previously running animations
-        internalCameraAnimator?.stopAnimation()
+        internalAnimator?.stopAnimation()
 
         // Make a new camera animator for the new properties
-        internalCameraAnimator = makeCameraAnimator(duration: duration,
+        internalAnimator = makeCameraAnimator(duration: duration,
                                       curve: .easeOut,
                                       animationOwner: .custom(id: "com.mapbox.maps.cameraManager"),
                                       animations: animation)
@@ -191,13 +195,13 @@ public class CameraManager {
         // Add completion
         internalCameraAnimator?.addCompletion({ [weak self] (position) in
             completion?(position)
-            self?.internalCameraAnimator = nil
+            self?.internalAnimator = nil
         })
 
         // Start animation
         internalCameraAnimator?.startAnimation()
     }
-
+    
     /// Moves the viewpoint to a different location using a transition animation that
     /// evokes powered flight and an optional transition duration and timing function
     /// It seamlessly incorporates zooming and panning to help
@@ -214,7 +218,7 @@ public class CameraManager {
     /// - Returns: The optional `CameraAnimator` that will execute the FlyTo animation
     public func fly(to camera: CameraOptions,
                     duration: TimeInterval? = nil,
-                    completion: AnimationCompletion? = nil) -> CameraAnimator? {
+                    completion: AnimationCompletion? = nil) -> CameraAnimatorProtocol? {
 
         guard let mapView = mapView else {
             return nil
@@ -223,48 +227,18 @@ public class CameraManager {
         // Stop the `internalCameraAnimator` before beginning a `flyTo`
         internalCameraAnimator?.stopAnimation()
 
-        guard let interpolator = FlyToInterpolator(from: mapView.camera,
-                                                   to: camera,
-                                                   size: mapView.bounds.size) else {
-            return nil
-        }
-
-        // If there was no duration specified, use a default
-        let time: TimeInterval = duration ?? interpolator.duration()
-
-        // TODO: Consider timesteps based on the flyTo curve, for example, it would be beneficial to have a higher
-        // density of time steps at towards the start and end of the animation to avoid jiggling.
-        let timeSteps = stride(from: 0.0, through: 1.0, by: 0.025)
-        let keyTimes: [Double] = Array(timeSteps)
-
-        let animator = makeCameraAnimator(duration: time, curve: .linear) { (_) in
-
-// To consider: How to handle glfly 
-//            UIView.animateKeyframes(withDuration: 0, delay: 0, options: []) {
-//
-//                for keyTime in keyTimes {
-//                    let interpolatedCoordinate = interpolator.coordinate(at: keyTime)
-//                    let interpolatedZoom = interpolator.zoom(at: keyTime)
-//                    let interpolatedBearing = interpolator.bearing(at: keyTime)
-//                    let interpolatedPitch = interpolator.pitch(at: keyTime)
-//
-//                    UIView.addKeyframe(withRelativeStartTime: keyTime, relativeDuration: 0.025) {
-//                        camerOptions.center = interpolatedCoordinate
-//                        camerOptions.zoom = CGFloat(interpolatedZoom)
-//                        camerOptions.bearing = interpolatedBearing
-//                        camerOptions.pitch = CGFloat(interpolatedPitch)
-//                    }
-//                }
-//            }
-        }
-
-        if let completion = completion {
-            animator.addCompletion(completion)
-        }
-
-        animator.startAnimation()
-
-        return animator
+        let flyToAnimator = FlyToAnimator(delegate: self)
+        mapView.cameraAnimatorsHashTable.add(flyToAnimator)
+        
+        flyToAnimator.makeFlyToInterpolator(from: mapView.camera,
+                                             to: camera,
+                                             duration: duration,
+                                             screenFullSize: mapView.bounds.size)
+        
+        flyToAnimator.startAnimation()
+        internalAnimator = flyToAnimator
+        
+        return internalAnimator
     }
 
     /// This function optimizes the bearing for set camera so that it is taking the shortest path.

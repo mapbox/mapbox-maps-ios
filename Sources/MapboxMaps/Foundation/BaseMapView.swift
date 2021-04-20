@@ -24,11 +24,19 @@ open class BaseMapView: UIView {
     internal var pendingAnimatorCompletionBlocks: [PendingAnimationCompletion] = []
 
     /// Pointer HashTable for holding camera animators
-    internal var cameraAnimatorsHashTable = NSHashTable<CameraAnimator>.weakObjects()
+    internal var cameraAnimatorsHashTable = NSHashTable<CameraAnimatorProtocol>.weakObjects()
 
     /// List of animators currently alive
     public var cameraAnimators: [CameraAnimator] {
-        return cameraAnimatorsHashTable.allObjects
+        
+        var animators: [CameraAnimator] = []
+        cameraAnimatorsHashTable.allObjects.forEach { (animator) in
+            if let animator = animator as? CameraAnimator {
+                animators.append(animator)
+            }
+        }
+        
+        return animators
     }
 
     /// Map of event types to subscribed event handlers
@@ -214,7 +222,7 @@ open class BaseMapView: UIView {
         if needsDisplayRefresh {
             needsDisplayRefresh = false
 
-            for animator in cameraAnimators {
+            for animator in cameraAnimatorsHashTable.allObjects {
                 animator.update() 
             }
 

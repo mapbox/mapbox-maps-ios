@@ -11,7 +11,7 @@ import Turf
 public class DebugViewController: UIViewController {
 
     internal var mapView: MapView!
-    internal var runningAnimator: CameraAnimator?
+    internal var runningAnimator: CameraAnimatorProtocol?
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -57,6 +57,10 @@ public class DebugViewController: UIViewController {
          */
         mapView.on(.styleLoaded) { (event) in
             print("The map has finished loading style ... Event = \(event)")
+            let newYork = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
+            self.mapView.cameraManager.setCamera(to: CameraOptions(center: newYork,
+                                                                   zoom: 12))
+
         }
 
         /**
@@ -71,26 +75,14 @@ public class DebugViewController: UIViewController {
         mapView.on(.mapLoaded) { [weak self] (event) in
             guard let self = self else { return }
             print("The map has finished loading... Event = \(event)")
-            let newYork = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
-            self.mapView.cameraManager.setCamera(to: CameraOptions(center: newYork,
-                                                                   zoom: 12))
-
-            let brooklyn = CLLocationCoordinate2D(latitude: 40.680902, longitude: -73.968663)
-
-            var animator: CameraAnimator?
-            animator = self.mapView.cameraManager.makeCameraAnimator(duration: 10.0, curve: .easeInOut) { (transition) in
-
-                transition.zoom.toValue = 18
-                transition.pitch.toValue = 55
+            let sanFrancisco = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
+            
+            self.runningAnimator = self.mapView.cameraManager.fly(to: CameraOptions(center: sanFrancisco, zoom: 18))
+            
+            DispatchQueue.main.asyncAfter(deadline: .now()+2) { [weak self] in
+                self?.runningAnimator?.stopAnimation()
             }
 
-            animator?.addCompletion { (_) in
-                animator = nil
-            }
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                animator?.startAnimation()
-            }
         }
 
         /**

@@ -1,16 +1,26 @@
 import UIKit
 import CoreLocation
 
+@objc public protocol CameraAnimatorProtocol: AnyObject {
+    
+    func stopAnimation()
+    
+    var state: UIViewAnimatingState { get }
+    
+    func update()
+    
+}
+
 public typealias CameraAnimation = (inout CameraTransition) -> Void
 
 // MARK: CameraAnimator Class
-public class CameraAnimator: NSObject {
+public class CameraAnimator: NSObject, CameraAnimatorProtocol {
 
     /// Instance of the property animator that will run animations.
-    private var propertyAnimator: UIViewPropertyAnimator
+    internal var propertyAnimator: UIViewPropertyAnimator
 
     /// Delegate that conforms to `CameraAnimatorDelegate`.
-    private weak var delegate: CameraAnimatorDelegate?
+    internal weak var delegate: CameraAnimatorDelegate?
 
     /// The ID of the owner of this `CameraAnimator`.
     internal var owner: AnimationOwner
@@ -137,7 +147,7 @@ public class CameraAnimator: NSObject {
         propertyAnimator.continueAnimation(withTimingParameters: parameters, durationFactor: CGFloat(durationFactor))
     }
 
-    internal func update() {
+    public func update() {
 
         // Only call jumpTo if this animator is currently "active" and there are known changes to animate.
         guard propertyAnimator.state == .active,

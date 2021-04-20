@@ -260,7 +260,7 @@ class ViewController: UIViewController {
             print("Error setting background color: \(error)")
         }
     }
-    
+
     func popColorExpression() {
         guard let land = styles[styleStep].1 else {
             return

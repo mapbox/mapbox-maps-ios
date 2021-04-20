@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="p6J-Gi-W7S">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Offline Manager Example-->
+        <scene sceneID="Jaq-1S-aZV">
+            <objects>
+                <viewController id="p6J-Gi-W7S" customClass="OfflineManagerExample" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="qbu-bJ-H9h">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" verticalCompressionResistancePriority="999" translatesAutoresizingMaskIntoConstraints="NO" id="6sW-eb-occ">
+                                <rect key="frame" x="0.0" y="44" width="414" height="493"/>
+                                <color key="backgroundColor" systemColor="systemGray4Color"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wmP-zc-si6">
+                                <rect key="frame" x="98.5" y="557" width="217" height="48"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
+                                <state key="normal" title="Start Download"/>
+                                <connections>
+                                    <action selector="didTapButton:" destination="p6J-Gi-W7S" eventType="touchUpInside" id="HHj-HI-LNL"/>
+                                </connections>
+                            </button>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="XK3-DS-3sZ">
+                                <rect key="frame" x="10" y="288.5" width="394" height="4"/>
+                            </progressView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="999" showsHorizontalScrollIndicator="NO" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="scd-sH-5JU">
+                                <rect key="frame" x="10" y="625" width="394" height="271"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+
+Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </string>
+                                <color key="textColor" systemColor="labelColor"/>
+                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="JnB-68-BuS"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="XK3-DS-3sZ" firstAttribute="trailing" secondItem="scd-sH-5JU" secondAttribute="trailing" id="7Ah-9e-NC3"/>
+                            <constraint firstItem="6sW-eb-occ" firstAttribute="height" secondItem="qbu-bJ-H9h" secondAttribute="height" multiplier="0.55" id="A6S-Za-cx0"/>
+                            <constraint firstItem="XK3-DS-3sZ" firstAttribute="leading" secondItem="scd-sH-5JU" secondAttribute="leading" id="FfH-bv-fh2"/>
+                            <constraint firstItem="XK3-DS-3sZ" firstAttribute="centerY" secondItem="6sW-eb-occ" secondAttribute="centerY" id="MUJ-4A-swb"/>
+                            <constraint firstItem="scd-sH-5JU" firstAttribute="top" secondItem="wmP-zc-si6" secondAttribute="bottom" constant="20" id="O8f-Cy-NCx"/>
+                            <constraint firstItem="wmP-zc-si6" firstAttribute="centerX" secondItem="JnB-68-BuS" secondAttribute="centerX" id="Raq-kB-UXR"/>
+                            <constraint firstItem="JnB-68-BuS" firstAttribute="trailing" secondItem="scd-sH-5JU" secondAttribute="trailing" constant="10" id="XPT-7w-qlg"/>
+                            <constraint firstItem="wmP-zc-si6" firstAttribute="top" secondItem="6sW-eb-occ" secondAttribute="bottom" constant="20" id="cth-o0-Zd4"/>
+                            <constraint firstItem="scd-sH-5JU" firstAttribute="leading" secondItem="qbu-bJ-H9h" secondAttribute="leading" constant="10" id="czx-Bk-SoG"/>
+                            <constraint firstItem="6sW-eb-occ" firstAttribute="top" secondItem="JnB-68-BuS" secondAttribute="top" id="fvv-Mg-CtV"/>
+                            <constraint firstItem="6sW-eb-occ" firstAttribute="leading" secondItem="JnB-68-BuS" secondAttribute="leading" id="jQr-FM-lgd"/>
+                            <constraint firstItem="6sW-eb-occ" firstAttribute="trailing" secondItem="JnB-68-BuS" secondAttribute="trailing" id="oyr-9B-gEQ"/>
+                            <constraint firstItem="scd-sH-5JU" firstAttribute="bottom" secondItem="qbu-bJ-H9h" secondAttribute="bottom" id="qsk-g3-iOg"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="button" destination="wmP-zc-si6" id="Vek-S9-XuP"/>
+                        <outlet property="logView" destination="scd-sH-5JU" id="pfc-Qc-c5d"/>
+                        <outlet property="mapViewContainer" destination="6sW-eb-occ" id="eVL-IW-7nU"/>
+                        <outlet property="progressView" destination="XK3-DS-3sZ" id="sz7-Ss-Lf4"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UaR-Hg-6ea" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-630" y="7"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray4Color">
+            <color red="0.81960784313725488" green="0.81960784313725488" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

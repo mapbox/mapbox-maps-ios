@@ -152,7 +152,7 @@ extension TileStore {
 
     // TODO: docs
     public func tileRegionMetadata(forId id: String,
-                                   completion: @escaping (Result<AnyObject, TileRegionError>) -> Void) {
+                                   completion: @escaping (Result<Any, TileRegionError>) -> Void) {
         __getTileRegionMetadata(forId: id,
                                 callback: coreAPIClosureAdapter(for: completion, type: AnyObject.self))
     }

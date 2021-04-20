@@ -13,7 +13,20 @@ public struct Example {
             fatalError("Unable to get class name from example named \(type)")
         }
 
-        let exampleViewController = exampleClass.init()
+        let exampleViewController: UIViewController
+
+        // Look for a storyboard
+        let storyboardName = String(describing: exampleClass)
+        if Bundle.main.path(forResource: storyboardName, ofType: "storyboardc") != nil {
+            let storyboard = UIStoryboard(name: storyboardName, bundle: nil)
+            exampleViewController = storyboard.instantiateInitialViewController()!
+
+            // Check controller is what we expect
+            assert(Swift.type(of: exampleViewController) == exampleClass)
+        } else {
+            exampleViewController = exampleClass.init()
+        }
+
         exampleViewController.title = title
         exampleViewController.navigationItem.largeTitleDisplayMode = .never
 

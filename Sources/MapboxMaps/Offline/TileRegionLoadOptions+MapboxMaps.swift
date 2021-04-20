@@ -17,11 +17,20 @@ extension TileRegionLoadOptions {
     /// limits the average download speed. tile regions may be temporarily
     /// downloaded with higher speed, then pause downloading until the rolling
     /// average has dropped below this value.
-    public convenience init(geometry: MBXGeometry?,
-                            descriptors: [TilesetDescriptor]?,
-                            metadata: AnyObject? = nil,
-                            tileLoadOptions: TileLoadOptions,
-                            averageBytesPerSecond: Int? = nil) {
+    ///
+    /// If `metadata` is not a valid JSON object, then this initializer returns
+    /// `nil`.
+    public convenience init?(geometry: MBXGeometry?,
+                             descriptors: [TilesetDescriptor]?,
+                             metadata: Any? = nil,
+                             tileLoadOptions: TileLoadOptions,
+                             averageBytesPerSecond: Int? = nil) {
+        if let metadata = metadata {
+            guard JSONSerialization.isValidJSONObject(metadata) else {
+                return nil
+            }
+        }
+
         self.init(__geometry: geometry,
                   descriptors: descriptors,
                   metadata: metadata,

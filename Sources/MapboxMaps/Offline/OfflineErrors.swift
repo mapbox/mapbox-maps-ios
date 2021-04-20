@@ -7,7 +7,7 @@ internal protocol CoreErrorRepresentable {
 }
 
 /// Describes the reason for a tile region download request failure.
-public enum TileRegionError: Error, CoreErrorRepresentable {
+public enum TileRegionError: Error, CoreErrorRepresentable, CustomStringConvertible {
     typealias CoreErrorType = MapboxCommon.TileRegionError
 
     /// The operation was canceled.
@@ -41,13 +41,28 @@ public enum TileRegionError: Error, CoreErrorRepresentable {
         }
     }
 
+    public var description: String {
+        switch self {
+        case let .canceled(message):
+            return ".canceled(\(message))"
+        case let .doesNotExist(message):
+            return ".doesNotExist(\(message))"
+        case let .tilesetDescriptor(message):
+            return ".tilesetDescriptor(\(message))"
+        case let .diskFull(message):
+            return ".diskFull(\(message))"
+        case let .other(message):
+            return ".other(\(message))"
+        }
+    }
+
     internal init(unspecifiedError: String) {
         self = .other(unspecifiedError)
     }
 }
 
 /// Describes the reason for a style package download request failure.
-public enum StylePackError: Error, CoreErrorRepresentable {
+public enum StylePackError: Error, CoreErrorRepresentable, CustomStringConvertible {
     typealias CoreErrorType = MapboxCoreMaps.StylePackError
 
     /// The operation was canceled.
@@ -77,6 +92,19 @@ public enum StylePackError: Error, CoreErrorRepresentable {
             self = .diskFull(message)
         case .other:
             self = .other(message)
+        }
+    }
+
+    public var description: String {
+        switch self {
+        case let .canceled(message):
+            return ".canceled(\(message))"
+        case let .doesNotExist(message):
+            return ".doesNotExist(\(message))"
+        case let .diskFull(message):
+            return ".diskFull(\(message))"
+        case let .other(message):
+            return ".other(\(message))"
         }
     }
 }

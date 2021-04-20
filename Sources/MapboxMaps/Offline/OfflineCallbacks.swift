@@ -25,7 +25,7 @@ where ObjCType: AnyObject,
 
         if expected.isValue(), let value = expected.value as? T {
             result = .success(value)
-        } else if expected.isError(), let error = expected.error  {
+        } else if expected.isError(), let error = expected.error {
             result = .failure(ErrorType(coreError: error))
         } else {
             assertionFailure("Unexpected value or error: \(expected), expected: \(T.self)")

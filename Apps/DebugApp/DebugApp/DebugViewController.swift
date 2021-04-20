@@ -76,9 +76,9 @@ public class DebugViewController: UIViewController {
             guard let self = self else { return }
             print("The map has finished loading... Event = \(event)")
             let sanFrancisco = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
-            
-            self.runningAnimator = self.mapView.cameraManager.fly(to: CameraOptions(center: sanFrancisco, zoom: 18), completion: { [weak self] (position) in
-                
+
+            self.runningAnimator = self.mapView.cameraManager.fly(to: CameraOptions(center: sanFrancisco, zoom: 18), completion: { [weak self] (_) in
+
                 let newYork = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
                 self?.mapView.cameraManager.fly(to: CameraOptions(center: newYork))
             })

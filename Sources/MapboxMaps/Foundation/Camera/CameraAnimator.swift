@@ -2,13 +2,13 @@ import UIKit
 import CoreLocation
 
 @objc public protocol CameraAnimatorProtocol: AnyObject {
-    
+
     func stopAnimation()
-    
+
     var state: UIViewAnimatingState { get }
-    
+
     func update()
-    
+
 }
 
 public typealias CameraAnimation = (inout CameraTransition) -> Void

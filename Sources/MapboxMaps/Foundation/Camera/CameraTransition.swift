@@ -18,7 +18,7 @@ public struct CameraTransition {
 
     /// Represents a change to the bearing of the map.
     public var bearing: Change<Double>
-    
+
     /// Ensures that bearing transitions are optimized to take the shortest path.
     public var shouldOptimizeBearingPath: Bool = true
 
@@ -59,7 +59,7 @@ public struct CameraTransition {
         let cameraOptions = CameraOptions()
         cameraOptions.anchor    = anchor.toValue
         cameraOptions.bearing   = shouldOptimizeBearingPath ? optimizeBearing(startBearing: bearing.fromValue, endBearing: bearing.toValue) :  bearing.toValue
-        
+
         cameraOptions.padding   = padding.toValue
         cameraOptions.center    = center.toValue
         cameraOptions.zoom      = zoom.toValue
@@ -80,7 +80,7 @@ public struct CameraTransition {
 
         return cameraOptions
     }
-    
+
     /// This function optimizes the bearing for set camera so that it is taking the shortest path.
     /// - Parameters:
     ///   - startBearing: The current or start bearing of the map viewport.

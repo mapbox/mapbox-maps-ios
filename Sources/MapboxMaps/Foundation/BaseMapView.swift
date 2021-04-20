@@ -28,14 +28,14 @@ open class BaseMapView: UIView {
 
     /// List of animators currently alive
     public var cameraAnimators: [CameraAnimator] {
-        
+
         var animators: [CameraAnimator] = []
         cameraAnimatorsHashTable.allObjects.forEach { (animator) in
             if let animator = animator as? CameraAnimator {
                 animators.append(animator)
             }
         }
-        
+
         return animators
     }
 
@@ -223,7 +223,7 @@ open class BaseMapView: UIView {
             needsDisplayRefresh = false
 
             for animator in cameraAnimatorsHashTable.allObjects {
-                animator.update() 
+                animator.update()
             }
 
             /// This executes the series of scheduled animation completion blocks and also removes them from the list

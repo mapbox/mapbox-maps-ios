@@ -183,7 +183,7 @@ public class CameraManager {
         internalAnimator?.stopAnimation()
 
         // Make a new camera animator for the new properties
-        
+
         let cameraAnimator = makeCameraAnimator(duration: duration,
                                                 curve: .easeOut,
                                                 animationOwner: .custom(id: "com.mapbox.maps.cameraManager"),
@@ -197,11 +197,11 @@ public class CameraManager {
 
         // Start animation
         cameraAnimator.startAnimation()
-        
+
         // Store the animator in order to keep it alive
         internalAnimator = cameraAnimator
     }
-    
+
     /// Moves the viewpoint to a different location using a transition animation that
     /// evokes powered flight and an optional transition duration and timing function
     /// It seamlessly incorporates zooming and panning to help
@@ -226,19 +226,19 @@ public class CameraManager {
 
         let flyToAnimator = FlyToAnimator(delegate: self)
         mapView.cameraAnimatorsHashTable.add(flyToAnimator)
-        
+
         flyToAnimator.makeFlyToInterpolator(from: mapView.camera,
                                              to: camera,
                                              duration: duration,
                                              screenFullSize: mapView.bounds.size)
-        
+
         flyToAnimator.addCompletion(completion)
         flyToAnimator.startAnimation()
         internalAnimator = flyToAnimator
-        
+
         return internalAnimator
     }
-    
+
     /// Ease the camera to a destination
     /// - Parameters:
     ///   - camera: the target camera after animation
@@ -247,9 +247,9 @@ public class CameraManager {
     /// - Returns: An instance of `CameraAnimatorProtocol` which can be interrupted if necessary
     @discardableResult
     public func ease(to camera: CameraOptions, duration: TimeInterval, completion: AnimationCompletion? = nil) -> CameraAnimatorProtocol? {
-        
+
         internalAnimator?.stopAnimation()
-        
+
         let animator = makeCameraAnimator(duration: duration, curve: .easeInOut) { (transition) in
             transition.center.toValue = camera.center
             transition.padding.toValue = camera.padding
@@ -258,13 +258,13 @@ public class CameraManager {
             transition.bearing.toValue = camera.bearing
             transition.pitch.toValue = camera.pitch
         }
-        
+
         if let completion = completion {
             animator.addCompletion(completion)
         }
         animator.startAnimation()
         internalAnimator = animator
-        
+
         return internalAnimator
     }
 

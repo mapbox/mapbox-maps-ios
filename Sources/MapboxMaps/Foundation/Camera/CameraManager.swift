@@ -137,7 +137,7 @@ public class CameraManager {
             assertionFailure("MapView is nil.")
             return
         }
-        
+
         internalAnimator?.stopAnimation()
 
         let clampedCamera = CameraOptions(center: targetCamera.center,

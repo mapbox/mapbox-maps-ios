@@ -58,7 +58,7 @@ public struct CameraTransition {
 
         let cameraOptions = CameraOptions()
         cameraOptions.anchor    = anchor.toValue
-        cameraOptions.bearing   = shouldOptimizeBearingPath ? optimizeBearing(startBearing: bearing.fromValue, endBearing: bearing.toValue) :  bearing.toValue
+        cameraOptions.bearing   = shouldOptimizeBearingPath ? Self.optimizeBearing(startBearing: bearing.fromValue, endBearing: bearing.toValue) :  bearing.toValue
 
         cameraOptions.padding   = padding.toValue
         cameraOptions.center    = center.toValue
@@ -86,7 +86,7 @@ public struct CameraTransition {
     ///   - startBearing: The current or start bearing of the map viewport.
     ///   - endBearing: The bearing of where the map viewport should end at.
     /// - Returns: A `CLLocationDirection` that represents the correct final bearing accounting for positive and negatives.
-    internal func optimizeBearing(startBearing: CLLocationDirection?, endBearing: CLLocationDirection?) -> CLLocationDirection? {
+    internal static func optimizeBearing(startBearing: CLLocationDirection?, endBearing: CLLocationDirection?) -> CLLocationDirection? {
         // This modulus is required to account for larger values
         guard
             let startBearing = startBearing?.truncatingRemainder(dividingBy: 360.0),

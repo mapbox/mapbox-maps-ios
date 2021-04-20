@@ -1,22 +1,17 @@
 import XCTest
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsFoundation
-#endif
 
 final class CameraAnimatorDelegateMock: CameraAnimatorDelegate {
 
     struct SchedulePendingCompletionParameters {
-        var animator: CameraAnimator
+        var animator: CameraAnimatorProtocol
         var completion: AnimationCompletion
         var animatingPosition: UIViewAnimatingPosition
     }
 
     let schedulePendingCompletionStub = Stub<SchedulePendingCompletionParameters, Void>()
 
-    public func schedulePendingCompletion(forAnimator animator: CameraAnimator,
+    public func schedulePendingCompletion(forAnimator animator: CameraAnimatorProtocol,
                                           completion: @escaping AnimationCompletion,
                                           animatingPosition: UIViewAnimatingPosition) {
         schedulePendingCompletionStub.call(with: SchedulePendingCompletionParameters(animator: animator,

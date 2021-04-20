@@ -169,6 +169,8 @@
 		B521FC93262F626900B9A446 /* MapboxMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = B521FC92262F626900B9A446 /* MapboxMap.swift */; };
 		B521FC98262F627300B9A446 /* Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = B521FC97262F627300B9A446 /* Size.swift */; };
 		B521FC9D262F665C00B9A446 /* SizeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B521FC9C262F665C00B9A446 /* SizeTests.swift */; };
+		B521FCA2262F67D000B9A446 /* MapboxMapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B521FCA1262F67D000B9A446 /* MapboxMapTests.swift */; };
+		B521FCA7262F67DD00B9A446 /* MockMapClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B521FCA6262F67DD00B9A446 /* MockMapClient.swift */; };
 		B529341C2624E9D6003B181C /* PreferredFPS.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52934192624E9D6003B181C /* PreferredFPS.swift */; };
 		B529341D2624E9D6003B181C /* DelegatingMapClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B529341A2624E9D6003B181C /* DelegatingMapClient.swift */; };
 		B529341E2624E9D6003B181C /* DelegatingObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B529341B2624E9D6003B181C /* DelegatingObserver.swift */; };
@@ -600,6 +602,8 @@
 		B521FC92262F626900B9A446 /* MapboxMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapboxMap.swift; sourceTree = "<group>"; };
 		B521FC97262F627300B9A446 /* Size.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Size.swift; sourceTree = "<group>"; };
 		B521FC9C262F665C00B9A446 /* SizeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeTests.swift; sourceTree = "<group>"; };
+		B521FCA1262F67D000B9A446 /* MapboxMapTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxMapTests.swift; sourceTree = "<group>"; };
+		B521FCA6262F67DD00B9A446 /* MockMapClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMapClient.swift; sourceTree = "<group>"; };
 		B52934192624E9D6003B181C /* PreferredFPS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferredFPS.swift; sourceTree = "<group>"; };
 		B529341A2624E9D6003B181C /* DelegatingMapClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DelegatingMapClient.swift; sourceTree = "<group>"; };
 		B529341B2624E9D6003B181C /* DelegatingObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DelegatingObserver.swift; sourceTree = "<group>"; };
@@ -1187,6 +1191,8 @@
 				07182014256C1F6100F22489 /* Assets.xcassets */,
 				0CDFEAD725A77430008BC505 /* UtilsTests.swift */,
 				B51DE64725D7038300A80AC9 /* Comparable+ClampedTests.swift */,
+				B521FCA1262F67D000B9A446 /* MapboxMapTests.swift */,
+				B521FCA6262F67DD00B9A446 /* MockMapClient.swift */,
 			);
 			name = MapboxMapsFoundationTests;
 			path = ../Tests/MapboxMapsTests/Foundation;
@@ -2049,6 +2055,7 @@
 				CA03F0872624FDB100673961 /* MapInitOptionsTests.swift in Sources */,
 				C69F015A254358C5001AB49B /* AnnotationManagerIntegrationTests.swift in Sources */,
 				0CC6EF1725C3263400BFB153 /* SymbolLayerIntegrationTests.swift in Sources */,
+				B521FCA2262F67D000B9A446 /* MapboxMapTests.swift in Sources */,
 				0C5CFCDF25BB951B0001E753 /* BackgroundLayerTests.swift in Sources */,
 				CA2E4A1C2538D3530096DEDE /* IntegrationTestCase.swift in Sources */,
 				CA4AE0DB252D655A00183075 /* AnnotationInteractionDelegateTests.swift in Sources */,
@@ -2123,6 +2130,7 @@
 				CA548FF1251C404B00F829A3 /* RotateGestureHandlerTests.swift in Sources */,
 				CA4AE033252D654800183075 /* LineAnnotationTests.swift in Sources */,
 				0C37B1E425CB05F000DCDD3D /* ColorTests.swift in Sources */,
+				B521FCA7262F67DD00B9A446 /* MockMapClient.swift in Sources */,
 				B5A6921D262754DF00A03412 /* MockDelegatingObserverDelegate.swift in Sources */,
 				CADC7AD3251C51070082BA0A /* MockAnnotationSupportableMap.swift in Sources */,
 				0C32CA2125F982300057ED31 /* RasterDemSourceTests.swift in Sources */,

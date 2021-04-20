@@ -86,12 +86,35 @@ extension CameraOptions {
     }
 
     // MARK: Equals function
-    public static func == (lhs: CameraOptions, rhs: CameraOptions) -> Bool {
-        return lhs.center == rhs.center &&
-               lhs.padding == rhs.padding &&
-               lhs.anchor == rhs.anchor &&
-               lhs.zoom == rhs.zoom &&
-               lhs.bearing == rhs.bearing &&
-               lhs.pitch == rhs.pitch
+
+    /// :nodoc:
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? CameraOptions else {
+            return false
+        }
+        return other.isMember(of: CameraOptions.self)
+            && center == other.center
+            && padding == other.padding
+            && anchor == other.anchor
+            && zoom == other.zoom
+            && bearing == other.bearing
+            && pitch == other.pitch
+    }
+
+    /// :nodoc:
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(center?.latitude)
+        hasher.combine(center?.longitude)
+        hasher.combine(padding?.top)
+        hasher.combine(padding?.left)
+        hasher.combine(padding?.bottom)
+        hasher.combine(padding?.right)
+        hasher.combine(anchor?.x)
+        hasher.combine(anchor?.y)
+        hasher.combine(zoom)
+        hasher.combine(bearing)
+        hasher.combine(pitch)
+        return hasher.finalize()
     }
 }

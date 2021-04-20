@@ -85,6 +85,8 @@ internal class OrnamentsManager: NSObject {
         NSLayoutConstraint.deactivate(constraints)
         constraints.removeAll()
 
+        // Update the position for the ornaments
+        infoButton.
         // TODO: re-create new constraints for each view (and add them to the `constraints` array)
 
         // Activate new constraints
@@ -97,4 +99,53 @@ internal class OrnamentsManager: NSObject {
         compassView.isHidden = options.compassVisibility == .hidden
         infoButton.isHidden = !options._attributionButtonIsVisible
     }
+
+    func constraints(with view: UIView, position: OrnamentPosition, margin: CGPoint) -> [NSLayoutConstraint {
+        switch position {
+        case .topLeft:
+            return [view.leadingAnchor.constraint(equalTo: universalLayoutGuide.leadingAnchor,
+                                          constant: margin.x),
+                    
+
+        case .topCenter:
+
+        case .topRight:
+
+        case .centerLeft:
+
+        case .centerRight:
+
+        case .bottomLeft:
+
+        case .bottomCenter:
+
+        case .bottomRight:
+        }
+    }
+
+    internal var universalLayoutGuide: UILayoutGuide {
+            if #available(iOS 11.0, *) {
+                return self.view.safeAreaLayoutGuide
+            } else {
+                let layoutGuideIdentifier = "mapboxSafeAreaLayoutGuide"
+                // If there's already a generated layout guide, return it
+                if let layoutGuide = view.layoutGuides.filter({ $0.identifier == layoutGuideIdentifier }).first {
+                    return layoutGuide
+                } else {
+                    // If not, then make a new one based off the view's edges.
+                    let layoutGuide = UILayoutGuide()
+                    layoutGuide.identifier = layoutGuideIdentifier
+                    view.addLayoutGuide(layoutGuide)
+
+                    NSLayoutConstraint.activate([
+                        layoutGuide.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                        layoutGuide.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                        layoutGuide.topAnchor.constraint(equalTo: view.topAnchor),
+                        layoutGuide.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+                    ])
+
+                    return layoutGuide
+                }
+            }
+        }
 }

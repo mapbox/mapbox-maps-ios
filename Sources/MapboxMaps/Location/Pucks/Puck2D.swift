@@ -191,7 +191,7 @@ private extension Puck2D {
             location.coordinate.longitude,
             location.internalLocation.altitude
         ])
-        paint.locationTransition = StyleTransition(duration: 500, delay: 0)
+        paint.locationTransition = StyleTransition(duration: 0.5, delay: 0)
         paint.topImageSize = configuration.resolvedScale
         paint.bearingImageSize = configuration.resolvedScale
         paint.shadowImageSize = configuration.resolvedScale

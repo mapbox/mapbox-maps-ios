@@ -416,18 +416,37 @@ public class Style {
  */
 public struct StyleTransition: Codable {
 
-    /// Time allotted for transitions to complete in milliseconds.
+    internal enum CodingKeys: String, CodingKey {
+        case duration
+        case delay
+    }
+
+    /// Time allotted for transitions to complete in seconds.
     public var duration: TimeInterval = 0
 
-    /// Length of time before a transition begins in milliseconds.
+    /// Length of time before a transition begins in seconds.
     public var delay: TimeInterval = 0
 
     /// Initiralizer for `StyleTransition`
     /// - Parameters:
-    ///   - duration: Time for transition in milliseconds.
-    ///   - delay: Time before transition begins in milliseconds.
+    ///   - duration: Time for transition in seconds.
+    ///   - delay: Time before transition begins in seconds.
     public init(duration: TimeInterval, delay: TimeInterval) {
         self.duration = duration
         self.delay = delay
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        duration = try container.decode(Double.self, forKey: .duration) / 1000
+        delay = try container.decode(Double.self, forKey: .delay) / 1000
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encode(duration * 1000, forKey: .duration)
+        try container.encode(delay * 1000, forKey: .delay)
     }
 }

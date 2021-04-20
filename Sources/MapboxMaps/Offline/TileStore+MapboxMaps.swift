@@ -55,7 +55,18 @@ extension TileStore {
         }
     }
 
-    // TODO: docs
+    /// Checks if a tile region with the given id contains all tilesets from all
+    /// of the given tileset descriptors.
+    ///
+    /// - Parameters:
+    ///   - id: The tile region identifier.
+    ///   - descriptors: The array of tileset descriptors.
+    ///   - completion: The result callback.
+    ///
+    /// - Note:
+    ///     The user-provided callbacks will be executed on a TileStore-controlled
+    ///     worker thread; it is the responsibility of the user to dispatch to a
+    ///     user-controlled thread.
     public func tileRegionContainsDescriptors(forId id: String,
                                               descriptors: [TilesetDescriptor],
                                               completion: @escaping (Result<Bool, TileRegionError>) -> Void) {
@@ -82,75 +93,61 @@ extension TileStore {
         }
     }
 
-//    /**
-//     * @brief Returns a list of the existing tile regions.
-//     *
-//     * Note: The user-provided callbacks will be executed on a TileStore-controlled worker thread;
-//     * it is the responsibility of the user to dispatch to a user-controlled thread.
-//     *
-//     * @param callback The result callback.
-//     */
-//    - (void)getAllTileRegionsForCallback:(nonnull MBXTileRegionsCallback)callback NS_REFINED_FOR_SWIFT;
-
-    // TODO: docs
+    /// Fetch the array of the existing tile regions.
+    ///
+    /// - Parameter completion: The result callback.
+    ///
+    /// - Note:
+    ///     The user-provided callbacks will be executed on a TileStore-controlled
+    ///     worker thread; it is the responsibility of the user to dispatch to a
+    ///     user-controlled thread.
     public func allTileRegions(completion: @escaping (Result<[TileRegion], TileRegionError>) -> Void) {
         __getAllTileRegions(forCallback: coreAPIClosureAdapter(for: completion, type: NSArray.self))
     }
 
-//    /**
-//     * @brief Returns a tile region by its id.
-//     *
-//     * Note: The user-provided callbacks will be executed on a TileStore-controlled worker thread;
-//     * it is the responsibility of the user to dispatch to a user-controlled thread.
-//     *
-//     * @param id The tile region id.
-//     * @param callback The result callback.
-//     */
-//    - (void)getTileRegionForId:(nonnull NSString *)id
-//                      callback:(nonnull MBXTileRegionCallback)callback NS_REFINED_FOR_SWIFT;
-
-    // TODO: docs
+    /// Returns a tile region given its id.
+    ///
+    /// - Parameters:
+    ///   - id: The tile region id.
+    ///   - completion: The Result callback.
+    ///
+    /// - Note:
+    ///     The user-provided callbacks will be executed on a TileStore-controlled
+    ///     worker thread; it is the responsibility of the user to dispatch to a
+    ///     user-controlled thread.
     public func tileRegion(forId id: String,
                            completion: @escaping (Result<TileRegion, TileRegionError>) -> Void) {
         __getTileRegion(forId: id,
                         callback: coreAPIClosureAdapter(for: completion, type: TileRegion.self))
     }
 
-//    /**
-//     * @brief Returns a tile region's associated geometry
-//     *
-//     * The region associated geometry is provided by the client and it represents the area, which the tile
-//     * region must cover. The actual regional geometry depends on the tiling scheme and might exceed the
-//     * associated geometry.
-//     *
-//     * Note: The user-provided callbacks will be executed on a TileStore-controlled worker thread;
-//     * it is the responsibility of the user to dispatch to a user-controlled thread.
-//     *
-//     * @param id The tile region id.
-//     * @param callback The result callback.
-//     */
-//    - (void)getTileRegionGeometryForId:(nonnull NSString *)id
-//                              callback:(nonnull MBXTileRegionGeometryCallback)callback NS_REFINED_FOR_SWIFT;
-
-    // TODO: docs
+    /// Fetch a tile region's associated geometry
+    ///
+    /// The region associated geometry is provided by the client and it represents
+    /// the area, which the tile region must cover. The actual regional geometry
+    /// depends on the tiling scheme and might exceed the associated geometry.
+    ///
+    /// - Parameters:
+    ///   - id: The tile region id.
+    ///   - completion: The Result closure.
+    ///
+    /// - Note:
+    ///     The user-provided callbacks will be executed on a TileStore-controlled
+    ///     worker thread; it is the responsibility of the user to dispatch to a
+    ///     user-controlled thread.
     public func tileRegionGeometry(forId id: String,
                                    completion: @escaping (Result<MBXGeometry, TileRegionError>) -> Void) {
         __getTileRegion(forId: id,
                         callback: coreAPIClosureAdapter(for: completion, type: MBXGeometry.self))
     }
 
-//    /**
-//     * @brief Returns a tile region's associated metadata
-//     *
-//     * The region's associated metadata that a user previously set for this region.
-//     *
-//     * @param id The tile region id.
-//     * @param callback The result callback.
-//     */
-//    - (void)getTileRegionMetadataForId:(nonnull NSString *)id
-//                              callback:(nonnull MBXTileRegionMetadataCallback)callback NS_REFINED_FOR_SWIFT;
-
-    // TODO: docs
+    /// Fetch a tile region's associated metadata
+    ///
+    /// The region's associated metadata that a user previously set for this region.
+    ///
+    /// - Parameters:
+    ///   - id: The tile region id.
+    ///   - completion: The Result closure.
     public func tileRegionMetadata(forId id: String,
                                    completion: @escaping (Result<Any, TileRegionError>) -> Void) {
         __getTileRegionMetadata(forId: id,

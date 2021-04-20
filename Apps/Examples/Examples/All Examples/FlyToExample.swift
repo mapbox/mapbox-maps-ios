@@ -6,7 +6,6 @@ import MapboxMaps
 public class FlyToExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
-    internal var flyToAnimator: CameraAnimator?
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -35,10 +34,9 @@ public class FlyToExample: UIViewController, ExampleProtocol {
                                 bearing: 180,
                                 pitch: 50)
 
-        flyToAnimator = self.mapView.camera.fly(to: end) { [weak self] _ in
+        mapView.camera.fly(to: end) { [weak self] _ in
             print("Camera fly-to finished")
             // The below line is used for internal testing purposes only.
-            self?.flyToAnimator = nil
             self?.finish()
         }
 

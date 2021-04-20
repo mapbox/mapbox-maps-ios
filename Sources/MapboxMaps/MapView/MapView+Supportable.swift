@@ -8,13 +8,16 @@ extension MapView: OrnamentSupportableView {
     }
 
     internal func compassTapped() {
-        // Don't have access to CameraManager, so calling UIView.animate directly.
-        UIView.animate(withDuration: 0.3,
-                       delay: 0.0,
-                       options: [.curveEaseOut, .allowUserInteraction],
-                       animations: { [weak self] in
-                        self?.cameraView.bearing = 0.0
-        }, completion: nil)
+        var animator: CameraAnimator?
+        animator = camera.makeCameraAnimator(duration: 0.3, curve: .easeOut, animations: { (transition) in
+            transition.bearing.toValue = 0
+        })
+
+        animator?.addCompletion({ (_) in
+            animator = nil
+        })
+
+        animator?.startAnimation()
     }
 
     internal func subscribeCameraChangeHandler(_ handler: @escaping (CameraOptions) -> Void) {
@@ -32,7 +35,7 @@ extension MapView: LocationSupportableMapView {
     }
 
     public func metersPerPointAtLatitude(latitude: CLLocationDegrees) -> CLLocationDistance {
-        return Projection.getMetersPerPixelAtLatitude(forLatitude: latitude, zoom: Double(cameraView.zoom))
+        return Projection.getMetersPerPixelAtLatitude(forLatitude: latitude, zoom: Double(zoom))
     }
 
     public func subscribeRenderFrameHandler(_ handler: @escaping (MapboxCoreMaps.Event) -> Void) {

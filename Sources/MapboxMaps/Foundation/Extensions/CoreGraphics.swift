@@ -4,7 +4,7 @@ import CoreGraphics
 import MapboxCoreMaps
 
 // MARK: - CGPoint
-extension CGPoint {
+extension CGPoint: Hashable {
 
     /// Converts a `CGPoint` to an internal `ScreenCoordinate` type.
     internal var screenCoordinate: ScreenCoordinate {
@@ -23,6 +23,12 @@ extension CGPoint {
     internal static func interpolate(origin: CGPoint, destination: CGPoint, fraction: CGFloat) -> CGPoint {
         return CGPoint(x: origin.x + fraction * (destination.x - origin.x),
                        y: origin.y + fraction * (destination.y - origin.y))
+    }
+
+    /// Hashable conformance
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(x)
+        hasher.combine(y)
     }
 }
 

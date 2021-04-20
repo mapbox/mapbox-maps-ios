@@ -17,10 +17,12 @@ extension CameraManager: CameraAnimatorDelegate {
     /// - Returns: A class that represents an animator with the provided configuration.
     public func makeCameraAnimator(duration: TimeInterval,
                                    timingParameters parameters: UITimingCurveProvider,
-                                   animationOwner: AnimationOwner = .unspecified) -> CameraAnimator {
+                                   animationOwner: AnimationOwner = .unspecified,
+                                   animations: @escaping CameraAnimation) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, timingParameters: parameters)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
-        cameraAnimators.add(cameraAnimator)
+        cameraAnimator.addAnimations(animations)
+        mapView?.cameraAnimatorsHashTable.add(cameraAnimator)
         return cameraAnimator
     }
 
@@ -40,10 +42,11 @@ extension CameraManager: CameraAnimatorDelegate {
     public func makeCameraAnimator(duration: TimeInterval,
                                    curve: UIView.AnimationCurve,
                                    animationOwner: AnimationOwner = .unspecified,
-                                   animations: (() -> Void)? = nil) -> CameraAnimator {
-        let propertyAnimator = UIViewPropertyAnimator(duration: duration, curve: curve, animations: animations)
+                                   animations: @escaping CameraAnimation) -> CameraAnimator {
+        let propertyAnimator = UIViewPropertyAnimator(duration: duration, curve: curve)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
-        cameraAnimators.add(cameraAnimator)
+        cameraAnimator.addAnimations(animations)
+        mapView?.cameraAnimatorsHashTable.add(cameraAnimator)
         return cameraAnimator
     }
 
@@ -65,10 +68,11 @@ extension CameraManager: CameraAnimatorDelegate {
                                    controlPoint1 point1: CGPoint,
                                    controlPoint2 point2: CGPoint,
                                    animationOwner: AnimationOwner = .unspecified,
-                                   animations: (() -> Void)? = nil) -> CameraAnimator {
-        let propertyAnimator = UIViewPropertyAnimator(duration: duration, controlPoint1: point1, controlPoint2: point2, animations: animations)
+                                   animations: @escaping CameraAnimation) -> CameraAnimator {
+        let propertyAnimator = UIViewPropertyAnimator(duration: duration, controlPoint1: point1, controlPoint2: point2)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
-        cameraAnimators.add(cameraAnimator)
+        cameraAnimator.addAnimations(animations)
+        mapView?.cameraAnimatorsHashTable.add(cameraAnimator)
         return cameraAnimator
     }
 
@@ -89,16 +93,57 @@ extension CameraManager: CameraAnimatorDelegate {
     public func makeCameraAnimator(duration: TimeInterval,
                                    dampingRatio ratio: CGFloat,
                                    animationOwner: AnimationOwner = .unspecified,
-                                   animations: (() -> Void)? = nil) -> CameraAnimator {
-        let propertyAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: ratio, animations: animations)
+                                   animations: @escaping CameraAnimation) -> CameraAnimator {
+        let propertyAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: ratio)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
-        cameraAnimators.add(cameraAnimator)
+        cameraAnimator.addAnimations(animations)
+        mapView?.cameraAnimatorsHashTable.add(cameraAnimator)
         return cameraAnimator
     }
 
     // MARK: CameraAnimatorDelegate functions
-    func schedulePendingCompletion(forAnimator animator: CameraAnimator, completion: @escaping AnimationCompletion, animatingPosition: UIViewAnimatingPosition) {
+    func schedulePendingCompletion(forAnimator animator: CameraAnimatorProtocol, completion: @escaping AnimationCompletion, animatingPosition: UIViewAnimatingPosition) {
         guard let mapView = mapView else { return }
         mapView.pendingAnimatorCompletionBlocks.append((completion, animatingPosition))
+    }
+
+    var camera: CameraOptions {
+        guard let validMapView = mapView else {
+            fatalError("MapView cannot be nil.")
+        }
+
+        return validMapView.cameraOptions
+    }
+
+    func jumpTo(camera: CameraOptions) {
+        guard let validMapView = mapView else {
+            fatalError("MapView cannot be nil.")
+        }
+        
+        let mbxCameraOptions = MapboxCoreMaps.CameraOptions(camera)
+        validMapView.mapboxMap.__map.setCameraFor(mbxCameraOptions)
+    }
+
+    func addViewToViewHeirarchy(_ view: CameraView) {
+
+        guard let validMapView = mapView else {
+            fatalError("MapView cannot be nil.")
+        }
+
+        validMapView.addSubview(view)
+
+    }
+
+    func anchorAfterPadding() -> CGPoint {
+
+        guard let validMapView = mapView else {
+            fatalError("MapView cannot be nil.")
+        }
+        let paddding = validMapView.padding
+        let xAfterPadding = validMapView.center.x + paddding.left - paddding.right
+        let yAfterPadding = validMapView.center.y + paddding.top - paddding.bottom
+        let anchor = CGPoint(x: xAfterPadding, y: yAfterPadding)
+
+        return anchor
     }
 }

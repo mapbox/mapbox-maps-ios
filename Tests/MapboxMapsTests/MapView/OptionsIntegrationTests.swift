@@ -20,7 +20,7 @@ internal class OptionsIntegrationTest: MapViewIntegrationTestCase {
             options = newConfig
         }
 
-        XCTAssertEqual(mapView.gestureManager.gestureOptions, newConfig.gestures)
+        XCTAssertEqual(mapView.gestures.gestureOptions, newConfig.gestures)
         XCTAssertEqual(mapView.cameraManager.mapCameraOptions, newConfig.camera)
         XCTAssertEqual(mapView.locationManager.locationOptions, newConfig.location)
         XCTAssertTrue(

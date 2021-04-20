@@ -61,11 +61,11 @@ extension MapView {
     }
 
     internal func setupGestures(with view: UIView, options: GestureOptions, cameraManager: CameraManager) {
-        gestureManager = GestureManager(for: view, options: options, cameraManager: cameraManager)
+        gestures = GestureManager(for: view, options: options, cameraManager: cameraManager)
     }
 
     internal func updateGestures(with newOptions: GestureOptions) {
-        gestureManager.updateGestureOptions(with: newOptions)
+        gestures.updateGestureOptions(with: newOptions)
     }
 
     internal func setupCamera(for view: MapView, options: MapCameraOptions) {

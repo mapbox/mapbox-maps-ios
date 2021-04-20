@@ -8,8 +8,8 @@ open class MapView: BaseMapView {
     /// To synchronously update the `mapOptions` please call `updateMapOptions(with newOptions: MapOptions)`
     internal var mapConfig: MapConfig = MapConfig()
 
-    /// The `gestureManager` will be responsible for all gestures on the map
-    public internal(set) var gestureManager: GestureManager!
+    /// The `gestures` property will be responsible for all gestures on the map
+    public internal(set) var gestures: GestureManager!
 
     /// The `ornamentsManager` will be responsible for all ornaments on the map
     internal var ornamentsManager: OrnamentsManager!

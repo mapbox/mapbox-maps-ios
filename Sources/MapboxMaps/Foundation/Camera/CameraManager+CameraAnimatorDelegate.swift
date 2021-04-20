@@ -46,7 +46,7 @@ extension CameraManager: CameraAnimatorDelegate {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, curve: curve)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimator.addAnimations(animations)
-        mapView?.cameraAnimators.add(cameraAnimator)
+        mapView?.cameraAnimatorsHashTable.add(cameraAnimator)
         return cameraAnimator
     }
 

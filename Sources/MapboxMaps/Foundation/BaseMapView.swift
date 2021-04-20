@@ -28,7 +28,7 @@ open class BaseMapView: UIView {
 
     /// List of animators currently alive
     public var cameraAnimators: [CameraAnimator] {
-        return cameraAnimators.allObjects
+        return cameraAnimatorsHashTable.allObjects
     }
 
     /// Map of event types to subscribed event handlers
@@ -214,9 +214,8 @@ open class BaseMapView: UIView {
         if needsDisplayRefresh {
             needsDisplayRefresh = false
 
-            // To figure out: How do you handle multiple animators animating multiple properties at the same time??
             for animator in cameraAnimators {
-                animator.update() // Should this return a `CameraOption` ?? 
+                animator.update() 
             }
 
             /// This executes the series of scheduled animation completion blocks and also removes them from the list

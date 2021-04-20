@@ -132,9 +132,9 @@ extension CameraManager: CameraAnimatorDelegate {
         validMapView.addSubview(view)
 
     }
-    
+
     func anchorAfterPadding() -> CGPoint {
-        
+
         guard let validMapView = mapView else {
             fatalError("MapView cannot be nil.")
         }
@@ -142,7 +142,7 @@ extension CameraManager: CameraAnimatorDelegate {
         let xAfterPadding = validMapView.center.x + paddding.left - paddding.right
         let yAfterPadding = validMapView.center.y + paddding.top - paddding.bottom
         let anchor = CGPoint(x: xAfterPadding, y: yAfterPadding)
-        
+
         return anchor
     }
 }

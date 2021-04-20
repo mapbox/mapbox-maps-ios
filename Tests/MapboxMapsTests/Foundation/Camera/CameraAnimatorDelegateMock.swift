@@ -28,7 +28,7 @@ final class CameraAnimatorDelegateMock: CameraAnimatorDelegate {
     public func animatorIsFinished(forAnimator animator: CameraAnimator) {
         animatorFinishedStub.call(with: animator)
     }
-    
+
     var camera: CameraOptions {
         return CameraOptions(center: .init(latitude: 10, longitude: 10),
                              padding: .init(top: 10, left: 10, bottom: 10, right: 10),
@@ -46,9 +46,9 @@ final class CameraAnimatorDelegateMock: CameraAnimatorDelegate {
     func addViewToViewHeirarchy(_ view: CameraView) {
         addViewToViewHeirarchyStub.call(with: view)
     }
-    
+
     let anchorAfterPaddingStub = Stub<Void, CGPoint>(defaultReturnValue: .zero)
-    func anchorAfterPadding() -> CGPoint  {
+    func anchorAfterPadding() -> CGPoint {
         return anchorAfterPaddingStub.call()
     }
 }

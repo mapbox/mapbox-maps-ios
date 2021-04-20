@@ -9,8 +9,8 @@ internal let cameraOptionsTestValue = CameraOptions(center: CLLocationCoordinate
                                                               pitch: 10)
 
 internal class CameraAnimatorTests: XCTestCase {
-    
-    var delegate: CameraAnimatorDelegateMock!
+
+    weak var delegate: CameraAnimatorDelegateMock!
     var propertyAnimator: UIViewPropertyAnimatorMock!
     var cameraView: CameraViewMock!
     var animator: CameraAnimator?
@@ -24,44 +24,42 @@ internal class CameraAnimatorTests: XCTestCase {
                                   owner: .unspecified,
                                   cameraView: cameraView)
     }
-    
 
     func testInitializationAndDeinit() {
         XCTAssertEqual(delegate.addViewToViewHeirarchyStub.invocations.count, 1)
-        
+
         animator = nil
         XCTAssertEqual(propertyAnimator.stopAnimationStub.invocations.count, 1)
         XCTAssertEqual(propertyAnimator.finishAnimationStub.invocations.count, 1)
         XCTAssertEqual(cameraView.removeFromSuperviewStub.invocations.count, 1)
     }
-    
+
     func testStartAnimation() {
         animator?.addAnimations { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
-        
+
         animator?.startAnimation()
-        
+
         XCTAssertEqual(propertyAnimator.startAnimationStub.invocations.count, 1)
         XCTAssertEqual(propertyAnimator.addAnimationsStub.invocations.count, 1)
         XCTAssertNotNil(animator?.transition)
         XCTAssertEqual(animator?.transition?.toCameraOptions.zoom, 10)
     }
-    
+
     func testUpdate() {
         animator?.addAnimations { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
-        
+
         animator?.startAnimation()
-        
+
         propertyAnimator.shouldReturnState = .active
         animator?.update()
-        
+
         XCTAssertEqual(delegate.jumpToStub.invocations.count, 1)
         XCTAssertEqual(delegate.jumpToStub.invocations.first?.parameters.zoom,
                        cameraView.localCamera.zoom)
-        
+
     }
 }
-

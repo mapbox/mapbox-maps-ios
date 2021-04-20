@@ -17,26 +17,25 @@ public class TerrainExample: UIViewController, ExampleProtocol {
 
         let centerCoordinate = CLLocationCoordinate2D(latitude: 32.6141, longitude: -114.34411)
 
-
         mapView.on(.styleLoaded) { [weak self] _ in
-            
+
             self?.mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate,
                                                               zoom: 10,
                                                               bearing: 80))
-            
+
             self?.addTerrain()
         }
-        
+
         mapView.on(.mapLoaded) { [weak self](_) in
             var animator = self?.mapView.cameraManager.makeCameraAnimator(duration: 10, curve: .easeInOut, animations: { (transition) in
                 transition.zoom.toValue = 14.5
                 transition.pitch.toValue = 85
             })
-            
+
             animator?.addCompletion({ (_) in
                 animator = nil
             })
-            
+
             animator?.startAnimation()
         }
     }

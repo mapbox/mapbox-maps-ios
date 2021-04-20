@@ -5,7 +5,7 @@ public typealias CameraAnimation = (inout CameraTransition) -> Void
 
 // MARK: CameraAnimator Class
 public class CameraAnimator: NSObject {
-    
+
     /// Instance of the property animator that will run animations.
     private var propertyAnimator: UIViewPropertyAnimator
 
@@ -17,10 +17,10 @@ public class CameraAnimator: NSObject {
 
     /// The `CameraView` owned by this animator
     internal var cameraView: CameraView
-    
+
     /// Represents the animation that this animator is attempting to execute
     internal var animation: CameraAnimation?
-    
+
     /// Defines the transition that will occur to the `CameraOptions` of the renderer due to this animator
     internal var transition: CameraTransition?
 
@@ -69,32 +69,32 @@ public class CameraAnimator: NSObject {
 
     /// Starts the animation if this animator is in `inactive` state. Also used to resume a "paused" animation.
     public func startAnimation() {
-    
+
         if self.state != .active {
-            
+
             guard let delegate = delegate else {
                 fatalError("CameraAnimator delegate cannot be nil when starting an animation")
             }
-            
+
             guard let animation = animation else {
                 fatalError("Animation cannot be nil when starting an animation")
             }
-                
+
             var cameraTransition = CameraTransition(with: delegate.camera, initialAnchor: delegate.anchorAfterPadding())
             animation(&cameraTransition)
-            
+
             propertyAnimator.addAnimations { [weak self] in
                 guard let self = self else { return }
                 self.cameraView.syncLayer(to: cameraTransition.toCameraOptions) // Set up the "to" values for the interpolation
             }
-    
+
             cameraView.syncLayer(to: cameraTransition.fromCameraOptions) // Set up the "from" values for the interpoloation
             transition = cameraTransition // Store the mutated camera transition
         }
-       
+
         propertyAnimator.startAnimation()
     }
-    
+
     /// Starts the animation after a delay
     /// - Parameter delay: Delay (in seconds) after which the animation should start
     public func startAnimation(afterDelay delay: TimeInterval) {
@@ -125,7 +125,7 @@ public class CameraAnimator: NSObject {
         let wrappedCompletion = wrapCompletion(completion)
         propertyAnimator.addCompletion(wrappedCompletion)
     }
-    
+
     internal func wrapCompletion(_ completion: @escaping AnimationCompletion) -> (UIViewAnimatingPosition) -> Void {
         return { [weak self] animationPosition in
             guard let self = self, let delegate = self.delegate else { return }
@@ -158,7 +158,7 @@ public class CameraAnimator: NSObject {
         if transition.bearing.toValue != nil {
             cameraOptions.bearing = interpolatedCamera.bearing
         }
-        
+
         if transition.anchor.toValue != nil {
             cameraOptions.anchor = interpolatedCamera.anchor
         }

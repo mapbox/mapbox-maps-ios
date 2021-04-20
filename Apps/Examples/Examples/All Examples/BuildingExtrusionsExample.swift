@@ -16,18 +16,18 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
         mapView.on(.styleLoaded) { [weak self] _ in
             self?.setupExample()
         }
-        
+
         mapView.on(.mapLoaded) { [weak self] (_) in
             var animator = self?.mapView.cameraManager.makeCameraAnimator(duration: 10, curve: .easeInOut, animations: { (transition) in
                 transition.zoom.toValue = 17
                 transition.pitch.toValue = 75
                 transition.bearing.toValue = transition.bearing.fromValue - 50
             })
-            
+
             animator?.addCompletion({ (_) in
                 animator = nil
             })
-            
+
             animator?.startAnimation()
         }
     }
@@ -39,7 +39,6 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
                                           zoom: 12,
                                           bearing: -17.6)
         mapView.cameraManager.setCamera(to: cameraOptions)
-    
 
         // The below lines are used for internal testing purposes only.
         DispatchQueue.main.asyncAfter(deadline: .now()+5.0) {
@@ -89,7 +88,7 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
         )
 
         mapView.style.addLayer(layer: layer)
-        
+
         var sky = SkyLayer(id: "my-sky")
         sky.paint?.skyType = .constant(.atmosphere)
         mapView.style.addLayer(layer: sky)

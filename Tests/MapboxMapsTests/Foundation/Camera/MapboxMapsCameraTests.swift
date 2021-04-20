@@ -7,23 +7,22 @@ import MetalKit
 @testable import MapboxMapsFoundation
 #endif
 
-
 internal class CameraManagerIntegrationTests: MapViewIntegrationTestCase {
-    
+
     var cameraManager: CameraManager {
         guard let mapView = mapView else {
             fatalError("MapView must not be nil")
         }
         return mapView.cameraManager
     }
-    
+
     func testSetCameraEnforcesMinZoom() {
-        
+
         guard let mapView = mapView else {
             XCTFail("MapView must not be nil")
             return
         }
-        
+
         mapView.update(with: { (config) in
             config.camera.minimumZoomLevel = CGFloat.random(in: 0..<cameraManager.mapCameraOptions.maximumZoomLevel)
         })
@@ -34,12 +33,12 @@ internal class CameraManagerIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testSetCameraEnforcesMaxZoom() {
-        
+
         guard let mapView = mapView else {
             XCTFail("MapView must not be nil")
             return
         }
-        
+
         mapView.update(with: { (config) in
             config.camera.maximumZoomLevel = CGFloat.random(in: cameraManager.mapCameraOptions.minimumZoomLevel...25.5)
         })
@@ -50,12 +49,12 @@ internal class CameraManagerIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testSetCameraEnforcesMinPitch() {
-        
+
         guard let mapView = mapView else {
             XCTFail("MapView must not be nil")
             return
         }
-        
+
         mapView.update(with: { (config) in
             config.camera.minimumPitch = CGFloat.random(in: 0..<cameraManager.mapCameraOptions.maximumPitch)
         })
@@ -66,12 +65,12 @@ internal class CameraManagerIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testSetCameraEnforcesMaxPitch() {
-        
+
         guard let mapView = mapView else {
             XCTFail("MapView must not be nil")
             return
         }
-        
+
         mapView.update(with: { (config) in
             config.camera.maximumPitch = CGFloat.random(in: cameraManager.mapCameraOptions.minimumPitch...85)
         })
@@ -84,7 +83,6 @@ internal class CameraManagerIntegrationTests: MapViewIntegrationTestCase {
     }
 
 }
-
 
 class CameraManagerTests: XCTestCase {
 
@@ -100,7 +98,6 @@ class CameraManagerTests: XCTestCase {
                               styleURI: nil)
         cameraManager = CameraManager(for: mapView, with: MapCameraOptions())
     }
-
 
     func testCameraForCoordinateArray() {
         // A 1:1 square
@@ -128,8 +125,6 @@ class CameraManagerTests: XCTestCase {
         XCTAssertEqual(camera.padding, UIEdgeInsets.zero)
         XCTAssertEqual(camera.pitch, 0)
     }
-
-    
 
     func testOptimizeBearingClockwise() {
         let startBearing = 0.0

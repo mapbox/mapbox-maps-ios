@@ -6,7 +6,7 @@ import MapboxMaps
 public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
-    
+
     // Coordinate in New York City
     let newYork = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
 
@@ -57,7 +57,6 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Center the map over New York City.
-        
 
         mapView.on(.styleLoaded) { [weak self] _ in
             guard let self = self else { return }

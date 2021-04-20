@@ -11,7 +11,7 @@ internal protocol CameraAnimatorDelegate: class {
     func jumpTo(camera: CameraOptions)
 
     func addViewToViewHeirarchy(_ view: CameraView)
-    
+
     func anchorAfterPadding() -> CGPoint
 
     /**

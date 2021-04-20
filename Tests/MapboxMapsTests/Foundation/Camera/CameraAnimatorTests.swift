@@ -10,7 +10,8 @@ internal let cameraOptionsTestValue = CameraOptions(center: CLLocationCoordinate
 
 internal class CameraAnimatorTests: XCTestCase {
 
-    weak var delegate: CameraAnimatorDelegateMock!
+    // swiftlint:disable weak_delegate
+    var delegate: CameraAnimatorDelegateMock!
     var propertyAnimator: UIViewPropertyAnimatorMock!
     var cameraView: CameraViewMock!
     var animator: CameraAnimator?
@@ -34,7 +35,7 @@ internal class CameraAnimatorTests: XCTestCase {
         XCTAssertEqual(cameraView.removeFromSuperviewStub.invocations.count, 1)
     }
 
-    func testStartAnimation() {
+    func testStartAndStopAnimation() {
         animator?.addAnimations { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
@@ -45,11 +46,22 @@ internal class CameraAnimatorTests: XCTestCase {
         XCTAssertEqual(propertyAnimator.addAnimationsStub.invocations.count, 1)
         XCTAssertNotNil(animator?.transition)
         XCTAssertEqual(animator?.transition?.toCameraOptions.zoom, 10)
+
+        animator?.stopAnimation()
+        XCTAssertEqual(propertyAnimator.stopAnimationStub.invocations.count, 1)
+        XCTAssertEqual(propertyAnimator.finishAnimationStub.invocations.count, 1)
+        XCTAssertEqual(propertyAnimator.finishAnimationStub.invocations.first?.parameters.finalPosition, .current)
+
     }
 
     func testUpdate() {
         animator?.addAnimations { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
+            transition.center.toValue = cameraOptionsTestValue.center!
+            transition.bearing.toValue = cameraOptionsTestValue.bearing!
+            transition.anchor.toValue = cameraOptionsTestValue.anchor!
+            transition.pitch.toValue = cameraOptionsTestValue.pitch!
+            transition.padding.toValue = cameraOptionsTestValue.padding!
         }
 
         animator?.startAnimation()
@@ -58,8 +70,8 @@ internal class CameraAnimatorTests: XCTestCase {
         animator?.update()
 
         XCTAssertEqual(delegate.jumpToStub.invocations.count, 1)
-        XCTAssertEqual(delegate.jumpToStub.invocations.first?.parameters.zoom,
-                       cameraView.localCamera.zoom)
+        XCTAssertEqual(delegate.jumpToStub.invocations.first?.parameters,
+                       cameraView.localCamera)
 
     }
 }

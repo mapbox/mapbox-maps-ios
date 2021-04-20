@@ -65,8 +65,6 @@ public class CameraAnimator: NSObject {
         cameraView.removeFromSuperview()
     }
 
-    // MARK: Functions
-
     /// Starts the animation if this animator is in `inactive` state. Also used to resume a "paused" animation.
     public func startAnimation() {
 

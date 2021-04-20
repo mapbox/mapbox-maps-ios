@@ -8,73 +8,111 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
     @IBOutlet var mapViewContainer: UIView!
     @IBOutlet var logView: UITextView!
     @IBOutlet var button: UIButton!
-    @IBOutlet var progressView: UIProgressView!
+    @IBOutlet var stylePackProgressView: UIProgressView!
+    @IBOutlet var tileRegionProgressView: UIProgressView!
+    @IBOutlet var progressContainer: UIView!
 
     private var mapView: MapView?
-    private var offlineManager: OfflineManager?
     private var logger: OfflineManagerLogWriter?
-    private var download: Cancelable?
-    private var tileRegion: TileRegion?
-
-    private let tokyoCoord = CLLocationCoordinate2D(latitude: 35.682027, longitude: 139.769305)
-    private let tokyoZoom: CGFloat = 12
-    private lazy var tokyoCoords: [CLLocationCoordinate2D] = {[
-        CLLocationCoordinate2D(latitude: tokyoCoord.latitude - 0.1, longitude: tokyoCoord.longitude - 0.1),
-        CLLocationCoordinate2D(latitude: tokyoCoord.latitude - 0.1, longitude: tokyoCoord.longitude + 0.1),
-        CLLocationCoordinate2D(latitude: tokyoCoord.latitude + 0.1, longitude: tokyoCoord.longitude + 0.1),
-        CLLocationCoordinate2D(latitude: tokyoCoord.latitude + 0.1, longitude: tokyoCoord.longitude - 0.1),
-        CLLocationCoordinate2D(latitude: tokyoCoord.latitude - 0.1, longitude: tokyoCoord.longitude - 0.1),
-    ]}()
 
     // Default MapInitOptions. If you use a custom path for a TileStore, you would
     // need to create a custom MapInitOptions to reference that TileStore.
     private var mapInitOptions = MapInitOptions()
 
-    deinit {
-        // Clean up after the example. Typically, you'll have custom business
-        // logic to decide when to evict tile regions and style packs
-        if let tileRegion = tileRegion {
-            TileStore.getInstance().removeTileRegion(forId: tileRegion.id)
-        }
+    private lazy var offlineManager: OfflineManager = {
+        return OfflineManager(resourceOptions: mapInitOptions.resourceOptions)
+    }()
 
-        if let offlineManager = offlineManager {
-            offlineManager.removeStylePack(for: .outdoors)
-        }
+    // Regions and style pack downloads
+    private var downloads: [Cancelable] = []
+
+    private let tokyoCoord = CLLocationCoordinate2D(latitude: 35.682027, longitude: 139.769305)
+    private let tokyoZoom: CGFloat = 12
+    private let tileRegionId = "myTileRegion"
+
+    private enum State {
+        case unknown
+        case initial
+        case downloading
+        case downloaded
+        case mapViewDisplayed
+        case finished
+    }
+
+    deinit {
+        removeTileRegionAndStylePack()
     }
 
     override public func viewDidLoad() {
         super.viewDidLoad()
 
         // Initialize a logger that writes into the text view
-        let logger = OfflineManagerLogWriter(for: ["Example", "maps"], textView: logView)
+        let logger = OfflineManagerLogWriter(for: ["Example"], textView: logView)
         LogConfiguration.getInstance().registerLogWriterBackend(forLogWriter: logger)
         self.logger = logger
 
-        setupViews()
+        // Set the disk quota to zero, so that tile regions are fully evicted
+        // when removed. The TileStore is also used when
+        // `ResourceOptions.isLoadTilePacksFromNetwork` is `true`, and also by
+        // the Navigation SDK.
+//        TileStore.getInstance().setOptionForKey(TileStoreOptions.diskQuota, value: 0)
+
+        state = .initial
     }
 
-    func setupViews() {
-        logView.text = ""
-        logView.textContainerInset.bottom = view.safeAreaInsets.bottom
-        logView.scrollIndicatorInsets.bottom = view.safeAreaInsets.bottom
+    // MARK: - Actions
 
-        progressView.progress = 0.0
-    }
+    internal func downloadTileRegions() {
+        precondition(downloads.isEmpty)
 
-    internal func downloadTileRegion() {
-        precondition(download == nil)
-        button.setTitle("Cancel Download", for: .normal)
+        let dispatchGroup = DispatchGroup()
+        var downloadError = false
 
-        let offlineManager = OfflineManager(resourceOptions: mapInitOptions.resourceOptions)
+        // - - - - - - - -
 
-        // Create an offline region with tiles using the "outdoors" style
-        let stylePackOptions = StylePackLoadOptions(glyphsRasterizationMode: .ideographsRasterizedLocally,
-                                                    metadata: ["tag": "my-outdoors-style-pack"])
+        // 1. Create style package with loadStylePack() call.
+        let stylePackLoadOptions = StylePackLoadOptions(glyphsRasterizationMode: .ideographsRasterizedLocally,
+                                                        metadata: ["tag": "my-outdoors-style-pack"])!
 
+        dispatchGroup.enter()
+        let stylePackDownload = offlineManager.loadStylePack(for: .outdoors, loadOptions: stylePackLoadOptions) { [weak self] progress in
+            // These closures do not get called from the main thread. In this case
+            // we're updating the UI, so it's important to dispatch to the main
+            // queue.
+            DispatchQueue.main.async {
+                guard let progress = progress,
+                      let stylePackProgressView = self?.stylePackProgressView else {
+                    return
+                }
+
+                Log.info(forMessage: "StylePack = \(progress)", category: "Example")
+                stylePackProgressView.progress = Float(progress.completedResourceCount) / Float(progress.requiredResourceCount)
+            }
+
+        } completion: { result in
+            DispatchQueue.main.async {
+                defer {
+                    dispatchGroup.leave()
+                }
+
+                switch result {
+                case let .success(stylePack):
+                    Log.info(forMessage: "stylePack = \(stylePack)", category: "Example")
+
+                case let .failure(error):
+                    Log.error(forMessage: "stylePack download Error = \(error)", category: "Example")
+                    downloadError = true
+                }
+            }
+        }
+
+        // - - - - - - - -
+
+        // 2. Create an offline region with tiles for the outdoors style
         let outdoorsOptions = TilesetDescriptorOptions(styleURI: .outdoors,
-                                                       zoomRange: 0...16,
-                                                       stylePackOptions: stylePackOptions)
+                                                       zoomRange: 0...16)
 
+        // Resolving this tileset descriptor will create a style package..
         let outdoorsDescriptor = offlineManager.createTilesetDescriptor(for: outdoorsOptions)
 
         // Load the tile region
@@ -83,74 +121,194 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
                                               networkRestriction: .none)
 
         let tileRegionLoadOptions = TileRegionLoadOptions(
-            geometry: MBXGeometry(line: tokyoCoords),
+            geometry: MBXGeometry(coordinate: tokyoCoord),
             descriptors: [outdoorsDescriptor],
             metadata: ["tag": "my-outdoors-tile-region"],
-            tileLoadOptions: tileLoadOptions,
-            averageBytesPerSecond: nil)!
+            tileLoadOptions: tileLoadOptions)!
 
         // Use the the default TileStore to load this region. You can create
         // custom TileStores are are unique for a particular file path, i.e.
         // there is only ever one TileStore per unique path.
-        download = TileStore.getInstance().loadTileRegion(forId: "myTileRegion",
+        dispatchGroup.enter()
+        let tileRegionDownload = TileStore.getInstance().loadTileRegion(forId: tileRegionId,
                                                           loadOptions: tileRegionLoadOptions) { [weak self] (progress) in
-            guard let progress = progress else {
-                return
-            }
-
             // These closures do not get called from the main thread. In this case
             // we're updating the UI, so it's important to dispatch to the main
             // queue.
             DispatchQueue.main.async {
-                Log.info(forMessage: "\(progress)", category: "Example")
-
-                // Update the progress bar
-                let fractionComplete = Float(progress.completedResourceCount) / Float(progress.requiredResourceCount)
-                self?.progressView.progress = fractionComplete
-            }
-        } completion: { [weak self] (result: Result<TileRegion, TileRegionError>) in
-            DispatchQueue.main.async {
-                guard let self = self else {
+                guard let progress = progress,
+                      let tileRegionProgressView = self?.tileRegionProgressView else {
                     return
                 }
 
-                self.download = nil
+                Log.info(forMessage: "\(progress)", category: "Example")
+
+                // Update the progress bar
+                tileRegionProgressView.progress = Float(progress.completedResourceCount) / Float(progress.requiredResourceCount)
+            }
+        } completion: { (result: Result<TileRegion, TileRegionError>) in
+            DispatchQueue.main.async {
+                defer {
+                    dispatchGroup.leave()
+                }
 
                 switch result {
                 case let .success(tileRegion):
                     Log.info(forMessage: "tileRegion = \(tileRegion)", category: "Example")
-                    self.enableShowMapView()
-                    self.tileRegion = tileRegion
 
                 case let .failure(error):
                     Log.error(forMessage: "tileRegion download Error = \(error)", category: "Example")
-                    self.button.setTitle("Start Download", for: .normal)
+                    downloadError = true
                 }
             }
         }
 
-        self.offlineManager = offlineManager
+        // Wait for both downloads before moving to the next state
+        dispatchGroup.notify(queue: .main) {
+            self.downloads = []
+            self.state = downloadError ? .finished : .downloaded
+        }
+
+        downloads = [stylePackDownload, tileRegionDownload]
+        state = .downloading
     }
 
-    internal func cancelDownload() {
-        download?.cancel()
-        download = nil
-        tileRegion = nil
-
-        button.isEnabled = true
-        button.setTitle("Start Download", for: .normal)
-        progressView.progress = 0
+    internal func cancelDownloads() {
+        // Canceling will trigger `.canceled` errors that will then change state
+        downloads.forEach { $0.cancel() }
     }
 
-    internal func enableShowMapView() {
-        button.isEnabled = true
-        button.setTitle("Show MapView", for: .normal)
-        progressView.isHidden = true
-        Log.info(forMessage: "Tile region has been downloaded. Try disabling the network and showing the map view.", category: "Example")
+    private func logDownloadResult<T, Error>(message: String, result: Result<[T], Error>) {
+        switch result {
+        case let .success(array):
+            Log.info(forMessage: message, category: "Example")
+            for element in array {
+                Log.info(forMessage: "\t\(element)", category: "Example")
+            }
+
+        case let .failure(error):
+            Log.error(forMessage: "\(message) \(error)", category: "Example")
+        }
     }
 
-    internal func showMapView() {
-        button.setTitle("Show Metadata", for: .normal)
+    private func showDownloadedRegions() {
+        offlineManager.allStylePacks { result in
+            self.logDownloadResult(message: "Style packs:", result: result)
+        }
+
+        TileStore.getInstance().allTileRegions { result in
+            self.logDownloadResult(message: "Tile regions:", result: result)
+        }
+        Log.info(forMessage: "\n", category: "Example")
+    }
+
+    // Remove downloaded region and style pack
+    private func removeTileRegionAndStylePack(completion: (() -> Void)? = nil ) {
+        // Clean up after the example. Typically, you'll have custom business
+        // logic to decide when to evict tile regions and style packs
+
+        // Remove the tile region with the tile region ID.
+        // Note this will not remove the downloaded tile packs, instead, it will
+        // just mark the tileset as not a part of a tile region. The tiles still
+        // exists in a predictive cache in the TileStore.
+        TileStore.getInstance().removeTileRegion(forId: tileRegionId)
+
+        // Set the disk quota to zero, so that tile regions are fully evicted
+        // when removed. The TileStore is also used when `ResourceOptions.isLoadTilePacksFromNetwork`
+        // is `true`, and also by the Navigation SDK.
+        // This removes the tiles from the predictive cache.
+        TileStore.getInstance().setOptionForKey(TileStoreOptions.diskQuota, value: 0)
+
+        // Remove the style pack with the style uri.
+        // Note this will not remove the downloaded style pack, instead, it will
+        // just mark the resources as not a part of the existing style pack. The
+        // resources still exists in the ambient cache.
+        offlineManager.removeStylePack(for: .outdoors)
+
+        // Remove the existing style resources from ambient cache using cache manager.
+        let cacheManager = CacheManager(options: mapInitOptions.resourceOptions)
+        cacheManager.clearAmbientCache { _ in
+            completion?()
+        }
+    }
+
+    // MARK: - State changes
+
+    @IBAction func didTapButton(_ button: UIButton) {
+        switch state {
+        case .unknown:
+            state = .initial
+        case .initial:
+            downloadTileRegions()
+        case .downloading:
+            // Cancel
+            cancelDownloads()
+        case .downloaded:
+            state = .mapViewDisplayed
+        case .mapViewDisplayed:
+            showDownloadedRegions()
+            state = .finished
+        case .finished:
+            removeTileRegionAndStylePack { [weak self] in
+                self?.showDownloadedRegions()
+                self?.state = .initial
+            }
+        }
+    }
+
+    private var state: State = .unknown {
+        didSet {
+            Log.warning(forMessage: "Changing state from \(oldValue) -> \(state)", category: "Debug")
+
+            switch (oldValue, state) {
+            case (_, .initial):
+                resetUI()
+
+            case (.initial, .downloading):
+                // Can cancel
+                button.setTitle("Cancel Downloads", for: .normal)
+
+            case (.downloading, .downloaded):
+                Log.info(forMessage: "Tile region has been downloaded. Try disabling the network and showing the map view.\n", category: "Example")
+                enableShowMapView()
+
+            case (.downloaded, .mapViewDisplayed):
+                showMapView()
+
+            case (.mapViewDisplayed, .finished),
+                 (.downloading, .finished):
+                button.setTitle("Reset", for: .normal)
+
+            default:
+                fatalError("Invalid transition from \(oldValue) to \(state)")
+            }
+        }
+    }
+
+    // MARK: - UI changes
+
+    private func resetUI() {
+        logger?.reset()
+        logView.textContainerInset.bottom = view.safeAreaInsets.bottom
+        logView.scrollIndicatorInsets.bottom = view.safeAreaInsets.bottom
+
+        progressContainer.isHidden = false
+        stylePackProgressView.progress = 0.0
+        tileRegionProgressView.progress = 0.0
+
+        button.setTitle("Start Downloads", for: .normal)
+
+        mapView?.removeFromSuperview()
+        mapView = nil
+    }
+
+    private func enableShowMapView() {
+        button.setTitle("Show Map", for: .normal)
+    }
+
+    private func showMapView() {
+        button.setTitle("Show Downloads", for: .normal)
+        progressContainer.isHidden = true
 
         let mapView = MapView(frame: mapViewContainer.bounds, mapInitOptions: mapInitOptions, styleURI: .outdoors)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -160,55 +318,64 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         mapView.cameraManager.setCamera(to: CameraOptions(center: tokyoCoord,
                                                           zoom: tokyoZoom))
 
-        self.mapView = mapView
-
-        // Add a line annotation that shows the bounds that were passed to the tile
-        // region API.
+        // Add a point annotation that shows the point geometry that were passed
+        // to the tile region API.
         mapView.on(.styleLoaded) { [weak self] _ in
-            guard let self = self else {
+            guard
+                let annotationManager = self?.mapView?.annotationManager,
+                let coord = self?.tokyoCoord else {
                 return
             }
-            self.mapView?.annotationManager.addAnnotation(LineAnnotation(coordinates: self.tokyoCoords))
-        }
-    }
 
-    private func fetchAndDisplayMetadata() {
-        guard let tileRegion = tileRegion else {
-            preconditionFailure()
+            annotationManager.addAnnotation(PointAnnotation(coordinate: coord))
         }
 
-        // Fetch the meta-data for the region. This should match the metadata
-        // passed to TileRegionLoadOptions
-        TileStore.getInstance().tileRegionMetadata(forId: tileRegion.id) { (result) in
-            DispatchQueue.main.async {
-                switch result {
-                case let .success(metadata):
-                    Log.info(forMessage: "Metadata = \(metadata)", category: "Example")
-                case let .failure(error):
-                    Log.error(forMessage: "Metadata error = \(error)", category: "Example")
-                }
-            }
-        }
-    }
-
-    @IBAction func didTapButton(_ button: UIButton) {
-        switch (download, tileRegion, mapView) {
-        case (.none, .none, .none):
-            downloadTileRegion()
-
-        case (.some, _, .none):
-            cancelDownload()
-
-        case (.none, .some, .none):
-            showMapView()
-
-        case (_, _, .some):
-            fetchAndDisplayMetadata()
-        }
+        self.mapView = mapView
     }
 }
 
-// MARK: - Convenience classes and extensions
+// MARK: - Convenience classes for tile and style classes
+
+extension TileRegionLoadProgress {
+    public override var description: String {
+        "TileRegionLoadProgress: \(completedResourceCount) / \(requiredResourceCount)"
+    }
+}
+
+extension StylePackLoadProgress {
+    public override var description: String {
+        "StylePackLoadProgress: \(completedResourceCount) / \(requiredResourceCount)"
+    }
+}
+
+extension TileRegion {
+    public override var description: String {
+        "TileRegion \(id): \(completedResourceCount) / \(requiredResourceCount)"
+    }
+}
+
+extension StylePack {
+    public override var description: String {
+        "StylePack \(styleURI): \(completedResourceCount) / \(requiredResourceCount)"
+    }
+}
+
+// MARK: - Custom logging
+
+internal extension LoggingLevel {
+    var color: UIColor {
+        switch self {
+        case .debug:
+            return .purple
+        case .warning:
+            return .orange
+        case .error:
+            return .red
+        default:
+            return .black
+        }
+    }
+}
 
 /// Convenience logger to write logs to the text view
 public final class OfflineManagerLogWriter: LogWriterBackend {
@@ -229,6 +396,11 @@ public final class OfflineManagerLogWriter: LogWriterBackend {
         self.textView = textView
     }
 
+    public func reset() {
+        log = NSMutableAttributedString()
+        textView?.attributedText = log
+    }
+
     public func writeLog(for level: LoggingLevel, message: String, category: String?) {
         print("[\(level.rawValue): \(category ?? "")] \(message)")
 
@@ -246,48 +418,6 @@ public final class OfflineManagerLogWriter: LogWriterBackend {
             log.append(message)
 
             textView.attributedText =  log
-
-            let range = NSRange(location: log.length, length: 0)
-            textView.scrollRangeToVisible(range)
-        }
-    }
-}
-
-extension TileRegionLoadProgress {
-    public override var description: String {
-        """
-        TileRegionLoadProgress: \(completedResourceCount) / \(requiredResourceCount)
-        """
-    }
-}
-
-extension TileRegion {
-    public override var description: String {
-        """
-        TileRegion \(id): \(requiredResourceCount) / \(completedResourceCount)
-        """
-    }
-}
-
-extension StylePack {
-    public override var description: String {
-        """
-        StylePack \(styleURI): \(requiredResourceCount) / \(completedResourceCount)
-        """
-    }
-}
-
-public extension LoggingLevel {
-    var color: UIColor {
-        switch self {
-        case .debug:
-            return .purple
-        case .warning:
-            return .orange
-        case .error:
-            return .red
-        default:
-            return .black
         }
     }
 }

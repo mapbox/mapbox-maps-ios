@@ -41,7 +41,7 @@ extension TilesetDescriptorOptions {
     public convenience init(styleURI: StyleURI,
                             zoomRange: ClosedRange<UInt8>,
                             pixelRatio: Float = Float(UIScreen.main.scale),
-                            stylePackOptions: StylePackLoadOptions?) {
+                            stylePackOptions: StylePackLoadOptions? = nil) {
         self.init(styleURI: styleURI.rawValue.absoluteString,
                   minZoom: zoomRange.lowerBound,
                   maxZoom: zoomRange.upperBound,

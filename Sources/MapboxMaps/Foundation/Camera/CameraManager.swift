@@ -207,15 +207,11 @@ public class CameraManager {
     /// It seamlessly incorporates zooming and panning to help
     /// the user find his or her bearings even after traversing a great distance.
     ///
-    /// NOTE: Keep in mind the lifecycle of the `CameraAnimator` returned by this method.
-    /// If a `CameraAnimator` is destroyed, before the animation is finished,
-    /// the animation will be interrupted and completion handlers will be called.
-    ///
     /// - Parameters:
     ///   - camera: The camera options at the end of the animation. Any camera parameters that are nil will not be animated.
     ///   - duration: Duration of the animation, measured in seconds. If nil, a suitable calculated duration is used.
     ///   - completion: Completion handler called when the animation stops
-    /// - Returns: The optional `CameraAnimator` that will execute the FlyTo animation
+    /// - Returns: An instance of `CameraAnimatorProtocol` which can be interrupted if necessary
     @discardableResult
     public func fly(to camera: CameraOptions,
                     duration: TimeInterval? = nil,
@@ -239,6 +235,35 @@ public class CameraManager {
         flyToAnimator.addCompletion(completion)
         flyToAnimator.startAnimation()
         internalAnimator = flyToAnimator
+        
+        return internalAnimator
+    }
+    
+    /// Ease the camera to a destination
+    /// - Parameters:
+    ///   - camera: the target camera after animation
+    ///   - duration: duration of the animation
+    ///   - completion: completion to be called after animation
+    /// - Returns: An instance of `CameraAnimatorProtocol` which can be interrupted if necessary
+    @discardableResult
+    public func ease(to camera: CameraOptions, duration: TimeInterval, completion: AnimationCompletion? = nil) -> CameraAnimatorProtocol? {
+        
+        internalAnimator?.stopAnimation()
+        
+        let animator = makeCameraAnimator(duration: duration, curve: .easeInOut) { (transition) in
+            transition.center.toValue = camera.center
+            transition.padding.toValue = camera.padding
+            transition.anchor.toValue = camera.anchor
+            transition.zoom.toValue = camera.zoom
+            transition.bearing.toValue = camera.bearing
+            transition.pitch.toValue = camera.pitch
+        }
+        
+        if let completion = completion {
+            animator.addCompletion(completion)
+        }
+        animator.startAnimation()
+        internalAnimator = animator
         
         return internalAnimator
     }

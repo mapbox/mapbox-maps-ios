@@ -7,10 +7,18 @@ import Turf
 
 internal typealias PendingAnimationCompletion = (completion: AnimationCompletion, animatingPosition: UIViewAnimatingPosition)
 
+// swiftlint:disable:next type_body_length
 open class BaseMapView: UIView, CameraViewDelegate {
 
-    /// The underlying renderer object responsible for rendering the map
-    public private(set) var __map: Map!
+    // mapbox map depends on MapInitOptions, which is not available until
+    // awakeFromNib() when instantiating BaseMapView from a xib or storyboard.
+    // This is the only reason that it is an implicitly-unwrapped optional var
+    // instead of a non-optional let.
+    public private(set) var mapboxMap: MapboxMap! {
+        didSet {
+            assert(oldValue == nil, "mapboxMap should only be set once.")
+        }
+    }
 
     private let mapClient = DelegatingMapClient()
     private let observer = DelegatingObserver()
@@ -50,7 +58,7 @@ open class BaseMapView: UIView, CameraViewDelegate {
     /// The map's current camera
     public var camera: CameraOptions {
         get {
-            return __map.getCameraOptions(forPadding: nil)
+            return mapboxMap.cameraOptions
         } set {
             cameraView.camera = newValue
         }
@@ -124,7 +132,7 @@ open class BaseMapView: UIView, CameraViewDelegate {
     }
 
     func jumpTo(camera: CameraOptions) {
-        __map.setCameraFor(camera)
+        mapboxMap.updateCamera(with: camera)
     }
 
     // MARK: Init
@@ -139,30 +147,31 @@ open class BaseMapView: UIView, CameraViewDelegate {
 
         self.resourceOptions = mapInitOptions.resourceOptions
 
-        let resolvedMapOptions: MapOptions
-
+        let resolvedMapInitOptions: MapInitOptions
         if mapInitOptions.mapOptions.size == nil {
             // Update using the view's size
-            let other = mapInitOptions.mapOptions
-            resolvedMapOptions = MapOptions(__contextMode: other.__contextMode,
-                                            constrainMode: other.__constrainMode,
-                                            viewportMode: other.__viewportMode,
-                                            orientation: other.__orientation,
-                                            crossSourceCollisions: other.__crossSourceCollisions,
-                                            size: Size(width: Float(bounds.width), height: Float(bounds.height)),
-                                            pixelRatio: other.pixelRatio,
-                                            glyphsRasterizationOptions: other.glyphsRasterizationOptions)
+            let original = mapInitOptions.mapOptions
+            let resolvedMapOptions = MapOptions(
+                __contextMode: original.__contextMode,
+                constrainMode: original.__constrainMode,
+                viewportMode: original.__viewportMode,
+                orientation: original.__orientation,
+                crossSourceCollisions: original.__crossSourceCollisions,
+                size: Size(width: Float(bounds.width), height: Float(bounds.height)),
+                pixelRatio: original.pixelRatio,
+                glyphsRasterizationOptions: original.glyphsRasterizationOptions)
+            resolvedMapInitOptions = MapInitOptions(
+                resourceOptions: mapInitOptions.resourceOptions,
+                mapOptions: resolvedMapOptions)
         } else {
-            resolvedMapOptions = mapInitOptions.mapOptions
+            resolvedMapInitOptions = mapInitOptions
         }
         mapClient.delegate = self
-        __map = Map(client: mapClient, mapOptions: resolvedMapOptions, resourceOptions: mapInitOptions.resourceOptions)
-
-        __map?.createRenderer()
+        mapboxMap = MapboxMap(mapClient: mapClient, mapInitOptions: resolvedMapInitOptions)
 
         observer.delegate = self
         let events = MapEvents.EventKind.allCases.map({ $0.rawValue })
-        __map.subscribe(for: observer, events: events)
+        mapboxMap.__map.subscribe(for: observer, events: events)
 
         self.cameraView = CameraView(delegate: self)
         self.addSubview(cameraView)
@@ -173,7 +182,7 @@ open class BaseMapView: UIView, CameraViewDelegate {
                                                object: nil)
 
         if let validStyleURI = styleURI {
-            __map?.setStyleURIForUri(validStyleURI.absoluteString)
+            mapboxMap.__map.setStyleURIForUri(validStyleURI.absoluteString)
         }
     }
 
@@ -224,9 +233,7 @@ open class BaseMapView: UIView, CameraViewDelegate {
 
     public override func layoutSubviews() {
         super.layoutSubviews()
-        let size = MapboxCoreMaps.Size(width: Float(bounds.size.width),
-                                       height: Float(bounds.size.height))
-        __map?.setSizeFor(size)
+        mapboxMap.size = bounds.size
     }
 
     func validateDisplayLink() {
@@ -326,7 +333,7 @@ open class BaseMapView: UIView, CameraViewDelegate {
     public func coordinate(for point: CGPoint, in view: UIView? = nil) -> CLLocationCoordinate2D {
         let view = view ?? self
         let screenCoordinate = convert(point, from: view).screenCoordinate // Transform to view's coordinate space
-        return __map.coordinateForPixel(forPixel: screenCoordinate)
+        return mapboxMap.__map.coordinateForPixel(forPixel: screenCoordinate)
     }
 
     /**
@@ -340,7 +347,7 @@ open class BaseMapView: UIView, CameraViewDelegate {
       */
     public func point(for coordinate: CLLocationCoordinate2D, in view: UIView? = nil) -> CGPoint {
         let view = view ?? self
-        let point = __map.pixelForCoordinate(for: coordinate).point
+        let point = mapboxMap.__map.pixelForCoordinate(for: coordinate).point
         let transformedPoint = convert(point, to: view)
         return transformedPoint
     }

@@ -21,7 +21,7 @@ internal protocol AnnotationSupportableMap: UIView {
 extension BaseMapView: AnnotationSupportableMap {
 
     public var observable: Observable? {
-        return __map
+        return mapboxMap.__map
     }
 
     public enum QueryRenderedFeaturesError: Error {
@@ -62,7 +62,7 @@ extension BaseMapView: AnnotationSupportableMap {
         let screenBox = ScreenBox(min: ScreenCoordinate(x: Double(rect.minX), y: Double(rect.minY)),
                                   max: ScreenCoordinate(x: Double(rect.maxX), y: Double(rect.maxY)))
 
-        __map.queryRenderedFeatures(for: screenBox, options: queryOptions, callback: { (expected: MBXExpected?) in
+        mapboxMap.__map.queryRenderedFeatures(for: screenBox, options: queryOptions, callback: { (expected: MBXExpected?) in
 
             guard let validExpected = expected else {
                 completion(.failure(.unknown))
@@ -113,7 +113,7 @@ extension BaseMapView: AnnotationSupportableMap {
         let screenPoint = ScreenCoordinate(x: Double(point.x),
                                            y: Double(point.y))
 
-        __map.queryRenderedFeatures(forPixel: screenPoint, options: queryOptions, callback: { (expected: MBXExpected?) in
+        mapboxMap.__map.queryRenderedFeatures(forPixel: screenPoint, options: queryOptions, callback: { (expected: MBXExpected?) in
 
             guard let validExpected = expected else {
                 completion(.failure(.unknown))

@@ -20,7 +20,7 @@ class MapInitOptionsIntegrationTests: XCTestCase {
             resourceOptions: ResourceOptions(accessToken: credentialsManager.accessToken))
 
         let mapView = MapView(frame: .zero, mapInitOptions: mapInitOptions)
-        let resourceOptions = mapView.__map.getResourceOptions()
+        let resourceOptions = mapView.mapboxMap.__map.getResourceOptions()
 
         XCTAssertEqual(resourceOptions, mapInitOptions.resourceOptions)
         XCTAssertEqual(resourceOptions.accessToken, credentialsManager.accessToken)
@@ -55,7 +55,7 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         XCTAssertEqual(optionsFromProvider, providerReturnValue)
 
         // Now check the resource options from the initialized MapView
-        let resourceOptions = mapView.__map.getResourceOptions()
+        let resourceOptions = mapView.mapboxMap.__map.getResourceOptions()
 
         XCTAssertEqual(resourceOptions, providerReturnValue.resourceOptions)
         XCTAssertEqual(resourceOptions.accessToken, credentialsManager.accessToken)
@@ -83,7 +83,7 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         XCTAssertNil(mapView.mapInitOptionsProvider)
 
         // Now check the resource options from the initialized MapView
-        let resourceOptions = mapView.__map.getResourceOptions()
+        let resourceOptions = mapView.mapboxMap.__map.getResourceOptions()
 
         // The map should use the default MapInitOptions
         XCTAssertEqual(resourceOptions, ResourceOptions(accessToken: CredentialsManager.default.accessToken))

@@ -56,9 +56,10 @@ public class ColorExpressionExample: UIViewController, ExampleProtocol {
 
         if let data = try? JSONEncoder().encode(exp.self),
            let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []) {
-            mapView.__map.setStyleLayerPropertyForLayerId("land",
-                                                          property: "background-color",
-                                                          value: jsonObject)
+            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(
+                "land",
+                property: "background-color",
+                value: jsonObject)
         }
 
         // The below line is used for internal testing purposes only.

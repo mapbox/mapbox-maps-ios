@@ -19,6 +19,7 @@ Mapbox welcomes participation and contributions from everyone.
       * `BaseMapView` no longer conforms to `MapClient` or `MBMMetalViewProvider`, and the methods they required are now internal.
       * The setter for `BaseMapView.__map` is now private
       * `Snapshotter` no longer conforms to `Observer`, and the method it required is now internal.
+  * The `BaseMapView.__map` property has been moved to `BaseMapView.mapboxMap.__map`. ([#280](https://github.com/mapbox/mapbox-maps-ios/pull/280))
 
 ## 10.0.0-beta.17 - April 13, 2021
 

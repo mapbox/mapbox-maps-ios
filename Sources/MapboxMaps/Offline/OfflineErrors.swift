@@ -7,7 +7,7 @@ internal protocol CoreErrorRepresentable {
 }
 
 /// Describes the reason for a tile region download request failure.
-public enum TileRegionError: Error, CoreErrorRepresentable, CustomStringConvertible {
+public enum TileRegionError: LocalizedError, CoreErrorRepresentable {
     typealias CoreErrorType = MapboxCommon.TileRegionError
 
     /// The operation was canceled.
@@ -41,7 +41,7 @@ public enum TileRegionError: Error, CoreErrorRepresentable, CustomStringConverti
         }
     }
 
-    public var description: String {
+    public var errorDescription: String? {
         switch self {
         case let .canceled(message):
             return ".canceled(\(message))"
@@ -62,7 +62,7 @@ public enum TileRegionError: Error, CoreErrorRepresentable, CustomStringConverti
 }
 
 /// Describes the reason for a style package download request failure.
-public enum StylePackError: Error, CoreErrorRepresentable, CustomStringConvertible {
+public enum StylePackError: LocalizedError, CoreErrorRepresentable {
     typealias CoreErrorType = MapboxCoreMaps.StylePackError
 
     /// The operation was canceled.
@@ -95,7 +95,7 @@ public enum StylePackError: Error, CoreErrorRepresentable, CustomStringConvertib
         }
     }
 
-    public var description: String {
+    public var errorDescription: String? {
         switch self {
         case let .canceled(message):
             return ".canceled(\(message))"

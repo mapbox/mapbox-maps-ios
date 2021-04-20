@@ -46,7 +46,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         // Initialize a logger that writes into the text view
-        let logger = OfflineManagerLogWriter(for: "Example", textView: logView)
+        let logger = OfflineManagerLogWriter(for: ["Example", "maps"], textView: logView)
         LogConfiguration.getInstance().registerLogWriterBackend(forLogWriter: logger)
         self.logger = logger
 
@@ -68,12 +68,11 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         let offlineManager = OfflineManager(resourceOptions: mapInitOptions.resourceOptions)
 
         // Create an offline region with tiles using the "outdoors" style
-        let stylePackOptions = StylePackLoadOptions(glyphsRasterizationMode: .ideographsRasterizedLocally,
+        let stylePackOptions = StylePackLoadOptions(glyphsRasterizationMode: .allGlyphsRasterizedLocally,
                                                     metadata: ["tag": "my-outdoors-style-pack"])
 
         let outdoorsOptions = TilesetDescriptorOptions(styleURI: .outdoors,
-                                                       minZoom: 0,
-                                                       maxZoom: 16,
+                                                       zoomRange: 0...16,
                                                        stylePackOptions: stylePackOptions)
 
         let outdoorsDescriptor = offlineManager.createTilesetDescriptor(for: outdoorsOptions)
@@ -216,31 +215,36 @@ public final class OfflineManagerLogWriter: LogWriterBackend {
     weak var textView: UITextView?
     var previousBackend: LogWriterBackend
     var log: NSMutableAttributedString
-    let category: String
+    let categories: [String?]
 
     deinit {
         // Restore normality
         LogConfiguration.getInstance().registerLogWriterBackend(forLogWriter: previousBackend)
     }
 
-    internal init(for category: String, textView: UITextView) {
+    internal init(for categories: [String], textView: UITextView) {
         self.previousBackend = LogConfiguration.getInstance().getLogWriterBackend()
         self.log = NSMutableAttributedString()
-        self.category = category
+        self.categories = categories as [String?]
         self.textView = textView
     }
 
     public func writeLog(for level: LoggingLevel, message: String, category: String?) {
         print("[\(level.rawValue): \(category ?? "")] \(message)")
 
-        guard category == self.category else {
+        guard categories.contains(category) else {
             return
         }
 
-        let message = NSMutableAttributedString(string: "\(message)\n", attributes: [NSAttributedString.Key.foregroundColor: level.color])
-        log.append(message)
+        DispatchQueue.main.async { [weak self] in
+            guard let textView = self?.textView,
+                  let log = self?.log else {
+                return
+            }
 
-        if let textView = textView {
+            let message = NSMutableAttributedString(string: "\(message)\n", attributes: [NSAttributedString.Key.foregroundColor: level.color])
+            log.append(message)
+
             textView.attributedText =  log
 
             let range = NSRange(location: log.length, length: 0)

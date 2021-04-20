@@ -68,7 +68,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         let offlineManager = OfflineManager(resourceOptions: mapInitOptions.resourceOptions)
 
         // Create an offline region with tiles using the "outdoors" style
-        let stylePackOptions = StylePackLoadOptions(glyphsRasterizationMode: .allGlyphsRasterizedLocally,
+        let stylePackOptions = StylePackLoadOptions(glyphsRasterizationMode: .ideographsRasterizedLocally,
                                                     metadata: ["tag": "my-outdoors-style-pack"])
 
         let outdoorsOptions = TilesetDescriptorOptions(styleURI: .outdoors,

@@ -48,13 +48,14 @@ public class CameraAnimator: NSObject {
     // MARK: Initializer
     internal init(delegate: CameraAnimatorDelegate,
                   propertyAnimator: UIViewPropertyAnimator,
-                  owner: AnimationOwner) {
+                  owner: AnimationOwner,
+                  cameraView: CameraView = CameraView()) {
         self.delegate = delegate
         self.propertyAnimator = propertyAnimator
         self.owner = owner
 
         // Set up the short lived camera view
-        cameraView = CameraView()
+        self.cameraView = cameraView
         delegate.addViewToViewHeirarchy(cameraView)
     }
 

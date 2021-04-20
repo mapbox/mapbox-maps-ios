@@ -51,35 +51,6 @@ internal class CameraView: UIView {
     internal required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    internal func syncLayerModel(to cameraOptions: CameraOptions) {
-        if let zoom = cameraOptions.zoom {
-            layer.model().opacity = Float(zoom)
-        }
-
-        if let bearing = cameraOptions.bearing {
-            layer.model().cornerRadius = CGFloat(bearing)
-        }
-
-        if let centerCoordinate = cameraOptions.center {
-            layer.model().position = CGPoint(x: centerCoordinate.longitude, y: centerCoordinate.latitude)
-        }
-
-        if let padding = cameraOptions.padding {
-            layer.model().bounds = CGRect(x: padding.left,
-                                  y: padding.right,
-                                  width: padding.bottom,
-                                  height: padding.top)
-        }
-
-        if let pitch = cameraOptions.pitch {
-            layer.model().transform.m11 = pitch
-        }
-
-        if let anchor = cameraOptions.anchor {
-            layer.model().anchorPoint = anchor
-        }
-    }
 
     internal func syncLayer(to cameraOptions: CameraOptions) {
         if let zoom = cameraOptions.zoom {

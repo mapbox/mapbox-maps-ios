@@ -19,7 +19,9 @@ final class CameraAnimatorDelegateMock: CameraAnimatorDelegate {
     public func schedulePendingCompletion(forAnimator animator: CameraAnimator,
                                           completion: @escaping AnimationCompletion,
                                           animatingPosition: UIViewAnimatingPosition) {
-        schedulePendingCompletionStub.call(with: SchedulePendingCompletionParameters(animator: animator, completion: completion, animatingPosition: animatingPosition))
+        schedulePendingCompletionStub.call(with: SchedulePendingCompletionParameters(animator: animator,
+                                                                                     completion: completion,
+                                                                                     animatingPosition: animatingPosition))
     }
 
     let animatorFinishedStub = Stub<CameraAnimator, Void>()

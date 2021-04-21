@@ -49,7 +49,7 @@ extension ResourceOptions {
     ///     tile in the ambient cache won’t be used as long as the up-to-date tile
     ///     pack exists in the cache.
     ///
-    ///     Tile store packs loading from network is disabled by default.
+    ///     Tile packs loading from network is disabled by default.
     public convenience init(accessToken: String,
                             baseUrl: String? = nil,
                             cachePath: String? = nil,
@@ -61,7 +61,6 @@ extension ResourceOptions {
 //      precondition(accessToken.count > 0)
 
         // Update the TileStore with the access token from the ResourceOptions
-        // TODO: Should we tie the default CredentialsManager to the default TileStore?
         if tileStoreEnabled {
             let tileStore = tileStore ?? TileStore.getInstance()
             tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken)

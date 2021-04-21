@@ -24,6 +24,6 @@ extension MapSnapshotOptions {
 
     /// Dimensions of the snapshot in points
     public var size: CGSize {
-        return CGSize(width: CGFloat(__size.width), height: CGFloat(__size.height))
+        return CGSize(__size)
     }
 }

@@ -79,7 +79,7 @@ open class BaseMapView: UIView {
         return center
     }
 
-    /// The map's  zoom level.
+    /// The map's current zoom level.
     public var zoom: CGFloat {
         guard let zoom = cameraOptions.zoom else {
             fatalError("Zoom is nil in camera options")
@@ -87,7 +87,7 @@ open class BaseMapView: UIView {
         return CGFloat(zoom)
     }
 
-    /// The map's bearing, measured clockwise from 0° north.
+    /// The map's current bearing, measured clockwise from 0° north.
     public var bearing: CLLocationDirection {
         guard let bearing = cameraOptions.bearing else {
             fatalError("Bearing is nil in camera options")
@@ -95,12 +95,23 @@ open class BaseMapView: UIView {
         return CLLocationDirection(bearing)
     }
 
-    /// The map's pitch, falling within a range of 0 to 60.
+    /// The map's current pitch, falling within a range of 0 to 60.
     public var pitch: CGFloat {
         guard let pitch = cameraOptions.pitch else {
             fatalError("Pitch is nil in camera options")
         }
         return pitch
+    }
+    
+    /// The map's current anchor, calculated after applying padding (if it exists)
+    public var anchor: CGPoint {
+        
+        let paddding = padding
+        let xAfterPadding = center.x + paddding.left - paddding.right
+        let yAfterPadding = center.y + paddding.top - paddding.bottom
+        let anchor = CGPoint(x: xAfterPadding, y: yAfterPadding)
+
+        return anchor
     }
 
     /// The map's camera padding

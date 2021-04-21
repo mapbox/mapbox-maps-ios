@@ -131,7 +131,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
             self.hadResourceEventError?(self.mapView!, eventError)
         })
 
-        view.__map.subscribe(for: observer, events: ["resource-request"])
+        view.mapboxMap.__map.subscribe(for: observer, events: ["resource-request"])
 
         self.observer = observer
 
@@ -150,7 +150,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
     internal override func tearDownWithError() throws {
 
         if let observer = observer {
-            mapView?.__map.unsubscribe(for: observer, events: ["resource-request"])
+            mapView?.mapboxMap.__map.unsubscribe(for: observer, events: ["resource-request"])
         }
 
         mapView?.removeFromSuperview()

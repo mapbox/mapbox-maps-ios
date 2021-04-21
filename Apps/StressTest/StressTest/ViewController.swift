@@ -70,7 +70,6 @@ class ViewController: UIViewController {
     var color: StylePropertyValue?
     var mapInitOptions: MapInitOptions!
     var snapshotter: Snapshotter?
-    var peer: MBXPeerWrapper?
     var logHandle: OSLog!
 
     override func viewDidLoad() {
@@ -248,12 +247,15 @@ class ViewController: UIViewController {
         do {
             let data = try JSONEncoder().encode(exp.self)
             let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
-            color = try mapView.__map.getStyleLayerProperty(forLayerId: land, property: "background-color")
+            color = mapView.mapboxMap.__map.getStyleLayerProperty(
+                forLayerId: land,
+                property: "background-color")
 
             print("Setting background color expression")
-            try mapView.__map.setStyleLayerPropertyForLayerId(land,
-                                                              property: "background-color",
-                                                              value: jsonObject)
+            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(
+                land,
+                property: "background-color",
+                value: jsonObject)
         } catch let error {
             print("Error setting background color: \(error)")
         }
@@ -266,13 +268,10 @@ class ViewController: UIViewController {
 
         if let color = color {
             print("Re-setting background color expression")
-            do {
-                try mapView.__map.setStyleLayerPropertyForLayerId(land,
-                                                                  property: "background-color",
-                                                                  value: color.value)
-            } catch let error {
-                print("Failed to reset the background color: \(error)")
-            }
+            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(
+                land,
+                property: "background-color",
+                value: color.value)
         }
         color = nil
     }

@@ -39,9 +39,10 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
     }
 
     func addModelAndTerrain() {
-        mapView.__map.addStyleCustomLayer(forLayerId: "Custom",
-                                          layerHost: self,
-                                          layerPosition: LayerPosition(above: nil, below: "waterway-label", at: nil))
+        mapView.mapboxMap.__map.addStyleCustomLayer(
+            forLayerId: "Custom",
+            layerHost: self,
+            layerPosition: LayerPosition(above: nil, below: "waterway-label", at: nil))
 
         var demSource = RasterDemSource()
         demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
@@ -59,7 +60,6 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
         _ = self.mapView.style.addLayer(layer: skyLayer)
 
         // Re-use terrain source for hillshade
-        let map = self.mapView.__map!
         let properties = [
             "id": "terrain_hillshade",
             "type": "hillshade",
@@ -67,8 +67,9 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
             "hillshade-illumination-anchor": "map"
         ] as [ String: Any ]
 
-        map.addStyleLayer(forProperties: properties,
-                          layerPosition: LayerPosition(above: nil, below: "water", at: nil))
+        mapView.mapboxMap.__map.addStyleLayer(
+            forProperties: properties,
+            layerPosition: LayerPosition(above: nil, below: "water", at: nil))
     }
 
     public func renderingWillStart(_ metalDevice: MTLDevice, colorPixelFormat: UInt, depthStencilPixelFormat: UInt) {

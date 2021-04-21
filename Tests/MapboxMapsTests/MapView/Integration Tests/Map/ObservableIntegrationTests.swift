@@ -45,7 +45,7 @@ class ObservableIntegrationTests: MapViewIntegrationTestCase {
             eventExpectation.fulfill()
         }
 
-        mapView.__map.subscribe(for: observer, events: ["resource-request"])
+        mapView.mapboxMap.__map.subscribe(for: observer, events: ["resource-request"])
 
         style.uri = .streets
 
@@ -57,6 +57,6 @@ class ObservableIntegrationTests: MapViewIntegrationTestCase {
 
         wait(for: [styleLoadExpectation, eventExpectation], timeout: 5.0)
 
-        mapView.__map.unsubscribe(for: observer)
+        mapView.mapboxMap.__map.unsubscribe(for: observer)
     }
 }

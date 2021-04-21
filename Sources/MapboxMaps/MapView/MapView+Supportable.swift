@@ -20,7 +20,7 @@ extension MapView: OrnamentSupportableView {
     internal func subscribeCameraChangeHandler(_ handler: @escaping (CameraOptions) -> Void) {
         on(.cameraChanged) { [weak self] _ in
             guard let validSelf = self else { return }
-            handler(validSelf.__map.getCameraOptions(forPadding: nil))
+            handler(validSelf.mapboxMap.__map.getCameraOptions(forPadding: nil))
         }
     }
 }
@@ -28,7 +28,7 @@ extension MapView: OrnamentSupportableView {
 extension MapView: LocationSupportableMapView {
 
     public func screenCoordinate(for locationCoordinate: CLLocationCoordinate2D) -> ScreenCoordinate {
-        return __map.pixelForCoordinate(for: locationCoordinate)
+        return mapboxMap.__map.pixelForCoordinate(for: locationCoordinate)
     }
 
     public func metersPerPointAtLatitude(latitude: CLLocationDegrees) -> CLLocationDistance {

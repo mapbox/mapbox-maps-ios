@@ -122,7 +122,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         expectation.expectedFulfillmentCount = expectedLayerCount
 
         didFinishLoadingStyle = { _ in
-            let layers = mapView.__map.getStyleLayers()
+            let layers = mapView.mapboxMap.__map.getStyleLayers()
             XCTAssertEqual(layers.count, expectedLayerCount)
 
             for layer in layers {

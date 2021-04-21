@@ -14,7 +14,7 @@ extension MapView {
         setupCamera(for: self, options: mapConfig.camera)
 
         // Initialize/Configure style manager
-        setupStyle(with: __map)
+        setupStyle(with: mapboxMap.__map)
 
         // Initialize/Configure gesture manager
         setupGestures(with: self, options: mapConfig.gestures, cameraManager: camera)
@@ -47,7 +47,7 @@ extension MapView {
 
         // Set prefetch zoom delta
         let defaultPrefetchZoomDelta: UInt8 = 4
-        self.__map.setPrefetchZoomDeltaForDelta(renderOptions.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
+        self.mapboxMap.__map.setPrefetchZoomDeltaForDelta(renderOptions.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
         self.preferredFPS = renderOptions.preferredFramesPerSecond
         metalView?.presentsWithTransaction = renderOptions.presentsWithTransaction
     }
@@ -55,7 +55,7 @@ extension MapView {
     internal func updateMapView(with newOptions: RenderOptions) {
         // Set prefetch zoom delta
         let defaultPrefetchZoomDelta: UInt8 = 4
-        self.__map.setPrefetchZoomDeltaForDelta(newOptions.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
+        self.mapboxMap.__map.setPrefetchZoomDeltaForDelta(newOptions.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
         self.preferredFPS = newOptions.preferredFramesPerSecond
         metalView?.presentsWithTransaction = newOptions.presentsWithTransaction
     }
@@ -104,6 +104,6 @@ extension MapView {
     }
 
     internal func setupStyle(with map: Map) {
-        style = Style(with: __map)
+        style = Style(with: map)
     }
 }

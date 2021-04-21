@@ -2,7 +2,6 @@ import Foundation
 import CoreLocation
 import UIKit
 
-
 public struct CameraOptions: Hashable {
     public var center: CLLocationCoordinate2D?
     public var padding: UIEdgeInsets?

@@ -27,13 +27,20 @@ public class LogoView: UIView {
         }
     }
 
-    internal var logoSize: LogoSize
+    internal var logoSize: LogoSize {
+        didSet {
+            invalidateIntrinsicContentSize()
+        }
+    }
+
+    public override var intrinsicContentSize: CGSize {
+        return logoSize.rawValue
+    }
 
     public init(logoSize: LogoSize) {
         let frame = CGRect(origin: .zero, size: logoSize.rawValue)
         self.logoSize = logoSize
         super.init(frame: frame)
-        translatesAutoresizingMaskIntoConstraints = false
         backgroundColor = UIColor.clear
     }
 

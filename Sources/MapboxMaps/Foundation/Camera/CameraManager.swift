@@ -228,6 +228,12 @@ public class CameraManager {
                                              duration: duration,
                                              screenFullSize: mapView.bounds.size)
 
+        // Nil out the internalAnimator after `flyTo` finishes
+        flyToAnimator.addCompletion { [weak self](_) in
+            self?.internalAnimator = nil
+        }
+        
+        // Add the developer-provided completion (if present)
         flyToAnimator.addCompletion(completion)
         flyToAnimator.startAnimation()
         internalAnimator = flyToAnimator
@@ -254,7 +260,13 @@ public class CameraManager {
             transition.bearing.toValue = camera.bearing
             transition.pitch.toValue = camera.pitch
         }
+        
+        // Nil out the `internalAnimator` once the "ease to" finishes
+        animator.addCompletion { [weak self] (_) in
+            self?.internalAnimator = nil
+        }
 
+        // Add the developer-provided completion (if present)
         if let completion = completion {
             animator.addCompletion(completion)
         }

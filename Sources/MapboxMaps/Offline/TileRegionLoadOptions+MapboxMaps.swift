@@ -21,7 +21,7 @@ extension TileRegionLoadOptions {
     /// If `metadata` is not a valid JSON object, then this initializer returns
     /// `nil`.
     public convenience init?(geometry: MBXGeometry?,
-                             descriptors: [TilesetDescriptor]?,
+                             descriptors: [TilesetDescriptor] = [],
                              metadata: Any? = nil,
                              tileLoadOptions: TileLoadOptions,
                              averageBytesPerSecond: Int? = nil) {
@@ -32,7 +32,7 @@ extension TileRegionLoadOptions {
         }
 
         self.init(__geometry: geometry,
-                  descriptors: descriptors,
+                  descriptors: descriptors.isEmpty ? nil : descriptors,
                   metadata: metadata,
                   tileLoadOptions: tileLoadOptions,
                   start: nil, // Not yet implemented

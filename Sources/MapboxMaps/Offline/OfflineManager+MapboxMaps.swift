@@ -34,15 +34,15 @@ extension MapboxCoreMaps.OfflineManager {
     -> Cancelable {
         if let progress = progress {
             return __loadStylePack(forStyleURI: styleURI.rawValue.absoluteString,
-                         loadOptions: loadOptions,
-                         onProgress: progress,
-                         onFinished: coreAPIClosureAdapter(for: completion, type: StylePack.self))
+                                   loadOptions: loadOptions,
+                                   onProgress: progress,
+                                   onFinished: coreAPIClosureAdapter(for: completion, type: StylePack.self))
         }
         // An overloaded version that does not report progess of the loading operation.
         else {
             return __loadStylePack(forStyleURI: styleURI.rawValue.absoluteString,
-                             loadOptions: loadOptions,
-                             onFinished: coreAPIClosureAdapter(for: completion, type: StylePack.self))
+                                   loadOptions: loadOptions,
+                                   onFinished: coreAPIClosureAdapter(for: completion, type: StylePack.self))
         }
     }
 

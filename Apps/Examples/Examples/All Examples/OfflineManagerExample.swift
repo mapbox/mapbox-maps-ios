@@ -128,7 +128,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         // there is only ever one TileStore per unique path.
         dispatchGroup.enter()
         let tileRegionDownload = TileStore.getInstance().loadTileRegion(forId: tileRegionId,
-                                                          loadOptions: tileRegionLoadOptions) { [weak self] (progress) in
+                                                                        loadOptions: tileRegionLoadOptions) { [weak self] (progress) in
             // These closures do not get called from the main thread. In this case
             // we're updating the UI, so it's important to dispatch to the main
             // queue.

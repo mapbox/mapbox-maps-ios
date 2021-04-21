@@ -11,6 +11,8 @@ Mapbox welcomes participation and contributions from everyone.
   * `MapOptions` has been renamed `MapConfig`. A new `MapOptions` has been introduced; its properties are required to initialize the underlying map object.
   * A `MapInitOptions` configuration struct has been introduced. It currently wraps both `ResourceOptions` and `MapOptions` and is used when initializing a `MapView`.
   * `baseURL` and `accessToken` can no longer be set from a nib or storyboard. Instead a new `MapInitOptionsProvider` protocol and an `IBOutlet` on `MapView` has been introduced to allow a customer `MapInitOptions` to be provided to the `MapView`. This provider is not used when initializing a `MapView` programmatically.
+  * The `Manager` suffix has been removed from `MapView.gesturesManager`, `MapView.ornamentsManager`, `MapView.cameraManager`, `MapView.locationManager`, and `MapView.annotationsManager`.
+  * `BaseMapView.camera` has been renamed to `BaseMapView.cameraOptions`.
 
 - #### Foundation
   * `AccountManager` has been removed. A new `CredentialsManager` replaces it. You can use `CredentialsManager.default` to set a global access token.
@@ -34,7 +36,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 - #### Ornaments
     * `LayoutPosition` has been deprecated in favor of `OrnamentPosition`.
-    * `LayoutVisibility` has been depracted in favor of `OrnamentVisibility`.
+    * `LayoutVisibility` has been deprecated in favor of `OrnamentVisibility`.
     * `showsLogoView` has been renamed to `_showsLogoView`.
     * `showsCompass` and `showsScale` have been deprecated. Visibility properties can be used to set how the Compass and Scale Bar should be shown.
 

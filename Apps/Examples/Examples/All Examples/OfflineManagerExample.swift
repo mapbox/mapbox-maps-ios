@@ -2,6 +2,8 @@ import Foundation
 import UIKit
 import MapboxMaps
 
+//swiftlint:disable file_length
+
 @objc(OfflineManagerExample)
 public class OfflineManagerExample: UIViewController, ExampleProtocol {
     // This example uses a Storyboard to setup the following views
@@ -417,7 +419,7 @@ public final class OfflineManagerLogWriter: LogWriterBackend {
             let message = NSMutableAttributedString(string: "\(message)\n", attributes: [NSAttributedString.Key.foregroundColor: level.color])
             log.append(message)
 
-            textView.attributedText =  log
+            textView.attributedText = log
         }
     }
 }

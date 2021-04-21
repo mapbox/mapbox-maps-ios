@@ -24,9 +24,12 @@ Mapbox welcomes participation and contributions from everyone.
   * The `BaseMapView.__map` property has been moved to `BaseMapView.mapboxMap.__map`. ([#280](https://github.com/mapbox/mapbox-maps-ios/pull/280))
   * A `CameraOptions` struct has been introduced. This shadows the class of the same name from MapboxCoreMaps and. This avoids unintended sharing and better reflects the intended value semantics of the `CameraOptions` concept. ([#284](https://github.com/mapbox/mapbox-maps-ios/pull/284))
 
-  * ResourceOptions contains a tile store instance (TileStore API). Tile store usage is enabled by default, the resource option `tileStoreEnabled` flag is introduced to disable it.
+- #### Dependencies
+  * Updated dependencies to MapboxCoreMaps 10.0.0-beta.20 and MapboxCommon 11.0.1
+  * ResourceOptions now contains a `TileStore` instance. Tile store usage is enabled by default, the resource option `tileStoreEnabled` flag is introduced to disable it.  
+  * `TileStore` no longer returns cached responses for 401, 403 and unauthorized requests.
+  * Fixed a bug where `TileStore` would not invoke completion closures (when client code did not keep a strong reference to the tile store instance).
 
-- Updates dependencies to MapboxCoreMaps 10.0.0-beta.20 and MapboxCommon 11.0.1
 
 ### Features ✨ and improvements 🏁
 

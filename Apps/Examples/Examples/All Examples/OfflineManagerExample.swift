@@ -53,12 +53,6 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         LogConfiguration.getInstance().registerLogWriterBackend(forLogWriter: logger)
         self.logger = logger
 
-        // Set the disk quota to zero, so that tile regions are fully evicted
-        // when removed. The TileStore is also used when
-        // `ResourceOptions.isLoadTilePacksFromNetwork` is `true`, and also by
-        // the Navigation SDK.
-//        TileStore.getInstance().setOptionForKey(TileStoreOptions.diskQuota, value: 0)
-
         state = .initial
     }
 

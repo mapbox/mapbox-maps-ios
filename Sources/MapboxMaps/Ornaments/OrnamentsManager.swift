@@ -89,10 +89,13 @@ internal class OrnamentsManager: NSObject {
         // Update the position for the ornaments
         let logoViewConstraints = constraints(with: logoView, position: options.logoViewPosition, margins: options.logoViewMargins)
         constraints.append(contentsOf: logoViewConstraints)
+
         let compassViewConstraints = constraints(with: compassView, position: options.compassViewPosition, margins: options.compassViewMargins)
         constraints.append(contentsOf: compassViewConstraints)
+
         let scaleBarViewConstraints = constraints(with: scalebarView, position: options.scaleBarPosition, margins: options.scaleBarMargins)
         constraints.append(contentsOf: scaleBarViewConstraints)
+
         let attributionButtonConstraints = constraints(with: attributionButton, position: options.attributionButtonPosition, margins: options.attributionButtonMargins)
         constraints.append(contentsOf: attributionButtonConstraints)
 
@@ -106,11 +109,12 @@ internal class OrnamentsManager: NSObject {
     }
 
     func constraints(with view: UIView, position: OrnamentPosition, margins: CGPoint) -> [NSLayoutConstraint] {
-        guard let universalLayoutGuide = layoutGuide(for: view) else { return [] }
+        let universalLayoutGuide = layoutGuide(for: view)
+
         switch position {
         case .topLeft:
             return [
-                view.leadingAnchor.constraint(equalTo: universalLayoutGuide.leadingAnchor,
+                view.leftAnchor.constraint(equalTo: universalLayoutGuide.leftAnchor,
                                           constant: margins.x),
                 view.topAnchor.constraint(equalTo: universalLayoutGuide.topAnchor,
                                               constant: margins.y)
@@ -120,7 +124,7 @@ internal class OrnamentsManager: NSObject {
             print("topCenter")
         case .topRight:
             return  [
-                view.trailingAnchor.constraint(equalTo: universalLayoutGuide.trailingAnchor,
+                view.rightAnchor.constraint(equalTo: universalLayoutGuide.rightAnchor,
                                                        constant: -margins.x),
                 view.topAnchor.constraint(equalTo: universalLayoutGuide.topAnchor,
                                                   constant: margins.y)
@@ -131,7 +135,7 @@ internal class OrnamentsManager: NSObject {
             print("centerRight")
         case .bottomLeft:
             return [
-                view.leadingAnchor.constraint(equalTo: universalLayoutGuide.leadingAnchor,
+                view.leftAnchor.constraint(equalTo: universalLayoutGuide.leftAnchor,
                                                       constant: margins.x),
                 view.bottomAnchor.constraint(equalTo: universalLayoutGuide.bottomAnchor,
                                                      constant: -margins.y)
@@ -140,19 +144,17 @@ internal class OrnamentsManager: NSObject {
             print("bottomCenter")
         case .bottomRight:
             return [
-                view.trailingAnchor.constraint(equalTo: universalLayoutGuide.trailingAnchor,
+                view.rightAnchor.constraint(equalTo: universalLayoutGuide.rightAnchor,
                                                        constant: -margins.x),
                 view.bottomAnchor.constraint(equalTo: universalLayoutGuide.bottomAnchor,
                                                      constant: -margins.y)
             ]
         }
-        return [NSLayoutConstraint()]
+        return []
     }
 
-    func layoutGuide(for view: UIView) -> UILayoutGuide? {
-        guard let superview = view.superview else {
-            return nil
-        }
+    func layoutGuide(for view: UIView) -> UILayoutGuide {
+        let superview = view.superview!
         if #available(iOS 11.0, *) {
             return superview.safeAreaLayoutGuide
         } else {
@@ -164,13 +166,13 @@ internal class OrnamentsManager: NSObject {
                 // If not, then make a new one based off the view's edges.
                 let layoutGuide = UILayoutGuide()
                 layoutGuide.identifier = layoutGuideIdentifier
-                view.addLayoutGuide(layoutGuide)
+                superview.addLayoutGuide(layoutGuide)
 
                 NSLayoutConstraint.activate([
-                    layoutGuide.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                    layoutGuide.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                    layoutGuide.topAnchor.constraint(equalTo: view.topAnchor),
-                    layoutGuide.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+                    layoutGuide.leftAnchor.constraint(equalTo: superview.leftAnchor),
+                    layoutGuide.rightAnchor.constraint(equalTo: superview.rightAnchor),
+                    layoutGuide.topAnchor.constraint(equalTo: superview.topAnchor),
+                    layoutGuide.bottomAnchor.constraint(equalTo: superview.bottomAnchor)
                 ])
 
                 return layoutGuide

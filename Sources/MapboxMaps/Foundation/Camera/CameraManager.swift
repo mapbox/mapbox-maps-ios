@@ -55,16 +55,16 @@ public class CameraManager {
         let coordinateLocations = coordinates.map { CLLocation(latitude: $0.latitude, longitude: $0.longitude) }
 
         // Construct new camera options with current values
-        let cameraOptions = mapView.cameraView.camera
+        let cameraOptions = MapboxCoreMaps.CameraOptions(mapView.cameraView.camera)
 
         let defaultEdgeInsets = EdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 
         // Create a new camera options with adjusted values
-        return mapView.mapboxMap.__map.cameraForCoordinates(
+        return CameraOptions(mapView.mapboxMap.__map.cameraForCoordinates(
             forCoordinates: coordinateLocations,
             padding: cameraOptions.__padding ?? defaultEdgeInsets,
             bearing: cameraOptions.__bearing,
-            pitch: cameraOptions.__pitch)
+            pitch: cameraOptions.__pitch))
     }
 
     /// Returns the camera that best fits the given coordinate bounds, with optional edge padding, bearing, and pitch values.
@@ -82,11 +82,11 @@ public class CameraManager {
             return CameraOptions()
         }
 
-        return mapView.mapboxMap.__map.cameraForCoordinateBounds(
+        return CameraOptions(mapView.mapboxMap.__map.cameraForCoordinateBounds(
             for: coordinateBounds,
             padding: edgePadding.toMBXEdgeInsetsValue(),
             bearing: NSNumber(value: Float(bearing)),
-            pitch: NSNumber(value: Float(pitch)))
+            pitch: NSNumber(value: Float(pitch))))
     }
 
     /// Returns the camera that best fits the given geometry, with optional edge padding, bearing, and pitch values.
@@ -105,11 +105,11 @@ public class CameraManager {
             return CameraOptions()
         }
 
-        return mapView.mapboxMap.__map.cameraForGeometry(
+        return CameraOptions(mapView.mapboxMap.__map.cameraForGeometry(
             for: MBXGeometry(geometry: geometry),
             padding: edgePadding.toMBXEdgeInsetsValue(),
             bearing: NSNumber(value: Float(bearing)),
-            pitch: NSNumber(value: Float(pitch)))
+            pitch: NSNumber(value: Float(pitch))))
     }
 
     /// Returns the coordinate bounds for a given `Camera` object's viewport.
@@ -120,7 +120,7 @@ public class CameraManager {
             assertionFailure("MapView is nil.")
             return CoordinateBounds()
         }
-        return mapView.mapboxMap.__map.coordinateBoundsForCamera(forCamera: camera)
+        return mapView.mapboxMap.__map.coordinateBoundsForCamera(forCamera: MapboxCoreMaps.CameraOptions(camera))
     }
 
     // MARK: Setting a new camera

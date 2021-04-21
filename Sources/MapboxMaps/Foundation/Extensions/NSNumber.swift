@@ -12,7 +12,7 @@ extension NSNumber {
 
     /// Converts the `Float` value of an `NSNumber` to a `CLLocationDirection` representation.
     public var CLLocationDirection: CLLocationDirection {
-        CoreLocation.CLLocationDirection(floatValue)
+        CoreLocation.CLLocationDirection(doubleValue)
     }
 
     // Useful for converting between NSNumbers and Core enums

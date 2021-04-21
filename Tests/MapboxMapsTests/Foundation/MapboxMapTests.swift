@@ -71,6 +71,6 @@ final class MapboxMapTests: XCTestCase {
     }
 
     func testGetCameraOptions() {
-        XCTAssertEqual(mapboxMap.cameraOptions, mapboxMap.__map.getCameraOptions(forPadding: nil))
+        XCTAssertEqual(mapboxMap.cameraOptions, CameraOptions(mapboxMap.__map.getCameraOptions(forPadding: nil)))
     }
 }

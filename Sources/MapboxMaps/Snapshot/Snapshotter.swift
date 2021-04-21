@@ -64,9 +64,10 @@ public class Snapshotter {
     /// Camera configuration for the snapshot
     public var camera: CameraOptions {
         get {
-            return mapSnapshotter.getCameraOptions(forPadding: nil)
-        } set(newValue) {
-            mapSnapshotter.setCameraFor(newValue)
+            return CameraOptions(mapSnapshotter.getCameraOptions(forPadding: nil))
+        }
+        set {
+            mapSnapshotter.setCameraFor(MapboxCoreMaps.CameraOptions(newValue))
         }
     }
 

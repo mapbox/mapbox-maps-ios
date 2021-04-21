@@ -2,108 +2,60 @@ import Foundation
 import CoreLocation
 import UIKit
 
-extension CameraOptions {
+public struct CameraOptions: Hashable {
+    public var center: CLLocationCoordinate2D?
+    public var padding: UIEdgeInsets?
+    public var anchor: CGPoint?
+    public var zoom: CGFloat?
+    public var bearing: CLLocationDirection?
+    public var pitch: CGFloat?
 
     /**
-    The `CameraOptions` object contains information about the current state of the camera.
+    `CameraOptions` represents a set of updates to make to the camera.
 
-    - Parameter centerCoordinate: The map coordinate that will represent the center of the viewport.
-    - Parameter padding: The padding surrounding the `CameraView`'s viewport. Defaults to nil.
-    - Parameter anchor: Point in this `CameraView`'s coordinate system on which to “anchor”
-                        responses to user-initiated gestures.
-    - Parameter zoom: The zoom level of the map. Defaults to nil.
-    - Bearing bearing: The bearing of the viewport, measured in degrees clockwise from true north.
-    - Parameter pitch: Pitch toward the horizon measured in degrees, with 0 degrees resulting in a two-dimensional map.
-    - Returns: A `CameraOptions` object that contains all configuration information the `CameraView`
-               will use to render the map's viewport.
+    - Parameter center: The geographic coordinate that will be rendered at the midpoint of the area defined by `padding`.
+    - Parameter padding: Insets from each edge of the map. Impacts the "principal point" of the graphical projection and the location at which `center` is rendered.
+    - Parameter anchor: Point in the map's coordinate system about which `zoom` and `bearing` should be applied. Mutually exclusive with `center`.
+    - Parameter zoom: The zoom level of the map.
+    - Parameter bearing: The bearing of the map, measured in degrees clockwise from true north.
+    - Parameter pitch: Pitch toward the horizon measured in degrees, with 0 degrees resulting in a top-down view for a two-dimensional map.
+    - Returns: A `CameraOptions` that contains all configuration information the map will use to determine which part of the map to render.
     */
-    public convenience init(center: CLLocationCoordinate2D? = nil,
-                            padding: UIEdgeInsets? = nil,
-                            anchor: CGPoint? = nil,
-                            zoom: CGFloat? = nil,
-                            bearing: CLLocationDirection? = nil,
-                            pitch: CGFloat? = nil) {
-        self.init(__center: center?.location,
-                  padding: padding?.toMBXEdgeInsetsValue(),
-                  anchor: anchor?.screenCoordinate,
-                  zoom: zoom?.NSNumber,
-                  bearing: bearing?.NSNumber,
-                  pitch: pitch?.NSNumber)
+    public init(center: CLLocationCoordinate2D? = nil,
+                padding: UIEdgeInsets? = nil,
+                anchor: CGPoint? = nil,
+                zoom: CGFloat? = nil,
+                bearing: CLLocationDirection? = nil,
+                pitch: CGFloat? = nil) {
+        self.center = center
+        self.padding = padding
+        self.anchor = anchor
+        self.zoom = zoom
+        self.bearing = bearing
+        self.pitch = pitch
     }
 
-    public var center: CLLocationCoordinate2D? {
-        get {
-            return __center?.coordinate
-        }
-        set {
-            __center = newValue?.location
-        }
+    internal init(_ objcValue: MapboxCoreMaps.CameraOptions) {
+        self.init(
+            center: objcValue.__center?.coordinate,
+            padding: objcValue.__padding?.toUIEdgeInsetsValue(),
+            anchor: objcValue.__anchor?.point,
+            zoom: objcValue.__zoom?.CGFloat,
+            bearing: objcValue.__bearing?.CLLocationDirection,
+            pitch: objcValue.__pitch?.CGFloat)
     }
 
-    public var padding: UIEdgeInsets? {
-        get {
-            return __padding?.toUIEdgeInsetsValue()
-        }
-        set {
-            __padding = newValue?.toMBXEdgeInsetsValue()
-        }
+    public static func == (lhs: CameraOptions, rhs: CameraOptions) -> Bool {
+        return lhs.center?.latitude == rhs.center?.latitude
+            && lhs.center?.longitude == rhs.center?.longitude
+            && lhs.padding == rhs.padding
+            && lhs.anchor == rhs.anchor
+            && lhs.zoom == rhs.zoom
+            && lhs.bearing == rhs.bearing
+            && lhs.pitch == rhs.pitch
     }
 
-    public var anchor: CGPoint? {
-        get {
-            return __anchor?.point
-        }
-        set {
-            __anchor = newValue?.screenCoordinate
-        }
-    }
-
-    public var zoom: CGFloat? {
-        get {
-            return __zoom?.CGFloat
-        }
-        set {
-            __zoom = newValue?.NSNumber
-        }
-    }
-
-    public var bearing: CLLocationDirection? {
-        get {
-            return __bearing?.CLLocationDirection
-        }
-        set {
-            __bearing = newValue?.NSNumber
-        }
-    }
-
-    public var pitch: CGFloat? {
-        get {
-            return __pitch?.CGFloat
-        }
-        set {
-            __pitch = newValue?.NSNumber
-        }
-    }
-
-    // MARK: Equals function
-
-    /// :nodoc:
-    public override func isEqual(_ object: Any?) -> Bool {
-        guard let other = object as? CameraOptions else {
-            return false
-        }
-        return other.isMember(of: CameraOptions.self)
-            && center == other.center
-            && padding == other.padding
-            && anchor == other.anchor
-            && zoom == other.zoom
-            && bearing == other.bearing
-            && pitch == other.pitch
-    }
-
-    /// :nodoc:
-    public override var hash: Int {
-        var hasher = Hasher()
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(center?.latitude)
         hasher.combine(center?.longitude)
         hasher.combine(padding?.top)
@@ -115,6 +67,17 @@ extension CameraOptions {
         hasher.combine(zoom)
         hasher.combine(bearing)
         hasher.combine(pitch)
-        return hasher.finalize()
+    }
+}
+
+extension MapboxCoreMaps.CameraOptions {
+    internal convenience init(_ swiftValue: CameraOptions) {
+        self.init(
+            __center: swiftValue.center?.location,
+            padding: swiftValue.padding?.toMBXEdgeInsetsValue(),
+            anchor: swiftValue.anchor?.screenCoordinate,
+            zoom: swiftValue.zoom?.NSNumber,
+            bearing: swiftValue.bearing?.NSNumber,
+            pitch: swiftValue.pitch?.NSNumber)
     }
 }

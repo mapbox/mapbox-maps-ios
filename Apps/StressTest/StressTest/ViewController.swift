@@ -203,7 +203,7 @@ class ViewController: UIViewController {
 
         let endOptions = CameraOptions(center: end, zoom: 17)
 
-        var animator: CameraAnimator?
+        var animator: CameraAnimatorProtocol?
         animator = mapView.camera.fly(to: endOptions) { _ in
             print("Removing line annotation for animator \(String(describing: animator))")
             self.mapView.annotations.removeAnnotation(lineAnnotation)

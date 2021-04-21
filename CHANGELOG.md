@@ -27,7 +27,8 @@ Mapbox welcomes participation and contributions from everyone.
   #### Camera Animations
   * A new `CameraTransition` struct has been introduced to allow better control on the "from" and "to" values of a camera animation ([#282](https://github.com/mapbox/mapbox-maps-ios/pull/282))
      * A mutable version of the `CameraTransition` struct is passed into every animation block.
-  * Animations can only be constructor injected into `CameraAnimator` as part of the `makeCameraAnimator*` methods on `mapView.camera`.
+  * Animations can only be constructor injected into `CameraAnimator` as part of the `makeAnimator*` methods on `mapView.camera`.
+  * The `makeCameraAnimator*` methods have been renamed to `makeAnimator*` methods
   
   #### Gestures
   - Gestures now directly call `__map.setCamera()` instead of using CoreAnimation

@@ -15,10 +15,10 @@ extension CameraManager: CameraAnimatorDelegate {
     ///   - timingParameters: The object providing the timing information. This object must adopt the `UITimingCurveProvider` protocol.
     ///   - animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
     /// - Returns: A class that represents an animator with the provided configuration.
-    public func makeCameraAnimator(duration: TimeInterval,
-                                   timingParameters parameters: UITimingCurveProvider,
-                                   animationOwner: AnimationOwner = .unspecified,
-                                   animations: @escaping CameraAnimation) -> CameraAnimator {
+    public func makeAnimator(duration: TimeInterval,
+                             timingParameters parameters: UITimingCurveProvider,
+                             animationOwner: AnimationOwner = .unspecified,
+                             animations: @escaping CameraAnimation) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, timingParameters: parameters)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimator.addAnimations(animations)
@@ -39,10 +39,10 @@ extension CameraManager: CameraAnimatorDelegate {
     ///                 Use this block to modify any animatable view properties. When you start the animations,
     ///                 those properties are animated from their current values to the new values using the specified animation parameters.
     /// - Returns: A class that represents an animator with the provided configuration.
-    public func makeCameraAnimator(duration: TimeInterval,
-                                   curve: UIView.AnimationCurve,
-                                   animationOwner: AnimationOwner = .unspecified,
-                                   animations: @escaping CameraAnimation) -> CameraAnimator {
+    public func makeAnimator(duration: TimeInterval,
+                             curve: UIView.AnimationCurve,
+                             animationOwner: AnimationOwner = .unspecified,
+                             animations: @escaping CameraAnimation) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, curve: curve)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimator.addAnimations(animations)
@@ -64,11 +64,11 @@ extension CameraManager: CameraAnimatorDelegate {
     ///                 Use this block to modify any animatable view properties. When you start the animations,
     ///                 those properties are animated from their current values to the new values using the specified animation parameters.
     /// - Returns: A class that represents an animator with the provided configuration.
-    public func makeCameraAnimator(duration: TimeInterval,
-                                   controlPoint1 point1: CGPoint,
-                                   controlPoint2 point2: CGPoint,
-                                   animationOwner: AnimationOwner = .unspecified,
-                                   animations: @escaping CameraAnimation) -> CameraAnimator {
+    public func makeAnimator(duration: TimeInterval,
+                             controlPoint1 point1: CGPoint,
+                             controlPoint2 point2: CGPoint,
+                             animationOwner: AnimationOwner = .unspecified,
+                             animations: @escaping CameraAnimation) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, controlPoint1: point1, controlPoint2: point2)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimator.addAnimations(animations)
@@ -90,10 +90,10 @@ extension CameraManager: CameraAnimatorDelegate {
     ///                 Use this block to modify any animatable view properties. When you start the animations,
     ///                 those properties are animated from their current values to the new values using the specified animation parameters.
     /// - Returns: A class that represents an animator with the provided configuration.
-    public func makeCameraAnimator(duration: TimeInterval,
-                                   dampingRatio ratio: CGFloat,
-                                   animationOwner: AnimationOwner = .unspecified,
-                                   animations: @escaping CameraAnimation) -> CameraAnimator {
+    public func makeAnimator(duration: TimeInterval,
+                             dampingRatio ratio: CGFloat,
+                             animationOwner: AnimationOwner = .unspecified,
+                             animations: @escaping CameraAnimation) -> CameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: ratio)
         let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimator.addAnimations(animations)

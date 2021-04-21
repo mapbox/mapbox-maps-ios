@@ -2,10 +2,10 @@ import UIKit
 import CoreLocation
 
 @objc public protocol CameraAnimatorProtocol: AnyObject {
-    
+
     /// Stops the animation in its tracks and calls any provided completion
     func stopAnimation()
-    
+
     /// The current state of the animation
     var state: UIViewAnimatingState { get }
 

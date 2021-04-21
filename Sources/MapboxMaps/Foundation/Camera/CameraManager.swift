@@ -180,7 +180,7 @@ public class CameraManager {
 
         // Make a new camera animator for the new properties
 
-        let cameraAnimator = makeCameraAnimator(duration: duration,
+        let cameraAnimator = makeAnimator(duration: duration,
                                                 curve: .easeOut,
                                                 animationOwner: .custom(id: "com.mapbox.maps.cameraManager"),
                                                 animations: animation)
@@ -246,7 +246,7 @@ public class CameraManager {
 
         internalAnimator?.stopAnimation()
 
-        let animator = makeCameraAnimator(duration: duration, curve: .easeInOut) { (transition) in
+        let animator = makeAnimator(duration: duration, curve: .easeInOut) { (transition) in
             transition.center.toValue = camera.center
             transition.padding.toValue = camera.padding
             transition.anchor.toValue = camera.anchor

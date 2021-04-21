@@ -12,7 +12,7 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
 
     // Store the CameraAnimators so that the do not fall out of scope.
     lazy var zoomAnimator: CameraAnimator = {
-        let animator = mapView.camera.makeCameraAnimator(duration: 4, curve: .easeInOut) { (transition) in
+        let animator = mapView.camera.makeAnimator(duration: 4, curve: .easeInOut) { (transition) in
             transition.zoom.toValue = 14
         }
 
@@ -25,7 +25,7 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
     }()
 
     lazy var pitchAnimator: CameraAnimator = {
-        let animator = mapView.camera.makeCameraAnimator(duration: 2, curve: .easeInOut) { (transition) in
+        let animator = mapView.camera.makeAnimator(duration: 2, curve: .easeInOut) { (transition) in
             transition.pitch.toValue = 55
         }
 
@@ -38,7 +38,7 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
     }()
 
     lazy var bearingAnimator: CameraAnimator = {
-        let animator = mapView.camera.makeCameraAnimator(duration: 4, curve: .easeInOut) { (transition) in
+        let animator = mapView.camera.makeAnimator(duration: 4, curve: .easeInOut) { (transition) in
             transition.bearing.toValue = -45
         }
 

@@ -203,7 +203,7 @@ internal class CameraView: UIView {
         if currentCamera != targetCamera {
 
             // Diff the targetCamera with the currentCamera and apply diffed camera properties to map
-            let diffedCamera = CameraOptions()
+            var diffedCamera = CameraOptions()
 
             if targetCamera.zoom != currentCamera.zoom, let targetZoom = targetCamera.zoom, !targetZoom.isNaN {
                 diffedCamera.zoom = targetCamera.zoom

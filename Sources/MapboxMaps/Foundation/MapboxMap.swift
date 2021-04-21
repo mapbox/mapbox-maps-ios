@@ -23,10 +23,10 @@ public final class MapboxMap {
     }
 
     internal var cameraOptions: CameraOptions {
-        return __map.getCameraOptions(forPadding: nil)
+        return CameraOptions(__map.getCameraOptions(forPadding: nil))
     }
 
     internal func updateCamera(with cameraOptions: CameraOptions) {
-        __map.setCameraFor(cameraOptions)
+        __map.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
     }
 }

@@ -36,7 +36,7 @@ extension GestureManager: GestureHandlerDelegate {
 
         if let cameraOptions = cameraManager.mapView?.mapboxMap.__map.getDragCameraOptionsFor(fromPoint: startPoint.screenCoordinate, toPoint: endPoint.screenCoordinate) {
 
-            cameraManager.setCamera(to: cameraOptions,
+            cameraManager.setCamera(to: CameraOptions(cameraOptions),
                                     animated: false,
                                     duration: 0,
                                     completion: nil)
@@ -50,7 +50,7 @@ extension GestureManager: GestureHandlerDelegate {
         if endPoint != driftEndPoint,
            let driftCameraOptions = cameraManager.mapView?.mapboxMap.__map.getDragCameraOptionsFor(fromPoint: endPoint.screenCoordinate, toPoint: driftEndPoint.screenCoordinate) {
 
-            cameraManager.setCamera(to: driftCameraOptions,
+            cameraManager.setCamera(to: CameraOptions(driftCameraOptions),
                                     animated: true,
                                     duration: Double(cameraManager.mapCameraOptions.decelerationRate),
                                     completion: nil)

@@ -2,13 +2,15 @@ import UIKit
 import CoreLocation
 
 @objc public protocol CameraAnimatorProtocol: AnyObject {
-
+    
+    /// Stops the animation in its tracks and calls any provided completion
     func stopAnimation()
-
+    
+    /// The current state of the animation
     var state: UIViewAnimatingState { get }
 
+    /// TODO: Move this to a non-public interface
     func update()
-
 }
 
 public typealias CameraAnimation = (inout CameraTransition) -> Void
@@ -23,7 +25,7 @@ public class CameraAnimator: NSObject, CameraAnimatorProtocol {
     internal weak var delegate: CameraAnimatorDelegate?
 
     /// The ID of the owner of this `CameraAnimator`.
-    internal var owner: AnimationOwner
+    public internal(set) var owner: AnimationOwner
 
     /// The `CameraView` owned by this animator
     internal var cameraView: CameraView
@@ -32,7 +34,7 @@ public class CameraAnimator: NSObject, CameraAnimatorProtocol {
     internal var animation: CameraAnimation?
 
     /// Defines the transition that will occur to the `CameraOptions` of the renderer due to this animator
-    internal var transition: CameraTransition?
+    public internal(set) var transition: CameraTransition?
 
     /// The state from of the animator.
     public var state: UIViewAnimatingState { return propertyAnimator.state }

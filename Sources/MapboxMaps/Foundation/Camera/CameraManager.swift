@@ -180,10 +180,11 @@ public class CameraManager {
         internalCameraAnimator?.stopAnimation()
 
         // Make a new camera animator for the new properties
-        internalCameraAnimator = makeCameraAnimator(duration: duration,
-                                      curve: .easeOut,
-                                      animationOwner: .custom(id: "com.mapbox.maps.cameraManager"),
-                                      animations: animation)
+        internalCameraAnimator = makeCameraAnimator(
+            duration: duration,
+            curve: .easeOut,
+            animationOwner: AnimationOwner(rawValue: "com.mapbox.maps.cameraManager"),
+            animations: animation)
 
         // Add completion
         internalCameraAnimator?.addCompletion({ [weak self] (position) in

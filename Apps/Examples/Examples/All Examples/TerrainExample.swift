@@ -10,7 +10,7 @@ public class TerrainExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         mapView = MapView(frame: view.bounds,
-                          styleURI: .custom(url: URL(string: "mapbox://styles/mapbox-map-design/ckhqrf2tz0dt119ny6azh975y")!))
+                          styleURI: StyleURI(rawValue: "mapbox://styles/mapbox-map-design/ckhqrf2tz0dt119ny6azh975y")!)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
         view.addSubview(mapView)

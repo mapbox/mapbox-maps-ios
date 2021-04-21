@@ -38,33 +38,17 @@ class StyleURITests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func checkCustomStyleURI(with URLString: String, line: UInt = #line) {
-        guard let sourceURL = URL(string: URLString) else {
-            XCTFail("Invalid URL for: \(URLString).", line: line)
-            return
-        }
-
-        guard let styleURI = StyleURI(rawValue: sourceURL) else {
+    private func checkCustomStyleURI(with string: String, line: UInt = #line) {
+        guard let styleURI = StyleURI(rawValue: string) else {
             XCTFail("Could not convert to StyleURI.", line: line)
             return
         }
 
-        guard case let .custom(destURL) = styleURI else {
-            XCTFail("Not a custom URL.", line: line)
-            return
-        }
-
-        XCTAssertEqual(destURL, sourceURL, line: line)
-        XCTAssertEqual(destURL, styleURI.rawValue.absoluteURL, line: line)
+        XCTAssertEqual(styleURI.rawValue, string, line: line)
     }
 
-    private func checkDefaultStyleURI(with URLString: String, expected: StyleURI, line: UInt = #line) {
-        guard let sourceURL = URL(string: URLString) else {
-            XCTFail("Invalid URL for: \(URLString)", line: line)
-            return
-        }
-
-        guard let styleURI = StyleURI(rawValue: sourceURL) else {
+    private func checkDefaultStyleURI(with string: String, expected: StyleURI, line: UInt = #line) {
+        guard let styleURI = StyleURI(rawValue: string) else {
             XCTFail("Could not convert to StyleURI", line: line)
             return
         }
@@ -72,13 +56,8 @@ class StyleURITests: XCTestCase {
         XCTAssertEqual(styleURI, expected, line: line)
     }
 
-    private func checkInvalidStyleURI(with URLString: String, line: UInt = #line) {
-        guard let sourceURL = URL(string: URLString) else {
-            print("Invalid URL from string: \(line)")
-            return
-        }
-
-        guard nil != StyleURI(rawValue: sourceURL) else {
+    private func checkInvalidStyleURI(with string: String, line: UInt = #line) {
+        guard nil != StyleURI(rawValue: string) else {
             print("Invalid styleURI from URL: \(line)")
             return
         }

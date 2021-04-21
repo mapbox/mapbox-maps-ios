@@ -136,13 +136,13 @@ open class BaseMapView: UIView, CameraViewDelegate {
     }
 
     // MARK: Init
-    public init(frame: CGRect, mapInitOptions: MapInitOptions, styleURI: URL?) {
+    public init(frame: CGRect, mapInitOptions: MapInitOptions, styleURI: StyleURI?) {
         super.init(frame: frame)
         self.commonInit(mapInitOptions: mapInitOptions,
                         styleURI: styleURI)
     }
 
-    private func commonInit(mapInitOptions: MapInitOptions, styleURI: URL?) {
+    private func commonInit(mapInitOptions: MapInitOptions, styleURI: StyleURI?) {
         checkForMetalSupport()
 
         self.resourceOptions = mapInitOptions.resourceOptions
@@ -182,7 +182,7 @@ open class BaseMapView: UIView, CameraViewDelegate {
                                                object: nil)
 
         if let validStyleURI = styleURI {
-            mapboxMap.__map.setStyleURIForUri(validStyleURI.absoluteString)
+            mapboxMap.__map.setStyleURIForUri(validStyleURI.rawValue)
         }
     }
 
@@ -208,9 +208,9 @@ open class BaseMapView: UIView, CameraViewDelegate {
         return Array(parsedString).count > 0 ? parsedString : nil
     }
 
-    class internal func parseIBStringAsURL(ibString: String) -> URL? {
+    class internal func parseIBStringAsStyleURI(ibString: String) -> StyleURI? {
         let parsedString = ibString.trimmingCharacters(in: .whitespacesAndNewlines)
-        return Array(parsedString).count > 0 ? URL(string: parsedString) : nil
+        return !parsedString.isEmpty ? StyleURI(rawValue: parsedString) : nil
     }
 
     open override func awakeFromNib() {
@@ -219,8 +219,8 @@ open class BaseMapView: UIView, CameraViewDelegate {
         let mapInitOptions = mapInitOptionsProvider?.mapInitOptions() ??
             MapInitOptions()
 
-        let ibStyleURI = BaseMapView.parseIBStringAsURL(ibString: styleURI__)
-        let styleURI = ibStyleURI ?? StyleURI.streets.rawValue
+        let ibStyleURI = BaseMapView.parseIBStringAsStyleURI(ibString: styleURI__)
+        let styleURI = ibStyleURI ?? StyleURI.streets
 
         commonInit(mapInitOptions: mapInitOptions, styleURI: styleURI)
     }

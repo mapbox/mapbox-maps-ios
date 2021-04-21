@@ -35,8 +35,8 @@ open class MapView: BaseMapView {
     ///   - mapInitOptions: `MapInitOptions`; default uses `CredentialsManager.default`
     ///         to retrieve a shared default access token.
     ///   - styleURI: `StyleURI` to initialize the map with, or nil.
-    public init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions(), styleURI: StyleURI? = .streets) {
-        super.init(frame: frame, mapInitOptions: mapInitOptions, styleURI: styleURI?.rawValue)
+    public override init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions(), styleURI: StyleURI? = .streets) {
+        super.init(frame: frame, mapInitOptions: mapInitOptions, styleURI: styleURI)
         initialize()
     }
 

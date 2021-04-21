@@ -113,7 +113,10 @@ public struct Examples {
                 description: "Use the deprecated OfflineRegionManager to download regions for offline use.",
                 type: OfflineRegionManagerExample.self),
         Example(title: "Use OfflineManager and TileStore to download a region",
-                description: "TODO: description",
+                description: """
+                    Shows how to use OfflineManager and TileStore to download regions
+                    for offline use.
+                """,
                 type: OfflineManagerExample.self),
         Example(title: "Add a line with a color gradient",
                 description: "Add a line with a rainbow color gradient.",

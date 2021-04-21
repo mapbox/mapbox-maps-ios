@@ -265,13 +265,16 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
             switch (oldValue, state) {
             case (_, .initial):
                 resetUI()
+                Log.warning(forMessage: "Enabling HTTP stack network connection", category: "Example")
+                NetworkConnectivity.getInstance().setMapboxStackConnectedForConnected(true)
 
             case (.initial, .downloading):
                 // Can cancel
                 button.setTitle("Cancel Downloads", for: .normal)
 
             case (.downloading, .downloaded):
-                Log.info(forMessage: "Tile region has been downloaded. Try disabling the network and showing the map view.\n", category: "Example")
+                Log.warning(forMessage: "Disabling HTTP stack network connection", category: "Example")
+                NetworkConnectivity.getInstance().setMapboxStackConnectedForConnected(false)
                 enableShowMapView()
 
             case (.downloaded, .mapViewDisplayed):

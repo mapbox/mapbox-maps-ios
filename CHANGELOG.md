@@ -23,6 +23,15 @@ Mapbox welcomes participation and contributions from everyone.
       * `Snapshotter` no longer conforms to `Observer`, and the method it required is now internal.
   * The `BaseMapView.__map` property has been moved to `BaseMapView.mapboxMap.__map`. ([#280](https://github.com/mapbox/mapbox-maps-ios/pull/280))
   * A `CameraOptions` struct has been introduced. This shadows the class of the same name from MapboxCoreMaps and. This avoids unintended sharing and better reflects the intended value semantics of the `CameraOptions` concept. ([#284](https://github.com/mapbox/mapbox-maps-ios/pull/284))
+  
+  #### Camera Animations
+  * A new  `CameraTransition` struct has been introduced to allow better control on the "from" and "to" values of a camera animation ([#282](https://github.com/mapbox/mapbox-maps-ios/pull/282))
+     * A mutable version of the `CameraTransition` struct is passed into every animation block.
+  * Animations can only be constructor injected into `CameraAnimator` as part of the `makeCameraAnimator*` methods on `mapView.camera`.
+  
+  #### Gestures
+  - Gestures now directly call `__map.setCamera()` instead of going via CoreAnimation
+  
 
 - #### Dependencies
   * Updated dependencies to MapboxCoreMaps 10.0.0-beta.20 and MapboxCommon 11.0.1

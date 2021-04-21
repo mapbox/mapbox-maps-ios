@@ -3,7 +3,7 @@ import UIKit
 /// Internal protocol that provides needed information / methods for the `CameraView`
 internal protocol CameraViewDelegate: class {
     /// The map's current camera
-    var camera: CameraOptions { get }
+    var cameraOptions: CameraOptions { get }
 
     /// The map's current center coordinate.
     var centerCoordinate: CLLocationCoordinate2D { get }
@@ -32,7 +32,7 @@ internal class CameraView: UIView {
 
     internal var camera: CameraOptions {
         get {
-            return delegate.camera
+            return delegate.cameraOptions
         }
         set {
             if let newZoom = newValue.zoom {
@@ -194,7 +194,7 @@ internal class CameraView: UIView {
     internal func update() {
 
         // Retrieve currently rendered camera
-        let currentCamera = delegate.camera
+        let currentCamera = delegate.cameraOptions
 
         // Get the latest interpolated values of the camera properties (if they exist)
         let targetCamera = localCamera.wrap()

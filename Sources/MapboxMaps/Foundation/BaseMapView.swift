@@ -48,7 +48,7 @@ open class BaseMapView: UIView, CameraViewDelegate {
     internal private(set) var cameraView: CameraView!
 
     /// The map's current camera
-    public var camera: CameraOptions {
+    public var cameraOptions: CameraOptions {
         get {
             return __map.getCameraOptions(forPadding: nil)
         } set {
@@ -59,7 +59,7 @@ open class BaseMapView: UIView, CameraViewDelegate {
     /// The map's current center coordinate.
     public var centerCoordinate: CLLocationCoordinate2D {
         get {
-            guard let center = camera.center else {
+            guard let center = cameraOptions.center else {
                 fatalError("Center is nil in camera options")
             }
             return center
@@ -71,7 +71,7 @@ open class BaseMapView: UIView, CameraViewDelegate {
     /// The map's  zoom level.
     public var zoom: CGFloat {
         get {
-            guard let zoom = camera.zoom else {
+            guard let zoom = cameraOptions.zoom else {
                 fatalError("Zoom is nil in camera options")
             }
             return CGFloat(zoom)
@@ -83,7 +83,7 @@ open class BaseMapView: UIView, CameraViewDelegate {
     /// The map's bearing, measured clockwise from 0° north.
     public var bearing: CLLocationDirection {
         get {
-            guard let bearing = camera.bearing else {
+            guard let bearing = cameraOptions.bearing else {
                 fatalError("Bearing is nil in camera options")
             }
             return CLLocationDirection(bearing)
@@ -95,7 +95,7 @@ open class BaseMapView: UIView, CameraViewDelegate {
     /// The map's pitch, falling within a range of 0 to 60.
     public var pitch: CGFloat {
         get {
-            guard let pitch = camera.pitch else {
+            guard let pitch = cameraOptions.pitch else {
                 fatalError("Pitch is nil in camera options")
             }
 
@@ -108,7 +108,7 @@ open class BaseMapView: UIView, CameraViewDelegate {
     /// The map's camera padding
     public var padding: UIEdgeInsets {
         get {
-            return camera.padding ?? .zero
+            return cameraOptions.padding ?? .zero
         } set {
             cameraView.padding = newValue
         }

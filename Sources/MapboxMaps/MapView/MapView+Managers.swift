@@ -17,7 +17,7 @@ extension MapView {
         setupStyle(with: __map)
 
         // Initialize/Configure gesture manager
-        setupGestures(with: self, options: mapConfig.gestures, cameraManager: cameraManager)
+        setupGestures(with: self, options: mapConfig.gestures, cameraManager: camera)
 
         // Initialize/Configure ornaments manager
         setupOrnaments(with: self, options: mapConfig.ornaments)
@@ -61,46 +61,46 @@ extension MapView {
     }
 
     internal func setupGestures(with view: UIView, options: GestureOptions, cameraManager: CameraManager) {
-        gestureManager = GestureManager(for: view, options: options, cameraManager: cameraManager)
+        gestures = GestureManager(for: view, options: options, cameraManager: cameraManager)
     }
 
     internal func updateGestures(with newOptions: GestureOptions) {
-        gestureManager.updateGestureOptions(with: newOptions)
+        gestures.updateGestureOptions(with: newOptions)
     }
 
     internal func setupCamera(for view: MapView, options: MapCameraOptions) {
-        cameraManager = CameraManager(for: view, with: mapConfig.camera)
+        camera = CameraManager(for: view, with: mapConfig.camera)
     }
 
     internal func updateCamera(with newOptions: MapCameraOptions) {
-        cameraManager.updateMapCameraOptions(newOptions: newOptions)
+        camera.updateMapCameraOptions(newOptions: newOptions)
     }
 
     internal func setupOrnaments(with view: OrnamentSupportableView, options: OrnamentOptions) {
-        ornamentsManager = OrnamentsManager(for: view,
+        ornaments = OrnamentsManager(for: view,
                                             withConfig: options.makeConfig())
     }
 
     internal func updateOrnaments(with newOptions: OrnamentOptions) {
-        ornamentsManager.ornamentConfig = newOptions.makeConfig()
+        ornaments.ornamentConfig = newOptions.makeConfig()
     }
 
     internal func setupUserLocationManager(with locationSupportableMapView: LocationSupportableMapView, options: LocationOptions) {
 
-        locationManager = LocationManager(locationOptions: options,
+        location = LocationManager(locationOptions: options,
                                           locationSupportableMapView: locationSupportableMapView)
     }
 
     internal func updateUserLocationManager(with options: LocationOptions) {
-        locationManager.updateLocationOptions(with: mapConfig.location)
+        location.updateLocationOptions(with: mapConfig.location)
     }
 
     internal func setupAnnotationManager(with annotationSupportableMap: AnnotationSupportableMap, and style: Style, options: AnnotationOptions) {
-        annotationManager = AnnotationManager(for: annotationSupportableMap, with: style, options: options)
+        annotations = AnnotationManager(for: annotationSupportableMap, with: style, options: options)
     }
 
     internal func updateAnnotationManager(with newOptions: AnnotationOptions) {
-        annotationManager.updateAnnotationOptions(with: newOptions)
+        annotations.updateAnnotationOptions(with: newOptions)
     }
 
     internal func setupStyle(with map: Map) {

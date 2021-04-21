@@ -17,7 +17,7 @@ public class PointAnnotationExample: UIViewController, ExampleProtocol {
         // Center the map camera over Copenhagen.
         let centerCoordinate = CLLocationCoordinate2D(latitude: 55.665957, longitude: 12.550343)
 
-        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate,
+        mapView.camera.setCamera(to: CameraOptions(center: centerCoordinate,
                                                           zoom: 8.0))
 
         // Allows the delegate to receive information about map events.
@@ -30,7 +30,7 @@ public class PointAnnotationExample: UIViewController, ExampleProtocol {
             let pointAnnotation = PointAnnotation(coordinate: centerCoordinate)
 
             // Add the annotation to the map.
-            self.mapView.annotationManager.addAnnotation(pointAnnotation)
+            self.mapView.annotations.addAnnotation(pointAnnotation)
 
             // The below line is used for internal testing purposes only.
             self.finish()

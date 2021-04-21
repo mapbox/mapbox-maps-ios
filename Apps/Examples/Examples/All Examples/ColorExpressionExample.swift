@@ -18,7 +18,7 @@ public class ColorExpressionExample: UIViewController, ExampleProtocol {
         let centerCoordinate = CLLocationCoordinate2D(latitude: 40.58058466412761,
                                                       longitude: -97.734375)
 
-        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate, zoom: 3))
+        mapView.camera.setCamera(to: CameraOptions(center: centerCoordinate, zoom: 3))
 
         // Allows the view controller to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in

@@ -18,7 +18,7 @@ public class LayerBelowExample: UIViewController, ExampleProtocol {
                                                       longitude: -88.137343)
 
         // Zoom to cover the whole Atlanta urban area
-        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate,
+        mapView.camera.setCamera(to: CameraOptions(center: centerCoordinate,
                                                           zoom: 4))
 
         // Allows the view controller to receive information about map events

@@ -21,7 +21,7 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
 
         let centerCoordinate = CLLocationCoordinate2D(latitude: 45.5076, longitude: -122.6736)
 
-        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate,
+        mapView.camera.setCamera(to: CameraOptions(center: centerCoordinate,
                                                           zoom: 11.0))
 
         // Wait for the map to load its style before adding data.

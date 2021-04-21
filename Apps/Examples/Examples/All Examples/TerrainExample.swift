@@ -16,7 +16,7 @@ public class TerrainExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         let centerCoordinate = CLLocationCoordinate2D(latitude: 32.6141, longitude: -114.34411)
-        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate,
+        mapView.camera.setCamera(to: CameraOptions(center: centerCoordinate,
                                                           zoom: 13.1,
                                                           bearing: 80,
                                                           pitch: 85))

@@ -89,7 +89,7 @@ internal struct SwiftUIMapView: UIViewRepresentable {
     /// If your `SwiftUIMapView` is reconfigured externally, SwiftUI will invoke `updateUIView(_:context:)`
     /// to give you an opportunity to re-sync the state of the underlying map view.
     func updateUIView(_ mapView: MapView, context: Context) {
-        mapView.cameraManager.setCamera(to: CameraOptions(center: camera.center, zoom: camera.zoom),
+        mapView.camera.setCamera(to: CameraOptions(center: camera.center, zoom: camera.zoom),
                                         animated: false)
         /// Since changing the style causes annotations to be removed from the map
         /// we only call the setter if the value has changed.
@@ -171,19 +171,19 @@ internal class SwiftUIMapViewCoordinator {
         }
         let annotationsByIdentifier = Dictionary(uniqueKeysWithValues: annotations.map { ($0.identifier, $0) })
 
-        let oldAnnotationIds = Set(mapView.annotationManager.annotations.values.map(\.identifier))
+        let oldAnnotationIds = Set(mapView.annotations.annotations.values.map(\.identifier))
         let newAnnotationIds = Set(annotationsByIdentifier.values.map(\.identifier))
 
         let idsForAnnotationsToRemove = oldAnnotationIds.subtracting(newAnnotationIds)
-        let annotationsToRemove = idsForAnnotationsToRemove.compactMap { mapView.annotationManager.annotations[$0] }
+        let annotationsToRemove = idsForAnnotationsToRemove.compactMap { mapView.annotations.annotations[$0] }
         if !annotationsToRemove.isEmpty {
-            mapView.annotationManager.removeAnnotations(annotationsToRemove)
+            mapView.annotations.removeAnnotations(annotationsToRemove)
         }
 
         let idsForAnnotationsToAdd = newAnnotationIds.subtracting(oldAnnotationIds)
         let annotationsToAdd = idsForAnnotationsToAdd.compactMap { annotationsByIdentifier[$0] }
         if !annotationsToAdd.isEmpty {
-            mapView.annotationManager.addAnnotations(annotationsToAdd)
+            mapView.annotations.addAnnotations(annotationsToAdd)
         }
     }
 }

@@ -193,21 +193,21 @@ class ViewController: UIViewController {
     }
 
     func flyTo(end: CLLocationCoordinate2D, completion: @escaping () -> Void) {
-        let startOptions = mapView.camera
+        let startOptions = mapView.cameraOptions
         let start = startOptions.center!
 
         let lineAnnotation = LineAnnotation(coordinates: [start, end])
 
         // Add the annotation to the map.
         print("Adding line annotation")
-        mapView.annotationManager.addAnnotation(lineAnnotation)
+        mapView.annotations.addAnnotation(lineAnnotation)
 
         let endOptions = CameraOptions(center: end, zoom: 17)
 
         var animator: CameraAnimator?
-        animator = mapView.cameraManager.fly(to: endOptions) { _ in
+        animator = mapView.camera.fly(to: endOptions) { _ in
             print("Removing line annotation for animator \(String(describing: animator))")
-            self.mapView.annotationManager.removeAnnotation(lineAnnotation)
+            self.mapView.annotations.removeAnnotation(lineAnnotation)
             animator = nil
             completion()
         }
@@ -215,7 +215,7 @@ class ViewController: UIViewController {
 
     func removeAnnotations() {
         print("Removing \(annotations.count) annotations")
-        mapView.annotationManager.removeAnnotations(annotations)
+        mapView.annotations.removeAnnotations(annotations)
         annotations = []
     }
 
@@ -228,7 +228,7 @@ class ViewController: UIViewController {
         }
 
         print("Adding \(annotations.count) annotations")
-        mapView.annotationManager.addAnnotations(annotations)
+        mapView.annotations.addAnnotations(annotations)
     }
 
     func pushColorExpression() {
@@ -290,7 +290,7 @@ class ViewController: UIViewController {
         print("Creating snapshotter")
         let snapshotter = Snapshotter(options: options)
         snapshotter.style.uri = .light
-        snapshotter.camera = mapView.camera
+        snapshotter.camera = mapView.cameraOptions
 
         snapshotter.on(.styleLoaded) { [weak self] _ in
             guard let snapshotter = self?.snapshotter else {

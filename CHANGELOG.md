@@ -25,12 +25,12 @@ Mapbox welcomes participation and contributions from everyone.
   * A `CameraOptions` struct has been introduced. This shadows the class of the same name from MapboxCoreMaps and. This avoids unintended sharing and better reflects the intended value semantics of the `CameraOptions` concept. ([#284](https://github.com/mapbox/mapbox-maps-ios/pull/284))
   
   #### Camera Animations
-  * A new  `CameraTransition` struct has been introduced to allow better control on the "from" and "to" values of a camera animation ([#282](https://github.com/mapbox/mapbox-maps-ios/pull/282))
+  * A new `CameraTransition` struct has been introduced to allow better control on the "from" and "to" values of a camera animation ([#282](https://github.com/mapbox/mapbox-maps-ios/pull/282))
      * A mutable version of the `CameraTransition` struct is passed into every animation block.
   * Animations can only be constructor injected into `CameraAnimator` as part of the `makeCameraAnimator*` methods on `mapView.camera`.
   
   #### Gestures
-  - Gestures now directly call `__map.setCamera()` instead of going via CoreAnimation
+  - Gestures now directly call `__map.setCamera()` instead of using CoreAnimation
   
 
 - #### Dependencies

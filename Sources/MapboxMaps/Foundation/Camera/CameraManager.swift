@@ -157,8 +157,7 @@ public class CameraManager {
             }
             performCameraAnimation(duration: duration, animation: animation, completion: completion)
         } else {
-            let mbxCamera = MapboxCoreMaps.CameraOptions(clampedCamera)
-            mapView.mapboxMap.__map.setCameraFor(mbxCamera)
+            mapView.mapboxMap.updateCamera(with: clampedCamera)
         }
     }
 

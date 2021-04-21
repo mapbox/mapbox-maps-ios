@@ -102,10 +102,10 @@ open class BaseMapView: UIView {
         }
         return pitch
     }
-    
+
     /// The map's current anchor, calculated after applying padding (if it exists)
     public var anchor: CGPoint {
-        
+
         let paddding = padding
         let xAfterPadding = center.x + paddding.left - paddding.right
         let yAfterPadding = center.y + paddding.top - paddding.bottom

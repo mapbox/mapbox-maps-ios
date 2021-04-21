@@ -56,7 +56,6 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        
         mapView.on(.styleLoaded) { [weak self] _ in
             guard let self = self else { return }
             // Center the map over New York City.

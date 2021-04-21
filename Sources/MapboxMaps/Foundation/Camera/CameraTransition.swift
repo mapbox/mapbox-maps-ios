@@ -17,7 +17,7 @@ public struct CameraTransition {
     /// Represents a change to the anchor of the map
     /// NOTE: Incompatible with concurrent center animations
     public var anchor: Change<CGPoint>
-    
+
     /// Set this value in order to make bearing/zoom animations
     /// honor a constant anchor throughout the transition
     /// NOTE: Incompatible with concurrent center animations

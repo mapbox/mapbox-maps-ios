@@ -119,7 +119,7 @@ extension CameraManager: CameraAnimatorDelegate {
         guard let validMapView = mapView else {
             fatalError("MapView cannot be nil.")
         }
-        
+
         let mbxCameraOptions = MapboxCoreMaps.CameraOptions(camera)
         validMapView.mapboxMap.__map.setCameraFor(mbxCameraOptions)
     }
@@ -139,7 +139,7 @@ extension CameraManager: CameraAnimatorDelegate {
         guard let validMapView = mapView else {
             fatalError("MapView cannot be nil.")
         }
-       
+
         return validMapView.anchor
     }
 }

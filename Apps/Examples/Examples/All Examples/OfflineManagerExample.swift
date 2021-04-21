@@ -42,6 +42,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
     }
 
     deinit {
+        NetworkConnectivity.getInstance().setMapboxStackConnectedForConnected(true)
         removeTileRegionAndStylePack()
     }
 

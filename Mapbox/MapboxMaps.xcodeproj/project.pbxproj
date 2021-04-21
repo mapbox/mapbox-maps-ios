@@ -206,6 +206,8 @@
 		B5B55D5F260E4D7B00EBB589 /* CameraAnimatorDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B55D56260E4D7500EBB589 /* CameraAnimatorDelegateMock.swift */; };
 		B5B55D60260E4D7B00EBB589 /* CameraAnimatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B55D55260E4D7500EBB589 /* CameraAnimatorTests.swift */; };
 		B5B8B74F26308AC300D936E5 /* CameraOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B8B74E26308AC300D936E5 /* CameraOptionsTests.swift */; };
+		B5CD9CF62630AA5500A4BADC /* ScreenBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CD9CF52630AA5500A4BADC /* ScreenBox.swift */; };
+		B5CD9CFB2630AA6100A4BADC /* ScreenBoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CD9CFA2630AA6100A4BADC /* ScreenBoxTests.swift */; };
 		B5DDE9602613ACB400998840 /* StyleEncodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DDE95F2613ACB400998840 /* StyleEncodable.swift */; };
 		C6334944262E28C300D17701 /* StyleTransitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6334943262E28C300D17701 /* StyleTransitionTests.swift */; };
 		C64994A9258D5ADE0052C21C /* LocationPuckManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64994A5258D5ADD0052C21C /* LocationPuckManager.swift */; };
@@ -631,6 +633,8 @@
 		B5B55D55260E4D7500EBB589 /* CameraAnimatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimatorTests.swift; sourceTree = "<group>"; };
 		B5B55D56260E4D7500EBB589 /* CameraAnimatorDelegateMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimatorDelegateMock.swift; sourceTree = "<group>"; };
 		B5B8B74E26308AC300D936E5 /* CameraOptionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraOptionsTests.swift; sourceTree = "<group>"; };
+		B5CD9CF52630AA5500A4BADC /* ScreenBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenBox.swift; sourceTree = "<group>"; };
+		B5CD9CFA2630AA6100A4BADC /* ScreenBoxTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenBoxTests.swift; sourceTree = "<group>"; };
 		B5DDE95F2613ACB400998840 /* StyleEncodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleEncodable.swift; sourceTree = "<group>"; };
 		C6334943262E28C300D17701 /* StyleTransitionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleTransitionTests.swift; sourceTree = "<group>"; };
 		C64994A5258D5ADD0052C21C /* LocationPuckManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationPuckManager.swift; sourceTree = "<group>"; };
@@ -791,6 +795,7 @@
 		0782B1DB258C254400D5FCE5 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				B5CD9CF52630AA5500A4BADC /* ScreenBox.swift */,
 				B521FC97262F627300B9A446 /* Size.swift */,
 				CABCDF502620E0FF00D61635 /* MapOptions.swift */,
 				B5B55D4B260E4D2900EBB589 /* MBXEdgeInsets.swift */,
@@ -1493,6 +1498,7 @@
 		CA0C42932602BF000054D9D0 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				B5CD9CFA2630AA6100A4BADC /* ScreenBoxTests.swift */,
 				CA03F0962624FDED00673961 /* ResourceOptionsTests.swift */,
 				CA0C42942602BF000054D9D0 /* LayerPositionTests.swift */,
 				B521FC9C262F665C00B9A446 /* SizeTests.swift */,
@@ -2022,6 +2028,7 @@
 				B575018A26334BA700937A9E /* MapboxScaleBarConstants.swift in Sources */,
 				0CD62F1124588532006421D1 /* GestureHandlerDelegate.swift in Sources */,
 				0782B061258C16B200D5FCE5 /* Utils.swift in Sources */,
+				B5CD9CF62630AA5500A4BADC /* ScreenBox.swift in Sources */,
 				0CD62F2C24588937006421D1 /* Style.swift in Sources */,
 				0CAC3CAA2534E8CC00D031E7 /* ResourceOptions.swift in Sources */,
 				0CA3DD61257AAE3B00B12C8F /* SkyLayer.swift in Sources */,
@@ -2109,6 +2116,7 @@
 				CA050571259104E200FF7D02 /* FeatureQueryingTest.swift in Sources */,
 				CA548FE2251C404B00F829A3 /* PitchGestureHandlerTests.swift in Sources */,
 				CA548FE3251C404B00F829A3 /* GestureUtilitiesTests.swift in Sources */,
+				B5CD9CFB2630AA6100A4BADC /* ScreenBoxTests.swift in Sources */,
 				B51DE68125D7039700A80AC9 /* Comparable+ClampedTests.swift in Sources */,
 				CA548FE4251C404B00F829A3 /* GestureManagerTests.swift in Sources */,
 				CA4AE123252D656600183075 /* MockAnnotationStyleDelegate.swift in Sources */,

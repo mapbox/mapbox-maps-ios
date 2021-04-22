@@ -333,6 +333,7 @@
 		CADCF77325854B090065C51B /* Turf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76225854AB00065C51B /* Turf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CADCF77425854B090065C51B /* MapboxCoreMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76325854AB00065C51B /* MapboxCoreMaps.framework */; };
 		CADCF77525854B090065C51B /* MapboxCoreMaps.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76325854AB00065C51B /* MapboxCoreMaps.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CAE639322632394C00A6B205 /* OfflineGuideIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE6392D2632394200A6B205 /* OfflineGuideIntegrationTests.swift */; };
 		CAED9FB1258C69DB003CCEFE /* MapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAED9FAF258C69DB003CCEFE /* MapViewTests.swift */; };
 		CAEDA0B0258E8188003CCEFE /* MapViewIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAEDA0AE258E8188003CCEFE /* MapViewIntegrationTests.swift */; };
 /* End PBXBuildFile section */
@@ -752,6 +753,7 @@
 		CADCF76125854AB00065C51B /* MapboxCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MapboxCommon.framework; sourceTree = "<group>"; };
 		CADCF76225854AB00065C51B /* Turf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Turf.framework; sourceTree = "<group>"; };
 		CADCF76325854AB00065C51B /* MapboxCoreMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MapboxCoreMaps.framework; sourceTree = "<group>"; };
+		CAE6392D2632394200A6B205 /* OfflineGuideIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineGuideIntegrationTests.swift; sourceTree = "<group>"; };
 		CAED9FAF258C69DB003CCEFE /* MapViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewTests.swift; sourceTree = "<group>"; };
 		CAEDA0AE258E8188003CCEFE /* MapViewIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewIntegrationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -906,6 +908,7 @@
 		07C1B3962446B0550044A3C6 /* MapboxMapsOfflineTests */ = {
 			isa = PBXGroup;
 			children = (
+				CAE6392D2632394200A6B205 /* OfflineGuideIntegrationTests.swift */,
 				07C1B3972446B0550044A3C6 /* MapboxMapsOfflineTests.swift */,
 			);
 			name = MapboxMapsOfflineTests;
@@ -2254,6 +2257,7 @@
 				CA548FF0251C404B00F829A3 /* MultiPointTests.swift in Sources */,
 				CA548FF1251C404B00F829A3 /* RotateGestureHandlerTests.swift in Sources */,
 				CA4AE033252D654800183075 /* LineAnnotationTests.swift in Sources */,
+				CAE639322632394C00A6B205 /* OfflineGuideIntegrationTests.swift in Sources */,
 				0C37B1E425CB05F000DCDD3D /* ColorTests.swift in Sources */,
 				B521FCA7262F67DD00B9A446 /* MockMapClient.swift in Sources */,
 				B5A6921D262754DF00A03412 /* MockDelegatingObserverDelegate.swift in Sources */,

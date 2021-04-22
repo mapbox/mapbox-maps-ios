@@ -142,7 +142,7 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
                     downloadWasDeleted.fulfill()
                 }
             case .failure(let error):
-                XCTFail("Error getting tile regions")
+                XCTFail("Error getting tile regions with error: \(error)")
             }
         })
 

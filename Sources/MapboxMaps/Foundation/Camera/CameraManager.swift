@@ -232,7 +232,7 @@ public class CameraManager {
         flyToAnimator.addCompletion { [weak self](_) in
             self?.internalAnimator = nil
         }
-        
+
         // Add the developer-provided completion (if present)
         flyToAnimator.addCompletion(completion)
         flyToAnimator.startAnimation()
@@ -260,7 +260,7 @@ public class CameraManager {
             transition.bearing.toValue = camera.bearing
             transition.pitch.toValue = camera.pitch
         }
-        
+
         // Nil out the `internalAnimator` once the "ease to" finishes
         animator.addCompletion { [weak self] (_) in
             self?.internalAnimator = nil

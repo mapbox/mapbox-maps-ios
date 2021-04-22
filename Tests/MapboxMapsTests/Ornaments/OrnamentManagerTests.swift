@@ -29,11 +29,11 @@ class OrnamentManagerTests: XCTestCase {
 
     func testHidingOrnament() {
         var options = OrnamentOptions()
-        var ornamentsManager = OrnamentsManager(view: ornamentSupportableView, options: options)
+        let ornamentsManager = OrnamentsManager(view: ornamentSupportableView, options: options)
 
         let initialSubviews = ornamentSupportableView.subviews.filter { $0.isKind(of: MapboxCompassOrnamentView.self) }
-        guard let isCompassHidden = initialSubviews.first?.isHidden else {
-            XCTFail()
+        guard let isInitialCompassHidden = initialSubviews.first?.isHidden else {
+            XCTFail("Failed to access the compass' isHidden property.")
             return
         }
 
@@ -44,13 +44,13 @@ class OrnamentManagerTests: XCTestCase {
 
         XCTAssertEqual(options.compassVisibility, .hidden)
 
-        let updatedSubviews  = ornamentSupportableView.subviews.filter { $0.isKind(of: MapboxCompassOrnamentView.self) }
-        guard let updatedCompass : MapboxCompassOrnamentView = updatedSubviews.first as? MapboxCompassOrnamentView else {
-            XCTFail()
+        let updatedSubviews = ornamentSupportableView.subviews.filter { $0.isKind(of: MapboxCompassOrnamentView.self) }
+        guard let isUpdatedCompassHidden = updatedSubviews.first?.isHidden else {
+            XCTFail("Failed to access the updated compass' isHidden property.")
             return
         }
 
-        XCTAssertNotEqual(isCompassHidden, updatedCompass.isHidden)
+        XCTAssertNotEqual(isInitialCompassHidden, isUpdatedCompassHidden)
     }
 
     func testUpdatingPosition() {

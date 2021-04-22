@@ -27,11 +27,6 @@ internal class FlyToAnimator: NSObject, CameraAnimatorProtocol {
         self.owner = owner
     }
 
-    deinit {
-        flyToInterpolator = nil
-        stopAnimation()
-    }
-
     internal func makeFlyToInterpolator(from initalCamera: CameraOptions, to finalCamera: CameraOptions, duration: TimeInterval? = nil, screenFullSize: CGSize) {
 
         guard let flyTo = FlyToInterpolator(from: initalCamera,

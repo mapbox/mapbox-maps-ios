@@ -1,9 +1,8 @@
 import Foundation
 
-internal protocol CoreErrorRepresentable {
+internal protocol CoreErrorRepresentable: Error {
     associatedtype CoreErrorType
     init(coreError: CoreErrorType)
-    init(unspecifiedError: String)
 }
 
 /// Describes the reason for a tile region download request failure.
@@ -44,20 +43,16 @@ public enum TileRegionError: LocalizedError, CoreErrorRepresentable {
     public var errorDescription: String? {
         switch self {
         case let .canceled(message):
-            return ".canceled(\(message))"
+            return message
         case let .doesNotExist(message):
-            return ".doesNotExist(\(message))"
+            return message
         case let .tilesetDescriptor(message):
-            return ".tilesetDescriptor(\(message))"
+            return message
         case let .diskFull(message):
-            return ".diskFull(\(message))"
+            return message
         case let .other(message):
-            return ".other(\(message))"
+            return message
         }
-    }
-
-    internal init(unspecifiedError: String) {
-        self = .other(unspecifiedError)
     }
 }
 
@@ -77,10 +72,6 @@ public enum StylePackError: LocalizedError, CoreErrorRepresentable {
     /// Some other failure reason.
     case other(String)
 
-    internal init(unspecifiedError: String) {
-        self = .other(unspecifiedError)
-    }
-
     internal init(coreError: MapboxCoreMaps.StylePackError) {
         let message = coreError.message
         switch coreError.type {
@@ -98,13 +89,13 @@ public enum StylePackError: LocalizedError, CoreErrorRepresentable {
     public var errorDescription: String? {
         switch self {
         case let .canceled(message):
-            return ".canceled(\(message))"
+            return message
         case let .doesNotExist(message):
-            return ".doesNotExist(\(message))"
+            return message
         case let .diskFull(message):
-            return ".diskFull(\(message))"
+            return message
         case let .other(message):
-            return ".other(\(message))"
+            return message
         }
     }
 }

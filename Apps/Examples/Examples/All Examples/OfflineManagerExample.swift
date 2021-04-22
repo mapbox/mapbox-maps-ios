@@ -143,7 +143,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
                 // Update the progress bar
                 tileRegionProgressView.progress = Float(progress.completedResourceCount) / Float(progress.requiredResourceCount)
             }
-        } completion: { (result: Result<TileRegion, TileRegionError>) in
+        } completion: { result in
             DispatchQueue.main.async {
                 defer {
                     dispatchGroup.leave()

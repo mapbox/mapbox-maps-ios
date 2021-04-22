@@ -15,7 +15,7 @@ extension StylePackLoadOptions {
     ///
     /// If `metadata` is not a valid JSON object, then this initializer returns
     /// `nil`.
-    public convenience init?(glyphsRasterizationMode: GlyphsRasterizationMode?, // TODO: default
+    public convenience init?(glyphsRasterizationMode: GlyphsRasterizationMode?,
                              metadata: Any? = nil,
                              acceptExpired: Bool = false) {
         if let metadata = metadata {

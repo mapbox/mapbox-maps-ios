@@ -47,7 +47,6 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
             tileLoadOptions: tileLoadOptions,
             averageBytesPerSecond: nil)!
 
-
         // Perform the download
         TileStore.getInstance().loadTileRegion(forId: "myTileRegion",
                                                loadOptions: tileRegionLoadOptions) { _ in
@@ -89,7 +88,6 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
             metadata: ["tag": "my-outdoors-tile-region"],
             tileLoadOptions: tileLoadOptions,
             averageBytesPerSecond: nil)!
-
 
         // Perform the download
         let download = TileStore.getInstance().loadTileRegion(forId: "myTileRegion",

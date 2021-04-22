@@ -4,9 +4,13 @@ import XCTest
 internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
 
     // MARK: Reusable test properties
-    private var mapInitOptions = MapInitOptions()
+
+    /// Offline manager properties
+//    private var mapInitOptions = MapInitOptions()
+    private let offlineManager = OfflineManager(resourceOptions: MapInitOptions().resourceOptions)
+
+    /// Tokyo coordinates
     private let tokyoCoord = CLLocationCoordinate2D(latitude: 35.682027, longitude: 139.769305)
-    private let tokyoZoom: CGFloat = 12
     private lazy var tokyoCoords: [CLLocationCoordinate2D] = {[
         CLLocationCoordinate2D(latitude: tokyoCoord.latitude - 0.1, longitude: tokyoCoord.longitude - 0.1),
         CLLocationCoordinate2D(latitude: tokyoCoord.latitude - 0.1, longitude: tokyoCoord.longitude + 0.1),
@@ -23,8 +27,6 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
         let downloadInProgress = XCTestExpectation(description: "Downloading offline tiles in progress")
         let completionBlockReached = XCTestExpectation(description: "Checks that completion block closure has been reached")
 
-        let offlineManager = OfflineManager(resourceOptions: self.mapInitOptions.resourceOptions)
-
         // Create an offline region with tiles using the "outdoors" style
         let stylePackOptions = StylePackLoadOptions(glyphsRasterizationMode: .ideographsRasterizedLocally,
                                                     metadata: ["tag": "my-outdoors-style-pack"])
@@ -40,12 +42,11 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
                                               acceptExpired: true,
                                               networkRestriction: .none)
 
-        let tileRegionLoadOptions = TileRegionLoadOptions(
-            geometry: MBXGeometry(line: self.tokyoCoords),
-            descriptors: [outdoorsDescriptor],
-            metadata: ["tag": "my-outdoors-tile-region"],
-            tileLoadOptions: tileLoadOptions,
-            averageBytesPerSecond: nil)!
+        let tileRegionLoadOptions = TileRegionLoadOptions(geometry: MBXGeometry(line: self.tokyoCoords),
+                                                          descriptors: [outdoorsDescriptor],
+                                                          metadata: ["tag": "my-outdoors-tile-region"],
+                                                          tileLoadOptions: tileLoadOptions,
+                                                          averageBytesPerSecond: nil)!
 
         // Perform the download
         TileStore.getInstance().loadTileRegion(forId: "myTileRegion",
@@ -65,8 +66,6 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
         let downloadInProgress = XCTestExpectation(description: "Downloading offline tiles in progress")
         let downloadWasCancelled = XCTestExpectation(description: "Checks a cancel function was reached and that the download was canceled")
 
-        let offlineManager = OfflineManager(resourceOptions: self.mapInitOptions.resourceOptions)
-
         // Create an offline region with tiles using the "outdoors" style
         let stylePackOptions = StylePackLoadOptions(glyphsRasterizationMode: .ideographsRasterizedLocally,
                                                     metadata: ["tag": "my-outdoors-style-pack"])
@@ -82,12 +81,11 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
                                               acceptExpired: true,
                                               networkRestriction: .none)
 
-        let tileRegionLoadOptions = TileRegionLoadOptions(
-            geometry: MBXGeometry(line: self.tokyoCoords),
-            descriptors: [outdoorsDescriptor],
-            metadata: ["tag": "my-outdoors-tile-region"],
-            tileLoadOptions: tileLoadOptions,
-            averageBytesPerSecond: nil)!
+        let tileRegionLoadOptions = TileRegionLoadOptions(geometry: MBXGeometry(line: self.tokyoCoords),
+                                                          descriptors: [outdoorsDescriptor],
+                                                          metadata: ["tag": "my-outdoors-tile-region"],
+                                                          tileLoadOptions: tileLoadOptions,
+                                                          averageBytesPerSecond: nil)!
 
         // Perform the download
         let download = TileStore.getInstance().loadTileRegion(forId: "myTileRegion",
@@ -104,6 +102,55 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
         wait(for: expectations, timeout: 5.0)
     }
 
+    internal func testOfflineRegionCanBeDeleted() {
+
+        /// Expectations to be fulfilled
+        let downloadWasDeleted = XCTestExpectation(description: "Downloaded offline tiles were deleted")
+
+        // Create an offline region with tiles using the "outdoors" style
+        let stylePackOptions = StylePackLoadOptions(glyphsRasterizationMode: .ideographsRasterizedLocally,
+                                                    metadata: ["tag": "my-outdoors-style-pack"])
+
+        let outdoorsOptions = TilesetDescriptorOptions(styleURI: .outdoors,
+                                                       zoomRange: 0...16,
+                                                       stylePackOptions: stylePackOptions)
+
+        let outdoorsDescriptor = offlineManager.createTilesetDescriptor(for: outdoorsOptions)
+
+        // Load the tile region
+        let tileLoadOptions = TileLoadOptions(criticalPriority: false,
+                                              acceptExpired: true,
+                                              networkRestriction: .none)
+
+        let tileRegionLoadOptions = TileRegionLoadOptions(geometry: MBXGeometry(line: self.tokyoCoords),
+                                                          descriptors: [outdoorsDescriptor],
+                                                          metadata: ["tag": "my-outdoors-tile-region"],
+                                                          tileLoadOptions: tileLoadOptions,
+                                                          averageBytesPerSecond: nil)!
+
+        // Perform the download
+        TileStore.getInstance().loadTileRegion(forId: "myTileRegion",
+                                               loadOptions: tileRegionLoadOptions) { _ in } completion: { _ in }
+
+
+        TileStore.getInstance().removeTileRegion(forId: "myTileRegion")
+
+        TileStore.getInstance().allTileRegions(completion: { result in
+            switch result {
+            case .success(let tileRegions):
+                if tileRegions.count == 0 {
+                    downloadWasDeleted.fulfill()
+                }
+            case .failure(let error):
+                XCTFail("Error getting tile regions")
+            }
+        })
+
+        let expectations = [downloadWasDeleted]
+        wait(for: expectations, timeout: 5.0)
+    }
+
+    // MARK: Private helper functions
     private func cancelDownload(download: Cancelable, expectation: XCTestExpectation) {
         download.cancel()
         expectation.fulfill()

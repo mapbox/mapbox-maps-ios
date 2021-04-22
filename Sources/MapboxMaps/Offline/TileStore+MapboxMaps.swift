@@ -72,26 +72,8 @@ extension TileStore {
                                               descriptors: [TilesetDescriptor],
                                               completion: @escaping (Result<Bool, Error>) -> Void) {
         __tileRegionContainsDescriptors(forId: id,
-                                        descriptors: descriptors) { (expected: MBXExpected?) in
-            let result: Result<Bool, Error>
-
-            defer {
-                completion(result)
-            }
-
-            guard let expected = expected as? MBXExpected<NSNumber, MapboxCommon.TileRegionError>  else {
-                result = .failure(TileRegionError.other("No or invalid result returned"))
-                return
-            }
-
-            if expected.isValue(), let value = expected.value?.boolValue {
-                result = .success(value)
-            } else if expected.isError(), let error = expected.error {
-                result = .failure(TileRegionError(coreError: error))
-            } else {
-                result = .failure(TileRegionError.other("Unexpected value or error."))
-            }
-        }
+                                        descriptors: descriptors,
+                                        callback: tileStoreClosureAdapter(for: completion, type: NSNumber.self))
     }
 
     /// Fetch the array of the existing tile regions.

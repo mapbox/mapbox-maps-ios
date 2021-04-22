@@ -23,7 +23,7 @@ public class CameraAnimator: NSObject, CameraAnimatorProtocol {
     internal private(set) weak var delegate: CameraAnimatorDelegate?
 
     /// The ID of the owner of this `CameraAnimator`.
-    public internal(set) var owner: AnimationOwner
+    public private(set) var owner: AnimationOwner
 
     /// The `CameraView` owned by this animator
     internal private(set) var cameraView: CameraView
@@ -32,7 +32,7 @@ public class CameraAnimator: NSObject, CameraAnimatorProtocol {
     internal private(set) var animation: ((inout CameraTransition) -> Void)?
 
     /// Defines the transition that will occur to the `CameraOptions` of the renderer due to this animator
-    public internal(set) var transition: CameraTransition?
+    public private(set) var transition: CameraTransition?
 
     /// The state from of the animator.
     public var state: UIViewAnimatingState { propertyAnimator.state }
@@ -84,16 +84,16 @@ public class CameraAnimator: NSObject, CameraAnimatorProtocol {
             guard let animation = animation else {
                 fatalError("Animation cannot be nil when starting an animation")
             }
-            
+
             // Set up the short lived camera view
             delegate.addViewToViewHeirarchy(cameraView)
 
             var cameraTransition = CameraTransition(with: delegate.camera, initialAnchor: delegate.anchorAfterPadding())
             animation(&cameraTransition)
 
-            propertyAnimator.addAnimations { [weak self] in
-                guard let self = self else { return }
-                self.cameraView.syncLayer(to: cameraTransition.toCameraOptions) // Set up the "to" values for the interpolation
+            propertyAnimator.addAnimations { [weak cameraView] in
+                guard let cameraView = cameraView else { return }
+                cameraView.syncLayer(to: cameraTransition.toCameraOptions) // Set up the "to" values for the interpolation
             }
 
             cameraView.syncLayer(to: cameraTransition.fromCameraOptions) // Set up the "from" values for the interpoloation
@@ -137,7 +137,8 @@ public class CameraAnimator: NSObject, CameraAnimatorProtocol {
     internal func wrapCompletion(_ completion: @escaping AnimationCompletion) -> (UIViewAnimatingPosition) -> Void {
         return { [weak self] animationPosition in
             guard let self = self, let delegate = self.delegate else { return }
-            self.transition = nil // Clear out the set maintaining the properties being animated by this animator -- since the animation is complete if we are here.
+            self.transition = nil // Clear out the transition being animated by this animator,
+                                  // since the animation is complete if we are here.
             delegate.schedulePendingCompletion(forAnimator: self, completion: completion, animatingPosition: animationPosition)
         }
     }

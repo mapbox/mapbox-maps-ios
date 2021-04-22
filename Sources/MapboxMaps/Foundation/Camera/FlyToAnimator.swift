@@ -26,7 +26,7 @@ internal class FlyToAnimator: NSObject, CameraAnimatorProtocol {
         self.delegate = delegate
         self.owner = owner
     }
-    
+
     deinit {
         scheduleCompletionIfNecessary(position: .current)
     }
@@ -78,11 +78,11 @@ internal class FlyToAnimator: NSObject, CameraAnimatorProtocol {
             delegate.schedulePendingCompletion(forAnimator: self,
                                                 completion: validAnimationCompletion,
                                                 animatingPosition: position)
-            
+
             // Once a completion has been scheduled, `nil` it out so it can't be executed again.
             animationCompletion = nil
         }
-        
+
     }
 
     func update() {

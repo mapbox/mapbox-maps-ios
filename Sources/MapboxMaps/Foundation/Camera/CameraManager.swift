@@ -234,7 +234,7 @@ public class CameraManager {
             completion?(position)
             self?.internalAnimator = nil
         }
-        
+
         flyToAnimator.startAnimation()
         internalAnimator = flyToAnimator
 

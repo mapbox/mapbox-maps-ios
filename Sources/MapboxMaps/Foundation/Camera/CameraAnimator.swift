@@ -13,8 +13,6 @@ import CoreLocation
     func update()
 }
 
-public typealias CameraAnimation = (inout CameraTransition) -> Void
-
 // MARK: CameraAnimator Class
 public class CameraAnimator: NSObject, CameraAnimatorProtocol {
 
@@ -31,7 +29,7 @@ public class CameraAnimator: NSObject, CameraAnimatorProtocol {
     internal var cameraView: CameraView
 
     /// Represents the animation that this animator is attempting to execute
-    internal var animation: CameraAnimation?
+    internal var animation: ((inout CameraTransition) -> Void)?
 
     /// Defines the transition that will occur to the `CameraOptions` of the renderer due to this animator
     public internal(set) var transition: CameraTransition?
@@ -126,7 +124,7 @@ public class CameraAnimator: NSObject, CameraAnimatorProtocol {
     }
 
     /// Add animations block to the animator.
-    internal func addAnimations(_ animations: @escaping CameraAnimation) {
+    internal func addAnimations(_ animations: @escaping (inout CameraTransition) -> Void) {
         animation = animations
     }
 

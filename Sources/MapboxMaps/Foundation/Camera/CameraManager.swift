@@ -173,7 +173,7 @@ public class CameraManager {
     ///   - duration: If animated, how long the animation takes
     ///   - animation: closure to perform
     ///   - completion: animation block called on completion
-    fileprivate func performCameraAnimation(duration: TimeInterval, animation: @escaping CameraAnimation, completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
+    fileprivate func performCameraAnimation(duration: TimeInterval, animation: @escaping (inout CameraTransition) -> Void, completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
 
         // Stop previously running animations
         internalAnimator?.stopAnimation()

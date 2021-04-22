@@ -10,9 +10,15 @@ import XCTest
 class OrnamentManagerTests: XCTestCase {
 
     var ornamentSupportableView: OrnamentSupportableViewMock!
+    var options: OrnamentOptions!
+    var ornamentsManager: OrnamentsManager!
 
     override func setUp() {
         ornamentSupportableView = OrnamentSupportableViewMock(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+
+        options = OrnamentOptions()
+        ornamentsManager = OrnamentsManager(view: ornamentSupportableView, options: options)
+
     }
 
     override func tearDown() {
@@ -20,17 +26,12 @@ class OrnamentManagerTests: XCTestCase {
     }
 
     func testInitializer() {
-       let options = OrnamentOptions()
-        let ornamentsManager = OrnamentsManager(view: ornamentSupportableView, options: options)
         XCTAssertEqual(ornamentSupportableView.subviews.count, 4)
         XCTAssertEqual(ornamentsManager.options.attributionButtonMargins, options.attributionButtonMargins)
 
     }
 
     func testHidingOrnament() {
-        var options = OrnamentOptions()
-        let ornamentsManager = OrnamentsManager(view: ornamentSupportableView, options: options)
-
         let initialSubviews = ornamentSupportableView.subviews.filter { $0.isKind(of: MapboxCompassOrnamentView.self) }
         guard let isInitialCompassHidden = initialSubviews.first?.isHidden else {
             XCTFail("Failed to access the compass' isHidden property.")
@@ -51,9 +52,5 @@ class OrnamentManagerTests: XCTestCase {
         }
 
         XCTAssertNotEqual(isInitialCompassHidden, isUpdatedCompassHidden)
-    }
-
-    func testUpdatingPosition() {
-
     }
 }

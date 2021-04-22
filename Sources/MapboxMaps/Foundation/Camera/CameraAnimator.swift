@@ -17,41 +17,41 @@ import CoreLocation
 public class CameraAnimator: NSObject, CameraAnimatorProtocol {
 
     /// Instance of the property animator that will run animations.
-    internal var propertyAnimator: UIViewPropertyAnimator
+    internal private(set) var propertyAnimator: UIViewPropertyAnimator
 
     /// Delegate that conforms to `CameraAnimatorDelegate`.
-    internal weak var delegate: CameraAnimatorDelegate?
+    internal private(set) weak var delegate: CameraAnimatorDelegate?
 
     /// The ID of the owner of this `CameraAnimator`.
     public internal(set) var owner: AnimationOwner
 
     /// The `CameraView` owned by this animator
-    internal var cameraView: CameraView
+    internal private(set) var cameraView: CameraView
 
     /// Represents the animation that this animator is attempting to execute
-    internal var animation: ((inout CameraTransition) -> Void)?
+    internal private(set) var animation: ((inout CameraTransition) -> Void)?
 
     /// Defines the transition that will occur to the `CameraOptions` of the renderer due to this animator
     public internal(set) var transition: CameraTransition?
 
     /// The state from of the animator.
-    public var state: UIViewAnimatingState { return propertyAnimator.state }
+    public var state: UIViewAnimatingState { propertyAnimator.state }
 
     /// Boolean that represents if the animation is running or not.
-    public var isRunning: Bool { return propertyAnimator.isRunning }
+    public var isRunning: Bool { propertyAnimator.isRunning }
 
     /// Boolean that represents if the animation is running normally or in reverse.
-    public var isReversed: Bool { return propertyAnimator.isReversed }
+    public var isReversed: Bool { propertyAnimator.isReversed }
 
     /// A Boolean value that indicates whether a completed animation remains in the active state.
     public var pausesOnCompletion: Bool {
-        get { return propertyAnimator.pausesOnCompletion}
+        get { propertyAnimator.pausesOnCompletion}
         set { propertyAnimator.pausesOnCompletion = newValue }
     }
 
     /// Value that represents what percentage of the animation has been completed.
     public var fractionComplete: Double {
-        get { return Double(propertyAnimator.fractionComplete) }
+        get { Double(propertyAnimator.fractionComplete) }
         set { propertyAnimator.fractionComplete = CGFloat(newValue) }
     }
 
@@ -63,10 +63,7 @@ public class CameraAnimator: NSObject, CameraAnimatorProtocol {
         self.delegate = delegate
         self.propertyAnimator = propertyAnimator
         self.owner = owner
-
-        // Set up the short lived camera view
         self.cameraView = cameraView
-        delegate.addViewToViewHeirarchy(cameraView)
     }
 
     deinit {
@@ -87,6 +84,9 @@ public class CameraAnimator: NSObject, CameraAnimatorProtocol {
             guard let animation = animation else {
                 fatalError("Animation cannot be nil when starting an animation")
             }
+            
+            // Set up the short lived camera view
+            delegate.addViewToViewHeirarchy(cameraView)
 
             var cameraTransition = CameraTransition(with: delegate.camera, initialAnchor: delegate.anchorAfterPadding())
             animation(&cameraTransition)

@@ -26,9 +26,7 @@ internal class CameraAnimatorTests: XCTestCase {
                                   cameraView: cameraView)
     }
 
-    func testInitializationAndDeinit() {
-        XCTAssertEqual(delegate.addViewToViewHeirarchyStub.invocations.count, 1)
-
+    func testDeinit() {
         animator = nil
         XCTAssertEqual(propertyAnimator.stopAnimationStub.invocations.count, 1)
         XCTAssertEqual(propertyAnimator.finishAnimationStub.invocations.count, 1)
@@ -42,6 +40,7 @@ internal class CameraAnimatorTests: XCTestCase {
 
         animator?.startAnimation()
 
+        XCTAssertEqual(delegate.addViewToViewHeirarchyStub.invocations.count, 1)
         XCTAssertEqual(propertyAnimator.startAnimationStub.invocations.count, 1)
         XCTAssertEqual(propertyAnimator.addAnimationsStub.invocations.count, 1)
         XCTAssertNotNil(animator?.transition)

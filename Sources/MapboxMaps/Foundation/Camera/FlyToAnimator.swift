@@ -26,6 +26,10 @@ internal class FlyToAnimator: NSObject, CameraAnimatorProtocol {
         self.delegate = delegate
         self.owner = owner
     }
+    
+    deinit {
+        scheduleCompletionIfNecessary(position: .current)
+    }
 
     internal func makeFlyToInterpolator(from initalCamera: CameraOptions, to finalCamera: CameraOptions, duration: TimeInterval? = nil, screenFullSize: CGSize) {
 
@@ -70,11 +74,15 @@ internal class FlyToAnimator: NSObject, CameraAnimatorProtocol {
     }
 
     func scheduleCompletionIfNecessary(position: UIViewAnimatingPosition) {
-        if let delegate = delegate, let animationCompletion = animationCompletion {
+        if let delegate = delegate, let validAnimationCompletion = animationCompletion {
             delegate.schedulePendingCompletion(forAnimator: self,
-                                                completion: animationCompletion,
+                                                completion: validAnimationCompletion,
                                                 animatingPosition: position)
+            
+            // Once a completion has been scheduled, `nil` it out so it can't be executed again.
+            animationCompletion = nil
         }
+        
     }
 
     func update() {

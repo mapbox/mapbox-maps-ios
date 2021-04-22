@@ -229,12 +229,12 @@ public class CameraManager {
                                              screenFullSize: mapView.bounds.size)
 
         // Nil out the internalAnimator after `flyTo` finishes
-        flyToAnimator.addCompletion { [weak self](_) in
+        flyToAnimator.addCompletion { [weak self](position) in
+            // Call the developer-provided completion (if present)
+            completion?(position)
             self?.internalAnimator = nil
         }
-
-        // Add the developer-provided completion (if present)
-        flyToAnimator.addCompletion(completion)
+        
         flyToAnimator.startAnimation()
         internalAnimator = flyToAnimator
 

@@ -79,7 +79,7 @@ internal class OrnamentsManager: NSObject {
         }
     }
 
-    private func updateOrnaments() {
+    internal func updateOrnaments() {
         // Remove previously-added constraints
         if constraints.count > 0 {
             NSLayoutConstraint.deactivate(constraints)
@@ -105,6 +105,7 @@ internal class OrnamentsManager: NSObject {
         logoView.isHidden = !options._logoViewIsVisible
         scalebarView.isHidden = options.scaleBarVisibility == .hidden
         compassView.isHidden = options.compassVisibility == .hidden
+        print("options.compassVisibility = \(options.compassVisibility), compassView.isHidden = \(compassView.isHidden)")
         attributionButton.isHidden = !options._attributionButtonIsVisible
     }
 

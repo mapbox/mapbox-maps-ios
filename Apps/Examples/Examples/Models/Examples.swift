@@ -116,6 +116,10 @@ public struct Examples {
                 description: """
                     Shows how to use OfflineManager and TileStore to download regions
                     for offline use.
+
+                    By default, users may download up to 250MB of data for offline
+                    use without incurring additional charges. This limit is subject
+                    to change during the beta.
                 """,
                 type: OfflineManagerExample.self),
         Example(title: "Add a line with a color gradient",

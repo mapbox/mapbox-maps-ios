@@ -27,6 +27,11 @@ extension MapboxCoreMaps.OfflineManager {
     /// If the style is fetched but loading some of the style package resources
     /// fails, the load request proceeds trying to load the remaining style package
     /// resources.
+    ///
+    /// - Important:
+    ///     By default, users may download up to 250MB of data for offline
+    ///     use without incurring additional charges. This limit is subject
+    ///     to change during the beta.
     @discardableResult
     public func loadStylePack(for styleURI: StyleURI,
                               loadOptions: StylePackLoadOptions,

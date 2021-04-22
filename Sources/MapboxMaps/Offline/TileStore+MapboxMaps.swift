@@ -32,10 +32,15 @@ extension TileStore {
     /// the given id, the pending loading operation will fail with an error of
     /// Canceled type.
     ///
-    /// - Important:
+    /// - Note:
     ///     The user-provided callbacks will be executed on a
     ///     TileStore-controlled worker thread; it is the responsibility of the
     ///     user to dispatch to a user-controlled thread.
+    ///
+    /// - Important:
+    ///     By default, users may download up to 250MB of data for offline
+    ///     use without incurring additional charges. This limit is subject
+    ///     to change during the beta.
     @discardableResult
     public func loadTileRegion(forId id: String,
                                loadOptions: TileRegionLoadOptions,

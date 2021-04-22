@@ -2,23 +2,23 @@ import UIKit
 
 internal class FlyToAnimator: NSObject, CameraAnimatorProtocol {
 
-    internal weak var delegate: CameraAnimatorDelegate?
+    internal private(set) weak var delegate: CameraAnimatorDelegate?
 
-    internal var owner: AnimationOwner
+    internal private(set) var owner: AnimationOwner
 
-    internal var flyToInterpolator: FlyToInterpolator?
+    internal private(set) var flyToInterpolator: FlyToInterpolator?
 
-    internal var animationDuration: TimeInterval?
+    internal private(set) var animationDuration: TimeInterval?
 
     internal private(set) var state: UIViewAnimatingState = .inactive
 
-    internal var startTime: Date?
+    internal private(set) var startTime: Date?
 
-    internal var endTime: Date?
+    internal private(set) var endTime: Date?
 
-    internal var finalCameraOptions: CameraOptions?
+    internal private(set) var finalCameraOptions: CameraOptions?
 
-    internal var animationCompletion: AnimationCompletion?
+    internal private(set) var animationCompletion: AnimationCompletion?
 
     internal init(delegate: CameraAnimatorDelegate,
                   owner: AnimationOwner = .custom(id: "fly-to")) {

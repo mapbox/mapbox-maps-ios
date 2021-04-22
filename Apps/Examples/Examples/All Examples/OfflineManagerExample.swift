@@ -115,7 +115,6 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         let outdoorsOptions = TilesetDescriptorOptions(styleURI: .outdoors,
                                                        zoomRange: 0...16)
 
-        // Resolving this tileset descriptor will create a style package..
         let outdoorsDescriptor = offlineManager.createTilesetDescriptor(for: outdoorsOptions)
 
         // Load the tile region

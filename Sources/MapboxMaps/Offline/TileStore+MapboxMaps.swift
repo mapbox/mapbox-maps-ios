@@ -9,7 +9,7 @@ extension TileStore {
     ///   - progress: Invoked multiple times to report progress of the loading
     ///         operation. Optional, default is nil.
     ///   - completion: Invoked only once upon success, failure, or cancelation
-    ///         of the loading operation. Any `Result` error should be of type
+    ///         of the loading operation. Any `Result` error could be of type
     ///         `TileRegionError`.
     ///
     /// - Returns: A `Cancelable` object to cancel the load request
@@ -66,7 +66,7 @@ extension TileStore {
     /// - Parameters:
     ///   - id: The tile region identifier.
     ///   - descriptors: The array of tileset descriptors.
-    ///   - completion: The result callback. Any `Result` error should be of type
+    ///   - completion: The result callback. Any `Result` error could be of type
     ///         `TileRegionError`.
     ///
     /// - Note:
@@ -98,7 +98,7 @@ extension TileStore {
     ///
     /// - Parameters:
     ///   - id: The tile region id.
-    ///   - completion: The Result callback. Any `Result` error should be of type
+    ///   - completion: The Result callback. Any `Result` error could be of type
     ///         `TileRegionError`.
     ///
     /// - Note:
@@ -119,7 +119,7 @@ extension TileStore {
     ///
     /// - Parameters:
     ///   - id: The tile region id.
-    ///   - completion: The Result closure. Any `Result` error should be of type
+    ///   - completion: The Result closure. Any `Result` error could be of type
     ///         `TileRegionError`.
     ///
     /// - Note:
@@ -138,7 +138,7 @@ extension TileStore {
     ///
     /// - Parameters:
     ///   - id: The tile region id.
-    ///   - completion: The Result closure. Any `Result` error should be of type
+    ///   - completion: The Result closure. Any `Result` error could be of type
     ///         `TileRegionError`.
     public func tileRegionMetadata(forId id: String,
                                    completion: @escaping (Result<Any, Error>) -> Void) {

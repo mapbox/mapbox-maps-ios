@@ -9,7 +9,7 @@ extension MapboxCoreMaps.OfflineManager {
     ///   - progress: Invoked multiple times to report progress of the loading
     ///         operation.
     ///   - completion: Invoked only once upon success, failure, or cancelation
-    ///         of the loading operation. Any `Result` error should be of type
+    ///         of the loading operation. Any `Result` error could be of type
     ///         `StylePackError`.
     /// - Returns: Returns a Cancelable object to cancel the load request
     ///
@@ -68,7 +68,7 @@ extension MapboxCoreMaps.OfflineManager {
     ///
     /// - Parameters:
     ///   - styleURI: The URI of the style package's associated style
-    ///   - completion: The result callback. Any `Result` error should be of type
+    ///   - completion: The result callback. Any `Result` error could be of type
     ///         `StylePackError`.
     ///
     /// - Note:
@@ -84,7 +84,7 @@ extension MapboxCoreMaps.OfflineManager {
     ///
     /// - Parameters:
     ///   - styleURI: The URI of the style package's associated style
-    ///   - completion: The result callback. Any `Result` error should be of type
+    ///   - completion: The result callback. Any `Result` error could be of type
     ///         `StylePackError`.
     ///
     /// The style package's associated metadata that a user previously set.

@@ -94,7 +94,8 @@ public extension MapEvents {
 
         /**
          * The Map has entered the idle state. The Map is in the idle state when there are no ongoing transitions
-         * and the Map has rendered all available tiles.
+         * and the Map has rendered all available tiles. The event will not be emitted if
+         * Map#setUserAnimationInProgress or Map#setGestureInProgress is true.
          */
         case mapIdle
 

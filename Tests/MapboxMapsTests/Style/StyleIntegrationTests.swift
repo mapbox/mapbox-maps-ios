@@ -141,6 +141,9 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
                 }
             }
         }
+
+        style.uri = .streets
+
         wait(for: [expectation], timeout: 5.0)
     }
 }

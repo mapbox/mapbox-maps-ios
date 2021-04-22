@@ -112,6 +112,16 @@ public struct Examples {
         Example(title: "Use OfflineRegionManager to download a region",
                 description: "Use the deprecated OfflineRegionManager to download regions for offline use.",
                 type: OfflineRegionManagerExample.self),
+        Example(title: "Use OfflineManager and TileStore to download a region",
+                description: """
+                    Shows how to use OfflineManager and TileStore to download regions
+                    for offline use.
+
+                    By default, users may download up to 250MB of data for offline
+                    use without incurring additional charges. This limit is subject
+                    to change during the beta.
+                """,
+                type: OfflineManagerExample.self),
         Example(title: "Add a line with a color gradient",
                 description: "Add a line with a rainbow color gradient.",
                 type: LineGradientExample.self),

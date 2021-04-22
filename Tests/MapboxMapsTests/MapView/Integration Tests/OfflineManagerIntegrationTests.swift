@@ -8,6 +8,7 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
     /// Offline manager properties
 //    private var mapInitOptions = MapInitOptions()
     private let offlineManager = OfflineManager(resourceOptions: MapInitOptions().resourceOptions)
+    private let tileRegionId = "myTileRegion"
 
     /// Tokyo coordinates
     private let tokyoCoord = CLLocationCoordinate2D(latitude: 35.682027, longitude: 139.769305)
@@ -49,7 +50,7 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
                                                           averageBytesPerSecond: nil)!
 
         // Perform the download
-        TileStore.getInstance().loadTileRegion(forId: "myTileRegion",
+        TileStore.getInstance().loadTileRegion(forId: tileRegionId,
                                                loadOptions: tileRegionLoadOptions) { _ in
             downloadInProgress.fulfill()
         } completion: { _ in
@@ -88,7 +89,7 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
                                                           averageBytesPerSecond: nil)!
 
         // Perform the download
-        let download = TileStore.getInstance().loadTileRegion(forId: "myTileRegion",
+        let download = TileStore.getInstance().loadTileRegion(forId: tileRegionId,
                                                               loadOptions: tileRegionLoadOptions) { _ in
             downloadInProgress.fulfill()
         } completion: { _ in }
@@ -129,11 +130,10 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
                                                           averageBytesPerSecond: nil)!
 
         // Perform the download
-        TileStore.getInstance().loadTileRegion(forId: "myTileRegion",
+        TileStore.getInstance().loadTileRegion(forId: tileRegionId,
                                                loadOptions: tileRegionLoadOptions) { _ in } completion: { _ in }
 
-
-        TileStore.getInstance().removeTileRegion(forId: "myTileRegion")
+        TileStore.getInstance().removeTileRegion(forId: tileRegionId)
 
         TileStore.getInstance().allTileRegions(completion: { result in
             switch result {
@@ -148,6 +148,11 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
 
         let expectations = [downloadWasDeleted]
         wait(for: expectations, timeout: 5.0)
+    }
+
+    internal func testResourceLoadingFromTileStore() {
+        // TODO: Test needs to be implemented
+
     }
 
     // MARK: Private helper functions

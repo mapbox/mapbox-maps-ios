@@ -76,7 +76,7 @@ extension MapboxCoreMaps.OfflineManager {
     ///     is the responsibility of the user to dispatch to a user-controlled
     ///     thread.
     public func stylePack(for styleURI: StyleURI, completion: @escaping (Result<StylePack, Error>) -> Void) {
-        __getStylePack(forStyleURI: styleURI.rawValue.path,
+        __getStylePack(forStyleURI: styleURI.rawValue.absoluteString,
                        callback: offlineManagerClosureAdapter(for: completion, type: StylePack.self))
     }
 

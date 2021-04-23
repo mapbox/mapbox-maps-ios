@@ -3,10 +3,15 @@ import XCTest
 
 class CameraTransitionTests: XCTestCase {
 
+    var cameraTransition = CameraTransition(with: cameraOptionsTestValue,
+                                            initialAnchor: .zero)
+
     func testOptimizeBearingClockwise() {
         let startBearing = 0.0
         let endBearing = 90.0
-        let optimizedBearing = CameraTransition.optimizeBearing(startBearing: startBearing, endBearing: endBearing)
+        cameraTransition.bearing.fromValue = startBearing
+        cameraTransition.bearing.toValue = endBearing
+        let optimizedBearing = cameraTransition.optimizedBearingToValue
 
         XCTAssertEqual(optimizedBearing, 90.0)
     }
@@ -14,7 +19,9 @@ class CameraTransitionTests: XCTestCase {
     func testOptimizeBearingCounterClockwise() {
         let startBearing = 0.0
         let endBearing = 270.0
-        let optimizedBearing = CameraTransition.optimizeBearing(startBearing: startBearing, endBearing: endBearing)
+        cameraTransition.bearing.fromValue = startBearing
+        cameraTransition.bearing.toValue = endBearing
+        let optimizedBearing = cameraTransition.optimizedBearingToValue
 
         // We should rotate counter clockwise which is shown by a negative angle
         XCTAssertEqual(optimizedBearing, -90.0)
@@ -23,7 +30,9 @@ class CameraTransitionTests: XCTestCase {
     func testOptimizeBearingWhenBearingsAreTheSame() {
         let startBearing = -90.0
         let endBearing = 270.0
-        let optimizedBearing = CameraTransition.optimizeBearing(startBearing: startBearing, endBearing: endBearing)
+        cameraTransition.bearing.fromValue = startBearing
+        cameraTransition.bearing.toValue = endBearing
+        let optimizedBearing = cameraTransition.optimizedBearingToValue
 
         // -90 and 270 degrees is the same bearing so should just return original
         XCTAssertEqual(optimizedBearing, -90)
@@ -33,11 +42,17 @@ class CameraTransitionTests: XCTestCase {
         var optimizedBearing: CLLocationDirection?
 
         // Starting at -90 aka 270 should rotate clockwise to 20
-        optimizedBearing = CameraTransition.optimizeBearing(startBearing: -90.0, endBearing: 20.0)
+        cameraTransition.bearing.fromValue = -90
+        cameraTransition.bearing.toValue = 20
+
+        optimizedBearing = cameraTransition.optimizedBearingToValue
         XCTAssertEqual(optimizedBearing, 20)
 
         // Starting at -90 aka 270 should rotate clockwise to -270 aka 90
-        optimizedBearing = CameraTransition.optimizeBearing(startBearing: -90.0, endBearing: -270)
+        cameraTransition.bearing.fromValue = -90
+        cameraTransition.bearing.toValue = -270
+
+        optimizedBearing = cameraTransition.optimizedBearingToValue
         XCTAssertEqual(optimizedBearing, 90)
     }
 
@@ -45,15 +60,10 @@ class CameraTransitionTests: XCTestCase {
         var optimizedBearing: CLLocationDirection?
 
         // Test when no end bearing is provided
-        optimizedBearing = CameraTransition.optimizeBearing(startBearing: 0.0, endBearing: nil)
-        XCTAssertNil(optimizedBearing)
+        cameraTransition.bearing.fromValue = 0.0
+        cameraTransition.bearing.toValue = nil
 
-        // Test when no start bearing is provided
-        optimizedBearing = CameraTransition.optimizeBearing(startBearing: nil, endBearing: 90)
-        XCTAssertNil(optimizedBearing)
-
-        // Test when no bearings are provided
-        optimizedBearing = CameraTransition.optimizeBearing(startBearing: nil, endBearing: nil)
+        optimizedBearing = cameraTransition.optimizedBearingToValue
         XCTAssertNil(optimizedBearing)
     }
 
@@ -61,15 +71,21 @@ class CameraTransitionTests: XCTestCase {
         var optimizedBearing: CLLocationDirection?
 
         // 719 degrees is the same as 359 degrees. -1 should be returned because it is the shortest path from starting at 90
-        optimizedBearing = CameraTransition.optimizeBearing(startBearing: 90.0, endBearing: 719)
+        cameraTransition.bearing.fromValue = 90
+        cameraTransition.bearing.toValue = 719
+        optimizedBearing = cameraTransition.optimizedBearingToValue
         XCTAssertEqual(optimizedBearing, -1.0)
 
         // -195 should be returned because it is the shortest path from starting at 180
-        optimizedBearing = CameraTransition.optimizeBearing(startBearing: 180, endBearing: -555)
+        cameraTransition.bearing.fromValue = 180
+        cameraTransition.bearing.toValue = -555
+        optimizedBearing = cameraTransition.optimizedBearingToValue
         XCTAssertEqual(optimizedBearing, 165)
 
         // -160 should be returned because it is the shortest path from starting at 180
-        optimizedBearing = CameraTransition.optimizeBearing(startBearing: 180, endBearing: -520)
+        cameraTransition.bearing.fromValue = 180
+        cameraTransition.bearing.toValue = -520
+        optimizedBearing = cameraTransition.optimizedBearingToValue
         XCTAssertEqual(optimizedBearing, 200)
     }
 }

@@ -87,19 +87,19 @@ public struct CameraTransition {
                              pitch: pitch.fromValue)
 
     }
-    
+
     internal var optimizedBearingToValue: CLLocationDirection? {
-        
+
         // If we should not optimize bearing transition, then return the original `toValue`
         guard shouldOptimizeBearingPath else {
             return bearing.toValue
         }
-        
+
         // If `bearing.toValue` is nil, then return nil.
         guard let toBearing = bearing.toValue?.truncatingRemainder(dividingBy: 360.0) else {
             return nil
         }
-        
+
         let fromBearing = bearing.fromValue.truncatingRemainder(dividingBy: 360.0)
 
         // 180 degrees is the max the map should rotate, therefore if the difference between the end and start point is
@@ -114,7 +114,7 @@ public struct CameraTransition {
         }
 
         return toBearing
-        
+
     }
 
 }

@@ -21,7 +21,15 @@ public struct CameraTransition {
     /// Set this value in order to make bearing/zoom animations
     /// honor a constant anchor throughout the transition
     /// NOTE: Incompatible with concurrent center animations
-    public var constantAnchor: CGPoint?
+    public var constantAnchor: CGPoint? {
+        set {
+            anchor.fromValue = newValue ?? anchor.fromValue
+            anchor.toValue = newValue
+        }
+        get {
+            return anchor.fromValue == anchor.toValue ? anchor.fromValue : nil
+        }
+    }
 
     /// Represents a change to the bearing of the map.
     public var bearing: Change<CLLocationDirection>

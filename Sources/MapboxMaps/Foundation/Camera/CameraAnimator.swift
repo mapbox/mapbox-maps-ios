@@ -168,10 +168,7 @@ public class CameraAnimator: NSObject, CameraAnimatorProtocol {
             cameraOptions.bearing = interpolatedCamera.bearing
         }
 
-        // Honor the constant anchor if provided as part of the transition
-        if transition.constantAnchor != nil {
-            cameraOptions.anchor = transition.constantAnchor
-        } else if transition.anchor.toValue != nil {
+        if transition.anchor.toValue != nil {
             cameraOptions.anchor = interpolatedCamera.anchor
         }
 

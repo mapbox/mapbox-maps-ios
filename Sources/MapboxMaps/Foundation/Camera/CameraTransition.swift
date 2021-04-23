@@ -24,7 +24,7 @@ public struct CameraTransition {
     public var constantAnchor: CGPoint?
 
     /// Represents a change to the bearing of the map.
-    public var bearing: Change<Double>
+    public var bearing: Change<CLLocationDirection>
 
     /// Ensures that bearing transitions are optimized to take the shortest path.
     public var shouldOptimizeBearingPath: Bool = true
@@ -53,12 +53,12 @@ public struct CameraTransition {
             fatalError("Values in rendered CameraOptions cannot be nil")
         }
 
-        center  = .init(fromValue: renderedCenter)
-        zoom    = .init(fromValue: renderedZoom)
-        padding = .init(fromValue: renderedPadding)
-        pitch   = .init(fromValue: renderedPitch)
-        bearing = .init(fromValue: renderedBearing)
-        anchor  = .init(fromValue: initialAnchor)
+        center  = Change(fromValue: renderedCenter)
+        zoom    = Change(fromValue: renderedZoom)
+        padding = Change(fromValue: renderedPadding)
+        pitch   = Change(fromValue: renderedPitch)
+        bearing = Change(fromValue: renderedBearing)
+        anchor  = Change(fromValue: initialAnchor)
     }
 
     internal var toCameraOptions: CameraOptions {
@@ -66,9 +66,7 @@ public struct CameraTransition {
                              padding: padding.toValue,
                              anchor: anchor.toValue,
                              zoom: zoom.toValue,
-                             bearing: shouldOptimizeBearingPath ? Self.optimizeBearing(startBearing: bearing.fromValue,
-                                                                                       endBearing: bearing.toValue)
-                                                                :  bearing.toValue,
+                             bearing: optimizedBearingToValue,
                              pitch: pitch.toValue)
     }
 
@@ -81,33 +79,34 @@ public struct CameraTransition {
                              pitch: pitch.fromValue)
 
     }
-
-    /// This function optimizes the bearing for set camera so that it is taking the shortest path.
-    /// - Parameters:
-    ///   - startBearing: The current or start bearing of the map viewport.
-    ///   - endBearing: The bearing of where the map viewport should end at.
-    /// - Returns: A `CLLocationDirection` that represents the correct final bearing accounting for positive and negatives.
-    internal static func optimizeBearing(startBearing: CLLocationDirection?, endBearing: CLLocationDirection?) -> CLLocationDirection? {
-        // This modulus is required to account for larger values
-        guard
-            let startBearing = startBearing?.truncatingRemainder(dividingBy: 360.0),
-            let endBearing = endBearing?.truncatingRemainder(dividingBy: 360.0)
-        else {
+    
+    internal var optimizedBearingToValue: CLLocationDirection? {
+        
+        // If we should not optimize bearing transition, then return the original `toValue`
+        guard shouldOptimizeBearingPath else {
+            return bearing.toValue
+        }
+        
+        // If `bearing.toValue` is nil, then return nil.
+        guard let toBearing = bearing.toValue?.truncatingRemainder(dividingBy: 360.0) else {
             return nil
         }
+        
+        let fromBearing = bearing.fromValue.truncatingRemainder(dividingBy: 360.0)
 
         // 180 degrees is the max the map should rotate, therefore if the difference between the end and start point is
         // more than 180 we need to go the opposite direction
-        if endBearing - startBearing >= 180 {
-            return endBearing - 360
+        if toBearing - fromBearing >= 180 {
+            return toBearing - 360
         }
 
         // This is the inverse of the above, accounting for negative bearings
-        if endBearing - startBearing <= -180 {
-            return endBearing + 360
+        if toBearing - fromBearing <= -180 {
+            return toBearing + 360
         }
 
-        return endBearing
+        return toBearing
+        
     }
 
 }

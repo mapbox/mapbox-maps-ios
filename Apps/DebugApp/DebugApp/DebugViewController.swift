@@ -11,7 +11,7 @@ import Turf
 public class DebugViewController: UIViewController {
 
     internal var mapView: MapView!
-    internal var runningAnimator: CameraAnimator?
+    internal var runningAnimator: BasicCameraAnimator?
 
     override public func viewDidLoad() {
         super.viewDidLoad()

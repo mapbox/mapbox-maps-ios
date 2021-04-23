@@ -4,14 +4,14 @@ import XCTest
 final class CameraAnimatorDelegateMock: CameraAnimatorDelegate {
 
     struct SchedulePendingCompletionParameters {
-        var animator: CameraAnimatorProtocol
+        var animator: CameraAnimator
         var completion: AnimationCompletion
         var animatingPosition: UIViewAnimatingPosition
     }
 
     let schedulePendingCompletionStub = Stub<SchedulePendingCompletionParameters, Void>()
 
-    public func schedulePendingCompletion(forAnimator animator: CameraAnimatorProtocol,
+    public func schedulePendingCompletion(forAnimator animator: CameraAnimator,
                                           completion: @escaping AnimationCompletion,
                                           animatingPosition: UIViewAnimatingPosition) {
         schedulePendingCompletionStub.call(with: SchedulePendingCompletionParameters(animator: animator,
@@ -19,8 +19,8 @@ final class CameraAnimatorDelegateMock: CameraAnimatorDelegate {
                                                                                      animatingPosition: animatingPosition))
     }
 
-    let animatorFinishedStub = Stub<CameraAnimator, Void>()
-    public func animatorIsFinished(forAnimator animator: CameraAnimator) {
+    let animatorFinishedStub = Stub<BasicCameraAnimator, Void>()
+    public func animatorIsFinished(forAnimator animator: BasicCameraAnimator) {
         animatorFinishedStub.call(with: animator)
     }
 

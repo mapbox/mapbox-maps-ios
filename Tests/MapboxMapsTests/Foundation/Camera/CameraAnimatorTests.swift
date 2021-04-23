@@ -14,13 +14,13 @@ internal class CameraAnimatorTests: XCTestCase {
     var delegate: CameraAnimatorDelegateMock!
     var propertyAnimator: UIViewPropertyAnimatorMock!
     var cameraView: CameraViewMock!
-    var animator: CameraAnimator?
+    var animator: BasicCameraAnimator?
 
     override func setUp() {
         delegate = CameraAnimatorDelegateMock()
         propertyAnimator = UIViewPropertyAnimatorMock()
         cameraView = CameraViewMock()
-        animator = CameraAnimator(delegate: delegate,
+        animator = BasicCameraAnimator(delegate: delegate,
                                   propertyAnimator: propertyAnimator ,
                                   owner: .unspecified,
                                   cameraView: cameraView)

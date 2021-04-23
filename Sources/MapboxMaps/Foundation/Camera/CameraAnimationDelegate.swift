@@ -23,7 +23,7 @@ internal protocol CameraAnimatorDelegate: class {
     ///   - animator: The current animator that this delegate function is being called from
     ///   - completion: The completion block that needs to be scheduled
     ///   - animatingPosition: The position of the animation needed for the closure
-    func schedulePendingCompletion(forAnimator animator: CameraAnimatorProtocol,
+    func schedulePendingCompletion(forAnimator animator: CameraAnimator,
                                    completion: @escaping AnimationCompletion,
                                    animatingPosition: UIViewAnimatingPosition)
 }

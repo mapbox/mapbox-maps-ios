@@ -11,7 +11,7 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
     let newYork = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
 
     // Store the CameraAnimators so that the do not fall out of scope.
-    lazy var zoomAnimator: CameraAnimator = {
+    lazy var zoomAnimator: BasicCameraAnimator = {
         let animator = mapView.camera.makeAnimator(duration: 4, curve: .easeInOut) { (transition) in
             transition.zoom.toValue = 14
         }
@@ -24,7 +24,7 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
         return animator
     }()
 
-    lazy var pitchAnimator: CameraAnimator = {
+    lazy var pitchAnimator: BasicCameraAnimator = {
         let animator = mapView.camera.makeAnimator(duration: 2, curve: .easeInOut) { (transition) in
             transition.pitch.toValue = 55
         }
@@ -37,7 +37,7 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
         return animator
     }()
 
-    lazy var bearingAnimator: CameraAnimator = {
+    lazy var bearingAnimator: BasicCameraAnimator = {
         let animator = mapView.camera.makeAnimator(duration: 4, curve: .easeInOut) { (transition) in
             transition.bearing.toValue = -45
         }
@@ -67,7 +67,7 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
             guard let self = self else { return }
 
             print("Animating zoom from zoom lvl 3 -> zoom lvl 14")
-            self.zoomAnimator.startAnimation(afterDelay: 10)
+            self.zoomAnimator.startAnimation(afterDelay: 1)
             self.finish()
         }
     }

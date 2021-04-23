@@ -17,12 +17,12 @@ final class FlyToAnimatorTests: XCTestCase {
                                            bearing: 10,
                                            pitch: 10)
 
-    var flyToAnimator: FlyToAnimator!
+    var flyToAnimator: FlyToCameraAnimator!
     var cameraAnimatorDelegateMock: CameraAnimatorDelegateMock!
 
     override func setUp() {
         cameraAnimatorDelegateMock = CameraAnimatorDelegateMock()
-        flyToAnimator = FlyToAnimator(delegate: cameraAnimatorDelegateMock)
+        flyToAnimator = FlyToCameraAnimator(delegate: cameraAnimatorDelegateMock)
         flyToAnimator.makeFlyToInterpolator(from: initalCameraOptions,
                                             to: finalCameraOptions,
                                             duration: 10,

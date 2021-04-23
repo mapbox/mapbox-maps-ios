@@ -19,7 +19,7 @@ public class CameraManager {
     }
 
     /// Internal camera animator used for animated transition
-    internal var internalAnimator: CameraAnimatorProtocol?
+    internal var internalAnimator: CameraAnimator?
 
     /// May want to convert to an enum.
     fileprivate let northBearing: CGFloat = 0
@@ -211,7 +211,7 @@ public class CameraManager {
     @discardableResult
     public func fly(to camera: CameraOptions,
                     duration: TimeInterval? = nil,
-                    completion: AnimationCompletion? = nil) -> CameraAnimatorProtocol? {
+                    completion: AnimationCompletion? = nil) -> CameraAnimator? {
 
         guard let mapView = mapView else {
             return nil
@@ -220,7 +220,7 @@ public class CameraManager {
         // Stop the `internalAnimator` before beginning a `flyTo`
         internalAnimator?.stopAnimation()
 
-        let flyToAnimator = FlyToAnimator(delegate: self)
+        let flyToAnimator = FlyToCameraAnimator(delegate: self)
         mapView.cameraAnimatorsHashTable.add(flyToAnimator)
 
         flyToAnimator.makeFlyToInterpolator(from: mapView.cameraOptions,
@@ -248,7 +248,7 @@ public class CameraManager {
     ///   - completion: completion to be called after animation
     /// - Returns: An instance of `CameraAnimatorProtocol` which can be interrupted if necessary
     @discardableResult
-    public func ease(to camera: CameraOptions, duration: TimeInterval, completion: AnimationCompletion? = nil) -> CameraAnimatorProtocol? {
+    public func ease(to camera: CameraOptions, duration: TimeInterval, completion: AnimationCompletion? = nil) -> CameraAnimator? {
 
         internalAnimator?.stopAnimation()
 

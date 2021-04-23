@@ -1,16 +1,16 @@
 import UIKit
 
-internal class FlyToAnimator: NSObject, CameraAnimatorProtocol {
+public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterface {
 
     internal private(set) weak var delegate: CameraAnimatorDelegate?
 
-    internal private(set) var owner: AnimationOwner
+    public private(set) var owner: AnimationOwner
 
     internal private(set) var flyToInterpolator: FlyToInterpolator?
 
     internal private(set) var animationDuration: TimeInterval?
 
-    internal private(set) var state: UIViewAnimatingState = .inactive
+    public private(set) var state: UIViewAnimatingState = .inactive
 
     internal private(set) var startTime: Date?
 
@@ -52,13 +52,13 @@ internal class FlyToAnimator: NSObject, CameraAnimatorProtocol {
         finalCameraOptions = finalCamera
     }
 
-    func stopAnimation() {
+    public func stopAnimation() {
         state = .stopped
         flyToInterpolator = nil
         scheduleCompletionIfNecessary(position: .current) // `current` represents an interrupted animation.
     }
 
-    func startAnimation() {
+    internal func startAnimation() {
 
         guard flyToInterpolator != nil, let animationDuration = animationDuration else {
             fatalError("FlyToInterpolator not created")
@@ -69,11 +69,11 @@ internal class FlyToAnimator: NSObject, CameraAnimatorProtocol {
         endTime = startTime?.addingTimeInterval(animationDuration)
     }
 
-    func addCompletion(_ completion: AnimationCompletion?) {
+    internal func addCompletion(_ completion: AnimationCompletion?) {
         animationCompletion = completion
     }
 
-    func scheduleCompletionIfNecessary(position: UIViewAnimatingPosition) {
+    internal func scheduleCompletionIfNecessary(position: UIViewAnimatingPosition) {
         if let delegate = delegate, let validAnimationCompletion = animationCompletion {
             delegate.schedulePendingCompletion(forAnimator: self,
                                                 completion: validAnimationCompletion,
@@ -85,7 +85,7 @@ internal class FlyToAnimator: NSObject, CameraAnimatorProtocol {
 
     }
 
-    func update() {
+    internal func update() {
 
         guard state == .active,
               let startTime = startTime,

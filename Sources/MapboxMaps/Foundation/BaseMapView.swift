@@ -31,7 +31,7 @@ open class BaseMapView: UIView {
     internal var pendingAnimatorCompletionBlocks: [PendingAnimationCompletion] = []
 
     /// Pointer HashTable for holding camera animators
-    internal var cameraAnimatorsHashTable = NSHashTable<CameraAnimatorProtocol>.weakObjects()
+    internal var cameraAnimatorsHashTable = NSHashTable<CameraAnimatorInterface>.weakObjects()
 
     /// List of animators currently alive
     public var cameraAnimators: [CameraAnimator] {

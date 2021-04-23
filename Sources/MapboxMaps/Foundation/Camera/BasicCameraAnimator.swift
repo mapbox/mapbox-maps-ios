@@ -1,20 +1,26 @@
 import UIKit
 import CoreLocation
 
-@objc public protocol CameraAnimatorProtocol: AnyObject {
+@objc public protocol CameraAnimator: AnyObject {
 
     /// Stops the animation in its tracks and calls any provided completion
     func stopAnimation()
 
     /// The current state of the animation
     var state: UIViewAnimatingState { get }
+}
 
-    /// TODO: Move this to a non-public interface
+/// Internal-facing protocol to represent camera animators
+@objc internal protocol CameraAnimatorInterface: AnyObject {
     func update()
+
+    func stopAnimation()
+
+    var state: UIViewAnimatingState { get }
 }
 
 // MARK: CameraAnimator Class
-public class CameraAnimator: NSObject, CameraAnimatorProtocol {
+public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterface {
 
     /// Instance of the property animator that will run animations.
     internal private(set) var propertyAnimator: UIViewPropertyAnimator
@@ -33,7 +39,7 @@ public class CameraAnimator: NSObject, CameraAnimatorProtocol {
 
     /// Defines the transition that will occur to the `CameraOptions` of the renderer due to this animator
     public private(set) var transition: CameraTransition?
-    
+
     /// A timer used to delay the start of an animation
     private var delayedAnimationTimer: Timer?
 
@@ -105,7 +111,7 @@ public class CameraAnimator: NSObject, CameraAnimatorProtocol {
 
         propertyAnimator.startAnimation()
     }
-    
+
     /// Starts the animation after a delay
     /// - Parameter delay: Delay (in seconds) after which the animation should start
     public func startAnimation(afterDelay delay: TimeInterval) {
@@ -144,7 +150,7 @@ public class CameraAnimator: NSObject, CameraAnimatorProtocol {
             self.transition = nil // Clear out the transition being animated by this animator,
                                   // since the animation is complete if we are here.
             delegate.schedulePendingCompletion(forAnimator: self, completion: completion, animatingPosition: animationPosition)
-            
+
             // Invalidate the delayed animation timer if it exists
             self.delayedAnimationTimer?.invalidate()
             self.delayedAnimationTimer = nil

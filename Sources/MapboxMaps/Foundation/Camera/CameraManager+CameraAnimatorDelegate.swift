@@ -18,9 +18,9 @@ extension CameraManager: CameraAnimatorDelegate {
     public func makeAnimator(duration: TimeInterval,
                              timingParameters parameters: UITimingCurveProvider,
                              animationOwner: AnimationOwner = .unspecified,
-                             animations: @escaping (inout CameraTransition) -> Void) -> CameraAnimator {
+                             animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, timingParameters: parameters)
-        let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
+        let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimator.addAnimations(animations)
         mapView?.cameraAnimatorsHashTable.add(cameraAnimator)
         return cameraAnimator
@@ -42,9 +42,9 @@ extension CameraManager: CameraAnimatorDelegate {
     public func makeAnimator(duration: TimeInterval,
                              curve: UIView.AnimationCurve,
                              animationOwner: AnimationOwner = .unspecified,
-                             animations: @escaping (inout CameraTransition) -> Void) -> CameraAnimator {
+                             animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, curve: curve)
-        let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
+        let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimator.addAnimations(animations)
         mapView?.cameraAnimatorsHashTable.add(cameraAnimator)
         return cameraAnimator
@@ -68,9 +68,9 @@ extension CameraManager: CameraAnimatorDelegate {
                              controlPoint1 point1: CGPoint,
                              controlPoint2 point2: CGPoint,
                              animationOwner: AnimationOwner = .unspecified,
-                             animations: @escaping (inout CameraTransition) -> Void) -> CameraAnimator {
+                             animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, controlPoint1: point1, controlPoint2: point2)
-        let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
+        let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimator.addAnimations(animations)
         mapView?.cameraAnimatorsHashTable.add(cameraAnimator)
         return cameraAnimator
@@ -93,16 +93,16 @@ extension CameraManager: CameraAnimatorDelegate {
     public func makeAnimator(duration: TimeInterval,
                              dampingRatio ratio: CGFloat,
                              animationOwner: AnimationOwner = .unspecified,
-                             animations: @escaping (inout CameraTransition) -> Void) -> CameraAnimator {
+                             animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: ratio)
-        let cameraAnimator = CameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
+        let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimator.addAnimations(animations)
         mapView?.cameraAnimatorsHashTable.add(cameraAnimator)
         return cameraAnimator
     }
 
     // MARK: CameraAnimatorDelegate functions
-    func schedulePendingCompletion(forAnimator animator: CameraAnimatorProtocol, completion: @escaping AnimationCompletion, animatingPosition: UIViewAnimatingPosition) {
+    func schedulePendingCompletion(forAnimator animator: CameraAnimator, completion: @escaping AnimationCompletion, animatingPosition: UIViewAnimatingPosition) {
         guard let mapView = mapView else { return }
         mapView.pendingAnimatorCompletionBlocks.append((completion, animatingPosition))
     }

@@ -8,7 +8,7 @@ internal let cameraOptionsTestValue = CameraOptions(center: CLLocationCoordinate
                                                               bearing: 10,
                                                               pitch: 10)
 
-internal class CameraAnimatorTests: XCTestCase {
+internal class BasicCameraAnimatorTests: XCTestCase {
 
     // swiftlint:disable weak_delegate
     var delegate: CameraAnimatorDelegateMock!

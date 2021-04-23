@@ -32,7 +32,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     public private(set) var owner: AnimationOwner
 
     /// The `CameraView` owned by this animator
-    internal private(set) var cameraView: CameraView
+    private var cameraView: CameraView
 
     /// Represents the animation that this animator is attempting to execute
     internal private(set) var animation: ((inout CameraTransition) -> Void)?

@@ -23,11 +23,9 @@ internal class OptionsIntegrationTest: MapViewIntegrationTestCase {
         XCTAssertEqual(mapView.gestures.gestureOptions, newConfig.gestures)
         XCTAssertEqual(mapView.camera.mapCameraOptions, newConfig.camera)
         XCTAssertEqual(mapView.location.locationOptions, newConfig.location)
-        XCTAssertTrue(
-            mapView.ornaments.ornamentConfig.ornaments.contains {
-                $0.type == .compass || $0.type == .mapboxScaleBar
-            }
-        )
+        let ornaments = mapView.subviews.filter { $0.isKind(of: MapboxCompassOrnamentView.self) || $0.isKind(of: MapboxScaleBarOrnamentView.self) }
+
+        XCTAssertEqual(ornaments.count, 2)
         XCTAssertEqual(mapView.metalView?.presentsWithTransaction, true)
     }
 }

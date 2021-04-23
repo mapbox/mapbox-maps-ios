@@ -22,15 +22,7 @@ let package = Package(
             name: "MapboxMaps",
             dependencies: ["MapboxCoreMaps", "Turf", "MapboxMobileEvents"],
             exclude: [
-                "Annotations/Info.plist",
-                "Foundation/Info.plist",
-                "Gestures/Info.plist",
-                "Location/Info.plist",
                 "MapView/Info.plist",
-                "Offline/Info.plist",
-                "Ornaments/Info.plist",
-                "Snapshot/Info.plist",
-                "Style/Info.plist",
                 "Style/README.md",
             ]
         ),
@@ -38,15 +30,7 @@ let package = Package(
             name: "MapboxMapsTests",
             dependencies: ["MapboxMaps"],
             exclude: [
-                "Annotations/Info.plist",
-                "Foundation/Info.plist",
-                "Gestures/Info.plist",
-                "Location/Info.plist",
                 "MapView/Info.plist",
-                "Offline/Info.plist",
-                "Ornaments/Info.plist",
-                "Snapshot/Info.plist",
-                "Style/Info.plist",
                 "MapView/Integration Tests/HTTP/HTTPIntegrationTests.swift",
             ],
             resources: [

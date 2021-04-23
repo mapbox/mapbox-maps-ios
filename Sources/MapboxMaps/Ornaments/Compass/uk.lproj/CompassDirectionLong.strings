@@ -1,0 +1,95 @@
+/* East, long */
+"E" = "схід";
+
+/* East by north, long */
+"EbN" = "північний схід";
+
+/* East by south, long */
+"EbS" = "південний схід";
+
+/* East-northeast, long */
+"ENE" = "схід - північний схід";
+
+/* East-southeast, long */
+"ESE" = "схід - південний схід";
+
+/* North, long */
+"N" = "північ";
+
+/* North by east, long */
+"NbE" = "північний схід";
+
+/* North by west, long */
+"NbW" = "північний захід";
+
+/* Northeast, long */
+"NE" = "північний схід";
+
+/* Northeast by east, long */
+"NEbE" = "північний схід - схід";
+
+/* Northeast by north, long */
+"NEbN" = "північний счхід - північ";
+
+/* North-northeast, long */
+"NNE" = "північ - північний схід";
+
+/* North-northwest, long */
+"NNW" = "північ - північний захід";
+
+/* Northwest, long */
+"NW" = "північний захід";
+
+/* Northwest by north, long */
+"NWbN" = "північний захід - північ";
+
+/* Northwest by west, long */
+"NWbW" = "північний захід - захід";
+
+/* South, long */
+"S" = "південь";
+
+/* South by east, long */
+"SbE" = "південний схід";
+
+/* South by west, long */
+"SbW" = "південний захід";
+
+/* Southeast, long */
+"SE" = "південний схід";
+
+/* Southeast by east, long */
+"SEbE" = "південний схід - схід";
+
+/* Southeast by south, long */
+"SEbS" = "південний схід - південь";
+
+/* South-southeast, long */
+"SSE" = "південь - південний схід";
+
+/* South-southwest, long */
+"SSW" = "південь - південний захід";
+
+/* Southwest, long */
+"SW" = "південний захід";
+
+/* Southwest by south, long */
+"SWbS" = "південний захід - південь";
+
+/* Southwest by west, long */
+"SWbW" = "південний захід - захід";
+
+/* West, long */
+"W" = "захід";
+
+/* West by north, long */
+"WbN" = "північний захід";
+
+/* West by south, long */
+"WbS" = "південний захід";
+
+/* West-northwest, long */
+"WNW" = "захід - північний захід";
+
+/* West-southwest, long */
+"WSW" = "захід - південний захід";

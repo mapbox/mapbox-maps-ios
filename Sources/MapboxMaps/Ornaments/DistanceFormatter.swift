@@ -19,9 +19,9 @@ internal class DistanceFormatter: MeasurementFormatter {
 
         if !locale.usesMetricSystem {
             unitOptions = .providedUnit
-            measurement.convert(to: UnitLength.miles)
+            measurement.convert(to: .miles)
             if measurement.value <= 0.2 {
-                measurement.convert(to: UnitLength.feet)
+                measurement.convert(to: .feet)
             }
         } else {
             unitOptions = .naturalScale

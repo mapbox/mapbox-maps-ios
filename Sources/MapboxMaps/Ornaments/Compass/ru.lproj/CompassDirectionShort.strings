@@ -1,0 +1,95 @@
+/* East, short */
+"E" = "В";
+
+/* East by north, short */
+"EbN" = "СВ";
+
+/* East by south, short */
+"EbS" = "ЮВ";
+
+/* East-northeast, short */
+"ENE" = "ВСВ";
+
+/* East-southeast, short */
+"ESE" = "ЮЮВ";
+
+/* North, short */
+"N" = "С";
+
+/* North by east, short */
+"NbE" = "СВ";
+
+/* North by west, short */
+"NbW" = "СЗ";
+
+/* Northeast, short */
+"NE" = "СВ";
+
+/* Northeast by east, short */
+"NEbE" = "ВСВ";
+
+/* Northeast by north, short */
+"NEbN" = "ССВ";
+
+/* North-northeast, short */
+"NNE" = "ССВ";
+
+/* North-northwest, short */
+"NNW" = "ССЗ";
+
+/* Northwest, short */
+"NW" = "СЗ";
+
+/* Northwest by north, short */
+"NWbN" = "ССЗ";
+
+/* Northwest by west, short */
+"NWbW" = "ЗСЗ";
+
+/* South, short */
+"S" = "Ю";
+
+/* South by east, short */
+"SbE" = "ЮВ";
+
+/* South by west, short */
+"SbW" = "ЮЗ";
+
+/* Southeast, short */
+"SE" = "ЮВ";
+
+/* Southeast by east, short */
+"SEbE" = "ВЮВ";
+
+/* Southeast by south, short */
+"SEbS" = "ЮЮВ";
+
+/* South-southeast, short */
+"SSE" = "ЮЮВ";
+
+/* South-southwest, short */
+"SSW" = "ЮЮЗ";
+
+/* Southwest, short */
+"SW" = "ЮЗ";
+
+/* Southwest by south, short */
+"SWbS" = "ЮЮЗ";
+
+/* Southwest by west, short */
+"SWbW" = "ВЮВ";
+
+/* West, short */
+"W" = "З";
+
+/* West by north, short */
+"WbN" = "СЗ";
+
+/* West by south, short */
+"WbS" = "ЮГ";
+
+/* West-northwest, short */
+"WNW" = "ЗСЗ";
+
+/* West-southwest, short */
+"WSW" = "ЗЮЗ";

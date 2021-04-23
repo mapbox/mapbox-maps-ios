@@ -2,6 +2,12 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+### Features ✨ and improvements 🏁
+
+- `CompassDirectionFormatter` is now public. It provides a string representation of a `CLLocationDirection` and supports the same languages as in pre-v10 versions of the Maps SDK. ([#300](https://github.com/mapbox/mapbox-maps-ios/pull/300))
+
 ## 10.0.0-beta.18 - April 23, 2021
 
 ### Breaking changes ⚠️

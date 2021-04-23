@@ -1,88 +1,40 @@
 import CoreLocation
 import XCTest
+import MapboxMaps
 
-#if canImport(MapboxMaps)
-@testable import MapboxMaps
-#else
-@testable import MapboxMapsOrnaments
-#endif
+final class CompassDirectionFormatterTests: XCTestCase {
 
-//swiftlint:disable explicit_acl explicit_top_level_acl
-class CompassDirectionFormatterTests: XCTestCase {
+    var formatter: CompassDirectionFormatter!
 
-    //swiftlint:disable function_body_length
-    func testCompassDirections() {
-        let shortFormatter = CompassDirectionFormatter()
-        shortFormatter.unitStyle = .short
-        let mediumFormatter = CompassDirectionFormatter()
-        let longFormatter = CompassDirectionFormatter()
-        longFormatter.unitStyle = .long
-
-        var direction: CLLocationDirection
-
-        direction = -45
-        XCTAssertEqual("NW", shortFormatter.string(from: direction))
-        XCTAssertEqual("northwest", mediumFormatter.string(from: direction))
-        XCTAssertEqual("northwest", longFormatter.string(from: direction))
-
-        direction = 0
-        XCTAssertEqual("N", shortFormatter.string(from: direction))
-        XCTAssertEqual("north", mediumFormatter.string(from: direction))
-        XCTAssertEqual("north", longFormatter.string(from: direction))
-
-        direction = 1
-        XCTAssertEqual("N", shortFormatter.string(from: direction))
-        XCTAssertEqual("north", mediumFormatter.string(from: direction))
-        XCTAssertEqual("north", longFormatter.string(from: direction))
-
-        direction = 10
-        XCTAssertEqual("NbE", shortFormatter.string(from: direction))
-        XCTAssertEqual("north by east", mediumFormatter.string(from: direction))
-        XCTAssertEqual("north by east", longFormatter.string(from: direction))
-
-        direction = 20
-        XCTAssertEqual("NNE", shortFormatter.string(from: direction))
-        XCTAssertEqual("north-northeast", mediumFormatter.string(from: direction))
-        XCTAssertEqual("north-northeast", longFormatter.string(from: direction))
-
-        direction = 45
-        XCTAssertEqual("NE", shortFormatter.string(from: direction))
-        XCTAssertEqual("northeast", mediumFormatter.string(from: direction))
-        XCTAssertEqual("northeast", longFormatter.string(from: direction))
-
-        direction = 90
-        XCTAssertEqual("E", shortFormatter.string(from: direction))
-        XCTAssertEqual("east", mediumFormatter.string(from: direction))
-        XCTAssertEqual("east", longFormatter.string(from: direction))
-
-        direction = 180
-        XCTAssertEqual("S", shortFormatter.string(from: direction))
-        XCTAssertEqual("south", mediumFormatter.string(from: direction))
-        XCTAssertEqual("south", longFormatter.string(from: direction))
-
-        direction = 270
-        XCTAssertEqual("W", shortFormatter.string(from: direction))
-        XCTAssertEqual("west", mediumFormatter.string(from: direction))
-        XCTAssertEqual("west", longFormatter.string(from: direction))
-
-        direction = 359.34951805867024
-        XCTAssertEqual("N", shortFormatter.string(from: direction))
-        XCTAssertEqual("north", mediumFormatter.string(from: direction))
-        XCTAssertEqual("north", longFormatter.string(from: direction))
-
-        direction = 360
-        XCTAssertEqual("N", shortFormatter.string(from: direction))
-        XCTAssertEqual("north", mediumFormatter.string(from: direction))
-        XCTAssertEqual("north", longFormatter.string(from: direction))
-
-        direction = 360.1
-        XCTAssertEqual("N", shortFormatter.string(from: direction))
-        XCTAssertEqual("north", mediumFormatter.string(from: direction))
-        XCTAssertEqual("north", longFormatter.string(from: direction))
-
-        direction = 720
-        XCTAssertEqual("N", shortFormatter.string(from: direction))
-        XCTAssertEqual("north", mediumFormatter.string(from: direction))
-        XCTAssertEqual("north", longFormatter.string(from: direction))
+    override func setUp() {
+        super.setUp()
+        formatter = CompassDirectionFormatter()
     }
+
+    override func tearDown() {
+        formatter = nil
+        super.tearDown()
+    }
+
+    func verifyString(with direction: CLLocationDirection, short: String, long: String, line: UInt = #line) {
+        formatter.style = .short
+        XCTAssertEqual(short, formatter.string(from: direction), line: line)
+        formatter.style = .long
+        XCTAssertEqual(long, formatter.string(from: direction), line: line)
+    }
+
+    func testCompassDirections() {
+        verifyString(with: -45, short: "NW", long: "northwest")
+        verifyString(with: 0, short: "N", long: "north")
+        verifyString(with: 1, short: "N", long: "north")
+        verifyString(with: 10, short: "NbE", long: "north by east")
+        verifyString(with: 20, short: "NNE", long: "north-northeast")
+        verifyString(with: 45, short: "NE", long: "northeast")
+        verifyString(with: 90, short: "E", long: "east")
+        verifyString(with: 180, short: "S", long: "south")
+        verifyString(with: 270, short: "W", long: "west")
+        verifyString(with: 359.34951805867024, short: "N", long: "north")
+        verifyString(with: 360, short: "N", long: "north")
+        verifyString(with: 360.1, short: "N", long: "north")
+        verifyString(with: 720, short: "N", long: "north")    }
 }

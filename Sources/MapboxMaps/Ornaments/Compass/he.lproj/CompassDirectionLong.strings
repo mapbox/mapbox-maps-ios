@@ -1,0 +1,95 @@
+/* East, long */
+"E" = "מזרח";
+
+/* East by north, long */
+"EbN" = "east by north";
+
+/* East by south, long */
+"EbS" = "east by south";
+
+/* East-northeast, long */
+"ENE" = "מזרח-צפון מזרח";
+
+/* East-southeast, long */
+"ESE" = "מזרח-דרום מזרח";
+
+/* North, long */
+"N" = "צפון";
+
+/* North by east, long */
+"NbE" = "north by east";
+
+/* North by west, long */
+"NbW" = "north by west";
+
+/* Northeast, long */
+"NE" = "צפון מזרח";
+
+/* Northeast by east, long */
+"NEbE" = "northeast by east";
+
+/* Northeast by north, long */
+"NEbN" = "northeast by north";
+
+/* North-northeast, long */
+"NNE" = "צפון-צפון מזרח";
+
+/* North-northwest, long */
+"NNW" = "צפון-צפון מערב";
+
+/* Northwest, long */
+"NW" = "צפון מערב";
+
+/* Northwest by north, long */
+"NWbN" = "northwest by north";
+
+/* Northwest by west, long */
+"NWbW" = "northwest by west";
+
+/* South, long */
+"S" = "דרום";
+
+/* South by east, long */
+"SbE" = "south by east";
+
+/* South by west, long */
+"SbW" = "south by west";
+
+/* Southeast, long */
+"SE" = "דרום מזרח";
+
+/* Southeast by east, long */
+"SEbE" = "southeast by east";
+
+/* Southeast by south, long */
+"SEbS" = "southeast by south";
+
+/* South-southeast, long */
+"SSE" = "דרום-דרום מזרח";
+
+/* South-southwest, long */
+"SSW" = "דרום-דרום מערב";
+
+/* Southwest, long */
+"SW" = "דרום מערב";
+
+/* Southwest by south, long */
+"SWbS" = "southwest by south";
+
+/* Southwest by west, long */
+"SWbW" = "southwest by west";
+
+/* West, long */
+"W" = "מערב";
+
+/* West by north, long */
+"WbN" = "west by north";
+
+/* West by south, long */
+"WbS" = "west by south";
+
+/* West-northwest, long */
+"WNW" = "מערב-צפון מערב";
+
+/* West-southwest, long */
+"WSW" = "מערב-דרום מערב";

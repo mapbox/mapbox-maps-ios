@@ -1,0 +1,95 @@
+/* East, long */
+"E" = "đông";
+
+/* East by north, long */
+"EbN" = "đông về bắc";
+
+/* East by south, long */
+"EbS" = "đông về nam";
+
+/* East-northeast, long */
+"ENE" = "đông đông bắc";
+
+/* East-southeast, long */
+"ESE" = "đông đông nam";
+
+/* North, long */
+"N" = "bắc";
+
+/* North by east, long */
+"NbE" = "bắc về đông";
+
+/* North by west, long */
+"NbW" = "bắc về tây";
+
+/* Northeast, long */
+"NE" = "đông bắc";
+
+/* Northeast by east, long */
+"NEbE" = "đông bắc về đông";
+
+/* Northeast by north, long */
+"NEbN" = "đông bắc về bắc";
+
+/* North-northeast, long */
+"NNE" = "bắc đông bắc";
+
+/* North-northwest, long */
+"NNW" = "bắc tây bắc";
+
+/* Northwest, long */
+"NW" = "tây bắc";
+
+/* Northwest by north, long */
+"NWbN" = "tây bắc về bắc";
+
+/* Northwest by west, long */
+"NWbW" = "tây bắc về tây";
+
+/* South, long */
+"S" = "nam";
+
+/* South by east, long */
+"SbE" = "nam về đông";
+
+/* South by west, long */
+"SbW" = "nam về tây";
+
+/* Southeast, long */
+"SE" = "đông nam";
+
+/* Southeast by east, long */
+"SEbE" = "đông nam về đông";
+
+/* Southeast by south, long */
+"SEbS" = "đông nam về nam";
+
+/* South-southeast, long */
+"SSE" = "nam đông nam";
+
+/* South-southwest, long */
+"SSW" = "nam tây nam";
+
+/* Southwest, long */
+"SW" = "tây nam";
+
+/* Southwest by south, long */
+"SWbS" = "tây nam về nam";
+
+/* Southwest by west, long */
+"SWbW" = "tây nam về tây";
+
+/* West, long */
+"W" = "tây";
+
+/* West by north, long */
+"WbN" = "tây về bắc";
+
+/* West by south, long */
+"WbS" = "tây về nam";
+
+/* West-northwest, long */
+"WNW" = "tây tây bắc";
+
+/* West-southwest, long */
+"WSW" = "tây tây nam";

@@ -11,31 +11,27 @@ import CoreLocation
 }
 
 /// Internal-facing protocol to represent camera animators
-@objc internal protocol CameraAnimatorInterface: AnyObject {
+@objc internal protocol CameraAnimatorInterface: CameraAnimator {
     func update()
-
-    func stopAnimation()
-
-    var state: UIViewAnimatingState { get }
 }
 
 // MARK: CameraAnimator Class
 public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterface {
 
     /// Instance of the property animator that will run animations.
-    internal private(set) var propertyAnimator: UIViewPropertyAnimator
+    private let propertyAnimator: UIViewPropertyAnimator
 
     /// Delegate that conforms to `CameraAnimatorDelegate`.
     internal private(set) weak var delegate: CameraAnimatorDelegate?
 
     /// The ID of the owner of this `CameraAnimator`.
-    public private(set) var owner: AnimationOwner
+    private let owner: AnimationOwner
 
     /// The `CameraView` owned by this animator
-    private var cameraView: CameraView
+    private let cameraView: CameraView
 
     /// Represents the animation that this animator is attempting to execute
-    internal private(set) var animation: ((inout CameraTransition) -> Void)?
+    private var animation: ((inout CameraTransition) -> Void)?
 
     /// Defines the transition that will occur to the `CameraOptions` of the renderer due to this animator
     public private(set) var transition: CameraTransition?
@@ -79,6 +75,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         propertyAnimator.stopAnimation(false)
         propertyAnimator.finishAnimation(at: .current)
         cameraView.removeFromSuperview()
+        delayedAnimationTimer?.invalidate()
     }
 
     /// Starts the animation if this animator is in `inactive` state. Also used to resume a "paused" animation.
@@ -116,9 +113,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     /// - Parameter delay: Delay (in seconds) after which the animation should start
     public func startAnimation(afterDelay delay: TimeInterval) {
         delayedAnimationTimer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false, block: { [weak self] (timer) in
-            guard let self = self else { return }
-            self.startAnimation()
-            timer.invalidate()
+            self?.startAnimation()
         })
     }
 

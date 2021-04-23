@@ -266,9 +266,9 @@ public class CameraManager {
         }
 
         // Nil out the `internalAnimator` once the "ease to" finishes
-        animator.addCompletion { [weak self] (_) in
+        animator.addCompletion { [weak self] (position) in
             self?.internalAnimator = nil
-            animator.addCompletion(completion)
+            completion?(position)
         }
 
         animator.startAnimation()

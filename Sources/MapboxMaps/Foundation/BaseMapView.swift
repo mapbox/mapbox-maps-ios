@@ -35,7 +35,7 @@ open class BaseMapView: UIView {
 
     /// List of animators currently alive
     public var cameraAnimators: [CameraAnimator] {
-        return cameraAnimatorsHashTable.allObjects.compactMap { $0 as? CameraAnimator }
+        return cameraAnimatorsHashTable.allObjects
     }
 
     /// Map of event types to subscribed event handlers

@@ -161,6 +161,10 @@ public class CameraManager {
         }
     }
 
+    /// Interrupts all `active` animation.
+    /// The camera remains at the last point before the cancel request was invoked, i.e.,
+    /// the camera is not reset or fast-forwarded to the end of the transition.
+    /// Canceled animations cannot be restarted / resumed. The animator must be recreated.
     public func cancelAnimations() {
         guard let validMapView = mapView else { return }
         for animator in validMapView.cameraAnimatorsHashTable.allObjects where animator.state == UIViewAnimatingState.active {

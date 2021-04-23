@@ -3,13 +3,9 @@ import UIKit
 public enum OrnamentPosition: String, Equatable {
     // Clockwise from top left
     case topLeft
-    case topCenter
     case topRight
-    case centerRight
     case bottomRight
-    case bottomCenter
     case bottomLeft
-    case centerLeft
 }
 
 public enum OrnamentVisibility: String, Equatable {
@@ -73,6 +69,7 @@ internal class OrnamentsManager: NSObject {
                     forLatitude: center.latitude,
                     zoom: Double(zoom))
             }
+
             if let bearing = cameraOptions.bearing {
                 compassView.currentBearing = Double(bearing)
             }
@@ -119,9 +116,6 @@ internal class OrnamentsManager: NSObject {
                 view.topAnchor.constraint(equalTo: universalLayoutGuide.topAnchor,
                                               constant: margins.y)
                 ]
-
-        case .topCenter:
-            print("topCenter")
         case .topRight:
             return  [
                 view.rightAnchor.constraint(equalTo: universalLayoutGuide.rightAnchor,
@@ -129,10 +123,6 @@ internal class OrnamentsManager: NSObject {
                 view.topAnchor.constraint(equalTo: universalLayoutGuide.topAnchor,
                                                   constant: margins.y)
             ]
-        case .centerLeft:
-            print("centerLeft")
-        case .centerRight:
-            print("centerRight")
         case .bottomLeft:
             return [
                 view.leftAnchor.constraint(equalTo: universalLayoutGuide.leftAnchor,
@@ -140,8 +130,6 @@ internal class OrnamentsManager: NSObject {
                 view.bottomAnchor.constraint(equalTo: universalLayoutGuide.bottomAnchor,
                                                      constant: -margins.y)
             ]
-        case .bottomCenter:
-            print("bottomCenter")
         case .bottomRight:
             return [
                 view.rightAnchor.constraint(equalTo: universalLayoutGuide.rightAnchor,

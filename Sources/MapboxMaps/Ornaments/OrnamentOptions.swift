@@ -39,7 +39,7 @@ public struct OrnamentOptions: Equatable {
 
     // MARK: - Validation
 
-    /// true if there is at most one non-hidden ornament in each position; false otherwise.
+    /// `true` if there is at most one non-hidden ornament in each position; `false` otherwise.
     internal var isValid: Bool {
         let positions = [
             scaleBarVisibility != .hidden ? scaleBarPosition : nil,

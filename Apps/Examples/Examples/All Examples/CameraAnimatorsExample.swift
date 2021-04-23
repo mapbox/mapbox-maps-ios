@@ -67,7 +67,7 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
             guard let self = self else { return }
 
             print("Animating zoom from zoom lvl 3 -> zoom lvl 14")
-            self.zoomAnimator.startAnimation(afterDelay: 1)
+            self.zoomAnimator.startAnimation(afterDelay: 10)
             self.finish()
         }
     }

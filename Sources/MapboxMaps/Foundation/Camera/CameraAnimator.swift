@@ -33,6 +33,9 @@ public class CameraAnimator: NSObject, CameraAnimatorProtocol {
 
     /// Defines the transition that will occur to the `CameraOptions` of the renderer due to this animator
     public private(set) var transition: CameraTransition?
+    
+    /// A timer used to delay the start of an animation
+    private var delayedAnimationTimer: Timer?
 
     /// The state from of the animator.
     public var state: UIViewAnimatingState { propertyAnimator.state }
@@ -102,14 +105,15 @@ public class CameraAnimator: NSObject, CameraAnimatorProtocol {
 
         propertyAnimator.startAnimation()
     }
-
+    
     /// Starts the animation after a delay
     /// - Parameter delay: Delay (in seconds) after which the animation should start
     public func startAnimation(afterDelay delay: TimeInterval) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+        delayedAnimationTimer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false, block: { [weak self] (timer) in
             guard let self = self else { return }
             self.startAnimation()
-        }
+            timer.invalidate()
+        })
     }
 
     /// Pauses the animation.
@@ -140,6 +144,10 @@ public class CameraAnimator: NSObject, CameraAnimatorProtocol {
             self.transition = nil // Clear out the transition being animated by this animator,
                                   // since the animation is complete if we are here.
             delegate.schedulePendingCompletion(forAnimator: self, completion: completion, animatingPosition: animationPosition)
+            
+            // Invalidate the delayed animation timer if it exists
+            self.delayedAnimationTimer?.invalidate()
+            self.delayedAnimationTimer = nil
         }
     }
 

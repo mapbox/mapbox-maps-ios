@@ -29,7 +29,6 @@ public struct OrnamentOptions: Equatable {
     public var _logoViewIsVisible: Bool = true
     public var logoViewPosition: OrnamentPosition = .bottomLeft
     public var logoViewMargins: CGPoint = defaultOrnamentsMargin
-    public var telemetryOptOutShownInApp: Bool = false
 
     // MARK: - Attribution Button
 

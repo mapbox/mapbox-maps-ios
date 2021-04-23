@@ -78,10 +78,8 @@ internal class OrnamentsManager: NSObject {
 
     internal func updateOrnaments() {
         // Remove previously-added constraints
-        if constraints.count > 0 {
-            NSLayoutConstraint.deactivate(constraints)
-            constraints.removeAll()
-        }
+        NSLayoutConstraint.deactivate(constraints)
+        constraints.removeAll()
 
         // Update the position for the ornaments
         let logoViewConstraints = constraints(with: logoView, position: options.logoViewPosition, margins: options.logoViewMargins)
@@ -112,33 +110,32 @@ internal class OrnamentsManager: NSObject {
         case .topLeft:
             return [
                 view.leftAnchor.constraint(equalTo: universalLayoutGuide.leftAnchor,
-                                          constant: margins.x),
+                                           constant: margins.x),
                 view.topAnchor.constraint(equalTo: universalLayoutGuide.topAnchor,
-                                              constant: margins.y)
-                ]
+                                          constant: margins.y)
+            ]
         case .topRight:
             return  [
                 view.rightAnchor.constraint(equalTo: universalLayoutGuide.rightAnchor,
-                                                       constant: -margins.x),
+                                            constant: -margins.x),
                 view.topAnchor.constraint(equalTo: universalLayoutGuide.topAnchor,
-                                                  constant: margins.y)
+                                          constant: margins.y)
             ]
         case .bottomLeft:
             return [
                 view.leftAnchor.constraint(equalTo: universalLayoutGuide.leftAnchor,
-                                                      constant: margins.x),
+                                           constant: margins.x),
                 view.bottomAnchor.constraint(equalTo: universalLayoutGuide.bottomAnchor,
-                                                     constant: -margins.y)
+                                             constant: -margins.y)
             ]
         case .bottomRight:
             return [
                 view.rightAnchor.constraint(equalTo: universalLayoutGuide.rightAnchor,
-                                                       constant: -margins.x),
+                                            constant: -margins.x),
                 view.bottomAnchor.constraint(equalTo: universalLayoutGuide.bottomAnchor,
-                                                     constant: -margins.y)
+                                             constant: -margins.y)
             ]
         }
-        return []
     }
 
     func layoutGuide(for view: UIView) -> UILayoutGuide {

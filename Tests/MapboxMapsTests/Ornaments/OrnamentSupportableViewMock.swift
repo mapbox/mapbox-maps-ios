@@ -20,6 +20,4 @@ class OrnamentSupportableViewMock: UIView, OrnamentSupportableView {
     func tapped() {
         tapCalled = true
     }
-
-    var bearing = 0
 }

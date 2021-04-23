@@ -5,6 +5,8 @@ import XCTest
 // These tests are used for documentation purposes
 // Code between //--> and //<-- is used in the offline guide. Please do not modify
 // without consultation.
+
+//swiftlint:disable empty_enum_arguments
 class OfflineGuideIntegrationTests: XCTestCase {
     let tokyoCoord = CLLocationCoordinate2D(latitude: 35.682027, longitude: 139.769305)
 
@@ -66,7 +68,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
 
         //-->
         let metadata = [
-            "name" : "my-region",
+            "name": "my-region",
             "my-other-key": "my-other-tile-region-value"]
         let tileRegionLoadOptions = TileRegionLoadOptions(
             geometry: MBXGeometry(coordinate: tokyoCoord),
@@ -235,7 +237,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
             for region in tileRegions {
                 print("region = \(region.id)")
             }
-            XCTAssert(tileRegions.isEmpty)
+            XCTAssert(!tileRegions.isEmpty)
             expectation.fulfill()
         }
 
@@ -283,8 +285,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
             }
             if expected.isValue() {
                 expectation.fulfill()
-            }
-            else {
+            } else {
                 XCTFail("Delete failed: \(String(describing: expected.value))")
             }
         }

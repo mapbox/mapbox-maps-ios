@@ -34,7 +34,6 @@
 		07E816DA256D72E500ACFA73 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07182014256C1F6100F22489 /* Assets.xcassets */; };
 		0C01C0B925486E7200E4AA46 /* ExpressionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C01C08825486E6100E4AA46 /* ExpressionTests.swift */; };
 		0C1AF560244E47C1008D2A10 /* GestureOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1AF559244DF4DF008D2A10 /* GestureOptions.swift */; };
-		0C1AF565244F65E6008D2A10 /* OrnamentOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1AF564244F65E6008D2A10 /* OrnamentOptions.swift */; };
 		0C26425524EECD14001FE2E3 /* AllExpressions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C26425424EECD14001FE2E3 /* AllExpressions.swift */; };
 		0C2CD9F625D19D75006D068F /* OptionsIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2CD9E225D19D30006D068F /* OptionsIntegrationTests.swift */; };
 		0C2CDA2F25D1A51C006D068F /* PuckTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2CDA2D25D1A51C006D068F /* PuckTypeTests.swift */; };
@@ -145,7 +144,6 @@
 		0CD62F222458873E006421D1 /* LocationOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF65A86245354E30069B561 /* LocationOptions.swift */; };
 		0CD62F23245887C8006421D1 /* OrnamentsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07797FAF242C233100229F7D /* OrnamentsManager.swift */; };
 		0CD62F24245887CD006421D1 /* OrnamentSupportableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 076C4521242D4DF800A5E0C4 /* OrnamentSupportableView.swift */; };
-		0CD62F26245887D5006421D1 /* OrnamentConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1AF566244F6A80008D2A10 /* OrnamentConfig.swift */; };
 		0CD62F2C24588937006421D1 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4519DE42432FF14007CF39A /* Style.swift */; };
 		0CD62F392458CDD6006421D1 /* GestureUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0765213A245740BA00FDD209 /* GestureUtilities.swift */; };
 		0CDFEB0D25A7745A008BC505 /* UtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CDFEAD725A77430008BC505 /* UtilsTests.swift */; };
@@ -155,7 +153,6 @@
 		0CF0C42924EB1779000DC118 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF0C42824EB1779000DC118 /* Enums.swift */; };
 		1FECC9E02474519D00B63910 /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FECC9DF2474519D00B63910 /* Expression.swift */; };
 		2B8637D52461601100698135 /* MapboxScaleBarOrnamentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8637D42461601100698135 /* MapboxScaleBarOrnamentView.swift */; };
-		2B8637E12462F31B00698135 /* MapbxoScaleBarConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8637DF2462F31100698135 /* MapbxoScaleBarConstants.swift */; };
 		2B8637E32462F5AE00698135 /* MapboxScaleBarLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8637E22462F5AE00698135 /* MapboxScaleBarLabel.swift */; };
 		2B8637E62463F36400698135 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8637D72461992200698135 /* DistanceFormatter.swift */; };
 		5A35924524644C5E00E67344 /* CompassDirectionFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A359243246448E600E67344 /* CompassDirectionFormatter.swift */; };
@@ -183,6 +180,8 @@
 		B53B8763260D73D600C86BAA /* Puck3DIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53B8761260D73D600C86BAA /* Puck3DIntegrationTests.swift */; };
 		B54B7F0B25DB192C003FD6CA /* MockCameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54B7F0925DB192C003FD6CA /* MockCameraManager.swift */; };
 		B54B7F2125DB1ABA003FD6CA /* Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54B7F1F25DB1ABA003FD6CA /* Stub.swift */; };
+		B575018A26334BA700937A9E /* MapboxScaleBarConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B575018926334BA700937A9E /* MapboxScaleBarConstants.swift */; };
+		B575018F26334BB800937A9E /* OrnamentOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B575018E26334BB800937A9E /* OrnamentOptions.swift */; };
 		B5A6921B262754DF00A03412 /* DelegatingObserverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A69216262754DF00A03412 /* DelegatingObserverTests.swift */; };
 		B5A6921C262754DF00A03412 /* MockDelegatingMapClientDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A69217262754DF00A03412 /* MockDelegatingMapClientDelegate.swift */; };
 		B5A6921D262754DF00A03412 /* MockDelegatingObserverDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A69218262754DF00A03412 /* MockDelegatingObserverDelegate.swift */; };
@@ -422,8 +421,6 @@
 		0C01C08825486E6100E4AA46 /* ExpressionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionTests.swift; sourceTree = "<group>"; };
 		0C07948D2452331A0006A9C4 /* MapCameraOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCameraOptions.swift; sourceTree = "<group>"; };
 		0C1AF559244DF4DF008D2A10 /* GestureOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureOptions.swift; sourceTree = "<group>"; };
-		0C1AF564244F65E6008D2A10 /* OrnamentOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrnamentOptions.swift; sourceTree = "<group>"; };
-		0C1AF566244F6A80008D2A10 /* OrnamentConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrnamentConfig.swift; sourceTree = "<group>"; };
 		0C26425424EECD14001FE2E3 /* AllExpressions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllExpressions.swift; sourceTree = "<group>"; };
 		0C2CD9E225D19D30006D068F /* OptionsIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsIntegrationTests.swift; sourceTree = "<group>"; };
 		0C2CDA2D25D1A51C006D068F /* PuckTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuckTypeTests.swift; sourceTree = "<group>"; };
@@ -550,7 +547,6 @@
 		1FF65A86245354E30069B561 /* LocationOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationOptions.swift; sourceTree = "<group>"; };
 		2B8637D42461601100698135 /* MapboxScaleBarOrnamentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxScaleBarOrnamentView.swift; sourceTree = "<group>"; };
 		2B8637D72461992200698135 /* DistanceFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceFormatter.swift; sourceTree = "<group>"; };
-		2B8637DF2462F31100698135 /* MapbxoScaleBarConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapbxoScaleBarConstants.swift; sourceTree = "<group>"; };
 		2B8637E22462F5AE00698135 /* MapboxScaleBarLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxScaleBarLabel.swift; sourceTree = "<group>"; };
 		2B8637E72464021500698135 /* DistanceFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceFormatterTests.swift; sourceTree = "<group>"; };
 		2B86382C246D300400698135 /* FeatureCollectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeatureCollectionTests.swift; sourceTree = "<group>"; };
@@ -600,6 +596,8 @@
 		B53B8761260D73D600C86BAA /* Puck3DIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Puck3DIntegrationTests.swift; sourceTree = "<group>"; };
 		B54B7F0925DB192C003FD6CA /* MockCameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCameraManager.swift; sourceTree = "<group>"; };
 		B54B7F1F25DB1ABA003FD6CA /* Stub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stub.swift; sourceTree = "<group>"; };
+		B575018926334BA700937A9E /* MapboxScaleBarConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapboxScaleBarConstants.swift; sourceTree = "<group>"; };
+		B575018E26334BB800937A9E /* OrnamentOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrnamentOptions.swift; sourceTree = "<group>"; };
 		B5A69216262754DF00A03412 /* DelegatingObserverTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DelegatingObserverTests.swift; sourceTree = "<group>"; };
 		B5A69217262754DF00A03412 /* MockDelegatingMapClientDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockDelegatingMapClientDelegate.swift; sourceTree = "<group>"; };
 		B5A69218262754DF00A03412 /* MockDelegatingObserverDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockDelegatingObserverDelegate.swift; sourceTree = "<group>"; };
@@ -737,10 +735,10 @@
 		07797F94242C21BC00229F7D /* MapboxMapsOrnaments */ = {
 			isa = PBXGroup;
 			children = (
+				B575018E26334BB800937A9E /* OrnamentOptions.swift */,
 				B53A685E25E033AF008CB2AF /* OrnamentsLocalizable.strings */,
 				2B8637D72461992200698135 /* DistanceFormatter.swift */,
 				5A3592AC246AD45500E67344 /* MapboxInfoButtonOrnament.swift */,
-				0C1AF566244F6A80008D2A10 /* OrnamentConfig.swift */,
 				07797FAF242C233100229F7D /* OrnamentsManager.swift */,
 				076C4521242D4DF800A5E0C4 /* OrnamentSupportableView.swift */,
 				5A3593722476AE3400E67344 /* Compass */,
@@ -813,7 +811,6 @@
 		07C1B38B2446B0550044A3C6 /* MapboxMapsOffline */ = {
 			isa = PBXGroup;
 			children = (
-				07C1B38D2446B0550044A3C6 /* Info.plist */,
 				CA6245DE2627EC3900C79547 /* OfflineCallbacks.swift */,
 				CA6245D92627EA7F00C79547 /* OfflineErrors.swift */,
 				CA6245E82627F37B00C79547 /* OfflineManager+MapboxMaps.swift */,
@@ -919,7 +916,6 @@
 			children = (
 				CABCDF402620E09D00D61635 /* MapConfig.swift */,
 				CABCDF412620E09D00D61635 /* MapInitOptions.swift */,
-				0C1AF564244F65E6008D2A10 /* OrnamentOptions.swift */,
 				0CC9937D25D46B7100650CC1 /* RenderOptions.swift */,
 			);
 			path = Configuration;
@@ -1326,9 +1322,9 @@
 		2B8637DE2462F2EF00698135 /* ScaleBar */ = {
 			isa = PBXGroup;
 			children = (
+				B575018926334BA700937A9E /* MapboxScaleBarConstants.swift */,
 				2B8637D42461601100698135 /* MapboxScaleBarOrnamentView.swift */,
 				2B8637E22462F5AE00698135 /* MapboxScaleBarLabel.swift */,
-				2B8637DF2462F31100698135 /* MapbxoScaleBarConstants.swift */,
 			);
 			path = ScaleBar;
 			sourceTree = "<group>";
@@ -1886,7 +1882,6 @@
 				CA6245DA2627EA7F00C79547 /* OfflineErrors.swift in Sources */,
 				0CD62F1A245886E7006421D1 /* LocationManager.swift in Sources */,
 				0CD62F1E24588730006421D1 /* LocationProvider.swift in Sources */,
-				0C1AF565244F65E6008D2A10 /* OrnamentOptions.swift in Sources */,
 				0CD62F222458873E006421D1 /* LocationOptions.swift in Sources */,
 				0CD62F392458CDD6006421D1 /* GestureUtilities.swift in Sources */,
 				0C708F2924EB1EE2003CE791 /* LocationIndicatorLayer.swift in Sources */,
@@ -1911,13 +1906,13 @@
 				0C708F3124EB1EE2003CE791 /* CircleLayer.swift in Sources */,
 				0CD62F0724588501006421D1 /* PinchGestureHandler.swift in Sources */,
 				0782B17B258C236B00D5FCE5 /* MBXGeometry.swift in Sources */,
-				0CD62F26245887D5006421D1 /* OrnamentConfig.swift in Sources */,
 				B529341D2624E9D6003B181C /* DelegatingMapClient.swift in Sources */,
 				0C3B1E9224DDADD000CC29E8 /* MapboxMobileEvents+TelemetryProtocol.swift in Sources */,
 				0C9640E12531056700CABD3E /* LocationConsumer.swift in Sources */,
 				0C708F4D24EB23C7003CE791 /* RasterDemSource.swift in Sources */,
 				C6F256EF261FB99C0093D353 /* LogoView.swift in Sources */,
 				CA6245E92627F37B00C79547 /* OfflineManager+MapboxMaps.swift in Sources */,
+				B575018F26334BB800937A9E /* OrnamentOptions.swift in Sources */,
 				0CD62F23245887C8006421D1 /* OrnamentsManager.swift in Sources */,
 				CA0C427E2602BECE0054D9D0 /* LayerPosition.swift in Sources */,
 				07A0BCCB2582F16300B8E109 /* GeoJSONManager.swift in Sources */,
@@ -1960,7 +1955,6 @@
 				0CD62F182458865A006421D1 /* CameraView.swift in Sources */,
 				B5B55D47260E4D1500EBB589 /* CameraManager+CameraAnimatorDelegate.swift in Sources */,
 				07BA35CE251578DD003E1B55 /* AnnotationInteractionDelegate.swift in Sources */,
-				2B8637E12462F31B00698135 /* MapbxoScaleBarConstants.swift in Sources */,
 				2B8637E62463F36400698135 /* DistanceFormatter.swift in Sources */,
 				CA0C426926028ED30054D9D0 /* AnnotationOptions.swift in Sources */,
 				0C708F2F24EB1EE2003CE791 /* RasterLayer.swift in Sources */,
@@ -1994,6 +1988,7 @@
 				B52050A8260538240003E5BB /* ModelLayer.swift in Sources */,
 				B529341C2624E9D6003B181C /* PreferredFPS.swift in Sources */,
 				B521FC93262F626900B9A446 /* MapboxMap.swift in Sources */,
+				B575018A26334BA700937A9E /* MapboxScaleBarConstants.swift in Sources */,
 				0CD62F1124588532006421D1 /* GestureHandlerDelegate.swift in Sources */,
 				0782B061258C16B200D5FCE5 /* Utils.swift in Sources */,
 				0CD62F2C24588937006421D1 /* Style.swift in Sources */,

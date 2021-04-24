@@ -9,7 +9,6 @@ final class MockAnnotationStyleDelegate: AnnotationStyleDelegate {
                        sdf: Bool,
                        stretchX: [ImageStretches],
                        stretchY: [ImageStretches],
-                       scale: CGFloat,
                        imageContent: ImageContent?) -> Result<Bool, ImageError> {
         return .success(true)
     }

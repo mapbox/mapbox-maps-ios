@@ -33,9 +33,9 @@ public class DataDrivenSymbolsExample: UIViewController, ExampleProtocol {
 
         // Add icons from the U.S. National Parks Service to the map's style.
         // Icons are located in the asset catalog
-        _ = mapView.style.setStyleImage(image: UIImage(named: "nps-restrooms")!, with: "restrooms", scale: 1.0)
-        _ = mapView.style.setStyleImage(image: UIImage(named: "nps-trailhead")!, with: "trailhead", scale: 1.0)
-        _ = mapView.style.setStyleImage(image: UIImage(named: "nps-picnic-area")!, with: "picnic-area", scale: 1.0)
+        _ = mapView.style.setStyleImage(image: UIImage(named: "nps-restrooms")!, with: "restrooms")
+        _ = mapView.style.setStyleImage(image: UIImage(named: "nps-trailhead")!, with: "trailhead")
+        _ = mapView.style.setStyleImage(image: UIImage(named: "nps-picnic-area")!, with: "picnic-area")
 
         // Access a vector tileset that contains places of interest at Yosemite National Park.
         // This tileset was created by uploading NPS shapefiles to Mapbox Studio.

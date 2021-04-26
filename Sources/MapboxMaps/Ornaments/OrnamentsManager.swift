@@ -74,7 +74,7 @@ public class OrnamentsManager: NSObject {
         }
     }
 
-    internal func updateOrnaments() {
+    private func updateOrnaments() {
         // Remove previously-added constraints
         NSLayoutConstraint.deactivate(constraints)
         constraints.removeAll()
@@ -101,43 +101,25 @@ public class OrnamentsManager: NSObject {
         attributionButton.isHidden = !options._attributionButtonIsVisible
     }
 
-    func constraints(with view: UIView, position: OrnamentPosition, margins: CGPoint) -> [NSLayoutConstraint] {
-        let universalLayoutGuide = layoutGuide(for: view)
-
+    private func constraints(with view: UIView, position: OrnamentPosition, margins: CGPoint) -> [NSLayoutConstraint] {
+        let layoutGuide = view.superview!.safeAreaLayoutGuide
         switch position {
         case .topLeft:
             return [
-                view.leftAnchor.constraint(equalTo: universalLayoutGuide.leftAnchor,
-                                           constant: margins.x),
-                view.topAnchor.constraint(equalTo: universalLayoutGuide.topAnchor,
-                                          constant: margins.y)
-            ]
+                view.leftAnchor.constraint(equalTo: layoutGuide.leftAnchor, constant: margins.x),
+                view.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: margins.y)]
         case .topRight:
             return  [
-                view.rightAnchor.constraint(equalTo: universalLayoutGuide.rightAnchor,
-                                            constant: -margins.x),
-                view.topAnchor.constraint(equalTo: universalLayoutGuide.topAnchor,
-                                          constant: margins.y)
-            ]
+                view.rightAnchor.constraint(equalTo: layoutGuide.rightAnchor, constant: -margins.x),
+                view.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: margins.y)]
         case .bottomLeft:
             return [
-                view.leftAnchor.constraint(equalTo: universalLayoutGuide.leftAnchor,
-                                           constant: margins.x),
-                view.bottomAnchor.constraint(equalTo: universalLayoutGuide.bottomAnchor,
-                                             constant: -margins.y)
-            ]
+                view.leftAnchor.constraint(equalTo: layoutGuide.leftAnchor, constant: margins.x),
+                view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
         case .bottomRight:
             return [
-                view.rightAnchor.constraint(equalTo: universalLayoutGuide.rightAnchor,
-                                            constant: -margins.x),
-                view.bottomAnchor.constraint(equalTo: universalLayoutGuide.bottomAnchor,
-                                             constant: -margins.y)
-            ]
+                view.rightAnchor.constraint(equalTo: layoutGuide.rightAnchor, constant: -margins.x),
+                view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
         }
-    }
-
-    func layoutGuide(for view: UIView) -> UILayoutGuide {
-        let superview = view.superview!
-        return superview.safeAreaLayoutGuide
     }
 }

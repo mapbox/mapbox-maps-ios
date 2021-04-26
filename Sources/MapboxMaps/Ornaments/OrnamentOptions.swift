@@ -3,6 +3,10 @@ import UIKit
 private let defaultOrnamentsMargin = CGPoint(x: 8.0, y: 8.0)
 
 /// Used to configure Ornament-specific capabilities of the map
+///
+/// All margin values are relative to the MapView's safe area. To allow the safe area
+/// (and thereby ornaments) to track the presence of navigation bars and tab bars,
+/// make MapView the root view of a view controller.
 public struct OrnamentOptions: Equatable {
 
     // MARK: - Scale Bar

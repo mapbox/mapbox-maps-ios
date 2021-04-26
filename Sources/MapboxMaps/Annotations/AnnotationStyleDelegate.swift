@@ -15,7 +15,6 @@ public protocol AnnotationStyleDelegate {
                        sdf: Bool,
                        stretchX: [ImageStretches],
                        stretchY: [ImageStretches],
-                       scale: CGFloat,
                        imageContent: ImageContent?) -> Result<Bool, ImageError>
 
     func getStyleImage(with identifier: String) -> Image?

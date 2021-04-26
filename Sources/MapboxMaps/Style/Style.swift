@@ -157,7 +157,6 @@ public class Style {
                            Defaults to an empty array.
      - Parameter stretchY: The array of vertical image stretch areas.
                            Defaults to an empty array.
-     - Parameter scale: The scale factor for the image.
      - Parameter imageContent: The `ImageContent` which describes where text
                                can be fit into an image. By default, this is `nil`.
      - Returns: A boolean associated with a `Result` type if the operation is successful.
@@ -169,7 +168,6 @@ public class Style {
                               sdf: Bool = false,
                               stretchX: [ImageStretches] = [],
                               stretchY: [ImageStretches] = [],
-                              scale: CGFloat,
                               imageContent: ImageContent? = nil) -> Result<Bool, ImageError> {
 
         /**

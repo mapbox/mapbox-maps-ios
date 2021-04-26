@@ -486,7 +486,6 @@ public class AnnotationManager {
                                                                   sdf: false,
                                                                   stretchX: [],
                                                                   stretchY: [],
-                                                                  scale: 3.0,
                                                                   imageContent: nil)
 
             if case .failure(let imageError) = expectedCustomImage {
@@ -507,7 +506,6 @@ public class AnnotationManager {
                                                                    sdf: false,
                                                                    stretchX: [],
                                                                    stretchY: [],
-                                                                   scale: 3.0,
                                                                    imageContent: nil)
 
             if case .failure(let imageError) = expectedDefaultImage {

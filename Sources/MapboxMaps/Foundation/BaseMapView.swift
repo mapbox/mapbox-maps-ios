@@ -6,6 +6,7 @@ import Turf
 // swiftlint:disable file_length
 internal typealias PendingAnimationCompletion = (completion: AnimationCompletion, animatingPosition: UIViewAnimatingPosition)
 
+// swiftlint:disable force_cast
 internal class WeakCameraAnimatorSet {
     private let hashTable = NSHashTable<NSObject>.weakObjects()
 

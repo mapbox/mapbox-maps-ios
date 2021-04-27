@@ -80,7 +80,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
             // Set up the short lived camera view
             delegate.addViewToViewHeirarchy(cameraView)
 
-            var cameraTransition = CameraTransition(with: delegate.camera, initialAnchor: delegate.anchorAfterPadding())
+            var cameraTransition = CameraTransition(cameraOptions: delegate.camera, initialAnchor: delegate.anchorAfterPadding())
             animation(&cameraTransition)
 
             propertyAnimator.addAnimations { [weak cameraView] in
@@ -98,7 +98,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     /// Starts the animation after a delay
     /// - Parameter delay: Delay (in seconds) after which the animation should start
     public func startAnimation(afterDelay delay: TimeInterval) {
-        delayedAnimationTimer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false, block: { [weak self] (timer) in
+        delayedAnimationTimer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false, block: { [weak self] (_) in
             self?.startAnimation()
         })
     }
@@ -127,10 +127,9 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
     internal func wrapCompletion(_ completion: @escaping AnimationCompletion) -> (UIViewAnimatingPosition) -> Void {
         return { [weak self] animationPosition in
-            guard let self = self, let delegate = self.delegate else { return }
-            self.transition = nil // Clear out the transition being animated by this animator,
-                                  // since the animation is complete if we are here.
-            delegate.schedulePendingCompletion(forAnimator: self, completion: completion, animatingPosition: animationPosition)
+            guard let self = self else { return }
+            self.transition = nil // Clear out the transition being animated by this animator since the animation is complete if we are here.
+            self.delegate?.schedulePendingCompletion(forAnimator: self, completion: completion, animatingPosition: animationPosition)
 
             // Invalidate the delayed animation timer if it exists
             self.delayedAnimationTimer?.invalidate()

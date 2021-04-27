@@ -25,7 +25,7 @@ final class FlyToAnimatorTests: XCTestCase {
     let duration: TimeInterval = 10
 
     var flyToAnimator: FlyToCameraAnimator!
-    var cameraAnimatorDelegate: CameraAnimatorDelegateMock!
+    weak var cameraAnimatorDelegate: CameraAnimatorDelegateMock!
 
     override func setUp() {
         super.setUp()

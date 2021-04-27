@@ -3,8 +3,9 @@ import XCTest
 
 class CameraTransitionTests: XCTestCase {
 
-    var cameraTransition = CameraTransition(with: cameraOptionsTestValue,
-                                            initialAnchor: .zero)
+    var cameraTransition = CameraTransition(
+        cameraOptions: cameraOptionsTestValue,
+        initialAnchor: .zero)
 
     func testOptimizeBearingClockwise() {
         let startBearing = 0.0
@@ -55,7 +56,7 @@ class CameraTransitionTests: XCTestCase {
         optimizedBearing = cameraTransition.optimizedBearingToValue
         XCTAssertEqual(optimizedBearing, 90)
     }
-    
+
     func testOptimizeBearingWhenStartBearingIsNegativeAndIsLesserThanMinus360() {
         var optimizedBearing: CLLocationDirection?
 

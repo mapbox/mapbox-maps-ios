@@ -8,8 +8,9 @@ extension GlyphsRasterizationOptions {
     ///   - rasterizationMode: Rasterization mode. Defaults to
     ///         `.ideographsRasterizedLocally` i.e. ideographic symbols are
     ///         rasterized locally (not loaded from the server)
-    ///   - fontFamilies: Array of fonts, used for glyph rendering.Defaults to
-    ///         an appropriate system font.
+    ///   - fontFamilies: Array of fonts, used for glyph rendering. Defaults to
+    ///         an appropriate system font. This parameter is ignored if
+    ///         `rasterizationMode` is `.noGlyphsRasterizedLocally`
     ///
     /// - Note:
     ///     If `fontFamilies` is not provided, the SDK will first look for a font
@@ -20,9 +21,15 @@ extension GlyphsRasterizationOptions {
     /// - Note:
     ///     Calling `GlyphsRasterizationOptions()` will currently not call this
     ///     initializer.
-
     public convenience init(rasterizationMode: GlyphsRasterizationMode = .ideographsRasterizedLocally,
                             fontFamilies: [String] = []) {
+        // If rasterizationMode is .noGlyphsRasterizedLocally, we ignore the
+        // font family
+        guard rasterizationMode != .noGlyphsRasterizedLocally else {
+            self.init(rasterizationMode: .noGlyphsRasterizedLocally, fontFamily: nil)
+            return
+        }
+
         let resolvedFamilies: [String]
         if fontFamilies.isEmpty {
             resolvedFamilies = Self.defaultFontFamilies()

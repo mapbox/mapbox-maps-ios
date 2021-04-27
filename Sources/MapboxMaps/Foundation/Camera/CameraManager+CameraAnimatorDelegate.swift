@@ -22,7 +22,7 @@ extension CameraManager: CameraAnimatorDelegate {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, timingParameters: parameters)
         let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimator.addAnimations(animations)
-        mapView?.cameraAnimatorsHashTable.add(cameraAnimator)
+        mapView?.addCameraAnimator(cameraAnimator)
         return cameraAnimator
     }
 
@@ -46,7 +46,7 @@ extension CameraManager: CameraAnimatorDelegate {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, curve: curve)
         let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimator.addAnimations(animations)
-        mapView?.cameraAnimatorsHashTable.add(cameraAnimator)
+        mapView?.addCameraAnimator(cameraAnimator)
         return cameraAnimator
     }
 
@@ -72,7 +72,7 @@ extension CameraManager: CameraAnimatorDelegate {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, controlPoint1: point1, controlPoint2: point2)
         let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimator.addAnimations(animations)
-        mapView?.cameraAnimatorsHashTable.add(cameraAnimator)
+        mapView?.addCameraAnimator(cameraAnimator)
         return cameraAnimator
     }
 
@@ -97,7 +97,7 @@ extension CameraManager: CameraAnimatorDelegate {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: ratio)
         let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimator.addAnimations(animations)
-        mapView?.cameraAnimatorsHashTable.add(cameraAnimator)
+        mapView?.addCameraAnimator(cameraAnimator)
         return cameraAnimator
     }
 
@@ -113,13 +113,6 @@ extension CameraManager: CameraAnimatorDelegate {
         }
 
         return validMapView.cameraOptions
-    }
-
-    func jumpTo(camera: CameraOptions) {
-        guard let validMapView = mapView else {
-            fatalError("MapView cannot be nil.")
-        }
-        validMapView.mapboxMap.updateCamera(with: camera)
     }
 
     func addViewToViewHeirarchy(_ view: CameraView) {

@@ -1,7 +1,7 @@
 import UIKit
 import CoreLocation
 
-@objc public protocol CameraAnimator: AnyObject {
+public protocol CameraAnimator {
 
     /// Stops the animation in its tracks and calls any provided completion
     func stopAnimation()
@@ -11,8 +11,8 @@ import CoreLocation
 }
 
 /// Internal-facing protocol to represent camera animators
-@objc internal protocol CameraAnimatorInterface: CameraAnimator {
-    func update()
+internal protocol CameraAnimatorInterface: CameraAnimator {
+    var currentCameraOptions: CameraOptions? { get }
 }
 
 // MARK: CameraAnimator Class
@@ -157,13 +157,12 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         propertyAnimator.continueAnimation(withTimingParameters: parameters, durationFactor: CGFloat(durationFactor))
     }
 
-    public func update() {
+    internal var currentCameraOptions: CameraOptions? {
 
         // Only call jumpTo if this animator is currently "active" and there are known changes to animate.
         guard propertyAnimator.state == .active,
-              let transition = transition,
-              let delegate = delegate else {
-            return
+              let transition = transition else {
+            return nil
         }
 
         var cameraOptions = CameraOptions()
@@ -193,6 +192,6 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
             cameraOptions.pitch = interpolatedCamera.pitch
         }
 
-        delegate.jumpTo(camera: cameraOptions)
+        return cameraOptions
     }
 }

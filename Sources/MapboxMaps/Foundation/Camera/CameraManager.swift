@@ -167,7 +167,7 @@ public class CameraManager {
     /// Canceled animations cannot be restarted / resumed. The animator must be recreated.
     public func cancelAnimations() {
         guard let validMapView = mapView else { return }
-        for animator in validMapView.cameraAnimatorsHashTable.allObjects where animator.state == UIViewAnimatingState.active {
+        for animator in validMapView.cameraAnimators {
             animator.stopAnimation()
         }
     }
@@ -217,23 +217,25 @@ public class CameraManager {
                     duration: TimeInterval? = nil,
                     completion: AnimationCompletion? = nil) -> CameraAnimator? {
 
-        guard let mapView = mapView else {
+        guard let mapView = mapView,
+              let flyToAnimator = FlyToCameraAnimator(
+                inital: mapView.cameraOptions,
+                final: camera,
+                owner: .custom(id: "fly-to"),
+                duration: duration,
+                mapSize: mapView.mapboxMap.size,
+                delegate: self) else {
+            Log.warning(forMessage: "Unable to start fly-to animation", category: "CameraManager")
             return nil
         }
 
         // Stop the `internalAnimator` before beginning a `flyTo`
         internalAnimator?.stopAnimation()
 
-        let flyToAnimator = FlyToCameraAnimator(delegate: self)
-        mapView.cameraAnimatorsHashTable.add(flyToAnimator)
-
-        flyToAnimator.makeFlyToInterpolator(from: mapView.cameraOptions,
-                                             to: camera,
-                                             duration: duration,
-                                             screenFullSize: mapView.bounds.size)
+        mapView.addCameraAnimator(flyToAnimator)
 
         // Nil out the internalAnimator after `flyTo` finishes
-        flyToAnimator.addCompletion { [weak self](position) in
+        flyToAnimator.addCompletion { [weak self] (position) in
             // Call the developer-provided completion (if present)
             self?.internalAnimator = nil
             completion?(position)
@@ -241,7 +243,6 @@ public class CameraManager {
 
         flyToAnimator.startAnimation()
         internalAnimator = flyToAnimator
-
         return internalAnimator
     }
 

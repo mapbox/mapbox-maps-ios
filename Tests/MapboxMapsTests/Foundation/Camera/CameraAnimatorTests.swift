@@ -1,12 +1,13 @@
 import XCTest
 @testable import MapboxMaps
 
-internal let cameraOptionsTestValue = CameraOptions(center: CLLocationCoordinate2D(latitude: 10, longitude: 10),
-                                                              padding: .init(top: 10, left: 10, bottom: 10, right: 10),
-                                                              anchor: .init(x: 10.0, y: 10.0),
-                                                              zoom: 10,
-                                                              bearing: 10,
-                                                              pitch: 10)
+internal let cameraOptionsTestValue = CameraOptions(
+    center: CLLocationCoordinate2D(latitude: 10, longitude: 10),
+    padding: .init(top: 10, left: 10, bottom: 10, right: 10),
+    anchor: .init(x: 10.0, y: 10.0),
+    zoom: 10,
+    bearing: 10,
+    pitch: 10)
 
 internal class BasicCameraAnimatorTests: XCTestCase {
 
@@ -14,16 +15,17 @@ internal class BasicCameraAnimatorTests: XCTestCase {
     var delegate: CameraAnimatorDelegateMock!
     var propertyAnimator: UIViewPropertyAnimatorMock!
     var cameraView: CameraViewMock!
-    var animator: BasicCameraAnimator?
+    var animator: BasicCameraAnimator!
 
     override func setUp() {
         delegate = CameraAnimatorDelegateMock()
         propertyAnimator = UIViewPropertyAnimatorMock()
         cameraView = CameraViewMock()
-        animator = BasicCameraAnimator(delegate: delegate,
-                                  propertyAnimator: propertyAnimator ,
-                                  owner: .unspecified,
-                                  cameraView: cameraView)
+        animator = BasicCameraAnimator(
+            delegate: delegate,
+            propertyAnimator: propertyAnimator ,
+            owner: .unspecified,
+            cameraView: cameraView)
     }
 
     func testDeinit() {
@@ -53,7 +55,7 @@ internal class BasicCameraAnimatorTests: XCTestCase {
 
     }
 
-    func testUpdate() {
+    func testCurrentCameraOptions() {
         animator?.addAnimations { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
             transition.center.toValue = cameraOptionsTestValue.center!
@@ -62,15 +64,11 @@ internal class BasicCameraAnimatorTests: XCTestCase {
             transition.pitch.toValue = cameraOptionsTestValue.pitch!
             transition.padding.toValue = cameraOptionsTestValue.padding!
         }
-
         animator?.startAnimation()
-
         propertyAnimator.shouldReturnState = .active
-        animator?.update()
 
-        XCTAssertEqual(delegate.jumpToStub.invocations.count, 1)
-        XCTAssertEqual(delegate.jumpToStub.invocations.first?.parameters,
-                       cameraView.localCamera)
+        let cameraOptions = animator.currentCameraOptions
 
+        XCTAssertEqual(cameraOptions, cameraView.localCamera)
     }
 }

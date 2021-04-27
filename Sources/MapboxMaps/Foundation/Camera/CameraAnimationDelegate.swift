@@ -9,9 +9,6 @@ internal protocol CameraAnimatorDelegate: class {
     /// The current camera of the map
     var camera: CameraOptions { get }
 
-    /// Ask the map to set camera to new camera
-    func jumpTo(camera: CameraOptions)
-
     /// Adds the view to the MapView's subviews
     func addViewToViewHeirarchy(_ view: CameraView)
 

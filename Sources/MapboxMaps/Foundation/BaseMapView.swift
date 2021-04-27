@@ -6,6 +6,26 @@ import Turf
 // swiftlint:disable file_length
 internal typealias PendingAnimationCompletion = (completion: AnimationCompletion, animatingPosition: UIViewAnimatingPosition)
 
+internal class WeakCameraAnimatorSet {
+    private let hashTable = NSHashTable<NSObject>.weakObjects()
+
+    internal func add(_ object: CameraAnimatorInterface) {
+        hashTable.add((object as! NSObject))
+    }
+
+    internal func remove(_ object: CameraAnimatorInterface) {
+        hashTable.remove((object as! NSObject))
+    }
+
+    internal func removeAll() {
+        hashTable.removeAllObjects()
+    }
+
+    internal var allObjects: [CameraAnimatorInterface] {
+        hashTable.allObjects.map { $0 as! CameraAnimatorInterface }
+    }
+}
+
 open class BaseMapView: UIView {
 
     // mapbox map depends on MapInitOptions, which is not available until
@@ -31,11 +51,15 @@ open class BaseMapView: UIView {
     internal var pendingAnimatorCompletionBlocks: [PendingAnimationCompletion] = []
 
     /// Pointer HashTable for holding camera animators
-    internal var cameraAnimatorsHashTable = NSHashTable<CameraAnimatorInterface>.weakObjects()
+    private var cameraAnimatorsSet = WeakCameraAnimatorSet()
+
+    internal func addCameraAnimator(_ cameraAnimator: CameraAnimatorInterface) {
+        cameraAnimatorsSet.add(cameraAnimator)
+    }
 
     /// List of animators currently alive
     public var cameraAnimators: [CameraAnimator] {
-        return cameraAnimatorsHashTable.allObjects
+        return cameraAnimatorsSet.allObjects
     }
 
     /// Map of event types to subscribed event handlers
@@ -230,8 +254,10 @@ open class BaseMapView: UIView {
         if needsDisplayRefresh {
             needsDisplayRefresh = false
 
-            for animator in cameraAnimatorsHashTable.allObjects {
-                animator.update()
+            for animator in cameraAnimatorsSet.allObjects {
+                if let cameraOptions = animator.currentCameraOptions {
+                    mapboxMap.updateCamera(with: cameraOptions)
+                }
             }
 
             /// This executes the series of scheduled animation completion blocks and also removes them from the list

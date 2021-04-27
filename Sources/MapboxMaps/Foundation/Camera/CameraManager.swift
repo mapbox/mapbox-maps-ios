@@ -21,6 +21,15 @@ public class CameraManager {
     /// Used to set up camera specific configuration
     public internal(set) var mapCameraOptions: MapCameraOptions
 
+    /// List of animators currently alive
+    public var cameraAnimators: [CameraAnimator] {
+        guard let mapView = mapView else {
+            return []
+        }
+
+        return mapView.cameraAnimators
+    }
+
     /// Used to update the map's camera options and pass them to the core Map.
     internal func updateMapCameraOptions(newOptions: MapCameraOptions) {
         let boundOptions = BoundOptions(__bounds: newOptions.restrictedCoordinateBounds ?? nil,

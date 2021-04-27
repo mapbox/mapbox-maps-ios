@@ -33,12 +33,8 @@ open class BaseMapView: UIView {
     /// Pointer HashTable for holding camera animators
     private var cameraAnimatorsSet = WeakCameraAnimatorSet()
 
-    internal func addCameraAnimator(_ cameraAnimator: CameraAnimatorInterface) {
-        cameraAnimatorsSet.add(cameraAnimator)
-    }
-
     /// List of animators currently alive
-    public var cameraAnimators: [CameraAnimator] {
+    internal var cameraAnimators: [CameraAnimator] {
         return cameraAnimatorsSet.allObjects
     }
 
@@ -246,6 +242,11 @@ open class BaseMapView: UIView {
 
             self.displayCallback?()
         }
+    }
+
+    // Add an animator to the `cameraAnimatorsSet`
+    internal func addCameraAnimator(_ cameraAnimator: CameraAnimatorInterface) {
+        cameraAnimatorsSet.add(cameraAnimator)
     }
 
     func updateDisplayLinkPreferredFramesPerSecond() {

@@ -21,7 +21,7 @@ final class FlyToAnimatorTests: XCTestCase {
         bearing: 10,
         pitch: 10)
 
-    let animationOwner = AnimationOwner.custom(id: "")
+    let animationOwner = AnimationOwner.custom(id: "fly-to")
     let duration: TimeInterval = 10
 
     var flyToAnimator: FlyToCameraAnimator!
@@ -29,16 +29,20 @@ final class FlyToAnimatorTests: XCTestCase {
     // swiftlint:disable weak_delegate
     var cameraAnimatorDelegate: CameraAnimatorDelegateMock!
 
+    fileprivate var dateProvider: MockDateProvider!
+
     override func setUp() {
         super.setUp()
         cameraAnimatorDelegate = CameraAnimatorDelegateMock()
+        dateProvider = MockDateProvider()
         flyToAnimator = FlyToCameraAnimator(
             inital: initalCameraOptions,
             final: finalCameraOptions,
-            owner: .custom(id: ""),
+            owner: .custom(id: "fly-to"),
             duration: duration,
             mapSize: CGSize(width: 500, height: 500),
-            delegate: cameraAnimatorDelegate)
+            delegate: cameraAnimatorDelegate,
+            dateProvider: dateProvider)
     }
 
     override func tearDown() {
@@ -55,35 +59,106 @@ final class FlyToAnimatorTests: XCTestCase {
     }
 
     func testInitializationWithANegativeDurationReturnsNil() {
+        XCTAssertNil(
+            FlyToCameraAnimator(
+                inital: initalCameraOptions,
+                final: finalCameraOptions,
+                owner: .custom(id: "fly-to"),
+                duration: -1,
+                mapSize: CGSize(width: 500, height: 500),
+                delegate: cameraAnimatorDelegate)
+        )
     }
 
     func testInitializationWithANilDurationSetsDurationToCalculatedValue() {
+        let animator = FlyToCameraAnimator(
+            inital: initalCameraOptions,
+            final: finalCameraOptions,
+            owner: .custom(id: "fly-to"),
+            duration: nil,
+            mapSize: CGSize(width: 500, height: 500),
+            delegate: cameraAnimatorDelegate)
+        XCTAssertNotNil(animator?.duration)
     }
 
     func testInitializationWithInvalidCameraOptionsReturnsNil() {
+        XCTAssertNil(
+            FlyToCameraAnimator(
+                inital: CameraOptions(),
+                final: finalCameraOptions,
+                owner: .custom(id: "fly-to"),
+                duration: -1,
+                mapSize: CGSize(width: 500, height: 500),
+                delegate: cameraAnimatorDelegate)
+        )
     }
 
     func testStartAnimationChangesStateToActive() {
         flyToAnimator.startAnimation()
-
         XCTAssertEqual(flyToAnimator.state, .active)
     }
 
     func testAnimationBlocksAreScheduledWhenAnimationIsComplete() {
+        flyToAnimator.addCompletion({ (_) in
+            () // no-op
+        })
+
+        flyToAnimator.startAnimation()
+        dateProvider.mockValue = Date(timeIntervalSinceReferenceDate: 20)
+
+        let currentCameraOptions = flyToAnimator.currentCameraOptions
+        XCTAssertEqual(currentCameraOptions, finalCameraOptions)
+        XCTAssertEqual(flyToAnimator.state, .stopped)
+        XCTAssertEqual(cameraAnimatorDelegate.schedulePendingCompletionStub.invocations.count, 1)
+        XCTAssertEqual(cameraAnimatorDelegate.schedulePendingCompletionStub.invocations.first?.parameters.animatingPosition, .end)
+
     }
 
     func testAnimationBlocksAreScheduledWhenStopAnimationIsInvoked() {
+
+        flyToAnimator.addCompletion({ (_) in
+            () // no-op
+        })
+
+        flyToAnimator.startAnimation()
+        flyToAnimator.stopAnimation()
+
+        XCTAssertEqual(cameraAnimatorDelegate.schedulePendingCompletionStub.invocations.count, 1)
+        XCTAssertEqual(cameraAnimatorDelegate.schedulePendingCompletionStub.invocations.first?.parameters.animatingPosition, .current)
+
     }
 
     func testStopAnimationChangesStateToStopped() {
+        flyToAnimator.startAnimation()
+        flyToAnimator.stopAnimation()
+
+        XCTAssertEqual(flyToAnimator.state, .stopped)
     }
 
     func testCurrentCameraOptionsReturnsNilIfAnimationIsNotRunning() {
+        XCTAssertEqual(flyToAnimator.state, .inactive)
+        XCTAssertNil(flyToAnimator.currentCameraOptions)
     }
 
     func testCurrentCameraOptionsReturnsInterpolatedValueIfAnimationIsRunning() {
+
+        flyToAnimator.startAnimation()
+        dateProvider.mockValue = Date(timeIntervalSinceReferenceDate: 5)
+
+        let interpolatedCamera = flyToAnimator.currentCameraOptions
+        XCTAssertNotNil(interpolatedCamera)
+    }
+}
+
+private class MockDateProvider: DateProvider {
+
+    var mockValue: Date
+
+    var now: Date {
+        return mockValue
     }
 
-    func testCurrentCameraOptionsReturnsFinalCameraOptionsIfAnimationIsComplete() {
+    init(mockValue: Date = Date(timeIntervalSinceReferenceDate: 0)) {
+        self.mockValue = mockValue
     }
 }

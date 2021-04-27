@@ -18,12 +18,15 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
     private var completionBlocks = [AnimationCompletion]()
 
+    private let dateProvider: DateProvider
+
     internal init?(inital: CameraOptions,
                    final: CameraOptions,
                    owner: AnimationOwner,
                    duration: TimeInterval? = nil,
                    mapSize: CGSize,
-                   delegate: CameraAnimatorDelegate) {
+                   delegate: CameraAnimatorDelegate,
+                   dateProvider: DateProvider = DefaultDateProvider()) {
         guard let flyToInterpolator = FlyToInterpolator(from: inital, to: final, size: mapSize) else {
             return nil
         }
@@ -37,6 +40,7 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         self.owner = owner
         self.finalCameraOptions = final
         self.duration = duration ?? flyToInterpolator.duration()
+        self.dateProvider = dateProvider
     }
 
     public func stopAnimation() {
@@ -46,7 +50,7 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
     internal func startAnimation() {
         state = .active
-        start = Date()
+        start = dateProvider.now
     }
 
     internal func addCompletion(_ completion: @escaping AnimationCompletion) {
@@ -67,7 +71,7 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         guard state == .active, let start = start else {
             return nil
         }
-        let fractionComplete = min(Date().timeIntervalSince(start) / duration, 1)
+        let fractionComplete = min(dateProvider.now.timeIntervalSince(start) / duration, 1)
         guard fractionComplete < 1 else {
             state = .stopped
             scheduleCompletionIfNecessary(position: .end)

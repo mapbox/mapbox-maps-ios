@@ -4,13 +4,7 @@ import CoreGraphics
 import MapboxCoreMaps
 
 // MARK: - CLLocationCoordinate2D
-extension CLLocationCoordinate2D: Hashable {
-
-    /// Hashable conformance    
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(latitude)
-        hasher.combine(longitude)
-    }
+extension CLLocationCoordinate2D {
 
     /// Converts a `CLLocationCoordinate` to a `CLLocation`.
     internal var location: CLLocation {

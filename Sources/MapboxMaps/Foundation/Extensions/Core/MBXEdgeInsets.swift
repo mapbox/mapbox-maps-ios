@@ -9,18 +9,11 @@ internal extension EdgeInsets {
     }
 }
 
-extension UIEdgeInsets: Hashable {
+extension UIEdgeInsets {
     func toMBXEdgeInsetsValue() -> EdgeInsets {
         return EdgeInsets(top: Double(self.top),
                           left: Double(self.left),
                           bottom: Double(self.bottom),
                           right: Double(self.right))
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(top)
-        hasher.combine(bottom)
-        hasher.combine(left)
-        hasher.combine(right)
     }
 }

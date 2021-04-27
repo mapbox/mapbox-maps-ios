@@ -97,6 +97,70 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         XCTAssertEqual(resourceOptions, ResourceOptions(accessToken: CredentialsManager.default.accessToken))
         XCTAssertEqual(resourceOptions.accessToken, CredentialsManager.default.accessToken)
     }
+
+    func testStyleDefaultCamera() throws {
+        // Get path to empty style
+        let path = Bundle.mapboxMapsTests.path(forResource: "empty-style-chicago", ofType: "json")!
+        let url = URL(fileURLWithPath: path)
+
+        let data = try Data(contentsOf: url)
+        guard let styleJSONObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+            XCTFail("Failed to deserialize style JSON")
+            return
+        }
+
+        let mapInitOptions = MapInitOptions(styleURI: .custom(url: url))
+        let view = MapView(frame: .zero, mapInitOptions: mapInitOptions)
+
+        let expectation = self.expectation(description: "Wait for style to load")
+        view.on(.styleLoaded) { _ in
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1.0)
+
+        guard let sourceCenter = styleJSONObject["center"] as? [Double],
+              let sourceZoom = styleJSONObject["zoom"] as? CGFloat else {
+            XCTFail("Invalid JSON")
+            return
+        }
+
+        let destCenter = view.cameraOptions.center!
+        let destZoom = view.cameraOptions.zoom!
+
+        XCTAssertEqual(sourceCenter[0], destCenter.longitude, accuracy: 0.0000001)
+        XCTAssertEqual(sourceCenter[1], destCenter.latitude, accuracy: 0.0000001)
+        XCTAssertEqual(sourceZoom, destZoom, accuracy: 0.0000001)
+    }
+
+    func testInitialCameraOverridesStyleDefaultCamera() throws {
+        // Get path to empty style
+        let path = Bundle.mapboxMapsTests.path(forResource: "empty-style-chicago", ofType: "json")!
+        let url = URL(fileURLWithPath: path)
+
+        let sourceCamera = CameraOptions(center: CLLocationCoordinate2D(latitude: 1.23, longitude: 4.56), zoom: 14)
+
+        let mapInitOptions = MapInitOptions(cameraOptions: sourceCamera,
+                                            styleURI: .custom(url: url))
+        let view = MapView(frame: .zero, mapInitOptions: mapInitOptions)
+
+        let expectation = self.expectation(description: "Wait for style to load")
+        view.on(.styleLoaded) { _ in
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1.0)
+
+        let sourceCenter = sourceCamera.center!
+        let sourceZoom = sourceCamera.zoom!
+
+        let destCenter = view.cameraOptions.center!
+        let destZoom = view.cameraOptions.zoom!
+
+        XCTAssertEqual(sourceCenter.longitude, destCenter.longitude, accuracy: 0.0000001)
+        XCTAssertEqual(sourceCenter.latitude, destCenter.latitude, accuracy: 0.0000001)
+        XCTAssertEqual(sourceZoom, destZoom, accuracy: 0.0000001)
+    }
 }
 
 extension MapInitOptionsIntegrationTests: MapInitOptionsProvider {

@@ -1,6 +1,21 @@
 import UIKit
 import Turf
 
+public protocol CameraAnimator {
+
+    /// Stops the animation in its tracks and calls any provided completion
+    func stopAnimation()
+
+    /// The current state of the animation
+    var state: UIViewAnimatingState { get }
+}
+
+/// Internal-facing protocol to represent camera animators
+internal protocol CameraAnimatorInterface: CameraAnimator {
+    var currentCameraOptions: CameraOptions? { get }
+}
+
+
 /// An object that manages a camera's view lifecycle.
 public class CameraManager {
 
@@ -191,7 +206,6 @@ public class CameraManager {
 
         // Add completion
         cameraAnimator.addCompletion({ [weak self] (position) in
-            self?.internalAnimator = nil
             completion?(position)
         })
 
@@ -237,7 +251,6 @@ public class CameraManager {
         // Nil out the internalAnimator after `flyTo` finishes
         flyToAnimator.addCompletion { [weak self] (position) in
             // Call the developer-provided completion (if present)
-            self?.internalAnimator = nil
             completion?(position)
         }
 
@@ -268,7 +281,6 @@ public class CameraManager {
 
         // Nil out the `internalAnimator` once the "ease to" finishes
         animator.addCompletion { [weak self] (position) in
-            self?.internalAnimator = nil
             completion?(position)
         }
 

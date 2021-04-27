@@ -1,20 +1,6 @@
 import UIKit
 import CoreLocation
 
-public protocol CameraAnimator {
-
-    /// Stops the animation in its tracks and calls any provided completion
-    func stopAnimation()
-
-    /// The current state of the animation
-    var state: UIViewAnimatingState { get }
-}
-
-/// Internal-facing protocol to represent camera animators
-internal protocol CameraAnimatorInterface: CameraAnimator {
-    var currentCameraOptions: CameraOptions? { get }
-}
-
 // MARK: CameraAnimator Class
 public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterface {
 

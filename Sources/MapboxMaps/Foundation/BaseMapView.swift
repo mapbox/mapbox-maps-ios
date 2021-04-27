@@ -121,13 +121,9 @@ open class BaseMapView: UIView {
 
     /// The map's current anchor, calculated after applying padding (if it exists)
     public var anchor: CGPoint {
-
-        let paddding = padding
-        let xAfterPadding = center.x + paddding.left - paddding.right
-        let yAfterPadding = center.y + paddding.top - paddding.bottom
-        let anchor = CGPoint(x: xAfterPadding, y: yAfterPadding)
-
-        return anchor
+        let xAfterPadding = center.x + padding.left - padding.right
+        let yAfterPadding = center.y + padding.top - padding.bottom
+        return CGPoint(x: xAfterPadding, y: yAfterPadding)
     }
 
     /// The map's camera padding

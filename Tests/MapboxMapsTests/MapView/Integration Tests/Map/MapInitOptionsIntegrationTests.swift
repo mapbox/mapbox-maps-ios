@@ -17,13 +17,17 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         XCTAssertNotEqual(credentialsManager, CredentialsManager.default)
 
         let mapInitOptions = MapInitOptions(
-            resourceOptions: ResourceOptions(accessToken: credentialsManager.accessToken))
+            resourceOptions: ResourceOptions(accessToken: credentialsManager.accessToken),
+            styleURI: .outdoors)
 
         let mapView = MapView(frame: .zero, mapInitOptions: mapInitOptions)
         let resourceOptions = mapView.mapboxMap.__map.getResourceOptions()
 
         XCTAssertEqual(resourceOptions, mapInitOptions.resourceOptions)
         XCTAssertEqual(resourceOptions.accessToken, credentialsManager.accessToken)
+
+        XCTAssertEqual(mapView.mapboxMap.__map.getStyleURI(), StyleURI.outdoors.rawValue.absoluteString)
+        XCTAssertEqual(mapView.style.uri, .outdoors)
     }
 
     func testOptionsAreSetFromNibProvider() {
@@ -32,7 +36,8 @@ class MapInitOptionsIntegrationTests: XCTestCase {
 
         // Provider should return a custom MapInitOptions
         providerReturnValue = MapInitOptions(
-            resourceOptions: ResourceOptions(accessToken: credentialsManager.accessToken))
+            resourceOptions: ResourceOptions(accessToken: credentialsManager.accessToken),
+            styleURI: .satellite)
 
         // Load views from a nib, where the map view's provider is the file's owner,
         // i.e. this test.
@@ -59,6 +64,9 @@ class MapInitOptionsIntegrationTests: XCTestCase {
 
         XCTAssertEqual(resourceOptions, providerReturnValue.resourceOptions)
         XCTAssertEqual(resourceOptions.accessToken, credentialsManager.accessToken)
+
+        XCTAssertEqual(mapView.mapboxMap.__map.getStyleURI(), StyleURI.satellite.rawValue.absoluteString)
+        XCTAssertEqual(mapView.style.uri, .satellite)
     }
 
     func testDefaultOptionsAreUsedWhenNibDoesntSetProvider() {

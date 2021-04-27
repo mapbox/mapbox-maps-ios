@@ -10,7 +10,7 @@ extension ResourceOptions {
     ///   - cachePath: Path to database cache; default is `nil`, which will create
     ///         a path in the application's "support directory"
     ///   - assetPath: Path to assets; default is `nil`, which will use the application's
-    ///         resource bundle.
+    ///         resource bundle. `assetPath` is expected to be path to a bundle.
     ///   - cacheSize: Size of the cache.
     ///   - tileStore: A tile store is only used if `tileStoreEnabled` is `true`,
     ///         otherwise this argument is ignored. If `nil` (and `tileStoreEnabled`

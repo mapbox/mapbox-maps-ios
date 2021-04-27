@@ -8,6 +8,12 @@ public class Style {
     public private(set) weak var styleManager: StyleManager!
 
     internal init(with styleManager: StyleManager) {
+        guard let styleURL = URL(string: styleManager.getStyleURI()),
+              let uri = StyleURI(rawValue: styleURL) else {
+            preconditionFailure("Invalid styleURI")
+        }
+
+        self.uri = uri
         self.styleManager = styleManager
     }
 
@@ -18,12 +24,8 @@ public class Style {
      The URL may be a full HTTP or HTTPS URL ,a Mapbox style
      URL (mapbox://styles/{user}/{style}), or a URL for a style
      JSON file.
-
-     If you set this property to `nil`, the
-     receiver will use the default style and this property will
-     automatically be set to that style’s URL.
      */
-    public var uri: StyleURI = .streets {
+    public var uri: StyleURI {
         didSet {
             let uriString = uri.rawValue.absoluteString
             styleManager.setStyleURIForUri(uriString)

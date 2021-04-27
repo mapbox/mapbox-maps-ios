@@ -18,19 +18,6 @@ public struct CameraTransition {
     /// NOTE: Incompatible with concurrent center animations
     public var anchor: Change<CGPoint>
 
-    /// Set this value in order to make bearing/zoom animations
-    /// honor a constant anchor throughout the transition
-    /// NOTE: Incompatible with concurrent center animations
-    public var constantAnchor: CGPoint? {
-        set {
-            anchor.fromValue = newValue ?? anchor.fromValue
-            anchor.toValue = newValue
-        }
-        get {
-            return anchor.fromValue == anchor.toValue ? anchor.fromValue : nil
-        }
-    }
-
     /// Represents a change to the bearing of the map.
     public var bearing: Change<CLLocationDirection>
 
@@ -74,7 +61,7 @@ public struct CameraTransition {
                              padding: padding.toValue,
                              anchor: anchor.toValue,
                              zoom: zoom.toValue,
-                             bearing: optimizedBearingToValue,
+                             bearing: shouldOptimizeBearingPath ? optimizedBearingToValue : bearing.toValue,
                              pitch: pitch.toValue)
     }
 
@@ -90,17 +77,12 @@ public struct CameraTransition {
 
     internal var optimizedBearingToValue: CLLocationDirection? {
 
-        // If we should not optimize bearing transition, then return the original `toValue`
-        guard shouldOptimizeBearingPath else {
-            return bearing.toValue
-        }
-
         // If `bearing.toValue` is nil, then return nil.
         guard let toBearing = bearing.toValue?.truncatingRemainder(dividingBy: 360.0) else {
             return nil
         }
 
-        let fromBearing = bearing.fromValue.truncatingRemainder(dividingBy: 360.0)
+        let fromBearing = bearing.fromValue
 
         // 180 degrees is the max the map should rotate, therefore if the difference between the end and start point is
         // more than 180 we need to go the opposite direction

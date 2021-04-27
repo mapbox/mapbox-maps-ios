@@ -25,6 +25,8 @@ final class FlyToAnimatorTests: XCTestCase {
     let duration: TimeInterval = 10
 
     var flyToAnimator: FlyToCameraAnimator!
+
+    // swiftlint:disable weak_delegate
     var cameraAnimatorDelegate: CameraAnimatorDelegateMock!
 
     override func setUp() {

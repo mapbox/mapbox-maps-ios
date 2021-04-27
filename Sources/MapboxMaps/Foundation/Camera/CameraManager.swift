@@ -2,10 +2,10 @@ import UIKit
 import Turf
 
 public protocol CameraAnimator {
-    
+
     /// Stops the animation in its tracks and calls any provided completion
     func stopAnimation()
-    
+
     /// The current state of the animation
     var state: UIViewAnimatingState { get }
 }
@@ -17,10 +17,10 @@ internal protocol CameraAnimatorInterface: CameraAnimator {
 
 /// An object that manages a camera's view lifecycle.
 public class CameraManager {
-    
+
     /// Used to set up camera specific configuration
     public internal(set) var mapCameraOptions: MapCameraOptions
-    
+
     /// Used to update the map's camera options and pass them to the core Map.
     internal func updateMapCameraOptions(newOptions: MapCameraOptions) {
         let boundOptions = BoundOptions(__bounds: newOptions.restrictedCoordinateBounds ?? nil,
@@ -31,22 +31,22 @@ public class CameraManager {
         mapView?.mapboxMap.__map.setBoundsFor(boundOptions)
         mapCameraOptions = newOptions
     }
-    
+
     /// Internal camera animator used for animated transition
     internal var internalAnimator: CameraAnimator?
-    
+
     /// May want to convert to an enum.
     fileprivate let northBearing: CGFloat = 0
-    
+
     internal weak var mapView: BaseMapView?
-    
+
     public init(for mapView: BaseMapView, with mapCameraOptions: MapCameraOptions) {
         self.mapView = mapView
         self.mapCameraOptions = mapCameraOptions
     }
-    
+
     // MARK: Camera creation
-    
+
     /// Creates a new `Camera` object to fit a given array of coordinates.
     ///
     /// Note: This method does not set the map's camera to the new values. You must call
@@ -57,14 +57,14 @@ public class CameraManager {
             assertionFailure("MapView is nil.")
             return CameraOptions()
         }
-        
+
         let coordinateLocations = coordinates.map { CLLocation(latitude: $0.latitude, longitude: $0.longitude) }
-        
+
         // Construct new camera options with current values
         let cameraOptions = MapboxCoreMaps.CameraOptions(mapView.cameraOptions)
-        
+
         let defaultEdgeInsets = EdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        
+
         // Create a new camera options with adjusted values
         return CameraOptions(mapView.mapboxMap.__map.cameraForCoordinates(
                                 forCoordinates: coordinateLocations,
@@ -72,7 +72,7 @@ public class CameraManager {
                                 bearing: cameraOptions.__bearing,
                                 pitch: cameraOptions.__pitch))
     }
-    
+
     /// Returns the camera that best fits the given coordinate bounds, with optional edge padding, bearing, and pitch values.
     /// - Parameters:
     ///   - coordinateBounds: The coordinate bounds that will be displayed within the viewport.
@@ -87,14 +87,14 @@ public class CameraManager {
         guard let mapView = mapView else {
             return CameraOptions()
         }
-        
+
         return CameraOptions(mapView.mapboxMap.__map.cameraForCoordinateBounds(
                                 for: coordinateBounds,
                                 padding: edgePadding.toMBXEdgeInsetsValue(),
                                 bearing: NSNumber(value: Float(bearing)),
                                 pitch: NSNumber(value: Float(pitch))))
     }
-    
+
     /// Returns the camera that best fits the given geometry, with optional edge padding, bearing, and pitch values.
     /// - Parameters:
     ///   - geometry: The geoemtry that will be displayed within the viewport.
@@ -110,14 +110,14 @@ public class CameraManager {
             assertionFailure("MapView is nil.")
             return CameraOptions()
         }
-        
+
         return CameraOptions(mapView.mapboxMap.__map.cameraForGeometry(
                                 for: MBXGeometry(geometry: geometry),
                                 padding: edgePadding.toMBXEdgeInsetsValue(),
                                 bearing: NSNumber(value: Float(bearing)),
                                 pitch: NSNumber(value: Float(pitch))))
     }
-    
+
     /// Returns the coordinate bounds for a given `Camera` object's viewport.
     /// - Parameter camera: The camera that the coordinate bounds will be returned for.
     /// - Returns: `CoordinateBounds` for the given `Camera`
@@ -128,9 +128,9 @@ public class CameraManager {
         }
         return mapView.mapboxMap.__map.coordinateBoundsForCamera(forCamera: MapboxCoreMaps.CameraOptions(camera))
     }
-    
+
     // MARK: Setting a new camera
-    
+
     /// Transition the map's viewport to a new camera.
     /// - Parameters:
     ///   - targetCamera: The target camera to transition to.
@@ -145,21 +145,21 @@ public class CameraManager {
             assertionFailure("MapView is nil.")
             return
         }
-        
+
         internalAnimator?.stopAnimation()
-        
+
         let clampedCamera = CameraOptions(center: targetCamera.center,
                                           padding: targetCamera.padding,
                                           anchor: targetCamera.anchor,
                                           zoom: targetCamera.zoom?.clamped(to: mapCameraOptions.minimumZoomLevel...mapCameraOptions.maximumZoomLevel),
                                           bearing: targetCamera.bearing,
                                           pitch: targetCamera.pitch?.clamped(to: mapCameraOptions.minimumPitch...mapCameraOptions.maximumPitch))
-        
+
         // Return early if the cameraView's camera is already at `clampedCamera`
         guard mapView.cameraOptions != clampedCamera else {
             return
         }
-        
+
         if animated && duration > 0 {
             let animation = { (transition: inout CameraTransition) in
                 transition.center.toValue = clampedCamera.center
@@ -174,7 +174,7 @@ public class CameraManager {
             mapView.mapboxMap.updateCamera(with: clampedCamera)
         }
     }
-    
+
     /// Interrupts all `active` animation.
     /// The camera remains at the last point before the cancel request was invoked, i.e.,
     /// the camera is not reset or fast-forwarded to the end of the transition.
@@ -185,7 +185,7 @@ public class CameraManager {
             animator.stopAnimation()
         }
     }
-    
+
     /// Private function to perform camera animation
     /// - Parameters:
     ///   - duration: If animated, how long the animation takes
@@ -194,29 +194,29 @@ public class CameraManager {
     fileprivate func performCameraAnimation(duration: TimeInterval,
                                             animation: @escaping (inout CameraTransition) -> Void,
                                             completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
-        
+
         // Stop previously running animations
         internalAnimator?.stopAnimation()
-        
+
         // Make a new camera animator for the new properties
-        
+
         let cameraAnimator = makeAnimator(duration: duration,
                                           curve: .easeOut,
                                           animationOwner: .custom(id: "com.mapbox.maps.cameraManager"),
                                           animations: animation)
-        
+
         // Add completion
         cameraAnimator.addCompletion({ (position) in
             completion?(position)
         })
-        
+
         // Start animation
         cameraAnimator.startAnimation()
-        
+
         // Store the animator in order to keep it alive
         internalAnimator = cameraAnimator
     }
-    
+
     /// Moves the viewpoint to a different location using a transition animation that
     /// evokes powered flight and an optional transition duration and timing function
     /// It seamlessly incorporates zooming and panning to help
@@ -231,7 +231,7 @@ public class CameraManager {
     public func fly(to camera: CameraOptions,
                     duration: TimeInterval? = nil,
                     completion: AnimationCompletion? = nil) -> CameraAnimator? {
-        
+
         guard let mapView = mapView,
               let flyToAnimator = FlyToCameraAnimator(
                 inital: mapView.cameraOptions,
@@ -243,23 +243,23 @@ public class CameraManager {
             Log.warning(forMessage: "Unable to start fly-to animation", category: "CameraManager")
             return nil
         }
-        
+
         // Stop the `internalAnimator` before beginning a `flyTo`
         internalAnimator?.stopAnimation()
-        
+
         mapView.addCameraAnimator(flyToAnimator)
-        
+
         // Nil out the internalAnimator after `flyTo` finishes
         flyToAnimator.addCompletion { (position) in
             // Call the developer-provided completion (if present)
             completion?(position)
         }
-        
+
         flyToAnimator.startAnimation()
         internalAnimator = flyToAnimator
         return internalAnimator
     }
-    
+
     /// Ease the camera to a destination
     /// - Parameters:
     ///   - camera: the target camera after animation
@@ -270,9 +270,9 @@ public class CameraManager {
     public func ease(to camera: CameraOptions,
                      duration: TimeInterval,
                      completion: AnimationCompletion? = nil) -> CameraAnimator? {
-        
+
         internalAnimator?.stopAnimation()
-        
+
         let animator = makeAnimator(duration: duration, curve: .easeInOut) { (transition) in
             transition.center.toValue = camera.center
             transition.padding.toValue = camera.padding
@@ -281,25 +281,25 @@ public class CameraManager {
             transition.bearing.toValue = camera.bearing
             transition.pitch.toValue = camera.pitch
         }
-        
+
         // Nil out the `internalAnimator` once the "ease to" finishes
         animator.addCompletion { (position) in
             completion?(position)
         }
-        
+
         animator.startAnimation()
         internalAnimator = animator
-        
+
         return internalAnimator
     }
-    
+
 }
 
 fileprivate extension CoordinateBounds {
     func contains(_ coordinates: [CLLocationCoordinate2D]) -> Bool {
         let latitudeRange = southwest.latitude...northeast.latitude
         let longitudeRange = southwest.longitude...northeast.longitude
-        
+
         for coordinate in coordinates {
             if latitudeRange.contains(coordinate.latitude) || longitudeRange.contains(coordinate.longitude) {
                 return true

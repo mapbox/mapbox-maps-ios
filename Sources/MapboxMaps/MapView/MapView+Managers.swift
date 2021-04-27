@@ -60,7 +60,7 @@ extension MapView {
         metalView?.presentsWithTransaction = newOptions.presentsWithTransaction
     }
 
-    internal func setupGestures(with view: UIView, options: GestureOptions, cameraManager: CameraManager) {
+    internal func setupGestures(with view: UIView, options: GestureOptions, cameraManager: CameraAnimationsManager) {
         gestures = GestureManager(for: view, options: options, cameraManager: cameraManager)
     }
 
@@ -69,7 +69,7 @@ extension MapView {
     }
 
     internal func setupCamera(for view: MapView, options: MapCameraOptions) {
-        camera = CameraManager(for: view, with: mapConfig.camera)
+        camera = CameraAnimationsManager(for: view, with: mapConfig.camera)
     }
 
     internal func updateCamera(with newOptions: MapCameraOptions) {

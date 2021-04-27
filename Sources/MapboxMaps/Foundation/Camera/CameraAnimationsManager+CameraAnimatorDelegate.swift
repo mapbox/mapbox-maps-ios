@@ -1,7 +1,7 @@
 import UIKit
 
 // MARK: Camera Animation
-extension CameraManager: CameraAnimatorDelegate {
+extension CameraAnimationsManager: CameraAnimatorDelegate {
 
     // MARK: Animator Functions
 

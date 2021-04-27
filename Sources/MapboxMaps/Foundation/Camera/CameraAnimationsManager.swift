@@ -16,7 +16,7 @@ internal protocol CameraAnimatorInterface: CameraAnimator {
 }
 
 /// An object that manages a camera's view lifecycle.
-public class CameraManager {
+public class CameraAnimationsManager {
 
     /// Used to set up camera specific configuration
     public internal(set) var mapCameraOptions: MapCameraOptions

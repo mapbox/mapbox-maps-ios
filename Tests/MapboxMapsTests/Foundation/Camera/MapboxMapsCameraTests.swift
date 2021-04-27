@@ -3,7 +3,7 @@ import XCTest
 
 internal class CameraManagerIntegrationTests: MapViewIntegrationTestCase {
 
-    var cameraManager: CameraManager {
+    var cameraManager: CameraAnimationsManager {
         guard let mapView = mapView else {
             fatalError("MapView must not be nil")
         }

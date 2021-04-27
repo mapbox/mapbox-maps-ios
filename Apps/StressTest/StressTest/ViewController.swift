@@ -79,7 +79,7 @@ class ViewController: UIViewController {
 
         // Do any additional setup after loading the view.
         mapInitOptions = MapInitOptions()
-        mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions, styleURI: .streets)
+        mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         view.addSubview(mapView)
         NSLayoutConstraint.activate([
             mapView.leftAnchor.constraint(equalTo: view.leftAnchor),

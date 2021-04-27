@@ -16,6 +16,12 @@ public final class MapInitOptions: NSObject {
     /// Associated `MapOptions`
     public let mapOptions: MapOptions
 
+    /// Default style URI for initializing the map
+    public let styleURI: StyleURI?
+
+    /// Default camera options for initializing the map
+    public let cameraOptions: CameraOptions?
+
     /// Initializer. The default initializer, i.e. `MapInitOptions()` will use
     /// the default `CredentialsManager` to use the current shared access token.
     ///
@@ -24,10 +30,17 @@ public final class MapInitOptions: NSObject {
     ///         using `CredentialsManager.default`
     ///   - mapOptions: `MapOptions`; see `GlyphsRasterizationOptions` for the default
     ///         used for glyph rendering.
+    ///   - cameraOptions: `CameraOptions`, if not nil, will be applied to the map.
+    ///   - styleURI: Style URI for the map to load. Defaults to `.streets`, but
+    ///         can be `nil`.
     public init(resourceOptions: ResourceOptions = ResourceOptions(accessToken: CredentialsManager.default.accessToken ?? ""),
-                mapOptions: MapOptions = MapOptions(constrainMode: .heightOnly)) {
+                mapOptions: MapOptions = MapOptions(constrainMode: .heightOnly),
+                cameraOptions: CameraOptions? = nil,
+                styleURI: StyleURI? = .streets) {
         self.resourceOptions = resourceOptions
-        self.mapOptions = mapOptions
+        self.mapOptions      = mapOptions
+        self.cameraOptions   = cameraOptions
+        self.styleURI        = styleURI
     }
 
     /// :nodoc:
@@ -38,7 +51,9 @@ public final class MapInitOptions: NSObject {
 
         return
             (resourceOptions == other.resourceOptions) &&
-            (mapOptions == other.mapOptions)
+            (mapOptions == other.mapOptions) &&
+            (cameraOptions == other.cameraOptions) &&
+            (styleURI == other.styleURI)
     }
 
     /// :nodoc:
@@ -46,6 +61,8 @@ public final class MapInitOptions: NSObject {
         var hasher = Hasher()
         hasher.combine(resourceOptions)
         hasher.combine(mapOptions)
+        hasher.combine(cameraOptions)
+        hasher.combine(styleURI)
         return hasher.finalize()
     }
 }

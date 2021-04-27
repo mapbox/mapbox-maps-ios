@@ -25,7 +25,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
 
     // Default MapInitOptions. If you use a custom path for a TileStore, you would
     // need to create a custom MapInitOptions to reference that TileStore.
-    private var mapInitOptions = MapInitOptions()
+    private var mapInitOptions = MapInitOptions(styleURI: .outdoors)
 
     private lazy var offlineManager: OfflineManager = {
         return OfflineManager(resourceOptions: mapInitOptions.resourceOptions)
@@ -315,7 +315,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         button.setTitle("Show Downloads", for: .normal)
         progressContainer.isHidden = true
 
-        let mapView = MapView(frame: mapViewContainer.bounds, mapInitOptions: mapInitOptions, styleURI: .outdoors)
+        let mapView = MapView(frame: mapViewContainer.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapViewContainer.addSubview(mapView)
 

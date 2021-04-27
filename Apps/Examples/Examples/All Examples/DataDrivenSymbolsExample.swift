@@ -10,7 +10,8 @@ public class DataDrivenSymbolsExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds, styleURI: .outdoors)
+        let options = MapInitOptions(styleURI: .outdoors)
+        mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 

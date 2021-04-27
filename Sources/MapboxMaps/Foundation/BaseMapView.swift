@@ -6,27 +6,6 @@ import Turf
 // swiftlint:disable file_length
 internal typealias PendingAnimationCompletion = (completion: AnimationCompletion, animatingPosition: UIViewAnimatingPosition)
 
-// swiftlint:disable force_cast
-internal class WeakCameraAnimatorSet {
-    private let hashTable = NSHashTable<NSObject>.weakObjects()
-
-    internal func add(_ object: CameraAnimatorInterface) {
-        hashTable.add((object as! NSObject))
-    }
-
-    internal func remove(_ object: CameraAnimatorInterface) {
-        hashTable.remove((object as! NSObject))
-    }
-
-    internal func removeAll() {
-        hashTable.removeAllObjects()
-    }
-
-    internal var allObjects: [CameraAnimatorInterface] {
-        hashTable.allObjects.map { $0 as! CameraAnimatorInterface }
-    }
-}
-
 open class BaseMapView: UIView {
 
     // mapbox map depends on MapInitOptions, which is not available until

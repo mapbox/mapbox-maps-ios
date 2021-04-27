@@ -1,11 +1,34 @@
 import UIKit
 import Turf
 
+public protocol CameraAnimator {
+
+    /// Stops the animation in its tracks and calls any provided completion
+    func stopAnimation()
+
+    /// The current state of the animation
+    var state: UIViewAnimatingState { get }
+}
+
+/// Internal-facing protocol to represent camera animators
+internal protocol CameraAnimatorInterface: CameraAnimator {
+    var currentCameraOptions: CameraOptions? { get }
+}
+
 /// An object that manages a camera's view lifecycle.
-public class CameraManager {
+public class CameraAnimationsManager {
 
     /// Used to set up camera specific configuration
     public internal(set) var mapCameraOptions: MapCameraOptions
+
+    /// List of animators currently alive
+    public var cameraAnimators: [CameraAnimator] {
+        guard let mapView = mapView else {
+            return []
+        }
+
+        return mapView.cameraAnimators
+    }
 
     /// Used to update the map's camera options and pass them to the core Map.
     internal func updateMapCameraOptions(newOptions: MapCameraOptions) {
@@ -18,16 +41,8 @@ public class CameraManager {
         mapCameraOptions = newOptions
     }
 
-    /// Pointer HashTable for holding camera animators
-    internal var cameraAnimators = NSHashTable<CameraAnimator>.weakObjects()
-
-    /// List of animators currently alive
-    public var cameraAnimatorsList: [CameraAnimator] {
-        return cameraAnimators.allObjects
-    }
-
     /// Internal camera animator used for animated transition
-    internal var internalCameraAnimator: CameraAnimator?
+    internal var internalAnimator: CameraAnimator?
 
     /// May want to convert to an enum.
     fileprivate let northBearing: CGFloat = 0
@@ -55,16 +70,16 @@ public class CameraManager {
         let coordinateLocations = coordinates.map { CLLocation(latitude: $0.latitude, longitude: $0.longitude) }
 
         // Construct new camera options with current values
-        let cameraOptions = MapboxCoreMaps.CameraOptions(mapView.cameraView.camera)
+        let cameraOptions = MapboxCoreMaps.CameraOptions(mapView.cameraOptions)
 
         let defaultEdgeInsets = EdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 
         // Create a new camera options with adjusted values
         return CameraOptions(mapView.mapboxMap.__map.cameraForCoordinates(
-            forCoordinates: coordinateLocations,
-            padding: cameraOptions.__padding ?? defaultEdgeInsets,
-            bearing: cameraOptions.__bearing,
-            pitch: cameraOptions.__pitch))
+                                forCoordinates: coordinateLocations,
+                                padding: cameraOptions.__padding ?? defaultEdgeInsets,
+                                bearing: cameraOptions.__bearing,
+                                pitch: cameraOptions.__pitch))
     }
 
     /// Returns the camera that best fits the given coordinate bounds, with optional edge padding, bearing, and pitch values.
@@ -83,10 +98,10 @@ public class CameraManager {
         }
 
         return CameraOptions(mapView.mapboxMap.__map.cameraForCoordinateBounds(
-            for: coordinateBounds,
-            padding: edgePadding.toMBXEdgeInsetsValue(),
-            bearing: NSNumber(value: Float(bearing)),
-            pitch: NSNumber(value: Float(pitch))))
+                                for: coordinateBounds,
+                                padding: edgePadding.toMBXEdgeInsetsValue(),
+                                bearing: NSNumber(value: Float(bearing)),
+                                pitch: NSNumber(value: Float(pitch))))
     }
 
     /// Returns the camera that best fits the given geometry, with optional edge padding, bearing, and pitch values.
@@ -106,10 +121,10 @@ public class CameraManager {
         }
 
         return CameraOptions(mapView.mapboxMap.__map.cameraForGeometry(
-            for: MBXGeometry(geometry: geometry),
-            padding: edgePadding.toMBXEdgeInsetsValue(),
-            bearing: NSNumber(value: Float(bearing)),
-            pitch: NSNumber(value: Float(pitch))))
+                                for: MBXGeometry(geometry: geometry),
+                                padding: edgePadding.toMBXEdgeInsetsValue(),
+                                bearing: NSNumber(value: Float(bearing)),
+                                pitch: NSNumber(value: Float(pitch))))
     }
 
     /// Returns the coordinate bounds for a given `Camera` object's viewport.
@@ -140,11 +155,13 @@ public class CameraManager {
             return
         }
 
+        internalAnimator?.stopAnimation()
+
         let clampedCamera = CameraOptions(center: targetCamera.center,
                                           padding: targetCamera.padding,
                                           anchor: targetCamera.anchor,
                                           zoom: targetCamera.zoom?.clamped(to: mapCameraOptions.minimumZoomLevel...mapCameraOptions.maximumZoomLevel),
-                                          bearing: optimizeBearing(startBearing: mapView.cameraView.localBearing, endBearing: targetCamera.bearing),
+                                          bearing: targetCamera.bearing,
                                           pitch: targetCamera.pitch?.clamped(to: mapCameraOptions.minimumPitch...mapCameraOptions.maximumPitch))
 
         // Return early if the cameraView's camera is already at `clampedCamera`
@@ -152,19 +169,28 @@ public class CameraManager {
             return
         }
 
-        let transitionBlock = {
-            mapView.cameraOptions = clampedCamera
-        }
-
         if animated && duration > 0 {
-            performCameraAnimation(duration: duration, animation: transitionBlock, completion: completion)
+            let animation = { (transition: inout CameraTransition) in
+                transition.center.toValue = clampedCamera.center
+                transition.padding.toValue = clampedCamera.padding
+                transition.anchor.toValue = clampedCamera.anchor
+                transition.zoom.toValue = clampedCamera.zoom
+                transition.bearing.toValue = clampedCamera.bearing
+                transition.pitch.toValue = clampedCamera.pitch
+            }
+            performCameraAnimation(duration: duration, animation: animation, completion: completion)
         } else {
-            transitionBlock()
+            mapView.mapboxMap.updateCamera(with: clampedCamera)
         }
     }
 
+    /// Interrupts all `active` animation.
+    /// The camera remains at the last point before the cancel request was invoked, i.e.,
+    /// the camera is not reset or fast-forwarded to the end of the transition.
+    /// Canceled animations cannot be restarted / resumed. The animator must be recreated.
     public func cancelAnimations() {
-        for animator in cameraAnimators.allObjects where animator.state == .active {
+        guard let validMapView = mapView else { return }
+        for animator in validMapView.cameraAnimators {
             animator.stopAnimation()
         }
     }
@@ -174,25 +200,30 @@ public class CameraManager {
     ///   - duration: If animated, how long the animation takes
     ///   - animation: closure to perform
     ///   - completion: animation block called on completion
-    fileprivate func performCameraAnimation(duration: TimeInterval, animation: @escaping () -> Void, completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
+    fileprivate func performCameraAnimation(duration: TimeInterval,
+                                            animation: @escaping (inout CameraTransition) -> Void,
+                                            completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
 
         // Stop previously running animations
-        internalCameraAnimator?.stopAnimation()
+        internalAnimator?.stopAnimation()
 
         // Make a new camera animator for the new properties
-        internalCameraAnimator = makeCameraAnimator(duration: duration,
-                                      curve: .easeOut,
-                                      animationOwner: .custom(id: "com.mapbox.maps.cameraManager"),
-                                      animations: animation)
+
+        let cameraAnimator = makeAnimator(duration: duration,
+                                          curve: .easeOut,
+                                          animationOwner: .custom(id: "com.mapbox.maps.cameraManager"),
+                                          animations: animation)
 
         // Add completion
-        internalCameraAnimator?.addCompletion({ [weak self] (position) in
+        cameraAnimator.addCompletion({ (position) in
             completion?(position)
-            self?.internalCameraAnimator = nil
         })
 
         // Start animation
-        internalCameraAnimator?.startAnimation()
+        cameraAnimator.startAnimation()
+
+        // Store the animator in order to keep it alive
+        internalAnimator = cameraAnimator
     }
 
     /// Moves the viewpoint to a different location using a transition animation that
@@ -200,96 +231,77 @@ public class CameraManager {
     /// It seamlessly incorporates zooming and panning to help
     /// the user find his or her bearings even after traversing a great distance.
     ///
-    /// NOTE: Keep in mind the lifecycle of the `CameraAnimator` returned by this method.
-    /// If a `CameraAnimator` is destroyed, before the animation is finished,
-    /// the animation will be interrupted and completion handlers will be called.
-    ///
     /// - Parameters:
     ///   - camera: The camera options at the end of the animation. Any camera parameters that are nil will not be animated.
     ///   - duration: Duration of the animation, measured in seconds. If nil, a suitable calculated duration is used.
     ///   - completion: Completion handler called when the animation stops
-    /// - Returns: The optional `CameraAnimator` that will execute the FlyTo animation
+    /// - Returns: An instance of `CameraAnimatorProtocol` which can be interrupted if necessary
+    @discardableResult
     public func fly(to camera: CameraOptions,
                     duration: TimeInterval? = nil,
                     completion: AnimationCompletion? = nil) -> CameraAnimator? {
 
-        guard let mapView = mapView else {
+        guard let mapView = mapView,
+              let flyToAnimator = FlyToCameraAnimator(
+                inital: mapView.cameraOptions,
+                final: camera,
+                owner: .custom(id: "fly-to"),
+                duration: duration,
+                mapSize: mapView.mapboxMap.size,
+                delegate: self) else {
+            Log.warning(forMessage: "Unable to start fly-to animation", category: "CameraManager")
             return nil
         }
 
-        // Stop the `internalCameraAnimator` before beginning a `flyTo`
-        internalCameraAnimator?.stopAnimation()
+        // Stop the `internalAnimator` before beginning a `flyTo`
+        internalAnimator?.stopAnimation()
 
-        guard let interpolator = FlyToInterpolator(from: mapView.cameraOptions,
-                                                   to: camera,
-                                                   size: mapView.bounds.size) else {
-            return nil
+        mapView.addCameraAnimator(flyToAnimator)
+
+        // Nil out the internalAnimator after `flyTo` finishes
+        flyToAnimator.addCompletion { (position) in
+            // Call the developer-provided completion (if present)
+            completion?(position)
         }
 
-        // If there was no duration specified, use a default
-        let time: TimeInterval = duration ?? interpolator.duration()
+        flyToAnimator.startAnimation()
+        internalAnimator = flyToAnimator
+        return internalAnimator
+    }
 
-        // TODO: Consider timesteps based on the flyTo curve, for example, it would be beneficial to have a higher
-        // density of time steps at towards the start and end of the animation to avoid jiggling.
-        let timeSteps = stride(from: 0.0, through: 1.0, by: 0.025)
-        let keyTimes: [Double] = Array(timeSteps)
+    /// Ease the camera to a destination
+    /// - Parameters:
+    ///   - camera: the target camera after animation
+    ///   - duration: duration of the animation
+    ///   - completion: completion to be called after animation
+    /// - Returns: An instance of `CameraAnimatorProtocol` which can be interrupted if necessary
+    @discardableResult
+    public func ease(to camera: CameraOptions,
+                     duration: TimeInterval,
+                     completion: AnimationCompletion? = nil) -> CameraAnimator? {
 
-        let animator = makeCameraAnimator(duration: time, curve: .linear) {
+        internalAnimator?.stopAnimation()
 
-            UIView.animateKeyframes(withDuration: 0, delay: 0, options: []) {
-
-                for keyTime in keyTimes {
-                    let interpolatedCoordinate = interpolator.coordinate(at: keyTime)
-                    let interpolatedZoom = interpolator.zoom(at: keyTime)
-                    let interpolatedBearing = interpolator.bearing(at: keyTime)
-                    let interpolatedPitch = interpolator.pitch(at: keyTime)
-
-                    UIView.addKeyframe(withRelativeStartTime: keyTime, relativeDuration: 0.025) {
-                        self.mapView?.cameraView.centerCoordinate = interpolatedCoordinate
-                        self.mapView?.cameraView.zoom = CGFloat(interpolatedZoom)
-                        self.mapView?.cameraView.bearing = CGFloat(interpolatedBearing)
-                        self.mapView?.cameraView.pitch = CGFloat(interpolatedPitch)
-                    }
-                }
-            }
+        let animator = makeAnimator(duration: duration, curve: .easeInOut) { (transition) in
+            transition.center.toValue = camera.center
+            transition.padding.toValue = camera.padding
+            transition.anchor.toValue = camera.anchor
+            transition.zoom.toValue = camera.zoom
+            transition.bearing.toValue = camera.bearing
+            transition.pitch.toValue = camera.pitch
         }
 
-        if let completion = completion {
-            animator.addCompletion(completion)
+        // Nil out the `internalAnimator` once the "ease to" finishes
+        animator.addCompletion { (position) in
+            completion?(position)
         }
 
         animator.startAnimation()
+        internalAnimator = animator
 
-        return animator
+        return internalAnimator
     }
 
-    /// This function optimizes the bearing for set camera so that it is taking the shortest path.
-    /// - Parameters:
-    ///   - startBearing: The current or start bearing of the map viewport.
-    ///   - endBearing: The bearing of where the map viewport should end at.
-    /// - Returns: A `CLLocationDirection` that represents the correct final bearing accounting for positive and negatives.
-    internal func optimizeBearing(startBearing: CLLocationDirection?, endBearing: CLLocationDirection?) -> CLLocationDirection? {
-        // This modulus is required to account for larger values
-        guard
-            let startBearing = startBearing?.truncatingRemainder(dividingBy: 360.0),
-            let endBearing = endBearing?.truncatingRemainder(dividingBy: 360.0)
-        else {
-            return nil
-        }
-
-        // 180 degrees is the max the map should rotate, therefore if the difference between the end and start point is
-        // more than 180 we need to go the opposite direction
-        if endBearing - startBearing >= 180 {
-            return endBearing - 360
-        }
-
-        // This is the inverse of the above, accounting for negative bearings
-        if endBearing - startBearing <= -180 {
-            return endBearing + 360
-        }
-
-        return endBearing
-    }
 }
 
 fileprivate extension CoordinateBounds {

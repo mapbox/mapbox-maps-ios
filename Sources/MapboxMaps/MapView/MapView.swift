@@ -15,7 +15,7 @@ open class MapView: BaseMapView {
     internal var ornaments: OrnamentsManager!
 
     /// The `camera` object manages a camera's view lifecycle..
-    public internal(set) var camera: CameraManager!
+    public internal(set) var camera: CameraAnimationsManager!
 
     /// The `location`object handles location events of the map.
     public internal(set) var location: LocationManager!

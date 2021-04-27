@@ -9,7 +9,7 @@ internal extension EdgeInsets {
     }
 }
 
-internal extension UIEdgeInsets {
+extension UIEdgeInsets {
     func toMBXEdgeInsetsValue() -> EdgeInsets {
         return EdgeInsets(top: Double(self.top),
                           left: Double(self.left),

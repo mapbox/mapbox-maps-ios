@@ -58,7 +58,6 @@ internal struct FlyToInterpolator {
               let sourceZoomParam = source.zoom,
               let sourcePitchParam     = source.pitch,
               let sourceBearingParam = source.bearing else {
-            preconditionFailure("Source camera should have valid, non optional, parameters")
             return nil
         }
 

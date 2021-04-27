@@ -120,7 +120,7 @@ internal protocol CameraManagerProtocol: AnyObject {
     func cancelAnimations()
 }
 
-extension CameraManager: CameraManagerProtocol { }
+extension CameraAnimationsManager: CameraManagerProtocol { }
 
 public final class GestureManager: NSObject {
 

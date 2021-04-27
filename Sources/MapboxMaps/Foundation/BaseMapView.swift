@@ -157,7 +157,7 @@ open class BaseMapView: UIView {
         }
 
         if let cameraOptions = resolvedMapInitOptions.cameraOptions {
-            self.cameraOptions = cameraOptions
+            mapboxMap.__map.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
         }
     }
 

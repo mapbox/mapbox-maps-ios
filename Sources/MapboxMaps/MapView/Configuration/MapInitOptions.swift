@@ -30,7 +30,8 @@ public final class MapInitOptions: NSObject {
     ///         using `CredentialsManager.default`
     ///   - mapOptions: `MapOptions`; see `GlyphsRasterizationOptions` for the default
     ///         used for glyph rendering.
-    ///   - cameraOptions: `CameraOptions`, if not nil, will be applied to the map.
+    ///   - cameraOptions: `CameraOptions` to be applied to the map, overriding
+    ///         the default camera that has been specified in the style.
     ///   - styleURI: Style URI for the map to load. Defaults to `.streets`, but
     ///         can be `nil`.
     public init(resourceOptions: ResourceOptions = ResourceOptions(accessToken: CredentialsManager.default.accessToken ?? ""),

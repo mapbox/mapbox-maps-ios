@@ -12,7 +12,7 @@ public struct ExpressionBuilder {
             expressionElements = expressionElements + arg.expressionElements
         }
 
-        return Expression(with: expressionElements)
+        return Expression(elements: expressionElements)
     }
 }
 

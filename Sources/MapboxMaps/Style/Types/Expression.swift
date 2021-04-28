@@ -7,9 +7,28 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
     /// The individual elements of the expression in an array
     internal var elements: [Element]
 
+    /// The operator of this expression
+    public var `operator`: Operator {
+        guard let first = elements.first, case Element.operator(let op) = first else {
+            fatalError("First element of the expression is not an operator.")
+        }
+
+        return op
+    }
+
+    /// The arguments contained in this expression
+    public var arguments: [Argument] {
+        return elements.dropFirst().map { (element) -> Argument in
+            guard case Element.argument(let arg) = element else {
+                fatalError("All elements after the first element in the expression must be arguments.")
+            }
+            return arg
+        }
+    }
+
     // swiftlint:disable identifier_name
     public init(_ op: Expression.Operator,
-                @ExpressionBuilder content: () -> Expression = { Expression(with: [.argument(.null)])}) {
+                @ExpressionBuilder content: () -> Expression = { Expression(elements: [.argument(.null)])}) {
         var elements = content().elements
 
         if elements.count == 1 && elements[0] == .argument(.null) {
@@ -17,7 +36,12 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
         }
 
         elements.insert(.operator(op), at: 0)
-        self.init(with: elements)
+        self.init(elements: elements)
+    }
+    
+    /// Initialize an expression with an operator and arguments
+    public init(operator op: Operator, arguments: [Argument] = [.null]) {
+        self.elements = [.operator(op)] + arguments.map { Element.argument($0) }
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -28,7 +52,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
         }
     }
 
-    public init(with elements: [Element]) {
+    public init(elements: [Element]) {
         self.elements = elements
     }
 

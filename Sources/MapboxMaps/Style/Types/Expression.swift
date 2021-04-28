@@ -38,7 +38,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
         elements.insert(.operator(op), at: 0)
         self.init(elements: elements)
     }
-    
+
     /// Initialize an expression with an operator and arguments
     public init(operator op: Operator, arguments: [Argument] = [.null]) {
         self.elements = [.operator(op)] + arguments.map { Element.argument($0) }
@@ -136,6 +136,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
         case string(String)
         case boolean(Bool)
         case numberArray([Double])
+        case stringArray([String])
         case option(Option)
         case null
         case expression(Expression)
@@ -156,6 +157,8 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
                 return "\(option)"
             case .numberArray(let array):
                 return "\(array)"
+            case .stringArray(let stringArray):
+                return "\(stringArray)"
             }
         }
 
@@ -174,6 +177,8 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
             case (.expression(let lhsExpression), .expression(let rhsExpression)):
                 return lhsExpression == rhsExpression
             case (.numberArray(let lhsArray), .numberArray(let rhsArray)):
+                return lhsArray == rhsArray
+            case (.stringArray(let lhsArray), .stringArray(let rhsArray)):
                 return lhsArray == rhsArray
             default:
                 return false
@@ -198,6 +203,8 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
                 try container.encodeNil()
             case .numberArray(let array):
                 try container.encode(array)
+            case .stringArray(let stringArray):
+                try container.encode(stringArray)
             }
         }
 
@@ -217,6 +224,8 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
                 self = .option(validOption)
             } else if let validArray = try? container.decode([Double].self) {
                 self = .numberArray(validArray)
+            } else if let validStringArray = try? container.decode([String].self) {
+                self = .stringArray(validStringArray)
             } else if let dict = try? container.decode([String: String].self), dict.isEmpty {
                 self = .null
             } else {

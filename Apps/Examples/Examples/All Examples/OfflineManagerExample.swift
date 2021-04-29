@@ -25,7 +25,10 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
 
     // Default MapInitOptions. If you use a custom path for a TileStore, you would
     // need to create a custom MapInitOptions to reference that TileStore.
-    private var mapInitOptions = MapInitOptions(styleURI: .outdoors)
+    private lazy var mapInitOptions: MapInitOptions = {
+        MapInitOptions(cameraOptions: CameraOptions(center: tokyoCoord, zoom: tokyoZoom),
+                       styleURI: .outdoors)
+    }()
 
     private lazy var offlineManager: OfflineManager = {
         return OfflineManager(resourceOptions: mapInitOptions.resourceOptions)
@@ -318,10 +321,6 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         let mapView = MapView(frame: mapViewContainer.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapViewContainer.addSubview(mapView)
-
-        // Jump to center of our bounds
-        mapView.camera.setCamera(to: CameraOptions(center: tokyoCoord,
-                                                   zoom: tokyoZoom))
 
         // Add a point annotation that shows the point geometry that were passed
         // to the tile region API.

@@ -10,16 +10,13 @@ public class LayerBelowExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds)
-        view.addSubview(mapView)
-
         // Center the map over downtown Atlanta
         let centerCoordinate = CLLocationCoordinate2D(latitude: 35.137452,
                                                       longitude: -88.137343)
+        let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate, zoom: 4))
 
-        // Zoom to cover the whole Atlanta urban area
-        mapView.camera.setCamera(to: CameraOptions(center: centerCoordinate,
-                                                          zoom: 4))
+        mapView = MapView(frame: view.bounds, mapInitOptions: options)
+        view.addSubview(mapView)
 
         // Allows the view controller to receive information about map events
         mapView.on(.mapLoaded) { [weak self] _ in

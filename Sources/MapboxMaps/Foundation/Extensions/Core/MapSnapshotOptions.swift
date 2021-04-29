@@ -16,6 +16,10 @@ extension MapSnapshotOptions {
                             pixelRatio: Float = 1.0,
                             glyphsRasterizationOptions: GlyphsRasterizationOptions? = GlyphsRasterizationOptions(fontFamilies: []),
                             resourceOptions: ResourceOptions = ResourceOptions(accessToken: CredentialsManager.default.accessToken ?? "")) {
+        precondition(pixelRatio > 0)
+        precondition(Float(size.width) * pixelRatio <= 8192, "Width or scale too great.")
+        precondition(Float(size.height) * pixelRatio <= 8192, "Height or scale too great.")
+
         self.init(__size: Size(width: Float(size.width), height: Float(size.height)),
                   pixelRatio: pixelRatio,
                   glyphsRasterizationOptions: glyphsRasterizationOptions,

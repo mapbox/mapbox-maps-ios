@@ -10,16 +10,14 @@ public class GeoJSONSourceExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds)
-        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(mapView)
-
         // Set the center coordinate and zoom level.
         let centerCoordinate = CLLocationCoordinate2D(latitude: 18.239785,
                                                       longitude: -66.302490)
+        let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate, zoom: 6.9))
 
-        mapView.camera.setCamera(to: CameraOptions(center: centerCoordinate,
-                                                          zoom: 6.9))
+        mapView = MapView(frame: view.bounds, mapInitOptions: options)
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(mapView)
 
         // Allow the view controller to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in

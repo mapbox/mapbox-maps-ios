@@ -11,7 +11,10 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds)
+        // Set initial camera settings
+        let options = MapInitOptions(cameraOptions: CameraOptions(zoom: 15.0))
+
+        mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
@@ -21,9 +24,6 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         mapView.update { (mapOptions) in
             mapOptions.location.puckType = .puck2D()
         }
-
-        // Set initial camera settings
-        mapView.camera.setCamera(to: CameraOptions(zoom: 15.0))
 
         // Allows the delegate to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in

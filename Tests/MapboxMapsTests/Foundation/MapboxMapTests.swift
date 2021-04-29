@@ -1,5 +1,6 @@
 import XCTest
 @testable import MapboxMaps
+import Turf
 
 final class MapboxMapTests: XCTestCase {
 
@@ -94,6 +95,41 @@ final class MapboxMapTests: XCTestCase {
                 northeast,
                 southeast
             ],
+            padding: .zero,
+            bearing: 0,
+            pitch: 0)
+
+        XCTAssertEqual(expectedCenter.latitude, camera.center!.latitude, accuracy: 0.25)
+        XCTAssertEqual(expectedCenter.longitude, camera.center!.longitude, accuracy: 0.25)
+        XCTAssertEqual(camera.bearing, 0)
+        XCTAssertEqual(camera.padding, .zero)
+        XCTAssertEqual(camera.pitch, 0)
+    }
+
+    func testCameraForGeometry() {
+        // A 1:1 square
+        let southwest = CLLocationCoordinate2DMake(0, 0)
+        let northwest = CLLocationCoordinate2DMake(4, 0)
+        let northeast = CLLocationCoordinate2DMake(4, 4)
+        let southeast = CLLocationCoordinate2DMake(0, 4)
+
+        let coordinates = [
+            southwest,
+            northwest,
+            northeast,
+            southeast,
+        ]
+
+        let latitudeDelta =  northeast.latitude - southeast.latitude
+        let longitudeDelta = southeast.longitude - southwest.longitude
+
+        let expectedCenter = CLLocationCoordinate2DMake(northeast.latitude - (latitudeDelta / 2),
+                                                        southeast.longitude - (longitudeDelta / 2))
+
+        let geometry = Geometry.polygon(Polygon([coordinates]))
+
+        let camera = mapboxMap.camera(
+            for: geometry,
             padding: .zero,
             bearing: 0,
             pitch: 0)

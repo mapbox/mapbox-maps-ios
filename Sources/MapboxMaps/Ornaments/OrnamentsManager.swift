@@ -14,12 +14,11 @@ public enum OrnamentVisibility: String, Equatable {
     case visible
 }
 
-internal class OrnamentsManager: NSObject {
+public class OrnamentsManager: NSObject {
 
-    /// The `OrnamentOptions` that is used to set up the required ornaments on the map
-    internal var options: OrnamentOptions {
+    /// The `OrnamentOptions` object that is used to set up the required ornaments on the map
+    public var options: OrnamentOptions {
         didSet {
-            assert(options.isValid, "More than one ornament in a single position.")
             updateOrnaments()
         }
     }

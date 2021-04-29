@@ -5,9 +5,6 @@ public struct MapConfig: Equatable {
     /// Used to configure the gestures on the map
     public var gestures: GestureOptions = GestureOptions()
 
-    /// Used to configure the ornaments on the map
-    internal var ornaments: OrnamentOptions = OrnamentOptions()
-
     /// Used to configure the camera of the map
     public var camera: MapCameraOptions = MapCameraOptions()
 

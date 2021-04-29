@@ -42,6 +42,7 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
         // token, size, map style, and camera.
         let options = MapSnapshotOptions(size: CGSize(width: view.bounds.size.width,
                                                       height: view.bounds.height / 2),
+                                         pixelRatio: UIScreen.main.scale,
                                          resourceOptions: mapInitOptions.resourceOptions)
         snapshotter = Snapshotter(options: options)
         snapshotter.style.uri = .light

@@ -284,6 +284,7 @@ class ViewController: UIViewController {
         // Configure the snapshotter object with its default access
         // token, size, map style, and camera.
         let options = MapSnapshotOptions(size: CGSize(width: 300, height: 300),
+                                         pixelRatio: 1,
                                          resourceOptions: mapInitOptions.resourceOptions)
 
         print("Creating snapshotter")

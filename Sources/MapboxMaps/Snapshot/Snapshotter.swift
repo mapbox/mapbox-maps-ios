@@ -23,11 +23,14 @@ public class Snapshotter {
     /// A `style` object that can be manipulated to set different styles for a snapshot
     public let style: Style
 
+    private let options: MapSnapshotOptions
+
     /// Initialize a `Snapshotter` instance
     /// - Parameters:
     ///   - observer: Observer responsible for handling lifecycle events in a snapshot
     ///   - options: Options describing an intended snapshot
     public init(options: MapSnapshotOptions) {
+        self.options = options
         mapSnapshotter = MapSnapshotter(options: options)
         style = Style(with: mapSnapshotter)
         observer.delegate = self
@@ -93,6 +96,8 @@ public class Snapshotter {
     public func start(overlayHandler: SnapshotOverlayHandler?,
                       completion: @escaping (Result<UIImage, SnapshotError>) -> Void) {
 
+        let scale = CGFloat(options.pixelRatio)
+
         mapSnapshotter.start { (expected) in
             guard let validExpected = expected else {
                 completion(.failure(.unknown))
@@ -105,11 +110,12 @@ public class Snapshotter {
 
             if validExpected.isValue(), let snapshot = validExpected.value as? MapSnapshot {
                 let mbxImage = snapshot.image()
-                let scale = UIScreen.main.scale
 
                 if let uiImage = UIImage(mbxImage: mbxImage, scale: scale) {
                     let rect = CGRect(origin: .zero, size: uiImage.size)
-                    let renderer = UIGraphicsImageRenderer(size: uiImage.size)
+                    let format = UIGraphicsImageRendererFormat()
+                    format.scale = scale
+                    let renderer = UIGraphicsImageRenderer(size: uiImage.size, format: format)
                     let compositeImage = renderer.image { rendererContext in
 
                         // First draw the snaphot image into the context

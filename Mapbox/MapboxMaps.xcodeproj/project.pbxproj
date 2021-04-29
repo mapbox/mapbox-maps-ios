@@ -238,6 +238,9 @@
 		CA0C426926028ED30054D9D0 /* AnnotationOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0C426826028ED30054D9D0 /* AnnotationOptions.swift */; };
 		CA0C427E2602BECE0054D9D0 /* LayerPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0C427D2602BECE0054D9D0 /* LayerPosition.swift */; };
 		CA0C43052602BF2D0054D9D0 /* LayerPositionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0C42942602BF000054D9D0 /* LayerPositionTests.swift */; };
+		CA19C342263B411C00748F1A /* MapInitOptionsTests.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5A6922A2627566A00A03412 /* MapInitOptionsTests.xib */; };
+		CA19C344263B412700748F1A /* empty-style-chicago.json in Resources */ = {isa = PBXBuildFile; fileRef = CA19C343263B412700748F1A /* empty-style-chicago.json */; };
+		CA19C345263B412700748F1A /* empty-style-chicago.json in Resources */ = {isa = PBXBuildFile; fileRef = CA19C343263B412700748F1A /* empty-style-chicago.json */; };
 		CA2E4A1B2538D3530096DEDE /* MapViewIntegrationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA53616D2537ECA600A8AE38 /* MapViewIntegrationTestCase.swift */; };
 		CA2E4A1C2538D3530096DEDE /* IntegrationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5361862537EE0600A8AE38 /* IntegrationTestCase.swift */; };
 		CA2E4A1D2538D3530096DEDE /* DidIdleFailureIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA2E498825380B300096DEDE /* DidIdleFailureIntegrationTest.swift */; };
@@ -659,6 +662,7 @@
 		CA0C426826028ED30054D9D0 /* AnnotationOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnnotationOptions.swift; sourceTree = "<group>"; };
 		CA0C427D2602BECE0054D9D0 /* LayerPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerPosition.swift; sourceTree = "<group>"; };
 		CA0C42942602BF000054D9D0 /* LayerPositionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerPositionTests.swift; sourceTree = "<group>"; };
+		CA19C343263B412700748F1A /* empty-style-chicago.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "empty-style-chicago.json"; sourceTree = "<group>"; };
 		CA2E498825380B300096DEDE /* DidIdleFailureIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DidIdleFailureIntegrationTest.swift; sourceTree = "<group>"; };
 		CA355C06256EEA7C00FD1DB7 /* FlyToInterpolator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyToInterpolator.swift; sourceTree = "<group>"; };
 		CA4453C52436E71500477B4F /* MapboxTestHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapboxTestHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1445,6 +1449,7 @@
 		B5A692292627566A00A03412 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				CA19C343263B412700748F1A /* empty-style-chicago.json */,
 				B5A6922A2627566A00A03412 /* MapInitOptionsTests.xib */,
 			);
 			name = Resources;
@@ -1764,6 +1769,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				CA0B373925C4BEAE00B3396E /* Assets.xcassets in Resources */,
+				CA19C345263B412700748F1A /* empty-style-chicago.json in Resources */,
+				CA19C342263B411C00748F1A /* MapInitOptionsTests.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1784,6 +1791,7 @@
 				CA549002251C404B00F829A3 /* geometry-collection.geojson in Resources */,
 				CA549003251C404B00F829A3 /* simple-line.geojson in Resources */,
 				CA549004251C404B00F829A3 /* multipolygon.geojson in Resources */,
+				CA19C344263B412700748F1A /* empty-style-chicago.json in Resources */,
 				07E816DA256D72E500ACFA73 /* Assets.xcassets in Resources */,
 				CA549005251C404B00F829A3 /* featurecollection.geojson in Resources */,
 				CA549006251C404B00F829A3 /* polygon.geojson in Resources */,

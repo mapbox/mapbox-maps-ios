@@ -19,7 +19,8 @@ public class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         print("This example uses a deprecated API, and will be removed in a future release.")
-        mapView = MapView(frame: view.bounds, styleURI: .light)
+        let options = MapInitOptions(styleURI: .light)
+        mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 

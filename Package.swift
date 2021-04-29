@@ -44,6 +44,7 @@ let package = Package(
                 .copy("Foundation/GeoJSON/Fixtures/polygon.geojson"),
                 .copy("Foundation/GeoJSON/Fixtures/multipolygon.geojson"),
                 .copy("Helpers/MapboxAccessToken"),
+                .copy("Resources/empty-style-chicago.json"),
                 .process("Resources/MapInitOptionsTests.xib"),
             ]
         )

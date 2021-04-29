@@ -12,7 +12,7 @@ class MapInitOptionsTests: XCTestCase {
         CredentialsManager.default.accessToken = ""
     }
 
-    func testDefaultMapInitOptionsAreOverridden() {
+    func testDefaultOptionsAreOverridden() {
         var updatedMapInitOptions = MapInitOptions()
         XCTAssertNotEqual(updatedMapInitOptions.resourceOptions.accessToken, "pk.aaaaaa")
 
@@ -24,6 +24,12 @@ class MapInitOptionsTests: XCTestCase {
         // Check default MapOptions. This is to ensure that that MapOption's default
         // `init` is not being called.
         XCTAssert(updatedMapInitOptions.mapOptions.constrainMode != .none)
+    }
+
+    func testDefaultStyleURIAndCamera() {
+        let mapInitOptions = MapInitOptions()
+        XCTAssert(mapInitOptions.styleURI == .streets)
+        XCTAssertNil(mapInitOptions.cameraOptions)
     }
 
     func testEquality() {

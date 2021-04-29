@@ -10,7 +10,7 @@ extension ResourceOptions {
     ///   - cachePath: Path to database cache; default is `nil`, which will create
     ///         a path in the application's "support directory"
     ///   - assetPath: Path to assets; default is `nil`, which will use the application's
-    ///         resource bundle.
+    ///         resource bundle. `assetPath` is expected to be path to a bundle.
     ///   - cacheSize: Size of the cache.
     ///   - tileStore: A tile store is only used if `tileStoreEnabled` is `true`,
     ///         otherwise this argument is ignored. If `nil` (and `tileStoreEnabled`
@@ -53,8 +53,8 @@ extension ResourceOptions {
     public convenience init(accessToken: String,
                             baseUrl: String? = nil,
                             cachePath: String? = nil,
-                            assetPath: String? = nil,
-                            cacheSize: UInt64 = (1024*1024*10),
+                            assetPath: String? = Bundle.main.resourceURL?.path,
+                            cacheSize: UInt64 = (1024*1024*50),
                             tileStore: TileStore? = nil,
                             tileStoreEnabled: Bool = true,
                             loadTilePacksFromNetwork: Bool = false) {
@@ -71,7 +71,7 @@ extension ResourceOptions {
         self.init(__accessToken: accessToken,
                   baseURL: baseUrl,
                   cachePath: resolvedCachePath,
-                  assetPath: assetPath ?? Bundle.main.resourceURL?.path,
+                  assetPath: assetPath,
                   cacheSize: NSNumber(value: cacheSize),
                   tileStore: tileStore,
                   tileStoreEnabled: tileStoreEnabled,

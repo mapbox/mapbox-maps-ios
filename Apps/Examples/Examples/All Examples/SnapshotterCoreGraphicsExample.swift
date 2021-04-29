@@ -11,13 +11,6 @@ public class SnapshotterCoreGraphicsExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        let mapInitOptions = MapInitOptions()
-
-        // TODO: Fix crash that occurs when omitting MapViewController.
-        let testRect = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
-        mapView = MapView(frame: testRect, mapInitOptions: mapInitOptions)
-        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-
         // Add the `UIImageView` that will eventually render the snapshot.
         snapshotView = UIImageView(frame: CGRect.zero)
         snapshotView.translatesAutoresizingMaskIntoConstraints = false
@@ -28,10 +21,13 @@ public class SnapshotterCoreGraphicsExample: UIViewController, ExampleProtocol {
             snapshotView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
 
-        // Configure the snapshot options, such as the size and style to be used.
+        // Configure the snapshot options, such as the size, scale and style to be used.
+        // Here we use a scale (pixelRatio) that is different than the display's
+        // scale (UIScreen.main.scale)
         let options = MapSnapshotOptions(size: CGSize(width: view.bounds.size.width,
                                                       height: view.bounds.height),
-                                         resourceOptions: mapInitOptions.resourceOptions)
+                                         pixelRatio: 4,
+                                         resourceOptions: MapInitOptions().resourceOptions)
         snapshotter = Snapshotter(options: options)
         snapshotter.style.uri = .dark
 

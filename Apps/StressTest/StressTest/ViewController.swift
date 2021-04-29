@@ -79,7 +79,7 @@ class ViewController: UIViewController {
 
         // Do any additional setup after loading the view.
         mapInitOptions = MapInitOptions()
-        mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions, styleURI: .streets)
+        mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         view.addSubview(mapView)
         NSLayoutConstraint.activate([
             mapView.leftAnchor.constraint(equalTo: view.leftAnchor),
@@ -284,6 +284,7 @@ class ViewController: UIViewController {
         // Configure the snapshotter object with its default access
         // token, size, map style, and camera.
         let options = MapSnapshotOptions(size: CGSize(width: 300, height: 300),
+                                         pixelRatio: 1,
                                          resourceOptions: mapInitOptions.resourceOptions)
 
         print("Creating snapshotter")

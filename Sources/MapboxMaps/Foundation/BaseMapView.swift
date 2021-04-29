@@ -108,13 +108,12 @@ open class BaseMapView: UIView {
     }
 
     // MARK: Init
-    public init(frame: CGRect, mapInitOptions: MapInitOptions, styleURI: URL?) {
+    public init(frame: CGRect, mapInitOptions: MapInitOptions) {
         super.init(frame: frame)
-        self.commonInit(mapInitOptions: mapInitOptions,
-                        styleURI: styleURI)
+        commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
 
-    private func commonInit(mapInitOptions: MapInitOptions, styleURI: URL?) {
+    private func commonInit(mapInitOptions: MapInitOptions, overridingStyleURI: URL?) {
         checkForMetalSupport()
 
         self.resourceOptions = mapInitOptions.resourceOptions
@@ -134,7 +133,9 @@ open class BaseMapView: UIView {
                 glyphsRasterizationOptions: original.glyphsRasterizationOptions)
             resolvedMapInitOptions = MapInitOptions(
                 resourceOptions: mapInitOptions.resourceOptions,
-                mapOptions: resolvedMapOptions)
+                mapOptions: resolvedMapOptions,
+                cameraOptions: mapInitOptions.cameraOptions,
+                styleURI: mapInitOptions.styleURI)
         } else {
             resolvedMapInitOptions = mapInitOptions
         }
@@ -150,8 +151,13 @@ open class BaseMapView: UIView {
                                                name: UIApplication.willTerminateNotification,
                                                object: nil)
 
-        if let validStyleURI = styleURI {
-            mapboxMap.__map.setStyleURIForUri(validStyleURI.absoluteString)
+        // Use the overriding style URI if provided (currently from IB)
+        if let initialStyleURI = overridingStyleURI ?? resolvedMapInitOptions.styleURI?.rawValue {
+            mapboxMap.__map.setStyleURIForUri(initialStyleURI.absoluteString)
+        }
+
+        if let cameraOptions = resolvedMapInitOptions.cameraOptions {
+            mapboxMap.__map.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
         }
     }
 
@@ -189,9 +195,8 @@ open class BaseMapView: UIView {
             MapInitOptions()
 
         let ibStyleURI = BaseMapView.parseIBStringAsURL(ibString: styleURI__)
-        let styleURI = ibStyleURI ?? StyleURI.streets.rawValue
 
-        commonInit(mapInitOptions: mapInitOptions, styleURI: styleURI)
+        commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: ibStyleURI)
     }
 
     public func on(_ eventType: MapEvents.EventKind, handler: @escaping (MapboxCoreMaps.Event) -> Void) {

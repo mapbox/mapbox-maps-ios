@@ -11,6 +11,8 @@ Mapbox welcomes participation and contributions from everyone.
       * Removing default values for parameters
       * Making `bearing` and `pitch` parameters optional
       * Adding the `camera(for:camera:rect:)` variant
+  - `OrnamentOptions` should now be accessed via `MapView.ornaments.options`. Updates can be applied directly to the `options` property. Previously the map's ornament options were updated via `MapConfig.ornaments`. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310)) 
+  - The `LogoView` class is now private. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310))
 
 ## 10.0.0-beta.18.1 - April 28, 2021  
 

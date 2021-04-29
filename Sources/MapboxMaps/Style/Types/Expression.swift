@@ -26,21 +26,18 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
         }
     }
 
-    // swiftlint:disable identifier_name
-    public init(_ op: Expression.Operator,
-                @ExpressionBuilder content: () -> Expression = { Expression(elements: [.argument(.null)])}) {
-        var elements = content().elements
+    public init(_ op: Operator,
+                @ExpressionArgumentBuilder content: () -> [Expression.Argument]) {
+        self.init(operator: op, arguments: content())
+    }
 
-        if elements.count == 1 && elements[0] == .argument(.null) {
-            elements = []
-        }
-
-        elements.insert(.operator(op), at: 0)
-        self.init(elements: elements)
+    /// Create an operator-only expression.
+    public init(_ op: Operator) {
+        self.init(operator: op, arguments: [])
     }
 
     /// Initialize an expression with an operator and arguments
-    public init(operator op: Operator, arguments: [Argument] = [.null]) {
+    public init(operator op: Operator, arguments: [Argument]) {
         self.elements = [.operator(op)] + arguments.map { Element.argument($0) }
     }
 
@@ -50,10 +47,6 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
         for element in elements {
             try container.encode(element)
         }
-    }
-
-    public init(elements: [Element]) {
-        self.elements = elements
     }
 
     public var description: String {

@@ -70,6 +70,7 @@
 		0C455F73258D221C001BB023 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C455F6E258D221C001BB023 /* MapboxMobileEvents.framework */; };
 		0C455F75258D221C001BB023 /* MapboxCoreMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C455F6F258D221C001BB023 /* MapboxCoreMaps.framework */; };
 		0C455F77258D221C001BB023 /* MapboxCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C455F70258D221C001BB023 /* MapboxCommon.framework */; };
+		0C45894F263AFCDA00A11A26 /* ExpressionArgumentBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C45894E263AFCDA00A11A26 /* ExpressionArgumentBuilder.swift */; };
 		0C479F90251CEC340025EC4F /* Snapshotter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C479F8F251CEC340025EC4F /* Snapshotter.swift */; };
 		0C50AAE425BE8806007C0068 /* LightTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C50AAE225BE8806007C0068 /* LightTests.swift */; };
 		0C55010B2476D83A00AE019A /* Light.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5501082476D83A00AE019A /* Light.swift */; };
@@ -109,7 +110,6 @@
 		0C708F5624EB24B1003CE791 /* SourceProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C708F5524EB24B1003CE791 /* SourceProperties.swift */; };
 		0C708F5924EB2927003CE791 /* Sources.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C708F5824EB2927003CE791 /* Sources.swift */; };
 		0C708F6024EC70DD003CE791 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C708F5F24EC70DD003CE791 /* Color.swift */; };
-		0C88F22624F04D1600FC35F3 /* ExpressionBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C88F22524F04D1600FC35F3 /* ExpressionBuilder.swift */; };
 		0C88F22924F4223B00FC35F3 /* ExpressionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C88F22824F4223B00FC35F3 /* ExpressionOptions.swift */; };
 		0C8AA1F3257FE1830037FD6B /* MapEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8AA1F2257FE1830037FD6B /* MapEvents.swift */; };
 		0C8D815524F6B4A800717E88 /* Value.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8D815424F6B4A800717E88 /* Value.swift */; };
@@ -466,6 +466,7 @@
 		0C455F6E258D221C001BB023 /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxMobileEvents.framework; path = ../Carthage/Build/iOS/MapboxMobileEvents.framework; sourceTree = "<group>"; };
 		0C455F6F258D221C001BB023 /* MapboxCoreMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxCoreMaps.framework; path = ../Carthage/Build/iOS/MapboxCoreMaps.framework; sourceTree = "<group>"; };
 		0C455F70258D221C001BB023 /* MapboxCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxCommon.framework; path = ../Carthage/Build/iOS/MapboxCommon.framework; sourceTree = "<group>"; };
+		0C45894E263AFCDA00A11A26 /* ExpressionArgumentBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpressionArgumentBuilder.swift; sourceTree = "<group>"; };
 		0C479F8F251CEC340025EC4F /* Snapshotter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snapshotter.swift; sourceTree = "<group>"; };
 		0C50AAE225BE8806007C0068 /* LightTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightTests.swift; sourceTree = "<group>"; };
 		0C5501082476D83A00AE019A /* Light.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Light.swift; sourceTree = "<group>"; };
@@ -509,7 +510,6 @@
 		0C71B4C6242C19DF0076D6C4 /* GestureSupportableViewMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureSupportableViewMock.swift; sourceTree = "<group>"; };
 		0C71B4C8242C1ACA0076D6C4 /* PanGestureHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanGestureHandlerTests.swift; sourceTree = "<group>"; };
 		0C71B4CC242CE7000076D6C4 /* TapGestureHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapGestureHandlerTests.swift; sourceTree = "<group>"; };
-		0C88F22524F04D1600FC35F3 /* ExpressionBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionBuilder.swift; sourceTree = "<group>"; };
 		0C88F22824F4223B00FC35F3 /* ExpressionOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionOptions.swift; sourceTree = "<group>"; };
 		0C8AA1F2257FE1830037FD6B /* MapEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapEvents.swift; sourceTree = "<group>"; };
 		0C8C045C243F631B0040FC07 /* PinchGestureHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinchGestureHandlerTests.swift; sourceTree = "<group>"; };
@@ -1075,9 +1075,9 @@
 		0C708F5E24EC70C7003CE791 /* Types */ = {
 			isa = PBXGroup;
 			children = (
+				0C45894E263AFCDA00A11A26 /* ExpressionArgumentBuilder.swift */,
 				0C708F5F24EC70DD003CE791 /* Color.swift */,
 				1FECC9DF2474519D00B63910 /* Expression.swift */,
-				0C88F22524F04D1600FC35F3 /* ExpressionBuilder.swift */,
 				0C88F22824F4223B00FC35F3 /* ExpressionOptions.swift */,
 				0C8D815424F6B4A800717E88 /* Value.swift */,
 				0C9DE368252C263600880CC8 /* GeoJSONSourceData.swift */,
@@ -2014,12 +2014,12 @@
 				CA03F1132626948300673961 /* StylePackLoadOptions+MapboxMaps.swift in Sources */,
 				CABCDF4B2620E0D800D61635 /* Bool.swift in Sources */,
 				0C350D83263278090090FA74 /* FlyToCameraAnimator.swift in Sources */,
-				0C88F22624F04D1600FC35F3 /* ExpressionBuilder.swift in Sources */,
 				1FECC9E02474519D00B63910 /* Expression.swift in Sources */,
 				B52050A8260538240003E5BB /* ModelLayer.swift in Sources */,
 				B529341C2624E9D6003B181C /* PreferredFPS.swift in Sources */,
 				B521FC93262F626900B9A446 /* MapboxMap.swift in Sources */,
 				B575018A26334BA700937A9E /* MapboxScaleBarConstants.swift in Sources */,
+				0C45894F263AFCDA00A11A26 /* ExpressionArgumentBuilder.swift in Sources */,
 				0CD62F1124588532006421D1 /* GestureHandlerDelegate.swift in Sources */,
 				0782B061258C16B200D5FCE5 /* Utils.swift in Sources */,
 				0CD62F2C24588937006421D1 /* Style.swift in Sources */,

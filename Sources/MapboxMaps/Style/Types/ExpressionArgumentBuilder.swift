@@ -5,14 +5,7 @@ import UIKit
 public struct ExpressionArgumentBuilder {
 
     public static func buildBlock(_ arguments: ExpressionArgumentConvertible...) -> [Expression.Argument] {
-
-        var expressionArguments = [Expression.Argument]()
-
-        for arg in arguments {
-            expressionArguments = expressionArguments + arg.expressionArguments
-        }
-
-        return expressionArguments
+        return arguments.flatMap { $0.expressionArguments }
     }
 }
 

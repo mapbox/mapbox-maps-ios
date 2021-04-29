@@ -16,7 +16,7 @@ public enum OrnamentVisibility: String, Equatable {
 
 public class OrnamentsManager: NSObject {
 
-    /// The `OrnamentOptions` object that is used to set up the required ornaments on the map
+    /// The `OrnamentOptions` object that is used to set up and update the required ornaments on the map.
     public var options: OrnamentOptions {
         didSet {
             updateOrnaments()

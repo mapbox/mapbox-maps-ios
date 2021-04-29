@@ -49,8 +49,8 @@ public final class MapboxMap {
             __map.cameraForCoordinateBounds(
                 for: coordinateBounds,
                 padding: padding.toMBXEdgeInsetsValue(),
-                bearing: bearing.map(NSNumber.init),
-                pitch: pitch.map(NSNumber.init)))
+                bearing: bearing?.NSNumber,
+                pitch: pitch?.NSNumber))
     }
 
     /// Calculates a `CameraOptions` to fit a list of coordinates.
@@ -69,8 +69,8 @@ public final class MapboxMap {
             __map.cameraForCoordinates(
                 forCoordinates: coordinates.map(\.location),
                 padding: padding.toMBXEdgeInsetsValue(),
-                bearing: bearing.map(NSNumber.init),
-                pitch: pitch.map(NSNumber.init)))
+                bearing: bearing?.NSNumber,
+                pitch: pitch?.NSNumber))
     }
 
     /// Calculates a `CameraOptions` to fit a list of coordinates into a sub-rect of the map.
@@ -108,8 +108,8 @@ public final class MapboxMap {
             __map.cameraForGeometry(
                 for: MBXGeometry(geometry: geometry),
                 padding: padding.toMBXEdgeInsetsValue(),
-                bearing: bearing.map(NSNumber.init),
-                pitch: pitch.map(NSNumber.init)))
+                bearing: bearing?.NSNumber,
+                pitch: pitch?.NSNumber))
     }
 
     // MARK: - CameraOptions to CoordinateBounds

@@ -5,15 +5,19 @@ import MapboxMapsFoundation
 
 //swiftlint:disable file_length
 public class Style {
+
+    public static let defaultURI = StyleURI.streets
+
     public private(set) weak var styleManager: StyleManager!
 
     internal init(with styleManager: StyleManager) {
-        guard let styleURL = URL(string: styleManager.getStyleURI()),
-              let uri = StyleURI(rawValue: styleURL) else {
-            preconditionFailure("Invalid styleURI")
+        var uri: StyleURI?
+
+        if let styleURL = URL(string: styleManager.getStyleURI()) {
+            uri = StyleURI(rawValue: styleURL)
         }
 
-        self.uri = uri
+        self.uri = uri ?? Self.defaultURI
         self.styleManager = styleManager
     }
 

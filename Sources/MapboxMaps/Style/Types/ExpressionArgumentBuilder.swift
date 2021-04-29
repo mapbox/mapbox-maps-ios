@@ -50,9 +50,16 @@ extension Bool: ExpressionArgumentConvertible {
     }
 }
 
-extension Array: ExpressionArgumentConvertible where Element == Double {
+extension Array: ExpressionArgumentConvertible {
     public var expressionArguments: [Expression.Argument] {
-        return [.numberArray(self)]
+        if let validStringArray = self as? [String] {
+            return [.stringArray(validStringArray)]
+        } else if let validNumberArray = self as? [Double] {
+            return [.numberArray(validNumberArray)]
+        } else {
+            Log.warning(forMessage: "Unsupported array provided to Expression. Only [String] and [Double] are supported.", category: "Expressions")
+            return []
+        }
     }
 }
 

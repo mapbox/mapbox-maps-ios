@@ -59,10 +59,7 @@ extension BaseMapView: AnnotationSupportableMap {
 
         let queryOptions = RenderedQueryOptions(layerIds: styleLayerIdentifiers, filter: jsonExpression)
 
-        let screenBox = ScreenBox(min: ScreenCoordinate(x: Double(rect.minX), y: Double(rect.minY)),
-                                  max: ScreenCoordinate(x: Double(rect.maxX), y: Double(rect.maxY)))
-
-        mapboxMap.__map.queryRenderedFeatures(for: screenBox, options: queryOptions, callback: { (expected: MBXExpected?) in
+        mapboxMap.__map.queryRenderedFeatures(for: ScreenBox(rect), options: queryOptions, callback: { (expected: MBXExpected?) in
 
             guard let validExpected = expected else {
                 completion(.failure(.unknown))

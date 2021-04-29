@@ -2,6 +2,15 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+### Breaking changes ⚠️
+
+- `camera(for:)` methods have moved from `BaseMapView` to `MapboxMap` ([#286](https://github.com/mapbox/mapbox-maps-ios/pull/286))
+  * The API has also been aligned with Android by:
+      * Removing default values for parameters
+      * Making `bearing` and `pitch` parameters optional
+      * Adding the `camera(for:camera:rect:)` variant
 
 ## 10.0.0-beta.18.1 - April 28, 2021  
 

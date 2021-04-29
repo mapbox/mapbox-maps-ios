@@ -54,7 +54,7 @@ public class FitCameraToGeometryExample: UIViewController, ExampleProtocol {
             displayAlert(message: layerError.localizedDescription)
         }
 
-        let newCamera = mapView.camera.camera(fitting: polygon)
+        let newCamera = mapView.mapboxMap.camera(for: polygon, padding: .zero, bearing: 0, pitch: 0)
         mapView.camera.setCamera(to: newCamera) { _ in
             // The below line is used for internal testing purposes only.
             self.finish()

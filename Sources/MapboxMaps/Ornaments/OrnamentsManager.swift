@@ -14,12 +14,11 @@ public enum OrnamentVisibility: String, Equatable {
     case visible
 }
 
-internal class OrnamentsManager: NSObject {
+public class OrnamentsManager: NSObject {
 
-    /// The `OrnamentOptions` that is used to set up the required ornaments on the map
-    internal var options: OrnamentOptions {
+    /// The `OrnamentOptions` object that is used to set up and update the required ornaments on the map.
+    public var options: OrnamentOptions {
         didSet {
-            assert(options.isValid, "More than one ornament in a single position.")
             updateOrnaments()
         }
     }
@@ -140,28 +139,6 @@ internal class OrnamentsManager: NSObject {
 
     func layoutGuide(for view: UIView) -> UILayoutGuide {
         let superview = view.superview!
-        if #available(iOS 11.0, *) {
-            return superview.safeAreaLayoutGuide
-        } else {
-            let layoutGuideIdentifier = "mapboxSafeAreaLayoutGuide"
-            // If there's already a generated layout guide, return it
-            if let layoutGuide = superview.layoutGuides.filter({ $0.identifier == layoutGuideIdentifier }).first {
-                return layoutGuide
-            } else {
-                // If not, then make a new one based off the view's edges.
-                let layoutGuide = UILayoutGuide()
-                layoutGuide.identifier = layoutGuideIdentifier
-                superview.addLayoutGuide(layoutGuide)
-
-                NSLayoutConstraint.activate([
-                    layoutGuide.leftAnchor.constraint(equalTo: superview.leftAnchor),
-                    layoutGuide.rightAnchor.constraint(equalTo: superview.rightAnchor),
-                    layoutGuide.topAnchor.constraint(equalTo: superview.topAnchor),
-                    layoutGuide.bottomAnchor.constraint(equalTo: superview.bottomAnchor)
-                ])
-
-                return layoutGuide
-            }
-        }
+        return superview.safeAreaLayoutGuide
     }
 }

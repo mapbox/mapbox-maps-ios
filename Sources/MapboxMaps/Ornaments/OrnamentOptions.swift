@@ -35,16 +35,4 @@ public struct OrnamentOptions: Equatable {
     public var _attributionButtonIsVisible: Bool = true
     public var attributionButtonPosition: OrnamentPosition = .bottomRight
     public var attributionButtonMargins: CGPoint = defaultOrnamentsMargin
-
-    // MARK: - Validation
-
-    /// `true` if there is at most one non-hidden ornament in each position; `false` otherwise.
-    internal var isValid: Bool {
-        let positions = [
-            scaleBarVisibility != .hidden ? scaleBarPosition : nil,
-            compassVisibility != .hidden ? compassViewPosition : nil,
-            _logoViewIsVisible ? logoViewPosition : nil,
-            _attributionButtonIsVisible ? attributionButtonPosition : nil].compactMap { $0 }
-        return Set(positions).count == positions.count
-    }
 }

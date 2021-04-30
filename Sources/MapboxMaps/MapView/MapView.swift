@@ -12,7 +12,7 @@ open class MapView: BaseMapView {
     public internal(set) var gestures: GestureManager!
 
     /// The `ornaments`object will be responsible for all ornaments on the map.
-    internal var ornaments: OrnamentsManager!
+    public var ornaments: OrnamentsManager!
 
     /// The `camera` object manages a camera's view lifecycle..
     public internal(set) var camera: CameraAnimationsManager!

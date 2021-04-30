@@ -1,13 +1,13 @@
 import UIKit
 
 // swiftlint:disable function_body_length file_length type_body_length
-public class LogoView: UIView {
+internal class LogoView: UIView {
 
-    public enum LogoSize: RawRepresentable {
+    internal enum LogoSize: RawRepresentable {
         case regular
         case compact
 
-        public init?(rawValue: CGSize) {
+        internal init?(rawValue: CGSize) {
             if rawValue == CGSize(width: 85, height: 21) {
                 self = .regular
             } else if rawValue == CGSize(width: 16, height: 16) {
@@ -17,7 +17,7 @@ public class LogoView: UIView {
             }
         }
 
-        public var rawValue: CGSize {
+        internal var rawValue: CGSize {
             switch self {
             case .regular:
                 return CGSize(width: 85, height: 21)
@@ -33,22 +33,22 @@ public class LogoView: UIView {
         }
     }
 
-    public override var intrinsicContentSize: CGSize {
+    internal override var intrinsicContentSize: CGSize {
         return logoSize.rawValue
     }
 
-    public init(logoSize: LogoSize) {
+    internal init(logoSize: LogoSize) {
         let frame = CGRect(origin: .zero, size: logoSize.rawValue)
         self.logoSize = logoSize
         super.init(frame: frame)
         backgroundColor = UIColor.clear
     }
 
-    public override func draw(_ rect: CGRect) {
+    internal override func draw(_ rect: CGRect) {
         drawMapboxLogoOrnamentViewFullCanvas(frame: rect, resizing: .aspectFit)
     }
 
-    public required init?(coder: NSCoder) {
+    internal required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 

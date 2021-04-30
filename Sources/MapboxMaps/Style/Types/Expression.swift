@@ -7,17 +7,38 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
     /// The individual elements of the expression in an array
     internal var elements: [Element]
 
-    // swiftlint:disable identifier_name
-    public init(_ op: Expression.Operator,
-                @ExpressionBuilder content: () -> Expression = { Expression(with: [.argument(.null)])}) {
-        var elements = content().elements
-
-        if elements.count == 1 && elements[0] == .argument(.null) {
-            elements = []
+    /// The operator of this expression
+    public var `operator`: Operator {
+        guard let first = elements.first, case Element.operator(let op) = first else {
+            fatalError("First element of the expression is not an operator.")
         }
 
-        elements.insert(.operator(op), at: 0)
-        self.init(with: elements)
+        return op
+    }
+
+    /// The arguments contained in this expression
+    public var arguments: [Argument] {
+        return elements.dropFirst().map { (element) -> Argument in
+            guard case Element.argument(let arg) = element else {
+                fatalError("All elements after the first element in the expression must be arguments.")
+            }
+            return arg
+        }
+    }
+
+    public init(_ op: Operator,
+                @ExpressionArgumentBuilder content: () -> [Expression.Argument]) {
+        self.init(operator: op, arguments: content())
+    }
+
+    /// Create an operator-only expression.
+    public init(_ op: Operator) {
+        self.init(operator: op, arguments: [])
+    }
+
+    /// Initialize an expression with an operator and arguments
+    public init(operator op: Operator, arguments: [Argument]) {
+        self.elements = [.operator(op)] + arguments.map { Element.argument($0) }
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -26,10 +47,6 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
         for element in elements {
             try container.encode(element)
         }
-    }
-
-    public init(with elements: [Element]) {
-        self.elements = elements
     }
 
     public var description: String {
@@ -112,6 +129,7 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
         case string(String)
         case boolean(Bool)
         case numberArray([Double])
+        case stringArray([String])
         case option(Option)
         case null
         case expression(Expression)
@@ -132,6 +150,8 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
                 return "\(option)"
             case .numberArray(let array):
                 return "\(array)"
+            case .stringArray(let stringArray):
+                return "\(stringArray)"
             }
         }
 
@@ -150,6 +170,8 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
             case (.expression(let lhsExpression), .expression(let rhsExpression)):
                 return lhsExpression == rhsExpression
             case (.numberArray(let lhsArray), .numberArray(let rhsArray)):
+                return lhsArray == rhsArray
+            case (.stringArray(let lhsArray), .stringArray(let rhsArray)):
                 return lhsArray == rhsArray
             default:
                 return false
@@ -174,6 +196,8 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
                 try container.encodeNil()
             case .numberArray(let array):
                 try container.encode(array)
+            case .stringArray(let stringArray):
+                try container.encode(stringArray)
             }
         }
 
@@ -193,6 +217,8 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
                 self = .option(validOption)
             } else if let validArray = try? container.decode([Double].self) {
                 self = .numberArray(validArray)
+            } else if let validStringArray = try? container.decode([String].self) {
+                self = .stringArray(validStringArray)
             } else if let dict = try? container.decode([String: String].self), dict.isEmpty {
                 self = .null
             } else {

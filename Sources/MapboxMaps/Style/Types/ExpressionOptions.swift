@@ -60,8 +60,8 @@ public struct FormatOptions: Codable, Equatable, ExpressionArgumentConvertible {
         case textColor = "text-color"
     }
 
-    public var expressionElements: [Expression.Element] {
-        return [.argument(.option(.format(self)))]
+    public var expressionArguments: [Expression.Argument] {
+        return [.option(.format(self))]
     }
 
     public init(fontScale: Double? = nil, textFont: [String]? = nil, textColor: UIColor? = nil) {
@@ -88,8 +88,8 @@ public struct NumberFormatOptions: Codable, Equatable, ExpressionArgumentConvert
     /// Maximum number of fractional digits to include.
     public var maxFractionDigits: Int?
 
-    public var expressionElements: [Expression.Element] {
-        return [.argument(.option(.numberFormat(self)))]
+    public var expressionArguments: [Expression.Argument] {
+        return [.option(.numberFormat(self))]
     }
 
     internal enum CodingKeys: String, CodingKey {
@@ -125,8 +125,8 @@ public struct CollatorOptions: Codable, Equatable, ExpressionArgumentConvertible
         case diacriticSensitive = "diacritic-sensitive"
     }
 
-    public var expressionElements: [Expression.Element] {
-        return [.argument(.option(.collator(self)))]
+    public var expressionArguments: [Expression.Argument] {
+        return [.option(.collator(self))]
     }
 
     public init(caseSensitive: Bool?, diacriticSensitive: Bool?, locale: String?) {

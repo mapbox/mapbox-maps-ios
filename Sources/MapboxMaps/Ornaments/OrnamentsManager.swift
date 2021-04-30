@@ -44,7 +44,7 @@ public class OrnamentsManager: NSObject {
         view.addSubview(scalebarView)
 
         // Compass View
-        compassView = MapboxCompassOrnamentView(visibility: options.compassVisibility)
+        compassView = MapboxCompassOrnamentView(visibility: options.compassViewOptions.compassVisibility)
         compassView.translatesAutoresizingMaskIntoConstraints = false
         compassView.tapAction = { [weak view] in
             view?.compassTapped()

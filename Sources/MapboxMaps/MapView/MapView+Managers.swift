@@ -20,7 +20,7 @@ extension MapView {
         setupGestures(with: self, options: mapConfig.gestures, cameraManager: camera)
 
         // Initialize/Configure ornaments manager
-        setupOrnaments(with: self, options: OrnamentOptions())
+        setupOrnaments(with: self)
 
         // Initialize/Configure location manager
         setupUserLocationManager(with: self, options: mapConfig.location)
@@ -75,7 +75,7 @@ extension MapView {
         camera.updateMapCameraOptions(newOptions: newOptions)
     }
 
-    internal func setupOrnaments(with view: OrnamentSupportableView, options: OrnamentOptions) {
+    internal func setupOrnaments(with view: OrnamentSupportableView) {
         ornaments = OrnamentsManager(view: view, options: OrnamentOptions())
     }
 

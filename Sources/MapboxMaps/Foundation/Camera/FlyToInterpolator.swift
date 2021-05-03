@@ -53,7 +53,7 @@ internal struct FlyToInterpolator {
     ///   - size: Map View size in points
     internal init?(from source: CameraState, to dest: CameraOptions, with mapCameraOptions: MapCameraOptions = MapCameraOptions(), size: CGSize) {
         // Initial conditions
-        let sourcePaddingParam   = source.padding.toUIEdgeInsetsValue()
+        let sourcePaddingParam   = source.padding
         let sourceCoord          = source.center
         let sourceZoomParam      = CGFloat(source.zoom)
         let sourcePitchParam     = CGFloat(source.pitch)

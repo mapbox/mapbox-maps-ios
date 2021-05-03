@@ -66,7 +66,7 @@ public class Snapshotter {
 
     /// The current camera state of the snapshotter
     public var cameraState: CameraState {
-        return mapSnapshotter.getCameraState()
+        return CameraState(mapSnapshotter.getCameraState())
     }
 
     /// Sets the camera of the snapshotter

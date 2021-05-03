@@ -37,10 +37,10 @@ public struct CameraOptions: Hashable {
 
     public init(cameraState: CameraState, anchor: CGPoint? = nil) {
         self.center     = cameraState.center
-        self.padding    = cameraState.padding.toUIEdgeInsetsValue()
-        self.zoom       = CGFloat(cameraState.zoom)
+        self.padding    = cameraState.padding
+        self.zoom       = cameraState.zoom
         self.bearing    = cameraState.bearing
-        self.pitch      = CGFloat(cameraState.pitch)
+        self.pitch      = cameraState.pitch
         self.anchor     = anchor
     }
 

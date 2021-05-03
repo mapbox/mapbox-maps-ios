@@ -40,10 +40,10 @@ public struct CameraTransition {
 
     internal init(cameraState: CameraState, initialAnchor: CGPoint) {
         center  = Change(fromValue: cameraState.center)
-        zoom    = Change(fromValue: CGFloat(cameraState.zoom))
-        padding = Change(fromValue: cameraState.padding.toUIEdgeInsetsValue())
-        pitch   = Change(fromValue: CGFloat(cameraState.pitch))
-        bearing = Change(fromValue: CLLocationDirection(cameraState.bearing))
+        zoom    = Change(fromValue: cameraState.zoom)
+        padding = Change(fromValue: cameraState.padding)
+        pitch   = Change(fromValue: cameraState.pitch)
+        bearing = Change(fromValue: cameraState.bearing)
         anchor  = Change(fromValue: initialAnchor)
     }
 

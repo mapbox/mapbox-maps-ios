@@ -28,7 +28,7 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
              Create the point annotation, using a custom image to mark the location specified.
              The image is referenced from the application's asset catalog.
              */
-            let centerCoordinate = self.mapView.centerCoordinate
+            let centerCoordinate = self.mapView.cameraState.center
             let customPointAnnotation = PointAnnotation(coordinate: centerCoordinate,
                                                         image: UIImage(named: "star"))
 

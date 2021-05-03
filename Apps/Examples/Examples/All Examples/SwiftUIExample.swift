@@ -147,8 +147,8 @@ internal class SwiftUIMapViewCoordinator {
         /// will propagate this change to any other UI elements connected
         /// to the same binding.
         case .cameraChanged:
-            camera.center = mapView.centerCoordinate
-            camera.zoom = mapView.zoom
+            camera.center = mapView.cameraState.center
+            camera.zoom = mapView.cameraState.zoom
 
         /// When the map reloads, we need to re-sync the annotations
         case .mapLoaded:

@@ -24,7 +24,7 @@ public final class MapboxMap {
     }
 
     internal var cameraState: CameraState {
-        return __map.getCameraState()
+        return CameraState(__map.getCameraState())
     }
 
     internal func updateCamera(with cameraOptions: CameraOptions) {

@@ -10,11 +10,10 @@ private let defaultOrnamentsMargin = CGPoint(x: 8.0, y: 8.0)
 public struct OrnamentOptions: Equatable {
 
     // MARK: - Scale Bar
-    public var scaleBarOptions: ScaleBarOptions = ScaleBarOptions()
+    public var scaleBarOptions: CompassScaleBarOptions = CompassScaleBarOptions(position: .topLeft)
 
     // MARK: - Compass
-    public var compassViewOptions: CompassViewOptions = CompassViewOptions()
-
+    public var compassViewOptions: CompassScaleBarOptions = CompassScaleBarOptions(position: .topRight)
     // MARK: - Logo View
 
     /**
@@ -23,32 +22,20 @@ public struct OrnamentOptions: Equatable {
      information. See https://docs.mapbox.com/help/how-mapbox-works/attribution/
      for details.
      */
-    public var logoViewOptions: LogoViewOptions = LogoViewOptions()
+    public var logoViewOptions: AttributionLogoViewOptions = AttributionLogoViewOptions(position: .bottomLeft)
 
     // MARK: - Attribution Button
-    public var attributionButtonOptions: AttributionViewOptions = AttributionViewOptions()
+    public var attributionButtonOptions: AttributionLogoViewOptions = AttributionLogoViewOptions(position: .bottomLeft)
 }
 
-public struct ScaleBarOptions: Equatable {
-    public var scaleBarPosition: OrnamentPosition = .topLeft
-    public var scaleBarMargins: CGPoint = defaultOrnamentsMargin
-    public var scaleBarVisibility: OrnamentVisibility = .adaptive
+public struct CompassScaleBarOptions: Equatable {
+    public var position: OrnamentPosition
+    public var margins: CGPoint = defaultOrnamentsMargin
+    public var visibility: OrnamentVisibility = .adaptive
 }
 
-public struct CompassViewOptions: Equatable {
-    public var compassViewPosition: OrnamentPosition = .topRight
-    public var compassViewMargins: CGPoint = defaultOrnamentsMargin
-    public var compassVisibility: OrnamentVisibility = .adaptive
-}
-
-public struct LogoViewOptions: Equatable {
-    public var _logoViewIsVisible: Bool = true
-    public var logoViewPosition: OrnamentPosition = .bottomLeft
-    public var logoViewMargins: CGPoint = defaultOrnamentsMargin
-}
-
-public struct AttributionViewOptions: Equatable {
-    public var _attributionButtonIsVisible: Bool = true
-    public var attributionButtonPosition: OrnamentPosition = .bottomRight
-    public var attributionButtonMargins: CGPoint = defaultOrnamentsMargin
+public struct AttributionLogoViewOptions: Equatable {
+    public var position: OrnamentPosition
+    public var margins: CGPoint = defaultOrnamentsMargin
+    public var _isVisible: Bool = true
 }

@@ -107,12 +107,12 @@ extension CameraAnimationsManager: CameraAnimatorDelegate {
         mapView.pendingAnimatorCompletionBlocks.append((completion, animatingPosition))
     }
 
-    var camera: CameraOptions {
+    var camera: CameraState {
         guard let validMapView = mapView else {
             fatalError("MapView cannot be nil.")
         }
 
-        return validMapView.cameraOptions
+        return validMapView.cameraState
     }
 
     func addViewToViewHeirarchy(_ view: CameraView) {

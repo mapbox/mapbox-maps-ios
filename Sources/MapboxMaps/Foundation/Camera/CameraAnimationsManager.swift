@@ -32,11 +32,12 @@ public class CameraAnimationsManager {
 
     /// Used to update the map's camera options and pass them to the core Map.
     internal func updateMapCameraOptions(newOptions: MapCameraOptions) {
-        let boundOptions = BoundOptions(__bounds: newOptions.restrictedCoordinateBounds ?? nil,
-                                        maxZoom: newOptions.maximumZoomLevel as NSNumber,
-                                        minZoom: newOptions.minimumZoomLevel as NSNumber,
-                                        maxPitch: newOptions.maximumPitch as NSNumber,
-                                        minPitch: newOptions.minimumPitch as NSNumber)
+        let boundOptions = CameraBoundsOptions(
+            __bounds: newOptions.restrictedCoordinateBounds ?? nil,
+            maxZoom: newOptions.maximumZoomLevel as NSNumber,
+            minZoom: newOptions.minimumZoomLevel as NSNumber,
+            maxPitch: newOptions.maximumPitch as NSNumber,
+            minPitch: newOptions.minimumPitch as NSNumber)
         mapView?.mapboxMap.__map.setBoundsFor(boundOptions)
         mapCameraOptions = newOptions
     }
@@ -79,11 +80,6 @@ public class CameraAnimationsManager {
                                           zoom: targetCamera.zoom?.clamped(to: mapCameraOptions.minimumZoomLevel...mapCameraOptions.maximumZoomLevel),
                                           bearing: targetCamera.bearing,
                                           pitch: targetCamera.pitch?.clamped(to: mapCameraOptions.minimumPitch...mapCameraOptions.maximumPitch))
-
-        // Return early if the cameraView's camera is already at `clampedCamera`
-        guard mapView.cameraOptions != clampedCamera else {
-            return
-        }
 
         if animated && duration > 0 {
             let animation = { (transition: inout CameraTransition) in
@@ -159,7 +155,7 @@ public class CameraAnimationsManager {
 
         guard let mapView = mapView,
               let flyToAnimator = FlyToCameraAnimator(
-                inital: mapView.cameraOptions,
+                inital: mapView.cameraState,
                 final: camera,
                 owner: .custom(id: "fly-to"),
                 duration: duration,
@@ -174,7 +170,6 @@ public class CameraAnimationsManager {
 
         mapView.addCameraAnimator(flyToAnimator)
 
-        // Nil out the internalAnimator after `flyTo` finishes
         flyToAnimator.addCompletion { (position) in
             // Call the developer-provided completion (if present)
             completion?(position)

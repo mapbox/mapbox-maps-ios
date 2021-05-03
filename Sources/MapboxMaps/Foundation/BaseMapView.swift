@@ -59,40 +59,28 @@ open class BaseMapView: UIView {
     }
 
     /// The map's current camera
-    public var cameraOptions: CameraOptions {
-        return mapboxMap.cameraOptions
+    public var cameraState: CameraState {
+        return mapboxMap.cameraState
     }
 
     /// The map's current center coordinate.
     public var centerCoordinate: CLLocationCoordinate2D {
-        guard let center = cameraOptions.center else {
-            fatalError("Center is nil in camera options")
-        }
-        return center
+        return cameraState.center
     }
 
     /// The map's current zoom level.
     public var zoom: CGFloat {
-        guard let zoom = cameraOptions.zoom else {
-            fatalError("Zoom is nil in camera options")
-        }
-        return CGFloat(zoom)
+        return CGFloat(cameraState.zoom)
     }
 
     /// The map's current bearing, measured clockwise from 0° north.
     public var bearing: CLLocationDirection {
-        guard let bearing = cameraOptions.bearing else {
-            fatalError("Bearing is nil in camera options")
-        }
-        return CLLocationDirection(bearing)
+        return CLLocationDirection(cameraState.bearing)
     }
 
     /// The map's current pitch, falling within a range of 0 to 60.
     public var pitch: CGFloat {
-        guard let pitch = cameraOptions.pitch else {
-            fatalError("Pitch is nil in camera options")
-        }
-        return pitch
+        return CGFloat(cameraState.pitch)
     }
 
     /// The map's current anchor, calculated after applying padding (if it exists)
@@ -104,7 +92,7 @@ open class BaseMapView: UIView {
 
     /// The map's camera padding
     public var padding: UIEdgeInsets {
-        return cameraOptions.padding ?? .zero
+        return cameraState.padding.toUIEdgeInsetsValue()
     }
 
     // MARK: Init

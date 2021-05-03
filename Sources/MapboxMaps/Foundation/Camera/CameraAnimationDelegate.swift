@@ -7,7 +7,7 @@ public typealias AnimationCompletion = (UIViewAnimatingPosition) -> Void
 internal protocol CameraAnimatorDelegate: class {
 
     /// The current camera of the map
-    var camera: CameraOptions { get }
+    var camera: CameraState { get }
 
     /// Adds the view to the MapView's subviews
     func addViewToViewHeirarchy(_ view: CameraView)

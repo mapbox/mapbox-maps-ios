@@ -20,10 +20,10 @@ extension MapView: OrnamentSupportableView {
         animator?.startAnimation()
     }
 
-    internal func subscribeCameraChangeHandler(_ handler: @escaping (CameraOptions) -> Void) {
+    internal func subscribeCameraChangeHandler(_ handler: @escaping (CameraState) -> Void) {
         on(.cameraChanged) { [weak self] _ in
             guard let validSelf = self else { return }
-            handler(CameraOptions(validSelf.mapboxMap.__map.getCameraOptions(forPadding: nil)))
+            handler(validSelf.cameraState)
         }
     }
 }

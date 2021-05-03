@@ -38,21 +38,12 @@ public struct CameraTransition {
         }
     }
 
-    internal init(cameraOptions: CameraOptions, initialAnchor: CGPoint) {
-
-        guard let renderedCenter = cameraOptions.center,
-              let renderedZoom = cameraOptions.zoom,
-              let renderedPadding = cameraOptions.padding,
-              let renderedPitch = cameraOptions.pitch,
-              let renderedBearing = cameraOptions.bearing else {
-            fatalError("Values in CameraOptions cannot be nil")
-        }
-
-        center  = Change(fromValue: renderedCenter)
-        zoom    = Change(fromValue: renderedZoom)
-        padding = Change(fromValue: renderedPadding)
-        pitch   = Change(fromValue: renderedPitch)
-        bearing = Change(fromValue: renderedBearing)
+    internal init(cameraState: CameraState, initialAnchor: CGPoint) {
+        center  = Change(fromValue: cameraState.center)
+        zoom    = Change(fromValue: CGFloat(cameraState.zoom))
+        padding = Change(fromValue: cameraState.padding.toUIEdgeInsetsValue())
+        pitch   = Change(fromValue: CGFloat(cameraState.pitch))
+        bearing = Change(fromValue: CLLocationDirection(cameraState.bearing))
         anchor  = Change(fromValue: initialAnchor)
     }
 

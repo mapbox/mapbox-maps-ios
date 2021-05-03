@@ -8,7 +8,7 @@ public struct CameraState: Hashable {
     public let zoom: CGFloat
     public let bearing: CLLocationDirection
     public let pitch: CGFloat
-    
+
     internal init(_ objcValue: MapboxCoreMaps.CameraState) {
         self.center     = objcValue.center
         self.padding    = objcValue.padding.toUIEdgeInsetsValue()
@@ -16,7 +16,7 @@ public struct CameraState: Hashable {
         self.bearing    = CLLocationDirection(objcValue.bearing)
         self.pitch      = CGFloat(objcValue.pitch)
     }
-    
+
     public static func == (lhs: CameraState, rhs: CameraState) -> Bool {
         return lhs.center.latitude == rhs.center.latitude
             && lhs.center.longitude == rhs.center.longitude
@@ -25,7 +25,7 @@ public struct CameraState: Hashable {
             && lhs.bearing == rhs.bearing
             && lhs.pitch == rhs.pitch
     }
-    
+
     public func hash(into hasher: inout Hasher) {
         hasher.combine(center.latitude)
         hasher.combine(center.longitude)
@@ -40,13 +40,13 @@ public struct CameraState: Hashable {
 }
 
 extension MapboxCoreMaps.CameraState {
-    
+
     open override func isEqual(_ object: Any?) -> Bool {
-        
+
         guard let other = object as? MapboxCoreMaps.CameraState else {
             return false
         }
-        
+
         return
             center == other.center &&
             padding.toUIEdgeInsetsValue() == other.padding.toUIEdgeInsetsValue() &&
@@ -54,5 +54,5 @@ extension MapboxCoreMaps.CameraState {
             pitch == other.pitch &&
             bearing == other.bearing
     }
-    
+
 }

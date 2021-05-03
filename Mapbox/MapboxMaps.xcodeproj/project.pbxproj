@@ -110,6 +110,7 @@
 		0C708F5624EB24B1003CE791 /* SourceProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C708F5524EB24B1003CE791 /* SourceProperties.swift */; };
 		0C708F5924EB2927003CE791 /* Sources.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C708F5824EB2927003CE791 /* Sources.swift */; };
 		0C708F6024EC70DD003CE791 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C708F5F24EC70DD003CE791 /* Color.swift */; };
+		0C7330B726409539001FAF04 /* CameraState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C7330B626409539001FAF04 /* CameraState.swift */; };
 		0C88F22924F4223B00FC35F3 /* ExpressionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C88F22824F4223B00FC35F3 /* ExpressionOptions.swift */; };
 		0C8AA1F3257FE1830037FD6B /* MapEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8AA1F2257FE1830037FD6B /* MapEvents.swift */; };
 		0C8D815524F6B4A800717E88 /* Value.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8D815424F6B4A800717E88 /* Value.swift */; };
@@ -515,6 +516,7 @@
 		0C71B4C6242C19DF0076D6C4 /* GestureSupportableViewMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureSupportableViewMock.swift; sourceTree = "<group>"; };
 		0C71B4C8242C1ACA0076D6C4 /* PanGestureHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanGestureHandlerTests.swift; sourceTree = "<group>"; };
 		0C71B4CC242CE7000076D6C4 /* TapGestureHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapGestureHandlerTests.swift; sourceTree = "<group>"; };
+		0C7330B626409539001FAF04 /* CameraState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraState.swift; sourceTree = "<group>"; };
 		0C88F22824F4223B00FC35F3 /* ExpressionOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionOptions.swift; sourceTree = "<group>"; };
 		0C8AA1F2257FE1830037FD6B /* MapEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapEvents.swift; sourceTree = "<group>"; };
 		0C8C045C243F631B0040FC07 /* PinchGestureHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinchGestureHandlerTests.swift; sourceTree = "<group>"; };
@@ -1250,6 +1252,7 @@
 		1F4B7D7A2464C36E00745F05 /* Camera */ = {
 			isa = PBXGroup;
 			children = (
+				0C7330B626409539001FAF04 /* CameraState.swift */,
 				0C088ACA26388E3400107B5E /* CameraAnimationsManager.swift */,
 				0C088AC926388E3400107B5E /* CameraAnimationsManager+CameraAnimatorDelegate.swift */,
 				0C088ABF26386D2700107B5E /* WeakCameraAnimatorSet.swift */,
@@ -1905,6 +1908,7 @@
 			files = (
 				07980ECE251D5B5D00730DB7 /* LineAnnotation.swift in Sources */,
 				0742060024E4A598000A8932 /* AnnotationManager.swift in Sources */,
+				0C7330B726409539001FAF04 /* CameraState.swift in Sources */,
 				0C708F5324EB23C7003CE791 /* RasterSource.swift in Sources */,
 				0CE8ED6125890F870066E56C /* ModelSource.swift in Sources */,
 				C64994A9258D5ADE0052C21C /* LocationPuckManager.swift in Sources */,

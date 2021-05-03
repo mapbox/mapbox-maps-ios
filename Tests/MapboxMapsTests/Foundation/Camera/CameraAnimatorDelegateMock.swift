@@ -31,7 +31,7 @@ final class CameraAnimatorDelegateMock: CameraAnimatorDelegate {
             zoom: 10,
             bearing: 10,
             pitch: 20)
-        
+
         return CameraState(cameraStateObjc)
     }
 

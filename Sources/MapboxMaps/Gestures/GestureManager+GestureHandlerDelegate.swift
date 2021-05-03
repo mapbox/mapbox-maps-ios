@@ -12,7 +12,7 @@ extension GestureManager: GestureHandlerDelegate {
 
         // Single tapping twice with one finger will cause the map to zoom in
         if numberOfTaps == 2 && numberOfTouches == 1 {
-            cameraManager.setCamera(to: CameraOptions(zoom: CGFloat(mapView.cameraState.zoom + 1.0)),
+            cameraManager.setCamera(to: CameraOptions(zoom: mapView.cameraState.zoom + 1.0),
                                     animated: true,
                                     duration: 0.3,
                                     completion: nil)
@@ -20,7 +20,7 @@ extension GestureManager: GestureHandlerDelegate {
 
         // Double tapping twice with two fingers will cause the map to zoom out
         if numberOfTaps == 2 && numberOfTouches == 2 {
-            cameraManager.setCamera(to: CameraOptions(zoom: CGFloat(mapView.cameraState.zoom - 1.0)),
+            cameraManager.setCamera(to: CameraOptions(zoom: mapView.cameraState.zoom - 1.0),
                                     animated: true,
                                     duration: 0.3,
                                     completion: nil)
@@ -72,7 +72,7 @@ extension GestureManager: GestureHandlerDelegate {
             Log.error(forMessage: "MapView must exist when beginning a pinch gesture", category: "Gestures")
             return .zero
         }
-        return CGFloat(mapView.cameraState.zoom)
+        return mapView.cameraState.zoom
     }
 
     internal func pinchScaleChanged(with newScale: CGFloat, andAnchor anchor: CGPoint) {
@@ -106,7 +106,7 @@ extension GestureManager: GestureHandlerDelegate {
             return false
         }
 
-        return CGFloat(mapView.cameraState.zoom) >= cameraManager.mapCameraOptions.minimumZoomLevel
+        return mapView.cameraState.zoom >= cameraManager.mapCameraOptions.minimumZoomLevel
     }
 
     internal func rotationStartAngle() -> CGFloat {
@@ -174,7 +174,7 @@ extension GestureManager: GestureHandlerDelegate {
             Log.error(forMessage: "MapView must exist when starting pitch gesture", category: "Gestures")
             return 0
         }
-        return CGFloat(mapView.cameraState.pitch)
+        return mapView.cameraState.pitch
     }
 
     internal func horizontalPitchTiltTolerance() -> Double {

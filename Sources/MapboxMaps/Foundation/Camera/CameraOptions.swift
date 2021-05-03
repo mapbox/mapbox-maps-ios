@@ -27,12 +27,21 @@ public struct CameraOptions: Hashable {
                 zoom: CGFloat? = nil,
                 bearing: CLLocationDirection? = nil,
                 pitch: CGFloat? = nil) {
-        self.center = center
-        self.padding = padding
-        self.anchor = anchor
-        self.zoom = zoom
-        self.bearing = bearing
-        self.pitch = pitch
+        self.center     = center
+        self.padding 	= padding
+        self.anchor     = anchor
+        self.zoom 	    = zoom
+        self.bearing    = bearing
+        self.pitch      = pitch
+    }
+    
+    public init(cameraState: CameraState, anchor: CGPoint? = nil) {
+        self.center     = cameraState.center
+        self.padding    = cameraState.padding.toUIEdgeInsetsValue()
+        self.zoom       = CGFloat(cameraState.zoom)
+        self.bearing    = cameraState.bearing
+        self.pitch      = CGFloat(cameraState.pitch)
+        self.anchor     = anchor
     }
 
     internal init(_ objcValue: MapboxCoreMaps.CameraOptions) {

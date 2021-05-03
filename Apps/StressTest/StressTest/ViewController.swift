@@ -192,8 +192,8 @@ class ViewController: UIViewController {
     }
 
     func flyTo(end: CLLocationCoordinate2D, completion: @escaping () -> Void) {
-        let startOptions = mapView.cameraOptions
-        let start = startOptions.center!
+        let startOptions = mapView.cameraState
+        let start = startOptions.center
 
         let lineAnnotation = LineAnnotation(coordinates: [start, end])
 
@@ -290,7 +290,7 @@ class ViewController: UIViewController {
         print("Creating snapshotter")
         let snapshotter = Snapshotter(options: options)
         snapshotter.style.uri = .light
-        snapshotter.camera = mapView.cameraOptions
+        snapshotter.setCamera(to: CameraOptions(cameraState: mapView.cameraState))
 
         snapshotter.on(.styleLoaded) { [weak self] _ in
             guard let snapshotter = self?.snapshotter else {

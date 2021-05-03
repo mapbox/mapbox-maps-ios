@@ -72,7 +72,7 @@ final class MapboxMapTests: XCTestCase {
     }
 
     func testGetCameraOptions() {
-        XCTAssertEqual(mapboxMap.cameraState, CameraOptions(mapboxMap.__map.getCameraState()))
+        XCTAssertEqual(mapboxMap.cameraState, CameraState(mapboxMap.__map.getCameraState()))
     }
 
     func testCameraForCoordinateArray() {

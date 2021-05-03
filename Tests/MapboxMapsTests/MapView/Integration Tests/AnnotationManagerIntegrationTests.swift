@@ -21,7 +21,7 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
         didFinishLoadingStyle = { mapView in
 
             // Given
-            let annotation = PointAnnotation(coordinate: mapView.centerCoordinate)
+            let annotation = PointAnnotation(coordinate: mapView.cameraState.center)
             let annotationManager = AnnotationManager(for: mapView,
                                                       with: self,
                                                       options: AnnotationOptions())
@@ -62,7 +62,7 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
         didFinishLoadingStyle = { mapView in
 
             // Given
-            let annotation = PointAnnotation(coordinate: mapView.centerCoordinate)
+            let annotation = PointAnnotation(coordinate: mapView.cameraState.center)
             let requiredIndex = 3
             let position = LayerPosition(above: nil, below: nil, at: requiredIndex)
             let annotationManager = AnnotationManager(for: mapView,
@@ -104,7 +104,7 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
         didFinishLoadingStyle = { mapView in
 
             // Given
-            var annotation = PointAnnotation(coordinate: mapView.centerCoordinate)
+            var annotation = PointAnnotation(coordinate: mapView.cameraState.center)
             let annotationManager = AnnotationManager(for: mapView,
                                                       with: self,
                                                       options: AnnotationOptions())

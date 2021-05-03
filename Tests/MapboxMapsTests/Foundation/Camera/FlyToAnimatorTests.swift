@@ -2,16 +2,21 @@ import XCTest
 @testable import MapboxMaps
 
 final class FlyToAnimatorTests: XCTestCase {
-
-    let initalCameraOptions = CameraOptions(
-        center: CLLocationCoordinate2D(
-            latitude: 42.3601,
-            longitude: -71.0589),
-        padding: .zero,
-        zoom: 10,
-        bearing: 10,
-        pitch: 10)
-
+    
+    internal let initalCameraState = CameraState(
+        MapboxCoreMaps.CameraState(
+            center: .init(
+                latitude: 42.3601,
+                longitude: -71.0589),
+            padding: .init(
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0),
+            zoom: 10,
+            bearing: 10,
+            pitch: 10))
+    
     let finalCameraOptions = CameraOptions(
         center: CLLocationCoordinate2D(
             latitude: 37.7749,
@@ -36,7 +41,7 @@ final class FlyToAnimatorTests: XCTestCase {
         cameraAnimatorDelegate = CameraAnimatorDelegateMock()
         dateProvider = MockDateProvider()
         flyToAnimator = FlyToCameraAnimator(
-            inital: initalCameraOptions,
+            inital: initalCameraState,
             final: finalCameraOptions,
             owner: .custom(id: "fly-to"),
             duration: duration,
@@ -61,7 +66,7 @@ final class FlyToAnimatorTests: XCTestCase {
     func testInitializationWithANegativeDurationReturnsNil() {
         XCTAssertNil(
             FlyToCameraAnimator(
-                inital: initalCameraOptions,
+                inital: initalCameraState,
                 final: finalCameraOptions,
                 owner: .custom(id: "fly-to"),
                 duration: -1,
@@ -72,25 +77,13 @@ final class FlyToAnimatorTests: XCTestCase {
 
     func testInitializationWithANilDurationSetsDurationToCalculatedValue() {
         let animator = FlyToCameraAnimator(
-            inital: initalCameraOptions,
+            inital: initalCameraState,
             final: finalCameraOptions,
             owner: .custom(id: "fly-to"),
             duration: nil,
             mapSize: CGSize(width: 500, height: 500),
             delegate: cameraAnimatorDelegate)
         XCTAssertNotNil(animator?.duration)
-    }
-
-    func testInitializationWithInvalidCameraOptionsReturnsNil() {
-        XCTAssertNil(
-            FlyToCameraAnimator(
-                inital: CameraOptions(),
-                final: finalCameraOptions,
-                owner: .custom(id: "fly-to"),
-                duration: -1,
-                mapSize: CGSize(width: 500, height: 500),
-                delegate: cameraAnimatorDelegate)
-        )
     }
 
     func testStartAnimationChangesStateToActive() {

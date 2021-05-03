@@ -46,10 +46,10 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
                 height: view.bounds.height / 2),
             pixelRatio: UIScreen.main.scale,
             resourceOptions: mapInitOptions.resourceOptions)
-        
+
         snapshotter = Snapshotter(options: options)
         snapshotter.style.uri = .light
-        
+
         // Set the camera of the snapshotter
         let snapshotterCameraOptions = CameraOptions(cameraState: mapView.cameraState)
         snapshotter.setCamera(to: snapshotterCameraOptions)

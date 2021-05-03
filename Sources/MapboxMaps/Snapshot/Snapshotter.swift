@@ -63,12 +63,12 @@ public class Snapshotter {
             mapSnapshotter.setSizeFor(mbxSize)
         }
     }
-    
+
     /// The current camera state of the snapshotter
     public var cameraState: CameraState {
         return mapSnapshotter.getCameraState()
     }
-    
+
     /// Sets the camera of the snapshotter
     /// - Parameter cameraOptions: The target camera options
     public func setCamera(to cameraOptions: CameraOptions) {

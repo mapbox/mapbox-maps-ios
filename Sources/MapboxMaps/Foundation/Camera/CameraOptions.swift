@@ -34,7 +34,7 @@ public struct CameraOptions: Hashable {
         self.bearing    = bearing
         self.pitch      = pitch
     }
-    
+
     public init(cameraState: CameraState, anchor: CGPoint? = nil) {
         self.center     = cameraState.center
         self.padding    = cameraState.padding.toUIEdgeInsetsValue()

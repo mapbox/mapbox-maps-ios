@@ -3,7 +3,6 @@
 import UIKit
 import Turf
 
-// swiftlint:disable file_length
 internal typealias PendingAnimationCompletion = (completion: AnimationCompletion, animatingPosition: UIViewAnimatingPosition)
 
 open class BaseMapView: UIView {
@@ -63,36 +62,12 @@ open class BaseMapView: UIView {
         return mapboxMap.cameraState
     }
 
-    /// The map's current center coordinate.
-    public var centerCoordinate: CLLocationCoordinate2D {
-        return cameraState.center
-    }
-
-    /// The map's current zoom level.
-    public var zoom: CGFloat {
-        return CGFloat(cameraState.zoom)
-    }
-
-    /// The map's current bearing, measured clockwise from 0° north.
-    public var bearing: CLLocationDirection {
-        return CLLocationDirection(cameraState.bearing)
-    }
-
-    /// The map's current pitch, falling within a range of 0 to 60.
-    public var pitch: CGFloat {
-        return CGFloat(cameraState.pitch)
-    }
-
     /// The map's current anchor, calculated after applying padding (if it exists)
     public var anchor: CGPoint {
+        let padding = cameraState.padding.toUIEdgeInsetsValue()
         let xAfterPadding = center.x + padding.left - padding.right
         let yAfterPadding = center.y + padding.top - padding.bottom
         return CGPoint(x: xAfterPadding, y: yAfterPadding)
-    }
-
-    /// The map's camera padding
-    public var padding: UIEdgeInsets {
-        return cameraState.padding.toUIEdgeInsetsValue()
     }
 
     // MARK: Init

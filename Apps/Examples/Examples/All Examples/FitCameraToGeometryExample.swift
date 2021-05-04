@@ -44,13 +44,14 @@ public class FitCameraToGeometryExample: UIViewController, ExampleProtocol {
         polygonLayer.source = sourceIdentifier
 
         let addSourceResult = mapView.style?.addSource(source: source, identifier: sourceIdentifier)
-        let addLayerResult = mapView.style?.addLayer(layer: polygonLayer, layerPosition: nil)
 
         if case .failure(let sourceError) = addSourceResult {
             displayAlert(message: sourceError.localizedDescription)
         }
 
-        if case .failure(let layerError) = addLayerResult {
+        do {
+            try mapView.style?.addLayer(polygonLayer, layerPosition: nil)
+        } catch let layerError {
             displayAlert(message: layerError.localizedDescription)
         }
 

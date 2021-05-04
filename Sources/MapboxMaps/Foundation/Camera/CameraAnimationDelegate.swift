@@ -4,7 +4,7 @@ import UIKit
 public typealias AnimationCompletion = (UIViewAnimatingPosition) -> Void
 
 // MARK: CameraAnimatorDelegate Protocol
-internal protocol CameraAnimatorDelegate: class {
+internal protocol CameraAnimatorDelegate: AnyObject {
 
     /// The current camera of the map
     var camera: CameraState { get }

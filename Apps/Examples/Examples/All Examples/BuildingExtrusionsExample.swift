@@ -75,6 +75,6 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
             }
         )
 
-        mapView.style.addLayer(layer: layer)
+        try! mapView.style.addLayer(layer)
     }
 }

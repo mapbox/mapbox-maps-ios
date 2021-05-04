@@ -32,8 +32,8 @@ public class CustomLayerExample: UIViewController, ExampleProtocol {
         // Position the custom layer above the water layer and below all other layers.
         let layerPosition = LayerPosition(above: "water", below: nil, at: nil)
 
-        mapView.mapboxMap.__map.addStyleCustomLayer(
-            forLayerId: "Custom",
+        try! mapView.style.addCustomLayer(
+            withId: "Custom",
             layerHost: self,
             layerPosition: layerPosition)
     }

@@ -41,13 +41,11 @@ class ModelLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.modelRotationTransition = StyleTransition(duration: 10.0, delay: 10.0)
 
             // Add the layer
-            let addResult = style.addLayer(layer: layer)
-
-            switch (addResult) {
-                case .success(_):
-                    successfullyAddedLayerExpectation.fulfill()
-                case .failure(let error):
-                    XCTFail("Failed to add ModelLayer because of error: \(error)")
+            do {
+                try style.addLayer(layer)
+                successfullyAddedLayerExpectation.fulfill()
+            } catch {
+                XCTFail("Failed to add ModelLayer because of error: \(error)")
             }
 
             // Retrieve the layer
@@ -57,7 +55,7 @@ class ModelLayerIntegrationTests: MapViewIntegrationTestCase {
                 case .success(_):
                     successfullyRetrievedLayerExpectation.fulfill()    
                 case .failure(let error):
-                    XCTFail("Failed to retreive ModelLayer because of error: \(error)")   
+                    XCTFail("Failed to retrieve ModelLayer because of error: \(error)")
             }
         }
 

@@ -535,11 +535,7 @@ public class AnnotationManager {
             "Point"
         }
 
-        let expectedLayer = styleDelegate.addLayer(layer: symbolLayer, layerPosition: annotationOptions.layerPosition)
-
-        if case .failure(let layerError) = expectedLayer {
-            throw AnnotationError.addAnnotationFailed(layerError)
-        }
+        try styleDelegate.addLayer(symbolLayer, layerPosition: annotationOptions.layerPosition)
 
         self.symbolLayer = symbolLayer
     }
@@ -561,10 +557,7 @@ public class AnnotationManager {
             "LineString"
         }
 
-        if case .failure(let layerError) = styleDelegate.addLayer(layer: lineLayer, layerPosition: annotationOptions.layerPosition) {
-            throw AnnotationError.addAnnotationFailed(layerError)
-        }
-
+        try styleDelegate.addLayer(lineLayer, layerPosition: annotationOptions.layerPosition)
         self.lineLayer = lineLayer
     }
 
@@ -584,10 +577,7 @@ public class AnnotationManager {
             "Polygon"
         }
 
-        if case .failure(let layerError) = styleDelegate.addLayer(layer: fillLayer, layerPosition: annotationOptions.layerPosition) {
-            throw AnnotationError.addAnnotationFailed(layerError)
-        }
-
+        try styleDelegate.addLayer(fillLayer, layerPosition: annotationOptions.layerPosition)
         self.fillLayer = fillLayer
     }
 

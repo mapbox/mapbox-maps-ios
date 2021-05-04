@@ -50,7 +50,7 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
 
         // Add the data source and style layer to the map.
         _ = mapView.style.addSource(source: geoJSONSource, identifier: sourceIdentifier)
-        _ = mapView.style.addLayer(layer: fillLayer, layerPosition: nil)
+        try! mapView.style.addLayer(fillLayer, layerPosition: nil)
 
         // Set up the tap gesture
         addTapGesture(to: mapView)

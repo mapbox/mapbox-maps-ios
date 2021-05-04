@@ -59,30 +59,30 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
 
         alert.addAction(UIAlertAction(title: "Above state label", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            _ = self.mapView.style.removeStyleLayer(forLayerId: self.layer.id)
-            _ = self.mapView.style.addLayer(layer: self.layer,
-                                            layerPosition: LayerPosition(above: "state-label"))
+            try? self.mapView.style.removeLayer(withId: self.layer.id)
+            try? self.mapView.style.addLayer(self.layer,
+                                             layerPosition: LayerPosition(above: "state-label"))
         }))
 
         alert.addAction(UIAlertAction(title: "Below state label", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            _ = self.mapView.style.removeStyleLayer(forLayerId: self.layer.id)
-            _ = self.mapView.style.addLayer(layer: self.layer,
-                                            layerPosition: LayerPosition(below: "state-label"))
+            try? self.mapView.style.removeLayer(withId: self.layer.id)
+            try? self.mapView.style.addLayer(self.layer,
+                                             layerPosition: LayerPosition(below: "state-label"))
         }))
 
         alert.addAction(UIAlertAction(title: "Above all", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            _ = self.mapView.style.removeStyleLayer(forLayerId: self.layer.id)
-            _ = self.mapView.style.addLayer(layer: self.layer,
-                                            layerPosition: nil)
+            try? self.mapView.style.removeLayer(withId: self.layer.id)
+            try? self.mapView.style.addLayer(self.layer,
+                                             layerPosition: nil)
         }))
 
         alert.addAction(UIAlertAction(title: "Below all", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            _ = self.mapView.style.removeStyleLayer(forLayerId: self.layer.id)
-            _ = self.mapView.style.addLayer(layer: self.layer,
-                                            layerPosition: LayerPosition(at: 0))
+            try? self.mapView.style.removeLayer(withId: self.layer.id)
+            try? self.mapView.style.addLayer(self.layer,
+                                             layerPosition: LayerPosition(at: 0))
         }))
 
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
@@ -110,7 +110,7 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
 
         _ = mapView.style.addSource(source: source, identifier: sourceIdentifier)
         // If a layer position is not supplied, the layer is added above all other layers by default.
-        _ = mapView.style.addLayer(layer: layer, layerPosition: nil)
+        try! mapView.style.addLayer(layer, layerPosition: nil)
 
         // The below line is used for internal testing purposes only.
         finish()

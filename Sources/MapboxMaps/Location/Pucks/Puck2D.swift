@@ -137,10 +137,10 @@ internal class Puck2D: Puck {
               let style = locationSupportableMapView?.style
         else { return }
 
-        let removeLayerResult = style.removeStyleLayer(forLayerId: locationIndicatorLayer.id)
-
-        if case .failure(let layerError) = removeLayerResult {
-            Log.error(forMessage: "Error when removing location indicator layer: \(layerError)", category: "Location")
+        do {
+        try style.removeLayer(withId: locationIndicatorLayer.id)
+        } catch {
+            Log.error(forMessage: "Error when removing location indicator layer: \(error)", category: "Location")
         }
 
         self.locationIndicatorLayer = nil
@@ -153,7 +153,7 @@ private extension Puck2D {
     func createPreciseLocationIndicatorLayer(location: Location) throws {
         guard let style = locationSupportableMapView?.style else { return }
 
-        _ = style.removeStyleLayer(forLayerId: "approximate-puck")
+        try style.removeLayer(withId: "approximate-puck")
         // Call customizationHandler to allow developers to granularly modify the layer
 
         // Add images to sprite sheet
@@ -205,11 +205,7 @@ private extension Puck2D {
         layer.paint = paint
 
         // Add layer to style
-        let addLayerResult = style.addLayer(layer: layer, layerPosition: nil)
-
-        if case .failure(let layerError) = addLayerResult {
-            throw layerError
-        }
+        try style.addLayer(layer)
 
         locationIndicatorLayer = layer
     }
@@ -217,7 +213,7 @@ private extension Puck2D {
     func createApproximateLocationIndicatorLayer(location: Location) throws {
         guard let style = locationSupportableMapView?.style else { return }
         // TODO: Handle removal of precise indicator properly.
-        _ = style.removeStyleLayer(forLayerId: "puck")
+        try style.removeLayer(withId: "puck")
 
         // Create Layer
         var layer = LocationIndicatorLayer(id: "approximate-puck")
@@ -246,11 +242,8 @@ private extension Puck2D {
         layer.paint = paint
 
         // Add layer to style
-        let addLayerResult = style.addLayer(layer: layer, layerPosition: nil)
+        try style.addLayer(layer)
 
-        if case .failure(let layerError) = addLayerResult {
-            throw layerError
-        }
         locationIndicatorLayer = layer
     }
 }

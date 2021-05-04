@@ -84,6 +84,7 @@ extension ResourceOptions {
 
     private static func cacheURLIncludingSubdirectory() -> URL? {
         guard let bundleIdentifier = Bundle.main.bundleIdentifier else { return nil }
+//        guard let bundleIdentifier = Bundle(for: Self.self).bundleIdentifier else { return nil }
 
         var cacheDirectoryURL: URL
         do {

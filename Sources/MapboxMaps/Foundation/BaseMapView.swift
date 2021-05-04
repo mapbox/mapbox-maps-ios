@@ -3,7 +3,6 @@
 import UIKit
 import Turf
 
-// swiftlint:disable file_length
 internal typealias PendingAnimationCompletion = (completion: AnimationCompletion, animatingPosition: UIViewAnimatingPosition)
 
 open class BaseMapView: UIView {
@@ -59,52 +58,16 @@ open class BaseMapView: UIView {
     }
 
     /// The map's current camera
-    public var cameraOptions: CameraOptions {
-        return mapboxMap.cameraOptions
-    }
-
-    /// The map's current center coordinate.
-    public var centerCoordinate: CLLocationCoordinate2D {
-        guard let center = cameraOptions.center else {
-            fatalError("Center is nil in camera options")
-        }
-        return center
-    }
-
-    /// The map's current zoom level.
-    public var zoom: CGFloat {
-        guard let zoom = cameraOptions.zoom else {
-            fatalError("Zoom is nil in camera options")
-        }
-        return CGFloat(zoom)
-    }
-
-    /// The map's current bearing, measured clockwise from 0° north.
-    public var bearing: CLLocationDirection {
-        guard let bearing = cameraOptions.bearing else {
-            fatalError("Bearing is nil in camera options")
-        }
-        return CLLocationDirection(bearing)
-    }
-
-    /// The map's current pitch, falling within a range of 0 to 60.
-    public var pitch: CGFloat {
-        guard let pitch = cameraOptions.pitch else {
-            fatalError("Pitch is nil in camera options")
-        }
-        return pitch
+    public var cameraState: CameraState {
+        return mapboxMap.cameraState
     }
 
     /// The map's current anchor, calculated after applying padding (if it exists)
     public var anchor: CGPoint {
+        let padding = cameraState.padding
         let xAfterPadding = center.x + padding.left - padding.right
         let yAfterPadding = center.y + padding.top - padding.bottom
         return CGPoint(x: xAfterPadding, y: yAfterPadding)
-    }
-
-    /// The map's camera padding
-    public var padding: UIEdgeInsets {
-        return cameraOptions.padding ?? .zero
     }
 
     // MARK: Init

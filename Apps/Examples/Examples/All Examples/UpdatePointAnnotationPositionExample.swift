@@ -31,7 +31,7 @@ public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProt
     }
 
     public func addPointAnnotation() {
-        pointAnnotation = PointAnnotation(coordinate: mapView.centerCoordinate)
+        pointAnnotation = PointAnnotation(coordinate: mapView.cameraState.center)
         mapView.annotations.addAnnotation(pointAnnotation)
         mapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(updatePosition)))
     }

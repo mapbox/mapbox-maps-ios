@@ -12,7 +12,7 @@ extension GestureManager: GestureHandlerDelegate {
 
         // Single tapping twice with one finger will cause the map to zoom in
         if numberOfTaps == 2 && numberOfTouches == 1 {
-            cameraManager.setCamera(to: CameraOptions(zoom: mapView.zoom + 1.0),
+            cameraManager.setCamera(to: CameraOptions(zoom: mapView.cameraState.zoom + 1.0),
                                     animated: true,
                                     duration: 0.3,
                                     completion: nil)
@@ -20,7 +20,7 @@ extension GestureManager: GestureHandlerDelegate {
 
         // Double tapping twice with two fingers will cause the map to zoom out
         if numberOfTaps == 2 && numberOfTouches == 2 {
-            cameraManager.setCamera(to: CameraOptions(zoom: mapView.zoom - 1.0),
+            cameraManager.setCamera(to: CameraOptions(zoom: mapView.cameraState.zoom - 1.0),
                                     animated: true,
                                     duration: 0.3,
                                     completion: nil)
@@ -68,7 +68,11 @@ extension GestureManager: GestureHandlerDelegate {
     }
 
     internal func scaleForZoom() -> CGFloat {
-        cameraManager.mapView?.zoom ?? 0
+        guard let mapView = cameraManager.mapView else {
+            Log.error(forMessage: "MapView must exist when beginning a pinch gesture", category: "Gestures")
+            return .zero
+        }
+        return mapView.cameraState.zoom
     }
 
     internal func pinchScaleChanged(with newScale: CGFloat, andAnchor anchor: CGPoint) {
@@ -102,14 +106,14 @@ extension GestureManager: GestureHandlerDelegate {
             return false
         }
 
-        return mapView.zoom >= cameraManager.mapCameraOptions.minimumZoomLevel
+        return mapView.cameraState.zoom >= cameraManager.mapCameraOptions.minimumZoomLevel
     }
 
     internal func rotationStartAngle() -> CGFloat {
         guard let mapView = cameraManager.mapView else {
             return 0
         }
-        return CGFloat((mapView.bearing * .pi) / 180.0 * -1)
+        return CGFloat((mapView.cameraState.bearing * .pi) / 180.0 * -1)
     }
 
     internal func rotationChanged(with changedAngle: CGFloat, and anchor: CGPoint, and pinchScale: CGFloat) {
@@ -143,12 +147,14 @@ extension GestureManager: GestureHandlerDelegate {
             return
         }
 
+        let currentBearing = mapView.cameraState.bearing
+
         // Avoid contention with in-progress gestures
         // let toleranceForSnappingToNorth: CGFloat = 7.0
-        if mapView.bearing != 0.0
+        if currentBearing != 0.0
             && pinchState != .began
             && pinchState != .changed {
-            if mapView.bearing != 0.0 && isRotationAllowed() == false {
+            if currentBearing != 0.0 && isRotationAllowed() == false {
                 cameraManager.setCamera(to: CameraOptions(bearing: 0),
                                         animated: false,
                                         duration: 0,
@@ -165,9 +171,10 @@ extension GestureManager: GestureHandlerDelegate {
 
     internal func initialPitch() -> CGFloat {
         guard let mapView = cameraManager.mapView else {
+            Log.error(forMessage: "MapView must exist when starting pitch gesture", category: "Gestures")
             return 0
         }
-        return mapView.pitch
+        return mapView.cameraState.pitch
     }
 
     internal func horizontalPitchTiltTolerance() -> Double {

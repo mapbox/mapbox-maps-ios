@@ -64,14 +64,15 @@ public class Snapshotter {
         }
     }
 
-    /// Camera configuration for the snapshot
-    public var camera: CameraOptions {
-        get {
-            return CameraOptions(mapSnapshotter.getCameraOptions(forPadding: nil))
-        }
-        set {
-            mapSnapshotter.setCameraFor(MapboxCoreMaps.CameraOptions(newValue))
-        }
+    /// The current camera state of the snapshotter
+    public var cameraState: CameraState {
+        return CameraState(mapSnapshotter.getCameraState())
+    }
+
+    /// Sets the camera of the snapshotter
+    /// - Parameter cameraOptions: The target camera options
+    public func setCamera(to cameraOptions: CameraOptions) {
+        mapSnapshotter.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
     }
 
     /// In the tile mode, the snapshotter fetches the still image of a single tile.

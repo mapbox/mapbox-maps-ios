@@ -80,7 +80,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
             // Set up the short lived camera view
             delegate.addViewToViewHeirarchy(cameraView)
 
-            var cameraTransition = CameraTransition(cameraOptions: delegate.camera, initialAnchor: delegate.anchorAfterPadding())
+            var cameraTransition = CameraTransition(cameraState: delegate.camera, initialAnchor: delegate.anchorAfterPadding())
             animation(&cameraTransition)
 
             propertyAnimator.addAnimations { [weak cameraView] in

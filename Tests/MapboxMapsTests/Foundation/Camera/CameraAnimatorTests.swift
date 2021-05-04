@@ -9,6 +9,20 @@ internal let cameraOptionsTestValue = CameraOptions(
     bearing: 10,
     pitch: 10)
 
+internal let cameraStateTestValue = CameraState(
+    MapboxCoreMaps.CameraState(
+        center: .init(
+            latitude: 10,
+            longitude: 10),
+        padding: .init(
+            top: 10,
+            left: 10,
+            bottom: 10,
+            right: 10),
+        zoom: 10,
+        bearing: 10,
+        pitch: 10))
+
 internal class BasicCameraAnimatorTests: XCTestCase {
 
     // swiftlint:disable weak_delegate

@@ -20,7 +20,7 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
     private let dateProvider: DateProvider
 
-    internal init?(inital: CameraOptions,
+    internal init?(inital: CameraState,
                    final: CameraOptions,
                    owner: AnimationOwner,
                    duration: TimeInterval? = nil,

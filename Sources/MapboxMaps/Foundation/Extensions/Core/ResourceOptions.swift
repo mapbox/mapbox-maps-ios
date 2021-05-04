@@ -56,27 +56,25 @@ extension ResourceOptions {
                             assetPath: String? = Bundle.main.resourceURL?.path,
                             cacheSize: UInt64 = (1024*1024*50),
                             tileStore: TileStore? = nil,
-                            tileStoreEnabled: Bool = true,
-                            loadTilePacksFromNetwork: Bool = false) {
-//      precondition(accessToken.count > 0)
+                            tileStoreUsageMode: TileStoreUsageMode = .readOnly) {
 
         // Update the TileStore with the access token from the ResourceOptions
-        if tileStoreEnabled {
+        if tileStoreUsageMode != .disabled {
             let tileStore = tileStore ?? TileStore.getInstance()
             tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken)
         }
 
         let cacheURL = ResourceOptions.cacheURLIncludingSubdirectory()
         let resolvedCachePath = cachePath == nil ? cacheURL?.path : cachePath
-        self.init(__accessToken: accessToken,
-                  baseURL: baseUrl,
-                  cachePath: resolvedCachePath,
-                  assetPath: assetPath,
-                  cacheSize: NSNumber(value: cacheSize),
-                  tileStore: tileStore,
-                  tileStoreEnabled: tileStoreEnabled,
-                  loadTilePacksFromNetwork: loadTilePacksFromNetwork
-                  )
+        self.init(
+            __accessToken: accessToken,
+            baseURL: baseUrl,
+            cachePath: resolvedCachePath,
+            assetPath: assetPath,
+            cacheSize: NSNumber(value: cacheSize),
+            tileStore: tileStore,
+            tileStoreUsageMode: tileStoreUsageMode
+        )
     }
 
     /// The size of the cache in bytes
@@ -134,8 +132,7 @@ extension ResourceOptions {
             && ((tileStore == other.tileStore)
                     || (tileStore == nil)
                     || (other.tileStore == nil))
-            && (isTileStoreEnabled == other.isTileStoreEnabled)
-            && (isLoadTilePacksFromNetwork == other.isLoadTilePacksFromNetwork)
+            && (tileStoreUsageMode == other.tileStoreUsageMode)
     }
 
     /// :nodoc:
@@ -147,8 +144,7 @@ extension ResourceOptions {
         hasher.combine(assetPath)
         hasher.combine(cacheSize)
         hasher.combine(tileStore)
-        hasher.combine(isTileStoreEnabled)
-        hasher.combine(isLoadTilePacksFromNetwork)
+        hasher.combine(tileStoreUsageMode)
         return hasher.finalize()
     }
 }

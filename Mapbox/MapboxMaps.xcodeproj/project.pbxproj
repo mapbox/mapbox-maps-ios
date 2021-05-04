@@ -110,6 +110,8 @@
 		0C708F5624EB24B1003CE791 /* SourceProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C708F5524EB24B1003CE791 /* SourceProperties.swift */; };
 		0C708F5924EB2927003CE791 /* Sources.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C708F5824EB2927003CE791 /* Sources.swift */; };
 		0C708F6024EC70DD003CE791 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C708F5F24EC70DD003CE791 /* Color.swift */; };
+		0C7330B726409539001FAF04 /* CameraState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C7330B626409539001FAF04 /* CameraState.swift */; };
+		0C7330BC2640972C001FAF04 /* CameraStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C7330BB2640972C001FAF04 /* CameraStateTests.swift */; };
 		0C88F22924F4223B00FC35F3 /* ExpressionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C88F22824F4223B00FC35F3 /* ExpressionOptions.swift */; };
 		0C8AA1F3257FE1830037FD6B /* MapEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8AA1F2257FE1830037FD6B /* MapEvents.swift */; };
 		0C8D815524F6B4A800717E88 /* Value.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8D815424F6B4A800717E88 /* Value.swift */; };
@@ -515,6 +517,8 @@
 		0C71B4C6242C19DF0076D6C4 /* GestureSupportableViewMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureSupportableViewMock.swift; sourceTree = "<group>"; };
 		0C71B4C8242C1ACA0076D6C4 /* PanGestureHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanGestureHandlerTests.swift; sourceTree = "<group>"; };
 		0C71B4CC242CE7000076D6C4 /* TapGestureHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapGestureHandlerTests.swift; sourceTree = "<group>"; };
+		0C7330B626409539001FAF04 /* CameraState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraState.swift; sourceTree = "<group>"; };
+		0C7330BB2640972C001FAF04 /* CameraStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraStateTests.swift; sourceTree = "<group>"; };
 		0C88F22824F4223B00FC35F3 /* ExpressionOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionOptions.swift; sourceTree = "<group>"; };
 		0C8AA1F2257FE1830037FD6B /* MapEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapEvents.swift; sourceTree = "<group>"; };
 		0C8C045C243F631B0040FC07 /* PinchGestureHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinchGestureHandlerTests.swift; sourceTree = "<group>"; };
@@ -1250,6 +1254,7 @@
 		1F4B7D7A2464C36E00745F05 /* Camera */ = {
 			isa = PBXGroup;
 			children = (
+				0C7330B626409539001FAF04 /* CameraState.swift */,
 				0C088ACA26388E3400107B5E /* CameraAnimationsManager.swift */,
 				0C088AC926388E3400107B5E /* CameraAnimationsManager+CameraAnimatorDelegate.swift */,
 				0C088ABF26386D2700107B5E /* WeakCameraAnimatorSet.swift */,
@@ -1434,6 +1439,7 @@
 				B5B55D55260E4D7500EBB589 /* CameraAnimatorTests.swift */,
 				1FC8DA47243BE4A400A19318 /* MapboxMapsCameraTests.swift */,
 				CAA73A9B256F750B00E14EE0 /* FlyToTests.swift */,
+				0C7330BB2640972C001FAF04 /* CameraStateTests.swift */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -1905,6 +1911,7 @@
 			files = (
 				07980ECE251D5B5D00730DB7 /* LineAnnotation.swift in Sources */,
 				0742060024E4A598000A8932 /* AnnotationManager.swift in Sources */,
+				0C7330B726409539001FAF04 /* CameraState.swift in Sources */,
 				0C708F5324EB23C7003CE791 /* RasterSource.swift in Sources */,
 				0CE8ED6125890F870066E56C /* ModelSource.swift in Sources */,
 				C64994A9258D5ADE0052C21C /* LocationPuckManager.swift in Sources */,
@@ -2088,6 +2095,7 @@
 				CA548FD5251C404B00F829A3 /* MapboxCompassOrnamentViewTests.swift in Sources */,
 				CA548FD7251C404B00F829A3 /* PointAnnotationTests.swift in Sources */,
 				0CC6EF1425C3263400BFB153 /* LineLayerIntegrationTests.swift in Sources */,
+				0C7330BC2640972C001FAF04 /* CameraStateTests.swift in Sources */,
 				C64ED33D253F819B00ADADFB /* LocationConsumerMock.swift in Sources */,
 				0C5CFDAF25BE28D20001E753 /* Fixtures.swift in Sources */,
 				CA03F0872624FDB100673961 /* MapInitOptionsTests.swift in Sources */,

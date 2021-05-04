@@ -61,17 +61,16 @@ public class OrnamentsManager: NSObject {
         updateOrnaments()
 
         // Subscribe to updates for scalebar and compass
-        view.subscribeCameraChangeHandler { [scalebarView, compassView] (cameraOptions) in
-            if let zoom = cameraOptions.zoom,
-               let center = cameraOptions.center {
-                scalebarView.metersPerPoint = Projection.getMetersPerPixelAtLatitude(
-                    forLatitude: center.latitude,
-                    zoom: Double(zoom))
-            }
+        view.subscribeCameraChangeHandler { [scalebarView, compassView] (cameraState) in
 
-            if let bearing = cameraOptions.bearing {
-                compassView.currentBearing = Double(bearing)
-            }
+            // Update the scale bar
+            scalebarView.metersPerPoint = Projection.getMetersPerPixelAtLatitude(
+                forLatitude: cameraState.center.latitude,
+                zoom: Double(cameraState.zoom))
+
+            // Update the compass
+            compassView.currentBearing = Double(cameraState.bearing)
+
         }
     }
 

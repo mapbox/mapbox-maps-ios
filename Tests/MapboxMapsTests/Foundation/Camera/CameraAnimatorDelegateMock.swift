@@ -24,12 +24,15 @@ final class CameraAnimatorDelegateMock: CameraAnimatorDelegate {
         animatorFinishedStub.call(with: animator)
     }
 
-    var camera: CameraOptions {
-        return CameraOptions(center: .init(latitude: 10, longitude: 10),
-                             padding: .init(top: 10, left: 10, bottom: 10, right: 10),
-                             zoom: 10,
-                             bearing: 10,
-                             pitch: 20)
+    var camera: CameraState {
+        let cameraStateObjc = MapboxCoreMaps.CameraState(
+            center: .init(latitude: 10, longitude: 10),
+            padding: .init(top: 10, left: 10, bottom: 10, right: 10),
+            zoom: 10,
+            bearing: 10,
+            pitch: 20)
+
+        return CameraState(cameraStateObjc)
     }
 
     let jumpToStub = Stub<CameraOptions, Void>()

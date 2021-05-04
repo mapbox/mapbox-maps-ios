@@ -4,7 +4,7 @@ import XCTest
 class CameraTransitionTests: XCTestCase {
 
     var cameraTransition = CameraTransition(
-        cameraOptions: cameraOptionsTestValue,
+        cameraState: cameraStateTestValue,
         initialAnchor: .zero)
 
     func testOptimizeBearingClockwise() {

@@ -51,15 +51,13 @@ internal struct FlyToInterpolator {
     ///   - dest: End camera (parameters ARE clamped to properties from MapCameraOptions)
     ///   - mapCameraOptions: Camera-specific capabilities of the map, for example, min-zoom, max-pitch
     ///   - size: Map View size in points
-    internal init?(from source: CameraOptions, to dest: CameraOptions, with mapCameraOptions: MapCameraOptions = MapCameraOptions(), size: CGSize) {
+    internal init?(from source: CameraState, to dest: CameraOptions, with mapCameraOptions: MapCameraOptions = MapCameraOptions(), size: CGSize) {
         // Initial conditions
-        guard let sourcePaddingParam   = source.padding,
-              let sourceCoord     = source.center,
-              let sourceZoomParam = source.zoom,
-              let sourcePitchParam     = source.pitch,
-              let sourceBearingParam = source.bearing else {
-            return nil
-        }
+        let sourcePaddingParam   = source.padding
+        let sourceCoord          = source.center
+        let sourceZoomParam      = CGFloat(source.zoom)
+        let sourcePitchParam     = CGFloat(source.pitch)
+        let sourceBearingParam   = CLLocationDirection(source.bearing)
 
         sourceZoom  = sourceZoomParam
         sourceScale = pow(2, sourceZoom)

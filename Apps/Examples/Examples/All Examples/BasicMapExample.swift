@@ -12,7 +12,7 @@ public class BasicMapExample: UIViewController, ExampleProtocol {
 
         mapView = MapView(frame: view.bounds)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        mapView.ornaments.options.scaleBarVisibility = .visible
+        mapView.ornaments.options.scaleBarOptions.visibility = .visible
 
         view.addSubview(mapView)
     }

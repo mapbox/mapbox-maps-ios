@@ -23,7 +23,11 @@ internal class MapboxCompassOrnamentView: UIButton {
     private var compassBackgroundColor: UIColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
     private var needleColor: UIColor = #colorLiteral(red: 0.9971256852, green: 0.2427211106, blue: 0.196741581, alpha: 1)
     private var lineColor: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-    private let directionFormatter = CompassDirectionFormatter()
+    private let directionFormatter: CompassDirectionFormatter = {
+        let formatter = CompassDirectionFormatter()
+        formatter.style = .short
+        return formatter
+    }()
     /// Should be in range [-pi; pi]
     internal var currentBearing: CLLocationDirection = 0 {
         didSet {
@@ -88,8 +92,6 @@ internal class MapboxCompassOrnamentView: UIButton {
 
     // swiftlint:disable function_body_length
     private func createCompassImage() -> UIImage? {
-        let bundle = Bundle(for: type(of: self))
-
         UIGraphicsBeginImageContextWithOptions(Constants.compassSize, false, UIScreen.main.scale)
 
         //// Color Declarations
@@ -216,11 +218,7 @@ internal class MapboxCompassOrnamentView: UIButton {
         bezier2Path.fill()
 
         let northFont = UIFont.systemFont(ofSize: 11, weight: .light)
-        let northLocalized = NSLocalizedString("COMPASS_NORTH",
-                                               tableName: Constants.localizableTableName,
-                                               bundle: bundle,
-                                               value: "N",
-                                               comment: "Compass abbreviation for north")
+        let northLocalized = directionFormatter.string(from: 0)
         let north = NSAttributedString(string: northLocalized, attributes:
             [
                 NSAttributedString.Key.font: northFont,

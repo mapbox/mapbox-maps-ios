@@ -1,0 +1,95 @@
+/* East, long */
+"E" = "Osten";
+
+/* East by north, long */
+"EbN" = "Ost zu Nord";
+
+/* East by south, long */
+"EbS" = "Ost zu Süd";
+
+/* East-northeast, long */
+"ENE" = "Ostnordost";
+
+/* East-southeast, long */
+"ESE" = "Ostsüdost";
+
+/* North, long */
+"N" = "Nord";
+
+/* North by east, long */
+"NbE" = "Nord zu Ost";
+
+/* North by west, long */
+"NbW" = "Nord zu West";
+
+/* Northeast, long */
+"NE" = "Nordost";
+
+/* Northeast by east, long */
+"NEbE" = "Nordost zu Ost";
+
+/* Northeast by north, long */
+"NEbN" = "Nordost zu Nord";
+
+/* North-northeast, long */
+"NNE" = "Nordnordost";
+
+/* North-northwest, long */
+"NNW" = "Nordnordwest";
+
+/* Northwest, long */
+"NW" = "Nordwest";
+
+/* Northwest by north, long */
+"NWbN" = "Nordwest zu Nord";
+
+/* Northwest by west, long */
+"NWbW" = "Nordwest zu West";
+
+/* South, long */
+"S" = "Süd";
+
+/* South by east, long */
+"SbE" = "Süd zu Ost";
+
+/* South by west, long */
+"SbW" = "Süd zu West";
+
+/* Southeast, long */
+"SE" = "Südost";
+
+/* Southeast by east, long */
+"SEbE" = "Südost zu Ost";
+
+/* Southeast by south, long */
+"SEbS" = "Südost zu Süd";
+
+/* South-southeast, long */
+"SSE" = "Südsüdost";
+
+/* South-southwest, long */
+"SSW" = "Südsüdwest";
+
+/* Southwest, long */
+"SW" = "Südwest";
+
+/* Southwest by south, long */
+"SWbS" = "Südwest zu Süd";
+
+/* Southwest by west, long */
+"SWbW" = "Südwest zu West";
+
+/* West, long */
+"W" = "West";
+
+/* West by north, long */
+"WbN" = "West zu Nord";
+
+/* West by south, long */
+"WbS" = "West zu Süd";
+
+/* West-northwest, long */
+"WNW" = "Westnordwest";
+
+/* West-southwest, long */
+"WSW" = "Westsüdwest";

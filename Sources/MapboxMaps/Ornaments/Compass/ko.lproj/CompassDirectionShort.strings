@@ -1,0 +1,95 @@
+/* East, short */
+"E" = "동";
+
+/* East by north, short */
+"EbN" = "동미북";
+
+/* East by south, short */
+"EbS" = "동미남";
+
+/* East-northeast, short */
+"ENE" = "동북동";
+
+/* East-southeast, short */
+"ESE" = "동남동";
+
+/* North, short */
+"N" = "북";
+
+/* North by east, short */
+"NbE" = "북미동";
+
+/* North by west, short */
+"NbW" = "북미서";
+
+/* Northeast, short */
+"NE" = "북동";
+
+/* Northeast by east, short */
+"NEbE" = "북동미동";
+
+/* Northeast by north, short */
+"NEbN" = "북동미북";
+
+/* North-northeast, short */
+"NNE" = "북북동";
+
+/* North-northwest, short */
+"NNW" = "북북서";
+
+/* Northwest, short */
+"NW" = "북서";
+
+/* Northwest by north, short */
+"NWbN" = "북서미북";
+
+/* Northwest by west, short */
+"NWbW" = "북서미서";
+
+/* South, short */
+"S" = "남";
+
+/* South by east, short */
+"SbE" = "남미동";
+
+/* South by west, short */
+"SbW" = "남미서";
+
+/* Southeast, short */
+"SE" = "남동";
+
+/* Southeast by east, short */
+"SEbE" = "남동미동";
+
+/* Southeast by south, short */
+"SEbS" = "남동미남";
+
+/* South-southeast, short */
+"SSE" = "남남동";
+
+/* South-southwest, short */
+"SSW" = "남남서";
+
+/* Southwest, short */
+"SW" = "남서";
+
+/* Southwest by south, short */
+"SWbS" = "남서미남";
+
+/* Southwest by west, short */
+"SWbW" = "남서미서";
+
+/* West, short */
+"W" = "서";
+
+/* West by north, short */
+"WbN" = "서미북";
+
+/* West by south, short */
+"WbS" = "서미남";
+
+/* West-northwest, short */
+"WNW" = "서북서";
+
+/* West-southwest, short */
+"WSW" = "서남서";

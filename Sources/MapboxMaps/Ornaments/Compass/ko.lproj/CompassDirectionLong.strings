@@ -1,0 +1,95 @@
+/* East, long */
+"E" = "동쪽";
+
+/* East by north, long */
+"EbN" = "동미북쪽";
+
+/* East by south, long */
+"EbS" = "동미남쪽";
+
+/* East-northeast, long */
+"ENE" = "동북동쪽";
+
+/* East-southeast, long */
+"ESE" = "동남동쪽";
+
+/* North, long */
+"N" = "북쪽";
+
+/* North by east, long */
+"NbE" = "북미동쪽";
+
+/* North by west, long */
+"NbW" = "북미서쪽";
+
+/* Northeast, long */
+"NE" = "북동쪽";
+
+/* Northeast by east, long */
+"NEbE" = "북동미동쪽";
+
+/* Northeast by north, long */
+"NEbN" = "북동미북쪽";
+
+/* North-northeast, long */
+"NNE" = "북북동쪽";
+
+/* North-northwest, long */
+"NNW" = "북북서쪽";
+
+/* Northwest, long */
+"NW" = "북서쪽";
+
+/* Northwest by north, long */
+"NWbN" = "북서미북쪽";
+
+/* Northwest by west, long */
+"NWbW" = "북서미서쪽";
+
+/* South, long */
+"S" = "남쪽";
+
+/* South by east, long */
+"SbE" = "남미동쪽";
+
+/* South by west, long */
+"SbW" = "남미서";
+
+/* Southeast, long */
+"SE" = "남동쪽";
+
+/* Southeast by east, long */
+"SEbE" = "남동미동쪽";
+
+/* Southeast by south, long */
+"SEbS" = "남동미남쪽";
+
+/* South-southeast, long */
+"SSE" = "남남동쪽";
+
+/* South-southwest, long */
+"SSW" = "남남서쪽";
+
+/* Southwest, long */
+"SW" = "남서쪽";
+
+/* Southwest by south, long */
+"SWbS" = "남서미남쪽";
+
+/* Southwest by west, long */
+"SWbW" = "남서미서쪽";
+
+/* West, long */
+"W" = "서쪽";
+
+/* West by north, long */
+"WbN" = "서미북쪽";
+
+/* West by south, long */
+"WbS" = "서미남쪽";
+
+/* West-northwest, long */
+"WNW" = "서북서쪽";
+
+/* West-southwest, long */
+"WSW" = "서남서쪽";

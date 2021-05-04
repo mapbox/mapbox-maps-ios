@@ -1,0 +1,95 @@
+/* East, short */
+"E" = "R";
+
+/* East by north, short */
+"EbN" = "RįŠ";
+
+/* East by south, short */
+"EbS" = "RįP";
+
+/* East-northeast, short */
+"ENE" = "R-ŠR";
+
+/* East-southeast, short */
+"ESE" = "R-PR";
+
+/* North, short */
+"N" = "Š";
+
+/* North by east, short */
+"NbE" = "ŠįR";
+
+/* North by west, short */
+"NbW" = "ŠįV";
+
+/* Northeast, short */
+"NE" = "ŠR";
+
+/* Northeast by east, short */
+"NEbE" = "ŠRįR";
+
+/* Northeast by north, short */
+"NEbN" = "ŠRįŠ";
+
+/* North-northeast, short */
+"NNE" = "ŠŠR";
+
+/* North-northwest, short */
+"NNW" = "ŠŠV";
+
+/* Northwest, short */
+"NW" = "ŠV";
+
+/* Northwest by north, short */
+"NWbN" = "ŠVįŠ";
+
+/* Northwest by west, short */
+"NWbW" = "ŠVįV";
+
+/* South, short */
+"S" = "P";
+
+/* South by east, short */
+"SbE" = "PįR";
+
+/* South by west, short */
+"SbW" = "PįV";
+
+/* Southeast, short */
+"SE" = "PR";
+
+/* Southeast by east, short */
+"SEbE" = "PRįR";
+
+/* Southeast by south, short */
+"SEbS" = "PRįP";
+
+/* South-southeast, short */
+"SSE" = "PPR";
+
+/* South-southwest, short */
+"SSW" = "PPV";
+
+/* Southwest, short */
+"SW" = "PV";
+
+/* Southwest by south, short */
+"SWbS" = "PVįP";
+
+/* Southwest by west, short */
+"SWbW" = "PVįV";
+
+/* West, short */
+"W" = "V";
+
+/* West by north, short */
+"WbN" = "VįŠ";
+
+/* West by south, short */
+"WbS" = "VįP";
+
+/* West-northwest, short */
+"WNW" = "VŠV";
+
+/* West-southwest, short */
+"WSW" = "VPV";

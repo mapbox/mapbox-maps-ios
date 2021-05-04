@@ -17,6 +17,7 @@ Mapbox welcomes participation and contributions from everyone.
 ### Features ✨ and improvements 🏁
 
 - `OrnamentsManager` is now a public class and can be accessed via the `MapView`'s `ornaments` property.
+- `CompassDirectionFormatter` is now public. It provides a string representation of a `CLLocationDirection` and supports the same languages as in pre-v10 versions of the Maps SDK. ([#300](https://github.com/mapbox/mapbox-maps-ios/pull/300))
 
 ## 10.0.0-beta.18.1 - April 28, 2021  
 

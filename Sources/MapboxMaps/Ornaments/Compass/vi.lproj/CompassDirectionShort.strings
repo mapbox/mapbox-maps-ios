@@ -1,0 +1,95 @@
+/* East, short */
+"E" = "Đ";
+
+/* East by north, short */
+"EbN" = "ĐvB";
+
+/* East by south, short */
+"EbS" = "ĐvN";
+
+/* East-northeast, short */
+"ENE" = "ĐĐB";
+
+/* East-southeast, short */
+"ESE" = "ĐĐN";
+
+/* North, short */
+"N" = "B";
+
+/* North by east, short */
+"NbE" = "BvĐ";
+
+/* North by west, short */
+"NbW" = "BvT";
+
+/* Northeast, short */
+"NE" = "ĐB";
+
+/* Northeast by east, short */
+"NEbE" = "ĐBvĐ";
+
+/* Northeast by north, short */
+"NEbN" = "ĐBvB";
+
+/* North-northeast, short */
+"NNE" = "BĐB";
+
+/* North-northwest, short */
+"NNW" = "BTB";
+
+/* Northwest, short */
+"NW" = "TB";
+
+/* Northwest by north, short */
+"NWbN" = "TBvB";
+
+/* Northwest by west, short */
+"NWbW" = "TBvT";
+
+/* South, short */
+"S" = "N";
+
+/* South by east, short */
+"SbE" = "NvĐ";
+
+/* South by west, short */
+"SbW" = "NvT";
+
+/* Southeast, short */
+"SE" = "ĐN";
+
+/* Southeast by east, short */
+"SEbE" = "ĐNvĐ";
+
+/* Southeast by south, short */
+"SEbS" = "ĐNvN";
+
+/* South-southeast, short */
+"SSE" = "NĐN";
+
+/* South-southwest, short */
+"SSW" = "NTN";
+
+/* Southwest, short */
+"SW" = "TN";
+
+/* Southwest by south, short */
+"SWbS" = "TNvN";
+
+/* Southwest by west, short */
+"SWbW" = "TNvT";
+
+/* West, short */
+"W" = "T";
+
+/* West by north, short */
+"WbN" = "TvB";
+
+/* West by south, short */
+"WbS" = "TvN";
+
+/* West-northwest, short */
+"WNW" = "TTB";
+
+/* West-southwest, short */
+"WSW" = "TTN";

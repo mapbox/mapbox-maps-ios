@@ -211,6 +211,10 @@
 		B5CD9CF62630AA5500A4BADC /* ScreenBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CD9CF52630AA5500A4BADC /* ScreenBox.swift */; };
 		B5CD9CFB2630AA6100A4BADC /* ScreenBoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CD9CFA2630AA6100A4BADC /* ScreenBoxTests.swift */; };
 		B5DDE9602613ACB400998840 /* StyleEncodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DDE95F2613ACB400998840 /* StyleEncodable.swift */; };
+		B5F294B62635EE9E00199426 /* FloatingPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F294B52635EE9E00199426 /* FloatingPoint.swift */; };
+		B5F294BB2635EEAD00199426 /* FloatingPointTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F294BA2635EEAD00199426 /* FloatingPointTests.swift */; };
+		B5F295552635EF4E00199426 /* CompassDirectionLong.strings in Resources */ = {isa = PBXBuildFile; fileRef = B5F295512635EF4E00199426 /* CompassDirectionLong.strings */; };
+		B5F295562635EF4E00199426 /* CompassDirectionShort.strings in Resources */ = {isa = PBXBuildFile; fileRef = B5F295532635EF4E00199426 /* CompassDirectionShort.strings */; };
 		C6334944262E28C300D17701 /* StyleTransitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6334943262E28C300D17701 /* StyleTransitionTests.swift */; };
 		C64994A9258D5ADE0052C21C /* LocationPuckManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64994A5258D5ADD0052C21C /* LocationPuckManager.swift */; };
 		C64994AB258D5ADE0052C21C /* Puck.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64994A6258D5ADE0052C21C /* Puck.swift */; };
@@ -643,6 +647,48 @@
 		B5CD9CF52630AA5500A4BADC /* ScreenBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenBox.swift; sourceTree = "<group>"; };
 		B5CD9CFA2630AA6100A4BADC /* ScreenBoxTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenBoxTests.swift; sourceTree = "<group>"; };
 		B5DDE95F2613ACB400998840 /* StyleEncodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleEncodable.swift; sourceTree = "<group>"; };
+		B5F294B52635EE9E00199426 /* FloatingPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatingPoint.swift; sourceTree = "<group>"; };
+		B5F294BA2635EEAD00199426 /* FloatingPointTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatingPointTests.swift; sourceTree = "<group>"; };
+		B5F295522635EF4E00199426 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/CompassDirectionLong.strings; sourceTree = "<group>"; };
+		B5F295542635EF4E00199426 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/CompassDirectionShort.strings; sourceTree = "<group>"; };
+		B5F2955A2635EF9E00199426 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/CompassDirectionLong.strings"; sourceTree = "<group>"; };
+		B5F2955B2635EF9E00199426 /* bg */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bg; path = bg.lproj/CompassDirectionShort.strings; sourceTree = "<group>"; };
+		B5F2955C2635EF9E00199426 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/CompassDirectionLong.strings"; sourceTree = "<group>"; };
+		B5F2955D2635EF9E00199426 /* ca */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ca; path = ca.lproj/CompassDirectionShort.strings; sourceTree = "<group>"; };
+		B5F2955E2635EF9E00199426 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/CompassDirectionShort.strings; sourceTree = "<group>"; };
+		B5F2955F2635EF9E00199426 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/CompassDirectionShort.strings; sourceTree = "<group>"; };
+		B5F295602635EF9E00199426 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/CompassDirectionShort.strings; sourceTree = "<group>"; };
+		B5F295612635EF9E00199426 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/CompassDirectionLong.strings"; sourceTree = "<group>"; };
+		B5F295622635EF9E00199426 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/CompassDirectionShort.strings; sourceTree = "<group>"; };
+		B5F295632635EF9E00199426 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/CompassDirectionShort.strings; sourceTree = "<group>"; };
+		B5F295642635EF9E00199426 /* gl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = gl; path = gl.lproj/CompassDirectionShort.strings; sourceTree = "<group>"; };
+		B5F295652635EF9E00199426 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/CompassDirectionShort.strings; sourceTree = "<group>"; };
+		B5F295662635EF9E00199426 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/CompassDirectionShort.strings; sourceTree = "<group>"; };
+		B5F295672635EF9E00199426 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/CompassDirectionShort.strings; sourceTree = "<group>"; };
+		B5F295682635EF9E00199426 /* lt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = lt; path = lt.lproj/CompassDirectionShort.strings; sourceTree = "<group>"; };
+		B5F295692635EF9E00199426 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/CompassDirectionShort.strings"; sourceTree = "<group>"; };
+		B5F2956A2635EF9E00199426 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/CompassDirectionShort.strings; sourceTree = "<group>"; };
+		B5F2956B2635EF9E00199426 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/CompassDirectionShort.strings; sourceTree = "<group>"; };
+		B5F2956C2635EF9E00199426 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/CompassDirectionShort.strings; sourceTree = "<group>"; };
+		B5F2956D2635EF9E00199426 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/CompassDirectionShort.strings; sourceTree = "<group>"; };
+		B5F2956E2635EF9E00199426 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/CompassDirectionShort.strings"; sourceTree = "<group>"; };
+		B5F2956F2635EF9E00199426 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/CompassDirectionShort.strings"; sourceTree = "<group>"; };
+		B5F295702635EF9E00199426 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/CompassDirectionLong.strings; sourceTree = "<group>"; };
+		B5F295712635EF9E00199426 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/CompassDirectionLong.strings; sourceTree = "<group>"; };
+		B5F295722635EF9E00199426 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/CompassDirectionLong.strings; sourceTree = "<group>"; };
+		B5F295732635EF9E00199426 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/CompassDirectionLong.strings; sourceTree = "<group>"; };
+		B5F295742635EF9F00199426 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/CompassDirectionLong.strings; sourceTree = "<group>"; };
+		B5F295752635EF9F00199426 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/CompassDirectionLong.strings; sourceTree = "<group>"; };
+		B5F295762635EF9F00199426 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/CompassDirectionLong.strings; sourceTree = "<group>"; };
+		B5F295772635EF9F00199426 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/CompassDirectionLong.strings; sourceTree = "<group>"; };
+		B5F295782635EF9F00199426 /* bg */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bg; path = bg.lproj/CompassDirectionLong.strings; sourceTree = "<group>"; };
+		B5F295792635EF9F00199426 /* ca */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ca; path = ca.lproj/CompassDirectionLong.strings; sourceTree = "<group>"; };
+		B5F2957A2635EF9F00199426 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/CompassDirectionLong.strings; sourceTree = "<group>"; };
+		B5F2957B2635EF9F00199426 /* gl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = gl; path = gl.lproj/CompassDirectionLong.strings; sourceTree = "<group>"; };
+		B5F2957C2635EF9F00199426 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/CompassDirectionLong.strings; sourceTree = "<group>"; };
+		B5F2957D2635EF9F00199426 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/CompassDirectionLong.strings; sourceTree = "<group>"; };
+		B5F2957E2635EF9F00199426 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/CompassDirectionLong.strings; sourceTree = "<group>"; };
+		B5F2957F2635EF9F00199426 /* lt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = lt; path = lt.lproj/CompassDirectionLong.strings; sourceTree = "<group>"; };
 		C6334943262E28C300D17701 /* StyleTransitionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleTransitionTests.swift; sourceTree = "<group>"; };
 		C64994A5258D5ADD0052C21C /* LocationPuckManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationPuckManager.swift; sourceTree = "<group>"; };
 		C64994A6258D5ADE0052C21C /* Puck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Puck.swift; sourceTree = "<group>"; };
@@ -823,6 +869,7 @@
 		07855E29258BFCD90060A870 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				B5F294B52635EE9E00199426 /* FloatingPoint.swift */,
 				CABCDF482620E0D700D61635 /* Bool.swift */,
 				CABCDF472620E0D700D61635 /* RawRepresentable.swift */,
 				C64B6FE925E0479000C8E07E /* Bundle+MapboxMaps.swift */,
@@ -1384,6 +1431,8 @@
 		5A3593722476AE3400E67344 /* Compass */ = {
 			isa = PBXGroup;
 			children = (
+				B5F295512635EF4E00199426 /* CompassDirectionLong.strings */,
+				B5F295532635EF4E00199426 /* CompassDirectionShort.strings */,
 				5A9648FC2462F07B001FF05D /* MapboxCompassOrnamentView.swift */,
 				5A359243246448E600E67344 /* CompassDirectionFormatter.swift */,
 			);
@@ -1501,6 +1550,7 @@
 		CA0C42922602BF000054D9D0 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				B5F294BA2635EEAD00199426 /* FloatingPointTests.swift */,
 				CA0C42932602BF000054D9D0 /* Core */,
 			);
 			path = Extensions;
@@ -1746,6 +1796,25 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
+				bg,
+				"pt-BR",
+				ca,
+				cs,
+				da,
+				de,
+				"zh-Hant",
+				es,
+				fr,
+				gl,
+				he,
+				ja,
+				ko,
+				lt,
+				ru,
+				sv,
+				uk,
+				vi,
 			);
 			mainGroup = 1FEE78B92421884000337895;
 			productRefGroup = 1FEE78C42421884000337895 /* Products */;
@@ -1765,6 +1834,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5F295562635EF4E00199426 /* CompassDirectionShort.strings in Resources */,
+				B5F295552635EF4E00199426 /* CompassDirectionLong.strings in Resources */,
 				C64994AD258D5ADE0052C21C /* IndicatorAssets.xcassets in Resources */,
 				B53A685B25E033AF008CB2AF /* OrnamentsLocalizable.strings in Resources */,
 			);
@@ -1970,6 +2041,7 @@
 				0C708F5124EB23C7003CE791 /* GeojsonSource.swift in Sources */,
 				07625C8C2589755A002EEBCC /* SnapshotOverlay.swift in Sources */,
 				0CD62F0524587CF3006421D1 /* PanGestureHandler.swift in Sources */,
+				B5F294B62635EE9E00199426 /* FloatingPoint.swift in Sources */,
 				0782B076258C190C00D5FCE5 /* CoordinateBounds.swift in Sources */,
 				0CD62F0F2458852D006421D1 /* PitchGestureHandler.swift in Sources */,
 				0C8D815524F6B4A800717E88 /* Value.swift in Sources */,
@@ -2155,6 +2227,7 @@
 				0C32C9B225F979680057ED31 /* RasterSourceIntegrationTests.swift in Sources */,
 				0C32C9B025F979680057ED31 /* RasterDemSourceIntegrationTests.swift in Sources */,
 				0C5CFD1B25BB963A0001E753 /* Value+Fixtures.swift in Sources */,
+				B5F294BB2635EEAD00199426 /* FloatingPointTests.swift in Sources */,
 				CA548FEA251C404B00F829A3 /* AnnotationManagerTests.swift in Sources */,
 				B5A6921F262754DF00A03412 /* CredentialsManagerTests.swift in Sources */,
 				CAEDA0B0258E8188003CCEFE /* MapViewIntegrationTests.swift in Sources */,
@@ -2257,6 +2330,60 @@
 				B53A685D25E033AF008CB2AF /* en */,
 			);
 			name = OrnamentsLocalizable.strings;
+			sourceTree = "<group>";
+		};
+		B5F295512635EF4E00199426 /* CompassDirectionLong.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B5F295522635EF4E00199426 /* en */,
+				B5F2955A2635EF9E00199426 /* zh-Hans */,
+				B5F2955C2635EF9E00199426 /* pt-BR */,
+				B5F295612635EF9E00199426 /* zh-Hant */,
+				B5F295702635EF9E00199426 /* ru */,
+				B5F295712635EF9E00199426 /* sv */,
+				B5F295722635EF9E00199426 /* uk */,
+				B5F295732635EF9E00199426 /* vi */,
+				B5F295742635EF9F00199426 /* cs */,
+				B5F295752635EF9F00199426 /* da */,
+				B5F295762635EF9F00199426 /* de */,
+				B5F295772635EF9F00199426 /* es */,
+				B5F295782635EF9F00199426 /* bg */,
+				B5F295792635EF9F00199426 /* ca */,
+				B5F2957A2635EF9F00199426 /* fr */,
+				B5F2957B2635EF9F00199426 /* gl */,
+				B5F2957C2635EF9F00199426 /* he */,
+				B5F2957D2635EF9F00199426 /* ja */,
+				B5F2957E2635EF9F00199426 /* ko */,
+				B5F2957F2635EF9F00199426 /* lt */,
+			);
+			name = CompassDirectionLong.strings;
+			sourceTree = "<group>";
+		};
+		B5F295532635EF4E00199426 /* CompassDirectionShort.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B5F295542635EF4E00199426 /* en */,
+				B5F2955B2635EF9E00199426 /* bg */,
+				B5F2955D2635EF9E00199426 /* ca */,
+				B5F2955E2635EF9E00199426 /* cs */,
+				B5F2955F2635EF9E00199426 /* da */,
+				B5F295602635EF9E00199426 /* de */,
+				B5F295622635EF9E00199426 /* es */,
+				B5F295632635EF9E00199426 /* fr */,
+				B5F295642635EF9E00199426 /* gl */,
+				B5F295652635EF9E00199426 /* he */,
+				B5F295662635EF9E00199426 /* ja */,
+				B5F295672635EF9E00199426 /* ko */,
+				B5F295682635EF9E00199426 /* lt */,
+				B5F295692635EF9E00199426 /* pt-BR */,
+				B5F2956A2635EF9E00199426 /* ru */,
+				B5F2956B2635EF9E00199426 /* sv */,
+				B5F2956C2635EF9E00199426 /* uk */,
+				B5F2956D2635EF9E00199426 /* vi */,
+				B5F2956E2635EF9E00199426 /* zh-Hans */,
+				B5F2956F2635EF9E00199426 /* zh-Hant */,
+			);
+			name = CompassDirectionShort.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

@@ -4,9 +4,6 @@
 /* Accessibility label */
 "COMPASS_A11Y_LABEL" = "Compass";
 
-/* Compass abbreviation for north */
-"COMPASS_NORTH" = "N";
-
 /* Accessibility hint */
 "INFO_A11Y_HINT" = "Shows credits, a feedback form, and more";
 

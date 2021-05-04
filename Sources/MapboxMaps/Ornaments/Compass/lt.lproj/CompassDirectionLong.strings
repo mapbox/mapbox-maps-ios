@@ -1,0 +1,95 @@
+/* East, long */
+"E" = "rytai";
+
+/* East by north, long */
+"EbN" = "rytai į šiaurę";
+
+/* East by south, long */
+"EbS" = "rytai į pietus";
+
+/* East-northeast, long */
+"ENE" = "rytai - šiaurės rytai";
+
+/* East-southeast, long */
+"ESE" = "rytai - pietryčiai";
+
+/* North, long */
+"N" = "šiaurė";
+
+/* North by east, long */
+"NbE" = "šiaurė į rytus";
+
+/* North by west, long */
+"NbW" = "šiaurė į vakarus";
+
+/* Northeast, long */
+"NE" = "šiaurės rytai";
+
+/* Northeast by east, long */
+"NEbE" = "šiaurės rytai į rytus";
+
+/* Northeast by north, long */
+"NEbN" = "šiaurės rytai į šiaurę";
+
+/* North-northeast, long */
+"NNE" = "šiaurė - šiaurės rytai";
+
+/* North-northwest, long */
+"NNW" = "šiaurė - šiaurės vakarai";
+
+/* Northwest, long */
+"NW" = "šiaurės vakarai";
+
+/* Northwest by north, long */
+"NWbN" = "šiaurės vakarai į šiaurę";
+
+/* Northwest by west, long */
+"NWbW" = "šiaurės vakarai į vakarus";
+
+/* South, long */
+"S" = "pietūs";
+
+/* South by east, long */
+"SbE" = "pietūs į rytus";
+
+/* South by west, long */
+"SbW" = "pietūs į vakarus";
+
+/* Southeast, long */
+"SE" = "pietryčiai";
+
+/* Southeast by east, long */
+"SEbE" = "pietryčiai į rytus";
+
+/* Southeast by south, long */
+"SEbS" = "pietryčiai į pietus";
+
+/* South-southeast, long */
+"SSE" = "pietūs - pietryčiai";
+
+/* South-southwest, long */
+"SSW" = "pietūs - pietvakariai";
+
+/* Southwest, long */
+"SW" = "pietvakariai";
+
+/* Southwest by south, long */
+"SWbS" = "pietvakariai į pietus";
+
+/* Southwest by west, long */
+"SWbW" = "pietvakariai į vakarus";
+
+/* West, long */
+"W" = "vakarai";
+
+/* West by north, long */
+"WbN" = "vakarai į šiaurę";
+
+/* West by south, long */
+"WbS" = "vakarai į pietus";
+
+/* West-northwest, long */
+"WNW" = "vakarai - šiaurės vakarai";
+
+/* West-southwest, long */
+"WSW" = "vakarai - pietvakariai";

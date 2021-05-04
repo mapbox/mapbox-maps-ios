@@ -15,14 +15,13 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds)
+        let centerCoordinate = CLLocationCoordinate2D(latitude: 45.5076, longitude: -122.6736)
+        let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate,
+                                                                  zoom: 11.0))
+
+        mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
-
-        let centerCoordinate = CLLocationCoordinate2D(latitude: 45.5076, longitude: -122.6736)
-
-        mapView.camera.setCamera(to: CameraOptions(center: centerCoordinate,
-                                                          zoom: 11.0))
 
         // Wait for the map to load its style before adding data.
         mapView.on(.mapLoaded) { [weak self] _ in

@@ -20,8 +20,7 @@ final class GestureManagerTests: XCTestCase {
 
     override func setUp() {
         mapView = BaseMapView(frame: CGRect(x: 0, y: 0, width: 100, height: 100),
-                              mapInitOptions: MapInitOptions(),
-                              styleURI: nil)
+                              mapInitOptions: MapInitOptions(styleURI: nil))
         delegate = GestureHandlerDelegateMock()
         cameraManager = MockCameraManager()
         cameraManager.mapView = mapView
@@ -88,14 +87,6 @@ final class GestureManagerTests: XCTestCase {
         let tapGestureRecognizer = UITapGestureRecognizer()
         XCTAssertFalse(gestureManager.gestureRecognizer(panGestureRecognizer,
                                                         shouldRecognizeSimultaneouslyWith: tapGestureRecognizer))
-    }
-
-    func testScaleForZoom() {
-        mapView.cameraView.zoom = CGFloat.random(in: 0...22)
-
-        let scale = gestureManager.scaleForZoom()
-
-        XCTAssertEqual(scale, mapView.cameraView.zoom)
     }
 
     func testPinchScaleChanged_SetsCamera() {

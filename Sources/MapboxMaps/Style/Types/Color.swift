@@ -77,7 +77,7 @@ public struct ColorRepresentable: Codable, Equatable {
 
 extension UIColor: ExpressionArgumentConvertible {
 
-    public var expressionElements: [Expression.Element] {
+    public var expressionArguments: [Expression.Argument] {
         var red: CGFloat = 0.0
         var green: CGFloat = 0.0
         var blue: CGFloat = 0.0
@@ -90,6 +90,6 @@ extension UIColor: ExpressionArgumentConvertible {
             Double(blue * 255.0)
             Double(alpha)
         }
-        return [.argument(.expression(rgbaExp))]
+        return [.expression(rgbaExp)]
     }
 }

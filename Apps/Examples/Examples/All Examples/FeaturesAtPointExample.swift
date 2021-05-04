@@ -10,16 +10,14 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds)
-        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(mapView)
-
         // Center the map over the United States.
         let centerCoordinate = CLLocationCoordinate2D(latitude: 39.368279,
                                                       longitude: -97.646484)
+        let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate, zoom: 2.4))
 
-        mapView.camera.setCamera(to: CameraOptions(center: centerCoordinate,
-                                                          zoom: 2.4))
+        mapView = MapView(frame: view.bounds, mapInitOptions: options)
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(mapView)
 
         // Allows the view controller to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in

@@ -10,15 +10,14 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds)
-        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(mapView)
-
         // Center the map camera over New York City
         let centerCoordinate = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
+        let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate,
+                                                                  zoom: 9.0))
 
-        mapView.camera.setCamera(to: CameraOptions(center: centerCoordinate,
-                                                          zoom: 9.0))
+        mapView = MapView(frame: view.bounds, mapInitOptions: options)
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(mapView)
 
         // Allows the delegate to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in
@@ -29,7 +28,7 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
              Create the point annotation, using a custom image to mark the location specified.
              The image is referenced from the application's asset catalog.
              */
-            let centerCoordinate = self.mapView.centerCoordinate
+            let centerCoordinate = self.mapView.cameraState.center
             let customPointAnnotation = PointAnnotation(coordinate: centerCoordinate,
                                                         image: UIImage(named: "star"))
 

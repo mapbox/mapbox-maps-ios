@@ -25,23 +25,31 @@ internal class FlyToTests: XCTestCase {
     }
 
     fileprivate func privateTestFlyTo(s0: CLLocationCoordinate2D, s2: CLLocationCoordinate2D) {
-        let source = CameraOptions(center: s0,
-                                   padding: .zero,
-                                   anchor: .zero,
-                                   zoom: 10,
-                                   bearing: 0,
-                                   pitch: 0)
 
-        let dest = CameraOptions(center: s2,
-                                 padding: .zero,
-                                 anchor: .zero,
-                                 zoom: 10,
-                                 bearing: 0,
-                                 pitch: 0)
+        let source = CameraState(
+            MapboxCoreMaps.CameraState(
+                center: s0,
+                padding: .init(
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0),
+                zoom: 10,
+                bearing: 0,
+                pitch: 0))
 
-        guard let flyTo = FlyToInterpolator(from: source,
-                                            to: dest,
-                                            size: CGSize(width: 1000.0, height: 1000.0)) else {
+        let dest = CameraOptions(
+            center: s2,
+            padding: .zero,
+            anchor: .zero,
+            zoom: 10,
+            bearing: 0,
+            pitch: 0)
+
+        guard let flyTo = FlyToInterpolator(
+                from: source,
+                to: dest,
+                size: CGSize(width: 1000.0, height: 1000.0)) else {
             XCTFail("Failed to create interpolator")
             return
         }
@@ -79,11 +87,18 @@ internal class FlyToTests: XCTestCase {
                 longitude: CLLocationDegrees.random(in: 180..<360)
             )
 
-            let source = CameraOptions(center: sourceCoord,
-                                       padding: .zero,
-                                       zoom: 14,
-                                       bearing: 0,
-                                       pitch: 0)
+            let source = CameraState(
+                MapboxCoreMaps.CameraState(
+                    center: sourceCoord,
+                    padding: .init(
+                        top: 0,
+                        left: 0,
+                        bottom: 0,
+                        right: 0),
+                    zoom: 14,
+                    bearing: 0,
+                    pitch: 0))
+
             let dest = CameraOptions(center: destCoord,
                                      zoom: 18,
                                      bearing: 90,
@@ -111,14 +126,14 @@ internal class FlyToTests: XCTestCase {
 
                 // Zoom doesn't go below start or end
                 let zoom = CGFloat(flyTo.zoom(at: t))
-                XCTAssert(zoom <= max(source.zoom!, dest.zoom!), "t=\(t) zoom=\(zoom)")
+                XCTAssert(zoom <= max(source.zoom, dest.zoom!), "t=\(t) zoom=\(zoom)")
 
                 let bearing = CLLocationDirection(flyTo.bearing(at: t))
-                XCTAssert(bearing >= source.bearing!, "t=\(t) bearing=\(bearing)")
+                XCTAssert(bearing >= source.bearing, "t=\(t) bearing=\(bearing)")
                 XCTAssert(bearing <= dest.bearing!, "t=\(t) bearing=\(bearing)")
 
                 let pitch = CGFloat(flyTo.pitch(at: t))
-                XCTAssert(pitch >= source.pitch!, "t=\(t) pitch=\(pitch)")
+                XCTAssert(pitch >= source.pitch, "t=\(t) pitch=\(pitch)")
                 XCTAssert(pitch <= dest.pitch!, "t=\(t) pitch=\(pitch)")
             }
         }

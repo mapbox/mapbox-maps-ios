@@ -6,18 +6,16 @@ import MapboxMaps
 public class FlyToExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
-    internal var flyToAnimator: CameraAnimator?
 
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds)
+        // Center the map over San Francisco.
+        let options = MapInitOptions(cameraOptions: CameraOptions(center: .sanfrancisco, zoom: 15))
+
+        mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
-
-        // Center the map over San Francisco.
-        mapView.camera.setCamera(to: CameraOptions(center: .sanfrancisco,
-                                                          zoom: 15))
 
         // Allows the view controller to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in
@@ -35,10 +33,9 @@ public class FlyToExample: UIViewController, ExampleProtocol {
                                 bearing: 180,
                                 pitch: 50)
 
-        flyToAnimator = self.mapView.camera.fly(to: end) { [weak self] _ in
+        mapView.camera.fly(to: end) { [weak self] _ in
             print("Camera fly-to finished")
             // The below line is used for internal testing purposes only.
-            self?.flyToAnimator = nil
             self?.finish()
         }
 

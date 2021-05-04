@@ -10,15 +10,13 @@ public class DataDrivenSymbolsExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds, styleURI: .outdoors)
+        let centerCoordinate = CLLocationCoordinate2D(latitude: 37.761, longitude: -119.624)
+        let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate, zoom: 10.0),
+                                     styleURI: .outdoors)
+
+        mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
-
-        // Set center location
-        let centerCoordinate = CLLocationCoordinate2D(latitude: 37.761, longitude: -119.624)
-
-        mapView.camera.setCamera(to: CameraOptions(center: centerCoordinate,
-                                                          zoom: 10.0))
 
         // Allows the delegate to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in

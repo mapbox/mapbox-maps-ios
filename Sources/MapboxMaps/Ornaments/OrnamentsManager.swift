@@ -14,12 +14,11 @@ public enum OrnamentVisibility: String, Equatable {
     case visible
 }
 
-internal class OrnamentsManager: NSObject {
+public class OrnamentsManager: NSObject {
 
-    /// The `OrnamentOptions` that is used to set up the required ornaments on the map
-    internal var options: OrnamentOptions {
+    /// The `OrnamentOptions` object that is used to set up and update the required ornaments on the map.
+    public var options: OrnamentOptions {
         didSet {
-            assert(options.isValid, "More than one ornament in a single position.")
             updateOrnaments()
         }
     }
@@ -62,17 +61,16 @@ internal class OrnamentsManager: NSObject {
         updateOrnaments()
 
         // Subscribe to updates for scalebar and compass
-        view.subscribeCameraChangeHandler { [scalebarView, compassView] (cameraOptions) in
-            if let zoom = cameraOptions.zoom,
-               let center = cameraOptions.center {
-                scalebarView.metersPerPoint = Projection.getMetersPerPixelAtLatitude(
-                    forLatitude: center.latitude,
-                    zoom: Double(zoom))
-            }
+        view.subscribeCameraChangeHandler { [scalebarView, compassView] (cameraState) in
 
-            if let bearing = cameraOptions.bearing {
-                compassView.currentBearing = Double(bearing)
-            }
+            // Update the scale bar
+            scalebarView.metersPerPoint = Projection.getMetersPerPixelAtLatitude(
+                forLatitude: cameraState.center.latitude,
+                zoom: Double(cameraState.zoom))
+
+            // Update the compass
+            compassView.currentBearing = Double(cameraState.bearing)
+
         }
     }
 
@@ -140,28 +138,6 @@ internal class OrnamentsManager: NSObject {
 
     func layoutGuide(for view: UIView) -> UILayoutGuide {
         let superview = view.superview!
-        if #available(iOS 11.0, *) {
-            return superview.safeAreaLayoutGuide
-        } else {
-            let layoutGuideIdentifier = "mapboxSafeAreaLayoutGuide"
-            // If there's already a generated layout guide, return it
-            if let layoutGuide = superview.layoutGuides.filter({ $0.identifier == layoutGuideIdentifier }).first {
-                return layoutGuide
-            } else {
-                // If not, then make a new one based off the view's edges.
-                let layoutGuide = UILayoutGuide()
-                layoutGuide.identifier = layoutGuideIdentifier
-                superview.addLayoutGuide(layoutGuide)
-
-                NSLayoutConstraint.activate([
-                    layoutGuide.leftAnchor.constraint(equalTo: superview.leftAnchor),
-                    layoutGuide.rightAnchor.constraint(equalTo: superview.rightAnchor),
-                    layoutGuide.topAnchor.constraint(equalTo: superview.topAnchor),
-                    layoutGuide.bottomAnchor.constraint(equalTo: superview.bottomAnchor)
-                ])
-
-                return layoutGuide
-            }
-        }
+        return superview.safeAreaLayoutGuide
     }
 }

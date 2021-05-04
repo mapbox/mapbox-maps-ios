@@ -15,16 +15,15 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds)
+        // Set the map's center coordinate and zoom level
+        let centerCoordinate = CLLocationCoordinate2D(latitude: 37.8, longitude: -96)
+        let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate,
+                                                                  zoom: 2))
+
+        mapView = MapView(frame: view.bounds, mapInitOptions: options)
+
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
-
-        // Set the map's center coordinate and zoom level
-        let centerCoordinate = CLLocationCoordinate2D(latitude: 37.8,
-                                                      longitude: -96)
-
-        mapView.camera.setCamera(to: CameraOptions(center: centerCoordinate,
-                                                          zoom: 2))
 
         // Allows the view controller to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in

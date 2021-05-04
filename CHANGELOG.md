@@ -4,9 +4,33 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Breaking changes ⚠️
+
+- `camera(for:)` methods have moved from `BaseMapView` to `MapboxMap` ([#286](https://github.com/mapbox/mapbox-maps-ios/pull/286))
+  * The API has also been aligned with Android by:
+      * Removing default values for parameters
+      * Making `bearing` and `pitch` parameters optional
+      * Adding the `camera(for:camera:rect:)` variant
+  - `OrnamentOptions` should now be accessed via `MapView.ornaments.options`. `MapConfig.ornaments` has been removed. Updates can be applied directly to `OrnamentsManager.options`. Previously the map's ornament options were updated on `MapConfig.ornaments` with `MapView.update`. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310)) 
+  - The `LogoView` class is now private. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310))
+
 ### Features ✨ and improvements 🏁
 
+- `OrnamentsManager` is now a public class and can be accessed via the `MapView`'s `ornaments` property.
 - `CompassDirectionFormatter` is now public. It provides a string representation of a `CLLocationDirection` and supports the same languages as in pre-v10 versions of the Maps SDK. ([#300](https://github.com/mapbox/mapbox-maps-ios/pull/300))
+
+## 10.0.0-beta.18.1 - April 28, 2021  
+
+### Breaking changes ⚠️
+
+- #### Camera Animations
+  * A new `CameraTransition` struct has been introduced to allow better control on the "from" and "to" values of a camera animation ([#282](https://github.com/mapbox/mapbox-maps-ios/pull/282))
+     * A mutable version of the `CameraTransition` struct is passed into every animation block.
+  * Animations can only be constructor injected into `CameraAnimator` as part of the `makeAnimator*` methods on `mapView.camera`.
+  * The `makeCameraAnimator*` methods have been renamed to `makeAnimator*` methods
+  
+- #### Gestures
+  - Gestures now directly call `__map.setCamera()` instead of using CoreAnimation
 
 ## 10.0.0-beta.18 - April 23, 2021
 
@@ -28,7 +52,7 @@ Mapbox welcomes participation and contributions from everyone.
       * The setter for `BaseMapView.__map` is now private
       * `Snapshotter` no longer conforms to `Observer`, and the method it required is now internal.
   * The `BaseMapView.__map` property has been moved to `BaseMapView.mapboxMap.__map`. ([#280](https://github.com/mapbox/mapbox-maps-ios/pull/280))
-  * A `CameraOptions` struct has been introduced. This shadows the class of the same name from MapboxCoreMaps and. This avoids unintended sharing and better reflects the intended value semantics of the `CameraOptions` concept. ([#284](https://github.com/mapbox/mapbox-maps-ios/pull/284))
+  * A `CameraOptions` struct has been introduced. This shadows the class of the same name from MapboxCoreMaps and. This avoids unintended sharing and better reflects the intended value semantics of the `CameraOptions` concept. ([#284](https://github.com/mapbox/mapbox-maps-ios/pull/284))  
 
 - #### Dependencies
   * Updated dependencies to MapboxCoreMaps 10.0.0-beta.20 and MapboxCommon 11.0.1

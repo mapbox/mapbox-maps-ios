@@ -24,11 +24,11 @@ class MapboxMapsFoundationTests: XCTestCase {
         /**
          Test with offset bounds
          */
-        let mapInitOptions = MapInitOptions(resourceOptions: ResourceOptions(accessToken: "a1b2c3"))
+        let mapInitOptions = MapInitOptions(resourceOptions: ResourceOptions(accessToken: "a1b2c3"),
+                                            styleURI: nil)
 
         mapView = BaseMapView(frame: CGRect(x: 10, y: 10, width: 100, height: 100),
-                              mapInitOptions: mapInitOptions,
-                              styleURI: nil)
+                              mapInitOptions: mapInitOptions)
     }
 
     override func tearDown() {

@@ -12,10 +12,10 @@ open class MapView: BaseMapView {
     public internal(set) var gestures: GestureManager!
 
     /// The `ornaments`object will be responsible for all ornaments on the map.
-    internal var ornaments: OrnamentsManager!
+    public var ornaments: OrnamentsManager!
 
     /// The `camera` object manages a camera's view lifecycle..
-    public internal(set) var camera: CameraManager!
+    public internal(set) var camera: CameraAnimationsManager!
 
     /// The `location`object handles location events of the map.
     public internal(set) var location: LocationManager!
@@ -34,9 +34,8 @@ open class MapView: BaseMapView {
     ///   - frame: frame for the MapView.
     ///   - mapInitOptions: `MapInitOptions`; default uses `CredentialsManager.default`
     ///         to retrieve a shared default access token.
-    ///   - styleURI: `StyleURI` to initialize the map with, or nil.
-    public init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions(), styleURI: StyleURI? = .streets) {
-        super.init(frame: frame, mapInitOptions: mapInitOptions, styleURI: styleURI?.rawValue)
+    public override init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions()) {
+        super.init(frame: frame, mapInitOptions: mapInitOptions)
         initialize()
     }
 

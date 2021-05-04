@@ -13,7 +13,7 @@ internal protocol OrnamentSupportableView: UIView {
     // Compass ornament has been tapped
     func compassTapped()
 
-    func subscribeCameraChangeHandler(_ handler: @escaping (CameraOptions) -> Void)
+    func subscribeCameraChangeHandler(_ handler: @escaping (CameraState) -> Void)
 }
 
 // Provides default implementation of OrnamentSupportableView methods.

@@ -12,10 +12,12 @@ public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProt
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds)
+        let camera = CameraOptions(center: CLLocationCoordinate2D(latitude: 59.3, longitude: 8.06),
+                                   zoom: 12)
+        let options = MapInitOptions(cameraOptions: camera)
+
+        mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        mapView.camera.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 59.3, longitude: 8.06),
-                                                          zoom: 12))
         view.addSubview(mapView)
 
         // Allows the view controller to receive information about map events.
@@ -29,7 +31,7 @@ public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProt
     }
 
     public func addPointAnnotation() {
-        pointAnnotation = PointAnnotation(coordinate: mapView.centerCoordinate)
+        pointAnnotation = PointAnnotation(coordinate: mapView.cameraState.center)
         mapView.annotations.addAnnotation(pointAnnotation)
         mapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(updatePosition)))
     }

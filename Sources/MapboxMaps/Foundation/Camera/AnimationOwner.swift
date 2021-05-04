@@ -1,5 +1,5 @@
 // MARK: AnimationOwner Enum
-public enum AnimationOwner {
+public enum AnimationOwner: Equatable {
     case gestures
     case unspecified
     case custom(id: String)

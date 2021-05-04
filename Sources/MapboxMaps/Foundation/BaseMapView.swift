@@ -3,12 +3,9 @@
 import UIKit
 import Turf
 
-// swiftlint:disable file_length
-
 internal typealias PendingAnimationCompletion = (completion: AnimationCompletion, animatingPosition: UIViewAnimatingPosition)
 
-// swiftlint:disable:next type_body_length
-open class BaseMapView: UIView, CameraViewDelegate {
+open class BaseMapView: UIView {
 
     // mapbox map depends on MapInitOptions, which is not available until
     // awakeFromNib() when instantiating BaseMapView from a xib or storyboard.
@@ -32,6 +29,14 @@ open class BaseMapView: UIView, CameraViewDelegate {
     /// List of completion blocks that need to be completed by the displayLink
     internal var pendingAnimatorCompletionBlocks: [PendingAnimationCompletion] = []
 
+    /// Pointer HashTable for holding camera animators
+    private var cameraAnimatorsSet = WeakCameraAnimatorSet()
+
+    /// List of animators currently alive
+    internal var cameraAnimators: [CameraAnimator] {
+        return cameraAnimatorsSet.allObjects
+    }
+
     /// Map of event types to subscribed event handlers
     private var eventHandlers: [String: [(MapboxCoreMaps.Event) -> Void]] = [:]
 
@@ -52,97 +57,26 @@ open class BaseMapView: UIView, CameraViewDelegate {
         }
     }
 
-    /// Returns the camera view managed by this object.
-    internal private(set) var cameraView: CameraView!
-
     /// The map's current camera
-    public var cameraOptions: CameraOptions {
-        get {
-            return mapboxMap.cameraOptions
-        } set {
-            cameraView.camera = newValue
-        }
+    public var cameraState: CameraState {
+        return mapboxMap.cameraState
     }
 
-    /// The map's current center coordinate.
-    public var centerCoordinate: CLLocationCoordinate2D {
-        get {
-            guard let center = cameraOptions.center else {
-                fatalError("Center is nil in camera options")
-            }
-            return center
-        } set {
-            cameraView.centerCoordinate = newValue
-        }
-    }
-
-    /// The map's  zoom level.
-    public var zoom: CGFloat {
-        get {
-            guard let zoom = cameraOptions.zoom else {
-                fatalError("Zoom is nil in camera options")
-            }
-            return CGFloat(zoom)
-        } set {
-            cameraView.zoom = newValue
-        }
-    }
-
-    /// The map's bearing, measured clockwise from 0° north.
-    public var bearing: CLLocationDirection {
-        get {
-            guard let bearing = cameraOptions.bearing else {
-                fatalError("Bearing is nil in camera options")
-            }
-            return CLLocationDirection(bearing)
-        } set {
-            cameraView.bearing = CGFloat(newValue)
-        }
-    }
-
-    /// The map's pitch, falling within a range of 0 to 60.
-    public var pitch: CGFloat {
-        get {
-            guard let pitch = cameraOptions.pitch else {
-                fatalError("Pitch is nil in camera options")
-            }
-
-            return pitch
-        } set {
-            cameraView.pitch = newValue
-        }
-    }
-
-    /// The map's camera padding
-    public var padding: UIEdgeInsets {
-        get {
-            return cameraOptions.padding ?? .zero
-        } set {
-            cameraView.padding = newValue
-        }
-    }
-
+    /// The map's current anchor, calculated after applying padding (if it exists)
     public var anchor: CGPoint {
-        get {
-            // TODO: Evaluate whether we should get the anchor from CameraView or not
-            return cameraView.anchor
-        } set {
-            cameraView.anchor = newValue
-        }
-    }
-
-    func jumpTo(camera: CameraOptions) {
-        mapboxMap.updateCamera(with: camera)
+        let padding = cameraState.padding
+        let xAfterPadding = center.x + padding.left - padding.right
+        let yAfterPadding = center.y + padding.top - padding.bottom
+        return CGPoint(x: xAfterPadding, y: yAfterPadding)
     }
 
     // MARK: Init
-    public init(frame: CGRect, mapInitOptions: MapInitOptions, styleURI: URL?) {
+    public init(frame: CGRect, mapInitOptions: MapInitOptions) {
         super.init(frame: frame)
-        self.commonInit(mapInitOptions: mapInitOptions,
-                        styleURI: styleURI)
+        commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
 
-    private func commonInit(mapInitOptions: MapInitOptions, styleURI: URL?) {
+    private func commonInit(mapInitOptions: MapInitOptions, overridingStyleURI: URL?) {
         checkForMetalSupport()
 
         self.resourceOptions = mapInitOptions.resourceOptions
@@ -162,7 +96,9 @@ open class BaseMapView: UIView, CameraViewDelegate {
                 glyphsRasterizationOptions: original.glyphsRasterizationOptions)
             resolvedMapInitOptions = MapInitOptions(
                 resourceOptions: mapInitOptions.resourceOptions,
-                mapOptions: resolvedMapOptions)
+                mapOptions: resolvedMapOptions,
+                cameraOptions: mapInitOptions.cameraOptions,
+                styleURI: mapInitOptions.styleURI)
         } else {
             resolvedMapInitOptions = mapInitOptions
         }
@@ -173,16 +109,18 @@ open class BaseMapView: UIView, CameraViewDelegate {
         let events = MapEvents.EventKind.allCases.map({ $0.rawValue })
         mapboxMap.__map.subscribe(for: observer, events: events)
 
-        self.cameraView = CameraView(delegate: self)
-        self.addSubview(cameraView)
-
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(willTerminate),
                                                name: UIApplication.willTerminateNotification,
                                                object: nil)
 
-        if let validStyleURI = styleURI {
-            mapboxMap.__map.setStyleURIForUri(validStyleURI.absoluteString)
+        // Use the overriding style URI if provided (currently from IB)
+        if let initialStyleURI = overridingStyleURI ?? resolvedMapInitOptions.styleURI?.rawValue {
+            mapboxMap.__map.setStyleURIForUri(initialStyleURI.absoluteString)
+        }
+
+        if let cameraOptions = resolvedMapInitOptions.cameraOptions {
+            mapboxMap.__map.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
         }
     }
 
@@ -220,9 +158,8 @@ open class BaseMapView: UIView, CameraViewDelegate {
             MapInitOptions()
 
         let ibStyleURI = BaseMapView.parseIBStringAsURL(ibString: styleURI__)
-        let styleURI = ibStyleURI ?? StyleURI.streets.rawValue
 
-        commonInit(mapInitOptions: mapInitOptions, styleURI: styleURI)
+        commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: ibStyleURI)
     }
 
     public func on(_ eventType: MapEvents.EventKind, handler: @escaping (MapboxCoreMaps.Event) -> Void) {
@@ -256,7 +193,12 @@ open class BaseMapView: UIView, CameraViewDelegate {
 
         if needsDisplayRefresh {
             needsDisplayRefresh = false
-            self.cameraView.update()
+
+            for animator in cameraAnimatorsSet.allObjects {
+                if let cameraOptions = animator.currentCameraOptions {
+                    mapboxMap.updateCamera(with: cameraOptions)
+                }
+            }
 
             /// This executes the series of scheduled animation completion blocks and also removes them from the list
             while !pendingAnimatorCompletionBlocks.isEmpty {
@@ -268,6 +210,11 @@ open class BaseMapView: UIView, CameraViewDelegate {
 
             self.displayCallback?()
         }
+    }
+
+    // Add an animator to the `cameraAnimatorsSet`
+    internal func addCameraAnimator(_ cameraAnimator: CameraAnimatorInterface) {
+        cameraAnimatorsSet.add(cameraAnimator)
     }
 
     func updateDisplayLinkPreferredFramesPerSecond() {

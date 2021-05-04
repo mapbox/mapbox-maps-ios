@@ -79,7 +79,7 @@ class ViewController: UIViewController {
 
         // Do any additional setup after loading the view.
         mapInitOptions = MapInitOptions()
-        mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions, styleURI: .streets)
+        mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         view.addSubview(mapView)
         NSLayoutConstraint.activate([
             mapView.leftAnchor.constraint(equalTo: view.leftAnchor),
@@ -192,8 +192,8 @@ class ViewController: UIViewController {
     }
 
     func flyTo(end: CLLocationCoordinate2D, completion: @escaping () -> Void) {
-        let startOptions = mapView.cameraOptions
-        let start = startOptions.center!
+        let startOptions = mapView.cameraState
+        let start = startOptions.center
 
         let lineAnnotation = LineAnnotation(coordinates: [start, end])
 
@@ -284,12 +284,13 @@ class ViewController: UIViewController {
         // Configure the snapshotter object with its default access
         // token, size, map style, and camera.
         let options = MapSnapshotOptions(size: CGSize(width: 300, height: 300),
+                                         pixelRatio: 1,
                                          resourceOptions: mapInitOptions.resourceOptions)
 
         print("Creating snapshotter")
         let snapshotter = Snapshotter(options: options)
         snapshotter.style.uri = .light
-        snapshotter.camera = mapView.cameraOptions
+        snapshotter.setCamera(to: CameraOptions(cameraState: mapView.cameraState))
 
         snapshotter.on(.styleLoaded) { [weak self] _ in
             guard let snapshotter = self?.snapshotter else {

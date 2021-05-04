@@ -19,15 +19,15 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        self.mapView = MapView(frame: view.bounds)
-        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.view.addSubview(mapView)
-
         let camera = CameraOptions(center: self.modelOrigin,
                                    zoom: 18,
                                    bearing: 180,
                                    pitch: 60)
-        mapView.camera.setCamera(to: camera)
+        let options = MapInitOptions(cameraOptions: camera)
+
+        mapView = MapView(frame: view.bounds, mapInitOptions: options)
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.view.addSubview(mapView)
 
         self.mapView.on(.styleLoaded) { [weak self] _ in
             self?.addModelAndTerrain()

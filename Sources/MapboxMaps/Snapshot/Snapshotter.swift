@@ -23,11 +23,14 @@ public class Snapshotter {
     /// A `style` object that can be manipulated to set different styles for a snapshot
     public let style: Style
 
+    private let options: MapSnapshotOptions
+
     /// Initialize a `Snapshotter` instance
     /// - Parameters:
     ///   - observer: Observer responsible for handling lifecycle events in a snapshot
     ///   - options: Options describing an intended snapshot
     public init(options: MapSnapshotOptions) {
+        self.options = options
         mapSnapshotter = MapSnapshotter(options: options)
         style = Style(with: mapSnapshotter)
         observer.delegate = self
@@ -61,14 +64,15 @@ public class Snapshotter {
         }
     }
 
-    /// Camera configuration for the snapshot
-    public var camera: CameraOptions {
-        get {
-            return CameraOptions(mapSnapshotter.getCameraOptions(forPadding: nil))
-        }
-        set {
-            mapSnapshotter.setCameraFor(MapboxCoreMaps.CameraOptions(newValue))
-        }
+    /// The current camera state of the snapshotter
+    public var cameraState: CameraState {
+        return CameraState(mapSnapshotter.getCameraState())
+    }
+
+    /// Sets the camera of the snapshotter
+    /// - Parameter cameraOptions: The target camera options
+    public func setCamera(to cameraOptions: CameraOptions) {
+        mapSnapshotter.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
     }
 
     /// In the tile mode, the snapshotter fetches the still image of a single tile.
@@ -93,6 +97,8 @@ public class Snapshotter {
     public func start(overlayHandler: SnapshotOverlayHandler?,
                       completion: @escaping (Result<UIImage, SnapshotError>) -> Void) {
 
+        let scale = CGFloat(options.pixelRatio)
+
         mapSnapshotter.start { (expected) in
             guard let validExpected = expected else {
                 completion(.failure(.unknown))
@@ -105,11 +111,12 @@ public class Snapshotter {
 
             if validExpected.isValue(), let snapshot = validExpected.value as? MapSnapshot {
                 let mbxImage = snapshot.image()
-                let scale = UIScreen.main.scale
 
                 if let uiImage = UIImage(mbxImage: mbxImage, scale: scale) {
                     let rect = CGRect(origin: .zero, size: uiImage.size)
-                    let renderer = UIGraphicsImageRenderer(size: uiImage.size)
+                    let format = UIGraphicsImageRendererFormat()
+                    format.scale = scale
+                    let renderer = UIGraphicsImageRenderer(size: uiImage.size, format: format)
                     let compositeImage = renderer.image { rendererContext in
 
                         // First draw the snaphot image into the context

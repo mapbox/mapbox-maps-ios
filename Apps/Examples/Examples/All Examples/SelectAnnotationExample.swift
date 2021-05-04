@@ -22,16 +22,14 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds)
-        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(mapView)
-
         // Set the center coordinate and zoom level over southern Iceland.
         let centerCoordinate = CLLocationCoordinate2D(latitude: 63.982738,
                                                       longitude: -16.741790)
+        let options = MapInitOptions(cameraOptions: CameraOptions(center: centerCoordinate, zoom: 12.0))
 
-        mapView.camera.setCamera(to: CameraOptions(center: centerCoordinate,
-                                                          zoom: 12.0))
+        mapView = MapView(frame: view.bounds, mapInitOptions: options)
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(mapView)
 
         // Allow the view controller to receive information about map events.
         mapView.on(.mapLoaded) { [weak self] _ in
@@ -59,7 +57,7 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
     public func setupExample() {
 
         // Create the point annotation, which will be rendered with the default red pin.
-        let coordinate = mapView.centerCoordinate
+        let coordinate = mapView.cameraState.center
         let pointAnnotation = PointAnnotation(coordinate: coordinate)
 
         // Allow the view controller to accept annotation selection events.

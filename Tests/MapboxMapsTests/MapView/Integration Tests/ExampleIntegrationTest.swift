@@ -9,9 +9,7 @@ internal class ExampleIntegrationTest: MapViewIntegrationTestCase {
     }
 
     internal func testWaitForIdle() throws {
-        guard
-            let mapView = mapView,
-            let style = style else {
+        guard let style = style else {
             XCTFail("There should be valid MapView and Style objects created by setUp.")
             return
         }
@@ -20,9 +18,6 @@ internal class ExampleIntegrationTest: MapViewIntegrationTestCase {
         expectation.expectedFulfillmentCount = 2
 
         style.uri = .streets
-
-        mapView.centerCoordinate = CLLocationCoordinate2D(latitude: 42.0, longitude: -71.0)
-        mapView.zoom = 8.0
 
         didFinishLoadingStyle = { _ in
             expectation.fulfill()

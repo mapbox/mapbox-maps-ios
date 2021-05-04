@@ -11,7 +11,7 @@ import MapboxMapsFoundation
 // Mock class that flags true when `OrnamentSupportableView` protocol methods have been called on it
 class OrnamentSupportableViewMock: UIView, OrnamentSupportableView {
 
-    func subscribeCameraChangeHandler(_ handler: @escaping (CameraOptions) -> Void) {
+    func subscribeCameraChangeHandler(_ handler: @escaping (CameraState) -> Void) {
 
     }
 

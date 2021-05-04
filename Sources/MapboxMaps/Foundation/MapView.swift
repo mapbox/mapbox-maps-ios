@@ -333,7 +333,7 @@ extension MapView: DelegatingMapClientDelegate {
         metalView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         metalView.autoResizeDrawable = true
         metalView.contentScaleFactor = UIScreen.main.scale
-        metalView.contentMode = .center
+        metalView.contentMode = .scaleToFill
         metalView.isOpaque = isOpaque
         metalView.layer.isOpaque = isOpaque
         metalView.isPaused = true

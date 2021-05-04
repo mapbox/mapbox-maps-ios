@@ -191,7 +191,7 @@ extension AnnotationManagerIntegrationTestCase: AnnotationStyleDelegate {
     }
 
     func addLayer(_ layer: Layer, layerPosition: LayerPosition?) throws {
-        let style = try XCTUnwrap(style)
+        let style = try XCTUnwrap(self.style)
         try style.addLayer(layer, layerPosition: layerPosition)
     }
 }

@@ -36,12 +36,10 @@ class ImageSourceIntegrationTests: MapViewIntegrationTestCase {
             }
 
             // Retrieve the source
-            let retrieveResult = style.getSource(id: "test-source", type: ImageSource.self)
-
-            switch (retrieveResult) {
-                case .success(_):
-                successfullyRetrievedSourceExpectation.fulfill()    
-                case .failure(let error):
+            do {
+                _ = try style.source(withId: "test-source", type: ImageSource.self)
+                successfullyRetrievedSourceExpectation.fulfill()
+            } catch {
                 XCTFail("Failed to retrieve ImageSource because of error: \(error)")
             }
         }

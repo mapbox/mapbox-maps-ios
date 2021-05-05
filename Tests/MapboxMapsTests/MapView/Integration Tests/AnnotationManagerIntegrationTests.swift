@@ -18,7 +18,15 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
         let sourceAddedExpectation = XCTestExpectation(description: "Annotation source layer added")
         let styleLayerAddedExpectation = XCTestExpectation(description: "Annotation style layer added")
 
-        didFinishLoadingStyle = { mapView in
+        didFinishLoadingStyle = { [weak self] mapView in
+
+            styleLoadedExpectation.fulfill()
+
+            guard let self = self,
+                  let style = self.style else {
+                XCTFail()
+                return
+            }
 
             // Given
             let annotation = PointAnnotation(coordinate: mapView.cameraState.center)
@@ -27,22 +35,11 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
                                                       options: AnnotationOptions())
             annotationManager.addAnnotation(annotation)
 
-            // When
-            let sourceResult = self.style?.getSource(id: annotationManager.defaultSourceId, type: GeoJSONSource.self)
-            let styleLayer = self.mapView?.mapboxMap.__map.getStyleLayerProperties(forLayerId: annotationManager.defaultSymbolLayerId)
-            // ❓ Core SDK call to get style layer works, but not Style API line below
-            // let styleLayer = self.style?.getLayer(with: annotationManager.defaultSymbolLayerId, type: SymbolLayer.self)
+            _ = try! style.sourceProperties(for: annotationManager.defaultSourceId)
+            sourceAddedExpectation.fulfill()
 
-            // Then
-            styleLoadedExpectation.fulfill()
-
-            if case .success = sourceResult {
-                sourceAddedExpectation.fulfill()
-            }
-
-            if styleLayer?.value != nil {
-                styleLayerAddedExpectation.fulfill()
-            }
+            _ = try! style.layerProperties(for: annotationManager.defaultSymbolLayerId)
+            styleLayerAddedExpectation.fulfill()
         }
 
         let expectations = [
@@ -99,9 +96,16 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
         let styleLoadedExpectation = XCTestExpectation(description: "Wait for map to load style")
         let sourceAddedExpectation = XCTestExpectation(description: "Annotation source layer added")
         let styleLayerAddedExpectation = XCTestExpectation(description: "Annotation style layer added")
-        let retrieveUserInfoExpectation = XCTestExpectation(description: "Get the userInfo value that was set for the annotation")
 
-        didFinishLoadingStyle = { mapView in
+        didFinishLoadingStyle = { [weak self] mapView in
+
+            styleLoadedExpectation.fulfill()
+
+            guard let self = self,
+                  let style = self.style else {
+                XCTFail()
+                return
+            }
 
             // Given
             var annotation = PointAnnotation(coordinate: mapView.cameraState.center)
@@ -112,33 +116,17 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
             annotationManager.addAnnotation(annotation)
 
             // When
-            let sourceResult = self.style?.getSource(id: annotationManager.defaultSourceId, type: GeoJSONSource.self)
-            let styleLayer = self.mapView?.mapboxMap.__map.getStyleLayerProperties(forLayerId: annotationManager.defaultSymbolLayerId)
-            // ❓ Core SDK call to get style layer works, but not Style API line below
-            // let styleLayer = self.style?.getLayer(with: annotationManager.defaultSymbolLayerId, type: SymbolLayer.self)
+            _ = try! style.source(withId: annotationManager.defaultSourceId, type: GeoJSONSource.self)
+            sourceAddedExpectation.fulfill()
 
-            // Then
-            styleLoadedExpectation.fulfill()
-
-            if let value = annotation.userInfo?["TestKey"] as? Bool,
-               value == true {
-                retrieveUserInfoExpectation.fulfill()
-            }
-
-            if case .success = sourceResult {
-                sourceAddedExpectation.fulfill()
-            }
-
-            if styleLayer?.value != nil {
-                styleLayerAddedExpectation.fulfill()
-            }
+            _ = try! style.layerProperties(for: annotationManager.defaultSymbolLayerId)
+            styleLayerAddedExpectation.fulfill()
         }
 
         let expectations = [
             styleLoadedExpectation,
             sourceAddedExpectation,
-            styleLayerAddedExpectation,
-            retrieveUserInfoExpectation
+            styleLayerAddedExpectation
         ]
 
         wait(for: expectations, timeout: 5.0)

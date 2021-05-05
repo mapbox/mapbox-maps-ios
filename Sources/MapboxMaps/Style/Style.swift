@@ -41,9 +41,10 @@ public class Style {
      Moves a `layer` to a new layer position in the style.
      - Parameter layerId: The layer to move
      - Parameter position: The new position to move the layer to
+
      - Throws: `LayerError` on failure, or `NSError` with a _domain of "com.mapbox.bindgen"
      */
-    public func _moveLayer(with layerId: String, to position: LayerPosition) throws {
+    public func _moveLayer(withId layerId: String, to position: LayerPosition) throws {
         let properties = try layerProperties(for: layerId)
         try removeLayer(withId: layerId)
         try addLayer(with: properties, layerPosition: position)
@@ -53,20 +54,14 @@ public class Style {
      Gets a `layer` from the map
      - Parameter layerID: The id of the layer to be fetched
      - Parameter type: The type of the layer that will be fetched
-     - Returns: The fully formed `layer` object of type equal to `type` is returned as
-                part of the `Result`s success case if the operation is successful.
-                Else, returns a `LayerError` as part of the `Result` failure case.
+
+     - Returns: The fully formed `layer` object of type equal to `type`
+     - Throws: Error
      */
-    public func getLayer<T: Layer>(with layerID: String, type: T.Type = T.self) -> Result<T, LayerError> {
-        let layerResult = _layer(with: layerID, type: type)
-        switch layerResult {
-        case .success(let layer):
-            // swiftlint:disable force_cast
-            return .success(layer as! T)
-            // swiftlint:enable force_cast
-        case .failure(let error):
-            return .failure(error)
-        }
+    public func layer<T: Layer>(withId layerID: String, type: T.Type = T.self) throws -> T {
+        // swiftlint:disable force_cast
+        return try _layer(withId: layerID, type: type) as! T
+        // swiftlint:enable force_cast
     }
 
     /**
@@ -77,20 +72,14 @@ public class Style {
 
      - Parameter layerID: The id of the layer to be fetched
      - Parameter type: The type of the layer that will be fetched
-     - Returns: The fully formed `layer` object of type equal to `type` is returned as
-                part of the `Result`s success case if the operation is successful.
-                Else, returns a `LayerError` as part of the `Result` failure case.
-     */
-    public func _layer(with layerID: String, type: Layer.Type) -> Result<Layer, LayerError> {
 
+     - Returns: The fully formed `layer` object of type equal to `type`
+     - Throws: Error
+     */
+    public func _layer(withId layerID: String, type: Layer.Type) throws -> Layer {
         // Get the layer properties from the map
-        do {
-            let layerProps = try layerProperties(for: layerID)
-            let layer = try type.init(jsonObject: layerProps)
-            return .success(layer)
-        } catch {
-            return .failure(.layerDecodingFailed(error))
-        }
+        let properties = try layerProperties(for: layerID)
+        return try type.init(jsonObject: properties)
     }
 
     /// Updates a layer that exists in the style already
@@ -98,36 +87,16 @@ public class Style {
     ///   - id: identifier of layer to update
     ///   - type: Type of the layer
     ///   - update: Closure that mutates a layer passed to it
-    /// - Returns: Result type with  `.success` if update is successful, `LayerError` otherwise
-    @discardableResult
-    public func updateLayer<T: Layer>(id: String, type: T.Type, update: (inout T) -> Void) -> Result<Bool, LayerError> {
-
-        let result: Result<T, LayerError> = getLayer(with: id, type: T.self)
-        var layer: T
-
-        // Fetch the layer from the style
-        switch result {
-        case .success(let retrievedLayer):
-            // Successfully retrieved the layer
-            layer = retrievedLayer
-        case .failure:
-
-            // Could not retrieve the layer
-            return .failure(.getStyleLayerFailed("Could not retrieve the layer"))
-        }
+    public func updateLayer<T: Layer>(id: String, type: T.Type, update: (inout T) throws -> Void) throws {
+        var layer: T = try self.layer(withId: id, type: T.self)
 
         // Call closure to update the retrieved layer
-        update(&layer)
+        try update(&layer)
 
-        do {
-            let value = try layer.jsonObject()
+        let value = try layer.jsonObject()
 
-            // Apply the changes to the layer properties to the style
-            try setLayerProperties(for: id, properties: value)
-            return .success(true)
-        } catch {
-            return .failure(.updateStyleLayerFailed(error))
-        }
+        // Apply the changes to the layer properties to the style
+        try setLayerProperties(for: id, properties: value)
     }
 
     // MARK: Layer properties
@@ -166,14 +135,9 @@ public class Style {
                 as part of the `Result`s success case if the operation is successful.
                 Else, returns a `SourceError` as part of the `Result` failure case.
      */
-    public func getSource<T: Source>(id: String, type: T.Type = T.self) -> Result<T, SourceError> {
+    public func source<T: Source>(withId id: String, type: T.Type = T.self) throws -> T {
         // swiftlint:disable force_cast
-        do {
-            let source = try _source(id: id, type: type)
-            return .success(source as! T)
-        } catch {
-            return .failure(error as! SourceError)
-        }
+        return try _source(withId: id, type: type) as! T
         // swiftlint:enable force_cast
     }
 
@@ -189,7 +153,7 @@ public class Style {
                 as part of the `Result`s success case if the operation is successful.
                 Else, returns a `SourceError` as part of the `Result` failure case.
      */
-    public func _source(id: String, type: Source.Type) throws  -> Source {
+    public func _source(withId id: String, type: Source.Type) throws  -> Source {
         // Get the source properties for a given identifier
         let sourceProps = try sourceProperties(for: id)
         let source = try type.init(jsonObject: sourceProps)
@@ -218,20 +182,9 @@ public class Style {
      - Note: This method is only effective with sources of `GeoJSONSource` type,
              and should not be used to update other source types.
      */
-    public func updateGeoJSON<T: GeoJSONObject>(for sourceIdentifier: String, with geoJSON: T) -> Result<Bool, SourceError> {
-
-        guard let geoJSONDictionary = try? GeoJSONManager.dictionaryFrom(geoJSON) else {
-            return .failure(.setSourceProperty("Could not parse updated GeoJSON"))
-        }
-
-        do {
-            try setSourceProperty(for: sourceIdentifier, property: "data", value: geoJSONDictionary)
-            return .success(true)
-        } catch {
-            // swiftlint:disable force_cast
-            return .failure(error as! SourceError)
-            // swiftlint:enable force_cast
-        }
+    public func updateGeoJSONSource<T: GeoJSONObject>(withId sourceId: String, geoJSON: T) throws {
+        let geoJSONDictionary = try GeoJSONManager.dictionaryFrom(geoJSON)
+        try setSourceProperty(for: sourceId, property: "data", value: geoJSONDictionary as Any)
     }
 
     // MARK: Light

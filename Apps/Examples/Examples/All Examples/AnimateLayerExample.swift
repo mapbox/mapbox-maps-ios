@@ -93,10 +93,10 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
 
         // Add the sources and layers to the map style.
         _ = mapView.style.addSource(source: airplaneRoute.source, identifier: airplaneRoute.identifier)
-        _ = mapView.style.addLayer(layer: lineLayer, layerPosition: nil)
+        try! mapView.style.addLayer(lineLayer, layerPosition: nil)
 
         _ = mapView.style.addSource(source: airplaneSymbol.source, identifier: airplaneSymbol.identifier)
-        _ = mapView.style.addLayer(layer: airplaneSymbolLayer, layerPosition: nil)
+        try! mapView.style.addLayer(airplaneSymbolLayer, layerPosition: nil)
     }
 
     public func startAnimation(routeLine: LineString) {

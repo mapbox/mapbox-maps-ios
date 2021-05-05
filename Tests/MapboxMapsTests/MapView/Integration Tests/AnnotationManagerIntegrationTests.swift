@@ -190,12 +190,8 @@ extension AnnotationManagerIntegrationTestCase: AnnotationStyleDelegate {
         return style.updateSourceProperty(id: id, property: property, value: value)
     }
 
-    func addLayer(layer: Layer, layerPosition: LayerPosition?) -> Result<Bool, LayerError> {
-        guard let style = style else {
-            XCTFail("No style available")
-            return .failure(.addStyleLayerFailed(nil))
-        }
-
-        return style.addLayer(layer: layer, layerPosition: layerPosition)
+    func addLayer(_ layer: Layer, layerPosition: LayerPosition?) throws {
+        let style = try XCTUnwrap(self.style)
+        try style.addLayer(layer, layerPosition: layerPosition)
     }
 }

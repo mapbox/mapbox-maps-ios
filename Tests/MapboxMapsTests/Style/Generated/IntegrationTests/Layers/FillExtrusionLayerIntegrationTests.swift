@@ -51,13 +51,11 @@ class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.fillExtrusionVerticalGradient = Value<Bool>.testConstantValue()
 
             // Add the layer
-            let addResult = style.addLayer(layer: layer)
-
-            switch (addResult) {
-                case .success(_):
-                    successfullyAddedLayerExpectation.fulfill()
-                case .failure(let error):
-                    XCTFail("Failed to add FillExtrusionLayer because of error: \(error)")
+            do {
+                try style.addLayer(layer)
+                successfullyAddedLayerExpectation.fulfill()
+            } catch {
+                XCTFail("Failed to add FillExtrusionLayer because of error: \(error)")
             }
 
             // Retrieve the layer

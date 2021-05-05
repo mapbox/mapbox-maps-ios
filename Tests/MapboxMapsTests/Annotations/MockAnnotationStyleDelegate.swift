@@ -26,7 +26,6 @@ final class MockAnnotationStyleDelegate: AnnotationStyleDelegate {
         return .success(true)
     }
 
-    func addLayer(layer: Layer, layerPosition: LayerPosition?) -> Result<Bool, LayerError> {
-        return .success(true)
+    func addLayer(_ layer: Layer, layerPosition: LayerPosition?) throws {
     }
 }

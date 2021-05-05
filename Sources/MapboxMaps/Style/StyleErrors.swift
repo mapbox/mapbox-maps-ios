@@ -35,14 +35,17 @@ public enum LayerError: Error {
     /// The layer retrieved from the map could not be decoded.
     case layerDecodingFailed(Error)
 
-    /// Addding the style layer to the map failed
-    case addStyleLayerFailed(String?)
-
-    /// The layer properties for a layer are nil
-    case getStyleLayerFailed(String?)
+    /// Adding the style layer to the map failed
+    case addLayerFailed(String)
 
     /// Remove the style layer from the map failed
-    case removeStyleLayerFailed(String?)
+    case removeLayerFailed(String)
+
+    /// Setting layer property(s) failed
+    case setLayerPropertyFailed(String)
+
+    /// The layer properties for a layer are nil
+    case getStyleLayerFailed(String)
 
     /// The retrieved layer is nil
     case retrievedLayerIsNil

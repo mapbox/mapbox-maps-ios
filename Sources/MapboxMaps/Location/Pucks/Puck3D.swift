@@ -78,7 +78,7 @@ internal class Puck3D: Puck {
             }
             self.removePuck()
             style.addSource(source: self.modelSource, identifier: "puck-model-source")
-            style.addLayer(layer: self.modelLayer)
+            try! style.addLayer(self.modelLayer)
         }
 
         // Do initial setup
@@ -119,10 +119,13 @@ internal class Puck3D: Puck {
 
     /// This function will remove the puck from `mapView`
     private func removePuck() {
-        guard let style = locationSupportableMapView?.style else {
+        guard
+            let style = locationSupportableMapView?.style,
+            style.layerExists(withId: "puck-model-layer") else {
             return
         }
-        _ = style.removeStyleLayer(forLayerId: "puck-model-layer")
+
+        try! style.removeLayer(withId: "puck-model-layer")
         style.styleManager.removeStyleSource(forSourceId: "puck-model-source")
     }
 }

@@ -113,7 +113,7 @@ public class DataDrivenSymbolsExample: UIViewController, ExampleProtocol {
 
         layer.layout?.iconImage = .expression(expression)
 
-        _ = mapView.style.addLayer(layer: layer, layerPosition: nil)
+        try! mapView.style.addLayer(layer, layerPosition: nil)
 
         // The below line is used for internal testing purposes only.
         finish()

@@ -38,7 +38,7 @@ public enum LayerType: String, Codable {
     case sky
 
     /// Layer used for a 3D model
-    case model = "model"
+    case model
 
     /// The associated Swift struct type
     public var layerType: Layer.Type {
@@ -98,10 +98,19 @@ public protocol Layer: Codable, StyleEncodable, StyleDecodable {
     var maxZoom: Double? { get set }
 }
 
+/// Information about a layer
+public struct LayerInfo {
+    /// The identifier of the layer
+    var id: String
+
+    /// The type of the layer
+    var type: LayerType
+}
+
 public extension Layer {
     /// Initializes a Layer given a JSON dictionary
     /// - Throws: Errors occurring during decoding
-    init(jsonObject: [String: AnyObject]) throws {
+    init(jsonObject: [String: Any]) throws {
         let layerData = try JSONSerialization.data(withJSONObject: jsonObject)
         self = try JSONDecoder().decode(Self.self, from: layerData)
     }

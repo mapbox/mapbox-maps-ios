@@ -2,7 +2,7 @@ import UIKit
 
 /// The `GestureHandlerDelegate` protocol supports communication
 /// from the Gestures module to the `MapView`.
-internal protocol GestureHandlerDelegate: class {
+internal protocol GestureHandlerDelegate: AnyObject {
 
     // View has been tapped with a number of taps and number of finger touches
     func tapped(numberOfTaps: Int, numberOfTouches: Int)

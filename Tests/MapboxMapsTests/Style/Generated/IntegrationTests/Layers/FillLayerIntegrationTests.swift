@@ -50,13 +50,11 @@ class FillLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.fillTranslateAnchor = Value<FillTranslateAnchor>.testConstantValue()
 
             // Add the layer
-            let addResult = style.addLayer(layer: layer)
-
-            switch (addResult) {
-                case .success(_):
-                    successfullyAddedLayerExpectation.fulfill()
-                case .failure(let error):
-                    XCTFail("Failed to add FillLayer because of error: \(error)")
+            do {
+                try style.addLayer(layer)
+                successfullyAddedLayerExpectation.fulfill()
+            } catch {
+                XCTFail("Failed to add FillLayer because of error: \(error)")
             }
 
             // Retrieve the layer

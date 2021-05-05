@@ -25,12 +25,10 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             var newBackgroundLayer = BackgroundLayer(id: "test-id")
             newBackgroundLayer.paint?.backgroundColor = .constant(.init(color: .white))
 
-            let result1 = style.addLayer(layer: newBackgroundLayer)
-
-            switch result1 {
-            case .success:
+            do {
+                try style.addLayer(newBackgroundLayer)
                 expectation.fulfill()
-            case .failure(let error):
+            } catch {
                 XCTFail("Could not add background layer due to error: \(error)")
             }
 
@@ -78,12 +76,10 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             let layers = style.styleManager.getStyleLayers()
             let newBackgroundLayer = BackgroundLayer(id: "test-id")
 
-            let result = style.addLayer(layer: newBackgroundLayer)
-
-            switch result {
-            case .success:
+            do {
+                try style.addLayer(newBackgroundLayer)
                 expectation.fulfill()
-            case .failure(let error):
+            } catch {
                 XCTFail("Could not add background layer due to error: \(error)")
             }
 

@@ -11,6 +11,8 @@ public class Style {
     public private(set) weak var styleManager: StyleManager!
 
     internal init(with styleManager: StyleManager) {
+        self.styleManager = styleManager
+
         var uri: StyleURI?
 
         if let styleURL = URL(string: styleManager.getStyleURI()) {
@@ -18,22 +20,6 @@ public class Style {
         }
 
         self.uri = uri ?? Self.defaultURI
-        self.styleManager = styleManager
-    }
-
-    // Could we use a mutating function here?
-    /**
-     URL of the style currently displayed in the receiver.
-
-     The URL may be a full HTTP or HTTPS URL ,a Mapbox style
-     URL (mapbox://styles/{user}/{style}), or a URL for a style
-     JSON file.
-     */
-    public var uri: StyleURI {
-        didSet {
-            let uriString = uri.rawValue.absoluteString
-            styleManager.setStyleURIForUri(uriString)
-        }
     }
 
     // MARK: Layers
@@ -44,27 +30,10 @@ public class Style {
      - Returns: If operation successful, returns a `true` as part of the `Result`
                 success case. Else, returns a `LayerError` in the `Result` failure case.
      */
-    @discardableResult
-    public func addLayer(layer: Layer, layerPosition: LayerPosition? = nil) -> Result<Bool, LayerError> {
+    public func addLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
         // Attempt to encode the provided layer into JSON and apply it to the map
-        do {
-            let layerJSON = try layer.jsonObject()
-            let expected = styleManager.addStyleLayer(forProperties: layerJSON, layerPosition: layerPosition)
-
-            if expected.isError() {
-                return .failure(.addStyleLayerFailed(expected.error as? String))
-            } else {
-                return .success(true)
-            }
-        } catch {
-            // Return failure if we run into an issue
-            switch error {
-            case let error as LayerError:
-                return .failure(error)
-            default:
-                return .failure(.layerEncodingFailed(error))
-            }
-        }
+        let layerJSON = try layer.jsonObject()
+        try addLayer(with: layerJSON, layerPosition: layerPosition)
     }
 
     /**
@@ -75,26 +44,9 @@ public class Style {
      - Throws: `LayerError` on failure, or `NSError` with a _domain of "com.mapbox.bindgen"
      */
     public func _moveLayer(with layerId: String, to position: LayerPosition) throws {
-        let expectedProperties = styleManager.getStyleLayerProperties(forLayerId: layerId)
-        if expectedProperties.isError() {
-            throw LayerError.getStyleLayerFailed(expectedProperties.error as? String)
-        }
-
-        if !(expectedProperties.value is [String: Any]) {
-            assertionFailure("Layer properties are not a valid type")
-        }
-
-        let expectedRemoval = styleManager.removeStyleLayer(forLayerId: layerId)
-        if expectedRemoval.isError() {
-            throw LayerError.removeStyleLayerFailed(expectedRemoval.error as? String)
-        }
-
-        let expectedAddition = styleManager.addStyleLayer(forProperties: expectedProperties.value as Any,
-                                                              layerPosition: position)
-
-        if expectedAddition.isError() {
-            throw LayerError.addStyleLayerFailed(expectedAddition.error as? String)
-        }
+        let properties = try layerProperties(for: layerId)
+        try removeLayer(withId: layerId)
+        try addLayer(with: properties, layerPosition: position)
     }
 
     /**
@@ -132,20 +84,53 @@ public class Style {
     public func _layer(with layerID: String, type: Layer.Type) -> Result<Layer, LayerError> {
 
         // Get the layer properties from the map
-        let layerProps = styleManager.getStyleLayerProperties(forLayerId: layerID)
-
-        guard layerProps.isValue(),
-              let validValue = layerProps.value as? [String: AnyObject] else {
-            return .failure(.getStyleLayerFailed(layerProps.error as? String))
-        }
-        // Decode the layer properties into a layer object
         do {
-            let layer = try type.init(jsonObject: validValue)
+            let layerProps = try layerProperties(for: layerID)
+            let layer = try type.init(jsonObject: layerProps)
             return .success(layer)
         } catch {
             return .failure(.layerDecodingFailed(error))
         }
     }
+
+    /// Updates a layer that exists in the style already
+    /// - Parameters:
+    ///   - id: identifier of layer to update
+    ///   - type: Type of the layer
+    ///   - update: Closure that mutates a layer passed to it
+    /// - Returns: Result type with  `.success` if update is successful, `LayerError` otherwise
+    @discardableResult
+    public func updateLayer<T: Layer>(id: String, type: T.Type, update: (inout T) -> Void) -> Result<Bool, LayerError> {
+
+        let result: Result<T, LayerError> = getLayer(with: id, type: T.self)
+        var layer: T
+
+        // Fetch the layer from the style
+        switch result {
+        case .success(let retrievedLayer):
+            // Successfully retrieved the layer
+            layer = retrievedLayer
+        case .failure:
+
+            // Could not retrieve the layer
+            return .failure(.getStyleLayerFailed("Could not retrieve the layer"))
+        }
+
+        // Call closure to update the retrieved layer
+        update(&layer)
+
+        do {
+            let value = try layer.jsonObject()
+
+            // Apply the changes to the layer properties to the style
+            try setLayerProperties(for: id, properties: value)
+            return .success(true)
+        } catch {
+            return .failure(.updateStyleLayerFailed(error))
+        }
+    }
+
+    // MARK: Style images
 
     /**
      Add a given `UIImage` to the map style's sprite, or updates
@@ -202,19 +187,6 @@ public class Style {
         return styleManager.getStyleImage(forImageId: identifier)
     }
 
-    /**
-     Remove a style layer from the map with specific id.
-
-     - Returns: A boolean associated with a `Result` type if the operation is successful.
-                Otherwise, this will return a `LayerError` as part of the `Result` failure case.
-     */
-    public func removeStyleLayer(forLayerId: String) -> Result<Bool, LayerError> {
-        let expected = styleManager.removeStyleLayer(forLayerId: forLayerId)
-
-        return expected.isError() ? .failure(.removeStyleLayerFailed(expected.error as? String))
-                                  : .success(true)
-    }
-
     // MARK: Sources
 
     /**
@@ -237,6 +209,19 @@ public class Style {
         } catch {
             return .failure(.sourceEncodingFailed(error))
         }
+    }
+
+    /**
+     Remove a source with a specified identifier from the map.
+     - Parameter sourceID: The unique identifer representing the source to be removed.
+     - Returns: If operation successful, returns a `true` as part of the `Result`
+                success case. Else, returns a `SourceError` in the `Result` failure case.
+     */
+    public func removeSource(for sourceID: String) -> Result<Bool, SourceError> {
+        let expected = styleManager.removeStyleSource(forSourceId: sourceID)
+
+        return expected.isError() ? .failure(.removeSourceFailed(expected.error as? String))
+                                  : .success(true)
     }
 
     /**
@@ -329,6 +314,8 @@ public class Style {
                                     value: geoJSONDictionary)
     }
 
+    // MARK: Terrain
+
     /// Sets a terrain on the style
     /// - Parameter terrain: The `Terrain` that should be rendered
     /// - Returns: Result type with `.success` if terrain is successfully applied. `TerrainError` otherwise.
@@ -346,19 +333,6 @@ public class Style {
         }
     }
 
-    /**
-     Remove a source with a specified identifier from the map.
-     - Parameter sourceID: The unique identifer representing the source to be removed.
-     - Returns: If operation successful, returns a `true` as part of the `Result`
-                success case. Else, returns a `SourceError` in the `Result` failure case.
-     */
-    public func removeSource(for sourceID: String) -> Result<Bool, SourceError> {
-        let expected = styleManager.removeStyleSource(forSourceId: sourceID)
-
-        return expected.isError() ? .failure(.removeSourceFailed(expected.error as? String))
-                                  : .success(true)
-    }
-
     /// Add a light object to the map's style
     /// - Parameter light: The `Light` object to be applied to the style.
     /// - Returns: IF operation successful, returns a `true` as part of the `Result`.  Else returns a `LightError`.
@@ -374,44 +348,131 @@ public class Style {
             return .failure(.addLightFailed(nil))
         }
     }
+}
 
-    /// Updates a layer that exists in the style already
-    /// - Parameters:
-    ///   - id: identifier of layer to update
-    ///   - type: Type of the layer
-    ///   - update: Closure that mutates a layer passed to it
-    /// - Returns: Result type with  `.success` if update is successful, `LayerError` otherwise
-    @discardableResult
-    public func updateLayer<T: Layer>(id: String, type: T.Type, update: (inout T) -> Void) -> Result<Bool, LayerError> {
+// MARK: - StyleManagerProtocol
 
-        let result: Result<T, LayerError> = getLayer(with: id, type: T.self)
-        var layer: T
+// swiftlint:disable force_cast
+extension Style: StyleManagerProtocol {
+    public var isLoaded: Bool {
+        return styleManager.isStyleLoaded()
+    }
 
-        // Fetch the layer from the style
-        switch result {
-        case .success(let retrievedLayer):
-            // Successfully retrieved the layer
-            layer = retrievedLayer
-        case .failure:
+    public var uri: StyleURI {
+        get {
+            let uriString = styleManager.getStyleURI()
+            guard let url = URL(string: uriString),
+                  let styleURI = StyleURI(rawValue: url) else {
+                fatalError()
+            }
+            return styleURI
+        }
+        set {
+            styleManager.setStyleURIForUri(newValue.rawValue.absoluteString)
+        }
+    }
 
-            // Could not retrieve the layer
-            return .failure(.getStyleLayerFailed(nil))
+    public var JSON: String {
+        get {
+            styleManager.getStyleJSON()
+        }
+        set {
+            styleManager.setStyleJSONForJson(newValue)
+        }
+    }
+
+    public var defaultCamera: CameraOptions {
+        return CameraOptions(styleManager.getStyleDefaultCamera())
+    }
+
+    public var transition: TransitionOptions {
+        get {
+            styleManager.getStyleTransition()
+        }
+        set {
+            styleManager.setStyleTransitionFor(newValue)
+        }
+    }
+
+    // MARK: Layers
+
+    public func addLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
+        let expected = styleManager.addStyleLayer(forProperties: properties, layerPosition: layerPosition)
+        if expected.isError() {
+            throw LayerError.addLayerFailed(expected.error as! String)
+        }
+    }
+
+    public func addCustomLayer(withId id: String, layerHost: CustomLayerHost, layerPosition: LayerPosition?) throws {
+        let expected = styleManager.addStyleCustomLayer(forLayerId: id, layerHost: layerHost, layerPosition: layerPosition)
+        if expected.isError() {
+            throw LayerError.addLayerFailed(expected.error as! String)
+        }
+    }
+
+    public func removeLayer(withId id: String) throws {
+        let expected = styleManager.removeStyleLayer(forLayerId: id)
+        if expected.isError() {
+            throw LayerError.removeLayerFailed(expected.error as! String)
+        }
+    }
+
+    public func layerExists(withId id: String) -> Bool {
+        return styleManager.styleLayerExists(forLayerId: id)
+    }
+
+    public var layerIdentifiers: [LayerInfo] {
+        return styleManager.getStyleLayers().compactMap { info in
+            guard let layerType = LayerType(rawValue: info.type) else {
+                assertionFailure("Failed to create LayerType from \(info.type)")
+                return nil
+            }
+            return LayerInfo(id: info.id, type: layerType)
+        }
+    }
+
+    // MARK: Layer Properties
+
+    /// :nodoc:
+    public func _layerProperty(for layerId: String, property: String) -> StylePropertyValue {
+        return styleManager.getStyleLayerProperty(forLayerId: layerId, property: property)
+    }
+
+    public func setLayerProperty(for layerId: String, property: String, value: Any) throws {
+        let expected = styleManager.setStyleLayerPropertyForLayerId(layerId, property: property, value: value)
+        if expected.isError() {
+            throw LayerError.setLayerPropertyFailed(expected.error as! String)
+        }
+    }
+
+    /// :nodoc:
+    public static func _layerPropertyDefaultValue(for layerType: String, property: String) -> StylePropertyValue {
+        return StyleManager.getStyleLayerPropertyDefaultValue(forLayerType: layerType, property: property)
+    }
+
+    public func layerProperties(for layerId: String) throws -> [String: Any] {
+        let expected = styleManager.getStyleLayerProperties(forLayerId: layerId)
+        if expected.isError() {
+            throw LayerError.getStyleLayerFailed(expected.error as! String)
         }
 
-        // Call closure to update the retrieved layer
-        update(&layer)
+        guard let result = expected.value as? [String: Any] else {
+            throw LayerError.getStyleLayerFailed("Value mismatch")
+        }
 
-        do {
-            let value = try layer.jsonObject()
+        return result
+    }
 
-            // Apply the changes to the layer properties to the style
-            styleManager.setStyleLayerPropertiesForLayerId(id, properties: value)
-            return .success(true)
-        } catch {
-            return .failure(.updateStyleLayerFailed(error))
+    public func setLayerProperties(for layerId: String, properties: [String: Any]) throws {
+        let expected = styleManager.setStyleLayerPropertiesForLayerId(layerId, properties: properties)
+        if expected.isError() {
+            throw LayerError.setLayerPropertyFailed(expected.error as! String)
         }
     }
 }
+// swiftlint:enable force_cast
+
+// MARK: - StyleTransition
 
 /**
  The transition property for a layer.

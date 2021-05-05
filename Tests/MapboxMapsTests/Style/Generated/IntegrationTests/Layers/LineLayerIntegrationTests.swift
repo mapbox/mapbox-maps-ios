@@ -61,13 +61,11 @@ class LineLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.paint?.lineWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
 
             // Add the layer
-            let addResult = style.addLayer(layer: layer)
-
-            switch (addResult) {
-                case .success(_):
-                    successfullyAddedLayerExpectation.fulfill()
-                case .failure(let error):
-                    XCTFail("Failed to add LineLayer because of error: \(error)")
+            do {
+                try style.addLayer(layer)
+                successfullyAddedLayerExpectation.fulfill()
+            } catch {
+                XCTFail("Failed to add LineLayer because of error: \(error)")
             }
 
             // Retrieve the layer

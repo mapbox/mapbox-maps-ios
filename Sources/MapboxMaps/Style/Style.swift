@@ -352,6 +352,7 @@ public class Style {
 
 // MARK: - StyleManagerProtocol
 
+// swiftlint:disable force_cast
 extension Style: StyleManagerProtocol {
     public var isLoaded: Bool {
         return styleManager.isStyleLoaded()
@@ -467,6 +468,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 }
+// swiftlint:enable force_cast
 
 // MARK: - StyleTransition
 

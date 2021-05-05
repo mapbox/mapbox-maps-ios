@@ -169,4 +169,3 @@ public protocol StyleManagerProtocol {
 
     // TODO: source, light, terrain, image
 }
-

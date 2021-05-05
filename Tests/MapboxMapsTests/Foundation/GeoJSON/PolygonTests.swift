@@ -45,5 +45,3 @@ class PolygonTests: XCTestCase {
         XCTAssert(decodedPolygon.innerRings.first?.coordinates.count == 5)
     }
 }
-
-//swift_lint:enable force_try force_cast

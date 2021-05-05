@@ -41,9 +41,8 @@ public enum LayerError: Error {
     /// Remove the style layer from the map failed
     case removeLayerFailed(String)
 
-
+    /// Setting layer property(s) failed
     case setLayerPropertyFailed(String)
-
 
     /// The layer properties for a layer are nil
     case getStyleLayerFailed(String)

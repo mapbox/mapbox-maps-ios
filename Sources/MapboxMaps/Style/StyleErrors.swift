@@ -25,6 +25,9 @@ public enum SourceError: Error {
 
     /// The source property could not be set.
     case setSourceProperty(String)
+
+    /// Temporary error for clustering.
+    case getSourceClusterDetailsFailed(String)
 }
 
 /// Error enum for all layer-related errors

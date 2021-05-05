@@ -329,6 +329,7 @@ public class Style {
 
 // MARK: - StyleManagerProtocol
 
+// See `StyleManagerProtocol` for documentation for the following APIs
 // swiftlint:disable force_cast
 extension Style: StyleManagerProtocol {
     public var isLoaded: Bool {
@@ -509,6 +510,45 @@ extension Style: StyleManagerProtocol {
 
     public static func _sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue {
         return StyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
+    }
+
+    // MARK: Clustering
+
+    public func geoJSONSourceClusterExpansionZoom(for sourceId: String, cluster: UInt32) throws -> Float {
+        let expected = styleManager.getStyleGeoJSONSourceClusterExpansionZoom(forSourceId: sourceId, cluster: cluster)
+
+        if expected.isError() {
+            throw SourceError.getSourceClusterDetailsFailed(expected.error as! String)
+        }
+
+        guard let result = expected.value as? NSNumber else {
+            throw SourceError.getSourceClusterDetailsFailed("Value mismatch")
+        }
+        return result.floatValue
+    }
+
+    public func geoJSONSourceClusterChildren(for sourceId: String, cluster: UInt32) throws -> [Feature] {
+        let expected = styleManager.getStyleGeoJSONSourceClusterChildren(forSourceId: sourceId, cluster: cluster)
+
+        if expected.isError() {
+            throw SourceError.getSourceClusterDetailsFailed(expected.error as! String)
+        }
+
+        let features = expected.value as! [MBXFeature]
+
+        return features.compactMap { Feature($0) }
+    }
+
+    public func geoJSONSourceClusterLeaves(for sourceId: String, cluster: UInt32, limit: UInt32, offset: UInt32) throws -> [Feature] {
+        let expected = styleManager.getStyleGeoJSONSourceClusterLeaves(forSourceId: sourceId, cluster: cluster, limit: limit, offset: offset)
+
+        if expected.isError() {
+            throw SourceError.getSourceClusterDetailsFailed(expected.error as! String)
+        }
+
+        let features = expected.value as! [MBXFeature]
+
+        return features.compactMap { Feature($0) }
     }
 }
 // swiftlint:enable force_cast

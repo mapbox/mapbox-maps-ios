@@ -12,6 +12,7 @@ Mapbox welcomes participation and contributions from everyone.
       * Making `bearing` and `pitch` parameters optional
       * Adding the `camera(for:camera:rect:)` variant
   - `OrnamentOptions` should now be accessed via `MapView.ornaments.options`. `MapConfig.ornaments` has been removed. Updates can be applied directly to `OrnamentsManager.options`. Previously the map's ornament options were updated on `MapConfig.ornaments` with `MapView.update`. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310)) 
+  - `OrnamentOptions` now uses structs to manage options for individual ornaments. For example, `OrnamentOptions.scaleBarPosition` is now `OrnamentOptions.scaleBar.position`. ([#318](https://github.com/mapbox/mapbox-maps-ios/pull/318))
   - The `LogoView` class is now private. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310))
 
 ### Features ✨ and improvements 🏁

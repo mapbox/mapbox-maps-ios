@@ -1,6 +1,6 @@
-import Foundation
 import MapboxCoreMaps
 import Turf
+import UIKit
 
 public final class MapboxMap {
     /// The underlying renderer object responsible for rendering the map
@@ -119,6 +119,53 @@ public final class MapboxMap {
     /// - Parameter camera: The camera for which the coordinate bounds will be returned.
     /// - Returns: `CoordinateBounds` for the given `CameraOptions`
     public func coordinateBounds(for camera: CameraOptions) -> CoordinateBounds {
-        return __map.coordinateBoundsForCamera(forCamera: MapboxCoreMaps.CameraOptions(camera))
+        return __map.coordinateBoundsForCamera(
+            forCamera: MapboxCoreMaps.CameraOptions(camera))
+    }
+
+    /// Converts a point in the mapView's coordinate system to a geographic coordinate. The point must exist in the coordinate space of the `MapView`
+    /// - Parameter point: The point to convert. Must exist in the coordinate space of the `MapView`
+    /// - Returns: A `CLLocationCoordinate` that represents the geographic location of the point.
+    public func coordinate(for point: CGPoint) -> CLLocationCoordinate2D {
+        return __map.coordinateForPixel(forPixel: point.screenCoordinate)
+    }
+    
+    /// Converts a map coordinate to a `CGPoint`, relative to the `MapView`.
+    /// - Parameter coordinate: The coordinate to convert.
+    /// - Returns: A `CGPoint` relative to the `UIView`.
+    public func point(for coordinate: CLLocationCoordinate2D) -> CGPoint {
+        return __map.pixelForCoordinate(for: coordinate).point
+    }
+    
+    /// Transforms a view's frame into a set of coordinate bounds
+    /// - Parameter rect: The `rect` whose bounds will be transformed into a set of map coordinate bounds.
+    /// - Returns: A `CoordinateBounds` object that represents the southwest and northeast corners of the view's bounds.
+    public func coordinateBounds(for rect: CGRect) -> CoordinateBounds {
+        let topRight = coordinate(for: CGPoint(x: rect.maxX, y: rect.minY)).wrap()
+        let bottomLeft = coordinate(for: CGPoint(x: rect.minX, y: rect.maxY)).wrap()
+
+        let southwest = CLLocationCoordinate2D(latitude: bottomLeft.latitude, longitude: bottomLeft.longitude)
+        let northeast = CLLocationCoordinate2D(latitude: topRight.latitude, longitude: topRight.longitude)
+
+        return CoordinateBounds(southwest: southwest, northeast: northeast)
+    }
+    
+    /// Transforms a set of map coordinate bounds to a `CGRect` relative to the `MapView`.
+    /// - Parameter coordinateBounds: The `coordinateBounds` that will be converted into a rect relative to the `MapView`
+    /// - Returns: A `CGRect` whose corners represent the vertices of a set of `CoordinateBounds`.
+    public func rect(for coordinateBounds: CoordinateBounds) -> CGRect {
+        let southwest = coordinateBounds.southwest.wrap()
+        let northeast = coordinateBounds.northeast.wrap()
+        
+        var rect = CGRect.zero
+        
+        let swPoint = point(for: southwest)
+        let nePoint = point(for: northeast)
+        
+        rect = CGRect(origin: swPoint, size: CGSize.zero)
+        
+        rect = rect.extend(from: nePoint)
+        
+        return rect
     }
 }

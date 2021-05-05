@@ -1,5 +1,6 @@
 import Foundation
 
+// swiftlint:disable file_length
 public protocol StyleManagerProtocol {
     /// `true` if and only if the style JSON contents, the style specified sprite
     /// and sources are all loaded, otherwise returns `false`.
@@ -261,7 +262,6 @@ public protocol StyleManagerProtocol {
     ///     The default value for the named property for the sources with type sourceType.
     static func _sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue
 
-
     //
     //
     //    /**
@@ -281,7 +281,6 @@ public protocol StyleManagerProtocol {
     //     * @return An array of features for the underlying children or a string describing an error if the operation was not successful.
     //     */
     //    func geoJSONSourceClusterChildren(for sourceId: String, cluster: UInt32) throws -> [Feature] // mov
-
 
     //
     //
@@ -461,3 +460,4 @@ public protocol StyleManagerProtocol {
     ////    open func invalidateStyleCustomGeometrySourceRegion(forSourceId sourceId: String, bounds: MBMCoordinateBounds) -> MBXExpected
     //    func invalidateCustomGeometrySourceRegion(for sourceId: String, bounds: CoordinateBounds) throws
 }
+// swiftlint:enable file_length

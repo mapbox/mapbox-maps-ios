@@ -129,14 +129,14 @@ public final class MapboxMap {
     public func coordinate(for point: CGPoint) -> CLLocationCoordinate2D {
         return __map.coordinateForPixel(forPixel: point.screenCoordinate)
     }
-    
+
     /// Converts a map coordinate to a `CGPoint`, relative to the `MapView`.
     /// - Parameter coordinate: The coordinate to convert.
     /// - Returns: A `CGPoint` relative to the `UIView`.
     public func point(for coordinate: CLLocationCoordinate2D) -> CGPoint {
         return __map.pixelForCoordinate(for: coordinate).point
     }
-    
+
     /// Transforms a view's frame into a set of coordinate bounds
     /// - Parameter rect: The `rect` whose bounds will be transformed into a set of map coordinate bounds.
     /// - Returns: A `CoordinateBounds` object that represents the southwest and northeast corners of the view's bounds.
@@ -149,23 +149,23 @@ public final class MapboxMap {
 
         return CoordinateBounds(southwest: southwest, northeast: northeast)
     }
-    
+
     /// Transforms a set of map coordinate bounds to a `CGRect` relative to the `MapView`.
     /// - Parameter coordinateBounds: The `coordinateBounds` that will be converted into a rect relative to the `MapView`
     /// - Returns: A `CGRect` whose corners represent the vertices of a set of `CoordinateBounds`.
     public func rect(for coordinateBounds: CoordinateBounds) -> CGRect {
         let southwest = coordinateBounds.southwest.wrap()
         let northeast = coordinateBounds.northeast.wrap()
-        
+
         var rect = CGRect.zero
-        
+
         let swPoint = point(for: southwest)
         let nePoint = point(for: northeast)
-        
+
         rect = CGRect(origin: swPoint, size: CGSize.zero)
-        
+
         rect = rect.extend(from: nePoint)
-        
+
         return rect
     }
 }

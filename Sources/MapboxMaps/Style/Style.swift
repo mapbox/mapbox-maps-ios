@@ -196,32 +196,9 @@ public class Style {
      - Returns: If operation successful, returns a `true` as part of the `Result`
                 success case. Else, returns a `SourceError` in the `Result` failure case.
      */
-    @discardableResult
-    public func addSource(source: Source, identifier: String) -> Result<Bool, SourceError> {
-
-        // Attempt to encode the provided source into JSON and apply it to the map
-        do {
-            let sourceDictionary = try source.jsonObject()
-            let expected = styleManager.addStyleSource(forSourceId: identifier, properties: sourceDictionary)
-
-            return expected.isValue() ? .success(true)
-                                      : .failure(.addSourceFailed(expected.error as? String))
-        } catch {
-            return .failure(.sourceEncodingFailed(error))
-        }
-    }
-
-    /**
-     Remove a source with a specified identifier from the map.
-     - Parameter sourceID: The unique identifer representing the source to be removed.
-     - Returns: If operation successful, returns a `true` as part of the `Result`
-                success case. Else, returns a `SourceError` in the `Result` failure case.
-     */
-    public func removeSource(for sourceID: String) -> Result<Bool, SourceError> {
-        let expected = styleManager.removeStyleSource(forSourceId: sourceID)
-
-        return expected.isError() ? .failure(.removeSourceFailed(expected.error as? String))
-                                  : .success(true)
+    public func addSource(_ source: Source, id: String) throws {
+        let sourceDictionary = try source.jsonObject()
+        try addSource(withId: id, properties: sourceDictionary)
     }
 
     /**
@@ -232,8 +209,8 @@ public class Style {
                 as part of the `Result`s success case if the operation is successful.
                 Else, returns a `SourceError` as part of the `Result` failure case.
      */
-    public func getSource<T: Source>(identifier: String, type: T.Type = T.self) -> Result<T, SourceError> {
-        let sourceResult = _source(identifier: identifier, type: type)
+    public func getSource<T: Source>(id: String, type: T.Type = T.self) -> Result<T, SourceError> {
+        let sourceResult = _source(id: id, type: type)
         switch sourceResult {
         case .success(let source):
             // swiftlint:disable force_cast
@@ -256,9 +233,9 @@ public class Style {
                 as part of the `Result`s success case if the operation is successful.
                 Else, returns a `SourceError` as part of the `Result` failure case.
      */
-    public func _source(identifier: String, type: Source.Type) -> Result<Source, SourceError> {
+    public func _source(id: String, type: Source.Type) -> Result<Source, SourceError> {
         // Get the source properties for a given identifier
-        let sourceProps = styleManager.getStyleSourceProperties(forSourceId: identifier)
+        let sourceProps = styleManager.getStyleSourceProperties(forSourceId: id)
 
         // If sourceProps represents an error, return early
         guard sourceProps.isValue(),
@@ -421,7 +398,7 @@ extension Style: StyleManagerProtocol {
         return styleManager.styleLayerExists(forLayerId: id)
     }
 
-    public var layerIdentifiers: [LayerInfo] {
+    public var allLayerIdentifiers: [LayerInfo] {
         return styleManager.getStyleLayers().compactMap { info in
             guard let layerType = LayerType(rawValue: info.type) else {
                 assertionFailure("Failed to create LayerType from \(info.type)")
@@ -467,6 +444,36 @@ extension Style: StyleManagerProtocol {
         let expected = styleManager.setStyleLayerPropertiesForLayerId(layerId, properties: properties)
         if expected.isError() {
             throw LayerError.setLayerPropertyFailed(expected.error as! String)
+        }
+    }
+
+    // MARK: Sources
+
+    public func addSource(withId sourceId: String, properties: [String: Any]) throws {
+        let expected = styleManager.addStyleSource(forSourceId: sourceId, properties: properties)
+        if expected.isError() {
+            throw SourceError.addSourceFailed(expected.error as! String)
+        }
+    }
+
+    public func removeSource(withId sourceId: String) throws {
+        let expected = styleManager.removeStyleSource(forSourceId: sourceId)
+        if expected.isError() {
+            throw SourceError.removeSourceFailed(expected.error as! String)
+        }
+    }
+
+    public func sourceExists(withId sourceId: String) -> Bool {
+        return styleManager.styleSourceExists(forSourceId: sourceId)
+    }
+
+    public var allSourceIdentifiers: [SourceInfo] {
+        return styleManager.getStyleSources().compactMap { info in
+            guard let sourceType = SourceType(rawValue: info.type) else {
+                assertionFailure("Failed to create SourceType from \(info.type)")
+                return nil
+            }
+            return SourceInfo(id: info.id, type: sourceType)
         }
     }
 }

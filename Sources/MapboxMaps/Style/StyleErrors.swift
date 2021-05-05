@@ -15,16 +15,16 @@ public enum SourceError: Error {
     case sourceDecodingFailed(Error)
 
     /// The source could not be added to the map
-    case addSourceFailed(String?)
+    case addSourceFailed(String)
+
+    /// The source could not be removed from the map
+    case removeSourceFailed(String)
 
     /// The source could not be retrieved from the map
     case getSourceFailed(String?)
 
     /// The source property could not be set.
     case setSourceProperty(String?)
-
-    /// The source could not be removed from the map
-    case removeSourceFailed(String?)
 }
 
 /// Error enum for all layer-related errors

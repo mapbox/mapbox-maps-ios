@@ -347,24 +347,17 @@ public class AnnotationManager {
     /**
      Adds a new source layer for all annotations.
      */
-    internal func createAnnotationSource() -> Result<Bool, AnnotationError> {
+    internal func createAnnotationSource() throws {
 
         annotationSource = GeoJSONSource()
 
-        guard var sourceLayer = annotationSource else {
-            return .failure(.addAnnotationFailed(nil))
+        guard var source = annotationSource else {
+            throw AnnotationError.addAnnotationFailed(nil)
         }
 
-        sourceLayer.data = .featureCollection(annotationFeatures)
+        source.data = .featureCollection(annotationFeatures)
 
-        let addSourceExpectation = styleDelegate.addSource(source: sourceLayer, identifier: sourceId)
-
-        switch addSourceExpectation {
-        case .success(let bool):
-            return .success(bool)
-        case .failure(let sourceError):
-            return .failure(.addAnnotationFailed(sourceError))
-        }
+        try styleDelegate.addSource(source, id: sourceId)
     }
 
     /**
@@ -447,9 +440,7 @@ public class AnnotationManager {
         }
 
         if annotationSource == nil {
-            if case .failure(let sourceError) = createAnnotationSource() {
-                throw AnnotationError.addAnnotationFailed(sourceError)
-            }
+            try createAnnotationSource()
         } else {
             let updateSourceExpectation = styleDelegate.updateSourceProperty(id: sourceId,
                                                                              property: "data",

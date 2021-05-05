@@ -89,10 +89,10 @@ public class GeoJSONSourceExample: UIViewController, ExampleProtocol {
         polygonLayer.paint?.fillOpacity = .constant(0.3)
         polygonLayer.paint?.fillOutlineColor = .constant(ColorRepresentable(color: UIColor.purple))
         // Add the source and style layers to the map style.
-        _ = mapView.style.addSource(source: geoJSONSource, identifier: geoJSONDataSourceIdentifier)
-        try! mapView.style.addLayer(circleLayer, layerPosition: nil)
-        try! mapView.style.addLayer(lineLayer, layerPosition: nil)
-        try! mapView.style.addLayer(polygonLayer, layerPosition: nil)
+        try! mapView.style.addSource(geoJSONSource, id: geoJSONDataSourceIdentifier)
+        try! mapView.style.addLayer(circleLayer)
+        try! mapView.style.addLayer(lineLayer)
+        try! mapView.style.addLayer(polygonLayer)
 
         // The below line is used for internal testing purposes only.
         finish()

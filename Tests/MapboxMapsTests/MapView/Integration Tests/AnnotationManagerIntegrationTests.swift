@@ -28,7 +28,7 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
             annotationManager.addAnnotation(annotation)
 
             // When
-            let sourceResult = self.style?.getSource(identifier: annotationManager.defaultSourceId, type: GeoJSONSource.self)
+            let sourceResult = self.style?.getSource(id: annotationManager.defaultSourceId, type: GeoJSONSource.self)
             let styleLayer = self.mapView?.mapboxMap.__map.getStyleLayerProperties(forLayerId: annotationManager.defaultSymbolLayerId)
             // ❓ Core SDK call to get style layer works, but not Style API line below
             // let styleLayer = self.style?.getLayer(with: annotationManager.defaultSymbolLayerId, type: SymbolLayer.self)
@@ -112,7 +112,7 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
             annotationManager.addAnnotation(annotation)
 
             // When
-            let sourceResult = self.style?.getSource(identifier: annotationManager.defaultSourceId, type: GeoJSONSource.self)
+            let sourceResult = self.style?.getSource(id: annotationManager.defaultSourceId, type: GeoJSONSource.self)
             let styleLayer = self.mapView?.mapboxMap.__map.getStyleLayerProperties(forLayerId: annotationManager.defaultSymbolLayerId)
             // ❓ Core SDK call to get style layer works, but not Style API line below
             // let styleLayer = self.style?.getLayer(with: annotationManager.defaultSymbolLayerId, type: SymbolLayer.self)
@@ -172,19 +172,19 @@ extension AnnotationManagerIntegrationTestCase: AnnotationStyleDelegate {
         return style.getStyleImage(with: identifier)
     }
 
-    func addSource(source: Source, identifier: String) -> Result<Bool, SourceError> {
+    func addSource(_ source: Source, id: String) throws {
         guard let style = style else {
             XCTFail("No style available")
-            return .failure(.addSourceFailed(nil))
+            throw SourceError.addSourceFailed("No style available")
         }
 
-        return style.addSource(source: source, identifier: identifier)
+        try style.addSource(source, id: id)
     }
 
     func updateSourceProperty(id: String, property: String, value: [String: Any]) -> Result<Bool, SourceError> {
         guard let style = style else {
             XCTFail("No style available")
-            return .failure(.addSourceFailed(nil))
+            return .failure(.addSourceFailed("No style available"))
         }
 
         return style.updateSourceProperty(id: id, property: property, value: value)

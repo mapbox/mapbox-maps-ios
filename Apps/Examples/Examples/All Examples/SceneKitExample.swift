@@ -48,7 +48,9 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
         demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
         demSource.tileSize = 512
         demSource.maxzoom = 14.0
-        mapView.style.addSource(source: demSource, identifier: "mapbox-dem")
+
+        try! mapView.style.addSource(demSource, id: "mapbox-dem")
+
         let terrain = Terrain(sourceId: "mapbox-dem")
         _ = self.mapView.style.setTerrain(terrain)
 

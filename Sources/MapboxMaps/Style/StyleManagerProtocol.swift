@@ -100,7 +100,7 @@ public protocol StyleManagerProtocol {
     func layerExists(withId id: String) -> Bool
 
     /// The ordered list of the current style layers' identifiers and types
-    var layerIdentifiers: [LayerInfo] { get }
+    var allLayerIdentifiers: [LayerInfo] { get }
 
     /// :nodoc:
     ///
@@ -165,5 +165,293 @@ public protocol StyleManagerProtocol {
     ///     An error describing why the operation was unsuccessful.
     func setLayerProperties(for layerId: String, properties: [String: Any]) throws
 
-    // TODO: source, light, terrain, image
+    // MARK: Sources
+
+    /// Adds a new style source.
+    ///
+    /// - See Also: https://docs.mapbox.com/mapbox-gl-js/style-spec/#sources
+    ///
+    /// - Parameters:
+    ///   - sourceId: An identifier for the style source.
+    ///   - properties: A JSON dictionary of style source properties.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    func addSource(withId sourceId: String, properties: [String: Any]) throws
+
+    /// Removes an existing style source.
+    ///
+    /// - Parameter sourceId: Identifier of the style source to remove.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    func removeSource(withId sourceId: String) throws
+
+    /// Checks whether a given style source exists.
+    ///
+    /// - Parameter sourceId: Style source identifier.
+    ///
+    /// - Returns: `true` if the given source exists, `false` otherwise.
+    func sourceExists(withId sourceId: String) -> Bool
+
+    /// The ordered list of the current style sources' identifiers and types
+    var allSourceIdentifiers: [SourceInfo] { get }
+
+
+
+    //
+    //    /**
+    //     * @brief Gets the value of style source \p property.
+    //     *
+    //     * @param sourceId Style source identified.
+    //     * @param property Style source property name.
+    //     * @return The value of \p property in the source with \p sourceId.
+    //     */
+    //    func _sourceProperty(for sourceId: String, property: String) -> StylePropertyValue
+    //
+    //
+    //    /**
+    //     * @brief Sets a \a value to a style source \a property.
+    //     *
+    //     * @param sourceId Style source identifier.
+    //     * @param property Style source property name.
+    //     * @param value Style source property value.
+    //     *
+    //     * @return A string describing an error if the operation was not successful, empty otherwise.
+    //     */
+    //    func setSourceProperty(for sourceId: String, property: String, value: Any) throws
+    //
+    //    /**
+    //     * @brief Gets style source properties.
+    //     *        In order to convert returned value to a json string please take a look at mapbox::common::ValueConverter.
+    //     *
+    //     * @param sourceId Style source identifier.
+    //     *
+    //     * @return Style source properties or a string describing an error if the operation was not successful.
+    //     */
+    //    func sourceProperties(for sourceId: String) throws -> [String: Any]
+    //
+    //
+    //    /**
+    //     * @brief Sets style source properties.
+    //     *        This method can be used to perform batch update for a style source properties. The structure of a
+    //     *        provided `properties` value must conform to \sa https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/
+    //     *        format for a corresponding source type. Modification of a source type
+    //     *        \sa https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/#type is not allowed.
+    //     *
+    //     * @param sourceId Style source identifier.
+    //     * @param properties A map of Style source properties.
+    //     *
+    //     * @return A string describing an error if the operation was not successful, empty otherwise.
+    //     */
+    //    func setSourceProperties(for sourceId: String, properties: [String: Any]) throws
+    //
+    //    /**
+    //     * @brief Gets the default value of style source \p property.
+    //     *
+    //     * @param sourceType Style source type.
+    //     * @param property Style source property name.
+    //     * @return The default value of \p property for the sources with type \p sourceType.
+    //     */
+    //    static func sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue
+    //
+    //
+    //    /**
+    //     * @brief Returns the zoom on which the cluster expands into several children (useful for "click to zoom" feature).
+    //     * @param sourceId GeoJSON style source identifier.
+    //     * @param cluster Cluster from which to retrieve the expansion zoom from
+    //     *
+    //     * @return The zoom on which the cluster expands into several children or a string describing an error if the operation was not successful.
+    //     */
+    //    func geoJSONSourceClusterExpansionZoom(for sourceId: String, cluster: UInt32) throws -> Float
+    //
+    //    /**
+    //     * @brief Returns the children of a cluster (on the next zoom level).
+    //     * @param sourceId GeoJSON style source identifier.
+    //     * @param cluster from which to retrieve children from
+    //     *
+    //     * @return An array of features for the underlying children or a string describing an error if the operation was not successful.
+    //     */
+    //    func geoJSONSourceClusterChildren(for sourceId: String, cluster: UInt32) throws -> [Feature] // mov
+
+
+    //
+    //
+    //    /**
+    //     * @brief Returns all the leaves of a cluster (given its cluster_id), with pagination support: limit is the number of leaves to return (set to Infinity for all points), and offset is the amount of points to skip (for pagination).
+    //     * @param sourceId GeoJSON style source identifier.
+    //     * @param cluster from which to retrieve leaves from
+    //     * @param limit is the number of points to return
+    //     * @param offset is the amount of points to skip (for pagination)
+    //     *
+    //     * @return An array of features for the underlying leaves or a string describing an error if the operation was not successful.
+    //     */
+    //    func geoJSONSourceClusterLeaves(for sourceId: String, cluster: UInt32, limit: UInt32, offset: UInt32) throws -> [MBXFeature]
+    //
+    //    /**
+    //     * @brief Updates the image of an image style source.
+    //     *
+    //     * \sa https://docs.mapbox.com/mapbox-gl-js/style-spec/#sources-image
+    //     *
+    //     * @param sourceId Style source identifier.
+    //     * @param image Pixel data of the image.
+    //     *
+    //     * @return A string describing an error if the operation was not successful, empty otherwise.
+    //     */
+    //    func updateImageSource(withId sourceId: String, image: UIImage) throws
+    //
+    //
+    //    /**
+    //     * @brief Returns the existing style sources.
+    //     *
+    //     * @return The list containing the information about existing style source objects.
+    //     */
+    //    var sources: [StyleObjectInfo] { get }
+    //
+    //    /**
+    //     * @brief Sets the style global light source properties.
+    //     *
+    //     * \sa https://docs.mapbox.com/mapbox-gl-js/style-spec/#light
+    //     *
+    //     * @param properties A map of style light properties values, with their names as key.
+    //     *
+    //     * @return A string describing an error if the operation was not successful, empty otherwise.
+    //     */
+    //    func setLight(properties: [String: Any]) throws
+    //
+    //    /**
+    //     * @brief Gets the value of a style light \a property.
+    //     *
+    //     * @param property Style light property name.
+    //     * @return Style light property value.
+    //     */
+    //    func lightPropertyValue(for property: String) -> StylePropertyValue
+    //
+    //    /**
+    //     * @brief Sets a \a value to the the style light \a property.
+    //     *
+    //     * @param property Style light property name.
+    //     * @param value Style light property value.
+    //     *
+    //     * @return A string describing an error if the operation was not successful, empty otherwise.
+    //     */
+    //    func setLightProperty(for property: String, value: Any) throws
+    //
+    //    /**
+    //     * @brief Sets the style global terrain source properties.
+    //     *
+    //     * \sa https://docs.mapbox.com/mapbox-gl-js/style-spec/#terrain
+    //     *
+    //     * @param properties A map of style terrain properties values, with their names as key.
+    //     *
+    //     * @return A string describing an error if the operation was not successful, empty otherwise.
+    //     */
+    ////    open func setStyleTerrainForProperties(_ properties: Any) -> MBXExpected
+    //    func setTerrain(for properties: [String: Any]) throws
+    //
+    //    /**
+    //     * @brief Gets the value of a style terrain \a property.
+    //     *
+    //     * @param property Style terrain property name.
+    //     * @return Style terrain property value.
+    //     */
+    //    func terrainPropertyValue(for property: String) -> StylePropertyValue
+    //
+    //    /**
+    //     * @brief Sets a \a value to the the style terrain \a property.
+    //     *
+    //     * @param property Style terrain property name.
+    //     * @param value Style terrain property value.
+    //     *
+    //     * @return A string describing an error if the operation was not successful, empty otherwise.
+    //     */
+    //    func setTerrainProperty(_ property: String, value: Any) throws
+    //
+    //
+    //    /**
+    //     * @brief Get an image from the style.
+    //     *
+    //     * @param imageId ID of the image.
+    //     *
+    //     * @return Image data associated with the given ID, or empty if no image is
+    //     * associated with that ID.
+    //     */
+    ////    open func getStyleImage(forImageId imageId: String) -> MBMImage?
+    //    func image(for imageId: String) -> UIImage?
+    //
+    //    /**
+    //     * @brief Adds an image to be used in the style. This API can also be used for updating
+    //     * an image. If the image \a id was already added, it gets replaced by the new image.
+    //     *
+    //     * The image can be used in `icon-image`, `fill-pattern`, and `line-pattern`.
+    //     *
+    //     * \sa https://www.mapbox.com/mapbox-gl-js/style-spec/#layout-symbol-icon-image
+    //     * \sa https://www.mapbox.com/mapbox-gl-js/style-spec/#paint-line-line-pattern
+    //     * \sa https://www.mapbox.com/mapbox-gl-js/style-spec/#paint-fill-fill-pattern
+    //     *
+    //     * @param imageId ID of the image.
+    //     * @param scale Scale factor for the image.
+    //     * @param image Pixel data of the image.
+    //     * @param sdf Option to treat whether image is SDF(signed distance field) or not.
+    //     * @param stretchX An array of two-element arrays, consisting of two numbers that represent
+    //     * the from position and the to position of areas that can be stretched horizontally.
+    //     * @param stretchY An array of two-element arrays, consisting of two numbers that represent
+    //     * the from position and the to position of areas that can be stretched vertically.
+    //     * @param content An array of four numbers, with the first two specifying the left, top
+    //     * corner, and the last two specifying the right, bottom corner. If present, and if the
+    //     * icon uses icon-text-fit, the symbol's text will be fit inside the content box.
+    //     *
+    //     * @return A string describing an error if the operation was not successful, empty otherwise.
+    //     */
+    //    func addImage(_ image: UIImage, imageId: String, sdf: Bool, stretchX: [ImageStretches], stretchY: [ImageStretches], content: ImageContent?) throws
+    //
+    //    /**
+    //     * @brief Removes an image from the style.
+    //     *
+    //     * @param imageId ID of the image to remove.
+    //     *
+    //     * @return A string describing an error if the operation was not successful, empty otherwise.
+    //     */
+    //    func removeImage(forImageId imageId: String) throws
+    //
+    //    /**
+    //     * @brief Adds a custom geometry to be used in the style. To add the data, implement the fetchTileFunction callback in the options and call setStyleCustomGeometrySourceTileData()
+    //     *
+    //     * @param sourceId Style source identifier
+    //     * @param options Settings for the custom geometry
+    //     */
+    ////    open func addStyleCustomGeometrySource(forSourceId sourceId: String, options: MBMCustomGeometrySourceOptions) -> MBXExpected
+    //    func addCustomGeometrySource(for sourceId: String, options: CustomGeometrySourceOptions) throws
+    //
+    //    /**
+    //     * @brief Set tile data of a custom geometry.
+    //     *
+    //     * @param sourceId Style source identifier
+    //     * @param tileId Identifier of the tile
+    //     * @param featureCollection An array with the features to add
+    //     */
+    //    func setCustomGeometrySourceTileData(for sourceId: String, tileId: CanonicalTileID, featureCollection: [MBXFeature]) throws
+    //
+    //    /**
+    //     * @brief Invalidate tile for provided custom geometry source.
+    //     *
+    //     * @param sourceId Style source identifier
+    //     * @param tileId Identifier of the tile
+    //     *
+    //     * @return A string describing an error if the operation was not successful, empty otherwise.
+    //     */
+    //    func invalidateCustomGeometrySourceTile(for sourceId: String, tileId: CanonicalTileID) throws
+    //
+    //    /**
+    //     * @brief Invalidate region for provided custom geometry source.
+    //     *
+    //     * @param sourceId Style source identifier
+    //     * @param bounds Coordinate bounds.
+    //     *
+    //     * @return A string describing an error if the operation was not successful, empty otherwise.
+    //     */
+    ////    open func invalidateStyleCustomGeometrySourceRegion(forSourceId sourceId: String, bounds: MBMCoordinateBounds) -> MBXExpected
+    //    func invalidateCustomGeometrySourceRegion(for sourceId: String, bounds: CoordinateBounds) throws
+
+
 }

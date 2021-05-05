@@ -39,17 +39,15 @@ class GeoJSONSourceIntegrationTests: MapViewIntegrationTestCase {
             source.prefetchZoomDelta = Double.testSourceValue()
             
             // Add the source
-            let addResult = style.addSource(source: source, identifier: "test-source")
-
-            switch (addResult) {
-                case .success(_):
+            do {
+                try style.addSource(source, id: "test-source")
                 successfullyAddedSourceExpectation.fulfill()
-                case .failure(let error):
-                    XCTFail("Failed to add GeoJSONSource because of error: \(error)")
+            } catch {
+                XCTFail("Failed to add GeoJSONSource because of error: \(error)")
             }
 
             // Retrieve the source
-            let retrieveResult = style.getSource(identifier: "test-source", type: GeoJSONSource.self)
+            let retrieveResult = style.getSource(id: "test-source", type: GeoJSONSource.self)
 
             switch (retrieveResult) {
                 case .success(_):

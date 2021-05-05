@@ -77,7 +77,9 @@ internal class Puck3D: Puck {
                 return
             }
             self.removePuck()
-            style.addSource(source: self.modelSource, identifier: "puck-model-source")
+
+            // TODO: On first setup "puck-model does not have a uri"
+            try? style.addSource(self.modelSource, id: "puck-model-source")
             try! style.addLayer(self.modelLayer)
         }
 
@@ -126,6 +128,6 @@ internal class Puck3D: Puck {
         }
 
         try! style.removeLayer(withId: "puck-model-layer")
-        style.styleManager.removeStyleSource(forSourceId: "puck-model-source")
+        try! style.removeSource(withId: "puck-model-source")
     }
 }

@@ -33,7 +33,7 @@ public class TerrainExample: UIViewController, ExampleProtocol {
         demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
         demSource.tileSize = 512
         demSource.maxzoom = 14.0
-        _ = mapView.style.addSource(source: demSource, identifier: "mapbox-dem")
+        try! mapView.style.addSource(demSource, id: "mapbox-dem")
 
         var terrain = Terrain(sourceId: "mapbox-dem")
         terrain.exaggeration = .constant(1.5)

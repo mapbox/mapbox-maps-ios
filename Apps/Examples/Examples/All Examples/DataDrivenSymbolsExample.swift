@@ -39,7 +39,7 @@ public class DataDrivenSymbolsExample: UIViewController, ExampleProtocol {
         // This tileset was created by uploading NPS shapefiles to Mapbox Studio.
         var source = VectorSource()
         source.url = "mapbox://examples.ciuz0vpc"
-        _ = mapView.style.addSource(source: source, identifier: sourceLayerIdentifier)
+        try! mapView.style.addSource(source, id: sourceLayerIdentifier)
 
         // Create a symbol layer and access the layer contained.
         var layer = SymbolLayer(id: sourceLayerIdentifier)

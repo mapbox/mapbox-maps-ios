@@ -433,6 +433,7 @@ extension Style: StyleManagerProtocol {
 
     // MARK: Layer Properties
 
+    /// :nodoc:
     public func _layerProperty(for layerId: String, property: String) -> StylePropertyValue {
         return styleManager.getStyleLayerProperty(forLayerId: layerId, property: property)
     }
@@ -444,6 +445,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 
+    /// :nodoc:
     public static func _layerPropertyDefaultValue(for layerType: String, property: String) -> StylePropertyValue {
         return StyleManager.getStyleLayerPropertyDefaultValue(forLayerType: layerType, property: property)
     }

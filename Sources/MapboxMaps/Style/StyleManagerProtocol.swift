@@ -1,7 +1,5 @@
 import Foundation
 
-//internal protocol StyleManagerProtocolInternal {
-
 public protocol StyleManagerProtocol {
     /// `true` if and only if the style JSON contents, the style specified sprite
     /// and sources are all loaded, otherwise returns `false`.

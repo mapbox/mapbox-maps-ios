@@ -84,7 +84,7 @@ public enum TerrainError: Error {
 /// Enum for all light-related errors
 public enum LightError: Error {
     /// Adding a new light object to style failed
-    case addLightFailed(String?)
+    case addLightFailed(String)
 
     /// Retrieving a light object from style failed
     case getLightFailed(Error)

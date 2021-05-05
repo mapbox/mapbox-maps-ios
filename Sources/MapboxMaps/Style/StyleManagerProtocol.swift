@@ -372,36 +372,41 @@ public protocol StyleManagerProtocol {
     ///     or nil if no image is associated with that ID.
     func image(withId id: String) -> UIImage?
 
-    //
-    //    /**
-    //     * @brief Sets the style global light source properties.
-    //     *
-    //     * \sa https://docs.mapbox.com/mapbox-gl-js/style-spec/#light
-    //     *
-    //     * @param properties A map of style light properties values, with their names as key.
-    //     *
-    //     * @return A string describing an error if the operation was not successful, empty otherwise.
-    //     */
-    //    func setLight(properties: [String: Any]) throws
-    //
-    //    /**
-    //     * @brief Gets the value of a style light \a property.
-    //     *
-    //     * @param property Style light property name.
-    //     * @return Style light property value.
-    //     */
-    //    func lightPropertyValue(for property: String) -> StylePropertyValue
-    //
-    //    /**
-    //     * @brief Sets a \a value to the the style light \a property.
-    //     *
-    //     * @param property Style light property name.
-    //     * @param value Style light property value.
-    //     *
-    //     * @return A string describing an error if the operation was not successful, empty otherwise.
-    //     */
-    //    func setLightProperty(for property: String, value: Any) throws
-    //
+    // MARK: Light
+
+    /// Sets the style global light source properties.
+    ///
+    /// - See Also: https://docs.mapbox.com/mapbox-gl-js/style-spec/#light
+    ///
+    /// - Parameter properties: A dictionary of style light properties values,
+    ///     with their names as key.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    func setLight(properties: [String: Any]) throws
+
+    /// :nodoc:
+    ///
+    /// Gets the value of a style light property.
+    ///
+    /// - Parameter property: Style light property name.
+    ///
+    /// - Returns: Style light property value.
+    func _lightProperty(_ property: String) -> StylePropertyValue
+
+    /// Sets a value to the style light property.
+    ///
+    /// - Parameters:
+    ///   - property: Style light property name.
+    ///   - value: Style light property value.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    func setLightProperty(_ property: String, value: Any) throws
+
+    // MARK: Terrain
+
+
     //    /**
     //     * @brief Sets the style global terrain source properties.
     //     *
@@ -420,7 +425,7 @@ public protocol StyleManagerProtocol {
     //     * @param property Style terrain property name.
     //     * @return Style terrain property value.
     //     */
-    //    func terrainPropertyValue(for property: String) -> StylePropertyValue
+    //    func _terrainPropertyValue(for property: String) -> StylePropertyValue
     //
     //    /**
     //     * @brief Sets a \a value to the the style terrain \a property.

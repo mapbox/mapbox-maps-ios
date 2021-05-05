@@ -253,20 +253,15 @@ public class Style {
         }
     }
 
-    /// Add a light object to the map's style
-    /// - Parameter light: The `Light` object to be applied to the style.
-    /// - Returns: IF operation successful, returns a `true` as part of the `Result`.  Else returns a `LightError`.
-    public func addLight(_ light: Light) -> Result<Bool, LightError> {
-        do {
-            let lightData = try JSONEncoder().encode(light)
-            let lightDictionary = try JSONSerialization.jsonObject(with: lightData)
-            let expectation = styleManager.setStyleTerrainForProperties(lightDictionary)
+    // MARK: Light
 
-            return expectation.isValue() ? .success(true)
-                                         : .failure(.addLightFailed(expectation.error as? String))
-        } catch {
-            return .failure(.addLightFailed(nil))
-        }
+    /// Gets the value of a style light property.
+    ///
+    /// - Parameter property: Style light property name.
+    ///
+    /// - Returns: Style light property value.
+    public func lightProperty(_ property: String) -> Any {
+        return _lightProperty(property).value
     }
 }
 
@@ -542,6 +537,27 @@ extension Style: StyleManagerProtocol {
         }
 
         return UIImage(mbxImage: mbmImage)
+    }
+
+    // MARK: Style
+
+    public func setLight(properties: [String: Any]) throws {
+        let expected = styleManager.setStyleLightForProperties(properties)
+        if expected.isError() {
+            throw LightError.addLightFailed(expected.error as! String)
+        }
+    }
+
+    public func _lightProperty(_ property: String) -> StylePropertyValue {
+        return styleManager.getStyleLightProperty(forProperty: property)
+    }
+
+    public func setLightProperty(_ property: String, value: Any) throws {
+        let expected = styleManager.setStyleLightPropertyForProperty(property, value: value)
+
+        if expected.isError() {
+            throw LightError.addLightFailed(expected.error as! String)
+        }
     }
 }
 // swiftlint:enable force_cast

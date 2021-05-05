@@ -11,12 +11,12 @@ public struct OrnamentOptions: Equatable {
 
     // MARK: - Scale Bar
     /// The ornament options for the scale bar.
-    public var scaleBarOptions = ScaleBarViewOptions()
+    public var scaleBar = ScaleBarViewOptions()
 
     // MARK: - Compass
 
     /// The ornament options for the compass view.
-    public var compassViewOptions = CompassViewOptions()
+    public var compass = CompassViewOptions()
 
     // MARK: - Logo View
     /**
@@ -26,11 +26,11 @@ public struct OrnamentOptions: Equatable {
      for details.
      */
     /// The ornament options for the logo view.
-    public var logoViewOptions = LogoViewOptions()
+    public var logo = LogoViewOptions()
 
     // MARK: - Attribution Button
     /// The ornament options for the attribution button.
-    public var attributionButtonOptions = AttributionButtonOptions()
+    public var attributionButton = AttributionButtonOptions()
 }
 
 public protocol BaseOrnamentOptions: Equatable {

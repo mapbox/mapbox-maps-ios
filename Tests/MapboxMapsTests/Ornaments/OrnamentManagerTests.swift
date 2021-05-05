@@ -27,7 +27,7 @@ class OrnamentManagerTests: XCTestCase {
 
     func testInitializer() {
         XCTAssertEqual(ornamentSupportableView.subviews.count, 4)
-        XCTAssertEqual(ornamentsManager.options.attributionButtonOptions.margins, options.attributionButtonOptions.margins)
+        XCTAssertEqual(ornamentsManager.options.attributionButton.margins, options.attributionButton.margins)
 
     }
 
@@ -38,12 +38,12 @@ class OrnamentManagerTests: XCTestCase {
             return
         }
 
-        XCTAssertEqual(options.compassViewOptions.visibility, .adaptive)
-        options.compassViewOptions.visibility = .hidden
+        XCTAssertEqual(options.compass.visibility, .adaptive)
+        options.compass.visibility = .hidden
 
         ornamentsManager.options = options
 
-        XCTAssertEqual(options.compassViewOptions.visibility, .hidden)
+        XCTAssertEqual(options.compass.visibility, .hidden)
 
         let updatedSubviews = ornamentSupportableView.subviews.filter { $0.isKind(of: MapboxCompassOrnamentView.self) }
         guard let isUpdatedCompassHidden = updatedSubviews.first?.isHidden else {

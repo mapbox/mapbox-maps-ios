@@ -27,7 +27,9 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
 
         /// Create an offline region with tiles using the "outdoors" style
         let stylePackOptions = StylePackLoadOptions(glyphsRasterizationMode: .ideographsRasterizedLocally,
-                                                    metadata: ["tag": "my-outdoors-style-pack"])
+                                                    metadata: ["tag": "my-outdoors-style-pack"])!
+
+        _ = offlineManager.loadStylePack(for: .outdoors, loadOptions: stylePackOptions) { _ in } completion: { _ in }
 
         let outdoorsOptions = TilesetDescriptorOptions(styleURI: .outdoors,
                                                        zoomRange: 0...16,
@@ -62,9 +64,17 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
         /// Perform the download
         TileStore.getInstance().loadTileRegion(forId: tileRegionId,
                                                loadOptions: tileRegionLoadOptions!) { _ in
-            downloadInProgress.fulfill()
-        } completion: { _ in
-            completionBlockReached.fulfill()
+            DispatchQueue.main.async {
+                downloadInProgress.fulfill()
+                downloadInProgress.assertForOverFulfill = false
+            }
+        } completion: { result in
+            switch result {
+            case .success(let region):
+                completionBlockReached.fulfill()
+            case .failure(let error):
+                XCTFail("Download failed with error: \(error)")
+            }
         }
 
         let expectations = [downloadInProgress, completionBlockReached]
@@ -80,7 +90,9 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
         /// Perform the download
         let download = TileStore.getInstance().loadTileRegion(forId: tileRegionId,
                                                               loadOptions: tileRegionLoadOptions!) { _ in
-            downloadInProgress.fulfill()
+            DispatchQueue.main.async {
+                downloadInProgress.fulfill()
+            }
         } completion: { _ in }
 
         /// This guarantees that after 3 seconds of a download in progress, we will force a cancel
@@ -101,7 +113,9 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
         TileStore.getInstance().loadTileRegion(forId: tileRegionId,
                                                loadOptions: tileRegionLoadOptions!) { _ in } completion: { _ in }
 
-        TileStore.getInstance().removeTileRegion(forId: tileRegionId)
+
+
+        TileStore.getInstance().removeTileRegion(forId: self.tileRegionId)
 
         TileStore.getInstance().allTileRegions(completion: { result in
             switch result {
@@ -134,6 +148,8 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
 
         let expectations = [mapDidLoad]
         wait(for: expectations, timeout: 5.0)
+
+        NetworkConnectivity.getInstance().setMapboxStackConnectedForConnected(true)
     }
 
     // MARK: Private helper functions

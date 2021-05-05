@@ -406,36 +406,36 @@ public protocol StyleManagerProtocol {
 
     // MARK: Terrain
 
+    /// Sets the style global terrain source properties.
+    ///
+    /// - See Also: https://docs.mapbox.com/mapbox-gl-js/style-spec/#terrain
+    ///
+    /// - Parameter properties: A dictionary of style terrain properties values,
+    ///     with their names as key.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    func setTerrain(properties: [String: Any]) throws
 
-    //    /**
-    //     * @brief Sets the style global terrain source properties.
-    //     *
-    //     * \sa https://docs.mapbox.com/mapbox-gl-js/style-spec/#terrain
-    //     *
-    //     * @param properties A map of style terrain properties values, with their names as key.
-    //     *
-    //     * @return A string describing an error if the operation was not successful, empty otherwise.
-    //     */
-    ////    open func setStyleTerrainForProperties(_ properties: Any) -> MBXExpected
-    //    func setTerrain(for properties: [String: Any]) throws
-    //
-    //    /**
-    //     * @brief Gets the value of a style terrain \a property.
-    //     *
-    //     * @param property Style terrain property name.
-    //     * @return Style terrain property value.
-    //     */
-    //    func _terrainPropertyValue(for property: String) -> StylePropertyValue
-    //
-    //    /**
-    //     * @brief Sets a \a value to the the style terrain \a property.
-    //     *
-    //     * @param property Style terrain property name.
-    //     * @param value Style terrain property value.
-    //     *
-    //     * @return A string describing an error if the operation was not successful, empty otherwise.
-    //     */
-    //    func setTerrainProperty(_ property: String, value: Any) throws
+    /// Gets the value of a style terrain property.
+    ///
+    /// - Parameter property: Style terrain property name.
+    ///
+    /// - Returns: Style terrain property value.
+    func _terrainProperty(_ property: String) -> StylePropertyValue
+
+    /// Sets a value to the named style terrain property.
+    ///
+    /// - Parameters:
+    ///   - property: Style terrain property name.
+    ///   - value: Style terrain property value.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    func setTerrainProperty(_ property: String, value: Any) throws
+
+    // MARK: Custom geometry
+
     //
     //
     //

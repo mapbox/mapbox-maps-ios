@@ -234,25 +234,6 @@ public class Style {
         }
     }
 
-    // MARK: Terrain
-
-    /// Sets a terrain on the style
-    /// - Parameter terrain: The `Terrain` that should be rendered
-    /// - Returns: Result type with `.success` if terrain is successfully applied. `TerrainError` otherwise.
-    @discardableResult
-    public func setTerrain(_ terrain: Terrain) -> Result<Bool, TerrainError> {
-        do {
-            let terrainData = try JSONEncoder().encode(terrain)
-            let terrainDictionary = try JSONSerialization.jsonObject(with: terrainData)
-            let expectation = styleManager.setStyleTerrainForProperties(terrainDictionary)
-
-            return expectation.isValue() ? .success(true)
-                                         : .failure(.addTerrainFailed(expectation.error as? String))
-        } catch {
-            return .failure(.decodingTerrainFailed(error))
-        }
-    }
-
     // MARK: Light
 
     /// Gets the value of a style light property.
@@ -262,6 +243,32 @@ public class Style {
     /// - Returns: Style light property value.
     public func lightProperty(_ property: String) -> Any {
         return _lightProperty(property).value
+    }
+
+    // MARK: Terrain
+
+    /// Sets a terrain on the style
+    ///
+    /// - Parameter terrain: The `Terrain` that should be rendered
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    public func setTerrain(_ terrain: Terrain) throws {
+        let terrainData = try JSONEncoder().encode(terrain)
+        guard let terrainDictionary = try JSONSerialization.jsonObject(with: terrainData) as? [String: Any] else {
+            throw StyleEncodingError.invalidJSONObject
+        }
+
+        try setTerrain(properties: terrainDictionary)
+    }
+
+    /// Gets the value of a style terrain property.
+    ///
+    /// - Parameter property: Style terrain property name.
+    ///
+    /// - Returns: Style terrain property value.
+    public func terrainProperty(_ property: String) -> Any {
+        return _terrainProperty(property).value
     }
 }
 
@@ -559,6 +566,38 @@ extension Style: StyleManagerProtocol {
             throw LightError.addLightFailed(expected.error as! String)
         }
     }
+
+    // MARK: Terrain
+
+    public func setTerrain(properties: [String: Any]) throws {
+        let expected = styleManager.setStyleTerrainForProperties(properties)
+
+        if expected.isError() {
+            throw TerrainError.addTerrainFailed(expected.error as! String)
+        }
+    }
+
+    public func _terrainProperty(_ property: String) -> StylePropertyValue {
+        return styleManager.getStyleTerrainProperty(forProperty: property)
+    }
+
+    /// Sets a value to the named style terrain property.
+    ///
+    /// - Parameters:
+    ///   - property: Style terrain property name.
+    ///   - value: Style terrain property value.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    public func setTerrainProperty(_ property: String, value: Any) throws {
+        let expected = styleManager.setStyleTerrainPropertyForProperty(property, value: value)
+
+        if expected.isError() {
+            // Temp error
+            throw TerrainError.setTerrainProperty(expected.error as! String)
+        }
+    }
+
 }
 // swiftlint:enable force_cast
 

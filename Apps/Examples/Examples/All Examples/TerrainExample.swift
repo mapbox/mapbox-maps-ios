@@ -38,7 +38,7 @@ public class TerrainExample: UIViewController, ExampleProtocol {
         var terrain = Terrain(sourceId: "mapbox-dem")
         terrain.exaggeration = .constant(1.5)
 
-        _ = mapView.style.setTerrain(terrain)
+        try! mapView.style.setTerrain(terrain)
 
         var skyLayer = SkyLayer(id: "sky-layer")
         skyLayer.paint?.skyType = .constant(.atmosphere)

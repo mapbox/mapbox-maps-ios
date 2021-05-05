@@ -76,9 +76,10 @@ public enum ImageError: Error {
 /// Error enum for all terrain-related errors
 public enum TerrainError: Error {
     /// Decoding terrain failed
-    case decodingTerrainFailed(Error)
+    case setTerrainProperty(String)
+
     /// Adding terrain failed
-    case addTerrainFailed(String?)
+    case addTerrainFailed(String)
 }
 
 /// Enum for all light-related errors

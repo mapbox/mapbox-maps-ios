@@ -14,24 +14,38 @@ final class MockCameraManager: CameraManagerProtocol {
 
     struct SetCameraParameters {
         var camera: CameraOptions
-        var animated: Bool
-        var duration: TimeInterval
-        var completion: ((UIViewAnimatingPosition) -> Void)?
     }
 
     let setCameraStub = Stub<SetCameraParameters, Void>()
 
-    func setCamera(to camera: CameraOptions,
-                   animated: Bool,
-                   duration: TimeInterval,
-                   completion: ((UIViewAnimatingPosition) -> Void)?) {
+    func setCamera(to camera: CameraOptions) {
         setCameraStub.call(
-            with: SetCameraParameters(camera: camera,
-                                      animated: animated,
-                                      duration: duration,
-                                      completion: completion))
+            with: SetCameraParameters(camera: camera))
     }
 
+    struct EaseToCameraParameters {
+        var camera: CameraOptions
+        var duration: TimeInterval
+        var curve: UIView.AnimationCurve
+        var completion: AnimationCompletion?
+    }
+
+    let easeToStub = Stub<EaseToCameraParameters, CameraAnimator?>(defaultReturnValue: nil)
+    func ease(to camera: CameraOptions,
+              duration: TimeInterval,
+              curve: UIView.AnimationCurve,
+              completion: AnimationCompletion?) -> CameraAnimator? {
+
+        return easeToStub.call(
+            with: EaseToCameraParameters(
+                camera: camera,
+                duration: duration,
+                curve: curve,
+                completion: completion))
+    }
+
+    let cancelAnimationsStub = Stub<Void, Void>()
     func cancelAnimations() {
+        cancelAnimationsStub.call()
     }
 }

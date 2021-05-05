@@ -47,8 +47,8 @@ public class CameraLocationConsumer: LocationConsumer {
     }
 
     public func locationUpdate(newLocation: Location) {
-        mapView?.camera.setCamera(to: CameraOptions(center: newLocation.coordinate, zoom: 15),
-                                         animated: true,
-                                         duration: 1.3)
+        mapView?.camera.ease(
+            to: CameraOptions(center: newLocation.coordinate, zoom: 15),
+            duration: 1.3)
     }
 }

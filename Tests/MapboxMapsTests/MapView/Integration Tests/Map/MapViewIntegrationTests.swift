@@ -39,7 +39,7 @@ class MapViewIntegrationTests: IntegrationTestCase {
 
             mapView.on(.mapLoaded) { [weak mapView] _ in
                 let dest = CameraOptions(center: CLLocationCoordinate2D(latitude: 10, longitude: 10), zoom: 10)
-                mapView?.camera.setCamera(to: dest, animated: true, duration: 5) { _ in
+                mapView?.camera.ease(to: dest, duration: 5) { (_) in
                     expectation.fulfill()
                 }
             }

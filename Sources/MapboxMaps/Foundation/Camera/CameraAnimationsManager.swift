@@ -57,43 +57,16 @@ public class CameraAnimationsManager {
 
     // MARK: Setting a new camera
 
-    /// Transition the map's viewport to a new camera.
+    /// Sets the map's viewport to a new camera synchronously. Any active animations will be canceled.
     /// - Parameters:
     ///   - targetCamera: The target camera to transition to.
-    ///   - animated: Set to `true` if transition should be animated. `false` by default.
-    ///   - duration: Controls the duration of the animation transition. Must be greater than zero if `animated` is true.
-    ///   - completion: The completion block to be called after an animated transition. Only called if `animated` is true.
-    public func setCamera(to targetCamera: CameraOptions,
-                          animated: Bool = false,
-                          duration: TimeInterval = 0,
-                          completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
+    public func setCamera(to targetCamera: CameraOptions) {
         guard let mapView = mapView else {
             assertionFailure("MapView is nil.")
             return
         }
-
-        internalAnimator?.stopAnimation()
-
-        let clampedCamera = CameraOptions(center: targetCamera.center,
-                                          padding: targetCamera.padding,
-                                          anchor: targetCamera.anchor,
-                                          zoom: targetCamera.zoom?.clamped(to: mapCameraOptions.minimumZoomLevel...mapCameraOptions.maximumZoomLevel),
-                                          bearing: targetCamera.bearing,
-                                          pitch: targetCamera.pitch?.clamped(to: mapCameraOptions.minimumPitch...mapCameraOptions.maximumPitch))
-
-        if animated && duration > 0 {
-            let animation = { (transition: inout CameraTransition) in
-                transition.center.toValue = clampedCamera.center
-                transition.padding.toValue = clampedCamera.padding
-                transition.anchor.toValue = clampedCamera.anchor
-                transition.zoom.toValue = clampedCamera.zoom
-                transition.bearing.toValue = clampedCamera.bearing
-                transition.pitch.toValue = clampedCamera.pitch
-            }
-            performCameraAnimation(duration: duration, animation: animation, completion: completion)
-        } else {
-            mapView.mapboxMap.updateCamera(with: clampedCamera)
-        }
+        cancelAnimations() // cancel any active animations
+        mapView.mapboxMap.updateCamera(with: targetCamera)
     }
 
     /// Interrupts all `active` animation.
@@ -102,40 +75,9 @@ public class CameraAnimationsManager {
     /// Canceled animations cannot be restarted / resumed. The animator must be recreated.
     public func cancelAnimations() {
         guard let validMapView = mapView else { return }
-        for animator in validMapView.cameraAnimators {
+        for animator in validMapView.cameraAnimators where animator.state == .active {
             animator.stopAnimation()
         }
-    }
-
-    /// Private function to perform camera animation
-    /// - Parameters:
-    ///   - duration: If animated, how long the animation takes
-    ///   - animation: closure to perform
-    ///   - completion: animation block called on completion
-    fileprivate func performCameraAnimation(duration: TimeInterval,
-                                            animation: @escaping (inout CameraTransition) -> Void,
-                                            completion: ((UIViewAnimatingPosition) -> Void)? = nil) {
-
-        // Stop previously running animations
-        internalAnimator?.stopAnimation()
-
-        // Make a new camera animator for the new properties
-
-        let cameraAnimator = makeAnimator(duration: duration,
-                                          curve: .easeOut,
-                                          animationOwner: .custom(id: "com.mapbox.maps.cameraManager"),
-                                          animations: animation)
-
-        // Add completion
-        cameraAnimator.addCompletion({ (position) in
-            completion?(position)
-        })
-
-        // Start animation
-        cameraAnimator.startAnimation()
-
-        // Store the animator in order to keep it alive
-        internalAnimator = cameraAnimator
     }
 
     /// Moves the viewpoint to a different location using a transition animation that
@@ -189,11 +131,12 @@ public class CameraAnimationsManager {
     @discardableResult
     public func ease(to camera: CameraOptions,
                      duration: TimeInterval,
+                     curve: UIView.AnimationCurve = .easeOut,
                      completion: AnimationCompletion? = nil) -> CameraAnimator? {
 
         internalAnimator?.stopAnimation()
 
-        let animator = makeAnimator(duration: duration, curve: .easeInOut) { (transition) in
+        let animator = makeAnimator(duration: duration, curve: curve) { (transition) in
             transition.center.toValue = camera.center
             transition.padding.toValue = camera.padding
             transition.anchor.toValue = camera.anchor

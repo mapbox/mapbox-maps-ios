@@ -20,7 +20,8 @@ public class CameraAnimationExample: UIViewController, ExampleProtocol {
             guard let self = self else { return }
 
             // Center the map camera over New York City.
-            let centerCoordinate = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
+            let centerCoordinate = CLLocationCoordinate2D(
+                latitude: 40.7128, longitude: -74.0060)
 
             let newCamera = CameraOptions(center: centerCoordinate,
                                           padding: .zero,
@@ -29,9 +30,7 @@ public class CameraAnimationExample: UIViewController, ExampleProtocol {
                                           bearing: 180.0,
                                           pitch: 15.0)
 
-            self.mapView.camera.setCamera(to: newCamera,
-                                                 animated: true,
-                                                 duration: 5.0) { _ in
+            self.mapView.camera.ease(to: newCamera, duration: 5.0) { (_) in
                 // The below line is used for internal testing purposes only.
                 self.finish()
             }

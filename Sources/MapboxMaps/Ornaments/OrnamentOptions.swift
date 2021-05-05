@@ -10,33 +10,70 @@ private let defaultOrnamentsMargin = CGPoint(x: 8.0, y: 8.0)
 public struct OrnamentOptions: Equatable {
 
     // MARK: - Scale Bar
-
-    public var scaleBarPosition: OrnamentPosition = .topLeft
-    public var scaleBarMargins: CGPoint = defaultOrnamentsMargin
-    public var scaleBarVisibility: OrnamentVisibility = .adaptive
+    /// The ornament options for the scale bar.
+    public var scaleBar = ScaleBarViewOptions()
 
     // MARK: - Compass
 
-    public var compassViewPosition: OrnamentPosition = .topRight
-    public var compassViewMargins: CGPoint = defaultOrnamentsMargin
-    public var compassVisibility: OrnamentVisibility = .adaptive
+    /// The ornament options for the compass view.
+    public var compass = CompassViewOptions()
 
     // MARK: - Logo View
-
     /**
      Per our terms of service, a Mapbox map is required to display both
      a Mapbox logo as well as an information icon that contains attribution
      information. See https://docs.mapbox.com/help/how-mapbox-works/attribution/
      for details.
      */
-
-    public var _logoViewIsVisible: Bool = true
-    public var logoViewPosition: OrnamentPosition = .bottomLeft
-    public var logoViewMargins: CGPoint = defaultOrnamentsMargin
+    /// The ornament options for the logo view.
+    public var logo = LogoViewOptions()
 
     // MARK: - Attribution Button
+    /// The ornament options for the attribution button.
+    public var attributionButton = AttributionButtonOptions()
+}
 
-    public var _attributionButtonIsVisible: Bool = true
-    public var attributionButtonPosition: OrnamentPosition = .bottomRight
-    public var attributionButtonMargins: CGPoint = defaultOrnamentsMargin
+public protocol BaseOrnamentOptions: Equatable {
+    var position: OrnamentPosition { get set }
+    var margins: CGPoint { get set }
+}
+
+/// Used to configure position, margin, and visibility for the map's scale bar.
+public struct ScaleBarViewOptions: BaseOrnamentOptions {
+    /// The default value for this property is `.topLeft`.
+    public var position: OrnamentPosition = .topLeft
+    /// The default value for this property is `CGPoint(x: 8.0, y: 8.0)`.
+    public var margins: CGPoint = defaultOrnamentsMargin
+    /// The default value for this property is `.adaptive`.
+    public var visibility: OrnamentVisibility = .adaptive
+}
+
+/// Used to configure position, margin, and visibility for the map's compass view.
+public struct CompassViewOptions: BaseOrnamentOptions {
+    /// The default value for this property is `.topRight`.
+    public var position: OrnamentPosition = .topRight
+    /// The default value for this property is `CGPoint(x: 8.0, y: 8.0)`.
+    public var margins: CGPoint = defaultOrnamentsMargin
+    /// The default value for this property is `.adaptive`.
+    public var visibility: OrnamentVisibility = .adaptive
+}
+
+/// Used to configure position, margin, and visibility for the map's attribution button.
+public struct AttributionButtonOptions: Equatable {
+    /// The default value for this property is `.bottomRight`.
+    public var position: OrnamentPosition = .bottomRight
+    /// The default value for this property is `CGPoint(x: 8.0, y: 8.0)`.
+    public var margins: CGPoint = defaultOrnamentsMargin
+    /// The default value for this property is `true`.
+    public var _isVisible: Bool = true
+}
+
+/// Used to configure position, margin, and visibility for the map's logo view.
+public struct LogoViewOptions: Equatable {
+    /// The default value for this property is `.bottomLeft`.
+    public var position: OrnamentPosition = .bottomLeft
+    /// The default value for this property is `CGPoint(x: 8.0, y: 8.0)`.
+    public var margins: CGPoint = defaultOrnamentsMargin
+    /// The default value for this property is `true`.
+    public var _isVisible: Bool = true
 }

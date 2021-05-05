@@ -44,7 +44,7 @@ public class OrnamentsManager: NSObject {
         view.addSubview(scalebarView)
 
         // Compass View
-        compassView = MapboxCompassOrnamentView(visibility: options.compassVisibility)
+        compassView = MapboxCompassOrnamentView(visibility: options.compass.visibility)
         compassView.translatesAutoresizingMaskIntoConstraints = false
         compassView.tapAction = { [weak view] in
             view?.compassTapped()
@@ -80,25 +80,33 @@ public class OrnamentsManager: NSObject {
         constraints.removeAll()
 
         // Update the position for the ornaments
-        let logoViewConstraints = constraints(with: logoView, position: options.logoViewPosition, margins: options.logoViewMargins)
+        let logoViewConstraints = constraints(with: logoView,
+                                              position: options.logo.position,
+                                              margins: options.logo.margins)
         constraints.append(contentsOf: logoViewConstraints)
 
-        let compassViewConstraints = constraints(with: compassView, position: options.compassViewPosition, margins: options.compassViewMargins)
+        let compassViewConstraints = constraints(with: compassView,
+                                                 position: options.compass.position,
+                                                 margins: options.compass.margins)
         constraints.append(contentsOf: compassViewConstraints)
 
-        let scaleBarViewConstraints = constraints(with: scalebarView, position: options.scaleBarPosition, margins: options.scaleBarMargins)
+        let scaleBarViewConstraints = constraints(with: scalebarView,
+                                                  position: options.scaleBar.position,
+                                                  margins: options.scaleBar.margins)
         constraints.append(contentsOf: scaleBarViewConstraints)
 
-        let attributionButtonConstraints = constraints(with: attributionButton, position: options.attributionButtonPosition, margins: options.attributionButtonMargins)
+        let attributionButtonConstraints = constraints(with: attributionButton,
+                                                       position: options.attributionButton.position,
+                                                       margins: options.attributionButton.margins)
         constraints.append(contentsOf: attributionButtonConstraints)
 
         // Activate new constraints
         NSLayoutConstraint.activate(constraints)
 
-        logoView.isHidden = !options._logoViewIsVisible
-        scalebarView.isHidden = options.scaleBarVisibility == .hidden
-        compassView.isHidden = options.compassVisibility == .hidden
-        attributionButton.isHidden = !options._attributionButtonIsVisible
+        logoView.isHidden = !options.logo._isVisible
+        scalebarView.isHidden = options.scaleBar.visibility == .hidden
+        compassView.isHidden = options.compass.visibility == .hidden
+        attributionButton.isHidden = !options.attributionButton._isVisible
     }
 
     private func constraints(with view: UIView, position: OrnamentPosition, margins: CGPoint) -> [NSLayoutConstraint] {

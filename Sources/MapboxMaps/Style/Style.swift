@@ -144,63 +144,6 @@ public class Style {
         return _layerProperty(for: layerId, property: property).value
     }
 
-    // MARK: Style images
-
-    /**
-     Add a given `UIImage` to the map style's sprite, or updates
-     the given image in the sprite if it already exists.
-
-     You must call this method after the map's style has finished loading in order
-     to set any image or pattern properties on a style layer.
-
-     - Parameter image: The image to be added to the map style's sprite.
-     - Parameter identifier: The name of the image the map style's sprite
-                             will use for identification.
-     - Parameter sdf: Whether or not the image is treated as a signed distance field.
-                      Defaults to `false`.
-     - Parameter stretchX: The array of horizontal image stretch areas.
-                           Defaults to an empty array.
-     - Parameter stretchY: The array of vertical image stretch areas.
-                           Defaults to an empty array.
-     - Parameter imageContent: The `ImageContent` which describes where text
-                               can be fit into an image. By default, this is `nil`.
-     - Returns: A boolean associated with a `Result` type if the operation is successful.
-                Otherwise, this will return a `StyleError` as part of the `Result` failure case.
-     */
-    @discardableResult
-    public func setStyleImage(image: UIImage,
-                              with identifier: String,
-                              sdf: Bool = false,
-                              stretchX: [ImageStretches] = [],
-                              stretchY: [ImageStretches] = [],
-                              imageContent: ImageContent? = nil) -> Result<Bool, ImageError> {
-
-        /**
-         TODO: Define interfaces for stretchX/Y/imageContent,
-         as these are core SDK types.
-         */
-
-        guard let mbxImage = Image(uiImage: image) else {
-            return .failure(.convertingImageFailed(nil))
-        }
-
-        let expected = styleManager.addStyleImage(forImageId: identifier,
-                                                  scale: Float(image.scale),
-                                                  image: mbxImage,
-                                                  sdf: sdf,
-                                                  stretchX: stretchX,
-                                                  stretchY: stretchY,
-                                                  content: imageContent)
-
-        return expected.isError() ? .failure(.addStyleImageFailed(expected.error as? String))
-                                  : .success(true)
-    }
-
-    public func getStyleImage(with identifier: String) -> Image? {
-        // TODO: Send back UIImage, not MBX Image
-        return styleManager.getStyleImage(forImageId: identifier)
-    }
-
     // MARK: Sources
 
     /**
@@ -549,6 +492,56 @@ extension Style: StyleManagerProtocol {
         let features = expected.value as! [MBXFeature]
 
         return features.compactMap { Feature($0) }
+    }
+
+    // MARK: Image source
+
+    public func updateImageSource(withId sourceId: String, image: UIImage) throws {
+        guard let mbmImage = Image(uiImage: image) else {
+            throw ImageError.convertingImageFailed("Failed to convert UIImage to MBMImage")
+        }
+
+        let expected = styleManager.updateStyleImageSourceImage(forSourceId: sourceId, image: mbmImage)
+
+        if expected.isError() {
+            throw ImageError.imageSourceImageUpdateFailed(expected.error as! String)
+        }
+    }
+
+    // MARK: Style images
+
+    public func addImage(_ image: UIImage, id: String, sdf: Bool = false, stretchX: [ImageStretches] = [], stretchY: [ImageStretches] = [], content: ImageContent? = nil) throws {
+        guard let mbmImage = Image(uiImage: image) else {
+            throw ImageError.convertingImageFailed("Failed to convert UIImage to MBMImage")
+        }
+
+        let expected = styleManager.addStyleImage(forImageId: id,
+                                                  scale: Float(image.scale),
+                                                  image: mbmImage,
+                                                  sdf: sdf,
+                                                  stretchX: stretchX,
+                                                  stretchY: stretchY,
+                                                  content: content)
+
+        if expected.isError() {
+            throw ImageError.addStyleImageFailed(expected.error as! String)
+        }
+    }
+
+    public func removeImage(withId id: String) throws {
+        let expected = styleManager.removeStyleImage(forImageId: id)
+
+        if expected.isError() {
+            throw ImageError.removeImageFailed(expected.error as! String)
+        }
+    }
+
+    public func image(withId id: String) -> UIImage? {
+        guard let mbmImage = styleManager.getStyleImage(forImageId: id) else {
+            return nil
+        }
+
+        return UIImage(mbxImage: mbmImage)
     }
 }
 // swiftlint:enable force_cast

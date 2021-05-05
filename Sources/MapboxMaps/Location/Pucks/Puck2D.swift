@@ -160,18 +160,12 @@ private extension Puck2D {
         guard let topImage = configuration.resolvedTopImage, let bearingImage = configuration.resolvedBearingImage else {
             return
         }
-        if case let .failure(imageError) = style.setStyleImage(image: topImage, with: "locationIndicatorLayerTopImage") {
-            throw imageError
-        }
-        if case let .failure(imageError) = style.setStyleImage(image: bearingImage, with: "locationIndicatorLayerBearingImage") {
-            throw imageError
-        }
+
+        try style.addImage(topImage, id: "locationIndicatorLayerTopImage")
+        try style.addImage(bearingImage, id: "locationIndicatorLayerBearingImage")
 
         if let validShadowImage = configuration.shadowImage {
-            let setStyleImageResultInner = style.setStyleImage(image: validShadowImage, with: "locationIndicatorLayerShadowImage")
-            if case let .failure(imageError) = setStyleImageResultInner {
-                throw imageError
-            }
+            try style.addImage(validShadowImage, id: "locationIndicatorLayerShadowImage")
         }
 
         // Create Layer

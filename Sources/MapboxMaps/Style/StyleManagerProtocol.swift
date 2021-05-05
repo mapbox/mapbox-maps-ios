@@ -294,7 +294,7 @@ public protocol StyleManagerProtocol {
 
     /// Returns all the leaves of a cluster (given its cluster_id), with
     /// pagination support: limit is the number of leaves to return (set
-    /// to Infinity for all points), and offset is the amount of points to skip
+    /// to `UInt32.max` for all points), and offset is the amount of points to skip
     /// (for pagination).
     ///
     /// - Parameters:
@@ -310,26 +310,78 @@ public protocol StyleManagerProtocol {
     ///     An error describing why the operation was unsuccessful.
     func geoJSONSourceClusterLeaves(for sourceId: String, cluster: UInt32, limit: UInt32, offset: UInt32) throws -> [Feature]
 
-    //
-    //    /**
-    //     * @brief Updates the image of an image style source.
-    //     *
-    //     * \sa https://docs.mapbox.com/mapbox-gl-js/style-spec/#sources-image
-    //     *
-    //     * @param sourceId Style source identifier.
-    //     * @param image Pixel data of the image.
-    //     *
-    //     * @return A string describing an error if the operation was not successful, empty otherwise.
-    //     */
-    //    func updateImageSource(withId sourceId: String, image: UIImage) throws
-    //
-    //
-    //    /**
-    //     * @brief Returns the existing style sources.
-    //     *
-    //     * @return The list containing the information about existing style source objects.
-    //     */
-    //    var sources: [StyleObjectInfo] { get }
+    // MARK: Image source
+
+    /// Updates the image of an image style source.
+    ///
+    /// - See Also: https://docs.mapbox.com/mapbox-gl-js/style-spec/#sources-image
+    ///
+    /// - Parameters:
+    ///   - sourceId: Style source identifier.
+    ///   - image: UIImage
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    func updateImageSource(withId sourceId: String, image: UIImage) throws
+
+    // MARK: Style images
+
+    /// Adds an image to be used in the style.
+    ///
+    /// This API can also be used for
+    /// updating an image. If the image id was already added, it gets replaced
+    /// by the new image.
+    ///
+    /// The image can be used in
+    /// [`icon-image`](https://www.mapbox.com/mapbox-gl-js/style-spec/#layout-symbol-icon-image),
+    /// [`fill-pattern`](https://www.mapbox.com/mapbox-gl-js/style-spec/#paint-fill-fill-pattern), and
+    /// [`line-pattern`](https://www.mapbox.com/mapbox-gl-js/style-spec/#paint-line-line-pattern).
+    ///
+    /// - Parameters:
+    ///   - image: Image to add.
+    ///   - id: ID of the image.
+    ///   - sdf: Option to treat whether image is SDF(signed distance field) or not.
+    ///   - stretchX: An array of two-element arrays, consisting of two numbers
+    ///         that represent the from position and the to position of areas
+    ///         that can be stretched horizontally.
+    ///   - stretchY: An array of two-element arrays, consisting of two numbers
+    ///         that represent the from position and the to position of areas
+    ///         that can be stretched vertically.
+    ///   - content: An array of four numbers, with the first two specifying the
+    ///         left, top corner, and the last two specifying the right, bottom
+    ///         corner. If present, and if the icon uses icon-text-fit, the
+    ///         symbol's text will be fit inside the content box.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    func addImage(_ image: UIImage, id: String, sdf: Bool, stretchX: [ImageStretches], stretchY: [ImageStretches], content: ImageContent?) throws
+
+    /// Removes an image from the style.
+    ///
+    /// - Parameter id: ID of the image to remove.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    func removeImage(withId id: String) throws
+
+    /// Get an image from the style.
+    ///
+    /// - Parameter id: ID of the image.
+    ///
+    /// - Returns: UIImage representing the data associated with the given ID,
+    ///     or nil if no image is associated with that ID.
+    func image(withId id: String) -> UIImage?
+
+
+
+
+
+
+
+
+
+
+
     //
     //    /**
     //     * @brief Sets the style global light source properties.
@@ -391,51 +443,6 @@ public protocol StyleManagerProtocol {
     //    func setTerrainProperty(_ property: String, value: Any) throws
     //
     //
-    //    /**
-    //     * @brief Get an image from the style.
-    //     *
-    //     * @param imageId ID of the image.
-    //     *
-    //     * @return Image data associated with the given ID, or empty if no image is
-    //     * associated with that ID.
-    //     */
-    ////    open func getStyleImage(forImageId imageId: String) -> MBMImage?
-    //    func image(for imageId: String) -> UIImage?
-    //
-    //    /**
-    //     * @brief Adds an image to be used in the style. This API can also be used for updating
-    //     * an image. If the image \a id was already added, it gets replaced by the new image.
-    //     *
-    //     * The image can be used in `icon-image`, `fill-pattern`, and `line-pattern`.
-    //     *
-    //     * \sa https://www.mapbox.com/mapbox-gl-js/style-spec/#layout-symbol-icon-image
-    //     * \sa https://www.mapbox.com/mapbox-gl-js/style-spec/#paint-line-line-pattern
-    //     * \sa https://www.mapbox.com/mapbox-gl-js/style-spec/#paint-fill-fill-pattern
-    //     *
-    //     * @param imageId ID of the image.
-    //     * @param scale Scale factor for the image.
-    //     * @param image Pixel data of the image.
-    //     * @param sdf Option to treat whether image is SDF(signed distance field) or not.
-    //     * @param stretchX An array of two-element arrays, consisting of two numbers that represent
-    //     * the from position and the to position of areas that can be stretched horizontally.
-    //     * @param stretchY An array of two-element arrays, consisting of two numbers that represent
-    //     * the from position and the to position of areas that can be stretched vertically.
-    //     * @param content An array of four numbers, with the first two specifying the left, top
-    //     * corner, and the last two specifying the right, bottom corner. If present, and if the
-    //     * icon uses icon-text-fit, the symbol's text will be fit inside the content box.
-    //     *
-    //     * @return A string describing an error if the operation was not successful, empty otherwise.
-    //     */
-    //    func addImage(_ image: UIImage, imageId: String, sdf: Bool, stretchX: [ImageStretches], stretchY: [ImageStretches], content: ImageContent?) throws
-    //
-    //    /**
-    //     * @brief Removes an image from the style.
-    //     *
-    //     * @param imageId ID of the image to remove.
-    //     *
-    //     * @return A string describing an error if the operation was not successful, empty otherwise.
-    //     */
-    //    func removeImage(forImageId imageId: String) throws
     //
     //    /**
     //     * @brief Adds a custom geometry to be used in the style. To add the data, implement the fetchTileFunction callback in the options and call setStyleCustomGeometrySourceTileData()

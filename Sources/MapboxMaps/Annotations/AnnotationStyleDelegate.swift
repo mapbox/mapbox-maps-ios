@@ -10,14 +10,10 @@ import MapboxCoreMaps
 //swiftlint:disable class_delegate_protocol
 public protocol AnnotationStyleDelegate {
     //swiftlint:disable function_parameter_count
-    func setStyleImage(image: UIImage,
-                       with identifier: String,
-                       sdf: Bool,
-                       stretchX: [ImageStretches],
-                       stretchY: [ImageStretches],
-                       imageContent: ImageContent?) -> Result<Bool, ImageError>
 
-    func getStyleImage(with identifier: String) -> Image?
+    func addImage(_ image: UIImage, id: String, sdf: Bool, stretchX: [ImageStretches], stretchY: [ImageStretches], content: ImageContent?) throws
+
+    func image(withId id: String) -> UIImage?
 
     func addSource(_ source: Source, id: String) throws
 

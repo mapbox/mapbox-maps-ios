@@ -63,10 +63,14 @@ public enum ImageError: Error {
     case convertingImageFailed(String?)
 
     /// Adding the image to the style's sprite failed.
-    case addStyleImageFailed(String?)
+    case addStyleImageFailed(String)
 
     /// The style image does not exist in the sprite
-    case getStyleImageFailed(String?)
+    case getStyleImageFailed(String)
+
+    /// Temporary
+    case imageSourceImageUpdateFailed(String)
+    case removeImageFailed(String)
 }
 
 /// Error enum for all terrain-related errors

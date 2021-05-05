@@ -130,6 +130,20 @@ public class Style {
         }
     }
 
+    // MARK: Layer properties
+
+    /// Gets the value of style layer property.
+    ///
+    /// - Parameters:
+    ///   - layerId: Style layer identifier.
+    ///   - property: Style layer property name.
+    ///
+    /// - Returns:
+    ///     The value of the property in the layer with layerId.
+    public func layerProperty(for layerId: String, property: String) -> Any {
+        return _layerProperty(for: layerId, property: property).value
+    }
+
     // MARK: Style images
 
     /**
@@ -210,15 +224,14 @@ public class Style {
                 Else, returns a `SourceError` as part of the `Result` failure case.
      */
     public func getSource<T: Source>(id: String, type: T.Type = T.self) -> Result<T, SourceError> {
-        let sourceResult = _source(id: id, type: type)
-        switch sourceResult {
-        case .success(let source):
-            // swiftlint:disable force_cast
+        // swiftlint:disable force_cast
+        do {
+            let source = try _source(id: id, type: type)
             return .success(source as! T)
-            // swiftlint:enable force_cast
-        case .failure(let error):
-            return .failure(error)
+        } catch {
+            return .failure(error as! SourceError)
         }
+        // swiftlint:enable force_cast
     }
 
     /**
@@ -233,40 +246,22 @@ public class Style {
                 as part of the `Result`s success case if the operation is successful.
                 Else, returns a `SourceError` as part of the `Result` failure case.
      */
-    public func _source(id: String, type: Source.Type) -> Result<Source, SourceError> {
+    public func _source(id: String, type: Source.Type) throws  -> Source {
         // Get the source properties for a given identifier
-        let sourceProps = styleManager.getStyleSourceProperties(forSourceId: id)
-
-        // If sourceProps represents an error, return early
-        guard sourceProps.isValue(),
-              let validValue = sourceProps.value as? [String: AnyObject] else {
-            return .failure(.getSourceFailed(sourceProps.error as? String))
-        }
-
-        // Decode the source properties into a source object
-        do {
-            let source = try type.init(jsonObject: validValue)
-            return .success(source)
-        } catch {
-            return .failure(.sourceDecodingFailed(error))
-        }
+        let sourceProps = try sourceProperties(for: id)
+        let source = try type.init(jsonObject: sourceProps)
+        return source
     }
 
-    /**
-     Set a source property for a given source to an updated value.
-
-     - Parameter id: The identifier representing the source.
-     - Parameter property: The name of the source property to change.
-     - Parameter value: The new value to for the `property`.
-     - Returns: If operation successful, returns a `true` as part of the `Result` success case.
-                Else, returns a `SourceError` in the `Result` failure case.
-     */
-    @discardableResult
-    public func updateSourceProperty(id: String, property: String, value: [String: Any]) -> Result<Bool, SourceError> {
-        let expectation = styleManager.setStyleSourcePropertyForSourceId(id, property: property, value: value)
-
-        return expectation.isValue() ? .success(true)
-                                     : .failure(.setSourceProperty(expectation.error as? String))
+    /// Gets the value of style source property.
+    ///
+    /// - Parameters:
+    ///   - sourceId: Style source identifier.
+    ///   - property: Style source property name.
+    ///
+    /// - Returns: The value of the property in the source with sourceId.
+    public func sourceProperty(for sourceId: String, property: String) -> Any {
+        return _sourceProperty(for: sourceId, property: property).value
     }
 
     /**
@@ -286,9 +281,14 @@ public class Style {
             return .failure(.setSourceProperty("Could not parse updated GeoJSON"))
         }
 
-        return updateSourceProperty(id: sourceIdentifier,
-                                    property: "data",
-                                    value: geoJSONDictionary)
+        do {
+            try setSourceProperty(for: sourceIdentifier, property: "data", value: geoJSONDictionary)
+            return .success(true)
+        } catch {
+            // swiftlint:disable force_cast
+            return .failure(error as! SourceError)
+            // swiftlint:enable force_cast
+        }
     }
 
     // MARK: Terrain
@@ -410,7 +410,6 @@ extension Style: StyleManagerProtocol {
 
     // MARK: Layer Properties
 
-    /// :nodoc:
     public func _layerProperty(for layerId: String, property: String) -> StylePropertyValue {
         return styleManager.getStyleLayerProperty(forLayerId: layerId, property: property)
     }
@@ -422,7 +421,6 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    /// :nodoc:
     public static func _layerPropertyDefaultValue(for layerType: String, property: String) -> StylePropertyValue {
         return StyleManager.getStyleLayerPropertyDefaultValue(forLayerType: layerType, property: property)
     }
@@ -475,6 +473,42 @@ extension Style: StyleManagerProtocol {
             }
             return SourceInfo(id: info.id, type: sourceType)
         }
+    }
+
+    // MARK: Source properties
+
+    public func _sourceProperty(for sourceId: String, property: String) -> StylePropertyValue {
+        return styleManager.getStyleSourceProperty(forSourceId: sourceId, property: property)
+    }
+
+    public func setSourceProperty(for sourceId: String, property: String, value: Any) throws {
+        let expected = styleManager.setStyleSourcePropertyForSourceId(sourceId, property: property, value: value)
+        if expected.isError() {
+            throw SourceError.setSourceProperty(expected.error as! String)
+        }
+    }
+
+    public func sourceProperties(for sourceId: String) throws -> [String: Any] {
+        let expected = styleManager.getStyleSourceProperties(forSourceId: sourceId)
+        if expected.isError() {
+            throw SourceError.getSourceFailed(expected.error as! String)
+        }
+
+        guard let result = expected.value as? [String: Any] else {
+            throw SourceError.getSourceFailed("Value mismatch")
+        }
+        return result
+    }
+
+    public func setSourceProperties(for sourceId: String, properties: [String: Any]) throws {
+        let expected = styleManager.setStyleSourcePropertiesForSourceId(sourceId, properties: properties)
+        if expected.isError() {
+            throw SourceError.setSourceProperty(expected.error as! String)
+        }
+    }
+
+    public static func _sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue {
+        return StyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
     }
 }
 // swiftlint:enable force_cast

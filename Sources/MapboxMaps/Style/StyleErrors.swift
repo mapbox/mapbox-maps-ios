@@ -21,10 +21,10 @@ public enum SourceError: Error {
     case removeSourceFailed(String)
 
     /// The source could not be retrieved from the map
-    case getSourceFailed(String?)
+    case getSourceFailed(String)
 
     /// The source property could not be set.
-    case setSourceProperty(String?)
+    case setSourceProperty(String)
 }
 
 /// Error enum for all layer-related errors

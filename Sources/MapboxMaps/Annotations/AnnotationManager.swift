@@ -268,15 +268,11 @@ public class AnnotationManager {
             return .failure(.removeAnnotationFailed("Failed to parse data from FeatureCollection"))
         }
 
-        let updateSourceExpectation = styleDelegate.updateSourceProperty(id: sourceId,
-                                                                         property: "data",
-                                                                         value: geoJSONDictionary)
-
-        switch updateSourceExpectation {
-        case .success(let bool):
-            return .success(bool)
-        case .failure(let sourceError):
-            return .failure(.removeAnnotationFailed(sourceError.localizedDescription))
+        do {
+            try styleDelegate.setSourceProperty(for: sourceId, property: "data", value: geoJSONDictionary)
+            return .success(true)
+        } catch {
+            return .failure(.removeAnnotationFailed(error.localizedDescription))
         }
     }
 
@@ -442,12 +438,7 @@ public class AnnotationManager {
         if annotationSource == nil {
             try createAnnotationSource()
         } else {
-            let updateSourceExpectation = styleDelegate.updateSourceProperty(id: sourceId,
-                                                                             property: "data",
-                                                                             value: geoJSON)
-            if case .failure(let sourceError) = updateSourceExpectation {
-                throw AnnotationError.addAnnotationFailed(sourceError)
-            }
+            try styleDelegate.setSourceProperty(for: sourceId, property: "data", value: geoJSON)
         }
     }
 

@@ -173,21 +173,13 @@ extension AnnotationManagerIntegrationTestCase: AnnotationStyleDelegate {
     }
 
     func addSource(_ source: Source, id: String) throws {
-        guard let style = style else {
-            XCTFail("No style available")
-            throw SourceError.addSourceFailed("No style available")
-        }
-
+        let style = try XCTUnwrap(self.style)
         try style.addSource(source, id: id)
     }
 
-    func updateSourceProperty(id: String, property: String, value: [String: Any]) -> Result<Bool, SourceError> {
-        guard let style = style else {
-            XCTFail("No style available")
-            return .failure(.addSourceFailed("No style available"))
-        }
-
-        return style.updateSourceProperty(id: id, property: property, value: value)
+    func setSourceProperty(for sourceId: String, property: String, value: Any) throws {
+        let style = try XCTUnwrap(self.style)
+        try style.setSourceProperty(for: sourceId, property: property, value: value)
     }
 
     func addLayer(_ layer: Layer, layerPosition: LayerPosition?) throws {

@@ -9,10 +9,7 @@ internal class ExampleIntegrationTest: MapViewIntegrationTestCase {
     }
 
     internal func testWaitForIdle() throws {
-        guard let style = style else {
-            XCTFail("There should be valid MapView and Style objects created by setUp.")
-            return
-        }
+        let style = try XCTUnwrap(self.style)
 
         let expectation = XCTestExpectation(description: "Wait for map to idle")
         expectation.expectedFulfillmentCount = 2

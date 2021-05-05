@@ -10,12 +10,8 @@ import Turf
 
 class ImageSourceIntegrationTests: MapViewIntegrationTestCase {
     
-    func testAdditionAndRemovalOfSource() {
-
-        guard let style = style else {
-            XCTFail("There should be valid MapView and Style objects created by setUp.")
-            return
-        }
+    func testAdditionAndRemovalOfSource() throws {
+        let style = try XCTUnwrap(self.style)
 
         let successfullyAddedSourceExpectation = XCTestExpectation(description: "Successfully added ImageSource to Map")
         successfullyAddedSourceExpectation.expectedFulfillmentCount = 1

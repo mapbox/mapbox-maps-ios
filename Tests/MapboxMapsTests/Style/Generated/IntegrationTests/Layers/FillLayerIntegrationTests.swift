@@ -14,10 +14,7 @@ class FillLayerIntegrationTests: MapViewIntegrationTestCase {
     }
 
     internal func testWaitForIdle() throws {
-        guard let style = style else {
-            XCTFail("There should be valid MapView and Style objects created by setUp.")
-            return
-        }
+        let style = try XCTUnwrap(self.style)
 
         let successfullyAddedLayerExpectation = XCTestExpectation(description: "Successfully added FillLayer to Map")
         successfullyAddedLayerExpectation.expectedFulfillmentCount = 1

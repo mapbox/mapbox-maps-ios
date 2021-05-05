@@ -140,6 +140,7 @@ public protocol StyleManagerProtocol {
     /// Gets the properties for a style layer.
     ///
     /// - Parameter layerId: layer id.
+    ///
     /// - Returns:
     ///     JSON dictionary representing the layer properties
     ///
@@ -197,63 +198,70 @@ public protocol StyleManagerProtocol {
     /// The ordered list of the current style sources' identifiers and types
     var allSourceIdentifiers: [SourceInfo] { get }
 
+    // MARK: Source properties
+
+    /// :nodoc:
+    ///
+    /// Gets the value of style source property.
+    ///
+    /// - Parameters:
+    ///   - sourceId: Style source identifier.
+    ///   - property: Style source property name.
+    ///
+    /// - Returns: The value of the property in the source with sourceId.
+    func _sourceProperty(for sourceId: String, property: String) -> StylePropertyValue
+
+    /// Sets a value to a style source property.
+    ///
+    /// - Parameters:
+    ///   - sourceId: Style source identifier.
+    ///   - property: Style source property name.
+    ///   - value: Style source property value (JSON value)
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    func setSourceProperty(for sourceId: String, property: String, value: Any) throws
+
+    /// Gets style source properties.
+    ///
+    /// - Parameter sourceId: Style source identifier
+    ///
+    /// - Returns:
+    ///     JSON dictionary representing the layer properties
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    func sourceProperties(for sourceId: String) throws -> [String: Any]
+
+    /// Sets style source properties.
+    ///
+    /// This method can be used to perform batch update for a style source properties.
+    /// The structure of a provided `properties` value must conform to the
+    /// [format](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/) for a
+    /// corresponding source type. Modification of a [source type](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/#type)
+    /// is not allowed.
+    ///
+    /// - Parameters:
+    ///   - sourceId: Style source identifier
+    ///   - properties: A JSON dictionary of Style source properties
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    func setSourceProperties(for sourceId: String, properties: [String: Any]) throws
+
+    /// :nodoc:
+    ///
+    /// Gets the default value of style source property.
+    ///
+    /// - Parameters:
+    ///   - sourceType: Style source type.
+    ///   - property: Style source property name.
+    ///
+    /// - Returns:
+    ///     The default value for the named property for the sources with type sourceType.
+    static func _sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue
 
 
-    //
-    //    /**
-    //     * @brief Gets the value of style source \p property.
-    //     *
-    //     * @param sourceId Style source identified.
-    //     * @param property Style source property name.
-    //     * @return The value of \p property in the source with \p sourceId.
-    //     */
-    //    func _sourceProperty(for sourceId: String, property: String) -> StylePropertyValue
-    //
-    //
-    //    /**
-    //     * @brief Sets a \a value to a style source \a property.
-    //     *
-    //     * @param sourceId Style source identifier.
-    //     * @param property Style source property name.
-    //     * @param value Style source property value.
-    //     *
-    //     * @return A string describing an error if the operation was not successful, empty otherwise.
-    //     */
-    //    func setSourceProperty(for sourceId: String, property: String, value: Any) throws
-    //
-    //    /**
-    //     * @brief Gets style source properties.
-    //     *        In order to convert returned value to a json string please take a look at mapbox::common::ValueConverter.
-    //     *
-    //     * @param sourceId Style source identifier.
-    //     *
-    //     * @return Style source properties or a string describing an error if the operation was not successful.
-    //     */
-    //    func sourceProperties(for sourceId: String) throws -> [String: Any]
-    //
-    //
-    //    /**
-    //     * @brief Sets style source properties.
-    //     *        This method can be used to perform batch update for a style source properties. The structure of a
-    //     *        provided `properties` value must conform to \sa https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/
-    //     *        format for a corresponding source type. Modification of a source type
-    //     *        \sa https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/#type is not allowed.
-    //     *
-    //     * @param sourceId Style source identifier.
-    //     * @param properties A map of Style source properties.
-    //     *
-    //     * @return A string describing an error if the operation was not successful, empty otherwise.
-    //     */
-    //    func setSourceProperties(for sourceId: String, properties: [String: Any]) throws
-    //
-    //    /**
-    //     * @brief Gets the default value of style source \p property.
-    //     *
-    //     * @param sourceType Style source type.
-    //     * @param property Style source property name.
-    //     * @return The default value of \p property for the sources with type \p sourceType.
-    //     */
-    //    static func sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue
     //
     //
     //    /**
@@ -452,6 +460,4 @@ public protocol StyleManagerProtocol {
     //     */
     ////    open func invalidateStyleCustomGeometrySourceRegion(forSourceId sourceId: String, bounds: MBMCoordinateBounds) -> MBXExpected
     //    func invalidateCustomGeometrySourceRegion(for sourceId: String, bounds: CoordinateBounds) throws
-
-
 }

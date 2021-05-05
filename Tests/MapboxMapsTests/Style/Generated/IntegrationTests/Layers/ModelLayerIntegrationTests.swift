@@ -1,4 +1,4 @@
-// This file is generated
+// This file is NOT CURRENTLY generated
 import XCTest
 
 #if canImport(MapboxMaps)
@@ -14,10 +14,7 @@ class ModelLayerIntegrationTests: MapViewIntegrationTestCase {
     }
 
     internal func testWaitForIdle() throws {
-        guard let style = style else {
-            XCTFail("There should be valid MapView and Style objects created by setUp.")
-            return
-        }
+        let style = try XCTUnwrap(self.style)
 
         let successfullyAddedLayerExpectation = XCTestExpectation(description: "Successfully added ModelLayer to Map")
         successfullyAddedLayerExpectation.expectedFulfillmentCount = 1

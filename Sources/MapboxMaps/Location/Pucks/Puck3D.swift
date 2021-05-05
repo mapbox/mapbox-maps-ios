@@ -110,7 +110,7 @@ internal class Puck3D: Puck {
         modelSource.models = [key: model]
         if let data = try? JSONEncoder().encode([key: model]),
            let jsonDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-            style.updateSourceProperty(id: "puck-model-source", property: "models", value: jsonDictionary)
+            try? style.setSourceProperty(for: "puck-model-source", property: "models", value: jsonDictionary)
         }
     }
 

@@ -113,8 +113,6 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
         TileStore.getInstance().loadTileRegion(forId: tileRegionId,
                                                loadOptions: tileRegionLoadOptions!) { _ in } completion: { _ in }
 
-
-
         TileStore.getInstance().removeTileRegion(forId: self.tileRegionId)
 
         TileStore.getInstance().allTileRegions(completion: { result in

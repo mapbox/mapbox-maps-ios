@@ -17,8 +17,8 @@ public struct OrnamentOptions: Equatable {
 
     /// The ornament options for the compass view. The compass view has a default position of `.topRight`.
     public var compassViewOptions: CompassScaleBarOptions = CompassScaleBarOptions(position: .topRight)
-    // MARK: - Logo View
 
+    // MARK: - Logo View
     /**
      Per our terms of service, a Mapbox map is required to display both
      a Mapbox logo as well as an information icon that contains attribution
@@ -45,10 +45,8 @@ public struct CompassScaleBarOptions: Equatable {
 /// Used to configure the map's logo view and attribution button.
 public struct AttributionLogoViewOptions: Equatable {
     public var position: OrnamentPosition
-
     /// The default value for this property is `CGPoint(x: 8.0, y: 8.0)`.
     public var margins: CGPoint = defaultOrnamentsMargin
-
     /// The default value for this property is `true`.
     public var _isVisible: Bool = true
 }

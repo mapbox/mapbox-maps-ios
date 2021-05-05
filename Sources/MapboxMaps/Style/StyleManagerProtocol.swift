@@ -1,7 +1,7 @@
 import Foundation
 import Turf
 
-// swiftlint:disable file_length
+// swiftlint:disable file_length function_parameter_count
 public protocol StyleManagerProtocol {
     /// `true` if and only if the style JSON contents, the style specified sprite
     /// and sources are all loaded, otherwise returns `false`.
@@ -372,16 +372,6 @@ public protocol StyleManagerProtocol {
     ///     or nil if no image is associated with that ID.
     func image(withId id: String) -> UIImage?
 
-
-
-
-
-
-
-
-
-
-
     //
     //    /**
     //     * @brief Sets the style global light source properties.
@@ -483,4 +473,4 @@ public protocol StyleManagerProtocol {
     ////    open func invalidateStyleCustomGeometrySourceRegion(forSourceId sourceId: String, bounds: MBMCoordinateBounds) -> MBXExpected
     //    func invalidateCustomGeometrySourceRegion(for sourceId: String, bounds: CoordinateBounds) throws
 }
-// swiftlint:enable file_length
+// swiftlint:enable file_length function_parameter_count

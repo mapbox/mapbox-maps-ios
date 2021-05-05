@@ -436,46 +436,50 @@ public protocol StyleManagerProtocol {
 
     // MARK: Custom geometry
 
-    //
-    //
-    //
-    //    /**
-    //     * @brief Adds a custom geometry to be used in the style. To add the data, implement the fetchTileFunction callback in the options and call setStyleCustomGeometrySourceTileData()
-    //     *
-    //     * @param sourceId Style source identifier
-    //     * @param options Settings for the custom geometry
-    //     */
-    ////    open func addStyleCustomGeometrySource(forSourceId sourceId: String, options: MBMCustomGeometrySourceOptions) -> MBXExpected
-    //    func addCustomGeometrySource(for sourceId: String, options: CustomGeometrySourceOptions) throws
-    //
-    //    /**
-    //     * @brief Set tile data of a custom geometry.
-    //     *
-    //     * @param sourceId Style source identifier
-    //     * @param tileId Identifier of the tile
-    //     * @param featureCollection An array with the features to add
-    //     */
-    //    func setCustomGeometrySourceTileData(for sourceId: String, tileId: CanonicalTileID, featureCollection: [MBXFeature]) throws
-    //
-    //    /**
-    //     * @brief Invalidate tile for provided custom geometry source.
-    //     *
-    //     * @param sourceId Style source identifier
-    //     * @param tileId Identifier of the tile
-    //     *
-    //     * @return A string describing an error if the operation was not successful, empty otherwise.
-    //     */
-    //    func invalidateCustomGeometrySourceTile(for sourceId: String, tileId: CanonicalTileID) throws
-    //
-    //    /**
-    //     * @brief Invalidate region for provided custom geometry source.
-    //     *
-    //     * @param sourceId Style source identifier
-    //     * @param bounds Coordinate bounds.
-    //     *
-    //     * @return A string describing an error if the operation was not successful, empty otherwise.
-    //     */
-    ////    open func invalidateStyleCustomGeometrySourceRegion(forSourceId sourceId: String, bounds: MBMCoordinateBounds) -> MBXExpected
-    //    func invalidateCustomGeometrySourceRegion(for sourceId: String, bounds: CoordinateBounds) throws
+    /// Adds a custom geometry to be used in the style.
+    ///
+    /// To add the data, implement the fetchTileFunction callback in the options
+    /// and call `setCustomGeometrySourceTileData`.
+    ///
+    /// - Parameters:
+    ///   - sourceId: Style source identifier
+    ///   - options: Settings for the custom geometry
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    func addCustomGeometrySource(withId sourceId: String, options: CustomGeometrySourceOptions) throws
+
+    /// :nodoc:
+    /// 
+    /// Set tile data of a custom geometry.
+    ///
+    /// - Parameters:
+    ///   - sourceId: Style source identifier
+    ///   - tileId: Identifier of the tile
+    ///   - features: An array of features to add
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.\
+    func _setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Feature]) throws
+
+    /// Invalidate tile for provided custom geometry source.
+    ///
+    /// - Parameters:
+    ///   - sourceId: Style source identifier
+    ///   - tileId: Identifier of the tile
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    func invalidateCustomGeometrySourceTile(forSourceId sourceId: String, tileId: CanonicalTileID) throws
+
+    /// Invalidate region for provided custom geometry source.
+    ///
+    /// - Parameters:
+    ///   - sourceId: Style source identifier
+    ///   - bounds: Coordinate bounds.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    func invalidateCustomGeometrySourceRegion(forSourceId sourceId: String, bounds: CoordinateBounds) throws
 }
 // swiftlint:enable file_length function_parameter_count

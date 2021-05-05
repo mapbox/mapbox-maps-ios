@@ -90,3 +90,7 @@ public enum LightError: Error {
     /// Retrieving a light object from style failed
     case getLightFailed(Error)
 }
+
+public enum TemporaryError: Error {
+    case failure(String)
+}

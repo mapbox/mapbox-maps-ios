@@ -581,14 +581,6 @@ extension Style: StyleManagerProtocol {
         return styleManager.getStyleTerrainProperty(forProperty: property)
     }
 
-    /// Sets a value to the named style terrain property.
-    ///
-    /// - Parameters:
-    ///   - property: Style terrain property name.
-    ///   - value: Style terrain property value.
-    ///
-    /// - Throws:
-    ///     An error describing why the operation was unsuccessful.
     public func setTerrainProperty(_ property: String, value: Any) throws {
         let expected = styleManager.setStyleTerrainPropertyForProperty(property, value: value)
 
@@ -598,6 +590,41 @@ extension Style: StyleManagerProtocol {
         }
     }
 
+    // MARK: Custom geometry
+
+    public func addCustomGeometrySource(withId sourceId: String, options: CustomGeometrySourceOptions) throws {
+        let expected = styleManager.addStyleCustomGeometrySource(forSourceId: sourceId, options: options)
+
+        if expected.isError() {
+            throw TemporaryError.failure(expected.error as! String)
+        }
+    }
+
+    // TODO: Fix initialization of MBXFeature.
+    public func _setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Feature]) throws {
+        let mbxFeatures = features.compactMap { MBXFeature($0) }
+        let expected = styleManager.setStyleCustomGeometrySourceTileDataForSourceId(sourceId, tileId: tileId, featureCollection: mbxFeatures)
+
+        if expected.isError() {
+            throw TemporaryError.failure(expected.error as! String)
+        }
+    }
+
+    public func invalidateCustomGeometrySourceTile(forSourceId sourceId: String, tileId: CanonicalTileID) throws {
+        let expected = styleManager.invalidateStyleCustomGeometrySourceTile(forSourceId: sourceId, tileId: tileId)
+
+        if expected.isError() {
+            throw TemporaryError.failure(expected.error as! String)
+        }
+    }
+
+    public func invalidateCustomGeometrySourceRegion(forSourceId sourceId: String, bounds: CoordinateBounds) throws {
+        let expected = styleManager.invalidateStyleCustomGeometrySourceRegion(forSourceId: sourceId, bounds: bounds)
+
+        if expected.isError() {
+            throw TemporaryError.failure(expected.error as! String)
+        }
+    }
 }
 // swiftlint:enable force_cast
 

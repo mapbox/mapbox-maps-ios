@@ -73,3 +73,37 @@ extension Feature {
         self.init(geometry: Geometry.geometryCollection(geometryCollection))
     }
 }
+
+extension MBXFeature {
+    /// Initialize an `MBXFeature` with a `Turf.Feature`
+    internal convenience init?(_ feature: Feature) {
+
+        let identifier: Any?
+
+        // Features may or may not have an identifier. If they have one,
+        // it is either a number or string value.
+        switch feature.identifier {
+        case let .number(number):
+            switch number {
+            case let .int(intId):
+                identifier = NSNumber(value: intId)
+            case let .double(doubleId):
+                identifier = NSNumber(value: doubleId)
+            }
+
+        case let .string(stringId):
+            identifier = stringId
+
+        case .none:
+            identifier = nil
+        }
+
+        let geometry = MBXGeometry(geometry: feature.geometry)
+        let properties = feature.properties
+
+        print("TODO: \(String(describing: identifier)) \(geometry) \(String(describing: properties))")
+
+        return nil
+//      self.init(identifier: identifier, geometry: geometry, properties: properties)
+    }
+}

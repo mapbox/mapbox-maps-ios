@@ -29,7 +29,7 @@ public struct OrnamentOptions: Equatable {
     public var logoViewOptions: AttributionLogoViewOptions = AttributionLogoViewOptions(position: .bottomLeft)
 
     // MARK: - Attribution Button
-    /// The orname options for the attribution button. The attribution button has a default position of `.bottomRight`.
+    /// The ornament options for the attribution button. The attribution button has a default position of `.bottomRight`.
     public var attributionButtonOptions: AttributionLogoViewOptions = AttributionLogoViewOptions(position: .bottomRight)
 }
 

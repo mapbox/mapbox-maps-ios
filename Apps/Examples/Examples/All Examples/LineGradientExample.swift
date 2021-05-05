@@ -104,7 +104,7 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
         lineLayer.layout?.lineJoin = .constant(.round)
 
         // Add the source and style layer to the map style.
-        mapView.style.addSource(source: geoJSONSource, identifier: geoJSONDataSourceIdentifier)
+        try! mapView.style.addSource(geoJSONSource, id: geoJSONDataSourceIdentifier)
         try! mapView.style.addLayer(lineLayer, layerPosition: nil)
     }
 }

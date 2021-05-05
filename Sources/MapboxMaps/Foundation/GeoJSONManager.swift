@@ -40,7 +40,7 @@ public struct GeoJSONManager {
     /**
      Converts a generic object confirming to the `GeoJSONObject` protocol
      to a dictionary representation of that data. Use this method when creating
-     a new GeoJSON source with `MBXStyleManager.addStyleSource(forSourceId:properties)`.
+     a new GeoJSON source with `Style.addSource(_:properties)`.
 
      - Parameter geoJSONObject: A generic object that conforms to the `GeoJSONObject` protocol.
      - Returns: A nested dictionary that represents the `data` object of a GeoJSON feature.

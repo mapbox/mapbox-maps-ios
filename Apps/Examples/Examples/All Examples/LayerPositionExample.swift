@@ -108,7 +108,8 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
             CLLocationCoordinate2DMake(32.91648534731439, -114.43359375)
         ]])))
 
-        _ = mapView.style.addSource(source: source, identifier: sourceIdentifier)
+        try! mapView.style.addSource(source, id: sourceIdentifier)
+
         // If a layer position is not supplied, the layer is added above all other layers by default.
         try! mapView.style.addLayer(layer, layerPosition: nil)
 

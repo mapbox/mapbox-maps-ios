@@ -10,12 +10,8 @@ import Turf
 
 class RasterDemSourceIntegrationTests: MapViewIntegrationTestCase {
     
-    func testAdditionAndRemovalOfSource() {
-
-        guard let style = style else {
-            XCTFail("There should be valid MapView and Style objects created by setUp.")
-            return
-        }
+    func testAdditionAndRemovalOfSource() throws {
+        let style = try XCTUnwrap(self.style)
 
         let successfullyAddedSourceExpectation = XCTestExpectation(description: "Successfully added RasterDemSource to Map")
         successfullyAddedSourceExpectation.expectedFulfillmentCount = 1
@@ -41,17 +37,15 @@ class RasterDemSourceIntegrationTests: MapViewIntegrationTestCase {
             source.maxOverscaleFactorForParentTiles = Double.testSourceValue()
             
             // Add the source
-            let addResult = style.addSource(source: source, identifier: "test-source")
-
-            switch (addResult) {
-                case .success(_):
+            do {
+                try style.addSource(source, id: "test-source")
                 successfullyAddedSourceExpectation.fulfill()
-                case .failure(let error):
-                    XCTFail("Failed to add RasterDemSource because of error: \(error)")
+            } catch {
+                XCTFail("Failed to add RasterDemSource because of error: \(error)")
             }
 
             // Retrieve the source
-            let retrieveResult = style.getSource(identifier: "test-source", type: RasterDemSource.self)
+            let retrieveResult = style.getSource(id: "test-source", type: RasterDemSource.self)
 
             switch (retrieveResult) {
                 case .success(_):

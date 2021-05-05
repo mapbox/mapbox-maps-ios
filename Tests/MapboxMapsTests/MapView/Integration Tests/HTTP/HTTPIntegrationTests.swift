@@ -95,8 +95,6 @@ class CustomHttpService: HttpServiceInterface {
         print("TODO: download(for:callback:) conformance")
         return 0
     }
-
-    var peer: MBXPeerWrapper?
 }
 
 class HTTPIntegrationTests: MapViewIntegrationTestCase {
@@ -106,14 +104,11 @@ class HTTPIntegrationTests: MapViewIntegrationTestCase {
     override class func setUp() {
         super.setUp()
 
-        try! HttpServiceFactory.setUserDefinedForCustom(customHTTPService)
+        HttpServiceFactory.setUserDefinedForCustom(customHTTPService)
     }
 
     func testReplacingHTTPService() throws {
-        guard let style = style else {
-            XCTFail("Style should be valid")
-            return
-        }
+        let style = try XCTUnwrap(self.style)
 
         let serviceExpectation = XCTestExpectation(description: "Requests should be made by custom HTTP stack")
         serviceExpectation.assertForOverFulfill = false
@@ -129,10 +124,7 @@ class HTTPIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testReplacingHTTPServiceAndForcedError() throws {
-        guard let style = style else {
-            XCTFail("Style should be valid")
-            return
-        }
+        let style = try XCTUnwrap(self.style)
 
         let serviceExpectation = XCTestExpectation(description: "Mock service request should be called")
         let errorExpectation = XCTestExpectation(description: "Map should fail to load, with our custom error")
@@ -148,7 +140,7 @@ class HTTPIntegrationTests: MapViewIntegrationTestCase {
 
         didFailLoadingMap = { (_, error2) in
             XCTAssertNotNil(error2)
-            let description = error2.userInfo["description"] as? String
+            let description = error2.userInfo["message"] as? String
             XCTAssertNotNil(description)
             XCTAssert(description!.contains(errorMessage))
 

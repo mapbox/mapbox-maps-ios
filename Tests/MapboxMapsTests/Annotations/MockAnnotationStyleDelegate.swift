@@ -17,15 +17,7 @@ final class MockAnnotationStyleDelegate: AnnotationStyleDelegate {
         return Image(uiImage: UIImage())
     }
 
-    func addSource(source: Source, identifier: String) -> Result<Bool, SourceError> {
-        return .success(true)
-    }
-
-    //swiftlint:disable identifier_name
-    func updateSourceProperty(id: String, property: String, value: [String: Any]) -> Result<Bool, SourceError> {
-        return .success(true)
-    }
-
-    func addLayer(_ layer: Layer, layerPosition: LayerPosition?) throws {
-    }
+    func addLayer(_ layer: Layer, layerPosition: LayerPosition?) throws {}
+    func addSource(_ source: Source, id: String) throws {}
+    func setSourceProperty(for sourceId: String, property: String, value: Any) throws {}
 }

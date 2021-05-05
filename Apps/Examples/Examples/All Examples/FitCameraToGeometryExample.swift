@@ -43,16 +43,16 @@ public class FitCameraToGeometryExample: UIViewController, ExampleProtocol {
         polygonLayer.paint?.fillColor = .constant(ColorRepresentable(color: .gray))
         polygonLayer.source = sourceIdentifier
 
-        let addSourceResult = mapView.style?.addSource(source: source, identifier: sourceIdentifier)
-
-        if case .failure(let sourceError) = addSourceResult {
-            displayAlert(message: sourceError.localizedDescription)
+        do {
+            try mapView.style?.addSource(source, id: sourceIdentifier)
+        } catch {
+            displayAlert(message: error.localizedDescription)
         }
 
         do {
             try mapView.style?.addLayer(polygonLayer, layerPosition: nil)
-        } catch let layerError {
-            displayAlert(message: layerError.localizedDescription)
+        } catch {
+            displayAlert(message: error.localizedDescription)
         }
 
         let newCamera = mapView.mapboxMap.camera(for: polygon, padding: .zero, bearing: 0, pitch: 0)

@@ -268,15 +268,11 @@ public class AnnotationManager {
             return .failure(.removeAnnotationFailed("Failed to parse data from FeatureCollection"))
         }
 
-        let updateSourceExpectation = styleDelegate.updateSourceProperty(id: sourceId,
-                                                                         property: "data",
-                                                                         value: geoJSONDictionary)
-
-        switch updateSourceExpectation {
-        case .success(let bool):
-            return .success(bool)
-        case .failure(let sourceError):
-            return .failure(.removeAnnotationFailed(sourceError.localizedDescription))
+        do {
+            try styleDelegate.setSourceProperty(for: sourceId, property: "data", value: geoJSONDictionary)
+            return .success(true)
+        } catch {
+            return .failure(.removeAnnotationFailed(error.localizedDescription))
         }
     }
 
@@ -347,24 +343,17 @@ public class AnnotationManager {
     /**
      Adds a new source layer for all annotations.
      */
-    internal func createAnnotationSource() -> Result<Bool, AnnotationError> {
+    internal func createAnnotationSource() throws {
 
         annotationSource = GeoJSONSource()
 
-        guard var sourceLayer = annotationSource else {
-            return .failure(.addAnnotationFailed(nil))
+        guard var source = annotationSource else {
+            throw AnnotationError.addAnnotationFailed(nil)
         }
 
-        sourceLayer.data = .featureCollection(annotationFeatures)
+        source.data = .featureCollection(annotationFeatures)
 
-        let addSourceExpectation = styleDelegate.addSource(source: sourceLayer, identifier: sourceId)
-
-        switch addSourceExpectation {
-        case .success(let bool):
-            return .success(bool)
-        case .failure(let sourceError):
-            return .failure(.addAnnotationFailed(sourceError))
-        }
+        try styleDelegate.addSource(source, id: sourceId)
     }
 
     /**
@@ -447,16 +436,9 @@ public class AnnotationManager {
         }
 
         if annotationSource == nil {
-            if case .failure(let sourceError) = createAnnotationSource() {
-                throw AnnotationError.addAnnotationFailed(sourceError)
-            }
+            try createAnnotationSource()
         } else {
-            let updateSourceExpectation = styleDelegate.updateSourceProperty(id: sourceId,
-                                                                             property: "data",
-                                                                             value: geoJSON)
-            if case .failure(let sourceError) = updateSourceExpectation {
-                throw AnnotationError.addAnnotationFailed(sourceError)
-            }
+            try styleDelegate.setSourceProperty(for: sourceId, property: "data", value: geoJSON)
         }
     }
 

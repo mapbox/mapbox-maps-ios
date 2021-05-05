@@ -45,3 +45,12 @@ public extension Source {
         self = try JSONDecoder().decode(Self.self, from: sourceData)
     }
 }
+
+/// Information about a Source
+public struct SourceInfo {
+    /// The identifier of the source
+    var id: String
+
+    /// The type of the source
+    var type: SourceType
+}

@@ -19,13 +19,9 @@ public protocol AnnotationStyleDelegate {
 
     func getStyleImage(with identifier: String) -> Image?
 
-    func addSource(source: Source,
-                   identifier: String) -> Result<Bool, SourceError>
+    func addSource(_ source: Source, id: String) throws
 
-    // swiftlint:disable identifier_name
-    func updateSourceProperty(id: String,
-                              property: String,
-                              value: [String: Any]) -> Result<Bool, SourceError>
+    func setSourceProperty(for sourceId: String, property: String, value: Any) throws
 
     func addLayer(_ layer: Layer, layerPosition: LayerPosition?) throws
 }

@@ -10,13 +10,13 @@ private let defaultOrnamentsMargin = CGPoint(x: 8.0, y: 8.0)
 public struct OrnamentOptions: Equatable {
 
     // MARK: - Scale Bar
-    /// The ornament options for the scale bar. The scale bar has a default position of `.topLeft`.
-    public var scaleBarOptions: CompassScaleBarOptions = CompassScaleBarOptions(position: .topLeft)
+    /// The ornament options for the scale bar.
+    public var scaleBarOptions = ScaleBarViewOptions()
 
     // MARK: - Compass
 
-    /// The ornament options for the compass view. The compass view has a default position of `.topRight`.
-    public var compassViewOptions: CompassScaleBarOptions = CompassScaleBarOptions(position: .topRight)
+    /// The ornament options for the compass view.
+    public var compassViewOptions = CompassViewOptions()
 
     // MARK: - Logo View
     /**
@@ -25,26 +25,53 @@ public struct OrnamentOptions: Equatable {
      information. See https://docs.mapbox.com/help/how-mapbox-works/attribution/
      for details.
      */
-    /// The ornament options for the logo view. The logo view has a default position of `.bottomLeft`.
-    public var logoViewOptions: AttributionLogoViewOptions = AttributionLogoViewOptions(position: .bottomLeft)
+    /// The ornament options for the logo view.
+    public var logoViewOptions = LogoViewOptions()
 
     // MARK: - Attribution Button
-    /// The ornament options for the attribution button. The attribution button has a default position of `.bottomRight`.
-    public var attributionButtonOptions: AttributionLogoViewOptions = AttributionLogoViewOptions(position: .bottomRight)
+    /// The ornament options for the attribution button.
+    public var attributionButtonOptions = AttributionButtonOptions()
 }
 
-/// Used to configure position, margin, and visibility for the map's scale bar and compass view.
-public struct CompassScaleBarOptions: Equatable {
-    public var position: OrnamentPosition
+public protocol BaseOrnamentOptions: Equatable {
+    var position: OrnamentPosition { get set }
+    var margins: CGPoint { get set }
+}
+
+/// Used to configure position, margin, and visibility for the map's scale bar.
+public struct ScaleBarViewOptions: BaseOrnamentOptions {
+    /// The default value for this property is `.topLeft`.
+    public var position: OrnamentPosition = .topLeft
     /// The default value for this property is `CGPoint(x: 8.0, y: 8.0)`.
     public var margins: CGPoint = defaultOrnamentsMargin
     /// The default value for this property is `.adaptive`.
     public var visibility: OrnamentVisibility = .adaptive
 }
 
-/// Used to configure the map's logo view and attribution button.
-public struct AttributionLogoViewOptions: Equatable {
-    public var position: OrnamentPosition
+/// Used to configure position, margin, and visibility for the map's compass view.
+public struct CompassViewOptions: BaseOrnamentOptions {
+    /// The default value for this property is `.topRight`.
+    public var position: OrnamentPosition = .topRight
+    /// The default value for this property is `CGPoint(x: 8.0, y: 8.0)`.
+    public var margins: CGPoint = defaultOrnamentsMargin
+    /// The default value for this property is `.adaptive`.
+    public var visibility: OrnamentVisibility = .adaptive
+}
+
+/// Used to configure position, margin, and visibility for the map's attribution button.
+public struct AttributionButtonOptions: Equatable {
+    /// The default value for this property is `.bottomRight`.
+    public var position: OrnamentPosition = .bottomRight
+    /// The default value for this property is `CGPoint(x: 8.0, y: 8.0)`.
+    public var margins: CGPoint = defaultOrnamentsMargin
+    /// The default value for this property is `true`.
+    public var _isVisible: Bool = true
+}
+
+/// Used to configure position, margin, and visibility for the map's logo view.
+public struct LogoViewOptions: Equatable {
+    /// The default value for this property is `.bottomLeft`.
+    public var position: OrnamentPosition = .bottomLeft
     /// The default value for this property is `CGPoint(x: 8.0, y: 8.0)`.
     public var margins: CGPoint = defaultOrnamentsMargin
     /// The default value for this property is `true`.

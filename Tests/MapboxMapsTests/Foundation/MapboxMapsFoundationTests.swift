@@ -79,46 +79,6 @@ class MapboxMapsFoundationTests: XCTestCase {
         XCTAssertEqual(coordinate.longitude, CLLocationDegrees(0), accuracy: accuracy)
     }
 
-    func testPointToCoordinateInSubViewEqualOrigins() {
-//        let subViewRect = CGRect(x: 0,
-//                                 y: 0,
-//                                 width: mapView.bounds.size.width / 2,
-//                                 height: mapView.bounds.size.height / 2)
-//        let subview = UIView(frame: subViewRect)
-//
-//        mapView.addSubview(subview)
-//
-//        /**
-//         We shouldn't expect the centers to be the same, since now that the
-//         mapView is offset. The "center" is in the space of the parent view.
-//         */
-//        subview.center = CGPoint(x: mapView.bounds.midX, y: mapView.bounds.midY)
-//        XCTAssertNotEqual(subview.center, mapView.center, "Center of both views are not equal")
-//        XCTAssertEqual(subview.frame.origin.x, 25.0)
-//        XCTAssertEqual(subview.frame.origin.y, 25.0)
-//
-//        let updatedSubViewOrigin = subview.frame.origin
-//        let originCoordinateA = mapView.mapboxMap.coordinate(for: updatedSubViewOrigin)
-//        let originCoordinateB = mapView.mapboxMap.coordinate(for: CGPoint.zero)
-//
-//        XCTAssertEqual(originCoordinateA.latitude, originCoordinateB.latitude, accuracy: accuracy)
-//        XCTAssertEqual(originCoordinateA.longitude, originCoordinateB.longitude, accuracy: accuracy)
-
-        // The subview's origin is expected to be 1/4 of the map view's height and width
-//        let expectedSubViewOrigin = CGPoint(x: mapView.bounds.width * 0.25, y: mapView.bounds.height * 0.25)
-//        let convertedSubViewOrigin = mapView.convert(expectedSubViewOrigin, to: subview)
-//        // So this should be zero
-//        XCTAssertEqual(convertedSubViewOrigin, .zero)
-//
-//        let originCoordinateC = mapView.convert(convertedSubViewOrigin, toCoordinateFrom: subview)
-//
-//        XCTAssertEqual(originCoordinateB.latitude, originCoordinateC.latitude, accuracy: accuracy)
-//        XCTAssertEqual(originCoordinateB.longitude, originCoordinateC.longitude, accuracy: accuracy)
-//
-//        XCTAssertEqual(originCoordinateA.latitude, originCoordinateC.latitude, accuracy: accuracy)
-//        XCTAssertEqual(originCoordinateA.longitude, originCoordinateC.longitude, accuracy: accuracy)
-    }
-
     func testPointToCoordinateWithBoundsShifted() {
         // Shift bounds down and right 1/2 of the map's size
         mapView.bounds = CGRect(x: mapView.frame.midX,

@@ -17,7 +17,7 @@ public class RestrictCoordinateBoundsExample: UIViewController, ExampleProtocol 
                                       northeast: CLLocationCoordinate2D(latitude: 66.61, longitude: -13.47))
         let camera = mapView.mapboxMap.camera(for: bounds, padding: .zero, bearing: 0, pitch: 0)
         // Set the camera's center coordinate.
-        mapView.camera.setCamera(to: camera, completion: nil)
+        mapView.camera.setCamera(to: camera)
 
         mapView.update { (mapOptions) in
             mapOptions.camera.restrictedCoordinateBounds = bounds

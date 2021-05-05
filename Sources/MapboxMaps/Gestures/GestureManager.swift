@@ -112,10 +112,12 @@ internal protocol CameraManagerProtocol: AnyObject {
 
     var mapCameraOptions: MapCameraOptions { get }
 
-    func setCamera(to camera: CameraOptions,
-                   animated: Bool,
-                   duration: TimeInterval,
-                   completion: ((UIViewAnimatingPosition) -> Void)?)
+    func setCamera(to camera: CameraOptions)
+
+    func ease(to camera: CameraOptions,
+              duration: TimeInterval,
+              curve: UIView.AnimationCurve,
+              completion: AnimationCompletion?) -> CameraAnimator?
 
     func cancelAnimations()
 }

@@ -173,18 +173,18 @@ public class Style {
         return _sourceProperty(for: sourceId, property: property).value
     }
 
-    /**
-     Updates the `data` property of a given `GeoJSONSource` with a new value
-     conforming to the `GeoJSONObject` protocol.
-
-     - Parameter id: The identifier representing the GeoJSON source.
-     - Parameter geoJSON: The new GeoJSON to be associated with the source data.
-
-     - Throws: StyleError or type conversion errors
-
-     - Attention: This method is only effective with sources of `GeoJSONSource` type,
-             and should not be used to update other source types.
-     */
+    /// Updates the `data` property of a given `GeoJSONSource` with a new value
+    /// conforming to the `GeoJSONObject` protocol.
+    ///
+    /// - Parameters:
+    ///   - id: The identifier representing the GeoJSON source.
+    ///   - geoJSON: The new GeoJSON to be associated with the source data. i.e.
+    ///   a feature or feature collection.
+    ///
+    /// - Throws: StyleError or type conversion errors
+    ///
+    /// - Attention: This method is only effective with sources of `GeoJSONSource`
+    /// type, and cannot be used to update other source types.
     public func updateGeoJSONSource<T: GeoJSONObject>(withId id: String, geoJSON: T) throws {
         guard let sourceInfo = allSourceIdentifiers.first(where: { $0.id == id }),
               sourceInfo.type == .geoJson else {

@@ -1,21 +1,25 @@
 import XCTest
 import MapboxMaps
+import Turf
 
 class MigrationGuideIntegrationTests: IntegrationTestCase {
+
+    private var testRect = CGRect(origin: .zero, size: CGSize(width: 100, height: 100))
 
     func testBasicMapViewController() throws {
 
         let expectation = self.expectation(description: "load map view")
 
         //-->
-        CredentialsManager.default.accessToken = accessToken
-
         class BasicMapViewController: UIViewController {
             var mapView: MapView!
+            var accessToken: String!
             var completion: (() -> Void)?
 
             override func viewDidLoad() {
                 super.viewDidLoad()
+
+                CredentialsManager.default.accessToken = accessToken
 
                 mapView = MapView(frame: view.bounds)
                 view.addSubview(mapView)
@@ -25,6 +29,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         //<--
 
         let vc = BasicMapViewController(nibName: nil, bundle: nil)
+        vc.accessToken = accessToken
         vc.completion = {
             expectation.fulfill()
         }
@@ -40,17 +45,17 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         expectation.assertForOverFulfill = false
 
         //-->
-        CredentialsManager.default.accessToken = accessToken
-
         class BasicMapViewController: UIViewController {
-
             var mapView: MapView!
+            var accessToken: String!
             var handler: ((Event) -> Void)?
 
             override func viewDidLoad() {
                 super.viewDidLoad()
                 mapView = MapView(frame: view.bounds)
                 view.addSubview(mapView)
+
+                CredentialsManager.default.accessToken = accessToken
 
                 /**
                  The closure is called when style data has been loaded. This is called
@@ -140,6 +145,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         //<--
 
         let vc = BasicMapViewController(nibName: nil, bundle: nil)
+        vc.accessToken = accessToken
         vc.handler = { _ in
             expectation.fulfill()
         }
@@ -156,10 +162,10 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         let someBounds = CoordinateBounds()
 
         //-->
-        mapView.update { (mapOptions) in
-            // Configure map to show a scale bar
-            mapOptions.ornaments.scaleBarVisibility = .visible
+        // Configure map to show a scale bar
+        mapView.ornaments.options.scaleBar.visibility = .visible
 
+        mapView.update { (mapOptions) in
             // Configure map to disable pitch gestures
             mapOptions.gestures.pitchEnabled = false
 
@@ -172,13 +178,17 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
     func testAppDelegateConfig() throws {
 
         //-->
+        //import UIKit
+        //import MapboxMaps
+        //
+        //@UIApplicationMain
         class AppDelegate: UIResponder, UIApplicationDelegate {
 
             var window: UIWindow?
             let customHTTPService = CustomHttpService()
 
             func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-                try! HttpServiceFactory.setUserDefinedForCustom(customHTTPService)
+                HttpServiceFactory.setUserDefinedForCustom(customHTTPService)
                 return true
             }
         }
@@ -268,5 +278,184 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         let appDelegate = AppDelegate()
 
         _ = appDelegate.application(application, didFinishLaunchingWithOptions: nil)
+    }
+
+    func testSettingCamera() {
+        let frame = testRect
+
+        /*
+         ### Set the map’s camera
+
+         The camera manager can be configured with an initial camera view.
+         To set the map’s camera, first create a `CameraOptions`
+         object, then direct the map to use it via the `MapInitOptions`.
+         `CameraOptions` parameters are optional, so only the required properties
+         need to be set.
+         */
+
+        //-->
+        // Set the center coordinate of the map to Honolulu, Hawaii
+        let centerCoordinate = CLLocationCoordinate2D(latitude: 21.3069,
+                                                      longitude: -157.8583)
+        // Create a camera
+        let camera = CameraOptions(center: centerCoordinate,
+                                   zoom: 14)
+
+        let options = MapInitOptions(cameraOptions: camera)
+        let mapView = MapView(frame: frame, mapInitOptions: options)
+        //<--
+
+        do {
+            /*
+             ### Fit the camera to a given shape
+
+             In the Maps SDK v10, the approach to fitting the camera to a given shape
+             like that of pre-v10 versions.
+
+             In v10, call `camera(for:)` functions on the `MapboxMap` to create: a
+             camera for a given geometry, a camera that fits a set of rectangular
+             coordinate bounds or a camera based off of a collection of coordinates.
+             Then, call `ease(to:)` on `MapView.camera` to visibly transition
+             to the new camera.
+
+             Below is an example of setting the camera to a set of coordinates:
+             */
+
+            //-->
+            let coordinates = [
+                CLLocationCoordinate2DMake(24, -89),
+                CLLocationCoordinate2DMake(24, -88),
+                CLLocationCoordinate2DMake(26, -88),
+                CLLocationCoordinate2DMake(26, -89),
+                CLLocationCoordinate2DMake(24, -89)
+            ]
+            let camera = mapView.mapboxMap.camera(for: coordinates,
+                                                  padding: .zero,
+                                                  bearing: nil,
+                                                  pitch: nil)
+            mapView.camera.ease(to: camera, duration: 10.0)
+            //<--
+        }
+    }
+
+    func testMapCameraOptions() {
+        let mapView = MapView(frame: .zero)
+
+        //-->
+        let sw = CLLocationCoordinate2DMake(-12, -46)
+        let ne = CLLocationCoordinate2DMake(2, 43)
+        let restrictedBounds = CoordinateBounds(southwest: sw, northeast: ne)
+
+        mapView.update { ( mapOptions ) in
+            mapOptions.camera.minimumZoomLevel = 8.0
+            mapOptions.camera.maximumZoomLevel = 15.0
+            mapOptions.camera.restrictedCoordinateBounds = restrictedBounds
+        }
+        //<--
+    }
+
+    func testGeoJSONSource() {
+        //-->
+        var myGeoJSONSource = GeoJSONSource()
+        myGeoJSONSource.maxzoom = 14
+        //<--
+
+        let someTurfFeature = Feature(geometry: .point(Point(CLLocationCoordinate2D(latitude: 0, longitude: 0))))
+        let someTurfFeatureCollection = FeatureCollection(features: [someTurfFeature])
+        let someGeoJSONDocumentURL = Fixture.geoJSONURL(from: "polygon")!
+
+        //-->
+        // Setting the `data` property with a url pointing to a GeoJSON document
+        myGeoJSONSource.data = .url(someGeoJSONDocumentURL)
+
+        // Setting a Turf feature to the `data` property
+        myGeoJSONSource.data = .featureCollection(someTurfFeatureCollection)
+        //<--
+    }
+
+    func testAddGeoJSONSource() {
+        CredentialsManager.default.accessToken = accessToken
+
+        var myGeoJSONSource = GeoJSONSource()
+        myGeoJSONSource.maxzoom = 14
+        myGeoJSONSource.data = .url(Fixture.geoJSONURL(from: "polygon")!)
+
+        let mapView = MapView(frame: testRect)
+        let expectation = self.expectation(description: "Source was added")
+        mapView.on(.styleLoaded) { [weak mapView] _ in
+            guard let mapView = mapView else {
+                return
+            }
+
+            do {
+                //-->
+                try mapView.style.addSource(myGeoJSONSource, id: "my-geojson-source")
+                //<--
+
+                /*
+                 As mentioned earlier, all `Layer`s are also Swift structs. The
+                 following code sets up a background layer and sets its background
+                 color to red:
+                 */
+
+                //-->
+                var myBackgroundLayer = BackgroundLayer(id: "my-background-layer")
+                myBackgroundLayer.paint?.backgroundColor = .constant(ColorRepresentable(color: .red))
+                //<--
+
+                /*
+                Once a layer is created, add it to the map:
+                */
+                try mapView.style.addLayer(myBackgroundLayer)
+
+                expectation.fulfill()
+            } catch {
+                XCTFail("Failed to add source: \(error)")
+            }
+        }
+
+        wait(for: [expectation], timeout: 5.0)
+    }
+
+    func testAdd3DTerrain() {
+        CredentialsManager.default.accessToken = accessToken
+
+        let mapView = MapView(frame: testRect)
+        let expectation = self.expectation(description: "Source was added")
+        mapView.on(.styleLoaded) { [weak mapView] _ in
+            guard let mapView = mapView else {
+                return
+            }
+
+            do {
+                //-->
+                // Add terrain
+                var demSource = RasterDemSource()
+                demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
+                demSource.tileSize = 512
+                demSource.maxzoom = 14.0
+                try mapView.style.addSource(demSource, id: "mapbox-dem")
+
+                var terrain = Terrain(sourceId: "mapbox-dem")
+                terrain.exaggeration = .constant(1.5)
+
+                // Add sky layer
+                try mapView.style.setTerrain(terrain)
+
+                var skyLayer = SkyLayer(id: "sky-layer")
+                skyLayer.paint?.skyType = .constant(.atmosphere)
+                skyLayer.paint?.skyAtmosphereSun = .constant([0.0, 0.0])
+                skyLayer.paint?.skyAtmosphereSunIntensity = .constant(15.0)
+
+                try mapView.style.addLayer(skyLayer)
+                //<--
+
+                expectation.fulfill()
+            } catch {
+                XCTFail("Failed to add source: \(error)")
+            }
+        }
+
+        wait(for: [expectation], timeout: 5.0)
     }
 }

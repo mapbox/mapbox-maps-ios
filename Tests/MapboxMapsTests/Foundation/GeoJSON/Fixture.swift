@@ -18,12 +18,19 @@ class Fixture {
         }
     }
 
-    class func geojsonData(from name: String) throws -> Data? {
+    class func geoJSONURL(from name: String) -> URL? {
         guard let path = Bundle.mapboxMapsTests.path(forResource: name, ofType: "geojson") else {
             XCTAssert(false, "Fixture \(name) not found.")
             return nil
         }
-        let filePath = URL(fileURLWithPath: path)
+        return URL(fileURLWithPath: path)
+    }
+
+    class func geojsonData(from name: String) throws -> Data? {
+        guard let filePath = geoJSONURL(from: name) else {
+            XCTAssert(false, "Fixture \(name) not found. Invalid URL?")
+            return nil
+        }
         return try Data(contentsOf: filePath)
     }
 

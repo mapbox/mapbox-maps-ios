@@ -36,6 +36,7 @@ public struct OrnamentOptions: Equatable {
 public protocol BaseOrnamentOptions: Equatable {
     var position: OrnamentPosition { get set }
     var margins: CGPoint { get set }
+    var visibility: OrnamentVisibility { get set }
 }
 
 /// Used to configure position, margin, and visibility for the map's scale bar.
@@ -64,8 +65,10 @@ public struct AttributionButtonOptions: Equatable {
     public var position: OrnamentPosition = .bottomRight
     /// The default value for this property is `CGPoint(x: 8.0, y: 8.0)`.
     public var margins: CGPoint = defaultOrnamentsMargin
-    /// The default value for this property is `true`.
-    public var _isVisible: Bool = true
+    /// The default value for this property is `visible`. Setting this property to `.adaptive`
+    /// willl lead to the same behavior as `.visible` . The attribution button  will be visible
+    /// as long as the map view is visible.
+    public var visibility: OrnamentVisibility = .visible
 }
 
 /// Used to configure position, margin, and visibility for the map's logo view.
@@ -74,6 +77,8 @@ public struct LogoViewOptions: Equatable {
     public var position: OrnamentPosition = .bottomLeft
     /// The default value for this property is `CGPoint(x: 8.0, y: 8.0)`.
     public var margins: CGPoint = defaultOrnamentsMargin
-    /// The default value for this property is `true`.
-    public var _isVisible: Bool = true
+    /// The default value for this property is `visible`. Setting this property to `.adaptive`
+    /// willl lead to the same behavior as `.visible`. The logo view will be visible as long
+    /// as the map view is visible.
+    public var visibility: OrnamentVisibility = .visible
 }

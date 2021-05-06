@@ -424,30 +424,6 @@ extension Style: StyleManagerProtocol {
         return StyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
     }
 
-    // MARK: - Clustering
-
-    public func geoJSONSourceClusterExpansionZoom(for sourceId: String, cluster: UInt32) throws -> Float {
-        return try handleExpected {
-            return styleManager.getStyleGeoJSONSourceClusterExpansionZoom(forSourceId: sourceId, cluster: cluster)
-        }
-    }
-
-    public func geoJSONSourceClusterChildren(for sourceId: String, cluster: UInt32) throws -> [Feature] {
-        let features: [MBXFeature] = try handleExpected {
-            return styleManager.getStyleGeoJSONSourceClusterChildren(forSourceId: sourceId, cluster: cluster)
-        }
-
-        return features.compactMap { Feature($0) }
-    }
-
-    public func geoJSONSourceClusterLeaves(for sourceId: String, cluster: UInt32, limit: UInt32, offset: UInt32) throws -> [Feature] {
-        let features: [MBXFeature] = try handleExpected {
-            return styleManager.getStyleGeoJSONSourceClusterLeaves(forSourceId: sourceId, cluster: cluster, limit: limit, offset: offset)
-        }
-
-        return features.compactMap { Feature($0) }
-    }
-
     // MARK: - Image source
 
     public func updateImageSource(withId id: String, image: UIImage) throws {

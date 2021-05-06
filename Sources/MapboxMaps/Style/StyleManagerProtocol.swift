@@ -263,53 +263,6 @@ public protocol StyleManagerProtocol {
     ///     The default value for the named property for the sources with type sourceType.
     static func _sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue
 
-    // MARK: Clustering
-
-    /// Returns the zoom on which the cluster expands into several children
-    /// (useful for "click to zoom" feature).
-    ///
-    /// - Parameters:
-    ///   - sourceId: GeoJSON style source identifier.
-    ///   - cluster: Cluster from which to retrieve the expansion zoom.
-    ///
-    /// - Returns:
-    ///     The zoom on which the cluster expands into several children
-    ///
-    /// - Throws:
-    ///     An error describing why the operation was unsuccessful.
-    func geoJSONSourceClusterExpansionZoom(for sourceId: String, cluster: UInt32) throws -> Float
-
-    /// Returns the children of a cluster (on the next zoom level).
-    ///
-    /// - Parameters:
-    ///   - sourceId: GeoJSON style source identifier.
-    ///   - cluster: Cluster from which to retrieve children.
-    ///
-    /// - Returns:
-    ///     An array of features for the underlying children
-    ///
-    /// - Throws:
-    ///     An error describing why the operation was unsuccessful.
-    func geoJSONSourceClusterChildren(for sourceId: String, cluster: UInt32) throws -> [Feature]
-
-    /// Returns all the leaves of a cluster (given its cluster_id), with
-    /// pagination support: limit is the number of leaves to return (set
-    /// to `UInt32.max` for all points), and offset is the amount of points to skip
-    /// (for pagination).
-    ///
-    /// - Parameters:
-    ///   - sourceId: GeoJSON style source identifier.
-    ///   - cluster: Cluster from which to retrieve leaves.
-    ///   - limit: The number of points to return.
-    ///   - offset: The number of points to skip (for pagination).
-    ///   
-    /// - Returns:
-    ///     An array of features for the underlying children
-    ///
-    /// - Throws:
-    ///     An error describing why the operation was unsuccessful.
-    func geoJSONSourceClusterLeaves(for sourceId: String, cluster: UInt32, limit: UInt32, offset: UInt32) throws -> [Feature]
-
     // MARK: Image source
 
     /// Updates the image of an image style source.

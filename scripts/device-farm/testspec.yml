@@ -41,13 +41,18 @@ phases:
 
       - cp -R /tmp/unzipped-ipa/Payload/$APP_NAME.app /tmp/test-root/$CONFIG-iphoneos
 
-
   # The test phase includes commands that run your test suite execution.
   test:
     commands:
       - xcodebuild -version
       - ls -ladF /Applications/Xcode*.*
       - cd /tmp/test-root && xcodebuild test-without-building -destination id=$DEVICEFARM_DEVICE_UDID -xctestrun device.xctestrun -derivedDataPath $DEVICEFARM_LOG_DIR -resultBundlePath $DEVICEFARM_LOG_DIR/$SCHEME.$CONFIG.$DATE.xcresult -enableCodeCoverage YES
+
+
+  # The post test phase includes are commands that are run after your tests are executed.
+  post_test:
+    commands:
+      - chmod -R 777 $DEVICEFARM_LOG_DIR
 
 # The artifacts phase lets you specify the location where your tests logs,
 # device logs will be stored. And also let you specify the location of your test

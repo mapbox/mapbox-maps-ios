@@ -33,6 +33,14 @@ internal class LogoView: UIView {
         }
     }
 
+    public override var isHidden: Bool {
+        didSet {
+            if isHidden {
+                #warning("The Mapbox logo wordmark must remain enabled in accordance with our Terms of Service. See https://www.mapbox.com/legal/tos for more details.")
+            }
+        }
+    }
+
     internal override var intrinsicContentSize: CGSize {
         return logoSize.rawValue
     }

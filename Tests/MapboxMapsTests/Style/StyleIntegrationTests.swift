@@ -37,6 +37,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
                     XCTAssert(layer.paint?.backgroundColor == newBackgroundLayer.paint?.backgroundColor)
                     layer.paint?.backgroundColor = .constant(.init(color: .blue))
                 }
+                expectation.fulfill()
             } catch {
                 XCTFail("Could not update background layer due to error: \(error)")
             }

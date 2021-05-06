@@ -24,7 +24,7 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
 
             guard let self = self,
                   let style = self.style else {
-                XCTFail()
+                XCTFail("nil test or style")
                 return
             }
 
@@ -103,7 +103,7 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
 
             guard let self = self,
                   let style = self.style else {
-                XCTFail()
+                XCTFail("nil test or style")
                 return
             }
 

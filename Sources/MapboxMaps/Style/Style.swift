@@ -209,7 +209,7 @@ public class Style {
     public func setTerrain(_ terrain: Terrain) throws {
         let terrainData = try JSONEncoder().encode(terrain)
         guard let terrainDictionary = try JSONSerialization.jsonObject(with: terrainData) as? [String: Any] else {
-            throw StyleEncodingError.invalidJSONObject
+            throw TypeConversionError.unexpectedType
         }
 
         try setTerrain(properties: terrainDictionary)
@@ -223,12 +223,38 @@ public class Style {
     public func terrainProperty(_ property: String) -> Any {
         return _terrainProperty(property).value
     }
+
+    private func handleExpected(closure: () -> (MBXExpected<AnyObject, AnyObject>)) throws {
+        let expected = closure()
+
+        if expected.isError() {
+            // swiftlint:disable force_cast
+            throw StyleError(message: expected.error as! String)
+            // swiftlint:enable force_cast
+        }
+    }
+
+    private func handleExpected<T>(closure: () -> (MBXExpected<AnyObject, AnyObject>), returnType: T.Type = T.self) throws -> T {
+        let expected = closure()
+
+        if expected.isError() {
+            // swiftlint:disable force_cast
+            throw StyleError(message: expected.error as! String)
+            // swiftlint:enable force_cast
+        }
+
+        guard let result = expected.value as? T else {
+            assertionFailure("Unexpected type mismatch. Type: \(String(describing: expected.value)) expect \(T.self)")
+            throw TypeConversionError.unexpectedType
+        }
+
+        return result
+    }
 }
 
 // MARK: - StyleManagerProtocol
 
 // See `StyleManagerProtocol` for documentation for the following APIs
-// swiftlint:disable force_cast
 extension Style: StyleManagerProtocol {
     public var isLoaded: Bool {
         return styleManager.isStyleLoaded()
@@ -273,23 +299,20 @@ extension Style: StyleManagerProtocol {
     // MARK: Layers
 
     public func addLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
-        let expected = styleManager.addStyleLayer(forProperties: properties, layerPosition: layerPosition)
-        if expected.isError() {
-            throw LayerError.addLayerFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.addStyleLayer(forProperties: properties, layerPosition: layerPosition)
         }
     }
 
     public func addCustomLayer(withId id: String, layerHost: CustomLayerHost, layerPosition: LayerPosition?) throws {
-        let expected = styleManager.addStyleCustomLayer(forLayerId: id, layerHost: layerHost, layerPosition: layerPosition)
-        if expected.isError() {
-            throw LayerError.addLayerFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.addStyleCustomLayer(forLayerId: id, layerHost: layerHost, layerPosition: layerPosition)
         }
     }
 
     public func removeLayer(withId id: String) throws {
-        let expected = styleManager.removeStyleLayer(forLayerId: id)
-        if expected.isError() {
-            throw LayerError.removeLayerFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.removeStyleLayer(forLayerId: id)
         }
     }
 
@@ -314,9 +337,8 @@ extension Style: StyleManagerProtocol {
     }
 
     public func setLayerProperty(for layerId: String, property: String, value: Any) throws {
-        let expected = styleManager.setStyleLayerPropertyForLayerId(layerId, property: property, value: value)
-        if expected.isError() {
-            throw LayerError.setLayerPropertyFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.setStyleLayerPropertyForLayerId(layerId, property: property, value: value)
         }
     }
 
@@ -325,38 +347,28 @@ extension Style: StyleManagerProtocol {
     }
 
     public func layerProperties(for layerId: String) throws -> [String: Any] {
-        let expected = styleManager.getStyleLayerProperties(forLayerId: layerId)
-        if expected.isError() {
-            throw LayerError.getStyleLayerFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.getStyleLayerProperties(forLayerId: layerId)
         }
-
-        guard let result = expected.value as? [String: Any] else {
-            throw LayerError.getStyleLayerFailed("Value mismatch")
-        }
-
-        return result
     }
 
     public func setLayerProperties(for layerId: String, properties: [String: Any]) throws {
-        let expected = styleManager.setStyleLayerPropertiesForLayerId(layerId, properties: properties)
-        if expected.isError() {
-            throw LayerError.setLayerPropertyFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.setStyleLayerPropertiesForLayerId(layerId, properties: properties)
         }
     }
 
     // MARK: Sources
 
     public func addSource(withId sourceId: String, properties: [String: Any]) throws {
-        let expected = styleManager.addStyleSource(forSourceId: sourceId, properties: properties)
-        if expected.isError() {
-            throw SourceError.addSourceFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.addStyleSource(forSourceId: sourceId, properties: properties)
         }
     }
 
     public func removeSource(withId sourceId: String) throws {
-        let expected = styleManager.removeStyleSource(forSourceId: sourceId)
-        if expected.isError() {
-            throw SourceError.removeSourceFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.removeStyleSource(forSourceId: sourceId)
         }
     }
 
@@ -381,28 +393,20 @@ extension Style: StyleManagerProtocol {
     }
 
     public func setSourceProperty(for sourceId: String, property: String, value: Any) throws {
-        let expected = styleManager.setStyleSourcePropertyForSourceId(sourceId, property: property, value: value)
-        if expected.isError() {
-            throw SourceError.setSourceProperty(expected.error as! String)
+        return try handleExpected {
+            return styleManager.setStyleSourcePropertyForSourceId(sourceId, property: property, value: value)
         }
     }
 
     public func sourceProperties(for sourceId: String) throws -> [String: Any] {
-        let expected = styleManager.getStyleSourceProperties(forSourceId: sourceId)
-        if expected.isError() {
-            throw SourceError.getSourceFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.getStyleSourceProperties(forSourceId: sourceId)
         }
-
-        guard let result = expected.value as? [String: Any] else {
-            throw SourceError.getSourceFailed("Value mismatch")
-        }
-        return result
     }
 
     public func setSourceProperties(for sourceId: String, properties: [String: Any]) throws {
-        let expected = styleManager.setStyleSourcePropertiesForSourceId(sourceId, properties: properties)
-        if expected.isError() {
-            throw SourceError.setSourceProperty(expected.error as! String)
+        return try handleExpected {
+            return styleManager.setStyleSourcePropertiesForSourceId(sourceId, properties: properties)
         }
     }
 
@@ -413,38 +417,23 @@ extension Style: StyleManagerProtocol {
     // MARK: Clustering
 
     public func geoJSONSourceClusterExpansionZoom(for sourceId: String, cluster: UInt32) throws -> Float {
-        let expected = styleManager.getStyleGeoJSONSourceClusterExpansionZoom(forSourceId: sourceId, cluster: cluster)
-
-        if expected.isError() {
-            throw SourceError.getSourceClusterDetailsFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.getStyleGeoJSONSourceClusterExpansionZoom(forSourceId: sourceId, cluster: cluster)
         }
-
-        guard let result = expected.value as? NSNumber else {
-            throw SourceError.getSourceClusterDetailsFailed("Value mismatch")
-        }
-        return result.floatValue
     }
 
     public func geoJSONSourceClusterChildren(for sourceId: String, cluster: UInt32) throws -> [Feature] {
-        let expected = styleManager.getStyleGeoJSONSourceClusterChildren(forSourceId: sourceId, cluster: cluster)
-
-        if expected.isError() {
-            throw SourceError.getSourceClusterDetailsFailed(expected.error as! String)
+        let features: [MBXFeature] = try handleExpected {
+            return styleManager.getStyleGeoJSONSourceClusterChildren(forSourceId: sourceId, cluster: cluster)
         }
-
-        let features = expected.value as! [MBXFeature]
 
         return features.compactMap { Feature($0) }
     }
 
     public func geoJSONSourceClusterLeaves(for sourceId: String, cluster: UInt32, limit: UInt32, offset: UInt32) throws -> [Feature] {
-        let expected = styleManager.getStyleGeoJSONSourceClusterLeaves(forSourceId: sourceId, cluster: cluster, limit: limit, offset: offset)
-
-        if expected.isError() {
-            throw SourceError.getSourceClusterDetailsFailed(expected.error as! String)
+        let features: [MBXFeature] = try handleExpected {
+            return styleManager.getStyleGeoJSONSourceClusterLeaves(forSourceId: sourceId, cluster: cluster, limit: limit, offset: offset)
         }
-
-        let features = expected.value as! [MBXFeature]
 
         return features.compactMap { Feature($0) }
     }
@@ -453,13 +442,11 @@ extension Style: StyleManagerProtocol {
 
     public func updateImageSource(withId sourceId: String, image: UIImage) throws {
         guard let mbmImage = Image(uiImage: image) else {
-            throw ImageError.convertingImageFailed("Failed to convert UIImage to MBMImage")
+            throw TypeConversionError.unexpectedType
         }
 
-        let expected = styleManager.updateStyleImageSourceImage(forSourceId: sourceId, image: mbmImage)
-
-        if expected.isError() {
-            throw ImageError.imageSourceImageUpdateFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.updateStyleImageSourceImage(forSourceId: sourceId, image: mbmImage)
         }
     }
 
@@ -467,27 +454,23 @@ extension Style: StyleManagerProtocol {
 
     public func addImage(_ image: UIImage, id: String, sdf: Bool = false, stretchX: [ImageStretches] = [], stretchY: [ImageStretches] = [], content: ImageContent? = nil) throws {
         guard let mbmImage = Image(uiImage: image) else {
-            throw ImageError.convertingImageFailed("Failed to convert UIImage to MBMImage")
+            throw TypeConversionError.unexpectedType
         }
 
-        let expected = styleManager.addStyleImage(forImageId: id,
-                                                  scale: Float(image.scale),
-                                                  image: mbmImage,
-                                                  sdf: sdf,
-                                                  stretchX: stretchX,
-                                                  stretchY: stretchY,
-                                                  content: content)
-
-        if expected.isError() {
-            throw ImageError.addStyleImageFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.addStyleImage(forImageId: id,
+                                              scale: Float(image.scale),
+                                              image: mbmImage,
+                                              sdf: sdf,
+                                              stretchX: stretchX,
+                                              stretchY: stretchY,
+                                              content: content)
         }
     }
 
     public func removeImage(withId id: String) throws {
-        let expected = styleManager.removeStyleImage(forImageId: id)
-
-        if expected.isError() {
-            throw ImageError.removeImageFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.removeStyleImage(forImageId: id)
         }
     }
 
@@ -502,9 +485,8 @@ extension Style: StyleManagerProtocol {
     // MARK: Style
 
     public func setLight(properties: [String: Any]) throws {
-        let expected = styleManager.setStyleLightForProperties(properties)
-        if expected.isError() {
-            throw LightError.addLightFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.setStyleLightForProperties(properties)
         }
     }
 
@@ -513,20 +495,16 @@ extension Style: StyleManagerProtocol {
     }
 
     public func setLightProperty(_ property: String, value: Any) throws {
-        let expected = styleManager.setStyleLightPropertyForProperty(property, value: value)
-
-        if expected.isError() {
-            throw LightError.addLightFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.setStyleLightPropertyForProperty(property, value: value)
         }
     }
 
     // MARK: Terrain
 
     public func setTerrain(properties: [String: Any]) throws {
-        let expected = styleManager.setStyleTerrainForProperties(properties)
-
-        if expected.isError() {
-            throw TerrainError.addTerrainFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.setStyleTerrainForProperties(properties)
         }
     }
 
@@ -535,51 +513,39 @@ extension Style: StyleManagerProtocol {
     }
 
     public func setTerrainProperty(_ property: String, value: Any) throws {
-        let expected = styleManager.setStyleTerrainPropertyForProperty(property, value: value)
-
-        if expected.isError() {
-            // Temp error
-            throw TerrainError.setTerrainProperty(expected.error as! String)
+        return try handleExpected {
+            return styleManager.setStyleTerrainPropertyForProperty(property, value: value)
         }
     }
 
     // MARK: Custom geometry
 
     public func addCustomGeometrySource(withId sourceId: String, options: CustomGeometrySourceOptions) throws {
-        let expected = styleManager.addStyleCustomGeometrySource(forSourceId: sourceId, options: options)
-
-        if expected.isError() {
-            throw TemporaryError.failure(expected.error as! String)
+        return try handleExpected {
+            return styleManager.addStyleCustomGeometrySource(forSourceId: sourceId, options: options)
         }
     }
 
     // TODO: Fix initialization of MBXFeature.
     public func _setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Feature]) throws {
         let mbxFeatures = features.compactMap { MBXFeature($0) }
-        let expected = styleManager.setStyleCustomGeometrySourceTileDataForSourceId(sourceId, tileId: tileId, featureCollection: mbxFeatures)
-
-        if expected.isError() {
-            throw TemporaryError.failure(expected.error as! String)
+        return try handleExpected {
+            return styleManager.setStyleCustomGeometrySourceTileDataForSourceId(sourceId, tileId: tileId, featureCollection: mbxFeatures)
         }
     }
 
     public func invalidateCustomGeometrySourceTile(forSourceId sourceId: String, tileId: CanonicalTileID) throws {
-        let expected = styleManager.invalidateStyleCustomGeometrySourceTile(forSourceId: sourceId, tileId: tileId)
-
-        if expected.isError() {
-            throw TemporaryError.failure(expected.error as! String)
+        return try handleExpected {
+            return styleManager.invalidateStyleCustomGeometrySourceTile(forSourceId: sourceId, tileId: tileId)
         }
     }
 
     public func invalidateCustomGeometrySourceRegion(forSourceId sourceId: String, bounds: CoordinateBounds) throws {
-        let expected = styleManager.invalidateStyleCustomGeometrySourceRegion(forSourceId: sourceId, bounds: bounds)
-
-        if expected.isError() {
-            throw TemporaryError.failure(expected.error as! String)
+        return try handleExpected {
+            return styleManager.invalidateStyleCustomGeometrySourceRegion(forSourceId: sourceId, bounds: bounds)
         }
     }
 }
-// swiftlint:enable force_cast
 
 // MARK: - StyleTransition
 

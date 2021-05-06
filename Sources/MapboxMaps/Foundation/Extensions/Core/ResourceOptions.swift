@@ -54,7 +54,7 @@ extension ResourceOptions {
             tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken)
         }
 
-        let cacheURL = ResourceOptions.cacheURLIncludingSubdirectory()
+        let cacheURL = try? ResourceOptions.cacheURLIncludingSubdirectory()
         let resolvedCachePath = cachePath == nil ? cacheURL?.path : cachePath
         self.init(
             __accessToken: accessToken,
@@ -72,33 +72,21 @@ extension ResourceOptions {
         __cacheSize?.uint64Value
     }
 
-    private static func cacheURLIncludingSubdirectory() -> URL? {
-        guard let bundleIdentifier = Bundle.main.bundleIdentifier else { return nil }
-
-        var cacheDirectoryURL: URL
-        do {
-            cacheDirectoryURL = try FileManager.default.url(for: .applicationSupportDirectory,
+    private static func cacheURLIncludingSubdirectory() throws -> URL? {
+        var cacheDirectoryURL = try FileManager.default.url(for: .applicationSupportDirectory,
                                                             in: .userDomainMask,
                                                             appropriateFor: nil,
                                                             create: true)
-        } catch {
-            return nil
-        }
 
-        cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent(bundleIdentifier)
-        cacheDirectoryURL.appendPathComponent(".mapbox")
+        cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent("com.mapbox.maps")
 
-        do {
-            try FileManager.default.createDirectory(at: cacheDirectoryURL,
-                                                    withIntermediateDirectories: true,
-                                                    attributes: nil)
-        } catch {
-            return nil
-        }
+        try FileManager.default.createDirectory(at: cacheDirectoryURL,
+                                                withIntermediateDirectories: true,
+                                                attributes: nil)
 
         cacheDirectoryURL.setTemporaryResourceValue(true, forKey: .isExcludedFromBackupKey)
 
-        return cacheDirectoryURL.appendingPathComponent("cache.db")
+        return cacheDirectoryURL.appendingPathComponent("ambient_cache.db")
     }
 
     /// :nodoc:

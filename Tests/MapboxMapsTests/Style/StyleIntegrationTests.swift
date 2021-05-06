@@ -32,28 +32,23 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
                 XCTFail("Could not add background layer due to error: \(error)")
             }
 
-            let result2 = style.updateLayer(id: newBackgroundLayer.id, type: BackgroundLayer.self) { (layer) in
-                XCTAssert(layer.paint?.backgroundColor == newBackgroundLayer.paint?.backgroundColor)
-                layer.paint?.backgroundColor = .constant(.init(color: .blue))
-            }
-
-            switch result2 {
-            case .success:
+            do {
+                try style.updateLayer(withId: newBackgroundLayer.id, type: BackgroundLayer.self) { (layer) throws in
+                    XCTAssert(layer.paint?.backgroundColor == newBackgroundLayer.paint?.backgroundColor)
+                    layer.paint?.backgroundColor = .constant(.init(color: .blue))
+                }
                 expectation.fulfill()
-            case .failure(let error):
+            } catch {
                 XCTFail("Could not update background layer due to error: \(error)")
             }
 
-            let result3 = style.getLayer(with: newBackgroundLayer.id, type: BackgroundLayer.self)
-
-            switch result3 {
-            case .success(let retrievedLayer):
+            do {
+                let retrievedLayer = try style.layer(withId: newBackgroundLayer.id, type: BackgroundLayer.self)
                 XCTAssert(retrievedLayer.paint?.backgroundColor == .constant(.init(color: .blue)))
                 expectation.fulfill()
-            case .failure(let error):
+            } catch {
                 XCTFail("Could not retrieve background layer due to error: \(error)")
             }
-
         }
 
         wait(for: [expectation], timeout: 5.0)
@@ -88,7 +83,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
                 for step in stride(from: 0, to: layers.count, by: 3) {
 
                     let newLayerPosition = LayerPosition(above: nil, below: nil, at: step)
-                    try style._moveLayer(with: "test-id", to: newLayerPosition)
+                    try style._moveLayer(withId: "test-id", to: newLayerPosition)
 
                     // Get layer position
                     let layers = style.styleManager.getStyleLayers()
@@ -118,22 +113,15 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         expectation.expectedFulfillmentCount = expectedLayerCount
 
         didFinishLoadingStyle = { _ in
-            let layers = mapView.mapboxMap.__map.getStyleLayers()
+            let layers = style.allLayerIdentifiers
             XCTAssertEqual(layers.count, expectedLayerCount)
 
             for layer in layers {
-                guard let type = LayerType(rawValue: layer.type) else {
-                    XCTFail("Failed to create LayerType from \(layer.type)")
-                    continue
-                }
-
-                let result = style._layer(with: layer.id, type: type.layerType)
-
-                switch result {
-                case .success:
+                do {
+                    _ = try style._layer(withId: layer.id, type: layer.type.layerType)
                     expectation.fulfill()
-                default:
-                    XCTFail("Failed to get line layer with id \(layer.id), error \(result)")
+                } catch {
+                    XCTFail("Failed to get line layer with id \(layer.id), error \(error)")
                 }
             }
         }

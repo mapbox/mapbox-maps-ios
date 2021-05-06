@@ -62,13 +62,11 @@ class CircleLayerIntegrationTests: MapViewIntegrationTestCase {
             }
 
             // Retrieve the layer
-            let retrieveResult = style.getLayer(with: "test-id", type: CircleLayer.self)
-
-            switch (retrieveResult) {
-                case .success(_):
-                    successfullyRetrievedLayerExpectation.fulfill()    
-                case .failure(let error):
-                    XCTFail("Failed to retreive CircleLayer because of error: \(error)")   
+            do {
+                _ = try style.layer(withId: "test-id", type: CircleLayer.self)
+                successfullyRetrievedLayerExpectation.fulfill()
+            } catch {
+                XCTFail("Failed to retrieve CircleLayer because of error: \(error)")   
             }
         }
 

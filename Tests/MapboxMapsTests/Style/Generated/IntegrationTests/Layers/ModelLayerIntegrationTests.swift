@@ -46,13 +46,11 @@ class ModelLayerIntegrationTests: MapViewIntegrationTestCase {
             }
 
             // Retrieve the layer
-            let retrieveResult = style.getLayer(with: "test-id", type: ModelLayer.self)
-
-            switch (retrieveResult) {
-                case .success(_):
-                    successfullyRetrievedLayerExpectation.fulfill()    
-                case .failure(let error):
-                    XCTFail("Failed to retrieve ModelLayer because of error: \(error)")
+            do {
+                _ = try style.layer(withId: "test-id", type: ModelLayer.self)
+                successfullyRetrievedLayerExpectation.fulfill()
+            } catch {
+                XCTFail("Failed to retrieve ModelLayer because of error: \(error)")
             }
         }
 

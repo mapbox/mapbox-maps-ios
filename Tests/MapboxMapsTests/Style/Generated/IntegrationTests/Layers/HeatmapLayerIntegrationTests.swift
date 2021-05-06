@@ -51,13 +51,11 @@ class HeatmapLayerIntegrationTests: MapViewIntegrationTestCase {
             }
 
             // Retrieve the layer
-            let retrieveResult = style.getLayer(with: "test-id", type: HeatmapLayer.self)
-
-            switch (retrieveResult) {
-                case .success(_):
-                    successfullyRetrievedLayerExpectation.fulfill()    
-                case .failure(let error):
-                    XCTFail("Failed to retreive HeatmapLayer because of error: \(error)")   
+            do {
+                _ = try style.layer(withId: "test-id", type: HeatmapLayer.self)
+                successfullyRetrievedLayerExpectation.fulfill()
+            } catch {
+                XCTFail("Failed to retrieve HeatmapLayer because of error: \(error)")   
             }
         }
 

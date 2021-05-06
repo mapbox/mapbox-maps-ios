@@ -22,14 +22,15 @@ public class Style {
         self.uri = uri ?? Self.defaultURI
     }
 
-    // MARK: Layers
+    // MARK: - Layers
 
-    /**
-     Adds a `layer` to the map
-     - Parameter layer: The layer to apply on the map
-     - Returns: If operation successful, returns a `true` as part of the `Result`
-                success case. Else, returns a `LayerError` in the `Result` failure case.
-     */
+    /// Adds a `layer` to the map
+    ///
+    /// - Parameters:
+    ///   - layer: The layer to apply on the map
+    ///   - layerPosition: Position at which to add the map.
+    ///
+    /// - Throws: StyleError or type conversion errors
     public func addLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
         // Attempt to encode the provided layer into JSON and apply it to the map
         let layerJSON = try layer.jsonObject()
@@ -41,11 +42,12 @@ public class Style {
      Moves a `layer` to a new layer position in the style.
      - Parameter layerId: The layer to move
      - Parameter position: The new position to move the layer to
-     - Throws: `LayerError` on failure, or `NSError` with a _domain of "com.mapbox.bindgen"
+
+     - Throws: `StyleError` on failure, or `NSError` with a _domain of "com.mapbox.bindgen"
      */
-    public func _moveLayer(with layerId: String, to position: LayerPosition) throws {
-        let properties = try layerProperties(for: layerId)
-        try removeLayer(withId: layerId)
+    public func _moveLayer(withId id: String, to position: LayerPosition) throws {
+        let properties = try layerProperties(for: id)
+        try removeLayer(withId: id)
         try addLayer(with: properties, layerPosition: position)
     }
 
@@ -53,20 +55,14 @@ public class Style {
      Gets a `layer` from the map
      - Parameter layerID: The id of the layer to be fetched
      - Parameter type: The type of the layer that will be fetched
-     - Returns: The fully formed `layer` object of type equal to `type` is returned as
-                part of the `Result`s success case if the operation is successful.
-                Else, returns a `LayerError` as part of the `Result` failure case.
+
+     - Returns: The fully formed `layer` object of type equal to `type`
+     - Throws: StyleError or type conversion errors
      */
-    public func getLayer<T: Layer>(with layerID: String, type: T.Type = T.self) -> Result<T, LayerError> {
-        let layerResult = _layer(with: layerID, type: type)
-        switch layerResult {
-        case .success(let layer):
-            // swiftlint:disable force_cast
-            return .success(layer as! T)
-            // swiftlint:enable force_cast
-        case .failure(let error):
-            return .failure(error)
-        }
+    public func layer<T: Layer>(withId id: String, type: T.Type = T.self) throws -> T {
+        // swiftlint:disable force_cast
+        return try _layer(withId: id, type: type) as! T
+        // swiftlint:enable force_cast
     }
 
     /**
@@ -77,60 +73,37 @@ public class Style {
 
      - Parameter layerID: The id of the layer to be fetched
      - Parameter type: The type of the layer that will be fetched
-     - Returns: The fully formed `layer` object of type equal to `type` is returned as
-                part of the `Result`s success case if the operation is successful.
-                Else, returns a `LayerError` as part of the `Result` failure case.
-     */
-    public func _layer(with layerID: String, type: Layer.Type) -> Result<Layer, LayerError> {
 
+     - Returns: The fully formed `layer` object of type equal to `type`
+     - Throws: StyleError or type conversion errors
+     */
+    public func _layer(withId id: String, type: Layer.Type) throws -> Layer {
         // Get the layer properties from the map
-        do {
-            let layerProps = try layerProperties(for: layerID)
-            let layer = try type.init(jsonObject: layerProps)
-            return .success(layer)
-        } catch {
-            return .failure(.layerDecodingFailed(error))
-        }
+        let properties = try layerProperties(for: id)
+        return try type.init(jsonObject: properties)
     }
 
     /// Updates a layer that exists in the style already
+    ///
     /// - Parameters:
     ///   - id: identifier of layer to update
     ///   - type: Type of the layer
     ///   - update: Closure that mutates a layer passed to it
-    /// - Returns: Result type with  `.success` if update is successful, `LayerError` otherwise
-    @discardableResult
-    public func updateLayer<T: Layer>(id: String, type: T.Type, update: (inout T) -> Void) -> Result<Bool, LayerError> {
-
-        let result: Result<T, LayerError> = getLayer(with: id, type: T.self)
-        var layer: T
-
-        // Fetch the layer from the style
-        switch result {
-        case .success(let retrievedLayer):
-            // Successfully retrieved the layer
-            layer = retrievedLayer
-        case .failure:
-
-            // Could not retrieve the layer
-            return .failure(.getStyleLayerFailed("Could not retrieve the layer"))
-        }
+    ///
+    /// - Throws: StyleError or type conversion errors
+    public func updateLayer<T: Layer>(withId id: String, type: T.Type, update: (inout T) throws -> Void) throws {
+        var layer: T = try self.layer(withId: id, type: T.self)
 
         // Call closure to update the retrieved layer
-        update(&layer)
+        try update(&layer)
 
-        do {
-            let value = try layer.jsonObject()
+        let value = try layer.jsonObject()
 
-            // Apply the changes to the layer properties to the style
-            try setLayerProperties(for: id, properties: value)
-            return .success(true)
-        } catch {
-            return .failure(.updateStyleLayerFailed(error))
-        }
+        // Apply the changes to the layer properties to the style
+        try setLayerProperties(for: id, properties: value)
     }
 
-    // MARK: Layer properties
+    // MARK: - Layer properties
 
     /// Gets the value of style layer property.
     ///
@@ -144,14 +117,14 @@ public class Style {
         return _layerProperty(for: layerId, property: property).value
     }
 
-    // MARK: Sources
+    // MARK: - Sources
 
     /**
      Adds a source to the map
      - Parameter source: The source to add to the map.
      - Parameter identifier: A unique source identifier.
-     - Returns: If operation successful, returns a `true` as part of the `Result`
-                success case. Else, returns a `SourceError` in the `Result` failure case.
+
+     - Throws: StyleError or type conversion errors
      */
     public func addSource(_ source: Source, id: String) throws {
         let sourceDictionary = try source.jsonObject()
@@ -162,18 +135,12 @@ public class Style {
      Retrieves a source from the map
      - Parameter identifier: The id of the source to retrieve
      - Parameter type: The type of the source
-     - Returns: The fully formed `source` object of type equal to `type` is returned
-                as part of the `Result`s success case if the operation is successful.
-                Else, returns a `SourceError` as part of the `Result` failure case.
+     - Returns: The fully formed `source` object of type equal to `type`.
+     - Throws: StyleError or type conversion errors
      */
-    public func getSource<T: Source>(id: String, type: T.Type = T.self) -> Result<T, SourceError> {
+    public func source<T: Source>(withId id: String, type: T.Type = T.self) throws -> T {
         // swiftlint:disable force_cast
-        do {
-            let source = try _source(id: id, type: type)
-            return .success(source as! T)
-        } catch {
-            return .failure(error as! SourceError)
-        }
+        return try _source(withId: id, type: type) as! T
         // swiftlint:enable force_cast
     }
 
@@ -185,11 +152,10 @@ public class Style {
 
      - Parameter identifier: The id of the source to retrieve
      - Parameter type: The type of the source
-     - Returns: The fully formed `source` object of type equal to `type` is returned
-                as part of the `Result`s success case if the operation is successful.
-                Else, returns a `SourceError` as part of the `Result` failure case.
+     - Returns: The fully formed `source` object of type equal to `type`.
+     - Throws: StyleError or type conversion errors
      */
-    public func _source(id: String, type: Source.Type) throws  -> Source {
+    public func _source(withId id: String, type: Source.Type) throws  -> Source {
         // Get the source properties for a given identifier
         let sourceProps = try sourceProperties(for: id)
         let source = try type.init(jsonObject: sourceProps)
@@ -207,34 +173,29 @@ public class Style {
         return _sourceProperty(for: sourceId, property: property).value
     }
 
-    /**
-     Updates the `data` property of a given `GeoJSONSource` with a new value
-     conforming to the `GeoJSONObject` protocol.
-
-     - Parameter sourceIdentifier: The identifier representing the GeoJSON source.
-     - Parameter geoJSON: The new GeoJSON to be associated with the source data.
-     - Returns: If operation successful, returns a `true` as part of the `Result` success case.
-                Else, returns an `Error` in the `Result` failure case.
-     - Note: This method is only effective with sources of `GeoJSONSource` type,
-             and should not be used to update other source types.
-     */
-    public func updateGeoJSON<T: GeoJSONObject>(for sourceIdentifier: String, with geoJSON: T) -> Result<Bool, SourceError> {
-
-        guard let geoJSONDictionary = try? GeoJSONManager.dictionaryFrom(geoJSON) else {
-            return .failure(.setSourceProperty("Could not parse updated GeoJSON"))
+    /// Updates the `data` property of a given `GeoJSONSource` with a new value
+    /// conforming to the `GeoJSONObject` protocol.
+    ///
+    /// - Parameters:
+    ///   - id: The identifier representing the GeoJSON source.
+    ///   - geoJSON: The new GeoJSON to be associated with the source data. i.e.
+    ///   a feature or feature collection.
+    ///
+    /// - Throws: StyleError or type conversion errors
+    ///
+    /// - Attention: This method is only effective with sources of `GeoJSONSource`
+    /// type, and cannot be used to update other source types.
+    public func updateGeoJSONSource<T: GeoJSONObject>(withId id: String, geoJSON: T) throws {
+        guard let sourceInfo = allSourceIdentifiers.first(where: { $0.id == id }),
+              sourceInfo.type == .geoJson else {
+            fatalError("updateGeoJSONSource: Source with id '\(id)' is not a GeoJSONSource.")
         }
 
-        do {
-            try setSourceProperty(for: sourceIdentifier, property: "data", value: geoJSONDictionary)
-            return .success(true)
-        } catch {
-            // swiftlint:disable force_cast
-            return .failure(error as! SourceError)
-            // swiftlint:enable force_cast
-        }
+        let geoJSONDictionary = try GeoJSONManager.dictionaryFrom(geoJSON)
+        try setSourceProperty(for: id, property: "data", value: geoJSONDictionary as Any)
     }
 
-    // MARK: Light
+    // MARK: - Light
 
     /// Gets the value of a style light property.
     ///
@@ -245,7 +206,7 @@ public class Style {
         return _lightProperty(property).value
     }
 
-    // MARK: Terrain
+    // MARK: - Terrain
 
     /// Sets a terrain on the style
     ///
@@ -256,7 +217,7 @@ public class Style {
     public func setTerrain(_ terrain: Terrain) throws {
         let terrainData = try JSONEncoder().encode(terrain)
         guard let terrainDictionary = try JSONSerialization.jsonObject(with: terrainData) as? [String: Any] else {
-            throw StyleEncodingError.invalidJSONObject
+            throw TypeConversionError.unexpectedType
         }
 
         try setTerrain(properties: terrainDictionary)
@@ -270,12 +231,40 @@ public class Style {
     public func terrainProperty(_ property: String) -> Any {
         return _terrainProperty(property).value
     }
+
+    // MARK: - Conversion helpers
+
+    private func handleExpected(closure: () -> (MBXExpected<AnyObject, AnyObject>)) throws {
+        let expected = closure()
+
+        if expected.isError() {
+            // swiftlint:disable force_cast
+            throw StyleError(message: expected.error as! String)
+            // swiftlint:enable force_cast
+        }
+    }
+
+    private func handleExpected<T>(closure: () -> (MBXExpected<AnyObject, AnyObject>), returnType: T.Type = T.self) throws -> T {
+        let expected = closure()
+
+        if expected.isError() {
+            // swiftlint:disable force_cast
+            throw StyleError(message: expected.error as! String)
+            // swiftlint:enable force_cast
+        }
+
+        guard let result = expected.value as? T else {
+            assertionFailure("Unexpected type mismatch. Type: \(String(describing: expected.value)) expect \(T.self)")
+            throw TypeConversionError.unexpectedType
+        }
+
+        return result
+    }
 }
 
-// MARK: - StyleManagerProtocol
+// MARK: - StyleManagerProtocol -
 
 // See `StyleManagerProtocol` for documentation for the following APIs
-// swiftlint:disable force_cast
 extension Style: StyleManagerProtocol {
     public var isLoaded: Bool {
         return styleManager.isStyleLoaded()
@@ -317,26 +306,23 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    // MARK: Layers
+    // MARK: - Layers
 
     public func addLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
-        let expected = styleManager.addStyleLayer(forProperties: properties, layerPosition: layerPosition)
-        if expected.isError() {
-            throw LayerError.addLayerFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.addStyleLayer(forProperties: properties, layerPosition: layerPosition)
         }
     }
 
     public func addCustomLayer(withId id: String, layerHost: CustomLayerHost, layerPosition: LayerPosition?) throws {
-        let expected = styleManager.addStyleCustomLayer(forLayerId: id, layerHost: layerHost, layerPosition: layerPosition)
-        if expected.isError() {
-            throw LayerError.addLayerFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.addStyleCustomLayer(forLayerId: id, layerHost: layerHost, layerPosition: layerPosition)
         }
     }
 
     public func removeLayer(withId id: String) throws {
-        let expected = styleManager.removeStyleLayer(forLayerId: id)
-        if expected.isError() {
-            throw LayerError.removeLayerFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.removeStyleLayer(forLayerId: id)
         }
     }
 
@@ -354,16 +340,15 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    // MARK: Layer Properties
+    // MARK: - Layer Properties
 
     public func _layerProperty(for layerId: String, property: String) -> StylePropertyValue {
         return styleManager.getStyleLayerProperty(forLayerId: layerId, property: property)
     }
 
     public func setLayerProperty(for layerId: String, property: String, value: Any) throws {
-        let expected = styleManager.setStyleLayerPropertyForLayerId(layerId, property: property, value: value)
-        if expected.isError() {
-            throw LayerError.setLayerPropertyFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.setStyleLayerPropertyForLayerId(layerId, property: property, value: value)
         }
     }
 
@@ -372,43 +357,33 @@ extension Style: StyleManagerProtocol {
     }
 
     public func layerProperties(for layerId: String) throws -> [String: Any] {
-        let expected = styleManager.getStyleLayerProperties(forLayerId: layerId)
-        if expected.isError() {
-            throw LayerError.getStyleLayerFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.getStyleLayerProperties(forLayerId: layerId)
         }
-
-        guard let result = expected.value as? [String: Any] else {
-            throw LayerError.getStyleLayerFailed("Value mismatch")
-        }
-
-        return result
     }
 
     public func setLayerProperties(for layerId: String, properties: [String: Any]) throws {
-        let expected = styleManager.setStyleLayerPropertiesForLayerId(layerId, properties: properties)
-        if expected.isError() {
-            throw LayerError.setLayerPropertyFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.setStyleLayerPropertiesForLayerId(layerId, properties: properties)
         }
     }
 
-    // MARK: Sources
+    // MARK: - Sources
 
-    public func addSource(withId sourceId: String, properties: [String: Any]) throws {
-        let expected = styleManager.addStyleSource(forSourceId: sourceId, properties: properties)
-        if expected.isError() {
-            throw SourceError.addSourceFailed(expected.error as! String)
+    public func addSource(withId id: String, properties: [String: Any]) throws {
+        return try handleExpected {
+            return styleManager.addStyleSource(forSourceId: id, properties: properties)
         }
     }
 
-    public func removeSource(withId sourceId: String) throws {
-        let expected = styleManager.removeStyleSource(forSourceId: sourceId)
-        if expected.isError() {
-            throw SourceError.removeSourceFailed(expected.error as! String)
+    public func removeSource(withId id: String) throws {
+        return try handleExpected {
+            return styleManager.removeStyleSource(forSourceId: id)
         }
     }
 
-    public func sourceExists(withId sourceId: String) -> Bool {
-        return styleManager.styleSourceExists(forSourceId: sourceId)
+    public func sourceExists(withId id: String) -> Bool {
+        return styleManager.styleSourceExists(forSourceId: id)
     }
 
     public var allSourceIdentifiers: [SourceInfo] {
@@ -421,35 +396,27 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    // MARK: Source properties
+    // MARK: - Source properties
 
     public func _sourceProperty(for sourceId: String, property: String) -> StylePropertyValue {
         return styleManager.getStyleSourceProperty(forSourceId: sourceId, property: property)
     }
 
     public func setSourceProperty(for sourceId: String, property: String, value: Any) throws {
-        let expected = styleManager.setStyleSourcePropertyForSourceId(sourceId, property: property, value: value)
-        if expected.isError() {
-            throw SourceError.setSourceProperty(expected.error as! String)
+        return try handleExpected {
+            return styleManager.setStyleSourcePropertyForSourceId(sourceId, property: property, value: value)
         }
     }
 
     public func sourceProperties(for sourceId: String) throws -> [String: Any] {
-        let expected = styleManager.getStyleSourceProperties(forSourceId: sourceId)
-        if expected.isError() {
-            throw SourceError.getSourceFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.getStyleSourceProperties(forSourceId: sourceId)
         }
-
-        guard let result = expected.value as? [String: Any] else {
-            throw SourceError.getSourceFailed("Value mismatch")
-        }
-        return result
     }
 
     public func setSourceProperties(for sourceId: String, properties: [String: Any]) throws {
-        let expected = styleManager.setStyleSourcePropertiesForSourceId(sourceId, properties: properties)
-        if expected.isError() {
-            throw SourceError.setSourceProperty(expected.error as! String)
+        return try handleExpected {
+            return styleManager.setStyleSourcePropertiesForSourceId(sourceId, properties: properties)
         }
     }
 
@@ -457,84 +424,39 @@ extension Style: StyleManagerProtocol {
         return StyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
     }
 
-    // MARK: Clustering
+    // MARK: - Image source
 
-    public func geoJSONSourceClusterExpansionZoom(for sourceId: String, cluster: UInt32) throws -> Float {
-        let expected = styleManager.getStyleGeoJSONSourceClusterExpansionZoom(forSourceId: sourceId, cluster: cluster)
-
-        if expected.isError() {
-            throw SourceError.getSourceClusterDetailsFailed(expected.error as! String)
-        }
-
-        guard let result = expected.value as? NSNumber else {
-            throw SourceError.getSourceClusterDetailsFailed("Value mismatch")
-        }
-        return result.floatValue
-    }
-
-    public func geoJSONSourceClusterChildren(for sourceId: String, cluster: UInt32) throws -> [Feature] {
-        let expected = styleManager.getStyleGeoJSONSourceClusterChildren(forSourceId: sourceId, cluster: cluster)
-
-        if expected.isError() {
-            throw SourceError.getSourceClusterDetailsFailed(expected.error as! String)
-        }
-
-        let features = expected.value as! [MBXFeature]
-
-        return features.compactMap { Feature($0) }
-    }
-
-    public func geoJSONSourceClusterLeaves(for sourceId: String, cluster: UInt32, limit: UInt32, offset: UInt32) throws -> [Feature] {
-        let expected = styleManager.getStyleGeoJSONSourceClusterLeaves(forSourceId: sourceId, cluster: cluster, limit: limit, offset: offset)
-
-        if expected.isError() {
-            throw SourceError.getSourceClusterDetailsFailed(expected.error as! String)
-        }
-
-        let features = expected.value as! [MBXFeature]
-
-        return features.compactMap { Feature($0) }
-    }
-
-    // MARK: Image source
-
-    public func updateImageSource(withId sourceId: String, image: UIImage) throws {
+    public func updateImageSource(withId id: String, image: UIImage) throws {
         guard let mbmImage = Image(uiImage: image) else {
-            throw ImageError.convertingImageFailed("Failed to convert UIImage to MBMImage")
+            throw TypeConversionError.unexpectedType
         }
 
-        let expected = styleManager.updateStyleImageSourceImage(forSourceId: sourceId, image: mbmImage)
-
-        if expected.isError() {
-            throw ImageError.imageSourceImageUpdateFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.updateStyleImageSourceImage(forSourceId: id, image: mbmImage)
         }
     }
 
-    // MARK: Style images
+    // MARK: - Style images
 
     public func addImage(_ image: UIImage, id: String, sdf: Bool = false, stretchX: [ImageStretches] = [], stretchY: [ImageStretches] = [], content: ImageContent? = nil) throws {
         guard let mbmImage = Image(uiImage: image) else {
-            throw ImageError.convertingImageFailed("Failed to convert UIImage to MBMImage")
+            throw TypeConversionError.unexpectedType
         }
 
-        let expected = styleManager.addStyleImage(forImageId: id,
-                                                  scale: Float(image.scale),
-                                                  image: mbmImage,
-                                                  sdf: sdf,
-                                                  stretchX: stretchX,
-                                                  stretchY: stretchY,
-                                                  content: content)
-
-        if expected.isError() {
-            throw ImageError.addStyleImageFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.addStyleImage(forImageId: id,
+                                              scale: Float(image.scale),
+                                              image: mbmImage,
+                                              sdf: sdf,
+                                              stretchX: stretchX,
+                                              stretchY: stretchY,
+                                              content: content)
         }
     }
 
     public func removeImage(withId id: String) throws {
-        let expected = styleManager.removeStyleImage(forImageId: id)
-
-        if expected.isError() {
-            throw ImageError.removeImageFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.removeStyleImage(forImageId: id)
         }
     }
 
@@ -546,12 +468,11 @@ extension Style: StyleManagerProtocol {
         return UIImage(mbxImage: mbmImage)
     }
 
-    // MARK: Style
+    // MARK: - Style
 
     public func setLight(properties: [String: Any]) throws {
-        let expected = styleManager.setStyleLightForProperties(properties)
-        if expected.isError() {
-            throw LightError.addLightFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.setStyleLightForProperties(properties)
         }
     }
 
@@ -560,20 +481,16 @@ extension Style: StyleManagerProtocol {
     }
 
     public func setLightProperty(_ property: String, value: Any) throws {
-        let expected = styleManager.setStyleLightPropertyForProperty(property, value: value)
-
-        if expected.isError() {
-            throw LightError.addLightFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.setStyleLightPropertyForProperty(property, value: value)
         }
     }
 
-    // MARK: Terrain
+    // MARK: - Terrain
 
     public func setTerrain(properties: [String: Any]) throws {
-        let expected = styleManager.setStyleTerrainForProperties(properties)
-
-        if expected.isError() {
-            throw TerrainError.addTerrainFailed(expected.error as! String)
+        return try handleExpected {
+            return styleManager.setStyleTerrainForProperties(properties)
         }
     }
 
@@ -582,53 +499,41 @@ extension Style: StyleManagerProtocol {
     }
 
     public func setTerrainProperty(_ property: String, value: Any) throws {
-        let expected = styleManager.setStyleTerrainPropertyForProperty(property, value: value)
-
-        if expected.isError() {
-            // Temp error
-            throw TerrainError.setTerrainProperty(expected.error as! String)
+        return try handleExpected {
+            return styleManager.setStyleTerrainPropertyForProperty(property, value: value)
         }
     }
 
-    // MARK: Custom geometry
+    // MARK: - Custom geometry
 
-    public func addCustomGeometrySource(withId sourceId: String, options: CustomGeometrySourceOptions) throws {
-        let expected = styleManager.addStyleCustomGeometrySource(forSourceId: sourceId, options: options)
-
-        if expected.isError() {
-            throw TemporaryError.failure(expected.error as! String)
+    public func addCustomGeometrySource(withId id: String, options: CustomGeometrySourceOptions) throws {
+        return try handleExpected {
+            return styleManager.addStyleCustomGeometrySource(forSourceId: id, options: options)
         }
     }
 
     // TODO: Fix initialization of MBXFeature.
     public func _setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Feature]) throws {
         let mbxFeatures = features.compactMap { MBXFeature($0) }
-        let expected = styleManager.setStyleCustomGeometrySourceTileDataForSourceId(sourceId, tileId: tileId, featureCollection: mbxFeatures)
-
-        if expected.isError() {
-            throw TemporaryError.failure(expected.error as! String)
+        return try handleExpected {
+            return styleManager.setStyleCustomGeometrySourceTileDataForSourceId(sourceId, tileId: tileId, featureCollection: mbxFeatures)
         }
     }
 
     public func invalidateCustomGeometrySourceTile(forSourceId sourceId: String, tileId: CanonicalTileID) throws {
-        let expected = styleManager.invalidateStyleCustomGeometrySourceTile(forSourceId: sourceId, tileId: tileId)
-
-        if expected.isError() {
-            throw TemporaryError.failure(expected.error as! String)
+        return try handleExpected {
+            return styleManager.invalidateStyleCustomGeometrySourceTile(forSourceId: sourceId, tileId: tileId)
         }
     }
 
     public func invalidateCustomGeometrySourceRegion(forSourceId sourceId: String, bounds: CoordinateBounds) throws {
-        let expected = styleManager.invalidateStyleCustomGeometrySourceRegion(forSourceId: sourceId, bounds: bounds)
-
-        if expected.isError() {
-            throw TemporaryError.failure(expected.error as! String)
+        return try handleExpected {
+            return styleManager.invalidateStyleCustomGeometrySourceRegion(forSourceId: sourceId, bounds: bounds)
         }
     }
 }
-// swiftlint:enable force_cast
 
-// MARK: - StyleTransition
+// MARK: - StyleTransition -
 
 /**
  The transition property for a layer.

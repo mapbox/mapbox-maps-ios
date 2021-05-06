@@ -66,13 +66,11 @@ class LocationIndicatorLayerIntegrationTests: MapViewIntegrationTestCase {
             }
 
             // Retrieve the layer
-            let retrieveResult = style.getLayer(with: "test-id", type: LocationIndicatorLayer.self)
-
-            switch (retrieveResult) {
-                case .success(_):
-                    successfullyRetrievedLayerExpectation.fulfill()    
-                case .failure(let error):
-                    XCTFail("Failed to retreive LocationIndicatorLayer because of error: \(error)")   
+            do {
+                _ = try style.layer(withId: "test-id", type: LocationIndicatorLayer.self)
+                successfullyRetrievedLayerExpectation.fulfill()
+            } catch {
+                XCTFail("Failed to retrieve LocationIndicatorLayer because of error: \(error)")   
             }
         }
 

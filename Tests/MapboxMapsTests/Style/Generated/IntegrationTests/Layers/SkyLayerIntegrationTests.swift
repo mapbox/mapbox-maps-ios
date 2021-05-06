@@ -51,13 +51,11 @@ class SkyLayerIntegrationTests: MapViewIntegrationTestCase {
             }
 
             // Retrieve the layer
-            let retrieveResult = style.getLayer(with: "test-id", type: SkyLayer.self)
-
-            switch (retrieveResult) {
-                case .success(_):
-                    successfullyRetrievedLayerExpectation.fulfill()    
-                case .failure(let error):
-                    XCTFail("Failed to retreive SkyLayer because of error: \(error)")   
+            do {
+                _ = try style.layer(withId: "test-id", type: SkyLayer.self)
+                successfullyRetrievedLayerExpectation.fulfill()
+            } catch {
+                XCTFail("Failed to retrieve SkyLayer because of error: \(error)")   
             }
         }
 

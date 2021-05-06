@@ -56,13 +56,11 @@ class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
             }
 
             // Retrieve the layer
-            let retrieveResult = style.getLayer(with: "test-id", type: FillExtrusionLayer.self)
-
-            switch (retrieveResult) {
-                case .success(_):
-                    successfullyRetrievedLayerExpectation.fulfill()    
-                case .failure(let error):
-                    XCTFail("Failed to retreive FillExtrusionLayer because of error: \(error)")   
+            do {
+                _ = try style.layer(withId: "test-id", type: FillExtrusionLayer.self)
+                successfullyRetrievedLayerExpectation.fulfill()
+            } catch {
+                XCTFail("Failed to retrieve FillExtrusionLayer because of error: \(error)")   
             }
         }
 

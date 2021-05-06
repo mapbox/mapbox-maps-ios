@@ -8,12 +8,12 @@ public protocol StyleDecodable {
 
 public extension StyleEncodable where Self: Encodable {
     /// Given an Encodable object return the JSON dictionary representation
-    /// - Throws: Errors occurring during encoding, or `StyleEncodingError.invalidJSONObject`
+    /// - Throws: Errors occurring during encoding, or `TypeConversionError.invalidJSONObject`
     /// - Returns: A JSON dictionary representing the object.
     func jsonObject() throws -> [String: Any] {
         let data = try JSONEncoder().encode(self)
         guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-            throw StyleEncodingError.invalidJSONObject
+            throw TypeConversionError.invalidJSONObject
         }
         return jsonObject
     }

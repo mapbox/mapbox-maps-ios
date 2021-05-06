@@ -49,13 +49,11 @@ class BackgroundLayerIntegrationTests: MapViewIntegrationTestCase {
             }
 
             // Retrieve the layer
-            let retrieveResult = style.getLayer(with: "test-id", type: BackgroundLayer.self)
-
-            switch (retrieveResult) {
-                case .success(_):
-                    successfullyRetrievedLayerExpectation.fulfill()    
-                case .failure(let error):
-                    XCTFail("Failed to retreive BackgroundLayer because of error: \(error)")   
+            do {
+                _ = try style.layer(withId: "test-id", type: BackgroundLayer.self)
+                successfullyRetrievedLayerExpectation.fulfill()
+            } catch {
+                XCTFail("Failed to retrieve BackgroundLayer because of error: \(error)")   
             }
         }
 

@@ -11,9 +11,13 @@ Mapbox welcomes participation and contributions from everyone.
       * Removing default values for parameters
       * Making `bearing` and `pitch` parameters optional
       * Adding the `camera(for:camera:rect:)` variant
-  - `OrnamentOptions` should now be accessed via `MapView.ornaments.options`. `MapConfig.ornaments` has been removed. Updates can be applied directly to `OrnamentsManager.options`. Previously the map's ornament options were updated on `MapConfig.ornaments` with `MapView.update`. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310)) 
-  - `OrnamentOptions` now uses structs to manage options for individual ornaments. For example, `OrnamentOptions.scaleBarPosition` is now `OrnamentOptions.scaleBar.position`. ([#318](https://github.com/mapbox/mapbox-maps-ios/pull/318))
-  - The `LogoView` class is now private. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310))
+- `OrnamentOptions` should now be accessed via `MapView.ornaments.options`. `MapConfig.ornaments` has been removed. Updates can be applied directly to `OrnamentsManager.options`. Previously the map's ornament options were updated on `MapConfig.ornaments` with `MapView.update`. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310)) 
+- `OrnamentOptions` now uses structs to manage options for individual ornaments. For example, `OrnamentOptions.scaleBarPosition` is now `OrnamentOptions.scaleBar.position`. ([#318](https://github.com/mapbox/mapbox-maps-ios/pull/318))
+- The `LogoView` class is now private. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310))
+- `Style` has been significantly refactored, for example:
+  - Synchronous APIs returning `Result` types now throw.
+  - A number of APIs previously accessed via `__map` are now available via the `Style` object.
+  - APIs with a `get` prefix have been renamed; for example `getLayer<T>(with:type:)` to `layer<T>(withId:type:) throws` and `getSource<T>(id:type:)` to `source<T>(withId:type:) throws`
 
 ### Features ✨ and improvements 🏁
 

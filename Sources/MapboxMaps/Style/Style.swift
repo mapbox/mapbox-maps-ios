@@ -22,14 +22,15 @@ public class Style {
         self.uri = uri ?? Self.defaultURI
     }
 
-    // MARK: Layers
+    // MARK: - Layers
 
-    /**
-     Adds a `layer` to the map
-     - Parameter layer: The layer to apply on the map
-     - Returns: If operation successful, returns a `true` as part of the `Result`
-                success case. Else, returns a `LayerError` in the `Result` failure case.
-     */
+    /// Adds a `layer` to the map
+    ///
+    /// - Parameters:
+    ///   - layer: The layer to apply on the map
+    ///   - layerPosition: Position at which to add the map.
+    ///
+    /// - Throws: StyleError or type conversion errors
     public func addLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
         // Attempt to encode the provided layer into JSON and apply it to the map
         let layerJSON = try layer.jsonObject()
@@ -42,11 +43,11 @@ public class Style {
      - Parameter layerId: The layer to move
      - Parameter position: The new position to move the layer to
 
-     - Throws: `LayerError` on failure, or `NSError` with a _domain of "com.mapbox.bindgen"
+     - Throws: `StyleError` on failure, or `NSError` with a _domain of "com.mapbox.bindgen"
      */
-    public func _moveLayer(withId layerId: String, to position: LayerPosition) throws {
-        let properties = try layerProperties(for: layerId)
-        try removeLayer(withId: layerId)
+    public func _moveLayer(withId id: String, to position: LayerPosition) throws {
+        let properties = try layerProperties(for: id)
+        try removeLayer(withId: id)
         try addLayer(with: properties, layerPosition: position)
     }
 
@@ -56,11 +57,11 @@ public class Style {
      - Parameter type: The type of the layer that will be fetched
 
      - Returns: The fully formed `layer` object of type equal to `type`
-     - Throws: Error
+     - Throws: StyleError or type conversion errors
      */
-    public func layer<T: Layer>(withId layerID: String, type: T.Type = T.self) throws -> T {
+    public func layer<T: Layer>(withId id: String, type: T.Type = T.self) throws -> T {
         // swiftlint:disable force_cast
-        return try _layer(withId: layerID, type: type) as! T
+        return try _layer(withId: id, type: type) as! T
         // swiftlint:enable force_cast
     }
 
@@ -74,20 +75,23 @@ public class Style {
      - Parameter type: The type of the layer that will be fetched
 
      - Returns: The fully formed `layer` object of type equal to `type`
-     - Throws: Error
+     - Throws: StyleError or type conversion errors
      */
-    public func _layer(withId layerID: String, type: Layer.Type) throws -> Layer {
+    public func _layer(withId id: String, type: Layer.Type) throws -> Layer {
         // Get the layer properties from the map
-        let properties = try layerProperties(for: layerID)
+        let properties = try layerProperties(for: id)
         return try type.init(jsonObject: properties)
     }
 
     /// Updates a layer that exists in the style already
+    ///
     /// - Parameters:
     ///   - id: identifier of layer to update
     ///   - type: Type of the layer
     ///   - update: Closure that mutates a layer passed to it
-    public func updateLayer<T: Layer>(id: String, type: T.Type, update: (inout T) throws -> Void) throws {
+    ///
+    /// - Throws: StyleError or type conversion errors
+    public func updateLayer<T: Layer>(withId id: String, type: T.Type, update: (inout T) throws -> Void) throws {
         var layer: T = try self.layer(withId: id, type: T.self)
 
         // Call closure to update the retrieved layer
@@ -99,7 +103,7 @@ public class Style {
         try setLayerProperties(for: id, properties: value)
     }
 
-    // MARK: Layer properties
+    // MARK: - Layer properties
 
     /// Gets the value of style layer property.
     ///
@@ -113,14 +117,14 @@ public class Style {
         return _layerProperty(for: layerId, property: property).value
     }
 
-    // MARK: Sources
+    // MARK: - Sources
 
     /**
      Adds a source to the map
      - Parameter source: The source to add to the map.
      - Parameter identifier: A unique source identifier.
-     - Returns: If operation successful, returns a `true` as part of the `Result`
-                success case. Else, returns a `SourceError` in the `Result` failure case.
+
+     - Throws: StyleError or type conversion errors
      */
     public func addSource(_ source: Source, id: String) throws {
         let sourceDictionary = try source.jsonObject()
@@ -131,9 +135,8 @@ public class Style {
      Retrieves a source from the map
      - Parameter identifier: The id of the source to retrieve
      - Parameter type: The type of the source
-     - Returns: The fully formed `source` object of type equal to `type` is returned
-                as part of the `Result`s success case if the operation is successful.
-                Else, returns a `SourceError` as part of the `Result` failure case.
+     - Returns: The fully formed `source` object of type equal to `type`.
+     - Throws: StyleError or type conversion errors
      */
     public func source<T: Source>(withId id: String, type: T.Type = T.self) throws -> T {
         // swiftlint:disable force_cast
@@ -149,9 +152,8 @@ public class Style {
 
      - Parameter identifier: The id of the source to retrieve
      - Parameter type: The type of the source
-     - Returns: The fully formed `source` object of type equal to `type` is returned
-                as part of the `Result`s success case if the operation is successful.
-                Else, returns a `SourceError` as part of the `Result` failure case.
+     - Returns: The fully formed `source` object of type equal to `type`.
+     - Throws: StyleError or type conversion errors
      */
     public func _source(withId id: String, type: Source.Type) throws  -> Source {
         // Get the source properties for a given identifier
@@ -175,19 +177,25 @@ public class Style {
      Updates the `data` property of a given `GeoJSONSource` with a new value
      conforming to the `GeoJSONObject` protocol.
 
-     - Parameter sourceIdentifier: The identifier representing the GeoJSON source.
+     - Parameter id: The identifier representing the GeoJSON source.
      - Parameter geoJSON: The new GeoJSON to be associated with the source data.
-     - Returns: If operation successful, returns a `true` as part of the `Result` success case.
-                Else, returns an `Error` in the `Result` failure case.
-     - Note: This method is only effective with sources of `GeoJSONSource` type,
+
+     - Throws: StyleError or type conversion errors
+
+     - Attention: This method is only effective with sources of `GeoJSONSource` type,
              and should not be used to update other source types.
      */
-    public func updateGeoJSONSource<T: GeoJSONObject>(withId sourceId: String, geoJSON: T) throws {
+    public func updateGeoJSONSource<T: GeoJSONObject>(withId id: String, geoJSON: T) throws {
+        guard let sourceInfo = allSourceIdentifiers.first(where: { $0.id == id }),
+              sourceInfo.type == .geoJson else {
+            fatalError("updateGeoJSONSource: Source with id '\(id)' is not a GeoJSONSource.")
+        }
+
         let geoJSONDictionary = try GeoJSONManager.dictionaryFrom(geoJSON)
-        try setSourceProperty(for: sourceId, property: "data", value: geoJSONDictionary as Any)
+        try setSourceProperty(for: id, property: "data", value: geoJSONDictionary as Any)
     }
 
-    // MARK: Light
+    // MARK: - Light
 
     /// Gets the value of a style light property.
     ///
@@ -198,7 +206,7 @@ public class Style {
         return _lightProperty(property).value
     }
 
-    // MARK: Terrain
+    // MARK: - Terrain
 
     /// Sets a terrain on the style
     ///
@@ -223,6 +231,8 @@ public class Style {
     public func terrainProperty(_ property: String) -> Any {
         return _terrainProperty(property).value
     }
+
+    // MARK: - Conversion helpers
 
     private func handleExpected(closure: () -> (MBXExpected<AnyObject, AnyObject>)) throws {
         let expected = closure()
@@ -252,7 +262,7 @@ public class Style {
     }
 }
 
-// MARK: - StyleManagerProtocol
+// MARK: - StyleManagerProtocol -
 
 // See `StyleManagerProtocol` for documentation for the following APIs
 extension Style: StyleManagerProtocol {
@@ -296,7 +306,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    // MARK: Layers
+    // MARK: - Layers
 
     public func addLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
         return try handleExpected {
@@ -330,7 +340,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    // MARK: Layer Properties
+    // MARK: - Layer Properties
 
     public func _layerProperty(for layerId: String, property: String) -> StylePropertyValue {
         return styleManager.getStyleLayerProperty(forLayerId: layerId, property: property)
@@ -358,22 +368,22 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    // MARK: Sources
+    // MARK: - Sources
 
-    public func addSource(withId sourceId: String, properties: [String: Any]) throws {
+    public func addSource(withId id: String, properties: [String: Any]) throws {
         return try handleExpected {
-            return styleManager.addStyleSource(forSourceId: sourceId, properties: properties)
+            return styleManager.addStyleSource(forSourceId: id, properties: properties)
         }
     }
 
-    public func removeSource(withId sourceId: String) throws {
+    public func removeSource(withId id: String) throws {
         return try handleExpected {
-            return styleManager.removeStyleSource(forSourceId: sourceId)
+            return styleManager.removeStyleSource(forSourceId: id)
         }
     }
 
-    public func sourceExists(withId sourceId: String) -> Bool {
-        return styleManager.styleSourceExists(forSourceId: sourceId)
+    public func sourceExists(withId id: String) -> Bool {
+        return styleManager.styleSourceExists(forSourceId: id)
     }
 
     public var allSourceIdentifiers: [SourceInfo] {
@@ -386,7 +396,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    // MARK: Source properties
+    // MARK: - Source properties
 
     public func _sourceProperty(for sourceId: String, property: String) -> StylePropertyValue {
         return styleManager.getStyleSourceProperty(forSourceId: sourceId, property: property)
@@ -414,7 +424,7 @@ extension Style: StyleManagerProtocol {
         return StyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
     }
 
-    // MARK: Clustering
+    // MARK: - Clustering
 
     public func geoJSONSourceClusterExpansionZoom(for sourceId: String, cluster: UInt32) throws -> Float {
         return try handleExpected {
@@ -438,19 +448,19 @@ extension Style: StyleManagerProtocol {
         return features.compactMap { Feature($0) }
     }
 
-    // MARK: Image source
+    // MARK: - Image source
 
-    public func updateImageSource(withId sourceId: String, image: UIImage) throws {
+    public func updateImageSource(withId id: String, image: UIImage) throws {
         guard let mbmImage = Image(uiImage: image) else {
             throw TypeConversionError.unexpectedType
         }
 
         return try handleExpected {
-            return styleManager.updateStyleImageSourceImage(forSourceId: sourceId, image: mbmImage)
+            return styleManager.updateStyleImageSourceImage(forSourceId: id, image: mbmImage)
         }
     }
 
-    // MARK: Style images
+    // MARK: - Style images
 
     public func addImage(_ image: UIImage, id: String, sdf: Bool = false, stretchX: [ImageStretches] = [], stretchY: [ImageStretches] = [], content: ImageContent? = nil) throws {
         guard let mbmImage = Image(uiImage: image) else {
@@ -482,7 +492,7 @@ extension Style: StyleManagerProtocol {
         return UIImage(mbxImage: mbmImage)
     }
 
-    // MARK: Style
+    // MARK: - Style
 
     public func setLight(properties: [String: Any]) throws {
         return try handleExpected {
@@ -500,7 +510,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    // MARK: Terrain
+    // MARK: - Terrain
 
     public func setTerrain(properties: [String: Any]) throws {
         return try handleExpected {
@@ -518,11 +528,11 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    // MARK: Custom geometry
+    // MARK: - Custom geometry
 
-    public func addCustomGeometrySource(withId sourceId: String, options: CustomGeometrySourceOptions) throws {
+    public func addCustomGeometrySource(withId id: String, options: CustomGeometrySourceOptions) throws {
         return try handleExpected {
-            return styleManager.addStyleCustomGeometrySource(forSourceId: sourceId, options: options)
+            return styleManager.addStyleCustomGeometrySource(forSourceId: id, options: options)
         }
     }
 
@@ -547,7 +557,7 @@ extension Style: StyleManagerProtocol {
     }
 }
 
-// MARK: - StyleTransition
+// MARK: - StyleTransition -
 
 /**
  The transition property for a layer.

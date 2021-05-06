@@ -33,7 +33,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             }
 
             do {
-                try style.updateLayer(id: newBackgroundLayer.id, type: BackgroundLayer.self) { (layer) throws in
+                try style.updateLayer(withId: newBackgroundLayer.id, type: BackgroundLayer.self) { (layer) throws in
                     XCTAssert(layer.paint?.backgroundColor == newBackgroundLayer.paint?.backgroundColor)
                     layer.paint?.backgroundColor = .constant(.init(color: .blue))
                 }

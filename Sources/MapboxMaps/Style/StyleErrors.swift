@@ -25,6 +25,9 @@ public enum SourceError: Error {
 
     /// The source property could not be set.
     case setSourceProperty(String)
+
+    /// Temporary error for clustering.
+    case getSourceClusterDetailsFailed(String)
 }
 
 /// Error enum for all layer-related errors
@@ -60,25 +63,34 @@ public enum ImageError: Error {
     case convertingImageFailed(String?)
 
     /// Adding the image to the style's sprite failed.
-    case addStyleImageFailed(String?)
+    case addStyleImageFailed(String)
 
     /// The style image does not exist in the sprite
-    case getStyleImageFailed(String?)
+    case getStyleImageFailed(String)
+
+    /// Temporary
+    case imageSourceImageUpdateFailed(String)
+    case removeImageFailed(String)
 }
 
 /// Error enum for all terrain-related errors
 public enum TerrainError: Error {
     /// Decoding terrain failed
-    case decodingTerrainFailed(Error)
+    case setTerrainProperty(String)
+
     /// Adding terrain failed
-    case addTerrainFailed(String?)
+    case addTerrainFailed(String)
 }
 
 /// Enum for all light-related errors
 public enum LightError: Error {
     /// Adding a new light object to style failed
-    case addLightFailed(String?)
+    case addLightFailed(String)
 
     /// Retrieving a light object from style failed
     case getLightFailed(Error)
+}
+
+public enum TemporaryError: Error {
+    case failure(String)
 }

@@ -154,22 +154,17 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
 
 // swiftlint:disable function_parameter_count identifier_name
 extension AnnotationManagerIntegrationTestCase: AnnotationStyleDelegate {
-    func setStyleImage(image: UIImage, with identifier: String, sdf: Bool, stretchX: [ImageStretches], stretchY: [ImageStretches], imageContent: ImageContent?) -> Result<Bool, ImageError> {
-        guard let style = style else {
-            XCTFail("No style available")
-            return .failure(.addStyleImageFailed(nil))
-        }
 
-        return style.setStyleImage(image: image, with: identifier)
-    }
-
-    func getStyleImage(with identifier: String) -> Image? {
+    func image(withId id: String) -> UIImage? {
         guard let style = style else {
-            XCTFail("No style available")
             return nil
         }
+        return style.image(withId: id)
+    }
 
-        return style.getStyleImage(with: identifier)
+    func addImage(_ image: UIImage, id: String, sdf: Bool, stretchX: [ImageStretches], stretchY: [ImageStretches], content: ImageContent?) throws {
+        let style = try XCTUnwrap(self.style)
+        try style.addImage(image, id: id)
     }
 
     func addSource(_ source: Source, id: String) throws {

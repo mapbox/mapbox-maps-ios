@@ -52,14 +52,14 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
         try! mapView.style.addSource(demSource, id: "mapbox-dem")
 
         let terrain = Terrain(sourceId: "mapbox-dem")
-        _ = self.mapView.style.setTerrain(terrain)
+        try! mapView.style.setTerrain(terrain)
 
         var skyLayer = SkyLayer(id: "sky-layer")
         skyLayer.paint?.skyType = .constant(.atmosphere)
         skyLayer.paint?.skyAtmosphereSun = .constant([0, 0])
         skyLayer.paint?.skyAtmosphereSunIntensity = .constant(15.0)
 
-        try! self.mapView.style.addLayer(skyLayer)
+        try! mapView.style.addLayer(skyLayer)
 
         // Re-use terrain source for hillshade
         let properties = [

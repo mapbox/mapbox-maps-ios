@@ -463,16 +463,12 @@ public class AnnotationManager {
 
         // If the point annotation has a custom image, add it to the sprite.
         if let customImage = pointAnnotation.image {
-            let expectedCustomImage = styleDelegate.setStyleImage(image: customImage,
-                                                                  with: pointAnnotation.identifier,
-                                                                  sdf: false,
-                                                                  stretchX: [],
-                                                                  stretchY: [],
-                                                                  imageContent: nil)
-
-            if case .failure(let imageError) = expectedCustomImage {
-                throw AnnotationError.addAnnotationFailed(imageError)
-            }
+            try styleDelegate.addImage(customImage,
+                                       id: pointAnnotation.identifier,
+                                       sdf: false,
+                                       stretchX: [],
+                                       stretchY: [],
+                                       content: nil)
         }
 
         // Add the default symbol layer image.
@@ -481,18 +477,14 @@ public class AnnotationManager {
         }
 
         // Add the default icon image to the sprite, but only once.
-        if styleDelegate.getStyleImage(with: PointAnnotation.defaultIconImageIdentifier) == nil {
+        if styleDelegate.image(withId: PointAnnotation.defaultIconImageIdentifier) == nil {
 
-            let expectedDefaultImage = styleDelegate.setStyleImage(image: pointAnnotation.defaultAnnotationImage(),
-                                                                   with: PointAnnotation.defaultIconImageIdentifier,
-                                                                   sdf: false,
-                                                                   stretchX: [],
-                                                                   stretchY: [],
-                                                                   imageContent: nil)
-
-            if case .failure(let imageError) = expectedDefaultImage {
-                throw AnnotationError.addAnnotationFailed(imageError)
-            }
+            try styleDelegate.addImage(pointAnnotation.defaultAnnotationImage(),
+                                       id: PointAnnotation.defaultIconImageIdentifier,
+                                       sdf: false,
+                                       stretchX: [],
+                                       stretchY: [],
+                                       content: nil)
         }
 
         // Make the style layer for the first time.

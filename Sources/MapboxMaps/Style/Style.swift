@@ -144,63 +144,6 @@ public class Style {
         return _layerProperty(for: layerId, property: property).value
     }
 
-    // MARK: Style images
-
-    /**
-     Add a given `UIImage` to the map style's sprite, or updates
-     the given image in the sprite if it already exists.
-
-     You must call this method after the map's style has finished loading in order
-     to set any image or pattern properties on a style layer.
-
-     - Parameter image: The image to be added to the map style's sprite.
-     - Parameter identifier: The name of the image the map style's sprite
-                             will use for identification.
-     - Parameter sdf: Whether or not the image is treated as a signed distance field.
-                      Defaults to `false`.
-     - Parameter stretchX: The array of horizontal image stretch areas.
-                           Defaults to an empty array.
-     - Parameter stretchY: The array of vertical image stretch areas.
-                           Defaults to an empty array.
-     - Parameter imageContent: The `ImageContent` which describes where text
-                               can be fit into an image. By default, this is `nil`.
-     - Returns: A boolean associated with a `Result` type if the operation is successful.
-                Otherwise, this will return a `StyleError` as part of the `Result` failure case.
-     */
-    @discardableResult
-    public func setStyleImage(image: UIImage,
-                              with identifier: String,
-                              sdf: Bool = false,
-                              stretchX: [ImageStretches] = [],
-                              stretchY: [ImageStretches] = [],
-                              imageContent: ImageContent? = nil) -> Result<Bool, ImageError> {
-
-        /**
-         TODO: Define interfaces for stretchX/Y/imageContent,
-         as these are core SDK types.
-         */
-
-        guard let mbxImage = Image(uiImage: image) else {
-            return .failure(.convertingImageFailed(nil))
-        }
-
-        let expected = styleManager.addStyleImage(forImageId: identifier,
-                                                  scale: Float(image.scale),
-                                                  image: mbxImage,
-                                                  sdf: sdf,
-                                                  stretchX: stretchX,
-                                                  stretchY: stretchY,
-                                                  content: imageContent)
-
-        return expected.isError() ? .failure(.addStyleImageFailed(expected.error as? String))
-                                  : .success(true)
-    }
-
-    public func getStyleImage(with identifier: String) -> Image? {
-        // TODO: Send back UIImage, not MBX Image
-        return styleManager.getStyleImage(forImageId: identifier)
-    }
-
     // MARK: Sources
 
     /**
@@ -291,44 +234,47 @@ public class Style {
         }
     }
 
+    // MARK: Light
+
+    /// Gets the value of a style light property.
+    ///
+    /// - Parameter property: Style light property name.
+    ///
+    /// - Returns: Style light property value.
+    public func lightProperty(_ property: String) -> Any {
+        return _lightProperty(property).value
+    }
+
     // MARK: Terrain
 
     /// Sets a terrain on the style
+    ///
     /// - Parameter terrain: The `Terrain` that should be rendered
-    /// - Returns: Result type with `.success` if terrain is successfully applied. `TerrainError` otherwise.
-    @discardableResult
-    public func setTerrain(_ terrain: Terrain) -> Result<Bool, TerrainError> {
-        do {
-            let terrainData = try JSONEncoder().encode(terrain)
-            let terrainDictionary = try JSONSerialization.jsonObject(with: terrainData)
-            let expectation = styleManager.setStyleTerrainForProperties(terrainDictionary)
-
-            return expectation.isValue() ? .success(true)
-                                         : .failure(.addTerrainFailed(expectation.error as? String))
-        } catch {
-            return .failure(.decodingTerrainFailed(error))
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    public func setTerrain(_ terrain: Terrain) throws {
+        let terrainData = try JSONEncoder().encode(terrain)
+        guard let terrainDictionary = try JSONSerialization.jsonObject(with: terrainData) as? [String: Any] else {
+            throw StyleEncodingError.invalidJSONObject
         }
+
+        try setTerrain(properties: terrainDictionary)
     }
 
-    /// Add a light object to the map's style
-    /// - Parameter light: The `Light` object to be applied to the style.
-    /// - Returns: IF operation successful, returns a `true` as part of the `Result`.  Else returns a `LightError`.
-    public func addLight(_ light: Light) -> Result<Bool, LightError> {
-        do {
-            let lightData = try JSONEncoder().encode(light)
-            let lightDictionary = try JSONSerialization.jsonObject(with: lightData)
-            let expectation = styleManager.setStyleTerrainForProperties(lightDictionary)
-
-            return expectation.isValue() ? .success(true)
-                                         : .failure(.addLightFailed(expectation.error as? String))
-        } catch {
-            return .failure(.addLightFailed(nil))
-        }
+    /// Gets the value of a style terrain property.
+    ///
+    /// - Parameter property: Style terrain property name.
+    ///
+    /// - Returns: Style terrain property value.
+    public func terrainProperty(_ property: String) -> Any {
+        return _terrainProperty(property).value
     }
 }
 
 // MARK: - StyleManagerProtocol
 
+// See `StyleManagerProtocol` for documentation for the following APIs
 // swiftlint:disable force_cast
 extension Style: StyleManagerProtocol {
     public var isLoaded: Bool {
@@ -509,6 +455,175 @@ extension Style: StyleManagerProtocol {
 
     public static func _sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue {
         return StyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
+    }
+
+    // MARK: Clustering
+
+    public func geoJSONSourceClusterExpansionZoom(for sourceId: String, cluster: UInt32) throws -> Float {
+        let expected = styleManager.getStyleGeoJSONSourceClusterExpansionZoom(forSourceId: sourceId, cluster: cluster)
+
+        if expected.isError() {
+            throw SourceError.getSourceClusterDetailsFailed(expected.error as! String)
+        }
+
+        guard let result = expected.value as? NSNumber else {
+            throw SourceError.getSourceClusterDetailsFailed("Value mismatch")
+        }
+        return result.floatValue
+    }
+
+    public func geoJSONSourceClusterChildren(for sourceId: String, cluster: UInt32) throws -> [Feature] {
+        let expected = styleManager.getStyleGeoJSONSourceClusterChildren(forSourceId: sourceId, cluster: cluster)
+
+        if expected.isError() {
+            throw SourceError.getSourceClusterDetailsFailed(expected.error as! String)
+        }
+
+        let features = expected.value as! [MBXFeature]
+
+        return features.compactMap { Feature($0) }
+    }
+
+    public func geoJSONSourceClusterLeaves(for sourceId: String, cluster: UInt32, limit: UInt32, offset: UInt32) throws -> [Feature] {
+        let expected = styleManager.getStyleGeoJSONSourceClusterLeaves(forSourceId: sourceId, cluster: cluster, limit: limit, offset: offset)
+
+        if expected.isError() {
+            throw SourceError.getSourceClusterDetailsFailed(expected.error as! String)
+        }
+
+        let features = expected.value as! [MBXFeature]
+
+        return features.compactMap { Feature($0) }
+    }
+
+    // MARK: Image source
+
+    public func updateImageSource(withId sourceId: String, image: UIImage) throws {
+        guard let mbmImage = Image(uiImage: image) else {
+            throw ImageError.convertingImageFailed("Failed to convert UIImage to MBMImage")
+        }
+
+        let expected = styleManager.updateStyleImageSourceImage(forSourceId: sourceId, image: mbmImage)
+
+        if expected.isError() {
+            throw ImageError.imageSourceImageUpdateFailed(expected.error as! String)
+        }
+    }
+
+    // MARK: Style images
+
+    public func addImage(_ image: UIImage, id: String, sdf: Bool = false, stretchX: [ImageStretches] = [], stretchY: [ImageStretches] = [], content: ImageContent? = nil) throws {
+        guard let mbmImage = Image(uiImage: image) else {
+            throw ImageError.convertingImageFailed("Failed to convert UIImage to MBMImage")
+        }
+
+        let expected = styleManager.addStyleImage(forImageId: id,
+                                                  scale: Float(image.scale),
+                                                  image: mbmImage,
+                                                  sdf: sdf,
+                                                  stretchX: stretchX,
+                                                  stretchY: stretchY,
+                                                  content: content)
+
+        if expected.isError() {
+            throw ImageError.addStyleImageFailed(expected.error as! String)
+        }
+    }
+
+    public func removeImage(withId id: String) throws {
+        let expected = styleManager.removeStyleImage(forImageId: id)
+
+        if expected.isError() {
+            throw ImageError.removeImageFailed(expected.error as! String)
+        }
+    }
+
+    public func image(withId id: String) -> UIImage? {
+        guard let mbmImage = styleManager.getStyleImage(forImageId: id) else {
+            return nil
+        }
+
+        return UIImage(mbxImage: mbmImage)
+    }
+
+    // MARK: Style
+
+    public func setLight(properties: [String: Any]) throws {
+        let expected = styleManager.setStyleLightForProperties(properties)
+        if expected.isError() {
+            throw LightError.addLightFailed(expected.error as! String)
+        }
+    }
+
+    public func _lightProperty(_ property: String) -> StylePropertyValue {
+        return styleManager.getStyleLightProperty(forProperty: property)
+    }
+
+    public func setLightProperty(_ property: String, value: Any) throws {
+        let expected = styleManager.setStyleLightPropertyForProperty(property, value: value)
+
+        if expected.isError() {
+            throw LightError.addLightFailed(expected.error as! String)
+        }
+    }
+
+    // MARK: Terrain
+
+    public func setTerrain(properties: [String: Any]) throws {
+        let expected = styleManager.setStyleTerrainForProperties(properties)
+
+        if expected.isError() {
+            throw TerrainError.addTerrainFailed(expected.error as! String)
+        }
+    }
+
+    public func _terrainProperty(_ property: String) -> StylePropertyValue {
+        return styleManager.getStyleTerrainProperty(forProperty: property)
+    }
+
+    public func setTerrainProperty(_ property: String, value: Any) throws {
+        let expected = styleManager.setStyleTerrainPropertyForProperty(property, value: value)
+
+        if expected.isError() {
+            // Temp error
+            throw TerrainError.setTerrainProperty(expected.error as! String)
+        }
+    }
+
+    // MARK: Custom geometry
+
+    public func addCustomGeometrySource(withId sourceId: String, options: CustomGeometrySourceOptions) throws {
+        let expected = styleManager.addStyleCustomGeometrySource(forSourceId: sourceId, options: options)
+
+        if expected.isError() {
+            throw TemporaryError.failure(expected.error as! String)
+        }
+    }
+
+    // TODO: Fix initialization of MBXFeature.
+    public func _setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Feature]) throws {
+        let mbxFeatures = features.compactMap { MBXFeature($0) }
+        let expected = styleManager.setStyleCustomGeometrySourceTileDataForSourceId(sourceId, tileId: tileId, featureCollection: mbxFeatures)
+
+        if expected.isError() {
+            throw TemporaryError.failure(expected.error as! String)
+        }
+    }
+
+    public func invalidateCustomGeometrySourceTile(forSourceId sourceId: String, tileId: CanonicalTileID) throws {
+        let expected = styleManager.invalidateStyleCustomGeometrySourceTile(forSourceId: sourceId, tileId: tileId)
+
+        if expected.isError() {
+            throw TemporaryError.failure(expected.error as! String)
+        }
+    }
+
+    public func invalidateCustomGeometrySourceRegion(forSourceId sourceId: String, bounds: CoordinateBounds) throws {
+        let expected = styleManager.invalidateStyleCustomGeometrySourceRegion(forSourceId: sourceId, bounds: bounds)
+
+        if expected.isError() {
+            throw TemporaryError.failure(expected.error as! String)
+        }
     }
 }
 // swiftlint:enable force_cast

@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 10.0.0-beta.19 - May 6, 2021
+
 ### Breaking changes ⚠️
 
 - `camera(for:)` methods have moved from `BaseMapView` to `MapboxMap` ([#286](https://github.com/mapbox/mapbox-maps-ios/pull/286))
@@ -25,7 +27,7 @@ Mapbox welcomes participation and contributions from everyone.
 - `CompassDirectionFormatter` is now public. It provides a string representation of a `CLLocationDirection` and supports the same languages as in pre-v10 versions of the Maps SDK. ([#300](https://github.com/mapbox/mapbox-maps-ios/pull/300))- `OrnamentOptions` should now be accessed via `MapView.ornaments.options`. Updates can be applied directly to the `options` property. Previously the map's ornament options were updated via `MapConfig.ornaments`. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310)) 
 - The `LogoView` class is now private. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310))
 
-## 10.0.0-beta.18.1 - April 28, 2021  
+## 10.0.0-beta.18.1 - April 28, 2021
 
 ### Breaking changes ⚠️
 

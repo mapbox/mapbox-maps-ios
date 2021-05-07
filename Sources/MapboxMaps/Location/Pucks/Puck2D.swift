@@ -153,7 +153,9 @@ private extension Puck2D {
     func createPreciseLocationIndicatorLayer(location: Location) throws {
         guard let style = locationSupportableMapView?.style else { return }
 
-        try style.removeLayer(withId: "approximate-puck")
+        if style.layerExists(withId: "approximate-puck") {
+            try style.removeLayer(withId: "approximate-puck")
+        }
         // Call customizationHandler to allow developers to granularly modify the layer
 
         // Add images to sprite sheet
@@ -207,7 +209,9 @@ private extension Puck2D {
     func createApproximateLocationIndicatorLayer(location: Location) throws {
         guard let style = locationSupportableMapView?.style else { return }
         // TODO: Handle removal of precise indicator properly.
-        try style.removeLayer(withId: "puck")
+        if style.layerExists(withId: "puck") {
+            try style.removeLayer(withId: "puck")
+        }
 
         // Create Layer
         var layer = LocationIndicatorLayer(id: "approximate-puck")

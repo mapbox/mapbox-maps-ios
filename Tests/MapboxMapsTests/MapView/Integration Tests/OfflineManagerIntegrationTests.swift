@@ -25,8 +25,6 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
         let stylePackOptions = StylePackLoadOptions(glyphsRasterizationMode: .ideographsRasterizedLocally,
                                                     metadata: ["tag": "my-outdoors-style-pack"])!
 
-        _ = offlineManager.loadStylePack(for: .outdoors, loadOptions: stylePackOptions) { _ in } completion: { _ in }
-
         let outdoorsOptions = TilesetDescriptorOptions(styleURI: .outdoors,
                                                        zoomRange: 0...16,
                                                        stylePackOptions: stylePackOptions)
@@ -146,7 +144,9 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
 
     internal func testMapCanBeLoadedWithoutNetworkConnectivity() {
         /// Expectations to be fulfilled
-        let mapDidLoad = XCTestExpectation(description: "Map was loaded")
+        let mapIsUsingDatabase = XCTestExpectation(description: "Map is using database for resources")
+        mapIsUsingDatabase.assertForOverFulfill = false
+        let mapWasLoaded = XCTestExpectation(description: "Map was loaded")
 
         /// Perform the download
         TileStore.getInstance().loadTileRegion(forId: tileRegionId,
@@ -157,14 +157,21 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
         self.mapView!.on(.resourceRequest) { event in
             let eventElements = event.data as! [String: Any]
 
-            for element in eventElements {
-                if element.key == "data-source" && element.value as! String == "database" {
-                    mapDidLoad.fulfill()
-                }
+            let source = eventElements["data-source"] as! String
+
+            switch source {
+            case "network":
+                XCTFail("Loading is occurring from the network")
+            default:
+                mapIsUsingDatabase.fulfill()
             }
         }
 
-        let expectations = [mapDidLoad]
+        self.mapView!.on(.mapLoaded) { _ in
+            mapWasLoaded.fulfill()
+        }
+
+        let expectations = [mapIsUsingDatabase, mapWasLoaded]
         wait(for: expectations, timeout: 5.0)
 
         NetworkConnectivity.getInstance().setMapboxStackConnectedForConnected(true)

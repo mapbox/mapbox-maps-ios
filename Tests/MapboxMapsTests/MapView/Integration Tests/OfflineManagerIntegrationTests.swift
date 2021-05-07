@@ -1,6 +1,8 @@
 import XCTest
 @testable import MapboxMaps
 
+// swiftlint:disable force_cast empty_enum_arguments
+
 internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
 
     // MARK: Reusable test properties

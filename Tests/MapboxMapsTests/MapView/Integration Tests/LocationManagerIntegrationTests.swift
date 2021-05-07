@@ -3,8 +3,6 @@ import XCTest
 
 internal class LocationManagerIntegrationTestCase: MapViewIntegrationTestCase {
 
-    // MARK: - Test adding point annotation
-
     /**
         The purpose of this test is to ensure that a location manager can have a custom location provider
         The `locationManager` requires a `LocationConsumer` and therefore the full lifecycle

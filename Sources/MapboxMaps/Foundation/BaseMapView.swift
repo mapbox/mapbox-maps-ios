@@ -47,8 +47,6 @@ open class BaseMapView: UIView {
 
     /// List of animators currently alive
     internal var cameraAnimators: [CameraAnimator] {
-
-        offlineManager = OfflineManager(resourceOptions: ResourceOptions())
         return cameraAnimatorsSet.allObjects
     }
 

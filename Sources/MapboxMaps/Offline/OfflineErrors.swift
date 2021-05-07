@@ -6,7 +6,7 @@ internal protocol CoreErrorRepresentable: Error {
 }
 
 /// Describes the reason for a tile region download request failure.
-public enum TileRegionError: LocalizedError, CoreErrorRepresentable {
+public enum TileRegionError: LocalizedError, CoreErrorRepresentable, Equatable {
     typealias CoreErrorType = MapboxCommon.TileRegionError
 
     /// The operation was canceled.
@@ -57,7 +57,7 @@ public enum TileRegionError: LocalizedError, CoreErrorRepresentable {
 }
 
 /// Describes the reason for a style package download request failure.
-public enum StylePackError: LocalizedError, CoreErrorRepresentable {
+public enum StylePackError: LocalizedError, CoreErrorRepresentable, Equatable {
     typealias CoreErrorType = MapboxCoreMaps.StylePackError
 
     /// The operation was canceled.

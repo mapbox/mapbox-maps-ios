@@ -318,6 +318,8 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         button.setTitle("Show Downloads", for: .normal)
         progressContainer.isHidden = true
 
+        // It's important that the MapView use the same ResourceOptions as the
+        // OfflineManager
         let mapView = MapView(frame: mapViewContainer.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapViewContainer.addSubview(mapView)

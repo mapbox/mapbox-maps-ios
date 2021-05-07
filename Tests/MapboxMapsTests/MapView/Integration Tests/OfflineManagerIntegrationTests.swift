@@ -115,28 +115,28 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
         /// Perform the download
         TileStore.getInstance().loadTileRegion(forId: tileRegionId,
                                                loadOptions: tileRegionLoadOptions!) { _ in }
-        completion: { result in
-            switch result {
-            case .success(let region):
-                if region.requiredResourceCount == region.completedResourceCount {
-                    /// Waiting for the load tile to complete
-                    TileStore.getInstance().removeTileRegion(forId: self.tileRegionId)
+            completion: { result in
+                switch result {
+                case .success(let region):
+                    if region.requiredResourceCount == region.completedResourceCount {
+                        /// Waiting for the load tile to complete
+                        TileStore.getInstance().removeTileRegion(forId: self.tileRegionId)
 
-                    TileStore.getInstance().allTileRegions(completion: { result in
-                        switch result {
-                        case .success(let tileRegions):
-                            if tileRegions.count == 0 {
-                                downloadWasDeleted.fulfill()
+                        TileStore.getInstance().allTileRegions(completion: { result in
+                            switch result {
+                            case .success(let tileRegions):
+                                if tileRegions.count == 0 {
+                                    downloadWasDeleted.fulfill()
+                                }
+                            case .failure(let error):
+                                XCTFail("Error getting tile regions with error: \(error)")
                             }
-                        case .failure(let error):
-                            XCTFail("Error getting tile regions with error: \(error)")
-                        }
-                    })
+                        })
+                    }
+                case .failure(let error):
+                    XCTFail("Test failed with error: \(error)")
                 }
-            case .failure(let error):
-                XCTFail("Test failed with error: \(error)")
             }
-        }
 
         let expectations = [downloadWasDeleted]
         wait(for: expectations, timeout: 5.0)

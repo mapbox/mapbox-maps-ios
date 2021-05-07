@@ -140,7 +140,6 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
             }
         }
 
-
         let expectations = [downloadWasDeleted]
         wait(for: expectations, timeout: 5.0)
     }

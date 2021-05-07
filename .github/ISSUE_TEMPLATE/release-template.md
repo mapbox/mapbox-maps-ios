@@ -109,6 +109,10 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 - [ ] Have your release buddy approve and then merge your release branch in `mapbox-maps-ios`.
 ***When you squash & merge, make the commit message "Maps SDK Release {Version}"***
 
+## 🚀 Update Studio Preview
+- [ ] Navigate to your local clone of [Studio Preview](https://github.com/mapbox/studio-preview-ios/) and ensure that it is up-to-date.
+- [ ] Follow the steps outlined in the [Studio Preview iOS wiki](https://github.com/mapbox/studio-preview-ios/wiki/Release-Checklist).
+
 ## 📣 Announcements
 
 - [ ] Announce the release in #sdk-releases and in #maps-sdk to notify the team about the completed release! 🎉

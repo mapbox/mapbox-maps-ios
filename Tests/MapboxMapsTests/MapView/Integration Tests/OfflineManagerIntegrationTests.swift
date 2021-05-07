@@ -6,18 +6,12 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
     // MARK: Reusable test properties
 
     /// Offline manager properties
-    private let offlineManager = OfflineManager(resourceOptions: MapInitOptions().resourceOptions)
+    private lazy var resourceOptions = ResourceOptions(accessToken: accessToken)
+    private lazy var offlineManager = OfflineManager(resourceOptions: resourceOptions)
     private let tileRegionId = "myTileRegion"
 
     /// Tokyo coordinates
     private let tokyoCoord = CLLocationCoordinate2D(latitude: 35.682027, longitude: 139.769305)
-    private lazy var tokyoCoords: [CLLocationCoordinate2D] = {[
-        CLLocationCoordinate2D(latitude: tokyoCoord.latitude - 0.1, longitude: tokyoCoord.longitude - 0.1),
-        CLLocationCoordinate2D(latitude: tokyoCoord.latitude - 0.1, longitude: tokyoCoord.longitude + 0.1),
-        CLLocationCoordinate2D(latitude: tokyoCoord.latitude + 0.1, longitude: tokyoCoord.longitude + 0.1),
-        CLLocationCoordinate2D(latitude: tokyoCoord.latitude + 0.1, longitude: tokyoCoord.longitude - 0.1),
-        CLLocationCoordinate2D(latitude: tokyoCoord.latitude - 0.1, longitude: tokyoCoord.longitude - 0.1),
-    ]}()
 
     /// Tile Region Options
     internal var tileRegionLoadOptions: TileRegionLoadOptions?
@@ -59,6 +53,7 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
     internal func testProgressAndCompletionBlocksBaseCase() {
         /// Expectations to be fulfilled
         let downloadInProgress = XCTestExpectation(description: "Downloading offline tiles in progress")
+        downloadInProgress.assertForOverFulfill = false
         let completionBlockReached = XCTestExpectation(description: "Checks that completion block closure has been reached")
 
         /// Perform the download
@@ -66,12 +61,15 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
                                                loadOptions: tileRegionLoadOptions!) { _ in
             DispatchQueue.main.async {
                 downloadInProgress.fulfill()
-                downloadInProgress.assertForOverFulfill = false
             }
         } completion: { result in
             switch result {
             case .success(let region):
-                completionBlockReached.fulfill()
+                if region.requiredResourceCount == region.completedResourceCount {
+                    completionBlockReached.fulfill()
+                } else {
+                    XCTFail("Not all items were loaded")
+                }
             case .failure(let error):
                 XCTFail("Download failed with error: \(error)")
             }
@@ -84,23 +82,27 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
     internal func testProgressCanBeCancelled() {
 
         /// Expectations to be fulfilled
-        let downloadInProgress = XCTestExpectation(description: "Downloading offline tiles in progress")
         let downloadWasCancelled = XCTestExpectation(description: "Checks a cancel function was reached and that the download was canceled")
 
         /// Perform the download
         let download = TileStore.getInstance().loadTileRegion(forId: tileRegionId,
-                                                              loadOptions: tileRegionLoadOptions!) { _ in
-            DispatchQueue.main.async {
-                downloadInProgress.fulfill()
+                                                              loadOptions: tileRegionLoadOptions!) { _ in }
+        completion: { result in
+            switch result {
+            case .success(_):
+                XCTFail("Result reached success block, therefore download was not canceled")
+            case .failure(let error):
+                if error.localizedDescription == "Load was canceled" {
+                    downloadWasCancelled.fulfill()
+                } else {
+                    XCTFail("Download was not canceled")
+                }
             }
-        } completion: { _ in }
-
-        /// This guarantees that after 3 seconds of a download in progress, we will force a cancel
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-            self.cancelDownload(download: download, expectation: downloadWasCancelled)
         }
 
-        let expectations = [downloadInProgress, downloadWasCancelled]
+        download.cancel()
+
+        let expectations = [downloadWasCancelled]
         wait(for: expectations, timeout: 5.0)
     }
 
@@ -113,24 +115,27 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
         TileStore.getInstance().loadTileRegion(forId: tileRegionId,
                                                loadOptions: tileRegionLoadOptions!) { _ in } completion: { _ in }
 
-        TileStore.getInstance().removeTileRegion(forId: self.tileRegionId)
+        /// Waiting for the load tile to complete
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            TileStore.getInstance().removeTileRegion(forId: self.tileRegionId)
 
-        TileStore.getInstance().allTileRegions(completion: { result in
-            switch result {
-            case .success(let tileRegions):
-                if tileRegions.count == 0 {
-                    downloadWasDeleted.fulfill()
+            TileStore.getInstance().allTileRegions(completion: { result in
+                switch result {
+                case .success(let tileRegions):
+                    if tileRegions.count == 0 {
+                        downloadWasDeleted.fulfill()
+                    }
+                case .failure(let error):
+                    XCTFail("Error getting tile regions with error: \(error)")
                 }
-            case .failure(let error):
-                XCTFail("Error getting tile regions with error: \(error)")
-            }
-        })
+            })
+        }
 
         let expectations = [downloadWasDeleted]
         wait(for: expectations, timeout: 5.0)
     }
 
-    internal func testMapCanBeLoadedWithNetworkConnectivity() {
+    internal func testMapCanBeLoadedWithoutNetworkConnectivity() {
         /// Expectations to be fulfilled
         let mapDidLoad = XCTestExpectation(description: "Map was loaded")
 
@@ -140,19 +145,19 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
 
         NetworkConnectivity.getInstance().setMapboxStackConnectedForConnected(false)
 
-        self.mapView!.on(.mapLoaded) { _ in
-            mapDidLoad.fulfill()
+        self.mapView!.on(.resourceRequest) { event in
+            let eventElements = event.data as! [String: Any]
+
+            for element in eventElements {
+                if element.key == "data-source" && element.value as! String == "database" {
+                    mapDidLoad.fulfill()
+                }
+            }
         }
 
         let expectations = [mapDidLoad]
         wait(for: expectations, timeout: 5.0)
 
         NetworkConnectivity.getInstance().setMapboxStackConnectedForConnected(true)
-    }
-
-    // MARK: Private helper functions
-    private func cancelDownload(download: Cancelable, expectation: XCTestExpectation) {
-        download.cancel()
-        expectation.fulfill()
     }
 }

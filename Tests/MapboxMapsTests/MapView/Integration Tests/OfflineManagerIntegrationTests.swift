@@ -18,8 +18,8 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
     /// Tile Region Options
     internal var tileRegionLoadOptions: TileRegionLoadOptions?
 
-    override func setUp() {
-        super.setUp()
+    override func setUpWithError() {
+        super.setUpWithError()
 
         /// Create an offline region with tiles using the "outdoors" style
         let stylePackOptions = StylePackLoadOptions(glyphsRasterizationMode: .ideographsRasterizedLocally,

@@ -2,6 +2,8 @@ import XCTest
 import MapboxMaps
 import Turf
 
+// swiftlint:disable force_cast file_length orphaned_doc_comment
+
 class MigrationGuideIntegrationTests: IntegrationTestCase {
 
     private var testRect = CGRect(origin: .zero, size: CGSize(width: 100, height: 100))
@@ -203,9 +205,9 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                 var urlRequest = URLRequest(url: URL(string: request.url)!)
 
                 let methodMap: [HttpMethod: String] = [
-                    .get : "GET",
-                    .head : "HEAD",
-                    .post : "POST"
+                    .get: "GET",
+                    .head: "HEAD",
+                    .post: "POST"
                 ]
 
                 urlRequest.httpMethod          = methodMap[request.method]!
@@ -222,8 +224,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                         // Map NSURLError to HttpRequestErrorType
                         let requestError = HttpRequestError(type: .otherError, message: error.localizedDescription)
                         expected = MBXExpected(error: requestError)
-                    }
-                    else if let response = response as? HTTPURLResponse,
+                    } else if let response = response as? HTTPURLResponse,
                             let data = data {
 
                         // Keys are expected to be lowercase
@@ -239,8 +240,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
                         let responseData = HttpResponseData(headers: headers, code: Int64(response.statusCode), data: data)
                         expected = MBXExpected(value: responseData)
-                    }
-                    else {
+                    } else {
                         // Error
                         let requestError = HttpRequestError(type: .otherError, message: "Invalid response")
                         expected = MBXExpected(error: requestError)

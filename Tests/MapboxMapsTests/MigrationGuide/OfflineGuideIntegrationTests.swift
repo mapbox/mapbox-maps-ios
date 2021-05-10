@@ -237,7 +237,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
             for region in tileRegions {
                 print("region = \(region.id)")
             }
-            XCTAssert(!tileRegions.isEmpty)
+            XCTAssert(tileRegions.isEmpty)
             expectation.fulfill()
         }
 

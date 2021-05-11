@@ -77,7 +77,6 @@ final class MapEventHandlerTests: XCTestCase {
         XCTAssertNil(cancelable)
     }
 
-    //swiftlint:disable nesting
     func testRetainCycle() {
 
         class StrongHandlerContainer {
@@ -159,5 +158,4 @@ final class MapEventHandlerTests: XCTestCase {
         XCTAssertNil(weakContainer)
         XCTAssertNil(cancelable)
     }
-    //swiftlint:enable nesting
 }

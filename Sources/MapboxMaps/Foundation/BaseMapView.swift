@@ -17,6 +17,19 @@ open class BaseMapView: UIView {
         }
     }
 
+    /// Offline Manager initialized with the same ResourceOptions as the map view
+    ///
+    /// - Important: If you use an `OfflineManager` in conjunction with a `MapView`
+    /// they must use the same resource options. You can use this convenience
+    /// function to ensure this.
+    public func makeOfflineManager() -> OfflineManager {
+        guard let resourceOptions = resourceOptions else {
+            fatalError("resourceOptions not yet initialized")
+        }
+
+        return OfflineManager(resourceOptions: resourceOptions)
+    }
+
     private let mapClient = DelegatingMapClient()
     private let observer = DelegatingObserver()
 
@@ -24,7 +37,7 @@ open class BaseMapView: UIView {
     internal private(set) var metalView: MTKView?
 
     /// Resource options for this map view
-    internal private(set) var resourceOptions: ResourceOptions?
+    internal private(set) var resourceOptions: ResourceOptions!
 
     /// List of completion blocks that need to be completed by the displayLink
     internal var pendingAnimatorCompletionBlocks: [PendingAnimationCompletion] = []

@@ -15,6 +15,14 @@ public final class MapboxMap {
         }
     }
 
+    private var eventHandlers = WeakSet<MapEventHandler>()
+
+    deinit {
+        eventHandlers.allObjects.forEach {
+            $0.cancel()
+        }
+    }
+
     internal init(mapClient: MapClient, mapInitOptions: MapInitOptions) {
         __map = Map(
             client: mapClient,
@@ -29,6 +37,17 @@ public final class MapboxMap {
 
     internal func updateCamera(with cameraOptions: CameraOptions) {
         __map.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
+    }
+
+    // MARK: - Event handling
+
+    @discardableResult
+    public func on(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Bool) -> Cancelable {
+        let handler = MapEventHandler(for: [eventType.rawValue],
+                                      observable: self,
+                                      handler: handler)
+        eventHandlers.add(handler)
+        return handler
     }
 
     // MARK: - Camera Fitting
@@ -167,5 +186,19 @@ public final class MapboxMap {
         rect = rect.extend(from: nePoint)
 
         return rect
+    }
+}
+
+extension MapboxMap: ObservableProtocol {
+    public func subscribe(_ observer: Observer, events: [String]) {
+        __map.subscribe(for: observer, events: events)
+    }
+
+    public func unsubscribe(_ observer: Observer, events: [String] = []) {
+        if events.isEmpty {
+            __map.unsubscribe(for: observer)
+        } else {
+            __map.unsubscribe(for: observer, events: events)
+        }
     }
 }

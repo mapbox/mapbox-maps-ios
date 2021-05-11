@@ -33,6 +33,7 @@ public class SnapshotterCoreGraphicsExample: UIViewController, ExampleProtocol {
 
         snapshotter.on(.styleLoaded) { [weak self] _ in
             self?.startSnapshot()
+            return true
         }
     }
 

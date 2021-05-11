@@ -32,13 +32,14 @@ public class DebugViewController: UIViewController {
          `-[MGLMapViewDelegate mapView:didFinishLoadingStyle:]` in SDK versions
          prior to v10.
          */
-        mapView.on(.styleDataLoaded) { (event) in
+        mapView.mapboxMap.on(.styleDataLoaded) { (event) -> Bool in
             guard let data = event.data as? [String: Any],
                   let type = data["type"] else {
-                return
+                return false
             }
 
             print("The map has finished loading style data of type = \(type)")
+            return false
         }
 
         /**
@@ -55,8 +56,9 @@ public class DebugViewController: UIViewController {
          Changes to sources or layers of the current style do not cause this
          event to be emitted.
          */
-        mapView.on(.styleLoaded) { (event) in
+        mapView.mapboxMap.on(.styleLoaded) { (event) in
             print("The map has finished loading style ... Event = \(event)")
+            return true
         }
 
         /**
@@ -68,8 +70,9 @@ public class DebugViewController: UIViewController {
          map and ensures that these layers would only be shown after the map has
          been fully rendered.
          */
-        mapView.on(.mapLoaded) { (event) in
+        mapView.mapboxMap.on(.mapLoaded) { (event) in
             print("The map has finished loading... Event = \(event)")
+            return true
         }
 
         /**
@@ -80,14 +83,15 @@ public class DebugViewController: UIViewController {
          You can use the associated error message to notify the user that map
          data is unavailable.
          */
-        mapView.on(.mapLoadingError) { (event) in
+        mapView.mapboxMap.on(.mapLoadingError) { (event) in
             guard let data = event.data as? [String: Any],
                   let type = data["type"],
                   let message = data["message"] else {
-                return
+                return true
             }
 
             print("The map failed to load.. \(type) = \(message)")
+            return true
         }
     }
 }

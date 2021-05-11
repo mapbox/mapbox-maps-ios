@@ -15,40 +15,45 @@ public class Snapshotter {
     /// rendering a snapshot.
     internal var mapSnapshotter: MapSnapshotter
 
-    private let observer = DelegatingObserver()
-
-    /// Map of event types to subscribed event handlers
-    private var eventHandlers: [String: [(MapboxCoreMaps.Event) -> Void]] = [:]
-
     /// A `style` object that can be manipulated to set different styles for a snapshot
     public let style: Style
 
     private let options: MapSnapshotOptions
 
+    private var eventHandlers = WeakSet<MapEventHandler>()
+
+    deinit {
+        eventHandlers.allObjects.forEach {
+            $0.cancel()
+        }
+    }
+
     /// Initialize a `Snapshotter` instance
     /// - Parameters:
-    ///   - observer: Observer responsible for handling lifecycle events in a snapshot
     ///   - options: Options describing an intended snapshot
     public init(options: MapSnapshotOptions) {
         self.options = options
         mapSnapshotter = MapSnapshotter(options: options)
         style = Style(with: mapSnapshotter)
-        observer.delegate = self
-        mapSnapshotter.subscribe(for: observer, events: [
-            MapEvents.styleLoaded,
-            MapEvents.styleImageMissing,
-            MapEvents.mapLoadingError
-        ])
     }
 
     /// Reacting to snapshot events.
+    ///
     /// - Parameters:
     ///   - eventType: The event type to react to.
-    ///   - handler: The block of code to execute when the event occurs.
-    public func on(_ eventType: MapEvents.EventKind, handler: @escaping (MapboxCoreMaps.Event) -> Void) {
-        var handlers: [(MapboxCoreMaps.Event) -> Void] = eventHandlers[eventType.rawValue] ?? []
-        handlers.append(handler)
-        eventHandlers[eventType.rawValue] = handlers
+    ///   - handler: The block of code to execute when the event occurs. Return
+    ///     `true` to indicate that you have handled the event(s) and no longer
+    ///     wish to receive them.
+    ///
+    /// - Returns: A `Cancelable` object that you can use to stop listening for
+    ///     events, in the case your closure does not return `true`.
+    @discardableResult
+    public func on(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Bool) -> Cancelable {
+        let handler = MapEventHandler(for: [eventType.rawValue],
+                                      observable: self,
+                                      handler: handler)
+        eventHandlers.add(handler)
+        return handler
     }
 
     /// The size of the snapshot
@@ -218,12 +223,16 @@ public class Snapshotter {
     }
 }
 
-extension Snapshotter: DelegatingObserverDelegate {
-    /// Notify correct handler
-    internal func notify(for event: MapboxCoreMaps.Event) {
-        let handlers = eventHandlers[event.type]
-        handlers?.forEach { (handler) in
-            handler(event)
+extension Snapshotter: ObservableProtocol {
+    public func subscribe(_ observer: Observer, events: [String]) {
+        mapSnapshotter.subscribe(for: observer, events: events)
+    }
+
+    public func unsubscribe(_ observer: Observer, events: [String] = []) {
+        if events.isEmpty {
+            mapSnapshotter.unsubscribe(for: observer)
+        } else {
+            mapSnapshotter.unsubscribe(for: observer, events: events)
         }
     }
 }

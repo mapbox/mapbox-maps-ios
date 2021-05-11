@@ -296,12 +296,13 @@ class ViewController: UIViewController {
             guard let snapshotter = self?.snapshotter else {
                 assertionFailure("Snapshotter does not exist")
                 completion()
-                return
+                return true
             }
 
             snapshotter.start(overlayHandler: nil) { _ in
                 completion()
             }
+            return true
         }
 
         self.snapshotter = snapshotter

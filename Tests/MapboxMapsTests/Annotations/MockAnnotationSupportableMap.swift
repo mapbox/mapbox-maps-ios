@@ -4,7 +4,6 @@ import Turf
 
 //swiftlint:disable explicit_acl explicit_top_level_acl
 final class MockAnnotationSupportableMap: UIView, AnnotationSupportableMap {
-
     func visibleFeatures(in rect: CGRect,
                          styleLayers: Set<String>?,
                          filter: Expression?,
@@ -13,13 +12,21 @@ final class MockAnnotationSupportableMap: UIView, AnnotationSupportableMap {
         let queriedFeature = QueriedFeature(feature: feature, source: "SourceID", sourceLayer: nil, state: true)
         completion(.success([queriedFeature]))
     }
+}
+
+final class MockCancelable: Cancelable {
+    func cancel() {}
+}
+
+final class MockMapEventsObservable: MapEventsObservable {
 
     struct OnParameters {
         var eventType: MapEvents.EventKind
-        var handler: (MapboxCoreMaps.Event) -> Void
+        var handler: (MapboxCoreMaps.Event) -> Bool
     }
-    let onStub = Stub<OnParameters, Void>()
-    func on(_ eventType: MapEvents.EventKind, handler: @escaping (MapboxCoreMaps.Event) -> Void) {
+
+    let onStub = Stub<OnParameters, Cancelable>(defaultReturnValue: MockCancelable())
+    func on(_ eventType: MapEvents.EventKind, handler: @escaping (MapboxCoreMaps.Event) -> Bool) -> Cancelable {
         return onStub.call(with: OnParameters(eventType: eventType, handler: handler))
     }
 }

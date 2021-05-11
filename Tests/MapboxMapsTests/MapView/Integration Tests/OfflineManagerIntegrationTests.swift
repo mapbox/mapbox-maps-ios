@@ -142,7 +142,7 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
         wait(for: expectations, timeout: 5.0)
     }
 
-    internal func testMapCanBeLoadedWithoutNetworkConnectivity() {
+    internal func testMapCanBeLoadedWithoutNetworkConnectivity() throws {
         /// Expectations to be fulfilled
         let mapIsUsingDatabase = XCTestExpectation(description: "Map is using database for resources")
         mapIsUsingDatabase.assertForOverFulfill = false
@@ -154,7 +154,9 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
 
         NetworkConnectivity.getInstance().setMapboxStackConnectedForConnected(false)
 
-        self.mapView!.on(.resourceRequest) { event in
+        let mapboxMap = try XCTUnwrap(mapView?.mapboxMap)
+
+        mapboxMap.on(.resourceRequest) { event in
             let eventElements = event.data as! [String: Any]
 
             let source = eventElements["data-source"] as! String
@@ -165,10 +167,12 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
             default:
                 mapIsUsingDatabase.fulfill()
             }
+            return false
         }
 
-        self.mapView!.on(.mapLoaded) { _ in
+        mapboxMap.on(.mapLoaded) { _ in
             mapWasLoaded.fulfill()
+            return true
         }
 
         let expectations = [mapIsUsingDatabase, mapWasLoaded]

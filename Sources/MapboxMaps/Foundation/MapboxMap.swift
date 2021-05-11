@@ -39,17 +39,6 @@ public final class MapboxMap {
         __map.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
     }
 
-    // MARK: - Event handling
-
-    @discardableResult
-    public func on(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Bool) -> Cancelable {
-        let handler = MapEventHandler(for: [eventType.rawValue],
-                                      observable: self,
-                                      handler: handler)
-        eventHandlers.add(handler)
-        return handler
-    }
-
     // MARK: - Camera Fitting
 
     /// Calculates a `CameraOptions` to fit a `CoordinateBounds`
@@ -189,6 +178,8 @@ public final class MapboxMap {
     }
 }
 
+// MARK: - ObservableProtocol
+
 extension MapboxMap: ObservableProtocol {
     public func subscribe(_ observer: Observer, events: [String]) {
         __map.subscribe(for: observer, events: events)
@@ -202,3 +193,18 @@ extension MapboxMap: ObservableProtocol {
         }
     }
 }
+
+// MARK: - Map Event handling
+
+extension MapboxMap: MapEventsObservable {
+    @discardableResult
+    public func on(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Bool) -> Cancelable {
+        let handler = MapEventHandler(for: [eventType.rawValue],
+                                      observable: self,
+                                      handler: handler)
+        eventHandlers.add(handler)
+        return handler
+    }
+}
+
+

@@ -13,9 +13,9 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.on(.styleLoaded) { [weak self] _ in
-            guard let self = self else { return }
+        mapView.mapboxMap.on(.styleLoaded) { _ in
             self.setupExample()
+            return true
         }
     }
 

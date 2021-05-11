@@ -1,5 +1,20 @@
 import Foundation
 
+public protocol MapEventsObservable: AnyObject {
+    /// Listen to Map events.
+    ///
+    /// - Parameters:
+    ///   - eventType: The event type to listen to.
+    ///   - handler: The block of code to execute when the event occurs. Return
+    ///     `true` to indicate that you have handled the event(s) and no longer
+    ///     wish to receive them.
+    ///
+    /// - Returns: A `Cancelable` object that you can use to stop listening for
+    ///     events, in the case your closure does not return `true`.
+    @discardableResult
+    func on(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Bool) -> Cancelable
+}
+
 internal final class MapEventHandler: NSObject, Observer, Cancelable {
     // Events to match
     private let events: [String]

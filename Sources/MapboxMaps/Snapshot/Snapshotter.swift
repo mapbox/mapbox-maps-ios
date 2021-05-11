@@ -37,25 +37,6 @@ public class Snapshotter {
         style = Style(with: mapSnapshotter)
     }
 
-    /// Reacting to snapshot events.
-    ///
-    /// - Parameters:
-    ///   - eventType: The event type to react to.
-    ///   - handler: The block of code to execute when the event occurs. Return
-    ///     `true` to indicate that you have handled the event(s) and no longer
-    ///     wish to receive them.
-    ///
-    /// - Returns: A `Cancelable` object that you can use to stop listening for
-    ///     events, in the case your closure does not return `true`.
-    @discardableResult
-    public func on(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Bool) -> Cancelable {
-        let handler = MapEventHandler(for: [eventType.rawValue],
-                                      observable: self,
-                                      handler: handler)
-        eventHandlers.add(handler)
-        return handler
-    }
-
     /// The size of the snapshot
     public var snapshotSize: CGSize {
         get {
@@ -234,5 +215,26 @@ extension Snapshotter: ObservableProtocol {
         } else {
             mapSnapshotter.unsubscribe(for: observer, events: events)
         }
+    }
+}
+
+extension Snapshotter: MapEventsObservable {
+    /// Reacting to snapshot events.
+    ///
+    /// - Parameters:
+    ///   - eventType: The event type to react to.
+    ///   - handler: The block of code to execute when the event occurs. Return
+    ///     `true` to indicate that you have handled the event(s) and no longer
+    ///     wish to receive them.
+    ///
+    /// - Returns: A `Cancelable` object that you can use to stop listening for
+    ///     events, in the case your closure does not return `true`.
+    @discardableResult
+    public func on(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Bool) -> Cancelable {
+        let handler = MapEventHandler(for: [eventType.rawValue],
+                                      observable: self,
+                                      handler: handler)
+        eventHandlers.add(handler)
+        return handler
     }
 }

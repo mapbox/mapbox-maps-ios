@@ -96,8 +96,9 @@ class ViewController: UIViewController {
         super.viewDidAppear(animated)
 
         // Set initial conditions
-        mapView.on(.styleLoaded) { _ in
+        mapView.mapboxMap.on(.styleLoaded) { _ in
             self.flyToNextCoordinate()
+            return true
         }
 
         mapView.style.uri = styles[styleStep].0

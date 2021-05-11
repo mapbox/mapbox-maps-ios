@@ -60,8 +60,9 @@ extension MapView {
         guard let validResourceOptions = resourceOptions else { return }
         eventsListener = EventsManager(accessToken: validResourceOptions.accessToken)
 
-        on(.mapLoaded) { [weak self] _ in
+        mapboxMap.on(.mapLoaded) { [weak self] _ in
             self?.eventsListener?.push(event: .map(event: .loaded))
+            return false
         }
     }
 }

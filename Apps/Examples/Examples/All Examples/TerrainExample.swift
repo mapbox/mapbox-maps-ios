@@ -23,8 +23,9 @@ public class TerrainExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        mapView.on(.styleLoaded) { [weak self] _ in
-            self?.addTerrain()
+        mapView.mapboxMap.on(.styleLoaded) { _ in
+            self.addTerrain()
+            return true
         }
     }
 

@@ -15,14 +15,16 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.on(.mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.on(.mapLoaded) { _ in
 
-            self?.setupExample()
+            self.setupExample()
 
             // Set the center coordinate and zoom level.
             let centerCoordinate = CLLocationCoordinate2D(latitude: 38.875, longitude: -77.035)
             let camera = CameraOptions(center: centerCoordinate, zoom: 12.0)
-            self?.mapView.camera.setCamera(to: camera)
+            self.mapView.camera.setCamera(to: camera)
+
+            return true
         }
     }
 

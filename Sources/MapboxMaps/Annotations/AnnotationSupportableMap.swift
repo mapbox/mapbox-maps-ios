@@ -15,11 +15,9 @@ internal protocol AnnotationSupportableMap: UIView {
                          styleLayers: Set<String>?,
                          filter: Expression?,
                          completion: @escaping (Result<[QueriedFeature], BaseMapView.QueryRenderedFeaturesError>) -> Void)
-    func on(_ eventType: MapEvents.EventKind, handler: @escaping (MapboxCoreMaps.Event) -> Void)
 }
 
 extension BaseMapView: AnnotationSupportableMap {
-
     public var observable: Observable? {
         return mapboxMap.__map
     }

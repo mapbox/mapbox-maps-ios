@@ -23,9 +23,9 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the view controller to receive information about map events.
-        mapView.on(.mapLoaded) { [weak self] _ in
-            guard let self = self else { return }
+        mapView.mapboxMap.on(.mapLoaded) { _ in
             self.setupExample()
+            return true
         }
 
         // Add a button to change the position of layer

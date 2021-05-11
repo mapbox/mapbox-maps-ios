@@ -18,11 +18,10 @@ public class FlyToExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the view controller to receive information about map events.
-        mapView.on(.mapLoaded) { [weak self] _ in
-            guard let self = self else { return }
+        mapView.mapboxMap.on(.mapLoaded) { _ in
             self.setupExample()
+            return true
         }
-
     }
 
     // Wait for the style to load before adding data to it.

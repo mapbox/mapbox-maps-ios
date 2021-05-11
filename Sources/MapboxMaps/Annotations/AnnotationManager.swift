@@ -81,6 +81,12 @@ public class AnnotationManager {
     internal weak var mapView: AnnotationSupportableMap?
 
     /**
+     The map object to handle listening to map events
+     */
+    internal weak var mapEventsObservable: MapEventsObservable?
+
+
+    /**
      The source layer used by the annotation manager.
      */
     internal var annotationSource: GeoJSONSource?
@@ -139,11 +145,13 @@ public class AnnotationManager {
      - Parameter interactionDelegate: Delegate responsible for handling annotation interaction events
      */
     internal init(for mapView: AnnotationSupportableMap,
+                  mapEventsObservable: MapEventsObservable,
                   with styleDelegate: AnnotationStyleDelegate,
                   options: AnnotationOptions,
                   interactionDelegate: AnnotationInteractionDelegate? = nil) {
 
         self.mapView = mapView
+        self.mapEventsObservable = mapEventsObservable
         self.styleDelegate = styleDelegate
         self.interactionDelegate = interactionDelegate
         self.annotationOptions = options
@@ -152,14 +160,18 @@ public class AnnotationManager {
         userInteractionEnabled = true
 
         configureTapGesture()
-        mapView.on(.mapLoaded) { [weak self] _ in
+        mapEventsObservable.on(.mapLoaded) { [weak self] (event: Event) -> Bool in
             // Reset the annotation source and default layers.
-            guard let self = self else { return }
+            guard let self = self else { return true }
             self.annotations = [:]
             self.annotationSource = nil
             self.symbolLayer = nil
             self.lineLayer = nil
             self.fillLayer = nil
+
+            // We want to reset if the style changes, so we need to listen to
+            // multiple load events
+            return false
         }
     }
 

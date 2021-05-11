@@ -8,6 +8,7 @@ import Turf
 final class AnnotationManagerTests: XCTestCase {
 
     var annotationSupportableMap: MockAnnotationSupportableMap!
+    var annotationMapEventsObservable: MockMapEventsObservable!
     var annotationSupportableStyle: MockAnnotationStyleDelegate!
     var annotationManager: AnnotationManager!
 
@@ -17,7 +18,9 @@ final class AnnotationManagerTests: XCTestCase {
         // Given
         annotationSupportableMap = MockAnnotationSupportableMap()
         annotationSupportableStyle = MockAnnotationStyleDelegate()
+        annotationMapEventsObservable = MockMapEventsObservable()
         annotationManager = AnnotationManager(for: annotationSupportableMap,
+                                              mapEventsObservable: annotationMapEventsObservable,
                                               with: annotationSupportableStyle,
                                               options: AnnotationOptions())
     }
@@ -52,8 +55,8 @@ final class AnnotationManagerTests: XCTestCase {
         XCTAssertNil(annotationManager.symbolLayer)
         XCTAssertNil(annotationManager.lineLayer)
         XCTAssertNil(annotationManager.fillLayer)
-        XCTAssertEqual(annotationSupportableMap.onStub.invocations.count, 1)
-        XCTAssertEqual(annotationSupportableMap.onStub.parameters.first?.eventType, .mapLoaded)
+        XCTAssertEqual(annotationMapEventsObservable.onStub.invocations.count, 1)
+        XCTAssertEqual(annotationMapEventsObservable.onStub.parameters.first?.eventType, .mapLoaded)
     }
 
     func testLayerIdentifiers() {

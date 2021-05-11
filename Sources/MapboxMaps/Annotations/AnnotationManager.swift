@@ -85,7 +85,6 @@ public class AnnotationManager {
      */
     internal weak var mapEventsObservable: MapEventsObservable?
 
-
     /**
      The source layer used by the annotation manager.
      */
@@ -160,7 +159,7 @@ public class AnnotationManager {
         userInteractionEnabled = true
 
         configureTapGesture()
-        mapEventsObservable.on(.mapLoaded) { [weak self] (event: Event) -> Bool in
+        mapEventsObservable.on(.mapLoaded) { [weak self] _ -> Bool in
             // Reset the annotation source and default layers.
             guard let self = self else { return true }
             self.annotations = [:]

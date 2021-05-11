@@ -206,5 +206,3 @@ extension MapboxMap: MapEventsObservable {
         return handler
     }
 }
-
-

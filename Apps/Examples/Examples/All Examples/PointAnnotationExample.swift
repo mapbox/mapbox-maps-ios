@@ -30,7 +30,7 @@ public class PointAnnotationExample: UIViewController, ExampleProtocol {
 
             // The below line is used for internal testing purposes only.
             self.finish()
-            
+
             return true
         }
     }

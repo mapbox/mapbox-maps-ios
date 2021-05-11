@@ -21,11 +21,10 @@ public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProt
         view.addSubview(mapView)
 
         // Allows the view controller to receive information about map events.
-        mapView.mapboxMap.on(.mapLoaded) { _ in
+        mapView.mapboxMap.onNext(.mapLoaded) { _ in
             self.addPointAnnotation()
             // The below line is used for internal testing purposes only.
             self.finish()
-            return true
         }
 
     }

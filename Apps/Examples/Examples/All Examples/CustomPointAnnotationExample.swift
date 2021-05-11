@@ -20,9 +20,9 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the delegate to receive information about map events.
-        mapView.mapboxMap.on(.mapLoaded) { [weak self] _ in
+        mapView.mapboxMap.onNext(.mapLoaded) { [weak self] _ in
 
-            guard let self = self else { return true }
+            guard let self = self else { return }
 
             /**
              Create the point annotation, using a custom image to mark the location specified.
@@ -37,7 +37,6 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
 
             // The below line is used for internal testing purposes only.
             self.finish()
-            return true
         }
     }
 }

@@ -18,7 +18,7 @@ public class LineAnnotationExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the delegate to receive information about map events.
-        mapView.mapboxMap.on(.mapLoaded) { _ in
+        mapView.mapboxMap.onNext(.mapLoaded) { _ in
 
             // Line from New York City, NY to Washington, D.C.
             let lineCoordinates = [
@@ -34,8 +34,6 @@ public class LineAnnotationExample: UIViewController, ExampleProtocol {
 
             // The below line is used for internal testing purposes only.
             self.finish()
-
-            return true
         }
     }
 }

@@ -54,9 +54,8 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
         let snapshotterCameraOptions = CameraOptions(cameraState: mapView.cameraState)
         snapshotter.setCamera(to: snapshotterCameraOptions)
 
-        snapshotter.on(.styleLoaded) { [weak self] _ in
+        snapshotter.onNext(.styleLoaded) { [weak self] _ in
             self?.startSnapshot()
-            return true
         }
     }
 

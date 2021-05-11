@@ -17,9 +17,8 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allow the view controller to receive information about map events.
-        mapView.mapboxMap.on(.mapLoaded) { _ in
+        mapView.mapboxMap.onNext(.mapLoaded) { _ in
             self.drawLineLayer()
-            return true
         }
     }
 

@@ -19,9 +19,8 @@ public class LayerBelowExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the view controller to receive information about map events
-        mapView.mapboxMap.on(.mapLoaded) { _ in
+        mapView.mapboxMap.onNext(.mapLoaded) { _ in
             self.setupExample()
-            return true
         }
     }
 

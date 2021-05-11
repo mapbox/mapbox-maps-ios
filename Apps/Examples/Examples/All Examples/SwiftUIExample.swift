@@ -124,11 +124,11 @@ internal class SwiftUIMapViewCoordinator {
         didSet {
             /// The coordinator observes the `.cameraChanged` event, and
             /// whenever the camera changes, it updates the camera binding
-            mapView?.mapboxMap.on(.cameraChanged, handler: notify(for:))
+            mapView?.mapboxMap.onNext(.cameraChanged, handler: notify(for:))
 
             /// The coordinator also observes the `.mapLoaded` event
             /// so that it can sync annotations whenever the map reloads
-            mapView?.mapboxMap.on(.mapLoaded, handler: notify(for:))
+            mapView?.mapboxMap.onNext(.mapLoaded, handler: notify(for:))
         }
     }
 
@@ -136,10 +136,10 @@ internal class SwiftUIMapViewCoordinator {
         _camera = camera
     }
 
-    func notify(for event: Event) -> Bool {
+    func notify(for event: Event) {
         guard let typedEvent = MapEvents.EventKind(rawValue: event.type),
               let mapView = mapView else {
-            return true
+            return
         }
         switch typedEvent {
         /// As the camera changes, we update the binding. SwiftUI
@@ -157,7 +157,6 @@ internal class SwiftUIMapViewCoordinator {
         default:
             break
         }
-        return true
     }
 
     /// Only sync annotations once the map's initial load is complete

@@ -29,9 +29,8 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-        mapView.mapboxMap.on(.styleLoaded) { _ in
+        mapView.mapboxMap.onNext(.styleLoaded) { _ in
             self.addModelAndTerrain()
-            return true
         }
     }
 

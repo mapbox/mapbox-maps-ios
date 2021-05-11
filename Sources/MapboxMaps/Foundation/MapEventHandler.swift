@@ -1,18 +1,36 @@
 import Foundation
 
 public protocol MapEventsObservable: AnyObject {
-    /// Listen to Map events.
+    /// Listen to multiple occurrences of a Map event.
     ///
     /// - Parameters:
     ///   - eventType: The event type to listen to.
-    ///   - handler: The block of code to execute when the event occurs. Return
-    ///     `true` to indicate that you have handled the event(s) and no longer
-    ///     wish to receive them.
+    ///   - handler: The closure to execute when the event occurs.
     ///
     /// - Returns: A `Cancelable` object that you can use to stop listening for
-    ///     events, in the case your closure does not return `true`.
+    ///     events. This is especially important if you have a retain cycle in
+    ///     the handler.
     @discardableResult
-    func on(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Bool) -> Cancelable
+    func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable
+
+    /// Listen to a single occurrence of a Map event.
+    ///
+    /// This will observe the next (and only the next) event of the specified
+    /// type. After observation, the underlying subscriber will unsubscribe from
+    /// the map or snapshotter.
+    ///
+    /// If you need to unsubscribe before the event fires, call `cancel()` on
+    /// the returned `Cancelable` object.
+    ///
+    /// - Parameters:
+    ///   - eventType: The event type to listen to.
+    ///   - handler: The closure to execute when the event occurs.
+    ///
+    /// - Returns: A `Cancelable` object that you can use to stop listening for
+    ///     the event. This is especially important if you have a retain cycle in
+    ///     the handler.
+    @discardableResult
+    func onNext(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable
 }
 
 internal final class MapEventHandler: NSObject, Observer, Cancelable {

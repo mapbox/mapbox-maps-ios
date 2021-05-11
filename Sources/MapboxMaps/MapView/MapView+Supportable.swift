@@ -21,12 +21,11 @@ extension MapView: OrnamentSupportableView {
     }
 
     internal func subscribeCameraChangeHandler(_ handler: @escaping (CameraState) -> Void) {
-        mapboxMap.on(.cameraChanged) { [weak self] _ in
-            guard let validSelf = self else {
-                return true
+        mapboxMap.onEvery(.cameraChanged) { [weak self] _ in
+            guard let self = self else {
+                return
             }
-            handler(validSelf.cameraState)
-            return false
+            handler(self.cameraState)
         }
     }
 }
@@ -42,19 +41,16 @@ extension MapView: LocationSupportableMapView {
     }
 
     public func subscribeRenderFrameHandler(_ handler: @escaping (MapboxCoreMaps.Event) -> Void) {
-        mapboxMap.on(.renderFrameStarted) { (event) in
+        mapboxMap.onEvery(.renderFrameStarted) { (event) in
             handler(event)
-            return false
         }
     }
 
     public func subscribeStyleChangeHandler(_ handler: @escaping (MapboxCoreMaps.Event) -> Void) {
-        mapboxMap.on(.styleLoaded) { (event) in
+        mapboxMap.onEvery(.styleLoaded) { (event) in
             handler(event)
-            return false
         }
     }
-
 }
 
 extension Style: AnnotationStyleDelegate { }

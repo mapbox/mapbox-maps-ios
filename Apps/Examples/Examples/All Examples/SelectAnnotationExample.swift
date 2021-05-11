@@ -32,9 +32,8 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allow the view controller to receive information about map events.
-        mapView.mapboxMap.on(.mapLoaded) { _ in
+        mapView.mapboxMap.onNext(.mapLoaded) { _ in
             self.setupExample()
-            return true
         }
 
         // Add the label on top of the map view controller.

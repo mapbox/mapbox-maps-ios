@@ -219,21 +219,26 @@ extension Snapshotter: ObservableProtocol {
 }
 
 extension Snapshotter: MapEventsObservable {
-    /// Reacting to snapshot events.
-    ///
-    /// - Parameters:
-    ///   - eventType: The event type to react to.
-    ///   - handler: The block of code to execute when the event occurs. Return
-    ///     `true` to indicate that you have handled the event(s) and no longer
-    ///     wish to receive them.
-    ///
-    /// - Returns: A `Cancelable` object that you can use to stop listening for
-    ///     events, in the case your closure does not return `true`.
     @discardableResult
-    public func on(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Bool) -> Cancelable {
+    public func onNext(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
         let handler = MapEventHandler(for: [eventType.rawValue],
                                       observable: self,
-                                      handler: handler)
+                                      handler: { event in
+                                        handler(event)
+                                        return true
+                                      })
+        eventHandlers.add(handler)
+        return handler
+    }
+
+    @discardableResult
+    public func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
+        let handler = MapEventHandler(for: [eventType.rawValue],
+                                      observable: self,
+                                      handler: { event in
+                                        handler(event)
+                                        return false
+                                      })
         eventHandlers.add(handler)
         return handler
     }

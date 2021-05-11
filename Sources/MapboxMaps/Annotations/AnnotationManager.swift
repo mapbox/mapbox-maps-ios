@@ -159,18 +159,15 @@ public class AnnotationManager {
         userInteractionEnabled = true
 
         configureTapGesture()
-        mapEventsObservable.on(.mapLoaded) { [weak self] _ -> Bool in
+        mapEventsObservable.onEvery(.mapLoaded) { [weak self] _ in
             // Reset the annotation source and default layers.
-            guard let self = self else { return true }
+            guard let self = self else { return }
+
             self.annotations = [:]
             self.annotationSource = nil
             self.symbolLayer = nil
             self.lineLayer = nil
             self.fillLayer = nil
-
-            // We want to reset if the style changes, so we need to listen to
-            // multiple load events
-            return false
         }
     }
 

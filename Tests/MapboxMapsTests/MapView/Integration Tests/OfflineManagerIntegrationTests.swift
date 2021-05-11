@@ -155,7 +155,7 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
 
         let mapboxMap = try XCTUnwrap(mapView?.mapboxMap)
 
-        mapboxMap.on(.resourceRequest) { event in
+        mapboxMap.onEvery(.resourceRequest) { event in
             let eventElements = event.data as! [String: Any]
 
             let source = eventElements["data-source"] as! String
@@ -166,12 +166,10 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
             default:
                 mapIsUsingDatabase.fulfill()
             }
-            return false
         }
 
-        mapboxMap.on(.mapLoaded) { _ in
+        mapboxMap.onNext(.mapLoaded) { _ in
             mapWasLoaded.fulfill()
-            return true
         }
 
         let expectations = [mapIsUsingDatabase, mapWasLoaded]

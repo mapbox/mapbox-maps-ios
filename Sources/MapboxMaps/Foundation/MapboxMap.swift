@@ -198,10 +198,25 @@ extension MapboxMap: ObservableProtocol {
 
 extension MapboxMap: MapEventsObservable {
     @discardableResult
-    public func on(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Bool) -> Cancelable {
+    public func onNext(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
         let handler = MapEventHandler(for: [eventType.rawValue],
                                       observable: self,
-                                      handler: handler)
+                                      handler: { event in
+                                        handler(event)
+                                        return true
+                                      })
+        eventHandlers.add(handler)
+        return handler
+    }
+
+    @discardableResult
+    public func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
+        let handler = MapEventHandler(for: [eventType.rawValue],
+                                      observable: self,
+                                      handler: { event in
+                                        handler(event)
+                                        return false
+                                      })
         eventHandlers.add(handler)
         return handler
     }

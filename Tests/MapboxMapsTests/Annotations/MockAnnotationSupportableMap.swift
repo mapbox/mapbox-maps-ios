@@ -22,11 +22,16 @@ final class MockMapEventsObservable: MapEventsObservable {
 
     struct OnParameters {
         var eventType: MapEvents.EventKind
-        var handler: (MapboxCoreMaps.Event) -> Bool
+        var handler: (MapboxCoreMaps.Event) -> Void
     }
 
     let onStub = Stub<OnParameters, Cancelable>(defaultReturnValue: MockCancelable())
-    func on(_ eventType: MapEvents.EventKind, handler: @escaping (MapboxCoreMaps.Event) -> Bool) -> Cancelable {
+
+    func onNext(_ eventType: MapEvents.EventKind, handler: @escaping (MapboxCoreMaps.Event) -> Void) -> Cancelable {
+        return onStub.call(with: OnParameters(eventType: eventType, handler: handler))
+    }
+
+    func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (MapboxCoreMaps.Event) -> Void) -> Cancelable {
         return onStub.call(with: OnParameters(eventType: eventType, handler: handler))
     }
 }

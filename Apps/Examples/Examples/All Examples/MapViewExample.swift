@@ -19,10 +19,9 @@ public class MapViewExample: UIViewController, ExampleProtocol {
 
         mapView.style.uri = StyleURI.custom(url: URL(string: "mapbox://styles/examples/cke97f49z5rlg19l310b7uu7j")!)
 
-        mapView.mapboxMap.on(.styleLoaded) { _ in
+        mapView.mapboxMap.onNext(.styleLoaded) { _ in
             // The below line is used for internal testing purposes only.
             self.finish()
-            return true
         }
     }
 }

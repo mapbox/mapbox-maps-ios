@@ -132,7 +132,13 @@ class OfflineGuideIntegrationTests: XCTestCase {
 
     func testLoadAndCancelTileRegion() throws {
         let expectation = self.expectation(description: "Tile region download should be canceled")
-        let accessToken = try mapboxAccessToken()
+        var accessToken: String = ""
+        do {
+            accessToken = try mapboxAccessToken()
+        } catch {
+            _ = XCTSkip("Mapbox access token not found")
+        }
+
         let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken))
 
         // Create the tile set descriptor

@@ -83,7 +83,13 @@ class OfflineGuideIntegrationTests: XCTestCase {
     func testLoadAndCancelStylePack() throws {
 
         let expectation = self.expectation(description: "style pack should be canceled")
-        let accessToken = try mapboxAccessToken()
+        var accessToken: String = ""
+        do {
+            accessToken = try mapboxAccessToken()
+        } catch {
+            _ = XCTSkip("Mapbox access token not found")
+        }
+
         let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken))
         let stylePackLoadOptions = StylePackLoadOptions(glyphsRasterizationMode: .ideographsRasterizedLocally)!
 
@@ -199,7 +205,13 @@ class OfflineGuideIntegrationTests: XCTestCase {
 
     func testFetchingAllStylePacks() throws {
         let expectation = self.expectation(description: "Style packs should be fetched without error")
-        let accessToken = try mapboxAccessToken()
+        var accessToken: String = ""
+        do {
+            accessToken = try mapboxAccessToken()
+        } catch {
+            _ = XCTSkip("Mapbox access token not found")
+        }
+
         let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken))
 
         let handleStylePacks = { (stylePacks: [StylePack]) in

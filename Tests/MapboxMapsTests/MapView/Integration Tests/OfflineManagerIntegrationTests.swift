@@ -88,7 +88,7 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
                                                               loadOptions: tileRegionLoadOptions!) { _ in }
         completion: { result in
             switch result {
-            case .success(_):
+            case .success:
                 XCTFail("Result reached success block, therefore download was not canceled")
             case .failure(let error):
                 let tileError = error as! TileRegionError

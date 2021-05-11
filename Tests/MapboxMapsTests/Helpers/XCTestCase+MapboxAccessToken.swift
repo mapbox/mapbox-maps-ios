@@ -4,7 +4,7 @@ extension XCTestCase {
     func mapboxAccessToken() throws -> String {
         func token() throws -> String {
             // User defaults can override plist
-            if let token = UserDefaults.standard.string(forKey: "MBXAccessToken") {
+            if let token = UserDefaults.standard.string(forKey: "MAPBOX_ACCESS_TOKEN") {
                 print("Found access token from UserDefaults (command line parameter?)")
                 return token
             } else if let token = Bundle.mapboxMapsTests.infoDictionary?["MBXAccessToken"] as? String {

@@ -127,7 +127,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
         stylePackCancelable.cancel()
         //<--
 
-        wait(for: [expectation], timeout: 20.0)
+        wait(for: [expectation], timeout: 5.0)
     }
 
     func testLoadAndCancelTileRegion() throws {
@@ -188,7 +188,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
         tileRegionCancelable.cancel()
         //<--
 
-        wait(for: [expectation], timeout: 20.0)
+        wait(for: [expectation], timeout: 5.0)
     }
 
     func testFetchingAllStylePacks() throws {
@@ -226,7 +226,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
         }
         //<--
 
-        wait(for: [expectation], timeout: 20.0)
+        wait(for: [expectation], timeout: 5.0)
     }
 
     func testFetchingAllTileRegions() throws {

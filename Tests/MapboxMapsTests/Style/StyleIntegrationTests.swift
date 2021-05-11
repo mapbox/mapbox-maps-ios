@@ -103,7 +103,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testDecodingOfAllLayersInStreetsv11() {
-        guard let mapView = mapView, let style = style else {
+        guard let _ = mapView, let style = style else {
             XCTFail("There should be valid MapView and Style objects created by setUp.")
             return
         }

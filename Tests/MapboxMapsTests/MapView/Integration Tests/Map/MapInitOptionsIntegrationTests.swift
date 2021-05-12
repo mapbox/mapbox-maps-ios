@@ -26,7 +26,7 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         XCTAssertEqual(resourceOptions, mapInitOptions.resourceOptions)
         XCTAssertEqual(resourceOptions.accessToken, credentialsManager.accessToken)
 
-        XCTAssertEqual(mapView.mapboxMap.__map.getStyleURI(), StyleURI.outdoors.rawValue.absoluteString)
+        XCTAssertEqual(mapView.mapboxMap.__map.getStyleURI(), StyleURI.outdoors.rawValue)
         XCTAssertEqual(mapView.style.uri, .outdoors)
     }
 
@@ -65,7 +65,7 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         XCTAssertEqual(resourceOptions, providerReturnValue.resourceOptions)
         XCTAssertEqual(resourceOptions.accessToken, credentialsManager.accessToken)
 
-        XCTAssertEqual(mapView.mapboxMap.__map.getStyleURI(), StyleURI.satellite.rawValue.absoluteString)
+        XCTAssertEqual(mapView.mapboxMap.__map.getStyleURI(), StyleURI.satellite.rawValue)
         XCTAssertEqual(mapView.style.uri, .satellite)
     }
 
@@ -109,7 +109,7 @@ class MapInitOptionsIntegrationTests: XCTestCase {
             return
         }
 
-        let mapInitOptions = MapInitOptions(styleURI: .custom(url: url))
+        let mapInitOptions = MapInitOptions(styleURI: StyleURI(url: url))
         let view = MapView(frame: .zero, mapInitOptions: mapInitOptions)
 
         let expectation = self.expectation(description: "Wait for style to load")
@@ -141,7 +141,7 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         let sourceCamera = CameraOptions(center: CLLocationCoordinate2D(latitude: 1.23, longitude: 4.56), zoom: 14)
 
         let mapInitOptions = MapInitOptions(cameraOptions: sourceCamera,
-                                            styleURI: .custom(url: url))
+                                            styleURI: StyleURI(url: url))
         let view = MapView(frame: .zero, mapInitOptions: mapInitOptions)
 
         let expectation = self.expectation(description: "Wait for style to load")

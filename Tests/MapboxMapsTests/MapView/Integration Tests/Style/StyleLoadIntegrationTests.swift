@@ -31,7 +31,7 @@ class StyleLoadIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testLoadingBlueprintStyleURI() {
-        loadAndIdle(for: .custom(url: URL(string: "mapbox://styles/mapbox-map-design/ck40ed2go56yr1cp7bbsalr1c")!))
+        loadAndIdle(for: StyleURI(rawValue: "mapbox://styles/mapbox-map-design/ck40ed2go56yr1cp7bbsalr1c")!)
     }
 
     // MARK: - Helpers

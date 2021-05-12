@@ -1,17 +1,12 @@
-// MARK: AnimationOwner Enum
-public enum AnimationOwner: Equatable {
-    case gestures
-    case unspecified
-    case custom(id: String)
+public struct AnimationOwner: RawRepresentable {
+    public typealias RawValue = String
 
-    public var id: String {
-        switch self {
-        case .gestures:
-            return "com.mapbox.maps.gestures"
-        case .unspecified:
-            return "com.mapbox.maps.unspecified"
-        case .custom(id: let  id):
-            return id
-        }
+    public let rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
     }
+
+    public static let gestures = AnimationOwner(rawValue: "com.mapbox.maps.gestures")
+    public static let unspecified = AnimationOwner(rawValue: "com.mapbox.maps.unspecified")
 }

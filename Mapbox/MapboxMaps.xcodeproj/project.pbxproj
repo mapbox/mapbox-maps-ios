@@ -226,6 +226,9 @@
 		C69F0142254358B3001AB49B /* LocationManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69F011125431AF4001AB49B /* LocationManagerIntegrationTests.swift */; };
 		C69F015A254358C5001AB49B /* AnnotationManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07958C23253A2AE50043ECC0 /* AnnotationManagerIntegrationTests.swift */; };
 		C69F017525435C55001AB49B /* LocationProviderMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69F017325435C55001AB49B /* LocationProviderMock.swift */; };
+		C6C5CDC5264C12C80097FCD1 /* OfflineGuideIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C5CDBE264C0CBE0097FCD1 /* OfflineGuideIntegrationTests.swift */; };
+		C6C5CDC9264C12D00097FCD1 /* MigrationGuideIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C5CDBF264C0CBE0097FCD1 /* MigrationGuideIntegrationTests.swift */; };
+		C6C5CDD9264C12F30097FCD1 /* OfflineManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C5CDB8264C0C910097FCD1 /* OfflineManagerIntegrationTests.swift */; };
 		C6F256EF261FB99C0093D353 /* LogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6F256EE261FB99C0093D353 /* LogoView.swift */; };
 		CA03F0872624FDB100673961 /* MapInitOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA03F0862624FDB100673961 /* MapInitOptionsTests.swift */; };
 		CA03F08F2624FDCB00673961 /* MapInitOptionsIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA03F08E2624FDCB00673961 /* MapInitOptionsIntegrationTests.swift */; };
@@ -238,7 +241,6 @@
 		CA0B373325C4BEAE00B3396E /* MapboxMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CD34FCE242AADDB00943687 /* MapboxMaps.framework */; };
 		CA0B373925C4BEAE00B3396E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07182014256C1F6100F22489 /* Assets.xcassets */; };
 		CA0B37E725C4C00300B3396E /* HTTPIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB11C982555986F00060963 /* HTTPIntegrationTests.swift */; };
-		CA0B380C25C4C01400B3396E /* MapViewIntegrationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA53616D2537ECA600A8AE38 /* MapViewIntegrationTestCase.swift */; };
 		CA0B380D25C4C01400B3396E /* IntegrationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5361862537EE0600A8AE38 /* IntegrationTestCase.swift */; };
 		CA0C426926028ED30054D9D0 /* AnnotationOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0C426826028ED30054D9D0 /* AnnotationOptions.swift */; };
 		CA0C427E2602BECE0054D9D0 /* LayerPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0C427D2602BECE0054D9D0 /* LayerPosition.swift */; };
@@ -262,7 +264,6 @@
 		CA548FD7251C404B00F829A3 /* PointAnnotationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EEFA8725018B8800352933 /* PointAnnotationTests.swift */; };
 		CA548FD8251C404B00F829A3 /* MultiLineStringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B863830246D300400698135 /* MultiLineStringTests.swift */; };
 		CA548FD9251C404B00F829A3 /* OrnamentManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07797FA0242C21BC00229F7D /* OrnamentManagerTests.swift */; };
-		CA548FDA251C404B00F829A3 /* MapboxMapsOfflineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07C1B3972446B0550044A3C6 /* MapboxMapsOfflineTests.swift */; };
 		CA548FDB251C404B00F829A3 /* LineStringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B863833246D300500698135 /* LineStringTests.swift */; };
 		CA548FDF251C404B00F829A3 /* MapboxMapsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07C1B3DB2446B6F40044A3C6 /* MapboxMapsSnapshotTests.swift */; };
 		CA548FE0251C404B00F829A3 /* GeoJSONManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B86385D246D3BA700698135 /* GeoJSONManagerTests.swift */; };
@@ -335,7 +336,6 @@
 		CADCF77325854B090065C51B /* Turf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76225854AB00065C51B /* Turf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CADCF77425854B090065C51B /* MapboxCoreMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76325854AB00065C51B /* MapboxCoreMaps.framework */; };
 		CADCF77525854B090065C51B /* MapboxCoreMaps.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76325854AB00065C51B /* MapboxCoreMaps.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CAE639322632394C00A6B205 /* OfflineGuideIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE6392D2632394200A6B205 /* OfflineGuideIntegrationTests.swift */; };
 		CAED9FB1258C69DB003CCEFE /* MapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAED9FAF258C69DB003CCEFE /* MapViewTests.swift */; };
 		CAEDA0B0258E8188003CCEFE /* MapViewIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAEDA0AE258E8188003CCEFE /* MapViewIntegrationTests.swift */; };
 /* End PBXBuildFile section */
@@ -434,7 +434,6 @@
 		07BA35E625157A0E003E1B55 /* AnnotationSupportableMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationSupportableMap.swift; sourceTree = "<group>"; };
 		07BA363025157B09003E1B55 /* MockAnnotationSupportableMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAnnotationSupportableMap.swift; sourceTree = "<group>"; };
 		07BF0C5E24F4875F00754DB2 /* Geometry+MBXGeometryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Geometry+MBXGeometryTests.swift"; sourceTree = "<group>"; };
-		07C1B3972446B0550044A3C6 /* MapboxMapsOfflineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxMapsOfflineTests.swift; sourceTree = "<group>"; };
 		07C1B3DB2446B6F40044A3C6 /* MapboxMapsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxMapsSnapshotTests.swift; sourceTree = "<group>"; };
 		07D2C7DA2523EBE60025C2BA /* PolygonAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolygonAnnotation.swift; sourceTree = "<group>"; };
 		07D2C80B2523ECC40025C2BA /* PolygonAnnotationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolygonAnnotationTests.swift; sourceTree = "<group>"; };
@@ -703,6 +702,9 @@
 		C64ED33B253F819B00ADADFB /* LocationConsumerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationConsumerMock.swift; sourceTree = "<group>"; };
 		C69F011125431AF4001AB49B /* LocationManagerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerIntegrationTests.swift; sourceTree = "<group>"; };
 		C69F017325435C55001AB49B /* LocationProviderMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationProviderMock.swift; sourceTree = "<group>"; };
+		C6C5CDB8264C0C910097FCD1 /* OfflineManagerIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineManagerIntegrationTests.swift; sourceTree = "<group>"; };
+		C6C5CDBE264C0CBE0097FCD1 /* OfflineGuideIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineGuideIntegrationTests.swift; sourceTree = "<group>"; };
+		C6C5CDBF264C0CBE0097FCD1 /* MigrationGuideIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationGuideIntegrationTests.swift; sourceTree = "<group>"; };
 		C6F256EE261FB99C0093D353 /* LogoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogoView.swift; sourceTree = "<group>"; };
 		CA03F0862624FDB100673961 /* MapInitOptionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapInitOptionsTests.swift; sourceTree = "<group>"; };
 		CA03F08E2624FDCB00673961 /* MapInitOptionsIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapInitOptionsIntegrationTests.swift; sourceTree = "<group>"; };
@@ -757,7 +759,6 @@
 		CADCF76125854AB00065C51B /* MapboxCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MapboxCommon.framework; sourceTree = "<group>"; };
 		CADCF76225854AB00065C51B /* Turf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Turf.framework; sourceTree = "<group>"; };
 		CADCF76325854AB00065C51B /* MapboxCoreMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MapboxCoreMaps.framework; sourceTree = "<group>"; };
-		CAE6392D2632394200A6B205 /* OfflineGuideIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineGuideIntegrationTests.swift; sourceTree = "<group>"; };
 		CAED9FAF258C69DB003CCEFE /* MapViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewTests.swift; sourceTree = "<group>"; };
 		CAEDA0AE258E8188003CCEFE /* MapViewIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewIntegrationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -907,16 +908,6 @@
 			);
 			name = MapboxMapsOffline;
 			path = ../Sources/MapboxMaps/Offline;
-			sourceTree = "<group>";
-		};
-		07C1B3962446B0550044A3C6 /* MapboxMapsOfflineTests */ = {
-			isa = PBXGroup;
-			children = (
-				CAE6392D2632394200A6B205 /* OfflineGuideIntegrationTests.swift */,
-				07C1B3972446B0550044A3C6 /* MapboxMapsOfflineTests.swift */,
-			);
-			name = MapboxMapsOfflineTests;
-			path = ../Tests/MapboxMapsTests/Offline;
 			sourceTree = "<group>";
 		};
 		07C1B3CF2446B6F40044A3C6 /* MapboxMapsSnapshot */ = {
@@ -1332,6 +1323,7 @@
 		1FEE78B92421884000337895 = {
 			isa = PBXGroup;
 			children = (
+				C6C5CDBD264C0CBE0097FCD1 /* MigrationGuide */,
 				CA56648B24478722006F392C /* Configurations */,
 				0CD34FCF242AADDB00943687 /* MapboxMaps */,
 				0CD34FDA242AADDB00943687 /* MapboxMapsTests */,
@@ -1344,7 +1336,6 @@
 				1FF65A51244E33E10069B561 /* MapboxMapsLocation */,
 				1FF65A5C244E33E10069B561 /* MapboxMapsLocationTests */,
 				07C1B38B2446B0550044A3C6 /* MapboxMapsOffline */,
-				07C1B3962446B0550044A3C6 /* MapboxMapsOfflineTests */,
 				07797F94242C21BC00229F7D /* MapboxMapsOrnaments */,
 				07797F9F242C21BC00229F7D /* MapboxMapsOrnamentsTests */,
 				07C1B3CF2446B6F40044A3C6 /* MapboxMapsSnapshot */,
@@ -1543,6 +1534,16 @@
 			path = Pucks;
 			sourceTree = "<group>";
 		};
+		C6C5CDBD264C0CBE0097FCD1 /* MigrationGuide */ = {
+			isa = PBXGroup;
+			children = (
+				C6C5CDBE264C0CBE0097FCD1 /* OfflineGuideIntegrationTests.swift */,
+				C6C5CDBF264C0CBE0097FCD1 /* MigrationGuideIntegrationTests.swift */,
+			);
+			name = MigrationGuide;
+			path = ../Tests/MapboxMapsTests/MigrationGuide;
+			sourceTree = "<group>";
+		};
 		CA05A71D2551C85000ABF902 /* CacheManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -1582,6 +1583,7 @@
 		CA2E498725380AE10096DEDE /* Integration Tests */ = {
 			isa = PBXGroup;
 			children = (
+				C6C5CDB8264C0C910097FCD1 /* OfflineManagerIntegrationTests.swift */,
 				CAD7BA0425A368DE00E64C78 /* ExampleIntegrationTest.swift */,
 				CA57257B2568D13D005ED95E /* Map */,
 				07958C23253A2AE50043ECC0 /* AnnotationManagerIntegrationTests.swift */,
@@ -2151,7 +2153,6 @@
 				B53B8623260D717700C86BAA /* XCTestCase+MapboxAccessToken.swift in Sources */,
 				B53B8663260D719100C86BAA /* TestConveniences.swift in Sources */,
 				B53B8650260D718B00C86BAA /* Stub.swift in Sources */,
-				CA0B380C25C4C01400B3396E /* MapViewIntegrationTestCase.swift in Sources */,
 				CA0B380D25C4C01400B3396E /* IntegrationTestCase.swift in Sources */,
 				B506A5A125E023E90097ADB7 /* Bundle+MapboxMapsTests.swift in Sources */,
 				CA0B37E725C4C00300B3396E /* HTTPIntegrationTests.swift in Sources */,
@@ -2180,7 +2181,9 @@
 				0C32C9B625F979680057ED31 /* VectorSourceIntegrationTests.swift in Sources */,
 				CA548FD4251C404B00F829A3 /* MapboxMapsCameraTests.swift in Sources */,
 				CA548FD5251C404B00F829A3 /* MapboxCompassOrnamentViewTests.swift in Sources */,
+				C6C5CDC5264C12C80097FCD1 /* OfflineGuideIntegrationTests.swift in Sources */,
 				CA548FD7251C404B00F829A3 /* PointAnnotationTests.swift in Sources */,
+				C6C5CDD9264C12F30097FCD1 /* OfflineManagerIntegrationTests.swift in Sources */,
 				0CC6EF1425C3263400BFB153 /* LineLayerIntegrationTests.swift in Sources */,
 				0C7330BC2640972C001FAF04 /* CameraStateTests.swift in Sources */,
 				C64ED33D253F819B00ADADFB /* LocationConsumerMock.swift in Sources */,
@@ -2197,9 +2200,9 @@
 				CA2E4A1D2538D3530096DEDE /* DidIdleFailureIntegrationTest.swift in Sources */,
 				0C35751725DD8E010085D775 /* StyleIntegrationTests.swift in Sources */,
 				CA548FD9251C404B00F829A3 /* OrnamentManagerTests.swift in Sources */,
-				CA548FDA251C404B00F829A3 /* MapboxMapsOfflineTests.swift in Sources */,
 				CA548FDB251C404B00F829A3 /* LineStringTests.swift in Sources */,
 				0CC6EF1125C3263400BFB153 /* CircleLayerIntegrationTests.swift in Sources */,
+				C6C5CDC9264C12D00097FCD1 /* MigrationGuideIntegrationTests.swift in Sources */,
 				0C5CFCF425BB951B0001E753 /* FillLayerTests.swift in Sources */,
 				B54B7F0B25DB192C003FD6CA /* MockCameraManager.swift in Sources */,
 				0C5CFCEB25BB951B0001E753 /* HillshadeLayerTests.swift in Sources */,
@@ -2265,7 +2268,6 @@
 				CA548FF0251C404B00F829A3 /* MultiPointTests.swift in Sources */,
 				CA548FF1251C404B00F829A3 /* RotateGestureHandlerTests.swift in Sources */,
 				CA4AE033252D654800183075 /* LineAnnotationTests.swift in Sources */,
-				CAE639322632394C00A6B205 /* OfflineGuideIntegrationTests.swift in Sources */,
 				0C37B1E425CB05F000DCDD3D /* ColorTests.swift in Sources */,
 				B521FCA7262F67DD00B9A446 /* MockMapClient.swift in Sources */,
 				B5A6921D262754DF00A03412 /* MockDelegatingObserverDelegate.swift in Sources */,

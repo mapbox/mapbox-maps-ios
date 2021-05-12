@@ -168,7 +168,6 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         rootViewController?.view.addSubview(vc.view)
 
         wait(for: [expectation], timeout: 5)
-
     }
 
     func testMapViewConfiguration() throws {
@@ -191,7 +190,6 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
     }
 
     func testAppDelegateConfig() throws {
-
         //-->
         //import UIKit
         //import MapboxMaps

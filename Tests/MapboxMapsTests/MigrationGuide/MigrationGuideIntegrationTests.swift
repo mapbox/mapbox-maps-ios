@@ -2,7 +2,7 @@ import XCTest
 import MapboxMaps
 import Turf
 
-// swiftlint:disable force_cast file_length orphaned_doc_comment
+// swiftlint:disable force_cast file_length orphaned_doc_comment type_body_length
 
 class MigrationGuideIntegrationTests: IntegrationTestCase {
 

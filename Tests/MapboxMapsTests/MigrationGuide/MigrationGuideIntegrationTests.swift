@@ -43,7 +43,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
     func testMapLoadingEventsLifecycle() throws {
         let expectation = self.expectation(description: "Map events")
-        expectation.expectedFulfillmentCount = 4
+        expectation.expectedFulfillmentCount = 6
         expectation.assertForOverFulfill = false
 
         //-->
@@ -68,7 +68,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                  `-[MGLMapViewDelegate mapView:didFinishLoadingStyle:]` in SDK versions
                  prior to v10.
                  */
-                mapView.on(.styleDataLoaded) { [weak self] (event) in
+                mapView.mapboxMap.onEvery(.styleDataLoaded) { [weak self] (event) in
                     guard let data = event.data as? [String: Any],
                           let type = data["type"],
                           let handler = self?.handler else {
@@ -93,9 +93,9 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                  Changes to sources or layers of the current style do not cause this
                  event to be emitted.
                  */
-                mapView.on(.styleLoaded) { [weak self] (event) in
+                mapView.mapboxMap.onNext(.styleLoaded) { (event) in
                     print("The map has finished loading style ... Event = \(event)")
-                    self?.handler?(event)
+                    self.handler?(event)
                 }
 
                 /**
@@ -107,9 +107,9 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                  map and ensures that these layers would only be shown after the map has
                  been fully rendered.
                  */
-                mapView.on(.mapLoaded) { [weak self] (event) in
+                mapView.mapboxMap.onNext(.mapLoaded) { (event) in
                     print("The map has finished loading... Event = \(event)")
-                    self?.handler?(event)
+                    self.handler?(event)
                 }
 
                 /**
@@ -120,9 +120,9 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                  - All currently requested tiles have been rendered
                  - All fade/transition animations have completed
                  */
-                mapView.on(.mapIdle) { [weak self] (event) in
+                mapView.mapboxMap.onNext(.mapIdle) { (event) in
                     print("The map is idle... Event = \(event)")
-                    self?.handler?(event)
+                    self.handler?(event)
                 }
 
                 /**
@@ -133,7 +133,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                  You can use the associated error message to notify the user that map
                  data is unavailable.
                  */
-                mapView.on(.mapLoadingError) { (event) in
+                mapView.mapboxMap.onNext(.mapLoadingError) { (event) in
                     guard let data = event.data as? [String: Any],
                           let type = data["type"],
                           let message = data["message"] else {
@@ -274,7 +274,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
             }
         }
 
-        let application = UIApplication()
+        let application = UIApplication.shared
         let appDelegate = AppDelegate()
 
         _ = appDelegate.application(application, didFinishLaunchingWithOptions: nil)
@@ -382,11 +382,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
         let mapView = MapView(frame: testRect)
         let expectation = self.expectation(description: "Source was added")
-        mapView.on(.styleLoaded) { [weak mapView] _ in
-            guard let mapView = mapView else {
-                return
-            }
-
+        mapView.mapboxMap.onNext(.styleLoaded) { _ in
             do {
                 //-->
                 try mapView.style.addSource(myGeoJSONSource, id: "my-geojson-source")
@@ -422,11 +418,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
         let mapView = MapView(frame: testRect)
         let expectation = self.expectation(description: "Source was added")
-        mapView.on(.styleLoaded) { [weak mapView] _ in
-            guard let mapView = mapView else {
-                return
-            }
-
+        mapView.mapboxMap.onNext(.styleLoaded) { _ in
             do {
                 //-->
                 // Add terrain

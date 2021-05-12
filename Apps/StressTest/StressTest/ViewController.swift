@@ -54,8 +54,8 @@ class ViewController: UIViewController {
             (.light, "land"),
             (.satellite, nil),
             (.satelliteStreets, nil),
-            (.custom(url: URL(string: "mapbox://styles/mapbox-map-design/ck40ed2go56yr1cp7bbsalr1c")!), "land"),
-            (.custom(url: URL(string: "mapbox://styles/examples/cke97f49z5rlg19l310b7uu7j")!), nil),
+            (StyleURI(rawValue: "mapbox://styles/mapbox-map-design/ck40ed2go56yr1cp7bbsalr1c")!, "land"),
+            (StyleURI(rawValue: "mapbox://styles/examples/cke97f49z5rlg19l310b7uu7j")!, nil),
         ]
     }()
 

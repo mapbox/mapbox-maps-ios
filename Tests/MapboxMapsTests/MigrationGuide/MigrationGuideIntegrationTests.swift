@@ -8,6 +8,19 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
     private var testRect = CGRect(origin: .zero, size: CGSize(width: 100, height: 100))
 
+    var originalToken: String!
+
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+        originalToken = CredentialsManager.default.accessToken
+        CredentialsManager.default.accessToken = accessToken
+    }
+
+    override func tearDownWithError() throws {
+        try super.tearDownWithError()
+        CredentialsManager.default.accessToken = originalToken
+    }
+
     func testBasicMapViewController() throws {
 
         let expectation = self.expectation(description: "load map view")
@@ -54,10 +67,10 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
             override func viewDidLoad() {
                 super.viewDidLoad()
+                CredentialsManager.default.accessToken = accessToken
+
                 mapView = MapView(frame: view.bounds)
                 view.addSubview(mapView)
-
-                CredentialsManager.default.accessToken = accessToken
 
                 /**
                  The closure is called when style data has been loaded. This is called
@@ -274,10 +287,9 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
             }
         }
 
-        let application = UIApplication.shared
         let appDelegate = AppDelegate()
 
-        _ = appDelegate.application(application, didFinishLaunchingWithOptions: nil)
+        _ = appDelegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
     }
 
     func testSettingCamera() {

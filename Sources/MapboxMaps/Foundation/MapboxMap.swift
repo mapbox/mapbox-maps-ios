@@ -200,11 +200,10 @@ extension MapboxMap: MapEventsObservable {
     @discardableResult
     public func onNext(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
         let handler = MapEventHandler(for: [eventType.rawValue],
-                                      observable: self,
-                                      handler: { event in
-                                        handler(event)
-                                        return true
-                                      })
+                                      observable: self) { event in
+            handler(event)
+            return true
+        }
         eventHandlers.add(handler)
         return handler
     }
@@ -212,11 +211,10 @@ extension MapboxMap: MapEventsObservable {
     @discardableResult
     public func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
         let handler = MapEventHandler(for: [eventType.rawValue],
-                                      observable: self,
-                                      handler: { event in
-                                        handler(event)
-                                        return false
-                                      })
+                                      observable: self) { event in
+            handler(event)
+            return false
+        }
         eventHandlers.add(handler)
         return handler
     }

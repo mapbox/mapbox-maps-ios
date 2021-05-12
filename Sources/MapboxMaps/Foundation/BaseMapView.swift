@@ -31,7 +31,6 @@ open class BaseMapView: UIView {
     }
 
     private let mapClient = DelegatingMapClient()
-    private let observer = DelegatingObserver()
 
     /// The underlying metal view that is used to render the map
     internal private(set) var metalView: MTKView?
@@ -43,15 +42,12 @@ open class BaseMapView: UIView {
     internal var pendingAnimatorCompletionBlocks: [PendingAnimationCompletion] = []
 
     /// Pointer HashTable for holding camera animators
-    private var cameraAnimatorsSet = WeakCameraAnimatorSet()
+    private var cameraAnimatorsSet = WeakSet<CameraAnimatorInterface>()
 
     /// List of animators currently alive
     internal var cameraAnimators: [CameraAnimator] {
         return cameraAnimatorsSet.allObjects
     }
-
-    /// Map of event types to subscribed event handlers
-    private var eventHandlers: [String: [(MapboxCoreMaps.Event) -> Void]] = [:]
 
     private var needsDisplayRefresh: Bool = false
     private var dormant: Bool = false
@@ -118,10 +114,6 @@ open class BaseMapView: UIView {
         mapClient.delegate = self
         mapboxMap = MapboxMap(mapClient: mapClient, mapInitOptions: resolvedMapInitOptions)
 
-        observer.delegate = self
-        let events = MapEvents.EventKind.allCases.map({ $0.rawValue })
-        mapboxMap.__map.subscribe(for: observer, events: events)
-
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(willTerminate),
                                                name: UIApplication.willTerminateNotification,
@@ -173,12 +165,6 @@ open class BaseMapView: UIView {
         let ibStyleURI = BaseMapView.parseIBStringAsURL(ibString: styleURI__)
 
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: ibStyleURI)
-    }
-
-    public func on(_ eventType: MapEvents.EventKind, handler: @escaping (MapboxCoreMaps.Event) -> Void) {
-        var handlers = eventHandlers[eventType.rawValue] ?? []
-        handlers.append(handler)
-        eventHandlers[eventType.rawValue] = handlers
     }
 
     public override func layoutSubviews() {
@@ -279,16 +265,6 @@ open class BaseMapView: UIView {
 
     required public init?(coder: NSCoder) {
         super.init(coder: coder)
-    }
-}
-
-extension BaseMapView: DelegatingObserverDelegate {
-    /// Notify correct handler
-    internal func notify(for event: MapboxCoreMaps.Event) {
-        let handlers = eventHandlers[event.type]
-        handlers?.forEach { (handler) in
-            handler(event)
-        }
     }
 }
 

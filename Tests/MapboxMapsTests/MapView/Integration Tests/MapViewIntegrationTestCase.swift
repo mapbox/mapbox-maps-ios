@@ -28,17 +28,17 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
                                             styleURI: nil)
         let view = MapView(frame: window.bounds, mapInitOptions: mapInitOptions)
 
-        view.on(.styleLoaded) { [weak self] _ in
+        view.mapboxMap.onEvery(.styleLoaded) { [weak self] _ in
             guard let self = self else { return }
             self.didFinishLoadingStyle?(self.mapView!)
         }
 
-        view.on(.mapIdle) { [weak self] _ in
+        view.mapboxMap.onEvery(.mapIdle) { [weak self] _ in
             guard let self = self else { return }
             self.didBecomeIdle?(self.mapView!)
         }
 
-        view.on(.mapLoadingError) { [weak self] event in
+        view.mapboxMap.onEvery(.mapLoadingError) { [weak self] event in
             guard let self = self else { return }
 
             let userInfo: [String: Any] = (event.data as? [String: Any]) ?? [:]

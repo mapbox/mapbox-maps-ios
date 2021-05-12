@@ -32,7 +32,7 @@ public class DebugViewController: UIViewController {
          `-[MGLMapViewDelegate mapView:didFinishLoadingStyle:]` in SDK versions
          prior to v10.
          */
-        mapView.on(.styleDataLoaded) { (event) in
+        mapView.mapboxMap.onEvery(.styleDataLoaded) { event in
             guard let data = event.data as? [String: Any],
                   let type = data["type"] else {
                 return
@@ -55,7 +55,7 @@ public class DebugViewController: UIViewController {
          Changes to sources or layers of the current style do not cause this
          event to be emitted.
          */
-        mapView.on(.styleLoaded) { (event) in
+        mapView.mapboxMap.onNext(.styleLoaded) { (event) in
             print("The map has finished loading style ... Event = \(event)")
         }
 
@@ -68,7 +68,7 @@ public class DebugViewController: UIViewController {
          map and ensures that these layers would only be shown after the map has
          been fully rendered.
          */
-        mapView.on(.mapLoaded) { (event) in
+        mapView.mapboxMap.onNext(.mapLoaded) { (event) in
             print("The map has finished loading... Event = \(event)")
         }
 
@@ -80,7 +80,7 @@ public class DebugViewController: UIViewController {
          You can use the associated error message to notify the user that map
          data is unavailable.
          */
-        mapView.on(.mapLoadingError) { (event) in
+        mapView.mapboxMap.onNext(.mapLoadingError) { (event) in
             guard let data = event.data as? [String: Any],
                   let type = data["type"],
                   let message = data["message"] else {

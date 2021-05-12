@@ -26,7 +26,7 @@ extension MapView {
         setupUserLocationManager(with: self, options: mapConfig.location)
 
         // Initialize/Configure annotations manager
-        setupAnnotationManager(with: self, and: style, options: mapConfig.annotations)
+        setupAnnotationManager(with: self, mapEventsObservable: mapboxMap, style: style, options: mapConfig.annotations)
     }
 
     /// Updates the map with new configuration options. Causes underlying structures to reload configuration synchronously.
@@ -89,8 +89,8 @@ extension MapView {
         location.updateLocationOptions(with: mapConfig.location)
     }
 
-    internal func setupAnnotationManager(with annotationSupportableMap: AnnotationSupportableMap, and style: Style, options: AnnotationOptions) {
-        annotations = AnnotationManager(for: annotationSupportableMap, with: style, options: options)
+    internal func setupAnnotationManager(with annotationSupportableMap: AnnotationSupportableMap, mapEventsObservable: MapEventsObservable, style: Style, options: AnnotationOptions) {
+        annotations = AnnotationManager(for: annotationSupportableMap, mapEventsObservable: mapEventsObservable, with: style, options: options)
     }
 
     internal func updateAnnotationManager(with newOptions: AnnotationOptions) {

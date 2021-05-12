@@ -176,17 +176,17 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
 
         style.uri = .streets
 
-        mapView.on(.mapLoadingError) { event in
+        mapView.mapboxMap.onNext(.mapLoadingError) { event in
             let userInfo: [String: Any] = (event.data as? [String: Any]) ?? [:]
             Log.error(forMessage: "Map failed to load with error: \(userInfo)", category: "Map")
             XCTFail("Failed to load map with \(userInfo)")
         }
 
-        mapView.on(.styleLoaded) { _ in
+        mapView.mapboxMap.onNext(.styleLoaded) { _ in
             expectation.fulfill()
         }
 
-        mapView.on(.mapIdle) { _ in
+        mapView.mapboxMap.onNext(.mapIdle) { _ in
             expectation.fulfill()
         }
 

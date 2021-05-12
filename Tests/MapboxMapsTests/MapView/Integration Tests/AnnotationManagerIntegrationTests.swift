@@ -31,6 +31,7 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
             // Given
             let annotation = PointAnnotation(coordinate: mapView.cameraState.center)
             let annotationManager = AnnotationManager(for: mapView,
+                                                      mapEventsObservable: mapView.mapboxMap,
                                                       with: self,
                                                       options: AnnotationOptions())
             annotationManager.addAnnotation(annotation)
@@ -63,6 +64,7 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
             let requiredIndex = 3
             let position = LayerPosition(above: nil, below: nil, at: requiredIndex)
             let annotationManager = AnnotationManager(for: mapView,
+                                                      mapEventsObservable: mapView.mapboxMap,
                                                       with: self,
                                                       options: AnnotationOptions(layerPosition: position))
             annotationManager.addAnnotation(annotation)
@@ -110,6 +112,7 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
             // Given
             var annotation = PointAnnotation(coordinate: mapView.cameraState.center)
             let annotationManager = AnnotationManager(for: mapView,
+                                                      mapEventsObservable: mapView.mapboxMap,
                                                       with: self,
                                                       options: AnnotationOptions())
             annotation.userInfo = ["TestKey": true]

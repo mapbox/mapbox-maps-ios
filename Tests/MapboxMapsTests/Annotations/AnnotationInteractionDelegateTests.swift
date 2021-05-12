@@ -12,6 +12,7 @@ class AnnotationInteractionDelegateTests: XCTestCase {
 
     var annotationSupportableMapMock: MockAnnotationSupportableMap!
     var annotationSupportableStyleMock: MockAnnotationStyleDelegate!
+    var annotationMapEventsObservableMock: MockMapEventsObservable!
     var defaultCoordinate: CLLocationCoordinate2D!
 
     var selectionExpectation: XCTestExpectation?
@@ -22,6 +23,7 @@ class AnnotationInteractionDelegateTests: XCTestCase {
     override func setUp() {
         annotationSupportableMapMock = MockAnnotationSupportableMap()
         annotationSupportableStyleMock = MockAnnotationStyleDelegate()
+        annotationMapEventsObservableMock = MockMapEventsObservable()
         selectionExpectation = expectation(description: "didSelectAnnotation was called")
         defaultCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     }
@@ -29,6 +31,7 @@ class AnnotationInteractionDelegateTests: XCTestCase {
     override func tearDown() {
         annotationSupportableMapMock = nil
         annotationSupportableStyleMock = nil
+        annotationMapEventsObservableMock = nil
         selectionExpectation = nil
         deselectionExpectation = nil
         defaultCoordinate = nil
@@ -37,6 +40,7 @@ class AnnotationInteractionDelegateTests: XCTestCase {
     func testProgrammaticAnnotationSelection() {
         // Given
         let annotationManager = AnnotationManager(for: annotationSupportableMapMock,
+                                                  mapEventsObservable: annotationMapEventsObservableMock,
                                                   with: annotationSupportableStyleMock,
                                                   options: AnnotationOptions())
         annotationManager.interactionDelegate = self

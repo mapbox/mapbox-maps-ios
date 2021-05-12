@@ -15,6 +15,14 @@ public final class MapboxMap {
         }
     }
 
+    private var eventHandlers = WeakSet<MapEventHandler>()
+
+    deinit {
+        eventHandlers.allObjects.forEach {
+            $0.cancel()
+        }
+    }
+
     internal init(mapClient: MapClient, mapInitOptions: MapInitOptions) {
         __map = Map(
             client: mapClient,
@@ -167,5 +175,47 @@ public final class MapboxMap {
         rect = rect.extend(from: nePoint)
 
         return rect
+    }
+}
+
+// MARK: - ObservableProtocol
+
+extension MapboxMap: ObservableProtocol {
+    public func subscribe(_ observer: Observer, events: [String]) {
+        __map.subscribe(for: observer, events: events)
+    }
+
+    public func unsubscribe(_ observer: Observer, events: [String] = []) {
+        if events.isEmpty {
+            __map.unsubscribe(for: observer)
+        } else {
+            __map.unsubscribe(for: observer, events: events)
+        }
+    }
+}
+
+// MARK: - Map Event handling
+
+extension MapboxMap: MapEventsObservable {
+    @discardableResult
+    public func onNext(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
+        let handler = MapEventHandler(for: [eventType.rawValue],
+                                      observable: self) { event in
+            handler(event)
+            return true
+        }
+        eventHandlers.add(handler)
+        return handler
+    }
+
+    @discardableResult
+    public func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
+        let handler = MapEventHandler(for: [eventType.rawValue],
+                                      observable: self) { event in
+            handler(event)
+            return false
+        }
+        eventHandlers.add(handler)
+        return handler
     }
 }

@@ -19,9 +19,7 @@ public class PointAnnotationExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the delegate to receive information about map events.
-        mapView.on(.mapLoaded) { [weak self] _ in
-
-            guard let self = self else { return }
+        mapView.mapboxMap.onNext(.mapLoaded) { _ in
 
             // Create the point annotation, which will be rendered with the default red pin.
             let centerCoordinate = self.mapView.cameraState.center

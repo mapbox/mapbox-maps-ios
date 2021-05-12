@@ -15,9 +15,7 @@ public class CameraAnimationExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the delegate to receive information about map events.
-        mapView.on(.mapLoaded) { [weak self] _ in
-
-            guard let self = self else { return }
+        mapView.mapboxMap.onNext(.mapLoaded) { _ in
 
             // Center the map camera over New York City.
             let centerCoordinate = CLLocationCoordinate2D(
@@ -30,9 +28,9 @@ public class CameraAnimationExample: UIViewController, ExampleProtocol {
                                           bearing: 180.0,
                                           pitch: 15.0)
 
-            self.mapView.camera.ease(to: newCamera, duration: 5.0) { (_) in
+            self.mapView.camera.ease(to: newCamera, duration: 5.0) { [weak self] (_) in
                 // The below line is used for internal testing purposes only.
-                self.finish()
+                self?.finish()
             }
         }
     }

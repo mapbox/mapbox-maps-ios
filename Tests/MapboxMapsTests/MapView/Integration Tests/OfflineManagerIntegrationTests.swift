@@ -1,8 +1,7 @@
 import XCTest
 @testable import MapboxMaps
 
-// swiftlint:disable force_cast empty_enum_arguments
-
+// swiftlint:disable force_cast
 internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
 
     // MARK: Reusable test properties
@@ -89,7 +88,7 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
                                                               loadOptions: tileRegionLoadOptions!) { _ in }
         completion: { result in
             switch result {
-            case .success(_):
+            case .success:
                 XCTFail("Result reached success block, therefore download was not canceled")
             case .failure(let error):
                 let tileError = error as! TileRegionError
@@ -142,7 +141,7 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
         wait(for: expectations, timeout: 5.0)
     }
 
-    internal func testMapCanBeLoadedWithoutNetworkConnectivity() {
+    internal func testMapCanBeLoadedWithoutNetworkConnectivity() throws {
         /// Expectations to be fulfilled
         let mapIsUsingDatabase = XCTestExpectation(description: "Map is using database for resources")
         mapIsUsingDatabase.assertForOverFulfill = false
@@ -154,7 +153,9 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
 
         NetworkConnectivity.getInstance().setMapboxStackConnectedForConnected(false)
 
-        self.mapView!.on(.resourceRequest) { event in
+        let mapboxMap = try XCTUnwrap(mapView?.mapboxMap)
+
+        mapboxMap.onEvery(.resourceRequest) { event in
             let eventElements = event.data as! [String: Any]
 
             let source = eventElements["data-source"] as! String
@@ -167,7 +168,7 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
             }
         }
 
-        self.mapView!.on(.mapLoaded) { _ in
+        mapboxMap.onNext(.mapLoaded) { _ in
             mapWasLoaded.fulfill()
         }
 

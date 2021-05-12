@@ -1,14 +1,14 @@
 import Foundation
 
 // swiftlint:disable force_cast
-internal class WeakCameraAnimatorSet {
+internal class WeakSet<T> {
     private let hashTable = NSHashTable<NSObject>.weakObjects()
 
-    internal func add(_ object: CameraAnimatorInterface) {
+    internal func add(_ object: T) {
         hashTable.add((object as! NSObject))
     }
 
-    internal func remove(_ object: CameraAnimatorInterface) {
+    internal func remove(_ object: T) {
         hashTable.remove((object as! NSObject))
     }
 
@@ -16,7 +16,7 @@ internal class WeakCameraAnimatorSet {
         hashTable.removeAllObjects()
     }
 
-    internal var allObjects: [CameraAnimatorInterface] {
-        hashTable.allObjects.map { $0 as! CameraAnimatorInterface }
+    internal var allObjects: [T] {
+        hashTable.allObjects.map { $0 as! T }
     }
 }

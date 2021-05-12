@@ -32,8 +32,7 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allow the view controller to receive information about map events.
-        mapView.on(.mapLoaded) { [weak self] _ in
-            guard let self = self else { return }
+        mapView.mapboxMap.onNext(.mapLoaded) { _ in
             self.setupExample()
         }
 

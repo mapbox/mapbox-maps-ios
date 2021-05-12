@@ -26,9 +26,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         }
 
         // Allows the delegate to receive information about map events.
-        mapView.on(.mapLoaded) { [weak self] _ in
-            guard let self = self else { return }
-
+        mapView.mapboxMap.onNext(.mapLoaded) { _ in
             // Register the location consumer with the map
             // Note that the location manager holds weak references to consumers, which should be retained
             self.mapView.location.addLocationConsumer(newConsumer: self.cameraLocationConsumer)

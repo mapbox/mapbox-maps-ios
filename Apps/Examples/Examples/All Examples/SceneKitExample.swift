@@ -27,10 +27,10 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
 
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.view.addSubview(mapView)
+        view.addSubview(mapView)
 
-        self.mapView.on(.styleLoaded) { [weak self] _ in
-            self?.addModelAndTerrain()
+        mapView.mapboxMap.onNext(.styleLoaded) { _ in
+            self.addModelAndTerrain()
         }
     }
 

@@ -120,8 +120,10 @@ open class BaseMapView: UIView {
                                                object: nil)
 
         // Use the overriding style URI if provided (currently from IB)
-        if let initialStyleURI = overridingStyleURI ?? resolvedMapInitOptions.styleURI?.rawValue {
+        if let initialStyleURI = overridingStyleURI {
             mapboxMap.__map.setStyleURIForUri(initialStyleURI.absoluteString)
+        } else if let initialStyleURI = resolvedMapInitOptions.styleURI {
+            mapboxMap.__map.setStyleURIForUri(initialStyleURI.rawValue)
         }
 
         if let cameraOptions = resolvedMapInitOptions.cameraOptions {

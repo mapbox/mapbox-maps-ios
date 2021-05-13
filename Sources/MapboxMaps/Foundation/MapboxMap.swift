@@ -15,6 +15,9 @@ public final class MapboxMap {
         }
     }
 
+    /// The `style` object supports run time styling.
+    public internal(set) var style: Style
+
     private var eventHandlers = WeakSet<MapEventHandler>()
 
     deinit {
@@ -29,6 +32,8 @@ public final class MapboxMap {
             mapOptions: mapInitOptions.mapOptions,
             resourceOptions: mapInitOptions.resourceOptions)
         __map.createRenderer()
+
+        style = Style(with: __map)
     }
 
     internal var cameraState: CameraState {
@@ -38,6 +43,39 @@ public final class MapboxMap {
     internal func updateCamera(with cameraOptions: CameraOptions) {
         __map.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
     }
+
+    // MARK: - Style loading
+     private func observeStyleLoad(_ completion: @escaping (Result<Style, Error>) -> Void) {
+
+        _ = onNext(eventTypes: [.styleLoaded, .mapLoadingError]) { event in
+             switch event.type {
+             case MapEvents.styleLoaded:
+                 assert(self.style.isLoaded)
+                 completion(.success(self.style))
+
+             case MapEvents.mapLoadingError:
+                 let error = MapLoadingError(data: event.data)
+                 completion(.failure(error))
+
+             default:
+                 fatalError("Unexpected event type")
+             }
+         }
+     }
+
+     public func loadStyleURI(_ styleURI: StyleURI, completion: ((Result<Style, Error>) -> Void)? = nil) {
+         if let completion = completion {
+             observeStyleLoad(completion)
+         }
+         __map.setStyleURIForUri(styleURI.rawValue)
+     }
+
+     public func loadStyleJSON(_ JSON: String, completion: ((Result<Style, Error>) -> Void)? = nil) {
+         if let completion = completion {
+             observeStyleLoad(completion)
+         }
+         __map.setStyleJSONForJson(JSON)
+     }
 
     // MARK: - Camera Fitting
 
@@ -197,15 +235,21 @@ extension MapboxMap: ObservableProtocol {
 // MARK: - Map Event handling
 
 extension MapboxMap: MapEventsObservable {
-    @discardableResult
-    public func onNext(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
-        let handler = MapEventHandler(for: [eventType.rawValue],
+
+    private func onNext(eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable {
+        let rawTypes = eventTypes.map { $0.rawValue }
+        let handler = MapEventHandler(for: rawTypes,
                                       observable: self) { event in
             handler(event)
             return true
         }
         eventHandlers.add(handler)
         return handler
+    }
+
+    @discardableResult
+    public func onNext(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
+        return onNext(eventTypes: [eventType], handler: handler)
     }
 
     @discardableResult

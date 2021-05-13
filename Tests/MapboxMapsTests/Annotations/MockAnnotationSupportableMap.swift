@@ -7,7 +7,7 @@ final class MockAnnotationSupportableMap: UIView, AnnotationSupportableMap {
     func visibleFeatures(in rect: CGRect,
                          styleLayers: Set<String>?,
                          filter: Expression?,
-                         completion: @escaping (Result<[QueriedFeature], BaseMapView.QueryRenderedFeaturesError>) -> Void) {
+                         completion: @escaping (Result<[QueriedFeature], MapView.QueryRenderedFeaturesError>) -> Void) {
         let feature = MBXFeature()
         let queriedFeature = QueriedFeature(feature: feature, source: "SourceID", sourceLayer: nil, state: true)
         completion(.success([queriedFeature]))

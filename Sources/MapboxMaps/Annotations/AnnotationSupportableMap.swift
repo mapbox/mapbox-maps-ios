@@ -14,10 +14,10 @@ internal protocol AnnotationSupportableMap: UIView {
     func visibleFeatures(in rect: CGRect,
                          styleLayers: Set<String>?,
                          filter: Expression?,
-                         completion: @escaping (Result<[QueriedFeature], BaseMapView.QueryRenderedFeaturesError>) -> Void)
+                         completion: @escaping (Result<[QueriedFeature], MapView.QueryRenderedFeaturesError>) -> Void)
 }
 
-extension BaseMapView: AnnotationSupportableMap {
+extension MapView: AnnotationSupportableMap {
     public var observable: Observable? {
         return mapboxMap.__map
     }

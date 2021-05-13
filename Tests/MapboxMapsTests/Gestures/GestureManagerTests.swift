@@ -11,7 +11,7 @@ import MapboxMapsFoundation
 //swiftlint:disable explicit_acl explicit_top_level_acl
 final class GestureManagerTests: XCTestCase {
 
-    var mapView: BaseMapView!
+    var mapView: MapView!
     // swiftlint:disable weak_delegate
     var delegate: GestureHandlerDelegateMock!
     var cameraManager: MockCameraManager!
@@ -19,7 +19,7 @@ final class GestureManagerTests: XCTestCase {
     var gestureManager: GestureManager!
 
     override func setUp() {
-        mapView = BaseMapView(frame: CGRect(x: 0, y: 0, width: 100, height: 100),
+        mapView = MapView(frame: CGRect(x: 0, y: 0, width: 100, height: 100),
                               mapInitOptions: MapInitOptions(styleURI: nil))
         delegate = GestureHandlerDelegateMock()
         cameraManager = MockCameraManager()

@@ -8,7 +8,7 @@ import MapboxMapsFoundation
 
 final class MockCameraManager: CameraManagerProtocol {
 
-    var mapView: BaseMapView?
+    var mapView: MapView?
 
     var options = MapCameraOptions()
 

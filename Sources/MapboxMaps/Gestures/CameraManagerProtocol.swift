@@ -2,7 +2,7 @@ import Foundation
 
 internal protocol CameraManagerProtocol: AnyObject {
 
-    var mapView: BaseMapView? { get }
+    var mapView: MapView? { get }
 
     var options: MapCameraOptions { get }
 

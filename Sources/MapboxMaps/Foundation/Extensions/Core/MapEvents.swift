@@ -206,7 +206,7 @@ public extension MapEvents {
 
         /**
          * Camera has changed. This event is emitted whenever the visible viewport
-         * changes due to `BaseMapView.layoutSubviews` being called or when the camera
+         * changes due to `MapView.layoutSubviews` being called or when the camera
          * is modified by calling Map camera methods.
          */
         case cameraChanged

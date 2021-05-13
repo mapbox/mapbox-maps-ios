@@ -4,7 +4,7 @@ internal protocol CameraManagerProtocol: AnyObject {
 
     var mapView: BaseMapView? { get }
 
-    var mapCameraOptions: MapCameraOptions { get }
+    var options: MapCameraOptions { get }
 
     func setCamera(to camera: CameraOptions)
 

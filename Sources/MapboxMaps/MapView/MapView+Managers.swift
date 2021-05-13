@@ -11,7 +11,7 @@ extension MapView {
         setupMapView(with: mapConfig.render)
 
         // Initialize/Configure camera manager first since Gestures needs it as dependency
-        setupCamera(for: self, options: mapConfig.camera)
+        setupCamera(view: self)
 
         // Initialize/Configure style manager
         setupStyle(with: mapboxMap.__map)
@@ -36,7 +36,6 @@ extension MapView {
 
         // Update the managers in order
         updateMapView(with: mapConfig.render)
-        updateCamera(with: mapConfig.camera)
         updateAnnotationManager(with: mapConfig.annotations)
     }
 
@@ -61,12 +60,8 @@ extension MapView {
         gestures = GestureManager(for: view, cameraManager: cameraManager)
     }
 
-    internal func setupCamera(for view: MapView, options: MapCameraOptions) {
-        camera = CameraAnimationsManager(for: view, with: mapConfig.camera)
-    }
-
-    internal func updateCamera(with newOptions: MapCameraOptions) {
-        camera.updateMapCameraOptions(newOptions: newOptions)
+    internal func setupCamera(view: MapView) {
+        camera = CameraAnimationsManager(mapView: view)
     }
 
     internal func setupOrnaments(with view: OrnamentSupportableView) {

@@ -11,12 +11,11 @@ internal class OptionsIntegrationTest: MapViewIntegrationTestCase {
         }
 
         var newConfig = MapboxMaps.MapConfig()
-        newConfig.camera.animationDuration = 0.1
 
         mapView.update { (options) in
             options = newConfig
         }
-        XCTAssertEqual(mapView.camera.mapCameraOptions, newConfig.camera)
+
         XCTAssertEqual(mapView.metalView?.presentsWithTransaction, true)
     }
 }

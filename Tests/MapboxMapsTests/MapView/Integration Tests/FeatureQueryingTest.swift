@@ -22,7 +22,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
         let featureQueryExpectation = XCTestExpectation(description: "Wait for features to be queried.")
 
         didFinishLoadingStyle = { mapView in
-            let cameraManager = CameraAnimationsManager(for: mapView, with: MapCameraOptions())
+            let cameraManager = CameraAnimationsManager(mapView: mapView)
             cameraManager.setCamera(to: CameraOptions(center: self.centerCoordinate,
                                     zoom: 15.0))
         }
@@ -56,7 +56,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
         let featureQueryExpectation = XCTestExpectation(description: "Wait for features to be queried.")
 
         didFinishLoadingStyle = { mapView in
-            let cameraManager = CameraAnimationsManager(for: mapView, with: MapCameraOptions())
+            let cameraManager = CameraAnimationsManager(mapView: mapView)
             cameraManager.setCamera(to: CameraOptions(center: self.centerCoordinate,
                                     zoom: 15.0))
         }

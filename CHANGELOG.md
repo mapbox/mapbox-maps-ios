@@ -8,6 +8,10 @@ Mapbox welcomes participation and contributions from everyone.
 
  - `StyleURI`, `PreferredFPS`, and `AnimationOwner` are now structs. ([#285](https://github.com/mapbox/mapbox-maps-ios/pull/285))
  
+### Features ✨ and improvements 🏁
+
+- `SourceInfo` properties have been updated to be public ([#349](https://github.com/mapbox/mapbox-maps-ios/pull/349))
+
 ## 10.0.0-beta.19.1 - May 7, 2021
 
 ### Breaking changes ⚠️

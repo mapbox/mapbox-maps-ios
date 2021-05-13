@@ -135,7 +135,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
 
         self.observer = observer
 
-        style = view.style
+        style = view.mapboxMap.style
 
         rootView.addSubview(view)
 

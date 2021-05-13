@@ -100,7 +100,7 @@ class ViewController: UIViewController {
             self.flyToNextCoordinate()
         }
 
-        mapView.style.uri = styles[styleStep].0
+        mapView.mapboxMap.style.uri = styles[styleStep].0
     }
 
     func flyToNextCoordinate() {
@@ -118,7 +118,7 @@ class ViewController: UIViewController {
             removeAnnotations()
 
             // Change the style
-            mapView.style.uri = styles[styleStep].0
+            mapView.mapboxMap.style.uri = styles[styleStep].0
             print("Changing style to \(styles[styleStep].0)")
 
             return

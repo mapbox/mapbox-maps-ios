@@ -73,7 +73,7 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
             }
 
             // Get layer position
-            let layers = mapView.style.styleManager.getStyleLayers()
+            let layers = mapView.mapboxMap.style.styleManager.getStyleLayers()
             let layerIds = layers.map { $0.id }
             let layerIndex = layerIds.firstIndex(of: layerId)
             XCTAssertNotNil(layerIndex)

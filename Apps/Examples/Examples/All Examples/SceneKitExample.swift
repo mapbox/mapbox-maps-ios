@@ -39,7 +39,7 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
     }
 
     func addModelAndTerrain() {
-        try! mapView.style.addCustomLayer(
+        try! mapView.mapboxMap.style.addCustomLayer(
             withId: "Custom",
             layerHost: self,
             layerPosition: .below("waterway-label"))
@@ -49,17 +49,17 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
         demSource.tileSize = 512
         demSource.maxzoom = 14.0
 
-        try! mapView.style.addSource(demSource, id: "mapbox-dem")
+        try! mapView.mapboxMap.style.addSource(demSource, id: "mapbox-dem")
 
         let terrain = Terrain(sourceId: "mapbox-dem")
-        try! mapView.style.setTerrain(terrain)
+        try! mapView.mapboxMap.style.setTerrain(terrain)
 
         var skyLayer = SkyLayer(id: "sky-layer")
         skyLayer.paint?.skyType = .constant(.atmosphere)
         skyLayer.paint?.skyAtmosphereSun = .constant([0, 0])
         skyLayer.paint?.skyAtmosphereSunIntensity = .constant(15.0)
 
-        try! mapView.style.addLayer(skyLayer)
+        try! mapView.mapboxMap.style.addLayer(skyLayer)
 
         // Re-use terrain source for hillshade
         let properties = [

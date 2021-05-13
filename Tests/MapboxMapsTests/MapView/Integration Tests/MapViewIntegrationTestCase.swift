@@ -46,7 +46,7 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
             self.didFailLoadingMap?(self.mapView!, error)
         }
 
-        style = view.style
+        style = view.mapboxMap.style
 
         rootView.addSubview(view)
 

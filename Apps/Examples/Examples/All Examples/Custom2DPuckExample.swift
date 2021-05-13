@@ -26,11 +26,9 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
 
     internal func setupExample() {
 
-        mapView.update { (mapOptions) in
-            // Granularly configure the location puck with a `Puck2DConfiguration`
-            let configuration = Puck2DConfiguration(topImage: UIImage(named: "star"))
-            mapOptions.location.puckType = .puck2D(configuration)
-        }
+        // Granularly configure the location puck with a `Puck2DConfiguration`
+        let configuration = Puck2DConfiguration(topImage: UIImage(named: "star"))
+        mapView.location.options.puckType = .puck2D(configuration)
 
         let coordinate = CLLocationCoordinate2D(latitude: 39.085006, longitude: -77.150925)
         mapView.camera.setCamera(to: CameraOptions(center: coordinate,

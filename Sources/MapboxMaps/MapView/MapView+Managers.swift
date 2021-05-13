@@ -23,7 +23,7 @@ extension MapView {
         setupOrnaments(with: self)
 
         // Initialize/Configure location manager
-        setupUserLocationManager(with: self, options: mapConfig.location)
+        setupUserLocationManager(with: self)
 
         // Initialize/Configure annotations manager
         setupAnnotationManager(with: self, mapEventsObservable: mapboxMap, style: style, options: mapConfig.annotations)
@@ -37,7 +37,6 @@ extension MapView {
         // Update the managers in order
         updateMapView(with: mapConfig.render)
         updateCamera(with: mapConfig.camera)
-        updateUserLocationManager(with: mapConfig.location)
         updateAnnotationManager(with: mapConfig.annotations)
     }
 
@@ -74,14 +73,9 @@ extension MapView {
         ornaments = OrnamentsManager(view: view, options: OrnamentOptions())
     }
 
-    internal func setupUserLocationManager(with locationSupportableMapView: LocationSupportableMapView, options: LocationOptions) {
+    internal func setupUserLocationManager(with locationSupportableMapView: LocationSupportableMapView) {
 
-        location = LocationManager(locationOptions: options,
-                                          locationSupportableMapView: locationSupportableMapView)
-    }
-
-    internal func updateUserLocationManager(with options: LocationOptions) {
-        location.updateLocationOptions(with: mapConfig.location)
+        location = LocationManager(locationSupportableMapView: locationSupportableMapView)
     }
 
     internal func setupAnnotationManager(with annotationSupportableMap: AnnotationSupportableMap, mapEventsObservable: MapEventsObservable, style: Style, options: AnnotationOptions) {

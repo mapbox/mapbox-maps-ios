@@ -46,11 +46,7 @@ internal class LocationManagerIntegrationTestCase: MapViewIntegrationTestCase {
     }
 
     private func setupLocationManager(with mapView: MapView) -> LocationManager {
-        let locationProviderOptions = LocationOptions()
-
-        let locationManager = LocationManager(locationOptions: locationProviderOptions,
-                                              locationSupportableMapView: mapView)
-
+        let locationManager = LocationManager(locationSupportableMapView: mapView)
         return locationManager
     }
 

@@ -13,11 +13,8 @@ final class Puck3DIntegrationTests: XCTestCase {
     func testPuck3DDeinitializationDoesNotCrash() {
         autoreleasepool {
             let mapView = MapView(frame: .zero)
-            mapView.update { (options) in
-                options.location.puckType = .puck3D(
-                    Puck3DConfiguration(
-                        model: Model()))
-            }
+            mapView.location.options.puckType = .puck3D(Puck3DConfiguration(
+                                                            model: Model()))
         }
         // there is no assertion here because this test is
         // merely ensuring that Puck3D does not crash when

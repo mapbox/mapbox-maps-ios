@@ -99,7 +99,7 @@ public class CameraAnimationsManager {
               let flyToAnimator = FlyToCameraAnimator(
                 inital: mapView.cameraState,
                 final: camera,
-                owner: AnimationOwner(rawValue: "com.mapbox.maps.cameraAnimationsManager"),
+                owner: AnimationOwner(rawValue: "com.mapbox.maps.cameraAnimationsManager.flyToAnimator"),
                 duration: duration,
                 mapSize: mapView.mapboxMap.size,
                 delegate: self) else {

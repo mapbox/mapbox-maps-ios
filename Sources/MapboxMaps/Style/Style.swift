@@ -6,8 +6,6 @@ import MapboxMapsFoundation
 //swiftlint:disable file_length
 public class Style {
 
-    public static let defaultURI = StyleURI.streets
-
     public private(set) weak var styleManager: StyleManager!
 
     internal init(with styleManager: StyleManager) {
@@ -15,7 +13,9 @@ public class Style {
 
         let uri = StyleURI(rawValue: styleManager.getStyleURI())
 
-        self.uri = uri ?? Self.defaultURI
+        if let uri = uri {
+            self.uri = uri
+        }
     }
 
     // MARK: - Layers

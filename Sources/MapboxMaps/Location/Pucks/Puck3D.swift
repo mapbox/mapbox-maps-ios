@@ -40,11 +40,13 @@ internal class Puck3D: Puck {
     // MARK: Protocol Properties
     internal var puckStyle: PuckStyle
     internal weak var locationSupportableMapView: LocationSupportableMapView?
+    internal weak var style: LocationStyleDelegate?
 
     // MARK: Initializers
-    internal init(puckStyle: PuckStyle, locationSupportableMapView: LocationSupportableMapView, configuration: Puck3DConfiguration) {
+    internal init(puckStyle: PuckStyle, locationSupportableMapView: LocationSupportableMapView, style: LocationStyleDelegate, configuration: Puck3DConfiguration) {
         self.puckStyle = puckStyle
         self.locationSupportableMapView = locationSupportableMapView
+        self.style = style
         self.configuration = configuration
         modelLayer = ModelLayer(id: "puck-model-layer")
         modelSource = ModelSource()
@@ -73,7 +75,7 @@ internal class Puck3D: Puck {
 
         let addStyle = { [weak self] in
             guard let self = self,
-                  let style = self.locationSupportableMapView?.style else {
+                  let style = self.style else {
                 return
             }
             self.removePuck()
@@ -94,7 +96,7 @@ internal class Puck3D: Puck {
 
     // MARK: Protocol Implementation
     internal func updateLocation(location: Location) {
-        guard let style = locationSupportableMapView?.style,
+        guard let style = style,
               let key = modelSource.models?.keys.first,
               var model = modelSource.models?.values.first else { return }
 
@@ -121,9 +123,8 @@ internal class Puck3D: Puck {
 
     /// This function will remove the puck from `mapView`
     private func removePuck() {
-        guard
-            let style = locationSupportableMapView?.style,
-            style.layerExists(withId: "puck-model-layer") else {
+        guard let style = style,
+              style.layerExists(withId: "puck-model-layer") else {
             return
         }
 

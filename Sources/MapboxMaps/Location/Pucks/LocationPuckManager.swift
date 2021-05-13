@@ -40,6 +40,9 @@ internal class LocationPuckManager: LocationConsumer {
     /// MapView that supports location events
     internal private(set) weak var locationSupportableMapView: LocationSupportableMapView?
 
+    /// Style protocol that supports limited style APIs
+    internal private(set) weak var style: LocationStyleDelegate?
+
     /// The current  puck style
     internal private(set) var puckStyle: PuckStyle
 
@@ -47,10 +50,12 @@ internal class LocationPuckManager: LocationConsumer {
     internal private(set) var puckType: PuckType
 
     internal init(locationSupportableMapView: LocationSupportableMapView,
+                  style: LocationStyleDelegate?,
                   puckType: PuckType) {
         puckStyle = .precise
         self.puckType = puckType
         self.locationSupportableMapView = locationSupportableMapView
+        self.style = style
     }
 
     /// LocationConsumer protocol method that will handle location updates
@@ -66,14 +71,24 @@ internal class LocationPuckManager: LocationConsumer {
     }
 
     internal func createPuck() {
-        guard let locationSupportableMapView = self.locationSupportableMapView else { return }
+        guard let locationSupportableMapView = locationSupportableMapView,
+              let style = style else {
+            return
+        }
+
         var puck: Puck
 
         switch puckType {
         case let .puck2D(configuration):
-            puck = Puck2D(puckStyle: puckStyle, locationSupportableMapView: locationSupportableMapView, configuration: configuration)
+            puck = Puck2D(puckStyle: puckStyle,
+                          locationSupportableMapView: locationSupportableMapView,
+                          style: style,
+                          configuration: configuration)
         case let .puck3D(configuration):
-            puck = Puck3D(puckStyle: puckStyle, locationSupportableMapView: locationSupportableMapView, configuration: configuration)
+            puck = Puck3D(puckStyle: puckStyle,
+                          locationSupportableMapView: locationSupportableMapView,
+                          style: style,
+                          configuration: configuration)
         }
 
         if let location = latestLocation {

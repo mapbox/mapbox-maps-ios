@@ -57,11 +57,16 @@ internal class Puck2D: Puck {
     internal var puckStyle: PuckStyle
 
     internal weak var locationSupportableMapView: LocationSupportableMapView?
+    internal weak var style: LocationStyleDelegate?
 
     // MARK: Initializers
-    internal init(puckStyle: PuckStyle, locationSupportableMapView: LocationSupportableMapView, configuration: Puck2DConfiguration) {
+    internal init(puckStyle: PuckStyle,
+                  locationSupportableMapView: LocationSupportableMapView,
+                  style: LocationStyleDelegate,
+                  configuration: Puck2DConfiguration) {
         self.puckStyle = puckStyle
         self.locationSupportableMapView = locationSupportableMapView
+        self.style = style
         self.configuration = configuration
     }
 
@@ -71,8 +76,8 @@ internal class Puck2D: Puck {
 
     // MARK: Protocol Implementation
     internal func updateLocation(location: Location) {
-        if let locationIndicatorLayer = self.locationIndicatorLayer,
-           let style = locationSupportableMapView?.style {
+        if let locationIndicatorLayer = locationIndicatorLayer,
+           let style = style {
 
             let newLocation: [Double] = [
                 location.coordinate.latitude,
@@ -85,21 +90,15 @@ internal class Puck2D: Puck {
                 bearing = latestBearing.trueHeading
             }
 
-            let expectedValueLocation = style.styleManager.setStyleLayerPropertyForLayerId(locationIndicatorLayer.id,
-                                                                                           property: "location",
-                                                                                           value: newLocation)
-            let expectedValueBearing = style.styleManager.setStyleLayerPropertyForLayerId(locationIndicatorLayer.id,
-                                                                                          property: "bearing",
-                                                                                          value: bearing)
-
-            if expectedValueLocation.isError() {
-                Log.error(forMessage: "Error when updating location in location indicator layer: \(String(describing: expectedValueLocation.error))", category: "Location")
+            do {
+                try style.setLayerProperties(for: locationIndicatorLayer.id,
+                                             properties: [
+                                                "location": newLocation,
+                                                "bearing": bearing
+                                             ])
+            } catch {
+                Log.error(forMessage: "Error when updating location/bearing in location indicator layer: \(error)", category: "Location")
             }
-
-            if expectedValueBearing.isError() {
-                Log.error(forMessage: "Error when updating location in location indicator layer: \(String(describing: expectedValueBearing.error))", category: "Location")
-            }
-
         } else {
             updateStyle(puckStyle: puckStyle, location: location)
         }
@@ -134,11 +133,12 @@ internal class Puck2D: Puck {
 
     private func removePuck() {
         guard let locationIndicatorLayer = self.locationIndicatorLayer,
-              let style = locationSupportableMapView?.style
-        else { return }
+              let style = style else {
+            return
+        }
 
         do {
-        try style.removeLayer(withId: locationIndicatorLayer.id)
+            try style.removeLayer(withId: locationIndicatorLayer.id)
         } catch {
             Log.error(forMessage: "Error when removing location indicator layer: \(error)", category: "Location")
         }
@@ -151,7 +151,9 @@ internal class Puck2D: Puck {
 
 private extension Puck2D {
     func createPreciseLocationIndicatorLayer(location: Location) throws {
-        guard let style = locationSupportableMapView?.style else { return }
+        guard let style = style else {
+            return
+        }
 
         if style.layerExists(withId: "approximate-puck") {
             try style.removeLayer(withId: "approximate-puck")
@@ -207,8 +209,10 @@ private extension Puck2D {
     }
 
     func createApproximateLocationIndicatorLayer(location: Location) throws {
-        guard let style = locationSupportableMapView?.style else { return }
-        // TODO: Handle removal of precise indicator properly.
+        guard let style = style else {
+            return
+        }
+
         if style.layerExists(withId: "puck") {
             try style.removeLayer(withId: "puck")
         }

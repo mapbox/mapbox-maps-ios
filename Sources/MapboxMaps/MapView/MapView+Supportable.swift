@@ -53,4 +53,6 @@ extension MapView: LocationSupportableMapView {
     }
 }
 
+extension Style: LocationStyleDelegate { }
+
 extension Style: AnnotationStyleDelegate { }

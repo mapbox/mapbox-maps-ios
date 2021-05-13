@@ -13,7 +13,6 @@ import UIKit
 #endif
 
 class LocationSupportableMapViewMock: UIView, LocationSupportableMapView {
-    var style: Style!
 
     func subscribeRenderFrameHandler(_ handler: @escaping (MapboxCoreMaps.Event) -> Void) {
         print("Pass through implementation")

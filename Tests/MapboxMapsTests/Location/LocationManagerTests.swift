@@ -10,21 +10,24 @@ import MapboxMapsFoundation
 internal class LocationManagerTests: XCTestCase {
 
     var locationSupportableMapView: LocationSupportableMapViewMock!
+    var locationSupportableStyle: MockLocationStyleDelegate!
 
     override func setUp() {
         locationSupportableMapView = LocationSupportableMapViewMock()
+        locationSupportableStyle = MockLocationStyleDelegate()
         super.setUp()
     }
 
     override func tearDown() {
         locationSupportableMapView = nil
+        locationSupportableStyle = nil
         super.tearDown()
     }
 
     func testLocationManagerDefaultInitialization() {
         let locationOptions = LocationOptions()
 
-        let locationManager = LocationManager(locationSupportableMapView: locationSupportableMapView)
+        let locationManager = LocationManager(locationSupportableMapView: locationSupportableMapView, style: locationSupportableStyle)
 
         XCTAssertEqual(locationManager.options, locationOptions)
         XCTAssertTrue(locationManager.locationSupportableMapView === locationSupportableMapView)
@@ -32,7 +35,7 @@ internal class LocationManagerTests: XCTestCase {
     }
 
     func testAddLocationConsumer() {
-        let locationManager = LocationManager(locationSupportableMapView: locationSupportableMapView)
+        let locationManager = LocationManager(locationSupportableMapView: locationSupportableMapView, style: locationSupportableStyle)
         let locationConsumer = LocationConsumerMock()
 
         locationManager.addLocationConsumer(newConsumer: locationConsumer)
@@ -43,7 +46,11 @@ internal class LocationManagerTests: XCTestCase {
     func testUpdateLocationOptionsWithModifiedPuckType() {
         var locationOptions = LocationOptions()
         locationOptions.puckType = .puck2D(Puck2DConfiguration(scale: .constant(1.0)))
-        let locationManager = LocationManager(locationSupportableMapView: locationSupportableMapView)
+        let locationManager = LocationManager(
+            locationOptions: locationOptions,
+            locationSupportableMapView: locationSupportableMapView,
+            style: locationSupportableStyle)
+        let locationManager = LocationManager(locationSupportableMapView: locationSupportableMapView, style: locationSupportableStyle)
 
         var locationOptions2 = LocationOptions()
         locationOptions2.puckType = .puck2D(Puck2DConfiguration(scale: .constant(2.0)))
@@ -56,7 +63,7 @@ internal class LocationManagerTests: XCTestCase {
     func testUpdateLocationOptionsWithPuckTypeSetToNil() {
         var locationOptions = LocationOptions()
         locationOptions.puckType = .puck2D()
-        let locationManager = LocationManager(locationSupportableMapView: locationSupportableMapView)
+        let locationManager = LocationManager(locationSupportableMapView: locationSupportableMapView, style: locationSupportableStyle)
 
         var locationOptions2 = LocationOptions()
         locationOptions2.puckType = nil
@@ -69,7 +76,7 @@ internal class LocationManagerTests: XCTestCase {
     func testUpdateLocationOptionsWithPuckTypeSetToNonNil() {
         var locationOptions = LocationOptions()
         locationOptions.puckType = nil
-        let locationManager = LocationManager(locationSupportableMapView: locationSupportableMapView)
+        let locationManager = LocationManager(locationSupportableMapView: locationSupportableMapView, style: locationSupportableStyle)
 
         var locationOptions2 = LocationOptions()
         locationOptions2.puckType = .puck2D()

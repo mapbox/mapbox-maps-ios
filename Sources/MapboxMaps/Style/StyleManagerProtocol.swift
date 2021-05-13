@@ -15,7 +15,7 @@ public protocol StyleManagerProtocol {
     /// - Attention:
     ///     This method should be called on the same thread where the MapboxMap
     ///     object is initialized.
-    var uri: StyleURI { get set }
+    var uri: StyleURI? { get set }
 
     /// Get or set the style via a JSON serialization string
     ///

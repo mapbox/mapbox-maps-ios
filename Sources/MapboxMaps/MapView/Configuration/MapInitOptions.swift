@@ -37,7 +37,7 @@ public final class MapInitOptions: NSObject {
     public init(resourceOptions: ResourceOptions = ResourceOptions(accessToken: CredentialsManager.default.accessToken ?? ""),
                 mapOptions: MapOptions = MapOptions(constrainMode: .heightOnly),
                 cameraOptions: CameraOptions? = nil,
-                styleURI: StyleURI? = Style.defaultURI) {
+                styleURI: StyleURI? = .streets) {
         self.resourceOptions = resourceOptions
         self.mapOptions      = mapOptions
         self.cameraOptions   = cameraOptions

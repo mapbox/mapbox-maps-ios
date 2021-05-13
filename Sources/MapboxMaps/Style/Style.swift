@@ -6,16 +6,14 @@ import MapboxMapsFoundation
 //swiftlint:disable file_length
 public class Style {
 
-    public static let defaultURI = StyleURI.streets
-
     public private(set) weak var styleManager: StyleManager!
 
     internal init(with styleManager: StyleManager) {
         self.styleManager = styleManager
 
-        let uri = StyleURI(rawValue: styleManager.getStyleURI())
-
-        self.uri = uri ?? Self.defaultURI
+        if let uri = StyleURI(rawValue: styleManager.getStyleURI()) {
+            self.uri = uri
+        }
     }
 
     // MARK: - Layers
@@ -266,16 +264,24 @@ extension Style: StyleManagerProtocol {
         return styleManager.isStyleLoaded()
     }
 
-    public var uri: StyleURI {
+    public var uri: StyleURI? {
         get {
             let uriString = styleManager.getStyleURI()
+
+            // A "nil" style is returned as an empty string
+            if uriString.isEmpty {
+                return nil
+            }
+
             guard let styleURI = StyleURI(rawValue: uriString) else {
                 fatalError()
             }
             return styleURI
         }
         set {
-            styleManager.setStyleURIForUri(newValue.rawValue)
+            if let uriString = newValue?.rawValue {
+                styleManager.setStyleURIForUri(uriString)
+            }
         }
     }
 

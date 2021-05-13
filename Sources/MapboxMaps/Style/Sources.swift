@@ -49,8 +49,8 @@ public extension Source {
 /// Information about a Source
 public struct SourceInfo {
     /// The identifier of the source
-    var id: String
+    public var id: String
 
     /// The type of the source
-    var type: SourceType
+    public var type: SourceType
 }

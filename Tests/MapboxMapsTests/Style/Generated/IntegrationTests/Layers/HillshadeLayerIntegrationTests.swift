@@ -54,7 +54,7 @@ class HillshadeLayerIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the layer
             do {
-                _ = try style.layer(withId: "test-id", type: HillshadeLayer.self)
+                _ = try style.layer(withId: "test-id") as HillshadeLayer
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve HillshadeLayer because of error: \(error)")   

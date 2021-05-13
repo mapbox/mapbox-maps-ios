@@ -53,9 +53,9 @@ public class Style {
      - Returns: The fully formed `layer` object of type equal to `type`
      - Throws: StyleError or type conversion errors
      */
-    public func layer<T: Layer>(withId id: String, type: T.Type = T.self) throws -> T {
+    public func layer<T: Layer>(withId id: String) throws -> T {
         // swiftlint:disable force_cast
-        return try _layer(withId: id, type: type) as! T
+        return try _layer(withId: id, type: T.self) as! T
         // swiftlint:enable force_cast
     }
 
@@ -85,8 +85,8 @@ public class Style {
     ///   - update: Closure that mutates a layer passed to it
     ///
     /// - Throws: StyleError or type conversion errors
-    public func updateLayer<T: Layer>(withId id: String, type: T.Type, update: (inout T) throws -> Void) throws {
-        var layer: T = try self.layer(withId: id, type: T.self)
+    public func updateLayer<T: Layer>(withId id: String, update: (inout T) throws -> Void) throws {
+        var layer: T = try self.layer(withId: id)
 
         // Call closure to update the retrieved layer
         try update(&layer)
@@ -132,9 +132,9 @@ public class Style {
      - Returns: The fully formed `source` object of type equal to `type`.
      - Throws: StyleError or type conversion errors
      */
-    public func source<T: Source>(withId id: String, type: T.Type = T.self) throws -> T {
+    public func source<T: Source>(withId id: String) throws -> T {
         // swiftlint:disable force_cast
-        return try _source(withId: id, type: type) as! T
+        return try _source(withId: id, type: T.self) as! T
         // swiftlint:enable force_cast
     }
 
@@ -238,7 +238,7 @@ public class Style {
         }
     }
 
-    private func handleExpected<T>(closure: () -> (MBXExpected<AnyObject, AnyObject>), returnType: T.Type = T.self) throws -> T {
+    private func handleExpected<T>(closure: () -> (MBXExpected<AnyObject, AnyObject>)) throws -> T {
         let expected = closure()
 
         if expected.isError() {

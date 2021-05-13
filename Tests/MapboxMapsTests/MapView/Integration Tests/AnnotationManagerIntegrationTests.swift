@@ -119,7 +119,7 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
             annotationManager.addAnnotation(annotation)
 
             // When
-            _ = try! style.source(withId: annotationManager.defaultSourceId, type: GeoJSONSource.self)
+            _ = try! style.source(withId: annotationManager.defaultSourceId) as GeoJSONSource
             sourceAddedExpectation.fulfill()
 
             _ = try! style.layerProperties(for: annotationManager.defaultSymbolLayerId)

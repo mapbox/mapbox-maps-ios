@@ -52,7 +52,7 @@ class SkyLayerIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the layer
             do {
-                _ = try style.layer(withId: "test-id", type: SkyLayer.self)
+                _ = try style.layer(withId: "test-id") as SkyLayer
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve SkyLayer because of error: \(error)")   

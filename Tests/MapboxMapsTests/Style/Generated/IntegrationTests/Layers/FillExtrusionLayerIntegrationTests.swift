@@ -57,7 +57,7 @@ class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the layer
             do {
-                _ = try style.layer(withId: "test-id", type: FillExtrusionLayer.self)
+                _ = try style.layer(withId: "test-id") as FillExtrusionLayer
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve FillExtrusionLayer because of error: \(error)")   

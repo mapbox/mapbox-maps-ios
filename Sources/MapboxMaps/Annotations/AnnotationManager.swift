@@ -93,7 +93,11 @@ public class AnnotationManager {
     /**
      Options used by the annotation manager.
      */
-    internal var annotationOptions: AnnotationOptions
+    public var options = AnnotationOptions() {
+        didSet {
+            Log.warning(forMessage: "Updating annotation manager options is not supported at this time.", category: "Annotations")
+        }
+    }
 
     /**
      The default source identifier, which will be used by the `AnnotationManager` by default.
@@ -104,7 +108,7 @@ public class AnnotationManager {
      The source identifier used by the `AnnotationManager`.
      */
     internal var sourceId: String {
-        return annotationOptions.sourceId ?? defaultSourceId
+        return options.sourceId ?? defaultSourceId
     }
 
     /**
@@ -146,14 +150,12 @@ public class AnnotationManager {
     internal init(for mapView: AnnotationSupportableMap,
                   mapEventsObservable: MapEventsObservable,
                   with styleDelegate: AnnotationStyleDelegate,
-                  options: AnnotationOptions,
                   interactionDelegate: AnnotationInteractionDelegate? = nil) {
 
         self.mapView = mapView
         self.mapEventsObservable = mapEventsObservable
         self.styleDelegate = styleDelegate
         self.interactionDelegate = interactionDelegate
-        self.annotationOptions = options
         annotations = [:]
         annotationFeatures = FeatureCollection(features: [])
         userInteractionEnabled = true
@@ -169,11 +171,6 @@ public class AnnotationManager {
             self.lineLayer = nil
             self.fillLayer = nil
         }
-    }
-
-    internal func updateAnnotationOptions(with newOptions: AnnotationOptions) {
-        self.annotationOptions = newOptions
-        Log.warning(forMessage: "Updating annotation manager is not supported at this time.", category: "Annotations")
     }
 
     // MARK: - Public functions
@@ -517,7 +514,7 @@ public class AnnotationManager {
             "Point"
         }
 
-        try styleDelegate.addLayer(symbolLayer, layerPosition: annotationOptions.layerPosition)
+        try styleDelegate.addLayer(symbolLayer, layerPosition: options.layerPosition)
 
         self.symbolLayer = symbolLayer
     }
@@ -539,7 +536,7 @@ public class AnnotationManager {
             "LineString"
         }
 
-        try styleDelegate.addLayer(lineLayer, layerPosition: annotationOptions.layerPosition)
+        try styleDelegate.addLayer(lineLayer, layerPosition: options.layerPosition)
         self.lineLayer = lineLayer
     }
 
@@ -559,7 +556,7 @@ public class AnnotationManager {
             "Polygon"
         }
 
-        try styleDelegate.addLayer(fillLayer, layerPosition: annotationOptions.layerPosition)
+        try styleDelegate.addLayer(fillLayer, layerPosition: options.layerPosition)
         self.fillLayer = fillLayer
     }
 

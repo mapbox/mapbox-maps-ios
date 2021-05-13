@@ -21,8 +21,7 @@ final class AnnotationManagerTests: XCTestCase {
         annotationMapEventsObservable = MockMapEventsObservable()
         annotationManager = AnnotationManager(for: annotationSupportableMap,
                                               mapEventsObservable: annotationMapEventsObservable,
-                                              with: annotationSupportableStyle,
-                                              options: AnnotationOptions())
+                                              with: annotationSupportableStyle)
     }
 
     override func tearDown() {

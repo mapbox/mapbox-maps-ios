@@ -41,8 +41,7 @@ class AnnotationInteractionDelegateTests: XCTestCase {
         // Given
         let annotationManager = AnnotationManager(for: annotationSupportableMapMock,
                                                   mapEventsObservable: annotationMapEventsObservableMock,
-                                                  with: annotationSupportableStyleMock,
-                                                  options: AnnotationOptions())
+                                                  with: annotationSupportableStyleMock)
         annotationManager.interactionDelegate = self
         let annotation = PointAnnotation(coordinate: defaultCoordinate)
         _ = annotationManager.addAnnotation(annotation)

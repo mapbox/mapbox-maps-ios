@@ -23,16 +23,13 @@ extension MapView {
         setupUserLocationManager(with: self)
 
         // Initialize/Configure annotations manager
-        setupAnnotationManager(with: self, mapEventsObservable: mapboxMap, style: style, options: mapConfig.annotations)
+        setupAnnotationManager(with: self, mapEventsObservable: mapboxMap, style: style)
     }
 
     /// Updates the map with new configuration options. Causes underlying structures to reload configuration synchronously.
     /// - Parameter update: A closure that is fed the current map options and manipulates it in some way.
     public func update(with updateMapConfig: (inout MapConfig) -> Void) {
         updateMapConfig(&mapConfig) // This mutates the map options
-
-        // Update the managers in order
-        updateAnnotationManager(with: mapConfig.annotations)
     }
 
     internal func setupGestures(with view: UIView, cameraManager: CameraAnimationsManager) {
@@ -52,12 +49,8 @@ extension MapView {
         location = LocationManager(locationSupportableMapView: locationSupportableMapView)
     }
 
-    internal func setupAnnotationManager(with annotationSupportableMap: AnnotationSupportableMap, mapEventsObservable: MapEventsObservable, style: Style, options: AnnotationOptions) {
-        annotations = AnnotationManager(for: annotationSupportableMap, mapEventsObservable: mapEventsObservable, with: style, options: options)
-    }
-
-    internal func updateAnnotationManager(with newOptions: AnnotationOptions) {
-        annotations.updateAnnotationOptions(with: newOptions)
+    internal func setupAnnotationManager(with annotationSupportableMap: AnnotationSupportableMap, mapEventsObservable: MapEventsObservable, style: Style) {
+        annotations = AnnotationManager(for: annotationSupportableMap, mapEventsObservable: mapEventsObservable, with: style)
     }
 
     internal func setupStyle(with map: Map) {

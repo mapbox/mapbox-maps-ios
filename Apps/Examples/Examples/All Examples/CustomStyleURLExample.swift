@@ -10,11 +10,11 @@ internal class CustomStyleURLExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         // Create a URL for a custom style created in Mapbox Studio.
-        guard let customStyleURL = URL(string: "mapbox://styles/examples/cke97f49z5rlg19l310b7uu7j") else {
-            fatalError("Style URL is invalid")
+        guard let customStyleURI = StyleURI(rawValue: "mapbox://styles/examples/cke97f49z5rlg19l310b7uu7j") else {
+            fatalError("Style URI is invalid")
         }
 
-        let options = MapInitOptions(styleURI: .custom(url: customStyleURL))
+        let options = MapInitOptions(styleURI: customStyleURI)
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)

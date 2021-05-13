@@ -26,7 +26,7 @@ final class FlyToAnimatorTests: XCTestCase {
         bearing: 10,
         pitch: 10)
 
-    let animationOwner = AnimationOwner.custom(id: "fly-to")
+    let animationOwner = AnimationOwner(rawValue: "fly-to")
     let duration: TimeInterval = 10
 
     var flyToAnimator: FlyToCameraAnimator!
@@ -43,7 +43,7 @@ final class FlyToAnimatorTests: XCTestCase {
         flyToAnimator = FlyToCameraAnimator(
             inital: initalCameraState,
             final: finalCameraOptions,
-            owner: .custom(id: "fly-to"),
+            owner: AnimationOwner(rawValue: "fly-to"),
             duration: duration,
             mapSize: CGSize(width: 500, height: 500),
             delegate: cameraAnimatorDelegate,
@@ -68,7 +68,7 @@ final class FlyToAnimatorTests: XCTestCase {
             FlyToCameraAnimator(
                 inital: initalCameraState,
                 final: finalCameraOptions,
-                owner: .custom(id: "fly-to"),
+                owner: AnimationOwner(rawValue: "fly-to"),
                 duration: -1,
                 mapSize: CGSize(width: 500, height: 500),
                 delegate: cameraAnimatorDelegate)
@@ -79,7 +79,7 @@ final class FlyToAnimatorTests: XCTestCase {
         let animator = FlyToCameraAnimator(
             inital: initalCameraState,
             final: finalCameraOptions,
-            owner: .custom(id: "fly-to"),
+            owner: AnimationOwner(rawValue: "fly-to"),
             duration: nil,
             mapSize: CGSize(width: 500, height: 500),
             delegate: cameraAnimatorDelegate)

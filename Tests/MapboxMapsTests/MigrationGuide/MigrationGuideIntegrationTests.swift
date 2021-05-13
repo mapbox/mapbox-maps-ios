@@ -2,11 +2,24 @@ import XCTest
 import MapboxMaps
 import Turf
 
-// swiftlint:disable force_cast file_length orphaned_doc_comment
+// swiftlint:disable force_cast file_length orphaned_doc_comment type_body_length
 
 class MigrationGuideIntegrationTests: IntegrationTestCase {
 
     private var testRect = CGRect(origin: .zero, size: CGSize(width: 100, height: 100))
+
+    var originalToken: String!
+
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+        originalToken = CredentialsManager.default.accessToken
+        CredentialsManager.default.accessToken = accessToken
+    }
+
+    override func tearDownWithError() throws {
+        try super.tearDownWithError()
+        CredentialsManager.default.accessToken = originalToken
+    }
 
     func testBasicMapViewController() throws {
 
@@ -54,10 +67,10 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
             override func viewDidLoad() {
                 super.viewDidLoad()
+                CredentialsManager.default.accessToken = accessToken
+
                 mapView = MapView(frame: view.bounds)
                 view.addSubview(mapView)
-
-                CredentialsManager.default.accessToken = accessToken
 
                 /**
                  The closure is called when style data has been loaded. This is called
@@ -155,7 +168,6 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         rootViewController?.view.addSubview(vc.view)
 
         wait(for: [expectation], timeout: 5)
-
     }
 
     func testMapViewConfiguration() throws {
@@ -178,7 +190,6 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
     }
 
     func testAppDelegateConfig() throws {
-
         //-->
         //import UIKit
         //import MapboxMaps
@@ -274,10 +285,9 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
             }
         }
 
-        let application = UIApplication.shared
         let appDelegate = AppDelegate()
 
-        _ = appDelegate.application(application, didFinishLaunchingWithOptions: nil)
+        _ = appDelegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
     }
 
     func testSettingCamera() {

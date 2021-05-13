@@ -38,14 +38,14 @@ extension MapboxCoreMaps.OfflineManager {
                               progress: StylePackLoadProgressCallback? = nil,
                               completion: @escaping (Result<StylePack, Error>) -> Void) -> Cancelable {
         if let progress = progress {
-            return __loadStylePack(forStyleURI: styleURI.rawValue.absoluteString,
+            return __loadStylePack(forStyleURI: styleURI.rawValue,
                                    loadOptions: loadOptions,
                                    onProgress: progress,
                                    onFinished: offlineManagerClosureAdapter(for: completion, type: StylePack.self))
         }
         // An overloaded version that does not report progess of the loading operation.
         else {
-            return __loadStylePack(forStyleURI: styleURI.rawValue.absoluteString,
+            return __loadStylePack(forStyleURI: styleURI.rawValue,
                                    loadOptions: loadOptions,
                                    onFinished: offlineManagerClosureAdapter(for: completion, type: StylePack.self))
         }
@@ -76,7 +76,7 @@ extension MapboxCoreMaps.OfflineManager {
     ///     is the responsibility of the user to dispatch to a user-controlled
     ///     thread.
     public func stylePack(for styleURI: StyleURI, completion: @escaping (Result<StylePack, Error>) -> Void) {
-        __getStylePack(forStyleURI: styleURI.rawValue.absoluteString,
+        __getStylePack(forStyleURI: styleURI.rawValue,
                        callback: offlineManagerClosureAdapter(for: completion, type: StylePack.self))
     }
 
@@ -90,7 +90,7 @@ extension MapboxCoreMaps.OfflineManager {
     /// The style package's associated metadata that a user previously set.
     public func stylePackMetadata(for styleURI: StyleURI,
                                   completion: @escaping (Result<AnyObject, Error>) -> Void) {
-        __getStylePackMetadata(forStyleURI: styleURI.rawValue.absoluteString,
+        __getStylePackMetadata(forStyleURI: styleURI.rawValue,
                                callback: offlineManagerClosureAdapter(for: completion, type: AnyObject.self))
     }
 
@@ -102,7 +102,7 @@ extension MapboxCoreMaps.OfflineManager {
     /// resources eviction might be deferred. All pending loading operations for
     /// the style package with the given id will fail with Canceled error.
     public func removeStylePack(for styleURI: StyleURI) {
-        removeStylePack(forStyleURI: styleURI.rawValue.absoluteString)
+        removeStylePack(forStyleURI: styleURI.rawValue)
     }
 }
 

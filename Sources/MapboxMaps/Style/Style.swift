@@ -13,11 +13,7 @@ public class Style {
     internal init(with styleManager: StyleManager) {
         self.styleManager = styleManager
 
-        var uri: StyleURI?
-
-        if let styleURL = URL(string: styleManager.getStyleURI()) {
-            uri = StyleURI(rawValue: styleURL)
-        }
+        let uri = StyleURI(rawValue: styleManager.getStyleURI())
 
         self.uri = uri ?? Self.defaultURI
     }
@@ -273,14 +269,13 @@ extension Style: StyleManagerProtocol {
     public var uri: StyleURI {
         get {
             let uriString = styleManager.getStyleURI()
-            guard let url = URL(string: uriString),
-                  let styleURI = StyleURI(rawValue: url) else {
+            guard let styleURI = StyleURI(rawValue: uriString) else {
                 fatalError()
             }
             return styleURI
         }
         set {
-            styleManager.setStyleURIForUri(newValue.rawValue.absoluteString)
+            styleManager.setStyleURIForUri(newValue.rawValue)
         }
     }
 

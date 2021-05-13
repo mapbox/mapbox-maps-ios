@@ -67,7 +67,7 @@ class LocationIndicatorLayerIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the layer
             do {
-                _ = try style.layer(withId: "test-id", type: LocationIndicatorLayer.self)
+                _ = try style.layer(withId: "test-id") as LocationIndicatorLayer
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve LocationIndicatorLayer because of error: \(error)")   

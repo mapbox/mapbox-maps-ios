@@ -33,7 +33,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             }
 
             do {
-                try style.updateLayer(withId: newBackgroundLayer.id, type: BackgroundLayer.self) { (layer) throws in
+                try style.updateLayer(withId: newBackgroundLayer.id) { (layer: inout BackgroundLayer) throws in
                     XCTAssert(layer.paint?.backgroundColor == newBackgroundLayer.paint?.backgroundColor)
                     layer.paint?.backgroundColor = .constant(.init(color: .blue))
                 }
@@ -43,7 +43,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             }
 
             do {
-                let retrievedLayer = try style.layer(withId: newBackgroundLayer.id, type: BackgroundLayer.self)
+                let retrievedLayer: BackgroundLayer = try style.layer(withId: newBackgroundLayer.id)
                 XCTAssert(retrievedLayer.paint?.backgroundColor == .constant(.init(color: .blue)))
                 expectation.fulfill()
             } catch {
@@ -103,7 +103,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testDecodingOfAllLayersInStreetsv11() {
-        guard let mapView = mapView, let style = style else {
+        guard let style = style else {
             XCTFail("There should be valid MapView and Style objects created by setUp.")
             return
         }

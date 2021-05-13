@@ -106,7 +106,7 @@ class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the layer
             do {
-                _ = try style.layer(withId: "test-id", type: SymbolLayer.self)
+                _ = try style.layer(withId: "test-id") as SymbolLayer
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve SymbolLayer because of error: \(error)")   

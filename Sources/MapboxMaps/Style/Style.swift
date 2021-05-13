@@ -11,9 +11,7 @@ public class Style {
     internal init(with styleManager: StyleManager) {
         self.styleManager = styleManager
 
-        let uri = StyleURI(rawValue: styleManager.getStyleURI())
-
-        if let uri = uri {
+        if let uri = StyleURI(rawValue: styleManager.getStyleURI()) {
             self.uri = uri
         }
     }

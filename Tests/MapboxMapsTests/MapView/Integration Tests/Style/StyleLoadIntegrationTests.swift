@@ -5,6 +5,24 @@ import CoreLocation
 class StyleLoadIntegrationTests: MapViewIntegrationTestCase {
 
     // MARK: - Tests
+    func testNilStyleDoesNotLoad() {
+        guard let style = style else {
+            XCTFail("Should have a valid Style object")
+            return
+        }
+
+        XCTAssertNil(style.uri, "Current style should be nil.") // As set by setUp
+
+        let expectation = self.expectation(description: "Style should not load")
+        expectation.expectedFulfillmentCount = 1
+        expectation.isInverted = true
+
+        didFinishLoadingStyle = { _ in
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 10)
+    }
 
     func testLoadingDarkStyleURI() {
         loadAndIdle(for: .dark)

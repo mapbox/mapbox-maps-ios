@@ -17,7 +17,7 @@ extension MapView {
         setupStyle(with: mapboxMap.__map)
 
         // Initialize/Configure gesture manager
-        setupGestures(with: self, options: mapConfig.gestures, cameraManager: camera)
+        setupGestures(with: self, cameraManager: camera)
 
         // Initialize/Configure ornaments manager
         setupOrnaments(with: self)
@@ -37,7 +37,6 @@ extension MapView {
         // Update the managers in order
         updateMapView(with: mapConfig.render)
         updateCamera(with: mapConfig.camera)
-        updateGestures(with: mapConfig.gestures)
         updateUserLocationManager(with: mapConfig.location)
         updateAnnotationManager(with: mapConfig.annotations)
     }
@@ -59,12 +58,8 @@ extension MapView {
         metalView?.presentsWithTransaction = newOptions.presentsWithTransaction
     }
 
-    internal func setupGestures(with view: UIView, options: GestureOptions, cameraManager: CameraAnimationsManager) {
-        gestures = GestureManager(for: view, options: options, cameraManager: cameraManager)
-    }
-
-    internal func updateGestures(with newOptions: GestureOptions) {
-        gestures.updateGestureOptions(with: newOptions)
+    internal func setupGestures(with view: UIView, cameraManager: CameraAnimationsManager) {
+        gestures = GestureManager(for: view, cameraManager: cameraManager)
     }
 
     internal func setupCamera(for view: MapView, options: MapCameraOptions) {

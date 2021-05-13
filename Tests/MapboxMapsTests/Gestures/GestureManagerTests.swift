@@ -26,7 +26,6 @@ final class GestureManagerTests: XCTestCase {
         cameraManager.mapView = mapView
         initialGestureOptions = GestureOptions()
         gestureManager = GestureManager(for: mapView,
-                                        options: initialGestureOptions,
                                         cameraManager: cameraManager)
     }
 
@@ -55,10 +54,12 @@ final class GestureManagerTests: XCTestCase {
 
         var options = GestureOptions()
         options.pitchEnabled = false
-        let gestureManager = GestureManager(for: mapView, options: options, cameraManager: cameraManager)
+        let gestureManager = GestureManager(
+            for: mapView,
+            cameraManager: cameraManager)
 
         options.pitchEnabled = true
-        gestureManager.updateGestureOptions(with: options)
+        gestureManager.options = options
 
         XCTAssert(gestureManager.gestureHandlers.count == 7)
     }
@@ -70,7 +71,7 @@ final class GestureManagerTests: XCTestCase {
         options.zoomEnabled = false
         options.rotateEnabled = false
 
-        gestureManager.updateGestureOptions(with: options)
+        gestureManager.options = options
 
         XCTAssert(gestureManager.gestureHandlers.count == 0)
     }

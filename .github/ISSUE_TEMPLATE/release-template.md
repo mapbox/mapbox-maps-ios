@@ -37,11 +37,15 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 - [ ] api-downloads PR ->
 - [ ] mapbox-maps-ios docs PR ->
 - [ ] ios-sdk PR ->
+- [ ] studio-preview-ios PR ->
  
 **1) Create Release Branch & Kickoff Build**
 
 - [ ] Pull the latest from main to include all code updates. Then make a new branch called "Release/{VERSION}"
 - [ ] Update the internal version pointers by running this command `./scripts/release/update-version.sh {VERSION}`. Commit these changes so they will be included in the build.
+- [ ] Perform manual QA of this branch by running:
+  - [ ] `mapbox-maps-ios` examples
+  - [ ] [Studio Preview](https://github.com/mapbox/studio-preview-ios/). Update the Podfile to point to the release branch. Check for any breaking changes in the code and any visible performance issues.
 - [ ] Open a PR for the "Release/{VERSION}" branch. This allows CI to run.
 - [ ] Kickoff the build by passing an empty commit with the message "[release] {VERSION}", with the SEMVER version but no `v` prefix. For example: `git commit --allow-empty -m "[release] 10.0.0-beta.14"`. It's important that you follow the commit message as it triggers the build job.
 
@@ -110,7 +114,7 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 ***When you squash & merge, make the commit message "Maps SDK Release {Version}"***
 
 ## 🚀 Update Studio Preview
-- [ ] Navigate to your local clone of [Studio Preview](https://github.com/mapbox/studio-preview-ios/) and ensure that it is up-to-date.
+- [ ] Navigate to your local clone of [Studio Preview](https://github.com/mapbox/studio-preview-ios/) and ensure that it is up-to-date. Include any previous code updates that you made during QA.
 - [ ] Follow the steps outlined in the [Studio Preview iOS wiki](https://github.com/mapbox/studio-preview-ios/wiki/Release-Checklist).
 
 ## 📣 Announcements

@@ -1,6 +1,11 @@
 import Foundation
 
 extension TileStore {
+    /// Convenience to set the access token for a TileStore
+    public func setAccessToken(_ accessToken: String) {
+        setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken)
+    }
+
     /// Loads a new tile region or updates the existing one.
     ///
     /// - Parameters:

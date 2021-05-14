@@ -32,8 +32,7 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
             let annotation = PointAnnotation(coordinate: mapView.cameraState.center)
             let annotationManager = AnnotationManager(for: mapView,
                                                       mapEventsObservable: mapView.mapboxMap,
-                                                      with: self,
-                                                      options: AnnotationOptions())
+                                                      with: self)
             annotationManager.addAnnotation(annotation)
 
             _ = try! style.sourceProperties(for: annotationManager.defaultSourceId)
@@ -65,8 +64,7 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
             let position = LayerPosition(above: nil, below: nil, at: requiredIndex)
             let annotationManager = AnnotationManager(for: mapView,
                                                       mapEventsObservable: mapView.mapboxMap,
-                                                      with: self,
-                                                      options: AnnotationOptions(layerPosition: position))
+                                                      with: self)
             annotationManager.addAnnotation(annotation)
 
             guard let layerId = annotationManager.layerId(for: PointAnnotation.self) else {
@@ -113,8 +111,7 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
             var annotation = PointAnnotation(coordinate: mapView.cameraState.center)
             let annotationManager = AnnotationManager(for: mapView,
                                                       mapEventsObservable: mapView.mapboxMap,
-                                                      with: self,
-                                                      options: AnnotationOptions())
+                                                      with: self)
             annotation.userInfo = ["TestKey": true]
             annotationManager.addAnnotation(annotation)
 

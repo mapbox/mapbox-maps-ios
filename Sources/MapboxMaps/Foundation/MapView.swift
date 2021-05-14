@@ -5,10 +5,10 @@ import Turf
 
 internal typealias PendingAnimationCompletion = (completion: AnimationCompletion, animatingPosition: UIViewAnimatingPosition)
 
-open class BaseMapView: UIView {
+open class MapView: UIView {
 
     // mapbox map depends on MapInitOptions, which is not available until
-    // awakeFromNib() when instantiating BaseMapView from a xib or storyboard.
+    // awakeFromNib() when instantiating MapView from a xib or storyboard.
     // This is the only reason that it is an implicitly-unwrapped optional var
     // instead of a non-optional let.
     public private(set) var mapboxMap: MapboxMap! {
@@ -16,6 +16,27 @@ open class BaseMapView: UIView {
             assert(oldValue == nil, "mapboxMap should only be set once.")
         }
     }
+
+    /// The `gestures` object will be responsible for all gestures on the map.
+    public internal(set) var gestures: GestureManager!
+
+    /// The `ornaments`object will be responsible for all ornaments on the map.
+    public internal(set) var ornaments: OrnamentsManager!
+
+    /// The `camera` object manages a camera's view lifecycle..
+    public internal(set) var camera: CameraAnimationsManager!
+
+    /// The `location`object handles location events of the map.
+    public internal(set) var location: LocationManager!
+
+    /// The `style` object supports run time styling.
+    public internal(set) var style: Style!
+
+    /// Controls the addition/removal of annotations to the map.
+    public internal(set) var annotations: AnnotationManager!
+
+    /// A reference to the `EventsManager` used for dispatching telemetry.
+    internal var eventsListener: EventsListener!
 
     /// Offline Manager initialized with the same ResourceOptions as the map view
     ///
@@ -88,8 +109,12 @@ open class BaseMapView: UIView {
         return CGPoint(x: xAfterPadding, y: yAfterPadding)
     }
 
-    // MARK: Init
-    public init(frame: CGRect, mapInitOptions: MapInitOptions) {
+    /// Initialize a MapView
+    /// - Parameters:
+    ///   - frame: frame for the MapView.
+    ///   - mapInitOptions: `MapInitOptions`; default uses
+    ///    `CredentialsManager.default` to retrieve a shared default access token.
+    public init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions()) {
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
@@ -146,6 +171,33 @@ open class BaseMapView: UIView {
 
         // Set preferrredFPS
         preferredFPS = options.preferredFramesPerSecond
+
+        // Setup Telemetry logging
+        setUpTelemetryLogging()
+
+        // Set up managers
+        setupManagers()
+    }
+
+    internal func setupManagers() {
+
+        // Initialize/Configure camera manager first since Gestures needs it as dependency
+        camera = CameraAnimationsManager(mapView: self)
+
+        // Initialize/Configure style manager
+        style = Style(with: mapboxMap.__map)
+
+        // Initialize/Configure gesture manager
+        gestures = GestureManager(for: self, cameraManager: camera)
+
+        // Initialize/Configure ornaments manager
+        ornaments = OrnamentsManager(view: self, options: OrnamentOptions())
+
+        // Initialize/Configure location manager
+        location = LocationManager(locationSupportableMapView: self)
+
+        // Initialize/Configure annotations manager
+        annotations = AnnotationManager(for: self, mapEventsObservable: mapboxMap, with: style)
     }
 
     private func checkForMetalSupport() {
@@ -181,7 +233,7 @@ open class BaseMapView: UIView {
         let mapInitOptions = mapInitOptionsProvider?.mapInitOptions() ??
             MapInitOptions()
 
-        let ibStyleURI = BaseMapView.parseIBStringAsURL(ibString: styleURI__)
+        let ibStyleURI = MapView.parseIBStringAsURL(ibString: styleURI__)
 
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: ibStyleURI)
     }
@@ -278,7 +330,7 @@ open class BaseMapView: UIView {
     }
 }
 
-extension BaseMapView: DelegatingMapClientDelegate {
+extension MapView: DelegatingMapClientDelegate {
     internal func scheduleRepaint() {
         needsDisplayRefresh = true
     }
@@ -311,14 +363,26 @@ extension BaseMapView: DelegatingMapClientDelegate {
 }
 
 private class BaseMapViewProxy: NSObject {
-    weak var mapView: BaseMapView?
+    weak var mapView: MapView?
 
-    init(mapView: BaseMapView) {
+    init(mapView: MapView) {
         self.mapView = mapView
         super.init()
     }
 
     @objc func updateFromDisplayLink(displayLink: CADisplayLink) {
         mapView?.updateFromDisplayLink(displayLink: displayLink)
+    }
+}
+
+// MARK: Telemetry
+extension MapView {
+    internal func setUpTelemetryLogging() {
+        guard let validResourceOptions = resourceOptions else { return }
+        eventsListener = EventsManager(accessToken: validResourceOptions.accessToken)
+
+        mapboxMap.onNext(.mapLoaded) { [weak self] _ in
+            self?.eventsListener?.push(event: .map(event: .loaded))
+        }
     }
 }

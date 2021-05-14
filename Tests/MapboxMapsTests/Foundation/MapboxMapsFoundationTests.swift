@@ -11,7 +11,7 @@ import UIKit
 // swiftlint:disable explicit_top_level_acl explicit_acl
 class MapboxMapsFoundationTests: XCTestCase {
 
-    var mapView: BaseMapView!
+    var mapView: MapView!
 
     /**
        +/- 0.25 is the acceptable level of accuracy to account
@@ -27,7 +27,7 @@ class MapboxMapsFoundationTests: XCTestCase {
         let mapInitOptions = MapInitOptions(resourceOptions: ResourceOptions(accessToken: "a1b2c3"),
                                             styleURI: nil)
 
-        mapView = BaseMapView(frame: CGRect(x: 10, y: 10, width: 100, height: 100),
+        mapView = MapView(frame: CGRect(x: 10, y: 10, width: 100, height: 100),
                               mapInitOptions: mapInitOptions)
     }
 

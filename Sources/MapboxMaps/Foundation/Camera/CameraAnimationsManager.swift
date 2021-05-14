@@ -46,9 +46,9 @@ public class CameraAnimationsManager {
     /// May want to convert to an enum.
     fileprivate let northBearing: CGFloat = 0
 
-    internal weak var mapView: BaseMapView?
+    internal weak var mapView: MapView?
 
-    internal init(mapView: BaseMapView) {
+    internal init(mapView: MapView) {
         self.mapView = mapView
     }
 

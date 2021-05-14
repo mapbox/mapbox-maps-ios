@@ -7,9 +7,6 @@ extension MapView {
     /// Configures/Initializes the map with `mapConfig`
     internal func setupManagers() {
 
-        // Initialize/configure the map if needed
-        setupMapView(with: mapConfig.render)
-
         // Initialize/Configure camera manager first since Gestures needs it as dependency
         setupCamera(view: self)
 
@@ -35,25 +32,7 @@ extension MapView {
         updateMapConfig(&mapConfig) // This mutates the map options
 
         // Update the managers in order
-        updateMapView(with: mapConfig.render)
         updateAnnotationManager(with: mapConfig.annotations)
-    }
-
-    internal func setupMapView(with renderOptions: RenderOptions) {
-
-        // Set prefetch zoom delta
-        let defaultPrefetchZoomDelta: UInt8 = 4
-        self.mapboxMap.__map.setPrefetchZoomDeltaForDelta(renderOptions.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
-        self.preferredFPS = renderOptions.preferredFramesPerSecond
-        metalView?.presentsWithTransaction = renderOptions.presentsWithTransaction
-    }
-
-    internal func updateMapView(with newOptions: RenderOptions) {
-        // Set prefetch zoom delta
-        let defaultPrefetchZoomDelta: UInt8 = 4
-        self.mapboxMap.__map.setPrefetchZoomDeltaForDelta(newOptions.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
-        self.preferredFPS = newOptions.preferredFramesPerSecond
-        metalView?.presentsWithTransaction = newOptions.presentsWithTransaction
     }
 
     internal func setupGestures(with view: UIView, cameraManager: CameraAnimationsManager) {

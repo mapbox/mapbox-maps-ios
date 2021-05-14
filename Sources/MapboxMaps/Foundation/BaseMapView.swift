@@ -32,6 +32,15 @@ open class BaseMapView: UIView {
 
     private let mapClient = DelegatingMapClient()
 
+    public var options = RenderOptions() {
+        didSet {
+            let defaultPrefetchZoomDelta: UInt8 = 4
+            mapboxMap.__map.setPrefetchZoomDeltaForDelta(options.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
+            preferredFPS = options.preferredFramesPerSecond
+            metalView?.presentsWithTransaction = options.presentsWithTransaction
+        }
+    }
+
     /// The underlying metal view that is used to render the map
     internal private(set) var metalView: MTKView?
 
@@ -60,7 +69,7 @@ open class BaseMapView: UIView {
     /// a nib.
     @IBOutlet internal private(set) weak var mapInitOptionsProvider: MapInitOptionsProvider?
 
-    internal var preferredFPS: PreferredFPS = .normal {
+    internal var preferredFPS: PreferredFPS = .maximum {
         didSet {
             updateDisplayLinkPreferredFramesPerSecond()
         }
@@ -129,6 +138,14 @@ open class BaseMapView: UIView {
         if let cameraOptions = resolvedMapInitOptions.cameraOptions {
             mapboxMap.__map.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
         }
+
+        // Set prefetchZoomDelta
+        let defaultPrefetchZoomDelta: UInt8 = 4
+        mapboxMap.__map.setPrefetchZoomDeltaForDelta(
+            options.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
+
+        // Set preferrredFPS
+        preferredFPS = options.preferredFramesPerSecond
     }
 
     private func checkForMetalSupport() {
@@ -181,6 +198,7 @@ open class BaseMapView: UIView {
             let target = BaseMapViewProxy(mapView: self)
             displayLink = window?.screen.displayLink(withTarget: target, selector: #selector(target.updateFromDisplayLink))
 
+            preferredFPS = options.preferredFramesPerSecond
             updateDisplayLinkPreferredFramesPerSecond()
             displayLink?.add(to: .current, forMode: .common)
 
@@ -219,18 +237,8 @@ open class BaseMapView: UIView {
     }
 
     func updateDisplayLinkPreferredFramesPerSecond() {
-
         if let displayLink = displayLink {
-
-            var newFrameRate: PreferredFPS = .maximum
-
-            if preferredFPS == .normal {
-                // TODO: Check for legacy device
-            } else {
-                newFrameRate = preferredFPS
-            }
-
-            displayLink.preferredFramesPerSecond = newFrameRate.rawValue
+            displayLink.preferredFramesPerSecond = preferredFPS.rawValue
         }
     }
 
@@ -293,7 +301,7 @@ extension BaseMapView: DelegatingMapClientDelegate {
         metalView.layer.isOpaque = isOpaque
         metalView.isPaused = true
         metalView.enableSetNeedsDisplay = true
-        metalView.presentsWithTransaction = true
+        metalView.presentsWithTransaction = options.presentsWithTransaction
 
         insertSubview(metalView, at: 0)
         self.metalView = metalView

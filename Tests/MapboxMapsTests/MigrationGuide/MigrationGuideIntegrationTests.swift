@@ -178,12 +178,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         //-->
         // Configure map to show a scale bar
         mapView.ornaments.options.scaleBar.visibility = .visible
-
-        mapView.update { (mapOptions) in
-
-            // Configure map to restrict panning to a set of coordinate bounds
-            mapOptions.camera.restrictedCoordinateBounds = someBounds
-        }
+        mapView.camera.options.restrictedCoordinateBounds = someBounds
         //<--
     }
 
@@ -353,12 +348,9 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         let sw = CLLocationCoordinate2DMake(-12, -46)
         let ne = CLLocationCoordinate2DMake(2, 43)
         let restrictedBounds = CoordinateBounds(southwest: sw, northeast: ne)
-
-        mapView.update { ( mapOptions ) in
-            mapOptions.camera.minimumZoomLevel = 8.0
-            mapOptions.camera.maximumZoomLevel = 15.0
-            mapOptions.camera.restrictedCoordinateBounds = restrictedBounds
-        }
+        mapView.camera.options.minimumZoomLevel = 8.0
+        mapView.camera.options.maximumZoomLevel = 15.0
+        mapView.camera.options.restrictedCoordinateBounds = restrictedBounds
         //<--
     }
 

@@ -19,7 +19,17 @@ internal protocol CameraAnimatorInterface: CameraAnimator {
 public class CameraAnimationsManager {
 
     /// Used to set up camera specific configuration
-    public internal(set) var mapCameraOptions: MapCameraOptions
+    public var options = MapCameraOptions() {
+        didSet {
+            let boundOptions = CameraBoundsOptions(
+                __bounds: options.restrictedCoordinateBounds ?? nil,
+                maxZoom: options.maximumZoomLevel as NSNumber,
+                minZoom: options.minimumZoomLevel as NSNumber,
+                maxPitch: options.maximumPitch as NSNumber,
+                minPitch: options.minimumPitch as NSNumber)
+            mapView?.mapboxMap.__map.setBoundsFor(boundOptions)
+        }
+    }
 
     /// List of animators currently alive
     public var cameraAnimators: [CameraAnimator] {
@@ -30,18 +40,6 @@ public class CameraAnimationsManager {
         return mapView.cameraAnimators
     }
 
-    /// Used to update the map's camera options and pass them to the core Map.
-    internal func updateMapCameraOptions(newOptions: MapCameraOptions) {
-        let boundOptions = CameraBoundsOptions(
-            __bounds: newOptions.restrictedCoordinateBounds ?? nil,
-            maxZoom: newOptions.maximumZoomLevel as NSNumber,
-            minZoom: newOptions.minimumZoomLevel as NSNumber,
-            maxPitch: newOptions.maximumPitch as NSNumber,
-            minPitch: newOptions.minimumPitch as NSNumber)
-        mapView?.mapboxMap.__map.setBoundsFor(boundOptions)
-        mapCameraOptions = newOptions
-    }
-
     /// Internal camera animator used for animated transition
     internal var internalAnimator: CameraAnimator?
 
@@ -50,9 +48,8 @@ public class CameraAnimationsManager {
 
     internal weak var mapView: BaseMapView?
 
-    public init(for mapView: BaseMapView, with mapCameraOptions: MapCameraOptions) {
+    internal init(mapView: BaseMapView) {
         self.mapView = mapView
-        self.mapCameraOptions = mapCameraOptions
     }
 
     // MARK: Setting a new camera

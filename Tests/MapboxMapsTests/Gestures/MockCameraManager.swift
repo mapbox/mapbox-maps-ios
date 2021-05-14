@@ -10,7 +10,7 @@ final class MockCameraManager: CameraManagerProtocol {
 
     var mapView: BaseMapView?
 
-    var mapCameraOptions = MapCameraOptions()
+    var options = MapCameraOptions()
 
     struct SetCameraParameters {
         var camera: CameraOptions

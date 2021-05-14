@@ -21,9 +21,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         cameraLocationConsumer = CameraLocationConsumer(mapView: mapView)
 
         // Add user position icon to the map with location indicator layer
-        mapView.update { (mapOptions) in
-            mapOptions.location.puckType = .puck2D()
-        }
+        mapView.location.options.puckType = .puck2D()
 
         // Allows the delegate to receive information about map events.
         mapView.mapboxMap.onNext(.mapLoaded) { _ in

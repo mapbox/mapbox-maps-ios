@@ -39,12 +39,22 @@ public class LocationManager: NSObject {
     /// Only created if `showsUserLocation` is `true`
     internal var locationPuckManager: LocationPuckManager?
 
-    public private(set) var locationOptions: LocationOptions
+    public var options = LocationOptions() {
+        didSet {
+            guard options != oldValue else { return }
+            locationProvider.locationProviderOptions = options
 
-    internal init(locationOptions: LocationOptions,
-                  locationSupportableMapView: LocationSupportableMapView) {
-        /// Sets the local options needed to configure the user location puck
-        self.locationOptions = locationOptions
+            if options.puckType != oldValue.puckType {
+                syncUserLocationUpdating()
+            }
+
+            if let puckType = options.puckType, puckType != oldValue.puckType {
+                locationPuckManager?.changePuckType(to: puckType)
+            }
+        }
+    }
+
+    internal init(locationSupportableMapView: LocationSupportableMapView) {
 
         /// Allows location updates to be reflected on screen using delegate method
         self.locationSupportableMapView = locationSupportableMapView
@@ -54,7 +64,7 @@ public class LocationManager: NSObject {
         /// Sets our default `locationProvider`
         locationProvider = AppleLocationProvider()
         locationProvider.setDelegate(self)
-        locationProvider.locationProviderOptions = locationOptions
+        locationProvider.locationProviderOptions = options
 
         syncUserLocationUpdating()
     }
@@ -78,24 +88,6 @@ public class LocationManager: NSObject {
 
     public func removeLocationConsumer(consumer: LocationConsumer) {
         consumers.remove(consumer)
-    }
-
-    internal func updateLocationOptions(with newOptions: LocationOptions) {
-
-        guard newOptions != locationOptions else { return }
-
-        // Update the location options
-        let previousOptions = locationOptions
-        locationOptions = newOptions
-        locationProvider.locationProviderOptions = newOptions
-
-        if newOptions.puckType != previousOptions.puckType {
-            syncUserLocationUpdating()
-        }
-
-        if let puckType = newOptions.puckType, puckType != previousOptions.puckType {
-            locationPuckManager?.changePuckType(to: puckType)
-        }
     }
 
     /// Allows a custom case to request full accuracy
@@ -189,7 +181,7 @@ extension LocationManager: LocationProviderDelegate {
 // MARK: Private helper functions that only the Location Manager needs access to
 private extension LocationManager {
     func syncUserLocationUpdating() {
-        if let puckType = locationOptions.puckType {
+        if let puckType = options.puckType {
             /// Get permissions if needed
             if locationProvider.authorizationStatus == .notDetermined {
                 requestLocationPermissions()

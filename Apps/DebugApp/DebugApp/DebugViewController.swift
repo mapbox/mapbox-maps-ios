@@ -17,9 +17,7 @@ public class DebugViewController: UIViewController {
         super.viewDidLoad()
 
         mapView = MapView(frame: view.bounds)
-        mapView.update { (mapOptions) in
-            mapOptions.location.puckType = .puck2D()
-        }
+        mapView.location.options.puckType = .puck2D()
 
         view.addSubview(mapView)
 

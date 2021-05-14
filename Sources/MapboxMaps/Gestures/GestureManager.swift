@@ -1,133 +1,20 @@
 import UIKit
 import CoreLocation
 
-#if canImport(MapboxMapsFoundation)
-import MapboxMapsFoundation
-#endif
-
-public enum GestureType: Hashable {
-    /// The pan gesture type
-    case pan
-
-    /// The tap gesture type
-    case tap(numberOfTaps: Int, numberOfTouches: Int)
-
-    /// The zoom gesture type
-    case pinch
-
-    /// The rotate gesture type
-    case rotate
-
-    /// The quick zoom gesture type
-    case quickZoom
-
-    /// The pitch gesture type
-    case pitch
-
-    // Generates a handler for every gesture type
-    // swiftlint:disable explicit_acl
-    func makeHandler(for view: UIView,
-                     delegate: GestureHandlerDelegate,
-                     contextProvider: GestureContextProvider,
-                     gestureOptions: GestureOptions) -> GestureHandler {
-        switch self {
-        case .pan:
-            return PanGestureHandler(for: view, withDelegate: delegate, panScrollMode: gestureOptions.scrollingMode)
-        case .tap(let numberOfTaps, let numberOfTouches):
-            return TapGestureHandler(for: view,
-                                     numberOfTapsRequired: numberOfTaps,
-                                     numberOfTouchesRequired: numberOfTouches,
-                                     withDelegate: delegate)
-        case .pinch:
-            return PinchGestureHandler(for: view, withDelegate: delegate)
-        case .rotate:
-            return RotateGestureHandler(for: view, withDelegate: delegate, andContextProvider: contextProvider)
-        case .quickZoom:
-            return QuickZoomGestureHandler(for: view, withDelegate: delegate)
-        case .pitch:
-            return PitchGestureHandler(for: view, withDelegate: delegate)
-        }
-    }
-
-    // Provides understanding of equality between gesture types
-    public static func == (lhs: GestureType, rhs: GestureType) -> Bool {
-        switch (lhs, rhs) {
-        // Compares two pan gesture types (always true)
-        case (.pan, .pan):
-            return true
-        // Compares two tap gesture types with potentially different parameterized values
-        case (let .tap(lhsNumberOfTaps, lhsNumberOfTouches), let .tap(rhsNumberOfTaps, rhsNumberOfTouches)):
-            return lhsNumberOfTaps == rhsNumberOfTaps &&
-                   lhsNumberOfTouches == rhsNumberOfTouches
-        // Compares two pinch gesture types (always true)
-        case (.pinch, .pinch):
-            return true
-        // Compares two rotate gesture types (always true)
-        case (.rotate, .rotate):
-            return true
-        // Compares two long press gesture types (always true)
-        case (.quickZoom, .quickZoom):
-            return true
-        case (.pitch, .pitch):
-            return true
-        default:
-            return false
-        }
-    }
-
-}
-
-internal class GestureHandler {
-
-    /// The view that the gesture handler is operating on
-    weak var view: UIView?
-
-    /// The underlying gestureRecognizer that this handler is managing
-    var gestureRecognizer: UIGestureRecognizer?
-
-    /// The delegate that the gesture handler calls to manipulate the view
-    weak var delegate: GestureHandlerDelegate!
-
-    init(for view: UIView, withDelegate delegate: GestureHandlerDelegate) {
-        self.view = view
-        self.delegate = delegate
-    }
-
-    deinit {
-        if let validGestureRecognizer = self.gestureRecognizer {
-            self.view?.removeGestureRecognizer(validGestureRecognizer)
-        }
-    }
-}
-
 public protocol GestureManagerDelegate: AnyObject {
 
     /// Informs the delegate that a gesture haas begun. Could be used to cancel camera tracking.
     func gestureBegan(for gestureType: GestureType)
 }
 
-internal protocol CameraManagerProtocol: AnyObject {
-
-    var mapView: BaseMapView? { get }
-
-    var mapCameraOptions: MapCameraOptions { get }
-
-    func setCamera(to camera: CameraOptions)
-
-    func ease(to camera: CameraOptions,
-              duration: TimeInterval,
-              curve: UIView.AnimationCurve,
-              completion: AnimationCompletion?) -> CameraAnimator?
-
-    func cancelAnimations()
-}
-
-extension CameraAnimationsManager: CameraManagerProtocol { }
-
 public final class GestureManager: NSObject {
 
     /// The `GestureOptions` that are used to set up the required gestures on the map
-    private(set) var gestureOptions: GestureOptions
+    public var options = GestureOptions() {
+        didSet {
+            configureGestureHandlers(for: options)
+        }
+    }
 
     /// Map of GestureType --> GestureHandler. We mantain a map to allow us to remove gestures arbitrarily.
     private(set) var gestureHandlers: [GestureType: GestureHandler] = [:]
@@ -140,17 +27,11 @@ public final class GestureManager: NSObject {
 
     internal weak var delegate: GestureManagerDelegate?
 
-    internal init(for view: UIView, options: GestureOptions, cameraManager: CameraManagerProtocol) {
+    internal init(for view: UIView, cameraManager: CameraManagerProtocol) {
         self.cameraManager = cameraManager
-        gestureOptions = options
         self.view = view
         super.init()
         configureGestureHandlers(for: options)
-    }
-
-    internal func updateGestureOptions(with newOptions: GestureOptions) {
-        gestureOptions = newOptions
-        configureGestureHandlers(for: newOptions)
     }
 
     // Loops through supported gestures and generate associated handlers that are to be kept alive

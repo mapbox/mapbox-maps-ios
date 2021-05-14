@@ -14,13 +14,10 @@ internal class OptionsIntegrationTest: MapViewIntegrationTestCase {
         newConfig.location.puckType = nil
         newConfig.location.activityType = .automotiveNavigation
         newConfig.camera.animationDuration = 0.1
-        newConfig.gestures.scrollEnabled = false
 
         mapView.update { (options) in
             options = newConfig
         }
-
-        XCTAssertEqual(mapView.gestures.gestureOptions, newConfig.gestures)
         XCTAssertEqual(mapView.camera.mapCameraOptions, newConfig.camera)
         XCTAssertEqual(mapView.location.locationOptions, newConfig.location)
         let ornaments = mapView.subviews.filter { $0.isKind(of: MapboxCompassOrnamentView.self) || $0.isKind(of: MapboxScaleBarOrnamentView.self) }

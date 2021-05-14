@@ -180,8 +180,6 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         mapView.ornaments.options.scaleBar.visibility = .visible
 
         mapView.update { (mapOptions) in
-            // Configure map to disable pitch gestures
-            mapOptions.gestures.pitchEnabled = false
 
             // Configure map to restrict panning to a set of coordinate bounds
             mapOptions.camera.restrictedCoordinateBounds = someBounds

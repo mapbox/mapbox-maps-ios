@@ -37,7 +37,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
             view.isHidden = true
 
             labels.append(view)
-            addSubview(view)
+            staticContainerView.addSubview(view)
         }
         return labels
     }()
@@ -136,6 +136,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
         clipsToBounds = false
 
         staticContainerView.backgroundColor = .red
+        staticContainerView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(staticContainerView)
         staticContainerView.clipsToBounds = false
 
@@ -146,8 +147,13 @@ internal class MapboxScaleBarOrnamentView: UIView {
         // Pin scale bar container to match root ornament view
         // Test against all four configurations
 
-        staticContainerView.widthAnchor.constraint(equalTo:widthAnchor).isActive = true
-        staticContainerView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
+//        staticContainerView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor).isActive = true
+        staticContainerView.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor).isActive = true
+        staticContainerView.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor).isActive = true
+        staticContainerView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
+        staticContainerView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor).isActive = true
+//        staticContainerView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
+
         staticContainerView.addSubview(dynamicContainerView)
 
         addZeroLabel()

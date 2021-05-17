@@ -35,6 +35,9 @@ public class LocationManager: NSObject {
     /// `MapView` that has specific functionality to support location
     internal weak var locationSupportableMapView: LocationSupportableMapView!
 
+    /// Style that has limited functionality to support location
+    internal weak var style: LocationStyleDelegate?
+
     /// Manager that handles the visual puck element.
     /// Only created if `showsUserLocation` is `true`
     internal var locationPuckManager: LocationPuckManager?
@@ -54,10 +57,12 @@ public class LocationManager: NSObject {
         }
     }
 
-    internal init(locationSupportableMapView: LocationSupportableMapView) {
+    internal init(locationSupportableMapView: LocationSupportableMapView, style: LocationStyleDelegate) {
 
         /// Allows location updates to be reflected on screen using delegate method
         self.locationSupportableMapView = locationSupportableMapView
+
+        self.style = style
 
         super.init()
 
@@ -196,6 +201,7 @@ private extension LocationManager {
             } else {
                 let locationPuckManager = LocationPuckManager(
                     locationSupportableMapView: locationSupportableMapView,
+                    style: style,
                     puckType: puckType)
                 consumers.add(locationPuckManager)
                 self.locationPuckManager = locationPuckManager

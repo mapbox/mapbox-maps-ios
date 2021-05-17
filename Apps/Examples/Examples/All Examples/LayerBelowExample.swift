@@ -45,7 +45,7 @@ public class LayerBelowExample: UIViewController, ExampleProtocol {
         // Add the data source to the map
         try! mapView.style.addSource(source, id: sourceIdentifier)
         // Add the layer to the map below the "settlement-label" layer
-        try! mapView.style.addLayer(layer, layerPosition: LayerPosition(below: "settlement-label"))
+        try! mapView.style.addLayer(layer, layerPosition: .below("settlement-label"))
 
         // The below line is used for internal testing purposes only.
         finish()

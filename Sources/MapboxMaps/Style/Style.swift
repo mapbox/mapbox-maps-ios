@@ -311,13 +311,13 @@ extension Style: StyleManagerProtocol {
 
     public func addLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
         return try handleExpected {
-            return styleManager.addStyleLayer(forProperties: properties, layerPosition: layerPosition)
+            return styleManager.addStyleLayer(forProperties: properties, layerPosition: layerPosition?.corePosition)
         }
     }
 
     public func addCustomLayer(withId id: String, layerHost: CustomLayerHost, layerPosition: LayerPosition?) throws {
         return try handleExpected {
-            return styleManager.addStyleCustomLayer(forLayerId: id, layerHost: layerHost, layerPosition: layerPosition)
+            return styleManager.addStyleCustomLayer(forLayerId: id, layerHost: layerHost, layerPosition: layerPosition?.corePosition)
         }
     }
 

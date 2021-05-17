@@ -37,7 +37,7 @@ final class AnnotationManagerTests: XCTestCase {
         XCTAssertEqual(a, b)
 
         // Test ergonomics
-        _ = AnnotationOptions(layerPosition: LayerPosition())
+        _ = AnnotationOptions(layerPosition: .above("line-layer"))
         _ = AnnotationOptions(sourceId: "test")
         _ = AnnotationOptions(sourceOptions: AnnotationSourceOptions())
     }

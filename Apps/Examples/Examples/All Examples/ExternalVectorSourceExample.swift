@@ -51,10 +51,8 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
 
         // Define the layer's positioning within the layer stack so
         // that it doesn't obscure other important labels.
-        let layerPosition = LayerPosition(above: nil, below: "waterway-label", at: nil)
-
         do {
-            try mapView.style.addLayer(lineLayer, layerPosition: layerPosition)
+            try mapView.style.addLayer(lineLayer, layerPosition: .below("waterway-label"))
         } catch let layerError {
             displayAlert(message: layerError.localizedDescription)
         }

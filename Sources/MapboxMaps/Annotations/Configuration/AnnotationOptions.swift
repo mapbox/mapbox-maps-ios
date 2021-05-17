@@ -9,7 +9,7 @@ public struct AnnotationSourceOptions: Equatable {
 public struct AnnotationOptions: Equatable {
     /// The `LayerPosition` used to position the underlying style layers. Default will position the
     /// layers above existing layers.
-    public var layerPosition: LayerPosition = LayerPosition()
+    public var layerPosition: LayerPosition?
 
     // TODO: Handle multiple layer Ids
 //    /// The layer identifier for the layer used by the AnnotationManager. Default is nil, meaning a

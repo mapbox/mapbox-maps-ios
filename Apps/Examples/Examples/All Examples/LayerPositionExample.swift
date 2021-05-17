@@ -60,14 +60,14 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
             guard let self = self else { return }
             try? self.mapView.style.removeLayer(withId: self.layer.id)
             try? self.mapView.style.addLayer(self.layer,
-                                             layerPosition: LayerPosition(above: "state-label"))
+                                             layerPosition: .above("state-label"))
         }))
 
         alert.addAction(UIAlertAction(title: "Below state label", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
             try? self.mapView.style.removeLayer(withId: self.layer.id)
             try? self.mapView.style.addLayer(self.layer,
-                                             layerPosition: LayerPosition(below: "state-label"))
+                                             layerPosition: .below("state-label"))
         }))
 
         alert.addAction(UIAlertAction(title: "Above all", style: .default, handler: { [weak self] _ in
@@ -81,7 +81,7 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
             guard let self = self else { return }
             try? self.mapView.style.removeLayer(withId: self.layer.id)
             try? self.mapView.style.addLayer(self.layer,
-                                             layerPosition: LayerPosition(at: 0))
+                                             layerPosition: .at(0))
         }))
 
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))

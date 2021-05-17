@@ -78,7 +78,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         tileStore.loadTileRegion(forId: tileRegionId,
                                  loadOptions: tileRegionLoadOptions!) { _ in
             DispatchQueue.main.async {
-                print(".", terminator:"")
+                print(".", terminator: "")
                 downloadInProgress.fulfill()
             }
         } completion: { result in

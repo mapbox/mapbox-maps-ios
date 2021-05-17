@@ -47,7 +47,7 @@ public final class MapboxMap {
     // MARK: - Style loading
      private func observeStyleLoad(_ completion: @escaping (Result<Style, Error>) -> Void) {
 
-        _ = onNext(eventTypes: [.styleLoaded, .mapLoadingError]) { event in
+        onNext(eventTypes: [.styleLoaded, .mapLoadingError]) { event in
              switch event.type {
              case MapEvents.styleLoaded:
                  assert(self.style.isLoaded)
@@ -236,6 +236,7 @@ extension MapboxMap: ObservableProtocol {
 
 extension MapboxMap: MapEventsObservable {
 
+    @discardableResult
     private func onNext(eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable {
         let rawTypes = eventTypes.map { $0.rawValue }
         let handler = MapEventHandler(for: rawTypes,

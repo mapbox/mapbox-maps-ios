@@ -158,7 +158,7 @@ public class AnnotationManager {
         self.styleDelegate = styleDelegate
         self.interactionDelegate = interactionDelegate
         self.options = options
-        
+
         annotations = [:]
         annotationFeatures = FeatureCollection(features: [])
         userInteractionEnabled = true

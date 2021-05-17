@@ -38,7 +38,9 @@ class OfflineGuideIntegrationTests: XCTestCase {
         let expectation = self.expectation(description: "Wait...")
         _ = XCTWaiter.wait(for: [expectation], timeout: 1.0)
 
-        try TileStore.removeDirectory(at: tileStorePathURL)
+        if let tileStorePathURL = tileStorePathURL {
+            try TileStore.removeDirectory(at: tileStorePathURL)
+        }
     }
 
     // Test StylePackLoadOptions

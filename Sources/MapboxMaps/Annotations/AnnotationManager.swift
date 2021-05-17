@@ -93,7 +93,7 @@ public class AnnotationManager {
     /**
      Options used by the annotation manager.
      */
-    public var options = AnnotationOptions() {
+    public var options: AnnotationOptions {
         didSet {
             Log.warning(forMessage: "Updating annotation manager options is not supported at this time.", category: "Annotations")
         }
@@ -150,12 +150,15 @@ public class AnnotationManager {
     internal init(for mapView: AnnotationSupportableMap,
                   mapEventsObservable: MapEventsObservable,
                   with styleDelegate: AnnotationStyleDelegate,
-                  interactionDelegate: AnnotationInteractionDelegate? = nil) {
+                  interactionDelegate: AnnotationInteractionDelegate? = nil,
+                  options: AnnotationOptions = AnnotationOptions()) {
 
         self.mapView = mapView
         self.mapEventsObservable = mapEventsObservable
         self.styleDelegate = styleDelegate
         self.interactionDelegate = interactionDelegate
+        self.options = options
+        
         annotations = [:]
         annotationFeatures = FeatureCollection(features: [])
         userInteractionEnabled = true

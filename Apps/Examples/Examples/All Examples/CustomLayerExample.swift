@@ -30,12 +30,10 @@ public class CustomLayerExample: UIViewController, ExampleProtocol {
 
     internal func addCustomLayer() {
         // Position the custom layer above the water layer and below all other layers.
-        let layerPosition = LayerPosition(above: "water", below: nil, at: nil)
-
         try! mapView.style.addCustomLayer(
             withId: "Custom",
             layerHost: self,
-            layerPosition: layerPosition)
+            layerPosition: .above("water"))
     }
 }
 

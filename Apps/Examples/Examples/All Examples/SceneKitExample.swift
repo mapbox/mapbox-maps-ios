@@ -42,7 +42,7 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
         try! mapView.style.addCustomLayer(
             withId: "Custom",
             layerHost: self,
-            layerPosition: LayerPosition(above: nil, below: "waterway-label", at: nil))
+            layerPosition: .below("waterway-label"))
 
         var demSource = RasterDemSource()
         demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
@@ -69,9 +69,7 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
             "hillshade-illumination-anchor": "map"
         ] as [ String: Any ]
 
-        mapView.mapboxMap.__map.addStyleLayer(
-            forProperties: properties,
-            layerPosition: LayerPosition(above: nil, below: "water", at: nil))
+        try! mapView.style.addLayer(with: properties, layerPosition: .below("water"))
     }
 
     public func renderingWillStart(_ metalDevice: MTLDevice, colorPixelFormat: UInt, depthStencilPixelFormat: UInt) {

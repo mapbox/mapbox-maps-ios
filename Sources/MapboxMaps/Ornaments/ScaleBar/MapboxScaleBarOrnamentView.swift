@@ -11,6 +11,11 @@ internal class MapboxScaleBarOrnamentView: UIView {
 
     // MARK: - Properties
 
+    // This view should have size and positioning that matches the root scale bar.
+    // It contains the `dynamicContainerView` in order to avoid triggering `layoutSubviews`
+    // on the map view.
+    internal var staticContainerView = UIView()
+
     internal var metersPerPoint: CLLocationDistance = 1 {
         didSet {
             guard metersPerPoint != oldValue else {
@@ -19,7 +24,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
 
             updateVisibility()
             needsRecalculateSize = true
-            invalidateIntrinsicContentSize()
+            updateScaleBar()
         }
     }
 
@@ -43,7 +48,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
             var bars: [UIView] = []
             for _ in 0..<row.numberOfBars {
                 let bar = UIView()
-                self.containerView.addSubview(bar)
+                self.dynamicContainerView.addSubview(bar)
                 bars.append(bar)
             }
             _bars = bars
@@ -51,16 +56,17 @@ internal class MapboxScaleBarOrnamentView: UIView {
         return _bars!
     }
 
-    lazy private var containerView: UIView = {
+    var size = CGSize()
+    // This container view's size and position can change based on the size
+    // of its contents. It is contained within the `staticContainerView`.
+    lazy private var dynamicContainerView: UIView = {
         let view = UIView()
-        view.clipsToBounds = true
+//        view.clipsToBounds = true
         view.backgroundColor = Constants.primaryColor
         view.layer.borderColor = Constants.primaryColor.cgColor
         view.layer.borderWidth = Constants.borderWidth / UIScreen.main.scale
         view.layer.cornerRadius = Constants.barHeight / 2.0
         view.layer.masksToBounds = true
-
-        addSubview(view)
 
         return view
     }()
@@ -86,7 +92,6 @@ internal class MapboxScaleBarOrnamentView: UIView {
 
     private var labelImageCache: [CLLocationDistance: UIImage] = [:]
     private var lastLabelWidth: CGFloat = Constants.scaleBarLabelWidthHint
-    private var size = CGSize()
     private var needsRecalculateSize = false
     private var shouldLayoutBars = false
 
@@ -107,10 +112,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
 
     internal override var intrinsicContentSize: CGSize {
         // Size is calculated elsewhere - since 'intrinsicContentSize' is part of the
-        // constraint system, this should be done in 'updateConstraints'
-        guard size.width >= 0 else {
-            return CGSize()
-        }
+        // constraint system, this should be done in 'updateScaleBar'
         return size
     }
 
@@ -131,8 +133,22 @@ internal class MapboxScaleBarOrnamentView: UIView {
     }
 
     private func commonInit() {
-        translatesAutoresizingMaskIntoConstraints = false
         clipsToBounds = false
+
+        staticContainerView.backgroundColor = .red
+        addSubview(staticContainerView)
+        staticContainerView.clipsToBounds = false
+
+        // TODO: Pin scale bar container's constraints
+        // Only constraints influence the size (width/height)
+
+        // Add width constraint to ornament view
+        // Pin scale bar container to match root ornament view
+        // Test against all four configurations
+
+        staticContainerView.widthAnchor.constraint(equalTo:widthAnchor).isActive = true
+        staticContainerView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
+        staticContainerView.addSubview(dynamicContainerView)
 
         addZeroLabel()
 
@@ -144,14 +160,13 @@ internal class MapboxScaleBarOrnamentView: UIView {
 
     // MARK: - Layout
 
-    // The primary job of 'updateConstraints' here is to recalculate the
-    // 'intrinsicContentSize:', 'metersPerPoint' and the maximum width determine the
+    // The primary job of 'updateScaleBar' here is to recalculate
+    // 'metersPerPoint' and the maximum width determine the
     // current 'row', which in turn determines the "actualWidth". To obtain the full
     // width of the scale bar, we also need to include some space for the "last"
     // label
-    internal override func updateConstraints() {
+    internal func updateScaleBar() {
         guard !isHidden && needsRecalculateSize else {
-            super.updateConstraints()
             return
         }
 
@@ -163,7 +178,6 @@ internal class MapboxScaleBarOrnamentView: UIView {
         let totalBarWidth = actualWidth()
 
         guard totalBarWidth > 0.0 else {
-            super.updateConstraints()
             return
         }
 
@@ -180,9 +194,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
         let halfLabelWidth = ceil(lastLabelWidth / 2)
 
         size = CGSize(width: totalBarWidth + halfLabelWidth, height: 16)
-
         setNeedsLayout()
-        super.updateConstraints() // This calls intrinsicContentSize
     }
 
     internal override func layoutSubviews() {
@@ -195,7 +207,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
         needsRecalculateSize = false
 
         let totalBarWidth = actualWidth()
-        guard size.width > 0 && totalBarWidth > 0 else {
+        guard totalBarWidth > 0 else {
             return
         }
 
@@ -211,7 +223,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
         let halfLabelWidth = ceil(lastLabelWidth / 2)
         let barOffset = isRightToLeft ? halfLabelWidth : 0.0
 
-        containerView.frame = CGRect(x: barOffset,
+        dynamicContainerView.frame = CGRect(x: barOffset,
                                      y: intrinsicContentSize.height - Constants.barHeight,
                                      width: totalBarWidth,
                                      height: Constants.barHeight)
@@ -221,6 +233,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
         let barDelta = isRightToLeft ? -barWidth : barWidth
 
         layoutLabels(with: barOffset, delta: barDelta, yPosition: yPosition)
+
     }
 
     private func layoutBars(with barWidth: CGFloat) {
@@ -348,12 +361,12 @@ internal class MapboxScaleBarOrnamentView: UIView {
                               Constants.metricTable.last!.distance : Constants.imperialTable.last!.distance
         let alpha: CGFloat = maximumDistance > allowedDistance ? 0 : 1
 
-        if alpha != self.alpha {
+        if alpha != staticContainerView.alpha {
             UIView.animate(withDuration: 0.2,
                            delay: 0,
                            options: .beginFromCurrentState,
                            animations: {
-                            self.alpha = alpha
+                            self.staticContainerView.alpha = alpha
             },
                            completion: nil)
         }

@@ -90,4 +90,56 @@ class MapViewIntegrationTests: IntegrationTestCase {
         XCTAssertNil(mapView.displayLink?.preferredFramesPerSecond)
         XCTAssertNotEqual(mapView.preferredFPS.rawValue, mapView.displayLink?.preferredFramesPerSecond)
     }
+
+    func testLoadStyleURICompletionIsCalled() {
+        let completionCalled = expectation(description: "Completion closure is called")
+        mapView.mapboxMap.loadStyleURI(.streets) { result in
+            completionCalled.fulfill()
+        }
+        wait(for: [completionCalled], timeout: 5.0)
+        waitForNextIdle()
+    }
+
+    func testLoadStyleURICompletionIsCalledWhenMapViewIsDeallocated() {
+        mapView.removeFromSuperview()
+        mapView = nil
+
+
+        weak var weakMapView: MapView?
+        weak var weakMapboxMap: MapboxMap?
+        var completionCalled: XCTestExpectation!
+
+        autoreleasepool {
+            let resourceOptions = ResourceOptions(accessToken: accessToken)
+            let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
+            mapView = MapView(frame: rootView.bounds, mapInitOptions: mapInitOptions)
+            rootView.addSubview(mapView)
+
+
+            weakMapView = mapView
+            weakMapboxMap = mapView.mapboxMap
+
+            completionCalled = expectation(description: "Completion closure is called")
+            mapView.mapboxMap.loadStyleURI(.streets) { result in
+                completionCalled.fulfill()
+            }
+
+            mapView.removeFromSuperview()
+            mapView = nil
+        }
+        XCTAssertNil(weakMapView)
+        XCTAssertNotNil(weakMapboxMap)
+        wait(for: [completionCalled], timeout: 5.0)
+        XCTAssertNil(weakMapView)
+        XCTAssertNil(weakMapboxMap)
+    }
+
+    private func waitForNextIdle() {
+        let waitForIdle = expectation(description: "Wait for idle")
+        mapView.mapboxMap.onNext(.mapIdle) { _ in
+            waitForIdle.fulfill()
+        }
+        wait(for: [waitForIdle], timeout: 30)
+    }
+
 }

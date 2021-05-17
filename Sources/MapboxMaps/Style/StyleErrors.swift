@@ -32,15 +32,23 @@ public enum TypeConversionError: Error {
 
 /// Error type that represents the data returned with the `.mapLoadingError`
 /// event
+///
+/// The associated message (which is returned by `errorDescription`) contains
+/// a descriptive error message.
 public enum MapLoadingError: LocalizedError {
+    /// Style could not be loaded
     case style(String)
 
+    /// Sprite could not be loaded
     case sprite(String)
 
+    /// Source could not be loaded
     case source(String)
 
+    /// Tile could not be loaded
     case tile(String)
 
+    /// Glyphs could not be loaded
     case glyphs(String)
 
     internal init(data: Any) {
@@ -66,6 +74,8 @@ public enum MapLoadingError: LocalizedError {
         }
     }
 
+    /// Associated message (from `.mapLoadingError` event) that describes the
+    /// error
     public var errorDescription: String {
         switch self {
         case let .style(message):

@@ -45,37 +45,52 @@ public final class MapboxMap {
     }
 
     // MARK: - Style loading
-     private func observeStyleLoad(_ completion: @escaping (Result<Style, Error>) -> Void) {
-
+    private func observeStyleLoad(_ completion: @escaping (Result<Style, Error>) -> Void) {
         onNext(eventTypes: [.styleLoaded, .mapLoadingError]) { event in
-             switch event.type {
-             case MapEvents.styleLoaded:
-                 assert(self.style.isLoaded)
-                 completion(.success(self.style))
+            switch event.type {
+            case MapEvents.styleLoaded:
+                assert(self.style.isLoaded)
+                completion(.success(self.style))
 
-             case MapEvents.mapLoadingError:
-                 let error = MapLoadingError(data: event.data)
-                 completion(.failure(error))
+            case MapEvents.mapLoadingError:
+                let error = MapLoadingError(data: event.data)
+                completion(.failure(error))
 
-             default:
-                 fatalError("Unexpected event type")
-             }
-         }
-     }
+            default:
+                fatalError("Unexpected event type")
+            }
+        }
+    }
 
-     public func loadStyleURI(_ styleURI: StyleURI, completion: ((Result<Style, Error>) -> Void)? = nil) {
-         if let completion = completion {
-             observeStyleLoad(completion)
-         }
-         __map.setStyleURIForUri(styleURI.rawValue)
-     }
+    /// Loads a style from a StyleURI, calling a completion closure when the
+    /// style is fully loaded or there has been an error during load.
+    ///
+    /// - Parameters:
+    ///   - styleURI: StyleURI to load
+    ///   - completion: Closure called when the style has been fully loaded. The
+    ///     `Result` type encapsulates the `Style` or error that occurred. See
+    ///     `MapLoadingError`
+    public func loadStyleURI(_ styleURI: StyleURI, completion: ((Result<Style, Error>) -> Void)? = nil) {
+        if let completion = completion {
+            observeStyleLoad(completion)
+        }
+        __map.setStyleURIForUri(styleURI.rawValue)
+    }
 
-     public func loadStyleJSON(_ JSON: String, completion: ((Result<Style, Error>) -> Void)? = nil) {
-         if let completion = completion {
-             observeStyleLoad(completion)
-         }
-         __map.setStyleJSONForJson(JSON)
-     }
+    /// Loads a style from a JSON string, calling a completion closure when the
+    /// style is fully loaded or there has been an error during load.
+    ///
+    /// - Parameters:
+    ///   - styleURI: Style JSON string
+    ///   - completion: Closure called when the style has been fully loaded. The
+    ///     `Result` type encapsulates the `Style` or error that occurred. See
+    ///     `MapLoadingError`
+    public func loadStyleJSON(_ JSON: String, completion: ((Result<Style, Error>) -> Void)? = nil) {
+        if let completion = completion {
+            observeStyleLoad(completion)
+        }
+        __map.setStyleJSONForJson(JSON)
+    }
 
     // MARK: - Camera Fitting
 

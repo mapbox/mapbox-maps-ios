@@ -152,6 +152,7 @@ internal class Puck2D: Puck {
 private extension Puck2D {
     func createPreciseLocationIndicatorLayer(location: Location) throws {
         guard let style = style else {
+            Log.warning(forMessage: "Puck2D.createPreciseLocationIndicatorLayer - Style does not exit.", category: "Location")
             return
         }
 
@@ -210,6 +211,7 @@ private extension Puck2D {
 
     func createApproximateLocationIndicatorLayer(location: Location) throws {
         guard let style = style else {
+            Log.warning(forMessage: "Puck2D.createApproximateLocationIndicatorLayer - Style does not exit.", category: "Location")
             return
         }
 

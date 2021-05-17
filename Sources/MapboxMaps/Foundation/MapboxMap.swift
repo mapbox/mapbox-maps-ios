@@ -49,7 +49,9 @@ public final class MapboxMap {
         onNext(eventTypes: [.styleLoaded, .mapLoadingError]) { event in
             switch event.type {
             case MapEvents.styleLoaded:
-                assert(self.style.isLoaded)
+                if !self.style.isLoaded {
+                    Log.warning(forMessage: "style.isLoaded == false, was this an empty style?", category: "Style")
+                }
                 completion(.success(self.style))
 
             case MapEvents.mapLoadingError:

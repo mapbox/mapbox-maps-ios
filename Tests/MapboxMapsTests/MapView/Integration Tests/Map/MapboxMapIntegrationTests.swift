@@ -29,6 +29,38 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
         removeMapView()
     }
 
+    func testLoadStyleJSONCompletionIsCalled() {
+
+        let styleJSONObject: [String: Any] = [
+            "version": 8,
+            "center": [
+            -87.6298,
+            41.8781
+            ],
+            "zoom": 12,
+            "sources": [],
+            "layers": []
+        ]
+
+        let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
+        XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string")
+
+        setupMapView()
+
+        let completionCalled = expectation(description: "Completion closure is called")
+        mapView.mapboxMap.loadStyleJSON(styleJSON) { result in
+            guard case .success = result else {
+                XCTFail("loadStyleJSON failed")
+                return
+            }
+            completionCalled.fulfill()
+        }
+        wait(for: [completionCalled], timeout: 5.0)
+        waitForNextIdle()
+
+        removeMapView()
+    }
+
     func testLoadStyleURICompletionIsCalledWhenMapViewIsDeallocated() {
         weak var weakMapView: MapView?
         weak var weakMapboxMap: MapboxMap?

@@ -31,7 +31,6 @@ public class DebugViewController: UIViewController {
             switch result {
             case .success:
                 print("The map has finished loading style")
-            break
             case let .failure(error):
                 print("The map failed to load the style: \(error)")
             }

@@ -20,7 +20,7 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
         setupMapView()
 
         let completionCalled = expectation(description: "Completion closure is called")
-        mapView.mapboxMap.loadStyleURI(.streets) { result in
+        mapView.mapboxMap.loadStyleURI(.streets) { _ in
             completionCalled.fulfill()
         }
         wait(for: [completionCalled], timeout: 5.0)
@@ -74,14 +74,14 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
             weakMapboxMap = mapView.mapboxMap
 
             completionCalled = expectation(description: "Completion closure is called")
-            mapView.mapboxMap.loadStyleURI(.streets) { result in
+            mapView.mapboxMap.loadStyleURI(.streets) { _ in
                 completionCalled.fulfill()
             }
 
             // Now remove the MapView
             removeMapView()
         }
-        
+
         XCTAssertNil(weakMapView)
         XCTAssertNotNil(weakMapboxMap)
         wait(for: [completionCalled], timeout: 5.0)
@@ -112,4 +112,3 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
         wait(for: [waitForIdle], timeout: 30)
     }
 }
-

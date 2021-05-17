@@ -385,7 +385,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         mapView.mapboxMap.onNext(.styleLoaded) { _ in
             do {
                 //-->
-                try mapView.style.addSource(myGeoJSONSource, id: "my-geojson-source")
+                try mapView.mapboxMap.style.addSource(myGeoJSONSource, id: "my-geojson-source")
                 //<--
 
                 /*
@@ -402,7 +402,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                 /*
                 Once a layer is created, add it to the map:
                 */
-                try mapView.style.addLayer(myBackgroundLayer)
+                try mapView.mapboxMap.style.addLayer(myBackgroundLayer)
 
                 expectation.fulfill()
             } catch {
@@ -426,20 +426,20 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                 demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
                 demSource.tileSize = 512
                 demSource.maxzoom = 14.0
-                try mapView.style.addSource(demSource, id: "mapbox-dem")
+                try mapView.mapboxMap.style.addSource(demSource, id: "mapbox-dem")
 
                 var terrain = Terrain(sourceId: "mapbox-dem")
                 terrain.exaggeration = .constant(1.5)
 
                 // Add sky layer
-                try mapView.style.setTerrain(terrain)
+                try mapView.mapboxMap.style.setTerrain(terrain)
 
                 var skyLayer = SkyLayer(id: "sky-layer")
                 skyLayer.paint?.skyType = .constant(.atmosphere)
                 skyLayer.paint?.skyAtmosphereSun = .constant([0.0, 0.0])
                 skyLayer.paint?.skyAtmosphereSunIntensity = .constant(15.0)
 
-                try mapView.style.addLayer(skyLayer)
+                try mapView.mapboxMap.style.addLayer(skyLayer)
                 //<--
 
                 expectation.fulfill()

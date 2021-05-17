@@ -92,8 +92,8 @@ internal struct SwiftUIMapView: UIViewRepresentable {
         mapView.camera.setCamera(to: CameraOptions(center: camera.center, zoom: camera.zoom))
         /// Since changing the style causes annotations to be removed from the map
         /// we only call the setter if the value has changed.
-        if mapView.style.uri != styleURI {
-            mapView.style.uri = styleURI
+        if mapView.mapboxMap.style.uri != styleURI {
+            mapView.mapboxMap.style.uri = styleURI
         }
 
         /// The coordinator needs to manager annotations because

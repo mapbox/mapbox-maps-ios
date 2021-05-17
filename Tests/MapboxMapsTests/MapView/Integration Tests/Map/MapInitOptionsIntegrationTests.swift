@@ -27,7 +27,7 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         XCTAssertEqual(resourceOptions.accessToken, credentialsManager.accessToken)
 
         XCTAssertEqual(mapView.mapboxMap.__map.getStyleURI(), StyleURI.outdoors.rawValue)
-        XCTAssertEqual(mapView.style.uri, .outdoors)
+        XCTAssertEqual(mapView.mapboxMap.style.uri, .outdoors)
     }
 
     func testOptionsAreSetFromNibProvider() {
@@ -66,7 +66,7 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         XCTAssertEqual(resourceOptions.accessToken, credentialsManager.accessToken)
 
         XCTAssertEqual(mapView.mapboxMap.__map.getStyleURI(), StyleURI.satellite.rawValue)
-        XCTAssertEqual(mapView.style.uri, .satellite)
+        XCTAssertEqual(mapView.mapboxMap.style.uri, .satellite)
     }
 
     func testDefaultOptionsAreUsedWhenNibDoesntSetProvider() {

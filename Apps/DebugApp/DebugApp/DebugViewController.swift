@@ -16,10 +16,25 @@ public class DebugViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MapView(frame: view.bounds)
+        // Deliberately set nil style
+        mapView = MapView(frame: view.bounds, mapInitOptions: MapInitOptions(styleURI: nil))
         mapView.location.options.puckType = .puck2D()
 
         view.addSubview(mapView)
+
+        // Convenience that takes a closure that's called when the style
+        // is loaded or fails to load.
+        //
+        // Handling load callbacks is ALSO demonstrated below using the separate `onNext` & `onEvery`
+        // callbacks
+        mapView.mapboxMap.loadStyleURI(.streets) { result in
+            switch result {
+            case .success:
+                print("The map has finished loading style")
+            case let .failure(error):
+                print("The map failed to load the style: \(error)")
+            }
+        }
 
         /**
          The closure is called when style data has been loaded. This is called

@@ -43,7 +43,7 @@ public class LayerBelowExample: UIViewController, ExampleProtocol {
         layer.paint?.fillOutlineColor = .constant(ColorRepresentable(color: #colorLiteral(red: 0.03167597491, green: 0.3966798381, blue: 0.043041647, alpha: 1)))
 
         // Add the data source to the map
-        try! mapView.style.addSource(source, id: sourceIdentifier)
+        try! mapView.mapboxMap.style.addSource(source, id: sourceIdentifier)
         // Add the layer to the map below the "settlement-label" layer
         try! mapView.style.addLayer(layer, layerPosition: .below("settlement-label"))
 

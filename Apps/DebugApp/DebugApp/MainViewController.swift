@@ -15,7 +15,7 @@ class MainViewController: UIViewController {
 
     // Show the view controller modally (fullscreen). The test is expected to dismiss the view controller using
     // viewController.dismiss(animated:completion:)
-    func showViewController<T: DebugViewController>(withIdentifier identifier: String = "viewControllerId", type: T.Type = T.self, completion: ((T) -> Void)? = nil) {
+    func showViewController<T: UIViewController>(withIdentifier identifier: String, type: T.Type = T.self, completion: ((T) -> Void)? = nil) {
         guard let vc = storyboard?.instantiateViewController(withIdentifier: identifier) as? T else {
             fatalError("DebugViewController should have an identifier")
         }
@@ -25,5 +25,9 @@ class MainViewController: UIViewController {
         present(vc, animated: false) {
             completion?(vc)
         }
+    }
+
+    @IBAction func showViewController() {
+        self.showViewController(withIdentifier: "viewControllerId", type: DebugViewController.self)
     }
 }

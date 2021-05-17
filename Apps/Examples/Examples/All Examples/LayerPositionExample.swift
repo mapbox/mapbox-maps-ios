@@ -72,8 +72,8 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
 
         alert.addAction(UIAlertAction(title: "Above all", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            try? self.mapView.style.removeLayer(withId: self.layer.id)
-            try? self.mapView.style.addLayer(self.layer,
+            try? self.mapView.mapboxMap.style.removeLayer(withId: self.layer.id)
+            try? self.mapView.mapboxMap.style.addLayer(self.layer,
                                              layerPosition: nil)
         }))
 
@@ -107,10 +107,10 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
             CLLocationCoordinate2DMake(32.91648534731439, -114.43359375)
         ]])))
 
-        try! mapView.style.addSource(source, id: sourceIdentifier)
+        try! mapView.mapboxMap.style.addSource(source, id: sourceIdentifier)
 
         // If a layer position is not supplied, the layer is added above all other layers by default.
-        try! mapView.style.addLayer(layer, layerPosition: nil)
+        try! mapView.mapboxMap.style.addLayer(layer, layerPosition: nil)
 
         // The below line is used for internal testing purposes only.
         finish()

@@ -44,7 +44,7 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         lineLayer.layout?.lineCap = .constant(.round)
 
         do {
-            try mapView.style.addSource(vectorSource, id: sourceIdentifier)
+            try mapView.mapboxMap.style.addSource(vectorSource, id: sourceIdentifier)
         } catch {
             displayAlert(message: error.localizedDescription)
         }

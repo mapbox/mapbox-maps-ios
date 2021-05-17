@@ -2,31 +2,38 @@ import XCTest
 @testable import MapboxMaps
 
 // swiftlint:disable force_cast
-internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
+internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
-    // MARK: Reusable test properties
+    var tileStorePathURL: URL!
+    var tileStore: TileStore!
+    var resourceOptions: ResourceOptions!
+    var offlineManager: OfflineManager!
+    var tileRegionId = ""
 
-    /// Offline manager properties
-    private lazy var resourceOptions = ResourceOptions(accessToken: accessToken)
-    private lazy var offlineManager = OfflineManager(resourceOptions: resourceOptions)
-    private let tileRegionId = "myTileRegion"
-
-    /// Tokyo coordinates
-    private let tokyoCoord = CLLocationCoordinate2D(latitude: 35.682027, longitude: 139.769305)
-
-    /// Tile Region Options
-    internal var tileRegionLoadOptions: TileRegionLoadOptions?
+    let tokyoCoord = CLLocationCoordinate2D(latitude: 35.682027, longitude: 139.769305)
+    var tileRegionLoadOptions: TileRegionLoadOptions!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
+        accessToken = try mapboxAccessToken()
 
-        /// Create an offline region with tiles using the "outdoors" style
-        let stylePackOptions = StylePackLoadOptions(glyphsRasterizationMode: .ideographsRasterizedLocally,
-                                                    metadata: ["tag": "my-outdoors-style-pack"])!
+        tileRegionId = "tile-region-\(name)"
 
+        // TileStore
+        tileStorePathURL = try TileStore.fileURLForDirectory(for: name.fileSystemSafeString())
+        tileStore = TileStore.getInstanceForPath(tileStorePathURL.path)
+
+        // OfflineManager
+        // Setting the TileStore here has the side effect of setting its access
+        // token
+        resourceOptions = ResourceOptions(accessToken: accessToken,
+                                          tileStore: tileStore)
+
+        offlineManager = OfflineManager(resourceOptions: resourceOptions)
+
+        // Setup TileRegionLoadOptions
         let outdoorsOptions = TilesetDescriptorOptions(styleURI: .outdoors,
-                                                       zoomRange: 0...16,
-                                                       stylePackOptions: stylePackOptions)
+                                                       zoomRange: 0...16)
 
         let outdoorsDescriptor = offlineManager.createTilesetDescriptor(for: outdoorsOptions)
 
@@ -40,18 +47,29 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
                                                       metadata: ["tag": "my-outdoors-tile-region"],
                                                       tileLoadOptions: tileLoadOptions,
                                                       averageBytesPerSecond: nil)!
+
     }
 
-    override func tearDown() {
-        super.tearDown()
+    override func tearDownWithError() throws {
+        try super.tearDownWithError()
+
+        tileStore = nil
         tileRegionLoadOptions = nil
+        resourceOptions = nil
+        offlineManager = nil
+
+        // Wait before removing directory
+        let expectation = self.expectation(description: "Wait...")
+        _ = XCTWaiter.wait(for: [expectation], timeout: 1.0)
+
+        if let tileStorePathURL = tileStorePathURL {
+            try TileStore.removeDirectory(at: tileStorePathURL)
+        }
     }
 
     // MARK: Test Cases
 
     internal func testProgressAndCompletionBlocksBaseCase() throws {
-
-        throw XCTSkip("Test is failing - disabled temporarily")
 
         /// Expectations to be fulfilled
         let downloadInProgress = XCTestExpectation(description: "Downloading offline tiles in progress")
@@ -59,128 +77,181 @@ internal class OfflineManagerIntegrationTestCase: MapViewIntegrationTestCase {
         let completionBlockReached = XCTestExpectation(description: "Checks that completion block closure has been reached")
 
         /// Perform the download
-        TileStore.getInstance().loadTileRegion(forId: tileRegionId,
-                                               loadOptions: tileRegionLoadOptions!) { _ in
+        tileStore.loadTileRegion(forId: tileRegionId,
+                                 loadOptions: tileRegionLoadOptions!) { _ in
             DispatchQueue.main.async {
+                print(".", terminator: "")
                 downloadInProgress.fulfill()
             }
         } completion: { result in
-            switch result {
-            case .success(let region):
-                if region.requiredResourceCount == region.completedResourceCount {
-                    completionBlockReached.fulfill()
-                } else {
-                    XCTFail("Not all items were loaded")
+            DispatchQueue.main.async {
+                switch result {
+                case let .success(region):
+                    if region.requiredResourceCount == region.completedResourceCount {
+                        print("✔︎")
+                        completionBlockReached.fulfill()
+                    } else {
+                        print("𐄂")
+                        XCTFail("Not all items were loaded")
+                    }
+                case let .failure(error):
+                    print("𐄂")
+                    XCTFail("Download failed with error: \(error)")
                 }
-            case .failure(let error):
-                XCTFail("Download failed with error: \(error)")
             }
         }
 
         let expectations = [downloadInProgress, completionBlockReached]
-        wait(for: expectations, timeout: 5.0)
+        wait(for: expectations, timeout: 30.0)
     }
 
     internal func testProgressCanBeCancelled() throws {
-        throw XCTSkip("Test is failing - disabled temporarily")
-
         /// Expectations to be fulfilled
         let downloadWasCancelled = XCTestExpectation(description: "Checks a cancel function was reached and that the download was canceled")
 
         /// Perform the download
-        let download = TileStore.getInstance().loadTileRegion(forId: tileRegionId,
-                                                              loadOptions: tileRegionLoadOptions!) { _ in }
-        completion: { result in
-            switch result {
-            case .success:
-                XCTFail("Result reached success block, therefore download was not canceled")
-            case .failure(let error):
-                let tileError = error as! TileRegionError
-                if tileError == .canceled("Load was canceled") {
-                    downloadWasCancelled.fulfill()
-                } else {
-                    XCTFail("Download was not canceled")
+        let download = tileStore.loadTileRegion(forId: tileRegionId,
+                                                loadOptions: tileRegionLoadOptions!) { _ in }
+            completion: { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success:
+                        XCTFail("Result reached success block, therefore download was not canceled")
+                    case let .failure(error):
+                        if case TileRegionError.canceled = error {
+                            downloadWasCancelled.fulfill()
+                        } else {
+                            XCTFail("Download was not canceled")
+                        }
+                    }
+                }
+            }
+
+        DispatchQueue.main.async {
+            download.cancel()
+        }
+
+        let expectations = [downloadWasCancelled]
+        wait(for: expectations, timeout: 10.0)
+    }
+
+    internal func testOfflineRegionCanBeDeleted() throws {
+        /// Expectations to be fulfilled
+        let tileRegionDownloaded = XCTestExpectation(description: "Downloaded offline tiles")
+
+        /// Perform the download
+        tileStore.loadTileRegion(forId: tileRegionId,
+                                 loadOptions: tileRegionLoadOptions!) { _ in }
+            completion: { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let region):
+                        if region.requiredResourceCount == region.completedResourceCount {
+                            tileRegionDownloaded.fulfill()
+                        } else {
+                            XCTFail("Not all items were loaded")
+                        }
+
+                    case .failure(let error):
+                        print("𐄂")
+                        XCTFail("Download failed with error: \(error)")
+                    }
+                }
+            }
+
+        wait(for: [tileRegionDownloaded], timeout: 30.0)
+
+        // Now delete
+        let downloadWasDeleted = XCTestExpectation(description: "Downloaded offline tiles were deleted")
+
+        tileStore.removeTileRegion(forId: self.tileRegionId)
+
+        tileStore.allTileRegions { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let tileRegions):
+                    if tileRegions.count == 0 {
+                        downloadWasDeleted.fulfill()
+                    } else {
+                        XCTFail("Tile regions still remain.")
+                    }
+                case .failure(let error):
+                    XCTFail("Error getting tile regions with error: \(error)")
                 }
             }
         }
 
-        download.cancel()
-
-        let expectations = [downloadWasCancelled]
-        wait(for: expectations, timeout: 5.0)
-    }
-
-    internal func testOfflineRegionCanBeDeleted() throws {
-        throw XCTSkip("Test is failing - disabled temporarily")
-
-        /// Expectations to be fulfilled
-        let downloadWasDeleted = XCTestExpectation(description: "Downloaded offline tiles were deleted")
-
-        /// Perform the download
-        TileStore.getInstance().loadTileRegion(forId: tileRegionId,
-                                               loadOptions: tileRegionLoadOptions!) { _ in }
-            completion: { result in
-                switch result {
-                case .success(let region):
-                    if region.requiredResourceCount == region.completedResourceCount {
-                        /// Waiting for the load tile to complete
-                        TileStore.getInstance().removeTileRegion(forId: self.tileRegionId)
-
-                        TileStore.getInstance().allTileRegions(completion: { result in
-                            switch result {
-                            case .success(let tileRegions):
-                                if tileRegions.count == 0 {
-                                    downloadWasDeleted.fulfill()
-                                }
-                            case .failure(let error):
-                                XCTFail("Error getting tile regions with error: \(error)")
-                            }
-                        })
-                    }
-                case .failure(let error):
-                    XCTFail("Test failed with error: \(error)")
-                }
-            }
-
-        let expectations = [downloadWasDeleted]
-        wait(for: expectations, timeout: 5.0)
+        wait(for: [downloadWasDeleted], timeout: 5.0)
     }
 
     internal func testMapCanBeLoadedWithoutNetworkConnectivity() throws {
-        throw XCTSkip("Test is failing - disabled temporarily")
+
+        guard let rootView = rootViewController?.view else {
+            throw XCTSkip("No valid UIWindow or root view controller")
+        }
+
+        guard MTLCreateSystemDefaultDevice() != nil else {
+            throw XCTSkip("No valid Metal device (OS version or VM?)")
+        }
+
+        // 1. Load TileRegion from network
+        try testProgressAndCompletionBlocksBaseCase()
+
+        // - - - - - - - -
+        // 2. stylepack
+
+        let stylePackLoaded = expectation(description: "StylePack was loaded")
+        let stylePackOptions = StylePackLoadOptions(glyphsRasterizationMode: .ideographsRasterizedLocally,
+                                                    metadata: ["tag": "my-outdoors-style-pack"])!
+
+        offlineManager.loadStylePack(for: .outdoors,
+                                     loadOptions: stylePackOptions) { result in
+            DispatchQueue.main.async {
+                print("StylePack completed: \(result)")
+                switch result {
+                case let .failure(error):
+                    XCTFail("stylePackLoaded error: \(error)")
+                case .success:
+                    stylePackLoaded.fulfill()
+                }
+            }
+        }
+
+        wait(for: [stylePackLoaded], timeout: 30.0)
+
+        // - - - - - - - -
+        // 3. Disable load-from-network, and try launch map at this location
+        NetworkConnectivity.getInstance().setMapboxStackConnectedForConnected(false)
+
+        let cameraOptions = CameraOptions(center: tokyoCoord, zoom: 16)
+        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions,
+                                            cameraOptions: cameraOptions,
+                                            styleURI: .outdoors)
+        let mapView = MapView(frame: rootView.bounds, mapInitOptions: mapInitOptions)
+        rootView.addSubview(mapView)
 
         /// Expectations to be fulfilled
         let mapIsUsingDatabase = XCTestExpectation(description: "Map is using database for resources")
         mapIsUsingDatabase.assertForOverFulfill = false
+
         let mapWasLoaded = XCTestExpectation(description: "Map was loaded")
 
-        /// Perform the download
-        TileStore.getInstance().loadTileRegion(forId: tileRegionId,
-                                               loadOptions: tileRegionLoadOptions!) { _ in } completion: { _ in }
-
-        NetworkConnectivity.getInstance().setMapboxStackConnectedForConnected(false)
-
-        let mapboxMap = try XCTUnwrap(mapView?.mapboxMap)
-
-        mapboxMap.onEvery(.resourceRequest) { event in
+        mapView.mapboxMap.onEvery(.resourceRequest) { event in
             let eventElements = event.data as! [String: Any]
-
             let source = eventElements["data-source"] as! String
-
-            switch source {
-            case "network":
+            if source == "network" {
                 XCTFail("Loading is occurring from the network")
-            default:
+            } else {
                 mapIsUsingDatabase.fulfill()
             }
         }
 
-        mapboxMap.onNext(.mapLoaded) { _ in
+        mapView.mapboxMap.onNext(.mapLoaded) { _ in
             mapWasLoaded.fulfill()
         }
 
         let expectations = [mapIsUsingDatabase, mapWasLoaded]
-        wait(for: expectations, timeout: 5.0)
+        wait(for: expectations, timeout: 5.0, enforceOrder: true)
 
         NetworkConnectivity.getInstance().setMapboxStackConnectedForConnected(true)
     }

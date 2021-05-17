@@ -1,5 +1,5 @@
 import Foundation
-import MapboxMaps
+@testable import MapboxMaps
 import XCTest
 
 // These tests are used for documentation purposes
@@ -9,6 +9,39 @@ import XCTest
 //swiftlint:disable empty_enum_arguments
 class OfflineGuideIntegrationTests: XCTestCase {
     let tokyoCoord = CLLocationCoordinate2D(latitude: 35.682027, longitude: 139.769305)
+
+    var tileStorePathURL: URL!
+    var tileStore: TileStore!
+    var accessToken: String!
+
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+
+        do {
+            accessToken = try mapboxAccessToken()
+        } catch {
+            throw XCTSkip("Mapbox access token not found")
+        }
+
+        tileStorePathURL = try TileStore.fileURLForDirectory(for: name.fileSystemSafeString())
+        tileStore = TileStore.getInstanceForPath(tileStorePathURL.path)
+
+        tileStore.setAccessToken(accessToken)
+    }
+
+    override func tearDownWithError() throws {
+        try super.tearDownWithError()
+
+        tileStore = nil
+
+        // Wait before removing directory
+        let expectation = self.expectation(description: "Wait...")
+        _ = XCTWaiter.wait(for: [expectation], timeout: 1.0)
+
+        if let tileStorePathURL = tileStorePathURL {
+            try TileStore.removeDirectory(at: tileStorePathURL)
+        }
+    }
 
     // Test StylePackLoadOptions
     func testDefineAStylePackage() throws {
@@ -22,10 +55,9 @@ class OfflineGuideIntegrationTests: XCTestCase {
 
     // Test TileRegionLoadOptions
     func testDefineATileRegion() throws {
-        let accessToken = try mapboxAccessToken()
-
         //-->
-        let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken))
+        let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken,
+                                                                             tileStore: tileStore))
 
         // 1. Create the tile set descriptor
         let options = TilesetDescriptorOptions(styleURI: .outdoors, zoomRange: 0...16)
@@ -83,14 +115,9 @@ class OfflineGuideIntegrationTests: XCTestCase {
     func testLoadAndCancelStylePack() throws {
 
         let expectation = self.expectation(description: "style pack should be canceled")
-        var accessToken: String = ""
-        do {
-            accessToken = try mapboxAccessToken()
-        } catch {
-            _ = XCTSkip("Mapbox access token not found")
-        }
 
-        let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken))
+        let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken,
+                                                                             tileStore: tileStore))
         let stylePackLoadOptions = StylePackLoadOptions(glyphsRasterizationMode: .ideographsRasterizedLocally)!
 
         let handleCancelation = {
@@ -138,14 +165,8 @@ class OfflineGuideIntegrationTests: XCTestCase {
 
     func testLoadAndCancelTileRegion() throws {
         let expectation = self.expectation(description: "Tile region download should be canceled")
-        var accessToken: String = ""
-        do {
-            accessToken = try mapboxAccessToken()
-        } catch {
-            _ = XCTSkip("Mapbox access token not found")
-        }
-
-        let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken))
+        let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken,
+                                                                             tileStore: tileStore))
 
         // Create the tile set descriptor
         let options = TilesetDescriptorOptions(styleURI: .outdoors, zoomRange: 0...16)
@@ -172,7 +193,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
             descriptors: [tilesetDescriptor],
             tileLoadOptions: tileLoadOptions)!
 
-        let tileRegionCancelable = TileStore.getInstance().loadTileRegion(
+        let tileRegionCancelable = tileStore.loadTileRegion(
             forId: tileRegionId,
             loadOptions: tileRegionLoadOptions) { _ in
             //
@@ -205,14 +226,9 @@ class OfflineGuideIntegrationTests: XCTestCase {
 
     func testFetchingAllStylePacks() throws {
         let expectation = self.expectation(description: "Style packs should be fetched without error")
-        var accessToken: String = ""
-        do {
-            accessToken = try mapboxAccessToken()
-        } catch {
-            _ = XCTSkip("Mapbox access token not found")
-        }
 
-        let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken))
+        let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken,
+                                                                             tileStore: tileStore))
 
         let handleStylePacks = { (stylePacks: [StylePack]) in
             // During testing there should be no style packs
@@ -248,8 +264,6 @@ class OfflineGuideIntegrationTests: XCTestCase {
     }
 
     func testFetchingAllTileRegions() throws {
-        throw XCTSkip("Test occasionally fails since tileRegions can be non-empty")
-
         let expectation = self.expectation(description: "Style packs should be fetched without error")
 
         let handleTileRegions = { (tileRegions: [TileRegion]) in
@@ -271,7 +285,8 @@ class OfflineGuideIntegrationTests: XCTestCase {
 
         //-->
         // Get a list of tile regions that are currently available.
-        TileStore.getInstance().allTileRegions { result in
+        // TileStore.getInstance()
+        tileStore.allTileRegions { result in
             switch result {
             case let .success(tileRegions):
                 handleTileRegions(tileRegions)
@@ -289,8 +304,8 @@ class OfflineGuideIntegrationTests: XCTestCase {
     }
 
     func testDeleteStylePack() throws {
-        let accessToken = try mapboxAccessToken()
-        let resourceOptions = ResourceOptions(accessToken: accessToken)
+        let resourceOptions = ResourceOptions(accessToken: accessToken,
+                                              tileStore: tileStore)
         let offlineManager = OfflineManager(resourceOptions: resourceOptions)
 
         //-->
@@ -324,7 +339,8 @@ class OfflineGuideIntegrationTests: XCTestCase {
 
     func testDeleteTileRegions() throws {
         //-->
-        TileStore.getInstance().removeTileRegion(forId: "my-tile-region-id")
+        //TileStore.getInstance().removeTileRegion(forId: "my-tile-region-id")
+        tileStore.removeTileRegion(forId: "my-tile-region-id")
         //<--
 
         // Note this will not remove the downloaded tile packs, instead, it will
@@ -335,7 +351,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
         // disk quota to zero. This will ensure tile regions are fully evicted.
 
         //-->
-        TileStore.getInstance().setOptionForKey(TileStoreOptions.diskQuota, value: 0)
+        tileStore.setOptionForKey(TileStoreOptions.diskQuota, value: 0)
         //<--
 
         // Wait *some time* before the test calls exit()

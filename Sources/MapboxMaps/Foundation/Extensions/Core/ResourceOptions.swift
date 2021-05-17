@@ -51,7 +51,7 @@ extension ResourceOptions {
         // Update the TileStore with the access token from the ResourceOptions
         if tileStoreUsageMode != .disabled {
             let tileStore = tileStore ?? TileStore.getInstance()
-            tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken)
+            tileStore.setAccessToken(accessToken)
         }
 
         let cacheURL = try? ResourceOptions.cacheURLIncludingSubdirectory()

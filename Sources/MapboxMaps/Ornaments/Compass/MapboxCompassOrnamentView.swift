@@ -15,7 +15,7 @@ internal class MapboxCompassOrnamentView: UIButton {
     internal var containerView = UIImageView()
     internal var visibility: OrnamentVisibility = .adaptive {
         didSet {
-            updateVisibility()
+            animateVisibilityUpdate()
         }
     }
 
@@ -33,7 +33,7 @@ internal class MapboxCompassOrnamentView: UIButton {
     internal var currentBearing: CLLocationDirection = 0 {
         didSet {
             let adjustedBearing = currentBearing.truncatingRemainder(dividingBy: 360)
-            updateVisibility()
+            animateVisibilityUpdate()
             self.containerView.transform = CGAffineTransform(rotationAngle: -adjustedBearing.toRadians())
         }
     }
@@ -77,20 +77,20 @@ internal class MapboxCompassOrnamentView: UIButton {
         tapAction?()
     }
 
-    private func updateVisibility() {
+    private func animateVisibilityUpdate() {
         switch visibility {
         case .visible:
-            animate(toAlpha: 1)
+            animate(toHidden: false)
         case .hidden:
-            animate(toAlpha: 0)
+            animate(toHidden: true)
         case .adaptive:
-            animate(toAlpha: abs(currentBearing) < 0.001 ? 0 : 1)
+            animate(toHidden: abs(currentBearing) < 0.001)
         }
     }
 
-    private func animate(toAlpha alpha: CGFloat) {
+    private func animate(toHidden isHidden: Bool) {
         UIView.animate(withDuration: Constants.animationDuration) {
-            self.containerView.alpha = alpha
+            self.containerView.isHidden = isHidden
         }
     }
 

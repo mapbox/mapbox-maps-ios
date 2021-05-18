@@ -21,7 +21,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
         // TileStore
         tileStorePathURL = try TileStore.fileURLForDirectory(for: name.fileSystemSafeString())
-        tileStore = TileStore.getInstanceForPath(tileStorePathURL.path)
+        tileStore = TileStore.shared(for: tileStorePathURL.path)
 
         // OfflineManager
         // Setting the TileStore here has the side effect of setting its access
@@ -38,14 +38,10 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         let outdoorsDescriptor = offlineManager.createTilesetDescriptor(for: outdoorsOptions)
 
         /// Load the tile region
-        let tileLoadOptions = TileLoadOptions(criticalPriority: false,
-                                              acceptExpired: true,
-                                              networkRestriction: .none)
-
         tileRegionLoadOptions = TileRegionLoadOptions(geometry: MBXGeometry(coordinate: self.tokyoCoord),
                                                       descriptors: [outdoorsDescriptor],
                                                       metadata: ["tag": "my-outdoors-tile-region"],
-                                                      tileLoadOptions: tileLoadOptions,
+                                                      acceptExpired: true,
                                                       averageBytesPerSecond: nil)!
 
     }
@@ -221,7 +217,8 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
         // - - - - - - - -
         // 3. Disable load-from-network, and try launch map at this location
-        NetworkConnectivity.getInstance().setMapboxStackConnectedForConnected(false)
+        
+        OfflineSwitch.shared.isMapboxStackConnected = false
 
         let cameraOptions = CameraOptions(center: tokyoCoord, zoom: 16)
         let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions,
@@ -253,6 +250,6 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         let expectations = [mapIsUsingDatabase, mapWasLoaded]
         wait(for: expectations, timeout: 5.0, enforceOrder: true)
 
-        NetworkConnectivity.getInstance().setMapboxStackConnectedForConnected(true)
+        OfflineSwitch.shared.isMapboxStackConnected = true
     }
 }

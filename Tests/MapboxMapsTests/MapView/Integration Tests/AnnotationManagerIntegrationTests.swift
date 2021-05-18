@@ -32,7 +32,8 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
             let annotation = PointAnnotation(coordinate: mapView.cameraState.center)
             let annotationManager = AnnotationManager(for: mapView,
                                                       mapEventsObservable: mapView.mapboxMap,
-                                                      with: self)
+                                                      mapFeatureQueryable: mapView.mapboxMap,
+                                                      style: style)
             annotationManager.addAnnotation(annotation)
 
             _ = try! style.sourceProperties(for: annotationManager.defaultSourceId)
@@ -51,19 +52,23 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
         wait(for: expectations, timeout: 5.0)
     }
 
-    internal func testAddAnnotationAtSpecificLayerPosition() {
-        style?.uri = .streets
+    internal func testAddAnnotationAtSpecificLayerPosition() throws {
+
+        let style = try XCTUnwrap(style)
+        style.uri = .streets
 
         let styleLoadedExpectation = XCTestExpectation(description: "Wait for map to load style")
 
         didFinishLoadingStyle = { mapView in
+
 
             // Given
             let annotation = PointAnnotation(coordinate: mapView.cameraState.center)
             let requiredIndex = 3
             let annotationManager = AnnotationManager(for: mapView,
                                                       mapEventsObservable: mapView.mapboxMap,
-                                                      with: self,
+                                                      mapFeatureQueryable: mapView.mapboxMap,
+                                                      style: style,
                                                       options: AnnotationOptions(layerPosition: .at(requiredIndex)))
             annotationManager.addAnnotation(annotation)
 
@@ -111,7 +116,8 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
             var annotation = PointAnnotation(coordinate: mapView.cameraState.center)
             let annotationManager = AnnotationManager(for: mapView,
                                                       mapEventsObservable: mapView.mapboxMap,
-                                                      with: self)
+                                                      mapFeatureQueryable: mapView.mapboxMap,
+                                                      style: style)
             annotation.userInfo = ["TestKey": true]
             annotationManager.addAnnotation(annotation)
 

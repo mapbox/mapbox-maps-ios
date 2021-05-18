@@ -1,6 +1,7 @@
 import MapboxCoreMaps
 import Turf
 import UIKit
+@_implementationOnly import MapboxCommon_Private
 
 public final class MapboxMap {
     /// The underlying renderer object responsible for rendering the map

@@ -7,25 +7,27 @@ import Turf
 //swiftlint:disable explicit_acl explicit_top_level_acl
 final class AnnotationManagerTests: XCTestCase {
 
-    var annotationSupportableMap: MockAnnotationSupportableMap!
+    var annotationMapFeatureQueryable: MockMapFeatureQueryable!
     var annotationMapEventsObservable: MockMapEventsObservable!
     var annotationSupportableStyle: MockAnnotationStyleDelegate!
     var annotationManager: AnnotationManager!
 
     let defaultCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    let view = UIView()
 
     override func setUp() {
         // Given
-        annotationSupportableMap = MockAnnotationSupportableMap()
         annotationSupportableStyle = MockAnnotationStyleDelegate()
         annotationMapEventsObservable = MockMapEventsObservable()
-        annotationManager = AnnotationManager(for: annotationSupportableMap,
+        annotationMapFeatureQueryable = MockMapFeatureQueryable()
+        annotationManager = AnnotationManager(for: view,
                                               mapEventsObservable: annotationMapEventsObservable,
-                                              with: annotationSupportableStyle)
+                                              mapFeatureQueryable: annotationMapFeatureQueryable,
+                                              style: annotationSupportableStyle)
     }
 
     override func tearDown() {
-        annotationSupportableMap = nil
+        annotationMapFeatureQueryable = nil
         annotationSupportableStyle = nil
         annotationManager = nil
     }

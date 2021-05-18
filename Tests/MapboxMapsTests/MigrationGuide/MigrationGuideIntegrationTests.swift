@@ -173,7 +173,8 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
     func testMapViewConfiguration() throws {
 
         let mapView = MapView(frame: .zero)
-        let someBounds = CoordinateBounds()
+        let someBounds = CoordinateBounds(southwest: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+                                          northeast: CLLocationCoordinate2D(latitude: 1, longitude: 1))
 
         //-->
         // Configure map to show a scale bar
@@ -222,12 +223,12 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
                     // `HttpResponse` takes an `MBXExpected` type. This is very similar to Swift's
                     // `Result` type. APIs using `MBXExpected` are prone to future changes.
-                    let expected: MBXExpected<HttpResponseData, HttpRequestError>
+                    let result: Result<HttpResponseData, HttpRequestError>
 
                     if let error = error {
                         // Map NSURLError to HttpRequestErrorType
                         let requestError = HttpRequestError(type: .otherError, message: error.localizedDescription)
-                        expected = MBXExpected(error: requestError)
+                        result = .failure(requestError)
                     } else if let response = response as? HTTPURLResponse,
                             let data = data {
 
@@ -243,14 +244,14 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                         }
 
                         let responseData = HttpResponseData(headers: headers, code: Int64(response.statusCode), data: data)
-                        expected = MBXExpected(value: responseData)
+                        result = .success(responseData)
                     } else {
                         // Error
                         let requestError = HttpRequestError(type: .otherError, message: "Invalid response")
-                        expected = MBXExpected(error: requestError)
+                        result = .failure(requestError)
                     }
 
-                    let response = HttpResponse(request: request, result: expected as! MBXExpected<AnyObject, AnyObject>)
+                    let response = HttpResponse(request: request, result: result)
                     callback(response)
                 }
 

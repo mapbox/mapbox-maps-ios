@@ -64,16 +64,13 @@ class CacheManagerIntegrationTests: IntegrationTestCase {
         // Forces a revalidation of the tiles in the ambient cache and downloads
         // a fresh version of the tiles from the tile server.
 
-        cm.invalidateAmbientCache { expected in
-            guard let expected = expected else {
-                XCTFail("Should have a valid expected result")
-                return
+        cm.invalidateAmbientCache { result in
+            switch result {
+            case let .failure(error):
+                XCTFail("Should have a valid expected result: \(error)")
+            case .success:
+                expectation.fulfill()
             }
-
-            XCTAssertTrue(expected.isValue())
-            XCTAssertNil(expected.value, "Currently the 'success' value is nil")
-
-            expectation.fulfill()
         }
         wait(for: [expectation], timeout: 5.0)
     }
@@ -83,16 +80,13 @@ class CacheManagerIntegrationTests: IntegrationTestCase {
 
         let expectation = self.expectation(description: "Clear ambient cache")
 
-        cm.clearAmbientCache { expected in
-            guard let expected = expected else {
-                XCTFail("Should have a valid expected result")
-                return
+        cm.clearAmbientCache { result in
+            switch result {
+            case let .failure(error):
+                XCTFail("Should have a valid expected result: \(error)")
+            case .success:
+                expectation.fulfill()
             }
-
-            XCTAssertTrue(expected.isValue())
-            XCTAssertNil(expected.value, "Currently the 'success' value is nil")
-
-            expectation.fulfill()
         }
 
         wait(for: [expectation], timeout: 5.0)
@@ -107,30 +101,24 @@ class CacheManagerIntegrationTests: IntegrationTestCase {
         setupCacheManager()
         let expectation = self.expectation(description: "Set maximum size")
 
-        cm.setMaximumAmbientCacheSizeForSize(1024*1024*2) { [weak cm, weak self] expected in
-            guard let self = self else {
-                fatalError("Invalid test setup")
-            }
-
-            guard let expected = expected else {
-                XCTFail("Should have a valid expected result")
-                return
-            }
-
-            XCTAssertTrue(expected.isValue())
-            XCTAssertNil(expected.value, "Currently the 'success' value is nil")
-
-            // Reset back to default
-            cm?.setMaximumAmbientCacheSizeForSize(self.defaultCacheSize) { expected in
-                guard let expected = expected else {
-                    XCTFail("Should have a valid expected result")
+        cm.setMaximumAmbientCacheSize(1024*1024*2) { [weak cm, weak self] result in
+            switch result {
+            case let .failure(error):
+                XCTFail("Should have a valid expected result: \(error)")
+            case .success:
+                guard let self = self, let cm = cm else {
+                    XCTFail("Test and/or CM have been deallocated.")
                     return
                 }
 
-                XCTAssertTrue(expected.isValue())
-                XCTAssertNil(expected.value, "Currently the 'success' value is nil")
-
-                expectation.fulfill()
+                cm.setMaximumAmbientCacheSize(self.defaultCacheSize) { result in
+                    switch result {
+                    case let .failure(error):
+                        XCTFail("Should have a valid expected result: \(error)")
+                    case .success:
+                        expectation.fulfill()
+                    }
+                }
             }
         }
 

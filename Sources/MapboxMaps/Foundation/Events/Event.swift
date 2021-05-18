@@ -1,7 +1,6 @@
 import Foundation
 
 public typealias Event = MapboxCoreMaps.Event
-public typealias TelemetryEvent = MapboxCommon.Event
 
 internal typealias EventAttributes = [String: Any]
 

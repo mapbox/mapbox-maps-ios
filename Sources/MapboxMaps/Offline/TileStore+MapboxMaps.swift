@@ -1,6 +1,31 @@
 import Foundation
+@_implementationOnly import MapboxCommon_Private
 
 extension TileStore {
+
+    /// Returns a shared TileStore instance at the default location. Creates a
+    /// new one if one doesn't yet exist.
+    ///
+    /// - See Also:
+    ///     `shared(for:)`
+    public static var `default`: TileStore {
+        return TileStore.__getInstance()
+    }
+
+    /// Gets a TileStore instance for the given storage path. Creates a new one
+    /// if one doesn't exist.
+    ///
+    /// If the given path is empty, the tile store at the default location is
+    /// returned.
+    ///
+    /// On iOS, this storage path is excluded from automatic cloud backup.
+    ///
+    /// - Parameter path: The path on disk where tiles and metadata will be stored
+    /// - Returns: TileStore instance.
+    public static func shared(for path: String) -> TileStore {
+        return TileStore.__getInstanceForPath(path)
+    }
+
     /// Convenience to set the access token for a TileStore
     public func setAccessToken(_ accessToken: String) {
         setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken)

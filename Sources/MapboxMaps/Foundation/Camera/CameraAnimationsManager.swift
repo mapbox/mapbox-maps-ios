@@ -1,5 +1,6 @@
 import UIKit
 import Turf
+@_implementationOnly import MapboxCommon_Private
 
 public protocol CameraAnimator {
 

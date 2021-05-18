@@ -1,4 +1,5 @@
 import Foundation
+@_implementationOnly import MapboxCommon_Private
 
 extension MapboxCoreMaps.OfflineManager {
     /// Loads a new style package or updates the existing one.

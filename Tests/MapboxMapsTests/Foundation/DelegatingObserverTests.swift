@@ -21,7 +21,7 @@ final class DelegatingObserverTests: XCTestCase {
     }
 
     func testNotifyForwardsToDelegate() {
-        let expectedEvent = Event()
+        let expectedEvent = Event(type: "test", data: "test")
 
         delegatingObserver.notify(for: expectedEvent)
 

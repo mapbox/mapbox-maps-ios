@@ -1,6 +1,7 @@
 import UIKit
 import MapboxCoreMaps
-import MapboxCommon
+@_implementationOnly import MapboxCoreMaps_Private
+@_implementationOnly import MapboxCommon_Private
 
 #if canImport(MapboxMapsFoundation)
 import MapboxMapsFoundation

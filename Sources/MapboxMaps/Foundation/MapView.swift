@@ -1,5 +1,7 @@
 @_exported import MapboxCoreMaps
 @_exported import MapboxCommon
+@_implementationOnly import MapboxCoreMaps_Private
+@_implementationOnly import MapboxCommon_Private
 import UIKit
 import Turf
 
@@ -28,9 +30,6 @@ open class MapView: UIView {
 
     /// The `location`object handles location events of the map.
     public internal(set) var location: LocationManager!
-
-    /// The `style` object supports run time styling.
-    public internal(set) var style: Style!
 
     /// Controls the addition/removal of annotations to the map.
     public internal(set) var annotations: AnnotationManager!
@@ -134,6 +133,7 @@ open class MapView: UIView {
                 viewportMode: original.__viewportMode,
                 orientation: original.__orientation,
                 crossSourceCollisions: original.__crossSourceCollisions,
+                optimizeForTerrain: original.__optimizeForTerrain,
                 size: Size(width: Float(bounds.width), height: Float(bounds.height)),
                 pixelRatio: original.pixelRatio,
                 glyphsRasterizationOptions: original.glyphsRasterizationOptions)
@@ -184,9 +184,6 @@ open class MapView: UIView {
         // Initialize/Configure camera manager first since Gestures needs it as dependency
         camera = CameraAnimationsManager(mapView: self)
 
-        // Initialize/Configure style manager
-        style = Style(with: mapboxMap.__map)
-
         // Initialize/Configure gesture manager
         gestures = GestureManager(for: self, cameraManager: camera)
 
@@ -194,10 +191,13 @@ open class MapView: UIView {
         ornaments = OrnamentsManager(view: self, options: OrnamentOptions())
 
         // Initialize/Configure location manager
-        location = LocationManager(locationSupportableMapView: self, style: style)
+        location = LocationManager(locationSupportableMapView: self, style: mapboxMap.style)
 
         // Initialize/Configure annotations manager
-        annotations = AnnotationManager(for: self, mapEventsObservable: mapboxMap, with: style)
+        annotations = AnnotationManager(for: self,
+                                        mapEventsObservable: mapboxMap,
+                                        mapFeatureQueryable: mapboxMap,
+                                        style: mapboxMap.style)
     }
 
     private func checkForMetalSupport() {

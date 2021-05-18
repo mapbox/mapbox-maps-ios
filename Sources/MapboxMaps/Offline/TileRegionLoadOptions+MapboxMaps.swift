@@ -23,7 +23,8 @@ extension TileRegionLoadOptions {
     public convenience init?(geometry: MBXGeometry?,
                              descriptors: [TilesetDescriptor],
                              metadata: Any? = nil,
-                             tileLoadOptions: TileLoadOptions,
+                             acceptExpired: Bool = false ,
+                             networkRestriction: NetworkRestriction = .none,
                              averageBytesPerSecond: Int? = nil) {
         if let metadata = metadata {
             guard JSONSerialization.isValidJSONObject(metadata) else {
@@ -34,7 +35,8 @@ extension TileRegionLoadOptions {
         self.init(__geometry: geometry,
                   descriptors: descriptors.isEmpty ? nil : descriptors,
                   metadata: metadata,
-                  tileLoadOptions: tileLoadOptions,
+                  acceptExpired: acceptExpired,
+                  networkRestriction: networkRestriction,
                   start: nil, // Not yet implemented
                   averageBytesPerSecond: averageBytesPerSecond?.NSNumber,
                   extraOptions: nil)

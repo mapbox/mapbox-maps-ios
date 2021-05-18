@@ -131,7 +131,7 @@ internal class Puck2D: Puck {
         })
     }
 
-    private func removePuck() {
+    internal func removePuck() {
         guard let locationIndicatorLayer = self.locationIndicatorLayer,
               let style = style else {
             return
@@ -149,7 +149,7 @@ internal class Puck2D: Puck {
 
 // MARK: Layer Creation Functions
 
-private extension Puck2D {
+internal extension Puck2D {
     func createPreciseLocationIndicatorLayer(location: Location) throws {
         guard let style = style else {
             Log.warning(forMessage: "Puck2D.createPreciseLocationIndicatorLayer - Style does not exit.", category: "Location")

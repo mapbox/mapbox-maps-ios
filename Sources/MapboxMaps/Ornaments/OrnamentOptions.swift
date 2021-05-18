@@ -44,7 +44,7 @@ public protocol OrnamentOptionsProtocol {
 /// Used to configure position, margin, and visibility for the map's scale bar view.
 public struct ScaleBarViewOptions: OrnamentOptionsProtocol, Equatable {
     /// The default value for this property is `.topLeft`.
-    public var position: OrnamentPosition = .topRight
+    public var position: OrnamentPosition = .topLeft
     /// The default value for this property is `CGPoint(x: 8.0, y: 8.0)`.
     public var margins: CGPoint = defaultOrnamentsMargin
     /// The default value for this property is `.adaptive`.
@@ -54,7 +54,7 @@ public struct ScaleBarViewOptions: OrnamentOptionsProtocol, Equatable {
 /// Used to configure position, margin, and visibility for the map's compass view.
 public struct CompassViewOptions: OrnamentOptionsProtocol, Equatable {
     /// The default value for this property is `.topRight`.
-    public var position: OrnamentPosition = .topLeft
+    public var position: OrnamentPosition = .topRight
     /// The default value for this property is `CGPoint(x: 8.0, y: 8.0)`.
     public var margins: CGPoint = defaultOrnamentsMargin
     /// The default value for this property is `.adaptive`.

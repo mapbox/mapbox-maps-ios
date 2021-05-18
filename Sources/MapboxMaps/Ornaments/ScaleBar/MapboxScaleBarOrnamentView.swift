@@ -15,7 +15,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
     // It contains the `dynamicContainerView` in order to avoid triggering `layoutSubviews`
     // on the map view.
     internal var staticContainerView = UIView()
-
+    internal var didSetContainerViewWidth = false
     internal var metersPerPoint: CLLocationDistance = 1 {
         didSet {
             guard metersPerPoint != oldValue else {
@@ -146,14 +146,11 @@ internal class MapboxScaleBarOrnamentView: UIView {
         // Add width constraint to ornament view
         // Pin scale bar container to match root ornament view
         // Test against all four configurations
-
-//        staticContainerView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor).isActive = true
-        staticContainerView.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor).isActive = true
-        staticContainerView.heightAnchor.constraint(equalTo: safeAreaLayoutGuide.heightAnchor).isActive = true
-        staticContainerView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
-        staticContainerView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor).isActive = true
-//        staticContainerView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
-
+        staticContainerView.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        staticContainerView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        staticContainerView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        staticContainerView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        staticContainerView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         staticContainerView.addSubview(dynamicContainerView)
 
         addZeroLabel()
@@ -162,6 +159,11 @@ internal class MapboxScaleBarOrnamentView: UIView {
                                                selector: #selector(resetLabelImageCache),
                                                name: NSLocale.currentLocaleDidChangeNotification,
                                                object: nil)
+    }
+
+    override func didMoveToSuperview() {
+        // Set the width anchor once the scale bar has superview.
+        staticContainerView.widthAnchor.constraint(equalToConstant: maximumWidth).isActive = true
     }
 
     // MARK: - Layout

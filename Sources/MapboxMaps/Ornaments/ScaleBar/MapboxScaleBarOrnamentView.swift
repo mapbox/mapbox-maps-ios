@@ -15,7 +15,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
     // It contains the `dynamicContainerView` in order to avoid triggering `layoutSubviews`
     // on the map view.
     internal var staticContainerView = UIView()
-    internal var didSetContainerViewWidth = false
+
     internal var metersPerPoint: CLLocationDistance = 1 {
         didSet {
             guard metersPerPoint != oldValue else {
@@ -56,6 +56,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
         return _bars!
     }
 
+    var isOnRight = false
     var size = CGSize()
     // This container view's size and position can change based on the size
     // of its contents. It is contained within the `staticContainerView`.
@@ -138,14 +139,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
         staticContainerView.backgroundColor = .clear
         staticContainerView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(staticContainerView)
-        staticContainerView.clipsToBounds = false
 
-        // TODO: Pin scale bar container's constraints
-        // Only constraints influence the size (width/height)
-
-        // Add width constraint to ornament view
-        // Pin scale bar container to match root ornament view
-        // Test against all four configurations
         staticContainerView.heightAnchor.constraint(equalToConstant: 16).isActive = true
         staticContainerView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         staticContainerView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -229,7 +223,8 @@ internal class MapboxScaleBarOrnamentView: UIView {
         let barWidth = totalBarWidth / CGFloat(bars.count)
         let isRightToLeft = usesRightToLeftLayout()
         let halfLabelWidth = ceil(lastLabelWidth / 2)
-        let barOffset = isRightToLeft ? halfLabelWidth : 0.0
+        let newBarOffset = staticContainerView.frame.width - totalBarWidth - halfLabelWidth
+        let barOffset = isOnRight ? newBarOffset : 0.0
 
         dynamicContainerView.frame = CGRect(x: barOffset,
                                      y: intrinsicContentSize.height - Constants.barHeight,
@@ -246,9 +241,9 @@ internal class MapboxScaleBarOrnamentView: UIView {
 
     private func layoutBars(with barWidth: CGFloat) {
         bars.enumerated().forEach {
-            let xPostion = barWidth * CGFloat($0.offset)
+            let xPosition = barWidth * CGFloat($0.offset)
             $0.element.backgroundColor = ($0.offset % 2 == 0) ? Constants.primaryColor : Constants.secondaryColor
-            $0.element.frame = CGRect(x: xPostion, y: 0, width: barWidth, height: Constants.barHeight)
+            $0.element.frame = CGRect(x: xPosition, y: 0, width: barWidth, height: Constants.barHeight)
         }
     }
 

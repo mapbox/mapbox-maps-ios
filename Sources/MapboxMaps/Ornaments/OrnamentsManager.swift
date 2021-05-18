@@ -40,6 +40,7 @@ public class OrnamentsManager: NSObject {
 
         // Scalebar View
         scalebarView = MapboxScaleBarOrnamentView()
+        scalebarView.isOnRight = options.scaleBar.position == OrnamentPosition.bottomRight || options.scaleBar.position == OrnamentPosition.topRight
         scalebarView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scalebarView)
 

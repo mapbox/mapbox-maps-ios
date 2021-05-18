@@ -21,7 +21,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
     @IBOutlet var progressContainer: UIView!
 
     private var mapView: MapView?
-    private var logger: OfflineManagerLogWriter?
+    private var logger: OfflineManagerLogWriter!
 
     // Default MapInitOptions. If you use a custom path for a TileStore, you would
     // need to create a custom MapInitOptions to reference that TileStore.
@@ -51,7 +51,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
     }
 
     deinit {
-        NetworkConnectivity.getInstance().setMapboxStackConnectedForConnected(true)
+        OfflineSwitch.shared.isMapboxStackConnected = true
         removeTileRegionAndStylePack()
     }
 
@@ -59,9 +59,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         // Initialize a logger that writes into the text view
-        let logger = OfflineManagerLogWriter(for: ["Example"], textView: logView)
-        LogConfiguration.getInstance().registerLogWriterBackend(forLogWriter: logger)
-        self.logger = logger
+        self.logger = OfflineManagerLogWriter(textView: logView)
 
         state = .initial
     }
@@ -91,11 +89,11 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
                     return
                 }
 
-                Log.info(forMessage: "StylePack = \(progress)", category: "Example")
+                self?.logger?.log(message: "StylePack = \(progress)", category: "Example")
                 stylePackProgressView.progress = Float(progress.completedResourceCount) / Float(progress.requiredResourceCount)
             }
 
-        } completion: { result in
+        } completion: { [weak self] result in
             DispatchQueue.main.async {
                 defer {
                     dispatchGroup.leave()
@@ -103,10 +101,10 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
 
                 switch result {
                 case let .success(stylePack):
-                    Log.info(forMessage: "stylePack = \(stylePack)", category: "Example")
+                    self?.logger?.log(message: "StylePack = \(stylePack)", category: "Example")
 
                 case let .failure(error):
-                    Log.error(forMessage: "stylePack download Error = \(error)", category: "Example")
+                    self?.logger?.log(message: "stylePack download Error = \(error)", category: "Example", color: .red)
                     downloadError = true
                 }
             }
@@ -121,22 +119,18 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         let outdoorsDescriptor = offlineManager.createTilesetDescriptor(for: outdoorsOptions)
 
         // Load the tile region
-        let tileLoadOptions = TileLoadOptions(criticalPriority: false,
-                                              acceptExpired: true,
-                                              networkRestriction: .none)
-
         let tileRegionLoadOptions = TileRegionLoadOptions(
             geometry: MBXGeometry(coordinate: tokyoCoord),
             descriptors: [outdoorsDescriptor],
             metadata: ["tag": "my-outdoors-tile-region"],
-            tileLoadOptions: tileLoadOptions)!
+            acceptExpired: true)!
 
         // Use the the default TileStore to load this region. You can create
         // custom TileStores are are unique for a particular file path, i.e.
         // there is only ever one TileStore per unique path.
         dispatchGroup.enter()
-        let tileRegionDownload = TileStore.getInstance().loadTileRegion(forId: tileRegionId,
-                                                                        loadOptions: tileRegionLoadOptions) { [weak self] (progress) in
+        let tileRegionDownload = TileStore.default.loadTileRegion(forId: tileRegionId,
+                                                                  loadOptions: tileRegionLoadOptions) { [weak self] (progress) in
             // These closures do not get called from the main thread. In this case
             // we're updating the UI, so it's important to dispatch to the main
             // queue.
@@ -146,12 +140,12 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
                     return
                 }
 
-                Log.info(forMessage: "\(progress)", category: "Example")
+                self?.logger?.log(message: "\(progress)", category: "Example")
 
                 // Update the progress bar
                 tileRegionProgressView.progress = Float(progress.completedResourceCount) / Float(progress.requiredResourceCount)
             }
-        } completion: { result in
+        } completion: { [weak self] result in
             DispatchQueue.main.async {
                 defer {
                     dispatchGroup.leave()
@@ -159,10 +153,10 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
 
                 switch result {
                 case let .success(tileRegion):
-                    Log.info(forMessage: "tileRegion = \(tileRegion)", category: "Example")
+                    self?.logger?.log(message: "tileRegion = \(tileRegion)", category: "Example")
 
                 case let .failure(error):
-                    Log.error(forMessage: "tileRegion download Error = \(error)", category: "Example")
+                    self?.logger?.log(message: "tileRegion download Error = \(error)", category: "Example", color: .red)
                     downloadError = true
                 }
             }
@@ -186,13 +180,13 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
     private func logDownloadResult<T, Error>(message: String, result: Result<[T], Error>) {
         switch result {
         case let .success(array):
-            Log.info(forMessage: message, category: "Example")
+            logger?.log(message: message, category: "Example")
             for element in array {
-                Log.info(forMessage: "\t\(element)", category: "Example")
+                logger?.log(message: "\t\(element)", category: "Example")
             }
 
         case let .failure(error):
-            Log.error(forMessage: "\(message) \(error)", category: "Example")
+            logger?.log(message: "\(message) \(error)", category: "Example", color: .red)
         }
     }
 
@@ -201,10 +195,10 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
             self.logDownloadResult(message: "Style packs:", result: result)
         }
 
-        TileStore.getInstance().allTileRegions { result in
+        TileStore.default.allTileRegions { result in
             self.logDownloadResult(message: "Tile regions:", result: result)
         }
-        Log.info(forMessage: "\n", category: "Example")
+        logger?.log(message: "\n", category: "Example")
     }
 
     // Remove downloaded region and style pack
@@ -216,13 +210,13 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         // Note this will not remove the downloaded tile packs, instead, it will
         // just mark the tileset as not a part of a tile region. The tiles still
         // exists in a predictive cache in the TileStore.
-        TileStore.getInstance().removeTileRegion(forId: tileRegionId)
+        TileStore.default.removeTileRegion(forId: tileRegionId)
 
         // Set the disk quota to zero, so that tile regions are fully evicted
         // when removed. The TileStore is also used when `ResourceOptions.isLoadTilePacksFromNetwork`
         // is `true`, and also by the Navigation SDK.
         // This removes the tiles from the predictive cache.
-        TileStore.getInstance().setOptionForKey(TileStoreOptions.diskQuota, value: 0)
+        TileStore.default.setOptionForKey(TileStoreOptions.diskQuota, value: 0)
 
         // Remove the style pack with the style uri.
         // Note this will not remove the downloaded style pack, instead, it will
@@ -263,21 +257,21 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
 
     private var state: State = .unknown {
         didSet {
-            Log.warning(forMessage: "Changing state from \(oldValue) -> \(state)", category: "Debug")
+            logger?.log(message: "Changing state from \(oldValue) -> \(state)", category: "Example", color: .orange)
 
             switch (oldValue, state) {
             case (_, .initial):
                 resetUI()
-                Log.warning(forMessage: "Enabling HTTP stack network connection", category: "Example")
-                NetworkConnectivity.getInstance().setMapboxStackConnectedForConnected(true)
+                logger?.log(message: "Enabling HTTP stack network connection", category: "Example", color: .orange)
+                OfflineSwitch.shared.isMapboxStackConnected = true
 
             case (.initial, .downloading):
                 // Can cancel
                 button.setTitle("Cancel Downloads", for: .normal)
 
             case (.downloading, .downloaded):
-                Log.warning(forMessage: "Disabling HTTP stack network connection", category: "Example")
-                NetworkConnectivity.getInstance().setMapboxStackConnectedForConnected(false)
+                logger?.log(message: "Disabling HTTP stack network connection", category: "Example", color: .orange)
+                OfflineSwitch.shared.isMapboxStackConnected = false
                 enableShowMapView()
 
             case (.downloaded, .mapViewDisplayed):
@@ -366,39 +360,13 @@ extension StylePack {
     }
 }
 
-// MARK: - Custom logging
-
-internal extension LoggingLevel {
-    var color: UIColor {
-        switch self {
-        case .debug:
-            return .purple
-        case .warning:
-            return .orange
-        case .error:
-            return .red
-        default:
-            return .black
-        }
-    }
-}
-
 /// Convenience logger to write logs to the text view
-public final class OfflineManagerLogWriter: LogWriterBackend {
+public final class OfflineManagerLogWriter {
     weak var textView: UITextView?
-    var previousBackend: LogWriterBackend
     var log: NSMutableAttributedString
-    let categories: [String?]
 
-    deinit {
-        // Restore normality
-        LogConfiguration.getInstance().registerLogWriterBackend(forLogWriter: previousBackend)
-    }
-
-    internal init(for categories: [String], textView: UITextView) {
-        self.previousBackend = LogConfiguration.getInstance().getLogWriterBackend()
+    internal init(textView: UITextView) {
         self.log = NSMutableAttributedString()
-        self.categories = categories as [String?]
         self.textView = textView
     }
 
@@ -407,12 +375,8 @@ public final class OfflineManagerLogWriter: LogWriterBackend {
         textView?.attributedText = log
     }
 
-    public func writeLog(for level: LoggingLevel, message: String, category: String?) {
-        print("[\(level.rawValue): \(category ?? "")] \(message)")
-
-        guard categories.contains(category) else {
-            return
-        }
+    public func log(message: String, category: String?, color: UIColor = .black) {
+        print("[\(category ?? "")] \(message)")
 
         DispatchQueue.main.async { [weak self] in
             guard let textView = self?.textView,
@@ -420,7 +384,7 @@ public final class OfflineManagerLogWriter: LogWriterBackend {
                 return
             }
 
-            let message = NSMutableAttributedString(string: "\(message)\n", attributes: [NSAttributedString.Key.foregroundColor: level.color])
+            let message = NSMutableAttributedString(string: "\(message)\n", attributes: [NSAttributedString.Key.foregroundColor: color])
             log.append(message)
 
             textView.attributedText = log

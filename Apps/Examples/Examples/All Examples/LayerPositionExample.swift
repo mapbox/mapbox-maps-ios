@@ -58,15 +58,15 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
 
         alert.addAction(UIAlertAction(title: "Above state label", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            try? self.mapView.style.removeLayer(withId: self.layer.id)
-            try? self.mapView.style.addLayer(self.layer,
+            try? self.mapView.mapboxMap.style.removeLayer(withId: self.layer.id)
+            try? self.mapView.mapboxMap.style.addLayer(self.layer,
                                              layerPosition: .above("state-label"))
         }))
 
         alert.addAction(UIAlertAction(title: "Below state label", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            try? self.mapView.style.removeLayer(withId: self.layer.id)
-            try? self.mapView.style.addLayer(self.layer,
+            try? self.mapView.mapboxMap.style.removeLayer(withId: self.layer.id)
+            try? self.mapView.mapboxMap.style.addLayer(self.layer,
                                              layerPosition: .below("state-label"))
         }))
 
@@ -79,8 +79,8 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
 
         alert.addAction(UIAlertAction(title: "Below all", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            try? self.mapView.style.removeLayer(withId: self.layer.id)
-            try? self.mapView.style.addLayer(self.layer,
+            try? self.mapView.mapboxMap.style.removeLayer(withId: self.layer.id)
+            try? self.mapView.mapboxMap.style.addLayer(self.layer,
                                              layerPosition: .at(0))
         }))
 

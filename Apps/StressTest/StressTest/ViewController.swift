@@ -67,7 +67,7 @@ class ViewController: UIViewController {
     }
 
     var annotations: [PointAnnotation] = []
-    var color: StylePropertyValue?
+    var color: Any?
     var mapInitOptions: MapInitOptions!
     var snapshotter: Snapshotter?
     var logHandle: OSLog!
@@ -247,13 +247,13 @@ class ViewController: UIViewController {
         do {
             let data = try JSONEncoder().encode(exp.self)
             let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
-            color = mapView.mapboxMap.__map.getStyleLayerProperty(
-                forLayerId: land,
+            color = mapView.mapboxMap.style.layerProperty(
+                for: land,
                 property: "background-color")
 
             print("Setting background color expression")
-            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(
-                land,
+            try! mapView.mapboxMap.style.setLayerProperty(
+                for: land,
                 property: "background-color",
                 value: jsonObject)
         } catch let error {
@@ -268,10 +268,10 @@ class ViewController: UIViewController {
 
         if let color = color {
             print("Re-setting background color expression")
-            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(
-                land,
+            try! mapView.mapboxMap.style.setLayerProperty(
+                for: land,
                 property: "background-color",
-                value: color.value)
+                value: color)
         }
         color = nil
     }

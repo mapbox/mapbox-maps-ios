@@ -154,10 +154,11 @@ open class MapView: UIView {
                                                object: nil)
 
         // Use the overriding style URI if provided (currently from IB)
-        if let initialStyleURI = overridingStyleURI {
-            mapboxMap.__map.setStyleURIForUri(initialStyleURI.absoluteString)
+        if let initialStyleURI = overridingStyleURI,
+           let styleURI = StyleURI(url: initialStyleURI) {
+            mapboxMap.loadStyleURI(styleURI)
         } else if let initialStyleURI = resolvedMapInitOptions.styleURI {
-            mapboxMap.__map.setStyleURIForUri(initialStyleURI.rawValue)
+            mapboxMap.loadStyleURI(initialStyleURI)
         }
 
         if let cameraOptions = resolvedMapInitOptions.cameraOptions {

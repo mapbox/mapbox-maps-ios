@@ -68,19 +68,19 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
     @objc public func findFeatures(_ sender: UITapGestureRecognizer) {
         let tapPoint = sender.location(in: mapView)
 
-        mapView.visibleFeatures(at: tapPoint,
-                                styleLayers: ["US-states"],
-                                completion: { [weak self] result in
-                                    switch result {
-                                    case .success(let queriedfeatures):
-                                        if let firstFeature = queriedfeatures.first?.feature.properties,
-                                           let stateName = firstFeature["STATE_NAME"] as? String {
-                                            self?.showAlert(with: "You selected \(stateName)")
-                                        }
-                                    case .failure(let error):
-                                        self?.showAlert(with: "An error occurred: \(error.localizedDescription)")
-                                    }
-                                 })
+        mapView.mapboxMap.queryRenderedFeatures(
+            at: tapPoint,
+            options: RenderedQueryOptions(layerIds: ["US-states"], filter: nil)) { [weak self] result in
+            switch result {
+            case .success(let queriedfeatures):
+                if let firstFeature = queriedfeatures.first?.feature.properties,
+                   let stateName = firstFeature["STATE_NAME"] as? String {
+                    self?.showAlert(with: "You selected \(stateName)")
+                }
+            case .failure(let error):
+                self?.showAlert(with: "An error occurred: \(error.localizedDescription)")
+            }
+        }
     }
 
     // Present an alert with a given title.

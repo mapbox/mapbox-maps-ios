@@ -52,9 +52,9 @@ public enum MapLoadingError: LocalizedError {
     case glyphs(String)
 
     internal init(data: Any) {
-        guard let dictionary = data as? [String: String],
-              let type = dictionary["type"],
-              let message = dictionary["message"] else {
+        guard let dictionary = data as? [String: Any],
+              let type = dictionary["type"] as? String,
+              let message = dictionary["message"] as? String else {
             fatalError("Invalid event data format")
         }
 
@@ -76,7 +76,7 @@ public enum MapLoadingError: LocalizedError {
 
     /// Associated message (from `.mapLoadingError` event) that describes the
     /// error
-    public var errorDescription: String {
+    public var errorDescription: String? {
         switch self {
         case let .style(message):
             return message

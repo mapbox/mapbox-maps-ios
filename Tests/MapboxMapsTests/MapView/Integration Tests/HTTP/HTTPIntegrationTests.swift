@@ -19,8 +19,8 @@ class CustomHttpService: HttpServiceInterface {
 
         // If the test sets an error, call the callback with immediately
         if let error = forcedError {
-            let expected = MBXExpected<AnyObject, AnyObject>(error: error)
-            let response = HttpResponse(request: request, result: expected)
+            let result: Result<HttpResponseData, HttpRequestError> = .failure(error)
+            let response = HttpResponse(request: request, result: result)
             callback(response)
             requestCompletion?()
             return 0
@@ -44,12 +44,12 @@ class CustomHttpService: HttpServiceInterface {
             // `HttpResponse` takes an `MBXExpected` type. This is very similar to Swift's
             // `Result` type.
             // APIs using `MBXExpected` are prone to future changes.
-            let expected: MBXExpected<AnyObject, AnyObject>
+            let result: Result<HttpResponseData, HttpRequestError>
 
             if let error = error {
                 // Map NSURLError to HttpRequestErrorType
                 let requestError = HttpRequestError(type: .otherError, message: error.localizedDescription)
-                expected = MBXExpected(error: requestError)
+                result = .failure(requestError)
             } else if let response = response as? HTTPURLResponse,
                     let data = data {
 
@@ -65,14 +65,14 @@ class CustomHttpService: HttpServiceInterface {
                 }
 
                 let responseData = HttpResponseData(headers: headers, code: Int64(response.statusCode), data: data)
-                expected = MBXExpected(value: responseData)
+                result = .success(responseData)
             } else {
                 // error
                 let requestError = HttpRequestError(type: .otherError, message: "Invalid response")
-                expected = MBXExpected(error: requestError)
+                result = .failure(requestError)
             }
 
-            let response = HttpResponse(request: request, result: expected)
+            let response = HttpResponse(request: request, result: result)
             callback(response)
             self.requestCompletion?()
         }
@@ -108,7 +108,7 @@ class HTTPIntegrationTests: MapViewIntegrationTestCase {
     }
 
     func testReplacingHTTPService() throws {
-        let style = try XCTUnwrap(self.style)
+        let mapView = try XCTUnwrap(self.mapView)
 
         let serviceExpectation = XCTestExpectation(description: "Requests should be made by custom HTTP stack")
         serviceExpectation.assertForOverFulfill = false
@@ -118,13 +118,13 @@ class HTTPIntegrationTests: MapViewIntegrationTestCase {
             serviceExpectation.fulfill()
         }
 
-        style.uri = .streets
+        mapView.mapboxMap.loadStyleURI(.streets)
 
         wait(for: [serviceExpectation], timeout: 5.0)
     }
 
     func testReplacingHTTPServiceAndForcedError() throws {
-        let style = try XCTUnwrap(self.style)
+        let mapView = try XCTUnwrap(self.mapView)
 
         let serviceExpectation = XCTestExpectation(description: "Mock service request should be called")
         let errorExpectation = XCTestExpectation(description: "Map should fail to load, with our custom error")
@@ -136,13 +136,18 @@ class HTTPIntegrationTests: MapViewIntegrationTestCase {
             serviceExpectation.fulfill()
         }
 
-        style.uri = .streets
+        mapView.mapboxMap.loadStyleURI(.streets) { result in
+            guard case let .failure(error) = result,
+                  let error = error as? LocalizedError else {
+                XCTFail("Expecting a forced failure")
+                return
+            }
 
-        didFailLoadingMap = { (_, error2) in
-            XCTAssertNotNil(error2)
-            let description = error2.userInfo["message"] as? String
-            XCTAssertNotNil(description)
-            XCTAssert(description!.contains(errorMessage))
+            if let description = error.errorDescription {
+                XCTAssert(description.contains(errorMessage))
+            } else {
+                XCTFail("No error message")
+            }
 
             errorExpectation.fulfill()
         }

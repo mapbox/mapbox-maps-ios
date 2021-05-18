@@ -223,8 +223,9 @@ internal class MapboxScaleBarOrnamentView: UIView {
         let barWidth = totalBarWidth / CGFloat(bars.count)
         let isRightToLeft = usesRightToLeftLayout()
         let halfLabelWidth = ceil(lastLabelWidth / 2)
-        let newBarOffset = staticContainerView.frame.width - totalBarWidth - halfLabelWidth
-        let barOffset = isOnRight ? newBarOffset : 0.0
+        //
+        let scaleBarOffsetForRight = staticContainerView.frame.width - totalBarWidth - halfLabelWidth
+        let barOffset = isOnRight ? scaleBarOffsetForRight : 0.0
 
         dynamicContainerView.frame = CGRect(x: barOffset,
                                      y: intrinsicContentSize.height - Constants.barHeight,
@@ -236,7 +237,6 @@ internal class MapboxScaleBarOrnamentView: UIView {
         let barDelta = isRightToLeft ? -barWidth : barWidth
 
         layoutLabels(with: barOffset, delta: barDelta, yPosition: yPosition)
-
     }
 
     private func layoutBars(with barWidth: CGFloat) {

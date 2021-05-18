@@ -28,7 +28,6 @@
 		07A5DE852515576E00A27F8B /* AnnotationStyleDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A5DE832515576E00A27F8B /* AnnotationStyleDelegate.swift */; };
 		07A8A3D1251C4CA6004281CF /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43D7B5125196D1C00951460 /* Annotation.swift */; };
 		07BA35CE251578DD003E1B55 /* AnnotationInteractionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07BA35CC251578DD003E1B55 /* AnnotationInteractionDelegate.swift */; };
-		07BA35E825157A0E003E1B55 /* AnnotationSupportableMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07BA35E625157A0E003E1B55 /* AnnotationSupportableMap.swift */; };
 		07D2C7DB2523EBE60025C2BA /* PolygonAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D2C7DA2523EBE60025C2BA /* PolygonAnnotation.swift */; };
 		07D7150425798CD70025BF61 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D7150325798CD70025BF61 /* UIImage.swift */; };
 		07E816DA256D72E500ACFA73 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07182014256C1F6100F22489 /* Assets.xcassets */; };
@@ -329,7 +328,6 @@
 		CAC1960B25AE98F400F69FEA /* GlyphsRasterizationOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC1960A25AE98F400F69FEA /* GlyphsRasterizationOptions.swift */; };
 		CAC1965525AEAFD900F69FEA /* GlyphsRasterizationOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC1961F25AEAE6600F69FEA /* GlyphsRasterizationOptionsTests.swift */; };
 		CAD7BA0625A368DE00E64C78 /* ExampleIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAD7BA0425A368DE00E64C78 /* ExampleIntegrationTest.swift */; };
-		CADC7AD3251C51070082BA0A /* MockAnnotationSupportableMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07BA363025157B09003E1B55 /* MockAnnotationSupportableMap.swift */; };
 		CADCF76E25854B090065C51B /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76025854AB00065C51B /* MapboxMobileEvents.framework */; };
 		CADCF76F25854B090065C51B /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76025854AB00065C51B /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CADCF77025854B090065C51B /* MapboxCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76125854AB00065C51B /* MapboxCommon.framework */; };
@@ -433,8 +431,6 @@
 		07A5DEB625155B9500A27F8B /* MockAnnotationStyleDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAnnotationStyleDelegate.swift; sourceTree = "<group>"; };
 		07B82A652548C1320048D0F2 /* FeatureQueryingTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureQueryingTest.swift; sourceTree = "<group>"; };
 		07BA35CC251578DD003E1B55 /* AnnotationInteractionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationInteractionDelegate.swift; sourceTree = "<group>"; };
-		07BA35E625157A0E003E1B55 /* AnnotationSupportableMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationSupportableMap.swift; sourceTree = "<group>"; };
-		07BA363025157B09003E1B55 /* MockAnnotationSupportableMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAnnotationSupportableMap.swift; sourceTree = "<group>"; };
 		07BF0C5E24F4875F00754DB2 /* Geometry+MBXGeometryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Geometry+MBXGeometryTests.swift"; sourceTree = "<group>"; };
 		07C1B3DB2446B6F40044A3C6 /* MapboxMapsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxMapsSnapshotTests.swift; sourceTree = "<group>"; };
 		07D2C7DA2523EBE60025C2BA /* PolygonAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolygonAnnotation.swift; sourceTree = "<group>"; };
@@ -960,7 +956,6 @@
 				0742060124E4A5D0000A8932 /* PointAnnotation.swift */,
 				07980ECD251D5B5D00730DB7 /* LineAnnotation.swift */,
 				07D2C7DA2523EBE60025C2BA /* PolygonAnnotation.swift */,
-				07BA35E625157A0E003E1B55 /* AnnotationSupportableMap.swift */,
 				07BA35CC251578DD003E1B55 /* AnnotationInteractionDelegate.swift */,
 				07A5DE832515576E00A27F8B /* AnnotationStyleDelegate.swift */,
 			);
@@ -976,7 +971,6 @@
 				07980EE7251D673E00730DB7 /* LineAnnotationTests.swift */,
 				07D2C80B2523ECC40025C2BA /* PolygonAnnotationTests.swift */,
 				07163339252546C80014A772 /* AnnotationInteractionDelegateTests.swift */,
-				07BA363025157B09003E1B55 /* MockAnnotationSupportableMap.swift */,
 				07A5DEB625155B9500A27F8B /* MockAnnotationStyleDelegate.swift */,
 				07EEFA9325018E5800352933 /* Extensions */,
 			);
@@ -2080,7 +2074,6 @@
 				B5DDE9602613ACB400998840 /* StyleEncodable.swift in Sources */,
 				0C88F22924F4223B00FC35F3 /* ExpressionOptions.swift in Sources */,
 				0782B037258C14A400D5FCE5 /* NSNumber.swift in Sources */,
-				07BA35E825157A0E003E1B55 /* AnnotationSupportableMap.swift in Sources */,
 				0C55010B2476D83A00AE019A /* Light.swift in Sources */,
 				B5B55D45260E4D1500EBB589 /* AnimationOwner.swift in Sources */,
 				0C088ACC26388E3400107B5E /* CameraAnimationsManager.swift in Sources */,
@@ -2277,7 +2270,6 @@
 				0C37B1E425CB05F000DCDD3D /* ColorTests.swift in Sources */,
 				B521FCA7262F67DD00B9A446 /* MockMapClient.swift in Sources */,
 				B5A6921D262754DF00A03412 /* MockDelegatingObserverDelegate.swift in Sources */,
-				CADC7AD3251C51070082BA0A /* MockAnnotationSupportableMap.swift in Sources */,
 				0C32CA2125F982300057ED31 /* RasterDemSourceTests.swift in Sources */,
 				CA548FF4251C404B00F829A3 /* DistanceFormatterTests.swift in Sources */,
 				CAED9FB1258C69DB003CCEFE /* MapViewTests.swift in Sources */,

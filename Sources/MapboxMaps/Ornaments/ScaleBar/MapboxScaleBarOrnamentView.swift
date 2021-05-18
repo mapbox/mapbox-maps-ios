@@ -5,6 +5,7 @@ import CoreLocation
 import MapboxMapsFoundation
 #endif
 
+//swiftlint:disable type_body_length
 internal class MapboxScaleBarOrnamentView: UIView {
 
     internal typealias Row = (distance: CLLocationDistance, numberOfBars: UInt)
@@ -62,7 +63,6 @@ internal class MapboxScaleBarOrnamentView: UIView {
     // of its contents. It is contained within the `staticContainerView`.
     lazy private var dynamicContainerView: UIView = {
         let view = UIView()
-//        view.clipsToBounds = true
         view.backgroundColor = Constants.primaryColor
         view.layer.borderColor = Constants.primaryColor.cgColor
         view.layer.borderWidth = Constants.borderWidth / UIScreen.main.scale
@@ -300,8 +300,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
         return image
     }
 
-    @objc
-    private func resetLabelImageCache() {
+    @objc private func resetLabelImageCache() {
         labelImageCache.removeAll()
         addZeroLabel()
     }

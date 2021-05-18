@@ -135,7 +135,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
     private func commonInit() {
         clipsToBounds = false
 
-        staticContainerView.backgroundColor = .red
+        staticContainerView.backgroundColor = .clear
         staticContainerView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(staticContainerView)
         staticContainerView.clipsToBounds = false

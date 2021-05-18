@@ -130,6 +130,4 @@ public class OrnamentsManager: NSObject {
                 view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
         }
     }
-
-    
 }

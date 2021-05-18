@@ -21,10 +21,10 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
             do {
                 try puck.createPreciseLocationIndicatorLayer(location: Location(with: CLLocation(latitude: 1, longitude: 1)))
                 createPuckExpectation.fulfill()
-            }
-            catch {
+            } catch {
                 XCTFail("Failed to create a precise location indicator layer.")
             }
+
             let puckExists = style.layerExists(withId: "puck")
             if puckExists {
                 styleContainsPuckExpectation.fulfill()
@@ -45,10 +45,10 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
             do {
                 try puck.createApproximateLocationIndicatorLayer(location: Location(with: CLLocation(latitude: 1, longitude: 1)))
                 createPuckExpectation.fulfill()
-            }
-            catch {
+            } catch {
                 XCTFail("Failed to create an approximate location indicator layer.")
             }
+
             let puckExists = style.layerExists(withId: "approximate-puck")
             if puckExists {
                 styleContainsPuckExpectation.fulfill()
@@ -69,10 +69,10 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
             do {
                 try puck.createPreciseLocationIndicatorLayer(location: Location(with: CLLocation(latitude: 1, longitude: 1)))
                 createPuckExpectation.fulfill()
-            }
-            catch {
+            } catch {
                 XCTFail("Failed to create a precise location indicator layer.")
             }
+
             puck.removePuck()
             let puckExists = style.layerExists(withId: "puck")
             if !puckExists {
@@ -96,8 +96,7 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
             let puck = Puck2D(puckStyle: .precise, locationSupportableMapView: self.mapView!, configuration: Puck2DConfiguration())
             do {
                 try puck.createPreciseLocationIndicatorLayer(location: location)
-            }
-            catch {
+            } catch {
                 XCTFail("Failed to create a precise location indicator layer.")
             }
 

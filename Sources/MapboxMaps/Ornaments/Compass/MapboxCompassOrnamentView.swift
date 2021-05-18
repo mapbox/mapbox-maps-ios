@@ -12,9 +12,10 @@ internal class MapboxCompassOrnamentView: UIButton {
         static let animationDuration: TimeInterval = 0.3
     }
 
+    internal var containerView = UIImageView()
     internal var visibility: OrnamentVisibility = .adaptive {
         didSet {
-            updateVisibility()
+            animateVisibilityUpdate()
         }
     }
 
@@ -32,8 +33,8 @@ internal class MapboxCompassOrnamentView: UIButton {
     internal var currentBearing: CLLocationDirection = 0 {
         didSet {
             let adjustedBearing = currentBearing.truncatingRemainder(dividingBy: 360)
-            updateVisibility()
-            self.transform = CGAffineTransform(rotationAngle: -adjustedBearing.toRadians())
+            animateVisibilityUpdate()
+            self.containerView.transform = CGAffineTransform(rotationAngle: -adjustedBearing.toRadians())
         }
     }
 
@@ -41,7 +42,7 @@ internal class MapboxCompassOrnamentView: UIButton {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         self.visibility = visibility
-        alpha = visibility == .visible ? 1 : 0
+        containerView.isHidden = visibility == .visible
         let bundle = Bundle.mapboxMaps
         accessibilityLabel = NSLocalizedString("COMPASS_A11Y_LABEL",
                                                tableName: Constants.localizableTableName,
@@ -55,13 +56,16 @@ internal class MapboxCompassOrnamentView: UIButton {
                                               comment: "Accessibility hint")
 
         if let image = createCompassImage() {
-            setImage(image, for: .normal)
+            containerView.image = image
             NSLayoutConstraint.activate([
                 widthAnchor.constraint(equalToConstant: image.size.width),
-                heightAnchor.constraint(equalToConstant: image.size.height)
+                heightAnchor.constraint(equalToConstant: image.size.height),
+                containerView.widthAnchor.constraint(equalToConstant: image.size.width),
+                containerView.heightAnchor.constraint(equalToConstant: image.size.height)
             ])
         }
-
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(containerView)
         addTarget(self, action: #selector(didTap), for: .touchUpInside)
     }
 
@@ -73,20 +77,20 @@ internal class MapboxCompassOrnamentView: UIButton {
         tapAction?()
     }
 
-    private func updateVisibility() {
+    private func animateVisibilityUpdate() {
         switch visibility {
         case .visible:
-            animate(toAlpha: 1)
+            animate(toHidden: false)
         case .hidden:
-            animate(toAlpha: 0)
+            animate(toHidden: true)
         case .adaptive:
-            animate(toAlpha: abs(currentBearing) < 0.001 ? 0 : 1)
+            animate(toHidden: abs(currentBearing) < 0.001)
         }
     }
 
-    private func animate(toAlpha alpha: CGFloat) {
+    private func animate(toHidden isHidden: Bool) {
         UIView.animate(withDuration: Constants.animationDuration) {
-            self.alpha = alpha
+            self.containerView.isHidden = isHidden
         }
     }
 

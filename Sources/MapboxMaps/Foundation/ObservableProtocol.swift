@@ -1,7 +1,7 @@
 import Foundation
 import MapboxCoreMaps
 
-public protocol ObservableProtocol: AnyObject {
+internal protocol ObservableProtocol: AnyObject {
     /// Subscribes an Observer to a provided list of event types.
     ///
     /// A type conforming to `ObservableProtocol` will hold a strong reference

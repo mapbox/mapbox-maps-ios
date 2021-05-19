@@ -2,7 +2,7 @@ import Foundation
 import Turf
 
 // swiftlint:disable file_length function_parameter_count
-public protocol StyleManagerProtocol {
+internal protocol StyleManagerProtocol {
     /// `true` if and only if the style JSON contents, the style specified sprite
     /// and sources are all loaded, otherwise returns `false`.
     var isLoaded: Bool { get }

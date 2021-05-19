@@ -183,7 +183,7 @@ extension MapboxMap: CameraManagerProtocol {
         return __map.coordinateBoundsZoomForCamera(forCamera: MapboxCoreMaps.CameraOptions(camera))
     }
 
-    public func unwrappedCoordinateBoundsZoom(for camera: CameraOptions) -> CoordinateBoundsZoom {
+    public func coordinateBoundsZoomUnwrapped(for camera: CameraOptions) -> CoordinateBoundsZoom {
         return __map.coordinateBoundsZoomForCameraUnwrapped(forCamera: MapboxCoreMaps.CameraOptions(camera))
     }
 
@@ -209,7 +209,7 @@ extension MapboxMap: CameraManagerProtocol {
 
     // MARK: - Camera options setters/getters
 
-    public func setCamera(to cameraOptions: CameraOptions) {
+    public func _setCamera(to cameraOptions: CameraOptions) {
         __map.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
     }
 
@@ -307,22 +307,6 @@ extension MapboxMap: MapFeatureQueryable {
                                                                      type: FeatureExtensionValue.self,
                                                                      concreteErrorType: MapError.self))
     }
-}
-
-extension MapboxMap: MapFeatureState {
-    // swiftlint:disable vertical_parameter_alignment
-    internal func featureState(for sourceId: String,
-                               layerId: String?,
-                               featureId: String,
-                               completion: @escaping (Result<Any, Error>) -> Void) {
-        __map.getFeatureState(forSourceId: sourceId,
-                              sourceLayerId: layerId,
-                              featureId: featureId,
-                              callback: coreAPIClosureAdapter(for: completion,
-                                                              type: NSDictionary.self,
-                                                              concreteErrorType: MapError.self))
-    }
-    // swiftlint:enable vertical_parameter_alignment
 }
 
 // MARK: - ObservableProtocol -

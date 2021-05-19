@@ -78,10 +78,3 @@ internal protocol MapFeatureQueryable: AnyObject {
                                completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void)
     //swiftlint:enable function_parameter_count
 }
-
-internal protocol MapFeatureState: AnyObject {
-    func featureState(for sourceId: String,
-                      layerId: String?,
-                      featureId: String,
-                      completion: @escaping (Result<Any, Error>) -> Void)
-}

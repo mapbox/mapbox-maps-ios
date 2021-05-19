@@ -1,6 +1,6 @@
 import Turf
 
-public protocol CameraManagerProtocol {
+internal protocol CameraManagerProtocol {
 
     /// Calculates a `CameraOptions` to fit a `CoordinateBounds`
     ///
@@ -85,7 +85,7 @@ public protocol CameraManagerProtocol {
     /// - Parameter camera: The camera for which the `CoordinateBoundsZoom` will
     ///     be returned.
     /// - Returns: `CoordinateBoundsZoom` for the given `CameraOptions`
-    func unwrappedCoordinateBoundsZoom(for camera: CameraOptions) -> CoordinateBoundsZoom
+    func coordinateBoundsZoomUnwrapped(for camera: CameraOptions) -> CoordinateBoundsZoom
 
     // MARK: - Screen coordinate conversion
 
@@ -120,6 +120,7 @@ public protocol CameraManagerProtocol {
 
     // MARK: - Camera getters/setters
 
+    /// :nodoc:
     /// Changes the map view by any combination of center, zoom, bearing, and pitch,
     /// without an animated transition. The map will retain its current values
     /// for any details not passed via the camera options argument. It is not
@@ -127,7 +128,7 @@ public protocol CameraManagerProtocol {
     /// constraints resulting in a different `CameraState`.
     ///
     /// - Parameter cameraOptions: New camera options
-    func setCamera(to cameraOptions: CameraOptions)
+    func _setCamera(to cameraOptions: CameraOptions)
 
     /// Returns the current camera state
     var cameraState: CameraState { get }

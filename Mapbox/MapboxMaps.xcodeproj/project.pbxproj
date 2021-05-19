@@ -328,7 +328,7 @@
 		CAC1960B25AE98F400F69FEA /* GlyphsRasterizationOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC1960A25AE98F400F69FEA /* GlyphsRasterizationOptions.swift */; };
 		CAC1965525AEAFD900F69FEA /* GlyphsRasterizationOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC1961F25AEAE6600F69FEA /* GlyphsRasterizationOptionsTests.swift */; };
 		CAD7BA0625A368DE00E64C78 /* ExampleIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAD7BA0425A368DE00E64C78 /* ExampleIntegrationTest.swift */; };
-		CAE43ED5265460FE006F43E9 /* MapFeatureQueryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43ED4265460FE006F43E9 /* MapFeatureQueryProtocol.swift */; };
+		CAE43ED5265460FE006F43E9 /* MapFeatureQueryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43ED4265460FE006F43E9 /* MapFeatureQueryable.swift */; };
 		CAE43EDA26546192006F43E9 /* OfflineSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43ED626546191006F43E9 /* OfflineSwitch.swift */; };
 		CAE43EDB26546192006F43E9 /* HttpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43ED726546191006F43E9 /* HttpResponse.swift */; };
 		CAE43EDC26546192006F43E9 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43ED826546191006F43E9 /* CacheManager.swift */; };
@@ -751,7 +751,7 @@
 		CAC1960A25AE98F400F69FEA /* GlyphsRasterizationOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlyphsRasterizationOptions.swift; sourceTree = "<group>"; };
 		CAC1961F25AEAE6600F69FEA /* GlyphsRasterizationOptionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlyphsRasterizationOptionsTests.swift; sourceTree = "<group>"; };
 		CAD7BA0425A368DE00E64C78 /* ExampleIntegrationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleIntegrationTest.swift; sourceTree = "<group>"; };
-		CAE43ED4265460FE006F43E9 /* MapFeatureQueryProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapFeatureQueryProtocol.swift; sourceTree = "<group>"; };
+		CAE43ED4265460FE006F43E9 /* MapFeatureQueryable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapFeatureQueryable.swift; sourceTree = "<group>"; };
 		CAE43ED626546191006F43E9 /* OfflineSwitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineSwitch.swift; sourceTree = "<group>"; };
 		CAE43ED726546191006F43E9 /* HttpResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpResponse.swift; sourceTree = "<group>"; };
 		CAE43ED826546191006F43E9 /* CacheManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
@@ -1232,7 +1232,7 @@
 				C6F256EE261FB99C0093D353 /* LogoView.swift */,
 				B521FC92262F626900B9A446 /* MapboxMap.swift */,
 				CA5890D4264B00B50060987A /* MapEventHandler.swift */,
-				CAE43ED4265460FE006F43E9 /* MapFeatureQueryProtocol.swift */,
+				CAE43ED4265460FE006F43E9 /* MapFeatureQueryable.swift */,
 				0C03DD42264EE95D00D4D307 /* MapView.swift */,
 				CA5890D3264B00B50060987A /* ObservableProtocol.swift */,
 				B52934192624E9D6003B181C /* PreferredFPS.swift */,
@@ -2034,7 +2034,7 @@
 				0C03DD43264EE95D00D4D307 /* MapView.swift in Sources */,
 				0782B1A3258C250400D5FCE5 /* Geometry.swift in Sources */,
 				0CD62F1024588530006421D1 /* GestureManager.swift in Sources */,
-				CAE43ED5265460FE006F43E9 /* MapFeatureQueryProtocol.swift in Sources */,
+				CAE43ED5265460FE006F43E9 /* MapFeatureQueryable.swift in Sources */,
 				0742060324E4A5D0000A8932 /* PointAnnotation.swift in Sources */,
 				0C708F3124EB1EE2003CE791 /* CircleLayer.swift in Sources */,
 				0CD62F0724588501006421D1 /* PinchGestureHandler.swift in Sources */,

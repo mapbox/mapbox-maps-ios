@@ -74,7 +74,6 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                     "Point"
                 }
 
-                // Depends on Expression being `StyleEncodable`
                 guard let data = try? JSONEncoder().encode(filter),
                       let filterArray = try? JSONSerialization.jsonObject(with: data) as? [Any] else {
                     XCTFail("Invalid data or filter object")

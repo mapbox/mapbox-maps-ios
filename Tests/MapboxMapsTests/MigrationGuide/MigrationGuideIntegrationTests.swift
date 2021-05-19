@@ -2,7 +2,7 @@ import XCTest
 import MapboxMaps
 import Turf
 
-// swiftlint:disable file_length orphaned_doc_comment
+// swiftlint:disable file_length orphaned_doc_comment type_body_length
 class MigrationGuideIntegrationTests: IntegrationTestCase {
 
     private var testRect = CGRect(origin: .zero, size: CGSize(width: 100, height: 100))
@@ -446,8 +446,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                 }
                 //<--
                 expectation.fulfill()
-            }
-            catch {
+            } catch {
                 XCTFail("Failed with \(error)")
             }
         }
@@ -461,7 +460,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
             override func viewDidLoad() {
                 super.viewDidLoad()
-                mapView.mapboxMap.onNext(.mapLoaded) { (event) in
+                mapView.mapboxMap.onNext(.mapLoaded) { _ in
                     self.mapView.annotations.interactionDelegate = self
                     let coordinate = CLLocationCoordinate2DMake(24, -89)
                     let pointAnnotation = PointAnnotation(coordinate: coordinate)

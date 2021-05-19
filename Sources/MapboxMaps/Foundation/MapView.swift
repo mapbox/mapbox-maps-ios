@@ -54,8 +54,7 @@ open class MapView: UIView {
 
     public var options = RenderOptions() {
         didSet {
-            let defaultPrefetchZoomDelta: UInt8 = 4
-            mapboxMap.__map.setPrefetchZoomDeltaForDelta(options.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
+            mapboxMap.__map.setPrefetchZoomDeltaForDelta(options.prefetchZoomDelta)
             preferredFPS = options.preferredFramesPerSecond
             metalView?.presentsWithTransaction = options.presentsWithTransaction
         }
@@ -166,9 +165,7 @@ open class MapView: UIView {
         }
 
         // Set prefetchZoomDelta
-        let defaultPrefetchZoomDelta: UInt8 = 4
-        mapboxMap.__map.setPrefetchZoomDeltaForDelta(
-            options.prefetchesTiles ? defaultPrefetchZoomDelta : 0)
+        mapboxMap.__map.setPrefetchZoomDeltaForDelta(options.prefetchZoomDelta)
 
         // Set preferrredFPS
         preferredFPS = options.preferredFramesPerSecond

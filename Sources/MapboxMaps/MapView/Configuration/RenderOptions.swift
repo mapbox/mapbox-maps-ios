@@ -13,15 +13,10 @@ public struct RenderOptions: Equatable {
     ///  See Also `CADisplayLink.preferredFramesPerSecond`
     public var preferredFramesPerSecond: PreferredFPS = .normal
 
-    ///  A Boolean value indicating whether the map should prefetch tiles.
-    ///
-    ///  When this property is set to `true`, the map view prefetches tiles designed for
-    ///  a low zoom level and displays them until receiving more detailed tiles for the
-    ///  current zoom level. The prefetched tiles typically contain simplified versions
-    ///  of each shape, improving the map view’s perceived performance.
-    ///
-    ///  The default value of this property is `true`.
-    public var prefetchesTiles: Bool = true
+    /// When loading a map, if `PrefetchZoomDelta` is set to any number greater than 0, the map
+    /// map at lower resolution as quick as possible. It will get clamped at the tile source
+    /// minimum zoom. The default `PrefetchZoomDelta` is 4.
+    public var prefetchZoomDelta: UInt8 = 4
 
     /// A Boolean value that indicates whether the underlying `CAMetalLayer` of the `MapView`
     /// presents its content using a CoreAnimation transaction

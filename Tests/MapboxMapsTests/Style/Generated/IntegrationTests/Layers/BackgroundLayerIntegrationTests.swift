@@ -31,14 +31,14 @@ class BackgroundLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.layout?.visibility = .constant(.visible)
+            layer.visibility = .constant(.visible)
 
-            layer.paint?.backgroundColor = Value<ColorRepresentable>.testConstantValue()
-            layer.paint?.backgroundColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.backgroundOpacity = Value<Double>.testConstantValue()
-            layer.paint?.backgroundOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.backgroundPattern = Value<ResolvedImage>.testConstantValue()
-            layer.paint?.backgroundPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.backgroundColor = Value<ColorRepresentable>.testConstantValue()
+            layer.backgroundColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.backgroundOpacity = Value<Double>.testConstantValue()
+            layer.backgroundOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.backgroundPattern = Value<ResolvedImage>.testConstantValue()
+            layer.backgroundPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
 
             // Add the layer
             do {

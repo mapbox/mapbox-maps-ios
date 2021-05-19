@@ -31,20 +31,20 @@ class FillLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.layout?.visibility = .constant(.visible)
-            layer.layout?.fillSortKey = Value<Double>.testConstantValue()
+            layer.visibility = .constant(.visible)
+            layer.fillSortKey = Value<Double>.testConstantValue()
 
-            layer.paint?.fillAntialias = Value<Bool>.testConstantValue()
-            layer.paint?.fillColor = Value<ColorRepresentable>.testConstantValue()
-            layer.paint?.fillColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.fillOpacity = Value<Double>.testConstantValue()
-            layer.paint?.fillOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.fillOutlineColor = Value<ColorRepresentable>.testConstantValue()
-            layer.paint?.fillOutlineColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.fillPattern = Value<ResolvedImage>.testConstantValue()
-            layer.paint?.fillPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.fillTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.fillTranslateAnchor = Value<FillTranslateAnchor>.testConstantValue()
+            layer.fillAntialias = Value<Bool>.testConstantValue()
+            layer.fillColor = Value<ColorRepresentable>.testConstantValue()
+            layer.fillColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.fillOpacity = Value<Double>.testConstantValue()
+            layer.fillOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.fillOutlineColor = Value<ColorRepresentable>.testConstantValue()
+            layer.fillOutlineColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.fillPattern = Value<ResolvedImage>.testConstantValue()
+            layer.fillPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.fillTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.fillTranslateAnchor = Value<FillTranslateAnchor>.testConstantValue()
 
             // Add the layer
             do {

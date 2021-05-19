@@ -39,8 +39,8 @@ public class LayerBelowExample: UIViewController, ExampleProtocol {
         // Create the layer, add the data source, and add basic styling to the layer
         layer = FillLayer(id: "urban-areas-layer")
         layer.source = sourceIdentifier
-        layer.paint?.fillColor = .constant(ColorRepresentable(color: #colorLiteral(red: 0.9764705896, green: 0.5455193555, blue: 0.8344934594, alpha: 1)))
-        layer.paint?.fillOutlineColor = .constant(ColorRepresentable(color: #colorLiteral(red: 0.03167597491, green: 0.3966798381, blue: 0.043041647, alpha: 1)))
+        layer.fillColor = .constant(ColorRepresentable(color: #colorLiteral(red: 0.9764705896, green: 0.5455193555, blue: 0.8344934594, alpha: 1)))
+        layer.fillOutlineColor = .constant(ColorRepresentable(color: #colorLiteral(red: 0.03167597491, green: 0.3966798381, blue: 0.043041647, alpha: 1)))
 
         // Add the data source to the map
         try! mapView.mapboxMap.style.addSource(source, id: sourceIdentifier)

@@ -176,33 +176,22 @@ internal extension Puck2D {
 
         // Create Layer
         var layer = LocationIndicatorLayer(id: "puck")
-
-        // Create and set Layout property
-        var layout = LocationIndicatorLayer.Layout()
-        layout.topImage = .constant(ResolvedImage.name("locationIndicatorLayerTopImage"))
-        layout.bearingImage = .constant(ResolvedImage.name("locationIndicatorLayerBearingImage"))
-
-        layer.layout = layout
-
-        // Create and set Paint property
-        var paint = LocationIndicatorLayer.Paint()
-        paint.location = .constant([
+        layer.topImage = .constant(ResolvedImage.name("locationIndicatorLayerTopImage"))
+        layer.bearingImage = .constant(ResolvedImage.name("locationIndicatorLayerBearingImage"))
+        layer.location = .constant([
             location.coordinate.latitude,
             location.coordinate.longitude,
             location.internalLocation.altitude
         ])
-        paint.locationTransition = StyleTransition(duration: 0.5, delay: 0)
-        paint.topImageSize = configuration.resolvedScale
-        paint.bearingImageSize = configuration.resolvedScale
-        paint.shadowImageSize = configuration.resolvedScale
-        paint.accuracyRadius = .constant(location.horizontalAccuracy)
-
-        paint.emphasisCircleRadiusTransition = StyleTransition(duration: 0, delay: 0)
-        paint.bearingTransition = StyleTransition(duration: 0, delay: 0)
-        paint.accuracyRadiusColor = .constant(ColorRepresentable(color: UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
-        paint.accuracyRadiusBorderColor = .constant(ColorRepresentable(color: .lightGray))
-
-        layer.paint = paint
+        layer.locationTransition = StyleTransition(duration: 0.5, delay: 0)
+        layer.topImageSize = configuration.resolvedScale
+        layer.bearingImageSize = configuration.resolvedScale
+        layer.shadowImageSize = configuration.resolvedScale
+        layer.accuracyRadius = .constant(location.horizontalAccuracy)
+        layer.emphasisCircleRadiusTransition = StyleTransition(duration: 0, delay: 0)
+        layer.bearingTransition = StyleTransition(duration: 0, delay: 0)
+        layer.accuracyRadiusColor = .constant(ColorRepresentable(color: UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
+        layer.accuracyRadiusBorderColor = .constant(ColorRepresentable(color: .lightGray))
 
         // Add layer to style
         try style.addLayer(layer)
@@ -224,8 +213,7 @@ internal extension Puck2D {
         var layer = LocationIndicatorLayer(id: "approximate-puck")
 
         // Create and set Paint property
-        var paint = LocationIndicatorLayer.Paint()
-        paint.location = .constant([
+        layer.location = .constant([
             location.coordinate.latitude,
             location.coordinate.longitude,
             location.internalLocation.altitude
@@ -240,11 +228,10 @@ internal extension Puck2D {
             8
             5000
         }
-        paint.accuracyRadius = .expression(exp)
+        layer.accuracyRadius = .expression(exp)
 
-        paint.accuracyRadiusColor = .constant(ColorRepresentable(color: UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
-        paint.accuracyRadiusBorderColor = .constant(ColorRepresentable(color: .lightGray))
-        layer.paint = paint
+        layer.accuracyRadiusColor = .constant(ColorRepresentable(color: UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
+        layer.accuracyRadiusBorderColor = .constant(ColorRepresentable(color: .lightGray))
 
         // Add layer to style
         try style.addLayer(layer)

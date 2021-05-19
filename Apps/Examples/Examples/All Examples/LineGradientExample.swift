@@ -68,8 +68,8 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
         lineLayer.source = geoJSONDataSourceIdentifier
 
         // Styling the line
-        lineLayer.paint?.lineColor = .constant(ColorRepresentable(color: UIColor.red))
-        lineLayer.paint?.lineGradient = .expression(
+        lineLayer.lineColor = .constant(ColorRepresentable(color: UIColor.red))
+        lineLayer.lineGradient = .expression(
             Exp(.interpolate) {
                 Exp(.linear)
                 Exp(.lineProgress)
@@ -90,7 +90,7 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
 
         let lowZoomWidth = 10
         let highZoomWidth = 20
-        lineLayer.paint?.lineWidth = .expression(
+        lineLayer.lineWidth = .expression(
             Exp(.interpolate) {
                 Exp(.linear)
                 Exp(.zoom)
@@ -100,8 +100,8 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
                 highZoomWidth
             }
         )
-        lineLayer.layout?.lineCap = .constant(.round)
-        lineLayer.layout?.lineJoin = .constant(.round)
+        lineLayer.lineCap = .constant(.round)
+        lineLayer.lineJoin = .constant(.round)
 
         // Add the source and style layer to the map style.
         try! mapView.mapboxMap.style.addSource(geoJSONSource, id: geoJSONDataSourceIdentifier)

@@ -43,13 +43,13 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
         // Create a line layer
         var lineLayer = LineLayer(id: "line-layer")
         lineLayer.source = sourceIdentifier
-        lineLayer.paint?.lineColor = .constant(ColorRepresentable(color: UIColor.red))
+        lineLayer.lineColor = .constant(ColorRepresentable(color: UIColor.red))
 
         let lowZoomWidth = 5
         let highZoomWidth = 20
 
         // Use an expression to define the line width at different zoom extents
-        lineLayer.paint?.lineWidth = .expression(
+        lineLayer.lineWidth = .expression(
             Exp(.interpolate) {
                 Exp(.linear)
                 Exp(.zoom)
@@ -59,8 +59,8 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
                 highZoomWidth
             }
         )
-        lineLayer.layout?.lineCap = .constant(.round)
-        lineLayer.layout?.lineJoin = .constant(.round)
+        lineLayer.lineCap = .constant(.round)
+        lineLayer.lineJoin = .constant(.round)
 
         // Add the lineLayer to the map.
         try! mapView.mapboxMap.style.addSource(routeLineSource, id: sourceIdentifier)

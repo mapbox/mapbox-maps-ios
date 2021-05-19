@@ -62,7 +62,7 @@ class FillExtrusionLayerTests: XCTestCase {
     func testEncodingAndDecodingOfLayoutProperties() {
 
        var layer = FillExtrusionLayer(id: "test-id")	
-       layer.layout?.visibility = .constant(.visible)
+       layer.visibility = .constant(.visible)
 
        var data: Data?
        do {
@@ -78,7 +78,7 @@ class FillExtrusionLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(FillExtrusionLayer.self, from: validData)
-           XCTAssert(decodedLayer.layout?.visibility == .constant(.visible))
+           XCTAssert(decodedLayer.visibility == .constant(.visible))
  
        } catch {
            XCTFail("Failed to decode FillExtrusionLayer")
@@ -88,20 +88,20 @@ class FillExtrusionLayerTests: XCTestCase {
     func testEncodingAndDecodingOfPaintProperties() {
 
        var layer = FillExtrusionLayer(id: "test-id")	
-       layer.paint?.fillExtrusionBase = Value<Double>.testConstantValue()
-       layer.paint?.fillExtrusionBaseTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.paint?.fillExtrusionColor = Value<ColorRepresentable>.testConstantValue()
-       layer.paint?.fillExtrusionColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.paint?.fillExtrusionHeight = Value<Double>.testConstantValue()
-       layer.paint?.fillExtrusionHeightTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.paint?.fillExtrusionOpacity = Value<Double>.testConstantValue()
-       layer.paint?.fillExtrusionOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.paint?.fillExtrusionPattern = Value<ResolvedImage>.testConstantValue()
-       layer.paint?.fillExtrusionPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.paint?.fillExtrusionTranslate = Value<[Double]>.testConstantValue()
-       layer.paint?.fillExtrusionTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.paint?.fillExtrusionTranslateAnchor = Value<FillExtrusionTranslateAnchor>.testConstantValue()
-       layer.paint?.fillExtrusionVerticalGradient = Value<Bool>.testConstantValue()
+       layer.fillExtrusionBase = Value<Double>.testConstantValue()
+       layer.fillExtrusionBaseTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.fillExtrusionColor = Value<ColorRepresentable>.testConstantValue()
+       layer.fillExtrusionColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.fillExtrusionHeight = Value<Double>.testConstantValue()
+       layer.fillExtrusionHeightTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.fillExtrusionOpacity = Value<Double>.testConstantValue()
+       layer.fillExtrusionOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.fillExtrusionPattern = Value<ResolvedImage>.testConstantValue()
+       layer.fillExtrusionPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.fillExtrusionTranslate = Value<[Double]>.testConstantValue()
+       layer.fillExtrusionTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.fillExtrusionTranslateAnchor = Value<FillExtrusionTranslateAnchor>.testConstantValue()
+       layer.fillExtrusionVerticalGradient = Value<Bool>.testConstantValue()
 
        var data: Data?
        do {
@@ -117,15 +117,15 @@ class FillExtrusionLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(FillExtrusionLayer.self, from: validData)
-           XCTAssert(decodedLayer.layout?.visibility == .constant(.visible))
-       	   XCTAssert(layer.paint?.fillExtrusionBase == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.paint?.fillExtrusionColor == Value<ColorRepresentable>.testConstantValue())
-       	   XCTAssert(layer.paint?.fillExtrusionHeight == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.paint?.fillExtrusionOpacity == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.paint?.fillExtrusionPattern == Value<ResolvedImage>.testConstantValue())
-       	   XCTAssert(layer.paint?.fillExtrusionTranslate == Value<[Double]>.testConstantValue())
-       	   XCTAssert(layer.paint?.fillExtrusionTranslateAnchor == Value<FillExtrusionTranslateAnchor>.testConstantValue())
-       	   XCTAssert(layer.paint?.fillExtrusionVerticalGradient == Value<Bool>.testConstantValue())
+           XCTAssert(decodedLayer.visibility == .constant(.visible))
+       	   XCTAssert(layer.fillExtrusionBase == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.fillExtrusionColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.fillExtrusionHeight == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.fillExtrusionOpacity == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.fillExtrusionPattern == Value<ResolvedImage>.testConstantValue())
+       	   XCTAssert(layer.fillExtrusionTranslate == Value<[Double]>.testConstantValue())
+       	   XCTAssert(layer.fillExtrusionTranslateAnchor == Value<FillExtrusionTranslateAnchor>.testConstantValue())
+       	   XCTAssert(layer.fillExtrusionVerticalGradient == Value<Bool>.testConstantValue())
  
        } catch {
            XCTFail("Failed to decode FillExtrusionLayer")

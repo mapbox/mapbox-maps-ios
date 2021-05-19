@@ -31,18 +31,18 @@ class HillshadeLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.layout?.visibility = .constant(.visible)
+            layer.visibility = .constant(.visible)
 
-            layer.paint?.hillshadeAccentColor = Value<ColorRepresentable>.testConstantValue()
-            layer.paint?.hillshadeAccentColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.hillshadeExaggeration = Value<Double>.testConstantValue()
-            layer.paint?.hillshadeExaggerationTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.hillshadeHighlightColor = Value<ColorRepresentable>.testConstantValue()
-            layer.paint?.hillshadeHighlightColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.hillshadeIlluminationAnchor = Value<HillshadeIlluminationAnchor>.testConstantValue()
-            layer.paint?.hillshadeIlluminationDirection = Value<Double>.testConstantValue()
-            layer.paint?.hillshadeShadowColor = Value<ColorRepresentable>.testConstantValue()
-            layer.paint?.hillshadeShadowColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.hillshadeAccentColor = Value<ColorRepresentable>.testConstantValue()
+            layer.hillshadeAccentColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.hillshadeExaggeration = Value<Double>.testConstantValue()
+            layer.hillshadeExaggerationTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.hillshadeHighlightColor = Value<ColorRepresentable>.testConstantValue()
+            layer.hillshadeHighlightColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.hillshadeIlluminationAnchor = Value<HillshadeIlluminationAnchor>.testConstantValue()
+            layer.hillshadeIlluminationDirection = Value<Double>.testConstantValue()
+            layer.hillshadeShadowColor = Value<ColorRepresentable>.testConstantValue()
+            layer.hillshadeShadowColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
 
             // Add the layer
             do {

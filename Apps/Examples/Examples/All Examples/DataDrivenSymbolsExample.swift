@@ -110,7 +110,7 @@ public class DataDrivenSymbolsExample: UIViewController, ExampleProtocol {
             This gets the POITYPE and matches the result of it to image name on the sprite sheet.
          */
 
-        layer.layout?.iconImage = .expression(expression)
+        layer.iconImage = .expression(expression)
 
         try! mapView.mapboxMap.style.addLayer(layer, layerPosition: nil)
 

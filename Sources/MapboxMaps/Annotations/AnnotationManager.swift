@@ -513,7 +513,7 @@ public class AnnotationManager {
          property associated with an annotation's `Feature`
          to set the image.
          */
-        symbolLayer.layout?.iconImage = .expression(Exp(.get) {
+        symbolLayer.iconImage = .expression(Exp(.get) {
             "icon-image"
         })
 

@@ -62,7 +62,7 @@ class SkyLayerTests: XCTestCase {
     func testEncodingAndDecodingOfLayoutProperties() {
 
        var layer = SkyLayer(id: "test-id")	
-       layer.layout?.visibility = .constant(.visible)
+       layer.visibility = .constant(.visible)
 
        var data: Data?
        do {
@@ -78,7 +78,7 @@ class SkyLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(SkyLayer.self, from: validData)
-           XCTAssert(decodedLayer.layout?.visibility == .constant(.visible))
+           XCTAssert(decodedLayer.visibility == .constant(.visible))
  
        } catch {
            XCTFail("Failed to decode SkyLayer")
@@ -88,16 +88,16 @@ class SkyLayerTests: XCTestCase {
     func testEncodingAndDecodingOfPaintProperties() {
 
        var layer = SkyLayer(id: "test-id")	
-       layer.paint?.skyAtmosphereColor = Value<ColorRepresentable>.testConstantValue()
-       layer.paint?.skyAtmosphereHaloColor = Value<ColorRepresentable>.testConstantValue()
-       layer.paint?.skyAtmosphereSun = Value<[Double]>.testConstantValue()
-       layer.paint?.skyAtmosphereSunIntensity = Value<Double>.testConstantValue()
-       layer.paint?.skyGradient = Value<ColorRepresentable>.testConstantValue()
-       layer.paint?.skyGradientCenter = Value<[Double]>.testConstantValue()
-       layer.paint?.skyGradientRadius = Value<Double>.testConstantValue()
-       layer.paint?.skyOpacity = Value<Double>.testConstantValue()
-       layer.paint?.skyOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.paint?.skyType = Value<SkyType>.testConstantValue()
+       layer.skyAtmosphereColor = Value<ColorRepresentable>.testConstantValue()
+       layer.skyAtmosphereHaloColor = Value<ColorRepresentable>.testConstantValue()
+       layer.skyAtmosphereSun = Value<[Double]>.testConstantValue()
+       layer.skyAtmosphereSunIntensity = Value<Double>.testConstantValue()
+       layer.skyGradient = Value<ColorRepresentable>.testConstantValue()
+       layer.skyGradientCenter = Value<[Double]>.testConstantValue()
+       layer.skyGradientRadius = Value<Double>.testConstantValue()
+       layer.skyOpacity = Value<Double>.testConstantValue()
+       layer.skyOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.skyType = Value<SkyType>.testConstantValue()
 
        var data: Data?
        do {
@@ -113,16 +113,16 @@ class SkyLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(SkyLayer.self, from: validData)
-           XCTAssert(decodedLayer.layout?.visibility == .constant(.visible))
-       	   XCTAssert(layer.paint?.skyAtmosphereColor == Value<ColorRepresentable>.testConstantValue())
-       	   XCTAssert(layer.paint?.skyAtmosphereHaloColor == Value<ColorRepresentable>.testConstantValue())
-       	   XCTAssert(layer.paint?.skyAtmosphereSun == Value<[Double]>.testConstantValue())
-       	   XCTAssert(layer.paint?.skyAtmosphereSunIntensity == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.paint?.skyGradient == Value<ColorRepresentable>.testConstantValue())
-       	   XCTAssert(layer.paint?.skyGradientCenter == Value<[Double]>.testConstantValue())
-       	   XCTAssert(layer.paint?.skyGradientRadius == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.paint?.skyOpacity == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.paint?.skyType == Value<SkyType>.testConstantValue())
+           XCTAssert(decodedLayer.visibility == .constant(.visible))
+       	   XCTAssert(layer.skyAtmosphereColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.skyAtmosphereHaloColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.skyAtmosphereSun == Value<[Double]>.testConstantValue())
+       	   XCTAssert(layer.skyAtmosphereSunIntensity == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.skyGradient == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.skyGradientCenter == Value<[Double]>.testConstantValue())
+       	   XCTAssert(layer.skyGradientRadius == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.skyOpacity == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.skyType == Value<SkyType>.testConstantValue())
  
        } catch {
            XCTFail("Failed to decode SkyLayer")

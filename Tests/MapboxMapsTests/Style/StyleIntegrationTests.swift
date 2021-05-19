@@ -23,7 +23,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         didFinishLoadingStyle = { _ in
 
             var newBackgroundLayer = BackgroundLayer(id: "test-id")
-            newBackgroundLayer.paint?.backgroundColor = .constant(.init(color: .white))
+            newBackgroundLayer.backgroundColor = .constant(.init(color: .white))
 
             do {
                 try style.addLayer(newBackgroundLayer)
@@ -34,8 +34,8 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
 
             do {
                 try style.updateLayer(withId: newBackgroundLayer.id) { (layer: inout BackgroundLayer) throws in
-                    XCTAssert(layer.paint?.backgroundColor == newBackgroundLayer.paint?.backgroundColor)
-                    layer.paint?.backgroundColor = .constant(.init(color: .blue))
+                    XCTAssert(layer.backgroundColor == newBackgroundLayer.backgroundColor)
+                    layer.backgroundColor = .constant(.init(color: .blue))
                 }
                 expectation.fulfill()
             } catch {
@@ -44,7 +44,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
 
             do {
                 let retrievedLayer: BackgroundLayer = try style.layer(withId: newBackgroundLayer.id)
-                XCTAssert(retrievedLayer.paint?.backgroundColor == .constant(.init(color: .blue)))
+                XCTAssert(retrievedLayer.backgroundColor == .constant(.init(color: .blue)))
                 expectation.fulfill()
             } catch {
                 XCTFail("Could not retrieve background layer due to error: \(error)")

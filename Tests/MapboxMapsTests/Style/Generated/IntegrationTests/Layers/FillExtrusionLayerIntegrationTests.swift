@@ -31,21 +31,21 @@ class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.layout?.visibility = .constant(.visible)
+            layer.visibility = .constant(.visible)
 
-            layer.paint?.fillExtrusionBase = Value<Double>.testConstantValue()
-            layer.paint?.fillExtrusionBaseTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.fillExtrusionColor = Value<ColorRepresentable>.testConstantValue()
-            layer.paint?.fillExtrusionColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.fillExtrusionHeight = Value<Double>.testConstantValue()
-            layer.paint?.fillExtrusionHeightTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.fillExtrusionOpacity = Value<Double>.testConstantValue()
-            layer.paint?.fillExtrusionOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.fillExtrusionPattern = Value<ResolvedImage>.testConstantValue()
-            layer.paint?.fillExtrusionPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.fillExtrusionTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.fillExtrusionTranslateAnchor = Value<FillExtrusionTranslateAnchor>.testConstantValue()
-            layer.paint?.fillExtrusionVerticalGradient = Value<Bool>.testConstantValue()
+            layer.fillExtrusionBase = Value<Double>.testConstantValue()
+            layer.fillExtrusionBaseTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.fillExtrusionColor = Value<ColorRepresentable>.testConstantValue()
+            layer.fillExtrusionColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.fillExtrusionHeight = Value<Double>.testConstantValue()
+            layer.fillExtrusionHeightTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.fillExtrusionOpacity = Value<Double>.testConstantValue()
+            layer.fillExtrusionOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.fillExtrusionPattern = Value<ResolvedImage>.testConstantValue()
+            layer.fillExtrusionPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.fillExtrusionTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.fillExtrusionTranslateAnchor = Value<FillExtrusionTranslateAnchor>.testConstantValue()
+            layer.fillExtrusionVerticalGradient = Value<Bool>.testConstantValue()
 
             // Add the layer
             do {

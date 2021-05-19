@@ -7,6 +7,7 @@ Mapbox welcomes participation and contributions from everyone.
 ### Breaking changes ⚠️
 
  - `StyleURI`, `PreferredFPS`, and `AnimationOwner` are now structs. ([#285](https://github.com/mapbox/mapbox-maps-ios/pull/285))
+ - The `layout` and `paint` substructs for each layer are now merged into the root layer struct. ([#362](https://github.com/mapbox/mapbox-maps-ios/pull/362))
  
 ## 10.0.0-beta.19.1 - May 7, 2021
 

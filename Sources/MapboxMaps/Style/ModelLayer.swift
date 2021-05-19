@@ -1,4 +1,3 @@
-// This file is generated.
 // swiftlint:disable nesting
 
 import Foundation

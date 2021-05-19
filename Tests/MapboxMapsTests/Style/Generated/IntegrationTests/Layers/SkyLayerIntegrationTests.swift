@@ -31,16 +31,16 @@ class SkyLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.layout?.visibility = .constant(.visible)
+            layer.visibility = .constant(.visible)
 
-            layer.paint?.skyAtmosphereColor = Value<ColorRepresentable>.testConstantValue()
-            layer.paint?.skyAtmosphereHaloColor = Value<ColorRepresentable>.testConstantValue()
-            layer.paint?.skyAtmosphereSunIntensity = Value<Double>.testConstantValue()
-            layer.paint?.skyGradient = Value<ColorRepresentable>.testConstantValue()
-            layer.paint?.skyGradientRadius = Value<Double>.testConstantValue()
-            layer.paint?.skyOpacity = Value<Double>.testConstantValue()
-            layer.paint?.skyOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.skyType = Value<SkyType>.testConstantValue()
+            layer.skyAtmosphereColor = Value<ColorRepresentable>.testConstantValue()
+            layer.skyAtmosphereHaloColor = Value<ColorRepresentable>.testConstantValue()
+            layer.skyAtmosphereSunIntensity = Value<Double>.testConstantValue()
+            layer.skyGradient = Value<ColorRepresentable>.testConstantValue()
+            layer.skyGradientRadius = Value<Double>.testConstantValue()
+            layer.skyOpacity = Value<Double>.testConstantValue()
+            layer.skyOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.skyType = Value<SkyType>.testConstantValue()
 
             // Add the layer
             do {

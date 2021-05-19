@@ -31,22 +31,22 @@ class RasterLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.layout?.visibility = .constant(.visible)
+            layer.visibility = .constant(.visible)
 
-            layer.paint?.rasterBrightnessMax = Value<Double>.testConstantValue()
-            layer.paint?.rasterBrightnessMaxTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.rasterBrightnessMin = Value<Double>.testConstantValue()
-            layer.paint?.rasterBrightnessMinTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.rasterContrast = Value<Double>.testConstantValue()
-            layer.paint?.rasterContrastTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.rasterFadeDuration = Value<Double>.testConstantValue()
-            layer.paint?.rasterHueRotate = Value<Double>.testConstantValue()
-            layer.paint?.rasterHueRotateTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.rasterOpacity = Value<Double>.testConstantValue()
-            layer.paint?.rasterOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.rasterResampling = Value<RasterResampling>.testConstantValue()
-            layer.paint?.rasterSaturation = Value<Double>.testConstantValue()
-            layer.paint?.rasterSaturationTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.rasterBrightnessMax = Value<Double>.testConstantValue()
+            layer.rasterBrightnessMaxTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.rasterBrightnessMin = Value<Double>.testConstantValue()
+            layer.rasterBrightnessMinTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.rasterContrast = Value<Double>.testConstantValue()
+            layer.rasterContrastTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.rasterFadeDuration = Value<Double>.testConstantValue()
+            layer.rasterHueRotate = Value<Double>.testConstantValue()
+            layer.rasterHueRotateTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.rasterOpacity = Value<Double>.testConstantValue()
+            layer.rasterOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.rasterResampling = Value<RasterResampling>.testConstantValue()
+            layer.rasterSaturation = Value<Double>.testConstantValue()
+            layer.rasterSaturationTransition = StyleTransition(duration: 10.0, delay: 10.0)
 
             // Add the layer
             do {

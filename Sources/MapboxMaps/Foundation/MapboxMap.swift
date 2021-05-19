@@ -310,10 +310,11 @@ extension MapboxMap: MapFeatureQueryable {
 }
 
 extension MapboxMap: MapFeatureState {
+    // swiftlint:disable vertical_parameter_alignment
     internal func featureState(for sourceId: String,
-                             layerId: String?,
-                             featureId: String,
-                             completion: @escaping (Result<Any, Error>) -> Void) {
+                               layerId: String?,
+                               featureId: String,
+                               completion: @escaping (Result<Any, Error>) -> Void) {
         __map.getFeatureState(forSourceId: sourceId,
                               sourceLayerId: layerId,
                               featureId: featureId,
@@ -321,6 +322,7 @@ extension MapboxMap: MapFeatureState {
                                                               type: NSDictionary.self,
                                                               concreteErrorType: MapError.self))
     }
+    // swiftlint:enable vertical_parameter_alignment
 }
 
 // MARK: - ObservableProtocol -

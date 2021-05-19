@@ -1,7 +1,7 @@
 import Turf
 @_implementationOnly import MapboxCoreMaps_Private
 
-public protocol MapFeatureQueryable: AnyObject {
+internal protocol MapFeatureQueryable: AnyObject {
     /// Queries the map for rendered features.
     ///
     /// - Parameters:
@@ -66,7 +66,7 @@ public protocol MapFeatureQueryable: AnyObject {
     ///             use type 'UInt64', set to maximum for all points)
     ///       2. `offset`: the amount of points to skip (for pagination, must
     ///             use type 'UInt64')
-    ///             
+    ///
     ///   - completion: The result could be a feature extension value containing
     ///         either a value (expansion-zoom) or a feature collection (children
     ///         or leaves). An error is passed if the operation was not successful.
@@ -85,4 +85,3 @@ internal protocol MapFeatureState: AnyObject {
                       featureId: String,
                       completion: @escaping (Result<Any, Error>) -> Void)
 }
-

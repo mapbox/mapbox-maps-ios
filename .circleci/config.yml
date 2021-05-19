@@ -346,6 +346,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - configure-environment
       - ensure-text-exists-in-commit:
           commit-text: "[run device tests]"
           always-run: << parameters.device-tests-always-run >>
@@ -460,6 +461,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - configure-environment
       - ensure-text-exists-in-commit:
           commit-text: "[create xcframework]"
           always-run: << parameters.create-xcframework-always-run >>
@@ -484,6 +486,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - configure-environment
       - ensure-text-exists-in-commit:
           commit-text: "[release]"
           always-run: << parameters.device-tests-always-run >>
@@ -542,6 +545,7 @@ jobs:
           message: '<$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` started.>'
           include_visit_job_action: true
       - checkout
+      - configure-environment
       - install-dependencies
       - make-docs
       - run:

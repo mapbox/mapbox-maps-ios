@@ -37,19 +37,6 @@ open class MapView: UIView {
     /// A reference to the `EventsManager` used for dispatching telemetry.
     internal var eventsListener: EventsListener!
 
-    /// Offline Manager initialized with the same ResourceOptions as the map view
-    ///
-    /// - Important: If you use an `OfflineManager` in conjunction with a `MapView`
-    /// they must use the same resource options. You can use this convenience
-    /// function to ensure this.
-    public func makeOfflineManager() -> OfflineManager {
-        guard let resourceOptions = resourceOptions else {
-            fatalError("resourceOptions not yet initialized")
-        }
-
-        return OfflineManager(resourceOptions: resourceOptions)
-    }
-
     private let mapClient = DelegatingMapClient()
 
     public var options = RenderOptions() {

@@ -47,6 +47,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
     func testDefineAStylePackage() throws {
         //-->
         let options = StylePackLoadOptions(glyphsRasterizationMode: .ideographsRasterizedLocally,
+                                           metadata: ["my-key": "my-value"],
                                            acceptExpired: false)
         //<--
 
@@ -141,7 +142,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
 
             case let .failure(error):
                 // Handle error occurred during the style pack download
-                if case StylePackError.canceled(_) = error {
+                if case StylePackError.canceled = error {
                     handleCancelation()
                 } else {
                     handleFailure(error)
@@ -198,7 +199,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
                 print("Process \(tileRegion)")
             case let .failure(error):
                 // Handle error occurred during the tile region download
-                if case TileRegionError.canceled(_) = error {
+                if case TileRegionError.canceled = error {
                     handleCancelation()
                 } else {
                     handleFailure(error)

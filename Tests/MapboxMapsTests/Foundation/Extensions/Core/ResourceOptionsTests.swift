@@ -2,9 +2,6 @@ import XCTest
 import MapboxMaps
 
 private class SubResourceOptions: ResourceOptions {
-    convenience init() {
-        self.init(accessToken: "overridden")
-    }
 }
 
 class ResourceOptionsTests: XCTestCase {
@@ -13,7 +10,7 @@ class ResourceOptionsTests: XCTestCase {
         let a = ResourceOptions(accessToken: "a")
         let b = ResourceOptions(accessToken: "a")
         let c = ResourceOptions(accessToken: "c")
-        let d = SubResourceOptions()
+        let d = SubResourceOptions(accessToken: "a")
 
         XCTAssertEqual(a, b)
         XCTAssertNotEqual(a, c)

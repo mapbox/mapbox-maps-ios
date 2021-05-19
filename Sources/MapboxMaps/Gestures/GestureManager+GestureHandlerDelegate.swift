@@ -1,6 +1,7 @@
 import UIKit
-import MapboxCommon
-import MapboxCoreMaps
+@_exported import MapboxCoreMaps
+@_exported import MapboxCommon
+@_implementationOnly import MapboxCommon_Private
 
 extension GestureManager: GestureHandlerDelegate {
     // MapView has been tapped a certain number of times

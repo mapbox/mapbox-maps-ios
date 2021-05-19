@@ -69,7 +69,7 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
             "hillshade-illumination-anchor": "map"
         ] as [ String: Any ]
 
-        try! mapView.style.addLayer(with: properties, layerPosition: .below("water"))
+        try! mapView.mapboxMap.style.addLayer(with: properties, layerPosition: .below("water"))
     }
 
     public func renderingWillStart(_ metalDevice: MTLDevice, colorPixelFormat: UInt, depthStencilPixelFormat: UInt) {

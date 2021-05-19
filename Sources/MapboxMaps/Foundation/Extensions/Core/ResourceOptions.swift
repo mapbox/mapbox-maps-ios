@@ -1,4 +1,5 @@
 import Foundation
+@_implementationOnly import MapboxCommon_Private
 
 // MARK: - ResourceOptions
 
@@ -40,7 +41,7 @@ extension ResourceOptions {
     ///     and then a tile pack that also includes this tile. The individual tile
     ///     in the ambient cache won’t be used as long as the up-to-date tile pack
     ///     exists in the cache.
-    public convenience init(accessToken: String,
+    public convenience init(accessToken: String = CredentialsManager.default.accessToken ?? "",
                             baseUrl: String? = nil,
                             cachePath: String? = nil,
                             assetPath: String? = Bundle.main.resourceURL?.path,
@@ -50,7 +51,7 @@ extension ResourceOptions {
 
         // Update the TileStore with the access token from the ResourceOptions
         if tileStoreUsageMode != .disabled {
-            let tileStore = tileStore ?? TileStore.getInstance()
+            let tileStore = tileStore ?? TileStore.default
             tileStore.setAccessToken(accessToken)
         }
 
@@ -78,7 +79,8 @@ extension ResourceOptions {
                                                             appropriateFor: nil,
                                                             create: true)
 
-        cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent("com.mapbox.maps")
+        cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent("mapbox")
+        cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent("maps")
 
         try FileManager.default.createDirectory(at: cacheDirectoryURL,
                                                 withIntermediateDirectories: true,

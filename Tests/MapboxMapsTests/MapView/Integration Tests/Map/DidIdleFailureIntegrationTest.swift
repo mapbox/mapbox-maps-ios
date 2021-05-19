@@ -120,7 +120,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
             do {
                 event = try JSONDecoder().decode(ResourceEvent.self, from: jsonData)
             } catch let error {
-                Log.error(forMessage: "Failed to decode to ResourceEvent: \(error)", category: "Map")
+                print("Failed to decode to ResourceEvent: \(error)")
                 return
             }
 
@@ -178,7 +178,6 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
 
         mapView.mapboxMap.onNext(.mapLoadingError) { event in
             let userInfo: [String: Any] = (event.data as? [String: Any]) ?? [:]
-            Log.error(forMessage: "Map failed to load with error: \(userInfo)", category: "Map")
             XCTFail("Failed to load map with \(userInfo)")
         }
 
@@ -202,9 +201,9 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
 
         case .timedOut:
             if let error = eventError {
-                Log.error(forMessage: "Timed out, test had a resource error: \(error.reason) - \(error.message)", category: "Map")
+                print("Timed out, test had a resource error: \(error.reason) - \(error.message)")
             } else {
-                Log.error(forMessage: "Timed out, but no resource error", category: "Map")
+                print("Timed out, but no resource error")
             }
             fallthrough
 

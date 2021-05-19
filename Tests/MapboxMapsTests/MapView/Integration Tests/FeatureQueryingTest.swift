@@ -32,8 +32,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
             let centerPoint = mapView.center
 
             // When
-            mapView.visibleFeatures(at: centerPoint, completion: { result in
-                // Then
+            mapView.mapboxMap.queryRenderedFeatures(at: centerPoint) { result in
                 switch result {
                 case .success(let features):
                     if features.count > 0 {
@@ -44,7 +43,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                 case .failure:
                     XCTFail("Feature querying failed")
                 }
-            })
+            }
         }
 
         wait(for: [featureQueryExpectation], timeout: 5.0)
@@ -69,12 +68,21 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                                    height: 50)
 
             // When
-            mapView.visibleFeatures(in: queryRect, completion: { unfilteredFeatures in
+            mapView.mapboxMap.queryRenderedFeatures(in: queryRect) { unfilteredFeatures in
                 let filter = Exp(.eq) {
                     "$type"
                     "Point"
                 }
-                mapView.visibleFeatures(in: queryRect, filter: filter, completion: { filteredFeatures in
+
+                guard let data = try? JSONEncoder().encode(filter),
+                      let filterArray = try? JSONSerialization.jsonObject(with: data) as? [Any] else {
+                    XCTFail("Invalid data or filter object")
+                    return
+                }
+
+                // TODO: Convert
+                let options = RenderedQueryOptions(layerIds: nil, filter: filterArray)
+                mapView.mapboxMap.queryRenderedFeatures(in: queryRect, options: options) { filteredFeatures in
                     if case .success(let unfilteredFeatures) = unfilteredFeatures,
                        case .success(let filteredFeatures) = filteredFeatures {
 
@@ -92,9 +100,8 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                     } else {
                         XCTFail("Feature querying failed.")
                     }
-
-                })
-            })
+                }
+            }
         }
 
         wait(for: [featureQueryExpectation], timeout: 5.0)

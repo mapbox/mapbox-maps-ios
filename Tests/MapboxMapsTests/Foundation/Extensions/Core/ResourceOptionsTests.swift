@@ -2,18 +2,15 @@ import XCTest
 import MapboxMaps
 
 private class SubResourceOptions: ResourceOptions {
-    override init() {
-        super.init()
-    }
 }
 
 class ResourceOptionsTests: XCTestCase {
 
     func testEquality() {
-        let a = ResourceOptions()
-        let b = ResourceOptions()
+        let a = ResourceOptions(accessToken: "a")
+        let b = ResourceOptions(accessToken: "a")
         let c = ResourceOptions(accessToken: "c")
-        let d = SubResourceOptions()
+        let d = SubResourceOptions(accessToken: "a")
 
         XCTAssertEqual(a, b)
         XCTAssertNotEqual(a, c)
@@ -21,7 +18,7 @@ class ResourceOptionsTests: XCTestCase {
     }
 
     func testHashValue() {
-        let a = ResourceOptions()
+        let a = ResourceOptions(accessToken: "a")
         let c = ResourceOptions(accessToken: "c")
 
         XCTAssertNotEqual(a.hashValue, 0)
@@ -29,13 +26,5 @@ class ResourceOptionsTests: XCTestCase {
         XCTAssertNotEqual(a.hashValue, c.hashValue)
 
         XCTAssertEqual(a.hashValue, a.hashValue)
-    }
-
-    func testAccessTokenFromDefaultInit() {
-        let options = ResourceOptions()
-        // Access token is "" here because of Swift creates a sane default
-        // because of the nonnull attribute in Obj-C (and exposed in Swift as
-        // `String`)
-        XCTAssertEqual(options.accessToken, "")
     }
 }

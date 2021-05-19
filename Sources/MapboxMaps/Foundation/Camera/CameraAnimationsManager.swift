@@ -1,5 +1,6 @@
 import UIKit
 import Turf
+@_implementationOnly import MapboxCommon_Private
 
 public protocol CameraAnimator {
 
@@ -63,7 +64,7 @@ public class CameraAnimationsManager {
             return
         }
         cancelAnimations() // cancel any active animations
-        mapView.mapboxMap.updateCamera(with: targetCamera)
+        mapView.mapboxMap._setCamera(to: targetCamera)
     }
 
     /// Interrupts all `active` animation.

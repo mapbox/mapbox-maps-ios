@@ -36,7 +36,8 @@ final class MapboxMapTests: XCTestCase {
             constrainMode: NSNumber(value: mapInitOptions.mapOptions.constrainMode.rawValue),
             viewportMode: mapInitOptions.mapOptions.viewportMode.map { NSNumber(value: $0.rawValue) },
             orientation: NSNumber(value: mapInitOptions.mapOptions.orientation.rawValue),
-            crossSourceCollisions: NSNumber(value: mapInitOptions.mapOptions.crossSourceCollisions),
+            crossSourceCollisions: mapInitOptions.mapOptions.crossSourceCollisions.NSNumber,
+            optimizeForTerrain: mapInitOptions.mapOptions.optimizeForTerrain.NSNumber,
             size: mapInitOptions.mapOptions.size.map(Size.init),
             pixelRatio: mapInitOptions.mapOptions.pixelRatio,
             glyphsRasterizationOptions: nil) // __map.getOptions() always returns nil for glyphsRasterizationOptions

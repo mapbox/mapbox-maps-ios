@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+@_implementationOnly import MapboxCommon_Private
 
 @_functionBuilder
 public struct ExpressionArgumentBuilder {

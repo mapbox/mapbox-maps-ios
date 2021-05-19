@@ -24,7 +24,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
         }
 
         tileStorePathURL = try TileStore.fileURLForDirectory(for: name.fileSystemSafeString())
-        tileStore = TileStore.getInstanceForPath(tileStorePathURL.path)
+        tileStore = TileStore.shared(for: tileStorePathURL.path)
 
         tileStore.setAccessToken(accessToken)
     }
@@ -64,14 +64,11 @@ class OfflineGuideIntegrationTests: XCTestCase {
         let tilesetDescriptor = offlineManager.createTilesetDescriptor(for: options)
 
         // 2. Create the TileRegionLoadOptions
-        let tileLoadOptions = TileLoadOptions(criticalPriority: false,
-                                              acceptExpired: true,
-                                              networkRestriction: .none)
-
         let tileRegionLoadOptions = TileRegionLoadOptions(
             geometry: MBXGeometry(coordinate: tokyoCoord),
             descriptors: [tilesetDescriptor],
-            tileLoadOptions: tileLoadOptions)
+            acceptExpired: true)
+
         //<--
 
         XCTAssertNotNil(tileRegionLoadOptions, "Invalid configuration. Metadata?")
@@ -94,10 +91,6 @@ class OfflineGuideIntegrationTests: XCTestCase {
     }
 
     func testTileRegionMetadata() throws {
-        let tileLoadOptions = TileLoadOptions(criticalPriority: false,
-                                              acceptExpired: true,
-                                              networkRestriction: .none)
-
         //-->
         let metadata = [
             "name": "my-region",
@@ -106,7 +99,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
             geometry: MBXGeometry(coordinate: tokyoCoord),
             descriptors: [],
             metadata: metadata,
-            tileLoadOptions: tileLoadOptions)
+            acceptExpired: true)
         //<--
 
         XCTAssertNotNil(tileRegionLoadOptions, "Invalid configuration. Metadata?")
@@ -184,14 +177,10 @@ class OfflineGuideIntegrationTests: XCTestCase {
         let tileRegionId = "my-tile-region-id"
 
         // Load the tile region
-        let tileLoadOptions = TileLoadOptions(criticalPriority: false,
-                                              acceptExpired: true,
-                                              networkRestriction: .none)
-
         let tileRegionLoadOptions = TileRegionLoadOptions(
             geometry: MBXGeometry(coordinate: tokyoCoord),
             descriptors: [tilesetDescriptor],
-            tileLoadOptions: tileLoadOptions)!
+            acceptExpired: true)!
 
         let tileRegionCancelable = tileStore.loadTileRegion(
             forId: tileRegionId,
@@ -313,15 +302,12 @@ class OfflineGuideIntegrationTests: XCTestCase {
         //<--
 
         let expectation = self.expectation(description: "Ambient Cache should be cleared successfully")
-        let handleExpected = { (expected: MBXExpected<AnyObject, AnyObject>?) in
-            guard let expected = expected else {
-                XCTFail("Invalid expected result")
-                return
-            }
-            if expected.isValue() {
+        let handleExpected = { (result: Result<Void, Error>) in
+            switch result {
+            case .success:
                 expectation.fulfill()
-            } else {
-                XCTFail("Delete failed: \(String(describing: expected.value))")
+            case let .failure(error):
+                XCTFail("Delete failed: \(error)")
             }
         }
 
@@ -329,8 +315,8 @@ class OfflineGuideIntegrationTests: XCTestCase {
         // Remove the existing style resources from the ambient cache using
         // CacheManager
         let cacheManager = CacheManager(options: resourceOptions)
-        cacheManager.clearAmbientCache { expected in
-            handleExpected(expected)
+        cacheManager.clearAmbientCache { result in
+            handleExpected(result)
         }
         //<--
 

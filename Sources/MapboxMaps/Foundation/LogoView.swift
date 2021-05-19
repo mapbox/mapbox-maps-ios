@@ -1,4 +1,5 @@
 import UIKit
+@_implementationOnly import MapboxCommon_Private
 
 // swiftlint:disable function_body_length file_length type_body_length
 internal class LogoView: UIView {

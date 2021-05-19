@@ -10,7 +10,7 @@ import CoreLocation
 //swiftlint:disable explicit_acl explicit_top_level_acl
 class AnnotationInteractionDelegateTests: XCTestCase {
 
-    var annotationSupportableMapMock: MockAnnotationSupportableMap!
+    var annotationMapFeatureQueryableMock: MockMapFeatureQueryable!
     var annotationSupportableStyleMock: MockAnnotationStyleDelegate!
     var annotationMapEventsObservableMock: MockMapEventsObservable!
     var defaultCoordinate: CLLocationCoordinate2D!
@@ -21,15 +21,15 @@ class AnnotationInteractionDelegateTests: XCTestCase {
     var deselectionDelegateWasCalled: Bool = false
 
     override func setUp() {
-        annotationSupportableMapMock = MockAnnotationSupportableMap()
-        annotationSupportableStyleMock = MockAnnotationStyleDelegate()
+        annotationMapFeatureQueryableMock = MockMapFeatureQueryable()
         annotationMapEventsObservableMock = MockMapEventsObservable()
+        annotationSupportableStyleMock = MockAnnotationStyleDelegate()
         selectionExpectation = expectation(description: "didSelectAnnotation was called")
         defaultCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     }
 
     override func tearDown() {
-        annotationSupportableMapMock = nil
+        annotationMapFeatureQueryableMock = nil
         annotationSupportableStyleMock = nil
         annotationMapEventsObservableMock = nil
         selectionExpectation = nil
@@ -39,9 +39,10 @@ class AnnotationInteractionDelegateTests: XCTestCase {
 
     func testProgrammaticAnnotationSelection() {
         // Given
-        let annotationManager = AnnotationManager(for: annotationSupportableMapMock,
+        let annotationManager = AnnotationManager(for: UIView(),
                                                   mapEventsObservable: annotationMapEventsObservableMock,
-                                                  with: annotationSupportableStyleMock)
+                                                  mapFeatureQueryable: annotationMapFeatureQueryableMock,
+                                                  style: annotationSupportableStyleMock)
         annotationManager.interactionDelegate = self
         let annotation = PointAnnotation(coordinate: defaultCoordinate)
         _ = annotationManager.addAnnotation(annotation)

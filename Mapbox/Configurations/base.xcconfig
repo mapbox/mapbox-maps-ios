@@ -38,7 +38,7 @@ ARCHS[sdk=iphonesimulator*] = x86_64
 //
 // and then use that in the various build scripts.
 //
-BUILD_DIR = ../build/Build/Products
+//BUILD_DIR = ../build/Build/Products
 
 // TODO: Move into developer config?
 DEVELOPMENT_TEAM = GJZR2MEM28
@@ -59,7 +59,7 @@ SUPPORTS_MACCATALYST = NO
 // -----------------------------------------------------------------------------
 // Swift
 
-SWIFT_VERSION = 5.0
+SWIFT_VERSION = 5.3
 
 SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Debug] = DEBUG
 SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Release] = RELEASE
@@ -158,14 +158,6 @@ RUN_CLANG_STATIC_ANALYZER = YES
 
 SWIFT_TREAT_WARNINGS_AS_ERRORS[config=Debug] = NO
 SWIFT_TREAT_WARNINGS_AS_ERRORS[config=Release] = NO
-
-
-// -----------------------------------------------------------------------------
-// Search paths
-
-FRAMEWORK_SEARCH_PATHS = $(inherited) $(PLATFORM_DIR)/Developer/Library/Frameworks $(PROJECT_DIR)/../lib/
-HEADER_SEARCH_PATHS = $(inherited)
-LIBRARY_SEARCH_PATHS = $(inherited)
 
 // -----------------------------------------------------------------------------
 // Custom

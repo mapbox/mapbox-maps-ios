@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -28,7 +28,6 @@
 		07A5DE852515576E00A27F8B /* AnnotationStyleDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A5DE832515576E00A27F8B /* AnnotationStyleDelegate.swift */; };
 		07A8A3D1251C4CA6004281CF /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43D7B5125196D1C00951460 /* Annotation.swift */; };
 		07BA35CE251578DD003E1B55 /* AnnotationInteractionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07BA35CC251578DD003E1B55 /* AnnotationInteractionDelegate.swift */; };
-		07BA35E825157A0E003E1B55 /* AnnotationSupportableMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07BA35E625157A0E003E1B55 /* AnnotationSupportableMap.swift */; };
 		07D2C7DB2523EBE60025C2BA /* PolygonAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D2C7DA2523EBE60025C2BA /* PolygonAnnotation.swift */; };
 		07D7150425798CD70025BF61 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D7150325798CD70025BF61 /* UIImage.swift */; };
 		07E816DA256D72E500ACFA73 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07182014256C1F6100F22489 /* Assets.xcassets */; };
@@ -65,10 +64,6 @@
 		0C3B1E8E24DDADD000CC29E8 /* EventsStringTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3B1E8A24DDADD000CC29E8 /* EventsStringTokens.swift */; };
 		0C3B1E9024DDADD000CC29E8 /* EventsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3B1E8B24DDADD000CC29E8 /* EventsManager.swift */; };
 		0C3B1E9224DDADD000CC29E8 /* MapboxMobileEvents+TelemetryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3B1E8C24DDADD000CC29E8 /* MapboxMobileEvents+TelemetryProtocol.swift */; };
-		0C455F71258D221C001BB023 /* Turf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C455F6D258D221C001BB023 /* Turf.framework */; };
-		0C455F73258D221C001BB023 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C455F6E258D221C001BB023 /* MapboxMobileEvents.framework */; };
-		0C455F75258D221C001BB023 /* MapboxCoreMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C455F6F258D221C001BB023 /* MapboxCoreMaps.framework */; };
-		0C455F77258D221C001BB023 /* MapboxCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C455F70258D221C001BB023 /* MapboxCommon.framework */; };
 		0C45894F263AFCDA00A11A26 /* ExpressionArgumentBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C45894E263AFCDA00A11A26 /* ExpressionArgumentBuilder.swift */; };
 		0C479F90251CEC340025EC4F /* Snapshotter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C479F8F251CEC340025EC4F /* Snapshotter.swift */; };
 		0C50AAE425BE8806007C0068 /* LightTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C50AAE225BE8806007C0068 /* LightTests.swift */; };
@@ -121,7 +116,6 @@
 		0CA3DD61257AAE3B00B12C8F /* SkyLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA3DD5E257AAE3B00B12C8F /* SkyLayer.swift */; };
 		0CAC3CAA2534E8CC00D031E7 /* ResourceOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAC3CA92534E8CC00D031E7 /* ResourceOptions.swift */; };
 		0CB90C6D264CC292003008A5 /* GestureType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB90C6B264CC292003008A5 /* GestureType.swift */; };
-		0CB90C6E264CC292003008A5 /* CameraManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB90C6C264CC292003008A5 /* CameraManagerProtocol.swift */; };
 		0CB90C73264CC2A5003008A5 /* GestureHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB90C72264CC2A5003008A5 /* GestureHandler.swift */; };
 		0CBCF28E25409F030025F7B3 /* ResolvedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CBCF28D25409F030025F7B3 /* ResolvedImage.swift */; };
 		0CC6EF0B25C3263400BFB153 /* ModelLayerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC6EEFC25C3263400BFB153 /* ModelLayerIntegrationTests.swift */; };
@@ -321,6 +315,11 @@
 		CA99A8702540CD1900D16C78 /* StyleLoadIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA99A86E2540CD1900D16C78 /* StyleLoadIntegrationTests.swift */; };
 		CA9F8CE32641F95C00A8BCB6 /* StyleManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9F8CE22641F95C00A8BCB6 /* StyleManagerProtocol.swift */; };
 		CAA73A9D256F750B00E14EE0 /* FlyToTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA73A9B256F750B00E14EE0 /* FlyToTests.swift */; };
+		CAB77E3D2654AB310071D74C /* MapboxCoreMaps in Frameworks */ = {isa = PBXBuildFile; productRef = CAB77E3C2654AB310071D74C /* MapboxCoreMaps */; };
+		CAB77E402654AB4F0071D74C /* MapboxMobileEvents in Frameworks */ = {isa = PBXBuildFile; productRef = CAB77E3F2654AB4F0071D74C /* MapboxMobileEvents */; };
+		CAB77E432654AB6E0071D74C /* Turf in Frameworks */ = {isa = PBXBuildFile; productRef = CAB77E422654AB6E0071D74C /* Turf */; };
+		CAB77E452654AC5E0071D74C /* CameraAnimationsManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB77E442654AC5E0071D74C /* CameraAnimationsManagerProtocol.swift */; };
+		CAB77E472654ACE90071D74C /* CameraManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB77E462654ACE90071D74C /* CameraManagerProtocol.swift */; };
 		CABCDF372620E03A00D61635 /* CredentialsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CABCDF362620E03A00D61635 /* CredentialsManager.swift */; };
 		CABCDF432620E09E00D61635 /* MapInitOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CABCDF412620E09D00D61635 /* MapInitOptions.swift */; };
 		CABCDF4A2620E0D800D61635 /* RawRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CABCDF472620E0D700D61635 /* RawRepresentable.swift */; };
@@ -329,15 +328,18 @@
 		CAC1960B25AE98F400F69FEA /* GlyphsRasterizationOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC1960A25AE98F400F69FEA /* GlyphsRasterizationOptions.swift */; };
 		CAC1965525AEAFD900F69FEA /* GlyphsRasterizationOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC1961F25AEAE6600F69FEA /* GlyphsRasterizationOptionsTests.swift */; };
 		CAD7BA0625A368DE00E64C78 /* ExampleIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAD7BA0425A368DE00E64C78 /* ExampleIntegrationTest.swift */; };
-		CADC7AD3251C51070082BA0A /* MockAnnotationSupportableMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07BA363025157B09003E1B55 /* MockAnnotationSupportableMap.swift */; };
-		CADCF76E25854B090065C51B /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76025854AB00065C51B /* MapboxMobileEvents.framework */; };
-		CADCF76F25854B090065C51B /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76025854AB00065C51B /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CADCF77025854B090065C51B /* MapboxCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76125854AB00065C51B /* MapboxCommon.framework */; };
-		CADCF77125854B090065C51B /* MapboxCommon.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76125854AB00065C51B /* MapboxCommon.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CADCF77225854B090065C51B /* Turf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76225854AB00065C51B /* Turf.framework */; };
-		CADCF77325854B090065C51B /* Turf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76225854AB00065C51B /* Turf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CADCF77425854B090065C51B /* MapboxCoreMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76325854AB00065C51B /* MapboxCoreMaps.framework */; };
-		CADCF77525854B090065C51B /* MapboxCoreMaps.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CADCF76325854AB00065C51B /* MapboxCoreMaps.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CAE43ED5265460FE006F43E9 /* MapFeatureQueryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43ED4265460FE006F43E9 /* MapFeatureQueryable.swift */; };
+		CAE43EDA26546192006F43E9 /* OfflineSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43ED626546191006F43E9 /* OfflineSwitch.swift */; };
+		CAE43EDB26546192006F43E9 /* HttpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43ED726546191006F43E9 /* HttpResponse.swift */; };
+		CAE43EDC26546192006F43E9 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43ED826546191006F43E9 /* CacheManager.swift */; };
+		CAE43EDD26546192006F43E9 /* OfflineRegionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43ED926546192006F43E9 /* OfflineRegionManager.swift */; };
+		CAE43EDF26546217006F43E9 /* MapboxMapIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43EDE26546217006F43E9 /* MapboxMapIntegrationTests.swift */; };
+		CAE43EE22654627E006F43E9 /* TileStore+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43EE12654627E006F43E9 /* TileStore+Tests.swift */; };
+		CAE43EE32654627E006F43E9 /* TileStore+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43EE12654627E006F43E9 /* TileStore+Tests.swift */; };
+		CAE43EE6265462B7006F43E9 /* MockMapFeatureQueryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43EE4265462B7006F43E9 /* MockMapFeatureQueryable.swift */; };
+		CAE43EE7265462B7006F43E9 /* MockMapFeatureQueryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43EE4265462B7006F43E9 /* MockMapFeatureQueryable.swift */; };
+		CAE43EE8265462B7006F43E9 /* MapboxMapsAnnotationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43EE5265462B7006F43E9 /* MapboxMapsAnnotationsTests.swift */; };
+		CAE43EEA26546426006F43E9 /* MapViewIntegrationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA53616D2537ECA600A8AE38 /* MapViewIntegrationTestCase.swift */; };
 		CAED9FB1258C69DB003CCEFE /* MapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAED9FAF258C69DB003CCEFE /* MapViewTests.swift */; };
 		CAEDA0B0258E8188003CCEFE /* MapViewIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAEDA0AE258E8188003CCEFE /* MapViewIntegrationTests.swift */; };
 /* End PBXBuildFile section */
@@ -387,11 +389,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				CADCF77125854B090065C51B /* MapboxCommon.framework in Embed Frameworks */,
-				CADCF76F25854B090065C51B /* MapboxMobileEvents.framework in Embed Frameworks */,
-				CADCF77525854B090065C51B /* MapboxCoreMaps.framework in Embed Frameworks */,
 				CA952ECE251C30B80099C080 /* MapboxMaps.framework in Embed Frameworks */,
-				CADCF77325854B090065C51B /* Turf.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -433,8 +431,6 @@
 		07A5DEB625155B9500A27F8B /* MockAnnotationStyleDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAnnotationStyleDelegate.swift; sourceTree = "<group>"; };
 		07B82A652548C1320048D0F2 /* FeatureQueryingTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureQueryingTest.swift; sourceTree = "<group>"; };
 		07BA35CC251578DD003E1B55 /* AnnotationInteractionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationInteractionDelegate.swift; sourceTree = "<group>"; };
-		07BA35E625157A0E003E1B55 /* AnnotationSupportableMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationSupportableMap.swift; sourceTree = "<group>"; };
-		07BA363025157B09003E1B55 /* MockAnnotationSupportableMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAnnotationSupportableMap.swift; sourceTree = "<group>"; };
 		07BF0C5E24F4875F00754DB2 /* Geometry+MBXGeometryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Geometry+MBXGeometryTests.swift"; sourceTree = "<group>"; };
 		07C1B3DB2446B6F40044A3C6 /* MapboxMapsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxMapsSnapshotTests.swift; sourceTree = "<group>"; };
 		07D2C7DA2523EBE60025C2BA /* PolygonAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolygonAnnotation.swift; sourceTree = "<group>"; };
@@ -477,10 +473,6 @@
 		0C3B1E8A24DDADD000CC29E8 /* EventsStringTokens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventsStringTokens.swift; sourceTree = "<group>"; };
 		0C3B1E8B24DDADD000CC29E8 /* EventsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventsManager.swift; sourceTree = "<group>"; };
 		0C3B1E8C24DDADD000CC29E8 /* MapboxMobileEvents+TelemetryProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MapboxMobileEvents+TelemetryProtocol.swift"; sourceTree = "<group>"; };
-		0C455F6D258D221C001BB023 /* Turf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Turf.framework; path = ../Carthage/Build/iOS/Turf.framework; sourceTree = "<group>"; };
-		0C455F6E258D221C001BB023 /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxMobileEvents.framework; path = ../Carthage/Build/iOS/MapboxMobileEvents.framework; sourceTree = "<group>"; };
-		0C455F6F258D221C001BB023 /* MapboxCoreMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxCoreMaps.framework; path = ../Carthage/Build/iOS/MapboxCoreMaps.framework; sourceTree = "<group>"; };
-		0C455F70258D221C001BB023 /* MapboxCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxCommon.framework; path = ../Carthage/Build/iOS/MapboxCommon.framework; sourceTree = "<group>"; };
 		0C45894E263AFCDA00A11A26 /* ExpressionArgumentBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpressionArgumentBuilder.swift; sourceTree = "<group>"; };
 		0C479F8F251CEC340025EC4F /* Snapshotter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snapshotter.swift; sourceTree = "<group>"; };
 		0C50AAE225BE8806007C0068 /* LightTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightTests.swift; sourceTree = "<group>"; };
@@ -540,7 +532,6 @@
 		0CA3DD5E257AAE3B00B12C8F /* SkyLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkyLayer.swift; sourceTree = "<group>"; };
 		0CAC3CA92534E8CC00D031E7 /* ResourceOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceOptions.swift; sourceTree = "<group>"; };
 		0CB90C6B264CC292003008A5 /* GestureType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GestureType.swift; sourceTree = "<group>"; };
-		0CB90C6C264CC292003008A5 /* CameraManagerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraManagerProtocol.swift; sourceTree = "<group>"; };
 		0CB90C72264CC2A5003008A5 /* GestureHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GestureHandler.swift; sourceTree = "<group>"; };
 		0CBCF28D25409F030025F7B3 /* ResolvedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResolvedImage.swift; sourceTree = "<group>"; };
 		0CBCF2D7254229630025F7B3 /* STYLE_README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = STYLE_README.md; path = ../../../Mapbox/STYLE_README.md; sourceTree = "<group>"; };
@@ -750,6 +741,8 @@
 		CA9F8CE22641F95C00A8BCB6 /* StyleManagerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleManagerProtocol.swift; sourceTree = "<group>"; };
 		CAA73A9B256F750B00E14EE0 /* FlyToTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyToTests.swift; sourceTree = "<group>"; };
 		CAB11C982555986F00060963 /* HTTPIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPIntegrationTests.swift; sourceTree = "<group>"; };
+		CAB77E442654AC5E0071D74C /* CameraAnimationsManagerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimationsManagerProtocol.swift; sourceTree = "<group>"; };
+		CAB77E462654ACE90071D74C /* CameraManagerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraManagerProtocol.swift; sourceTree = "<group>"; };
 		CABCDF362620E03A00D61635 /* CredentialsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CredentialsManager.swift; sourceTree = "<group>"; };
 		CABCDF412620E09D00D61635 /* MapInitOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapInitOptions.swift; sourceTree = "<group>"; };
 		CABCDF472620E0D700D61635 /* RawRepresentable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawRepresentable.swift; sourceTree = "<group>"; };
@@ -758,10 +751,15 @@
 		CAC1960A25AE98F400F69FEA /* GlyphsRasterizationOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlyphsRasterizationOptions.swift; sourceTree = "<group>"; };
 		CAC1961F25AEAE6600F69FEA /* GlyphsRasterizationOptionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlyphsRasterizationOptionsTests.swift; sourceTree = "<group>"; };
 		CAD7BA0425A368DE00E64C78 /* ExampleIntegrationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleIntegrationTest.swift; sourceTree = "<group>"; };
-		CADCF76025854AB00065C51B /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MapboxMobileEvents.framework; sourceTree = "<group>"; };
-		CADCF76125854AB00065C51B /* MapboxCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MapboxCommon.framework; sourceTree = "<group>"; };
-		CADCF76225854AB00065C51B /* Turf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Turf.framework; sourceTree = "<group>"; };
-		CADCF76325854AB00065C51B /* MapboxCoreMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MapboxCoreMaps.framework; sourceTree = "<group>"; };
+		CAE43ED4265460FE006F43E9 /* MapFeatureQueryable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapFeatureQueryable.swift; sourceTree = "<group>"; };
+		CAE43ED626546191006F43E9 /* OfflineSwitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineSwitch.swift; sourceTree = "<group>"; };
+		CAE43ED726546191006F43E9 /* HttpResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpResponse.swift; sourceTree = "<group>"; };
+		CAE43ED826546191006F43E9 /* CacheManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
+		CAE43ED926546192006F43E9 /* OfflineRegionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineRegionManager.swift; sourceTree = "<group>"; };
+		CAE43EDE26546217006F43E9 /* MapboxMapIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapboxMapIntegrationTests.swift; sourceTree = "<group>"; };
+		CAE43EE12654627E006F43E9 /* TileStore+Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TileStore+Tests.swift"; path = "../../Offline/TileStore+Tests.swift"; sourceTree = "<group>"; };
+		CAE43EE4265462B7006F43E9 /* MockMapFeatureQueryable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockMapFeatureQueryable.swift; sourceTree = "<group>"; };
+		CAE43EE5265462B7006F43E9 /* MapboxMapsAnnotationsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapboxMapsAnnotationsTests.swift; sourceTree = "<group>"; };
 		CAED9FAF258C69DB003CCEFE /* MapViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewTests.swift; sourceTree = "<group>"; };
 		CAEDA0AE258E8188003CCEFE /* MapViewIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewIntegrationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -771,10 +769,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C455F73258D221C001BB023 /* MapboxMobileEvents.framework in Frameworks */,
-				0C455F71258D221C001BB023 /* Turf.framework in Frameworks */,
-				0C455F77258D221C001BB023 /* MapboxCommon.framework in Frameworks */,
-				0C455F75258D221C001BB023 /* MapboxCoreMaps.framework in Frameworks */,
+				CAB77E432654AB6E0071D74C /* Turf in Frameworks */,
+				CAB77E402654AB4F0071D74C /* MapboxMobileEvents in Frameworks */,
+				CAB77E3D2654AB310071D74C /* MapboxCoreMaps in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -790,11 +787,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CADCF77025854B090065C51B /* MapboxCommon.framework in Frameworks */,
-				CADCF76E25854B090065C51B /* MapboxMobileEvents.framework in Frameworks */,
-				CADCF77425854B090065C51B /* MapboxCoreMaps.framework in Frameworks */,
 				CA952ECD251C30B80099C080 /* MapboxMaps.framework in Frameworks */,
-				CADCF77225854B090065C51B /* Turf.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -861,6 +854,10 @@
 		0782B1DB258C254400D5FCE5 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				CAE43ED826546191006F43E9 /* CacheManager.swift */,
+				CAE43ED726546191006F43E9 /* HttpResponse.swift */,
+				CAE43ED926546192006F43E9 /* OfflineRegionManager.swift */,
+				CAE43ED626546191006F43E9 /* OfflineSwitch.swift */,
 				B5CD9CF52630AA5500A4BADC /* ScreenBox.swift */,
 				B521FC97262F627300B9A446 /* Size.swift */,
 				CABCDF502620E0FF00D61635 /* MapOptions.swift */,
@@ -960,7 +957,6 @@
 				0742060124E4A5D0000A8932 /* PointAnnotation.swift */,
 				07980ECD251D5B5D00730DB7 /* LineAnnotation.swift */,
 				07D2C7DA2523EBE60025C2BA /* PolygonAnnotation.swift */,
-				07BA35E625157A0E003E1B55 /* AnnotationSupportableMap.swift */,
 				07BA35CC251578DD003E1B55 /* AnnotationInteractionDelegate.swift */,
 				07A5DE832515576E00A27F8B /* AnnotationStyleDelegate.swift */,
 			);
@@ -971,12 +967,13 @@
 		07E4FD2424E4A35600D734D1 /* MapboxMapsAnnotationsTests */ = {
 			isa = PBXGroup;
 			children = (
+				CAE43EE5265462B7006F43E9 /* MapboxMapsAnnotationsTests.swift */,
+				CAE43EE4265462B7006F43E9 /* MockMapFeatureQueryable.swift */,
 				07EEFA8C25018B8800352933 /* AnnotationManagerTests.swift */,
 				07EEFA8725018B8800352933 /* PointAnnotationTests.swift */,
 				07980EE7251D673E00730DB7 /* LineAnnotationTests.swift */,
 				07D2C80B2523ECC40025C2BA /* PolygonAnnotationTests.swift */,
 				07163339252546C80014A772 /* AnnotationInteractionDelegateTests.swift */,
-				07BA363025157B09003E1B55 /* MockAnnotationSupportableMap.swift */,
 				07A5DEB625155B9500A27F8B /* MockAnnotationStyleDelegate.swift */,
 				07EEFA9325018E5800352933 /* Extensions */,
 			);
@@ -1225,22 +1222,24 @@
 		1F11C1102421B05600F8397B /* MapboxMapsFoundation */ = {
 			isa = PBXGroup;
 			children = (
-				0C03DD42264EE95D00D4D307 /* MapView.swift */,
-				CA5890DA264B00CE0060987A /* WeakSet.swift */,
-				CA5890D4264B00B50060987A /* MapEventHandler.swift */,
-				CA5890D3264B00B50060987A /* ObservableProtocol.swift */,
+				CAB77E462654ACE90071D74C /* CameraManagerProtocol.swift */,
+				CA6245FF26289D6400C79547 /* Cancelable.swift */,
+				CABCDF362620E03A00D61635 /* CredentialsManager.swift */,
 				0C088AC426387EA400107B5E /* DateProvider.swift */,
-				B521FC92262F626900B9A446 /* MapboxMap.swift */,
 				B529341A2624E9D6003B181C /* DelegatingMapClient.swift */,
 				B529341B2624E9D6003B181C /* DelegatingObserver.swift */,
-				B52934192624E9D6003B181C /* PreferredFPS.swift */,
-				C6F256EE261FB99C0093D353 /* LogoView.swift */,
-				CABCDF362620E03A00D61635 /* CredentialsManager.swift */,
 				07A0BC9D2582F15B00B8E109 /* GeoJSONManager.swift */,
+				C6F256EE261FB99C0093D353 /* LogoView.swift */,
+				B521FC92262F626900B9A446 /* MapboxMap.swift */,
+				CA5890D4264B00B50060987A /* MapEventHandler.swift */,
+				CAE43ED4265460FE006F43E9 /* MapFeatureQueryable.swift */,
+				0C03DD42264EE95D00D4D307 /* MapView.swift */,
+				CA5890D3264B00B50060987A /* ObservableProtocol.swift */,
+				B52934192624E9D6003B181C /* PreferredFPS.swift */,
+				CA5890DA264B00CE0060987A /* WeakSet.swift */,
 				1F4B7D7A2464C36E00745F05 /* Camera */,
 				07625BB42587F273002EEBCC /* Events */,
 				07855E29258BFCD90060A870 /* Extensions */,
-				CA6245FF26289D6400C79547 /* Cancelable.swift */,
 			);
 			name = MapboxMapsFoundation;
 			path = ../Sources/MapboxMaps/Foundation;
@@ -1272,7 +1271,7 @@
 		1F2AD7302421C462006592F4 /* MapboxMapsGestures */ = {
 			isa = PBXGroup;
 			children = (
-				0CB90C6C264CC292003008A5 /* CameraManagerProtocol.swift */,
+				CAB77E442654AC5E0071D74C /* CameraAnimationsManagerProtocol.swift */,
 				0CB90C6B264CC292003008A5 /* GestureType.swift */,
 				B5B55D50260E4D4500EBB589 /* GestureManager+GestureHandlerDelegate.swift */,
 				0CC8BD29242405AA00288A9B /* GestureHandlers */,
@@ -1366,11 +1365,6 @@
 		1FEE79BC2421AC7C00337895 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0C455F70258D221C001BB023 /* MapboxCommon.framework */,
-				0C455F6F258D221C001BB023 /* MapboxCoreMaps.framework */,
-				0C455F6E258D221C001BB023 /* MapboxMobileEvents.framework */,
-				0C455F6D258D221C001BB023 /* Turf.framework */,
-				CADCF75F25854AB00065C51B /* lib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1567,6 +1561,7 @@
 		CA0C42922602BF000054D9D0 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				CAE43EE12654627E006F43E9 /* TileStore+Tests.swift */,
 				B5F294BA2635EEAD00199426 /* FloatingPointTests.swift */,
 				CA0C42932602BF000054D9D0 /* Core */,
 			);
@@ -1626,6 +1621,7 @@
 		CA57257B2568D13D005ED95E /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				CAE43EDE26546217006F43E9 /* MapboxMapIntegrationTests.swift */,
 				CA03F08E2624FDCB00673961 /* MapInitOptionsIntegrationTests.swift */,
 				CA57257C2568D15E005ED95E /* ObservableIntegrationTests.swift */,
 				CAEDA0AE258E8188003CCEFE /* MapViewIntegrationTests.swift */,
@@ -1670,18 +1666,6 @@
 			path = Glyphs;
 			sourceTree = "<group>";
 		};
-		CADCF75F25854AB00065C51B /* lib */ = {
-			isa = PBXGroup;
-			children = (
-				CADCF76025854AB00065C51B /* MapboxMobileEvents.framework */,
-				CADCF76125854AB00065C51B /* MapboxCommon.framework */,
-				CADCF76225854AB00065C51B /* Turf.framework */,
-				CADCF76325854AB00065C51B /* MapboxCoreMaps.framework */,
-			);
-			name = lib;
-			path = ../lib;
-			sourceTree = "<group>";
-		};
 		CAED9FAE258C69A7003CCEFE /* Unit Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -1720,6 +1704,11 @@
 			dependencies = (
 			);
 			name = MapboxMaps;
+			packageProductDependencies = (
+				CAB77E3C2654AB310071D74C /* MapboxCoreMaps */,
+				CAB77E3F2654AB4F0071D74C /* MapboxMobileEvents */,
+				CAB77E422654AB6E0071D74C /* Turf */,
+			);
 			productName = Mapbox;
 			productReference = 0CD34FCE242AADDB00943687 /* MapboxMaps.framework */;
 			productType = "com.apple.product-type.framework";
@@ -1835,6 +1824,11 @@
 				vi,
 			);
 			mainGroup = 1FEE78B92421884000337895;
+			packageReferences = (
+				CAB77E3B2654AB310071D74C /* XCRemoteSwiftPackageReference "mapbox-core-maps-ios" */,
+				CAB77E3E2654AB4F0071D74C /* XCRemoteSwiftPackageReference "mapbox-events-ios" */,
+				CAB77E412654AB6E0071D74C /* XCRemoteSwiftPackageReference "turf-swift" */,
+			);
 			productRefGroup = 1FEE78C42421884000337895 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -2035,9 +2029,12 @@
 				0C708F2124EB1EE2003CE791 /* FillExtrusionLayer.swift in Sources */,
 				B521FC98262F627300B9A446 /* Size.swift in Sources */,
 				0C26425524EECD14001FE2E3 /* AllExpressions.swift in Sources */,
+				CAB77E472654ACE90071D74C /* CameraManagerProtocol.swift in Sources */,
+				CAE43EDC26546192006F43E9 /* CacheManager.swift in Sources */,
 				0C03DD43264EE95D00D4D307 /* MapView.swift in Sources */,
 				0782B1A3258C250400D5FCE5 /* Geometry.swift in Sources */,
 				0CD62F1024588530006421D1 /* GestureManager.swift in Sources */,
+				CAE43ED5265460FE006F43E9 /* MapFeatureQueryable.swift in Sources */,
 				0742060324E4A5D0000A8932 /* PointAnnotation.swift in Sources */,
 				0C708F3124EB1EE2003CE791 /* CircleLayer.swift in Sources */,
 				0CD62F0724588501006421D1 /* PinchGestureHandler.swift in Sources */,
@@ -2049,6 +2046,7 @@
 				0C708F4D24EB23C7003CE791 /* RasterDemSource.swift in Sources */,
 				C6F256EF261FB99C0093D353 /* LogoView.swift in Sources */,
 				CA6245E92627F37B00C79547 /* OfflineManager+MapboxMaps.swift in Sources */,
+				CAE43EDB26546192006F43E9 /* HttpResponse.swift in Sources */,
 				B575018F26334BB800937A9E /* OrnamentOptions.swift in Sources */,
 				0CD62F23245887C8006421D1 /* OrnamentsManager.swift in Sources */,
 				0CB90C6D264CC292003008A5 /* GestureType.swift in Sources */,
@@ -2080,7 +2078,6 @@
 				B5DDE9602613ACB400998840 /* StyleEncodable.swift in Sources */,
 				0C88F22924F4223B00FC35F3 /* ExpressionOptions.swift in Sources */,
 				0782B037258C14A400D5FCE5 /* NSNumber.swift in Sources */,
-				07BA35E825157A0E003E1B55 /* AnnotationSupportableMap.swift in Sources */,
 				0C55010B2476D83A00AE019A /* Light.swift in Sources */,
 				B5B55D45260E4D1500EBB589 /* AnimationOwner.swift in Sources */,
 				0C088ACC26388E3400107B5E /* CameraAnimationsManager.swift in Sources */,
@@ -2092,12 +2089,14 @@
 				0C479F90251CEC340025EC4F /* Snapshotter.swift in Sources */,
 				0CD62F182458865A006421D1 /* CameraView.swift in Sources */,
 				0C088AC526387EA400107B5E /* DateProvider.swift in Sources */,
+				CAE43EDA26546192006F43E9 /* OfflineSwitch.swift in Sources */,
 				CA5890DB264B00CE0060987A /* WeakSet.swift in Sources */,
 				07BA35CE251578DD003E1B55 /* AnnotationInteractionDelegate.swift in Sources */,
 				2B8637E62463F36400698135 /* DistanceFormatter.swift in Sources */,
 				CA9F8CE32641F95C00A8BCB6 /* StyleManagerProtocol.swift in Sources */,
 				CA0C426926028ED30054D9D0 /* AnnotationOptions.swift in Sources */,
 				0C708F2F24EB1EE2003CE791 /* RasterLayer.swift in Sources */,
+				CAE43EDD26546192006F43E9 /* OfflineRegionManager.swift in Sources */,
 				0C088ACB26388E3400107B5E /* CameraAnimationsManager+CameraAnimatorDelegate.swift in Sources */,
 				0C35750225DD8D960085D775 /* StyleErrors.swift in Sources */,
 				0CE3D1B425816BD6000585A2 /* MapView+Supportable.swift in Sources */,
@@ -2107,6 +2106,7 @@
 				B5B55D46260E4D1500EBB589 /* CameraAnimationDelegate.swift in Sources */,
 				2B8637E32462F5AE00698135 /* MapboxScaleBarLabel.swift in Sources */,
 				CA6245E42627F20B00C79547 /* TileStore+MapboxMaps.swift in Sources */,
+				CAB77E452654AC5E0071D74C /* CameraAnimationsManagerProtocol.swift in Sources */,
 				0CD62F1924588661006421D1 /* MapCameraOptions.swift in Sources */,
 				0C3B1E8E24DDADD000CC29E8 /* EventsStringTokens.swift in Sources */,
 				B529341E2624E9D6003B181C /* DelegatingObserver.swift in Sources */,
@@ -2119,7 +2119,6 @@
 				0782AFE6258BFD2300D5FCE5 /* CoreLocation.swift in Sources */,
 				2B8637D52461601100698135 /* MapboxScaleBarOrnamentView.swift in Sources */,
 				0CD62F0824588505006421D1 /* QuickZoomGestureHandler.swift in Sources */,
-				0CB90C6E264CC292003008A5 /* CameraManagerProtocol.swift in Sources */,
 				0CB90C73264CC2A5003008A5 /* GestureHandler.swift in Sources */,
 				0CBCF28E25409F030025F7B3 /* ResolvedImage.swift in Sources */,
 				CAC1960B25AE98F400F69FEA /* GlyphsRasterizationOptions.swift in Sources */,
@@ -2155,8 +2154,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CAE43EEA26546426006F43E9 /* MapViewIntegrationTestCase.swift in Sources */,
 				B53B8623260D717700C86BAA /* XCTestCase+MapboxAccessToken.swift in Sources */,
 				CA4E2DD8264DC66F0039D80E /* MockLocationStyleDelegate.swift in Sources */,
+				CAE43EE7265462B7006F43E9 /* MockMapFeatureQueryable.swift in Sources */,
+				CAE43EE32654627E006F43E9 /* TileStore+Tests.swift in Sources */,
 				B53B8663260D719100C86BAA /* TestConveniences.swift in Sources */,
 				B53B8650260D718B00C86BAA /* Stub.swift in Sources */,
 				CA0B380D25C4C01400B3396E /* IntegrationTestCase.swift in Sources */,
@@ -2201,6 +2203,7 @@
 				0C5CFCDF25BB951B0001E753 /* BackgroundLayerTests.swift in Sources */,
 				CA2E4A1C2538D3530096DEDE /* IntegrationTestCase.swift in Sources */,
 				CA4AE0DB252D655A00183075 /* AnnotationInteractionDelegateTests.swift in Sources */,
+				CAE43EE6265462B7006F43E9 /* MockMapFeatureQueryable.swift in Sources */,
 				C69F0142254358B3001AB49B /* LocationManagerIntegrationTests.swift in Sources */,
 				CA548FD8251C404B00F829A3 /* MultiLineStringTests.swift in Sources */,
 				CA2E4A1D2538D3530096DEDE /* DidIdleFailureIntegrationTest.swift in Sources */,
@@ -2218,6 +2221,7 @@
 				0C5CFCF125BB951B0001E753 /* SkyLayerTests.swift in Sources */,
 				0C32CA2725F982300057ED31 /* VectorSourceTests.swift in Sources */,
 				CA548FDF251C404B00F829A3 /* MapboxMapsSnapshotTests.swift in Sources */,
+				CAE43EE22654627E006F43E9 /* TileStore+Tests.swift in Sources */,
 				B506A5A025E023E90097ADB7 /* Bundle+MapboxMapsTests.swift in Sources */,
 				0C32C9AE25F979680057ED31 /* GeoJsonSourceIntegrationTests.swift in Sources */,
 				0CC6EF0B25C3263400BFB153 /* ModelLayerIntegrationTests.swift in Sources */,
@@ -2277,7 +2281,6 @@
 				0C37B1E425CB05F000DCDD3D /* ColorTests.swift in Sources */,
 				B521FCA7262F67DD00B9A446 /* MockMapClient.swift in Sources */,
 				B5A6921D262754DF00A03412 /* MockDelegatingObserverDelegate.swift in Sources */,
-				CADC7AD3251C51070082BA0A /* MockAnnotationSupportableMap.swift in Sources */,
 				0C32CA2125F982300057ED31 /* RasterDemSourceTests.swift in Sources */,
 				CA548FF4251C404B00F829A3 /* DistanceFormatterTests.swift in Sources */,
 				CAED9FB1258C69DB003CCEFE /* MapViewTests.swift in Sources */,
@@ -2287,6 +2290,7 @@
 				B53B8763260D73D600C86BAA /* Puck3DIntegrationTests.swift in Sources */,
 				B5B8B74F26308AC300D936E5 /* CameraOptionsTests.swift in Sources */,
 				CAD7BA0625A368DE00E64C78 /* ExampleIntegrationTest.swift in Sources */,
+				CAE43EDF26546217006F43E9 /* MapboxMapIntegrationTests.swift in Sources */,
 				C6334944262E28C300D17701 /* StyleTransitionTests.swift in Sources */,
 				CA99A8702540CD1900D16C78 /* StyleLoadIntegrationTests.swift in Sources */,
 				CA548FF5251C404B00F829A3 /* Fixture.swift in Sources */,
@@ -2307,6 +2311,7 @@
 				0C32CA2A25F982300057ED31 /* ImageSourceTests.swift in Sources */,
 				0C350D90263278420090FA74 /* FlyToAnimatorTests.swift in Sources */,
 				B521FC9D262F665C00B9A446 /* SizeTests.swift in Sources */,
+				CAE43EE8265462B7006F43E9 /* MapboxMapsAnnotationsTests.swift in Sources */,
 				0C5CFCD625BB951B0001E753 /* FillExtrusionLayerTests.swift in Sources */,
 				B54B7F2125DB1ABA003FD6CA /* Stub.swift in Sources */,
 				0C01C0B925486E7200E4AA46 /* ExpressionTests.swift in Sources */,
@@ -2463,17 +2468,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CA56648F24478722006F392C /* Mapbox.xcconfig */;
 			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 11;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_TESTABILITY = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
-					"$(SRCROOT)/../Carthage/Build/iOS/",
-				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = "$(GCC_WARN_64_TO_32_BIT_CONVERSION)";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -2488,17 +2487,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CA56648F24478722006F392C /* Mapbox.xcconfig */;
 			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 11;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
-					"$(SRCROOT)/../Carthage/Build/iOS/",
-				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = "$(GCC_WARN_64_TO_32_BIT_CONVERSION)";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -2673,6 +2666,51 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CAB77E3B2654AB310071D74C /* XCRemoteSwiftPackageReference "mapbox-core-maps-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mapbox/mapbox-core-maps-ios";
+			requirement = {
+				kind = exactVersion;
+				version = "10.0.0-beta.22";
+			};
+		};
+		CAB77E3E2654AB4F0071D74C /* XCRemoteSwiftPackageReference "mapbox-events-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mapbox/mapbox-events-ios";
+			requirement = {
+				kind = exactVersion;
+				version = 0.10.8;
+			};
+		};
+		CAB77E412654AB6E0071D74C /* XCRemoteSwiftPackageReference "turf-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mapbox/turf-swift/";
+			requirement = {
+				kind = exactVersion;
+				version = "2.0.0-alpha.3";
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CAB77E3C2654AB310071D74C /* MapboxCoreMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CAB77E3B2654AB310071D74C /* XCRemoteSwiftPackageReference "mapbox-core-maps-ios" */;
+			productName = MapboxCoreMaps;
+		};
+		CAB77E3F2654AB4F0071D74C /* MapboxMobileEvents */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CAB77E3E2654AB4F0071D74C /* XCRemoteSwiftPackageReference "mapbox-events-ios" */;
+			productName = MapboxMobileEvents;
+		};
+		CAB77E422654AB6E0071D74C /* Turf */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CAB77E412654AB6E0071D74C /* XCRemoteSwiftPackageReference "turf-swift" */;
+			productName = Turf;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1FEE78BA2421884000337895 /* Project object */;
 }

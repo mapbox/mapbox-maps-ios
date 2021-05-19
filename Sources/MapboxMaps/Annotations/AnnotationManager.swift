@@ -1,7 +1,9 @@
 import Foundation
 import UIKit
-import MapboxCoreMaps
-import MapboxCommon
+@_exported import MapboxCoreMaps
+@_exported import MapboxCommon
+@_implementationOnly import MapboxCommon_Private
+
 import Turf
 import CoreLocation
 
@@ -78,12 +80,17 @@ public class AnnotationManager {
     /**
      The map object this class will use when querying for annotations.
      */
-    internal weak var mapView: AnnotationSupportableMap?
+    internal weak var view: UIView?
 
     /**
      The map object to handle listening to map events
      */
     internal weak var mapEventsObservable: MapEventsObservable?
+
+    /**
+     The map object to handle feature querying
+     */
+    internal weak var mapFeatureQueryable: MapFeatureQueryable?
 
     /**
      The source layer used by the annotation manager.
@@ -143,19 +150,21 @@ public class AnnotationManager {
      Creates a new `AnnotationManager` object. To manages the addition, update,
      and deletion of annotations (or "markers") to a map.
 
-     - Parameter mapView: A conformer to AnnotationSupportableMap
+     - Parameter mapView: A UIView
      - Parameter styleDelegate: Delegate responsible for applying the style to a map
      - Parameter interactionDelegate: Delegate responsible for handling annotation interaction events
      */
-    internal init(for mapView: AnnotationSupportableMap,
+    internal init(for view: UIView,
                   mapEventsObservable: MapEventsObservable,
-                  with styleDelegate: AnnotationStyleDelegate,
+                  mapFeatureQueryable: MapFeatureQueryable,
+                  style: AnnotationStyleDelegate,
                   interactionDelegate: AnnotationInteractionDelegate? = nil,
                   options: AnnotationOptions = AnnotationOptions()) {
 
-        self.mapView = mapView
+        self.view = view
         self.mapEventsObservable = mapEventsObservable
-        self.styleDelegate = styleDelegate
+        self.styleDelegate = style
+        self.mapFeatureQueryable = mapFeatureQueryable
         self.interactionDelegate = interactionDelegate
         self.options = options
 
@@ -566,7 +575,7 @@ public class AnnotationManager {
     // MARK: - Annotation selection
 
     internal func configureTapGesture() {
-        guard let mapView = mapView else {
+        guard let mapView = view else {
             assertionFailure("MapView is nil")
             return
         }
@@ -579,7 +588,7 @@ public class AnnotationManager {
     }
 
     @objc internal func handleTap(sender: UITapGestureRecognizer) {
-        guard let mapView = mapView else {
+        guard let mapView = view else {
             assertionFailure("MapView is nil")
             return
         }
@@ -595,29 +604,34 @@ public class AnnotationManager {
                              width: 44,
                              height: 44)
 
-        let annotationLayers: Set<String> = [defaultSymbolLayerId, defaultLineLayerId, defaultPolygonLayerId]
-        mapView.visibleFeatures(in: hitRect,
-                                styleLayers: annotationLayers,
-                                filter: nil,
-                                completion: { [weak self] result in
-                                    guard let validSelf = self else { return }
+        let annotationLayers = [defaultSymbolLayerId, defaultLineLayerId, defaultPolygonLayerId]
 
-                                    if case .success(let features) = result {
-                                        if features.count == 0 { return }
+        let options = RenderedQueryOptions(layerIds: annotationLayers, filter: nil)
+        mapFeatureQueryable?.queryRenderedFeatures(in: hitRect,
+                                                   options: options) { [weak self] result in
+            guard let self = self else {
+                return
+            }
 
-                                        guard let featureIdentifier = features[0].feature.identifier as? String else { return }
+            guard case let .success(features) = result, features.count > 0 else {
+                return
+            }
 
-                                        /**
-                                         If the found feature identifier exists in the internal
-                                         annotations dictionary, then we know we've found an annotation
-                                         and can notify the delegate.
-                                         */
-                                        if let annotation = validSelf.annotations[featureIdentifier] {
-                                            validSelf.selectAnnotation(annotation)
-                                        }
-                                    }
-                                })
+            guard let featureIdentifier = features.first?.feature.identifier as? String else {
+                return
+            }
+
+            /**
+             If the found feature identifier exists in the internal
+             annotations dictionary, then we know we've found an annotation
+             and can notify the delegate.
+             */
+            if let annotation = self.annotations[featureIdentifier] {
+                self.selectAnnotation(annotation)
+            }
+        }
     }
+
     // MARK: - Errors
 
     // Annotation-related errors

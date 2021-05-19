@@ -1,4 +1,6 @@
 import Turf
+@_implementationOnly import MapboxCommon_Private
+
 #if canImport(MapboxMapsFoundation)
 import MapboxMapsFoundation
 #endif

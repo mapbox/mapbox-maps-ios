@@ -12,6 +12,7 @@ public extension StyleEncodable where Self: Encodable {
     /// - Returns: A JSON dictionary representing the object.
     func jsonObject() throws -> [String: Any] {
         let data = try JSONEncoder().encode(self)
+
         guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
             throw TypeConversionError.invalidJSONObject
         }

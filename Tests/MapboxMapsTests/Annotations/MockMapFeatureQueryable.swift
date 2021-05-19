@@ -32,6 +32,7 @@ final class MockMapFeatureQueryable: MapFeatureQueryable {
         XCTFail("Untested")
     }
 
+    // swiftlint:disable function_parameter_count
     func queryFeatureExtension(for sourceId: String,
                                feature: Feature,
                                extension: String,
@@ -40,26 +41,7 @@ final class MockMapFeatureQueryable: MapFeatureQueryable {
                                completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) {
         XCTFail("Untested")
     }
-
-
-
-//    struct OnParameters {
-//        var eventType: MapEvents.EventKind
-//        var handler: (MapboxCoreMaps.Event) -> Void
-//    }
-//
-//    let queriedFeatureStub = Stub<OnParameters, Cancelable>(defaultReturnValue: MockCancelable())
-
-
-
-//    func visibleFeatures(in rect: CGRect,
-//                         styleLayers: Set<String>?,
-//                         filter: Expression?,
-//                         completion: @escaping (Result<[QueriedFeature], MapView.QueryRenderedFeaturesError>) -> Void) {
-//        let feature = MBXFeature()
-//        let queriedFeature = QueriedFeature(feature: feature, source: "SourceID", sourceLayer: nil, state: true)
-//        completion(.success([queriedFeature]))
-//    }
+    // swiftlint:enable function_parameter_count
 }
 
 final class MockCancelable: Cancelable {

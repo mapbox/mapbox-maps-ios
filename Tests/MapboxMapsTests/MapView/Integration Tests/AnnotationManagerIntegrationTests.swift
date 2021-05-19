@@ -54,14 +54,12 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
 
     internal func testAddAnnotationAtSpecificLayerPosition() throws {
 
-        let style = try XCTUnwrap(style)
+        let style = try XCTUnwrap(self.style)
         style.uri = .streets
 
         let styleLoadedExpectation = XCTestExpectation(description: "Wait for map to load style")
 
         didFinishLoadingStyle = { mapView in
-
-
             // Given
             let annotation = PointAnnotation(coordinate: mapView.cameraState.center)
             let requiredIndex = 3

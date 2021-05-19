@@ -71,4 +71,3 @@ internal func coreAPIClosureAdapter<SwiftError>(
         }
     }
 }
-

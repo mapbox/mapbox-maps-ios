@@ -604,7 +604,6 @@ public class AnnotationManager {
                              width: 44,
                              height: 44)
 
-
         let annotationLayers = [defaultSymbolLayerId, defaultLineLayerId, defaultPolygonLayerId]
 
         let options = RenderedQueryOptions(layerIds: annotationLayers, filter: nil)
@@ -632,7 +631,7 @@ public class AnnotationManager {
             }
         }
     }
-    
+
     // MARK: - Errors
 
     // Annotation-related errors

@@ -75,8 +75,11 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                 }
 
                 // Depends on Expression being `StyleEncodable`
-                let data = try! JSONEncoder().encode(filter)
-                let filterArray = try! JSONSerialization.jsonObject(with: data) as! [Any]
+                guard let data = try? JSONEncoder().encode(filter),
+                      let filterArray = try? JSONSerialization.jsonObject(with: data) as? [Any] else {
+                    XCTFail("Invalid data or filter object")
+                    return
+                }
 
                 // TODO: Convert
                 let options = RenderedQueryOptions(layerIds: nil, filter: filterArray)

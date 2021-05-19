@@ -2,8 +2,7 @@ import XCTest
 import MapboxMaps
 import Turf
 
-// swiftlint:disable force_cast file_length orphaned_doc_comment
-
+// swiftlint:disable file_length orphaned_doc_comment
 class MigrationGuideIntegrationTests: IntegrationTestCase {
 
     private var testRect = CGRect(origin: .zero, size: CGSize(width: 100, height: 100))

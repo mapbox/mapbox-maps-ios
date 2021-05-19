@@ -19,12 +19,14 @@ public protocol MapFeatureQueryable: AnyObject {
                              options: SourceQueryOptions,
                              completion: @escaping (Result<[QueriedFeature], Error>) -> Void)
 
+    //swiftlint:disable function_parameter_count
     func queryFeatureExtension(for sourceId: String,
                                feature: Feature,
                                extension: String,
                                extensionField: String,
                                args: [String: Any]?,
                                completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void)
+    //swiftlint:enable function_parameter_count
 }
 
 /// Type of errors thrown by the `MapFeatureQueryProtocol` APIs.
@@ -68,8 +70,8 @@ extension MapboxMap: MapFeatureQueryable {
     }
 
     public func querySourceFeatures(for sourceId: String,
-                             options: SourceQueryOptions,
-                             completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
+                                    options: SourceQueryOptions,
+                                    completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
         __map.querySourceFeatures(forSourceId: sourceId,
                                   options: options,
                                   callback: coreAPIClosureAdapter(for: completion,

@@ -217,7 +217,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
         // - - - - - - - -
         // 3. Disable load-from-network, and try launch map at this location
-        
+
         OfflineSwitch.shared.isMapboxStackConnected = false
 
         let cameraOptions = CameraOptions(center: tokyoCoord, zoom: 16)

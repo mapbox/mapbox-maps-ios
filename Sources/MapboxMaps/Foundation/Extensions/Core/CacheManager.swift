@@ -1,7 +1,4 @@
 import Foundation
-//@_exported import MapboxCoreMaps
-//@_implementationOnly import MapboxCoreMaps_Private
-
 
 extension CacheManager {
     public func invalidateAmbientCache(_ completion: @escaping (Result<Void, Error>) -> Void) {

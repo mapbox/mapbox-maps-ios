@@ -402,7 +402,9 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                 /*
                 Once a layer is created, add it to the map:
                 */
+                //-->
                 try mapView.mapboxMap.style.addLayer(myBackgroundLayer)
+                //<--
 
                 expectation.fulfill()
             } catch {
@@ -411,6 +413,86 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         }
 
         wait(for: [expectation], timeout: 5.0)
+    }
+
+    func testExpression() throws {
+        CredentialsManager.default.accessToken = accessToken
+
+        let mapView = MapView(frame: testRect)
+        let expectation = self.expectation(description: "layer updated")
+        mapView.mapboxMap.onNext(.styleLoaded) { _ in
+            do {
+
+                //-->
+                let expressionString =
+                    """
+                    [
+                        "interpolate",
+                        ["linear"],
+                        ["zoom"],
+                        0,
+                        "hsl(0, 79%, 53%)",
+                        14,
+                        "hsl(233, 80%, 47%)"
+                    ]
+                    """
+
+                if let expressionData = expressionString.data(using: .utf8) {
+                    let expJSONObject = try JSONSerialization.jsonObject(with: expressionData, options: [])
+
+                    try mapView.mapboxMap.style.setLayerProperty(for: "land",
+                                                                 property: "background-color",
+                                                                 value: expJSONObject)
+                }
+                //<--
+                expectation.fulfill()
+            }
+            catch {
+                XCTFail("Failed with \(error)")
+            }
+        }
+        wait(for: [expectation], timeout: 10.0)
+    }
+
+    func todo_testAnnotationInteraction() {
+        //-->
+        class MyViewController: UIViewController, AnnotationInteractionDelegate {
+            @IBOutlet var mapView: MapView!
+
+            override func viewDidLoad() {
+                super.viewDidLoad()
+                mapView.mapboxMap.onNext(.mapLoaded) { (event) in
+                    self.mapView.annotations.interactionDelegate = self
+                    let coordinate = CLLocationCoordinate2DMake(24, -89)
+                    let pointAnnotation = PointAnnotation(coordinate: coordinate)
+                    self.mapView.annotations.addAnnotation(pointAnnotation)
+                }
+            }
+
+            // MARK: - AnnotationInteractionDelegate
+            public func didSelectAnnotation(annotation: Annotation) {
+                print("Annotation selected")
+            }
+
+            public func didDeselectAnnotation(annotation: Annotation) {
+                print("Annotation deselected")
+            }
+        }
+        //<--
+
+        // TODO: Test above
+    }
+
+    func testEnableLocation() {
+        let mapView = MapView(frame: testRect)
+        //-->
+        mapView.location.options.puckType = .puck2D()
+        //<--
+
+        let customLocationProvider = LocationProviderMock(options: LocationOptions())
+        //-->
+        mapView.location.overrideLocationProvider(with: customLocationProvider)
+        //<--
     }
 
     func testAdd3DTerrain() {
@@ -448,6 +530,25 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
             }
         }
 
+        wait(for: [expectation], timeout: 5.0)
+    }
+
+    func testCacheManager() {
+        let expectation = self.expectation(description: "Cache manager invalidated")
+        let didInvalidate = {
+            expectation.fulfill()
+        }
+
+        //-->
+        // Default cache size and paths
+        let resourceOptions = ResourceOptions(accessToken: accessToken)
+        let cacheManager = CacheManager(options: resourceOptions)
+
+        cacheManager.invalidateAmbientCache { _ in
+            // Business logic
+            didInvalidate()
+        }
+        //<--
         wait(for: [expectation], timeout: 5.0)
     }
 }

@@ -91,3 +91,16 @@ public enum MapLoadingError: LocalizedError {
         }
     }
 }
+
+/// Type of errors thrown by the `MapboxMap` APIs.
+public struct MapError: LocalizedError, CoreErrorRepresentable {
+    /// :nodoc:
+    internal typealias CoreErrorType = NSString
+
+    /// Error message
+    public private(set) var errorDescription: String
+
+    internal init(coreError: NSString) {
+        errorDescription = coreError as String
+    }
+}

@@ -122,7 +122,7 @@ public final class MapboxMap {
     }
 }
 
-// MARK: - CameraManagerProtocol
+// MARK: - CameraManagerProtocol -
 
 extension MapboxMap: CameraManagerProtocol {
 
@@ -248,7 +248,82 @@ extension MapboxMap: CameraManagerProtocol {
     }
 }
 
-// MARK: - ObservableProtocol
+// MARK: - MapFeatureQueryable -
+
+// TODO: Turf feature property of QueriedFeature
+extension MapboxMap: MapFeatureQueryable {
+    public func queryRenderedFeatures(for shape: [CGPoint], options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
+        __map.queryRenderedFeatures(forShape: shape.map { $0.screenCoordinate },
+                                    options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
+                                    callback: coreAPIClosureAdapter(for: completion,
+                                                                    type: NSArray.self,
+                                                                    concreteErrorType: MapError.self))
+    }
+
+    public func queryRenderedFeatures(in rect: CGRect, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
+        __map.queryRenderedFeatures(for: ScreenBox(rect),
+                                    options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
+                                    callback: coreAPIClosureAdapter(for: completion,
+                                                                    type: NSArray.self,
+                                                                    concreteErrorType: MapError.self))
+    }
+
+    public func queryRenderedFeatures(at point: CGPoint, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
+        __map.queryRenderedFeatures(forPixel: point.screenCoordinate,
+                                    options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
+                                    callback: coreAPIClosureAdapter(for: completion,
+                                                                    type: NSArray.self,
+                                                                    concreteErrorType: MapError.self))
+    }
+
+    public func querySourceFeatures(for sourceId: String,
+                                    options: SourceQueryOptions,
+                                    completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
+        __map.querySourceFeatures(forSourceId: sourceId,
+                                  options: options,
+                                  callback: coreAPIClosureAdapter(for: completion,
+                                                                  type: NSArray.self,
+                                                                  concreteErrorType: MapError.self))
+    }
+
+    public func queryFeatureExtension(for sourceId: String,
+                                      feature: Feature,
+                                      extension: String,
+                                      extensionField: String,
+                                      args: [String: Any]? = nil,
+                                      completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) {
+
+        guard let feature = MBXFeature(feature) else {
+            completion(.failure(TypeConversionError.unexpectedType))
+            return
+        }
+
+        __map.queryFeatureExtensions(forSourceIdentifier: sourceId,
+                                     feature: feature,
+                                     extension: `extension`,
+                                     extensionField: extensionField,
+                                     args: args,
+                                     callback: coreAPIClosureAdapter(for: completion,
+                                                                     type: FeatureExtensionValue.self,
+                                                                     concreteErrorType: MapError.self))
+    }
+}
+
+extension MapboxMap: MapFeatureState {
+    internal func featureState(for sourceId: String,
+                             layerId: String?,
+                             featureId: String,
+                             completion: @escaping (Result<Any, Error>) -> Void) {
+        __map.getFeatureState(forSourceId: sourceId,
+                              sourceLayerId: layerId,
+                              featureId: featureId,
+                              callback: coreAPIClosureAdapter(for: completion,
+                                                              type: NSDictionary.self,
+                                                              concreteErrorType: MapError.self))
+    }
+}
+
+// MARK: - ObservableProtocol -
 
 extension MapboxMap: ObservableProtocol {
     public func subscribe(_ observer: Observer, events: [String]) {
@@ -264,7 +339,7 @@ extension MapboxMap: ObservableProtocol {
     }
 }
 
-// MARK: - Map Event handling
+// MARK: - Map Event handling -
 
 extension MapboxMap: MapEventsObservable {
 

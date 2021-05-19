@@ -16,8 +16,10 @@ public class PointClusteringExample: UIViewController, ExampleProtocol {
 
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        mapView.tintColor = .lightGray
 
         view.addSubview(mapView)
+
         mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
             guard let self = self, let style = self.mapView.style else { return }
             self.addPointClusters(to: style)

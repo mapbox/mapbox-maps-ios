@@ -17,7 +17,10 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
         let styleContainsPuckExpectation = XCTestExpectation(description: "Style contains puck layer.")
 
         didFinishLoadingStyle = { _ in
-            let puck = Puck2D(puckStyle: .precise, locationSupportableMapView: self.mapView!, style: style, configuration: Puck2DConfiguration())
+            let puck = Puck2D(puckStyle: .precise,
+                              locationSupportableMapView: self.mapView!,
+                              style: style,
+                              configuration: Puck2DConfiguration())
             do {
                 try puck.createPreciseLocationIndicatorLayer(location: Location(with: CLLocation(latitude: 1, longitude: 1)))
                 createPuckExpectation.fulfill()
@@ -41,7 +44,10 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
         let styleContainsPuckExpectation = XCTestExpectation(description: "style contains puck layer.")
 
         didFinishLoadingStyle = { _ in
-            let puck = Puck2D(puckStyle: .approximate, locationSupportableMapView: self.mapView!, style: style, configuration: Puck2DConfiguration())
+            let puck = Puck2D(puckStyle: .approximate,
+                              locationSupportableMapView: self.mapView!,
+                              style: style,
+                              configuration: Puck2DConfiguration())
             do {
                 try puck.createApproximateLocationIndicatorLayer(location: Location(with: CLLocation(latitude: 1, longitude: 1)))
                 createPuckExpectation.fulfill()
@@ -64,7 +70,10 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
         let removePuckExpectation = XCTestExpectation(description: "Remove a precise Puck2D.")
 
         didFinishLoadingStyle = { _ in
-            let puck = Puck2D(puckStyle: .precise, locationSupportableMapView: self.mapView!, style: style, configuration: Puck2DConfiguration())
+            let puck = Puck2D(puckStyle: .precise,
+                              locationSupportableMapView: self.mapView!,
+                              style: style,
+                              configuration: Puck2DConfiguration())
 
             do {
                 try puck.createPreciseLocationIndicatorLayer(location: Location(with: CLLocation(latitude: 1, longitude: 1)))
@@ -93,7 +102,10 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
         let addedApproximatePuckExpectation = XCTestExpectation(description: "Style contains approximate puck layer.")
 
         didFinishLoadingStyle = { _ in
-            let puck = Puck2D(puckStyle: .precise, locationSupportableMapView: self.mapView!, style: style, configuration: Puck2DConfiguration())
+            let puck = Puck2D(puckStyle: .precise,
+                              locationSupportableMapView: self.mapView!,
+                              style: style,
+                              configuration: Puck2DConfiguration())
             do {
                 try puck.createPreciseLocationIndicatorLayer(location: location)
             } catch {

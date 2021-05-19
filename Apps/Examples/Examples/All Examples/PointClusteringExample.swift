@@ -11,7 +11,7 @@ public class PointClusteringExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         // Initialize a map view centered over the United States and using the Mapbox Dark style.
-        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 40.669957, longitude: -103.5917968), zoom: 3)
+        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 40.669957, longitude: -103.5917968), zoom: 2)
         let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .dark)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
@@ -20,13 +20,13 @@ public class PointClusteringExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
-            guard let self = self, let style = self.mapView.style else { return }
-            self.addPointClusters(to: style)
+        mapView.mapboxMap.onNext(.styleLoaded) { _ in
+            self.addPointClusters()
         }
     }
 
-    func addPointClusters(to style: Style) {
+    func addPointClusters() {
+        let style = self.mapView.mapboxMap.style
         // Parse GeoJSON data. This example uses all M1.0+ earthquakes from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
         guard let url = URL(string: "https://www.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson") else { return }
 
@@ -58,7 +58,7 @@ public class PointClusteringExample: UIViewController, ExampleProtocol {
         // Add source and layers to the map view's style.
         try! style.addSource(source, id: sourceID)
         try! style.addLayer(clusteredLayer)
-        try! style.addLayer(unclusteredLayer)
+        try! style.addLayer(unclusteredLayer, layerPosition: .below(clusteredLayer.id))
         try! style.addLayer(clusterCountLayer)
     }
 

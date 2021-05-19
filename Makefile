@@ -1,6 +1,11 @@
 # ----------------------------------------------------------------------------------------------------------------------
 # Configurable varibles
-XCODE_PROJECT ?= Mapbox/MapboxMaps.xcodeproj
+ifneq ($(XCODE_WORKSPACE),)
+	XCODE_PROJECT := -workspace $(XCODE_WORKSPACE)
+else
+	XCODE_PROJECT ?= -project Mapbox/MapboxMaps.xcodeproj
+endif
+
 
 # Default to Debug since Release will require testability. (See #157)
 CONFIGURATION    ?= Debug
@@ -136,7 +141,7 @@ endif
 # Xcode build command for building for device. The CODE_SIGNING_* variables are so that no code signing occurs on CI - 
 # this is because AWS Device Farm re-signs the applications. This may need to change if a different provider is used.
 XCODE_BUILD_DEVICE = xcodebuild \
-	-project $(XCODE_PROJECT) \
+	$(XCODE_PROJECT) \
 	-sdk iphoneos \
 	-configuration $(CONFIGURATION) \
 	-derivedDataPath $(BUILD_DIR) \
@@ -465,7 +470,7 @@ $(CIRCLE_CI_CLI):
 # Create an XCFramework
 
 XCODE_ARCHIVE_SIM = xcodebuild archive \
-	-project $(XCODE_PROJECT) \
+	$(XCODE_PROJECT) \
 	-scheme MapboxMaps \
 	-destination="iOS Simulator" \
 	-archivePath /tmp/xcf/iossimulator.xcarchive \
@@ -475,7 +480,7 @@ XCODE_ARCHIVE_SIM = xcodebuild archive \
 	BUILD_LIBRARIES_FOR_DISTRIBUTION=YES 
 
 XCODE_ARCHIVE_DEVICE = xcodebuild archive \
-	-project $(XCODE_PROJECT) \
+	$(XCODE_PROJECT) \
 	-scheme MapboxMaps \
 	-destination="iOS" \
 	-archivePath /tmp/xcf/ios.xcarchive \

@@ -2,8 +2,6 @@ import Foundation
 import UIKit
 import MapboxMaps
 
-//swiftlint:disable file_length
-
 /// Example that shows how to use OfflineManager and TileStore to
 /// download regions for offline use.
 ///

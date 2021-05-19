@@ -19,13 +19,6 @@ assignees: ''
 - SEMVER tag e.g `v10.0.0-beta.12`:
 - Milestone:
 
-_Required dependencies:_
-
-- Compatible version of MapboxCoreMaps:
-- Compatible version of MapboxCommon:
-- Compatible version of Xcode:
-- Compatible version of MacOS:
-
 ## 📦 Release MapboxMaps
 
 Notes: Unless otherwise specified, `VERSION` refers to the SEMVER tag with the `v` prefix.
@@ -63,7 +56,8 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 - [ ] On your local `Release/{VERSION}` branch, pull the latest from remote release branch. CI will have committed changes to podspec and package manifest.
 - [ ] This is where we need to verify SPM update was successful. Open a tester single view application. Go to the Swift Package Manager menu and add our repo `https://github.com/mapbox/mapbox-maps-ios.git`. For the branch, specify your current release branch. Then verify that you can load the SDK, and display a basic map on device to verify that the build is working.
     - ***Note that the api-downloads PR needs to be merged and sanity checks need to complete before downloads are available here***
-- [ ] Generate the changelog manually by addding changes to the `CHANGELOG.md` file. Commit these changes have your release buddy review them. 
+- [ ] Generate the changelog manually by adding changes to the `CHANGELOG.md` file. Commit these changes have your release buddy review them. 
+- [ ] Review issues [tagged with the Release](https://app.zenhub.com/workspaces/maps-sdk-for-ios-5e9f47ffdf1ce5046f9011f4/reports/release) adding or removing the release from the Zenhub issues as necessary.
 
 **3) Create the Release Tag**
 
@@ -119,6 +113,8 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 
 ## 📣 Announcements
 
+- [ ] Tag the `@maps-ios` team in #mobile-maps-ios to notify the team about the completed release! 🎉
+- [ ] Review (update if needed) the issues in the [Zenhub Release](https://app.zenhub.com/workspaces/maps-sdk-for-ios-5e9f47ffdf1ce5046f9011f4/reports/release) and close it.
 - [ ] Announce the release in #sdk-releases and in #maps-sdk to notify the team about the completed release! 🎉
 
 When all of the above is completed, you can then close this ticket.

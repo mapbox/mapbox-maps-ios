@@ -12,7 +12,7 @@
       },
       {
         "package": "MapboxCoreMaps",
-        "repositoryURL": "http://github.com/mapbox/mapbox-core-maps-ios",
+        "repositoryURL": "https://github.com/mapbox/mapbox-core-maps-ios",
         "state": {
           "branch": null,
           "revision": "2d04afab0a93778bc4824b738ea4c7bba2551d23",
@@ -21,7 +21,7 @@
       },
       {
         "package": "MapboxMobileEvents",
-        "repositoryURL": "http://github.com/mapbox/mapbox-events-ios",
+        "repositoryURL": "https://github.com/mapbox/mapbox-events-ios",
         "state": {
           "branch": null,
           "revision": "6e4aa13817d59038bf762032e938fe0f7b95b589",
@@ -30,7 +30,7 @@
       },
       {
         "package": "Turf",
-        "repositoryURL": "http://github.com/mapbox/turf-swift",
+        "repositoryURL": "https://github.com/mapbox/turf-swift/",
         "state": {
           "branch": null,
           "revision": "23e72d4174eacd76cc6414f063b427d2dac81cfb",

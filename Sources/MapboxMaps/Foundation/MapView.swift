@@ -268,7 +268,7 @@ open class MapView: UIView {
 
             for animator in cameraAnimatorsSet.allObjects {
                 if let cameraOptions = animator.currentCameraOptions {
-                    mapboxMap.updateCamera(with: cameraOptions)
+                    mapboxMap.setCamera(to: cameraOptions)
                 }
             }
 

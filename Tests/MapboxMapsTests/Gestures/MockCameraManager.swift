@@ -6,7 +6,7 @@ import MapboxMapsFoundation
 @testable import MapboxMapsGestures
 #endif
 
-final class MockCameraManager: CameraManagerProtocol {
+final class MockCameraManager: CameraAnimationsManagerProtocol {
 
     var mapView: MapView?
 

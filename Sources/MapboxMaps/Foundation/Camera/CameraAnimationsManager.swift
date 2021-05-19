@@ -64,7 +64,7 @@ public class CameraAnimationsManager {
             return
         }
         cancelAnimations() // cancel any active animations
-        mapView.mapboxMap.updateCamera(with: targetCamera)
+        mapView.mapboxMap.setCamera(to: targetCamera)
     }
 
     /// Interrupts all `active` animation.

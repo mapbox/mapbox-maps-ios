@@ -1,6 +1,6 @@
 import Foundation
 
-internal protocol CameraManagerProtocol: AnyObject {
+internal protocol CameraAnimationsManagerProtocol: AnyObject {
 
     var mapView: MapView? { get }
 
@@ -16,4 +16,4 @@ internal protocol CameraManagerProtocol: AnyObject {
     func cancelAnimations()
 }
 
-extension CameraAnimationsManager: CameraManagerProtocol { }
+extension CameraAnimationsManager: CameraAnimationsManagerProtocol { }

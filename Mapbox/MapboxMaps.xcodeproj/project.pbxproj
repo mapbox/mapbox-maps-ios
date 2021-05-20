@@ -242,6 +242,7 @@
 		CA19C342263B411C00748F1A /* MapInitOptionsTests.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5A6922A2627566A00A03412 /* MapInitOptionsTests.xib */; };
 		CA19C344263B412700748F1A /* empty-style-chicago.json in Resources */ = {isa = PBXBuildFile; fileRef = CA19C343263B412700748F1A /* empty-style-chicago.json */; };
 		CA19C345263B412700748F1A /* empty-style-chicago.json in Resources */ = {isa = PBXBuildFile; fileRef = CA19C343263B412700748F1A /* empty-style-chicago.json */; };
+		CA28AAE526561CDE00B486F2 /* MapboxCoreMaps in Frameworks */ = {isa = PBXBuildFile; productRef = CA28AAE426561CDE00B486F2 /* MapboxCoreMaps */; };
 		CA2E4A1B2538D3530096DEDE /* MapViewIntegrationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA53616D2537ECA600A8AE38 /* MapViewIntegrationTestCase.swift */; };
 		CA2E4A1C2538D3530096DEDE /* IntegrationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5361862537EE0600A8AE38 /* IntegrationTestCase.swift */; };
 		CA2E4A1D2538D3530096DEDE /* DidIdleFailureIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA2E498825380B300096DEDE /* DidIdleFailureIntegrationTest.swift */; };
@@ -788,6 +789,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CA952ECD251C30B80099C080 /* MapboxMaps.framework in Frameworks */,
+				CA28AAE526561CDE00B486F2 /* MapboxCoreMaps in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1750,6 +1752,9 @@
 				CA952ED0251C30B80099C080 /* PBXTargetDependency */,
 			);
 			name = MapboxTestHost;
+			packageProductDependencies = (
+				CA28AAE426561CDE00B486F2 /* MapboxCoreMaps */,
+			);
 			productName = MapboxMapsTestHost;
 			productReference = CA4453C52436E71500477B4F /* MapboxTestHost.app */;
 			productType = "com.apple.product-type.application";
@@ -2695,6 +2700,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		CA28AAE426561CDE00B486F2 /* MapboxCoreMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CAB77E3B2654AB310071D74C /* XCRemoteSwiftPackageReference "mapbox-core-maps-ios" */;
+			productName = MapboxCoreMaps;
+		};
 		CAB77E3C2654AB310071D74C /* MapboxCoreMaps */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CAB77E3B2654AB310071D74C /* XCRemoteSwiftPackageReference "mapbox-core-maps-ios" */;

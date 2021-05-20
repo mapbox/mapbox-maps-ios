@@ -10,8 +10,9 @@ import UIKit
 @testable import MapboxMapsSnapshot
 #endif
 //swiftlint:disable explicit_top_level_acl explicit_acl
+
 class MapboxMapsSnapshotTests: XCTestCase {
-    
+
     var newAttachment: XCTAttachment!
     var resourceOptions: ResourceOptions!
     
@@ -36,7 +37,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
             
         }
         wait(for: [expectation], timeout: 30)
-        
+
     }
     
     // Testing snapshot overlay
@@ -44,9 +45,11 @@ class MapboxMapsSnapshotTests: XCTestCase {
         let imageRect = CGRect(x: 0, y: 0, width: 300, height: 300)
         let options = snapshotterOptions()
         let snapshotter = Snapshotter(options: options)
+
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
         snapshotter.setCamera(to: cameraOptions)
         snapshotter.style.uri = .light
+
         let expectation = self.expectation(description: "snapshot")
         expectation.expectedFulfillmentCount = 2
         snapshotter.start { (overlay) in
@@ -74,9 +77,11 @@ class MapboxMapsSnapshotTests: XCTestCase {
         let imageRect = CGRect(x: 0, y: 0, width: 300, height: 300)
         let options = snapshotterOptions()
         let snapshotter = Snapshotter(options: options) //should have protocol for GLnative (may have been ticketed)
+
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
         snapshotter.setCamera(to: cameraOptions)
         snapshotter.style.uri = .light
+
         let expectation = self.expectation(description: "snapshot accuracy")
         expectation.expectedFulfillmentCount = 2
         snapshotter.start { (overlay) in
@@ -100,7 +105,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
     }
     
     func testSnapshotLogoVisibility() {
-        
         let options = snapshotterOptions()
         let snapshotterNew = Snapshotter(options: options)
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)

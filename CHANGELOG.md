@@ -4,10 +4,20 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 10.0.0-beta.20 - May 20, 2021
+
 ### Breaking changes ⚠️
 
+ - Moved `.on()` from `BaseMapView` to `MapboxMap`. ([#339](https://github.com/mapbox/mapbox-maps-ios/pull/339))
+     - `.on()` has now been replaced by `onNext(...) -> Cancelable` and `onEvery(...) -> Cancelable`.
  - `StyleURI`, `PreferredFPS`, and `AnimationOwner` are now structs. ([#285](https://github.com/mapbox/mapbox-maps-ios/pull/285))
  - The `layout` and `paint` substructs for each layer are now merged into the root layer struct. ([#362](https://github.com/mapbox/mapbox-maps-ios/pull/362))
+ - `GestureOptions` are owned by `GestureManager` directly. ([#343](https://github.com/mapbox/mapbox-maps-ios/pull/343))
+ - `LocationOptions` are owned by `LocationManager` directly. ([#344](https://github.com/mapbox/mapbox-maps-ios/pull/344))
+ - `MapCameraOptions` are owned by `mapView.camera` directly. ([#345](https://github.com/mapbox/mapbox-maps-ios/pull/345))
+ - `RenderOptions` are owned by `BaseMapView` directly. ([#350](https://github.com/mapbox/mapbox-maps-ios/pull/350))
+ - `AnnotationOptions` are owned by `AnnotationManager` directly. ([#351](https://github.com/mapbox/mapbox-maps-ios/pull/351))
+ - `MapView` has been coalesced into `BaseMapView` and the resulting object is called `MapView`. ([#353](https://github.com/mapbox/mapbox-maps-ios/pull/353))
  
 ### Bug fixes 🐞
 

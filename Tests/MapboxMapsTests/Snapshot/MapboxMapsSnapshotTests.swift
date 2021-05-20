@@ -59,7 +59,6 @@ class MapboxMapsSnapshotTests: IntegrationTestCase {
                 } catch {
                     print(error)
                 }
-                
             }
             expectation.fulfill()
         }
@@ -117,7 +116,6 @@ class MapboxMapsSnapshotTests: IntegrationTestCase {
             case.failure(_) :
                 XCTFail()
             }
-            
             expectation2.fulfill()
         }
         

@@ -18,6 +18,9 @@ Mapbox welcomes participation and contributions from everyone.
  - `RenderOptions` are owned by `BaseMapView` directly. ([#350](https://github.com/mapbox/mapbox-maps-ios/pull/350))
  - `AnnotationOptions` are owned by `AnnotationManager` directly. ([#351](https://github.com/mapbox/mapbox-maps-ios/pull/351))
  - `MapView` has been coalesced into `BaseMapView` and the resulting object is called `MapView`. ([#353](https://github.com/mapbox/mapbox-maps-ios/pull/353))
+ - `Style.uri` is now an optional property. ([#347](https://github.com/mapbox/mapbox-maps-ios/pull/347))
+ - `Style` is no longer a dependency on `LocationSupportableMapView`. ([#352](https://github.com/mapbox/mapbox-maps-ios/pull/352))
+ - `Style` now has a more flat structure. `Layout` and `Paint` structs are now obsolete and `Layer` properties are at the root layer. ([#362](https://github.com/mapbox/mapbox-maps-ios/pull/362))
  
 ### Bug fixes 🐞
 

@@ -8,8 +8,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Breaking changes ⚠️
 
- - Moved `.on()` from `BaseMapView` to `MapboxMap`. ([#339](https://github.com/mapbox/mapbox-maps-ios/pull/339))
-     - `.on()` has now been replaced by `onNext(...) -> Cancelable` and `onEvery(...) -> Cancelable`.
+ - `BaseMapView.on()` has now been replaced by `mapView.mapboxMap.onNext(...) -> Cancelable` and `mapView.mapboxMap.onEvery(...) -> Cancelable`. ([#339](https://github.com/mapbox/mapbox-maps-ios/pull/339))
  - `StyleURI`, `PreferredFPS`, and `AnimationOwner` are now structs. ([#285](https://github.com/mapbox/mapbox-maps-ios/pull/285))
  - The `layout` and `paint` substructs for each layer are now merged into the root layer struct. ([#362](https://github.com/mapbox/mapbox-maps-ios/pull/362))
  - `GestureOptions` are owned by `GestureManager` directly. ([#343](https://github.com/mapbox/mapbox-maps-ios/pull/343))

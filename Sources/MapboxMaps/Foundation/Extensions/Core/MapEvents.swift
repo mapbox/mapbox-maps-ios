@@ -100,8 +100,16 @@ public extension MapEvents {
         case mapIdle
 
         /**
-         * The requested style data has been loaded. The 'type' property defines what kind of style data has been loaded.
+         * The requested style data has been loaded. The 'type' property defines
+         * what kind of style data has been loaded.
+         * Event may be emitted synchronously, for example, when StyleManager#setStyleJSON is used to load style.
          *
+         * Based on an event data 'type' property value, following use-cases may be implemented:
+         * - 'style': Style is parsed, style layer properties could be read and modified, style layers and sources could be
+         *   added or removed before rendering is started.
+         * - 'sprite': Style's sprite sheet is parsed and it is possible to add or update images.
+         * - 'sources': All sources defined by the style are loaded and their properties could be read and updated if needed.
+         *         *
          * Event data format (Object):
          * ```
          * .

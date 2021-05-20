@@ -21,7 +21,18 @@ Mapbox welcomes participation and contributions from everyone.
  - `Style.uri` is now an optional property. ([#347](https://github.com/mapbox/mapbox-maps-ios/pull/347))
  - `Style` is no longer a dependency on `LocationSupportableMapView`. ([#352](https://github.com/mapbox/mapbox-maps-ios/pull/352))
  - `Style` now has a more flat structure. `Layout` and `Paint` structs are now obsolete and `Layer` properties are at the root layer. ([#362](https://github.com/mapbox/mapbox-maps-ios/pull/362))
- 
+ - Changed `LayerPosition` to an enum. ([#](https://github.com/mapbox/mapbox-maps-ios/pull/221))
+ - Removed `style` from MapView; updated tests and examples to use `mapboxMap.style`. ([#361](https://github.com/mapbox/mapbox-maps-ios/pull/361))
+ - The `visibleFeatures` APIs have been renamed to `queryRenderedFeatures`. ([#361](https://github.com/mapbox/mapbox-maps-ios/pull/361))
+ - `LoggingConfiguration` is no longer public. ([#361](https://github.com/mapbox/mapbox-maps-ios/pull/361))
+ - The following Swift wrappers have been added for existing types; these primarily change callbacks from using an internal `MBXExpected` type to using Swift's `Result` type. ([#361](https://github.com/mapbox/mapbox-maps-ios/pull/361))
+     - `CacheManager`
+     - `HttpResponse`
+     - `OfflineSwitch` (which replaces NetworkConnectivity)
+     - `OfflineRegionManager` (though this API is deprecated)
+ - Adds `loadStyleURI` and `loadStyleJSON` to `MapboxMap`. ([#354](https://github.com/mapbox/mapbox-maps-ios/pull/354))
+
+
 ### Bug fixes 🐞
 
 - Fixed an issue where the map's scale bar and compass view could trigger `layoutSubviews()` for the map view. ([#338](https://github.com/mapbox/mapbox-maps-ios/pull/338)) 

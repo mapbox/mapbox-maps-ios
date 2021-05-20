@@ -10,8 +10,8 @@ public class SwitchStylesExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        // Create 
-        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 36.77271, longitude: -2.81361), zoom: 12)
+        // Initialize a map centered near El Ejido, Spain and with a zoom level of 13.
+        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 36.77271, longitude: -2.81361), zoom: 13)
         let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .satelliteStreets)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
@@ -20,19 +20,30 @@ public class SwitchStylesExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
+        // Add a `UISegmentedControl` to toggle between Mapbox Streets, Mapbox Satellite Streets, and a custom style.
         addStyleToggle()
     }
 
     @objc func switchStyle(sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
         case 0:
+            // Set the map's style to the default Mapbox Streets style.
             mapView.mapboxMap.style.uri = .streets
         case 1:
+            // Set the map's style to Mapbox Satellite Streets.
             mapView.mapboxMap.style.uri = .satelliteStreets
         case 2:
-            // A custom style designed by Taya Lavrinenko. https://blog.mapbox.com/doh-making-a-simspons-inspired-map-with-expressions-86e633b61ede
-            let customStyle = StyleURI(rawValue: "mapbox://styles/examples/cke97f49z5rlg19l310b7uu7j")!
-            mapView.mapboxMap.style.uri = customStyle
+            // Blueprint, a custom style designed by Amy Lee Walton. https://www.mapbox.com/gallery/#blueprint
+            let studioStyleURL = URL(string: "mapbox://styles/examples/ckox18pjy140u17pdvmpgut4i")!
+
+            // Set the map's style URI to a custom style URL.
+            mapView.mapboxMap.style.uri = StyleURI(url: studioStyleURL)
+
+            // A local style JSON that conforms to the Mapbox Style Specification <https://docs.mapbox.com/mapbox-gl-js/style-spec/>
+            // can be loaded as a `StyleURI`. Include the style JSON in your app's bundle, then create a `StyleURI`
+            // with that URL.
+            // let studioStyleURL = Bundle.main.url(forResource: "blueprint_style", withExtension: "json")!
+>>>>>>> 50e94bd6... Use a custom style for the third segment, add comments
         default:
             mapView.mapboxMap.style.uri = .satelliteStreets
         }
@@ -40,7 +51,7 @@ public class SwitchStylesExample: UIViewController, ExampleProtocol {
 
     func addStyleToggle() {
         // Create a UISegmentedControl to toggle between map styles
-        let styleToggle = UISegmentedControl(items: ["Local Style", "Satellite", "Studio Style"])
+        let styleToggle = UISegmentedControl(items: ["Streets", "Satellite Streets", "Studio Style"])
         styleToggle.translatesAutoresizingMaskIntoConstraints = false
         styleToggle.tintColor = UIColor(red: 0.976, green: 0.843, blue: 0.831, alpha: 1)
         styleToggle.backgroundColor = UIColor(red: 0.973, green: 0.329, blue: 0.294, alpha: 1)

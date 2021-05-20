@@ -12,7 +12,7 @@ import MapboxMapsStyle
 public protocol LocationSupportableMapView: UIView {
 
     /// Returns the screen coordinate for a given location coordinate (lat-long)
-    func screenCoordinate(for locationCoordinate: CLLocationCoordinate2D) -> ScreenCoordinate
+    func point(for coordinate: CLLocationCoordinate2D) -> CGPoint
 
     /// Allows the `LocationSupportableMapView` to subscribe to a delegate
     func subscribeRenderFrameHandler(_ handler: @escaping (MapboxCoreMaps.Event) -> Void)

@@ -32,10 +32,10 @@ extension MapView: OrnamentSupportableView {
 
 extension MapView: LocationSupportableMapView {
 
-    public func screenCoordinate(for locationCoordinate: CLLocationCoordinate2D) -> ScreenCoordinate {
-        return mapboxMap.__map.pixelForCoordinate(for: locationCoordinate)
+    public func point(for coordinate: CLLocationCoordinate2D) -> CGPoint {
+        return mapboxMap.point(for: coordinate)
     }
-
+    
     public func metersPerPointAtLatitude(latitude: CLLocationDegrees) -> CLLocationDistance {
         return Projection.getMetersPerPixelAtLatitude(forLatitude: latitude, zoom: Double(cameraState.zoom))
     }

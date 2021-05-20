@@ -41,7 +41,7 @@ open class MapView: UIView {
 
     public var options = RenderOptions() {
         didSet {
-            mapboxMap.__map.setPrefetchZoomDeltaForDelta(options.prefetchZoomDelta)
+            mapboxMap.prefetchZoomDelta = options.prefetchZoomDelta
             preferredFPS = options.preferredFramesPerSecond
             metalView?.presentsWithTransaction = options.presentsWithTransaction
         }
@@ -148,11 +148,11 @@ open class MapView: UIView {
         }
 
         if let cameraOptions = resolvedMapInitOptions.cameraOptions {
-            mapboxMap.__map.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
+            mapboxMap._setCamera(to: cameraOptions)
         }
 
         // Set prefetchZoomDelta
-        mapboxMap.__map.setPrefetchZoomDeltaForDelta(options.prefetchZoomDelta)
+        mapboxMap.prefetchZoomDelta = options.prefetchZoomDelta
 
         // Set preferrredFPS
         preferredFPS = options.preferredFramesPerSecond

@@ -29,16 +29,13 @@ extension GestureManager: GestureHandlerDelegate {
     }
 
     internal func panBegan(at point: CGPoint) {
-        cameraManager.mapView?.mapboxMap.__map.dragStart(forPoint: point.screenCoordinate)
+        cameraManager.mapView?.mapboxMap.dragStart(for: point)
     }
 
     // MapView has been panned
     internal func panned(from startPoint: CGPoint, to endPoint: CGPoint) {
-
-        if let cameraOptions = cameraManager.mapView?.mapboxMap.__map.getDragCameraOptionsFor(
-            fromPoint: startPoint.screenCoordinate,
-            toPoint: endPoint.screenCoordinate) {
-            cameraManager.setCamera(to: CameraOptions(cameraOptions))
+        if let cameraOptions = cameraManager.mapView?.mapboxMap.dragCameraOptions(from: startPoint, to: endPoint) {
+            cameraManager.setCamera(to: cameraOptions)
         }
     }
 
@@ -46,15 +43,15 @@ extension GestureManager: GestureHandlerDelegate {
     func panEnded(at endPoint: CGPoint, shouldDriftTo driftEndPoint: CGPoint) {
 
         if endPoint != driftEndPoint,
-           let driftCameraOptions = cameraManager.mapView?.mapboxMap.__map.getDragCameraOptionsFor(fromPoint: endPoint.screenCoordinate, toPoint: driftEndPoint.screenCoordinate) {
+           let driftCameraOptions = cameraManager.mapView?.mapboxMap.dragCameraOptions(from: endPoint, to: driftEndPoint) {
 
             _ = cameraManager.ease(
-                    to: CameraOptions(driftCameraOptions),
+                    to: driftCameraOptions,
                     duration: Double(cameraManager.options.decelerationRate),
                     curve: .easeOut,
                     completion: nil)
         }
-        cameraManager.mapView?.mapboxMap.__map.dragEnd()
+        cameraManager.mapView?.mapboxMap.dragEnd()
     }
 
     internal func cancelGestureTransitions() {

@@ -13,9 +13,13 @@ public struct RenderOptions: Equatable {
     ///  See Also `CADisplayLink.preferredFramesPerSecond`
     public var preferredFramesPerSecond: PreferredFPS = .maximum
 
-    /// When loading a map, if `PrefetchZoomDelta` is set to any number greater than 0, the map
-    /// map at lower resolution as quick as possible. It will get clamped at the tile source
-    /// minimum zoom. The default `PrefetchZoomDelta` is 4.
+    /// When loading a map, if `prefetchZoomDelta` is set to any number greater
+    /// than 0, the map will first request a tile for `zoom - prefetchZoomDelta`
+    /// in an attempt to display a full map at lower resolution as quick as
+    /// possible.
+    ///
+    /// It will get clamped at the tile source minimum zoom. The default delta
+    /// is 4.
     public var prefetchZoomDelta: UInt8 = 4
 
     /// A Boolean value that indicates whether the underlying `CAMetalLayer` of the `MapView`

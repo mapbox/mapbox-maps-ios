@@ -148,6 +148,10 @@ internal protocol CameraManagerProtocol {
     /// Returns the bounds of the map.
     var cameraBounds: CameraBounds { get }
 
+    /// Sets the camera bounds using a `CameraBoundsOptions`
+    /// - Parameter options: `CameraBoundsOptions` - `nil` parameters take no effect.
+    func setCameraBounds(for options: CameraBoundsOptions) throws
+
     // MARK: - Drag API
 
     /// Prepares the drag gesture to use the provided screen coordinate as a pivot

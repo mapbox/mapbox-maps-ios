@@ -355,9 +355,28 @@ jobs:
           name: Install Device Farm Dependencies
           command: make install-devicefarm-dependencies
       - install-dependencies
+
+
+
+    # There's a command for this, but it only works if run *after* the build.
+      # In this case, we need to determine the derived data path *before* building.
+      - run:
+          name: Locate derived data directory
+          command: |
+            xcodebuild \
+              -showBuildSettings \
+              -project Mapbox/MapboxMaps.xcodeproj \
+              -scheme 'MapboxTestHost' \
+              | sed -n 's:^ *BUILD_DIR = \(.*\)/Build/Products$:export DERIVED_DATA_PATH="\1":p' \
+              >> $BASH_ENV
       - run:
           name: Testing << parameters.scheme >> on AWS Device Farm
-          command: make test-with-device-farm SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
+          command: |
+            make test-with-device-farm \
+              SCHEME=<< parameters.scheme >> \
+              APP_NAME=<< parameters.app-name >> \
+              CONFIGURATION=Release \
+              BUILD_DIR="$DERIVED_DATA_PATH"
           when: always
       # get xcresults here, may be zipped with more than one result
       - run:

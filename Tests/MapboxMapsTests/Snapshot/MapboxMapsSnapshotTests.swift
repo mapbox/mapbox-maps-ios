@@ -23,20 +23,48 @@ class MapboxMapsSnapshotTests: XCTestCase {
     }
     
     // Testing creating the snapshot
-    func testCapturingSnapshotterInSnapshotCompletion() {
-        let timeout: TimeInterval = 10.0
+    func testSnapshotCancellation() {
+        weak var weakSnapshotter: Snapshotter?
         let expectation = self.expectation(description: "snapshot")
-        let options = snapshotterOptions()
-        let snapshotter = Snapshotter(options: options)
-        
-        snapshotter.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5))
-        snapshotter.style.uri = .light
-        snapshotter.start(overlayHandler: nil) { (result) in
-            expectation.fulfill()
-            XCTAssertNotNil(result)
+        expectation.assertForOverFulfill = false
+        autoreleasepool {
+            let options = snapshotterOptions()
+            let snapshotter = Snapshotter(options: options)
+            weakSnapshotter = snapshotter
             
+            weakSnapshotter?.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5))
+            weakSnapshotter?.style.uri = .light
+            weakSnapshotter?.start(overlayHandler: nil) { (result) in
+                expectation.fulfill()
+                XCTAssertNotNil(result)
+                // completion being called twice
+                XCTAssertNil(weakSnapshotter)
+                print("here is the result: \(result)")
+            }
         }
-        wait(for: [expectation], timeout: timeout)
+        XCTAssertNil(weakSnapshotter)
+        wait(for: [expectation], timeout: 10)
+    }
+    
+    
+    func testCapturingSnapshotterInSnapshotCompletion() {
+        weak var weakSnapshotter: Snapshotter?
+        autoreleasepool {
+            let expectation = self.expectation(description: "snapshot")
+            let options = snapshotterOptions()
+            let snapshotter = Snapshotter(options: options)
+            weakSnapshotter = snapshotter
+            
+            weakSnapshotter?.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5))
+            weakSnapshotter?.style.uri = .light
+            weakSnapshotter?.start(overlayHandler: nil) { (result) in
+                expectation.fulfill()
+                XCTAssertNotNil(result)
+                print(snapshotter)
+            }
+            wait(for: [expectation], timeout: 10)
+        }
+        XCTAssertNil(weakSnapshotter)
     }
     
     // Testing snapshot overlay
@@ -62,7 +90,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
                 let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Snapshot Asset.png")
                 do {
                     try image.pngData()?.write(to: url)
-                    print(url)
                 } catch {
                     print(error)
                 }
@@ -98,7 +125,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
             }
             expectation.fulfill()
         }
-        
         wait(for: [expectation], timeout: 10)
     }
     
@@ -126,7 +152,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
             }
             expectation2.fulfill()
         }
-        
         wait(for: [expectation2], timeout: 10)
     }
 }

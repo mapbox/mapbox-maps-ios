@@ -133,6 +133,9 @@ public struct Examples {
                 type: SwiftUIExample.self),
         Example(title: "Track Location Updates",
                 description: "Track a device's GPS updates with the camera and location provider",
-                type: TrackingModeExample.self)
+                type: TrackingModeExample.self),
+        Example(title: "Cluster points within a layer",
+                description: "Create a circle layer from a geoJSON source and cluster the points from that source. The clusters will update as the map's camera changes.",
+                type: PointClusteringExample.self)
     ]
 }

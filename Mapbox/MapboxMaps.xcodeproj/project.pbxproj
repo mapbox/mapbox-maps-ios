@@ -242,6 +242,7 @@
 		CA19C342263B411C00748F1A /* MapInitOptionsTests.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5A6922A2627566A00A03412 /* MapInitOptionsTests.xib */; };
 		CA19C344263B412700748F1A /* empty-style-chicago.json in Resources */ = {isa = PBXBuildFile; fileRef = CA19C343263B412700748F1A /* empty-style-chicago.json */; };
 		CA19C345263B412700748F1A /* empty-style-chicago.json in Resources */ = {isa = PBXBuildFile; fileRef = CA19C343263B412700748F1A /* empty-style-chicago.json */; };
+		CA28AAEE265807B600B486F2 /* MapboxCoreMaps in Frameworks */ = {isa = PBXBuildFile; productRef = CAB77E3C2654AB310071D74C /* MapboxCoreMaps */; settings = {ATTRIBUTES = (Required, ); }; };
 		CA2E4A1B2538D3530096DEDE /* MapViewIntegrationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA53616D2537ECA600A8AE38 /* MapViewIntegrationTestCase.swift */; };
 		CA2E4A1C2538D3530096DEDE /* IntegrationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5361862537EE0600A8AE38 /* IntegrationTestCase.swift */; };
 		CA2E4A1D2538D3530096DEDE /* DidIdleFailureIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA2E498825380B300096DEDE /* DidIdleFailureIntegrationTest.swift */; };
@@ -315,7 +316,7 @@
 		CA99A8702540CD1900D16C78 /* StyleLoadIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA99A86E2540CD1900D16C78 /* StyleLoadIntegrationTests.swift */; };
 		CA9F8CE32641F95C00A8BCB6 /* StyleManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9F8CE22641F95C00A8BCB6 /* StyleManagerProtocol.swift */; };
 		CAA73A9D256F750B00E14EE0 /* FlyToTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA73A9B256F750B00E14EE0 /* FlyToTests.swift */; };
-		CAB77E3D2654AB310071D74C /* MapboxCoreMaps in Frameworks */ = {isa = PBXBuildFile; productRef = CAB77E3C2654AB310071D74C /* MapboxCoreMaps */; };
+		CAB77E3D2654AB310071D74C /* MapboxCoreMaps in Frameworks */ = {isa = PBXBuildFile; productRef = CAB77E3C2654AB310071D74C /* MapboxCoreMaps */; settings = {ATTRIBUTES = (Weak, ); }; };
 		CAB77E402654AB4F0071D74C /* MapboxMobileEvents in Frameworks */ = {isa = PBXBuildFile; productRef = CAB77E3F2654AB4F0071D74C /* MapboxMobileEvents */; };
 		CAB77E432654AB6E0071D74C /* Turf in Frameworks */ = {isa = PBXBuildFile; productRef = CAB77E422654AB6E0071D74C /* Turf */; };
 		CAB77E452654AC5E0071D74C /* CameraAnimationsManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB77E442654AC5E0071D74C /* CameraAnimationsManagerProtocol.swift */; };
@@ -788,6 +789,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CA952ECD251C30B80099C080 /* MapboxMaps.framework in Frameworks */,
+				CA28AAEE265807B600B486F2 /* MapboxCoreMaps in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1752,7 +1754,7 @@
 			name = MapboxTestHost;
 			packageProductDependencies = (
 				CAB77E3C2654AB310071D74C /* MapboxCoreMaps */,
-			);			
+			);
 			productName = MapboxMapsTestHost;
 			productReference = CA4453C52436E71500477B4F /* MapboxTestHost.app */;
 			productType = "com.apple.product-type.application";

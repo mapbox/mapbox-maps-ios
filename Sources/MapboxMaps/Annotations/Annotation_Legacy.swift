@@ -3,13 +3,13 @@ import Turf
  A protocol that annotations should conform to.
  */
 
-public enum AnnotationType {
+public enum AnnotationType_Legacy {
     case point
     case line
     case polygon
 }
 
-public protocol Annotation {
+public protocol Annotation_Legacy {
 
     /**
      The unique identifier of the annotation.
@@ -25,7 +25,7 @@ public protocol Annotation {
     /**
     The geometry associated with an annotation.
      */
-    var type: AnnotationType { get }
+    var type: AnnotationType_Legacy { get }
 
     /**
      A Boolean value that indicates whether an annotation is selected, either programmatically or via user-interactions.

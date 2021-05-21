@@ -6,7 +6,7 @@ import Turf
 /**
  Marks a series of coordinates map, representing a line shape.
  */
-public struct LineAnnotation: Annotation {
+public struct LineAnnotation_Legacy: Annotation_Legacy {
 
     // MARK: - Public properties
 
@@ -18,7 +18,7 @@ public struct LineAnnotation: Annotation {
     /**
      The type of the annotation - in this case, a line.
      */
-    public private(set) var type: AnnotationType = .line
+    public private(set) var type: AnnotationType_Legacy = .line
 
     /**
      The text string containing the annotation's title. If the value is defined,
@@ -64,8 +64,8 @@ public struct LineAnnotation: Annotation {
     }
 }
 
-extension LineAnnotation: Equatable {
-    public static func == (lhs: LineAnnotation, rhs: LineAnnotation) -> Bool {
+extension LineAnnotation_Legacy: Equatable {
+    public static func == (lhs: LineAnnotation_Legacy, rhs: LineAnnotation_Legacy) -> Bool {
         lhs.identifier == rhs.identifier
     }
 }

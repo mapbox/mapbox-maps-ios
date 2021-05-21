@@ -8,7 +8,7 @@ import CoreLocation
 #endif
 
 //swiftlint:disable explicit_acl explicit_top_level_acl
-class AnnotationInteractionDelegateTests: XCTestCase {
+class AnnotationInteractionDelegateLegacyTests: XCTestCase {
 
     var annotationMapFeatureQueryableMock: MockMapFeatureQueryable!
     var annotationSupportableStyleMock: MockAnnotationStyleDelegate!
@@ -39,12 +39,12 @@ class AnnotationInteractionDelegateTests: XCTestCase {
 
     func testProgrammaticAnnotationSelection() {
         // Given
-        let annotationManager = AnnotationManager(for: UIView(),
+        let annotationManager = AnnotationManager_Legacy(for: UIView(),
                                                   mapEventsObservable: annotationMapEventsObservableMock,
                                                   mapFeatureQueryable: annotationMapFeatureQueryableMock,
                                                   style: annotationSupportableStyleMock)
         annotationManager.interactionDelegate = self
-        let annotation = PointAnnotation(coordinate: defaultCoordinate)
+        let annotation = PointAnnotation_Legacy(coordinate: defaultCoordinate)
         _ = annotationManager.addAnnotation(annotation)
         XCTAssertEqual(annotationManager.selectedAnnotations.count, 0)
 
@@ -66,13 +66,13 @@ class AnnotationInteractionDelegateTests: XCTestCase {
     }
 }
 
-extension AnnotationInteractionDelegateTests: AnnotationInteractionDelegate {
-    func didSelectAnnotation(annotation: Annotation) {
+extension AnnotationInteractionDelegateLegacyTests: AnnotationInteractionDelegate_Legacy {
+    func didSelectAnnotation(annotation: Annotation_Legacy) {
         selectionDelegateWasCalled = true
         selectionExpectation?.fulfill()
     }
 
-    func didDeselectAnnotation(annotation: Annotation) {
+    func didDeselectAnnotation(annotation: Annotation_Legacy) {
         deselectionDelegateWasCalled = true
         deselectionDelegateWasCalled = true
     }

@@ -7,7 +7,7 @@ import Turf
  Marks a single coordinate on the map with a customizable icon.
  By default, this is an image of a red pin.
  */
-public struct PointAnnotation: Annotation {
+public struct PointAnnotation_Legacy: Annotation_Legacy {
 
     // MARK: - Public properties
 
@@ -19,7 +19,7 @@ public struct PointAnnotation: Annotation {
     /**
      The type of the annotation - in this case, a point.
      */
-    public private(set) var type: AnnotationType = .point
+    public private(set) var type: AnnotationType_Legacy = .point
 
     /**
      The text string containing the annotation's title. If the value is defined,
@@ -87,7 +87,7 @@ public struct PointAnnotation: Annotation {
      */
     //swiftlint:disable function_body_length
     public func defaultAnnotationImage() -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(PointAnnotation.defaultIconSize,
+        UIGraphicsBeginImageContextWithOptions(PointAnnotation_Legacy.defaultIconSize,
                                                false,
                                                0)
         defer { UIGraphicsEndImageContext() }
@@ -165,8 +165,8 @@ public struct PointAnnotation: Annotation {
     }
 }
 
-extension PointAnnotation: Equatable {
-    public static func == (lhs: PointAnnotation, rhs: PointAnnotation) -> Bool {
+extension PointAnnotation_Legacy: Equatable {
+    public static func == (lhs: PointAnnotation_Legacy, rhs: PointAnnotation_Legacy) -> Bool {
         lhs.identifier == rhs.identifier
     }
 }

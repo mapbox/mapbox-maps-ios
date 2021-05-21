@@ -19,7 +19,7 @@ import MapboxMapsFoundation
 
  All annotations added with this class belong to a single source and style layer.
  */
-public class AnnotationManager {
+public class AnnotationManager_Legacy {
 
     // MARK: - Public properties
 
@@ -32,17 +32,17 @@ public class AnnotationManager {
              remove annotations. Instead, use the `addAnnotation` or `removeAnnotation`
              related methods update annotations belonging to the map view.
      */
-    public private(set) var annotations: [String: Annotation]
+    public private(set) var annotations: [String: Annotation_Legacy]
 
     /**
      The delegate to notify of changes in annotations.
      */
-    public weak var interactionDelegate: AnnotationInteractionDelegate?
+    public weak var interactionDelegate: AnnotationInteractionDelegate_Legacy?
 
     /**
      An array of annotations that have currently been selected by the annotation manager.
      */
-    public var selectedAnnotations: [Annotation] {
+    public var selectedAnnotations: [Annotation_Legacy] {
         return annotations.values.filter { ( annotation ) -> Bool in
             return annotation.isSelected
         }
@@ -100,7 +100,7 @@ public class AnnotationManager {
     /**
      Options used by the annotation manager.
      */
-    public var options: AnnotationOptions {
+    public var options: AnnotationOptions_Legacy {
         didSet {
             Log.warning(forMessage: "Updating annotation manager options is not supported at this time.", category: "Annotations")
         }
@@ -158,8 +158,8 @@ public class AnnotationManager {
                   mapEventsObservable: MapEventsObservable,
                   mapFeatureQueryable: MapFeatureQueryable,
                   style: AnnotationStyleDelegate,
-                  interactionDelegate: AnnotationInteractionDelegate? = nil,
-                  options: AnnotationOptions = AnnotationOptions()) {
+                  interactionDelegate: AnnotationInteractionDelegate_Legacy? = nil,
+                  options: AnnotationOptions_Legacy = AnnotationOptions_Legacy()) {
 
         self.view = view
         self.mapEventsObservable = mapEventsObservable
@@ -196,7 +196,7 @@ public class AnnotationManager {
      - Returns: If operation successful, returns a `true` as part of the `Result` success case.
                 Else, returns a `AnnotationError` in the `Result` failure case.
      */
-    @discardableResult public func addAnnotation(_ annotation: Annotation) -> Result<Bool, AnnotationError> {
+    @discardableResult public func addAnnotation(_ annotation: Annotation_Legacy) -> Result<Bool, AnnotationError> {
 
         if annotations[annotation.identifier] != nil {
             return .failure(.annotationAlreadyExists("Annotation has already been added."))
@@ -223,7 +223,7 @@ public class AnnotationManager {
 
      - Parameter annotations: Annotations to add to the `MapView`.
      */
-    @discardableResult public func addAnnotations(_ annotations: [Annotation]) -> Result<Bool, AnnotationError> {
+    @discardableResult public func addAnnotations(_ annotations: [Annotation_Legacy]) -> Result<Bool, AnnotationError> {
         for annotation in annotations {
             switch addAnnotation(annotation) {
             case .success:
@@ -243,7 +243,7 @@ public class AnnotationManager {
      - Throws: `AnnotationError.annotationDoesNotExist` if the annotation
                 hasn't been added, otherwise throws `AnnotationError.updateAnnotationFailed`.
      */
-    public func updateAnnotation(_ annotation: Annotation) throws {
+    public func updateAnnotation(_ annotation: Annotation_Legacy) throws {
 
         guard let existingAnnotation = annotations[annotation.identifier] else {
             throw AnnotationError.annotationDoesNotExist(nil)
@@ -267,7 +267,7 @@ public class AnnotationManager {
      - Returns: If operation successful, returns a `true` as part of the `Result` success case.
                 Else, returns a `AnnotationError` in the `Result` failure case.
      */
-    @discardableResult public func removeAnnotation(_ annotation: Annotation) -> Result<Bool, AnnotationError> {
+    @discardableResult public func removeAnnotation(_ annotation: Annotation_Legacy) -> Result<Bool, AnnotationError> {
 
         guard annotations[annotation.identifier] != nil else {
             return .failure(.removeAnnotationFailed("Annotation has already been removed"))
@@ -300,7 +300,7 @@ public class AnnotationManager {
 
      - Parameter annotations: Annotations to remove from the `MapView`.
      */
-    @discardableResult public func removeAnnotations(_ annotations: [Annotation]) -> Result<Bool, AnnotationError> {
+    @discardableResult public func removeAnnotations(_ annotations: [Annotation_Legacy]) -> Result<Bool, AnnotationError> {
         for annotation in annotations {
             switch removeAnnotation(annotation) {
             case .success:
@@ -319,7 +319,7 @@ public class AnnotationManager {
      If the annotation is selected, it becomes deselected.
      - Parameter Annotations: The annotation to select.
      */
-    public func selectAnnotation(_ annotation: Annotation) {
+    public func selectAnnotation(_ annotation: Annotation_Legacy) {
         if var annotation = annotations[annotation.identifier] {
             annotation.isSelected.toggle()
             annotations[annotation.identifier] = annotation
@@ -338,15 +338,15 @@ public class AnnotationManager {
      - Parameter annotationType: Type of annotation, for example, PointAnnotation.self
      - Returns: Identifier (or nil, if there isn't a layer for that type)
      */
-    public func layerId<T: Annotation>(for annotationType: T.Type) -> String? {
+    public func layerId<T: Annotation_Legacy>(for annotationType: T.Type) -> String? {
         switch annotationType {
-        case is PointAnnotation.Type:
+        case is PointAnnotation_Legacy.Type:
             return symbolLayer?.id
 
-        case is LineAnnotation.Type:
+        case is LineAnnotation_Legacy.Type:
             return lineLayer?.id
 
-        case is PolygonAnnotation.Type:
+        case is PolygonAnnotation_Legacy.Type:
             return fillLayer?.id
 
         default:
@@ -376,22 +376,22 @@ public class AnnotationManager {
     /**
      Creates a turf `Feature` based off an `Annotation`.
      */
-    internal func makeFeature(for annotation: Annotation) throws -> Feature {
+    internal func makeFeature(for annotation: Annotation_Legacy) throws -> Feature {
 
         var feature: Feature
 
         switch annotation {
-        case let point as PointAnnotation:
+        case let point as PointAnnotation_Legacy:
             feature = Feature(Point(point.coordinate))
 
             if point.image != nil {
                 feature.properties = ["icon-image": point.identifier]
             } else {
-                feature.properties = ["icon-image": PointAnnotation.defaultIconImageIdentifier]
+                feature.properties = ["icon-image": PointAnnotation_Legacy.defaultIconImageIdentifier]
             }
-        case let line as LineAnnotation:
+        case let line as LineAnnotation_Legacy:
             feature = Feature(LineString(line.coordinates))
-        case let polygon as PolygonAnnotation:
+        case let polygon as PolygonAnnotation_Legacy:
             var turfPolygon: Polygon
 
             if let holes = polygon.interiorPolygons {
@@ -419,7 +419,7 @@ public class AnnotationManager {
      its given index. If it does not exist yet within the `FeatureCollection`, it
      is appended to the `FeatureCollection`.
      */
-    internal func updateFeatureCollection(for annotation: Annotation) throws {
+    internal func updateFeatureCollection(for annotation: Annotation_Legacy) throws {
 
         let existingAnnotationIndex = annotationFeatures.features.firstIndex(where: { (feature) -> Bool in
             guard let featureIdentifier = feature.identifier?.value as? String else { return false }
@@ -438,7 +438,7 @@ public class AnnotationManager {
     /**
      Updates the source and style layers if needed.
      */
-    internal func updateLayers(for annotation: Annotation) throws {
+    internal func updateLayers(for annotation: Annotation_Legacy) throws {
         let geoJSONDictionary = try GeoJSONManager.dictionaryFrom(annotationFeatures)
         try updateSource(geoJSONDictionary: geoJSONDictionary)
         try updateStyleLayer(for: annotation)
@@ -463,20 +463,20 @@ public class AnnotationManager {
      Creates a style layer for a given annotation type,
      if the annotation type hasn't been added yet.
      */
-    internal func updateStyleLayer(for annotation: Annotation) throws {
+    internal func updateStyleLayer(for annotation: Annotation_Legacy) throws {
         switch annotation {
-        case let pointAnnotation as PointAnnotation:
+        case let pointAnnotation as PointAnnotation_Legacy:
             try updateSymbolStyleLayer(for: pointAnnotation)
-        case _ as LineAnnotation:
+        case _ as LineAnnotation_Legacy:
             try updateLineStyleLayer()
-        case _ as PolygonAnnotation:
+        case _ as PolygonAnnotation_Legacy:
             try updateFillStyleLayer()
         default:
             throw AnnotationError.styleLayerGenerationFailed(nil)
         }
     }
 
-    internal func updateSymbolStyleLayer(for pointAnnotation: PointAnnotation) throws {
+    internal func updateSymbolStyleLayer(for pointAnnotation: PointAnnotation_Legacy) throws {
 
         // If the point annotation has a custom image, add it to the sprite.
         if let customImage = pointAnnotation.image {
@@ -494,10 +494,10 @@ public class AnnotationManager {
         }
 
         // Add the default icon image to the sprite, but only once.
-        if styleDelegate.image(withId: PointAnnotation.defaultIconImageIdentifier) == nil {
+        if styleDelegate.image(withId: PointAnnotation_Legacy.defaultIconImageIdentifier) == nil {
 
             try styleDelegate.addImage(pointAnnotation.defaultAnnotationImage(),
-                                       id: PointAnnotation.defaultIconImageIdentifier,
+                                       id: PointAnnotation_Legacy.defaultIconImageIdentifier,
                                        sdf: false,
                                        stretchX: [],
                                        stretchY: [],

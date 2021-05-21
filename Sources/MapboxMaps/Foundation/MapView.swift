@@ -32,7 +32,7 @@ open class MapView: UIView {
     public internal(set) var location: LocationManager!
 
     /// Controls the addition/removal of annotations to the map.
-    public internal(set) var annotations: AnnotationManager!
+    public internal(set) var annotations: AnnotationManager_Legacy!
 
     /// A reference to the `EventsManager` used for dispatching telemetry.
     internal var eventsListener: EventsListener!
@@ -179,7 +179,7 @@ open class MapView: UIView {
         location = LocationManager(locationSupportableMapView: self, style: mapboxMap.style)
 
         // Initialize/Configure annotations manager
-        annotations = AnnotationManager(for: self,
+        annotations = AnnotationManager_Legacy(for: self,
                                         mapEventsObservable: mapboxMap,
                                         mapFeatureQueryable: mapboxMap,
                                         style: mapboxMap.style)

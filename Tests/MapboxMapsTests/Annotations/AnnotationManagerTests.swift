@@ -10,7 +10,7 @@ final class AnnotationManagerTests: XCTestCase {
     var annotationMapFeatureQueryable: MockMapFeatureQueryable!
     var annotationMapEventsObservable: MockMapEventsObservable!
     var annotationSupportableStyle: MockAnnotationStyleDelegate!
-    var annotationManager: AnnotationManager!
+    var annotationManager: AnnotationManager_Legacy!
 
     let defaultCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     let view = UIView()
@@ -20,7 +20,7 @@ final class AnnotationManagerTests: XCTestCase {
         annotationSupportableStyle = MockAnnotationStyleDelegate()
         annotationMapEventsObservable = MockMapEventsObservable()
         annotationMapFeatureQueryable = MockMapFeatureQueryable()
-        annotationManager = AnnotationManager(for: view,
+        annotationManager = AnnotationManager_Legacy(for: view,
                                               mapEventsObservable: annotationMapEventsObservable,
                                               mapFeatureQueryable: annotationMapFeatureQueryable,
                                               style: annotationSupportableStyle)
@@ -33,15 +33,15 @@ final class AnnotationManagerTests: XCTestCase {
     }
 
     // MARK: - Test adding point annotation
-    func testAnnotationOptions() {
-        let a = AnnotationOptions()
-        let b = AnnotationOptions()
+    func testAnnotationOptions_Legacy() {
+        let a = AnnotationOptions_Legacy()
+        let b = AnnotationOptions_Legacy()
         XCTAssertEqual(a, b)
 
         // Test ergonomics
-        _ = AnnotationOptions(layerPosition: .above("line-layer"))
-        _ = AnnotationOptions(sourceId: "test")
-        _ = AnnotationOptions(sourceOptions: AnnotationSourceOptions())
+        _ = AnnotationOptions_Legacy(layerPosition: .above("line-layer"))
+        _ = AnnotationOptions_Legacy(sourceId: "test")
+        _ = AnnotationOptions_Legacy(sourceOptions: AnnotationSourceOptions_Legacy())
     }
 
     func testAnnotationManagerDefaultInitialization() {
@@ -61,13 +61,13 @@ final class AnnotationManagerTests: XCTestCase {
     }
 
     func testLayerIdentifiers() {
-        let symbolLayerId = annotationManager.layerId(for: PointAnnotation.self)
+        let symbolLayerId = annotationManager.layerId(for: PointAnnotation_Legacy.self)
         XCTAssertNil(symbolLayerId)
 
-        let lineLayerId = annotationManager.layerId(for: LineAnnotation.self)
+        let lineLayerId = annotationManager.layerId(for: LineAnnotation_Legacy.self)
         XCTAssertNil(lineLayerId)
 
-        let fillLayerId = annotationManager.layerId(for: PolygonAnnotation.self)
+        let fillLayerId = annotationManager.layerId(for: PolygonAnnotation_Legacy.self)
         XCTAssertNil(fillLayerId)
     }
 
@@ -84,7 +84,7 @@ final class AnnotationManagerTests: XCTestCase {
     func testAnnotationFeatureConversion() {
         // Given
         let coordinate = CLLocationCoordinate2D(latitude: 25, longitude: 25)
-        let annotation = PointAnnotation(coordinate: coordinate)
+        let annotation = PointAnnotation_Legacy(coordinate: coordinate)
 
         // When
         let feature = try? annotationManager.makeFeature(for: annotation)
@@ -109,7 +109,7 @@ final class AnnotationManagerTests: XCTestCase {
     func testUpdateFeatureCollection() {
         // Given / When
         let coordinate = CLLocationCoordinate2D(latitude: -45, longitude: 50)
-        let annotation = PointAnnotation(coordinate: coordinate)
+        let annotation = PointAnnotation_Legacy(coordinate: coordinate)
 
         // Then
         XCTAssertTrue(annotationManager.annotationFeatures.features.isEmpty)
@@ -119,7 +119,7 @@ final class AnnotationManagerTests: XCTestCase {
 
     func testAddingSingleAnnotation() {
         // Given
-        let annotation = PointAnnotation(coordinate: defaultCoordinate)
+        let annotation = PointAnnotation_Legacy(coordinate: defaultCoordinate)
         let expectedAnnotationsCount = 1
 
         // When
@@ -133,8 +133,8 @@ final class AnnotationManagerTests: XCTestCase {
 
     func testAddingMultipleAnnotations() {
         // Given
-        let annotation1 = PointAnnotation(coordinate: defaultCoordinate)
-        let annotation2 = PointAnnotation(coordinate: defaultCoordinate)
+        let annotation1 = PointAnnotation_Legacy(coordinate: defaultCoordinate)
+        let annotation2 = PointAnnotation_Legacy(coordinate: defaultCoordinate)
         let expectedAnnotationsCount = 2
 
         // When
@@ -149,7 +149,7 @@ final class AnnotationManagerTests: XCTestCase {
 
     func testRemoveSingleAnnotation() {
         // Given
-        let annotation = PointAnnotation(coordinate: defaultCoordinate)
+        let annotation = PointAnnotation_Legacy(coordinate: defaultCoordinate)
         let expectedAnnotationCount = 0
 
         // When
@@ -165,9 +165,9 @@ final class AnnotationManagerTests: XCTestCase {
 
     func testRemoveMultipleAnnotations() {
         // Given
-        let annotation1 = PointAnnotation(coordinate: defaultCoordinate)
-        let annotation2 = PointAnnotation(coordinate: defaultCoordinate)
-        let annotation3 = PointAnnotation(coordinate: defaultCoordinate)
+        let annotation1 = PointAnnotation_Legacy(coordinate: defaultCoordinate)
+        let annotation2 = PointAnnotation_Legacy(coordinate: defaultCoordinate)
+        let annotation3 = PointAnnotation_Legacy(coordinate: defaultCoordinate)
         let expectedAnnotationCount = 1
 
         // When
@@ -183,7 +183,7 @@ final class AnnotationManagerTests: XCTestCase {
 
     func testUpdateAnnotation() {
         // Given
-        var annotation = PointAnnotation(coordinate: defaultCoordinate)
+        var annotation = PointAnnotation_Legacy(coordinate: defaultCoordinate)
         annotationManager.addAnnotation(annotation)
 
         // When
@@ -191,7 +191,7 @@ final class AnnotationManagerTests: XCTestCase {
 
         // Then
         XCTAssertNoThrow(try annotationManager.updateAnnotation(annotation))
-        let pointAnnotation = annotationManager.annotations[annotation.identifier] as? PointAnnotation
+        let pointAnnotation = annotationManager.annotations[annotation.identifier] as? PointAnnotation_Legacy
         XCTAssertEqual(annotation.coordinate, pointAnnotation?.coordinate)
     }
 
@@ -211,24 +211,24 @@ final class AnnotationManagerTests: XCTestCase {
     }
 
     func testLayerIdentifiersAfterAddingAnnotation() {
-        annotationManager.addAnnotation(PointAnnotation(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0)))
-        let symbolLayerId = annotationManager.layerId(for: PointAnnotation.self)
+        annotationManager.addAnnotation(PointAnnotation_Legacy(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0)))
+        let symbolLayerId = annotationManager.layerId(for: PointAnnotation_Legacy.self)
         XCTAssertEqual(symbolLayerId, annotationManager.defaultSymbolLayerId)
 
-        annotationManager.addAnnotation(LineAnnotation(coordinates: [
+        annotationManager.addAnnotation(LineAnnotation_Legacy(coordinates: [
             CLLocationCoordinate2D(latitude: 0, longitude: 0),
             CLLocationCoordinate2D(latitude: 1, longitude: 1)
         ]))
-        let lineLayerId = annotationManager.layerId(for: LineAnnotation.self)
+        let lineLayerId = annotationManager.layerId(for: LineAnnotation_Legacy.self)
         XCTAssertEqual(lineLayerId, annotationManager.defaultLineLayerId)
 
-        annotationManager.addAnnotation(PolygonAnnotation(coordinates: [
+        annotationManager.addAnnotation(PolygonAnnotation_Legacy(coordinates: [
             CLLocationCoordinate2D(latitude: 0, longitude: 0),
             CLLocationCoordinate2D(latitude: 0, longitude: 1),
             CLLocationCoordinate2D(latitude: 1, longitude: 1),
             CLLocationCoordinate2D(latitude: 1, longitude: 0)
         ]))
-        let fillLayerId = annotationManager.layerId(for: PolygonAnnotation.self)
+        let fillLayerId = annotationManager.layerId(for: PolygonAnnotation_Legacy.self)
         XCTAssertEqual(fillLayerId, annotationManager.defaultPolygonLayerId)
     }
 }

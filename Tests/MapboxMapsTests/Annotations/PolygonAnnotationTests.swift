@@ -32,7 +32,7 @@ class PolygonAnnotationTests: XCTestCase {
         // Given state from setUp()
 
         // When
-        let annotation = PolygonAnnotation(coordinates: defaultCoordinates)
+        let annotation = PolygonAnnotation_Legacy(coordinates: defaultCoordinates)
 
         // Then
         XCTAssertNotNil(annotation.identifier)
@@ -44,10 +44,10 @@ class PolygonAnnotationTests: XCTestCase {
 
     func testPolygonAnnotationsHaveUniqueIdentifiers() {
         // Given
-        let annotation1 = PolygonAnnotation(coordinates: defaultCoordinates)
+        let annotation1 = PolygonAnnotation_Legacy(coordinates: defaultCoordinates)
 
         // When
-        let annotation2 = PolygonAnnotation(coordinates: defaultCoordinates)
+        let annotation2 = PolygonAnnotation_Legacy(coordinates: defaultCoordinates)
 
         // Then
         XCTAssertNotEqual(annotation1.identifier, annotation2.identifier)
@@ -63,7 +63,7 @@ class PolygonAnnotationTests: XCTestCase {
             CLLocationCoordinate2DMake(24.806681, -88.637695)
         ]
 
-        let polygon = PolygonAnnotation(coordinates: defaultCoordinates, interiorPolygons: [interiorPolygon])
+        let polygon = PolygonAnnotation_Legacy(coordinates: defaultCoordinates, interiorPolygons: [interiorPolygon])
 
         XCTAssertNotNil(polygon.interiorPolygons)
     }

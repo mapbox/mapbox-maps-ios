@@ -1,12 +1,12 @@
 import Foundation
 
 /// :nodoc:
-public struct AnnotationSourceOptions: Equatable {
+public struct AnnotationSourceOptions_Legacy: Equatable {
     // TODO: Add source and cluster options
 }
 
 /// Configuration options for the AnnotationManager
-public struct AnnotationOptions: Equatable {
+public struct AnnotationOptions_Legacy: Equatable {
     /// The `LayerPosition` used to position the underlying style layers. Default will position the
     /// layers above existing layers.
     public var layerPosition: LayerPosition?
@@ -21,5 +21,5 @@ public struct AnnotationOptions: Equatable {
     public var sourceId: String?
 
     /// :nodoc: Source configuration options
-    public var sourceOptions: AnnotationSourceOptions = AnnotationSourceOptions()
+    public var sourceOptions: AnnotationSourceOptions_Legacy = AnnotationSourceOptions_Legacy()
 }

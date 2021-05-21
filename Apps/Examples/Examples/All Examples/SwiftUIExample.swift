@@ -43,9 +43,9 @@ internal struct SwiftUIMapView: UIViewRepresentable {
     }
 
     /// Here's a property and builder method for annotations
-    private var annotations = [Annotation]()
+    private var annotations = [Annotation_Legacy]()
 
-    func annotations(_ annotations: [Annotation]) -> Self {
+    func annotations(_ annotations: [Annotation_Legacy]) -> Self {
         var updated = self
         updated.annotations = annotations
         return updated
@@ -110,7 +110,7 @@ internal class SwiftUIMapViewCoordinator {
 
     /// It also has a setter for annotations. When the annotations
     /// are set, it synchronizes them to the map
-    var annotations = [Annotation]() {
+    var annotations = [Annotation_Legacy]() {
         didSet {
             syncAnnotations()
         }
@@ -200,9 +200,9 @@ internal struct ContentView: View {
     /// Each time you create an annotation, it is assigned a UUID. For this reason, it's not a great
     /// idea to actually create annotations inside of `body` which may be called repeatedly
     @State private var annotations = [
-        PointAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -75)),
-        PointAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -75.001)),
-        PointAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -74.999))
+        PointAnnotation_Legacy(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -75)),
+        PointAnnotation_Legacy(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -75.001)),
+        PointAnnotation_Legacy(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -74.999))
     ]
 
     public var body: some View {

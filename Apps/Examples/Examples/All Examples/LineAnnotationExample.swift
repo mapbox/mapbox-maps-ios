@@ -27,7 +27,7 @@ public class LineAnnotationExample: UIViewController, ExampleProtocol {
             ]
 
             // Create the line annotation.
-            let lineAnnotation = LineAnnotation(coordinates: lineCoordinates)
+            let lineAnnotation = LineAnnotation_Legacy(coordinates: lineCoordinates)
 
             // Add the annotation to the map.
             self.mapView.annotations.addAnnotation(lineAnnotation)

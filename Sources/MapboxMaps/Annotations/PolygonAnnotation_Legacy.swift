@@ -6,7 +6,7 @@ import Turf
 /**
  Marks a region of coordinates on map, representing a polygon shape.
  */
-public struct PolygonAnnotation: Annotation {
+public struct PolygonAnnotation_Legacy: Annotation_Legacy {
 
     // MARK: - Public properties
 
@@ -18,7 +18,7 @@ public struct PolygonAnnotation: Annotation {
     /**
      The type of the annotation - in this case, a polygon.
      */
-    public private(set) var type: AnnotationType = .polygon
+    public private(set) var type: AnnotationType_Legacy = .polygon
 
     /**
      The text string containing the polygon's title. If the value is defined,
@@ -69,8 +69,8 @@ public struct PolygonAnnotation: Annotation {
     }
 }
 
-extension PolygonAnnotation: Equatable {
-    public static func == (lhs: PolygonAnnotation, rhs: PolygonAnnotation) -> Bool {
+extension PolygonAnnotation_Legacy: Equatable {
+    public static func == (lhs: PolygonAnnotation_Legacy, rhs: PolygonAnnotation_Legacy) -> Bool {
         lhs.identifier == rhs.identifier
     }
 }

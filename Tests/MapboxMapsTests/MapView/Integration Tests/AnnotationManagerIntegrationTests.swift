@@ -29,8 +29,8 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
             }
 
             // Given
-            let annotation = PointAnnotation(coordinate: mapView.cameraState.center)
-            let annotationManager = AnnotationManager(for: mapView,
+            let annotation = PointAnnotation_Legacy(coordinate: mapView.cameraState.center)
+            let annotationManager = AnnotationManager_Legacy(for: mapView,
                                                       mapEventsObservable: mapView.mapboxMap,
                                                       mapFeatureQueryable: mapView.mapboxMap,
                                                       style: style)
@@ -61,16 +61,16 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
 
         didFinishLoadingStyle = { mapView in
             // Given
-            let annotation = PointAnnotation(coordinate: mapView.cameraState.center)
+            let annotation = PointAnnotation_Legacy(coordinate: mapView.cameraState.center)
             let requiredIndex = 3
-            let annotationManager = AnnotationManager(for: mapView,
+            let annotationManager = AnnotationManager_Legacy(for: mapView,
                                                       mapEventsObservable: mapView.mapboxMap,
                                                       mapFeatureQueryable: mapView.mapboxMap,
                                                       style: style,
-                                                      options: AnnotationOptions(layerPosition: .at(requiredIndex)))
+                                                      options: AnnotationOptions_Legacy(layerPosition: .at(requiredIndex)))
             annotationManager.addAnnotation(annotation)
 
-            guard let layerId = annotationManager.layerId(for: PointAnnotation.self) else {
+            guard let layerId = annotationManager.layerId(for: PointAnnotation_Legacy.self) else {
                 XCTFail("Layer should exist")
                 return
             }
@@ -111,8 +111,8 @@ internal class AnnotationManagerIntegrationTestCase: MapViewIntegrationTestCase 
             }
 
             // Given
-            var annotation = PointAnnotation(coordinate: mapView.cameraState.center)
-            let annotationManager = AnnotationManager(for: mapView,
+            var annotation = PointAnnotation_Legacy(coordinate: mapView.cameraState.center)
+            let annotationManager = AnnotationManager_Legacy(for: mapView,
                                                       mapEventsObservable: mapView.mapboxMap,
                                                       mapFeatureQueryable: mapView.mapboxMap,
                                                       style: style)

@@ -455,7 +455,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
     func todo_testAnnotationInteraction() {
         //-->
-        class MyViewController: UIViewController, AnnotationInteractionDelegate {
+        class MyViewController: UIViewController, AnnotationInteractionDelegate_Legacy {
             @IBOutlet var mapView: MapView!
 
             override func viewDidLoad() {
@@ -463,17 +463,17 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                 mapView.mapboxMap.onNext(.mapLoaded) { _ in
                     self.mapView.annotations.interactionDelegate = self
                     let coordinate = CLLocationCoordinate2DMake(24, -89)
-                    let pointAnnotation = PointAnnotation(coordinate: coordinate)
+                    let pointAnnotation = PointAnnotation_Legacy(coordinate: coordinate)
                     self.mapView.annotations.addAnnotation(pointAnnotation)
                 }
             }
 
             // MARK: - AnnotationInteractionDelegate
-            public func didSelectAnnotation(annotation: Annotation) {
+            public func didSelectAnnotation(annotation: Annotation_Legacy) {
                 print("Annotation selected")
             }
 
-            public func didDeselectAnnotation(annotation: Annotation) {
+            public func didDeselectAnnotation(annotation: Annotation_Legacy) {
                 print("Annotation deselected")
             }
         }

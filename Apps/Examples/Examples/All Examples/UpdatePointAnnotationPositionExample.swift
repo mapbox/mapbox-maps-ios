@@ -7,7 +7,7 @@ import Turf
 public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
-    internal var pointAnnotation: PointAnnotation!
+    internal var pointAnnotation: PointAnnotation_Legacy!
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +30,7 @@ public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProt
     }
 
     public func addPointAnnotation() {
-        pointAnnotation = PointAnnotation(coordinate: mapView.cameraState.center)
+        pointAnnotation = PointAnnotation_Legacy(coordinate: mapView.cameraState.center)
         mapView.annotations.addAnnotation(pointAnnotation)
         mapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(updatePosition)))
     }

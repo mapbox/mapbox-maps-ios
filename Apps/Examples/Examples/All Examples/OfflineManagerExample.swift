@@ -325,7 +325,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
                 return
             }
 
-            annotations.addAnnotation(PointAnnotation(coordinate: coord))
+            annotations.addAnnotation(PointAnnotation_Legacy(coordinate: coord))
         }
 
         self.mapView = mapView

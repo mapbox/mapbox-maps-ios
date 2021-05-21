@@ -57,7 +57,7 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
 
         // Create the point annotation, which will be rendered with the default red pin.
         let coordinate = mapView.cameraState.center
-        let pointAnnotation = PointAnnotation(coordinate: coordinate)
+        let pointAnnotation = PointAnnotation_Legacy(coordinate: coordinate)
 
         // Allow the view controller to accept annotation selection events.
         mapView.annotations.interactionDelegate = self
@@ -71,13 +71,13 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
 }
 
 // Change the label's text and style when it is selected or deselected.
-extension SelectAnnotationExample: AnnotationInteractionDelegate {
-    public func didDeselectAnnotation(annotation: Annotation) {
+extension SelectAnnotationExample: AnnotationInteractionDelegate_Legacy {
+    public func didDeselectAnnotation(annotation: Annotation_Legacy) {
         label.backgroundColor = UIColor.systemGray
         label.text = "Deselected annotation"
     }
 
-    public func didSelectAnnotation(annotation: Annotation) {
+    public func didSelectAnnotation(annotation: Annotation_Legacy) {
         label.backgroundColor = UIColor.systemGreen
         label.text = "Selected annotation!"
     }

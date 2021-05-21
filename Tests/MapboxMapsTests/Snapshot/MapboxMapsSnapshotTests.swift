@@ -36,8 +36,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
             XCTAssertNotNil(result)
             
         }
-        wait(for: [expectation], timeout: 30)
-
+        wait(for: [expectation], timeout: timeout)
     }
     
     // Testing snapshot overlay
@@ -63,7 +62,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
                 let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Snapshot Asset.png")
                 do {
                     try image.pngData()?.write(to: url)
-                    print(url)
+
                 } catch {
                     print(error)
                 }
@@ -75,13 +74,12 @@ class MapboxMapsSnapshotTests: XCTestCase {
     
     func testSnapshotSizeAndScaleAccuracy() {
         let imageRect = CGRect(x: 0, y: 0, width: 300, height: 300)
+
         let options = snapshotterOptions()
         let snapshotter = Snapshotter(options: options) //should have protocol for GLnative (may have been ticketed)
-
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
         snapshotter.setCamera(to: cameraOptions)
         snapshotter.style.uri = .light
-
         let expectation = self.expectation(description: "snapshot accuracy")
         expectation.expectedFulfillmentCount = 2
         snapshotter.start { (overlay) in
@@ -89,7 +87,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
         } completion: { (result) in
             // size comparison for snapshotter
             XCTAssertEqual(snapshotter.snapshotSize, imageRect.size)
-            
+
             //scale and size comparison for image
             switch result {
             case let .success(image) :

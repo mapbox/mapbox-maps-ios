@@ -162,6 +162,7 @@
 		2B8637E32462F5AE00698135 /* MapboxScaleBarLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8637E22462F5AE00698135 /* MapboxScaleBarLabel.swift */; };
 		2B8637E62463F36400698135 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8637D72461992200698135 /* DistanceFormatter.swift */; };
 		58AB5817265718FC00A232D4 /* Snapshot Asset.png in Resources */ = {isa = PBXBuildFile; fileRef = 58AB5812265718E300A232D4 /* Snapshot Asset.png */; };
+		5842CC51260E6BBC00C92CA5 /* Snapshot Asset.png in Resources */ = {isa = PBXBuildFile; fileRef = 5842CC50260E6BBC00C92CA5 /* Snapshot Asset.png */; };
 		5A35924524644C5E00E67344 /* CompassDirectionFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A359243246448E600E67344 /* CompassDirectionFormatter.swift */; };
 		5A3592B3246C1FA000E67344 /* MapboxInfoButtonOrnament.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3592AC246AD45500E67344 /* MapboxInfoButtonOrnament.swift */; };
 		5A9648FE246429C3001FF05D /* MapboxCompassOrnamentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9648FC2462F07B001FF05D /* MapboxCompassOrnamentView.swift */; };
@@ -434,6 +435,14 @@
 		07BA35CC251578DD003E1B55 /* AnnotationInteractionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationInteractionDelegate.swift; sourceTree = "<group>"; };
 		07BF0C5E24F4875F00754DB2 /* Geometry+MBXGeometryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Geometry+MBXGeometryTests.swift"; sourceTree = "<group>"; };
 		07C1B3DB2446B6F40044A3C6 /* MapboxMapsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MapboxMapsSnapshotTests.swift; path = ../Tests/MapboxMapsTests/Snapshot/MapboxMapsSnapshotTests.swift; sourceTree = SOURCE_ROOT; };
+		07C1B38C2446B0550044A3C6 /* MapboxMapsOffline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapboxMapsOffline.h; sourceTree = "<group>"; };
+		07C1B38D2446B0550044A3C6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		07C1B3972446B0550044A3C6 /* MapboxMapsOfflineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxMapsOfflineTests.swift; sourceTree = "<group>"; };
+		07C1B3992446B0550044A3C6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		07C1B3D02446B6F40044A3C6 /* MapboxMapsSnapshot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapboxMapsSnapshot.h; sourceTree = "<group>"; };
+		07C1B3D12446B6F40044A3C6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		07C1B3DB2446B6F40044A3C6 /* MapboxMapsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MapboxMapsSnapshotTests.swift; path = ../Tests/MapboxMapsTests/Snapshot/MapboxMapsSnapshotTests.swift; sourceTree = SOURCE_ROOT; };
+		07C1B3DD2446B6F40044A3C6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		07D2C7DA2523EBE60025C2BA /* PolygonAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolygonAnnotation.swift; sourceTree = "<group>"; };
 		07D2C80B2523ECC40025C2BA /* PolygonAnnotationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolygonAnnotationTests.swift; sourceTree = "<group>"; };
 		07D7150325798CD70025BF61 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
@@ -598,6 +607,7 @@
 		2B863851246D337200698135 /* featurecollection.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = featurecollection.geojson; sourceTree = "<group>"; };
 		2B86385D246D3BA700698135 /* GeoJSONManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoJSONManagerTests.swift; sourceTree = "<group>"; };
 		58AB5812265718E300A232D4 /* Snapshot Asset.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Snapshot Asset.png"; sourceTree = "<group>"; };
+		5842CC50260E6BBC00C92CA5 /* Snapshot Asset.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Snapshot Asset.png"; sourceTree = "<group>"; };
 		5A359243246448E600E67344 /* CompassDirectionFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassDirectionFormatter.swift; sourceTree = "<group>"; };
 		5A35924F246598F600E67344 /* CompassDirectionFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassDirectionFormatterTests.swift; sourceTree = "<group>"; };
 		5A3592AC246AD45500E67344 /* MapboxInfoButtonOrnament.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxInfoButtonOrnament.swift; sourceTree = "<group>"; };
@@ -926,6 +936,7 @@
 			isa = PBXGroup;
 			children = (
 				58AB5812265718E300A232D4 /* Snapshot Asset.png */,
+				5842CC50260E6BBC00C92CA5 /* Snapshot Asset.png */,
 				07C1B3DB2446B6F40044A3C6 /* MapboxMapsSnapshotTests.swift */,
 			);
 			name = MapboxMapsSnapshotTests;
@@ -1888,6 +1899,7 @@
 				07E816DA256D72E500ACFA73 /* Assets.xcassets in Resources */,
 				CA549005251C404B00F829A3 /* featurecollection.geojson in Resources */,
 				CA549006251C404B00F829A3 /* polygon.geojson in Resources */,
+				5842CC51260E6BBC00C92CA5 /* Snapshot Asset.png in Resources */,
 				CA549007251C404B00F829A3 /* point.geojson in Resources */,
 				CA549008251C404B00F829A3 /* multipoint.geojson in Resources */,
 				B5A6922B2627566A00A03412 /* MapInitOptionsTests.xib in Resources */,

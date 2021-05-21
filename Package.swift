@@ -45,11 +45,15 @@ let package = Package(
                 .copy("Foundation/GeoJSON/Fixtures/multipolygon.geojson"),
                 .copy("Helpers/MapboxAccessToken"),
 <<<<<<< HEAD
+<<<<<<< HEAD
                 .copy("Resources/empty-style-chicago.json"),
                 .process("Resources/MapInitOptionsTests.xib"),
 =======
                 .copy("Snapshot/Snapshot Asset.png"),
 >>>>>>> created snapshotter tests for overlay, size/scale accuracy and data comparison. Also made changes in Snapshotter to ensure snapshot size/scale are properly calculated
+=======
+                .copy("Snapshot/Snapshot Asset.png"),
+>>>>>>> bf82042cbd6c546a6396e0ce7ba8391a63fc4cc5
             ]
         )
     ]

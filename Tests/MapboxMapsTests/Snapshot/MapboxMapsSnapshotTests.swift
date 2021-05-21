@@ -90,7 +90,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
                 let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Snapshot Asset.png")
                 do {
                     try image.pngData()?.write(to: url)
-                    print(url)
                 } catch {
                     print(error)
                 }

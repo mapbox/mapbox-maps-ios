@@ -1750,6 +1750,9 @@
 				CA952ED0251C30B80099C080 /* PBXTargetDependency */,
 			);
 			name = MapboxTestHost;
+			packageProductDependencies = (
+				CAB77E3C2654AB310071D74C /* MapboxCoreMaps */,
+			);			
 			productName = MapboxMapsTestHost;
 			productReference = CA4453C52436E71500477B4F /* MapboxTestHost.app */;
 			productType = "com.apple.product-type.application";

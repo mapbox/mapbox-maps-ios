@@ -11,7 +11,8 @@ public class PointClusteringExample: UIViewController, ExampleProtocol {
         super.viewDidLoad()
 
         // Initialize a map view centered over the United States and using the Mapbox Dark style.
-        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 40.669957, longitude: -103.5917968), zoom: 2)
+        let center = CLLocationCoordinate2D(latitude: 40.669957, longitude: -103.5917968)
+        let cameraOptions = CameraOptions(center: center, zoom: 2)
         let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .dark)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)

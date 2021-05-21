@@ -26,7 +26,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
     func testSnapshotCancellation() throws {
         weak var weakSnapshotter: Snapshotter?
         let expectation = self.expectation(description: "snapshot")
-        expectation.assertForOverFulfill = false
         try autoreleasepool {
             let options = try snapshotterOptions()
             let snapshotter = Snapshotter(options: options)
@@ -37,9 +36,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
             weakSnapshotter?.start(overlayHandler: nil) { (result) in
                 expectation.fulfill()
                 XCTAssertNotNil(result)
-                // completion being called twice
                 XCTAssertNil(weakSnapshotter)
-                print("here is the result: \(result)")
             }
         }
         XCTAssertNil(weakSnapshotter)

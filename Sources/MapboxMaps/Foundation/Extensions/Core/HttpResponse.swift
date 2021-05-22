@@ -16,12 +16,12 @@ extension HttpResponse {
     ///   - request: Original request
     ///   - result: Result type encapsulating response or error
     public convenience init(request: HttpRequest, result: Result<HttpResponseData, HttpRequestError>) {
-        let expected: MBXExpected<AnyObject, AnyObject>
+        let expected: Expected<AnyObject, AnyObject>
         switch result {
         case let .success(response):
-            expected = MBXExpected(value: response)
+            expected = Expected(value: response)
         case let .failure(error):
-            expected = MBXExpected(error: error)
+            expected = Expected(error: error)
         }
 
         self.init(request: request, result: expected)
@@ -30,8 +30,8 @@ extension HttpResponse {
     /// Result of HTTP request call.
     public var result: Result<HttpResponseData, HttpRequestError> {
 
-        guard let expected = __result as? MBXExpected<HttpResponseData, HttpRequestError>  else {
-            fatalError("Invalid MBXExpected types or none.")
+        guard let expected = __result as? Expected<HttpResponseData, HttpRequestError>  else {
+            fatalError("Invalid Expected types or none.")
         }
 
         if expected.isValue() {

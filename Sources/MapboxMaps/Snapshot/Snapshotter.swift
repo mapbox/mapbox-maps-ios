@@ -87,16 +87,11 @@ public class Snapshotter {
         let scale = CGFloat(options.pixelRatio)
 
         mapSnapshotter.start { (expected) in
-            guard let validExpected = expected else {
-                completion(.failure(.unknown))
-                return
+            if expected.isError() {
+                completion(.failure(.snapshotFailed(reason: expected.error as? String)))
             }
 
-            if validExpected.isError() {
-                completion(.failure(.snapshotFailed(reason: validExpected.error as? String)))
-            }
-
-            if validExpected.isValue(), let snapshot = validExpected.value as? MapSnapshot {
+            if expected.isValue(), let snapshot = expected.value as? MapSnapshot {
                 let mbxImage = snapshot.image()
 
                 if let uiImage = UIImage(mbxImage: mbxImage, scale: scale) {
@@ -151,7 +146,7 @@ public class Snapshotter {
                 }
             }
 
-            if validExpected.isError(), let error = validExpected.error as? String {
+            if expected.isError(), let error = expected.error as? String {
                 completion(.failure(.snapshotFailed(reason: error)))
             }
 

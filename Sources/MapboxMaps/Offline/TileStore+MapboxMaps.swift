@@ -157,9 +157,9 @@ extension TileStore {
     ///     worker thread; it is the responsibility of the user to dispatch to a
     ///     user-controlled thread.
     public func tileRegionGeometry(forId id: String,
-                                   completion: @escaping (Result<MBXGeometry, Error>) -> Void) {
+                                   completion: @escaping (Result<MapboxCommon.Geometry, Error>) -> Void) {
         __getTileRegion(forId: id,
-                        callback: tileStoreClosureAdapter(for: completion, type: MBXGeometry.self))
+                        callback: tileStoreClosureAdapter(for: completion, type: MapboxCommon.Geometry.self))
     }
 
     /// Fetch a tile region's associated metadata
@@ -179,6 +179,6 @@ extension TileStore {
 
 private func tileStoreClosureAdapter<T, ObjCType>(
     for closure: @escaping (Result<T, Error>) -> Void,
-    type: ObjCType.Type) -> ((MBXExpected<AnyObject, AnyObject>?) -> Void) where ObjCType: AnyObject {
+    type: ObjCType.Type) -> ((Expected<AnyObject, AnyObject>?) -> Void) where ObjCType: AnyObject {
     return coreAPIClosureAdapter(for: closure, type: type, concreteErrorType: TileRegionError.self)
 }

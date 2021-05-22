@@ -20,7 +20,7 @@ extension TileRegionLoadOptions {
     ///
     /// If `metadata` is not a valid JSON object, then this initializer returns
     /// `nil`.
-    public convenience init?(geometry: MBXGeometry?,
+    public convenience init?(geometry: MapboxCommon.Geometry?,
                              descriptors: [TilesetDescriptor],
                              metadata: Any? = nil,
                              acceptExpired: Bool = false ,

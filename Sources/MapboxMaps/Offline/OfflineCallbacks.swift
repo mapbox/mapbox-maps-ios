@@ -13,22 +13,22 @@ internal enum OfflineError: Error {
 /// - Parameters:
 ///   - closure: developer provided completion closure.
 ///   - type: The ObjC type. For example, for `[TileRegion]` this would be `NSArray`
-/// - Returns: A suitable `MBXExpected` base closure.
+/// - Returns: A suitable `Expected` base closure.
 internal func coreAPIClosureAdapter<T, SwiftError, ObjCType>(
     for closure: @escaping (Result<T, Error>) -> Void,
     type: ObjCType.Type,
-    concreteErrorType: SwiftError.Type) -> ((MBXExpected<AnyObject, AnyObject>?) -> Void) where ObjCType: AnyObject,
+    concreteErrorType: SwiftError.Type) -> ((Expected<AnyObject, AnyObject>?) -> Void) where ObjCType: AnyObject,
                                                                                                 SwiftError: CoreErrorRepresentable,
                                                                                                 SwiftError.CoreErrorType: AnyObject {
-    return { (expected: MBXExpected?) in
+    return { (expected: Expected?) in
         let result: Result<T, Error>
 
         defer {
             closure(result)
         }
 
-        guard let expected = expected as? MBXExpected<ObjCType, SwiftError.CoreErrorType>  else {
-            assertionFailure("Invalid MBXExpected types or none.")
+        guard let expected = expected as? Expected<ObjCType, SwiftError.CoreErrorType>  else {
+            assertionFailure("Invalid Expected types or none.")
             result = .failure(OfflineError.typeMismatch)
             return
         }
@@ -46,17 +46,17 @@ internal func coreAPIClosureAdapter<T, SwiftError, ObjCType>(
 
 internal func coreAPIClosureAdapter<SwiftError>(
     for closure: @escaping (Result<Void, Error>) -> Void,
-    concreteErrorType: SwiftError.Type) -> ((MBXExpected<AnyObject, AnyObject>?) -> Void) where SwiftError: CoreErrorRepresentable,
+    concreteErrorType: SwiftError.Type) -> ((Expected<AnyObject, AnyObject>?) -> Void) where SwiftError: CoreErrorRepresentable,
                                                                                                 SwiftError.CoreErrorType: AnyObject {
-    return { (expected: MBXExpected?) in
+    return { (expected: Expected?) in
         let result: Result<Void, Error>
 
         defer {
             closure(result)
         }
 
-        guard let expected = expected as? MBXExpected<AnyObject, SwiftError.CoreErrorType>  else {
-            assertionFailure("Invalid MBXExpected types or none.")
+        guard let expected = expected as? Expected<AnyObject, SwiftError.CoreErrorType>  else {
+            assertionFailure("Invalid Expected types or none.")
             result = .failure(OfflineError.typeMismatch)
             return
         }

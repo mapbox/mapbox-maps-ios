@@ -2,13 +2,15 @@ import Foundation
 import MapboxCommon
 import Turf
 
+public typealias Feature = Turf.Feature
+
 // MARK: - Feature
 
 extension Feature {
 
-    /// Initialize a `Turf.Feature` with an `MBXFeature` object.
-    /// - Parameter feature: The `MBXFeature` to use to create the `Feature`.
-    public init?(_ feature: MBXFeature) {
+    /// Initialize a `Turf.Feature` with an `MapboxCommon.Feature` object.
+    /// - Parameter feature: The `MapboxCommon.Feature` to use to create the `Feature`.
+    public init?(_ feature: MapboxCommon.Feature) {
         guard let geometry = Geometry(feature.geometry) else { return nil }
 
         self.init(geometry: geometry)
@@ -74,8 +76,8 @@ extension Feature {
     }
 }
 
-extension MBXFeature {
-    /// Initialize an `MBXFeature` with a `Turf.Feature`
+extension MapboxCommon.Feature {
+    /// Initialize an `MapboxCommon.Feature` with a `Turf.Feature`
     internal convenience init?(_ feature: Feature) {
 
         let identifier: Any?
@@ -98,7 +100,7 @@ extension MBXFeature {
             identifier = nil
         }
 
-        let geometry = MBXGeometry(geometry: feature.geometry)
+        let geometry = MapboxCommon.Geometry(geometry: feature.geometry)
         let properties = feature.properties
 
         print("TODO: \(String(describing: identifier)) \(geometry) \(String(describing: properties))")

@@ -3,47 +3,47 @@ import MapboxCommon
 import CoreLocation
 import Turf
 
-// MARK: - MBXGeometry
+// MARK: - MapboxCommon.Geometry
 
-extension MBXGeometry {
+extension MapboxCommon.Geometry {
 
-    /// Initialize a `MBXGeometry` point from a coordinate.
-    /// - Parameter coordinate: The coordinate to represent the `MBXGeometry` point.
+    /// Initialize a `MapboxCommon.Geometry` point from a coordinate.
+    /// - Parameter coordinate: The coordinate to represent the `MapboxCommon.Geometry` point.
     public convenience init(coordinate: CLLocationCoordinate2D) {
         let pointValue = coordinate.toValue()
         self.init(point: pointValue)
     }
 
-    /// Initialize a `MBXGeometry` line from an array of coordinates.
-    /// - Parameter coordinates: The coordinates to represent the `MBXGeometry` line.
+    /// Initialize a `MapboxCommon.Geometry` line from an array of coordinates.
+    /// - Parameter coordinates: The coordinates to represent the `MapboxCommon.Geometry` line.
     public convenience init(line coordinates: [CLLocationCoordinate2D]) {
         let lineValues = CLLocationCoordinate2D.convertToValues(from: coordinates)
         self.init(line: lineValues)
     }
 
-    /// Initialize a `MBXGeometry` polygon from a two-dimensional array of coordinates.
-    /// - Parameter coordinates: The coordinates to represent the `MBXGeometry` polygon.
+    /// Initialize a `MapboxCommon.Geometry` polygon from a two-dimensional array of coordinates.
+    /// - Parameter coordinates: The coordinates to represent the `MapboxCommon.Geometry` polygon.
     public convenience init(polygon coordinates: [[CLLocationCoordinate2D]]) {
         let polygons = coordinates.map({ CLLocationCoordinate2D.convertToValues(from: $0) })
         self.init(polygon: polygons)
     }
 
-    /// Initialize a `MBXGeometry` multipoint from an array of `CLLocationCoordinate`s.
-    /// - Parameter coordinates: The coordinates to represent the `MBXGeometry` multipoint.
+    /// Initialize a `MapboxCommon.Geometry` multipoint from an array of `CLLocationCoordinate`s.
+    /// - Parameter coordinates: The coordinates to represent the `MapboxCommon.Geometry` multipoint.
     public convenience init(multiPoint coordinates: [CLLocationCoordinate2D]) {
         let multiPointValue = coordinates.map({ $0.toValue() })
         self.init(multiPoint: multiPointValue)
     }
 
-    /// Initialize a `MBXGeometry` multiline from a two-dimensional array of `CLLocationCoordinate`s.
-    /// - Parameter coordinates: The coordinates to represent the `MBXGeometry` multiline.
+    /// Initialize a `MapboxCommon.Geometry` multiline from a two-dimensional array of `CLLocationCoordinate`s.
+    /// - Parameter coordinates: The coordinates to represent the `MapboxCommon.Geometry` multiline.
     public convenience init(multiLine coordinates: [[CLLocationCoordinate2D]]) {
         let multiLineValues = coordinates.map({ CLLocationCoordinate2D.convertToValues(from: $0) })
         self.init(multiLine: multiLineValues)
     }
 
-    /// Initialize a `MBXGeometry` multipolygon from a three-dimensional array of `CLLocationCoordinate`s.
-    /// - Parameter coordinates: The coordinates to represent the `MBXGeometry` multipolygon.
+    /// Initialize a `MapboxCommon.Geometry` multipolygon from a three-dimensional array of `CLLocationCoordinate`s.
+    /// - Parameter coordinates: The coordinates to represent the `MapboxCommon.Geometry` multipolygon.
     public convenience init(multiPolygon coordinates: [[[CLLocationCoordinate2D]]]) {
         let multiPolygonValues = coordinates.map({
             $0.map({ CLLocationCoordinate2D.convertToValues(from: $0) })
@@ -51,8 +51,8 @@ extension MBXGeometry {
         self.init(multiPolygon: multiPolygonValues)
     }
 
-    /// Allows an `MBXGeometry` object to be initialized with an turf `Geometry` object.
-    /// - Parameter geometry: The turf `Geometry` object to transform into the `MBXGeometry` type.
+    /// Allows an `MapboxCommon.Geometry` object to be initialized with an turf `Geometry` object.
+    /// - Parameter geometry: The turf `Geometry` object to transform into the `MapboxCommon.Geometry` type.
     public convenience init(geometry: Geometry) {
         switch geometry {
         case .point(let point):
@@ -75,12 +75,12 @@ extension MBXGeometry {
             self.init(multiPolygon: multiPolygon.coordinates)
 
         case .geometryCollection(let geometryCollection):
-            let geometryValues = geometryCollection.geometries.map {( MBXGeometry.init(geometry: $0) )}
+            let geometryValues = geometryCollection.geometries.map {( MapboxCommon.Geometry.init(geometry: $0) )}
             self.init(geometryCollection: geometryValues)
 
         #if USING_TURF_WITH_LIBRARY_EVOLUTION
         @unknown default:
-            fatalError("Could not determine MBXGeometry from given Turf Geometry")
+            fatalError("Could not determine MapboxCommon.Geometry from given Turf Geometry")
         #endif
         }
     }

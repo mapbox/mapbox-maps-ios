@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 @_implementationOnly import MapboxCommon_Private
 
-@_functionBuilder
+@resultBuilder
 public struct ExpressionArgumentBuilder {
 
     public static func buildBlock(_ arguments: ExpressionArgumentConvertible...) -> [Expression.Argument] {

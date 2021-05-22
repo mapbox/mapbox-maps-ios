@@ -10,18 +10,18 @@ import CoreLocation
 
 internal class GeometryMBXGeometryTests: XCTestCase {
 
-    // MARK: - MBXGeometry → Turf Geometry
+    // MARK: - MapboxCommon.Geometry → Turf Geometry
     func testMBXGeometryToTurfGeometry_Point() {
         // Given
         let coordinate = CLLocationCoordinate2D(latitude: 40, longitude: 40)
-        let mbxGeometry = MBXGeometry(coordinate: coordinate)
+        let mbxGeometry = MapboxCommon.Geometry(coordinate: coordinate)
 
         // When
         let turfGeometry = Geometry.init(mbxGeometry)
 
         // Then
         guard let expectedTurfPoint = turfGeometry?.value as? Point else {
-            XCTFail("Could not convert MBXGeometry to Turf Point geometry")
+            XCTFail("Could not convert MapboxCommon.Geometry to Turf Point geometry")
             return
         }
 
@@ -36,14 +36,14 @@ internal class GeometryMBXGeometryTests: XCTestCase {
             CLLocationCoordinate2D(latitude: 0, longitude: 2)
         ]
 
-        let mbxGeometry = MBXGeometry(line: lineCoordinates)
+        let mbxGeometry = MapboxCommon.Geometry(line: lineCoordinates)
 
         // When
         let turfGeometry = Geometry.init(mbxGeometry)
 
         // Then
         guard let expectedTurfLineString = turfGeometry?.value as? LineString else {
-            XCTFail("Could not convert MBXGeometry to Turf LineString geometry")
+            XCTFail("Could not convert MapboxCommon.Geometry to Turf LineString geometry")
             return
         }
 
@@ -59,14 +59,14 @@ internal class GeometryMBXGeometryTests: XCTestCase {
             CLLocationCoordinate2D(latitude: 0, longitude: 0)
         ]
 
-        let mbxGeometry = MBXGeometry(polygon: [polygonCoordinates])
+        let mbxGeometry = MapboxCommon.Geometry(polygon: [polygonCoordinates])
 
         // When
         let turfGeometry = Geometry.init(mbxGeometry)
 
         // Then
         guard let expectedTurfPolygon = turfGeometry?.value as? Polygon else {
-            XCTFail("Could not convert MBXGeometry to Turf Polygon geometry.")
+            XCTFail("Could not convert MapboxCommon.Geometry to Turf Polygon geometry.")
             return
         }
 
@@ -78,14 +78,14 @@ internal class GeometryMBXGeometryTests: XCTestCase {
         let coordinate1 = CLLocationCoordinate2D(latitude: -44, longitude: 30)
         let coordinate2 = CLLocationCoordinate2D(latitude: -50, longitude: 40)
 
-        let mbxGeometry = MBXGeometry(multiPoint: [coordinate1, coordinate2])
+        let mbxGeometry = MapboxCommon.Geometry(multiPoint: [coordinate1, coordinate2])
 
         // When
         let turfGeometry = Geometry.init(mbxGeometry)
 
         // Then
         guard let expectedTurfMultiPoint = turfGeometry?.value as? MultiPoint else {
-            XCTFail("Could not convert MBXGeometry to Turf Multipoint geometry")
+            XCTFail("Could not convert MapboxCommon.Geometry to Turf Multipoint geometry")
             return
         }
 
@@ -104,14 +104,14 @@ internal class GeometryMBXGeometryTests: XCTestCase {
             CLLocationCoordinate2D(latitude: 20, longitude: 31)
         ]
 
-        let mbxGeometry = MBXGeometry(multiLine: [line1, line2])
+        let mbxGeometry = MapboxCommon.Geometry(multiLine: [line1, line2])
 
         // When
         let turfGeometry = Geometry.init(mbxGeometry)
 
         // Then
         guard let expectedTurfMultiLineString = turfGeometry?.value as? MultiLineString else {
-            XCTFail("Could not convert MBXGeometry to Turf MultiLineString geometry")
+            XCTFail("Could not convert MapboxCommon.Geometry to Turf MultiLineString geometry")
             return
         }
 
@@ -136,14 +136,14 @@ internal class GeometryMBXGeometryTests: XCTestCase {
             CLLocationCoordinate2D(latitude: 0, longitude: 0)
         ]
 
-        let mbxGeometry = MBXGeometry(multiPolygon: [[polygon1], [polygon2]])
+        let mbxGeometry = MapboxCommon.Geometry(multiPolygon: [[polygon1], [polygon2]])
 
         // When
         let turfGeometry = Geometry.init(mbxGeometry)
 
         // Then
         guard let expectedTurfMultiPolygon = turfGeometry?.value as? MultiPolygon else {
-            XCTFail("Could not convert MBXGeometry to Turf MultiPolygon")
+            XCTFail("Could not convert MapboxCommon.Geometry to Turf MultiPolygon")
             return
         }
 
@@ -153,18 +153,18 @@ internal class GeometryMBXGeometryTests: XCTestCase {
                        expectedTurfMultiPolygon.coordinates)
     }
 
-    // // MARK: - Turf Geometry → MBXGeometry
+    // // MARK: - Turf Geometry → MapboxCommon.Geometry
     func testGeometryToMBXGeometry_Point() {
         // Given
         let point = Point(CLLocationCoordinate2D(latitude: -10, longitude: 10))
         let geometry = Geometry.point(point)
 
         // When
-        let mbxGeometry = MBXGeometry.init(geometry: geometry)
+        let mbxGeometry = MapboxCommon.Geometry.init(geometry: geometry)
 
         // Then
         guard let mbxLocationValue = mbxGeometry.extractLocations()?.coordinateValue() else {
-            XCTFail("Could not extract NSValues from MBXGeometry")
+            XCTFail("Could not extract NSValues from MapboxCommon.Geometry")
             return
         }
 
@@ -182,11 +182,11 @@ internal class GeometryMBXGeometryTests: XCTestCase {
         let geometry = Geometry.lineString(line)
 
         // When
-        let mbxGeometry = MBXGeometry.init(geometry: geometry)
+        let mbxGeometry = MapboxCommon.Geometry.init(geometry: geometry)
 
         // Then
         guard let mbxLocationValues = mbxGeometry.extractLocationsArray() else {
-            XCTFail("Could not extract NSValues from MBXGeometry")
+            XCTFail("Could not extract NSValues from MapboxCommon.Geometry")
             return
         }
 
@@ -208,11 +208,11 @@ internal class GeometryMBXGeometryTests: XCTestCase {
         let geometry = Geometry.polygon(polygon)
 
         // When
-        let mbxGeometry = MBXGeometry.init(geometry: geometry)
+        let mbxGeometry = MapboxCommon.Geometry.init(geometry: geometry)
 
         // Then
         guard let mbxLocationValues = mbxGeometry.extractLocations2DArray() else {
-            XCTFail("Could not extract NSValues from MBXGeometry")
+            XCTFail("Could not extract NSValues from MapboxCommon.Geometry")
             return
         }
 
@@ -229,11 +229,11 @@ internal class GeometryMBXGeometryTests: XCTestCase {
         let geometry = Geometry.multiPoint(multiPoint)
 
         // When
-        let mbxGeometry = MBXGeometry.init(geometry: geometry)
+        let mbxGeometry = MapboxCommon.Geometry.init(geometry: geometry)
 
         // Then
         guard let mbxLocationValues = mbxGeometry.extractLocationsArray() else {
-            XCTFail("Could not extract NSValues from MBXGeometry")
+            XCTFail("Could not extract NSValues from MapboxCommon.Geometry")
             return
         }
 
@@ -258,11 +258,11 @@ internal class GeometryMBXGeometryTests: XCTestCase {
         let geometry = Geometry.multiLineString(multiLineString)
 
         // When
-        let mbxGeometry = MBXGeometry.init(geometry: geometry)
+        let mbxGeometry = MapboxCommon.Geometry.init(geometry: geometry)
 
         // Then
         guard let mbxLocationValues = mbxGeometry.extractLocations2DArray() else {
-            XCTFail("Could not extract NSValues from MBXGeometry")
+            XCTFail("Could not extract NSValues from MapboxCommon.Geometry")
             return
         }
 
@@ -291,11 +291,11 @@ internal class GeometryMBXGeometryTests: XCTestCase {
         let geometry = Geometry.multiPolygon(multiPolygon)
 
         // When
-        let mbxGeometry = MBXGeometry.init(geometry: geometry)
+        let mbxGeometry = MapboxCommon.Geometry.init(geometry: geometry)
 
         // Then
         guard let mbxLocationValues = mbxGeometry.extractLocations3DArray() else {
-            XCTFail("Could not extract NSValues from MBXGeometry")
+            XCTFail("Could not extract NSValues from MapboxCommon.Geometry")
             return
         }
 
@@ -321,21 +321,21 @@ internal class GeometryMBXGeometryTests: XCTestCase {
         let geometryCollection = Geometry.geometryCollection(geometries)
 
         // When
-        let mbxGeometry = MBXGeometry.init(geometry: geometryCollection)
+        let mbxGeometry = MapboxCommon.Geometry.init(geometry: geometryCollection)
 
         // Then
         guard let mbxLocationValues = mbxGeometry.extractGeometriesArray() else {
-            XCTFail("Could not extract NSValues from MBXGeometry collection")
+            XCTFail("Could not extract NSValues from MapboxCommon.Geometry collection")
             return
         }
 
         guard let mbxPointGeometryValue = mbxLocationValues[0].extractLocations() else {
-            XCTFail("Could not extract NSValues from point within MBXGeometry collection")
+            XCTFail("Could not extract NSValues from point within MapboxCommon.Geometry collection")
             return
         }
 
         guard let mbxPolygonGeometryValues = mbxLocationValues[1].extractLocations2DArray() else {
-            XCTFail("Could not extract NSValues from polygon within MBXGeometry collection")
+            XCTFail("Could not extract NSValues from polygon within MapboxCommon.Geometry collection")
             return
         }
 

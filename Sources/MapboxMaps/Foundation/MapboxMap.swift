@@ -166,7 +166,7 @@ extension MapboxMap: CameraManagerProtocol {
                        pitch: CGFloat?) -> CameraOptions {
         return CameraOptions(
             __map.cameraForGeometry(
-                for: MBXGeometry(geometry: geometry),
+                for: MapboxCommon.Geometry(geometry: geometry),
                 padding: padding.toMBXEdgeInsetsValue(),
                 bearing: bearing?.NSNumber,
                 pitch: pitch?.NSNumber))
@@ -293,7 +293,7 @@ extension MapboxMap: MapFeatureQueryable {
                                       args: [String: Any]? = nil,
                                       completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) {
 
-        guard let feature = MBXFeature(feature) else {
+        guard let feature = MapboxCommon.Feature(feature) else {
             completion(.failure(TypeConversionError.unexpectedType))
             return
         }

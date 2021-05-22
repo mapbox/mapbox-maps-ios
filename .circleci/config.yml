@@ -381,26 +381,32 @@ jobs:
       # get xcresults here, may be zipped with more than one result
       - run:
           name: "Gathering results"
-          command: make gather-results
+          command: make gather-results BUILD_DIR="$DERIVED_DATA_PATH"
           when: always
       - run:
           name: "Parsing xcresults for errors"
           command: |
-            RESULTS=`find build/testruns -name '*.xcresult'`
-            xargs swift run --package-path scripts/xcparty xcparty \<<< "$RESULTS" | tee build/testruns/failures.txt
+            RESULTS=`find "$DERIVED_DATA_PATH/testruns" -name '*.xcresult'`
+            xargs swift run --package-path scripts/xcparty xcparty \<<< "$RESULTS" | tee "$DERIVED_DATA_PATH/testruns/failures.txt"
           when: on_fail
       - run:
           name: Symbolicate crash logs
-          command: make symbolicate SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
-          when: always
-      # - run:
-      #     name: Converting and uploading coverage
-      #     command: |
-      #       make device-update-codecov-with-profdata \
-      #         SCHEME=<< parameters.scheme >> \
-      #         APP_NAME=<< parameters.app-name >> \
-      #         CONFIGURATION=Release \
-      #         COVERAGE_MAPBOX_MAPS_DEVICE=build/Build/Products/Release-iphoneos/MapboxMaps.framework/MapboxMaps
+          command: |
+            make symbolicate \
+              SCHEME=<< parameters.scheme >> \
+              APP_NAME=<< parameters.app-name >> \
+              CONFIGURATION=Release \
+              BUILD_DIR="$DERIVED_DATA_PATH"
+          when: always          
+      - run:
+          name: Converting and uploading coverage
+          command: |
+            make device-update-codecov-with-profdata \
+              SCHEME=<< parameters.scheme >> \
+              APP_NAME=<< parameters.app-name >> \
+              CONFIGURATION=Release \
+              BUILD_DIR="$DERIVED_DATA_PATH" \
+              COVERAGE_MAPBOX_MAPS_DEVICE="$DERIVED_DATA_PATH/Build/Products/Release-iphoneos/MapboxMaps.framework/MapboxMaps"
       - store-device-farm-artifacts
       - store-logs
       - report-failure:
@@ -459,15 +465,15 @@ jobs:
               CONFIGURATION=Release \
               BUILD_DIR="$DERIVED_DATA_PATH"
           when: always
-      # - run:
-      #     name: Converting and uploading coverage
-      #     command: |
-      #       pip3 install awscli gitpython
-      #       make device-update-codecov-with-profdata \
-      #         SCHEME=<< parameters.scheme >> \
-      #         APP_NAME=<< parameters.app-name >> \
-      #         CONFIGURATION=Release \
-      #         BUILD_DIR="$DERIVED_DATA_PATH"
+      - run:
+          name: Converting and uploading coverage
+          command: |
+            pip3 install awscli gitpython
+            make device-update-codecov-with-profdata \
+              SCHEME=<< parameters.scheme >> \
+              APP_NAME=<< parameters.app-name >> \
+              CONFIGURATION=Release \
+              BUILD_DIR="$DERIVED_DATA_PATH"
       - store-device-farm-artifacts:
           derived_data_path: $DERIVED_DATA_PATH
       - store-logs:

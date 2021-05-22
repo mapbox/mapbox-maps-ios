@@ -407,8 +407,10 @@ jobs:
               CONFIGURATION=Release \
               BUILD_DIR="$DERIVED_DATA_PATH" \
               COVERAGE_MAPBOX_MAPS_DEVICE="$DERIVED_DATA_PATH/Build/Products/Release-iphoneos/MapboxMaps.framework/MapboxMaps"
-      - store-device-farm-artifacts
-      - store-logs
+      - store-device-farm-artifacts:
+          derived_data_path: $DERIVED_DATA_PATH
+      - store-logs:
+          derived_data_path: $DERIVED_DATA_PATH
       - report-failure:
           report_failure: << parameters.report_failure >>
           message: "<< parameters.scheme >> device tests"

@@ -449,10 +449,6 @@ ifndef SDK_REGISTRY_TOKEN
 endif
 	@echo "$$NETRC" > $(NETRC_FILE)
 
-.PHONY: deps
-deps: | $(NETRC_FILE)
-	XCODE_XCCONFIG_FILE=${PWD}/xcode-12.xcconfig carthage bootstrap --platform iOS --use-netrc --no-cache-builds
-
 # ----------------------------------------------------------------------------------------------------------------------
 # Validation
 

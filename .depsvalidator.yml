@@ -1,13 +1,13 @@
 ---
 manifests:
-  - type: Cartfile
-  - type: Cartfile.resolved
   - type: Package.swift
     omit_for:
       - MapboxCommon
   - type: Package.resolved
   - type: Package.resolved
     path: Apps/Apps.xcworkspace/xcshareddata/swiftpm/Package.resolved
+  - type: Package.resolved
+    path: Mapbox/MapboxMaps.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
   - type: Podspec
     path: MapboxMaps.podspec
   - type: JSON

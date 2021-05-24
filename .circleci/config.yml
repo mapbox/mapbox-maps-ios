@@ -356,8 +356,6 @@ jobs:
           command: make install-devicefarm-dependencies
       - install-dependencies
 
-
-
     # There's a command for this, but it only works if run *after* the build.
       # In this case, we need to determine the derived data path *before* building.
       - run:

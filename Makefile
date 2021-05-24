@@ -450,7 +450,6 @@ update-codecov-with-profdata:
 	done
 	@echo "Done"
 
-
 COVERAGE_MAPBOX_MAPS_DEVICE ?= $(BUILT_DEVICE_PRODUCTS_DIR)/MapboxMaps.o
 
 .PHONY: device-update-codecov-with-profdata

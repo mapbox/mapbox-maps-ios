@@ -61,6 +61,22 @@ public class Snapshotter {
         mapSnapshotter.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
     }
 
+    /// Convenience function to set the URI of the current Mapbox Style to use.
+    /// This is equivalent to setting `snapshotter.style.uri`
+    ///
+    /// - Parameter styleURI: StyleURI to apply to the snapshotter
+    public func setStyleURI(_ styleURI: StyleURI) {
+        style.uri = styleURI
+    }
+
+    /// Convenience function to set the JSON of the current Mapbox Style to use.
+    /// This is equivalent to setting `snapshotter.style.JSON`
+    ///
+    /// - Parameter JSON: Style JSON string to apply to the snapshotter
+    public func setStyleJSON(_ JSON: String) {
+        mapSnapshotter.setStyleJSONForJson(JSON)
+    }
+
     /// In the tile mode, the snapshotter fetches the still image of a single tile.
     public var tileMode: Bool {
         get {

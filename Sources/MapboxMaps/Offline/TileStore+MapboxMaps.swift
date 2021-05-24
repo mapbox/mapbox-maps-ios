@@ -157,9 +157,9 @@ extension TileStore {
     ///     worker thread; it is the responsibility of the user to dispatch to a
     ///     user-controlled thread.
     public func tileRegionGeometry(forId id: String,
-                                   completion: @escaping (Result<MapboxCommon.Geometry, Error>) -> Void) {
+                                   completion: @escaping (Result<Geometry, Error>) -> Void) {
         __getTileRegion(forId: id,
-                        callback: tileStoreClosureAdapter(for: completion, type: MapboxCommon.Geometry.self))
+                        callback: tileStoreClosureAdapter(for: completion, type: Geometry.self))
     }
 
     /// Fetch a tile region's associated metadata

@@ -38,7 +38,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         let outdoorsDescriptor = offlineManager.createTilesetDescriptor(for: outdoorsOptions)
 
         /// Load the tile region
-        tileRegionLoadOptions = TileRegionLoadOptions(geometry: MapboxCommon.Geometry(coordinate: self.tokyoCoord),
+        tileRegionLoadOptions = TileRegionLoadOptions(geometry: Geometry(coordinate: self.tokyoCoord),
                                                       descriptors: [outdoorsDescriptor],
                                                       metadata: ["tag": "my-outdoors-tile-region"],
                                                       acceptExpired: true,

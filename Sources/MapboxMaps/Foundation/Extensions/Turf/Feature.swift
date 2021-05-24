@@ -8,8 +8,8 @@ public typealias Feature = MapboxCommon.Feature
 
 extension Turf.Feature {
 
-    /// Initialize a `Turf.Feature` with an `MapboxCommon.Feature` object.
-    /// - Parameter feature: The `MapboxCommon.Feature` to use to create the `Feature`.
+    /// Initialize a `Turf.Feature` with an `Feature` object.
+    /// - Parameter feature: The `Feature` to use to create the `Feature`.
     public init?(_ feature: Feature) {
         guard let geometry = Turf.Geometry(feature.geometry) else { return nil }
 
@@ -77,7 +77,7 @@ extension Turf.Feature {
 }
 
 extension Feature {
-    /// Initialize an `MapboxCommon.Feature` with a `Turf.Feature`
+    /// Initialize an `Feature` with a `Turf.Feature`
     internal convenience init?(_ feature: Turf.Feature) {
 
         let identifier: Any?

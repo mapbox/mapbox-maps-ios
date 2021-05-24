@@ -80,7 +80,7 @@ extension Geometry {
 
         #if USING_TURF_WITH_LIBRARY_EVOLUTION
         @unknown default:
-            fatalError("Could not determine MapboxCommon.Geometry from given Turf Geometry")
+            fatalError("Could not determine Geometry from given Turf Geometry")
         #endif
         }
     }

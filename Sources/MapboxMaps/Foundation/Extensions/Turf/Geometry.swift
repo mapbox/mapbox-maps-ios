@@ -9,8 +9,8 @@ public typealias Geometry = MapboxCommon.Geometry
 
 extension Turf.Geometry {
 
-    /// Allows a Turf object to be initialized with an internal `MapboxCommon.Geometry` object.
-    /// - Parameter geometry: The `MapboxCommon.Geometry` object to transform.
+    /// Allows a Turf object to be initialized with an internal `Geometry` object.
+    /// - Parameter geometry: The `Geometry` object to transform.
     public init?(_ geometry: Geometry) {
         switch geometry.geometryType {
         case GeometryType_Point:

@@ -15,8 +15,8 @@ final class MockMapFeatureQueryable: MapFeatureQueryable {
     func queryRenderedFeatures(in rect: CGRect,
                                options: RenderedQueryOptions?,
                                completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
-        let feature = MapboxCommon.Feature(identifier: "test-feature" as NSString,
-                                           geometry: MapboxCommon.Geometry(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0)),
+        let feature = Feature(identifier: "test-feature" as NSString,
+                                           geometry: Geometry(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0)),
                                            properties: [:])
         let queriedFeature = QueriedFeature(feature: feature, source: "SourceID", sourceLayer: nil, state: true)
         completion(.success([queriedFeature]))

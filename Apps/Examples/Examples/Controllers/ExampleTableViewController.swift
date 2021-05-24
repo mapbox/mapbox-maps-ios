@@ -51,16 +51,31 @@ extension ExampleTableViewController {
             return 60.0
         }
 
-        return 0
+        return 30
     }
 
+    public override func numberOfSections(in tableView: UITableView) -> Int {
+        return allExamples.count
+    }
+
+    public override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0 {
+            return nil
+        } else {
+            return allExamples[section - 1]["title"] as? String
+        }
+    }
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
         if isFiltering {
           return filteredExamples.count
         }
 
-        return allExamples.count
+        if section == 0 {
+            return 0
+        }
+        let examples = allExamples[section - 1]["examples"] as! [Example]
+        return examples.count
     }
 
     public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -70,7 +85,8 @@ extension ExampleTableViewController {
         if isFiltering {
           example = filteredExamples[indexPath.row]
         } else {
-          example = allExamples[indexPath.row]
+            let examples = allExamples[indexPath.section - 1]["examples"] as! [Example]
+          example = examples[indexPath.row]
         }
 
         let cell = UITableViewCell(style: .default, reuseIdentifier: "reuseIdentifier")
@@ -85,7 +101,8 @@ extension ExampleTableViewController {
         if isFiltering {
           example = filteredExamples[indexPath.row]
         } else {
-          example = allExamples[indexPath.row]
+            let examples = allExamples[indexPath.section - 1]["examples"] as! [Example]
+          example = examples[indexPath.row]
         }
 
         let exampleViewController = example.makeViewController()
@@ -93,7 +110,12 @@ extension ExampleTableViewController {
     }
 
     public func filterContentForSearchText(_ searchText: String) {
-        filteredExamples = allExamples.filter {
+        var examples = [Example]()
+
+        for array in allExamples {
+            examples.append(contentsOf: array["examples"] as! [Example])
+        }
+        filteredExamples = examples.filter {
             return $0.title.lowercased().contains(searchText.lowercased())
         }
 

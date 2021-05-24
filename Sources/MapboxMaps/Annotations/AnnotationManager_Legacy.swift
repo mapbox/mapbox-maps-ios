@@ -376,13 +376,13 @@ public class AnnotationManager_Legacy {
     /**
      Creates a turf `Feature` based off an `Annotation`.
      */
-    internal func makeFeature(for annotation: Annotation_Legacy) throws -> Feature {
+    internal func makeFeature(for annotation: Annotation_Legacy) throws -> Turf.Feature {
 
-        var feature: Feature
+        var feature: Turf.Feature
 
         switch annotation {
         case let point as PointAnnotation_Legacy:
-            feature = Feature(Point(point.coordinate))
+            feature = Turf.Feature(Point(point.coordinate))
 
             if point.image != nil {
                 feature.properties = ["icon-image": point.identifier]
@@ -390,7 +390,7 @@ public class AnnotationManager_Legacy {
                 feature.properties = ["icon-image": PointAnnotation_Legacy.defaultIconImageIdentifier]
             }
         case let line as LineAnnotation_Legacy:
-            feature = Feature(LineString(line.coordinates))
+            feature = Turf.Feature(LineString(line.coordinates))
         case let polygon as PolygonAnnotation_Legacy:
             var turfPolygon: Polygon
 
@@ -403,7 +403,7 @@ public class AnnotationManager_Legacy {
                 turfPolygon = Polygon(outerRing: outerRing)
             }
 
-            feature = Feature(turfPolygon)
+            feature = Turf.Feature(turfPolygon)
         default:
             throw AnnotationError.featureGenerationFailed("Could not generate Feature from annotation")
         }

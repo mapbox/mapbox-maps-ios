@@ -36,7 +36,7 @@ final class MockMapFeatureQueryable: MapFeatureQueryable {
 
     // swiftlint:disable function_parameter_count
     func queryFeatureExtension(for sourceId: String,
-                               feature: Feature,
+                               feature: Turf.Feature,
                                extension: String,
                                extensionField: String,
                                args: [String: Any]?,

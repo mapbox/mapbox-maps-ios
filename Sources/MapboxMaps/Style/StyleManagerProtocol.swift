@@ -413,7 +413,7 @@ internal protocol StyleManagerProtocol {
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.\
-    func _setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Feature]) throws
+    func _setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Turf.Feature]) throws
 
     /// Invalidate tile for provided custom geometry source.
     ///

@@ -59,7 +59,7 @@ internal protocol CameraManagerProtocol {
     ///   - bearing: The new bearing to be used by the camera.
     ///   - pitch: The new pitch to be used by the camera.
     /// - Returns: A `CameraOptions` that fits the provided constraints
-    func camera(for geometry: Geometry,
+    func camera(for geometry: Turf.Geometry,
                 padding: UIEdgeInsets,
                 bearing: CGFloat?,
                 pitch: CGFloat?) -> CameraOptions

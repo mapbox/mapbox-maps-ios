@@ -28,6 +28,7 @@ public class SwitchStylesExample: UIViewController, ExampleProtocol {
         switch sender.selectedSegmentIndex {
         case 0:
             // Set the map's style to the default Mapbox Streets style.
+            // The map's `StyleURI` can be set to default Mapbox styles: `.light`, `.dark`, `.satellite`, `.satelliteStreets`, and `.outdoors`.
             mapView.mapboxMap.style.uri = .streets
         case 1:
             // Set the map's style to Mapbox Satellite Streets.

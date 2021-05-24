@@ -27,6 +27,7 @@
 		A41E58342654593500D8B946 /* SwitchStylesExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E58332654593500D8B946 /* SwitchStylesExample.swift */; };
 		A41E584C26555A3400D8B946 /* PointClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E584B26555A3400D8B946 /* PointClusteringExample.swift */; };
 		A41E58F4265C005300D8B946 /* blueprint_style.json in Resources */ = {isa = PBXBuildFile; fileRef = A41E58F3265C005300D8B946 /* blueprint_style.json */; };
+		A41E590D265C263700D8B946 /* OfflineRegionManagerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E590C265C263700D8B946 /* OfflineRegionManagerExample.swift */; };
 		A4211CE62592549900D215B4 /* RestrictCoordinateBoundsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4211CE52592549900D215B4 /* RestrictCoordinateBoundsExample.swift */; };
 		B5327E9D260124C00095B6BD /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = B5327E9C260124C00095B6BD /* MapboxMaps */; };
 		B5327EBF260277930095B6BD /* Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5327EBE260277930095B6BD /* Example.swift */; };
@@ -139,6 +140,7 @@
 		A41E58332654593500D8B946 /* SwitchStylesExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchStylesExample.swift; sourceTree = "<group>"; };
 		A41E584B26555A3400D8B946 /* PointClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointClusteringExample.swift; sourceTree = "<group>"; };
 		A41E58F3265C005300D8B946 /* blueprint_style.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = blueprint_style.json; sourceTree = "<group>"; };
+		A41E590C265C263700D8B946 /* OfflineRegionManagerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineRegionManagerExample.swift; sourceTree = "<group>"; };
 		A4211CE52592549900D215B4 /* RestrictCoordinateBoundsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictCoordinateBoundsExample.swift; sourceTree = "<group>"; };
 		A4AC5DEB2542CB2200995E4C /* CustomStyleURLExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomStyleURLExample.swift; sourceTree = "<group>"; };
 		B5327EBE260277930095B6BD /* Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Example.swift; sourceTree = "<group>"; };
@@ -211,7 +213,6 @@
 		0746C182252FB0F4001638BD /* All Examples */ = {
 			isa = PBXGroup;
 			children = (
-				CA628413262DFD5C00651488 /* OfflineManagerExample.storyboard */,
 				58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */,
 				07DBDC91254C94C500F89304 /* AnimateLayerExample.swift */,
 				CADCF742258499570065C51B /* BasicMapExample.swift */,
@@ -235,6 +236,8 @@
 				0C78AC2825BF70E40057F570 /* LineGradientExample.swift */,
 				CA03F10E26268DF700673961 /* OfflineManagerExample.swift */,
 				C64ED3882540BA0700ADADFB /* PointAnnotationExample.swift */,
+				CA628413262DFD5C00651488 /* OfflineManagerExample.storyboard */,
+				A41E590C265C263700D8B946 /* OfflineRegionManagerExample.swift */,
 				A41E584B26555A3400D8B946 /* PointClusteringExample.swift */,
 				07A8D86825422C190068D50D /* PolygonAnnotationExample.swift */,
 				A4211CE52592549900D215B4 /* RestrictCoordinateBoundsExample.swift */,
@@ -525,6 +528,7 @@
 				CADCF72B2584990E0065C51B /* FlyToExample.swift in Sources */,
 				0333B84F25ED942600D667C9 /* SceneKitExample.swift in Sources */,
 				CADCF72D2584990E0065C51B /* GeoJSONSourceExample.swift in Sources */,
+				A41E590D265C263700D8B946 /* OfflineRegionManagerExample.swift in Sources */,
 				58A3C0C925C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift in Sources */,
 				B5327EBF260277930095B6BD /* Example.swift in Sources */,
 				CADCF736258499170065C51B /* ExampleTableViewController.swift in Sources */,

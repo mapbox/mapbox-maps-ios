@@ -192,7 +192,9 @@ public struct Examples {
         Example(title: "Add a line with a color gradient",
                 description: "Add a line with a rainbow color gradient.",
                 type: LineGradientExample.self),
-        Example(title: "Change the map's style", description: "Switch between local and default Mapbox styles for the same map view.", type: SwitchStylesExample.self)
+        Example(title: "Change the map's style",
+                description: "Switch between local and default Mapbox styles for the same map view.",
+                type: SwitchStylesExample.self)
     ]
 
     // Examples that show use cases related to user interaction with the map.

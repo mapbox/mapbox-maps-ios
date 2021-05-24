@@ -55,6 +55,10 @@ extension ExampleTableViewController {
     }
 
     public override func numberOfSections(in tableView: UITableView) -> Int {
+        if isFiltering {
+            return 1
+        }
+
         return allExamples.count
     }
 

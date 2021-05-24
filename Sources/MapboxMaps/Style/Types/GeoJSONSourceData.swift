@@ -15,6 +15,9 @@ public enum GeoJSONSourceData: Codable {
 
     /// The `data` property can be a geometry with no associated properties.
     case geometry(Turf.Geometry)
+    
+    /// Empty data to be used for initialization
+    case empty
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
@@ -51,6 +54,8 @@ public enum GeoJSONSourceData: Codable {
             try container.encode(featureCollection)
         case .geometry(let geometry):
             try container.encode(geometry)
+        case .empty:
+            try container.encode("")
         }
     }
 }

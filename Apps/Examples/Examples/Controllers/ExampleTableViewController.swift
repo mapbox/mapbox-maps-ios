@@ -1,6 +1,7 @@
 import UIKit
 import ObjectiveC
 
+//swiftlint:disable force_cast
 public class ExampleTableViewController: UITableViewController {
 
     internal var searchBar = UISearchBar()

@@ -44,20 +44,20 @@ public struct PolygonAnnotationManager {
     private let sourceId: String
     private let layerId: String
 
-    internal init(id: String, style: Style) {
+    internal init(id: String, style: Style, layerPosition: LayerPosition?) {
         self.id = id
         self.style = style
         self.sourceId = id + "-source"
         self.layerId = id + "-layer"
         
         do {
-            try makeSourceAndLayer()
+            try makeSourceAndLayer(layerPosition: layerPosition)
         } catch {
             fatalError("Failed to create source / layer in PolygonAnnotationManager")
         }
     }
 
-    internal func makeSourceAndLayer() throws {
+    internal func makeSourceAndLayer(layerPosition: LayerPosition?) throws {
 
         // Add the source with empty `data` property
         var source = GeoJSONSource()
@@ -74,7 +74,7 @@ public struct PolygonAnnotationManager {
         layer.fillOutlineColor = .expression( Exp(.get) { "fill-outline-color" } )
         layer.fillPattern = .expression( Exp(.get) { "fill-pattern" } )
 
-        try style.addLayer(layer)
+        try style.addLayer(layer, layerPosition: layerPosition)
     }
 
     internal func syncAnnotations() {

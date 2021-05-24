@@ -56,20 +56,20 @@ public struct PolylineAnnotationManager {
     private let sourceId: String
     private let layerId: String
 
-    internal init(id: String, style: Style) {
+    internal init(id: String, style: Style, layerPosition: LayerPosition?) {
         self.id = id
         self.style = style
         self.sourceId = id + "-source"
         self.layerId = id + "-layer"
         
         do {
-            try makeSourceAndLayer()
+            try makeSourceAndLayer(layerPosition: layerPosition)
         } catch {
             fatalError("Failed to create source / layer in PolylineAnnotationManager")
         }
     }
 
-    internal func makeSourceAndLayer() throws {
+    internal func makeSourceAndLayer(layerPosition: LayerPosition?) throws {
 
         // Add the source with empty `data` property
         var source = GeoJSONSource()
@@ -90,7 +90,7 @@ public struct PolylineAnnotationManager {
         layer.linePattern = .expression( Exp(.get) { "line-pattern" } )
         layer.lineWidth = .expression( Exp(.get) { "line-width" } )
 
-        try style.addLayer(layer)
+        try style.addLayer(layer, layerPosition: layerPosition)
     }
 
     internal func syncAnnotations() {

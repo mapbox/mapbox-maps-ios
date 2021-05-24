@@ -83,6 +83,31 @@ public class DebugViewController: UIViewController {
          */
         mapView.mapboxMap.onNext(.mapLoaded) { (event) in
             print("The map has finished loading... Event = \(event)")
+            
+            var circleAnnotationManager = CircleAnnotationManager(id: "my-circle-annotation-manager", style: self.mapView.mapboxMap.style)
+            var circleAnnotation1 = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            circleAnnotation1.circleRadius = 100
+            circleAnnotation1.circleOpacity = 1.0
+            circleAnnotation1.circleColor = .init(color: .clear)
+            circleAnnotation1.circleStrokeWidth = 3.0
+            circleAnnotation1.circleStrokeColor = .init(color: .purple)
+            
+            var circleAnnotation2 = CircleAnnotation(point: .init(.init(latitude: 10, longitude: 10)))
+            circleAnnotation2.circleRadius = 10
+            circleAnnotation2.circleOpacity = 1.0
+            circleAnnotation2.circleColor = .init(color: .blue)
+            circleAnnotation2.circleStrokeWidth = 3.0
+            circleAnnotation2.circleStrokeColor = .init(color: .yellow)
+            
+            var circleAnnotation3 = CircleAnnotation(point: .init(.init(latitude: -10, longitude: -10)))
+            circleAnnotation3.circleRadius = 10
+            circleAnnotation3.circleOpacity = 1.0
+            circleAnnotation3.circleColor = .init(color: .green)
+            circleAnnotation3.circleStrokeWidth = 19.0
+            circleAnnotation3.circleStrokeColor = .init(color: .white)
+            
+            circleAnnotationManager.annotations = [circleAnnotation1, circleAnnotation2, circleAnnotation3]
+            
         }
 
         /**

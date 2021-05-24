@@ -1,372 +1,227 @@
-
 // This file is generated.
 import Foundation
 import Turf
 
-public struct PointAnnotation: Hashable {
+public struct PointAnnotation: Annotation, Hashable {
 
-    // Identifier for this annotation
+    /// Identifier for this annotation
     public let id: String
 
-    // The feature backing this annotation
-    internal var feature: Turf.Feature
+    /// The feature backing this annotation
+    public internal(set) var feature: Turf.Feature
+    
+    /// A Boolean value that indicates whether an annotation is selected, either
+    /// programmatically or via user-interactions.
+    public var isSelected: Bool = false { 
+        didSet {
+            feature.properties?["is-selected"] = isSelected
+        }
+    }
 
+    /// Properties associated with the annotation
+    public var userInfo: [String: Any]? { 
+        didSet {
+            feature.properties?["userInfo"] = userInfo
+        }
+    }
+
+    public var type: AnnotationType = .point
+
+    /// Create a point annotation with a `Turf.Point` and an optional identifier.
     public init(id: String = UUID().uuidString, point: Turf.Point) {
         self.id = id
         self.feature = Turf.Feature(point)
-        self.feature.properties = ["id": id]
+        self.feature.properties = ["annotation-id": id]
     }
 
     // MARK:- Properties -
-
+    
     /// Part of the icon placed closest to the anchor.
     public var iconAnchor: IconAnchor? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(iconAnchor)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["icon-anchor"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.iconAnchor")
-            }
+            feature.properties?["icon-anchor"] = iconAnchor?.rawValue 
         }
     }
-
+    
     /// Name of image in sprite to use for drawing an image background.
     public var iconImage: String? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(iconImage)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["icon-image"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.iconImage")
-            }
+            feature.properties?["icon-image"] = iconImage 
         }
     }
-
+    
     /// Offset distance of icon from its anchor. Positive values indicate right and down, while negative values indicate left and up. Each component is multiplied by the value of `icon-size` to obtain the final offset in pixels. When combined with `icon-rotate` the offset will be as if the rotated direction was up.
     public var iconOffset: [Double]? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(iconOffset)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["icon-offset"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.iconOffset")
-            }
+            feature.properties?["icon-offset"] = iconOffset 
         }
     }
-
+    
     /// Rotates the icon clockwise.
     public var iconRotate: Double? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(iconRotate)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["icon-rotate"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.iconRotate")
-            }
+            feature.properties?["icon-rotate"] = iconRotate 
         }
     }
-
+    
     /// Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by `icon-size`. 1 is the original size; 3 triples the size of the image.
     public var iconSize: Double? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(iconSize)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["icon-size"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.iconSize")
-            }
+            feature.properties?["icon-size"] = iconSize 
         }
     }
-
+    
     /// Sorts features in ascending order based on this value. Features with lower sort keys are drawn and placed first.  When `icon-allow-overlap` or `text-allow-overlap` is `false`, features with a lower sort key will have priority during placement. When `icon-allow-overlap` or `text-allow-overlap` is set to `true`, features with a higher sort key will overlap over features with a lower sort key.
     public var symbolSortKey: Double? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(symbolSortKey)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["symbol-sort-key"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.symbolSortKey")
-            }
+            feature.properties?["symbol-sort-key"] = symbolSortKey 
         }
     }
-
+    
     /// Part of the text placed closest to the anchor.
     public var textAnchor: TextAnchor? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(textAnchor)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["text-anchor"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.textAnchor")
-            }
+            feature.properties?["text-anchor"] = textAnchor?.rawValue 
         }
     }
-
+    
     /// Value to use for a text label. If a plain `string` is provided, it will be treated as a `formatted` with default/inherited formatting options.
     public var textField: String? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(textField)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["text-field"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.textField")
-            }
+            feature.properties?["text-field"] = textField 
         }
     }
-
+    
     /// Font stack to use for displaying text.
     public var textFont: [String]? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(textFont)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["text-font"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.textFont")
-            }
+            feature.properties?["text-font"] = textFont 
         }
     }
-
+    
     /// Text justification options.
     public var textJustify: TextJustify? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(textJustify)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["text-justify"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.textJustify")
-            }
+            feature.properties?["text-justify"] = textJustify?.rawValue 
         }
     }
-
+    
     /// Text tracking amount.
     public var textLetterSpacing: Double? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(textLetterSpacing)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["text-letter-spacing"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.textLetterSpacing")
-            }
+            feature.properties?["text-letter-spacing"] = textLetterSpacing 
         }
     }
-
+    
     /// The maximum line width for text wrapping.
     public var textMaxWidth: Double? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(textMaxWidth)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["text-max-width"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.textMaxWidth")
-            }
+            feature.properties?["text-max-width"] = textMaxWidth 
         }
     }
-
+    
     /// Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up. If used with text-variable-anchor, input values will be taken as absolute values. Offsets along the x- and y-axis will be applied automatically based on the anchor position.
     public var textOffset: [Double]? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(textOffset)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["text-offset"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.textOffset")
-            }
+            feature.properties?["text-offset"] = textOffset 
         }
     }
-
+    
     /// Radial offset of text, in the direction of the symbol's anchor. Useful in combination with `text-variable-anchor`, which defaults to using the two-dimensional `text-offset` if present.
     public var textRadialOffset: Double? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(textRadialOffset)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["text-radial-offset"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.textRadialOffset")
-            }
+            feature.properties?["text-radial-offset"] = textRadialOffset 
         }
     }
-
+    
     /// Rotates the text clockwise.
     public var textRotate: Double? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(textRotate)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["text-rotate"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.textRotate")
-            }
+            feature.properties?["text-rotate"] = textRotate 
         }
     }
-
+    
     /// Font size.
     public var textSize: Double? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(textSize)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["text-size"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.textSize")
-            }
+            feature.properties?["text-size"] = textSize 
         }
     }
-
+    
     /// Specifies how to capitalize text, similar to the CSS `text-transform` property.
     public var textTransform: TextTransform? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(textTransform)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["text-transform"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.textTransform")
-            }
+            feature.properties?["text-transform"] = textTransform?.rawValue 
         }
     }
-
+    
     /// The color of the icon. This can only be used with sdf icons.
     public var iconColor: ColorRepresentable? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(iconColor)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["icon-color"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.iconColor")
-            }
+            feature.properties?["icon-color"] = iconColor?.rgbaDescription 
         }
     }
-
+    
     /// Fade out the halo towards the outside.
     public var iconHaloBlur: Double? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(iconHaloBlur)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["icon-halo-blur"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.iconHaloBlur")
-            }
+            feature.properties?["icon-halo-blur"] = iconHaloBlur 
         }
     }
-
+    
     /// The color of the icon's halo. Icon halos can only be used with SDF icons.
     public var iconHaloColor: ColorRepresentable? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(iconHaloColor)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["icon-halo-color"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.iconHaloColor")
-            }
+            feature.properties?["icon-halo-color"] = iconHaloColor?.rgbaDescription 
         }
     }
-
+    
     /// Distance of halo to the icon outline.
     public var iconHaloWidth: Double? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(iconHaloWidth)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["icon-halo-width"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.iconHaloWidth")
-            }
+            feature.properties?["icon-halo-width"] = iconHaloWidth 
         }
     }
-
+    
     /// The opacity at which the icon will be drawn.
     public var iconOpacity: Double? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(iconOpacity)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["icon-opacity"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.iconOpacity")
-            }
+            feature.properties?["icon-opacity"] = iconOpacity 
         }
     }
-
+    
     /// The color with which the text will be drawn.
     public var textColor: ColorRepresentable? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(textColor)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["text-color"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.textColor")
-            }
+            feature.properties?["text-color"] = textColor?.rgbaDescription 
         }
     }
-
+    
     /// The halo's fadeout distance towards the outside.
     public var textHaloBlur: Double? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(textHaloBlur)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["text-halo-blur"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.textHaloBlur")
-            }
+            feature.properties?["text-halo-blur"] = textHaloBlur 
         }
     }
-
+    
     /// The color of the text's halo, which helps it stand out from backgrounds.
     public var textHaloColor: ColorRepresentable? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(textHaloColor)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["text-halo-color"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.textHaloColor")
-            }
+            feature.properties?["text-halo-color"] = textHaloColor?.rgbaDescription 
         }
     }
-
+    
     /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
     public var textHaloWidth: Double? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(textHaloWidth)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["text-halo-width"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.textHaloWidth")
-            }
+            feature.properties?["text-halo-width"] = textHaloWidth 
         }
     }
-
+    
     /// The opacity at which the text will be drawn.
     public var textOpacity: Double? {
         didSet {
-            do {
-                let data = try JSONEncoder().encode(textOpacity)
-                let jsonValue = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                feature.properties?["text-opacity"] = jsonValue
-            } catch {
-                fatalError("Could not convert to json for keyPath: PointAnnotation.textOpacity")
-            }
+            feature.properties?["text-opacity"] = textOpacity 
         }
     }
 

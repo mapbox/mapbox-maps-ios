@@ -335,8 +335,7 @@ $(DEVICE_FARM_UPLOAD_IPA): $(XCTESTRUN_PACKAGE) | $(DEVICE_TEST_PATH) $(PAYLOAD_
 	cp -R $(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app $(PAYLOAD_DIR)
 
 	# Test moving frameworks for AWS to re-codesign
-	cp -R $(PAYLOAD_DIR)/$(APP_NAME).app/Frameworks/*.framework/Frameworks/*.framework $(PAYLOAD_DIR)/$(APP_NAME).app/Frameworks
-
+	mv $(PAYLOAD_DIR)/$(APP_NAME).app/Frameworks/*.framework/Frameworks/*.framework $(PAYLOAD_DIR)/$(APP_NAME).app/Frameworks
 
 	cp $(XCTESTRUN_PACKAGE) $(PAYLOAD_DIR)/$(APP_NAME).app/xctestrun.zip
 

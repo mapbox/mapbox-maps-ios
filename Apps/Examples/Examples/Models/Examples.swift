@@ -42,7 +42,7 @@ public struct Examples {
             "examples": styleExamples
         ],
         [
-            "title": "UserInteraction",
+            "title": "User Interaction",
             "examples": userInteractionExamples
         ]
     ]

@@ -59,7 +59,7 @@ extension ExampleTableViewController {
             return 1
         }
 
-        return allExamples.count
+        return allExamples.count + 1
     }
 
     public override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

@@ -35,7 +35,7 @@ extension MapView: LocationSupportableMapView {
     public func point(for coordinate: CLLocationCoordinate2D) -> CGPoint {
         return mapboxMap.point(for: coordinate)
     }
-    
+
     public func metersPerPointAtLatitude(latitude: CLLocationDegrees) -> CLLocationDistance {
         return Projection.getMetersPerPixelAtLatitude(forLatitude: latitude, zoom: Double(cameraState.zoom))
     }

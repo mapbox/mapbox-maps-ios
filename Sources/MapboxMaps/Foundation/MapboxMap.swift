@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import MapboxCoreMaps
 import Turf
 import UIKit
@@ -290,7 +291,9 @@ extension MapboxMap: CameraManagerProtocol {
         let expected = __map.setBoundsFor(options)
 
         if expected.isError() {
+            // swiftlint:disable force_cast
             throw MapError(coreError: expected.error as! NSString)
+            // swiftlint:enable force_cast
         }
     }
 

@@ -1,4 +1,5 @@
 import UIKit
+import CoreLocation
 
 #if canImport(MapboxMapsFoundation)
 import MapboxMapsFoundation
@@ -59,22 +60,6 @@ public class Snapshotter {
     /// - Parameter cameraOptions: The target camera options
     public func setCamera(to cameraOptions: CameraOptions) {
         mapSnapshotter.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
-    }
-
-    /// Convenience function to set the URI of the current Mapbox Style to use.
-    /// This is equivalent to setting `snapshotter.style.uri`
-    ///
-    /// - Parameter styleURI: StyleURI to apply to the snapshotter
-    public func setStyleURI(_ styleURI: StyleURI) {
-        style.uri = styleURI
-    }
-
-    /// Convenience function to set the JSON of the current Mapbox Style to use.
-    /// This is equivalent to setting `snapshotter.style.JSON`
-    ///
-    /// - Parameter JSON: Style JSON string to apply to the snapshotter
-    public func setStyleJSON(_ JSON: String) {
-        mapSnapshotter.setStyleJSONForJson(JSON)
     }
 
     /// In the tile mode, the snapshotter fetches the still image of a single tile.
@@ -217,6 +202,37 @@ public class Snapshotter {
          }
 
         return compositeImage
+    }
+
+    // MARK: - Camera
+
+    /// Returns the coordinate bounds corresponding to a given `CameraOptions`
+    ///
+    /// - Parameter camera: The camera for which the coordinate bounds will be returned.
+    /// - Returns: `CoordinateBounds` for the given `CameraOptions`
+    public func coordinateBounds(for camera: CameraOptions) -> CoordinateBounds {
+        return mapSnapshotter.coordinateBoundsForCamera(
+            forCamera: MapboxCoreMaps.CameraOptions(camera))
+    }
+
+    /// Calculates a `CameraOptions` to fit a list of coordinates.
+    ///
+    /// - Parameters:
+    ///   - coordinates: Array of coordinates that should fit within the new viewport.
+    ///   - padding: The new padding to be used by the camera.
+    ///   - bearing: The new bearing to be used by the camera.
+    ///   - pitch: The new pitch to be used by the camera.
+    /// - Returns: A `CameraOptions` that fits the provided constraints
+    public func camera(for coordinates: [CLLocationCoordinate2D],
+                       padding: UIEdgeInsets,
+                       bearing: Double?,
+                       pitch: Double?) -> CameraOptions {
+        return CameraOptions(
+            mapSnapshotter.cameraForCoordinates(
+                forCoordinates: coordinates.map(\.location),
+                padding: padding.toMBXEdgeInsetsValue(),
+                bearing: bearing?.NSNumber,
+                pitch: pitch?.NSNumber))
     }
 }
 

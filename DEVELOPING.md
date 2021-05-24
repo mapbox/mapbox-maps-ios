@@ -5,6 +5,7 @@ This guide contains the steps required to contribute to the development of this 
 ### Setting up a development environment
 
 This project runs on Apple's Metal rendering framework. Prerequisites for running the test app in simulators:
+
 - macOS 10.15 or later
 - Xcode 12.2+
 
@@ -12,13 +13,13 @@ This project:
 
 1. requires [a valid ~/.netrc file](https://docs.mapbox.com/ios/maps/guides/install/#configure-credentials) to fetch dependencies.
 
-1. uses [SwiftLint](https://github.com/realm/SwiftLint) to enforce a style guide. Install it with `brew install swiftlint` and check for lint by running `swiftlint` in the root of the repository.
+2. uses [SwiftLint](https://github.com/realm/SwiftLint) to enforce a style guide. Install it with `brew install swiftlint` and check for lint by running `swiftlint` in the root of the repository.
 
-1. uses [Swift Package Manager](https://github.com/apple/swift-package-manager) to manage dependencies for development. Cocapods is supported for *consuming* the SDK.
+3. uses [Swift Package Manager](https://github.com/apple/swift-package-manager) to manage dependencies for development. Cocapods is supported for *consuming* the SDK.
 
-1. uses [secret-shield](https://github.com/mapbox/secret-shield) to help block secrets such as access tokens from being exposed. Install `secret-shield` by entering `npm install -g @mapbox/secret-shield`. Install the pre-commit hook by running `scripts/install-pre-commit/install-pre-commit.sh`
+4. uses [secret-shield](https://github.com/mapbox/secret-shield) to help block secrets such as access tokens from being exposed. Install `secret-shield` by entering `npm install -g @mapbox/secret-shield`. Install the pre-commit hook by running `scripts/install-pre-commit/install-pre-commit.sh`
 
-1. uses CircleCI and AWS Device Farm for continuous integration.
+5. uses CircleCI and AWS Device Farm for continuous integration.
 
 ### Accessing the Maps SDK's source
 

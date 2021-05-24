@@ -191,7 +191,28 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         }
 
         // 1. Load TileRegion from network
-        try testProgressAndCompletionBlocksBaseCase()
+        let tileRegionLoaded = XCTestExpectation(description: "Tile region has loaded")
+
+        /// Perform the download
+        tileStore.loadTileRegion(forId: tileRegionId,
+                                 loadOptions: tileRegionLoadOptions!) { _ in }
+            completion: { result in
+            DispatchQueue.main.async {
+                switch result {
+                case let .success(region):
+                    if region.requiredResourceCount == region.completedResourceCount {
+                        print("✔︎")
+                        tileRegionLoaded.fulfill()
+                    } else {
+                        print("𐄂")
+                        XCTFail("Not all items were loaded")
+                    }
+                case let .failure(error):
+                    print("𐄂")
+                    XCTFail("Download failed with error: \(error)")
+                }
+            }
+        }
 
         // - - - - - - - -
         // 2. stylepack
@@ -213,7 +234,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
             }
         }
 
-        wait(for: [stylePackLoaded], timeout: 30.0)
+        wait(for: [stylePackLoaded, tileRegionLoaded], timeout: 30.0)
 
         // - - - - - - - -
         // 3. Disable load-from-network, and try launch map at this location

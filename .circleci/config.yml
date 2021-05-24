@@ -660,7 +660,6 @@ commands:
   install-dependencies:
     description: "Install Dependencies"
     steps:
-      - run: make deps
       - run: pip3 install awscli gitpython requests python-dateutil
 
   make-docs:

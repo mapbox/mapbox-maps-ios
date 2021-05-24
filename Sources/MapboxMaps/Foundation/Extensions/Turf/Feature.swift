@@ -2,14 +2,16 @@ import Foundation
 import MapboxCommon
 import Turf
 
+public typealias Feature = MapboxCommon.Feature
+
 // MARK: - Feature
 
-extension Feature {
+extension Turf.Feature {
 
-    /// Initialize a `Turf.Feature` with an `MBXFeature` object.
-    /// - Parameter feature: The `MBXFeature` to use to create the `Feature`.
-    public init?(_ feature: MBXFeature) {
-        guard let geometry = Geometry(feature.geometry) else { return nil }
+    /// Initialize a `Turf.Feature` with an `Feature` object.
+    /// - Parameter feature: The `Feature` to use to create the `Feature`.
+    public init?(_ feature: Feature) {
+        guard let geometry = Turf.Geometry(feature.geometry) else { return nil }
 
         self.init(geometry: geometry)
 
@@ -34,49 +36,49 @@ extension Feature {
     /// Initialize a `Turf.Feature` with a `Point`.
     /// - Parameter point: The `Point` to use to create the `Turf.Feature`.
     public init(_ point: Point) {
-        self.init(geometry: Geometry.point(point))
+        self.init(geometry: Turf.Geometry.point(point))
     }
 
     /// Initialize a `Turf.Feature` with a `LineString`.
     /// - Parameter line: The `LineString` to use to create the `Turf.Feature`.
     public init(_ line: LineString) {
-        self.init(geometry: Geometry.lineString(line))
+        self.init(geometry: Turf.Geometry.lineString(line))
     }
 
     /// Initialize a `Turf.Feature` with a `Polygon`.
     /// - Parameter polygon: The `Polygon` to use to create the `Turf.Feature`.
     public init(_ polygon: Polygon) {
-        self.init(geometry: Geometry.polygon(polygon))
+        self.init(geometry: Turf.Geometry.polygon(polygon))
     }
 
     /// Initialize a `Turf.Feature` with a `MultiPoint`.
     /// - Parameter multiPoint: The `MultiPoint` to use to create the `Turf.Feature`.
     public init(_ multiPoint: MultiPoint) {
-        self.init(geometry: Geometry.multiPoint(multiPoint))
+        self.init(geometry: Turf.Geometry.multiPoint(multiPoint))
     }
 
     /// Initialize a `Turf.Feature` with a `MultiLineString`.
     /// - Parameter multiLine: The `MultiLineString` to use to create the `Turf.Feature`.
     public init(_ multiLine: MultiLineString) {
-        self.init(geometry: Geometry.multiLineString(multiLine))
+        self.init(geometry: Turf.Geometry.multiLineString(multiLine))
     }
 
     /// Initialize a `Turf.Feature` with a `MultiPolygon`.
     /// - Parameter multiPolygon: The `MultiPolygon` to use to create the `Turf.Feature`.
     public init(_ multiPolygon: MultiPolygon) {
-        self.init(geometry: Geometry.multiPolygon(multiPolygon))
+        self.init(geometry: Turf.Geometry.multiPolygon(multiPolygon))
     }
 
     /// Initialize a `Turf.Feature` with a `GeometryCollection`.
     /// - Parameter geometryCollection: The `GeometryCollection` to use to create the `Turf.Feature`.
     public init(_ geometryCollection: GeometryCollection) {
-        self.init(geometry: Geometry.geometryCollection(geometryCollection))
+        self.init(geometry: Turf.Geometry.geometryCollection(geometryCollection))
     }
 }
 
-extension MBXFeature {
-    /// Initialize an `MBXFeature` with a `Turf.Feature`
-    internal convenience init?(_ feature: Feature) {
+extension Feature {
+    /// Initialize an `Feature` with a `Turf.Feature`
+    internal convenience init?(_ feature: Turf.Feature) {
 
         let identifier: Any?
 
@@ -98,12 +100,16 @@ extension MBXFeature {
             identifier = nil
         }
 
-        let geometry = MBXGeometry(geometry: feature.geometry)
+        let geometry = Geometry(geometry: feature.geometry)
         let properties = feature.properties
 
-        print("TODO: \(String(describing: identifier)) \(geometry) \(String(describing: properties))")
+        guard let nsIdentifier = identifier as? NSObject,
+              let nsProperties = properties as? [String: NSObject] else {
+            fatalError("Unexpected conversion")
+        }
 
-        return nil
-//      self.init(identifier: identifier, geometry: geometry, properties: properties)
+        self.init(identifier: nsIdentifier,
+                  geometry: geometry,
+                  properties: nsProperties)
     }
 }

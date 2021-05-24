@@ -75,10 +75,9 @@ clean:
 
 .PHONY: distclean
 distclean: clean
-	-rm Cartfile.resolved
-	-rm -rf Carthage \
-			~/Library/Caches/carthage \
-			~/Library/Caches/org.carthage.kit
+	-rm Package.resolved
+	-rm Apps/Apps.xcworkspace/xcshareddata/swiftpm/Package.resolved
+	-rm Mapbox/MapboxMaps.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
 
 $(PAYLOAD_DIR) $(TEST_ROOT) $(DEVICE_TEST_PATH):
 	-mkdir -p $@
@@ -448,10 +447,6 @@ ifndef SDK_REGISTRY_TOKEN
 	exit 1
 endif
 	@echo "$$NETRC" > $(NETRC_FILE)
-
-.PHONY: deps
-deps: | $(NETRC_FILE)
-	XCODE_XCCONFIG_FILE=${PWD}/xcode-12.xcconfig carthage bootstrap --platform iOS --use-netrc --no-cache-builds
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Validation

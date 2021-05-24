@@ -2,13 +2,21 @@ import Foundation
 import UIKit
 @_implementationOnly import MapboxCommon_Private
 
-@_functionBuilder
+#if swift(>=5.4)
+@resultBuilder
 public struct ExpressionArgumentBuilder {
-
     public static func buildBlock(_ arguments: ExpressionArgumentConvertible...) -> [Expression.Argument] {
         return arguments.flatMap { $0.expressionArguments }
     }
 }
+#else
+@_functionBuilder
+public struct ExpressionArgumentBuilder {
+    public static func buildBlock(_ arguments: ExpressionArgumentConvertible...) -> [Expression.Argument] {
+        return arguments.flatMap { $0.expressionArguments }
+    }
+}
+#endif
 
 public protocol ExpressionArgumentConvertible {
     var expressionArguments: [Expression.Argument] { get }

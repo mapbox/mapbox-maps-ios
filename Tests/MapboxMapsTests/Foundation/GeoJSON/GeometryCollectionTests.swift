@@ -21,9 +21,9 @@ class GeometryCollectionTests: XCTestCase {
         let geoJSON = try! GeoJSON.parse(data)
 
         // Assert
-        XCTAssert(geoJSON.decoded is Feature)
+        XCTAssert(geoJSON.decoded is Turf.Feature)
 
-        guard let geometryCollectionFeature = geoJSON.decoded as? Feature else {
+        guard let geometryCollectionFeature = geoJSON.decoded as? Turf.Feature else {
             XCTFail("Failed to create Feature.")
             return
         }
@@ -55,9 +55,9 @@ class GeometryCollectionTests: XCTestCase {
         let encodedJSON = try! GeoJSON.parse(encodedData)
 
         // Assert
-        XCTAssert(encodedJSON.decoded is Feature)
+        XCTAssert(encodedJSON.decoded is Turf.Feature)
 
-        guard let geometryCollectionFeature = encodedJSON.decoded as? Feature else {
+        guard let geometryCollectionFeature = encodedJSON.decoded as? Turf.Feature else {
             XCTFail("Failed to create Feature.")
             return
         }

@@ -220,8 +220,8 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
                 let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
 
-                    // `HttpResponse` takes an `MBXExpected` type. This is very similar to Swift's
-                    // `Result` type. APIs using `MBXExpected` are prone to future changes.
+                    // `HttpResponse` takes an `Expected` type. This is very similar to Swift's
+                    // `Result` type. APIs using `Expected` are prone to future changes.
                     let result: Result<HttpResponseData, HttpRequestError>
 
                     if let error = error {

@@ -37,7 +37,7 @@ class PointTests: XCTestCase {
         let data = try! Fixture.geojsonData(from: "point")!
         let geojson = try! GeoJSON.parse(data)
 
-        XCTAssert(geojson.decoded is Feature)
+        XCTAssert(geojson.decoded is Turf.Feature)
         XCTAssert(geojson.decodedFeature?.geometry.type == .Point)
     }
 }

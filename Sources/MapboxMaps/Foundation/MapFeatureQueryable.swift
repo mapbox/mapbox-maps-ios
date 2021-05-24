@@ -71,7 +71,7 @@ internal protocol MapFeatureQueryable: AnyObject {
     ///         either a value (expansion-zoom) or a feature collection (children
     ///         or leaves). An error is passed if the operation was not successful.
     func queryFeatureExtension(for sourceId: String,
-                               feature: Feature,
+                               feature: Turf.Feature,
                                extension: String,
                                extensionField: String,
                                args: [String: Any]?,

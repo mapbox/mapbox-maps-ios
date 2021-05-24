@@ -4,9 +4,21 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Breaking changes ⚠️
+
+- Updated MapboxCoreMaps and MapboxCommon dependencies. ([#388](https://github.com/mapbox/mapbox-maps-ios/pull/388))
+  - Removed the `MBX` prefix from `MBXGeometry`, `MBXGeometryType` and `MBXFeature`. Existing uses of the similar Turf types need to be fully namespaced, i.e. `Turf.Feature`
+  - Introduced separate minZoom/maxZoom fields into CustomGeometrySourceOptions API instead of the formerly used `zoomRange`
+  - Improved zooming performance.
+  - Fixed terrain transparency issue when a sky layer is not used.
+
 ### Features ✨ and improvements 🏁
 
 - Added `Snapshotter.coordinateBounds(for:)` and `Snapshotter.camera(for:padding:bearing:pitch:)`. ([#386](https://github.com/mapbox/mapbox-maps-ios/pull/386))
+
+### Development 🛠
+
+- Dependency management for development of the SDK has moved to Swift Package Manager and the existing Cartfile has been removed.
 
 ## 10.0.0-beta.20 - May 20, 2021
 

@@ -109,6 +109,6 @@ extension MapboxCoreMaps.OfflineManager {
 
 private func offlineManagerClosureAdapter<T, ObjCType>(
     for closure: @escaping (Result<T, Error>) -> Void,
-    type: ObjCType.Type) -> ((MBXExpected<AnyObject, AnyObject>?) -> Void) where ObjCType: AnyObject {
+    type: ObjCType.Type) -> ((Expected<AnyObject, AnyObject>?) -> Void) where ObjCType: AnyObject {
     return coreAPIClosureAdapter(for: closure, type: type, concreteErrorType: StylePackError.self)
 }

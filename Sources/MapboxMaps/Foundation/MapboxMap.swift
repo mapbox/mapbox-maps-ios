@@ -160,13 +160,13 @@ extension MapboxMap: CameraManagerProtocol {
                 box: ScreenBox(rect)))
     }
 
-    public func camera(for geometry: Geometry,
+    public func camera(for geometry: Turf.Geometry,
                        padding: UIEdgeInsets,
                        bearing: CGFloat?,
                        pitch: CGFloat?) -> CameraOptions {
         return CameraOptions(
             __map.cameraForGeometry(
-                for: MBXGeometry(geometry: geometry),
+                for: Geometry(geometry: geometry),
                 padding: padding.toMBXEdgeInsetsValue(),
                 bearing: bearing?.NSNumber,
                 pitch: pitch?.NSNumber))
@@ -287,13 +287,13 @@ extension MapboxMap: MapFeatureQueryable {
     }
 
     public func queryFeatureExtension(for sourceId: String,
-                                      feature: Feature,
+                                      feature: Turf.Feature,
                                       extension: String,
                                       extensionField: String,
                                       args: [String: Any]? = nil,
                                       completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) {
 
-        guard let feature = MBXFeature(feature) else {
+        guard let feature = Feature(feature) else {
             completion(.failure(TypeConversionError.unexpectedType))
             return
         }

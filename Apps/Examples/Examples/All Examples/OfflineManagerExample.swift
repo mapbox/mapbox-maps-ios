@@ -82,8 +82,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
             // we're updating the UI, so it's important to dispatch to the main
             // queue.
             DispatchQueue.main.async {
-                guard let progress = progress,
-                      let stylePackProgressView = self?.stylePackProgressView else {
+                guard let stylePackProgressView = self?.stylePackProgressView else {
                     return
                 }
 
@@ -118,7 +117,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
 
         // Load the tile region
         let tileRegionLoadOptions = TileRegionLoadOptions(
-            geometry: MBXGeometry(coordinate: tokyoCoord),
+            geometry: Geometry(coordinate: tokyoCoord),
             descriptors: [outdoorsDescriptor],
             metadata: ["tag": "my-outdoors-tile-region"],
             acceptExpired: true)!
@@ -133,8 +132,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
             // we're updating the UI, so it's important to dispatch to the main
             // queue.
             DispatchQueue.main.async {
-                guard let progress = progress,
-                      let tileRegionProgressView = self?.tileRegionProgressView else {
+                guard let tileRegionProgressView = self?.tileRegionProgressView else {
                     return
                 }
 

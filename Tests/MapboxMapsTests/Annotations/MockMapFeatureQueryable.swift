@@ -15,7 +15,9 @@ final class MockMapFeatureQueryable: MapFeatureQueryable {
     func queryRenderedFeatures(in rect: CGRect,
                                options: RenderedQueryOptions?,
                                completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
-        let feature = MBXFeature()
+        let feature = Feature(identifier: "test-feature" as NSString,
+                                           geometry: Geometry(coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0)),
+                                           properties: [:])
         let queriedFeature = QueriedFeature(feature: feature, source: "SourceID", sourceLayer: nil, state: true)
         completion(.success([queriedFeature]))
     }
@@ -34,7 +36,7 @@ final class MockMapFeatureQueryable: MapFeatureQueryable {
 
     // swiftlint:disable function_parameter_count
     func queryFeatureExtension(for sourceId: String,
-                               feature: Feature,
+                               feature: Turf.Feature,
                                extension: String,
                                extensionField: String,
                                args: [String: Any]?,

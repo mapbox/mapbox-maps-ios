@@ -230,7 +230,7 @@ public class Style {
 
     // MARK: - Conversion helpers
 
-    private func handleExpected(closure: () -> (MBXExpected<AnyObject, AnyObject>)) throws {
+    private func handleExpected(closure: () -> (Expected<AnyObject, AnyObject>)) throws {
         let expected = closure()
 
         if expected.isError() {
@@ -240,7 +240,7 @@ public class Style {
         }
     }
 
-    private func handleExpected<T>(closure: () -> (MBXExpected<AnyObject, AnyObject>)) throws -> T {
+    private func handleExpected<T>(closure: () -> (Expected<AnyObject, AnyObject>)) throws -> T {
         let expected = closure()
 
         if expected.isError() {
@@ -515,9 +515,9 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    // TODO: Fix initialization of MBXFeature.
-    public func _setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Feature]) throws {
-        let mbxFeatures = features.compactMap { MBXFeature($0) }
+    // TODO: Fix initialization of Feature.
+    public func _setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Turf.Feature]) throws {
+        let mbxFeatures = features.compactMap { Feature($0) }
         return try handleExpected {
             return styleManager.setStyleCustomGeometrySourceTileDataForSourceId(sourceId, tileId: tileId, featureCollection: mbxFeatures)
         }

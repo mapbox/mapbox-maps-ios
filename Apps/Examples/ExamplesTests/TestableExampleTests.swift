@@ -28,17 +28,18 @@ class TestableExampleTests: XCTestCase {
 
         let existingImpl = method_getImplementation(method)
 
-        for example in Examples.all {
-            // Add a method for this test, but using the same implementation
-            let selectorName = "test\(example.type)"
-            let testSelector = Selector((selectorName))
-            class_addMethod(Self.self, testSelector, existingImpl, "v@:f")
+        for category in Examples.all {
+            for example in category["examples"] as! [Example] {
+                // Add a method for this test, but using the same implementation
+                let selectorName = "test\(example.type)"
+                let testSelector = Selector((selectorName))
+                class_addMethod(Self.self, testSelector, existingImpl, "v@:f")
 
-            let test = TestableExampleTests(selector: testSelector)
-            test.example = example
-            newTestSuite.addTest(test)
+                let test = TestableExampleTests(selector: testSelector)
+                test.example = example
+                newTestSuite.addTest(test)
+            }
         }
-
         return newTestSuite
     }
 

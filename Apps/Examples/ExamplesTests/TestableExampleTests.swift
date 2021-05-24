@@ -2,6 +2,7 @@ import XCTest
 import ObjectiveC.runtime
 @testable import Examples
 
+//swiftlint:disable force_cast
 extension UINavigationController {
     func popToRootViewController(animated: Bool, completion: @escaping () -> Void) {
         popToRootViewController(animated: animated)

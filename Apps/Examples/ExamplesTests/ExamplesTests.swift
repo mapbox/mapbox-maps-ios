@@ -1,6 +1,7 @@
 import XCTest
 @testable import Examples
 
+//swiftlint:disable force_cast
 class ExamplesTests: XCTestCase {
 
     func testExampleClassExists() throws {

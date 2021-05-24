@@ -211,8 +211,7 @@ public class Snapshotter {
     /// - Parameter camera: The camera for which the coordinate bounds will be returned.
     /// - Returns: `CoordinateBounds` for the given `CameraOptions`
     public func coordinateBounds(for camera: CameraOptions) -> CoordinateBounds {
-        return mapSnapshotter.coordinateBoundsForCamera(
-            forCamera: MapboxCoreMaps.CameraOptions(camera))
+        return mapSnapshotter.coordinateBoundsForCamera(forCamera: MapboxCoreMaps.CameraOptions(camera))
     }
 
     /// Calculates a `CameraOptions` to fit a list of coordinates.
@@ -227,12 +226,11 @@ public class Snapshotter {
                        padding: UIEdgeInsets,
                        bearing: Double?,
                        pitch: Double?) -> CameraOptions {
-        return CameraOptions(
-            mapSnapshotter.cameraForCoordinates(
-                forCoordinates: coordinates.map(\.location),
-                padding: padding.toMBXEdgeInsetsValue(),
-                bearing: bearing?.NSNumber,
-                pitch: pitch?.NSNumber))
+        return CameraOptions(mapSnapshotter.cameraForCoordinates(
+                                forCoordinates: coordinates.map(\.location),
+                                padding: padding.toMBXEdgeInsetsValue(),
+                                bearing: bearing?.NSNumber,
+                                pitch: pitch?.NSNumber))
     }
 }
 

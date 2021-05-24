@@ -103,13 +103,13 @@ extension Feature {
         let geometry = Geometry(geometry: feature.geometry)
         let properties = feature.properties
 
-        guard let identifier = identifier as? NSObject,
-              let properties = properties as? [String: NSObject] else {
+        guard let nsIdentifier = identifier as? NSObject,
+              let nsProperties = properties as? [String: NSObject] else {
             fatalError("Unexpected conversion")
         }
 
-        self.init(identifier: identifier,
+        self.init(identifier: nsIdentifier,
                   geometry: geometry,
-                  properties: properties)
+                  properties: nsProperties)
     }
 }

@@ -69,7 +69,7 @@ public class PointClusteringExample: UIViewController, ExampleProtocol {
         clusteredLayer.filter = Exp(.has) { "point_count" }
 
         // Set the circle's color and radius based on the number of points within each cluster.
-        clusteredLayer.paint?.circleColor =  .expression(Exp(.step) {
+        clusteredLayer.circleColor =  .expression(Exp(.step) {
             Exp(.get) { "point_count" }
             UIColor(red: 0.32, green: 0.73, blue: 0.84, alpha: 1.00)
             100
@@ -78,7 +78,7 @@ public class PointClusteringExample: UIViewController, ExampleProtocol {
             UIColor(red: 0.95, green: 0.55, blue: 0.69, alpha: 1.00)
         })
 
-        clusteredLayer.paint?.circleRadius = .expression(Exp(.step) {
+        clusteredLayer.circleRadius = .expression(Exp(.step) {
             Exp(.get) { "point_count" }
             20
             100
@@ -98,10 +98,10 @@ public class PointClusteringExample: UIViewController, ExampleProtocol {
         Exp(.has) { "point_count" }
         }
 
-        unclusteredLayer.paint?.circleColor = .constant(ColorRepresentable(color: UIColor(red: 0.07, green: 0.71, blue: 0.85, alpha: 1.00)))
-        unclusteredLayer.paint?.circleRadius = .constant(4)
-        unclusteredLayer.paint?.circleStrokeWidth = .constant(1)
-        unclusteredLayer.paint?.circleStrokeColor = .constant(ColorRepresentable(color: .black))
+        unclusteredLayer.circleColor = .constant(ColorRepresentable(color: UIColor(red: 0.07, green: 0.71, blue: 0.85, alpha: 1.00)))
+        unclusteredLayer.circleRadius = .constant(4)
+        unclusteredLayer.circleStrokeWidth = .constant(1)
+        unclusteredLayer.circleStrokeColor = .constant(ColorRepresentable(color: .black))
         return unclusteredLayer
     }
 
@@ -112,8 +112,8 @@ public class PointClusteringExample: UIViewController, ExampleProtocol {
         numberLayer.filter = Exp(.has) { "point_count" }
 
         // Display the value for 'point_count' in the text field.
-        numberLayer.layout?.textField = .expression(Exp(.get) { "point_count" })
-        numberLayer.layout?.textSize = .constant(12)
+        numberLayer.textField = .expression(Exp(.get) { "point_count" })
+        numberLayer.textSize = .constant(12)
         return numberLayer
     }
 

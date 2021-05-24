@@ -3,7 +3,7 @@ import MapboxMaps
 
 /**
  To add a new example, create a new `Example` struct
- and place it within the array below. Make sure
+ and place it within the array for the category it belongs to below. Make sure
  the `fileName` is the same name of the new `UIViewController`
  you added in Examples/All Examples. See the README.md for more details.
  */
@@ -47,6 +47,7 @@ public struct Examples {
         ]
     ]
 
+    // Examples that show how to get started with Mapbox, such as creating a basic map view or setting a style once.
     public static let gettingStartedExamples = [
         Example(title: "Display a map view",
                 description: """
@@ -58,6 +59,7 @@ public struct Examples {
                 type: CustomStyleURLExample.self),
     ]
 
+    // Examples that show how to use 3D terrain or fill extrusions.
     public static let threeDExamples = [
         Example(title: "Show 3D terrain",
                 description: "Show realistic elevation by enabling terrain.",
@@ -70,6 +72,7 @@ public struct Examples {
                 type: BuildingExtrusionsExample.self),
     ]
 
+    // Examples that focus on annotations.
     public static let annotationExamples = [
         Example(title: "Add a point annotation",
                 description: "Add the default point annotation to a map.",
@@ -94,6 +97,7 @@ public struct Examples {
                 type: SwiftUIExample.self),
     ]
 
+    // Examples that focus on setting, animating, or otherwise changing the map's camera.
     public static let cameraExamples = [
         Example(title: "Fly-to camera animation",
                 description: """
@@ -109,6 +113,7 @@ public struct Examples {
 
     ]
 
+    // Examples focused on displaying the user's location.
     public static let locationExamples = [
         Example(title: "Display the user's location",
                 description: "Display the user's location on a map with the default user location puck.",
@@ -121,6 +126,7 @@ public struct Examples {
                 type: Custom3DPuckExample.self),
     ]
 
+    // Examples that highlight using the Offline APIs.
     public static let offlineExamples = [
         Example(title: "Use OfflineManager and TileStore to download a region",
                 description: """
@@ -134,6 +140,7 @@ public struct Examples {
                 type: OfflineManagerExample.self),
     ]
 
+    // Examples that show how to use the map's snapshotter.
     public static let snapshotExamples = [
         Example(title: "Create a static map snapshot",
                 description: """
@@ -149,6 +156,7 @@ public struct Examples {
                 type: SnapshotterCoreGraphicsExample.self),
     ]
 
+    // Examples that highlight how to set or modify the map's style and its contents.
     public static let styleExamples = [
         Example(title: "Display multiple icon images in a symbol layer",
                 description: """
@@ -187,6 +195,7 @@ public struct Examples {
                 type: LineGradientExample.self),
     ]
 
+    // Examples that show use cases related to user interaction with the map.
     public static let userInteractionExamples = [
         Example(title: "Find features at a point",
                 description: "Query the map for rendered features belonging to a specific layer.",

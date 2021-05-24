@@ -75,10 +75,9 @@ clean:
 
 .PHONY: distclean
 distclean: clean
-	-rm Cartfile.resolved
-	-rm -rf Carthage \
-			~/Library/Caches/carthage \
-			~/Library/Caches/org.carthage.kit
+	-rm Package.resolved
+	-rm Apps/Apps.xcworkspace/xcshareddata/swiftpm/Package.resolved
+	-rm Mapbox/MapboxMaps.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
 
 $(PAYLOAD_DIR) $(TEST_ROOT) $(DEVICE_TEST_PATH):
 	-mkdir -p $@

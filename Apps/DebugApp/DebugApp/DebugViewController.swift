@@ -11,6 +11,7 @@ import Turf
 public class DebugViewController: UIViewController {
 
     internal var mapView: MapView!
+    internal var circleAnnotationManager: CircleAnnotationManager?
     internal var runningAnimator: CameraAnimator?
 
     override public func viewDidLoad() {
@@ -84,8 +85,10 @@ public class DebugViewController: UIViewController {
         mapView.mapboxMap.onNext(.mapLoaded) { (event) in
             print("The map has finished loading... Event = \(event)")
             
-            var circleAnnotationManager = CircleAnnotationManager(id: "my-circle-annotation-manager", style: self.mapView.mapboxMap.style)
-            var circleAnnotation1 = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            self.circleAnnotationManager = self.mapView.annotations.makeCircleAnnotationManager()
+            self.circleAnnotationManager?.delegate = self
+            
+            var circleAnnotation1 = CircleAnnotation(id: "my-first-annotation", point: .init(.init(latitude: 0, longitude: 0)))
             circleAnnotation1.circleRadius = 100
             circleAnnotation1.circleOpacity = 1.0
             circleAnnotation1.circleColor = .init(color: .clear)
@@ -106,7 +109,13 @@ public class DebugViewController: UIViewController {
             circleAnnotation3.circleStrokeWidth = 19.0
             circleAnnotation3.circleStrokeColor = .init(color: .white)
             
-            circleAnnotationManager.annotations = [circleAnnotation1, circleAnnotation2, circleAnnotation3]
+            self.circleAnnotationManager?.annotations = [circleAnnotation1, circleAnnotation2, circleAnnotation3]
+            
+//
+//            var pointAnnotationManager = self.mapView.annotations.makePointAnnotationManager()
+//            var pointAnnotation1 = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+//            pointAnnotationManager.annotations = [pointAnnotation1]
+            
             
         }
 
@@ -127,5 +136,12 @@ public class DebugViewController: UIViewController {
 
             print("The map failed to load.. \(type) = \(message)")
         }
+    }
+}
+
+
+extension DebugViewController: CircleAnnotationInteractionDelegate {
+    public func annotationsTapped(forManager manager: CircleAnnotationManager, annotations: Set<CircleAnnotation>) {
+        print("***** Detected tap on annotations: \(annotations.map(\.id))")
     }
 }

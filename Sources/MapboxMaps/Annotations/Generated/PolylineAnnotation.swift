@@ -2,7 +2,7 @@
 import Foundation
 import Turf
 
-public struct PolylineAnnotation: Annotation, Hashable {
+public struct PolylineAnnotation: Annotation {
 
     /// Identifier for this annotation
     public let id: String

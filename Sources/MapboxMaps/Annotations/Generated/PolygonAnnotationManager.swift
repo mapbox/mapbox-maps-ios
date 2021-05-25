@@ -1,9 +1,24 @@
 // This file is generated.
 import Foundation
 import Turf
+@_implementationOnly import MapboxCommon_Private
 
-public struct PolygonAnnotationManager {
+/// A delegate that is called when a tap is detected on an annotation (or on several of them).
+public protocol PolygonAnnotationInteractionDelegate {
 
+    /// This method is invoked when a tap gesture is detected
+    /// - Parameters:
+    ///   - manager: The `PolygonAnnotationManager` that detected this tap gesture
+    ///   - annotations: A list of `PolygonAnnotations` that were tapped
+    func annotationsTapped(forManager manager: PolygonAnnotationManager,
+                           annotations: Set<PolygonAnnotation>)
+
+}
+
+/// An instance of `PolygonAnnotationManager` is responsible for a collection of `PolygonAnnotation`s. 
+public class PolygonAnnotationManager: AnnotationManager {
+
+    /// The collection of PolygonAnnotations being managed
     public var annotations = Set<PolygonAnnotation>() {
         didSet {
             guard annotations != oldValue else { return }
@@ -11,45 +26,109 @@ public struct PolygonAnnotationManager {
          }
     }
 
-    public struct Options: Codable, Equatable {
-        
-        /// Whether or not the fill should be antialiased.
-        public var fillAntialias: Value<Bool>? 
-        
-        /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
-        public var fillTranslate: Value<[Double]>? 
-        
-        /// Controls the frame of reference for `fill-translate`.
-        public var fillTranslateAnchor: Value<FillTranslateAnchor>? 
+    /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
+    public var delegate: PolygonAnnotationInteractionDelegate? {
+        didSet {
+            if delegate != nil {
+                setupTapRecognizer()
+            } else {
+                guard let view = view, let recognizer = tapRecognizer else { return }
+                view.removeGestureRecognizer(recognizer)
+                tapRecognizer = nil
+            }
+        }
+    }
+
+    /// The `UITapGestureRecognizer` that's listening to touch events on the map
+    private var tapRecognizer: UITapGestureRecognizer?
+
+    internal func setupTapRecognizer() {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+        tapGestureRecognizer.numberOfTapsRequired = 1
+        tapGestureRecognizer.numberOfTouchesRequired = 1
+        view?.addGestureRecognizer(tapGestureRecognizer)
+        tapRecognizer = tapGestureRecognizer
     }
     
-    public var options = Options() {
-        didSet {
-            guard options != oldValue else { return }
+    @objc internal func handleTap(_ tap: UITapGestureRecognizer) {
+        let options = RenderedQueryOptions(layerIds: [layerId], filter: nil)
+        mapFeatureQueryable?.queryRenderedFeatures(
+            at: tap.location(in: view),
+            options: options) { [weak self] (result) in
+            guard let self = self else { return }
             
-            do {
-                let data = try JSONEncoder().encode(options)
-                guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                    fatalError("Could not convert PolygonAnnotationManager.Options to JSON object")
+            switch result {
+            case .success(let queriedFeatures):
+                if let annotationIds = queriedFeatures.compactMap(\.feature.properties["annotation-id"]) as? [String]{
+
+                    let tappedAnnotations = self.annotations.filter { annotationIds.contains($0.id)}
+                    if !tappedAnnotations.isEmpty {
+                        self.delegate?.annotationsTapped(
+                            forManager: self,
+                            annotations: tappedAnnotations)
+                    }
                 }
-                try style.setLayerProperties(for: layerId, properties: json)
+            case .failure(let error):
+                Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)", 
+                            category: "Annotations")
+            }
+        }
+    }
+        
+    /// Whether or not the fill should be antialiased.
+    public var fillAntialias: Bool? {
+        didSet {
+            do {
+                guard let fillAntialias = fillAntialias else { return }
+                try style?.setLayerProperty(for: layerId, property: "fill-antialias ", value: fillAntialias)
             } catch {
-                fatalError("Could not encode PolygonAnnotationManager.Options")
+                Log.warning(forMessage: "Could not set PolygonAnnotationManager.fillAntialias",
+                            category: "Annotations")
+            }
+        }
+    }
+        
+    /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
+    public var fillTranslate: [Double]? {
+        didSet {
+            do {
+                guard let fillTranslate = fillTranslate else { return }
+                try style?.setLayerProperty(for: layerId, property: "fill-translate ", value: fillTranslate)
+            } catch {
+                Log.warning(forMessage: "Could not set PolygonAnnotationManager.fillTranslate",
+                            category: "Annotations")
+            }
+        }
+    }
+        
+    /// Controls the frame of reference for `fill-translate`.
+    public var fillTranslateAnchor: FillTranslateAnchor? {
+        didSet {
+            do {
+                guard let fillTranslateAnchor = fillTranslateAnchor else { return }
+                try style?.setLayerProperty(for: layerId, property: "fill-translate-anchor ", value: fillTranslateAnchor.rawValue)
+            } catch {
+                Log.warning(forMessage: "Could not set PolygonAnnotationManager.fillTranslateAnchor",
+                            category: "Annotations")
             }
         }
     }
     
-    private let id: String
-    private let style: Style
-    private let sourceId: String
-    private let layerId: String
+    public let id: String
+    private weak var style: Style?
+    public let sourceId: String
+    public let layerId: String
+    private weak var mapFeatureQueryable: MapFeatureQueryable?
+    private weak var view: UIView?
 
-    internal init(id: String, style: Style, layerPosition: LayerPosition?) {
+    internal init(id: String, style: Style, view: UIView, mapFeatureQueryable: MapFeatureQueryable, layerPosition: LayerPosition?) {
         self.id = id
         self.style = style
         self.sourceId = id + "-source"
         self.layerId = id + "-layer"
-        
+        self.view = view
+        self.mapFeatureQueryable = mapFeatureQueryable
+
         do {
             try makeSourceAndLayer(layerPosition: layerPosition)
         } catch {
@@ -57,7 +136,25 @@ public struct PolygonAnnotationManager {
         }
     }
 
+    deinit {
+        removeBackingSourceAndLayer()
+    }
+
+    func removeBackingSourceAndLayer() {
+        do {
+            try style?.removeLayer(withId: layerId)
+            try style?.removeSource(withId: layerId)
+        } catch {
+            Log.warning(forMessage: "Failed to remove source / layer from map for annotations due to error: \(error)",
+                        category: "Annotations")
+        }
+    }
+
     internal func makeSourceAndLayer(layerPosition: LayerPosition?) throws {
+
+        guard let style = style else { 
+            fatalError("Style must exist when adding a source and layer for annotations")
+        }
 
         // Add the source with empty `data` property
         var source = GeoJSONSource()
@@ -78,6 +175,11 @@ public struct PolygonAnnotationManager {
     }
 
     internal func syncAnnotations() {
+
+        guard let style = style else { 
+            fatalError("Style must exist when adding/removing annotations")
+        }
+
         let featureCollection = Turf.FeatureCollection(features: annotations.map(\.feature))
         do {
             let data = try JSONEncoder().encode(featureCollection)

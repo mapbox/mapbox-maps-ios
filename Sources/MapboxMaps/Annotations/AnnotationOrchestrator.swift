@@ -1,10 +1,6 @@
-import Foundation
+import UIKit
 import Turf
-
-public protocol AnnotationInteractionDelegate {
-    func didSelectAnnotation(annotation: Annotation_Legacy)
-    func didDeselectAnnotation(annotation: Annotation_Legacy)
-}
+@_implementationOnly import MapboxCommon_Private
 
 public enum AnnotationType {
     case point
@@ -13,7 +9,7 @@ public enum AnnotationType {
     case circle
 }
 
-public protocol Annotation {
+public protocol Annotation: Hashable {
     
     /// The unique identifier of the annotation.
     var id: String { get }
@@ -32,59 +28,89 @@ public protocol Annotation {
     var userInfo: [String: Any]? { get set }
 }
 
+public protocol AnnotationManager {
+    
+//    associatedtype A where A: Hashable
+    
+    var id: String { get }
+    
+    
+//    var annotations: Set<A> { get set }
+    
+    var sourceId: String { get }
+    
+    var layerId: String { get }
+}
 
-public struct AnnotationOrchestrator {
+
+public class AnnotationOrchestrator {
     
     private weak var view: UIView?
     
     private weak var style: Style?
     
     private weak var mapFeatureQueryable: MapFeatureQueryable?
-     
+
     internal init(view: UIView, mapFeatureQueryable: MapFeatureQueryable, style: Style) {
         self.view = view
         self.mapFeatureQueryable = mapFeatureQueryable
         self.style = style
     }
     
-    public func makePointAnnotationManager(id: String = String(UUID().uuidString.prefix(5)), layerPosition: LayerPosition? = nil) -> PointAnnotationManager {
+    public func makePointAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
+                                           layerPosition: LayerPosition? = nil) -> PointAnnotationManager {
         
-        guard let style = style else {
+        guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
             fatalError("Style must be present when creating an annotation manager")
         }
         
         return PointAnnotationManager(id: id,
-                                      style: style, layerPosition: layerPosition)
+                                      style: style,
+                                      view: view,
+                                      mapFeatureQueryable: mapFeatureQueryable,
+                                      layerPosition: layerPosition)
     }
     
-    public func makePolygonAnnotationManager(id: String = String(UUID().uuidString.prefix(5)), layerPosition: LayerPosition? = nil) -> PolygonAnnotationManager {
+    public func makePolygonAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
+                                             layerPosition: LayerPosition? = nil) -> PolygonAnnotationManager {
         
-        guard let style = style else {
+        guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
             fatalError("Style must be present when creating an annotation manager")
         }
         
         return PolygonAnnotationManager(id: id,
-                                        style: style, layerPosition: layerPosition)
+                                        style: style,
+                                        view: view,
+                                        mapFeatureQueryable: mapFeatureQueryable,
+                                        layerPosition: layerPosition)
     }
     
-    public func makePolylineAnnotationManager(id: String = String(UUID().uuidString.prefix(5)), layerPosition: LayerPosition? = nil) -> PolylineAnnotationManager {
+    public func makePolylineAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
+                                              layerPosition: LayerPosition? = nil) -> PolylineAnnotationManager {
         
-        guard let style = style else {
+        guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
             fatalError("Style must be present when creating an annotation manager")
         }
         
         return PolylineAnnotationManager(id: id,
-                                         style: style, layerPosition: layerPosition)
+                                         style: style,
+                                         view: view,
+                                         mapFeatureQueryable: mapFeatureQueryable,
+                                         layerPosition: layerPosition)
     }
     
-    public func makeCircleAnnotationManager(id: String = String(UUID().uuidString.prefix(5)), layerPosition: LayerPosition? = nil) -> CircleAnnotationManager {
+    public func makeCircleAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
+                                            layerPosition: LayerPosition? = nil) -> CircleAnnotationManager {
         
-        guard let style = style else {
+        guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
             fatalError("Style must be present when creating an annotation manager")
         }
         
         return CircleAnnotationManager(id: id,
-                                       style: style, layerPosition: layerPosition)
+                                       style: style,
+                                       view: view,
+                                       mapFeatureQueryable: mapFeatureQueryable,
+                                       layerPosition: layerPosition)
     }
 }
 

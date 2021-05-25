@@ -158,8 +158,8 @@ extension TileStore {
     ///     user-controlled thread.
     public func tileRegionGeometry(forId id: String,
                                    completion: @escaping (Result<Geometry, Error>) -> Void) {
-        __getTileRegion(forId: id,
-                        callback: tileStoreClosureAdapter(for: completion, type: Geometry.self))
+        __getTileRegionGeometry(forId: id,
+                                callback: tileStoreClosureAdapter(for: completion, type: Geometry.self))
     }
 
     /// Fetch a tile region's associated metadata

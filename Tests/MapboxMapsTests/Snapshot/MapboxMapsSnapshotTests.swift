@@ -51,17 +51,14 @@ class MapboxMapsSnapshotTests: XCTestCase {
             let options = try snapshotterOptions()
             let snapshotter = Snapshotter(options: options)
             weakSnapshotter = snapshotter
-//            let frame = CGRect(x: 0, y: 0, width: 100, height: 100)
-//            let mapView = MapView(frame: frame)
             weakSnapshotter?.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5))
             weakSnapshotter?.style.uri = .light
             weakSnapshotter?.start(overlayHandler: nil) { (result) in
                 expectation.fulfill()
                 XCTAssertNotNil(result)
                 print(snapshotter)
-//                print(mapView)
             }
-            wait(for: [expectation], timeout: 60)
+            wait(for: [expectation], timeout: 10)
         }
         XCTAssertNil(weakSnapshotter)
     }

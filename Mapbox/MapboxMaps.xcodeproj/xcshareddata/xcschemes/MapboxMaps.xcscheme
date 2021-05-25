@@ -54,6 +54,16 @@
                </Test>
             </SkippedTests>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CA548FCF251C404B00F829A3"
+               BuildableName = "MapboxMapsTestsWithHost.xctest"
+               BlueprintName = "MapboxMapsTestsWithHost"
+               ReferencedContainer = "container:MapboxMaps.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

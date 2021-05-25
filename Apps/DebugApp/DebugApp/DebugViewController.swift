@@ -20,7 +20,7 @@ public class DebugViewController: UIViewController {
         mapView = MapView(frame: view.bounds, mapInitOptions: MapInitOptions(styleURI: nil))
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.location.options.puckType = .puck2D()
-        
+
         view.addSubview(mapView)
 
         // Convenience that takes a closure that's called when the style

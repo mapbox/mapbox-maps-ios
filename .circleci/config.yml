@@ -355,35 +355,60 @@ jobs:
           name: Install Device Farm Dependencies
           command: make install-devicefarm-dependencies
       - install-dependencies
+
+    # There's a command for this, but it only works if run *after* the build.
+      # In this case, we need to determine the derived data path *before* building.
+      - run:
+          name: Locate derived data directory
+          command: |
+            xcodebuild \
+              -showBuildSettings \
+              -project Mapbox/MapboxMaps.xcodeproj \
+              -scheme 'MapboxTestHost' \
+              | sed -n 's:^ *BUILD_DIR = \(.*\)/Build/Products$:export DERIVED_DATA_PATH="\1":p' \
+              >> $BASH_ENV
       - run:
           name: Testing << parameters.scheme >> on AWS Device Farm
-          command: make test-with-device-farm SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
+          command: |
+            make test-with-device-farm \
+              SCHEME=<< parameters.scheme >> \
+              APP_NAME=<< parameters.app-name >> \
+              CONFIGURATION=Release \
+              BUILD_DIR="$DERIVED_DATA_PATH"
           when: always
       # get xcresults here, may be zipped with more than one result
       - run:
           name: "Gathering results"
-          command: make gather-results
+          command: make gather-results BUILD_DIR="$DERIVED_DATA_PATH"
           when: always
       - run:
           name: "Parsing xcresults for errors"
           command: |
-            RESULTS=`find build/testruns -name '*.xcresult'`
-            xargs swift run --package-path scripts/xcparty xcparty \<<< "$RESULTS" | tee build/testruns/failures.txt
+            RESULTS=`find "$DERIVED_DATA_PATH/testruns" -name '*.xcresult'`
+            xargs swift run --package-path scripts/xcparty xcparty \<<< "$RESULTS" | tee "$DERIVED_DATA_PATH/testruns/failures.txt"
           when: on_fail
       - run:
           name: Symbolicate crash logs
-          command: make symbolicate SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
-          when: always
-      # - run:
-      #     name: Converting and uploading coverage
-      #     command: |
-      #       make device-update-codecov-with-profdata \
-      #         SCHEME=<< parameters.scheme >> \
-      #         APP_NAME=<< parameters.app-name >> \
-      #         CONFIGURATION=Release \
-      #         COVERAGE_MAPBOX_MAPS_DEVICE=build/Build/Products/Release-iphoneos/MapboxMaps.framework/MapboxMaps
-      - store-device-farm-artifacts
-      - store-logs
+          command: |
+            make symbolicate \
+              SCHEME=<< parameters.scheme >> \
+              APP_NAME=<< parameters.app-name >> \
+              CONFIGURATION=Release \
+              BUILD_DIR="$DERIVED_DATA_PATH"
+          when: always          
+      - run:
+          name: Converting and uploading coverage
+          command: |
+            make device-update-codecov-with-profdata \
+              SCHEME=<< parameters.scheme >> \
+              APP_NAME=<< parameters.app-name >> \
+              CONFIGURATION=Release \
+              BUILD_DIR="$DERIVED_DATA_PATH" \
+              COVERAGE_MAPBOX_MAPS_DEVICE="$DERIVED_DATA_PATH/Build/Products/Release-iphoneos/MapboxMaps.framework/MapboxMaps"
+      - store-device-farm-artifacts:
+          derived_data_path: $DERIVED_DATA_PATH
+      - store-logs:
+          derived_data_path: $DERIVED_DATA_PATH
       - report-failure:
           report_failure: << parameters.report_failure >>
           message: "<< parameters.scheme >> device tests"
@@ -440,15 +465,15 @@ jobs:
               CONFIGURATION=Release \
               BUILD_DIR="$DERIVED_DATA_PATH"
           when: always
-      # - run:
-      #     name: Converting and uploading coverage
-      #     command: |
-      #       pip3 install awscli gitpython
-      #       make device-update-codecov-with-profdata \
-      #         SCHEME=<< parameters.scheme >> \
-      #         APP_NAME=<< parameters.app-name >> \
-      #         CONFIGURATION=Release \
-      #         BUILD_DIR="$DERIVED_DATA_PATH"
+      - run:
+          name: Converting and uploading coverage
+          command: |
+            pip3 install awscli gitpython
+            make device-update-codecov-with-profdata \
+              SCHEME=<< parameters.scheme >> \
+              APP_NAME=<< parameters.app-name >> \
+              CONFIGURATION=Release \
+              BUILD_DIR="$DERIVED_DATA_PATH"
       - store-device-farm-artifacts:
           derived_data_path: $DERIVED_DATA_PATH
       - store-logs:

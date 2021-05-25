@@ -333,6 +333,10 @@ $(DEVICE_FARM_UPLOAD_IPA): $(XCTESTRUN_PACKAGE) | $(DEVICE_TEST_PATH) $(PAYLOAD_
 
 	# Creating IPA package for upload
 	cp -R $(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app $(PAYLOAD_DIR)
+
+	# Test moving frameworks for AWS to re-codesign (if they exist)
+	mv $(PAYLOAD_DIR)/$(APP_NAME).app/Frameworks/*.framework/Frameworks/*.framework $(PAYLOAD_DIR)/$(APP_NAME).app/Frameworks || true
+
 	cp $(XCTESTRUN_PACKAGE) $(PAYLOAD_DIR)/$(APP_NAME).app/xctestrun.zip
 
 	-rm $(DEVICE_FARM_UPLOAD_IPA)
@@ -389,26 +393,48 @@ COVERAGE_ROOT_DIR ?= $(BUILD_DIR)/Build/ProfileData
 COVERAGE_MAPBOX_MAPS ?= $(BUILD_DIR)/Build/Products/$(CONFIGURATION)-iphonesimulator/MapboxMaps.o
 COVERAGE_ARCH ?= x86_64
 
+# .PHONY: update-codecov-with-profdata
+# update-codecov-with-profdata:
+# 	curl -sSfL --retry 5 --connect-timeout 5 https://codecov.io/bash > /tmp/codecov.sh
+# 	@PROF_DATA=`find $(COVERAGE_ROOT_DIR) -regex '.*\.profraw'` ; \
+# 	for RESULT in $${PROF_DATA[@]} ; \
+# 	do \
+# 		echo "Generating $${RESULT}.lcov" ; \
+# 		xcrun llvm-profdata merge -o $${RESULT}.profdata $${RESULT} ; \
+# 		xcrun llvm-cov export \
+# 			$(COVERAGE_MAPBOX_MAPS) \
+# 			-instr-profile=$${RESULT}.profdata \
+# 			-arch=$(COVERAGE_ARCH) \
+# 			-format=lcov > $${RESULT}.lcov ; \
+# 		echo "Uploading $${RESULT}.lcov to CodeCov.io" ; \
+# 		bash /tmp/codecov.sh \
+# 			-f $${RESULT}.lcov \
+# 			-t $(CODECOV_TOKEN) \
+# 			-J '^MapboxMaps$$' \
+# 			-n $${RESULT}.lcov \
+# 			-F "$$(echo '$(SCHEME)' | sed 's/[[:upper:]]/_&/g;s/^_//' | tr '[:upper:]' '[:lower:]')" ; \
+# 		echo "Generating lcov JSON" ; \
+# 		xcrun llvm-cov export \
+# 			$(COVERAGE_MAPBOX_MAPS) \
+# 			-instr-profile=$${RESULT}.profdata \
+# 			-arch=$(COVERAGE_ARCH) \
+# 			-format=text | python3 -m json.tool > $${RESULT}.json ; \
+# 		echo "Uploading to S3" ; \
+# 		python3 ./scripts/code-coverage/parse-code-coverage.py \
+# 			-g . \
+# 			-c MapboxMaps \
+# 			--scheme $(SCHEME) \
+# 			--report $${RESULT}.json ; \
+# 	done
+# 	@echo "Done"
+
 .PHONY: update-codecov-with-profdata
 update-codecov-with-profdata:
-	curl -sSfL --retry 5 --connect-timeout 5 https://codecov.io/bash > /tmp/codecov.sh
 	@PROF_DATA=`find $(COVERAGE_ROOT_DIR) -regex '.*\.profraw'` ; \
 	for RESULT in $${PROF_DATA[@]} ; \
 	do \
 		echo "Generating $${RESULT}.lcov" ; \
 		xcrun llvm-profdata merge -o $${RESULT}.profdata $${RESULT} ; \
-		xcrun llvm-cov export \
-			$(COVERAGE_MAPBOX_MAPS) \
-			-instr-profile=$${RESULT}.profdata \
-			-arch=$(COVERAGE_ARCH) \
-			-format=lcov > $${RESULT}.lcov ; \
-		echo "Uploading $${RESULT}.lcov to CodeCov.io" ; \
-		bash /tmp/codecov.sh \
-			-f $${RESULT}.lcov \
-			-t $(CODECOV_TOKEN) \
-			-J '^MapboxMaps$$' \
-			-n $${RESULT}.lcov \
-			-F "$$(echo '$(SCHEME)' | sed 's/[[:upper:]]/_&/g;s/^_//' | tr '[:upper:]' '[:lower:]')" ; \
 		echo "Generating lcov JSON" ; \
 		xcrun llvm-cov export \
 			$(COVERAGE_MAPBOX_MAPS) \

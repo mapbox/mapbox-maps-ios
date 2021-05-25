@@ -26,7 +26,7 @@ public struct StyleError: RawRepresentable, LocalizedError {
 }
 
 public enum TypeConversionError: Error {
-    case invalidJSONObject
+    case invalidObject
     case unexpectedType
 }
 

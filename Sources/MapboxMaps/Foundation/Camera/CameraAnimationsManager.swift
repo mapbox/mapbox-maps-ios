@@ -28,7 +28,7 @@ public class CameraAnimationsManager {
                 minZoom: options.minimumZoomLevel as NSNumber,
                 maxPitch: options.maximumPitch as NSNumber,
                 minPitch: options.minimumPitch as NSNumber)
-            mapView?.mapboxMap.__map.setBoundsFor(boundOptions)
+            try? mapView?.mapboxMap.setCameraBounds(for: boundOptions)
         }
     }
 

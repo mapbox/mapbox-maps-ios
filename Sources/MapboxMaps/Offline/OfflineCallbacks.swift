@@ -1,13 +1,6 @@
 import Foundation
 @_implementationOnly import MapboxCommon_Private
 
-/// Errors that OfflineManager and TileStore APIs can return as a Result type
-/// These typically represent an API error; as such these are currently internal
-internal enum OfflineError: Error {
-    case typeMismatch
-    case invalidResult
-}
-
 /// Returns a closure suitable for the OfflineManager and TileStore callback based
 /// APIs, that converts the expected type into a Swift Result type.
 /// - Parameters:
@@ -28,8 +21,8 @@ internal func coreAPIClosureAdapter<T, SwiftError, ObjCType>(
         }
 
         guard let expected = expected as? Expected<ObjCType, SwiftError.CoreErrorType>  else {
-            assertionFailure("Invalid Expected types or none.")
-            result = .failure(OfflineError.typeMismatch)
+            assertionFailure("Invalid MBXExpected types or none.")
+            result = .failure(TypeConversionError.unexpectedType)
             return
         }
 
@@ -39,7 +32,7 @@ internal func coreAPIClosureAdapter<T, SwiftError, ObjCType>(
             result = .failure(SwiftError(coreError: error))
         } else {
             assertionFailure("Unexpected value or error: \(expected), expected: \(T.self)")
-            result = .failure(OfflineError.invalidResult)
+            result = .failure(TypeConversionError.invalidObject)
         }
     }
 }
@@ -56,8 +49,8 @@ internal func coreAPIClosureAdapter<SwiftError>(
         }
 
         guard let expected = expected as? Expected<AnyObject, SwiftError.CoreErrorType>  else {
-            assertionFailure("Invalid Expected types or none.")
-            result = .failure(OfflineError.typeMismatch)
+            assertionFailure("Invalid MBXExpected types or none.")
+            result = .failure(TypeConversionError.unexpectedType)
             return
         }
 
@@ -67,7 +60,7 @@ internal func coreAPIClosureAdapter<SwiftError>(
             result = .failure(SwiftError(coreError: error))
         } else {
             assertionFailure("Unexpected value or error: \(expected)")
-            result = .failure(OfflineError.invalidResult)
+            result = .failure(TypeConversionError.invalidObject)
         }
     }
 }

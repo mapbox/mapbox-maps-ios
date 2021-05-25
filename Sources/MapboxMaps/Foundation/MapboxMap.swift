@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import MapboxCoreMaps
 import Turf
 import UIKit
@@ -5,7 +6,7 @@ import UIKit
 
 public final class MapboxMap {
     /// The underlying renderer object responsible for rendering the map
-    public let __map: Map
+    private let __map: Map
 
     internal var size: CGSize {
         get {
@@ -85,6 +86,57 @@ public final class MapboxMap {
             observeStyleLoad(completion)
         }
         __map.setStyleJSONForJson(JSON)
+    }
+
+    // MARK: - Prefetching
+
+    /// When loading a map, if `prefetchZoomDelta` is set to any number greater
+    /// than 0, the map will first request a tile for `zoom - prefetchZoomDelta`
+    /// in an attempt to display a full map at lower resolution as quick as
+    /// possible.
+    ///
+    /// It will get clamped at the tile source minimum zoom. The default delta
+    /// is 4.
+    public var prefetchZoomDelta: UInt8 {
+        get {
+            return __map.getPrefetchZoomDelta()
+        }
+        set {
+            __map.setPrefetchZoomDeltaForDelta(newValue)
+        }
+    }
+
+    /// Returns the map's options
+    public var options: MapOptions {
+        return __map.getOptions()
+    }
+
+    /// Reduces memory use. Useful to call when the application gets paused or
+    /// sent to background.
+    internal func reduceMemoryUse() {
+        __map.reduceMemoryUse()
+    }
+
+    /// Gets the resource options for the map.
+    ///
+    /// All optional fields of the returned object are initialized with the
+    /// actual values.
+    ///
+    /// - Note: The result of this property is different from the `ResourceOptions`
+    /// that were provided to the map's initializer.
+    public var resourceOptions: ResourceOptions {
+        return __map.getResourceOptions()
+    }
+
+    /// Gets elevation for the given coordinate.
+    ///
+    /// - Note: Elevation is only available for the visible region on the screen.
+    ///
+    /// - Parameter coordinate: Coordinate for which to return the elevation.
+    /// - Returns: Elevation (in meters) multiplied by current terrain
+    ///     exaggeration, or empty if elevation for the coordinate is not available.
+    public func elevation(at coordinate: CLLocationCoordinate2D) -> Double? {
+        return __map.getElevationFor(coordinate)?.doubleValue
     }
 
     // MARK: - Camera Fitting
@@ -231,6 +283,20 @@ extension MapboxMap: CameraManagerProtocol {
         return __map.getBounds()
     }
 
+    /// Sets the bounds of the map.
+    ///
+    /// - Parameter options: New camera bounds. Nil values will not take effect.
+    /// - Throws: `MapError`
+    public func setCameraBounds(for options: CameraBoundsOptions) throws {
+        let expected = __map.setBoundsFor(options)
+
+        if expected.isError() {
+            // swiftlint:disable force_cast
+            throw MapError(coreError: expected.error as! NSString)
+            // swiftlint:enable force_cast
+        }
+    }
+
     // MARK: - Drag API
 
     public func dragStart(for point: CGPoint) {
@@ -355,5 +421,11 @@ extension MapboxMap: MapEventsObservable {
         }
         eventHandlers.add(handler)
         return handler
+    }
+}
+
+extension MapboxMap {
+    internal var __testingMap: Map {
+        return __map
     }
 }

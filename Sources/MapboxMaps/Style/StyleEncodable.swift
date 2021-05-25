@@ -14,7 +14,7 @@ public extension StyleEncodable where Self: Encodable {
         let data = try JSONEncoder().encode(self)
 
         guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-            throw TypeConversionError.invalidJSONObject
+            throw TypeConversionError.invalidObject
         }
         return jsonObject
     }

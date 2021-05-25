@@ -12,7 +12,7 @@ import UIKit
 //swiftlint:disable explicit_top_level_acl explicit_acl
 
 class MapboxMapsSnapshotTests: XCTestCase {
-
+    
     var newAttachment: XCTAttachment!
     var resourceOptions: ResourceOptions!
     
@@ -51,29 +51,30 @@ class MapboxMapsSnapshotTests: XCTestCase {
             let options = try snapshotterOptions()
             let snapshotter = Snapshotter(options: options)
             weakSnapshotter = snapshotter
-            
+//            let frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+//            let mapView = MapView(frame: frame)
             weakSnapshotter?.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5))
             weakSnapshotter?.style.uri = .light
             weakSnapshotter?.start(overlayHandler: nil) { (result) in
                 expectation.fulfill()
                 XCTAssertNotNil(result)
                 print(snapshotter)
+//                print(mapView)
             }
-            wait(for: [expectation], timeout: 10)
+            wait(for: [expectation], timeout: 60)
         }
         XCTAssertNil(weakSnapshotter)
     }
     
     // Testing snapshot overlay
     func testSnapshotOverlay() throws {
-        let imageRect = CGRect(x: 0, y: 0, width: 300, height: 300)
         let options = try snapshotterOptions()
         let snapshotter = Snapshotter(options: options)
-
+        
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
         snapshotter.setCamera(to: cameraOptions)
         snapshotter.style.uri = .light
-
+        
         let expectation = self.expectation(description: "snapshot")
         expectation.expectedFulfillmentCount = 2
         snapshotter.start { (overlay) in
@@ -94,11 +95,12 @@ class MapboxMapsSnapshotTests: XCTestCase {
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 10)
+        
     }
     
     func testSnapshotSizeAndScaleAccuracy() {
         let imageRect = CGRect(x: 0, y: 0, width: 300, height: 300)
-
+        
         let options = try! snapshotterOptions()
         let snapshotter = Snapshotter(options: options) //should have protocol for GLnative (may have been ticketed)
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
@@ -111,7 +113,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
         } completion: { (result) in
             // size comparison for snapshotter
             XCTAssertEqual(snapshotter.snapshotSize, imageRect.size)
-
+            
             //scale and size comparison for image
             switch result {
             case let .success(image) :
@@ -140,7 +142,9 @@ class MapboxMapsSnapshotTests: XCTestCase {
                 self.add(newAttachment)
                 
                 // Compare snapshot asset data vs snapshot image data
-                let expectedImageData = try? Data(contentsOf: Bundle.mapboxMapsTests.url(forResource: "Snapshot Asset", withExtension: "png")!)
+                let path = Bundle.mapboxMapsTests.path(forResource: "Snapshot-Asset", ofType: "png")!
+                let url = URL(fileURLWithPath: path)
+                let expectedImageData = try? Data(contentsOf: url)
                 
                 XCTAssertEqual(expectedImageData, image.pngData(), "has the camera changed?")
                 

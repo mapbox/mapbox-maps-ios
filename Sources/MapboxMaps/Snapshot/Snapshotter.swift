@@ -89,11 +89,12 @@ public class Snapshotter {
         mapSnapshotter.start { (expected) in
             if expected.isError() {
                 completion(.failure(.snapshotFailed(reason: expected.error as? String)))
+                return
             }
             
-            guard validExpected.isValue(), let snapshot = validExpected.value as? MapSnapshot else {
+            guard expected.isValue(), let snapshot = expected.value as? MapSnapshot else {
                 
-                completion(.failure(.snapshotFailed(reason: validExpected.error as? String)))
+                completion(.failure(.snapshotFailed(reason: expected.error as? String)))
                 return
             }
             

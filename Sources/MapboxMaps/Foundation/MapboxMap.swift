@@ -17,6 +17,7 @@ public final class MapboxMap {
         eventHandlers.allObjects.forEach {
             $0.cancel()
         }
+        __map.destroyRenderer()
     }
 
     internal init(mapClient: MapClient, mapInitOptions: MapInitOptions) {

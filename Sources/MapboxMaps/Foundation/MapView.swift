@@ -32,7 +32,7 @@ open class MapView: UIView {
     public internal(set) var location: LocationManager!
 
     /// Controls the addition/removal of annotations to the map.
-    public internal(set) var annotations: AnnotationManager_Legacy!
+    public internal(set) var annotations: AnnotationOrchestrator!
 
     /// A reference to the `EventsManager` used for dispatching telemetry.
     internal var eventsListener: EventsListener!
@@ -179,10 +179,9 @@ open class MapView: UIView {
         location = LocationManager(locationSupportableMapView: self, style: mapboxMap.style)
 
         // Initialize/Configure annotations manager
-        annotations = AnnotationManager_Legacy(for: self,
-                                        mapEventsObservable: mapboxMap,
-                                        mapFeatureQueryable: mapboxMap,
-                                        style: mapboxMap.style)
+        annotations = AnnotationOrchestrator(view: self,
+                                             mapFeatureQueryable: mapboxMap,
+                                             style: mapboxMap.style)
     }
 
     private func checkForMetalSupport() {

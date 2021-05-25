@@ -94,6 +94,10 @@ open class MapView: UIView {
         return CGPoint(x: xAfterPadding, y: yAfterPadding)
     }
 
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     /// Initialize a MapView
     /// - Parameters:
     ///   - frame: frame for the MapView.
@@ -137,6 +141,10 @@ open class MapView: UIView {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(willTerminate),
                                                name: UIApplication.willTerminateNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(didReceiveMemoryWarning),
+                                               name: UIApplication.didReceiveMemoryWarningNotification,
                                                object: nil)
 
         // Use the overriding style URI if provided (currently from IB)
@@ -308,6 +316,10 @@ open class MapView: UIView {
             validateDisplayLink()
             dormant = true
         }
+    }
+
+    @objc func didReceiveMemoryWarning() {
+        mapboxMap.reduceMemoryUse()
     }
 
     required public init?(coder: NSCoder) {

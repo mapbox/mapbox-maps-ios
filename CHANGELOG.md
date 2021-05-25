@@ -18,7 +18,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Bug fixes 🐞
 
-- Fixed bug with `TileStore.tileRegionGeometry` returning invalid value. ([#390](https://github.com/mapbox/mapbox-maps-ios/pull/390))
+- Fixed a bug with `TileStore.tileRegionGeometry` returning invalid value. ([#390](https://github.com/mapbox/mapbox-maps-ios/pull/390))
+- Fixed a bug where the underlying renderer was not being destroyed. ([#395](https://github.com/mapbox/mapbox-maps-ios/pull/395))
 
 ### Features ✨ and improvements 🏁
 

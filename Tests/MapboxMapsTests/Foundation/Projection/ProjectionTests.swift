@@ -47,11 +47,13 @@ class ProjectionTests: XCTestCase {
         let lat45 = 2946.8675024093595
         let minusLat45 = 5245.132497590641
         let coords = [
-            (CLLocationCoordinate2D(latitude: 45, longitude: -180), MercatorCoordinate(x: 0,    y: lat45)),     // top left
-            (CLLocationCoordinate2D(latitude: 45, longitude: 180),  MercatorCoordinate(x: 8192, y: lat45)),     // top right
-            (CLLocationCoordinate2D(latitude: -45, longitude: -180),MercatorCoordinate(x: 0,    y: minusLat45)),  // bot left
-            (CLLocationCoordinate2D(latitude: -45, longitude: 180), MercatorCoordinate(x: 8192, y: minusLat45)),  // bot right
-            (CLLocationCoordinate2D(latitude: 0, longitude: 0),     MercatorCoordinate(x: 4096, y: 4096)),  // middle
+            // swiftlint:disable comma
+            (CLLocationCoordinate2D(latitude: 45, longitude: -180),  MercatorCoordinate(x: 0,    y: lat45)),        // top left
+            (CLLocationCoordinate2D(latitude: 45, longitude: 180),   MercatorCoordinate(x: 8192, y: lat45)),        // top right
+            (CLLocationCoordinate2D(latitude: -45, longitude: -180), MercatorCoordinate(x: 0,    y: minusLat45)),   // bot left
+            (CLLocationCoordinate2D(latitude: -45, longitude: 180),  MercatorCoordinate(x: 8192, y: minusLat45)),   // bot right
+            (CLLocationCoordinate2D(latitude: 0, longitude: 0),      MercatorCoordinate(x: 4096, y: 4096)),         // middle
+            // swiftlint:enable comma
         ]
 
         let zoom: CGFloat = 4

@@ -51,7 +51,7 @@ internal protocol MapProjectionDelegate: AnyObject {
 }
 
 public class Projection: MapProjectionDelegate {
-    private init() {}
+    internal init() {}
 
     public static func metersPerPoint(for latitude: CLLocationDegrees, zoom: CGFloat) -> Double {
         return MapboxCoreMaps.Projection.getMetersPerPixelAtLatitude(forLatitude: latitude, zoom: Double(zoom))

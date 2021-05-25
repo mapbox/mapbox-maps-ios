@@ -340,6 +340,7 @@
 		CAE43EE7265462B7006F43E9 /* MockMapFeatureQueryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43EE4265462B7006F43E9 /* MockMapFeatureQueryable.swift */; };
 		CAE43EE8265462B7006F43E9 /* MapboxMapsAnnotationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43EE5265462B7006F43E9 /* MapboxMapsAnnotationsTests.swift */; };
 		CAE43EEA26546426006F43E9 /* MapViewIntegrationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA53616D2537ECA600A8AE38 /* MapViewIntegrationTestCase.swift */; };
+		CAE643E2265C831E00C9E223 /* MapTransformable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE643E1265C831E00C9E223 /* MapTransformable.swift */; };
 		CAED9FB1258C69DB003CCEFE /* MapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAED9FAF258C69DB003CCEFE /* MapViewTests.swift */; };
 		CAEDA0B0258E8188003CCEFE /* MapViewIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAEDA0AE258E8188003CCEFE /* MapViewIntegrationTests.swift */; };
 /* End PBXBuildFile section */
@@ -760,6 +761,7 @@
 		CAE43EE12654627E006F43E9 /* TileStore+Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TileStore+Tests.swift"; path = "../../Offline/TileStore+Tests.swift"; sourceTree = "<group>"; };
 		CAE43EE4265462B7006F43E9 /* MockMapFeatureQueryable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockMapFeatureQueryable.swift; sourceTree = "<group>"; };
 		CAE43EE5265462B7006F43E9 /* MapboxMapsAnnotationsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapboxMapsAnnotationsTests.swift; sourceTree = "<group>"; };
+		CAE643E1265C831E00C9E223 /* MapTransformable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapTransformable.swift; sourceTree = "<group>"; };
 		CAED9FAF258C69DB003CCEFE /* MapViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewTests.swift; sourceTree = "<group>"; };
 		CAEDA0AE258E8188003CCEFE /* MapViewIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewIntegrationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1222,6 +1224,7 @@
 		1F11C1102421B05600F8397B /* MapboxMapsFoundation */ = {
 			isa = PBXGroup;
 			children = (
+				CAE643E1265C831E00C9E223 /* MapTransformable.swift */,
 				CAB77E462654ACE90071D74C /* CameraManagerProtocol.swift */,
 				CA6245FF26289D6400C79547 /* Cancelable.swift */,
 				CABCDF362620E03A00D61635 /* CredentialsManager.swift */,
@@ -2065,6 +2068,7 @@
 				0CD62F0F2458852D006421D1 /* PitchGestureHandler.swift in Sources */,
 				0C8D815524F6B4A800717E88 /* Value.swift in Sources */,
 				0CD62F0E2458852A006421D1 /* RotateGestureHandler.swift in Sources */,
+				CAE643E2265C831E00C9E223 /* MapTransformable.swift in Sources */,
 				0C1AF560244E47C1008D2A10 /* GestureOptions.swift in Sources */,
 				07729A592462461800440187 /* CameraOptions.swift in Sources */,
 				0CD62F1F24588734006421D1 /* LocationProviderDelegate.swift in Sources */,

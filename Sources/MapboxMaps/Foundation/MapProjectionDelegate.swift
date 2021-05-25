@@ -1,6 +1,6 @@
 import CoreLocation
 
-public protocol MapProjectionDelegate {
+internal protocol MapProjectionDelegate: AnyObject {
     /// Calculate distance spanned by one pixel at the specified latitude and
     /// zoom level.
     ///
@@ -50,7 +50,9 @@ public protocol MapProjectionDelegate {
     static func unproject(_ mercatorCoordinate: MercatorCoordinate, zoomScale: CGFloat) -> CLLocationCoordinate2D
 }
 
-struct Projection: MapProjectionDelegate {
+public class Projection: MapProjectionDelegate {
+    private init() {}
+
     public static func metersPerPoint(for latitude: CLLocationDegrees, zoom: CGFloat) -> Double {
         return MapboxCoreMaps.Projection.getMetersPerPixelAtLatitude(forLatitude: latitude, zoom: Double(zoom))
     }

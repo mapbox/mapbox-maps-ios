@@ -1,4 +1,4 @@
-internal protocol MapTransformable {
+internal protocol MapTransformDelegate: AnyObject {
     /// Gets the size of the map in points
     var size: CGSize { get set }
 

@@ -160,7 +160,7 @@ public final class MapboxMap {
     }
 }
 
-extension MapboxMap: MapTransformable {
+extension MapboxMap: MapTransformDelegate {
     internal var size: CGSize {
         get {
             CGSize(__map.getSize())

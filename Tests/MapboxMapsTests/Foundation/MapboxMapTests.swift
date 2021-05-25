@@ -140,4 +140,15 @@ final class MapboxMapTests: XCTestCase {
         XCTAssertEqual(camera.padding, .zero)
         XCTAssertEqual(camera.pitch, 0)
     }
+
+    func testProtocolConformance() {
+        let map = MapboxMap(mapClient: MockMapClient(), mapInitOptions: MapInitOptions())
+
+        // Compilation check only
+        _ = map as MapTransformDelegate
+        _ = map as CameraManagerProtocol
+        _ = map as MapFeatureQueryable
+        _ = map as ObservableProtocol
+        _ = map as MapEventsObservable
+    }
 }

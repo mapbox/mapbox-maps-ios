@@ -8,15 +8,6 @@ public final class MapboxMap {
     /// The underlying renderer object responsible for rendering the map
     private let __map: Map
 
-    internal var size: CGSize {
-        get {
-            CGSize(__map.getSize())
-        }
-        set {
-            __map.setSizeFor(Size(newValue))
-        }
-    }
-
     /// The `style` object supports run time styling.
     public internal(set) var style: Style
 
@@ -106,11 +97,6 @@ public final class MapboxMap {
         }
     }
 
-    /// Returns the map's options
-    public var options: MapOptions {
-        return __map.getOptions()
-    }
-
     /// Reduces memory use. Useful to call when the application gets paused or
     /// sent to background.
     internal func reduceMemoryUse() {
@@ -171,6 +157,51 @@ public final class MapboxMap {
         rect = rect.extend(from: nePoint)
 
         return rect
+    }
+}
+
+extension MapboxMap: MapTransformDelegate {
+    internal var size: CGSize {
+        get {
+            CGSize(__map.getSize())
+        }
+        set {
+            __map.setSizeFor(Size(newValue))
+        }
+    }
+
+    internal var isGestureInProgress: Bool {
+        get {
+            return __map.isGestureInProgress()
+        }
+        set {
+            __map.setGestureInProgressForInProgress(newValue)
+        }
+    }
+
+    internal var isUserAnimationInProgress: Bool {
+        get {
+            return __map.isUserAnimationInProgress()
+        }
+        set {
+            __map.setUserAnimationInProgressForInProgress(newValue)
+        }
+    }
+
+    public var options: MapOptions {
+        return __map.getOptions()
+    }
+
+    internal func setNorthOrientation(northOrientation: NorthOrientation) {
+        __map.setNorthOrientationFor(northOrientation)
+    }
+
+    internal func setConstrainMode(_ constrainMode: ConstrainMode) {
+        __map.setConstrainModeFor(constrainMode)
+    }
+
+    internal func setViewportMode(_ viewportMode: ViewportMode) {
+        __map.setViewportModeFor(viewportMode)
     }
 }
 

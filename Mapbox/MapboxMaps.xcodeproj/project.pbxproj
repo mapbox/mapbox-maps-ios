@@ -340,6 +340,10 @@
 		CAE43EE7265462B7006F43E9 /* MockMapFeatureQueryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43EE4265462B7006F43E9 /* MockMapFeatureQueryable.swift */; };
 		CAE43EE8265462B7006F43E9 /* MapboxMapsAnnotationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43EE5265462B7006F43E9 /* MapboxMapsAnnotationsTests.swift */; };
 		CAE43EEA26546426006F43E9 /* MapViewIntegrationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA53616D2537ECA600A8AE38 /* MapViewIntegrationTestCase.swift */; };
+		CAE643E5265D7D4000C9E223 /* MapTransformDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE643E3265D7D4000C9E223 /* MapTransformDelegate.swift */; };
+		CAE643E6265D7D4000C9E223 /* MapProjectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE643E4265D7D4000C9E223 /* MapProjectionDelegate.swift */; };
+		CAE643E9265D7D6400C9E223 /* ProjectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE643E8265D7D6400C9E223 /* ProjectionTests.swift */; };
+		CAE643EA265D7D6400C9E223 /* ProjectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE643E8265D7D6400C9E223 /* ProjectionTests.swift */; };
 		CAED9FB1258C69DB003CCEFE /* MapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAED9FAF258C69DB003CCEFE /* MapViewTests.swift */; };
 		CAEDA0B0258E8188003CCEFE /* MapViewIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAEDA0AE258E8188003CCEFE /* MapViewIntegrationTests.swift */; };
 /* End PBXBuildFile section */
@@ -760,6 +764,9 @@
 		CAE43EE12654627E006F43E9 /* TileStore+Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TileStore+Tests.swift"; path = "../../Offline/TileStore+Tests.swift"; sourceTree = "<group>"; };
 		CAE43EE4265462B7006F43E9 /* MockMapFeatureQueryable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockMapFeatureQueryable.swift; sourceTree = "<group>"; };
 		CAE43EE5265462B7006F43E9 /* MapboxMapsAnnotationsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapboxMapsAnnotationsTests.swift; sourceTree = "<group>"; };
+		CAE643E3265D7D4000C9E223 /* MapTransformDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapTransformDelegate.swift; sourceTree = "<group>"; };
+		CAE643E4265D7D4000C9E223 /* MapProjectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapProjectionDelegate.swift; sourceTree = "<group>"; };
+		CAE643E8265D7D6400C9E223 /* ProjectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectionTests.swift; sourceTree = "<group>"; };
 		CAED9FAF258C69DB003CCEFE /* MapViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewTests.swift; sourceTree = "<group>"; };
 		CAEDA0AE258E8188003CCEFE /* MapViewIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewIntegrationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1222,6 +1229,8 @@
 		1F11C1102421B05600F8397B /* MapboxMapsFoundation */ = {
 			isa = PBXGroup;
 			children = (
+				CAE643E4265D7D4000C9E223 /* MapProjectionDelegate.swift */,
+				CAE643E3265D7D4000C9E223 /* MapTransformDelegate.swift */,
 				CAB77E462654ACE90071D74C /* CameraManagerProtocol.swift */,
 				CA6245FF26289D6400C79547 /* Cancelable.swift */,
 				CABCDF362620E03A00D61635 /* CredentialsManager.swift */,
@@ -1248,6 +1257,7 @@
 		1F11C11B2421B05600F8397B /* MapboxMapsFoundationTests */ = {
 			isa = PBXGroup;
 			children = (
+				CAE643E7265D7D6400C9E223 /* Projection */,
 				B5A6921A262754DF00A03412 /* CredentialsManagerTests.swift */,
 				B5A69219262754DF00A03412 /* DelegatingMapClientTests.swift */,
 				B5A69216262754DF00A03412 /* DelegatingObserverTests.swift */,
@@ -1666,6 +1676,14 @@
 			path = Glyphs;
 			sourceTree = "<group>";
 		};
+		CAE643E7265D7D6400C9E223 /* Projection */ = {
+			isa = PBXGroup;
+			children = (
+				CAE643E8265D7D6400C9E223 /* ProjectionTests.swift */,
+			);
+			path = Projection;
+			sourceTree = "<group>";
+		};
 		CAED9FAE258C69A7003CCEFE /* Unit Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -2038,6 +2056,7 @@
 				0CD62F1024588530006421D1 /* GestureManager.swift in Sources */,
 				CAE43ED5265460FE006F43E9 /* MapFeatureQueryable.swift in Sources */,
 				0C708F3124EB1EE2003CE791 /* CircleLayer.swift in Sources */,
+				CAE643E6265D7D4000C9E223 /* MapProjectionDelegate.swift in Sources */,
 				0CD62F0724588501006421D1 /* PinchGestureHandler.swift in Sources */,
 				0782B17B258C236B00D5FCE5 /* MBXGeometry.swift in Sources */,
 				B529341D2624E9D6003B181C /* DelegatingMapClient.swift in Sources */,
@@ -2092,6 +2111,7 @@
 				0CD62F182458865A006421D1 /* CameraView.swift in Sources */,
 				0C088AC526387EA400107B5E /* DateProvider.swift in Sources */,
 				CAE43EDA26546192006F43E9 /* OfflineSwitch.swift in Sources */,
+				CAE643E5265D7D4000C9E223 /* MapTransformDelegate.swift in Sources */,
 				CA5890DB264B00CE0060987A /* WeakSet.swift in Sources */,
 				2B8637E62463F36400698135 /* DistanceFormatter.swift in Sources */,
 				CA9F8CE32641F95C00A8BCB6 /* StyleManagerProtocol.swift in Sources */,
@@ -2161,6 +2181,7 @@
 				CA4E2DD8264DC66F0039D80E /* MockLocationStyleDelegate.swift in Sources */,
 				CAE43EE7265462B7006F43E9 /* MockMapFeatureQueryable.swift in Sources */,
 				CAE43EE32654627E006F43E9 /* TileStore+Tests.swift in Sources */,
+				CAE643EA265D7D6400C9E223 /* ProjectionTests.swift in Sources */,
 				B53B8663260D719100C86BAA /* TestConveniences.swift in Sources */,
 				B53B8650260D718B00C86BAA /* Stub.swift in Sources */,
 				CA0B380D25C4C01400B3396E /* IntegrationTestCase.swift in Sources */,
@@ -2221,6 +2242,7 @@
 				CA0C43052602BF2D0054D9D0 /* LayerPositionTests.swift in Sources */,
 				0C32CA2425F982300057ED31 /* GeoJsonSourceTests.swift in Sources */,
 				0C5CFCF125BB951B0001E753 /* SkyLayerTests.swift in Sources */,
+				CAE643E9265D7D6400C9E223 /* ProjectionTests.swift in Sources */,
 				0C32CA2725F982300057ED31 /* VectorSourceTests.swift in Sources */,
 				CA548FDF251C404B00F829A3 /* MapboxMapsSnapshotTests.swift in Sources */,
 				CAE43EE22654627E006F43E9 /* TileStore+Tests.swift in Sources */,

@@ -14,6 +14,11 @@ Mapbox welcomes participation and contributions from everyone.
 - `MapboxMap.__map` is now private. ([#374](https://github.com/mapbox/mapbox-maps-ios/pull/374))
 - Added `CameraManagerProtocol.setCameraBounds`, `MapboxMap.prefetchZoomDelta`, `MapboxMap.options`, `MapboxMap.reduceMemoryUse()`, `MapboxMap.resourceOptions` and `MapboxMap.elevation(at:)`. ([#374](https://github.com/mapbox/mapbox-maps-ios/pull/374))
 - Removed `OfflineError.invalidResult` and `OfflineError.typeMismatch`. ([#374](https://github.com/mapbox/mapbox-maps-ios/pull/374))
+- Updated `Projection` APIs to be more Swift-like. ([#390](https://github.com/mapbox/mapbox-maps-ios/pull/390))
+
+### Bug fixes 🐞
+
+- Fixed bug with `TileStore.tileRegionGeometry` returning invalid value. ([#390](https://github.com/mapbox/mapbox-maps-ios/pull/390))
 
 ### Features ✨ and improvements 🏁
 
@@ -49,7 +54,6 @@ Mapbox welcomes participation and contributions from everyone.
      - `OfflineSwitch` (which replaces NetworkConnectivity)
      - `OfflineRegionManager` (though this API is deprecated)
  - Adds `loadStyleURI` and `loadStyleJSON` to `MapboxMap`. ([#354](https://github.com/mapbox/mapbox-maps-ios/pull/354))
-
 
 ### Bug fixes 🐞
 

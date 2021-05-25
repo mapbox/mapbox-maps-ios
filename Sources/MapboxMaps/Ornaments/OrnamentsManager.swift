@@ -67,9 +67,9 @@ public class OrnamentsManager: NSObject {
         view.subscribeCameraChangeHandler { [scalebarView, compassView] (cameraState) in
 
             // Update the scale bar
-            scalebarView.metersPerPoint = Projection.getMetersPerPixelAtLatitude(
-                forLatitude: cameraState.center.latitude,
-                zoom: Double(cameraState.zoom))
+            scalebarView.metersPerPoint = Projection.metersPerPoint(
+                for: cameraState.center.latitude,
+                zoom: cameraState.zoom)
 
             // Update the compass
             compassView.currentBearing = Double(cameraState.bearing)

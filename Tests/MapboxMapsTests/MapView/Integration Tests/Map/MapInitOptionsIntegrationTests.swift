@@ -11,13 +11,12 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         ResourceOptionsManager.destroyDefault()
     }
 
-    func testOptionsWithCustomCredentialsManager() {
+    func testOptionsWithCustomResourceOptionsManager() {
         ResourceOptionsManager.default.update { options in
             options.accessToken = "pk.aaaaaa"
         }
 
-        let ro = ResourceOptions(accessToken: "pk.cccccc")
-        let rom = ResourceOptionsManager(resourceOptions: ro)
+        let rom = ResourceOptionsManager(accessToken: "pk.cccccc")
 
         XCTAssertNotEqual(rom, ResourceOptionsManager.default)
 
@@ -39,8 +38,7 @@ class MapInitOptionsIntegrationTests: XCTestCase {
             options.accessToken = "pk.aaaaaa"
         }
 
-        let ro = ResourceOptions(accessToken: "pk.dddddd")
-        let rom = ResourceOptionsManager(resourceOptions: ro)
+        let rom = ResourceOptionsManager(accessToken: "pk.dddddd")
 
         // Provider should return a custom MapInitOptions
         providerReturnValue = MapInitOptions(

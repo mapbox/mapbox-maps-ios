@@ -14,28 +14,31 @@ class ResourceOptionsManagerTests: XCTestCase {
     }
 
     func testNewInstanceIsNotDefault() throws {
-        let options = ResourceOptions(accessToken: "pk.aaaaaa")
-        let rom = ResourceOptionsManager(resourceOptions: options)
+        let rom = ResourceOptionsManager(accessToken: "pk.aaaaaa")
         XCTAssertNotEqual(rom, ResourceOptionsManager.default)
     }
 
-    func testInternalCredentialsManagerWithMainBundle() throws {
-        // CredentialsManager searches the application's main bundle
+    func testInternalResourceOptionsManagerWithMainBundle() throws {
+        // ResourceOptionsManager searches the application's main bundle
         // For tests, it shouldn't find a token resulting in a default of `nil`
-        let rom = ResourceOptionsManager(resourceOptions: nil)
-        XCTAssertEqual(rom, ResourceOptionsManager.default)
+        let rom = ResourceOptionsManager(accessToken: nil)
+        XCTAssertEqual(rom.resourceOptions, ResourceOptionsManager.default.resourceOptions)
         XCTAssertEqual(rom.resourceOptions.accessToken, "")
+
+        // But these are different instances, so we should consider them separate
+        XCTAssertFalse(rom === ResourceOptionsManager.default)
+        XCTAssertEqual(rom, ResourceOptionsManager.default)
     }
 
-    func testInternalCredentialsManagerWithTestBundle() throws {
+    func testInternalResourceOptionsManagerWithTestBundle() throws {
         // Provide the test bundle. This should find an associated access token
         // Note - this behavior matches that of `mapboxAccessToken()`
-        let rom = ResourceOptionsManager(resourceOptions: nil, for: .mapboxMapsTests)
+        let rom = ResourceOptionsManager(accessToken: nil, for: .mapboxMapsTests)
         XCTAssertNotEqual(rom.resourceOptions.accessToken, "", "Did not find a test access token")
     }
 
-    func testResettingCredentialsManager() throws {
-        let rom = ResourceOptionsManager(resourceOptions: nil, for: .mapboxMapsTests)
+    func testResettingResourceOptionsManager() throws {
+        let rom = ResourceOptionsManager(accessToken: nil, for: .mapboxMapsTests)
         let token = rom.resourceOptions.accessToken
 
         rom.update { options in

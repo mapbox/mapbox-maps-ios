@@ -37,7 +37,7 @@ public class ResourceOptionsManager {
     /// A valid access token must be provided or found.
     public static var `default`: ResourceOptionsManager {
         if defaultInstance == nil {
-            defaultInstance = ResourceOptionsManager(resourceOptions: nil)
+            defaultInstance = ResourceOptionsManager(accessToken: nil)
         }
         return defaultInstance!
     }
@@ -60,14 +60,14 @@ public class ResourceOptionsManager {
     private var tileStore: TileStore!
     private var bundle: Bundle
 
-    /// Initializes a `ResourceOptionsManager` with a `ResourceOptions`
+    /// Initializes a `ResourceOptionsManager` with an optional access token.
     ///
-    /// If the supplied options is nil (which is the case for the `default`) then
-    /// we will use appropriate defaults, including searching for an access token
-    /// in the application's Info.plist.
+    /// If the supplied token is nil (which is the case for the `default`) then
+    /// we will use appropriate defaults for the `ResourceOptions`, including
+    /// searching for an access token in the application's Info.plist.
     ///
-    /// Use the shared `ResourceOptionsManager.default` to set a globally shared
-    /// access token:
+    /// You can override the shared global access token, using
+    /// `ResourceOptionsManager.default`:
     ///
     ///     ```
     ///     ResourceOptionsManager.default.update { resourceOptions in
@@ -75,25 +75,21 @@ public class ResourceOptionsManager {
     ///     }
     ///     ```
     ///
-    /// - Parameter resourceOptions: `ResourceOptions` or `nil`
-    ///
-    /// - Attention:
-    ///     This initializer will set the `TileStore`'s access token if tile store
-    ///     usage is enabled.
-    public convenience init(resourceOptions: ResourceOptions? = nil) {
-        self.init(resourceOptions: resourceOptions, for: .main)
+    /// - Parameter accessToken: Valid access token or `nil`
+    public convenience init(accessToken: String? = nil) {
+        self.init(accessToken: accessToken, for: .main)
     }
 
-    /// Initializes a `ResourceOptionsManager` with the specified resource options
+    /// Initializes a `ResourceOptionsManager` with the specified access token
     /// and `Bundle`.
     ///
     /// - Parameters:
-    ///     - resourceOptions: `ResourceOptions` or `nil`
+    ///     - accessToken: Valid access token or `nil`
     ///     - bundle: Bundle to search for an access token (used if resource
     ///         options is nil).
-    internal init(resourceOptions: ResourceOptions?, for bundle: Bundle) {
+    internal init(accessToken: String?, for bundle: Bundle) {
         self.bundle = bundle
-        reset(resourceOptions: resourceOptions)
+        reset(accessToken: accessToken)
     }
 
     /// Update the stored resource options
@@ -103,22 +99,19 @@ public class ResourceOptionsManager {
         block(&_resourceOptions)
     }
 
-    /// Reset the manager to the specified resource options, or defaults if
-    /// `nil` is supplied.
+    /// Reset the manager to a default `ResourceOptions` using the specified
+    /// access token.
     ///
-    /// - Parameter resourceOptions: `ResourceOptions` or `nil`
-    /// - Attention:
-    ///     This function will set the `TileStore`'s access token if tile store
-    ///     usage is enabled.
-    public func reset(resourceOptions: ResourceOptions? = nil) {
-        let resolvedOptions = resourceOptions ?? ResourceOptions(accessToken: defaultAccessToken())
-        let resolvedTileStore = resolvedOptions.tileStore ?? TileStore.default
+    /// - Parameter accessToken: Valid access token or `nil`
+    public func reset(accessToken: String? = nil) {
+        let resourceOptions = ResourceOptions(accessToken: accessToken ?? defaultAccessToken())
+        let resolvedTileStore = resourceOptions.tileStore ?? TileStore.default
 
-        if resolvedOptions.tileStoreUsageMode != .disabled {
-            resolvedTileStore.setAccessToken(resolvedOptions.accessToken)
+        if resourceOptions.tileStoreUsageMode != .disabled {
+            resolvedTileStore.setAccessToken(resourceOptions.accessToken)
         }
 
-        self._resourceOptions = resolvedOptions
+        self._resourceOptions = resourceOptions
         self.tileStore = resolvedTileStore
     }
 

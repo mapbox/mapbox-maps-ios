@@ -23,11 +23,11 @@ public final class MapInitOptions: NSObject {
     public let cameraOptions: CameraOptions?
 
     /// Initializer. The default initializer, i.e. `MapInitOptions()` will use
-    /// the default `CredentialsManager` to use the current shared access token.
+    /// the default `ResourceOptionsManager` to use the current shared access token.
     ///
     /// - Parameters:
     ///   - resourceOptions: `ResourceOptions`; default creates an instance
-    ///         using `CredentialsManager.default`
+    ///         using `ResourceOptionsManager.default`
     ///   - mapOptions: `MapOptions`; see `GlyphsRasterizationOptions` for the default
     ///         used for glyph rendering.
     ///   - cameraOptions: `CameraOptions` to be applied to the map, overriding

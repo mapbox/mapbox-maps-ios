@@ -10,7 +10,7 @@ extension MapSnapshotOptions {
     ///         `.ideographsRasterizedLocally`
     ///   - resourceOptions: Resource fetching options to be used by the
     ///         snapshotter. Default uses the access token provided by
-    ///         `CredentialsManager.default`
+    ///         `ResourceOptionsManager.default`
     public convenience init(size: CGSize,
                             pixelRatio: CGFloat,
                             glyphsRasterizationOptions: GlyphsRasterizationOptions? = GlyphsRasterizationOptions(fontFamilies: []),

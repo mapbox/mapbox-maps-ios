@@ -10,16 +10,16 @@ public enum AnnotationType {
 }
 
 public protocol Annotation {
-    
+
     /// The unique identifier of the annotation.
     var id: String { get }
-    
+
     /// The feature that is backing this annotation.
     var feature: Turf.Feature { get }
-    
+
     /// The geometry associated with an annotation.
     var type: AnnotationType { get }
-    
+
     /// A Boolean value that indicates whether an annotation is selected, either
     /// programmatically or via user-interactions.
     var isSelected: Bool { get set }
@@ -29,24 +29,23 @@ public protocol Annotation {
 }
 
 public protocol AnnotationManager {
-    
+
     /// The id of this annotation manager.
     var id: String { get }
-    
+
     /// The id of the `GeoJSONSource` that this manager is responsible for.
     var sourceId: String { get }
-    
+
     /// The id of the layer that this manager is responsible for.
     var layerId: String { get }
 }
 
-
 public class AnnotationOrchestrator {
-    
+
     private weak var view: UIView?
-    
+
     private weak var style: Style?
-    
+
     private weak var mapFeatureQueryable: MapFeatureQueryable?
 
     internal init(view: UIView, mapFeatureQueryable: MapFeatureQueryable, style: Style) {
@@ -55,55 +54,75 @@ public class AnnotationOrchestrator {
         self.style = style
     }
     
+    /// Creates a `PointAnnotationManager` which is used to manage a collection of `PointAnnotation`s.
+    /// - Parameters:
+    ///   - id: Optional string identifier for this manager.
+    ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
+    /// - Returns: An instance of `PointAnnotationManager`
     public func makePointAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
                                            layerPosition: LayerPosition? = nil) -> PointAnnotationManager {
-        
+
         guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
             fatalError("Style must be present when creating an annotation manager")
         }
-        
+
         return PointAnnotationManager(id: id,
                                       style: style,
                                       view: view,
                                       mapFeatureQueryable: mapFeatureQueryable,
                                       layerPosition: layerPosition)
     }
-    
+
+    /// Creates a `PolygonAnnotationManager` which is used to manage a collection of `PolygonAnnotation`s.
+    /// - Parameters:
+    ///   - id: Optional string identifier for this manager.
+    ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
+    /// - Returns: An instance of `PolygonAnnotationManager`
     public func makePolygonAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
                                              layerPosition: LayerPosition? = nil) -> PolygonAnnotationManager {
-        
+
         guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
             fatalError("Style must be present when creating an annotation manager")
         }
-        
+
         return PolygonAnnotationManager(id: id,
                                         style: style,
                                         view: view,
                                         mapFeatureQueryable: mapFeatureQueryable,
                                         layerPosition: layerPosition)
     }
-    
+
+    /// Creates a `PolylineAnnotationManager` which is used to manage a collection of `PolylineAnnotation`s.
+    /// - Parameters:
+    ///   - id: Optional string identifier for this manager.
+    ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
+    /// - Returns: An instance of `PolylineAnnotationManager`
     public func makePolylineAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
                                               layerPosition: LayerPosition? = nil) -> PolylineAnnotationManager {
-        
+
         guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
             fatalError("Style must be present when creating an annotation manager")
         }
-        
+
         return PolylineAnnotationManager(id: id,
                                          style: style,
                                          view: view,
                                          mapFeatureQueryable: mapFeatureQueryable,
                                          layerPosition: layerPosition)
     }
-    
+
+    /// Creates a `CircleAnnotationManager` which is used to manage a collection of `CircleAnnotation`s.
+    /// - Parameters:
+    ///   - id: Optional string identifier for this manager.
+    ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
+    /// - Returns: An instance of `CircleAnnotationManager`
     public func makeCircleAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
                                             layerPosition: LayerPosition? = nil) -> CircleAnnotationManager {
-        
+
         guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
             fatalError("Style must be present when creating an annotation manager")
         }
-        
+
         return CircleAnnotationManager(id: id,
                                        style: style,
                                        view: view,
@@ -111,4 +130,3 @@ public class AnnotationOrchestrator {
                                        layerPosition: layerPosition)
     }
 }
-

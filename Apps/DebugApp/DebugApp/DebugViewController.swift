@@ -87,22 +87,22 @@ public class DebugViewController: UIViewController {
          */
         mapView.mapboxMap.onNext(.mapLoaded) { (event) in
             print("The map has finished loading... Event = \(event)")
-            
+
             self.pointAnnotationManager = self.mapView.annotations.makePointAnnotationManager()
             var p1 = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
             p1.image = PointAnnotation.NamedImage(image: UIImage(named: "star")!, name: "star")
-            
+
             var p2 = PointAnnotation(point: .init(.init(latitude: 10, longitude: 10)))
             p2.image = PointAnnotation.NamedImage(image: UIImage(named: "star")!, name: "star")
-            
+
             var p3 = PointAnnotation(point: .init(.init(latitude: -10, longitude: -10)))
             p3.image = PointAnnotation.NamedImage(image: UIImage(named: "star")!, name: "star")
-            
+
             var p4 = PointAnnotation(point: .init(.init(latitude: -10, longitude: 0)))
             p4.image = PointAnnotation.NamedImage(image: UIImage(named: "triangle")!, name: "triangle")
-            
+
             self.pointAnnotationManager?.annotations = [p1, p2, p3, p4]
-            
+
 //            self.circleAnnotationManager = self.mapView.annotations.makeCircleAnnotationManager()
 //            self.circleAnnotationManager?.delegate = self
 //
@@ -157,7 +157,7 @@ public class DebugViewController: UIViewController {
 //            lineAnnotation1.lineColor = .init(color: .yellow)
 //            lineAnnotation1.lineWidth = 30
 //            self.lineAnnotationManager?.annotations.append(lineAnnotation1)
-            
+
         }
 
         /**
@@ -178,7 +178,7 @@ public class DebugViewController: UIViewController {
             print("The map failed to load.. \(type) = \(message)")
         }
     }
-    
+
     public func addLineAnnotation() {
         lineAnnotationManager = mapView.annotations.makePolylineAnnotationManager()
         lineAnnotationManager?.delegate = self
@@ -200,15 +200,14 @@ public class DebugViewController: UIViewController {
 //        lineLayer.source = "my-line-source"
 //        try! mapView.mapboxMap.style.addLayer(lineLayer)
 //
-        
-    }
-    
-    func addPolygonAnnotation() {
-        
-    }
-    
-}
 
+    }
+
+    func addPolygonAnnotation() {
+
+    }
+
+}
 
 extension DebugViewController: CircleAnnotationInteractionDelegate {
     public func annotationsTapped(forManager manager: CircleAnnotationManager, annotations: [CircleAnnotation]) {

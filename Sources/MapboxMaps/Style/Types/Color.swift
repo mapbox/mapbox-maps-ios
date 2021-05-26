@@ -5,18 +5,18 @@ public struct ColorRepresentable: Codable, Equatable {
 
     /// Expression representation of a `UIColor` used by the renderer
     internal let colorRepresentation: Expression?
-    
+
     public var rgbaDescription: String? {
         guard let colorRepresentation = colorRepresentation,
               colorRepresentation.operator == .rgba else {
             return nil
         }
-        
+
         let red = colorRepresentation.arguments[0]
         let green = colorRepresentation.arguments[1]
         let blue = colorRepresentation.arguments[2]
         let alpha = colorRepresentation.arguments[3]
-        
+
         return "rgba(\(red), \(green), \(blue), \(alpha))"
     }
 

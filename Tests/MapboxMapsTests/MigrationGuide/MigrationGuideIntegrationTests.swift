@@ -1,5 +1,5 @@
 import XCTest
-import MapboxMaps
+@testable import MapboxMaps
 import Turf
 
 // swiftlint:disable file_length orphaned_doc_comment type_body_length
@@ -7,17 +7,16 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
     private var testRect = CGRect(origin: .zero, size: CGSize(width: 100, height: 100))
 
-    var originalToken: String!
-
     override func setUpWithError() throws {
         try super.setUpWithError()
-        originalToken = CredentialsManager.default.accessToken
-        CredentialsManager.default.accessToken = accessToken
+        ResourceOptionsManager.default.update { resourceOptions in
+            resourceOptions.accessToken = self.accessToken
+        }
     }
 
     override func tearDownWithError() throws {
         try super.tearDownWithError()
-        CredentialsManager.default.accessToken = originalToken
+        ResourceOptionsManager.destroyDefault()
     }
 
     func testBasicMapViewController() throws {
@@ -33,7 +32,9 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
             override func viewDidLoad() {
                 super.viewDidLoad()
 
-                CredentialsManager.default.accessToken = accessToken
+                ResourceOptionsManager.default.update { resourceOptions in
+                    resourceOptions.accessToken = self.accessToken
+                }
 
                 mapView = MapView(frame: view.bounds)
                 view.addSubview(mapView)
@@ -66,7 +67,10 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
             override func viewDidLoad() {
                 super.viewDidLoad()
-                CredentialsManager.default.accessToken = accessToken
+
+                ResourceOptionsManager.default.update { resourceOptions in
+                    resourceOptions.accessToken = self.accessToken
+                }
 
                 mapView = MapView(frame: view.bounds)
                 view.addSubview(mapView)
@@ -374,8 +378,6 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
     }
 
     func testAddGeoJSONSource() {
-        CredentialsManager.default.accessToken = accessToken
-
         var myGeoJSONSource = GeoJSONSource()
         myGeoJSONSource.maxzoom = 14
         myGeoJSONSource.data = .url(Fixture.geoJSONURL(from: "polygon")!)
@@ -416,8 +418,6 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
     }
 
     func testExpression() throws {
-        CredentialsManager.default.accessToken = accessToken
-
         let mapView = MapView(frame: testRect)
         let expectation = self.expectation(description: "layer updated")
         mapView.mapboxMap.onNext(.styleLoaded) { _ in
@@ -495,8 +495,6 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
     }
 
     func testAdd3DTerrain() {
-        CredentialsManager.default.accessToken = accessToken
-
         let mapView = MapView(frame: testRect)
         let expectation = self.expectation(description: "Source was added")
         mapView.mapboxMap.onNext(.styleLoaded) { _ in

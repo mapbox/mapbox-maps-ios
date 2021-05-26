@@ -21,10 +21,12 @@ public final class MapboxMap {
     }
 
     internal init(mapClient: MapClient, mapInitOptions: MapInitOptions) {
+        let coreOptions = MapboxCoreMaps.ResourceOptions(mapInitOptions.resourceOptions)
+
         __map = Map(
             client: mapClient,
             mapOptions: mapInitOptions.mapOptions,
-            resourceOptions: mapInitOptions.resourceOptions)
+            resourceOptions: coreOptions)
         __map.createRenderer()
 
         style = Style(with: __map)
@@ -112,7 +114,7 @@ public final class MapboxMap {
     /// - Note: The result of this property is different from the `ResourceOptions`
     /// that were provided to the map's initializer.
     public var resourceOptions: ResourceOptions {
-        return __map.getResourceOptions()
+        return ResourceOptions(__map.getResourceOptions())
     }
 
     /// Gets elevation for the given coordinate.

@@ -36,6 +36,9 @@ internal protocol MapProjectionDelegate: AnyObject {
     ///         512 * 2 ^ Zoom level) where tileSize is the width of a tile
     ///         in points.
     /// - Returns: Mercator coordinate
+    ///
+    /// - Note: Coordinate latitudes will be clamped to
+    ///     [Projection.latitudeMin, Projection.latitudeMax]
     static func project(_ coordinate: CLLocationCoordinate2D, zoomScale: CGFloat) -> MercatorCoordinate
 
     /// Calculate a coordinate for a given point on the map in Mercator Projection.
@@ -51,6 +54,9 @@ internal protocol MapProjectionDelegate: AnyObject {
 }
 
 public class Projection: MapProjectionDelegate {
+    public static let latitudeMax: CLLocationDegrees = +85.051128779806604
+    public static let latitudeMin: CLLocationDegrees = -85.051128779806604
+
     internal init() {}
 
     public static func metersPerPoint(for latitude: CLLocationDegrees, zoom: CGFloat) -> Double {

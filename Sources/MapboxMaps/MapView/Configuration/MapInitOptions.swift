@@ -34,7 +34,7 @@ public final class MapInitOptions: NSObject {
     ///         the default camera that has been specified in the style.
     ///   - styleURI: Style URI for the map to load. Defaults to `.streets`, but
     ///         can be `nil`.
-    public init(resourceOptions: ResourceOptions = ResourceOptions(),
+    public init(resourceOptions: ResourceOptions = ResourceOptionsManager.default.resourceOptions,
                 mapOptions: MapOptions = MapOptions(),
                 cameraOptions: CameraOptions? = nil,
                 styleURI: StyleURI? = .streets) {

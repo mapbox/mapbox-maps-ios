@@ -3,7 +3,50 @@ import Foundation
 
 // MARK: - ResourceOptions
 
-extension ResourceOptions {
+/// Options to configure access to a resource
+public struct ResourceOptions {
+
+    /// The access token to access the resource. This should be a valid, non-empty,
+    /// Mapbox access token
+    public var accessToken: String
+
+    /// The base URL. Leave as `nil` unless you have a reason to change this.
+    public var baseURL: URL?
+
+    /// The file URL to the cache. The default, `nil`, will choose an appropriate
+    /// location on the device. The default location is excluded from backups.
+    public var cachePathURL: URL?
+
+    /// The path to the assets. The default, `nil`, uses the main bundle.
+    public var assetPathURL: URL?
+
+    /// The size of the cache in bytes. The default, `nil`, uses `defaultCacheSize`
+    public var cacheSize: UInt64?
+
+    /// The tile store instance
+    ///
+    /// This setting can be applied only if tile store usage is enabled,
+    /// otherwise it is ignored.
+    ///
+    /// If not set and tile store usage is enabled, a tile store at the default
+    /// location will be created and used.
+    ///
+    /// - Attention:
+    ///     If you create a `ResourceOptions` (rather than using `ResourceOptionsManager`
+    ///     to manage one), you will need to ensure that you set the `TileStore`'s
+    ///     access token at the same time. For example:
+    ///
+    ///     ```
+    ///     tileStore.setAccessToken(resourceOptions.accessToken)
+    ///     ```
+    public var tileStore: TileStore?
+
+    /// Tile store usage mode
+    public var tileStoreUsageMode: TileStoreUsageMode
+
+    /// The default size of the cache. Used if `cacheSize` is set to `nil`
+    public static let defaultCacheSize: UInt64 = (1024*1024*50)
+
     /// Initialize a `ResourceOptions`, used by both `MapView`s and `Snapshotter`s
     /// - Parameters:
     ///   - accessToken: Mapbox access token. You must provide a valid token.
@@ -41,90 +84,122 @@ extension ResourceOptions {
     ///     and then a tile pack that also includes this tile. The individual tile
     ///     in the ambient cache won’t be used as long as the up-to-date tile pack
     ///     exists in the cache.
-    public convenience init(accessToken: String = CredentialsManager.default.accessToken ?? "",
-                            baseUrl: String? = nil,
-                            cachePath: String? = nil,
-                            assetPath: String? = Bundle.main.resourceURL?.path,
-                            cacheSize: UInt64 = (1024*1024*50),
-                            tileStore: TileStore? = nil,
-                            tileStoreUsageMode: TileStoreUsageMode = .readOnly) {
+    public init(accessToken: String,
+                baseURL: URL? = nil,
+                cachePathURL: URL? = nil,
+                assetPathURL: URL? = nil,
+                cacheSize: UInt64 = Self.defaultCacheSize,
+                tileStore: TileStore? = nil,
+                tileStoreUsageMode: TileStoreUsageMode = .readOnly) {
+        self.accessToken        = accessToken
+        self.baseURL            = baseURL
+        self.cachePathURL       = cachePathURL ?? ResourceOptions.cacheURLIncludingSubdirectory()
+        self.assetPathURL       = assetPathURL ?? Bundle.main.resourceURL
+        self.cacheSize          = cacheSize
+        self.tileStore          = tileStore
+        self.tileStoreUsageMode = tileStoreUsageMode
+    }
 
-        // Update the TileStore with the access token from the ResourceOptions
-        if tileStoreUsageMode != .disabled {
-            let tileStore = tileStore ?? TileStore.default
-            tileStore.setAccessToken(accessToken)
+    private static func cacheURLIncludingSubdirectory() -> URL {
+        do {
+            var cacheDirectoryURL = try FileManager.default.url(for: .applicationSupportDirectory,
+                                                                in: .userDomainMask,
+                                                                appropriateFor: nil,
+                                                                create: true)
+
+            cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent("mapbox")
+            cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent("maps")
+
+            try FileManager.default.createDirectory(at: cacheDirectoryURL,
+                                                    withIntermediateDirectories: true,
+                                                    attributes: nil)
+
+            cacheDirectoryURL.setTemporaryResourceValue(true, forKey: .isExcludedFromBackupKey)
+
+            return cacheDirectoryURL.appendingPathComponent("ambient_cache.db")
+        } catch {
+            fatalError("Failed to create cache directory: \(error)")
         }
-
-        let cacheURL = try? ResourceOptions.cacheURLIncludingSubdirectory()
-        let resolvedCachePath = cachePath == nil ? cacheURL?.path : cachePath
-        self.init(
-            __accessToken: accessToken,
-            baseURL: baseUrl,
-            cachePath: resolvedCachePath,
-            assetPath: assetPath,
-            cacheSize: NSNumber(value: cacheSize),
-            tileStore: tileStore,
-            tileStoreUsageMode: tileStoreUsageMode
-        )
     }
+}
 
-    /// The size of the cache in bytes
-    public var cacheSize: UInt64? {
-        __cacheSize?.uint64Value
-    }
-
-    private static func cacheURLIncludingSubdirectory() throws -> URL? {
-        var cacheDirectoryURL = try FileManager.default.url(for: .applicationSupportDirectory,
-                                                            in: .userDomainMask,
-                                                            appropriateFor: nil,
-                                                            create: true)
-
-        cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent("mapbox")
-        cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent("maps")
-
-        try FileManager.default.createDirectory(at: cacheDirectoryURL,
-                                                withIntermediateDirectories: true,
-                                                attributes: nil)
-
-        cacheDirectoryURL.setTemporaryResourceValue(true, forKey: .isExcludedFromBackupKey)
-
-        return cacheDirectoryURL.appendingPathComponent("ambient_cache.db")
+extension ResourceOptions: Hashable {
+    /// :nodoc:
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        return (lhs.accessToken == rhs.accessToken)
+            && ((lhs.baseURL == rhs.baseURL)
+                    || (lhs.baseURL == nil)
+                    || (rhs.baseURL == nil))
+            && (lhs.cachePathURL == rhs.cachePathURL)
+            && (lhs.assetPathURL == rhs.assetPathURL)
+            && (lhs.cacheSize == rhs.cacheSize)
+            && ((lhs.tileStore == rhs.tileStore)
+                    || (lhs.tileStore == nil)
+                    || (rhs.tileStore == nil))
+            && (lhs.tileStoreUsageMode == rhs.tileStoreUsageMode)
     }
 
     /// :nodoc:
-    public override func isEqual(_ object: Any?) -> Bool {
-
-        guard let other = object as? ResourceOptions else {
-            return false
-        }
-
-        guard type(of: self) == type(of: other) else {
-            return false
-        }
-
-        return (accessToken == other.accessToken)
-            && ((baseURL == other.baseURL)
-                    || (baseURL == nil)
-                    || (other.baseURL == nil))
-            && (cachePath == other.cachePath)
-            && (assetPath == other.assetPath)
-            && (cacheSize == other.cacheSize)
-            && ((tileStore == other.tileStore)
-                    || (tileStore == nil)
-                    || (other.tileStore == nil))
-            && (tileStoreUsageMode == other.tileStoreUsageMode)
-    }
-
-    /// :nodoc:
-    open override var hash: Int {
-        var hasher = Hasher()
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(accessToken)
         hasher.combine(baseURL)
-        hasher.combine(cachePath)
-        hasher.combine(assetPath)
+        hasher.combine(cachePathURL)
+        hasher.combine(assetPathURL)
         hasher.combine(cacheSize)
         hasher.combine(tileStore)
         hasher.combine(tileStoreUsageMode)
-        return hasher.finalize()
+    }
+}
+
+extension ResourceOptions: CustomStringConvertible, CustomDebugStringConvertible {
+    private func redactedAccessToken() -> String {
+        let offset = min(4, accessToken.count)
+        let startIndex = accessToken.index(accessToken.startIndex, offsetBy: offset)
+        let result = accessToken.replacingCharacters(in: startIndex...,
+                                                     with: String(repeating: "◻︎", count: accessToken.count - offset))
+        return result
+    }
+
+    /// :nodoc:
+    public var description: String {
+        return "ResourceOptions: \(redactedAccessToken())"
+    }
+
+    /// :nodoc:
+    public var debugDescription: String {
+        withUnsafePointer(to: self) {
+            return "ResourceOptions @ \($0): \(redactedAccessToken())"
+        }
+    }
+}
+
+// MARK: - Conversion to/from internal type
+
+extension ResourceOptions {
+    internal init(_ objcValue: MapboxCoreMaps.ResourceOptions) {
+
+        let baseURL      = objcValue.baseURL.flatMap { URL(fileURLWithPath: $0) }
+        let cachePathURL = objcValue.cachePath.flatMap { URL(fileURLWithPath: $0) }
+        let assetPathURL = objcValue.assetPath.flatMap { URL(fileURLWithPath: $0) }
+
+        self.init(accessToken: objcValue.accessToken,
+                  baseURL: baseURL,
+                  cachePathURL: cachePathURL,
+                  assetPathURL: assetPathURL,
+                  cacheSize: objcValue.__cacheSize?.uint64Value ?? Self.defaultCacheSize,
+                  tileStore: objcValue.tileStore,
+                  tileStoreUsageMode: objcValue.tileStoreUsageMode)
+    }
+}
+
+extension MapboxCoreMaps.ResourceOptions {
+    internal convenience init(_ swiftValue: ResourceOptions) {
+        self.init(__accessToken: swiftValue.accessToken,
+                  baseURL: swiftValue.baseURL?.path,
+                  cachePath: swiftValue.cachePathURL?.path,
+                  assetPath: swiftValue.assetPathURL?.path,
+                  cacheSize: swiftValue.cacheSize?.NSNumber,
+                  tileStore: swiftValue.tileStore,
+                  tileStoreUsageMode: swiftValue.tileStoreUsageMode)
     }
 }

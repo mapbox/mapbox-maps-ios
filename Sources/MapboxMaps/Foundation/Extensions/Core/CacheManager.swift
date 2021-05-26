@@ -1,6 +1,13 @@
 import Foundation
 
-extension CacheManager {
+extension MapboxCoreMaps.CacheManager {
+
+    /// Construct a new cache manager.
+    ///
+    /// - Parameter options: Resource fetching options to be used by the cache manager.
+    public convenience init(options: ResourceOptions) {
+        self.init(options: MapboxCoreMaps.ResourceOptions(options))
+    }
 
     /// Forces a revalidation of the tiles in the ambient cache and downloads
     /// a fresh version of the tiles from the tile server.

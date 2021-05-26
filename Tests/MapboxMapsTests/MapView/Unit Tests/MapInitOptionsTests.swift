@@ -4,19 +4,23 @@ import XCTest
 class MapInitOptionsTests: XCTestCase {
     override func setUp() {
         super.setUp()
-        CredentialsManager.default.accessToken = ""
+        ResourceOptionsManager.default.update { options in
+            options.accessToken = "" // invalid token
+        }
     }
 
     override func tearDown() {
         super.tearDown()
-        CredentialsManager.default.accessToken = ""
+        ResourceOptionsManager.destroyDefault()
     }
 
     func testDefaultOptionsAreOverridden() {
         var updatedMapInitOptions = MapInitOptions()
         XCTAssertNotEqual(updatedMapInitOptions.resourceOptions.accessToken, "pk.aaaaaa")
 
-        CredentialsManager.default.accessToken = "pk.aaaaaa"
+        ResourceOptionsManager.default.update { options in
+            options.accessToken = "pk.aaaaaa"
+        }
 
         updatedMapInitOptions = MapInitOptions()
         XCTAssertEqual(updatedMapInitOptions.resourceOptions.accessToken, "pk.aaaaaa")

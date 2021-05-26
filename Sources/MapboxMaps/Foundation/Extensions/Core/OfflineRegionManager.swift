@@ -4,6 +4,11 @@
 extension OfflineRegionManager {
 
     // :nodoc:
+    public convenience init(resourceOptions: ResourceOptions) {
+        self.init(resourceOptions: MapboxCoreMaps.ResourceOptions(resourceOptions))
+    }
+
+    // :nodoc:
     public func offlineRegions(completion: @escaping (Result<[OfflineRegion], Error>) -> Void) {
         getOfflineRegions(forCallback: coreAPIClosureAdapter(for: completion,
                                                              type: NSArray.self,

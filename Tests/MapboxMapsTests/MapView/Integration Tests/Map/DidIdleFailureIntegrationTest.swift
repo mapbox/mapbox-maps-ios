@@ -3,26 +3,27 @@ import MapboxMaps
 import MapboxCoreMaps
 import MapboxCommon
 
-//            * .
-//            * ├── data-source - String ("resource-loader" | "network" | "database" | "asset" | "file-system")
-//            * ├── request - Object
-//            * │   ├── url - String
-//            * │   ├── kind - String ("unknown" | "style" | "source" | "tile" | "glyphs" | "sprite-image" | "sprite-json" | "image")
-//            * │   ├── priority - String ("regular" | "low")
-//            * │   └── loading-method - Array ["cache" | "network"]
-//            * ├── response - optional Object
-//            * │   ├── no-content - Boolean
-//            * │   ├── not-modified - Boolean
-//            * │   ├── must-revalidate - Boolean
-//            * │   ├── offline-data - Boolean
-//            * │   ├── size - Number (size in bytes)
-//            * │   ├── modified - optional String, rfc1123 timestamp
-//            * │   ├── expires - optional String, rfc1123 timestamp
-//            * │   ├── etag - optional String
-//            * │   └── error - optional Object
-//            * │       ├── reason - String ("success" | "not-found" | "server" | "connection" | "rate-limit" | "other")
-//            * │       └── message - String
-//            * └── cancelled - Boolean
+/*
+* ├── data-source - String ("resource-loader" | "network" | "database" | "asset" | "file-system")
+* ├── request - Object
+* │   ├── url - String
+* │   ├── kind - String ("unknown" | "style" | "source" | "tile" | "glyphs" | "sprite-image" | "sprite-json" | "image")
+* │   ├── priority - String ("regular" | "low")
+* │   └── loading-method - Array ["cache" | "network"]
+* ├── response - optional Object
+* │   ├── no-content - Boolean
+* │   ├── not-modified - Boolean
+* │   ├── must-revalidate - Boolean
+* │   ├── source - String ("network" | "cache" | "tile-store" | "local-file")
+* │   ├── size - Number (size in bytes)
+* │   ├── modified - optional String, rfc1123 timestamp
+* │   ├── expires - optional String, rfc1123 timestamp
+* │   ├── etag - optional String
+* │   └── error - optional Object
+* │       ├── reason - String ("success" | "not-found" | "server" | "connection" | "rate-limit" | "other")
+* │       └── message - String
+* └── cancelled - Boolean
+*/
 
 internal struct ResourceEventResponseError: Decodable {
     var reason: String
@@ -33,7 +34,7 @@ internal struct ResourceEventResponse: Decodable {
     var noContent: Bool
     var notModified: Bool
     var mustRevalidate: Bool
-    var offlineData: Bool
+    var source: String
     var size: Int
     var modified: String?
     var expires: String?
@@ -44,7 +45,7 @@ internal struct ResourceEventResponse: Decodable {
         case noContent = "no-content"
         case notModified = "not-modified"
         case mustRevalidate = "must-revalidate"
-        case offlineData = "offline-data"
+        case source
         case size
         case modified
         case expires
@@ -120,7 +121,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
             do {
                 event = try JSONDecoder().decode(ResourceEvent.self, from: jsonData)
             } catch let error {
-                print("Failed to decode to ResourceEvent: \(error)")
+                XCTFail("Failed to decode to ResourceEvent: \(error)")
                 return
             }
 

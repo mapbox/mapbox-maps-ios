@@ -22,10 +22,8 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         // TileStore
         tileStorePathURL = try TileStore.fileURLForDirectory(for: name.fileSystemSafeString())
         tileStore = TileStore.shared(for: tileStorePathURL.path)
+        tileStore.setAccessToken(accessToken)
 
-        // OfflineManager
-        // Setting the TileStore here has the side effect of setting its access
-        // token
         resourceOptions = ResourceOptions(accessToken: accessToken,
                                           tileStore: tileStore)
 

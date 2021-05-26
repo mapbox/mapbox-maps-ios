@@ -21,10 +21,13 @@ extension XCTestCase {
 
         func validated(token: String) throws -> String {
             if token.starts(with: "pk.") {
-                return token
+                // ok
+            } else if token.isEmpty {
+                print("⚠️ token is empty.")
             } else {
                 throw XCTSkip("Mapbox access token is invalid")
             }
+            return token
         }
 
         return try validated(token: token()).trimmingCharacters(in: .whitespacesAndNewlines)

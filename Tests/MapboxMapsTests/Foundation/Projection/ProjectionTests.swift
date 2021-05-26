@@ -87,5 +87,14 @@ class ProjectionTests: XCTestCase {
         let southPole2 = projectorType.unproject(southMercator, zoomScale: zoomScale)
         XCTAssertNotEqual(southPole2.latitude, southPole.latitude)
         XCTAssertEqual(southPole2.latitude, -85.051, accuracy: 0.001)
+
+        // Check clamping
+        let northMax = CLLocationCoordinate2D(latitude: Projection.latitudeMax, longitude: 0)
+        let northMaxMercator = projectorType.project(northMax, zoomScale: zoomScale)
+        XCTAssertEqual(northMercator.y, northMaxMercator.y, accuracy: 0.000001)
+
+        let southMin = CLLocationCoordinate2D(latitude: Projection.latitudeMin, longitude: 0)
+        let southMinMercator = projectorType.project(southMin, zoomScale: zoomScale)
+        XCTAssertEqual(southMercator.y, southMinMercator.y, accuracy: 0.000001)
     }
 }

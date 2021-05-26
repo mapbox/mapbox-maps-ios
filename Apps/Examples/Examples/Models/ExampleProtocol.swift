@@ -8,7 +8,7 @@ public protocol ExampleProtocol: AnyObject {
 
 extension ExampleProtocol {
     public func resourceOptions() -> ResourceOptions {
-        return ResourceOptions(accessToken: CredentialsManager.default.accessToken)
+        return ResourceOptionsManager.default.resourceOptions
     }
 
     public func finish() {

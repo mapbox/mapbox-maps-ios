@@ -1,3 +1,4 @@
+// swiftlint:disable all
 // This file is generated.
 import Foundation
 import Turf
@@ -34,12 +35,19 @@ public struct CircleAnnotation: Annotation {
         self.feature.properties = ["annotation-id": id]
     }
 
-    // MARK:- Properties -
+    // MARK: - Properties -
+
+    /// Set of used data driven properties
+    internal var dataDrivenPropertiesUsedSet: Set<String> = []
+
     
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var circleSortKey: Double? {
         didSet {
             feature.properties?["circle-sort-key"] = circleSortKey 
+            if circleSortKey != nil {
+                dataDrivenPropertiesUsedSet.insert("circle-sort-key")
+            }
         }
     }
     
@@ -47,6 +55,9 @@ public struct CircleAnnotation: Annotation {
     public var circleBlur: Double? {
         didSet {
             feature.properties?["circle-blur"] = circleBlur 
+            if circleBlur != nil {
+                dataDrivenPropertiesUsedSet.insert("circle-blur")
+            }
         }
     }
     
@@ -54,6 +65,9 @@ public struct CircleAnnotation: Annotation {
     public var circleColor: ColorRepresentable? {
         didSet {
             feature.properties?["circle-color"] = circleColor?.rgbaDescription 
+            if circleColor != nil {
+                dataDrivenPropertiesUsedSet.insert("circle-color")
+            }
         }
     }
     
@@ -61,6 +75,9 @@ public struct CircleAnnotation: Annotation {
     public var circleOpacity: Double? {
         didSet {
             feature.properties?["circle-opacity"] = circleOpacity 
+            if circleOpacity != nil {
+                dataDrivenPropertiesUsedSet.insert("circle-opacity")
+            }
         }
     }
     
@@ -68,6 +85,9 @@ public struct CircleAnnotation: Annotation {
     public var circleRadius: Double? {
         didSet {
             feature.properties?["circle-radius"] = circleRadius 
+            if circleRadius != nil {
+                dataDrivenPropertiesUsedSet.insert("circle-radius")
+            }
         }
     }
     
@@ -75,6 +95,9 @@ public struct CircleAnnotation: Annotation {
     public var circleStrokeColor: ColorRepresentable? {
         didSet {
             feature.properties?["circle-stroke-color"] = circleStrokeColor?.rgbaDescription 
+            if circleStrokeColor != nil {
+                dataDrivenPropertiesUsedSet.insert("circle-stroke-color")
+            }
         }
     }
     
@@ -82,6 +105,9 @@ public struct CircleAnnotation: Annotation {
     public var circleStrokeOpacity: Double? {
         didSet {
             feature.properties?["circle-stroke-opacity"] = circleStrokeOpacity 
+            if circleStrokeOpacity != nil {
+                dataDrivenPropertiesUsedSet.insert("circle-stroke-opacity")
+            }
         }
     }
     
@@ -89,18 +115,13 @@ public struct CircleAnnotation: Annotation {
     public var circleStrokeWidth: Double? {
         didSet {
             feature.properties?["circle-stroke-width"] = circleStrokeWidth 
+            if circleStrokeWidth != nil {
+                dataDrivenPropertiesUsedSet.insert("circle-stroke-width")
+            }
         }
     }
 
-    // MARK:- Hashable -
-
-    public static func == (lhs: CircleAnnotation, rhs: CircleAnnotation) -> Bool {
-        return lhs.id == rhs.id
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }   
 }
 
 // End of generated file.
+// swiftlint:enable all

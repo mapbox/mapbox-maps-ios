@@ -12,6 +12,9 @@ public class DebugViewController: UIViewController {
 
     internal var mapView: MapView!
     internal var circleAnnotationManager: CircleAnnotationManager?
+    internal var lineAnnotationManager: PolylineAnnotationManager?
+    internal var pointAnnotationManager: PointAnnotationManager?
+    internal var polygonAnnotationManager: PolygonAnnotationManager?
     internal var runningAnimator: CameraAnimator?
 
     override public func viewDidLoad() {
@@ -85,37 +88,75 @@ public class DebugViewController: UIViewController {
         mapView.mapboxMap.onNext(.mapLoaded) { (event) in
             print("The map has finished loading... Event = \(event)")
             
-            self.circleAnnotationManager = self.mapView.annotations.makeCircleAnnotationManager()
-            self.circleAnnotationManager?.delegate = self
+            self.pointAnnotationManager = self.mapView.annotations.makePointAnnotationManager()
+            var p1 = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+            p1.image = PointAnnotation.NamedImage(image: UIImage(named: "star")!, name: "star")
             
-            var circleAnnotation1 = CircleAnnotation(id: "my-first-annotation", point: .init(.init(latitude: 0, longitude: 0)))
-            circleAnnotation1.circleRadius = 100
-            circleAnnotation1.circleOpacity = 1.0
-            circleAnnotation1.circleColor = .init(color: .clear)
-            circleAnnotation1.circleStrokeWidth = 3.0
-            circleAnnotation1.circleStrokeColor = .init(color: .purple)
+            var p2 = PointAnnotation(point: .init(.init(latitude: 10, longitude: 10)))
+            p2.image = PointAnnotation.NamedImage(image: UIImage(named: "star")!, name: "star")
             
-            var circleAnnotation2 = CircleAnnotation(point: .init(.init(latitude: 10, longitude: 10)))
-            circleAnnotation2.circleRadius = 10
-            circleAnnotation2.circleOpacity = 1.0
-            circleAnnotation2.circleColor = .init(color: .blue)
-            circleAnnotation2.circleStrokeWidth = 3.0
-            circleAnnotation2.circleStrokeColor = .init(color: .yellow)
+            var p3 = PointAnnotation(point: .init(.init(latitude: -10, longitude: -10)))
+            p3.image = PointAnnotation.NamedImage(image: UIImage(named: "star")!, name: "star")
             
-            var circleAnnotation3 = CircleAnnotation(point: .init(.init(latitude: -10, longitude: -10)))
-            circleAnnotation3.circleRadius = 10
-            circleAnnotation3.circleOpacity = 1.0
-            circleAnnotation3.circleColor = .init(color: .green)
-            circleAnnotation3.circleStrokeWidth = 19.0
-            circleAnnotation3.circleStrokeColor = .init(color: .white)
+            var p4 = PointAnnotation(point: .init(.init(latitude: -10, longitude: 0)))
+            p4.image = PointAnnotation.NamedImage(image: UIImage(named: "triangle")!, name: "triangle")
             
-            self.circleAnnotationManager?.annotations = [circleAnnotation1, circleAnnotation2, circleAnnotation3]
+            self.pointAnnotationManager?.annotations = [p1, p2, p3, p4]
             
+//            self.circleAnnotationManager = self.mapView.annotations.makeCircleAnnotationManager()
+//            self.circleAnnotationManager?.delegate = self
 //
-//            var pointAnnotationManager = self.mapView.annotations.makePointAnnotationManager()
-//            var pointAnnotation1 = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
-//            pointAnnotationManager.annotations = [pointAnnotation1]
-            
+//            var circleAnnotation1 = CircleAnnotation(id: "my-first-annotation", point: .init(.init(latitude: 0, longitude: 0)))
+//            circleAnnotation1.circleRadius = 30
+//            circleAnnotation1.circleOpacity = 1.0
+//            circleAnnotation1.circleColor = .init(color: .clear)
+//            circleAnnotation1.circleStrokeWidth = 3.0
+//            circleAnnotation1.circleStrokeColor = .init(color: .purple)
+//
+//            var circleAnnotation2 = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+//            circleAnnotation2.circleRadius = 10
+//            circleAnnotation2.circleOpacity = 1.0
+//            circleAnnotation2.circleColor = .init(color: .blue)
+//            circleAnnotation2.circleStrokeWidth = 3.0
+//            circleAnnotation2.circleStrokeColor = .init(color: .yellow)
+//
+//            var circleAnnotation3 = CircleAnnotation(point: .init(.init(latitude: -10, longitude: -10)))
+//            circleAnnotation3.circleRadius = 10
+//            circleAnnotation3.circleOpacity = 1.0
+//            circleAnnotation3.circleColor = .init(color: .green)
+//            circleAnnotation3.circleStrokeWidth = 19.0
+//            circleAnnotation3.circleStrokeColor = .init(color: .white)
+//
+//            self.circleAnnotationManager?.annotations = [circleAnnotation1, circleAnnotation2, circleAnnotation3]
+//
+//            let lineCoordinates = [
+//                CLLocationCoordinate2DMake(0, 0),
+//                CLLocationCoordinate2DMake(10, 10)
+//            ]
+//
+//            self.lineAnnotationManager = self.mapView.annotations.makePolylineAnnotationManager()
+//            self.lineAnnotationManager?.delegate = self
+//            var lineAnnotation1 = PolylineAnnotation(line: .init(lineCoordinates))
+//            lineAnnotation1.lineColor = .init(color: .red)
+//            lineAnnotation1.lineWidth = 50.0
+//            lineAnnotation1.lineOpacity = 1.0
+//
+//            var lineAnnotation2 = PolylineAnnotation(line: .init([.init(latitude: 0, longitude: 0), .init(latitude: -20, longitude: -20)]))
+//            lineAnnotation2.lineColor = .init(color: .blue)
+//            lineAnnotation2.lineWidth = 10.0
+//            lineAnnotation2.lineOpacity = 0.5
+//
+//            var lineAnnotation3 = PolylineAnnotation(line: .init([.init(latitude: 0, longitude: 0), .init(latitude: 55, longitude: 55)]))
+//            lineAnnotation3.lineColor = .init(color: .orange)
+//            lineAnnotation3.lineWidth = 3
+//            lineAnnotation3.lineOpacity = 1.0
+//            lineAnnotation3.lineBlur = 2
+//
+//            self.lineAnnotationManager?.annotations = [lineAnnotation1, lineAnnotation2, lineAnnotation3]
+//
+//            lineAnnotation1.lineColor = .init(color: .yellow)
+//            lineAnnotation1.lineWidth = 30
+//            self.lineAnnotationManager?.annotations.append(lineAnnotation1)
             
         }
 
@@ -137,11 +178,46 @@ public class DebugViewController: UIViewController {
             print("The map failed to load.. \(type) = \(message)")
         }
     }
+    
+    public func addLineAnnotation() {
+        lineAnnotationManager = mapView.annotations.makePolylineAnnotationManager()
+        lineAnnotationManager?.delegate = self
+        let lineString = LineString([
+            CLLocationCoordinate2D(latitude: 0, longitude: 0),
+            CLLocationCoordinate2D(latitude: 10, longitude: 10)
+        ])
+        var a1 = PolylineAnnotation(line: lineString)
+        a1.lineColor = ColorRepresentable(color: .red)
+        a1.lineWidth = 10
+        lineAnnotationManager?.annotations = [a1]
+
+//        var lineSource = GeoJSONSource()
+//        lineSource.data = .feature(.init(lineString))
+//        try! mapView.mapboxMap.style.addSource(lineSource, id: "my-line-source")
+//
+//        var lineLayer = LineLayer(id: "my-line-id")
+//        lineLayer.lineColor = .constant(.init(color: .red))
+//        lineLayer.source = "my-line-source"
+//        try! mapView.mapboxMap.style.addLayer(lineLayer)
+//
+        
+    }
+    
+    func addPolygonAnnotation() {
+        
+    }
+    
 }
 
 
 extension DebugViewController: CircleAnnotationInteractionDelegate {
-    public func annotationsTapped(forManager manager: CircleAnnotationManager, annotations: Set<CircleAnnotation>) {
+    public func annotationsTapped(forManager manager: CircleAnnotationManager, annotations: [CircleAnnotation]) {
+        print("***** Detected tap on annotations: \(annotations.map(\.id))")
+    }
+}
+
+extension DebugViewController: PolylineAnnotationInteractionDelegate {
+    public func annotationsTapped(forManager manager: PolylineAnnotationManager, annotations: [PolylineAnnotation]) {
         print("***** Detected tap on annotations: \(annotations.map(\.id))")
     }
 }

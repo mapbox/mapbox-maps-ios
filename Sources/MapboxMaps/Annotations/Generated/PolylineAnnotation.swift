@@ -1,3 +1,4 @@
+// swiftlint:disable all
 // This file is generated.
 import Foundation
 import Turf
@@ -41,12 +42,19 @@ public struct PolylineAnnotation: Annotation {
         self.feature.properties = ["annotation-id": id]
     }
 
-    // MARK:- Properties -
+    // MARK: - Properties -
+
+    /// Set of used data driven properties
+    internal var dataDrivenPropertiesUsedSet: Set<String> = []
+
     
     /// The display of lines when joining.
     public var lineJoin: LineJoin? {
         didSet {
             feature.properties?["line-join"] = lineJoin?.rawValue 
+            if lineJoin != nil {
+                dataDrivenPropertiesUsedSet.insert("line-join")
+            }
         }
     }
     
@@ -54,6 +62,9 @@ public struct PolylineAnnotation: Annotation {
     public var lineSortKey: Double? {
         didSet {
             feature.properties?["line-sort-key"] = lineSortKey 
+            if lineSortKey != nil {
+                dataDrivenPropertiesUsedSet.insert("line-sort-key")
+            }
         }
     }
     
@@ -61,6 +72,9 @@ public struct PolylineAnnotation: Annotation {
     public var lineBlur: Double? {
         didSet {
             feature.properties?["line-blur"] = lineBlur 
+            if lineBlur != nil {
+                dataDrivenPropertiesUsedSet.insert("line-blur")
+            }
         }
     }
     
@@ -68,6 +82,9 @@ public struct PolylineAnnotation: Annotation {
     public var lineColor: ColorRepresentable? {
         didSet {
             feature.properties?["line-color"] = lineColor?.rgbaDescription 
+            if lineColor != nil {
+                dataDrivenPropertiesUsedSet.insert("line-color")
+            }
         }
     }
     
@@ -75,6 +92,9 @@ public struct PolylineAnnotation: Annotation {
     public var lineGapWidth: Double? {
         didSet {
             feature.properties?["line-gap-width"] = lineGapWidth 
+            if lineGapWidth != nil {
+                dataDrivenPropertiesUsedSet.insert("line-gap-width")
+            }
         }
     }
     
@@ -82,6 +102,9 @@ public struct PolylineAnnotation: Annotation {
     public var lineOffset: Double? {
         didSet {
             feature.properties?["line-offset"] = lineOffset 
+            if lineOffset != nil {
+                dataDrivenPropertiesUsedSet.insert("line-offset")
+            }
         }
     }
     
@@ -89,6 +112,9 @@ public struct PolylineAnnotation: Annotation {
     public var lineOpacity: Double? {
         didSet {
             feature.properties?["line-opacity"] = lineOpacity 
+            if lineOpacity != nil {
+                dataDrivenPropertiesUsedSet.insert("line-opacity")
+            }
         }
     }
     
@@ -96,6 +122,9 @@ public struct PolylineAnnotation: Annotation {
     public var linePattern: String? {
         didSet {
             feature.properties?["line-pattern"] = linePattern 
+            if linePattern != nil {
+                dataDrivenPropertiesUsedSet.insert("line-pattern")
+            }
         }
     }
     
@@ -103,18 +132,13 @@ public struct PolylineAnnotation: Annotation {
     public var lineWidth: Double? {
         didSet {
             feature.properties?["line-width"] = lineWidth 
+            if lineWidth != nil {
+                dataDrivenPropertiesUsedSet.insert("line-width")
+            }
         }
     }
 
-    // MARK:- Hashable -
-
-    public static func == (lhs: PolylineAnnotation, rhs: PolylineAnnotation) -> Bool {
-        return lhs.id == rhs.id
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }   
 }
 
 // End of generated file.
+// swiftlint:enable all

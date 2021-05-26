@@ -30,7 +30,7 @@ public struct SkyLayer: Layer {
     /// A color applied to the atmosphere sun halo. The alpha channel describes how strongly the sun halo is represented in an atmosphere sky layer.
     public var skyAtmosphereHaloColor: Value<ColorRepresentable>?
     
-    /// Position of the sun center [a azimuthal angle, p polar angle]. The azimuthal angle indicates the position of the sun relative to 0&#xB0; north, where degrees proceed clockwise. The polar angle indicates the height of the sun, where 0&#xB0; is directly above, at zenith, and 90&#xB0; at the horizon. When this property is ommitted, the sun center is directly inherited from the light position.
+    /// Position of the sun center [a azimuthal angle, p polar angle]. The azimuthal angle indicates the position of the sun relative to 0 degree north, where degrees proceed clockwise. The polar angle indicates the height of the sun, where 0 degree is directly above, at zenith, and 90 degree at the horizon. When this property is ommitted, the sun center is directly inherited from the light position.
     public var skyAtmosphereSun: Value<[Double]>?
     
     /// Intensity of the sun as a light source in the atmosphere (on a scale from 0 to a 100). Setting higher values will brighten up the sky.
@@ -39,7 +39,7 @@ public struct SkyLayer: Layer {
     /// Defines a radial color gradient with which to color the sky. The color values can be interpolated with an expression using `sky-radial-progress`. The range [0, 1] for the interpolant covers a radial distance (in degrees) of [0, `sky-gradient-radius`] centered at the position specified by `sky-gradient-center`.
     public var skyGradient: Value<ColorRepresentable>?
     
-    /// Position of the gradient center [a azimuthal angle, p polar angle]. The azimuthal angle indicates the position of the gradient center relative to 0&#xB0; north, where degrees proceed clockwise. The polar angle indicates the height of the gradient center, where 0&#xB0; is directly above, at zenith, and 90&#xB0; at the horizon.
+    /// Position of the gradient center [a azimuthal angle, p polar angle]. The azimuthal angle indicates the position of the gradient center relative to 0 degree north, where degrees proceed clockwise. The polar angle indicates the height of the gradient center, where 0 degree is directly above, at zenith, and 90 degree at the horizon.
     public var skyGradientCenter: Value<[Double]>?
     
     /// The angular distance (measured in degrees) from `sky-gradient-center` up to which the gradient extends. A value of 180 causes the gradient to wrap around to the opposite direction from `sky-gradient-center`.

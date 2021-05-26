@@ -9,7 +9,7 @@ public enum AnnotationType {
     case circle
 }
 
-public protocol Annotation: Hashable {
+public protocol Annotation {
     
     /// The unique identifier of the annotation.
     var id: String { get }
@@ -24,21 +24,19 @@ public protocol Annotation: Hashable {
     /// programmatically or via user-interactions.
     var isSelected: Bool { get set }
 
-    /// Properties associated with the annotation
+    /// Properties associated with the annotation.
     var userInfo: [String: Any]? { get set }
 }
 
 public protocol AnnotationManager {
     
-//    associatedtype A where A: Hashable
-    
+    /// The id of this annotation manager.
     var id: String { get }
     
-    
-//    var annotations: Set<A> { get set }
-    
+    /// The id of the `GeoJSONSource` that this manager is responsible for.
     var sourceId: String { get }
     
+    /// The id of the layer that this manager is responsible for.
     var layerId: String { get }
 }
 

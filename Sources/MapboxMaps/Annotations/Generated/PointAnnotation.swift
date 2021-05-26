@@ -1,3 +1,4 @@
+// swiftlint:disable all
 // This file is generated.
 import Foundation
 import Turf
@@ -34,12 +35,19 @@ public struct PointAnnotation: Annotation {
         self.feature.properties = ["annotation-id": id]
     }
 
-    // MARK:- Properties -
+    // MARK: - Properties -
+
+    /// Set of used data driven properties
+    internal var dataDrivenPropertiesUsedSet: Set<String> = []
+
     
     /// Part of the icon placed closest to the anchor.
     public var iconAnchor: IconAnchor? {
         didSet {
             feature.properties?["icon-anchor"] = iconAnchor?.rawValue 
+            if iconAnchor != nil {
+                dataDrivenPropertiesUsedSet.insert("icon-anchor")
+            }
         }
     }
     
@@ -47,6 +55,9 @@ public struct PointAnnotation: Annotation {
     public var iconImage: String? {
         didSet {
             feature.properties?["icon-image"] = iconImage 
+            if iconImage != nil {
+                dataDrivenPropertiesUsedSet.insert("icon-image")
+            }
         }
     }
     
@@ -54,6 +65,9 @@ public struct PointAnnotation: Annotation {
     public var iconOffset: [Double]? {
         didSet {
             feature.properties?["icon-offset"] = iconOffset 
+            if iconOffset != nil {
+                dataDrivenPropertiesUsedSet.insert("icon-offset")
+            }
         }
     }
     
@@ -61,6 +75,9 @@ public struct PointAnnotation: Annotation {
     public var iconRotate: Double? {
         didSet {
             feature.properties?["icon-rotate"] = iconRotate 
+            if iconRotate != nil {
+                dataDrivenPropertiesUsedSet.insert("icon-rotate")
+            }
         }
     }
     
@@ -68,6 +85,9 @@ public struct PointAnnotation: Annotation {
     public var iconSize: Double? {
         didSet {
             feature.properties?["icon-size"] = iconSize 
+            if iconSize != nil {
+                dataDrivenPropertiesUsedSet.insert("icon-size")
+            }
         }
     }
     
@@ -75,6 +95,9 @@ public struct PointAnnotation: Annotation {
     public var symbolSortKey: Double? {
         didSet {
             feature.properties?["symbol-sort-key"] = symbolSortKey 
+            if symbolSortKey != nil {
+                dataDrivenPropertiesUsedSet.insert("symbol-sort-key")
+            }
         }
     }
     
@@ -82,6 +105,9 @@ public struct PointAnnotation: Annotation {
     public var textAnchor: TextAnchor? {
         didSet {
             feature.properties?["text-anchor"] = textAnchor?.rawValue 
+            if textAnchor != nil {
+                dataDrivenPropertiesUsedSet.insert("text-anchor")
+            }
         }
     }
     
@@ -89,13 +115,9 @@ public struct PointAnnotation: Annotation {
     public var textField: String? {
         didSet {
             feature.properties?["text-field"] = textField 
-        }
-    }
-    
-    /// Font stack to use for displaying text.
-    public var textFont: [String]? {
-        didSet {
-            feature.properties?["text-font"] = textFont 
+            if textField != nil {
+                dataDrivenPropertiesUsedSet.insert("text-field")
+            }
         }
     }
     
@@ -103,6 +125,9 @@ public struct PointAnnotation: Annotation {
     public var textJustify: TextJustify? {
         didSet {
             feature.properties?["text-justify"] = textJustify?.rawValue 
+            if textJustify != nil {
+                dataDrivenPropertiesUsedSet.insert("text-justify")
+            }
         }
     }
     
@@ -110,6 +135,9 @@ public struct PointAnnotation: Annotation {
     public var textLetterSpacing: Double? {
         didSet {
             feature.properties?["text-letter-spacing"] = textLetterSpacing 
+            if textLetterSpacing != nil {
+                dataDrivenPropertiesUsedSet.insert("text-letter-spacing")
+            }
         }
     }
     
@@ -117,6 +145,9 @@ public struct PointAnnotation: Annotation {
     public var textMaxWidth: Double? {
         didSet {
             feature.properties?["text-max-width"] = textMaxWidth 
+            if textMaxWidth != nil {
+                dataDrivenPropertiesUsedSet.insert("text-max-width")
+            }
         }
     }
     
@@ -124,6 +155,9 @@ public struct PointAnnotation: Annotation {
     public var textOffset: [Double]? {
         didSet {
             feature.properties?["text-offset"] = textOffset 
+            if textOffset != nil {
+                dataDrivenPropertiesUsedSet.insert("text-offset")
+            }
         }
     }
     
@@ -131,6 +165,9 @@ public struct PointAnnotation: Annotation {
     public var textRadialOffset: Double? {
         didSet {
             feature.properties?["text-radial-offset"] = textRadialOffset 
+            if textRadialOffset != nil {
+                dataDrivenPropertiesUsedSet.insert("text-radial-offset")
+            }
         }
     }
     
@@ -138,6 +175,9 @@ public struct PointAnnotation: Annotation {
     public var textRotate: Double? {
         didSet {
             feature.properties?["text-rotate"] = textRotate 
+            if textRotate != nil {
+                dataDrivenPropertiesUsedSet.insert("text-rotate")
+            }
         }
     }
     
@@ -145,6 +185,9 @@ public struct PointAnnotation: Annotation {
     public var textSize: Double? {
         didSet {
             feature.properties?["text-size"] = textSize 
+            if textSize != nil {
+                dataDrivenPropertiesUsedSet.insert("text-size")
+            }
         }
     }
     
@@ -152,6 +195,9 @@ public struct PointAnnotation: Annotation {
     public var textTransform: TextTransform? {
         didSet {
             feature.properties?["text-transform"] = textTransform?.rawValue 
+            if textTransform != nil {
+                dataDrivenPropertiesUsedSet.insert("text-transform")
+            }
         }
     }
     
@@ -159,6 +205,9 @@ public struct PointAnnotation: Annotation {
     public var iconColor: ColorRepresentable? {
         didSet {
             feature.properties?["icon-color"] = iconColor?.rgbaDescription 
+            if iconColor != nil {
+                dataDrivenPropertiesUsedSet.insert("icon-color")
+            }
         }
     }
     
@@ -166,6 +215,9 @@ public struct PointAnnotation: Annotation {
     public var iconHaloBlur: Double? {
         didSet {
             feature.properties?["icon-halo-blur"] = iconHaloBlur 
+            if iconHaloBlur != nil {
+                dataDrivenPropertiesUsedSet.insert("icon-halo-blur")
+            }
         }
     }
     
@@ -173,6 +225,9 @@ public struct PointAnnotation: Annotation {
     public var iconHaloColor: ColorRepresentable? {
         didSet {
             feature.properties?["icon-halo-color"] = iconHaloColor?.rgbaDescription 
+            if iconHaloColor != nil {
+                dataDrivenPropertiesUsedSet.insert("icon-halo-color")
+            }
         }
     }
     
@@ -180,6 +235,9 @@ public struct PointAnnotation: Annotation {
     public var iconHaloWidth: Double? {
         didSet {
             feature.properties?["icon-halo-width"] = iconHaloWidth 
+            if iconHaloWidth != nil {
+                dataDrivenPropertiesUsedSet.insert("icon-halo-width")
+            }
         }
     }
     
@@ -187,6 +245,9 @@ public struct PointAnnotation: Annotation {
     public var iconOpacity: Double? {
         didSet {
             feature.properties?["icon-opacity"] = iconOpacity 
+            if iconOpacity != nil {
+                dataDrivenPropertiesUsedSet.insert("icon-opacity")
+            }
         }
     }
     
@@ -194,6 +255,9 @@ public struct PointAnnotation: Annotation {
     public var textColor: ColorRepresentable? {
         didSet {
             feature.properties?["text-color"] = textColor?.rgbaDescription 
+            if textColor != nil {
+                dataDrivenPropertiesUsedSet.insert("text-color")
+            }
         }
     }
     
@@ -201,6 +265,9 @@ public struct PointAnnotation: Annotation {
     public var textHaloBlur: Double? {
         didSet {
             feature.properties?["text-halo-blur"] = textHaloBlur 
+            if textHaloBlur != nil {
+                dataDrivenPropertiesUsedSet.insert("text-halo-blur")
+            }
         }
     }
     
@@ -208,6 +275,9 @@ public struct PointAnnotation: Annotation {
     public var textHaloColor: ColorRepresentable? {
         didSet {
             feature.properties?["text-halo-color"] = textHaloColor?.rgbaDescription 
+            if textHaloColor != nil {
+                dataDrivenPropertiesUsedSet.insert("text-halo-color")
+            }
         }
     }
     
@@ -215,6 +285,9 @@ public struct PointAnnotation: Annotation {
     public var textHaloWidth: Double? {
         didSet {
             feature.properties?["text-halo-width"] = textHaloWidth 
+            if textHaloWidth != nil {
+                dataDrivenPropertiesUsedSet.insert("text-halo-width")
+            }
         }
     }
     
@@ -222,18 +295,30 @@ public struct PointAnnotation: Annotation {
     public var textOpacity: Double? {
         didSet {
             feature.properties?["text-opacity"] = textOpacity 
+            if textOpacity != nil {
+                dataDrivenPropertiesUsedSet.insert("text-opacity")
+            }
         }
     }
 
-    // MARK:- Hashable -
-
-    public static func == (lhs: PointAnnotation, rhs: PointAnnotation) -> Bool {
-        return lhs.id == rhs.id
+    // MARK: - Image Convenience -
+    
+    public struct NamedImage {
+        public init(image: UIImage, name: String) {
+            self.image = image
+            self.name = name
+        }
+        
+        public let image: UIImage
+        public let name: String
     }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }   
+    
+    public var image: NamedImage? {
+        didSet {
+            self.iconImage = image?.name
+        }
+    }
 }
 
 // End of generated file.
+// swiftlint:enable all

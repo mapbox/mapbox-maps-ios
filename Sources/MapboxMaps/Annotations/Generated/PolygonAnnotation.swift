@@ -1,3 +1,4 @@
+// swiftlint:disable all
 // This file is generated.
 import Foundation
 import Turf
@@ -41,12 +42,19 @@ public struct PolygonAnnotation: Annotation {
         self.feature.properties = ["annotation-id": id]
     }
 
-    // MARK:- Properties -
+    // MARK: - Properties -
+
+    /// Set of used data driven properties
+    internal var dataDrivenPropertiesUsedSet: Set<String> = []
+
     
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var fillSortKey: Double? {
         didSet {
             feature.properties?["fill-sort-key"] = fillSortKey 
+            if fillSortKey != nil {
+                dataDrivenPropertiesUsedSet.insert("fill-sort-key")
+            }
         }
     }
     
@@ -54,6 +62,9 @@ public struct PolygonAnnotation: Annotation {
     public var fillColor: ColorRepresentable? {
         didSet {
             feature.properties?["fill-color"] = fillColor?.rgbaDescription 
+            if fillColor != nil {
+                dataDrivenPropertiesUsedSet.insert("fill-color")
+            }
         }
     }
     
@@ -61,6 +72,9 @@ public struct PolygonAnnotation: Annotation {
     public var fillOpacity: Double? {
         didSet {
             feature.properties?["fill-opacity"] = fillOpacity 
+            if fillOpacity != nil {
+                dataDrivenPropertiesUsedSet.insert("fill-opacity")
+            }
         }
     }
     
@@ -68,6 +82,9 @@ public struct PolygonAnnotation: Annotation {
     public var fillOutlineColor: ColorRepresentable? {
         didSet {
             feature.properties?["fill-outline-color"] = fillOutlineColor?.rgbaDescription 
+            if fillOutlineColor != nil {
+                dataDrivenPropertiesUsedSet.insert("fill-outline-color")
+            }
         }
     }
     
@@ -75,18 +92,13 @@ public struct PolygonAnnotation: Annotation {
     public var fillPattern: String? {
         didSet {
             feature.properties?["fill-pattern"] = fillPattern 
+            if fillPattern != nil {
+                dataDrivenPropertiesUsedSet.insert("fill-pattern")
+            }
         }
     }
 
-    // MARK:- Hashable -
-
-    public static func == (lhs: PolygonAnnotation, rhs: PolygonAnnotation) -> Bool {
-        return lhs.id == rhs.id
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }   
 }
 
 // End of generated file.
+// swiftlint:enable all

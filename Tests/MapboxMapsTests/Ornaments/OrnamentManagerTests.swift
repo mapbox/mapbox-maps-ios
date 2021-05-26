@@ -9,12 +9,12 @@ import XCTest
 //swiftlint:disable explicit_acl explicit_top_level_acl
 class OrnamentManagerTests: XCTestCase {
 
-    var ornamentSupportableView: OrnamentSupportableViewMock!
+    var ornamentSupportableView: OrnamentSupportableMapViewMock!
     var options: OrnamentOptions!
     var ornamentsManager: OrnamentsManager!
 
     override func setUp() {
-        ornamentSupportableView = OrnamentSupportableViewMock(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        ornamentSupportableView = OrnamentSupportableMapViewMock(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
 
         options = OrnamentOptions()
         ornamentsManager = OrnamentsManager(view: ornamentSupportableView, options: options)
@@ -53,4 +53,38 @@ class OrnamentManagerTests: XCTestCase {
 
         XCTAssertNotEqual(isInitialCompassHidden, isUpdatedCompassHidden)
     }
+
+    func testCompassTapped() {
+        let initialSubviews = ornamentSupportableView.subviews.filter { $0.isKind(of: MapboxCompassOrnamentView.self) }
+        guard let compass = initialSubviews.first as? MapboxCompassOrnamentView else {
+            XCTFail("Failed because compass could not be found")
+            return
+        }
+
+        ornamentSupportableView.mapboxMap.c = 0
+
+        XCTAssertTrue(compass.containerView.isHidden)
+        XCTAssertEqual(ornamentSupportableView.camera.camera.bearing, compass.currentBearing)
+
+        ornamentSupportableView.camera.camera.bearing = 30
+        XCTAssertFalse(compass.containerView.isHidden)
+        XCTAssertEqual(ornamentSupportableView.camera.camera.bearing, compass.currentBearing)
+
+        ornamentSupportableView.compassTapped()
+
+
+        let expectation = XCTestExpectation(description: "The compass' bearing should be 0 after a tap gesture")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            if self.ornamentSupportableView.camera.camera.bearing == 0 {
+                expectation.fulfill()
+            } else {
+                XCTFail("The compass' bearing is not 0.")
+            }
+        }
+        XCTAssertNotNil(ornamentSupportableView.cameraAnimators)
+
+
+        wait(for: [expectation], timeout: 5)
+    }
 }
+

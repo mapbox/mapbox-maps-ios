@@ -34,13 +34,6 @@ public struct PolygonAnnotation: Annotation {
         self.feature = Turf.Feature(polygon)
         self.feature.properties = ["annotation-id": id]
     }
-    
-    /// Create a polygon annotation with a `Turf.MultiPolygon` and an optional identifier.
-    public init(id: String = UUID().uuidString, polygons: Turf.MultiPolygon) {
-        self.id = id
-        self.feature = Turf.Feature(polygons)
-        self.feature.properties = ["annotation-id": id]
-    }
 
     // MARK: - Properties -
 

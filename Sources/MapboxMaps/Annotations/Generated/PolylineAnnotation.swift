@@ -35,13 +35,6 @@ public struct PolylineAnnotation: Annotation {
         self.feature.properties = ["annotation-id": id]
     }
 
-    /// Create a polyline annotation with a `Turf.MultiPolyline` and an optional identifier.
-    public init(id: String = UUID().uuidString, lines: Turf.MultiLineString) {
-        self.id = id
-        self.feature = Turf.Feature(lines)
-        self.feature.properties = ["annotation-id": id]
-    }
-
     // MARK: - Properties -
 
     /// Set of used data driven properties

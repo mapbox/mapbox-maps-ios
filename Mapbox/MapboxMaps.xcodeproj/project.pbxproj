@@ -164,6 +164,8 @@
 		2B8637E62463F36400698135 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8637D72461992200698135 /* DistanceFormatter.swift */; };
 		58549A1A265D9867009BC19C /* MapboxMapsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07C1B3DB2446B6F40044A3C6 /* MapboxMapsSnapshotTests.swift */; };
 		586168FD265D9D4B00911E3D /* Snapshot-Asset.png in Resources */ = {isa = PBXBuildFile; fileRef = 586168FC265D9D4B00911E3D /* Snapshot-Asset.png */; };
+		58EFAD15265FF4EE007FC1FF /* MapboxCommon.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 58EFAD13265FF4C2007FC1FF /* MapboxCommon.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		58EFAD16265FF4EE007FC1FF /* MapboxCoreMaps.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 58EFAD14265FF4C3007FC1FF /* MapboxCoreMaps.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5A35924524644C5E00E67344 /* CompassDirectionFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A359243246448E600E67344 /* CompassDirectionFormatter.swift */; };
 		5A3592B3246C1FA000E67344 /* MapboxInfoButtonOrnament.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3592AC246AD45500E67344 /* MapboxInfoButtonOrnament.swift */; };
 		5A9648FE246429C3001FF05D /* MapboxCompassOrnamentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9648FC2462F07B001FF05D /* MapboxCompassOrnamentView.swift */; };
@@ -395,6 +397,8 @@
 			dstSubfolderSpec = 10;
 			files = (
 				CA952ECE251C30B80099C080 /* MapboxMaps.framework in Embed Frameworks */,
+				58EFAD15265FF4EE007FC1FF /* MapboxCommon.framework in Embed Frameworks */,
+				58EFAD16265FF4EE007FC1FF /* MapboxCoreMaps.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -604,6 +608,8 @@
 		2B863851246D337200698135 /* featurecollection.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = featurecollection.geojson; sourceTree = "<group>"; };
 		2B86385D246D3BA700698135 /* GeoJSONManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoJSONManagerTests.swift; sourceTree = "<group>"; };
 		586168FC265D9D4B00911E3D /* Snapshot-Asset.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Snapshot-Asset.png"; sourceTree = "<group>"; };
+		58EFAD13265FF4C2007FC1FF /* MapboxCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MapboxCommon.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		58EFAD14265FF4C3007FC1FF /* MapboxCoreMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MapboxCoreMaps.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A359243246448E600E67344 /* CompassDirectionFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassDirectionFormatter.swift; sourceTree = "<group>"; };
 		5A35924F246598F600E67344 /* CompassDirectionFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassDirectionFormatterTests.swift; sourceTree = "<group>"; };
 		5A3592AC246AD45500E67344 /* MapboxInfoButtonOrnament.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxInfoButtonOrnament.swift; sourceTree = "<group>"; };
@@ -1377,6 +1383,8 @@
 		1FEE79BC2421AC7C00337895 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				58EFAD13265FF4C2007FC1FF /* MapboxCommon.framework */,
+				58EFAD14265FF4C3007FC1FF /* MapboxCoreMaps.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

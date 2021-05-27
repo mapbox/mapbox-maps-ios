@@ -170,19 +170,19 @@ internal class SwiftUIMapViewCoordinator {
         }
         let annotationsByIdentifier = Dictionary(uniqueKeysWithValues: annotations.map { ($0.identifier, $0) })
 
-        let oldAnnotationIds = Set(mapView.annotations.annotations.values.map(\.identifier))
+        let oldAnnotationIds = Set(mapView.annotations_legacy.annotations.values.map(\.identifier))
         let newAnnotationIds = Set(annotationsByIdentifier.values.map(\.identifier))
 
         let idsForAnnotationsToRemove = oldAnnotationIds.subtracting(newAnnotationIds)
-        let annotationsToRemove = idsForAnnotationsToRemove.compactMap { mapView.annotations.annotations[$0] }
+        let annotationsToRemove = idsForAnnotationsToRemove.compactMap { mapView.annotations_legacy.annotations[$0] }
         if !annotationsToRemove.isEmpty {
-            mapView.annotations.removeAnnotations(annotationsToRemove)
+            mapView.annotations_legacy.removeAnnotations(annotationsToRemove)
         }
 
         let idsForAnnotationsToAdd = newAnnotationIds.subtracting(oldAnnotationIds)
         let annotationsToAdd = idsForAnnotationsToAdd.compactMap { annotationsByIdentifier[$0] }
         if !annotationsToAdd.isEmpty {
-            mapView.annotations.addAnnotations(annotationsToAdd)
+            mapView.annotations_legacy.addAnnotations(annotationsToAdd)
         }
     }
 }

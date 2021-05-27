@@ -318,7 +318,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         // to the tile region API.
         mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
             guard
-                let annotations = self?.mapView?.annotations,
+                let annotations = self?.mapView?.annotations_legacy,
                 let coord = self?.tokyoCoord else {
                 return
             }

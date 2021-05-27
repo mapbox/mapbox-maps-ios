@@ -33,7 +33,7 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
                                                         image: UIImage(named: "star"))
 
             // Add the annotation to the map.
-            self.mapView.annotations.addAnnotation(customPointAnnotation)
+            self.mapView.annotations_legacy.addAnnotation(customPointAnnotation)
 
             // The below line is used for internal testing purposes only.
             self.finish()

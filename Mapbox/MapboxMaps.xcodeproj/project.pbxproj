@@ -38,6 +38,19 @@
 		0C088ACB26388E3400107B5E /* CameraAnimationsManager+CameraAnimatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C088AC926388E3400107B5E /* CameraAnimationsManager+CameraAnimatorDelegate.swift */; };
 		0C088ACC26388E3400107B5E /* CameraAnimationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C088ACA26388E3400107B5E /* CameraAnimationsManager.swift */; };
 		0C1AF560244E47C1008D2A10 /* GestureOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1AF559244DF4DF008D2A10 /* GestureOptions.swift */; };
+		0C1EBEDD2660337C0024E687 /* AnnotationOrchestrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1EBEDB2660337C0024E687 /* AnnotationOrchestrator.swift */; };
+		0C1EBEF62660356E0024E687 /* PolygonAnnotationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1EBEEE2660356E0024E687 /* PolygonAnnotationManager.swift */; };
+		0C1EBEF72660356E0024E687 /* CircleAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1EBEEF2660356E0024E687 /* CircleAnnotation.swift */; };
+		0C1EBEF82660356E0024E687 /* PolylineAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1EBEF02660356E0024E687 /* PolylineAnnotation.swift */; };
+		0C1EBEF92660356E0024E687 /* PointAnnotationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1EBEF12660356E0024E687 /* PointAnnotationManager.swift */; };
+		0C1EBEFA2660356E0024E687 /* PolygonAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1EBEF22660356E0024E687 /* PolygonAnnotation.swift */; };
+		0C1EBEFB2660356E0024E687 /* PolylineAnnotationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1EBEF32660356E0024E687 /* PolylineAnnotationManager.swift */; };
+		0C1EBEFC2660356E0024E687 /* CircleAnnotationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1EBEF42660356E0024E687 /* CircleAnnotationManager.swift */; };
+		0C1EBEFD2660356E0024E687 /* PointAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1EBEF52660356E0024E687 /* PointAnnotation.swift */; };
+		0C1EBF0A266035880024E687 /* PolygonAnnotationIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1EBF05266035880024E687 /* PolygonAnnotationIntegrationTests.swift */; };
+		0C1EBF0C266035880024E687 /* CircleAnnotationIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1EBF06266035880024E687 /* CircleAnnotationIntegrationTests.swift */; };
+		0C1EBF0E266035880024E687 /* PolylineAnnotationIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1EBF07266035880024E687 /* PolylineAnnotationIntegrationTests.swift */; };
+		0C1EBF10266035880024E687 /* PointAnnotationIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1EBF08266035880024E687 /* PointAnnotationIntegrationTests.swift */; };
 		0C26425524EECD14001FE2E3 /* AllExpressions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C26425424EECD14001FE2E3 /* AllExpressions.swift */; };
 		0C2CDA2F25D1A51C006D068F /* PuckTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2CDA2D25D1A51C006D068F /* PuckTypeTests.swift */; };
 		0C31F7AA25AF87AB00DCFB28 /* Puck3D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C31F7A925AF87AB00DCFB28 /* Puck3D.swift */; };
@@ -457,6 +470,19 @@
 		0C088AC926388E3400107B5E /* CameraAnimationsManager+CameraAnimatorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CameraAnimationsManager+CameraAnimatorDelegate.swift"; sourceTree = "<group>"; };
 		0C088ACA26388E3400107B5E /* CameraAnimationsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimationsManager.swift; sourceTree = "<group>"; };
 		0C1AF559244DF4DF008D2A10 /* GestureOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureOptions.swift; sourceTree = "<group>"; };
+		0C1EBEDB2660337C0024E687 /* AnnotationOrchestrator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnnotationOrchestrator.swift; sourceTree = "<group>"; };
+		0C1EBEEE2660356E0024E687 /* PolygonAnnotationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PolygonAnnotationManager.swift; sourceTree = "<group>"; };
+		0C1EBEEF2660356E0024E687 /* CircleAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleAnnotation.swift; sourceTree = "<group>"; };
+		0C1EBEF02660356E0024E687 /* PolylineAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PolylineAnnotation.swift; sourceTree = "<group>"; };
+		0C1EBEF12660356E0024E687 /* PointAnnotationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PointAnnotationManager.swift; sourceTree = "<group>"; };
+		0C1EBEF22660356E0024E687 /* PolygonAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PolygonAnnotation.swift; sourceTree = "<group>"; };
+		0C1EBEF32660356E0024E687 /* PolylineAnnotationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PolylineAnnotationManager.swift; sourceTree = "<group>"; };
+		0C1EBEF42660356E0024E687 /* CircleAnnotationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleAnnotationManager.swift; sourceTree = "<group>"; };
+		0C1EBEF52660356E0024E687 /* PointAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PointAnnotation.swift; sourceTree = "<group>"; };
+		0C1EBF05266035880024E687 /* PolygonAnnotationIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PolygonAnnotationIntegrationTests.swift; sourceTree = "<group>"; };
+		0C1EBF06266035880024E687 /* CircleAnnotationIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleAnnotationIntegrationTests.swift; sourceTree = "<group>"; };
+		0C1EBF07266035880024E687 /* PolylineAnnotationIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PolylineAnnotationIntegrationTests.swift; sourceTree = "<group>"; };
+		0C1EBF08266035880024E687 /* PointAnnotationIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PointAnnotationIntegrationTests.swift; sourceTree = "<group>"; };
 		0C26425424EECD14001FE2E3 /* AllExpressions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllExpressions.swift; sourceTree = "<group>"; };
 		0C2CDA2D25D1A51C006D068F /* PuckTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuckTypeTests.swift; sourceTree = "<group>"; };
 		0C31F7A925AF87AB00DCFB28 /* Puck3D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Puck3D.swift; sourceTree = "<group>"; };
@@ -966,6 +992,8 @@
 		07E4FD1924E4A35600D734D1 /* MapboxMapsAnnotations */ = {
 			isa = PBXGroup;
 			children = (
+				0C1EBEED2660356E0024E687 /* Generated */,
+				0C1EBEDB2660337C0024E687 /* AnnotationOrchestrator.swift */,
 				0C04F6FE2658135900B81ECD /* Annotation_Legacy.swift */,
 				0C04F6FF2658135900B81ECD /* AnnotationInteractionDelegate_Legacy.swift */,
 				0C04F7012658135900B81ECD /* AnnotationManager_Legacy.swift */,
@@ -982,6 +1010,7 @@
 		07E4FD2424E4A35600D734D1 /* MapboxMapsAnnotationsTests */ = {
 			isa = PBXGroup;
 			children = (
+				0C1EBF04266035880024E687 /* Generated */,
 				CAE43EE5265462B7006F43E9 /* MapboxMapsAnnotationsTests.swift */,
 				CAE43EE4265462B7006F43E9 /* MockMapFeatureQueryable.swift */,
 				07EEFA8C25018B8800352933 /* AnnotationManagerTests.swift */,
@@ -1011,6 +1040,32 @@
 				0CC9937D25D46B7100650CC1 /* RenderOptions.swift */,
 			);
 			path = Configuration;
+			sourceTree = "<group>";
+		};
+		0C1EBEED2660356E0024E687 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				0C1EBEEE2660356E0024E687 /* PolygonAnnotationManager.swift */,
+				0C1EBEEF2660356E0024E687 /* CircleAnnotation.swift */,
+				0C1EBEF02660356E0024E687 /* PolylineAnnotation.swift */,
+				0C1EBEF12660356E0024E687 /* PointAnnotationManager.swift */,
+				0C1EBEF22660356E0024E687 /* PolygonAnnotation.swift */,
+				0C1EBEF32660356E0024E687 /* PolylineAnnotationManager.swift */,
+				0C1EBEF42660356E0024E687 /* CircleAnnotationManager.swift */,
+				0C1EBEF52660356E0024E687 /* PointAnnotation.swift */,
+			);
+			path = Generated;
+			sourceTree = "<group>";
+		};
+		0C1EBF04266035880024E687 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				0C1EBF05266035880024E687 /* PolygonAnnotationIntegrationTests.swift */,
+				0C1EBF06266035880024E687 /* CircleAnnotationIntegrationTests.swift */,
+				0C1EBF07266035880024E687 /* PolylineAnnotationIntegrationTests.swift */,
+				0C1EBF08266035880024E687 /* PointAnnotationIntegrationTests.swift */,
+			);
+			path = Generated;
 			sourceTree = "<group>";
 		};
 		0C26425324EECD14001FE2E3 /* Expressions */ = {
@@ -2038,6 +2093,8 @@
 				0CD62F24245887CD006421D1 /* OrnamentSupportableView.swift in Sources */,
 				CA355C07256EEA7C00FD1DB7 /* FlyToInterpolator.swift in Sources */,
 				0C708F4F24EB23C7003CE791 /* VectorSource.swift in Sources */,
+				0C1EBEDD2660337C0024E687 /* AnnotationOrchestrator.swift in Sources */,
+				0C1EBEF62660356E0024E687 /* PolygonAnnotationManager.swift in Sources */,
 				0C946D1324DC5F8E003F114A /* Event.swift in Sources */,
 				0C04F7022658135900B81ECD /* PointAnnotation_Legacy.swift in Sources */,
 				CA6245DA2627EA7F00C79547 /* OfflineErrors.swift in Sources */,
@@ -2099,6 +2156,7 @@
 				0C1AF560244E47C1008D2A10 /* GestureOptions.swift in Sources */,
 				07729A592462461800440187 /* CameraOptions.swift in Sources */,
 				0CD62F1F24588734006421D1 /* LocationProviderDelegate.swift in Sources */,
+				0C1EBEF72660356E0024E687 /* CircleAnnotation.swift in Sources */,
 				0C708F5624EB24B1003CE791 /* SourceProperties.swift in Sources */,
 				B5B55D51260E4D4500EBB589 /* GestureManager+GestureHandlerDelegate.swift in Sources */,
 				CA6245D02627E13400C79547 /* TilesetDescriptorOptions+MapboxMaps.swift in Sources */,
@@ -2109,6 +2167,7 @@
 				0CD62F1D24588715006421D1 /* LocationPermissionsDelegate.swift in Sources */,
 				0C708F1F24EB1EE2003CE791 /* BackgroundLayer.swift in Sources */,
 				B5DDE9602613ACB400998840 /* StyleEncodable.swift in Sources */,
+				0C1EBEF92660356E0024E687 /* PointAnnotationManager.swift in Sources */,
 				0C88F22924F4223B00FC35F3 /* ExpressionOptions.swift in Sources */,
 				0782B037258C14A400D5FCE5 /* NSNumber.swift in Sources */,
 				0C55010B2476D83A00AE019A /* Light.swift in Sources */,
@@ -2132,7 +2191,9 @@
 				0C088ACB26388E3400107B5E /* CameraAnimationsManager+CameraAnimatorDelegate.swift in Sources */,
 				0C35750225DD8D960085D775 /* StyleErrors.swift in Sources */,
 				0CE3D1B425816BD6000585A2 /* MapView+Supportable.swift in Sources */,
+				0C1EBEFC2660356E0024E687 /* CircleAnnotationManager.swift in Sources */,
 				0C9DE369252C263600880CC8 /* GeoJSONSourceData.swift in Sources */,
+				0C1EBEFA2660356E0024E687 /* PolygonAnnotation.swift in Sources */,
 				0782B142258C1CAB00D5FCE5 /* NSValue.swift in Sources */,
 				B5B55D46260E4D1500EBB589 /* CameraAnimationDelegate.swift in Sources */,
 				2B8637E32462F5AE00698135 /* MapboxScaleBarLabel.swift in Sources */,
@@ -2140,6 +2201,7 @@
 				CAB77E452654AC5E0071D74C /* CameraAnimationsManagerProtocol.swift in Sources */,
 				0CD62F1924588661006421D1 /* MapCameraOptions.swift in Sources */,
 				0C3B1E8E24DDADD000CC29E8 /* EventsStringTokens.swift in Sources */,
+				0C1EBEF82660356E0024E687 /* PolylineAnnotation.swift in Sources */,
 				B529341E2624E9D6003B181C /* DelegatingObserver.swift in Sources */,
 				0CD62F2024588737006421D1 /* AppleLocationProvider.swift in Sources */,
 				0782B010258C051900D5FCE5 /* ScreenCoordinate.swift in Sources */,
@@ -2160,6 +2222,7 @@
 				0C04F7032658135900B81ECD /* PolygonAnnotation_Legacy.swift in Sources */,
 				CA5890D6264B00B50060987A /* MapEventHandler.swift in Sources */,
 				0C350D83263278090090FA74 /* FlyToCameraAnimator.swift in Sources */,
+				0C1EBEFD2660356E0024E687 /* PointAnnotation.swift in Sources */,
 				1FECC9E02474519D00B63910 /* Expression.swift in Sources */,
 				B52050A8260538240003E5BB /* ModelLayer.swift in Sources */,
 				CA5890D5264B00B50060987A /* ObservableProtocol.swift in Sources */,
@@ -2174,6 +2237,7 @@
 				0CAC3CAA2534E8CC00D031E7 /* ResourceOptions.swift in Sources */,
 				0CA3DD61257AAE3B00B12C8F /* SkyLayer.swift in Sources */,
 				0C708F2B24EB1EE2003CE791 /* FillLayer.swift in Sources */,
+				0C1EBEFB2660356E0024E687 /* PolylineAnnotationManager.swift in Sources */,
 				0782AFFB258BFE5800D5FCE5 /* CoreGraphics.swift in Sources */,
 				CA6245DF2627EC3900C79547 /* OfflineCallbacks.swift in Sources */,
 				CABCDF432620E09E00D61635 /* MapInitOptions.swift in Sources */,
@@ -2258,6 +2322,7 @@
 				0C32CA2725F982300057ED31 /* VectorSourceTests.swift in Sources */,
 				CAE43EE22654627E006F43E9 /* TileStore+Tests.swift in Sources */,
 				B506A5A025E023E90097ADB7 /* Bundle+MapboxMapsTests.swift in Sources */,
+				0C1EBF10266035880024E687 /* PointAnnotationIntegrationTests.swift in Sources */,
 				0C32C9AE25F979680057ED31 /* GeoJsonSourceIntegrationTests.swift in Sources */,
 				0CC6EF0B25C3263400BFB153 /* ModelLayerIntegrationTests.swift in Sources */,
 				0CC6EF1A25C3263400BFB153 /* FillExtrusionLayerIntegrationTests.swift in Sources */,
@@ -2298,6 +2363,7 @@
 				0C5CFCE225BB951B0001E753 /* SymbolLayerTests.swift in Sources */,
 				CA57257E2568D15E005ED95E /* ObservableIntegrationTests.swift in Sources */,
 				B53B86DA260D735C00C86BAA /* LocationOptionsTests.swift in Sources */,
+				0C1EBF0E266035880024E687 /* PolylineAnnotationIntegrationTests.swift in Sources */,
 				0C5CFCEE25BB951B0001E753 /* LocationIndicatorLayerTests.swift in Sources */,
 				0CC6EF2625C3263400BFB153 /* HillshadeLayerIntegrationTests.swift in Sources */,
 				CA548FEB251C404B00F829A3 /* MapboxMapsFoundationTests.swift in Sources */,
@@ -2308,6 +2374,7 @@
 				0C5CFDD525BE29BC0001E753 /* SouceProperties+Fixtures.swift in Sources */,
 				CA4AE07B252D655000183075 /* PolygonAnnotationTests.swift in Sources */,
 				CA548FEE251C404B00F829A3 /* FeatureCollectionTests.swift in Sources */,
+				0C1EBF0C266035880024E687 /* CircleAnnotationIntegrationTests.swift in Sources */,
 				0C59ED2325CC6D7E00C72E7A /* ExpressionBuilderTests.swift in Sources */,
 				CA05A7202551C89600ABF902 /* CacheManagerIntegrationTests.swift in Sources */,
 				B53B8622260D717700C86BAA /* XCTestCase+MapboxAccessToken.swift in Sources */,
@@ -2328,6 +2395,7 @@
 				CAD7BA0625A368DE00E64C78 /* ExampleIntegrationTest.swift in Sources */,
 				CAE43EDF26546217006F43E9 /* MapboxMapIntegrationTests.swift in Sources */,
 				C6334944262E28C300D17701 /* StyleTransitionTests.swift in Sources */,
+				0C1EBF0A266035880024E687 /* PolygonAnnotationIntegrationTests.swift in Sources */,
 				CA99A8702540CD1900D16C78 /* StyleLoadIntegrationTests.swift in Sources */,
 				CA548FF5251C404B00F829A3 /* Fixture.swift in Sources */,
 				0C5CFCD325BB951B0001E753 /* RasterLayerTests.swift in Sources */,

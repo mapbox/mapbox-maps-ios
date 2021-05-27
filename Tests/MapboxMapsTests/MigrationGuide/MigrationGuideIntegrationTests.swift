@@ -461,10 +461,10 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
             override func viewDidLoad() {
                 super.viewDidLoad()
                 mapView.mapboxMap.onNext(.mapLoaded) { _ in
-                    self.mapView.annotations.interactionDelegate = self
+                    self.mapView.annotations_legacy.interactionDelegate = self
                     let coordinate = CLLocationCoordinate2DMake(24, -89)
                     let pointAnnotation = PointAnnotation_Legacy(coordinate: coordinate)
-                    self.mapView.annotations.addAnnotation(pointAnnotation)
+                    self.mapView.annotations_legacy.addAnnotation(pointAnnotation)
                 }
             }
 

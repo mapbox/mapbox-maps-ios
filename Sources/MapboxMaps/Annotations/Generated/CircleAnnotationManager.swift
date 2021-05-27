@@ -4,28 +4,22 @@ import Foundation
 import Turf
 @_implementationOnly import MapboxCommon_Private
 
-/// A delegate that is called when a tap is detected on an annotation (or on several of them).
-public protocol CircleAnnotationInteractionDelegate {
-
-    /// This method is invoked when a tap gesture is detected
-    /// - Parameters:
-    ///   - manager: The `CircleAnnotationManager` that detected this tap gesture
-    ///   - annotations: A list of `CircleAnnotations` that were tapped
-    func annotationsTapped(forManager manager: CircleAnnotationManager,
-                           annotations: [CircleAnnotation])
-
-}
-
 /// An instance of `CircleAnnotationManager` is responsible for a collection of `CircleAnnotation`s. 
 public class CircleAnnotationManager: AnnotationManager {
 
     // MARK: - Annotations -
     
     /// The collection of CircleAnnotations being managed
-    public var annotations = [CircleAnnotation]() {
+    public private(set) var annotations = [CircleAnnotation]() {
         didSet {
             syncAnnotations()
          }
+    }
+
+    /// Syncs `CircleAnnotation`s to the map
+    /// NOTE: calling this repeatedly results in degraded performance
+    public func syncAnnotations(_ annotations: [CircleAnnotation]) {
+        self.annotations = annotations
     }
 
     // MARK: - AnnotationManager protocol conformance -
@@ -181,7 +175,7 @@ public class CircleAnnotationManager: AnnotationManager {
     // MARK: - Selection Handling -
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
-    public var delegate: CircleAnnotationInteractionDelegate? {
+    public weak var delegate: AnnotationInteractionDelegate? {
         didSet {
             if delegate != nil {
                 setupTapRecognizer()

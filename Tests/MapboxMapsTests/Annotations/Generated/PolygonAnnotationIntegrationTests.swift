@@ -41,7 +41,7 @@ class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
             annotation.fillPattern =  String.testConstantValue()
 
             self.verifyFeatureContainsProperties(annotation: annotation)
-            manager.annotations = [annotation]
+            manager.syncAnnotations([annotation])
             self.manager = manager
             successfullyLoadedStyleExpectation.fulfill()
         }

@@ -4,28 +4,22 @@ import Foundation
 import Turf
 @_implementationOnly import MapboxCommon_Private
 
-/// A delegate that is called when a tap is detected on an annotation (or on several of them).
-public protocol PolylineAnnotationInteractionDelegate {
-
-    /// This method is invoked when a tap gesture is detected
-    /// - Parameters:
-    ///   - manager: The `PolylineAnnotationManager` that detected this tap gesture
-    ///   - annotations: A list of `PolylineAnnotations` that were tapped
-    func annotationsTapped(forManager manager: PolylineAnnotationManager,
-                           annotations: [PolylineAnnotation])
-
-}
-
 /// An instance of `PolylineAnnotationManager` is responsible for a collection of `PolylineAnnotation`s. 
 public class PolylineAnnotationManager: AnnotationManager {
 
     // MARK: - Annotations -
     
     /// The collection of PolylineAnnotations being managed
-    public var annotations = [PolylineAnnotation]() {
+    public private(set) var annotations = [PolylineAnnotation]() {
         didSet {
             syncAnnotations()
          }
+    }
+
+    /// Syncs `PolylineAnnotation`s to the map
+    /// NOTE: calling this repeatedly results in degraded performance
+    public func syncAnnotations(_ annotations: [PolylineAnnotation]) {
+        self.annotations = annotations
     }
 
     // MARK: - AnnotationManager protocol conformance -
@@ -217,7 +211,7 @@ public class PolylineAnnotationManager: AnnotationManager {
     // MARK: - Selection Handling -
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
-    public var delegate: PolylineAnnotationInteractionDelegate? {
+    public weak var delegate: AnnotationInteractionDelegate? {
         didSet {
             if delegate != nil {
                 setupTapRecognizer()

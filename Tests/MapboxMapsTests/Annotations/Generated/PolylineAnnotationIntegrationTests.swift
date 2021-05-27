@@ -39,7 +39,7 @@ class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
             annotation.lineWidth =  Double.testConstantValue()
 
             self.verifyFeatureContainsProperties(annotation: annotation)
-            manager.annotations = [annotation]
+            manager.syncAnnotations([annotation])
             self.manager = manager
             successfullyLoadedStyleExpectation.fulfill()
         }

@@ -4,29 +4,23 @@ import Foundation
 import Turf
 @_implementationOnly import MapboxCommon_Private
 
-/// A delegate that is called when a tap is detected on an annotation (or on several of them).
-public protocol PointAnnotationInteractionDelegate {
-
-    /// This method is invoked when a tap gesture is detected
-    /// - Parameters:
-    ///   - manager: The `PointAnnotationManager` that detected this tap gesture
-    ///   - annotations: A list of `PointAnnotations` that were tapped
-    func annotationsTapped(forManager manager: PointAnnotationManager,
-                           annotations: [PointAnnotation])
-
-}
-
 /// An instance of `PointAnnotationManager` is responsible for a collection of `PointAnnotation`s. 
 public class PointAnnotationManager: AnnotationManager {
 
     // MARK: - Annotations -
     
     /// The collection of PointAnnotations being managed
-    public var annotations = [PointAnnotation]() {
+    public private(set) var annotations = [PointAnnotation]() {
         didSet {
             addImageToStyleIfNeeded()
             syncAnnotations()
          }
+    }
+
+    /// Syncs `PointAnnotation`s to the map
+    /// NOTE: calling this repeatedly results in degraded performance
+    public func syncAnnotations(_ annotations: [PointAnnotation]) {
+        self.annotations = annotations
     }
 
     // MARK: - AnnotationManager protocol conformance -
@@ -489,7 +483,7 @@ public class PointAnnotationManager: AnnotationManager {
     // MARK: - Selection Handling -
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
-    public var delegate: PointAnnotationInteractionDelegate? {
+    public weak var delegate: AnnotationInteractionDelegate? {
         didSet {
             if delegate != nil {
                 setupTapRecognizer()

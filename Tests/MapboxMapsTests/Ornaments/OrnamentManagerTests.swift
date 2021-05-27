@@ -7,9 +7,9 @@ import XCTest
 #endif
 
 //swiftlint:disable explicit_acl explicit_top_level_acl
-class OrnamentManagerTests: XCTestCase {
+class OrnamentManagerTests: MapViewIntegrationTestCase {
 
-    var ornamentSupportableView: OrnamentSupportableMapViewMock!
+    var ornamentSupportableView: OrnamentSupportableView!
     var options: OrnamentOptions!
     var ornamentsManager: OrnamentsManager!
 
@@ -55,33 +55,35 @@ class OrnamentManagerTests: XCTestCase {
     }
 
     func testCompassTapped() {
-        let initialSubviews = ornamentSupportableView.subviews.filter { $0.isKind(of: MapboxCompassOrnamentView.self) }
+        guard let mapView = mapView else {
+            XCTFail("Map view could not be found")
+            return
+        }
+        let initialSubviews = mapView.subviews.filter { $0.isKind(of: MapboxCompassOrnamentView.self) }
         guard let compass = initialSubviews.first as? MapboxCompassOrnamentView else {
             XCTFail("Failed because compass could not be found")
             return
         }
 
-        ornamentSupportableView.mapboxMap.c = 0
+        mapView.camera.setCamera(to: CameraOptions(bearing: 0))
 
         XCTAssertTrue(compass.containerView.isHidden)
-        XCTAssertEqual(ornamentSupportableView.camera.camera.bearing, compass.currentBearing)
+        XCTAssertEqual(mapView.mapboxMap.cameraState.bearing, compass.currentBearing)
 
-        ornamentSupportableView.camera.camera.bearing = 30
+        mapView.camera.setCamera(to: CameraOptions(bearing: 30))
         XCTAssertFalse(compass.containerView.isHidden)
-        XCTAssertEqual(ornamentSupportableView.camera.camera.bearing, compass.currentBearing)
+        XCTAssertEqual(mapView.mapboxMap.cameraState.bearing, compass.currentBearing)
 
         ornamentSupportableView.compassTapped()
 
-
         let expectation = XCTestExpectation(description: "The compass' bearing should be 0 after a tap gesture")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            if self.ornamentSupportableView.camera.camera.bearing == 0 {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            if mapView.mapboxMap.cameraState.bearing == 0 {
                 expectation.fulfill()
             } else {
                 XCTFail("The compass' bearing is not 0.")
             }
         }
-        XCTAssertNotNil(ornamentSupportableView.cameraAnimators)
 
 
         wait(for: [expectation], timeout: 5)

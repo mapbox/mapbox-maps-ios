@@ -9,6 +9,8 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
+        try guardForMetalDevice()
+
         ResourceOptionsManager.default.resourceOptions.accessToken = self.accessToken
     }
 

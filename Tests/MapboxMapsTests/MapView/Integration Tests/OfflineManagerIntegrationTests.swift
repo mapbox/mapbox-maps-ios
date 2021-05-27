@@ -182,12 +182,10 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         weak var weakMapView: MapView?
 
         try autoreleasepool {
+            try guardForMetalDevice()
+
             guard let rootView = rootViewController?.view else {
                 throw XCTSkip("No valid UIWindow or root view controller")
-            }
-
-            guard MTLCreateSystemDefaultDevice() != nil else {
-                throw XCTSkip("No valid Metal device (OS version or VM?)")
             }
 
             // 1. Load TileRegion from network

@@ -20,6 +20,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 - Fixed a bug with `TileStore.tileRegionGeometry` returning invalid value. ([#390](https://github.com/mapbox/mapbox-maps-ios/pull/390))
 - Fixed a bug where the underlying renderer was not being destroyed. ([#395](https://github.com/mapbox/mapbox-maps-ios/pull/395))
+- Fixed a bug where the snapshotter completion handler was being called twice on cancellation.
+([#382](https://github.com/mapbox/mapbox-maps-ios/pull/382))
 
 ### Features ✨ and improvements 🏁
 
@@ -58,7 +60,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Bug fixes 🐞
 
-- Fixed an issue where the map's scale bar and compass view could trigger `layoutSubviews()` for the map view. ([#338](https://github.com/mapbox/mapbox-maps-ios/pull/338)) 
+- Fixed an issue where the map's scale bar and compass view could trigger `layoutSubviews()` for the map view. ([#338](https://github.com/mapbox/mapbox-maps-ios/pull/338))
 
 ## 10.0.0-beta.19.1 - May 7, 2021
 
@@ -79,7 +81,7 @@ Mapbox welcomes participation and contributions from everyone.
       * Removing default values for parameters
       * Making `bearing` and `pitch` parameters optional
       * Adding the `camera(for:camera:rect:)` variant
-- `OrnamentOptions` should now be accessed via `MapView.ornaments.options`. `MapConfig.ornaments` has been removed. Updates can be applied directly to `OrnamentsManager.options`. Previously the map's ornament options were updated on `MapConfig.ornaments` with `MapView.update`. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310)) 
+- `OrnamentOptions` should now be accessed via `MapView.ornaments.options`. `MapConfig.ornaments` has been removed. Updates can be applied directly to `OrnamentsManager.options`. Previously the map's ornament options were updated on `MapConfig.ornaments` with `MapView.update`. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310))
 - `OrnamentOptions` now uses structs to manage options for individual ornaments. For example, `OrnamentOptions.scaleBarPosition` is now `OrnamentOptions.scaleBar.position`. ([#318](https://github.com/mapbox/mapbox-maps-ios/pull/318))
 - The `LogoView` class is now private. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310))
 - `Style` has been significantly refactored, for example:
@@ -90,7 +92,7 @@ Mapbox welcomes participation and contributions from everyone.
 ### Features ✨ and improvements 🏁
 
 - `OrnamentsManager` is now a public class and can be accessed via the `MapView`'s `ornaments` property.
-- `CompassDirectionFormatter` is now public. It provides a string representation of a `CLLocationDirection` and supports the same languages as in pre-v10 versions of the Maps SDK. ([#300](https://github.com/mapbox/mapbox-maps-ios/pull/300))- `OrnamentOptions` should now be accessed via `MapView.ornaments.options`. Updates can be applied directly to the `options` property. Previously the map's ornament options were updated via `MapConfig.ornaments`. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310)) 
+- `CompassDirectionFormatter` is now public. It provides a string representation of a `CLLocationDirection` and supports the same languages as in pre-v10 versions of the Maps SDK. ([#300](https://github.com/mapbox/mapbox-maps-ios/pull/300))- `OrnamentOptions` should now be accessed via `MapView.ornaments.options`. Updates can be applied directly to the `options` property. Previously the map's ornament options were updated via `MapConfig.ornaments`. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310))
 - The `LogoView` class is now private. ([#310](https://github.com/mapbox/mapbox-maps-ios/pull/310))
 
 ## 10.0.0-beta.18.1 - April 28, 2021
@@ -102,7 +104,7 @@ Mapbox welcomes participation and contributions from everyone.
      * A mutable version of the `CameraTransition` struct is passed into every animation block.
   * Animations can only be constructor injected into `CameraAnimator` as part of the `makeAnimator*` methods on `mapView.camera`.
   * The `makeCameraAnimator*` methods have been renamed to `makeAnimator*` methods
-  
+
 - #### Gestures
   - Gestures now directly call `__map.setCamera()` instead of using CoreAnimation
 

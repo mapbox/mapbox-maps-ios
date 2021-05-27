@@ -12,13 +12,11 @@ class MapInitOptionsIntegrationTests: XCTestCase {
     }
 
     func testOptionsWithCustomResourceOptionsManager() {
-        ResourceOptionsManager.default.update { options in
-            options.accessToken = "pk.aaaaaa"
-        }
+        ResourceOptionsManager.default.resourceOptions.accessToken = "pk.aaaaaa"
 
         let rom = ResourceOptionsManager(accessToken: "pk.cccccc")
 
-        XCTAssertNotEqual(rom, ResourceOptionsManager.default)
+        XCTAssert(rom !== ResourceOptionsManager.default)
 
         let mapInitOptions = MapInitOptions(
             resourceOptions: rom.resourceOptions,
@@ -34,9 +32,7 @@ class MapInitOptionsIntegrationTests: XCTestCase {
     }
 
     func testOptionsAreSetFromNibProvider() {
-        ResourceOptionsManager.default.update { options in
-            options.accessToken = "pk.aaaaaa"
-        }
+        ResourceOptionsManager.default.resourceOptions.accessToken = "pk.aaaaaa"
 
         let rom = ResourceOptionsManager(accessToken: "pk.dddddd")
 
@@ -76,9 +72,7 @@ class MapInitOptionsIntegrationTests: XCTestCase {
 
     func testDefaultOptionsAreUsedWhenNibDoesntSetProvider() {
 
-        ResourceOptionsManager.default.update { options in
-            options.accessToken = "pk.eeeeee"
-        }
+        ResourceOptionsManager.default.resourceOptions.accessToken = "pk.eeeeee"
 
         // Although this test checks that a MapView (#2) isn't connected to a
         // Provider, the first MapView will still be instantiated, so a return

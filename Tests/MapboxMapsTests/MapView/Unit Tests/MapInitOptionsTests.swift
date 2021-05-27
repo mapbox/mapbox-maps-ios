@@ -4,9 +4,7 @@ import XCTest
 class MapInitOptionsTests: XCTestCase {
     override func setUp() {
         super.setUp()
-        ResourceOptionsManager.default.update { options in
-            options.accessToken = "" // invalid token
-        }
+        ResourceOptionsManager.default.resourceOptions.accessToken = "" // invalid token
     }
 
     override func tearDown() {
@@ -18,9 +16,7 @@ class MapInitOptionsTests: XCTestCase {
         var updatedMapInitOptions = MapInitOptions()
         XCTAssertNotEqual(updatedMapInitOptions.resourceOptions.accessToken, "pk.aaaaaa")
 
-        ResourceOptionsManager.default.update { options in
-            options.accessToken = "pk.aaaaaa"
-        }
+        ResourceOptionsManager.default.resourceOptions.accessToken = "pk.aaaaaa"
 
         updatedMapInitOptions = MapInitOptions()
         XCTAssertEqual(updatedMapInitOptions.resourceOptions.accessToken, "pk.aaaaaa")

@@ -21,11 +21,6 @@ import Foundation
 ///     ```
 public class ResourceOptionsManager {
 
-    /// Errors that can be thrown by `ResourceOptionsManager`
-    public enum ResourceOptionsError: Error {
-        case invalidToken
-    }
-
     /// Default instance
     ///
     /// This shared instance is used by the default initializers
@@ -51,9 +46,14 @@ public class ResourceOptionsManager {
 
     private static var defaultInstance: ResourceOptionsManager?
 
-    /// Return the current resource options. To modify the options use `update(_:)`
+    /// Return the current resource options.
     public var resourceOptions: ResourceOptions {
-        return _resourceOptions
+        get {
+            return _resourceOptions
+        }
+        set {
+            update(newValue)
+        }
     }
 
     private var _resourceOptions: ResourceOptions!
@@ -77,7 +77,12 @@ public class ResourceOptionsManager {
     ///
     /// - Parameter accessToken: Valid access token or `nil`
     public convenience init(accessToken: String? = nil) {
-        self.init(accessToken: accessToken, for: .main)
+        let resourceOptions = ResourceOptions(accessToken: accessToken ?? "")
+        self.init(resourceOptions: resourceOptions)
+    }
+
+    public convenience init(resourceOptions: ResourceOptions) {
+        self.init(resourceOptions: resourceOptions, for: .main)
     }
 
     /// Initializes a `ResourceOptionsManager` with the specified access token
@@ -87,32 +92,33 @@ public class ResourceOptionsManager {
     ///     - accessToken: Valid access token or `nil`
     ///     - bundle: Bundle to search for an access token (used if resource
     ///         options is nil).
-    internal init(accessToken: String?, for bundle: Bundle) {
+    internal init(resourceOptions: ResourceOptions, for bundle: Bundle) {
         self.bundle = bundle
-        reset(accessToken: accessToken)
-    }
-
-    /// Update the stored resource options
-    /// - Parameter block: Closure called with the current resource options to
-    ///     be modified.
-    public func update(_ block: (inout ResourceOptions) -> Void) {
-        block(&_resourceOptions)
+        update(resourceOptions)
     }
 
     /// Reset the manager to a default `ResourceOptions` using the specified
     /// access token.
     ///
     /// - Parameter accessToken: Valid access token or `nil`
-    public func reset(accessToken: String? = nil) {
-        let resourceOptions = ResourceOptions(accessToken: accessToken ?? defaultAccessToken())
-        let resolvedTileStore = resourceOptions.tileStore ?? TileStore.default
+    internal func reset(resourceOptions: ResourceOptions? = nil) {
+        self.resourceOptions = resourceOptions ?? ResourceOptions(accessToken: defaultAccessToken())
+    }
 
+    private func update(_ resourceOptions: ResourceOptions) {
+        // Update access token
+        let token = resourceOptions.accessToken.isEmpty ?
+            defaultAccessToken() : resourceOptions.accessToken
+
+        _resourceOptions = resourceOptions
+        _resourceOptions.accessToken = token
+
+        let resolvedTileStore = resourceOptions.tileStore ?? TileStore.default
         if resourceOptions.tileStoreUsageMode != .disabled {
-            resolvedTileStore.setAccessToken(resourceOptions.accessToken)
+            resolvedTileStore.setAccessToken(token)
         }
 
-        self._resourceOptions = resourceOptions
-        self.tileStore = resolvedTileStore
+        tileStore = resolvedTileStore
     }
 
     internal func defaultAccessToken() -> String {
@@ -141,14 +147,5 @@ public class ResourceOptionsManager {
         }
 
         return token
-    }
-}
-
-extension ResourceOptionsManager: Equatable {
-    /// :nodoc:
-    public static func == (lhs: ResourceOptionsManager, rhs: ResourceOptionsManager) -> Bool {
-        return (lhs.resourceOptions == rhs.resourceOptions)
-            && (lhs.bundle == rhs.bundle)
-            && (lhs.tileStore == rhs.tileStore)
     }
 }

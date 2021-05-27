@@ -9,9 +9,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        ResourceOptionsManager.default.update { resourceOptions in
-            resourceOptions.accessToken = self.accessToken
-        }
+        ResourceOptionsManager.default.resourceOptions.accessToken = self.accessToken
     }
 
     override func tearDownWithError() throws {
@@ -32,9 +30,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
             override func viewDidLoad() {
                 super.viewDidLoad()
 
-                ResourceOptionsManager.default.update { resourceOptions in
-                    resourceOptions.accessToken = self.accessToken
-                }
+                ResourceOptionsManager.default.resourceOptions.accessToken = self.accessToken
 
                 mapView = MapView(frame: view.bounds)
                 view.addSubview(mapView)
@@ -68,9 +64,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
             override func viewDidLoad() {
                 super.viewDidLoad()
 
-                ResourceOptionsManager.default.update { resourceOptions in
-                    resourceOptions.accessToken = self.accessToken
-                }
+                ResourceOptionsManager.default.resourceOptions.accessToken = self.accessToken
 
                 mapView = MapView(frame: view.bounds)
                 view.addSubview(mapView)

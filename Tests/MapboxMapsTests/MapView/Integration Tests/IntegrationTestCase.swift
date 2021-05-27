@@ -11,6 +11,13 @@ internal class IntegrationTestCase: XCTestCase {
         accessToken = try mapboxAccessToken()
     }
 
+    internal override func tearDownWithError() throws {
+        rootViewController?.viewWillDisappear(false)
+        rootViewController?.viewDidDisappear(false)
+        rootViewController = nil
+        window = nil
+    }
+
     internal override func invokeTest() {
         autoreleasepool {
             super.invokeTest()

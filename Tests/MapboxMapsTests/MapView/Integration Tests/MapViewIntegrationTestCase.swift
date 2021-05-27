@@ -63,10 +63,7 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
         mapView = nil
         style = nil
 
-        rootViewController?.viewWillDisappear(false)
-        rootViewController?.viewDidDisappear(false)
-        rootViewController = nil
-        window = nil
+        try super.tearDownWithError()
     }
 }
 

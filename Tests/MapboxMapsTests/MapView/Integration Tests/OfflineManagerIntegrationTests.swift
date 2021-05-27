@@ -179,96 +179,105 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
     }
 
     internal func testMapCanBeLoadedWithoutNetworkConnectivity() throws {
+        weak var weakMapView: MapView?
 
-        guard let rootView = rootViewController?.view else {
-            throw XCTSkip("No valid UIWindow or root view controller")
-        }
+        try autoreleasepool {
+            guard let rootView = rootViewController?.view else {
+                throw XCTSkip("No valid UIWindow or root view controller")
+            }
 
-        guard MTLCreateSystemDefaultDevice() != nil else {
-            throw XCTSkip("No valid Metal device (OS version or VM?)")
-        }
+            guard MTLCreateSystemDefaultDevice() != nil else {
+                throw XCTSkip("No valid Metal device (OS version or VM?)")
+            }
 
-        // 1. Load TileRegion from network
-        let tileRegionLoaded = XCTestExpectation(description: "Tile region has loaded")
+            // 1. Load TileRegion from network
+            let tileRegionLoaded = XCTestExpectation(description: "Tile region has loaded")
 
-        /// Perform the download
-        tileStore.loadTileRegion(forId: tileRegionId,
-                                 loadOptions: tileRegionLoadOptions!) { _ in }
-            completion: { result in
-            DispatchQueue.main.async {
-                switch result {
-                case let .success(region):
-                    if region.requiredResourceCount == region.completedResourceCount {
-                        print("✔︎")
-                        tileRegionLoaded.fulfill()
-                    } else {
-                        print("𐄂")
-                        XCTFail("Not all items were loaded")
+            /// Perform the download
+            tileStore.loadTileRegion(forId: tileRegionId,
+                                     loadOptions: tileRegionLoadOptions!) { _ in }
+                completion: { result in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case let .success(region):
+                            if region.requiredResourceCount == region.completedResourceCount {
+                                print("✔︎")
+                                tileRegionLoaded.fulfill()
+                            } else {
+                                print("𐄂")
+                                XCTFail("Not all items were loaded")
+                            }
+                        case let .failure(error):
+                            print("𐄂")
+                            XCTFail("Download failed with error: \(error)")
+                        }
                     }
-                case let .failure(error):
-                    print("𐄂")
-                    XCTFail("Download failed with error: \(error)")
+                }
+
+            // - - - - - - - -
+            // 2. stylepack
+
+            let stylePackLoaded = expectation(description: "StylePack was loaded")
+            let stylePackOptions = StylePackLoadOptions(glyphsRasterizationMode: .ideographsRasterizedLocally,
+                                                        metadata: ["tag": "my-outdoors-style-pack"])!
+
+            offlineManager.loadStylePack(for: .outdoors,
+                                         loadOptions: stylePackOptions) { result in
+                DispatchQueue.main.async {
+                    print("StylePack completed: \(result)")
+                    switch result {
+                    case let .failure(error):
+                        XCTFail("stylePackLoaded error: \(error)")
+                    case .success:
+                        stylePackLoaded.fulfill()
+                    }
                 }
             }
-        }
 
-        // - - - - - - - -
-        // 2. stylepack
+            wait(for: [stylePackLoaded, tileRegionLoaded], timeout: 30.0)
 
-        let stylePackLoaded = expectation(description: "StylePack was loaded")
-        let stylePackOptions = StylePackLoadOptions(glyphsRasterizationMode: .ideographsRasterizedLocally,
-                                                    metadata: ["tag": "my-outdoors-style-pack"])!
+            // - - - - - - - -
+            // 3. Disable load-from-network, and try launch map at this location
 
-        offlineManager.loadStylePack(for: .outdoors,
-                                     loadOptions: stylePackOptions) { result in
-            DispatchQueue.main.async {
-                print("StylePack completed: \(result)")
-                switch result {
-                case let .failure(error):
-                    XCTFail("stylePackLoaded error: \(error)")
-                case .success:
-                    stylePackLoaded.fulfill()
+            OfflineSwitch.shared.isMapboxStackConnected = false
+
+            let cameraOptions = CameraOptions(center: tokyoCoord, zoom: 16)
+            let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions,
+                                                cameraOptions: cameraOptions,
+                                                styleURI: .outdoors)
+            let mapView = MapView(frame: rootView.bounds, mapInitOptions: mapInitOptions)
+            rootView.addSubview(mapView)
+
+            weakMapView = mapView
+
+            /// Expectations to be fulfilled
+            let mapIsUsingDatabase = XCTestExpectation(description: "Map is using database for resources")
+            mapIsUsingDatabase.assertForOverFulfill = false
+
+            let mapWasLoaded = XCTestExpectation(description: "Map was loaded")
+
+            mapView.mapboxMap.onEvery(.resourceRequest) { event in
+                let eventElements = event.data as! [String: Any]
+                let source = eventElements["data-source"] as! String
+                if source == "network" {
+                    XCTFail("Loading is occurring from the network")
+                } else {
+                    mapIsUsingDatabase.fulfill()
                 }
             }
-        }
 
-        wait(for: [stylePackLoaded, tileRegionLoaded], timeout: 30.0)
-
-        // - - - - - - - -
-        // 3. Disable load-from-network, and try launch map at this location
-
-        OfflineSwitch.shared.isMapboxStackConnected = false
-
-        let cameraOptions = CameraOptions(center: tokyoCoord, zoom: 16)
-        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions,
-                                            cameraOptions: cameraOptions,
-                                            styleURI: .outdoors)
-        let mapView = MapView(frame: rootView.bounds, mapInitOptions: mapInitOptions)
-        rootView.addSubview(mapView)
-
-        /// Expectations to be fulfilled
-        let mapIsUsingDatabase = XCTestExpectation(description: "Map is using database for resources")
-        mapIsUsingDatabase.assertForOverFulfill = false
-
-        let mapWasLoaded = XCTestExpectation(description: "Map was loaded")
-
-        mapView.mapboxMap.onEvery(.resourceRequest) { event in
-            let eventElements = event.data as! [String: Any]
-            let source = eventElements["data-source"] as! String
-            if source == "network" {
-                XCTFail("Loading is occurring from the network")
-            } else {
-                mapIsUsingDatabase.fulfill()
+            mapView.mapboxMap.onNext(.mapLoaded) { _ in
+                mapWasLoaded.fulfill()
             }
+
+            let expectations = [mapIsUsingDatabase, mapWasLoaded]
+            wait(for: expectations, timeout: 5.0, enforceOrder: true)
+
+            OfflineSwitch.shared.isMapboxStackConnected = true
+            mapView.removeFromSuperview()
+            rootView.removeFromSuperview()
         }
 
-        mapView.mapboxMap.onNext(.mapLoaded) { _ in
-            mapWasLoaded.fulfill()
-        }
-
-        let expectations = [mapIsUsingDatabase, mapWasLoaded]
-        wait(for: expectations, timeout: 5.0, enforceOrder: true)
-
-        OfflineSwitch.shared.isMapboxStackConnected = true
+        XCTAssertNil(weakMapView)
     }
 }

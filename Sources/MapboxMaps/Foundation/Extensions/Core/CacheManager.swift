@@ -1,6 +1,6 @@
 import Foundation
 
-extension MapboxCoreMaps.CacheManager {
+extension CacheManager {
 
     /// Construct a new cache manager.
     ///

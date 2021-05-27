@@ -84,9 +84,9 @@ $(PAYLOAD_DIR) $(TEST_ROOT) $(DEVICE_TEST_PATH):
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Simulators - SDK
+#	-project Mapbox/MapboxMaps.xcodeproj \
 
 XCODE_BUILD_SIM_SDK = set -o pipefail && xcodebuild \
-	-project Mapbox/MapboxMaps.xcodeproj \
 	-scheme MapboxMaps \
 	-sdk iphonesimulator \
 	-configuration $(CONFIGURATION) \

@@ -56,7 +56,7 @@ class CompassMapViewIntegrationTests: MapViewIntegrationTestCase {
                 XCTFail("The map's bearing is not 0 after a tap gesture.")
             }
 
-            if mapView.mapboxMap.cameraState.bearing == 0 {
+            if compass.currentBearing == 0 {
                 compassExpectation.fulfill()
             } else {
                 XCTFail("The map's bearing is not 0 after a tap gesture.")

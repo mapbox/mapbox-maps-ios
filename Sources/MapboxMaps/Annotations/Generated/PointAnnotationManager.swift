@@ -512,7 +512,7 @@ public class PointAnnotationManager: AnnotationManager {
     // MARK: - Selection Handling -
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
-    public var delegate: PointAnnotationInteractionDelegate? {
+    public weak var delegate: PointAnnotationInteractionDelegate? {
         didSet {
             if delegate != nil {
                 setupTapRecognizer()

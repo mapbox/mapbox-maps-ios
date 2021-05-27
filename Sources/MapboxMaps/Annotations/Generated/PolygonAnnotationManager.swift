@@ -167,7 +167,7 @@ public class PolygonAnnotationManager: AnnotationManager {
     // MARK: - Selection Handling -
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
-    public var delegate: PolygonAnnotationInteractionDelegate? {
+    public weak var delegate: PolygonAnnotationInteractionDelegate? {
         didSet {
             if delegate != nil {
                 setupTapRecognizer()

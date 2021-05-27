@@ -75,11 +75,11 @@ public class Snapshotter {
      Request a new snapshot. If there is a pending snapshot request, it is cancelled automatically.
 
      - Parameter overlayHandler: The optional block to call after the base map finishes drawing,
-                                 but before the final snapshot has been drawn. This block provides a
-                                `SnapshotOverlayHandler` type, which can be used with Core Graphics
-                                 to draw custom content directly over the snapshot image.
+     but before the final snapshot has been drawn. This block provides a
+     `SnapshotOverlayHandler` type, which can be used with Core Graphics
+     to draw custom content directly over the snapshot image.
      - Parameter completion: The block to call once the snapshot has been generated, providing a
-                             `Result<UIImage, SnapshotError>` type.
+     `Result<UIImage, SnapshotError>` type.
      */
     public func start(overlayHandler: SnapshotOverlayHandler?,
                       completion: @escaping (Result<UIImage, SnapshotError>) -> Void) {
@@ -89,69 +89,69 @@ public class Snapshotter {
         mapSnapshotter.start { (expected) in
             if expected.isError() {
                 completion(.failure(.snapshotFailed(reason: expected.error as? String)))
+                return
             }
 
-            if expected.isValue(), let snapshot = expected.value as? MapSnapshot {
-                let mbxImage = snapshot.image()
+            guard expected.isValue(), let snapshot = expected.value as? MapSnapshot else {
 
-                if let uiImage = UIImage(mbxImage: mbxImage, scale: scale) {
-                    let rect = CGRect(origin: .zero, size: uiImage.size)
-                    let format = UIGraphicsImageRendererFormat()
-                    format.scale = scale
-                    let renderer = UIGraphicsImageRenderer(size: uiImage.size, format: format)
-                    let compositeImage = renderer.image { rendererContext in
+                completion(.failure(.snapshotFailed(reason: expected.error as? String)))
+                return
+            }
 
-                        // First draw the snaphot image into the context
-                        let context = rendererContext.cgContext
+            let mbxImage = snapshot.image()
 
-                        if let cgImage = uiImage.cgImage {
-                            context.draw(cgImage, in: rect)
-                        }
+            guard let uiImage = UIImage(mbxImage: mbxImage, scale: scale) else {
+                completion(.failure(.snapshotFailed(reason: "Could not convert internal Image type to UIImage.")))
+                return
+            }
 
-                        let pointForCoordinate = { (coordinate: CLLocationCoordinate2D) -> CGPoint in
-                            let screenCoordinate = snapshot.screenCoordinate(for: coordinate)
-                            return CGPoint(x: screenCoordinate.x, y: screenCoordinate.y)
-                        }
+            let rect = CGRect(origin: .zero, size: uiImage.size)
+            let format = UIGraphicsImageRendererFormat()
+            format.scale = scale
+            let renderer = UIGraphicsImageRenderer(size: uiImage.size, format: format)
+            let compositeImage = renderer.image { rendererContext in
 
-                        let coordinateForPoint = { (point: CGPoint) -> CLLocationCoordinate2D in
-                            // TODO: Fix circular dependency issues with MapboxMapsStyle/Foundation in order to use point.screenCoordinate extension
-                            let screenCoordinate = ScreenCoordinate(x: Double(point.x), y: Double(point.y))
-                            return snapshot.coordinate(for: screenCoordinate)
-                        }
+                // First draw the snaphot image into the context
+                let context = rendererContext.cgContext
 
-                        // Apply the overlay, if provided.
-                        let overlay = SnapshotOverlay(context: context,
-                                                      scale: scale,
-                                                      pointForCoordinate: pointForCoordinate,
-                                                      coordinateForPoint: coordinateForPoint)
-
-                        if let overlayHandler = overlayHandler {
-                            context.saveGState()
-                            overlayHandler(overlay)
-                            context.restoreGState()
-                        }
-
-                        // Composite the logo on the snapshot,
-                        // only after everything else has been drawn.
-                        let logoView = LogoView(logoSize: .regular)
-                        let logoPadding = CGFloat(10.0)
-                        let logoOrigin = CGPoint(x: logoPadding,
-                                                 y: uiImage.size.height - logoView.frame.size.height - logoPadding)
-                        context.translateBy(x: logoOrigin.x, y: logoOrigin.y)
-                        logoView.layer.render(in: context)
-                     }
-                    completion(.success(compositeImage))
-                } else {
-                    completion(.failure(.snapshotFailed(reason: "Could not convert internal Image type to UIImage.")))
+                if let cgImage = uiImage.cgImage {
+                    context.draw(cgImage, in: rect)
                 }
-            }
 
-            if expected.isError(), let error = expected.error as? String {
-                completion(.failure(.snapshotFailed(reason: error)))
-            }
+                let pointForCoordinate = { (coordinate: CLLocationCoordinate2D) -> CGPoint in
+                    let screenCoordinate = snapshot.screenCoordinate(for: coordinate)
+                    return CGPoint(x: screenCoordinate.x, y: screenCoordinate.y)
+                }
 
+                let coordinateForPoint = { (point: CGPoint) -> CLLocationCoordinate2D in
+                    // TODO: Fix circular dependency issues with MapboxMapsStyle/Foundation in order to use point.screenCoordinate extension
+                    let screenCoordinate = ScreenCoordinate(x: Double(point.x), y: Double(point.y))
+                    return snapshot.coordinate(for: screenCoordinate)
+                }
+
+                // Apply the overlay, if provided.
+                let overlay = SnapshotOverlay(context: context,
+                                              scale: scale,
+                                              pointForCoordinate: pointForCoordinate,
+                                              coordinateForPoint: coordinateForPoint)
+
+                if let overlayHandler = overlayHandler {
+                    context.saveGState()
+                    overlayHandler(overlay)
+                    context.restoreGState()
+                }
+
+                // Composite the logo on the snapshot,
+                // only after everything else has been drawn.
+                let logoView = LogoView(logoSize: .regular)
+                let logoPadding = CGFloat(10.0)
+                let logoOrigin = CGPoint(x: logoPadding,
+                                         y: uiImage.size.height - logoView.frame.size.height - logoPadding)
+                context.translateBy(x: logoOrigin.x, y: logoOrigin.y)
+                logoView.layer.render(in: context)
+            }
+            completion(.success(compositeImage))
         }
-
     }
 
     /**
@@ -194,7 +194,7 @@ public class Snapshotter {
 
             // Composite the logo on the snapshot
             logoView.layer.render(in: context)
-         }
+        }
 
         return compositeImage
     }

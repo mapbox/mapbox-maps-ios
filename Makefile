@@ -38,17 +38,17 @@ endef
 export NETRC
 
 
-# Disabled optional code signing for the time-being. Currently with the setup below, 
-# when build-for-testing unit tests on device **locally** (i.e. you need code-signing), 
+# Disabled optional code signing for the time-being. Currently with the setup below,
+# when build-for-testing unit tests on device **locally** (i.e. you need code-signing),
 # the build can fail with
 #
 #	error: Cycle inside MapboxMapsTests; building could produce unreliable results.
 #
-# This can be fixed by adding MapboxMapTestHost as a dependency to the Test targets, 
+# This can be fixed by adding MapboxMapTestHost as a dependency to the Test targets,
 # but this isn't the appropriate a solution here (these originate as simulator unit
 # tests).
 #
-# The probable solution is to keep code signing disabled (during build), but then 
+# The probable solution is to keep code signing disabled (during build), but then
 # re-sign prior to running with the xctestrun file. The app, xctest, dylibs and
 # frameworks need to be recursively signed. Something along the lines of:
 #
@@ -137,7 +137,7 @@ ifneq ($(USB_DEVICE_ID),)
 USB_DEVICE_DESTINATION := -destination 'platform=ios,id=$(USB_DEVICE_ID)'
 endif
 
-# Xcode build command for building for device. The CODE_SIGNING_* variables are so that no code signing occurs on CI - 
+# Xcode build command for building for device. The CODE_SIGNING_* variables are so that no code signing occurs on CI -
 # this is because AWS Device Farm re-signs the applications. This may need to change if a different provider is used.
 XCODE_BUILD_DEVICE = xcodebuild \
 	$(XCODE_PROJECT) \
@@ -160,7 +160,7 @@ build-sdk-for-device:
 
 # Testing on device uses the generated `xctestrun` file that gets created. When
 # testing on device, this along with the binaries are packaged into a Payload and
-# sent to Device Farm. The paths have to be particular (unless the xctestrun is 
+# sent to Device Farm. The paths have to be particular (unless the xctestrun is
 # custom created). Examine the contents of the xctestrun file; __TESTROOT__ is
 # the directory where the xctestrun resides.
 
@@ -182,7 +182,7 @@ endif
 		-scheme '$(SCHEME)' \
 		-xcconfig $(CURDIR)/Mapbox/Configurations/$(APP_NAME)_testhost.xcconfig \
 		-enableCodeCoverage YES \
-		build-for-testing 
+		build-for-testing
 
 	# Gather app, frameworks and xctestrun
 	-mkdir $(TEST_ROOT)/$(CONFIGURATION)-iphoneos
@@ -224,7 +224,7 @@ DEVICE_FARM_RESULTS := $(BUILD_DIR)/$(BUILD_NAME)-results.json
 
 .PHONY: check_aws_creds
 check_aws_creds:
-ifndef AWS_ACCESS_KEY_ID 
+ifndef AWS_ACCESS_KEY_ID
 	@echo AWS_ACCESS_KEY_ID not set.
 	exit 1
 endif
@@ -250,16 +250,16 @@ clean-for-device-build:
 # Trigger unit tests on device farm with
 # This requires the following environment variables to be set (which will be on CI). The first
 # two can be set by calling `mbx env`
-# 	
-#	AWS_ACCESS_KEY_ID 
+#
+#	AWS_ACCESS_KEY_ID
 #	AWS_SECRET_ACCESS_KEY
 #	AWS_DEVICE_FARM_PROJECT
 #	AWS_DEVICE_FARM_DEVICE_POOL
 #
-# 	make test-with-device-farm SCHEME=MapboxMapsTestsWithHost APP_NAME=MapboxTestHost 
-# 
+# 	make test-with-device-farm SCHEME=MapboxMapsTestsWithHost APP_NAME=MapboxTestHost
+#
 # If token expires while the tests are in progress, run `mbx env` again followed by restarting
-# the test call. 
+# the test call.
 
 .PHONY: clean-test-with-device-farm
 clean-test-with-device-farm: clean-for-device-build test-with-device-farm
@@ -298,12 +298,12 @@ endif
 	rm $(DEVICE_FARM_UPLOAD_IPA)
 
 
-# Schedule a test run on multiple devices, but don't wait for the results, just 
-# dump out the response from scheduling. We do this, as if you run locally the 
-# AWS credentials can expire, so there needs to be a mechanism to pick up from 
+# Schedule a test run on multiple devices, but don't wait for the results, just
+# dump out the response from scheduling. We do this, as if you run locally the
+# AWS credentials can expire, so there needs to be a mechanism to pick up from
 # where we left the process.
 #
-# This was tried with using the APPIUM_NODE test type, but it appears that the 
+# This was tried with using the APPIUM_NODE test type, but it appears that the
 # app & frameworks are not re-signed. Note that we're passing the same IPA twice
 # here - that's because XCTEST_UI can accept a test spec file, but needs two IPAs.
 
@@ -311,7 +311,7 @@ $(DEVICE_FARM_RUN): $(DEVICE_FARM_UPLOAD_IPA)
 ifndef AWS_DEVICE_FARM_DEVICE_POOL
 	@echo "Please define AWS_DEVICE_FARM_DEVICE_POOL"
 	exit 1
-else	
+else
 	# Upload and start tests
 	python3 ./scripts/device-farm/devicefarm.py \
 		$(AWS_DEVICE_FARM_PROJECT) \
@@ -333,9 +333,6 @@ $(DEVICE_FARM_UPLOAD_IPA): $(XCTESTRUN_PACKAGE) | $(DEVICE_TEST_PATH) $(PAYLOAD_
 
 	# Creating IPA package for upload
 	cp -R $(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app $(PAYLOAD_DIR)
-
-	# Test moving frameworks for AWS to re-codesign (if they exist)
-	mv $(PAYLOAD_DIR)/$(APP_NAME).app/Frameworks/*.framework/Frameworks/*.framework $(PAYLOAD_DIR)/$(APP_NAME).app/Frameworks || true
 
 	cp $(XCTESTRUN_PACKAGE) $(PAYLOAD_DIR)/$(APP_NAME).app/xctestrun.zip
 
@@ -378,7 +375,7 @@ symbolicate:
 	done
 
 
-# Codecov.io appears to struggle with the raw coverage data from Xcode (in this Device Farm testing scenario). 
+# Codecov.io appears to struggle with the raw coverage data from Xcode (in this Device Farm testing scenario).
 # Explicitly converting it to an lcov format helps.
 #
 # However, the following conversion of the profdata has failed once. If this continues to be an
@@ -468,7 +465,7 @@ install-devicefarm-dependencies:
 	pip3 install awscli requests
 
 $(NETRC_FILE):
-ifndef SDK_REGISTRY_TOKEN 
+ifndef SDK_REGISTRY_TOKEN
 	@echo SDK_REGISTRY_TOKEN not set.
 	exit 1
 endif
@@ -481,7 +478,7 @@ endif
 # a pre commit hook to validate the CircleCI config. Call `make validate` from the pre-commit script.
 .PHONY: validate
 validate: $(CIRCLE_CI_CLI)
-	$(CIRCLE_CI_CLI) config validate -c .circleci/config.yml 
+	$(CIRCLE_CI_CLI) config validate -c .circleci/config.yml
 
 $(CIRCLE_CI_CLI):
 	curl -fLSs https://circle.ci/cli | bash
@@ -498,7 +495,7 @@ XCODE_ARCHIVE_SIM = xcodebuild archive \
 	-derivedDataPath /tmp/iphoneos \
 	-sdk iphonesimulator \
 	SKIP_INSTALL=NO \
-	BUILD_LIBRARIES_FOR_DISTRIBUTION=YES 
+	BUILD_LIBRARIES_FOR_DISTRIBUTION=YES
 
 XCODE_ARCHIVE_DEVICE = xcodebuild archive \
 	$(XCODE_PROJECT) \

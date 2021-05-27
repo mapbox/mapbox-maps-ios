@@ -162,6 +162,10 @@
 		2B8637D52461601100698135 /* MapboxScaleBarOrnamentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8637D42461601100698135 /* MapboxScaleBarOrnamentView.swift */; };
 		2B8637E32462F5AE00698135 /* MapboxScaleBarLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8637E22462F5AE00698135 /* MapboxScaleBarLabel.swift */; };
 		2B8637E62463F36400698135 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8637D72461992200698135 /* DistanceFormatter.swift */; };
+		58549A1A265D9867009BC19C /* MapboxMapsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07C1B3DB2446B6F40044A3C6 /* MapboxMapsSnapshotTests.swift */; };
+		586168FD265D9D4B00911E3D /* Snapshot-Asset.png in Resources */ = {isa = PBXBuildFile; fileRef = 586168FC265D9D4B00911E3D /* Snapshot-Asset.png */; };
+		58EFAD15265FF4EE007FC1FF /* MapboxCommon.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 58EFAD13265FF4C2007FC1FF /* MapboxCommon.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		58EFAD16265FF4EE007FC1FF /* MapboxCoreMaps.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 58EFAD14265FF4C3007FC1FF /* MapboxCoreMaps.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5A35924524644C5E00E67344 /* CompassDirectionFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A359243246448E600E67344 /* CompassDirectionFormatter.swift */; };
 		5A3592B3246C1FA000E67344 /* MapboxInfoButtonOrnament.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3592AC246AD45500E67344 /* MapboxInfoButtonOrnament.swift */; };
 		5A9648FE246429C3001FF05D /* MapboxCompassOrnamentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9648FC2462F07B001FF05D /* MapboxCompassOrnamentView.swift */; };
@@ -262,7 +266,6 @@
 		CA548FD8251C404B00F829A3 /* MultiLineStringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B863830246D300400698135 /* MultiLineStringTests.swift */; };
 		CA548FD9251C404B00F829A3 /* OrnamentManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07797FA0242C21BC00229F7D /* OrnamentManagerTests.swift */; };
 		CA548FDB251C404B00F829A3 /* LineStringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B863833246D300500698135 /* LineStringTests.swift */; };
-		CA548FDF251C404B00F829A3 /* MapboxMapsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07C1B3DB2446B6F40044A3C6 /* MapboxMapsSnapshotTests.swift */; };
 		CA548FE0251C404B00F829A3 /* GeoJSONManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B86385D246D3BA700698135 /* GeoJSONManagerTests.swift */; };
 		CA548FE1251C404B00F829A3 /* PinchGestureHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8C045C243F631B0040FC07 /* PinchGestureHandlerTests.swift */; };
 		CA548FE2251C404B00F829A3 /* PitchGestureHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 079EC07A245207DA000EDC84 /* PitchGestureHandlerTests.swift */; };
@@ -394,6 +397,8 @@
 			dstSubfolderSpec = 10;
 			files = (
 				CA952ECE251C30B80099C080 /* MapboxMaps.framework in Embed Frameworks */,
+				58EFAD15265FF4EE007FC1FF /* MapboxCommon.framework in Embed Frameworks */,
+				58EFAD16265FF4EE007FC1FF /* MapboxCoreMaps.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -602,6 +607,9 @@
 		2B863850246D337200698135 /* polygon.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = polygon.geojson; sourceTree = "<group>"; };
 		2B863851246D337200698135 /* featurecollection.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = featurecollection.geojson; sourceTree = "<group>"; };
 		2B86385D246D3BA700698135 /* GeoJSONManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoJSONManagerTests.swift; sourceTree = "<group>"; };
+		586168FC265D9D4B00911E3D /* Snapshot-Asset.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Snapshot-Asset.png"; sourceTree = "<group>"; };
+		58EFAD13265FF4C2007FC1FF /* MapboxCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MapboxCommon.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		58EFAD14265FF4C3007FC1FF /* MapboxCoreMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MapboxCoreMaps.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A359243246448E600E67344 /* CompassDirectionFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassDirectionFormatter.swift; sourceTree = "<group>"; };
 		5A35924F246598F600E67344 /* CompassDirectionFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassDirectionFormatterTests.swift; sourceTree = "<group>"; };
 		5A3592AC246AD45500E67344 /* MapboxInfoButtonOrnament.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxInfoButtonOrnament.swift; sourceTree = "<group>"; };
@@ -1375,6 +1383,8 @@
 		1FEE79BC2421AC7C00337895 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				58EFAD13265FF4C2007FC1FF /* MapboxCommon.framework */,
+				58EFAD14265FF4C3007FC1FF /* MapboxCoreMaps.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1515,6 +1525,7 @@
 		B5A692292627566A00A03412 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				586168FC265D9D4B00911E3D /* Snapshot-Asset.png */,
 				CA19C343263B412700748F1A /* empty-style-chicago.json */,
 				B5A6922A2627566A00A03412 /* MapInitOptionsTests.xib */,
 			);
@@ -1900,6 +1911,7 @@
 				CA549002251C404B00F829A3 /* geometry-collection.geojson in Resources */,
 				CA549003251C404B00F829A3 /* simple-line.geojson in Resources */,
 				CA549004251C404B00F829A3 /* multipolygon.geojson in Resources */,
+				586168FD265D9D4B00911E3D /* Snapshot-Asset.png in Resources */,
 				CA19C344263B412700748F1A /* empty-style-chicago.json in Resources */,
 				07E816DA256D72E500ACFA73 /* Assets.xcassets in Resources */,
 				CA549005251C404B00F829A3 /* featurecollection.geojson in Resources */,
@@ -2244,7 +2256,6 @@
 				0C5CFCF125BB951B0001E753 /* SkyLayerTests.swift in Sources */,
 				CAE643E9265D7D6400C9E223 /* ProjectionTests.swift in Sources */,
 				0C32CA2725F982300057ED31 /* VectorSourceTests.swift in Sources */,
-				CA548FDF251C404B00F829A3 /* MapboxMapsSnapshotTests.swift in Sources */,
 				CAE43EE22654627E006F43E9 /* TileStore+Tests.swift in Sources */,
 				B506A5A025E023E90097ADB7 /* Bundle+MapboxMapsTests.swift in Sources */,
 				0C32C9AE25F979680057ED31 /* GeoJsonSourceIntegrationTests.swift in Sources */,
@@ -2275,6 +2286,7 @@
 				0C2CDA2F25D1A51C006D068F /* PuckTypeTests.swift in Sources */,
 				CA548FE9251C404B00F829A3 /* GeometryCollectionTests.swift in Sources */,
 				0C5CFCD925BB951B0001E753 /* CircleLayerTests.swift in Sources */,
+				58549A1A265D9867009BC19C /* MapboxMapsSnapshotTests.swift in Sources */,
 				0C5CFCE525BB951B0001E753 /* HeatmapLayerTests.swift in Sources */,
 				0C32C9B225F979680057ED31 /* RasterSourceIntegrationTests.swift in Sources */,
 				0C32C9B025F979680057ED31 /* RasterDemSourceIntegrationTests.swift in Sources */,
@@ -2609,6 +2621,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				COMPRESS_PNG_FILES = NO;
 				INFOPLIST_FILE = ../Tests/MapboxMapsTests/MapView/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2617,6 +2630,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MapboxTestHost.app/MapboxTestHost";
 			};
@@ -2628,6 +2642,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				COMPRESS_PNG_FILES = NO;
 				INFOPLIST_FILE = ../Tests/MapboxMapsTests/MapView/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2636,6 +2651,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MapboxTestHost.app/MapboxTestHost";
 			};

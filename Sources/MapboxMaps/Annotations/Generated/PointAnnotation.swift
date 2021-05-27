@@ -35,6 +35,15 @@ public struct PointAnnotation: Annotation {
         self.feature.properties = ["annotation-id": id]
     }
 
+    /// Create a point annotation with a coordinate and an optional identifier
+    /// - Parameters:
+    ///   - id: Optional identifier for this annotation
+    ///   - coordinate: Coordinate where this annotation should be rendered
+    public init(id: String = UUID().uuidString, coordinate: CLLocationCoordinate2D) {
+        let point = Turf.Point(coordinate)
+        self.init(id: id, point: point)
+    }
+
     // MARK: - Properties -
 
     /// Set of used data driven properties

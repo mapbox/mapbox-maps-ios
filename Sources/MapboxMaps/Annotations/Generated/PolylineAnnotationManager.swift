@@ -58,7 +58,7 @@ public class PolylineAnnotationManager: AnnotationManager {
         do {
             try makeSourceAndLayer(layerPosition: layerPosition)
         } catch {
-            fatalError("Failed to create source / layer in PolylineAnnotationManager")
+            Log.error(forMessage: "Failed to create source / layer in PolylineAnnotationManager", category: "Annotations")
         }
     }
 
@@ -79,7 +79,8 @@ public class PolylineAnnotationManager: AnnotationManager {
     internal func makeSourceAndLayer(layerPosition: LayerPosition?) throws {
 
         guard let style = style else { 
-            fatalError("Style must exist when adding a source and layer for annotations")
+            Log.error(forMessage: "Style must exist when adding a source and layer for annotations", category: "Annotaitons")
+            return
         }
 
         // Add the source with empty `data` property
@@ -98,7 +99,8 @@ public class PolylineAnnotationManager: AnnotationManager {
     internal func syncAnnotations() {
 
         guard let style = style else { 
-            fatalError("Style must exist when adding/removing annotations")
+            Log.error(forMessage: "Style must exist when adding/removing annotations", category: "Annotations")
+            return
         }
 
         let allDataDrivenPropertiesUsed = Set(annotations.flatMap(\.dataDrivenPropertiesUsedSet))
@@ -106,7 +108,7 @@ public class PolylineAnnotationManager: AnnotationManager {
             do {
                 try style.setLayerProperty(for: layerId, property: property, value: ["get", property] )
             } catch {
-                Log.warning(forMessage: "Could not set layer property \(property) in PolylineAnnotationManager",
+                Log.error(forMessage: "Could not set layer property \(property) in PolylineAnnotationManager",
                             category: "Annotations")
             }
         }
@@ -115,11 +117,14 @@ public class PolylineAnnotationManager: AnnotationManager {
         do {
             let data = try JSONEncoder().encode(featureCollection)
             guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                fatalError("Could not convert annotation features to json object in PolylineAnnotationManager")
+                Log.error(forMessage: "Could not convert annotation features to json object in PolylineAnnotationManager", 
+                            category: "Annotations")
+                return
             }
             try style.setSourceProperty(for: sourceId, property: "data", value: jsonObject )
         } catch {
-            fatalError("Could not update annotations in PolylineAnnotationManager")
+            Log.error(forMessage: "Could not update annotations in PolylineAnnotationManager due to error: \(error)", 
+                        category: "Annotations")
         }
     }
 
@@ -129,10 +134,9 @@ public class PolylineAnnotationManager: AnnotationManager {
     public var lineCap: LineCap? {
         didSet {
             do {
-                guard let lineCap = lineCap else { return }
-                try style?.setLayerProperty(for: layerId, property: "line-cap", value: lineCap.rawValue)
+                try style?.setLayerProperty(for: layerId, property: "line-cap", value: lineCap?.rawValue as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PolylineAnnotationManager.lineCap",
+                Log.warning(forMessage: "Could not set PolylineAnnotationManager.lineCap due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -142,10 +146,9 @@ public class PolylineAnnotationManager: AnnotationManager {
     public var lineMiterLimit: Double? {
         didSet {
             do {
-                guard let lineMiterLimit = lineMiterLimit else { return }
-                try style?.setLayerProperty(for: layerId, property: "line-miter-limit", value: lineMiterLimit)
+                try style?.setLayerProperty(for: layerId, property: "line-miter-limit", value: lineMiterLimit as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PolylineAnnotationManager.lineMiterLimit",
+                Log.warning(forMessage: "Could not set PolylineAnnotationManager.lineMiterLimit due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -155,10 +158,9 @@ public class PolylineAnnotationManager: AnnotationManager {
     public var lineRoundLimit: Double? {
         didSet {
             do {
-                guard let lineRoundLimit = lineRoundLimit else { return }
-                try style?.setLayerProperty(for: layerId, property: "line-round-limit", value: lineRoundLimit)
+                try style?.setLayerProperty(for: layerId, property: "line-round-limit", value: lineRoundLimit as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PolylineAnnotationManager.lineRoundLimit",
+                Log.warning(forMessage: "Could not set PolylineAnnotationManager.lineRoundLimit due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -168,10 +170,9 @@ public class PolylineAnnotationManager: AnnotationManager {
     public var lineDasharray: [Double]? {
         didSet {
             do {
-                guard let lineDasharray = lineDasharray else { return }
-                try style?.setLayerProperty(for: layerId, property: "line-dasharray", value: lineDasharray)
+                try style?.setLayerProperty(for: layerId, property: "line-dasharray", value: lineDasharray as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PolylineAnnotationManager.lineDasharray",
+                Log.warning(forMessage: "Could not set PolylineAnnotationManager.lineDasharray due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -181,10 +182,9 @@ public class PolylineAnnotationManager: AnnotationManager {
     public var lineGradient: ColorRepresentable? {
         didSet {
             do {
-                guard let lineGradient = lineGradient else { return }
-                try style?.setLayerProperty(for: layerId, property: "line-gradient", value: lineGradient.rgbaDescription)
+                try style?.setLayerProperty(for: layerId, property: "line-gradient", value: lineGradient?.rgbaDescription as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PolylineAnnotationManager.lineGradient",
+                Log.warning(forMessage: "Could not set PolylineAnnotationManager.lineGradient due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -194,10 +194,9 @@ public class PolylineAnnotationManager: AnnotationManager {
     public var lineTranslate: [Double]? {
         didSet {
             do {
-                guard let lineTranslate = lineTranslate else { return }
-                try style?.setLayerProperty(for: layerId, property: "line-translate", value: lineTranslate)
+                try style?.setLayerProperty(for: layerId, property: "line-translate", value: lineTranslate as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PolylineAnnotationManager.lineTranslate",
+                Log.warning(forMessage: "Could not set PolylineAnnotationManager.lineTranslate due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -207,10 +206,9 @@ public class PolylineAnnotationManager: AnnotationManager {
     public var lineTranslateAnchor: LineTranslateAnchor? {
         didSet {
             do {
-                guard let lineTranslateAnchor = lineTranslateAnchor else { return }
-                try style?.setLayerProperty(for: layerId, property: "line-translate-anchor", value: lineTranslateAnchor.rawValue)
+                try style?.setLayerProperty(for: layerId, property: "line-translate-anchor", value: lineTranslateAnchor?.rawValue as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PolylineAnnotationManager.lineTranslateAnchor",
+                Log.warning(forMessage: "Could not set PolylineAnnotationManager.lineTranslateAnchor due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -219,7 +217,7 @@ public class PolylineAnnotationManager: AnnotationManager {
     // MARK: - Selection Handling -
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
-    public weak var delegate: PolylineAnnotationInteractionDelegate? {
+    public var delegate: PolylineAnnotationInteractionDelegate? {
         didSet {
             if delegate != nil {
                 setupTapRecognizer()

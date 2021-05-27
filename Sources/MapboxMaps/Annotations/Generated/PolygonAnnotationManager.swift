@@ -58,7 +58,7 @@ public class PolygonAnnotationManager: AnnotationManager {
         do {
             try makeSourceAndLayer(layerPosition: layerPosition)
         } catch {
-            fatalError("Failed to create source / layer in PolygonAnnotationManager")
+            Log.error(forMessage: "Failed to create source / layer in PolygonAnnotationManager", category: "Annotations")
         }
     }
 
@@ -79,7 +79,8 @@ public class PolygonAnnotationManager: AnnotationManager {
     internal func makeSourceAndLayer(layerPosition: LayerPosition?) throws {
 
         guard let style = style else { 
-            fatalError("Style must exist when adding a source and layer for annotations")
+            Log.error(forMessage: "Style must exist when adding a source and layer for annotations", category: "Annotaitons")
+            return
         }
 
         // Add the source with empty `data` property
@@ -98,7 +99,8 @@ public class PolygonAnnotationManager: AnnotationManager {
     internal func syncAnnotations() {
 
         guard let style = style else { 
-            fatalError("Style must exist when adding/removing annotations")
+            Log.error(forMessage: "Style must exist when adding/removing annotations", category: "Annotations")
+            return
         }
 
         let allDataDrivenPropertiesUsed = Set(annotations.flatMap(\.dataDrivenPropertiesUsedSet))
@@ -106,7 +108,7 @@ public class PolygonAnnotationManager: AnnotationManager {
             do {
                 try style.setLayerProperty(for: layerId, property: property, value: ["get", property] )
             } catch {
-                Log.warning(forMessage: "Could not set layer property \(property) in PolygonAnnotationManager",
+                Log.error(forMessage: "Could not set layer property \(property) in PolygonAnnotationManager",
                             category: "Annotations")
             }
         }
@@ -115,11 +117,14 @@ public class PolygonAnnotationManager: AnnotationManager {
         do {
             let data = try JSONEncoder().encode(featureCollection)
             guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                fatalError("Could not convert annotation features to json object in PolygonAnnotationManager")
+                Log.error(forMessage: "Could not convert annotation features to json object in PolygonAnnotationManager", 
+                            category: "Annotations")
+                return
             }
             try style.setSourceProperty(for: sourceId, property: "data", value: jsonObject )
         } catch {
-            fatalError("Could not update annotations in PolygonAnnotationManager")
+            Log.error(forMessage: "Could not update annotations in PolygonAnnotationManager due to error: \(error)", 
+                        category: "Annotations")
         }
     }
 
@@ -129,10 +134,9 @@ public class PolygonAnnotationManager: AnnotationManager {
     public var fillAntialias: Bool? {
         didSet {
             do {
-                guard let fillAntialias = fillAntialias else { return }
-                try style?.setLayerProperty(for: layerId, property: "fill-antialias", value: fillAntialias)
+                try style?.setLayerProperty(for: layerId, property: "fill-antialias", value: fillAntialias as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PolygonAnnotationManager.fillAntialias",
+                Log.warning(forMessage: "Could not set PolygonAnnotationManager.fillAntialias due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -142,10 +146,9 @@ public class PolygonAnnotationManager: AnnotationManager {
     public var fillTranslate: [Double]? {
         didSet {
             do {
-                guard let fillTranslate = fillTranslate else { return }
-                try style?.setLayerProperty(for: layerId, property: "fill-translate", value: fillTranslate)
+                try style?.setLayerProperty(for: layerId, property: "fill-translate", value: fillTranslate as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PolygonAnnotationManager.fillTranslate",
+                Log.warning(forMessage: "Could not set PolygonAnnotationManager.fillTranslate due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -155,10 +158,9 @@ public class PolygonAnnotationManager: AnnotationManager {
     public var fillTranslateAnchor: FillTranslateAnchor? {
         didSet {
             do {
-                guard let fillTranslateAnchor = fillTranslateAnchor else { return }
-                try style?.setLayerProperty(for: layerId, property: "fill-translate-anchor", value: fillTranslateAnchor.rawValue)
+                try style?.setLayerProperty(for: layerId, property: "fill-translate-anchor", value: fillTranslateAnchor?.rawValue as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PolygonAnnotationManager.fillTranslateAnchor",
+                Log.warning(forMessage: "Could not set PolygonAnnotationManager.fillTranslateAnchor due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -167,7 +169,7 @@ public class PolygonAnnotationManager: AnnotationManager {
     // MARK: - Selection Handling -
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
-    public weak var delegate: PolygonAnnotationInteractionDelegate? {
+    public var delegate: PolygonAnnotationInteractionDelegate? {
         didSet {
             if delegate != nil {
                 setupTapRecognizer()

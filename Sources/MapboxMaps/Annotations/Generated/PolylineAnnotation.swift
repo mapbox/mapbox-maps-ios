@@ -35,6 +35,12 @@ public struct PolylineAnnotation: Annotation {
         self.feature.properties = ["annotation-id": id]
     }
 
+    /// Create a polyline annotation with an array of coordinates and an optional identifier.
+    public init(id: String = UUID().uuidString, lineCoordinates: [CLLocationCoordinate2D]) {
+        let line = Turf.LineString(lineCoordinates)
+        self.init(id: id, line: line)
+    }
+
     // MARK: - Properties -
 
     /// Set of used data driven properties

@@ -35,6 +35,15 @@ public struct CircleAnnotation: Annotation {
         self.feature.properties = ["annotation-id": id]
     }
 
+    /// Create a circle annotation with a center coordinate and an optional identifier
+    /// - Parameters:
+    ///   - id: Optional identifier for this annotation
+    ///   - coordinate: Coordinate where this circle annotation should be centered
+    public init(id: String = UUID().uuidString, centerCoordinate: CLLocationCoordinate2D) {
+        let point = Turf.Point(centerCoordinate)
+        self.init(id: id, point: point)
+    }
+
     // MARK: - Properties -
 
     /// Set of used data driven properties

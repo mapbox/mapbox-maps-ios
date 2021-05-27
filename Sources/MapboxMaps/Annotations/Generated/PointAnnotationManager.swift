@@ -59,7 +59,7 @@ public class PointAnnotationManager: AnnotationManager {
         do {
             try makeSourceAndLayer(layerPosition: layerPosition)
         } catch {
-            fatalError("Failed to create source / layer in PointAnnotationManager")
+            Log.error(forMessage: "Failed to create source / layer in PointAnnotationManager", category: "Annotations")
         }
     }
 
@@ -80,7 +80,8 @@ public class PointAnnotationManager: AnnotationManager {
     internal func makeSourceAndLayer(layerPosition: LayerPosition?) throws {
 
         guard let style = style else { 
-            fatalError("Style must exist when adding a source and layer for annotations")
+            Log.error(forMessage: "Style must exist when adding a source and layer for annotations", category: "Annotaitons")
+            return
         }
 
         // Add the source with empty `data` property
@@ -105,7 +106,8 @@ public class PointAnnotationManager: AnnotationManager {
     internal func syncAnnotations() {
 
         guard let style = style else { 
-            fatalError("Style must exist when adding/removing annotations")
+            Log.error(forMessage: "Style must exist when adding/removing annotations", category: "Annotations")
+            return
         }
 
         let allDataDrivenPropertiesUsed = Set(annotations.flatMap(\.dataDrivenPropertiesUsedSet))
@@ -113,7 +115,7 @@ public class PointAnnotationManager: AnnotationManager {
             do {
                 try style.setLayerProperty(for: layerId, property: property, value: ["get", property] )
             } catch {
-                Log.warning(forMessage: "Could not set layer property \(property) in PointAnnotationManager",
+                Log.error(forMessage: "Could not set layer property \(property) in PointAnnotationManager",
                             category: "Annotations")
             }
         }
@@ -122,11 +124,14 @@ public class PointAnnotationManager: AnnotationManager {
         do {
             let data = try JSONEncoder().encode(featureCollection)
             guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                fatalError("Could not convert annotation features to json object in PointAnnotationManager")
+                Log.error(forMessage: "Could not convert annotation features to json object in PointAnnotationManager", 
+                            category: "Annotations")
+                return
             }
             try style.setSourceProperty(for: sourceId, property: "data", value: jsonObject )
         } catch {
-            fatalError("Could not update annotations in PointAnnotationManager")
+            Log.error(forMessage: "Could not update annotations in PointAnnotationManager due to error: \(error)", 
+                        category: "Annotations")
         }
     }
 
@@ -136,10 +141,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var iconAllowOverlap: Bool? {
         didSet {
             do {
-                guard let iconAllowOverlap = iconAllowOverlap else { return }
-                try style?.setLayerProperty(for: layerId, property: "icon-allow-overlap", value: iconAllowOverlap)
+                try style?.setLayerProperty(for: layerId, property: "icon-allow-overlap", value: iconAllowOverlap as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.iconAllowOverlap",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.iconAllowOverlap due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -149,10 +153,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var iconIgnorePlacement: Bool? {
         didSet {
             do {
-                guard let iconIgnorePlacement = iconIgnorePlacement else { return }
-                try style?.setLayerProperty(for: layerId, property: "icon-ignore-placement", value: iconIgnorePlacement)
+                try style?.setLayerProperty(for: layerId, property: "icon-ignore-placement", value: iconIgnorePlacement as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.iconIgnorePlacement",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.iconIgnorePlacement due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -162,10 +165,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var iconKeepUpright: Bool? {
         didSet {
             do {
-                guard let iconKeepUpright = iconKeepUpright else { return }
-                try style?.setLayerProperty(for: layerId, property: "icon-keep-upright", value: iconKeepUpright)
+                try style?.setLayerProperty(for: layerId, property: "icon-keep-upright", value: iconKeepUpright as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.iconKeepUpright",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.iconKeepUpright due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -175,10 +177,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var iconOptional: Bool? {
         didSet {
             do {
-                guard let iconOptional = iconOptional else { return }
-                try style?.setLayerProperty(for: layerId, property: "icon-optional", value: iconOptional)
+                try style?.setLayerProperty(for: layerId, property: "icon-optional", value: iconOptional as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.iconOptional",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.iconOptional due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -188,10 +189,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var iconPadding: Double? {
         didSet {
             do {
-                guard let iconPadding = iconPadding else { return }
-                try style?.setLayerProperty(for: layerId, property: "icon-padding", value: iconPadding)
+                try style?.setLayerProperty(for: layerId, property: "icon-padding", value: iconPadding as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.iconPadding",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.iconPadding due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -201,10 +201,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var iconPitchAlignment: IconPitchAlignment? {
         didSet {
             do {
-                guard let iconPitchAlignment = iconPitchAlignment else { return }
-                try style?.setLayerProperty(for: layerId, property: "icon-pitch-alignment", value: iconPitchAlignment.rawValue)
+                try style?.setLayerProperty(for: layerId, property: "icon-pitch-alignment", value: iconPitchAlignment?.rawValue as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.iconPitchAlignment",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.iconPitchAlignment due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -214,10 +213,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var iconRotationAlignment: IconRotationAlignment? {
         didSet {
             do {
-                guard let iconRotationAlignment = iconRotationAlignment else { return }
-                try style?.setLayerProperty(for: layerId, property: "icon-rotation-alignment", value: iconRotationAlignment.rawValue)
+                try style?.setLayerProperty(for: layerId, property: "icon-rotation-alignment", value: iconRotationAlignment?.rawValue as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.iconRotationAlignment",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.iconRotationAlignment due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -227,10 +225,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var iconTextFit: IconTextFit? {
         didSet {
             do {
-                guard let iconTextFit = iconTextFit else { return }
-                try style?.setLayerProperty(for: layerId, property: "icon-text-fit", value: iconTextFit.rawValue)
+                try style?.setLayerProperty(for: layerId, property: "icon-text-fit", value: iconTextFit?.rawValue as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.iconTextFit",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.iconTextFit due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -240,10 +237,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var iconTextFitPadding: [Double]? {
         didSet {
             do {
-                guard let iconTextFitPadding = iconTextFitPadding else { return }
-                try style?.setLayerProperty(for: layerId, property: "icon-text-fit-padding", value: iconTextFitPadding)
+                try style?.setLayerProperty(for: layerId, property: "icon-text-fit-padding", value: iconTextFitPadding as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.iconTextFitPadding",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.iconTextFitPadding due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -253,10 +249,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var symbolAvoidEdges: Bool? {
         didSet {
             do {
-                guard let symbolAvoidEdges = symbolAvoidEdges else { return }
-                try style?.setLayerProperty(for: layerId, property: "symbol-avoid-edges", value: symbolAvoidEdges)
+                try style?.setLayerProperty(for: layerId, property: "symbol-avoid-edges", value: symbolAvoidEdges as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.symbolAvoidEdges",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.symbolAvoidEdges due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -266,10 +261,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var symbolPlacement: SymbolPlacement? {
         didSet {
             do {
-                guard let symbolPlacement = symbolPlacement else { return }
-                try style?.setLayerProperty(for: layerId, property: "symbol-placement", value: symbolPlacement.rawValue)
+                try style?.setLayerProperty(for: layerId, property: "symbol-placement", value: symbolPlacement?.rawValue as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.symbolPlacement",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.symbolPlacement due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -279,10 +273,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var symbolSpacing: Double? {
         didSet {
             do {
-                guard let symbolSpacing = symbolSpacing else { return }
-                try style?.setLayerProperty(for: layerId, property: "symbol-spacing", value: symbolSpacing)
+                try style?.setLayerProperty(for: layerId, property: "symbol-spacing", value: symbolSpacing as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.symbolSpacing",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.symbolSpacing due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -292,10 +285,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var symbolZOrder: SymbolZOrder? {
         didSet {
             do {
-                guard let symbolZOrder = symbolZOrder else { return }
-                try style?.setLayerProperty(for: layerId, property: "symbol-z-order", value: symbolZOrder.rawValue)
+                try style?.setLayerProperty(for: layerId, property: "symbol-z-order", value: symbolZOrder?.rawValue as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.symbolZOrder",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.symbolZOrder due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -305,10 +297,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var textAllowOverlap: Bool? {
         didSet {
             do {
-                guard let textAllowOverlap = textAllowOverlap else { return }
-                try style?.setLayerProperty(for: layerId, property: "text-allow-overlap", value: textAllowOverlap)
+                try style?.setLayerProperty(for: layerId, property: "text-allow-overlap", value: textAllowOverlap as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.textAllowOverlap",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.textAllowOverlap due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -318,10 +309,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var textIgnorePlacement: Bool? {
         didSet {
             do {
-                guard let textIgnorePlacement = textIgnorePlacement else { return }
-                try style?.setLayerProperty(for: layerId, property: "text-ignore-placement", value: textIgnorePlacement)
+                try style?.setLayerProperty(for: layerId, property: "text-ignore-placement", value: textIgnorePlacement as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.textIgnorePlacement",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.textIgnorePlacement due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -331,10 +321,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var textKeepUpright: Bool? {
         didSet {
             do {
-                guard let textKeepUpright = textKeepUpright else { return }
-                try style?.setLayerProperty(for: layerId, property: "text-keep-upright", value: textKeepUpright)
+                try style?.setLayerProperty(for: layerId, property: "text-keep-upright", value: textKeepUpright as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.textKeepUpright",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.textKeepUpright due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -344,10 +333,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var textLineHeight: Double? {
         didSet {
             do {
-                guard let textLineHeight = textLineHeight else { return }
-                try style?.setLayerProperty(for: layerId, property: "text-line-height", value: textLineHeight)
+                try style?.setLayerProperty(for: layerId, property: "text-line-height", value: textLineHeight as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.textLineHeight",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.textLineHeight due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -357,10 +345,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var textMaxAngle: Double? {
         didSet {
             do {
-                guard let textMaxAngle = textMaxAngle else { return }
-                try style?.setLayerProperty(for: layerId, property: "text-max-angle", value: textMaxAngle)
+                try style?.setLayerProperty(for: layerId, property: "text-max-angle", value: textMaxAngle as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.textMaxAngle",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.textMaxAngle due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -370,10 +357,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var textOptional: Bool? {
         didSet {
             do {
-                guard let textOptional = textOptional else { return }
-                try style?.setLayerProperty(for: layerId, property: "text-optional", value: textOptional)
+                try style?.setLayerProperty(for: layerId, property: "text-optional", value: textOptional as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.textOptional",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.textOptional due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -383,10 +369,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var textPadding: Double? {
         didSet {
             do {
-                guard let textPadding = textPadding else { return }
-                try style?.setLayerProperty(for: layerId, property: "text-padding", value: textPadding)
+                try style?.setLayerProperty(for: layerId, property: "text-padding", value: textPadding as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.textPadding",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.textPadding due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -396,10 +381,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var textPitchAlignment: TextPitchAlignment? {
         didSet {
             do {
-                guard let textPitchAlignment = textPitchAlignment else { return }
-                try style?.setLayerProperty(for: layerId, property: "text-pitch-alignment", value: textPitchAlignment.rawValue)
+                try style?.setLayerProperty(for: layerId, property: "text-pitch-alignment", value: textPitchAlignment?.rawValue as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.textPitchAlignment",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.textPitchAlignment due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -409,10 +393,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var textRotationAlignment: TextRotationAlignment? {
         didSet {
             do {
-                guard let textRotationAlignment = textRotationAlignment else { return }
-                try style?.setLayerProperty(for: layerId, property: "text-rotation-alignment", value: textRotationAlignment.rawValue)
+                try style?.setLayerProperty(for: layerId, property: "text-rotation-alignment", value: textRotationAlignment?.rawValue as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.textRotationAlignment",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.textRotationAlignment due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -422,10 +405,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var textVariableAnchor: [String]? {
         didSet {
             do {
-                guard let textVariableAnchor = textVariableAnchor else { return }
-                try style?.setLayerProperty(for: layerId, property: "text-variable-anchor", value: textVariableAnchor)
+                try style?.setLayerProperty(for: layerId, property: "text-variable-anchor", value: textVariableAnchor as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.textVariableAnchor",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.textVariableAnchor due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -435,10 +417,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var textWritingMode: [String]? {
         didSet {
             do {
-                guard let textWritingMode = textWritingMode else { return }
-                try style?.setLayerProperty(for: layerId, property: "text-writing-mode", value: textWritingMode)
+                try style?.setLayerProperty(for: layerId, property: "text-writing-mode", value: textWritingMode as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.textWritingMode",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.textWritingMode due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -448,10 +429,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var iconTranslate: [Double]? {
         didSet {
             do {
-                guard let iconTranslate = iconTranslate else { return }
-                try style?.setLayerProperty(for: layerId, property: "icon-translate", value: iconTranslate)
+                try style?.setLayerProperty(for: layerId, property: "icon-translate", value: iconTranslate as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.iconTranslate",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.iconTranslate due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -461,10 +441,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var iconTranslateAnchor: IconTranslateAnchor? {
         didSet {
             do {
-                guard let iconTranslateAnchor = iconTranslateAnchor else { return }
-                try style?.setLayerProperty(for: layerId, property: "icon-translate-anchor", value: iconTranslateAnchor.rawValue)
+                try style?.setLayerProperty(for: layerId, property: "icon-translate-anchor", value: iconTranslateAnchor?.rawValue as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.iconTranslateAnchor",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.iconTranslateAnchor due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -474,10 +453,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var textTranslate: [Double]? {
         didSet {
             do {
-                guard let textTranslate = textTranslate else { return }
-                try style?.setLayerProperty(for: layerId, property: "text-translate", value: textTranslate)
+                try style?.setLayerProperty(for: layerId, property: "text-translate", value: textTranslate as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.textTranslate",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.textTranslate due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -487,10 +465,9 @@ public class PointAnnotationManager: AnnotationManager {
     public var textTranslateAnchor: TextTranslateAnchor? {
         didSet {
             do {
-                guard let textTranslateAnchor = textTranslateAnchor else { return }
-                try style?.setLayerProperty(for: layerId, property: "text-translate-anchor", value: textTranslateAnchor.rawValue)
+                try style?.setLayerProperty(for: layerId, property: "text-translate-anchor", value: textTranslateAnchor?.rawValue as Any)
             } catch {
-                Log.warning(forMessage: "Could not set PointAnnotationManager.textTranslateAnchor",
+                Log.warning(forMessage: "Could not set PointAnnotationManager.textTranslateAnchor due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -512,7 +489,7 @@ public class PointAnnotationManager: AnnotationManager {
     // MARK: - Selection Handling -
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
-    public weak var delegate: PointAnnotationInteractionDelegate? {
+    public var delegate: PointAnnotationInteractionDelegate? {
         didSet {
             if delegate != nil {
                 setupTapRecognizer()

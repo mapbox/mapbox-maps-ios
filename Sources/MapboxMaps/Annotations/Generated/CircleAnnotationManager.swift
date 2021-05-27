@@ -58,7 +58,7 @@ public class CircleAnnotationManager: AnnotationManager {
         do {
             try makeSourceAndLayer(layerPosition: layerPosition)
         } catch {
-            fatalError("Failed to create source / layer in CircleAnnotationManager")
+            Log.error(forMessage: "Failed to create source / layer in CircleAnnotationManager", category: "Annotations")
         }
     }
 
@@ -79,7 +79,8 @@ public class CircleAnnotationManager: AnnotationManager {
     internal func makeSourceAndLayer(layerPosition: LayerPosition?) throws {
 
         guard let style = style else { 
-            fatalError("Style must exist when adding a source and layer for annotations")
+            Log.error(forMessage: "Style must exist when adding a source and layer for annotations", category: "Annotaitons")
+            return
         }
 
         // Add the source with empty `data` property
@@ -98,7 +99,8 @@ public class CircleAnnotationManager: AnnotationManager {
     internal func syncAnnotations() {
 
         guard let style = style else { 
-            fatalError("Style must exist when adding/removing annotations")
+            Log.error(forMessage: "Style must exist when adding/removing annotations", category: "Annotations")
+            return
         }
 
         let allDataDrivenPropertiesUsed = Set(annotations.flatMap(\.dataDrivenPropertiesUsedSet))
@@ -106,7 +108,7 @@ public class CircleAnnotationManager: AnnotationManager {
             do {
                 try style.setLayerProperty(for: layerId, property: property, value: ["get", property] )
             } catch {
-                Log.warning(forMessage: "Could not set layer property \(property) in CircleAnnotationManager",
+                Log.error(forMessage: "Could not set layer property \(property) in CircleAnnotationManager",
                             category: "Annotations")
             }
         }
@@ -115,11 +117,14 @@ public class CircleAnnotationManager: AnnotationManager {
         do {
             let data = try JSONEncoder().encode(featureCollection)
             guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                fatalError("Could not convert annotation features to json object in CircleAnnotationManager")
+                Log.error(forMessage: "Could not convert annotation features to json object in CircleAnnotationManager", 
+                            category: "Annotations")
+                return
             }
             try style.setSourceProperty(for: sourceId, property: "data", value: jsonObject )
         } catch {
-            fatalError("Could not update annotations in CircleAnnotationManager")
+            Log.error(forMessage: "Could not update annotations in CircleAnnotationManager due to error: \(error)", 
+                        category: "Annotations")
         }
     }
 
@@ -129,10 +134,9 @@ public class CircleAnnotationManager: AnnotationManager {
     public var circlePitchAlignment: CirclePitchAlignment? {
         didSet {
             do {
-                guard let circlePitchAlignment = circlePitchAlignment else { return }
-                try style?.setLayerProperty(for: layerId, property: "circle-pitch-alignment", value: circlePitchAlignment.rawValue)
+                try style?.setLayerProperty(for: layerId, property: "circle-pitch-alignment", value: circlePitchAlignment?.rawValue as Any)
             } catch {
-                Log.warning(forMessage: "Could not set CircleAnnotationManager.circlePitchAlignment",
+                Log.warning(forMessage: "Could not set CircleAnnotationManager.circlePitchAlignment due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -142,10 +146,9 @@ public class CircleAnnotationManager: AnnotationManager {
     public var circlePitchScale: CirclePitchScale? {
         didSet {
             do {
-                guard let circlePitchScale = circlePitchScale else { return }
-                try style?.setLayerProperty(for: layerId, property: "circle-pitch-scale", value: circlePitchScale.rawValue)
+                try style?.setLayerProperty(for: layerId, property: "circle-pitch-scale", value: circlePitchScale?.rawValue as Any)
             } catch {
-                Log.warning(forMessage: "Could not set CircleAnnotationManager.circlePitchScale",
+                Log.warning(forMessage: "Could not set CircleAnnotationManager.circlePitchScale due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -155,10 +158,9 @@ public class CircleAnnotationManager: AnnotationManager {
     public var circleTranslate: [Double]? {
         didSet {
             do {
-                guard let circleTranslate = circleTranslate else { return }
-                try style?.setLayerProperty(for: layerId, property: "circle-translate", value: circleTranslate)
+                try style?.setLayerProperty(for: layerId, property: "circle-translate", value: circleTranslate as Any)
             } catch {
-                Log.warning(forMessage: "Could not set CircleAnnotationManager.circleTranslate",
+                Log.warning(forMessage: "Could not set CircleAnnotationManager.circleTranslate due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -168,10 +170,9 @@ public class CircleAnnotationManager: AnnotationManager {
     public var circleTranslateAnchor: CircleTranslateAnchor? {
         didSet {
             do {
-                guard let circleTranslateAnchor = circleTranslateAnchor else { return }
-                try style?.setLayerProperty(for: layerId, property: "circle-translate-anchor", value: circleTranslateAnchor.rawValue)
+                try style?.setLayerProperty(for: layerId, property: "circle-translate-anchor", value: circleTranslateAnchor?.rawValue as Any)
             } catch {
-                Log.warning(forMessage: "Could not set CircleAnnotationManager.circleTranslateAnchor",
+                Log.warning(forMessage: "Could not set CircleAnnotationManager.circleTranslateAnchor due to error: \(error)",
                             category: "Annotations")
             }
         }
@@ -180,7 +181,7 @@ public class CircleAnnotationManager: AnnotationManager {
     // MARK: - Selection Handling -
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
-    public weak var delegate: CircleAnnotationInteractionDelegate? {
+    public var delegate: CircleAnnotationInteractionDelegate? {
         didSet {
             if delegate != nil {
                 setupTapRecognizer()

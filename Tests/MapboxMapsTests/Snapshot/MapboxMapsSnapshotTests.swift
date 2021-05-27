@@ -1,14 +1,9 @@
 import XCTest
 import MapboxMaps
-import MapboxCoreMaps
 import Turf
 import Foundation
 import UIKit
-#if canImport(MapboxMaps)
-@testable import MapboxMaps
-#else
-@testable import MapboxMapsSnapshot
-#endif
+
 //swiftlint:disable explicit_top_level_acl explicit_acl
 
 class MapboxMapsSnapshotTests: XCTestCase {

@@ -33,7 +33,7 @@ open class MapView: UIView {
 
     /// Controls the addition/removal of annotations to the map.
     public internal(set) var annotations_legacy: AnnotationManager_Legacy!
-    
+
     public internal(set) var annotations: AnnotationOrchestrator!
 
     /// A reference to the `EventsManager` used for dispatching telemetry.
@@ -185,7 +185,7 @@ open class MapView: UIView {
                                         mapEventsObservable: mapboxMap,
                                         mapFeatureQueryable: mapboxMap,
                                         style: mapboxMap.style)
-        
+
         annotations = AnnotationOrchestrator(view: self, mapFeatureQueryable: mapboxMap, style: mapboxMap.style)
     }
 

@@ -53,7 +53,7 @@ public class AnnotationOrchestrator {
         self.mapFeatureQueryable = mapFeatureQueryable
         self.style = style
     }
-    
+
     /// Creates a `PointAnnotationManager` which is used to manage a collection of `PointAnnotation`s.
     /// - Parameters:
     ///   - id: Optional string identifier for this manager.

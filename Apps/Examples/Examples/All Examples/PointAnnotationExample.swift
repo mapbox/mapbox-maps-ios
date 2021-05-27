@@ -26,7 +26,7 @@ public class PointAnnotationExample: UIViewController, ExampleProtocol {
             let pointAnnotation = PointAnnotation_Legacy(coordinate: centerCoordinate)
 
             // Add the annotation to the map.
-            self.mapView.annotations.addAnnotation(pointAnnotation)
+            self.mapView.annotations_legacy.addAnnotation(pointAnnotation)
 
             // The below line is used for internal testing purposes only.
             self.finish()

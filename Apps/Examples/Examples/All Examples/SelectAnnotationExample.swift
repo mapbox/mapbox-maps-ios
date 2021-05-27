@@ -60,10 +60,10 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
         let pointAnnotation = PointAnnotation_Legacy(coordinate: coordinate)
 
         // Allow the view controller to accept annotation selection events.
-        mapView.annotations.interactionDelegate = self
+        mapView.annotations_legacy.interactionDelegate = self
 
         // Add the annotation to the map.
-        mapView.annotations.addAnnotation(pointAnnotation)
+        mapView.annotations_legacy.addAnnotation(pointAnnotation)
 
         // The below line is used for internal testing purposes only.
         finish()

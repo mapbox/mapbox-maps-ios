@@ -46,7 +46,7 @@ public class PolygonAnnotationExample: UIViewController, ExampleProtocol {
         let polygon = PolygonAnnotation_Legacy(coordinates: polygonCoords, interiorPolygons: [polygonHole])
 
         // Add the annotation to the map.
-        mapView.annotations.addAnnotation(polygon)
+        mapView.annotations_legacy.addAnnotation(polygon)
 
         // The below line is used for internal testing purposes only.
         finish()

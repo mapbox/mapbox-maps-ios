@@ -103,9 +103,5 @@ public class DebugViewController: UIViewController {
 
             print("The map failed to load.. \(type) = \(message)")
         }
-        mapView.mapboxMap.onNext(.cameraChanged) { _ in
-            print(mapView.mapboxMap.cameraState.bearing)
-            print(mapView.mapboxMap.camera.c)
-        }
     }
 }

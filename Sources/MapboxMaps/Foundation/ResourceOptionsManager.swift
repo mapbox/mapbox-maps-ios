@@ -13,9 +13,7 @@ import Foundation
 ///     ```
 ///     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 ///         // Override point for customization after application launch.
-///         ResourceOptionsManager.default.update { resourceOptions in
-///             resourceOptions.accessToken = "overridden-access-token"
-///         }
+///         ResourceOptionsManager.default.resourceOptions.accessToken = "overridden-access-token"
 ///         return true
 ///     }
 ///     ```
@@ -70,9 +68,7 @@ public class ResourceOptionsManager {
     /// `ResourceOptionsManager.default`:
     ///
     ///     ```
-    ///     ResourceOptionsManager.default.update { resourceOptions in
-    ///         resourceOptions.accessToken = "overridden-access-token"
-    ///     }
+    ///     ResourceOptionsManager.default.resourceOptions.accessToken = "overridden-access-token"
     ///     ```
     ///
     /// - Parameter accessToken: Valid access token or `nil`

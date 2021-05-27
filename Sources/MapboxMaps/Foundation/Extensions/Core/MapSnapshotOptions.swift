@@ -13,7 +13,7 @@ extension MapSnapshotOptions {
     ///         `ResourceOptionsManager.default`
     public convenience init(size: CGSize,
                             pixelRatio: CGFloat,
-                            glyphsRasterizationOptions: GlyphsRasterizationOptions? = GlyphsRasterizationOptions(fontFamilies: []),
+                            glyphsRasterizationOptions: GlyphsRasterizationOptions? = GlyphsRasterizationOptions(),
                             resourceOptions: ResourceOptions = ResourceOptionsManager.default.resourceOptions) {
         precondition(pixelRatio > 0)
         precondition(size.width * pixelRatio <= 8192, "Width or scale too great.")

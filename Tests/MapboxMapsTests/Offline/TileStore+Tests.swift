@@ -7,7 +7,7 @@ extension TileStore {
                                                             appropriateFor: nil,
                                                             create: true)
 
-        cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent("mapbox")
+        cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent(".mapbox")
         cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent("maps")
         cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent("tile-store")
         cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent(relativePath)

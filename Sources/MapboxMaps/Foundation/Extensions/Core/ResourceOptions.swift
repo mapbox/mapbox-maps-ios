@@ -107,7 +107,7 @@ public struct ResourceOptions {
                                                                 appropriateFor: nil,
                                                                 create: true)
 
-            cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent("mapbox")
+            cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent(".mapbox")
             cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent("maps")
 
             try FileManager.default.createDirectory(at: cacheDirectoryURL,

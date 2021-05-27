@@ -20,10 +20,6 @@ public protocol Annotation {
     /// The geometry associated with an annotation.
     var type: AnnotationType { get }
 
-    /// A Boolean value that indicates whether an annotation is selected, either
-    /// programmatically or via user-interactions.
-    var isSelected: Bool { get set }
-
     /// Properties associated with the annotation.
     var userInfo: [String: Any]? { get set }
 }
@@ -47,8 +43,8 @@ public protocol AnnotationInteractionDelegate: AnyObject {
     /// - Parameters:
     ///   - manager: The `AnnotationManager` that detected this tap gesture
     ///   - annotations: A list of `Annotations` that were tapped
-    func annotationsTapped(forManager manager: AnnotationManager,
-                           annotations: [Annotation])
+    func annotationManager(_ manager: AnnotationManager,
+                           didDetectTappedAnnotations annotations: [Annotation])
 
 }
 

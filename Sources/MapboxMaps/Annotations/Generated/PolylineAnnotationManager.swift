@@ -239,45 +239,25 @@ public class PolylineAnnotationManager: AnnotationManager {
         mapFeatureQueryable?.queryRenderedFeatures(
             at: tap.location(in: view),
             options: options) { [weak self] (result) in
+            
             guard let self = self else { return }
             
             switch result {
+            
             case .success(let queriedFeatures):
-                if let annotationIds = queriedFeatures.compactMap(\.feature.properties["annotation-id"]) as? [String]{
-                    
-                    let selectedAnnotations = self.handleAnnotationSelection(annotationIds: annotationIds)
-                    
-                    if !selectedAnnotations.isEmpty {
-                        self.delegate?.annotationsTapped(
-                            forManager: self,
-                            annotations: selectedAnnotations)
-                    }
+                if let annotationIds = queriedFeatures.compactMap(\.feature.properties["annotation-id"]) as? [String] {
+
+                    let tappedAnnotations = self.annotations.filter { annotationIds.contains($0.id) }
+                    self.delegate?.annotationManager(
+                        self,
+                        didDetectTappedAnnotations: tappedAnnotations)
                 }
+            
             case .failure(let error):
                 Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)", 
                             category: "Annotations")
             }
         }
-    }
-
-    internal func handleAnnotationSelection(annotationIds: [String]) -> [PolylineAnnotation] {
-        
-        var updates: [(index: Int, annotation: PolylineAnnotation)] = []
-        
-        for (index, annotation) in annotations.enumerated() where annotationIds.contains(annotation.id) {
-            var updatedAnnotation = annotation
-            updatedAnnotation.isSelected.toggle()
-            updates.append((index: index, annotation: updatedAnnotation))
-        }
-        
-        var tempAnnotations = annotations
-        
-        for update in updates {
-            tempAnnotations[update.index] = update.annotation
-        }
-        
-        annotations = tempAnnotations
-        return updates.map { $0.annotation }
     }
 
 } 

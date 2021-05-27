@@ -10,14 +10,6 @@ public struct PointAnnotation: Annotation {
 
     /// The feature backing this annotation
     public internal(set) var feature: Turf.Feature
-    
-    /// A Boolean value that indicates whether an annotation is selected, either
-    /// programmatically or via user-interactions.
-    public var isSelected: Bool = false { 
-        didSet {
-            feature.properties?["is-selected"] = isSelected
-        }
-    }
 
     /// Properties associated with the annotation
     public var userInfo: [String: Any]? { 

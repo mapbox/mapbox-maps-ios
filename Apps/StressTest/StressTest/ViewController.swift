@@ -199,14 +199,14 @@ class ViewController: UIViewController {
 
         // Add the annotation to the map.
         print("Adding line annotation")
-        mapView.annotations.addAnnotation(lineAnnotation)
+        mapView.annotations_legacy.addAnnotation(lineAnnotation)
 
         let endOptions = CameraOptions(center: end, zoom: 17)
 
         var animator: CameraAnimator?
         animator = mapView.camera.fly(to: endOptions) { _ in
             print("Removing line annotation for animator \(String(describing: animator))")
-            self.mapView.annotations.removeAnnotation(lineAnnotation)
+            self.mapView.annotations_legacy.removeAnnotation(lineAnnotation)
             animator = nil
             completion()
         }
@@ -214,7 +214,7 @@ class ViewController: UIViewController {
 
     func removeAnnotations() {
         print("Removing \(annotations.count) annotations")
-        mapView.annotations.removeAnnotations(annotations)
+        mapView.annotations_legacy.removeAnnotations(annotations)
         annotations = []
     }
 
@@ -227,7 +227,7 @@ class ViewController: UIViewController {
         }
 
         print("Adding \(annotations.count) annotations")
-        mapView.annotations.addAnnotations(annotations)
+        mapView.annotations_legacy.addAnnotations(annotations)
     }
 
     func pushColorExpression() {

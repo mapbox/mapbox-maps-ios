@@ -218,9 +218,6 @@ jobs:
       - checkout
       - configure-environment
       - run:
-          name: Delete Xcode Workspace so we can build with SPM
-          command: rm -rf MapboxMaps.xcworkspace
-      - run:
           name: Building MapboxMaps for simulator
           command: make build-sdk-for-simulator
           no_output_timeout: 5m
@@ -314,9 +311,6 @@ jobs:
     steps:
       - checkout
       - configure-environment
-      - run:
-          name: Delete Xcode Workspace so we can build with SPM
-          command: rm -rf MapboxMaps.xcworkspace
       # Building and testing are split into 2, with the aim that we'll be able to reuse
       # the build product and test on multiple simulators
       - run:
@@ -615,6 +609,7 @@ commands:
           command: |
             echo "MAPBOX_ACCESS_TOKEN = ${MAPBOX_ACCESS_TOKEN}" > ./developer.xcconfig
             echo "${MAPBOX_ACCESS_TOKEN}" > ~/.mapbox
+            echo "${MAPBOX_ACCESS_TOKEN}" > ./Tests/MapboxMapsTests/Helpers/MapboxAccessToken
 
   ensure-text-exists-in-commit:
     parameters:

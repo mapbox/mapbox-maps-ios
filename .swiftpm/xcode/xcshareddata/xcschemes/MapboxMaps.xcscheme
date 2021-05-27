@@ -10,7 +10,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "TOKEN_FILE=~/.mapbox&#10;TOKEN_FILE_2=~/mapbox&#10;TOKEN=&quot;$(cat $TOKEN_FILE 2&gt;/dev/null || cat $TOKEN_FILE_2 2&gt;/dev/null)&quot;&#10;echo &quot;hello there 1 ${TOKEN:0:5}&quot;&#10;if [ &quot;$TOKEN&quot; ]; then&#10;    echo &quot;hello there 2&quot;&#10;  if [ $(basename &quot;$WORKSPACE_PATH&quot;) = &quot;package.xcworkspace&quot; ]; then&#10;      echo &quot;hello there 4&quot;&#10;    MBX_ROOT=$(echo &quot;$WORKSPACE_PATH&quot; | rev | cut -d&apos;/&apos; -f4- | rev)&#10;  elif [ $(basename &quot;$WORKSPACE_PATH&quot;) = &quot;Apps.xcworkspace&quot; ]; then&#10;      echo &quot;hello there 5&quot;&#10;    MBX_ROOT=$(echo &quot;$WORKSPACE_PATH&quot; | rev | cut -d&apos;/&apos; -f3- | rev) &#10;  else&#10;      echo &quot;hello there 6&quot;&#10;    exit 1 # Unknown workspace&#10;  fi&#10;  echo &quot;hello there 7 ${TOKEN:0:5}, writing to $MBX_ROOT/Tests/MapboxMapsTests/Helpers/MapboxAccessToken&quot;&#10;&#10;  echo $TOKEN &gt; &quot;$MBX_ROOT/Tests/MapboxMapsTests/Helpers/MapboxAccessToken&quot;&#10;else&#10;    echo &quot;hello there 3&quot;  &#10;fi&#10;">
+               scriptText = "TOKEN_FILE=~/.mapbox&#10;TOKEN_FILE_2=~/mapbox&#10;TOKEN=&quot;$(cat $TOKEN_FILE 2&gt;/dev/null || cat $TOKEN_FILE_2 2&gt;/dev/null)&quot;&#10;if [ &quot;$TOKEN&quot; ]; then&#10;  echo &quot;Build pre-action step using ${TOKEN:0:5}&quot;&#10;  if [ $(basename &quot;$WORKSPACE_PATH&quot;) = &quot;package.xcworkspace&quot; ]; then&#10;    MBX_ROOT=$(echo &quot;$WORKSPACE_PATH&quot; | rev | cut -d&apos;/&apos; -f4- | rev)&#10;  elif [ $(basename &quot;$WORKSPACE_PATH&quot;) = &quot;Apps.xcworkspace&quot; ]; then&#10;    MBX_ROOT=$(echo &quot;$WORKSPACE_PATH&quot; | rev | cut -d&apos;/&apos; -f3- | rev) &#10;  else&#10;    exit 1 # Unknown workspace&#10;  fi&#10;  echo $TOKEN &gt; &quot;$MBX_ROOT/Tests/MapboxMapsTests/Helpers/MapboxAccessToken&quot;&#10;else&#10;  echo &quot;Build pre-action step: Could not find access token&quot;&#10;fi&#10;">
                <EnvironmentBuildable>
                   <BuildableReference
                      BuildableIdentifier = "primary"
@@ -92,7 +92,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "# Type a script or drag a script file from your workspace to insert its path.&#10;echo &quot;hello there from pre test&quot;&#10;">
+               scriptText = "echo &quot;Test pre-action script&quot;&#10;">
             </ActionContent>
          </ExecutionAction>
       </PreActions>

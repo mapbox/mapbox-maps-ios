@@ -14,13 +14,11 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
     internal override func setUpWithError() throws {
         try super.setUpWithError()
 
+        try guardForMetalDevice()
+
         guard let window = window,
               let rootView = rootViewController?.view else {
             throw XCTSkip("No valid UIWindow or root view controller")
-        }
-
-        guard MTLCreateSystemDefaultDevice() != nil else {
-            throw XCTSkip("No valid Metal device (OS version or VM?)")
         }
 
         let resourceOptions = ResourceOptions(accessToken: accessToken)

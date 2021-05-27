@@ -31,6 +31,8 @@ class MapViewIntegrationTests: IntegrationTestCase {
     }
 
     func testMapViewIsReleasedAfterCameraTransition() throws {
+        try guardForMetalDevice()
+
         weak var weakMapView: MapView?
         try autoreleasepool {
 

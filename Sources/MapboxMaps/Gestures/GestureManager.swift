@@ -25,7 +25,8 @@ public final class GestureManager: NSObject {
     /// The camera manager that responds to gestures.
     internal let cameraManager: CameraAnimationsManagerProtocol
 
-    internal weak var delegate: GestureManagerDelegate?
+    /// Set this delegate to be called back if a gesture begins
+    public weak var delegate: GestureManagerDelegate?
 
     internal init(for view: UIView, cameraManager: CameraAnimationsManagerProtocol) {
         self.cameraManager = cameraManager

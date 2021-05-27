@@ -11,7 +11,7 @@ internal protocol CameraAnimationsManagerProtocol: AnyObject {
     func ease(to camera: CameraOptions,
               duration: TimeInterval,
               curve: UIView.AnimationCurve,
-              completion: AnimationCompletion?) -> CameraAnimator?
+              completion: AnimationCompletion?) -> Cancelable?
 
     func cancelAnimations()
 }

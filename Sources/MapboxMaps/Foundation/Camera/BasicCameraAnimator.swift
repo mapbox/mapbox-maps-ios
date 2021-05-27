@@ -179,4 +179,10 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
         return cameraOptions
     }
+
+    // MARK: Cancelable
+
+    public func cancel() {
+        stopAnimation()
+    }
 }

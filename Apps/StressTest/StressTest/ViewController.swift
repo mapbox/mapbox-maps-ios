@@ -203,11 +203,11 @@ class ViewController: UIViewController {
 
         let endOptions = CameraOptions(center: end, zoom: 17)
 
-        var animator: CameraAnimator?
-        animator = mapView.camera.fly(to: endOptions) { _ in
-            print("Removing line annotation for animator \(String(describing: animator))")
+        var cancelableAnimator: Cancelable?
+        cancelableAnimator = mapView.camera.fly(to: endOptions) { _ in
+            print("Removing line annotation for animator \(String(describing: cancelableAnimator))")
             self.mapView.annotations_legacy.removeAnnotation(lineAnnotation)
-            animator = nil
+            cancelableAnimator = nil
             completion()
         }
     }

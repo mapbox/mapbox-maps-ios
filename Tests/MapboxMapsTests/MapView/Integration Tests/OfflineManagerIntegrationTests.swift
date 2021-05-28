@@ -10,11 +10,18 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
     var offlineManager: OfflineManager!
     var tileRegionId = ""
 
+    weak var weakTileStore: TileStore?
+    weak var weakOfflineManager: OfflineManager?
+
     let tokyoCoord = CLLocationCoordinate2D(latitude: 35.682027, longitude: 139.769305)
     var tileRegionLoadOptions: TileRegionLoadOptions!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
+        try setupTileStoreAndOfflineManager()
+    }
+
+    func setupTileStoreAndOfflineManager() throws {
         accessToken = try mapboxAccessToken()
 
         tileRegionId = "tile-region-\(name)"
@@ -23,11 +30,13 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         tileStorePathURL = try TileStore.fileURLForDirectory(for: name.fileSystemSafeString())
         tileStore = TileStore.shared(for: tileStorePathURL.path)
         tileStore.setAccessToken(accessToken)
+        weakTileStore = tileStore
 
         resourceOptions = ResourceOptions(accessToken: accessToken,
                                           tileStore: tileStore)
 
         offlineManager = OfflineManager(resourceOptions: resourceOptions)
+        weakOfflineManager = offlineManager
 
         // Setup TileRegionLoadOptions
         let outdoorsOptions = TilesetDescriptorOptions(styleURI: .outdoors,
@@ -47,10 +56,13 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
     override func tearDownWithError() throws {
         try super.tearDownWithError()
 
-        tileStore = nil
         tileRegionLoadOptions = nil
         resourceOptions = nil
         offlineManager = nil
+        tileStore = nil
+
+        XCTAssertNil(weakTileStore)
+        XCTAssertNil(weakOfflineManager)
 
         // Wait before removing directory
         let expectation = self.expectation(description: "Wait...")
@@ -153,7 +165,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
                 }
             }
 
-        wait(for: [tileRegionDownloaded], timeout: 30.0)
+        wait(for: [tileRegionDownloaded], timeout: 60.0)
 
         // Now delete
         let downloadWasDeleted = XCTestExpectation(description: "Downloaded offline tiles were deleted")
@@ -232,7 +244,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
                 }
             }
 
-            wait(for: [stylePackLoaded, tileRegionLoaded], timeout: 30.0)
+            wait(for: [stylePackLoaded, tileRegionLoaded], timeout: 60.0)
 
             // - - - - - - - -
             // 3. Disable load-from-network, and try launch map at this location
@@ -265,6 +277,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
             }
 
             mapView.mapboxMap.onNext(.mapLoaded) { _ in
+                print("Map was loaded")
                 mapWasLoaded.fulfill()
             }
 

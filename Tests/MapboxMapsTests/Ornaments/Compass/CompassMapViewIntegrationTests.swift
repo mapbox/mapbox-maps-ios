@@ -28,7 +28,7 @@ class CompassMapViewIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(mapView.mapboxMap.cameraState.bearing, 0)
     }
 
-    func testCompassTappedResetsToNorth() {
+    func testCompassTappedResetsToNorth() throws {
         let mapView = try XCTUnwrap(self.mapView, "Map view could not be found")
 
         let initialSubviews = mapView.subviews.filter { $0.isKind(of: MapboxCompassOrnamentView.self) }

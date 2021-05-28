@@ -1,7 +1,6 @@
 import XCTest
 @testable import MapboxMaps
 
-
 class CompassMapViewIntegrationTests: MapViewIntegrationTestCase {
 
     func testUpdateMapBearing() throws {

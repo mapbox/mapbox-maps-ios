@@ -38,7 +38,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
         wait(for: [expectation], timeout: 10)
     }
 
-    func TODO_testCapturingSnapshotterInSnapshotCompletion() throws {
+    func testCapturingSnapshotterInSnapshotCompletion() throws {
         weak var weakSnapshotter: Snapshotter?
         try autoreleasepool {
             let expectation = self.expectation(description: "snapshot")
@@ -58,7 +58,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
     }
 
     // Testing snapshot overlay
-    func TODO_testSnapshotOverlay() throws {
+    func testSnapshotOverlay() throws {
         let options = try snapshotterOptions()
         let snapshotter = Snapshotter(options: options)
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
@@ -86,7 +86,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
         wait(for: [expectation], timeout: 10)
     }
 
-    func TODO_testSnapshotSizeAndScaleAccuracy() {
+    func testSnapshotSizeAndScaleAccuracy() {
         let imageRect = CGRect(x: 0, y: 0, width: 300, height: 300)
         let options = try! snapshotterOptions()
         let snapshotter = Snapshotter(options: options) //should have protocol for GLnative (may have been ticketed)
@@ -114,7 +114,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
         wait(for: [expectation], timeout: 10)
     }
 
-    func TODO_testSnapshotLogoVisibility() throws {
+    func testSnapshotLogoVisibility() throws {
         let options = try snapshotterOptions()
         let snapshotterNew = Snapshotter(options: options)
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)

@@ -11,6 +11,11 @@ class MapboxMapsSnapshotTests: XCTestCase {
     var newAttachment: XCTAttachment!
     var resourceOptions: ResourceOptions!
 
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+        try guardForMetalDevice()
+    }
+
     // Create snapshot options
     private func snapshotterOptions() throws -> MapSnapshotOptions {
         let accessToken = try mapboxAccessToken()
@@ -131,8 +136,11 @@ class MapboxMapsSnapshotTests: XCTestCase {
                 let path = Bundle.mapboxMapsTests.path(forResource: "Snapshot-Asset", ofType: "png")!
                 let url = URL(fileURLWithPath: path)
                 let expectedImageData = try! Data(contentsOf: url)
-                // TO DO Image comparison
-//                XCTAssertEqual(expectedImageData, image.pngData(), "has the camera changed?")
+
+                if expectedImageData != image.pngData() {
+                    // TODO: Image comparison
+                    print("warning: Image data does not match.")
+                }
                 XCTAssertEqual(expectedImageData.count, image.pngData()!.count, accuracy: 5000)
 
             case.failure :

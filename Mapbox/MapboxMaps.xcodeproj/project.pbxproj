@@ -51,6 +51,7 @@
 		0C1EBF0C266035880024E687 /* CircleAnnotationIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1EBF06266035880024E687 /* CircleAnnotationIntegrationTests.swift */; };
 		0C1EBF0E266035880024E687 /* PolylineAnnotationIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1EBF07266035880024E687 /* PolylineAnnotationIntegrationTests.swift */; };
 		0C1EBF10266035880024E687 /* PointAnnotationIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1EBF08266035880024E687 /* PointAnnotationIntegrationTests.swift */; };
+		0C1EBF2126615E950024E687 /* PointAnnotation+ImageHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1EBF2026615E950024E687 /* PointAnnotation+ImageHandling.swift */; };
 		0C26425524EECD14001FE2E3 /* AllExpressions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C26425424EECD14001FE2E3 /* AllExpressions.swift */; };
 		0C2CDA2F25D1A51C006D068F /* PuckTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2CDA2D25D1A51C006D068F /* PuckTypeTests.swift */; };
 		0C31F7AA25AF87AB00DCFB28 /* Puck3D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C31F7A925AF87AB00DCFB28 /* Puck3D.swift */; };
@@ -484,6 +485,7 @@
 		0C1EBF06266035880024E687 /* CircleAnnotationIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleAnnotationIntegrationTests.swift; sourceTree = "<group>"; };
 		0C1EBF07266035880024E687 /* PolylineAnnotationIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PolylineAnnotationIntegrationTests.swift; sourceTree = "<group>"; };
 		0C1EBF08266035880024E687 /* PointAnnotationIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PointAnnotationIntegrationTests.swift; sourceTree = "<group>"; };
+		0C1EBF2026615E950024E687 /* PointAnnotation+ImageHandling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PointAnnotation+ImageHandling.swift"; sourceTree = "<group>"; };
 		0C26425424EECD14001FE2E3 /* AllExpressions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllExpressions.swift; sourceTree = "<group>"; };
 		0C2CDA2D25D1A51C006D068F /* PuckTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuckTypeTests.swift; sourceTree = "<group>"; };
 		0C31F7A925AF87AB00DCFB28 /* Puck3D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Puck3D.swift; sourceTree = "<group>"; };
@@ -994,6 +996,7 @@
 		07E4FD1924E4A35600D734D1 /* MapboxMapsAnnotations */ = {
 			isa = PBXGroup;
 			children = (
+				0C1EBF2026615E950024E687 /* PointAnnotation+ImageHandling.swift */,
 				0C1EBEED2660356E0024E687 /* Generated */,
 				0C1EBEDB2660337C0024E687 /* AnnotationOrchestrator.swift */,
 				0C04F6FE2658135900B81ECD /* Annotation_Legacy.swift */,
@@ -2166,6 +2169,7 @@
 				0CF0C42924EB1779000DC118 /* Enums.swift in Sources */,
 				0CD62F06245884FD006421D1 /* TapGestureHandler.swift in Sources */,
 				0C708F3424EB1EFA003CE791 /* Layers.swift in Sources */,
+				0C1EBF2126615E950024E687 /* PointAnnotation+ImageHandling.swift in Sources */,
 				5A3592B3246C1FA000E67344 /* MapboxInfoButtonOrnament.swift in Sources */,
 				0CD62F1D24588715006421D1 /* LocationPermissionsDelegate.swift in Sources */,
 				0C708F1F24EB1EE2003CE791 /* BackgroundLayer.swift in Sources */,

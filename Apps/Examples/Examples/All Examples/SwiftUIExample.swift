@@ -43,9 +43,9 @@ internal struct SwiftUIMapView: UIViewRepresentable {
     }
 
     /// Here's a property and builder method for annotations
-    private var annotations = [Annotation_Legacy]()
+    private var annotations = [PointAnnotation]()
 
-    func annotations(_ annotations: [Annotation_Legacy]) -> Self {
+    func annotations(_ annotations: [PointAnnotation]) -> Self {
         var updated = self
         updated.annotations = annotations
         return updated
@@ -110,11 +110,15 @@ internal class SwiftUIMapViewCoordinator {
 
     /// It also has a setter for annotations. When the annotations
     /// are set, it synchronizes them to the map
-    var annotations = [Annotation_Legacy]() {
+    var annotations = [PointAnnotation]() {
         didSet {
             syncAnnotations()
         }
     }
+
+    lazy var pointAnnotationManager: PointAnnotationManager? = {
+        mapView?.annotations.makePointAnnotationManager()
+    }()
 
     /// This `mapView` property needs to be weak because
     /// the map view takes a strong reference to the coordinator
@@ -162,28 +166,12 @@ internal class SwiftUIMapViewCoordinator {
     /// Only sync annotations once the map's initial load is complete
     private var initialMapLoadComplete = false
 
-    /// To sync annotations, we use the annotations' identifiers to determine which
-    /// annotations need to be added and which ones need to be removed.
     private func syncAnnotations() {
-        guard let mapView = mapView, initialMapLoadComplete else {
+        guard initialMapLoadComplete else {
             return
         }
-        let annotationsByIdentifier = Dictionary(uniqueKeysWithValues: annotations.map { ($0.identifier, $0) })
 
-        let oldAnnotationIds = Set(mapView.annotations_legacy.annotations.values.map(\.identifier))
-        let newAnnotationIds = Set(annotationsByIdentifier.values.map(\.identifier))
-
-        let idsForAnnotationsToRemove = oldAnnotationIds.subtracting(newAnnotationIds)
-        let annotationsToRemove = idsForAnnotationsToRemove.compactMap { mapView.annotations_legacy.annotations[$0] }
-        if !annotationsToRemove.isEmpty {
-            mapView.annotations_legacy.removeAnnotations(annotationsToRemove)
-        }
-
-        let idsForAnnotationsToAdd = newAnnotationIds.subtracting(oldAnnotationIds)
-        let annotationsToAdd = idsForAnnotationsToAdd.compactMap { annotationsByIdentifier[$0] }
-        if !annotationsToAdd.isEmpty {
-            mapView.annotations_legacy.addAnnotations(annotationsToAdd)
-        }
+        pointAnnotationManager?.syncAnnotations(annotations)
     }
 }
 
@@ -199,11 +187,18 @@ internal struct ContentView: View {
 
     /// Each time you create an annotation, it is assigned a UUID. For this reason, it's not a great
     /// idea to actually create annotations inside of `body` which may be called repeatedly
-    @State private var annotations = [
-        PointAnnotation_Legacy(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -75)),
-        PointAnnotation_Legacy(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -75.001)),
-        PointAnnotation_Legacy(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -74.999))
-    ]
+    @State private var annotations: [PointAnnotation] = {
+        var p1 = PointAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -75))
+        p1.image = .default
+
+        var p2 = PointAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -75.001))
+        p2.image = .default
+
+        var p3 = PointAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -74.999))
+        p3.image = .default
+
+        return [p1, p2, p3]
+    }()
 
     public var body: some View {
         VStack {

@@ -20,6 +20,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
 
     private var mapView: MapView?
     private var logger: OfflineManagerLogWriter!
+    private var pointAnnotationsManager: PointAnnotationManager?
 
     // Default MapInitOptions. If you use a custom path for a TileStore, you would
     // need to create a custom MapInitOptions to reference that TileStore.
@@ -317,13 +318,16 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         // Add a point annotation that shows the point geometry that were passed
         // to the tile region API.
         mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
-            guard
-                let annotations = self?.mapView?.annotations_legacy,
-                let coord = self?.tokyoCoord else {
+            guard let self = self,
+                  let mapView = self.mapView else {
                 return
             }
 
-            annotations.addAnnotation(PointAnnotation_Legacy(coordinate: coord))
+            var pointAnnotation = PointAnnotation(coordinate: self.tokyoCoord)
+            pointAnnotation.image = .default
+
+            self.pointAnnotationsManager = mapView.annotations.makePointAnnotationManager()
+            self.pointAnnotationsManager?.syncAnnotations([pointAnnotation])
         }
 
         self.mapView = mapView

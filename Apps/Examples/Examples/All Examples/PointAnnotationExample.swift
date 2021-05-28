@@ -6,6 +6,7 @@ import MapboxMaps
 public class PointAnnotationExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
+    private var pointAnnotationManager: PointAnnotationManager?
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -19,17 +20,36 @@ public class PointAnnotationExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Allows the delegate to receive information about map events.
-        mapView.mapboxMap.onNext(.mapLoaded) { _ in
+        mapView.mapboxMap.onNext(.mapLoaded) { [weak  self] _ in
 
-            // Create the point annotation, which will be rendered with the default red pin.
-            let centerCoordinate = self.mapView.cameraState.center
-            let pointAnnotation = PointAnnotation_Legacy(coordinate: centerCoordinate)
-
-            // Add the annotation to the map.
-            self.mapView.annotations_legacy.addAnnotation(pointAnnotation)
+            guard let self = self else { return }
+            self.setupExample()
 
             // The below line is used for internal testing purposes only.
             self.finish()
         }
+    }
+
+    func setupExample() {
+
+        // We want to display the annotation at the center of the map's current viewport
+        let centerCoordinate = mapView.cameraState.center
+
+        // Make a `PointAnnotationManager` which will be responsible for managing a collection of `PointAnnotion`s.
+        let pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
+
+        // Initialize a point annotation with a geometry ("coordinate" in this case)
+        // and configure it with a custom image (sourced from the asset catalogue)
+        var customPointAnnotation = PointAnnotation(coordinate: centerCoordinate)
+
+        // Make the annotation show the default red pin
+        customPointAnnotation.image = .default
+
+        // Add the annotation to the manager in order to render it on the mao.
+        pointAnnotationManager.syncAnnotations([customPointAnnotation])
+
+        // The annotations added above will show as long as the `PointAnnotationManager` is alive,
+        // so keep a reference to it.
+        self.pointAnnotationManager = pointAnnotationManager
     }
 }

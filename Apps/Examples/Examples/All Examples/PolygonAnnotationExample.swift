@@ -1,10 +1,12 @@
 import UIKit
 import MapboxMaps
+import Turf
 
 @objc(PolygonAnnotationExample)
 
 public class PolygonAnnotationExample: UIViewController, ExampleProtocol {
     internal var mapView: MapView!
+    internal var polygonAnnotationManager: PolygonAnnotationManager?
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -19,13 +21,37 @@ public class PolygonAnnotationExample: UIViewController, ExampleProtocol {
         // Allows the delegate to receive information about map events.
         mapView.mapboxMap.onNext(.mapLoaded) { _ in
             self.setupExample()
+
+            // The below line is used for internal testing purposes only.
+            self.finish()
         }
     }
 
     // Wait for the map to load before adding an annotation.
     public func setupExample() {
 
-        let polygonCoords = [
+        // Create the PolygonAnnotationManager
+        let polygonAnnotationManager = mapView.annotations.makePolygonAnnotationManager()
+
+        // Create the polygon annotation
+        var polygonAnnotation = PolygonAnnotation(polygon: makePolygon())
+
+        // Style the polygon annotation
+        polygonAnnotation.fillColor = ColorRepresentable(color: .red)
+        polygonAnnotation.fillOpacity = 0.8
+
+        // Add the polygon annotation to the manager
+        polygonAnnotationManager.syncAnnotations([polygonAnnotation])
+
+        // The annotations added above will show as long as the `PolygonAnnotationManager` is alive,
+        // so keep a reference to it.
+        self.polygonAnnotationManager = polygonAnnotationManager
+    }
+
+    func makePolygon() -> Turf.Polygon {
+
+        // Describe the polygon's geometry
+        let outerRingCoords = [
             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
             CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
             CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
@@ -34,7 +60,7 @@ public class PolygonAnnotationExample: UIViewController, ExampleProtocol {
         ]
 
         // This polygon has an intererior polygon which represents a hole in the shape.
-        let polygonHole = [
+        let innerRingCoords = [
             CLLocationCoordinate2DMake(25.085598897064752, -89.20898437499999),
             CLLocationCoordinate2DMake(25.085598897064752, -88.61572265625),
             CLLocationCoordinate2DMake(25.720735134412106, -88.61572265625),
@@ -42,13 +68,10 @@ public class PolygonAnnotationExample: UIViewController, ExampleProtocol {
             CLLocationCoordinate2DMake(25.085598897064752, -89.20898437499999)
         ]
 
-        // Create the polygon annotation.
-        let polygon = PolygonAnnotation_Legacy(coordinates: polygonCoords, interiorPolygons: [polygonHole])
+        /// Create the Polygon with the outer ring and inner ring
+        let outerRing = Turf.Ring(coordinates: outerRingCoords)
+        let innerRing = Turf.Ring(coordinates: innerRingCoords)
 
-        // Add the annotation to the map.
-        mapView.annotations_legacy.addAnnotation(polygon)
-
-        // The below line is used for internal testing purposes only.
-        finish()
+        return Turf.Polygon(outerRing: outerRing, innerRings: [innerRing])
     }
 }

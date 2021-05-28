@@ -259,7 +259,6 @@ public class PolylineAnnotationManager: AnnotationManager {
             }
         }
     }
-
 } 
 // End of generated file.
 // swiftlint:enable all

@@ -211,7 +211,6 @@ public class PolygonAnnotationManager: AnnotationManager {
             }
         }
     }
-
 } 
 // End of generated file.
 // swiftlint:enable all

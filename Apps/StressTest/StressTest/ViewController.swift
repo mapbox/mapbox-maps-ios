@@ -24,6 +24,14 @@ extension CLLocationCoordinate2D {
 class ViewController: UIViewController {
     var mapView: MapView!
 
+    lazy var pointAnnotationManager: PointAnnotationManager? = {
+        mapView?.annotations.makePointAnnotationManager()
+    }()
+
+    lazy var lineAnnotationManager: PolylineAnnotationManager? = {
+        mapView?.annotations.makePolylineAnnotationManager()
+    }()
+
     var startTime: TimeInterval = 0
     var endTime: TimeInterval   = 0
 
@@ -66,7 +74,7 @@ class ViewController: UIViewController {
         2 * styles.count * coords.count
     }
 
-    var annotations: [PointAnnotation_Legacy] = []
+    var annotations: [PointAnnotation] = []
     var color: Any?
     var mapInitOptions: MapInitOptions!
     var snapshotter: Snapshotter?
@@ -195,18 +203,19 @@ class ViewController: UIViewController {
         let startOptions = mapView.cameraState
         let start = startOptions.center
 
-        let lineAnnotation = LineAnnotation_Legacy(coordinates: [start, end])
+        var lineAnnotation = PolylineAnnotation(lineCoordinates: [start, end])
+        lineAnnotation.lineColor = .init(color: .red)
 
         // Add the annotation to the map.
         print("Adding line annotation")
-        mapView.annotations_legacy.addAnnotation(lineAnnotation)
+        lineAnnotationManager?.syncAnnotations([lineAnnotation])
 
         let endOptions = CameraOptions(center: end, zoom: 17)
 
         var cancelableAnimator: Cancelable?
         cancelableAnimator = mapView.camera.fly(to: endOptions) { _ in
             print("Removing line annotation for animator \(String(describing: cancelableAnimator))")
-            self.mapView.annotations_legacy.removeAnnotation(lineAnnotation)
+            self.lineAnnotationManager?.syncAnnotations([])
             cancelableAnimator = nil
             completion()
         }
@@ -214,20 +223,21 @@ class ViewController: UIViewController {
 
     func removeAnnotations() {
         print("Removing \(annotations.count) annotations")
-        mapView.annotations_legacy.removeAnnotations(annotations)
         annotations = []
+        pointAnnotationManager?.syncAnnotations([])
     }
 
     func addAnnotations(around coord: CLLocationCoordinate2D) {
         for lat in stride(from: coord.latitude-0.25, to: coord.latitude+0.25, by: 0.05) {
             for lng in stride(from: coord.longitude-0.25, to: coord.longitude+0.25, by: 0.05) {
-                let pointAnnotation = PointAnnotation_Legacy(coordinate: CLLocationCoordinate2D(lat, lng))
+                var pointAnnotation = PointAnnotation(coordinate: CLLocationCoordinate2D(lat, lng))
+                pointAnnotation.image = .default
                 annotations.append(pointAnnotation)
             }
         }
 
         print("Adding \(annotations.count) annotations")
-        mapView.annotations_legacy.addAnnotations(annotations)
+        pointAnnotationManager?.syncAnnotations(annotations)
     }
 
     func pushColorExpression() {

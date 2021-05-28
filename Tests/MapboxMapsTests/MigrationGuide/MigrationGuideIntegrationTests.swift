@@ -451,26 +451,28 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
     func todo_testAnnotationInteraction() {
         //-->
-        class MyViewController: UIViewController, AnnotationInteractionDelegate_Legacy {
+        class MyViewController: UIViewController, AnnotationInteractionDelegate {
             @IBOutlet var mapView: MapView!
+
+            lazy var pointAnnotationManager: PointAnnotationManager = {
+                return mapView.annotations.makePointAnnotationManager()
+            }()
 
             override func viewDidLoad() {
                 super.viewDidLoad()
                 mapView.mapboxMap.onNext(.mapLoaded) { _ in
-                    self.mapView.annotations_legacy.interactionDelegate = self
+                    self.pointAnnotationManager.delegate = self
                     let coordinate = CLLocationCoordinate2DMake(24, -89)
-                    let pointAnnotation = PointAnnotation_Legacy(coordinate: coordinate)
-                    self.mapView.annotations_legacy.addAnnotation(pointAnnotation)
+                    var pointAnnotation = PointAnnotation(coordinate: coordinate)
+                    pointAnnotation.image = .default
+                    self.pointAnnotationManager.syncAnnotations([pointAnnotation])
                 }
             }
 
             // MARK: - AnnotationInteractionDelegate
-            public func didSelectAnnotation(annotation: Annotation_Legacy) {
-                print("Annotation selected")
-            }
-
-            public func didDeselectAnnotation(annotation: Annotation_Legacy) {
-                print("Annotation deselected")
+            func annotationManager(_ manager: AnnotationManager,
+                                   didDetectTappedAnnotations annotations: [Annotation]) {
+                print("Annotations tapped: \(annotations)")
             }
         }
         //<--

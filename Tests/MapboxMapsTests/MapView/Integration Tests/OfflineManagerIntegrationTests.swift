@@ -273,7 +273,6 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
             OfflineSwitch.shared.isMapboxStackConnected = true
             mapView.removeFromSuperview()
-            rootView.removeFromSuperview()
         }
 
         XCTAssertNil(weakMapView)

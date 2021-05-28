@@ -129,9 +129,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
         snapshotterNew.start(overlayHandler: nil) { (result) in
             switch result {
             case let .success(image) :
-                let newAttachment = XCTAttachment(image: image)
-                newAttachment.lifetime = .keepAlways
-                self.add(newAttachment)
                 // Compare snapshot asset data vs snapshot image data
                 let path = Bundle.mapboxMapsTests.path(forResource: "Snapshot-Asset", ofType: "png")!
                 let url = URL(fileURLWithPath: path)
@@ -140,6 +137,9 @@ class MapboxMapsSnapshotTests: XCTestCase {
                 if expectedImageData != image.pngData() {
                     // TODO: Image comparison
                     print("warning: Image data does not match.")
+                    let newAttachment = XCTAttachment(image: image)
+                    newAttachment.lifetime = .keepAlways
+                    self.add(newAttachment)
                 }
                 XCTAssertEqual(expectedImageData.count, image.pngData()!.count, accuracy: 5000)
 

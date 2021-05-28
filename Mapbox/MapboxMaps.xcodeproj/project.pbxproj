@@ -210,7 +210,6 @@
 		B5A6921C262754DF00A03412 /* MockDelegatingMapClientDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A69217262754DF00A03412 /* MockDelegatingMapClientDelegate.swift */; };
 		B5A6921D262754DF00A03412 /* MockDelegatingObserverDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A69218262754DF00A03412 /* MockDelegatingObserverDelegate.swift */; };
 		B5A6921E262754DF00A03412 /* DelegatingMapClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A69219262754DF00A03412 /* DelegatingMapClientTests.swift */; };
-		B5A6921F262754DF00A03412 /* CredentialsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A6921A262754DF00A03412 /* CredentialsManagerTests.swift */; };
 		B5A6922B2627566A00A03412 /* MapInitOptionsTests.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5A6922A2627566A00A03412 /* MapInitOptionsTests.xib */; };
 		B5B55D45260E4D1500EBB589 /* AnimationOwner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B55D41260E4D1500EBB589 /* AnimationOwner.swift */; };
 		B5B55D46260E4D1500EBB589 /* CameraAnimationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B55D42260E4D1500EBB589 /* CameraAnimationDelegate.swift */; };
@@ -259,6 +258,9 @@
 		CA19C342263B411C00748F1A /* MapInitOptionsTests.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5A6922A2627566A00A03412 /* MapInitOptionsTests.xib */; };
 		CA19C344263B412700748F1A /* empty-style-chicago.json in Resources */ = {isa = PBXBuildFile; fileRef = CA19C343263B412700748F1A /* empty-style-chicago.json */; };
 		CA19C345263B412700748F1A /* empty-style-chicago.json in Resources */ = {isa = PBXBuildFile; fileRef = CA19C343263B412700748F1A /* empty-style-chicago.json */; };
+		CA2861EC265F3FCB002A20CA /* ResourceOptionsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA2861EA265F3FCB002A20CA /* ResourceOptionsManagerTests.swift */; };
+		CA2861ED265F3FCB002A20CA /* MapEventHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA2861EB265F3FCB002A20CA /* MapEventHandlerTests.swift */; };
+		CA2861F0265F4003002A20CA /* ResourceOptionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA2861EE265F3FDD002A20CA /* ResourceOptionsManager.swift */; };
 		CA2E4A1B2538D3530096DEDE /* MapViewIntegrationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA53616D2537ECA600A8AE38 /* MapViewIntegrationTestCase.swift */; };
 		CA2E4A1C2538D3530096DEDE /* IntegrationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5361862537EE0600A8AE38 /* IntegrationTestCase.swift */; };
 		CA2E4A1D2538D3530096DEDE /* DidIdleFailureIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA2E498825380B300096DEDE /* DidIdleFailureIntegrationTest.swift */; };
@@ -336,7 +338,6 @@
 		CAB77E432654AB6E0071D74C /* Turf in Frameworks */ = {isa = PBXBuildFile; productRef = CAB77E422654AB6E0071D74C /* Turf */; };
 		CAB77E452654AC5E0071D74C /* CameraAnimationsManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB77E442654AC5E0071D74C /* CameraAnimationsManagerProtocol.swift */; };
 		CAB77E472654ACE90071D74C /* CameraManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB77E462654ACE90071D74C /* CameraManagerProtocol.swift */; };
-		CABCDF372620E03A00D61635 /* CredentialsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CABCDF362620E03A00D61635 /* CredentialsManager.swift */; };
 		CABCDF432620E09E00D61635 /* MapInitOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CABCDF412620E09D00D61635 /* MapInitOptions.swift */; };
 		CABCDF4A2620E0D800D61635 /* RawRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CABCDF472620E0D700D61635 /* RawRepresentable.swift */; };
 		CABCDF4B2620E0D800D61635 /* Bool.swift in Sources */ = {isa = PBXBuildFile; fileRef = CABCDF482620E0D700D61635 /* Bool.swift */; };
@@ -669,7 +670,6 @@
 		B5A69217262754DF00A03412 /* MockDelegatingMapClientDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockDelegatingMapClientDelegate.swift; sourceTree = "<group>"; };
 		B5A69218262754DF00A03412 /* MockDelegatingObserverDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockDelegatingObserverDelegate.swift; sourceTree = "<group>"; };
 		B5A69219262754DF00A03412 /* DelegatingMapClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DelegatingMapClientTests.swift; sourceTree = "<group>"; };
-		B5A6921A262754DF00A03412 /* CredentialsManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CredentialsManagerTests.swift; sourceTree = "<group>"; };
 		B5A6922A2627566A00A03412 /* MapInitOptionsTests.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapInitOptionsTests.xib; sourceTree = "<group>"; };
 		B5B55D41260E4D1500EBB589 /* AnimationOwner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationOwner.swift; sourceTree = "<group>"; };
 		B5B55D42260E4D1500EBB589 /* CameraAnimationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimationDelegate.swift; sourceTree = "<group>"; };
@@ -749,6 +749,9 @@
 		CA0C427D2602BECE0054D9D0 /* LayerPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerPosition.swift; sourceTree = "<group>"; };
 		CA0C42942602BF000054D9D0 /* LayerPositionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerPositionTests.swift; sourceTree = "<group>"; };
 		CA19C343263B412700748F1A /* empty-style-chicago.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "empty-style-chicago.json"; sourceTree = "<group>"; };
+		CA2861EA265F3FCB002A20CA /* ResourceOptionsManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceOptionsManagerTests.swift; sourceTree = "<group>"; };
+		CA2861EB265F3FCB002A20CA /* MapEventHandlerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapEventHandlerTests.swift; sourceTree = "<group>"; };
+		CA2861EE265F3FDD002A20CA /* ResourceOptionsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceOptionsManager.swift; sourceTree = "<group>"; };
 		CA2E498825380B300096DEDE /* DidIdleFailureIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DidIdleFailureIntegrationTest.swift; sourceTree = "<group>"; };
 		CA355C06256EEA7C00FD1DB7 /* FlyToInterpolator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyToInterpolator.swift; sourceTree = "<group>"; };
 		CA4453C52436E71500477B4F /* MapboxTestHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapboxTestHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -781,7 +784,6 @@
 		CAB11C982555986F00060963 /* HTTPIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPIntegrationTests.swift; sourceTree = "<group>"; };
 		CAB77E442654AC5E0071D74C /* CameraAnimationsManagerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimationsManagerProtocol.swift; sourceTree = "<group>"; };
 		CAB77E462654ACE90071D74C /* CameraManagerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraManagerProtocol.swift; sourceTree = "<group>"; };
-		CABCDF362620E03A00D61635 /* CredentialsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CredentialsManager.swift; sourceTree = "<group>"; };
 		CABCDF412620E09D00D61635 /* MapInitOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapInitOptions.swift; sourceTree = "<group>"; };
 		CABCDF472620E0D700D61635 /* RawRepresentable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawRepresentable.swift; sourceTree = "<group>"; };
 		CABCDF482620E0D700D61635 /* Bool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bool.swift; sourceTree = "<group>"; };
@@ -1292,11 +1294,8 @@
 		1F11C1102421B05600F8397B /* MapboxMapsFoundation */ = {
 			isa = PBXGroup;
 			children = (
-				CAE643E4265D7D4000C9E223 /* MapProjectionDelegate.swift */,
-				CAE643E3265D7D4000C9E223 /* MapTransformDelegate.swift */,
 				CAB77E462654ACE90071D74C /* CameraManagerProtocol.swift */,
 				CA6245FF26289D6400C79547 /* Cancelable.swift */,
-				CABCDF362620E03A00D61635 /* CredentialsManager.swift */,
 				0C088AC426387EA400107B5E /* DateProvider.swift */,
 				B529341A2624E9D6003B181C /* DelegatingMapClient.swift */,
 				B529341B2624E9D6003B181C /* DelegatingObserver.swift */,
@@ -1305,9 +1304,12 @@
 				B521FC92262F626900B9A446 /* MapboxMap.swift */,
 				CA5890D4264B00B50060987A /* MapEventHandler.swift */,
 				CAE43ED4265460FE006F43E9 /* MapFeatureQueryable.swift */,
+				CAE643E4265D7D4000C9E223 /* MapProjectionDelegate.swift */,
+				CAE643E3265D7D4000C9E223 /* MapTransformDelegate.swift */,
 				0C03DD42264EE95D00D4D307 /* MapView.swift */,
 				CA5890D3264B00B50060987A /* ObservableProtocol.swift */,
 				B52934192624E9D6003B181C /* PreferredFPS.swift */,
+				CA2861EE265F3FDD002A20CA /* ResourceOptionsManager.swift */,
 				CA5890DA264B00CE0060987A /* WeakSet.swift */,
 				1F4B7D7A2464C36E00745F05 /* Camera */,
 				07625BB42587F273002EEBCC /* Events */,
@@ -1320,22 +1322,23 @@
 		1F11C11B2421B05600F8397B /* MapboxMapsFoundationTests */ = {
 			isa = PBXGroup;
 			children = (
-				CAE643E7265D7D6400C9E223 /* Projection */,
-				B5A6921A262754DF00A03412 /* CredentialsManagerTests.swift */,
+				B51DE64725D7038300A80AC9 /* Comparable+ClampedTests.swift */,
 				B5A69219262754DF00A03412 /* DelegatingMapClientTests.swift */,
 				B5A69216262754DF00A03412 /* DelegatingObserverTests.swift */,
+				1F11C11C2421B05600F8397B /* MapboxMapsFoundationTests.swift */,
+				B521FCA1262F67D000B9A446 /* MapboxMapTests.swift */,
+				CA2861EB265F3FCB002A20CA /* MapEventHandlerTests.swift */,
 				B5A69217262754DF00A03412 /* MockDelegatingMapClientDelegate.swift */,
 				B5A69218262754DF00A03412 /* MockDelegatingObserverDelegate.swift */,
-				CA0C42922602BF000054D9D0 /* Extensions */,
-				CAC1961E25AEAE2800F69FEA /* Glyphs */,
-				07DA743A258409AF00AD0446 /* GeoJSON */,
-				A4FE887B255F364600FBF117 /* Camera */,
-				1F11C11C2421B05600F8397B /* MapboxMapsFoundationTests.swift */,
-				07182014256C1F6100F22489 /* Assets.xcassets */,
-				0CDFEAD725A77430008BC505 /* UtilsTests.swift */,
-				B51DE64725D7038300A80AC9 /* Comparable+ClampedTests.swift */,
-				B521FCA1262F67D000B9A446 /* MapboxMapTests.swift */,
 				B521FCA6262F67DD00B9A446 /* MockMapClient.swift */,
+				CA2861EA265F3FCB002A20CA /* ResourceOptionsManagerTests.swift */,
+				0CDFEAD725A77430008BC505 /* UtilsTests.swift */,
+				07182014256C1F6100F22489 /* Assets.xcassets */,
+				A4FE887B255F364600FBF117 /* Camera */,
+				CA0C42922602BF000054D9D0 /* Extensions */,
+				07DA743A258409AF00AD0446 /* GeoJSON */,
+				CAC1961E25AEAE2800F69FEA /* Glyphs */,
+				CAE643E7265D7D6400C9E223 /* Projection */,
 			);
 			name = MapboxMapsFoundationTests;
 			path = ../Tests/MapboxMapsTests/Foundation;
@@ -2205,7 +2208,6 @@
 				B529341E2624E9D6003B181C /* DelegatingObserver.swift in Sources */,
 				0CD62F2024588737006421D1 /* AppleLocationProvider.swift in Sources */,
 				0782B010258C051900D5FCE5 /* ScreenCoordinate.swift in Sources */,
-				CABCDF372620E03A00D61635 /* CredentialsManager.swift in Sources */,
 				0782B11B258C1B9C00D5FCE5 /* Feature.swift in Sources */,
 				0C350D84263278090090FA74 /* BasicCameraAnimator.swift in Sources */,
 				C64B6FEA25E0479000C8E07E /* Bundle+MapboxMaps.swift in Sources */,
@@ -2228,6 +2230,7 @@
 				CA5890D5264B00B50060987A /* ObservableProtocol.swift in Sources */,
 				B529341C2624E9D6003B181C /* PreferredFPS.swift in Sources */,
 				B521FC93262F626900B9A446 /* MapboxMap.swift in Sources */,
+				CA2861F0265F4003002A20CA /* ResourceOptionsManager.swift in Sources */,
 				B575018A26334BA700937A9E /* MapboxScaleBarConstants.swift in Sources */,
 				0C45894F263AFCDA00A11A26 /* ExpressionArgumentBuilder.swift in Sources */,
 				0CD62F1124588532006421D1 /* GestureHandlerDelegate.swift in Sources */,
@@ -2298,6 +2301,7 @@
 				CA03F0872624FDB100673961 /* MapInitOptionsTests.swift in Sources */,
 				C69F015A254358C5001AB49B /* AnnotationManagerIntegrationTests.swift in Sources */,
 				0CC6EF1725C3263400BFB153 /* SymbolLayerIntegrationTests.swift in Sources */,
+				CA2861ED265F3FCB002A20CA /* MapEventHandlerTests.swift in Sources */,
 				B521FCA2262F67D000B9A446 /* MapboxMapTests.swift in Sources */,
 				0C5CFCDF25BB951B0001E753 /* BackgroundLayerTests.swift in Sources */,
 				CA2E4A1C2538D3530096DEDE /* IntegrationTestCase.swift in Sources */,
@@ -2358,7 +2362,6 @@
 				0C5CFD1B25BB963A0001E753 /* Value+Fixtures.swift in Sources */,
 				B5F294BB2635EEAD00199426 /* FloatingPointTests.swift in Sources */,
 				CA548FEA251C404B00F829A3 /* AnnotationManagerTests.swift in Sources */,
-				B5A6921F262754DF00A03412 /* CredentialsManagerTests.swift in Sources */,
 				CAEDA0B0258E8188003CCEFE /* MapViewIntegrationTests.swift in Sources */,
 				0C5CFCE225BB951B0001E753 /* SymbolLayerTests.swift in Sources */,
 				CA57257E2568D15E005ED95E /* ObservableIntegrationTests.swift in Sources */,
@@ -2376,6 +2379,7 @@
 				CA548FEE251C404B00F829A3 /* FeatureCollectionTests.swift in Sources */,
 				0C1EBF0C266035880024E687 /* CircleAnnotationIntegrationTests.swift in Sources */,
 				0C59ED2325CC6D7E00C72E7A /* ExpressionBuilderTests.swift in Sources */,
+				CA2861EC265F3FCB002A20CA /* ResourceOptionsManagerTests.swift in Sources */,
 				CA05A7202551C89600ABF902 /* CacheManagerIntegrationTests.swift in Sources */,
 				B53B8622260D717700C86BAA /* XCTestCase+MapboxAccessToken.swift in Sources */,
 				CA548FF0251C404B00F829A3 /* MultiPointTests.swift in Sources */,

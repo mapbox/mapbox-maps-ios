@@ -20,7 +20,19 @@ class MapViewIntegrationTests: IntegrationTestCase {
         rootView.addSubview(mapView)
     }
 
+    override func tearDownWithError() throws {
+        mapView?.removeFromSuperview()
+        mapView = nil
+
+        rootView?.removeFromSuperview()
+        rootView = nil
+
+        try super.tearDownWithError()
+    }
+
     func testMapViewIsReleasedAfterCameraTransition() throws {
+        try guardForMetalDevice()
+
         weak var weakMapView: MapView?
         try autoreleasepool {
 

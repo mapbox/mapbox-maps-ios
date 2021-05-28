@@ -8,6 +8,8 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
 
+        try guardForMetalDevice()
+
         guard let root = rootViewController?.view else {
             throw XCTSkip("No valid UIWindow or root view controller")
         }
@@ -29,7 +31,7 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
         removeMapView()
     }
 
-    func testLoadStyleJSONCompletionIsCalled() {
+    func testLoadStyleJSONCompletionIsCalled() throws {
 
         let styleJSONObject: [String: Any] = [
             "version": 8,
@@ -61,7 +63,7 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
         removeMapView()
     }
 
-    func testLoadStyleURICompletionIsCalledWhenMapViewIsDeallocated() {
+    func testLoadStyleURICompletionIsCalledWhenMapViewIsDeallocated() throws {
         weak var weakMapView: MapView?
         weak var weakMapboxMap: MapboxMap?
 

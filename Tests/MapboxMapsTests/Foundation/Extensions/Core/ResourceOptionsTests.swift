@@ -1,20 +1,15 @@
 import XCTest
 import MapboxMaps
 
-private class SubResourceOptions: ResourceOptions {
-}
-
 class ResourceOptionsTests: XCTestCase {
 
     func testEquality() {
         let a = ResourceOptions(accessToken: "a")
         let b = ResourceOptions(accessToken: "a")
         let c = ResourceOptions(accessToken: "c")
-        let d = SubResourceOptions(accessToken: "a")
 
         XCTAssertEqual(a, b)
         XCTAssertNotEqual(a, c)
-        XCTAssertNotEqual(a, d)
     }
 
     func testHashValue() {
@@ -26,5 +21,10 @@ class ResourceOptionsTests: XCTestCase {
         XCTAssertNotEqual(a.hashValue, c.hashValue)
 
         XCTAssertEqual(a.hashValue, a.hashValue)
+    }
+
+    func testAccessTokenIsObfuscated() {
+        let a = ResourceOptions(accessToken: "pk.HelloWorld")
+        XCTAssertEqual(a.description, "ResourceOptions: pk.H◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎")
     }
 }

@@ -104,7 +104,7 @@ open class MapView: UIView {
     /// - Parameters:
     ///   - frame: frame for the MapView.
     ///   - mapInitOptions: `MapInitOptions`; default uses
-    ///    `CredentialsManager.default` to retrieve a shared default access token.
+    ///    `ResourceOptionsManager.default` to retrieve a shared default resource option, including the access token.
     public init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions()) {
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)

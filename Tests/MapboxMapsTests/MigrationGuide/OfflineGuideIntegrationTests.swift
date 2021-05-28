@@ -1,5 +1,5 @@
 import Foundation
-@testable import MapboxMaps
+import MapboxMaps
 import XCTest
 
 // These tests are used for documentation purposes

@@ -20,7 +20,9 @@ final class GestureManagerTests: XCTestCase {
 
     override func setUp() {
         mapView = MapView(frame: CGRect(x: 0, y: 0, width: 100, height: 100),
-                              mapInitOptions: MapInitOptions(styleURI: nil))
+                          mapInitOptions: MapInitOptions(
+                            resourceOptions: ResourceOptions(accessToken: "dummy"),
+                            styleURI: nil))
         delegate = GestureHandlerDelegateMock()
         cameraManager = MockCameraManager()
         cameraManager.mapView = mapView

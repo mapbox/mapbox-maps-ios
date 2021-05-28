@@ -23,18 +23,18 @@ public final class MapInitOptions: NSObject {
     public let cameraOptions: CameraOptions?
 
     /// Initializer. The default initializer, i.e. `MapInitOptions()` will use
-    /// the default `CredentialsManager` to use the current shared access token.
+    /// the default `ResourceOptionsManager` to use the current shared access token.
     ///
     /// - Parameters:
     ///   - resourceOptions: `ResourceOptions`; default creates an instance
-    ///         using `CredentialsManager.default`
+    ///         using `ResourceOptionsManager.default`
     ///   - mapOptions: `MapOptions`; see `GlyphsRasterizationOptions` for the default
     ///         used for glyph rendering.
     ///   - cameraOptions: `CameraOptions` to be applied to the map, overriding
     ///         the default camera that has been specified in the style.
     ///   - styleURI: Style URI for the map to load. Defaults to `.streets`, but
     ///         can be `nil`.
-    public init(resourceOptions: ResourceOptions = ResourceOptions(),
+    public init(resourceOptions: ResourceOptions = ResourceOptionsManager.default.resourceOptions,
                 mapOptions: MapOptions = MapOptions(),
                 cameraOptions: CameraOptions? = nil,
                 styleURI: StyleURI? = .streets) {

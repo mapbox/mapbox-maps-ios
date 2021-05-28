@@ -1,6 +1,13 @@
 import XCTest
 
 extension XCTestCase {
+
+    func guardForMetalDevice() throws {
+        guard MTLCreateSystemDefaultDevice() != nil else {
+            throw XCTSkip("No valid Metal device (OS version or VM?)")
+        }
+    }
+
     func mapboxAccessToken() throws -> String {
         func token() throws -> String {
             // User defaults can override plist
@@ -21,10 +28,13 @@ extension XCTestCase {
 
         func validated(token: String) throws -> String {
             if token.starts(with: "pk.") {
-                return token
+                // ok
+            } else if token.isEmpty {
+                print("⚠️ token is empty.")
             } else {
                 throw XCTSkip("Mapbox access token is invalid")
             }
+            return token
         }
 
         return try validated(token: token()).trimmingCharacters(in: .whitespacesAndNewlines)

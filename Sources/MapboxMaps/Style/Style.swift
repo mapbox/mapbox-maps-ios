@@ -515,7 +515,6 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    // TODO: Fix initialization of Feature.
     public func _setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Turf.Feature]) throws {
         let mbxFeatures = features.compactMap { Feature($0) }
         return try handleExpected {

@@ -10,8 +10,7 @@ import XCTest
 class GlyphsRasterizationOptionsTests: XCTestCase {
 
     func testDefaults() {
-        // TODO: Replace with GlyphsRasterizationOptions()
-        let options = GlyphsRasterizationOptions(fontFamilies: [])
+        let options = GlyphsRasterizationOptions()
 
         XCTAssert(options.rasterizationMode == .ideographsRasterizedLocally)
         XCTAssertEqual(options.fontFamily, GlyphsRasterizationOptions.fallbackFontFamilyName)

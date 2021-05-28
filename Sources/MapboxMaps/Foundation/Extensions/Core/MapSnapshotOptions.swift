@@ -10,19 +10,21 @@ extension MapSnapshotOptions {
     ///         `.ideographsRasterizedLocally`
     ///   - resourceOptions: Resource fetching options to be used by the
     ///         snapshotter. Default uses the access token provided by
-    ///         `CredentialsManager.default`
+    ///         `ResourceOptionsManager.default`
     public convenience init(size: CGSize,
                             pixelRatio: CGFloat,
-                            glyphsRasterizationOptions: GlyphsRasterizationOptions? = GlyphsRasterizationOptions(fontFamilies: []),
-                            resourceOptions: ResourceOptions = ResourceOptions()) {
+                            glyphsRasterizationOptions: GlyphsRasterizationOptions? = GlyphsRasterizationOptions(),
+                            resourceOptions: ResourceOptions = ResourceOptionsManager.default.resourceOptions) {
         precondition(pixelRatio > 0)
         precondition(size.width * pixelRatio <= 8192, "Width or scale too great.")
         precondition(size.height * pixelRatio <= 8192, "Height or scale too great.")
 
+        let coreOptions = MapboxCoreMaps.ResourceOptions(resourceOptions)
+
         self.init(__size: Size(width: Float(size.width), height: Float(size.height)),
                   pixelRatio: Float(pixelRatio),
                   glyphsRasterizationOptions: glyphsRasterizationOptions,
-                  resourceOptions: resourceOptions)
+                  resourceOptions: coreOptions)
     }
 
     /// Dimensions of the snapshot in points

@@ -8,34 +8,37 @@ class MapInitOptionsIntegrationTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
         providerReturnValue = nil
+        ResourceOptionsManager.destroyDefault()
     }
 
-    func testOptionsWithCustomCredentialsManager() {
-        CredentialsManager.default.accessToken = "pk.aaaaaa"
-        let credentialsManager = CredentialsManager(accessToken: "pk.cccccc")
+    func testOptionsWithCustomResourceOptionsManager() {
+        ResourceOptionsManager.default.resourceOptions.accessToken = "pk.aaaaaa"
 
-        XCTAssertNotEqual(credentialsManager, CredentialsManager.default)
+        let rom = ResourceOptionsManager(accessToken: "pk.cccccc")
+
+        XCTAssert(rom !== ResourceOptionsManager.default)
 
         let mapInitOptions = MapInitOptions(
-            resourceOptions: ResourceOptions(accessToken: credentialsManager.accessToken),
+            resourceOptions: rom.resourceOptions,
             styleURI: .outdoors)
 
         let mapView = MapView(frame: .zero, mapInitOptions: mapInitOptions)
         let resourceOptions = mapView.mapboxMap.resourceOptions
 
         XCTAssertEqual(resourceOptions, mapInitOptions.resourceOptions)
-        XCTAssertEqual(resourceOptions.accessToken, credentialsManager.accessToken)
+        XCTAssertEqual(resourceOptions.accessToken, rom.resourceOptions.accessToken)
 
         XCTAssertEqual(mapView.mapboxMap.style.uri, .outdoors)
     }
 
     func testOptionsAreSetFromNibProvider() {
-        CredentialsManager.default.accessToken = "pk.aaaaaa"
-        let credentialsManager = CredentialsManager(accessToken: "pk.dddddd")
+        ResourceOptionsManager.default.resourceOptions.accessToken = "pk.aaaaaa"
+
+        let rom = ResourceOptionsManager(accessToken: "pk.dddddd")
 
         // Provider should return a custom MapInitOptions
         providerReturnValue = MapInitOptions(
-            resourceOptions: ResourceOptions(accessToken: credentialsManager.accessToken),
+            resourceOptions: rom.resourceOptions,
             styleURI: .satellite)
 
         // Load views from a nib, where the map view's provider is the file's owner,
@@ -62,13 +65,14 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         let resourceOptions = mapView.mapboxMap.resourceOptions
 
         XCTAssertEqual(resourceOptions, providerReturnValue.resourceOptions)
-        XCTAssertEqual(resourceOptions.accessToken, credentialsManager.accessToken)
+        XCTAssertEqual(resourceOptions.accessToken, rom.resourceOptions.accessToken)
 
         XCTAssertEqual(mapView.mapboxMap.style.uri, .satellite)
     }
 
     func testDefaultOptionsAreUsedWhenNibDoesntSetProvider() {
-        CredentialsManager.default.accessToken = "pk.eeeeee"
+
+        ResourceOptionsManager.default.resourceOptions.accessToken = "pk.eeeeee"
 
         // Although this test checks that a MapView (#2) isn't connected to a
         // Provider, the first MapView will still be instantiated, so a return
@@ -92,8 +96,7 @@ class MapInitOptionsIntegrationTests: XCTestCase {
         let resourceOptions = mapView.mapboxMap.resourceOptions
 
         // The map should use the default MapInitOptions
-        XCTAssertEqual(resourceOptions, ResourceOptions(accessToken: CredentialsManager.default.accessToken))
-        XCTAssertEqual(resourceOptions.accessToken, CredentialsManager.default.accessToken)
+        XCTAssertEqual(resourceOptions, ResourceOptionsManager.default.resourceOptions)
     }
 
     func testStyleDefaultCamera() throws {

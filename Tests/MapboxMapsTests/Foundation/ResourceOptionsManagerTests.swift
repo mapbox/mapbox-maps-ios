@@ -5,7 +5,7 @@ class ResourceOptionsManagerTests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        ResourceOptionsManager.default.reset()
+        ResourceOptionsManager.destroyDefault()
     }
 
     override func tearDownWithError() throws {
@@ -45,16 +45,14 @@ class ResourceOptionsManagerTests: XCTestCase {
     }
 
     func testResettingResourceOptionsManager() throws {
-        let resourceOptions = ResourceOptions(accessToken: "")
-        let rom = ResourceOptionsManager(resourceOptions: resourceOptions, for: .mapboxMapsTests)
-        let token = rom.resourceOptions.accessToken
+        let token = ResourceOptionsManager.default.resourceOptions.accessToken
 
-        rom.resourceOptions.accessToken = "custom-token"
+        ResourceOptionsManager.default.resourceOptions.accessToken = "custom-token"
 
-        XCTAssertEqual("custom-token", rom.resourceOptions.accessToken, "Resource options is a value type")
+        XCTAssertEqual("custom-token", ResourceOptionsManager.default.resourceOptions.accessToken, "Resource options is a value type")
 
-        rom.reset()
+        ResourceOptionsManager.destroyDefault()
 
-        XCTAssertEqual(token, rom.resourceOptions.accessToken, "Token should have been reset")
+        XCTAssertEqual(token, ResourceOptionsManager.default.resourceOptions.accessToken, "Token should have been reset")
     }
 }

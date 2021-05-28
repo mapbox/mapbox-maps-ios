@@ -35,10 +35,9 @@ public class ResourceOptionsManager {
         return defaultInstance!
     }
 
-    /// :nodoc:
     /// Convenience function to remove the default instance. Calling `default`
     /// again will re-create the default instance.
-    internal static func destroyDefault() {
+    public static func destroyDefault() {
         defaultInstance = nil
     }
 
@@ -91,14 +90,6 @@ public class ResourceOptionsManager {
     internal init(resourceOptions: ResourceOptions, for bundle: Bundle) {
         self.bundle = bundle
         update(resourceOptions)
-    }
-
-    /// Reset the manager to a default `ResourceOptions` using the specified
-    /// access token.
-    ///
-    /// - Parameter accessToken: Valid access token or `nil`
-    internal func reset(resourceOptions: ResourceOptions? = nil) {
-        self.resourceOptions = resourceOptions ?? ResourceOptions(accessToken: defaultAccessToken())
     }
 
     private func update(_ resourceOptions: ResourceOptions) {

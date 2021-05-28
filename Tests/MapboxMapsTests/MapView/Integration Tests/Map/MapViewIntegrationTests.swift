@@ -23,8 +23,6 @@ class MapViewIntegrationTests: IntegrationTestCase {
     override func tearDownWithError() throws {
         mapView?.removeFromSuperview()
         mapView = nil
-
-        rootView?.removeFromSuperview()
         rootView = nil
 
         try super.tearDownWithError()

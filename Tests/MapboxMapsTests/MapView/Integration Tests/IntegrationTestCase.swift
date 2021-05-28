@@ -5,6 +5,7 @@ internal class IntegrationTestCase: XCTestCase {
     internal var window: UIWindow?
     internal var rootViewController: UIViewController?
     internal var accessToken: String!
+    internal var createdWindow = false
 
     internal override func setUpWithError() throws {
         try setupScreenAndWindow()
@@ -12,8 +13,10 @@ internal class IntegrationTestCase: XCTestCase {
     }
 
     internal override func tearDownWithError() throws {
-        rootViewController?.viewWillDisappear(false)
-        rootViewController?.viewDidDisappear(false)
+        if createdWindow {
+            rootViewController?.viewWillDisappear(false)
+            rootViewController?.viewDidDisappear(false)
+        }
         rootViewController = nil
         window = nil
     }
@@ -31,6 +34,7 @@ internal class IntegrationTestCase: XCTestCase {
         rootViewController = window?.rootViewController
 
         if (window == nil) && (rootViewController == nil) {
+            createdWindow = true
 
             let screen = UIScreen.main
             let window = UIWindow(frame: screen.bounds)

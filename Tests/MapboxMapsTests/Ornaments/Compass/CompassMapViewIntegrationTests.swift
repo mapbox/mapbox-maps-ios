@@ -1,9 +1,6 @@
 import XCTest
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsOrnaments
-#endif
+
 
 class CompassMapViewIntegrationTests: MapViewIntegrationTestCase {
 

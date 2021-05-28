@@ -8,11 +8,11 @@ internal class EventsManager: EventsListener {
 
     var telemetry: TelemetryProtocol!
 
-    init(accessToken: String) {
+    init(accessToken: AccessToken) {
         let sdkVersion = "10.0.0"
         let mmeEventsManager = MMEEventsManager.shared()
         telemetry = mmeEventsManager
-        mmeEventsManager.initialize(withAccessToken: accessToken,
+        mmeEventsManager.initialize(withAccessToken: accessToken.token,
                                     userAgentBase: Constants.MGLAPIClientUserAgentBase,
                                     hostSDKVersion: sdkVersion)
     }

@@ -8,7 +8,7 @@ extension XCTestCase {
         }
     }
 
-    func mapboxAccessToken() throws -> String {
+    func mapboxAccessToken() throws -> AccessToken {
         func token() throws -> String {
             // User defaults can override plist
             if let token = UserDefaults.standard.string(forKey: "MBXAccessToken") {
@@ -37,7 +37,8 @@ extension XCTestCase {
             return token
         }
 
-        return try validated(token: token()).trimmingCharacters(in: .whitespacesAndNewlines)
+        let validatedToken = try validated(token: token()).trimmingCharacters(in: .whitespacesAndNewlines)
+        return .tokenString(validatedToken)
     }
 
     func clearDefaultAmbientCache() throws {

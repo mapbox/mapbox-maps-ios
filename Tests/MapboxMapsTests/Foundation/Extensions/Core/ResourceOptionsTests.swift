@@ -24,7 +24,7 @@ class ResourceOptionsTests: XCTestCase {
     }
 
     func testAccessTokenIsObfuscated() {
-        let a = ResourceOptions(accessToken: "pk.HelloWorld")
-        XCTAssertEqual(a.description, "ResourceOptions: pk.H◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎")
+        let a: AccessToken = "pk.HelloWorld"
+        XCTAssertEqual(a.description, "pk.H×××××××××")
     }
 }

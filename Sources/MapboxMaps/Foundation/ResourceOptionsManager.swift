@@ -30,7 +30,7 @@ public class ResourceOptionsManager {
     /// A valid access token must be provided or found.
     public static var `default`: ResourceOptionsManager {
         if defaultInstance == nil {
-            defaultInstance = ResourceOptionsManager(accessToken: nil)
+            defaultInstance = ResourceOptionsManager()
         }
         return defaultInstance!
     }
@@ -55,7 +55,6 @@ public class ResourceOptionsManager {
 
     private var _resourceOptions: ResourceOptions!
     private var tileStore: TileStore!
-    private var bundle: Bundle
 
     /// Initializes a `ResourceOptionsManager` with an optional access token.
     ///
@@ -71,13 +70,9 @@ public class ResourceOptionsManager {
     ///     ```
     ///
     /// - Parameter accessToken: Valid access token or `nil`
-    public convenience init(accessToken: String? = nil) {
-        let resourceOptions = ResourceOptions(accessToken: accessToken ?? "")
+    public convenience init(accessToken: AccessToken = .default()) {
+        let resourceOptions = ResourceOptions(accessToken: accessToken)
         self.init(resourceOptions: resourceOptions)
-    }
-
-    public convenience init(resourceOptions: ResourceOptions) {
-        self.init(resourceOptions: resourceOptions, for: .main)
     }
 
     /// Initializes a `ResourceOptionsManager` with the specified access token
@@ -87,52 +82,18 @@ public class ResourceOptionsManager {
     ///     - accessToken: Valid access token or `nil`
     ///     - bundle: Bundle to search for an access token (used if resource
     ///         options is nil).
-    internal init(resourceOptions: ResourceOptions, for bundle: Bundle) {
-        self.bundle = bundle
+    public init(resourceOptions: ResourceOptions) {
         update(resourceOptions)
     }
 
     private func update(_ resourceOptions: ResourceOptions) {
-        // Update access token
-        let token = resourceOptions.accessToken.isEmpty ?
-            defaultAccessToken() : resourceOptions.accessToken
-
         _resourceOptions = resourceOptions
-        _resourceOptions.accessToken = token
 
         let resolvedTileStore = resourceOptions.tileStore ?? TileStore.default
         if resourceOptions.tileStoreUsageMode != .disabled {
-            resolvedTileStore.setAccessToken(token)
+            resolvedTileStore.setAccessToken(resourceOptions.accessToken)
         }
 
         tileStore = resolvedTileStore
-    }
-
-    internal func defaultAccessToken() -> String {
-        // Check User defaults
-        #if DEBUG
-        if let accessToken = UserDefaults.standard.string(forKey: "MBXAccessToken") {
-            print("Found access token from UserDefaults (command line parameter?)")
-            return accessToken
-        }
-        #endif
-
-        var token = ""
-
-        // Check application plist
-        if let accessToken = bundle.infoDictionary?["MBXAccessToken"] as? String {
-            token = accessToken
-        }
-        // Check for a bundled file
-        else if let url = bundle.url(forResource: "MapboxAccessToken", withExtension: nil),
-                let tokenFromFile = try? String(contentsOf: url) {
-            token = tokenFromFile
-        }
-
-        if token.isEmpty {
-            Log.warning(forMessage: "Empty access token.", category: "ResourceOptions")
-        }
-
-        return token
     }
 }

@@ -12,7 +12,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
 
     var tileStorePathURL: URL!
     var tileStore: TileStore!
-    var accessToken: String!
+    var accessToken: AccessToken = .default(.mapboxMapsTests)
 
     override func setUpWithError() throws {
         try super.setUpWithError()

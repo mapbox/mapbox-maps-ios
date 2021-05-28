@@ -27,8 +27,8 @@ extension TileStore {
     }
 
     /// Convenience to set the access token for a TileStore
-    public func setAccessToken(_ accessToken: String) {
-        setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken)
+    public func setAccessToken(_ accessToken: AccessToken) {
+        setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken.token)
     }
 
     /// Loads a new tile region or updates the existing one.

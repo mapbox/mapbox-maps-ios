@@ -83,4 +83,10 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
             bearing: interpolator.bearing(at: fractionComplete),
             pitch: CGFloat(interpolator.pitch(at: fractionComplete)))
     }
+
+    // MARK: Cancelable
+
+    public func cancel() {
+        stopAnimation()
+    }
 }

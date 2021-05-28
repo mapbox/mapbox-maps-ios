@@ -2,7 +2,7 @@ import UIKit
 import Turf
 @_implementationOnly import MapboxCommon_Private
 
-public protocol CameraAnimator {
+public protocol CameraAnimator: Cancelable {
 
     /// Stops the animation in its tracks and calls any provided completion
     func stopAnimation()
@@ -87,11 +87,11 @@ public class CameraAnimationsManager {
     ///   - camera: The camera options at the end of the animation. Any camera parameters that are nil will not be animated.
     ///   - duration: Duration of the animation, measured in seconds. If nil, a suitable calculated duration is used.
     ///   - completion: Completion handler called when the animation stops
-    /// - Returns: An instance of `CameraAnimatorProtocol` which can be interrupted if necessary
+    /// - Returns: An instance of `Cancelable` which can be canceled if necessary
     @discardableResult
     public func fly(to camera: CameraOptions,
                     duration: TimeInterval? = nil,
-                    completion: AnimationCompletion? = nil) -> CameraAnimator? {
+                    completion: AnimationCompletion? = nil) -> Cancelable? {
 
         guard let mapView = mapView,
               let flyToAnimator = FlyToCameraAnimator(
@@ -125,12 +125,12 @@ public class CameraAnimationsManager {
     ///   - camera: the target camera after animation
     ///   - duration: duration of the animation
     ///   - completion: completion to be called after animation
-    /// - Returns: An instance of `CameraAnimatorProtocol` which can be interrupted if necessary
+    /// - Returns: An instance of `Cancelable` which can be canceled if necessary
     @discardableResult
     public func ease(to camera: CameraOptions,
                      duration: TimeInterval,
                      curve: UIView.AnimationCurve = .easeOut,
-                     completion: AnimationCompletion? = nil) -> CameraAnimator? {
+                     completion: AnimationCompletion? = nil) -> Cancelable? {
 
         internalAnimator?.stopAnimation()
 

@@ -42,17 +42,13 @@ class CompassMapViewIntegrationTests: MapViewIntegrationTestCase {
         let mapExpectation = XCTestExpectation(description: "The bearing for the map should be 0 after a tap gesture")
         let compassExpectation = XCTestExpectation(description: "The bearing for the compass should be 0 after a tap gesture.")
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        mapView.mapboxMap.onEvery(.cameraChanged) { _ in
             if mapView.mapboxMap.cameraState.bearing == 0 {
                 mapExpectation.fulfill()
-            } else {
-                XCTFail("The map's bearing is not 0 after a tap gesture.")
             }
 
             if compass.currentBearing == 0 {
                 compassExpectation.fulfill()
-            } else {
-                XCTFail("The map's bearing is not 0 after a tap gesture.")
             }
         }
 

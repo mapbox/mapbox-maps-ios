@@ -68,8 +68,8 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         var iterations = 30
         while (weakTileStore != nil) && (iterations > 0) {
             print("Waiting for TileStore operations to complete...")
-            let expectation = expectation(description: "Waiting")
-            _ = XCTWaiter.wait(for: [expectation], timeout: 2.0)
+            let expect = expectation(description: "Waiting")
+            _ = XCTWaiter.wait(for: [expect], timeout: 2.0)
 
             iterations -= 1
         }
@@ -335,8 +335,8 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
         // In this test, we exit early. This is to test that tearDown
         // will correctly wait until the completion block has been called
-        let expectation = expectation(description: "Early exit")
-        _ = XCTWaiter.wait(for: [expectation], timeout: 0.5)
+        let expect = expectation(description: "Early exit")
+        _ = XCTWaiter.wait(for: [expect], timeout: 0.5)
 
         resourceOptions = nil
         offlineManager = nil

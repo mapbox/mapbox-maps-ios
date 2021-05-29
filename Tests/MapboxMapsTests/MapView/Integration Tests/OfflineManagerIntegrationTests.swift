@@ -1,7 +1,7 @@
 import XCTest
 @testable import MapboxMaps
 
-// swiftlint:disable force_cast
+// swiftlint:disable force_cast type_body_length
 internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
     var tileStorePathURL: URL!

@@ -61,12 +61,21 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         offlineManager = nil
         tileStore = nil
 
-        XCTAssertNil(weakTileStore)
-        XCTAssertNil(weakOfflineManager)
+        // If tests time-out, we need to wait till the tile store operation(s)
+        // have been called, otherwise any XCTFail that is called can cross-talk
+        // with other running tests
 
-        // Wait before removing directory
-        let expectation = self.expectation(description: "Wait...")
-        _ = XCTWaiter.wait(for: [expectation], timeout: 1.0)
+        var iterations = 30
+        while (weakTileStore != nil) && (iterations > 0) {
+            print("Waiting for TileStore operations to complete...")
+            let expectation = expectation(description: "Waiting")
+            _ = XCTWaiter.wait(for: [expectation], timeout: 2.0)
+
+            iterations -= 1
+        }
+
+        XCTAssertNil(weakOfflineManager)
+        XCTAssertNil(weakTileStore)
 
         if let tileStorePathURL = tileStorePathURL {
             try TileStore.removeDirectory(at: tileStorePathURL)
@@ -108,7 +117,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         }
 
         let expectations = [downloadInProgress, completionBlockReached]
-        wait(for: expectations, timeout: 30.0)
+        wait(for: expectations, timeout: 60.0)
     }
 
     internal func testProgressCanBeCancelled() throws {
@@ -187,7 +196,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
             }
         }
 
-        wait(for: [downloadWasDeleted], timeout: 5.0)
+        wait(for: [downloadWasDeleted], timeout: 10.0)
     }
 
     internal func testMapCanBeLoadedWithoutNetworkConnectivity() throws {
@@ -290,4 +299,51 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
         XCTAssertNil(weakMapView)
     }
+
+    func testTileStoreIsRetainedDuringAsyncOperation() {
+        let expect = expectation(description: "Completion block called")
+        let functionName = name
+        tileStore.loadTileRegion(forId: tileRegionId,
+                                 loadOptions: tileRegionLoadOptions!) { _ in
+            print("\(functionName): Completion block called")
+            expect.fulfill()
+        }
+
+        tileRegionLoadOptions = nil
+        resourceOptions = nil
+//      offlineManager = nil // <--- if uncommented completion block is not called
+        tileStore = nil
+
+        XCTAssertNotNil(weakTileStore)
+        wait(for: [expect], timeout: 60)
+        offlineManager = nil
+
+        XCTAssertNil(weakTileStore)
+    }
+
+    func testTileStoreIsRetainedDuringAsyncOperationEarlyExit() {
+        let functionName = name
+        tileStore.loadTileRegion(forId: tileRegionId,
+                                 loadOptions: tileRegionLoadOptions!) { _ in
+            print("\(functionName): Completion block called")
+        }
+
+        tileRegionLoadOptions = nil
+        resourceOptions = nil
+        tileStore = nil
+        XCTAssertNotNil(weakTileStore)
+
+        // In this test, we exit early. This is to test that tearDown
+        // will correctly wait until the completion block has been called
+        let expectation = expectation(description: "Early exit")
+        _ = XCTWaiter.wait(for: [expectation], timeout: 0.5)
+
+        resourceOptions = nil
+        offlineManager = nil
+
+        // Unlike the test above, we expect the completion block not to have been
+        // called at this point
+        XCTAssertNotNil(weakTileStore)
+    }
+
 }

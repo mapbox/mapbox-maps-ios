@@ -5,7 +5,7 @@ import Turf
 // swiftlint:disable file_length orphaned_doc_comment type_body_length
 class MigrationGuideIntegrationTests: IntegrationTestCase {
 
-    var view: UIView? = nil
+    var view: UIView?
 
     private var testRect = CGRect(origin: .zero, size: CGSize(width: 100, height: 100))
 

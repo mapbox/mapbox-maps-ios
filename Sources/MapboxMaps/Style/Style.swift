@@ -371,6 +371,13 @@ extension Style: StyleManagerProtocol {
         }
     }
 
+    public func setLayerPersistence(for layerID: String, isPersistent: Bool) throws {
+        return try handleExpected {
+            return styleManager.setStyleLayerPersistent(isPersistent)
+        }
+    }
+
+    public func getLayerPersistent
     // MARK: - Sources
 
     public func addSource(withId id: String, properties: [String: Any]) throws {

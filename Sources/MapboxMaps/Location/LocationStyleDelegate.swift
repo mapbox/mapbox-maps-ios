@@ -6,6 +6,7 @@ internal protocol LocationStyleDelegate: AnyObject {
     func addSource(_ source: Source, id: String) throws
     func removeSource(withId id: String) throws
     func setSourceProperty(for sourceId: String, property: String, value: Any) throws
+    func setLayerPersistence(for layerId: String, isPersistent: Bool) throws
 
     //swiftlint:disable function_parameter_count
     func addImage(_ image: UIImage, id: String, sdf: Bool, stretchX: [ImageStretches], stretchY: [ImageStretches], content: ImageContent?) throws
@@ -18,5 +19,9 @@ extension LocationStyleDelegate {
 
     internal func addImage(_ image: UIImage, id: String, sdf: Bool = false, stretchX: [ImageStretches] = [], stretchY: [ImageStretches] = [], content: ImageContent? = nil) throws {
         try addImage(image, id: id, sdf: sdf, stretchX: stretchX, stretchY: stretchY, content: content)
+    }
+
+    internal func setLayerPersistence(for layerId: String, isPersistent: Bool) throws {
+        try setLayerPersistence(layerId: layerId, isPersistent: isPersistent)
     }
 }

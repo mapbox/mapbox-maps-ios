@@ -359,6 +359,9 @@ extension Style: StyleManagerProtocol {
         return StyleManager.getStyleLayerPropertyDefaultValue(forLayerType: layerType, property: property)
     }
 
+    /**
+
+     */
     public func layerProperties(for layerId: String) throws -> [String: Any] {
         return try handleExpected {
             return styleManager.getStyleLayerProperties(forLayerId: layerId)
@@ -371,13 +374,17 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    public func setLayerPersistence(for layerID: String, isPersistent: Bool) throws {
+    public func setLayerPersistence(for layerId: String, isPersistent: Bool) throws {
         return try handleExpected {
-            return styleManager.setStyleLayerPersistent(isPersistent)
+            return styleManager.setStyleLayerPersistent(layerId: layerId, isPersistent: isPersistent)
         }
     }
 
-    public func getLayerPersistent
+    public func isLayerPersistent(for layerId: String) -> Bool {
+        return try handleExpected {
+            return styleManager.isLayerPersistent(layerId: layerId)
+        }
+    }
     // MARK: - Sources
 
     public func addSource(withId id: String, properties: [String: Any]) throws {

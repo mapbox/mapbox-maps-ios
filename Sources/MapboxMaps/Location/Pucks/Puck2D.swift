@@ -25,6 +25,8 @@ public struct Puck2DConfiguration: Equatable {
     /// The size of the images, as a scale factor applied to the size of the specified image.
     public var scale: Value<Double>?
 
+    public var isPersistent: Bool = false
+
     public init(topImage: UIImage? = nil,
                 bearingImage: UIImage? = nil,
                 shadowImage: UIImage? = nil,
@@ -59,6 +61,17 @@ internal class Puck2D: Puck {
 
     internal weak var locationSupportableMapView: LocationSupportableMapView?
     internal weak var style: LocationStyleDelegate?
+
+    internal var isPersistent {
+        get {
+            return configuration.isPersistent
+        }
+        set {
+            if let style = style {
+                style.setLayerPersistence(for: , isPersistent: <#T##Bool#>)
+            }
+        }
+    }
 
     // MARK: Initializers
     internal init(puckStyle: PuckStyle,

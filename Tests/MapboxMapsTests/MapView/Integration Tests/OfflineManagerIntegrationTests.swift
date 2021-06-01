@@ -387,7 +387,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         XCTAssertNil(weakTileStore)
     }
 
-    func testTileStoreDelayedReleaseWithCaptureButReleasingOfflineManager() {
+    func testTileStoreDelayedReleaseWithCaptureButReleasingOfflineManager() throws {
 
         // This test is currently expected to fail, due to a known issue with
         // TileStore

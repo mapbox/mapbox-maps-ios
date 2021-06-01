@@ -418,5 +418,14 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
             // and is not called, so does not get released afterwards.
             XCTAssertNil(weakTileStore)
         }
+
+        // After this test runs and presumably because the TileStore is not released
+        // we see the following errors:
+//
+//        [logging] BUG IN CLIENT OF libsqlite3.dylib: database integrity compromised by API violation: vnode unlinked while in use: .../data/Library/Application Support/.mapbox/maps/tile-store/-OfflineManagerIntegrationTestCase-testTileStoreDelayedReleaseWithCaptureButReleasingOfflineManager-/metadata.db-wal
+//        [logging] BUG IN CLIENT OF libsqlite3.dylib: database integrity compromised by API violation: vnode unlinked while in use: .../data/Library/Application Support/.mapbox/maps/tile-store/-OfflineManagerIntegrationTestCase-testTileStoreDelayedReleaseWithCaptureButReleasingOfflineManager-/metadata.db-shm
+//        [logging] invalidated open fd: 8 (0x11)
+//        [logging] invalidated open fd: 9 (0x11)
+//        [logging] BUG IN CLIENT OF libsqlite3.dylib: database integrity compromised by API violation: vnode unlinked while in use: .../data/Library/Application Support/.mapbox/maps/tile-store/-OfflineManagerIntegrationTestCase-testTileStoreDelayedReleaseWithCaptureButReleasingOfflineManager-/metadata.db
     }
 }

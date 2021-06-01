@@ -103,7 +103,6 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         let completionBlockReached = expectation(description: "Checks that completion block closure has been reached")
 
         let closureDeallocation = expectation(description: "Closure deallocated")
-        let observer = DeallocationObserver(closureDeallocation.fulfill)
 
         /// Perform the download
         tileStore.loadTileRegion(forId: tileRegionId,
@@ -113,8 +112,10 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
                 downloadInProgress.fulfill()
             }
         } completion: { result in
+            let observer = DeallocationObserver(closureDeallocation.fulfill)
+            dump(observer)
+
             DispatchQueue.main.async {
-                _ = observer
                 switch result {
                 case let .success(region):
                     if region.requiredResourceCount == region.completedResourceCount {
@@ -140,14 +141,16 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         let downloadWasCancelled = expectation(description: "Checks a cancel function was reached and that the download was canceled")
 
         let closureDeallocation = expectation(description: "Closure deallocated")
-        let observer = DeallocationObserver(closureDeallocation.fulfill)
 
         /// Perform the download
         let download = tileStore.loadTileRegion(forId: tileRegionId,
                                                 loadOptions: tileRegionLoadOptions!) { _ in }
             completion: { result in
+                let observer = DeallocationObserver(closureDeallocation.fulfill)
+                dump(observer)
+
                 DispatchQueue.main.async {
-                    _ = observer
+                    dump(observer)
                     switch result {
                     case .success:
                         XCTFail("Result reached success block, therefore download was not canceled")
@@ -174,14 +177,15 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         let tileRegionDownloaded = expectation(description: "Downloaded offline tiles")
 
         let closureDeallocation = expectation(description: "Closure deallocated")
-        let observer = DeallocationObserver(closureDeallocation.fulfill)
 
         /// Perform the download
         tileStore.loadTileRegion(forId: tileRegionId,
                                  loadOptions: tileRegionLoadOptions!) { _ in }
             completion: { result in
+                let observer = DeallocationObserver(closureDeallocation.fulfill)
+                dump(observer)
+
                 DispatchQueue.main.async {
-                    _ = observer
                     switch result {
                     case .success(let region):
                         if region.requiredResourceCount == region.completedResourceCount {
@@ -197,7 +201,8 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
                 }
             }
 
-        wait(for: [tileRegionDownloaded, closureDeallocation], timeout: 60.0)
+        wait(for: [tileRegionDownloaded], timeout: 60.0)
+        wait(for: [closureDeallocation], timeout: 10.0)
 
         // Now delete
         let downloadWasDeleted = XCTestExpectation(description: "Downloaded offline tiles were deleted")
@@ -335,19 +340,20 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
     func testTileStoreImmediateRelease() {
         let functionName = name
 
+        let expect = expectation(description: "Completion called")
+        let closureDeallocation = expectation(description: "Closure deallocated")
+
         // This test is currently expected to fail, due to a known issue with
         // TileStore
         let expectedToFail = true
-
-        let expect = expectation(description: "Completion called")
         expect.isInverted = expectedToFail
-
-        let closureDeallocation = expectation(description: "Closure deallocated")
-        let observer = DeallocationObserver(closureDeallocation.fulfill)
+        closureDeallocation.isInverted = expectedToFail
 
         tileStore.loadTileRegion(forId: tileRegionId,
                                  loadOptions: tileRegionLoadOptions!) { _ in
-            _ = observer
+            let observer = DeallocationObserver(closureDeallocation.fulfill)
+            dump(observer)
+
             print("\(functionName): Completion block called")
             expect.fulfill()
         }
@@ -370,12 +376,12 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         let expect = expectation(description: "Completion called")
 
         let closureDeallocation = expectation(description: "Closure deallocated")
-        let observer = DeallocationObserver(closureDeallocation.fulfill)
 
         tileStore.loadTileRegion(forId: tileRegionId,
                                  loadOptions: tileRegionLoadOptions!) { _ in
             print("\(functionName): Completion block called")
-            _ = observer
+            let observer = DeallocationObserver(closureDeallocation.fulfill)
+            dump(observer)
             expect.fulfill()
         }
 
@@ -399,15 +405,16 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         let functionName = name
 
         let closureDeallocation = expectation(description: "Closure deallocated")
-        let observer = DeallocationObserver(closureDeallocation.fulfill)
 
         let expect = expectation(description: "Completion called")
         do {
             tileStore.loadTileRegion(forId: tileRegionId,
                                      loadOptions: tileRegionLoadOptions!) { _ in
+                let observer = DeallocationObserver(closureDeallocation.fulfill)
+                dump(observer)
+
                 DispatchQueue.main.async {
                     print("\(functionName): Completion block called")
-                    _ = observer
                     expect.fulfill()
                 }
             }
@@ -432,25 +439,26 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
     func testTileStoreDelayedReleaseWithCaptureButReleasingOfflineManager() throws {
 
+        let functionName = name
+        let expect = expectation(description: "Completion called")
+        let closureDeallocation = expectation(description: "Closure deallocated")
+
         // This test is currently expected to fail, due to a known issue with
         // TileStore
         let expectedToFail = true
-
-        let functionName = name
-        let expect = expectation(description: "Completion called")
         expect.isInverted = expectedToFail
-
-        let closureDeallocation = expectation(description: "Closure deallocated")
-        let observer = DeallocationObserver(closureDeallocation.fulfill)
+        closureDeallocation.isInverted = expectedToFail
 
         do {
             let tileStore2 = tileStore
             tileStore.loadTileRegion(forId: tileRegionId,
                                      loadOptions: tileRegionLoadOptions!) { _ in
+                let observer = DeallocationObserver(closureDeallocation.fulfill)
+                dump(observer)
+
                 DispatchQueue.main.async {
                     print("\(functionName): Completion block called")
-                    _ = tileStore2
-                    _ = observer
+                    dump(tileStore2)
 
                     expect.fulfill()
                 }

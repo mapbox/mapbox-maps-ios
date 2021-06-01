@@ -4,7 +4,10 @@ import MapboxMaps
 class DeallocationObserver {
     var observe: () -> Void
     deinit {
-        observe()
+        let observation = observe
+        DispatchQueue.main.async {
+            observation()
+        }
     }
     init(_ observe: @escaping () -> Void) {
         self.observe = observe

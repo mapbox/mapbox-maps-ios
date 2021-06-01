@@ -175,10 +175,10 @@ extension TileStore {
         __getTileRegionMetadata(forId: id,
                                 callback: tileStoreClosureAdapter(for: completion, type: AnyObject.self))
     }
-}
 
-private func tileStoreClosureAdapter<T, ObjCType>(
-    for closure: @escaping (Result<T, Error>) -> Void,
-    type: ObjCType.Type) -> ((Expected<AnyObject, AnyObject>?) -> Void) where ObjCType: AnyObject {
-    return coreAPIClosureAdapter(for: closure, type: type, concreteErrorType: TileRegionError.self)
+    private func tileStoreClosureAdapter<T, ObjCType>(
+        for closure: @escaping (Result<T, Error>) -> Void,
+        type: ObjCType.Type) -> ((Expected<AnyObject, AnyObject>?) -> Void) where ObjCType: AnyObject {
+        return coreAPIClosureAdapter(for: closure, type: type, concreteErrorType: TileRegionError.self)
+    }
 }

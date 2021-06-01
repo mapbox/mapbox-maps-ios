@@ -1,7 +1,7 @@
 import XCTest
 @testable import MapboxMaps
 
-// swiftlint:disable force_cast
+// swiftlint:disable force_cast type_body_length file_length
 internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
     var tileStorePathURL: URL!
@@ -10,11 +10,18 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
     var offlineManager: OfflineManager!
     var tileRegionId = ""
 
+    weak var weakTileStore: TileStore?
+    weak var weakOfflineManager: OfflineManager?
+
     let tokyoCoord = CLLocationCoordinate2D(latitude: 35.682027, longitude: 139.769305)
     var tileRegionLoadOptions: TileRegionLoadOptions!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
+        try setupTileStoreAndOfflineManager()
+    }
+
+    func setupTileStoreAndOfflineManager() throws {
         accessToken = try mapboxAccessToken()
 
         tileRegionId = "tile-region-\(name)"
@@ -23,11 +30,13 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         tileStorePathURL = try TileStore.fileURLForDirectory(for: name.fileSystemSafeString())
         tileStore = TileStore.shared(for: tileStorePathURL.path)
         tileStore.setAccessToken(accessToken)
+        weakTileStore = tileStore
 
         resourceOptions = ResourceOptions(accessToken: accessToken,
                                           tileStore: tileStore)
 
         offlineManager = OfflineManager(resourceOptions: resourceOptions)
+        weakOfflineManager = offlineManager
 
         // Setup TileRegionLoadOptions
         let outdoorsOptions = TilesetDescriptorOptions(styleURI: .outdoors,
@@ -47,17 +56,33 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
     override func tearDownWithError() throws {
         try super.tearDownWithError()
 
-        tileStore = nil
         tileRegionLoadOptions = nil
         resourceOptions = nil
         offlineManager = nil
+        tileStore = nil
 
-        // Wait before removing directory
-        let expectation = self.expectation(description: "Wait...")
-        _ = XCTWaiter.wait(for: [expectation], timeout: 1.0)
+        // If tests time-out, we may need to wait till the tile store operation(s)
+        // have been called, otherwise any XCTFail that is called can cross-talk
+        // with other running tests
 
-        if let tileStorePathURL = tileStorePathURL {
-            try TileStore.removeDirectory(at: tileStorePathURL)
+        var iterations = 30
+        while (weakTileStore != nil) && (iterations > 0) {
+            print("Waiting for TileStore operations to complete...")
+            let expect = expectation(description: "Waiting")
+            _ = XCTWaiter.wait(for: [expect], timeout: 2.0)
+
+            iterations -= 1
+        }
+
+        XCTAssertNil(weakOfflineManager)
+        if iterations > 0 {
+            XCTAssertNil(weakTileStore)
+
+            if let tileStorePathURL = tileStorePathURL {
+                try TileStore.removeDirectory(at: tileStorePathURL)
+            }
+        } else if weakTileStore != nil {
+            print("warning: TileStore not released!")
         }
     }
 
@@ -96,7 +121,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         }
 
         let expectations = [downloadInProgress, completionBlockReached]
-        wait(for: expectations, timeout: 30.0)
+        wait(for: expectations, timeout: 60.0)
     }
 
     internal func testProgressCanBeCancelled() throws {
@@ -153,7 +178,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
                 }
             }
 
-        wait(for: [tileRegionDownloaded], timeout: 30.0)
+        wait(for: [tileRegionDownloaded], timeout: 60.0)
 
         // Now delete
         let downloadWasDeleted = XCTestExpectation(description: "Downloaded offline tiles were deleted")
@@ -175,7 +200,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
             }
         }
 
-        wait(for: [downloadWasDeleted], timeout: 5.0)
+        wait(for: [downloadWasDeleted], timeout: 10.0)
     }
 
     internal func testMapCanBeLoadedWithoutNetworkConnectivity() throws {
@@ -232,7 +257,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
                 }
             }
 
-            wait(for: [stylePackLoaded, tileRegionLoaded], timeout: 30.0)
+            wait(for: [stylePackLoaded, tileRegionLoaded], timeout: 60.0)
 
             // - - - - - - - -
             // 3. Disable load-from-network, and try launch map at this location
@@ -265,6 +290,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
             }
 
             mapView.mapboxMap.onNext(.mapLoaded) { _ in
+                print("Map was loaded")
                 mapWasLoaded.fulfill()
             }
 
@@ -276,5 +302,138 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         }
 
         XCTAssertNil(weakMapView)
+    }
+
+    // Release tests
+
+    func testTileStoreImmediateRelease() {
+        let functionName = name
+
+        // This test is currently expected to fail, due to a known issue with
+        // TileStore
+        let expectedToFail = true
+
+        let expect = expectation(description: "Completion called")
+        expect.isInverted = expectedToFail
+        tileStore.loadTileRegion(forId: tileRegionId,
+                                 loadOptions: tileRegionLoadOptions!) { _ in
+            print("\(functionName): Completion block called")
+            expect.fulfill()
+        }
+
+        tileRegionLoadOptions = nil
+        resourceOptions = nil
+        tileStore = nil
+        offlineManager = nil
+        XCTAssertNil(weakTileStore)
+
+        // This will fail
+        wait(for: [expect], timeout: 60.0)
+    }
+
+    func testTileStoreDelayedRelease() {
+        let functionName = name
+
+        let expect = expectation(description: "Completion called")
+        tileStore.loadTileRegion(forId: tileRegionId,
+                                 loadOptions: tileRegionLoadOptions!) { _ in
+            print("\(functionName): Completion block called")
+            expect.fulfill()
+        }
+
+        tileRegionLoadOptions = nil
+        resourceOptions = nil
+
+        // Wait a short time
+        let expect2 = expectation(description: "Wait")
+        _ = XCTWaiter.wait(for: [expect2], timeout: 0.02)
+
+        // Now release
+        tileStore = nil
+        offlineManager = nil
+        XCTAssertNil(weakTileStore)
+
+        wait(for: [expect], timeout: 60.0)
+    }
+
+    func testTileStoreDelayedReleaseWithCapture() {
+        let functionName = name
+
+        let expect = expectation(description: "Completion called")
+        autoreleasepool {
+            let tileStore2 = tileStore
+            tileStore.loadTileRegion(forId: tileRegionId,
+                                     loadOptions: tileRegionLoadOptions!) { _ in
+                print("\(functionName): Completion block called")
+                expect.fulfill()
+                _ = tileStore2
+            }
+        }
+
+        tileRegionLoadOptions = nil
+        resourceOptions = nil
+
+        // Wait a short time
+        let expect2 = expectation(description: "Wait")
+        _ = XCTWaiter.wait(for: [expect2], timeout: 0.25)
+
+        // Now release
+        tileStore = nil
+        offlineManager = nil
+        XCTAssertNotNil(weakTileStore)
+        XCTAssertNil(weakOfflineManager)
+
+        wait(for: [expect], timeout: 60.0)
+        XCTAssertNil(weakTileStore)
+    }
+
+    func testTileStoreDelayedReleaseWithCaptureButReleasingOfflineManager() throws {
+
+        // This test is currently expected to fail, due to a known issue with
+        // TileStore
+        let expectedToFail = true
+
+        let functionName = name
+        let expect = expectation(description: "Completion called")
+        expect.isInverted = expectedToFail
+
+        do {
+            let tileStore2 = tileStore
+            tileStore.loadTileRegion(forId: tileRegionId,
+                                     loadOptions: tileRegionLoadOptions!) { _ in
+                print("\(functionName): Completion block called")
+                expect.fulfill()
+                _ = tileStore2
+            }
+        }
+
+        // Release
+        tileRegionLoadOptions = nil
+        resourceOptions = nil
+        tileStore = nil
+        XCTAssertNotNil(weakTileStore)
+
+        offlineManager = nil // <--- Completion block is NOT called
+        XCTAssertNil(weakOfflineManager)
+
+        // Wait a short time
+        let expect2 = expectation(description: "Wait")
+        _ = XCTWaiter.wait(for: [expect2], timeout: 0.25)
+
+        wait(for: [expect], timeout: 60.0)
+
+        // This fails because the completion block is holding the tilestore
+        // and is not called, so does not get released afterwards.
+        try XCTSkipIf(expectedToFail)
+        XCTAssertNil(weakTileStore)
+
+        // After this test runs and presumably because the TileStore is not released
+        // we see the following errors:
+//
+//        [logging] BUG IN CLIENT OF libsqlite3.dylib: database integrity compromised by API violation: vnode unlinked while in use: .../data/Library/Application Support/.mapbox/maps/tile-store/-OfflineManagerIntegrationTestCase-testTileStoreDelayedReleaseWithCaptureButReleasingOfflineManager-/metadata.db-wal
+//        [logging] BUG IN CLIENT OF libsqlite3.dylib: database integrity compromised by API violation: vnode unlinked while in use: .../data/Library/Application Support/.mapbox/maps/tile-store/-OfflineManagerIntegrationTestCase-testTileStoreDelayedReleaseWithCaptureButReleasingOfflineManager-/metadata.db-shm
+//        [logging] invalidated open fd: 8 (0x11)
+//        [logging] invalidated open fd: 9 (0x11)
+//        [logging] BUG IN CLIENT OF libsqlite3.dylib: database integrity compromised by API violation: vnode unlinked while in use: .../data/Library/Application Support/.mapbox/maps/tile-store/-OfflineManagerIntegrationTestCase-testTileStoreDelayedReleaseWithCaptureButReleasingOfflineManager-/metadata.db
     }
 }

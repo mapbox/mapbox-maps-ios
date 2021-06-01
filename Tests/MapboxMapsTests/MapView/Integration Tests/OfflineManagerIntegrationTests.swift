@@ -300,9 +300,12 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         XCTAssertNil(weakMapView)
     }
 
-    func testTileStoreIsRetainedDuringAsyncOperation() {
-        let expect = expectation(description: "Completion block called")
+    // Release tests
+
+    func testTileStoreImmediateRelease() {
         let functionName = name
+
+        let expect = expectation(description: "Completion called")
         tileStore.loadTileRegion(forId: tileRegionId,
                                  loadOptions: tileRegionLoadOptions!) { _ in
             print("\(functionName): Completion block called")
@@ -311,39 +314,102 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
         tileRegionLoadOptions = nil
         resourceOptions = nil
-//      offlineManager = nil // <--- if uncommented completion block is not called
         tileStore = nil
-
-        XCTAssertNotNil(weakTileStore)
-        wait(for: [expect], timeout: 60)
         offlineManager = nil
-
         XCTAssertNil(weakTileStore)
+
+        XCTExpectFailure("Completion block not called") {
+            wait(for: [expect], timeout: 30.0)
+        }
     }
 
-    func testTileStoreIsRetainedDuringAsyncOperationEarlyExit() {
+
+    func testTileStoreDelayedRelease() {
         let functionName = name
+
+        let expect = expectation(description: "Completion called")
         tileStore.loadTileRegion(forId: tileRegionId,
                                  loadOptions: tileRegionLoadOptions!) { _ in
             print("\(functionName): Completion block called")
+            expect.fulfill()
         }
 
+        tileRegionLoadOptions = nil
+        resourceOptions = nil
+
+        // Wait a short time
+        let expect2 = expectation(description: "Wait")
+        _ = XCTWaiter.wait(for: [expect2], timeout: 0.02)
+
+        // Now release
+        tileStore = nil
+        offlineManager = nil
+        XCTAssertNil(weakTileStore)
+
+        wait(for: [expect], timeout: 30.0)
+    }
+
+    func testTileStoreDelayedReleaseWithCapture() {
+        let functionName = name
+
+        let expect = expectation(description: "Completion called")
+        autoreleasepool {
+            let tileStore2 = tileStore
+            tileStore.loadTileRegion(forId: tileRegionId,
+                                     loadOptions: tileRegionLoadOptions!) { _ in
+                print("\(functionName): Completion block called")
+                expect.fulfill()
+                _ = tileStore2
+            }
+        }
+
+        tileRegionLoadOptions = nil
+        resourceOptions = nil
+
+        // Wait a short time
+        let expect2 = expectation(description: "Wait")
+        _ = XCTWaiter.wait(for: [expect2], timeout: 0.25)
+
+        // Now release
+        tileStore = nil
+        offlineManager = nil
+        XCTAssertNotNil(weakTileStore)
+        XCTAssertNil(weakOfflineManager)
+
+        wait(for: [expect], timeout: 30.0)
+        XCTAssertNil(weakTileStore)
+    }
+
+    func testTileStoreDelayedReleaseWithCaptureButReleasingOfflineManager() {
+        let functionName = name
+
+        let expect = expectation(description: "Completion called")
+        do {
+            let tileStore2 = tileStore
+            tileStore.loadTileRegion(forId: tileRegionId,
+                                     loadOptions: tileRegionLoadOptions!) { _ in
+                print("\(functionName): Completion block called")
+                expect.fulfill()
+                _ = tileStore2
+            }
+        }
+
+        // Release
         tileRegionLoadOptions = nil
         resourceOptions = nil
         tileStore = nil
         XCTAssertNotNil(weakTileStore)
 
-        // In this test, we exit early. This is to test that tearDown
-        // will correctly wait until the completion block has been called
-        let expect = expectation(description: "Early exit")
-        _ = XCTWaiter.wait(for: [expect], timeout: 0.5)
+        offlineManager = nil // <--- Completion block is NOT called
+        XCTAssertNil(weakOfflineManager)
 
-        resourceOptions = nil
-        offlineManager = nil
+        // Wait a short time
+        let expect2 = expectation(description: "Wait")
+        _ = XCTWaiter.wait(for: [expect2], timeout: 0.25)
 
-        // Unlike the test above, we expect the completion block not to have been
-        // called at this point
-        XCTAssertNotNil(weakTileStore)
+        XCTExpectFailure("Completion block not called") {
+            wait(for: [expect], timeout: 30.0)
+        }
+        XCTAssertNil(weakTileStore)
     }
-
 }

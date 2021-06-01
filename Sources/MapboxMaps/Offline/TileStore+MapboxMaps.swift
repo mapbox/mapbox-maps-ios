@@ -182,9 +182,10 @@ extension TileStore {
 
         let closure2 = { (result: Result<T, Error>) in
             closure(result)
+            
             // Capture self during TileStore operation. This does *not* create a
             // retain cycle
-            _ = self
+//            _ = self
         }
 
         return coreAPIClosureAdapter(for: closure2, type: type, concreteErrorType: TileRegionError.self)

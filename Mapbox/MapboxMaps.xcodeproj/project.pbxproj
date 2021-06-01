@@ -175,6 +175,7 @@
 		5A35924524644C5E00E67344 /* CompassDirectionFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A359243246448E600E67344 /* CompassDirectionFormatter.swift */; };
 		5A3592B3246C1FA000E67344 /* MapboxInfoButtonOrnament.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3592AC246AD45500E67344 /* MapboxInfoButtonOrnament.swift */; };
 		5A9648FE246429C3001FF05D /* MapboxCompassOrnamentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9648FC2462F07B001FF05D /* MapboxCompassOrnamentView.swift */; };
+		A495048D2666BE8800130A8F /* Compass in Resources */ = {isa = PBXBuildFile; fileRef = A495048C2666BE8700130A8F /* Compass */; };
 		B506A5A025E023E90097ADB7 /* Bundle+MapboxMapsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506A59E25E023E90097ADB7 /* Bundle+MapboxMapsTests.swift */; };
 		B506A5A125E023E90097ADB7 /* Bundle+MapboxMapsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506A59E25E023E90097ADB7 /* Bundle+MapboxMapsTests.swift */; };
 		B51DE65B25D7038900A80AC9 /* Comparable+Clamped.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51DE62125D7032C00A80AC9 /* Comparable+Clamped.swift */; };
@@ -264,7 +265,6 @@
 		CA4E2DD8264DC66F0039D80E /* MockLocationStyleDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4E2DBD264DC5FD0039D80E /* MockLocationStyleDelegate.swift */; };
 		CA548FD3251C404B00F829A3 /* PolygonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B863836246D300500698135 /* PolygonTests.swift */; };
 		CA548FD4251C404B00F829A3 /* MapboxMapsCameraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC8DA47243BE4A400A19318 /* MapboxMapsCameraTests.swift */; };
-		CA548FD5251C404B00F829A3 /* MapboxCompassOrnamentViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3593792476DEB800E67344 /* MapboxCompassOrnamentViewTests.swift */; };
 		CA548FD8251C404B00F829A3 /* MultiLineStringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B863830246D300400698135 /* MultiLineStringTests.swift */; };
 		CA548FD9251C404B00F829A3 /* OrnamentManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07797FA0242C21BC00229F7D /* OrnamentManagerTests.swift */; };
 		CA548FDB251C404B00F829A3 /* LineStringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B863833246D300500698135 /* LineStringTests.swift */; };
@@ -286,7 +286,6 @@
 		CA548FF4251C404B00F829A3 /* DistanceFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8637E72464021500698135 /* DistanceFormatterTests.swift */; };
 		CA548FF5251C404B00F829A3 /* Fixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B863837246D300500698135 /* Fixture.swift */; };
 		CA548FF6251C404B00F829A3 /* PointTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B863832246D300500698135 /* PointTests.swift */; };
-		CA548FFA251C404B00F829A3 /* CompassDirectionFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A35924F246598F600E67344 /* CompassDirectionFormatterTests.swift */; };
 		CA548FFB251C404B00F829A3 /* StyleURITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C786602440EAF0000CEF1E /* StyleURITests.swift */; };
 		CA548FFC251C404B00F829A3 /* PanGestureHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C71B4C8242C1ACA0076D6C4 /* PanGestureHandlerTests.swift */; };
 		CA548FFD251C404B00F829A3 /* QuickZoomGestureHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A44EE617244ED578006FE97E /* QuickZoomGestureHandlerTests.swift */; };
@@ -605,12 +604,11 @@
 		58EFAD13265FF4C2007FC1FF /* MapboxCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MapboxCommon.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		58EFAD14265FF4C3007FC1FF /* MapboxCoreMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MapboxCoreMaps.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A359243246448E600E67344 /* CompassDirectionFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassDirectionFormatter.swift; sourceTree = "<group>"; };
-		5A35924F246598F600E67344 /* CompassDirectionFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassDirectionFormatterTests.swift; sourceTree = "<group>"; };
 		5A3592AC246AD45500E67344 /* MapboxInfoButtonOrnament.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxInfoButtonOrnament.swift; sourceTree = "<group>"; };
-		5A3593792476DEB800E67344 /* MapboxCompassOrnamentViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxCompassOrnamentViewTests.swift; sourceTree = "<group>"; };
 		5A9648FC2462F07B001FF05D /* MapboxCompassOrnamentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxCompassOrnamentView.swift; sourceTree = "<group>"; };
 		A44EE617244ED578006FE97E /* QuickZoomGestureHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickZoomGestureHandlerTests.swift; sourceTree = "<group>"; };
 		A4519DE42432FF14007CF39A /* Style.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
+		A495048C2666BE8700130A8F /* Compass */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Compass; sourceTree = "<group>"; };
 		A4BDC0CC244A23EB00AA9B64 /* QuickZoomGestureHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickZoomGestureHandler.swift; sourceTree = "<group>"; };
 		A4C786602440EAF0000CEF1E /* StyleURITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleURITests.swift; sourceTree = "<group>"; };
 		B506A59E25E023E90097ADB7 /* Bundle+MapboxMapsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle+MapboxMapsTests.swift"; sourceTree = "<group>"; };
@@ -840,9 +838,8 @@
 		07797F9F242C21BC00229F7D /* MapboxMapsOrnamentsTests */ = {
 			isa = PBXGroup;
 			children = (
+				A495048C2666BE8700130A8F /* Compass */,
 				2B8637E72464021500698135 /* DistanceFormatterTests.swift */,
-				5A35924F246598F600E67344 /* CompassDirectionFormatterTests.swift */,
-				5A3593792476DEB800E67344 /* MapboxCompassOrnamentViewTests.swift */,
 				07797FA0242C21BC00229F7D /* OrnamentManagerTests.swift */,
 				076C4525242D59AD00A5E0C4 /* OrnamentSupportableViewMock.swift */,
 			);
@@ -1910,6 +1907,7 @@
 				CA549008251C404B00F829A3 /* multipoint.geojson in Resources */,
 				B5A6922B2627566A00A03412 /* MapInitOptionsTests.xib in Resources */,
 				CA549009251C404B00F829A3 /* multiline.geojson in Resources */,
+				A495048D2666BE8800130A8F /* Compass in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2214,7 +2212,6 @@
 				CAC1965525AEAFD900F69FEA /* GlyphsRasterizationOptionsTests.swift in Sources */,
 				0C32C9B625F979680057ED31 /* VectorSourceIntegrationTests.swift in Sources */,
 				CA548FD4251C404B00F829A3 /* MapboxMapsCameraTests.swift in Sources */,
-				CA548FD5251C404B00F829A3 /* MapboxCompassOrnamentViewTests.swift in Sources */,
 				C6C5CDC5264C12C80097FCD1 /* OfflineGuideIntegrationTests.swift in Sources */,
 				C6C5CDD9264C12F30097FCD1 /* OfflineManagerIntegrationTests.swift in Sources */,
 				0CC6EF1425C3263400BFB153 /* LineLayerIntegrationTests.swift in Sources */,
@@ -2327,7 +2324,6 @@
 				0CC6EF2025C3263400BFB153 /* FillLayerIntegrationTests.swift in Sources */,
 				C64ED307253F7CF500ADADFB /* LocationSupportableMapViewMock.swift in Sources */,
 				B5A6921E262754DF00A03412 /* DelegatingMapClientTests.swift in Sources */,
-				CA548FFA251C404B00F829A3 /* CompassDirectionFormatterTests.swift in Sources */,
 				0CDFEB0D25A7745A008BC505 /* UtilsTests.swift in Sources */,
 				CA548FFB251C404B00F829A3 /* StyleURITests.swift in Sources */,
 				CA2E4A1B2538D3530096DEDE /* MapViewIntegrationTestCase.swift in Sources */,

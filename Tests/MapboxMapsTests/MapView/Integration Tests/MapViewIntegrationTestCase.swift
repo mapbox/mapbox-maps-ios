@@ -53,6 +53,13 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
         view.leftAnchor.constraint(equalTo: rootView.leftAnchor).isActive = true
         view.rightAnchor.constraint(equalTo: rootView.rightAnchor).isActive = true
 
+        // Label
+        let label = UILabel()
+        label.text = name
+        label.sizeToFit()
+        label.frame.origin = CGPoint(x: 0, y: 60)
+        view.addSubview(label)
+
         mapView = view
     }
 

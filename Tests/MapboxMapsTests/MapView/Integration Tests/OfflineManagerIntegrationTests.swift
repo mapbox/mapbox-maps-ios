@@ -4,6 +4,7 @@ import XCTest
 // swiftlint:disable force_cast type_body_length file_length
 internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
+    var label: UILabel!
     var tileStorePathURL: URL!
     var tileStore: TileStore!
     var resourceOptions: ResourceOptions!
@@ -28,6 +29,10 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
         // TileStore
         tileStorePathURL = try TileStore.fileURLForDirectory(for: name.fileSystemSafeString())
+
+        // Ensure test starts from same conditions each time
+        try TileStore.removeDirectory(at: tileStorePathURL!)
+
         tileStore = TileStore.shared(for: tileStorePathURL.path)
         tileStore.setAccessToken(accessToken)
         weakTileStore = tileStore
@@ -50,11 +55,13 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
                                                       metadata: ["tag": "my-outdoors-tile-region"],
                                                       acceptExpired: true,
                                                       averageBytesPerSecond: nil)!
-
     }
 
     override func tearDownWithError() throws {
         try super.tearDownWithError()
+
+        label?.removeFromSuperview()
+        label = nil
 
         tileRegionLoadOptions = nil
         resourceOptions = nil
@@ -271,6 +278,13 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
             let mapView = MapView(frame: rootView.bounds, mapInitOptions: mapInitOptions)
             rootView.addSubview(mapView)
 
+            // Label
+            label = UILabel()
+            label.text = name
+            label.sizeToFit()
+            label.frame.origin = CGPoint(x: 0, y: 60)
+            mapView.addSubview(label)
+
             weakMapView = mapView
 
             /// Expectations to be fulfilled
@@ -325,10 +339,12 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         resourceOptions = nil
         tileStore = nil
         offlineManager = nil
-        XCTAssertNil(weakTileStore)
 
         // This will fail
         wait(for: [expect], timeout: 60.0)
+
+        XCTAssertNil(weakTileStore)
+        XCTAssertNil(weakOfflineManager)
     }
 
     func testTileStoreDelayedRelease() {
@@ -351,22 +367,21 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         // Now release
         tileStore = nil
         offlineManager = nil
-        XCTAssertNil(weakTileStore)
 
         wait(for: [expect], timeout: 60.0)
+
+        XCTAssertNil(weakTileStore)
     }
 
     func testTileStoreDelayedReleaseWithCapture() {
         let functionName = name
 
         let expect = expectation(description: "Completion called")
-        autoreleasepool {
-            let tileStore2 = tileStore
+        do {
             tileStore.loadTileRegion(forId: tileRegionId,
                                      loadOptions: tileRegionLoadOptions!) { _ in
                 print("\(functionName): Completion block called")
                 expect.fulfill()
-                _ = tileStore2
             }
         }
 
@@ -375,16 +390,16 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
         // Wait a short time
         let expect2 = expectation(description: "Wait")
-        _ = XCTWaiter.wait(for: [expect2], timeout: 0.25)
+        _ = XCTWaiter.wait(for: [expect2], timeout: 0.5)
 
         // Now release
         tileStore = nil
         offlineManager = nil
-        XCTAssertNotNil(weakTileStore)
-        XCTAssertNil(weakOfflineManager)
 
         wait(for: [expect], timeout: 60.0)
+
         XCTAssertNil(weakTileStore)
+        XCTAssertNil(weakOfflineManager)
     }
 
     func testTileStoreDelayedReleaseWithCaptureButReleasingOfflineManager() throws {
@@ -411,7 +426,6 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         tileRegionLoadOptions = nil
         resourceOptions = nil
         tileStore = nil
-        XCTAssertNotNil(weakTileStore)
 
         offlineManager = nil // <--- Completion block is NOT called
         XCTAssertNil(weakOfflineManager)

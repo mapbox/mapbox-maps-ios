@@ -1,7 +1,7 @@
 import XCTest
 @testable import MapboxMaps
 
-// swiftlint:disable force_cast type_body_length
+// swiftlint:disable force_cast type_body_length file_length
 internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
     var tileStorePathURL: URL!
@@ -80,7 +80,6 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         } else if weakTileStore != nil {
             print("warning: TileStore not released!")
         }
-
 
         if let tileStorePathURL = tileStorePathURL {
             try TileStore.removeDirectory(at: tileStorePathURL)
@@ -309,8 +308,10 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
     func testTileStoreImmediateRelease() {
         let functionName = name
+        let expectedToFail = true
 
         let expect = expectation(description: "Completion called")
+        expect.isInverted = expectedToFail
         tileStore.loadTileRegion(forId: tileRegionId,
                                  loadOptions: tileRegionLoadOptions!) { _ in
             print("\(functionName): Completion block called")
@@ -323,11 +324,9 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         offlineManager = nil
         XCTAssertNil(weakTileStore)
 
-        XCTExpectFailure("Completion block not called") {
-            wait(for: [expect], timeout: 30.0)
-        }
+        // This will fail
+        wait(for: [expect], timeout: 30.0)
     }
-
 
     func testTileStoreDelayedRelease() {
         let functionName = name
@@ -386,8 +385,12 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
     }
 
     func testTileStoreDelayedReleaseWithCaptureButReleasingOfflineManager() {
+
+        let expectedToFail = true
+
         let functionName = name
         let expect = expectation(description: "Completion called")
+        expect.isInverted = expectedToFail
         do {
             let tileStore2 = tileStore
             tileStore.loadTileRegion(forId: tileRegionId,
@@ -411,13 +414,11 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         let expect2 = expectation(description: "Wait")
         _ = XCTWaiter.wait(for: [expect2], timeout: 0.25)
 
-        XCTExpectFailure("Completion block not called") {
-            wait(for: [expect], timeout: 30.0)
+        wait(for: [expect], timeout: 30.0)
 
-            // This fails because the completion block is holding the tilestore
-            // and is not called, so does not get released afterwards.
-            XCTAssertNil(weakTileStore)
-        }
+        // This fails because the completion block is holding the tilestore
+        // and is not called, so does not get released afterwards.
+        XCTAssert((weakTileStore != nil) || expectedToFail)
 
         // After this test runs and presumably because the TileStore is not released
         // we see the following errors:

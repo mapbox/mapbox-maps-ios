@@ -328,7 +328,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         XCTAssertNil(weakTileStore)
 
         // This will fail
-        wait(for: [expect], timeout: 30.0)
+        wait(for: [expect], timeout: 60.0)
     }
 
     func testTileStoreDelayedRelease() {
@@ -353,7 +353,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         offlineManager = nil
         XCTAssertNil(weakTileStore)
 
-        wait(for: [expect], timeout: 30.0)
+        wait(for: [expect], timeout: 60.0)
     }
 
     func testTileStoreDelayedReleaseWithCapture() {
@@ -383,7 +383,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         XCTAssertNotNil(weakTileStore)
         XCTAssertNil(weakOfflineManager)
 
-        wait(for: [expect], timeout: 30.0)
+        wait(for: [expect], timeout: 60.0)
         XCTAssertNil(weakTileStore)
     }
 
@@ -420,7 +420,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         let expect2 = expectation(description: "Wait")
         _ = XCTWaiter.wait(for: [expect2], timeout: 0.25)
 
-        wait(for: [expect], timeout: 30.0)
+        wait(for: [expect], timeout: 60.0)
 
         // This fails because the completion block is holding the tilestore
         // and is not called, so does not get released afterwards.

@@ -341,7 +341,7 @@ extension MapView: DelegatingMapClientDelegate {
 
         metalView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         metalView.autoResizeDrawable = true
-        metalView.contentScaleFactor = UIScreen.main.scale
+        metalView.contentScaleFactor = CGFloat(self.mapboxMap.options.pixelRatio)
         metalView.contentMode = .center
         metalView.isOpaque = isOpaque
         metalView.layer.isOpaque = isOpaque

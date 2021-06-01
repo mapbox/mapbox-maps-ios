@@ -31,6 +31,13 @@ extension TileStore {
         setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken.token)
     }
 
+    /// Convenience to set the access token for a TileStore
+    public func setAccessToken(_ accessToken: AccessToken, domain: TileDataDomain) {
+        setOptionForKey(TileStoreOptions.mapboxAccessToken,
+                        domain: domain,
+                        value: accessToken.token)
+    }
+
     /// Loads a new tile region or updates the existing one.
     ///
     /// - Parameters:

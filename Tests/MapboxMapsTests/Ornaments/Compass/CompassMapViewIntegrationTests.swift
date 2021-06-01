@@ -6,7 +6,7 @@ class CompassMapViewIntegrationTests: MapViewIntegrationTestCase {
     func testUpdateMapBearing() throws {
         let mapView = try XCTUnwrap(self.mapView, "Map view could not be found")
 
-        let initialSubviews = mapView.subviews.filter { $0.isKind(of: MapboxCompassOrnamentView.self) }
+        let initialSubviews = mapView.subviews.filter { $0 is MapboxCompassOrnamentView }
 
         let compass = try XCTUnwrap(initialSubviews.first as? MapboxCompassOrnamentView, "The MapView should include a compass view as a subview")
 
@@ -27,7 +27,7 @@ class CompassMapViewIntegrationTests: MapViewIntegrationTestCase {
     func testCompassTappedResetsToNorth() throws {
         let mapView = try XCTUnwrap(self.mapView, "Map view could not be found")
 
-        let initialSubviews = mapView.subviews.filter { $0.isKind(of: MapboxCompassOrnamentView.self) }
+        let initialSubviews = mapView.subviews.filter { $0 is MapboxCompassOrnamentView }
 
         let compass = try XCTUnwrap(initialSubviews.first as? MapboxCompassOrnamentView, "The MapView should include a compass view as a subview")
 

@@ -61,7 +61,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         offlineManager = nil
         tileStore = nil
 
-        // If tests time-out, we need to wait till the tile store operation(s)
+        // If tests time-out, we may need to wait till the tile store operation(s)
         // have been called, otherwise any XCTFail that is called can cross-talk
         // with other running tests
 
@@ -77,12 +77,12 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         XCTAssertNil(weakOfflineManager)
         if iterations > 0 {
             XCTAssertNil(weakTileStore)
+
+            if let tileStorePathURL = tileStorePathURL {
+                try TileStore.removeDirectory(at: tileStorePathURL)
+            }
         } else if weakTileStore != nil {
             print("warning: TileStore not released!")
-        }
-
-        if let tileStorePathURL = tileStorePathURL {
-            try TileStore.removeDirectory(at: tileStorePathURL)
         }
     }
 
@@ -308,6 +308,9 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
     func testTileStoreImmediateRelease() {
         let functionName = name
+
+        // This test is currently expected to fail, due to a known issue with
+        // TileStore
         let expectedToFail = true
 
         let expect = expectation(description: "Completion called")
@@ -386,11 +389,14 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
     func testTileStoreDelayedReleaseWithCaptureButReleasingOfflineManager() {
 
+        // This test is currently expected to fail, due to a known issue with
+        // TileStore
         let expectedToFail = true
 
         let functionName = name
         let expect = expectation(description: "Completion called")
         expect.isInverted = expectedToFail
+
         do {
             let tileStore2 = tileStore
             tileStore.loadTileRegion(forId: tileRegionId,
@@ -418,7 +424,8 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
         // This fails because the completion block is holding the tilestore
         // and is not called, so does not get released afterwards.
-        XCTAssert((weakTileStore != nil) || expectedToFail)
+        try XCTSkipIf(expectedToFail)
+        XCTAssertNil(weakTileStore)
 
         // After this test runs and presumably because the TileStore is not released
         // we see the following errors:

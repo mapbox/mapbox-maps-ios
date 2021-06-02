@@ -5,6 +5,8 @@ import Turf
 // swiftlint:disable file_length orphaned_doc_comment type_body_length
 class MigrationGuideIntegrationTests: IntegrationTestCase {
 
+    var view: UIView?
+
     private var testRect = CGRect(origin: .zero, size: CGSize(width: 100, height: 100))
 
     override func setUpWithError() throws {
@@ -16,6 +18,9 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
     override func tearDownWithError() throws {
         try super.tearDownWithError()
+
+        view?.removeFromSuperview()
+        view = nil
         ResourceOptionsManager.destroyDefault()
     }
 
@@ -48,6 +53,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         }
 
         rootViewController?.view.addSubview(vc.view)
+        view = vc.view
 
         wait(for: [expectation], timeout: 5)
     }
@@ -165,6 +171,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         }
 
         rootViewController?.view.addSubview(vc.view)
+        view = vc.view
 
         wait(for: [expectation], timeout: 5)
     }

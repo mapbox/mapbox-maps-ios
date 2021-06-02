@@ -1,5 +1,4 @@
 import Foundation
-@_implementationOnly import MapboxCommon_Private
 
 // MARK: - ResourceOptions
 
@@ -8,7 +7,7 @@ public struct ResourceOptions {
 
     /// The access token to access the resource. This should be a valid, non-empty,
     /// Mapbox access token
-    public var accessToken: String
+    public var accessToken: AccessToken
 
     /// The base URL. Leave as `nil` unless you have a reason to change this.
     public var baseURL: URL?
@@ -84,7 +83,7 @@ public struct ResourceOptions {
     ///     and then a tile pack that also includes this tile. The individual tile
     ///     in the ambient cache won’t be used as long as the up-to-date tile pack
     ///     exists in the cache.
-    public init(accessToken: String,
+    public init(accessToken: AccessToken,
                 baseURL: URL? = nil,
                 cachePathURL: URL? = nil,
                 assetPathURL: URL? = nil,
@@ -151,28 +150,6 @@ extension ResourceOptions: Hashable {
     }
 }
 
-extension ResourceOptions: CustomStringConvertible, CustomDebugStringConvertible {
-    private func redactedAccessToken() -> String {
-        let offset = min(4, accessToken.count)
-        let startIndex = accessToken.index(accessToken.startIndex, offsetBy: offset)
-        let result = accessToken.replacingCharacters(in: startIndex...,
-                                                     with: String(repeating: "◻︎", count: accessToken.count - offset))
-        return result
-    }
-
-    /// :nodoc:
-    public var description: String {
-        return "ResourceOptions: \(redactedAccessToken())"
-    }
-
-    /// :nodoc:
-    public var debugDescription: String {
-        withUnsafePointer(to: self) {
-            return "ResourceOptions @ \($0): \(redactedAccessToken())"
-        }
-    }
-}
-
 // MARK: - Conversion to/from internal type
 
 extension ResourceOptions {
@@ -182,7 +159,7 @@ extension ResourceOptions {
         let cachePathURL = objcValue.cachePath.flatMap { URL(fileURLWithPath: $0) }
         let assetPathURL = objcValue.assetPath.flatMap { URL(fileURLWithPath: $0) }
 
-        self.init(accessToken: objcValue.accessToken,
+        self.init(accessToken: .tokenString(objcValue.accessToken),
                   baseURL: baseURL,
                   cachePathURL: cachePathURL,
                   assetPathURL: assetPathURL,
@@ -194,7 +171,7 @@ extension ResourceOptions {
 
 extension MapboxCoreMaps.ResourceOptions {
     internal convenience init(_ swiftValue: ResourceOptions) {
-        self.init(__accessToken: swiftValue.accessToken,
+        self.init(__accessToken: swiftValue.accessToken.token,
                   baseURL: swiftValue.baseURL?.path,
                   cachePath: swiftValue.cachePathURL?.path,
                   assetPath: swiftValue.assetPathURL?.path,

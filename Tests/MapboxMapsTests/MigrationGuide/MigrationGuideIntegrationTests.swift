@@ -31,13 +31,13 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         //-->
         class BasicMapViewController: UIViewController {
             var mapView: MapView!
-            var accessToken: String!
+            var accessToken: AccessToken = .default(.mapboxMapsTests)
             var completion: (() -> Void)?
 
             override func viewDidLoad() {
                 super.viewDidLoad()
 
-                ResourceOptionsManager.default.resourceOptions.accessToken = self.accessToken
+                ResourceOptionsManager.default.resourceOptions.accessToken = accessToken
 
                 mapView = MapView(frame: view.bounds)
                 view.addSubview(mapView)
@@ -66,13 +66,13 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         //-->
         class BasicMapViewController: UIViewController {
             var mapView: MapView!
-            var accessToken: String!
+            var accessToken: AccessToken = .default(.mapboxMapsTests)
             var handler: ((Event) -> Void)?
 
             override func viewDidLoad() {
                 super.viewDidLoad()
 
-                ResourceOptionsManager.default.resourceOptions.accessToken = self.accessToken
+                ResourceOptionsManager.default.resourceOptions.accessToken = accessToken
 
                 mapView = MapView(frame: view.bounds)
                 view.addSubview(mapView)

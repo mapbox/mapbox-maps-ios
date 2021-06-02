@@ -1,10 +1,11 @@
 import XCTest
+import MapboxMaps
 
 internal class IntegrationTestCase: XCTestCase {
 
     internal var window: UIWindow?
     internal var rootViewController: UIViewController?
-    internal var accessToken: String!
+    internal var accessToken: AccessToken = .default(.mapboxMapsTests)
     internal var createdWindow = false
 
     internal override func setUpWithError() throws {

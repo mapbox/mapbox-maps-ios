@@ -222,21 +222,6 @@ DEVICE_FARM_UPLOAD_IPA := $(BUILD_DIR)/upload.ipa
 DEVICE_FARM_RUN     := $(BUILD_DIR)/$(BUILD_NAME)-run.json
 DEVICE_FARM_RESULTS := $(BUILD_DIR)/$(BUILD_NAME)-results.json
 
-.PHONY: check_aws_creds
-check_aws_creds:
-ifndef AWS_ACCESS_KEY_ID
-	@echo AWS_ACCESS_KEY_ID not set.
-	exit 1
-endif
-ifndef AWS_SECRET_ACCESS_KEY
-	@echo AWS_SECRET_ACCESS_KEY not set.
-	exit 1
-endif
-ifndef AWS_DEVICE_FARM_PROJECT
-	@echo AWS_DEVICE_FARM_PROJECT not set.
-	exit 1
-endif
-
 # Before a device test for a scheme, we need to clear out older schemes/test-runs
 # that may exist from testing a different scheme
 .PHONY: clean-for-device-build
@@ -274,7 +259,7 @@ test-with-device-farm: $(DEVICE_FARM_RESULTS)
 # Wait for the previous scheduled run to complete and dump results/artifacts
 $(DEVICE_FARM_RESULTS): $(DEVICE_FARM_RUN)
 	-python3 ./scripts/device-farm/devicefarm.py \
-		$(AWS_DEVICE_FARM_PROJECT) \
+		$(DEVICE_FARM_PROJECT) \
 		--run-arn-file $(DEVICE_FARM_RUN) \
 		--artifacts-dir $(DEVICE_TEST_PATH) \
 		--output $(DEVICE_FARM_RESULTS)
@@ -308,15 +293,15 @@ endif
 # here - that's because XCTEST_UI can accept a test spec file, but needs two IPAs.
 
 $(DEVICE_FARM_RUN): $(DEVICE_FARM_UPLOAD_IPA)
-ifndef AWS_DEVICE_FARM_DEVICE_POOL
-	@echo "Please define AWS_DEVICE_FARM_DEVICE_POOL"
+ifndef DEVICE_FARM_DEVICE_POOL
+	@echo "Please define DEVICE_FARM_DEVICE_POOL"
 	exit 1
 else
 	# Upload and start tests
 	python3 ./scripts/device-farm/devicefarm.py \
-		$(AWS_DEVICE_FARM_PROJECT) \
+		$(DEVICE_FARM_PROJECT) \
 		--name $(BUILD_NAME) \
-		--device-pool $(AWS_DEVICE_FARM_DEVICE_POOL) \
+		--device-pool $(DEVICE_FARM_DEVICE_POOL) \
 		--ipa $(DEVICE_FARM_UPLOAD_IPA) \
 		--tests $(DEVICE_FARM_UPLOAD_IPA) \
 		--spec ./scripts/device-farm/testspec.yml \

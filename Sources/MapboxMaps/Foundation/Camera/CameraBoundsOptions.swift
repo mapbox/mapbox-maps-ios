@@ -22,10 +22,10 @@ public struct CameraBoundsOptions: Hashable {
 
     internal init(_ objcValue: MapboxCoreMaps.CameraBoundsOptions) {
         self.bounds = objcValue.bounds
-        self.maxZoom = objcValue.__maxZoom.flatMap{ CGFloat($0.doubleValue) }
-        self.minZoom = objcValue.__minZoom.flatMap{ CGFloat($0.doubleValue) }
-        self.maxPitch = objcValue.__maxPitch.flatMap{ CGFloat($0.doubleValue) }
-        self.minPitch = objcValue.__minPitch.flatMap{ CGFloat($0.doubleValue) }
+        self.maxZoom = objcValue.__maxZoom.flatMap { CGFloat($0.doubleValue) }
+        self.minZoom = objcValue.__minZoom.flatMap { CGFloat($0.doubleValue) }
+        self.maxPitch = objcValue.__maxPitch.flatMap { CGFloat($0.doubleValue) }
+        self.minPitch = objcValue.__minPitch.flatMap { CGFloat($0.doubleValue) }
     }
 
     public static func == (lhs: CameraBoundsOptions, rhs: CameraBoundsOptions) -> Bool {

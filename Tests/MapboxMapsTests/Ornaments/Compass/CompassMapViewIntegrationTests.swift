@@ -43,7 +43,7 @@ class CompassMapViewIntegrationTests: MapViewIntegrationTestCase {
                 mapExpectation.fulfill()
             }
 
-            if compass.currentBearing == 0 {
+            if compass.currentBearing.rounded() == 0 {
                 compassExpectation.fulfill()
             }
         }

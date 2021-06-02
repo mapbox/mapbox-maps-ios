@@ -28,7 +28,6 @@
 		A41E584C26555A3400D8B946 /* PointClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E584B26555A3400D8B946 /* PointClusteringExample.swift */; };
 		A41E58F4265C005300D8B946 /* blueprint_style.json in Resources */ = {isa = PBXBuildFile; fileRef = A41E58F3265C005300D8B946 /* blueprint_style.json */; };
 		A41E590D265C263700D8B946 /* OfflineRegionManagerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E590C265C263700D8B946 /* OfflineRegionManagerExample.swift */; };
-		A41E591F265D4B0300D8B946 /* SkyLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E591E265D4B0300D8B946 /* SkyLayerExample.swift */; };
 		A4211CE62592549900D215B4 /* RestrictCoordinateBoundsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4211CE52592549900D215B4 /* RestrictCoordinateBoundsExample.swift */; };
 		B5327E9D260124C00095B6BD /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = B5327E9C260124C00095B6BD /* MapboxMaps */; };
 		B5327EBF260277930095B6BD /* Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5327EBE260277930095B6BD /* Example.swift */; };
@@ -142,7 +141,6 @@
 		A41E584B26555A3400D8B946 /* PointClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointClusteringExample.swift; sourceTree = "<group>"; };
 		A41E58F3265C005300D8B946 /* blueprint_style.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = blueprint_style.json; sourceTree = "<group>"; };
 		A41E590C265C263700D8B946 /* OfflineRegionManagerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineRegionManagerExample.swift; sourceTree = "<group>"; };
-		A41E591E265D4B0300D8B946 /* SkyLayerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkyLayerExample.swift; sourceTree = "<group>"; };
 		A4211CE52592549900D215B4 /* RestrictCoordinateBoundsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictCoordinateBoundsExample.swift; sourceTree = "<group>"; };
 		A4AC5DEB2542CB2200995E4C /* CustomStyleURLExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomStyleURLExample.swift; sourceTree = "<group>"; };
 		B5327EBE260277930095B6BD /* Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Example.swift; sourceTree = "<group>"; };
@@ -245,7 +243,6 @@
 				A4211CE52592549900D215B4 /* RestrictCoordinateBoundsExample.swift */,
 				0333B84E25ED942600D667C9 /* SceneKitExample.swift */,
 				0773528E25438CCA00B48DB6 /* SelectAnnotationExample.swift */,
-				A41E591E265D4B0300D8B946 /* SkyLayerExample.swift */,
 				07C1A60C257EF7CF00531205 /* SnapshotterCoreGraphicsExample.swift */,
 				072C79EA25685D23006E47A7 /* SnapshotterExample.swift */,
 				07A2E03C25CB64E20082BC31 /* SwiftUIExample.swift */,
@@ -502,7 +499,6 @@
 				CA03F10F26268DF700673961 /* OfflineManagerExample.swift in Sources */,
 				CADCF73C258499200065C51B /* AppDelegate.swift in Sources */,
 				CADCF7392584991C0065C51B /* UIViewController+Children.swift in Sources */,
-				A41E591F265D4B0300D8B946 /* SkyLayerExample.swift in Sources */,
 				CADCF7262584990E0065C51B /* SnapshotterExample.swift in Sources */,
 				CADCF71D2584990E0065C51B /* CustomPointAnnotationExample.swift in Sources */,
 				CADCF7212584990E0065C51B /* PolygonAnnotationExample.swift in Sources */,

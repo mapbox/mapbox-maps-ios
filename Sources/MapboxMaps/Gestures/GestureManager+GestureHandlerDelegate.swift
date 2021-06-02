@@ -47,7 +47,7 @@ extension GestureManager: GestureHandlerDelegate {
 
             _ = cameraManager.ease(
                     to: driftCameraOptions,
-                    duration: 0.3,//Double(cameraManager.options.decelerationRate),
+                    duration: Double(decelerationRate),
                     curve: .easeOut,
                     completion: nil)
         }

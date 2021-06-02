@@ -69,7 +69,7 @@ open class MapView: UIView {
     private var displayCallback: (() -> Void)?
     @objc dynamic internal var displayLink: CADisplayLink?
 
-    private var pixelRatio: CGFloat = 3.0 /// Same default value as found in `MapInitOptions`
+    private var pixelRatio: CGFloat = 0.0
 
     @IBInspectable private var styleURI__: String = ""
 

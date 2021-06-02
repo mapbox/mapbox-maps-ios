@@ -69,7 +69,7 @@ public class Custom3DPuckExample: UIViewController, ExampleProtocol {
         mapView.location.options.puckType = .puck3D(configuration)
 
         let coordinate = CLLocationCoordinate2D(latitude: 39.085006, longitude: -77.150925)
-        mapView.camera.setCamera(to: CameraOptions(center: coordinate,
+        mapView.mapboxMap.setCamera(to: CameraOptions(center: coordinate,
                                                           zoom: 14,
                                                           pitch: 80))
     }

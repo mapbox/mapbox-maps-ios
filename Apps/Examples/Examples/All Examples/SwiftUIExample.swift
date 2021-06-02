@@ -89,7 +89,7 @@ internal struct SwiftUIMapView: UIViewRepresentable {
     /// If your `SwiftUIMapView` is reconfigured externally, SwiftUI will invoke `updateUIView(_:context:)`
     /// to give you an opportunity to re-sync the state of the underlying map view.
     func updateUIView(_ mapView: MapView, context: Context) {
-        mapView.camera.setCamera(to: CameraOptions(center: camera.center, zoom: camera.zoom))
+        mapView.mapboxMap.setCamera(to: CameraOptions(center: camera.center, zoom: camera.zoom))
         /// Since changing the style causes annotations to be removed from the map
         /// we only call the setter if the value has changed.
         if mapView.mapboxMap.style.uri != styleURI {

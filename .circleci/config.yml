@@ -25,7 +25,7 @@ workflows:
           xcode: "12.4.0"
           matrix:
             parameters:
-              configuration: ["Debug", `"Release"]
+              configuration: ["Debug", "Release"]
               report_failure: [true]
       - build-debug-app:
           report_failure: true
@@ -310,6 +310,9 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - add_ssh_keys:
+           fingerprints:
+             - "d3:03:ae:4f:f2:2d:71:37:7f:0d:ca:b9:d7:be:e3:43"
       - install-mbx-ci
       - configure-environment
       # Building and testing are split into 2, with the aim that we'll be able to reuse
@@ -341,6 +344,9 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - add_ssh_keys:
+           fingerprints:
+             - "d3:03:ae:4f:f2:2d:71:37:7f:0d:ca:b9:d7:be:e3:43"
       - install-mbx-ci
       - configure-environment
       - ensure-text-exists-in-commit:
@@ -413,6 +419,9 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - add_ssh_keys:
+           fingerprints:
+             - "d3:03:ae:4f:f2:2d:71:37:7f:0d:ca:b9:d7:be:e3:43"
       - install-mbx-ci
       - ensure-text-exists-in-commit:
           commit-text: "[run app device tests]"
@@ -483,6 +492,9 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - add_ssh_keys:
+           fingerprints:
+             - "d3:03:ae:4f:f2:2d:71:37:7f:0d:ca:b9:d7:be:e3:43"
       - install-mbx-ci
       - configure-environment
       - ensure-text-exists-in-commit:
@@ -509,6 +521,9 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - add_ssh_keys:
+           fingerprints:
+             - "d3:03:ae:4f:f2:2d:71:37:7f:0d:ca:b9:d7:be:e3:43"
       - install-mbx-ci
       - configure-environment
       - ensure-text-exists-in-commit:
@@ -569,6 +584,9 @@ jobs:
           message: '<$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` started.>'
           include_visit_job_action: true
       - checkout
+      - add_ssh_keys:
+           fingerprints:
+             - "d3:03:ae:4f:f2:2d:71:37:7f:0d:ca:b9:d7:be:e3:43"
       - install-mbx-ci
       - configure-environment
       - install-dependencies
@@ -619,12 +637,11 @@ commands:
 
   install-mbx-ci:
     steps:
-      run:
-        name: Install latest mbx-ci for iOS
-        command: |
-          brew tap mapbox/tap git@github.com:mapbox/tap
-          brew install mapbox/tap/mbx-ci
-          mbx-ci aws setup
+      - run:
+          name: Install latest mbx-ci
+          command: |
+            curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/latest/mbx-ci-darwin-amd64 > mbx-ci && chmod 755 ./mbx-ci
+            ./mbx-ci aws setup
 
   ensure-text-exists-in-commit:
     parameters:

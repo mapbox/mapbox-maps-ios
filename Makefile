@@ -265,7 +265,7 @@ clean-for-device-build:
 clean-test-with-device-farm: clean-for-device-build test-with-device-farm
 
 .PHONY: test-with-device-farm
-test-with-device-farm: check_aws_creds $(DEVICE_FARM_RESULTS)
+test-with-device-farm: 
 	python3 ./scripts/device-farm/check_results_for_failure.py $(DEVICE_FARM_RESULTS)
 
 	# Remove the ipa

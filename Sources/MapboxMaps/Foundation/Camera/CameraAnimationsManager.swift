@@ -20,15 +20,9 @@ internal protocol CameraAnimatorInterface: CameraAnimator {
 public class CameraAnimationsManager {
 
     /// Used to set up camera specific configuration
-    public var options = MapCameraOptions() {
+    public var options: CameraBoundsOptions {
         didSet {
-            let boundOptions = CameraBoundsOptions(
-                __bounds: options.restrictedCoordinateBounds ?? nil,
-                maxZoom: options.maximumZoomLevel as NSNumber,
-                minZoom: options.minimumZoomLevel as NSNumber,
-                maxPitch: options.maximumPitch as NSNumber,
-                minPitch: options.minimumPitch as NSNumber)
-            try? mapView?.mapboxMap.setCameraBounds(for: boundOptions)
+            try? mapView?.mapboxMap.setCameraBounds(for: options)
         }
     }
 
@@ -51,6 +45,7 @@ public class CameraAnimationsManager {
 
     internal init(mapView: MapView) {
         self.mapView = mapView
+        self.options = CameraBoundsOptions(cameraBounds: mapView.mapboxMap.cameraBounds)
     }
 
     // MARK: Setting a new camera
@@ -95,8 +90,9 @@ public class CameraAnimationsManager {
 
         guard let mapView = mapView,
               let flyToAnimator = FlyToCameraAnimator(
-                inital: mapView.cameraState,
+                initial: mapView.cameraState,
                 final: camera,
+                cameraBounds: mapView.mapboxMap.cameraBounds,
                 owner: AnimationOwner(rawValue: "com.mapbox.maps.cameraAnimationsManager.flyToAnimator"),
                 duration: duration,
                 mapSize: mapView.mapboxMap.size,

@@ -148,7 +148,6 @@
 		0CD62F1024588530006421D1 /* GestureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC8BD2C242405AA00288A9B /* GestureManager.swift */; };
 		0CD62F1124588532006421D1 /* GestureHandlerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC8BD2D242405AA00288A9B /* GestureHandlerDelegate.swift */; };
 		0CD62F182458865A006421D1 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC8DA55243BED0500A19318 /* CameraView.swift */; };
-		0CD62F1924588661006421D1 /* MapCameraOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C07948D2452331A0006A9C4 /* MapCameraOptions.swift */; };
 		0CD62F1A245886E7006421D1 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF65A67244E34000069B561 /* LocationManager.swift */; };
 		0CD62F1D24588715006421D1 /* LocationPermissionsDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF65A6D244E53F50069B561 /* LocationPermissionsDelegate.swift */; };
 		0CD62F1E24588730006421D1 /* LocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF65A74244F6E320069B561 /* LocationProvider.swift */; };
@@ -431,7 +430,6 @@
 		07D7150325798CD70025BF61 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		0C01C08825486E6100E4AA46 /* ExpressionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionTests.swift; sourceTree = "<group>"; };
 		0C03DD42264EE95D00D4D307 /* MapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
-		0C07948D2452331A0006A9C4 /* MapCameraOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCameraOptions.swift; sourceTree = "<group>"; };
 		0C088AC426387EA400107B5E /* DateProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateProvider.swift; sourceTree = "<group>"; };
 		0C088AC926388E3400107B5E /* CameraAnimationsManager+CameraAnimatorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CameraAnimationsManager+CameraAnimatorDelegate.swift"; sourceTree = "<group>"; };
 		0C088ACA26388E3400107B5E /* CameraAnimationsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimationsManager.swift; sourceTree = "<group>"; };
@@ -1329,7 +1327,6 @@
 				B5B55D42260E4D1500EBB589 /* CameraAnimationDelegate.swift */,
 				1FC8DA55243BED0500A19318 /* CameraView.swift */,
 				07729A5724623E9B00440187 /* CameraOptions.swift */,
-				0C07948D2452331A0006A9C4 /* MapCameraOptions.swift */,
 				CA355C06256EEA7C00FD1DB7 /* FlyToInterpolator.swift */,
 			);
 			path = Camera;
@@ -2128,7 +2125,6 @@
 				2B8637E32462F5AE00698135 /* MapboxScaleBarLabel.swift in Sources */,
 				CA6245E42627F20B00C79547 /* TileStore+MapboxMaps.swift in Sources */,
 				CAB77E452654AC5E0071D74C /* CameraAnimationsManagerProtocol.swift in Sources */,
-				0CD62F1924588661006421D1 /* MapCameraOptions.swift in Sources */,
 				0C3B1E8E24DDADD000CC29E8 /* EventsStringTokens.swift in Sources */,
 				0C1EBEF82660356E0024E687 /* PolylineAnnotation.swift in Sources */,
 				B529341E2624E9D6003B181C /* DelegatingObserver.swift in Sources */,

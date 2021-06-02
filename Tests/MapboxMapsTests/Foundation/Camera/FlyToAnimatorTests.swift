@@ -3,7 +3,7 @@ import XCTest
 
 final class FlyToAnimatorTests: XCTestCase {
 
-    internal let initalCameraState = CameraState(
+    internal let initialCameraState = CameraState(
         MapboxCoreMaps.CameraState(
             center: .init(
                 latitude: 42.3601,
@@ -41,8 +41,9 @@ final class FlyToAnimatorTests: XCTestCase {
         cameraAnimatorDelegate = CameraAnimatorDelegateMock()
         dateProvider = MockDateProvider()
         flyToAnimator = FlyToCameraAnimator(
-            inital: initalCameraState,
+            initial: initialCameraState,
             final: finalCameraOptions,
+            cameraBounds: CameraBounds.default,
             owner: AnimationOwner(rawValue: "fly-to"),
             duration: duration,
             mapSize: CGSize(width: 500, height: 500),
@@ -66,8 +67,9 @@ final class FlyToAnimatorTests: XCTestCase {
     func testInitializationWithANegativeDurationReturnsNil() {
         XCTAssertNil(
             FlyToCameraAnimator(
-                inital: initalCameraState,
+                initial: initialCameraState,
                 final: finalCameraOptions,
+                cameraBounds: CameraBounds.default,
                 owner: AnimationOwner(rawValue: "fly-to"),
                 duration: -1,
                 mapSize: CGSize(width: 500, height: 500),
@@ -77,8 +79,9 @@ final class FlyToAnimatorTests: XCTestCase {
 
     func testInitializationWithANilDurationSetsDurationToCalculatedValue() {
         let animator = FlyToCameraAnimator(
-            inital: initalCameraState,
+            initial: initialCameraState,
             final: finalCameraOptions,
+            cameraBounds: CameraBounds.default,
             owner: AnimationOwner(rawValue: "fly-to"),
             duration: nil,
             mapSize: CGSize(width: 500, height: 500),

@@ -20,14 +20,15 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
     private let dateProvider: DateProvider
 
-    internal init?(inital: CameraState,
+    internal init?(initial: CameraState,
                    final: CameraOptions,
+                   cameraBounds: CameraBounds,
                    owner: AnimationOwner,
                    duration: TimeInterval? = nil,
                    mapSize: CGSize,
                    delegate: CameraAnimatorDelegate,
                    dateProvider: DateProvider = DefaultDateProvider()) {
-        guard let flyToInterpolator = FlyToInterpolator(from: inital, to: final, size: mapSize) else {
+        guard let flyToInterpolator = FlyToInterpolator(from: initial, to: final, cameraBounds: cameraBounds, size: mapSize) else {
             return nil
         }
         if let duration = duration {

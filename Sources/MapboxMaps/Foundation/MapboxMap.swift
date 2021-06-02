@@ -322,7 +322,7 @@ extension MapboxMap: CameraManagerProtocol {
     /// - Parameter options: New camera bounds. Nil values will not take effect.
     /// - Throws: `MapError`
     public func setCameraBounds(for options: CameraBoundsOptions) throws {
-        let expected = __map.setBoundsFor(options)
+        let expected = __map.setBoundsFor(MapboxCoreMaps.CameraBoundsOptions(options))
 
         if expected.isError() {
             // swiftlint:disable force_cast

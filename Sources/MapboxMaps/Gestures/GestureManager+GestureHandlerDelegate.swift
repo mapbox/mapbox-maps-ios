@@ -47,7 +47,7 @@ extension GestureManager: GestureHandlerDelegate {
 
             _ = cameraManager.ease(
                     to: driftCameraOptions,
-                    duration: Double(cameraManager.options.decelerationRate),
+                    duration: 0.3,//Double(cameraManager.options.decelerationRate),
                     curve: .easeOut,
                     completion: nil)
         }
@@ -81,7 +81,13 @@ extension GestureManager: GestureHandlerDelegate {
     }
 
     internal func quickZoomChanged(with newScale: CGFloat, and anchor: CGPoint) {
-        let zoom = max(newScale, cameraManager.options.minimumZoomLevel)
+        guard let mapView = cameraManager.mapView else {
+            return
+        }
+
+        let minZoom = CGFloat(mapView.mapboxMap.cameraBounds.minZoom)
+        let maxZoom = CGFloat(mapView.mapboxMap.cameraBounds.maxZoom)
+        let zoom = newScale.clamped(to: minZoom...maxZoom)
         cameraManager.setCamera(to: CameraOptions(anchor: anchor, zoom: zoom))
     }
 
@@ -93,7 +99,9 @@ extension GestureManager: GestureHandlerDelegate {
             return false
         }
 
-        return mapView.cameraState.zoom >= cameraManager.options.minimumZoomLevel
+        let minZoom = CGFloat(mapView.mapboxMap.cameraBounds.minZoom)
+
+        return mapView.cameraState.zoom >= minZoom
     }
 
     internal func rotationStartAngle() -> CGFloat {

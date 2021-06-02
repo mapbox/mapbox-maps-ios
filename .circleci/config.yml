@@ -38,8 +38,8 @@ workflows:
               report_failure: [true]
       - run-tests-on-devices:
           name: "Run MapboxTestHost tests on devices"
-          device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
-          device-pool: $(AWS_DEVICE_FARM_5_DEVICE_POOL)
+          device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
+          device-pool: $(DEVICE_FARM_5_DEVICE_POOL)
           scheme: "MapboxMapsTestsWithHost"
           app-name: "MapboxTestHost"
           device-tests-always-run: true
@@ -47,8 +47,8 @@ workflows:
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
           xcode: "12.4.0"
-          device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
-          device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
+          device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
+          device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
           app-name: "Examples"
           device-tests-always-run: true
@@ -88,8 +88,8 @@ workflows:
       # Not on main
       - run-tests-on-devices:
           name: "Run MapboxTestHost tests on devices"
-          device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
-          device-pool: $(AWS_DEVICE_FARM_1_PHONE_POOL)
+          device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
+          device-pool: $(DEVICE_FARM_1_PHONE_POOL)
           scheme: "MapboxMapsTestsWithHost"
           app-name: "MapboxTestHost"
           filters:
@@ -98,8 +98,8 @@ workflows:
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
           xcode: "12.4.0"
-          device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
-          device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
+          device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
+          device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
           app-name: "Examples"
           filters:
@@ -108,8 +108,8 @@ workflows:
       # On main
       - run-tests-on-devices:
           name: "Run MapboxTestHost tests on devices (main)"
-          device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
-          device-pool: $(AWS_DEVICE_FARM_5_DEVICE_POOL)
+          device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
+          device-pool: $(DEVICE_FARM_5_DEVICE_POOL)
           scheme: "MapboxMapsTestsWithHost"
           app-name: "MapboxTestHost"
           device-tests-always-run: true
@@ -120,8 +120,8 @@ workflows:
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices (main)"
           xcode: "12.4.0"
-          device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
-          device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
+          device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
+          device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
           app-name: "Examples"
           device-tests-always-run: true
@@ -160,10 +160,10 @@ jobs:
         default: "12.2.0"
       device-farm-project:
         type: string
-        default: $(AWS_DEVICE_FARM_PROJECT_MAPS)
+        default: $(DEVICE_FARM_PROJECT_MAPS)
       device-pool:
         type: string
-        default: $(AWS_DEVICE_FARM_1_PHONE_POOL)
+        default: $(DEVICE_FARM_1_PHONE_POOL)
       device-tests-always-run:
         type: boolean
         default: false
@@ -187,8 +187,8 @@ jobs:
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
       HOMEBREW_NO_INSTALL_CLEANUP: 1
-      AWS_DEVICE_FARM_DEVICE_POOL: << parameters.device-pool >>
-      AWS_DEVICE_FARM_PROJECT: << parameters.device-farm-project >>
+      DEVICE_FARM_DEVICE_POOL: << parameters.device-pool >>
+      DEVICE_FARM_PROJECT: << parameters.device-farm-project >>
       CONFIGURATION: << parameters.configuration >>
     steps:
       # Don't run the default job

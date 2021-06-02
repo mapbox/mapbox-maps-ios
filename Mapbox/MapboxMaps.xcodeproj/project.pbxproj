@@ -326,6 +326,7 @@
 		CABCDF512620E0FF00D61635 /* MapOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CABCDF502620E0FF00D61635 /* MapOptions.swift */; };
 		CAC1960B25AE98F400F69FEA /* GlyphsRasterizationOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC1960A25AE98F400F69FEA /* GlyphsRasterizationOptions.swift */; };
 		CAC1965525AEAFD900F69FEA /* GlyphsRasterizationOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC1961F25AEAE6600F69FEA /* GlyphsRasterizationOptionsTests.swift */; };
+		CAC2A8E0266844ED0051971E /* CameraBoundsOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC2A8DF266844ED0051971E /* CameraBoundsOptions.swift */; };
 		CAD7BA0625A368DE00E64C78 /* ExampleIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAD7BA0425A368DE00E64C78 /* ExampleIntegrationTest.swift */; };
 		CAE43ED5265460FE006F43E9 /* MapFeatureQueryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43ED4265460FE006F43E9 /* MapFeatureQueryable.swift */; };
 		CAE43EDA26546192006F43E9 /* OfflineSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43ED626546191006F43E9 /* OfflineSwitch.swift */; };
@@ -751,6 +752,7 @@
 		CABCDF502620E0FF00D61635 /* MapOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapOptions.swift; sourceTree = "<group>"; };
 		CAC1960A25AE98F400F69FEA /* GlyphsRasterizationOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlyphsRasterizationOptions.swift; sourceTree = "<group>"; };
 		CAC1961F25AEAE6600F69FEA /* GlyphsRasterizationOptionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlyphsRasterizationOptionsTests.swift; sourceTree = "<group>"; };
+		CAC2A8DF266844ED0051971E /* CameraBoundsOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraBoundsOptions.swift; sourceTree = "<group>"; };
 		CAD7BA0425A368DE00E64C78 /* ExampleIntegrationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleIntegrationTest.swift; sourceTree = "<group>"; };
 		CAE43ED4265460FE006F43E9 /* MapFeatureQueryable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapFeatureQueryable.swift; sourceTree = "<group>"; };
 		CAE43ED626546191006F43E9 /* OfflineSwitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineSwitch.swift; sourceTree = "<group>"; };
@@ -1314,6 +1316,7 @@
 		1F4B7D7A2464C36E00745F05 /* Camera */ = {
 			isa = PBXGroup;
 			children = (
+				CAC2A8DF266844ED0051971E /* CameraBoundsOptions.swift */,
 				0C7330B626409539001FAF04 /* CameraState.swift */,
 				0C088ACA26388E3400107B5E /* CameraAnimationsManager.swift */,
 				0C088AC926388E3400107B5E /* CameraAnimationsManager+CameraAnimatorDelegate.swift */,
@@ -2120,6 +2123,7 @@
 				B5B55D46260E4D1500EBB589 /* CameraAnimationDelegate.swift in Sources */,
 				2B8637E32462F5AE00698135 /* MapboxScaleBarLabel.swift in Sources */,
 				CA6245E42627F20B00C79547 /* TileStore+MapboxMaps.swift in Sources */,
+				CAC2A8E0266844ED0051971E /* CameraBoundsOptions.swift in Sources */,
 				CAB77E452654AC5E0071D74C /* CameraAnimationsManagerProtocol.swift in Sources */,
 				0C3B1E8E24DDADD000CC29E8 /* EventsStringTokens.swift in Sources */,
 				0C1EBEF82660356E0024E687 /* PolylineAnnotation.swift in Sources */,

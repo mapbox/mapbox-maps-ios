@@ -312,7 +312,7 @@ jobs:
       - checkout
       - add_ssh_keys:
            fingerprints:
-             - "d3:03:ae:4f:f2:2d:71:37:7f:0d:ca:b9:d7:be:e3:43"
+             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
       - install-mbx-ci
       - configure-environment
       # Building and testing are split into 2, with the aim that we'll be able to reuse
@@ -346,7 +346,7 @@ jobs:
       - checkout
       - add_ssh_keys:
            fingerprints:
-             - "d3:03:ae:4f:f2:2d:71:37:7f:0d:ca:b9:d7:be:e3:43"
+             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
       - install-mbx-ci
       - configure-environment
       - ensure-text-exists-in-commit:
@@ -421,7 +421,7 @@ jobs:
       - checkout
       - add_ssh_keys:
            fingerprints:
-             - "d3:03:ae:4f:f2:2d:71:37:7f:0d:ca:b9:d7:be:e3:43"
+             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
       - install-mbx-ci
       - ensure-text-exists-in-commit:
           commit-text: "[run app device tests]"
@@ -494,7 +494,7 @@ jobs:
       - checkout
       - add_ssh_keys:
            fingerprints:
-             - "d3:03:ae:4f:f2:2d:71:37:7f:0d:ca:b9:d7:be:e3:43"
+             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
       - install-mbx-ci
       - configure-environment
       - ensure-text-exists-in-commit:
@@ -523,7 +523,7 @@ jobs:
       - checkout
       - add_ssh_keys:
            fingerprints:
-             - "d3:03:ae:4f:f2:2d:71:37:7f:0d:ca:b9:d7:be:e3:43"
+             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
       - install-mbx-ci
       - configure-environment
       - ensure-text-exists-in-commit:
@@ -586,7 +586,7 @@ jobs:
       - checkout
       - add_ssh_keys:
            fingerprints:
-             - "d3:03:ae:4f:f2:2d:71:37:7f:0d:ca:b9:d7:be:e3:43"
+             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
       - install-mbx-ci
       - configure-environment
       - install-dependencies

@@ -150,7 +150,6 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
                 dump(observer)
 
                 DispatchQueue.main.async {
-                    dump(observer)
                     switch result {
                     case .success:
                         XCTFail("Result reached success block, therefore download was not canceled")
@@ -390,13 +389,14 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
         // Wait a short time
         let expect2 = expectation(description: "Wait")
-        _ = XCTWaiter.wait(for: [expect2], timeout: 0.02)
+        _ = XCTWaiter.wait(for: [expect2], timeout: 1.0)
 
         // Now release
         tileStore = nil
         offlineManager = nil
 
-        wait(for: [expect, closureDeallocation], timeout: 60.0)
+        wait(for: [expect], timeout: 60.0)
+        wait(for: [closureDeallocation], timeout: 5.0)
 
         XCTAssertNil(weakTileStore)
     }

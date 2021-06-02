@@ -55,18 +55,6 @@ public class CameraAnimationsManager {
 
     // MARK: Setting a new camera
 
-    /// Sets the map's viewport to a new camera synchronously. Any active animations will be canceled.
-    /// - Parameters:
-    ///   - targetCamera: The target camera to transition to.
-    public func setCamera(to targetCamera: CameraOptions) {
-        guard let mapView = mapView else {
-            assertionFailure("MapView is nil.")
-            return
-        }
-        cancelAnimations() // cancel any active animations
-        mapView.mapboxMap._setCamera(to: targetCamera)
-    }
-
     /// Interrupts all `active` animation.
     /// The camera remains at the last point before the cancel request was invoked, i.e.,
     /// the camera is not reset or fast-forwarded to the end of the transition.

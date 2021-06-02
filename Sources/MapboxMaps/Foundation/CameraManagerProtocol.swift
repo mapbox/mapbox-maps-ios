@@ -128,7 +128,7 @@ internal protocol CameraManagerProtocol {
     /// constraints resulting in a different `CameraState`.
     ///
     /// - Parameter cameraOptions: New camera options
-    func _setCamera(to cameraOptions: CameraOptions)
+    func setCamera(to cameraOptions: CameraOptions)
 
     /// Returns the current camera state
     var cameraState: CameraState { get }

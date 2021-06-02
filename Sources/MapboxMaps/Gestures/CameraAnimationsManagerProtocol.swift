@@ -6,8 +6,6 @@ internal protocol CameraAnimationsManagerProtocol: AnyObject {
 
     var options: MapCameraOptions { get }
 
-    func setCamera(to camera: CameraOptions)
-
     func ease(to camera: CameraOptions,
               duration: TimeInterval,
               curve: UIView.AnimationCurve,

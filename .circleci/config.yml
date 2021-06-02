@@ -25,7 +25,7 @@ workflows:
           xcode: "12.4.0"
           matrix:
             parameters:
-              configuration: ["Debug", "Release"]
+              configuration: ["Debug", `"Release"]
               report_failure: [true]
       - build-debug-app:
           report_failure: true
@@ -310,6 +310,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - install-mbx-ci
       - configure-environment
       # Building and testing are split into 2, with the aim that we'll be able to reuse
       # the build product and test on multiple simulators
@@ -340,6 +341,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - install-mbx-ci
       - configure-environment
       - ensure-text-exists-in-commit:
           commit-text: "[run device tests]"
@@ -411,6 +413,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - install-mbx-ci
       - ensure-text-exists-in-commit:
           commit-text: "[run app device tests]"
           always-run: << parameters.device-tests-always-run >>
@@ -480,6 +483,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - install-mbx-ci
       - configure-environment
       - ensure-text-exists-in-commit:
           commit-text: "[create xcframework]"
@@ -505,6 +509,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - install-mbx-ci
       - configure-environment
       - ensure-text-exists-in-commit:
           commit-text: "[release]"
@@ -564,6 +569,7 @@ jobs:
           message: '<$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` started.>'
           include_visit_job_action: true
       - checkout
+      - install-mbx-ci
       - configure-environment
       - install-dependencies
       - make-docs
@@ -610,6 +616,15 @@ commands:
             echo "MAPBOX_ACCESS_TOKEN = ${MAPBOX_ACCESS_TOKEN}" > ./developer.xcconfig
             echo "${MAPBOX_ACCESS_TOKEN}" > ~/.mapbox
             echo "${MAPBOX_ACCESS_TOKEN}" > ./Tests/MapboxMapsTests/Helpers/MapboxAccessToken
+
+  install-mbx-ci:
+    steps:
+      run:
+        name: Install latest mbx-ci for iOS
+        command: |
+          brew tap mapbox/tap git@github.com:mapbox/tap
+          brew install mapbox/tap/mbx-ci
+          mbx-ci aws setup
 
   ensure-text-exists-in-commit:
     parameters:

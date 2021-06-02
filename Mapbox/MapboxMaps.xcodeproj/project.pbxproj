@@ -137,7 +137,6 @@
 		0CC6EF2625C3263400BFB153 /* HillshadeLayerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC6EF0525C3263400BFB153 /* HillshadeLayerIntegrationTests.swift */; };
 		0CC6EF2925C3263400BFB153 /* LocationIndicatorLayerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC6EF0625C3263400BFB153 /* LocationIndicatorLayerIntegrationTests.swift */; };
 		0CC6EF2C25C3263400BFB153 /* RasterLayerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC6EF0725C3263400BFB153 /* RasterLayerIntegrationTests.swift */; };
-		0CC9937E25D46B7100650CC1 /* RenderOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC9937D25D46B7100650CC1 /* RenderOptions.swift */; };
 		0CD34FDE242AADDB00943687 /* MapboxMaps.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CD34FD0242AADDB00943687 /* MapboxMaps.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0CD62F0524587CF3006421D1 /* PanGestureHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC8BD2A242405AA00288A9B /* PanGestureHandler.swift */; };
 		0CD62F06245884FD006421D1 /* TapGestureHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC8BD2B242405AA00288A9B /* TapGestureHandler.swift */; };
@@ -553,7 +552,6 @@
 		0CC8BD2B242405AA00288A9B /* TapGestureHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TapGestureHandler.swift; sourceTree = "<group>"; };
 		0CC8BD2C242405AA00288A9B /* GestureManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GestureManager.swift; sourceTree = "<group>"; };
 		0CC8BD2D242405AA00288A9B /* GestureHandlerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GestureHandlerDelegate.swift; sourceTree = "<group>"; };
-		0CC9937D25D46B7100650CC1 /* RenderOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderOptions.swift; sourceTree = "<group>"; };
 		0CD34FCE242AADDB00943687 /* MapboxMaps.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxMaps.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CD34FD0242AADDB00943687 /* MapboxMaps.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapboxMaps.h; sourceTree = "<group>"; };
 		0CD34FD1242AADDB00943687 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -975,7 +973,6 @@
 			isa = PBXGroup;
 			children = (
 				CABCDF412620E09D00D61635 /* MapInitOptions.swift */,
-				0CC9937D25D46B7100650CC1 /* RenderOptions.swift */,
 			);
 			path = Configuration;
 			sourceTree = "<group>";
@@ -2033,7 +2030,6 @@
 				0C708F2924EB1EE2003CE791 /* LocationIndicatorLayer.swift in Sources */,
 				0C708F6024EC70DD003CE791 /* Color.swift in Sources */,
 				0C708F2D24EB1EE2003CE791 /* HeatmapLayer.swift in Sources */,
-				0CC9937E25D46B7100650CC1 /* RenderOptions.swift in Sources */,
 				0C3B1E9024DDADD000CC29E8 /* EventsManager.swift in Sources */,
 				0C708F4B24EB23C7003CE791 /* ImageSource.swift in Sources */,
 				C64994AF258D5ADE0052C21C /* Puck2D.swift in Sources */,

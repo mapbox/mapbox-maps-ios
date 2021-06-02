@@ -8,6 +8,9 @@ internal protocol Puck {
     /// Property that stores the current `PuckStyle` of the puck
     var puckStyle: PuckStyle { get set }
 
+    /// Property that stores the current `PuckBearingSource` of the puck
+    var puckBearingSource: PuckBearingSource { get set }
+
     /// Property that references the mapView that the puck should be draw
     var locationSupportableMapView: LocationSupportableMapView? { get }
 

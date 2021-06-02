@@ -56,16 +56,19 @@ internal class Puck2D: Puck {
 
     // MARK: Protocol Properties
     internal var puckStyle: PuckStyle
+    internal var puckBearingSource: PuckBearingSource
 
     internal weak var locationSupportableMapView: LocationSupportableMapView?
     internal weak var style: LocationStyleDelegate?
 
     // MARK: Initializers
     internal init(puckStyle: PuckStyle,
+                  puckBearingSource: PuckBearingSource,
                   locationSupportableMapView: LocationSupportableMapView,
                   style: LocationStyleDelegate,
                   configuration: Puck2DConfiguration) {
         self.puckStyle = puckStyle
+        self.puckBearingSource = puckBearingSource
         self.locationSupportableMapView = locationSupportableMapView
         self.style = style
         self.configuration = configuration
@@ -87,8 +90,13 @@ internal class Puck2D: Puck {
             ]
 
             var bearing: Double = 0.0
-            if let latestBearing = location.heading {
-                bearing = latestBearing.trueHeading
+            switch puckBearingSource {
+            case .heading:
+                if let latestBearing = location.heading {
+                    bearing = latestBearing.trueHeading
+                }
+            case .course:
+                bearing = location.course
             }
 
             do {

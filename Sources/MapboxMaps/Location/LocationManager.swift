@@ -54,6 +54,10 @@ public class LocationManager: NSObject {
             if let puckType = options.puckType, puckType != oldValue.puckType {
                 locationPuckManager?.changePuckType(to: puckType)
             }
+
+            if options.puckBearingSource != oldValue.puckBearingSource {
+                locationPuckManager?.changePuckBearingSource(to: options.puckBearingSource)
+            }
         }
     }
 
@@ -196,13 +200,13 @@ private extension LocationManager {
             locationProvider.startUpdatingHeading()
 
             if let locationPuckManager = locationPuckManager {
-                // This serves as a reset and handles the case if permissions were changed for accuracy
+                // This serves as a reset and handles the case if permissions were changed for accuracy 
                 locationPuckManager.changePuckStyle(to: currentPuckStyle)
             } else {
-                let locationPuckManager = LocationPuckManager(
-                    locationSupportableMapView: locationSupportableMapView,
-                    style: style,
-                    puckType: puckType)
+                let locationPuckManager = LocationPuckManager(locationSupportableMapView: locationSupportableMapView,
+                                                              style: style,
+                                                              puckType: puckType,
+                                                              puckBearingSource: options.puckBearingSource)
                 consumers.add(locationPuckManager)
                 self.locationPuckManager = locationPuckManager
             }

@@ -3,7 +3,7 @@ import CoreLocation
 
 @objc public class Location: NSObject {
     public let heading: CLHeading?
-    public let internalLocation: CLLocation
+    internal let internalLocation: CLLocation
 
     public var coordinate: CLLocationCoordinate2D {
         return internalLocation.coordinate

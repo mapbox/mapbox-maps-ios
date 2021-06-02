@@ -39,12 +39,18 @@ internal class Puck3D: Puck {
 
     // MARK: Protocol Properties
     internal var puckStyle: PuckStyle
+    internal var puckBearingSource: PuckBearingSource
     internal weak var locationSupportableMapView: LocationSupportableMapView?
     internal weak var style: LocationStyleDelegate?
 
     // MARK: Initializers
-    internal init(puckStyle: PuckStyle, locationSupportableMapView: LocationSupportableMapView, style: LocationStyleDelegate, configuration: Puck3DConfiguration) {
+    internal init(puckStyle: PuckStyle,
+                  puckBearingSource: PuckBearingSource,
+                  locationSupportableMapView: LocationSupportableMapView,
+                  style: LocationStyleDelegate,
+                  configuration: Puck3DConfiguration) {
         self.puckStyle = puckStyle
+        self.puckBearingSource = puckBearingSource
         self.locationSupportableMapView = locationSupportableMapView
         self.style = style
         self.configuration = configuration
@@ -101,11 +107,20 @@ internal class Puck3D: Puck {
               var model = modelSource.models?.values.first else { return }
 
         model.position = [location.coordinate.longitude, location.coordinate.latitude]
-        if var orientation = model.orientation,
-           let validDirection = location.headingDirection {
 
-            let initialOrientation = initialPuckOrientation != nil ? initialPuckOrientation![2] : 0
-            orientation[2] = initialOrientation + validDirection
+        var validDirection: Double = 0.0
+        switch puckBearingSource {
+        case .heading:
+            if let validHeadingDirection = location.headingDirection {
+                validDirection = validHeadingDirection
+            }
+        case .course:
+            validDirection = location.course
+        }
+
+        if var orientation = model.orientation {
+            let initalOrientation = initialPuckOrientation != nil ? initialPuckOrientation![2] : 0
+            orientation[2] = initalOrientation + validDirection
             model.orientation = orientation
         }
 

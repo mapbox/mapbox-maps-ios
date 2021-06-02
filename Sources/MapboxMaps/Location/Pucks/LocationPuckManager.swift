@@ -2,6 +2,8 @@ import CoreLocation
 import MapboxCoreMaps
 import UIKit
 
+@_implementationOnly import MapboxCommon_Private
+
 #if canImport(MapboxMapsFoundation)
 import MapboxMapsFoundation
 #endif
@@ -27,6 +29,13 @@ public enum PuckType: Equatable {
     case puck3D(Puck3DConfiguration)
 }
 
+// MARK: PuckBearingSource
+/// This enum controls how the puck is oriented
+public enum PuckBearingSource: Equatable {
+    case heading
+    case course
+}
+
 // MARK: LocationPuckManager
 /// An object that is responsible for managing the location indicator which can be view based, or layer based
 internal class LocationPuckManager: LocationConsumer {
@@ -49,11 +58,16 @@ internal class LocationPuckManager: LocationConsumer {
     /// The current puck type
     internal private(set) var puckType: PuckType
 
+    /// The type of value that should be passed for bearing
+    internal var puckBearingSource: PuckBearingSource
+
     internal init(locationSupportableMapView: LocationSupportableMapView,
                   style: LocationStyleDelegate?,
-                  puckType: PuckType) {
+                  puckType: PuckType,
+                  puckBearingSource: PuckBearingSource) {
         puckStyle = .precise
         self.puckType = puckType
+        self.puckBearingSource = puckBearingSource
         self.locationSupportableMapView = locationSupportableMapView
         self.style = style
     }
@@ -81,11 +95,13 @@ internal class LocationPuckManager: LocationConsumer {
         switch puckType {
         case let .puck2D(configuration):
             puck = Puck2D(puckStyle: puckStyle,
+                          puckBearingSource: puckBearingSource,
                           locationSupportableMapView: locationSupportableMapView,
                           style: style,
                           configuration: configuration)
         case let .puck3D(configuration):
             puck = Puck3D(puckStyle: puckStyle,
+                          puckBearingSource: puckBearingSource,
                           locationSupportableMapView: locationSupportableMapView,
                           style: style,
                           configuration: configuration)
@@ -113,5 +129,15 @@ internal class LocationPuckManager: LocationConsumer {
         } else {
             createPuck()
         }
+    }
+
+    internal func changePuckBearingSource(to newPuckBearingSource: PuckBearingSource) {
+        guard var puck = self.puck else {
+            Log.warning(forMessage: "Puck must exist to change a PuckBearingSource", category: "Location")
+            return
+        }
+
+        puckBearingSource = newPuckBearingSource
+        puck.puckBearingSource = newPuckBearingSource
     }
 }

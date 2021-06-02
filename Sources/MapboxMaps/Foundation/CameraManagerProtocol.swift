@@ -120,7 +120,6 @@ internal protocol CameraManagerProtocol {
 
     // MARK: - Camera getters/setters
 
-    /// :nodoc:
     /// Changes the map view by any combination of center, zoom, bearing, and pitch,
     /// without an animated transition. The map will retain its current values
     /// for any details not passed via the camera options argument. It is not

@@ -1,13 +1,27 @@
 import Foundation
 import CoreLocation
 
+/// Holds options to be used for setting camera bounds.
 public struct CameraBoundsOptions: Hashable {
+
+    /// The latitude and longitude bounds to which the camera center are constrained.
     public var bounds: CoordinateBounds?
+
+    /// The maximum zoom level, in mapbox zoom levels 0-25.5. At low zoom levels,
+    /// a small set of map tiles covers a large geographical area. At higher
+    /// zoom levels, a larger number of tiles cover a smaller geographical area.
     public var maxZoom: CGFloat?
+
+    /// The minimum zoom level, in mapbox zoom levels 0-25.5.
     public var minZoom: CGFloat?
+
+    /// The maximum allowed pitch value in degrees.
     public var maxPitch: CGFloat?
+
+    /// The minimum allowed pitch value degrees.
     public var minPitch: CGFloat?
 
+    /// :nodoc:
     public init(bounds: CoordinateBounds? = nil,
                 maxZoom: CGFloat? = nil,
                 minZoom: CGFloat? = nil,
@@ -28,6 +42,7 @@ public struct CameraBoundsOptions: Hashable {
         self.minPitch = objcValue.__minPitch.flatMap { CGFloat($0.doubleValue) }
     }
 
+    /// :nodoc:
     public static func == (lhs: CameraBoundsOptions, rhs: CameraBoundsOptions) -> Bool {
         return lhs.bounds == rhs.bounds
             && lhs.maxZoom == rhs.maxZoom
@@ -36,6 +51,7 @@ public struct CameraBoundsOptions: Hashable {
             && lhs.minPitch == rhs.minPitch
     }
 
+    /// :nodoc:
     public func hash(into hasher: inout Hasher) {
         hasher.combine(bounds)
         hasher.combine(maxZoom)
@@ -46,14 +62,19 @@ public struct CameraBoundsOptions: Hashable {
 }
 
 extension CameraBoundsOptions {
+
+    /// Initialize a `CameraBoundsOptions` from the immutable `CameraBounds` type
+    /// - Parameter cameraBounds: `CameraBounds`
     public init(cameraBounds: CameraBounds) {
-        self.bounds = cameraBounds.bounds
-        self.maxZoom = CGFloat(cameraBounds.maxZoom)
-        self.minZoom = CGFloat(cameraBounds.minZoom)
-        self.maxPitch = CGFloat(cameraBounds.maxPitch)
-        self.minPitch = CGFloat(cameraBounds.minPitch)
+        bounds = cameraBounds.bounds
+        maxZoom = cameraBounds.maxZoom
+        minZoom = cameraBounds.minZoom
+        maxPitch = cameraBounds.maxPitch
+        minPitch = cameraBounds.minPitch
     }
 }
+
+// MARK: - MapboxCoreMaps.CameraBoundsOptions -
 
 extension MapboxCoreMaps.CameraBoundsOptions {
     internal convenience init(_ swiftValue: CameraBoundsOptions) {
@@ -62,20 +83,5 @@ extension MapboxCoreMaps.CameraBoundsOptions {
                   minZoom: swiftValue.minZoom?.NSNumber,
                   maxPitch: swiftValue.maxPitch?.NSNumber,
                   minPitch: swiftValue.minPitch?.NSNumber)
-    }
-}
-
-extension CameraBounds {
-    internal static var `default`: CameraBounds {
-        let defaultSouthWest = CLLocationCoordinate2D(latitude: -90, longitude: -180)
-        let defaultNorthEast = CLLocationCoordinate2D(latitude: 90, longitude: 180)
-
-        return CameraBounds(bounds: CoordinateBounds(southwest: defaultSouthWest,
-                                                     northeast: defaultNorthEast,
-                                                     infiniteBounds: true),
-                            maxZoom: 22,
-                            minZoom: 0,
-                            maxPitch: 85,
-                            minPitch: 0)
     }
 }

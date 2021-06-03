@@ -57,6 +57,12 @@ class OfflineGuideIntegrationTests: XCTestCase {
     // Test TileRegionLoadOptions
     func testDefineATileRegion() throws {
         //-->
+        // When providing a `TileStore` to `ResourceOptions`, you must ensure that
+        // the `TileStore` is correctly initialized using `setOptionForKey(_:value:)`.
+        // This includes providing an access token, if you are not using a default
+        // from the application's Info.plist
+        tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken)
+        
         let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken,
                                                                              tileStore: tileStore))
 

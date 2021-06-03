@@ -179,13 +179,14 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
     func testMapViewConfiguration() throws {
 
         let mapView = MapView(frame: .zero)
-        let someBounds = CoordinateBounds(southwest: CLLocationCoordinate2D(latitude: 0, longitude: 0),
-                                          northeast: CLLocationCoordinate2D(latitude: 1, longitude: 1))
 
         //-->
+        let restrictedBounds = CoordinateBounds(southwest: CLLocationCoordinate2D(latitude: 10, longitude: 10),
+                                                northeast: CLLocationCoordinate2D(latitude: 11, longitude: 11))
+
         // Configure map to show a scale bar
         mapView.ornaments.options.scaleBar.visibility = .visible
-        mapView.camera.options = CameraBoundsOptions(bounds: someBounds)
+        mapView.camera.options = CameraBoundsOptions(bounds: restrictedBounds)
         //<--
     }
 
@@ -359,6 +360,11 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                                                      maxZoom: 15.0,
                                                      minZoom: 8.0)
         //<--
+
+        // Can also set directly, though this will trigger 3 didSets
+        mapView.camera.options.bounds = restrictedBounds
+        mapView.camera.options.minZoom = 8.0
+        mapView.camera.options.maxZoom = 15.0
     }
 
     func testGeoJSONSource() {

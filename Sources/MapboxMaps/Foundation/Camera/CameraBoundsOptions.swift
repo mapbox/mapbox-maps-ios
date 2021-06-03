@@ -65,7 +65,7 @@ extension MapboxCoreMaps.CameraBoundsOptions {
     }
 }
 
-extension MapboxCoreMaps.CameraBounds {
+extension CameraBounds {
     internal static var `default`: CameraBounds {
         let defaultSouthWest = CLLocationCoordinate2D(latitude: -90, longitude: -180)
         let defaultNorthEast = CLLocationCoordinate2D(latitude: 90, longitude: 180)

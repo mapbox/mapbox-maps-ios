@@ -314,7 +314,7 @@ extension MapboxMap: CameraManagerProtocol {
 
     /// Returns the bounds of the map.
     public var cameraBounds: CameraBounds {
-        return __map.getBounds()
+        return CameraBounds(__map.getBounds())
     }
 
     /// Sets the bounds of the map.

@@ -185,7 +185,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         //-->
         // Configure map to show a scale bar
         mapView.ornaments.options.scaleBar.visibility = .visible
-        mapView.camera.options.restrictedCoordinateBounds = someBounds
+        mapView.camera.options = CameraBoundsOptions(bounds: someBounds)
         //<--
     }
 
@@ -355,9 +355,9 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         let sw = CLLocationCoordinate2DMake(-12, -46)
         let ne = CLLocationCoordinate2DMake(2, 43)
         let restrictedBounds = CoordinateBounds(southwest: sw, northeast: ne)
-        mapView.camera.options.minimumZoomLevel = 8.0
-        mapView.camera.options.maximumZoomLevel = 15.0
-        mapView.camera.options.restrictedCoordinateBounds = restrictedBounds
+        mapView.camera.options = CameraBoundsOptions(bounds: restrictedBounds,
+                                                     maxZoom: 15.0,
+                                                     minZoom: 8.0)
         //<--
     }
 

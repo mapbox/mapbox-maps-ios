@@ -12,9 +12,9 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
     internal var didFailLoadingMap: ((MapView, NSError) -> Void)?
 
     internal override func setUpWithError() throws {
-        try super.setUpWithError()
-
         try guardForMetalDevice()
+
+        try super.setUpWithError()
 
         guard let window = window,
               let rootView = rootViewController?.view else {

@@ -62,22 +62,22 @@ class MapViewIntegrationTests: IntegrationTestCase {
     }
 
     func testUpdatePreferredFPS() {
-        let originalFPS = mapView.preferredFPS
+        let originalFPS = mapView.preferredFramesPerSecond
         XCTAssertNotNil(originalFPS)
         XCTAssertEqual(originalFPS.rawValue, 0)
 
         let newFPS = 12
-        mapView.preferredFPS = PreferredFPS(rawValue: newFPS)
-        XCTAssertNotEqual(originalFPS, mapView.preferredFPS)
-        XCTAssertEqual(mapView.preferredFPS.rawValue, newFPS)
+        mapView.preferredFramesPerSecond = PreferredFPS(rawValue: newFPS)
+        XCTAssertNotEqual(originalFPS, mapView.preferredFramesPerSecond)
+        XCTAssertEqual(mapView.preferredFramesPerSecond.rawValue, newFPS)
     }
 
     func testUpdateFromDisplayLink() {
-        let originalFPS = mapView.preferredFPS
+        let originalFPS = mapView.preferredFramesPerSecond
         XCTAssertNotNil(mapView.displayLink)
-        mapView.preferredFPS = .lowPower
-        XCTAssertNotEqual(originalFPS, mapView.preferredFPS)
-        XCTAssertEqual(mapView.preferredFPS.rawValue, mapView.displayLink?.preferredFramesPerSecond)
+        mapView.preferredFramesPerSecond = .lowPower
+        XCTAssertNotEqual(originalFPS, mapView.preferredFramesPerSecond)
+        XCTAssertEqual(mapView.preferredFramesPerSecond.rawValue, mapView.displayLink?.preferredFramesPerSecond)
     }
 
     func testAnimatorCompletionBlocksAreRemoved() {
@@ -95,9 +95,9 @@ class MapViewIntegrationTests: IntegrationTestCase {
 
     func testUpdateFromDisplayLinkWhenNil() {
         mapView.displayLink = nil
-        mapView.preferredFPS = .maximum
+        mapView.preferredFramesPerSecond = .maximum
 
         XCTAssertNil(mapView.displayLink?.preferredFramesPerSecond)
-        XCTAssertNotEqual(mapView.preferredFPS.rawValue, mapView.displayLink?.preferredFramesPerSecond)
+        XCTAssertNotEqual(mapView.preferredFramesPerSecond.rawValue, mapView.displayLink?.preferredFramesPerSecond)
     }
 }

@@ -104,8 +104,8 @@ internal class Puck3D: Puck {
         if var orientation = model.orientation,
            let validDirection = location.headingDirection {
 
-            let initalOrientation = initialPuckOrientation != nil ? initialPuckOrientation![2] : 0
-            orientation[2] = initalOrientation + validDirection
+            let initialOrientation = initialPuckOrientation != nil ? initialPuckOrientation![2] : 0
+            orientation[2] = initialOrientation + validDirection
             model.orientation = orientation
         }
 

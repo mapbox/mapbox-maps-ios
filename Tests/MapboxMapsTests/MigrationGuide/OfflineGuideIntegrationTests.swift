@@ -62,7 +62,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
         // This includes providing an access token, if you are not using a default
         // from the application's Info.plist
         tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken)
-        
+
         let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken,
                                                                              tileStore: tileStore))
 

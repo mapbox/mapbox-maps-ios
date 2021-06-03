@@ -10,7 +10,7 @@ final class MockCameraManager: CameraAnimationsManagerProtocol {
 
     var mapView: MapView?
 
-    var options = MapCameraOptions()
+    var options = CameraBoundsOptions()
 
     struct EaseToCameraParameters {
         var camera: CameraOptions

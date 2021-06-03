@@ -39,11 +39,22 @@ open class MapView: UIView {
 
     private let mapClient = DelegatingMapClient()
 
-    public var options = RenderOptions() {
-        didSet {
-            mapboxMap.prefetchZoomDelta = options.prefetchZoomDelta
-            preferredFPS = options.preferredFramesPerSecond
-            metalView?.presentsWithTransaction = options.presentsWithTransaction
+    /// A Boolean value that indicates whether the underlying `CAMetalLayer` of the `MapView`
+    /// presents its content using a CoreAnimation transaction
+    ///
+    /// By default, this is `false` resulting in the output of a rendering pass being displayed on
+    /// the `CAMetalLayer` as quickly as possible (and asynchronously). This typically results
+    /// in the fastest rendering performance.
+    ///
+    /// If, however, the `MapView` is overlaid with a `UIKit` element which must
+    /// be pinned to a particular lat-long, then setting this to `true` will
+    /// result in better synchronization and less jitter.
+    public var presentsWithTransaction: Bool {
+        get {
+            return metalView?.presentsWithTransaction ?? false
+        }
+        set {
+            metalView?.presentsWithTransaction = newValue
         }
     }
 
@@ -69,13 +80,17 @@ open class MapView: UIView {
     private var displayCallback: (() -> Void)?
     @objc dynamic internal var displayLink: CADisplayLink?
 
+    /// Holding onto this value that comes from `MapOptions` since there is a race condition between
+    /// getting a `MetalView`, and intializing a `MapView`
+    private var pixelRatio: CGFloat = 0.0
+
     @IBInspectable private var styleURI__: String = ""
 
     /// Outlet that can be used when initializing a MapView with a Storyboard or
     /// a nib.
     @IBOutlet internal private(set) weak var mapInitOptionsProvider: MapInitOptionsProvider?
 
-    internal var preferredFPS: PreferredFPS = .maximum {
+    internal var preferredFramesPerSecond: PreferredFPS = .maximum {
         didSet {
             updateDisplayLinkPreferredFramesPerSecond()
         }
@@ -135,6 +150,9 @@ open class MapView: UIView {
         } else {
             resolvedMapInitOptions = mapInitOptions
         }
+
+        self.pixelRatio = CGFloat(resolvedMapInitOptions.mapOptions.pixelRatio)
+
         mapClient.delegate = self
         mapboxMap = MapboxMap(mapClient: mapClient, mapInitOptions: resolvedMapInitOptions)
 
@@ -159,11 +177,8 @@ open class MapView: UIView {
             mapboxMap.setCamera(to: cameraOptions)
         }
 
-        // Set prefetchZoomDelta
-        mapboxMap.prefetchZoomDelta = options.prefetchZoomDelta
-
-        // Set preferrredFPS
-        preferredFPS = options.preferredFramesPerSecond
+//        // Set prefetchZoomDelta
+//        mapboxMap.prefetchZoomDelta = options.prefetchZoomDelta
 
         // Setup Telemetry logging
         setUpTelemetryLogging()
@@ -240,7 +255,6 @@ open class MapView: UIView {
             let target = BaseMapViewProxy(mapView: self)
             displayLink = window?.screen.displayLink(withTarget: target, selector: #selector(target.updateFromDisplayLink))
 
-            preferredFPS = options.preferredFramesPerSecond
             updateDisplayLinkPreferredFramesPerSecond()
             displayLink?.add(to: .current, forMode: .common)
 
@@ -280,7 +294,7 @@ open class MapView: UIView {
 
     func updateDisplayLinkPreferredFramesPerSecond() {
         if let displayLink = displayLink {
-            displayLink.preferredFramesPerSecond = preferredFPS.rawValue
+            displayLink.preferredFramesPerSecond = preferredFramesPerSecond.rawValue
         }
     }
 
@@ -341,13 +355,13 @@ extension MapView: DelegatingMapClientDelegate {
 
         metalView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         metalView.autoResizeDrawable = true
-        metalView.contentScaleFactor = UIScreen.main.scale
+        metalView.contentScaleFactor = pixelRatio
         metalView.contentMode = .center
         metalView.isOpaque = isOpaque
         metalView.layer.isOpaque = isOpaque
         metalView.isPaused = true
         metalView.enableSetNeedsDisplay = true
-        metalView.presentsWithTransaction = options.presentsWithTransaction
+        metalView.presentsWithTransaction = false
 
         insertSubview(metalView, at: 0)
         self.metalView = metalView

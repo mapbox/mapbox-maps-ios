@@ -4,7 +4,7 @@ internal protocol CameraAnimationsManagerProtocol: AnyObject {
 
     var mapView: MapView? { get }
 
-    var options: MapCameraOptions { get }
+    var options: CameraBoundsOptions { get }
 
     func ease(to camera: CameraOptions,
               duration: TimeInterval,

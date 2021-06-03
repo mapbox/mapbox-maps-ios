@@ -38,8 +38,8 @@ workflows:
               report_failure: [true]
       - run-tests-on-devices:
           name: "Run MapboxTestHost tests on devices"
-          device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
-          device-pool: $(AWS_DEVICE_FARM_5_DEVICE_POOL)
+          device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
+          device-pool: $(DEVICE_FARM_5_DEVICE_POOL)
           scheme: "MapboxMapsTestsWithHost"
           app-name: "MapboxTestHost"
           device-tests-always-run: true
@@ -47,8 +47,8 @@ workflows:
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
           xcode: "12.4.0"
-          device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
-          device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
+          device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
+          device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
           app-name: "Examples"
           device-tests-always-run: true
@@ -88,8 +88,8 @@ workflows:
       # Not on main
       - run-tests-on-devices:
           name: "Run MapboxTestHost tests on devices"
-          device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
-          device-pool: $(AWS_DEVICE_FARM_1_PHONE_POOL)
+          device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
+          device-pool: $(DEVICE_FARM_1_PHONE_POOL)
           scheme: "MapboxMapsTestsWithHost"
           app-name: "MapboxTestHost"
           filters:
@@ -98,8 +98,8 @@ workflows:
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
           xcode: "12.4.0"
-          device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
-          device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
+          device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
+          device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
           app-name: "Examples"
           filters:
@@ -108,8 +108,8 @@ workflows:
       # On main
       - run-tests-on-devices:
           name: "Run MapboxTestHost tests on devices (main)"
-          device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
-          device-pool: $(AWS_DEVICE_FARM_5_DEVICE_POOL)
+          device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
+          device-pool: $(DEVICE_FARM_5_DEVICE_POOL)
           scheme: "MapboxMapsTestsWithHost"
           app-name: "MapboxTestHost"
           device-tests-always-run: true
@@ -120,8 +120,8 @@ workflows:
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices (main)"
           xcode: "12.4.0"
-          device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
-          device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
+          device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
+          device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
           app-name: "Examples"
           device-tests-always-run: true
@@ -160,10 +160,10 @@ jobs:
         default: "12.2.0"
       device-farm-project:
         type: string
-        default: $(AWS_DEVICE_FARM_PROJECT_MAPS)
+        default: $(DEVICE_FARM_PROJECT_MAPS)
       device-pool:
         type: string
-        default: $(AWS_DEVICE_FARM_1_PHONE_POOL)
+        default: $(DEVICE_FARM_1_PHONE_POOL)
       device-tests-always-run:
         type: boolean
         default: false
@@ -187,8 +187,8 @@ jobs:
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
       HOMEBREW_NO_INSTALL_CLEANUP: 1
-      AWS_DEVICE_FARM_DEVICE_POOL: << parameters.device-pool >>
-      AWS_DEVICE_FARM_PROJECT: << parameters.device-farm-project >>
+      DEVICE_FARM_DEVICE_POOL: << parameters.device-pool >>
+      DEVICE_FARM_PROJECT: << parameters.device-farm-project >>
       CONFIGURATION: << parameters.configuration >>
     steps:
       # Don't run the default job
@@ -310,6 +310,10 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - add_ssh_keys:
+           fingerprints:
+             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+      - install-mbx-ci
       - configure-environment
       # Building and testing are split into 2, with the aim that we'll be able to reuse
       # the build product and test on multiple simulators
@@ -340,6 +344,10 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - add_ssh_keys:
+           fingerprints:
+             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+      - install-mbx-ci
       - configure-environment
       - ensure-text-exists-in-commit:
           commit-text: "[run device tests]"
@@ -411,6 +419,10 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - add_ssh_keys:
+           fingerprints:
+             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+      - install-mbx-ci
       - ensure-text-exists-in-commit:
           commit-text: "[run app device tests]"
           always-run: << parameters.device-tests-always-run >>
@@ -480,6 +492,10 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - add_ssh_keys:
+           fingerprints:
+             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+      - install-mbx-ci
       - configure-environment
       - ensure-text-exists-in-commit:
           commit-text: "[create xcframework]"
@@ -505,6 +521,10 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - add_ssh_keys:
+           fingerprints:
+             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+      - install-mbx-ci
       - configure-environment
       - ensure-text-exists-in-commit:
           commit-text: "[release]"
@@ -564,6 +584,10 @@ jobs:
           message: '<$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` started.>'
           include_visit_job_action: true
       - checkout
+      - add_ssh_keys:
+           fingerprints:
+             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+      - install-mbx-ci
       - configure-environment
       - install-dependencies
       - make-docs
@@ -610,6 +634,14 @@ commands:
             echo "MAPBOX_ACCESS_TOKEN = ${MAPBOX_ACCESS_TOKEN}" > ./developer.xcconfig
             echo "${MAPBOX_ACCESS_TOKEN}" > ~/.mapbox
             echo "${MAPBOX_ACCESS_TOKEN}" > ./Tests/MapboxMapsTests/Helpers/MapboxAccessToken
+
+  install-mbx-ci:
+    steps:
+      - run:
+          name: Install latest mbx-ci
+          command: |
+            curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/latest/mbx-ci-darwin-amd64 > mbx-ci && chmod 755 ./mbx-ci
+            ./mbx-ci aws setup
 
   ensure-text-exists-in-commit:
     parameters:

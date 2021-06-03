@@ -19,7 +19,7 @@ Mapbox welcomes participation and contributions from everyone.
 - Updated the ambient cache path. ([#396](https://github.com/mapbox/mapbox-maps-ios/pull/396))
 - Removed `CameraAnimationsManager.setCamera()` and renamed `CameraManagerProtocol._setCamera` to `CameraManagerProtocol.setCamera()`. Use `MapView.mapboxMap.setCamera()` to set the camera. ([#426](https://github.com/mapbox/mapbox-maps-ios/pull/426))
 - Removed `MapCameraOptions` and `RenderOptions`; this behavior has moved to both `MapboxMap` and `MapView`. ([#427](https://github.com/mapbox/mapbox-maps-ios/pull/427/files))
-- Annotations has been rebuilt to expose many more customization options for each annotation. ([#398](https://github.com/mapbox/mapbox-maps-ios/pull/398))
+- The Annotations library has been rebuilt to expose many more customization options for each annotation. ([#398](https://github.com/mapbox/mapbox-maps-ios/pull/398))
 - High level animations return `Cancelable` instead of `CameraAnimator`. ([#400](https://github.com/mapbox/mapbox-maps-ios/pull/400))
 
 ### Bug fixes 🐞
@@ -33,7 +33,6 @@ Mapbox welcomes participation and contributions from everyone.
 ### Features ✨ and improvements 🏁
 
 - Added `Snapshotter.coordinateBounds(for:)` and `Snapshotter.camera(for:padding:bearing:pitch:)`. ([#386](https://github.com/mapbox/mapbox-maps-ios/pull/386))
-- Annotations has been rebuilt to expose many more customization options for each annotation. ([#398](https://github.com/mapbox/mapbox-maps-ios/pull/398))
 
 ### Development 🛠
 

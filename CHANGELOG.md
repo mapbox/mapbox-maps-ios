@@ -2,6 +2,12 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+### Breaking changes ⚠️
+
+- Converted `MapSnapshotOptions` to a struct. ([#430](https://github.com/mapbox/mapbox-maps-ios/pull/430))
+
 ## 10.0.0-beta.21 - June 3, 2021
 
 ### Breaking changes ⚠️

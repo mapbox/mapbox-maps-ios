@@ -2,7 +2,7 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## main
+## 10.0.0-beta.21 - June 3, 2021
 
 ### Breaking changes ⚠️
 
@@ -19,6 +19,8 @@ Mapbox welcomes participation and contributions from everyone.
 - Updated the ambient cache path. ([#396](https://github.com/mapbox/mapbox-maps-ios/pull/396))
 - Removed `CameraAnimationsManager.setCamera()` and renamed `CameraManagerProtocol._setCamera` to `CameraManagerProtocol.setCamera()`. Use `MapView.mapboxMap.setCamera()` to set the camera. ([#426](https://github.com/mapbox/mapbox-maps-ios/pull/426))
 - Removed `MapCameraOptions` and `RenderOptions`; this behavior has moved to both `MapboxMap` and `MapView`. ([#427](https://github.com/mapbox/mapbox-maps-ios/pull/427/files))
+- Annotations has been rebuilt to expose many more customization options for each annotation. ([#398](https://github.com/mapbox/mapbox-maps-ios/pull/398))
+- High level animations return `Cancelable` instead of `CameraAnimator`. ([#400](https://github.com/mapbox/mapbox-maps-ios/pull/400))
 
 ### Bug fixes 🐞
 
@@ -26,10 +28,12 @@ Mapbox welcomes participation and contributions from everyone.
 - Fixed a bug where the underlying renderer was not being destroyed. ([#395](https://github.com/mapbox/mapbox-maps-ios/pull/395))
 - Fixed a bug where the snapshotter completion handler was being called twice on cancellation.
 ([#382](https://github.com/mapbox/mapbox-maps-ios/pull/382))
+- Fixed a bug where `GestureManager.delegate` was inaccessible. ([#401](https://github.com/mapbox/mapbox-maps-ios/pull/401))
 
 ### Features ✨ and improvements 🏁
 
 - Added `Snapshotter.coordinateBounds(for:)` and `Snapshotter.camera(for:padding:bearing:pitch:)`. ([#386](https://github.com/mapbox/mapbox-maps-ios/pull/386))
+- Annotations has been rebuilt to expose many more customization options for each annotation. ([#398](https://github.com/mapbox/mapbox-maps-ios/pull/398))
 
 ### Development 🛠
 

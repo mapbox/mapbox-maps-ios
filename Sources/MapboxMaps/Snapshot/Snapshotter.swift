@@ -34,7 +34,7 @@ public class Snapshotter {
     ///   - options: Options describing an intended snapshot
     public init(options: MapSnapshotOptions) {
         self.options = options
-        mapSnapshotter = MapSnapshotter(options: options)
+        mapSnapshotter = MapSnapshotter(options: MapboxCoreMaps.MapSnapshotOptions(options))
         style = Style(with: mapSnapshotter)
     }
 

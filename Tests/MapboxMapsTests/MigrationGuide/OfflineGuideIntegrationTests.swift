@@ -26,7 +26,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
         tileStorePathURL = try TileStore.fileURLForDirectory(for: name.fileSystemSafeString())
         tileStore = TileStore.shared(for: tileStorePathURL.path)
 
-        tileStore.setAccessToken(accessToken)
+        tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken)
     }
 
     override func tearDownWithError() throws {
@@ -57,6 +57,12 @@ class OfflineGuideIntegrationTests: XCTestCase {
     // Test TileRegionLoadOptions
     func testDefineATileRegion() throws {
         //-->
+        // When providing a `TileStore` to `ResourceOptions`, you must ensure that
+        // the `TileStore` is correctly initialized using `setOptionForKey(_:value:)`.
+        // This includes providing an access token, if you are not using a default
+        // from the application's Info.plist
+        tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken)
+
         let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken,
                                                                              tileStore: tileStore))
 

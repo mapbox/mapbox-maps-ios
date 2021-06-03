@@ -34,7 +34,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         try TileStore.removeDirectory(at: tileStorePathURL!)
 
         tileStore = TileStore.shared(for: tileStorePathURL.path)
-        tileStore.setAccessToken(accessToken)
+        tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken)
         weakTileStore = tileStore
 
         resourceOptions = ResourceOptions(accessToken: accessToken,

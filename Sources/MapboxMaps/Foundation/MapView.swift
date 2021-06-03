@@ -69,6 +69,8 @@ open class MapView: UIView {
     private var displayCallback: (() -> Void)?
     @objc dynamic internal var displayLink: CADisplayLink?
 
+    /// Holding onto this value that comes from `MapOptions` since there is a race condition between
+    /// getting a `MetalView`, and intializing a `MapView`
     private var pixelRatio: CGFloat = 0.0
 
     @IBInspectable private var styleURI__: String = ""

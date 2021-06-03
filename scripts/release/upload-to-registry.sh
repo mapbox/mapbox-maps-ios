@@ -14,16 +14,6 @@ if [[ ! ${#} -eq 4 ]]; then
     exit 1
 fi
 
-if [[ "${AWS_ACCESS_KEY_ID:-invalid}" == "invalid" ]]; then
-    echo AWS_ACCESS_KEY_ID not set.
-    exit 1
-fi
-
-if [[ "${AWS_SECRET_ACCESS_KEY:-invalid}" == "invalid" ]]; then
-    echo AWS_SECRET_ACCESS_KEY not set.
-    exit 1
-fi
-
 SOURCE_ZIP=$1
 PROJECT=$2
 VERSION=$3

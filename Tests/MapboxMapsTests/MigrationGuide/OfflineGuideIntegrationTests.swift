@@ -26,7 +26,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
         tileStorePathURL = try TileStore.fileURLForDirectory(for: name.fileSystemSafeString())
         tileStore = TileStore.shared(for: tileStorePathURL.path)
 
-        tileStore.setAccessToken(accessToken)
+        tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken)
     }
 
     override func tearDownWithError() throws {

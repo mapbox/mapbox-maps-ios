@@ -126,6 +126,9 @@ internal protocol CameraManagerProtocol {
     /// guaranteed that the provided `CameraOptions` will be set, the map may apply
     /// constraints resulting in a different `CameraState`.
     ///
+    /// This method does not cancel existing animations. Call
+    /// `CameraAnimationsManager.cancelAnimations()`to cancel existing animations.l
+    ///
     /// - Parameter cameraOptions: New camera options
     func setCamera(to cameraOptions: CameraOptions)
 

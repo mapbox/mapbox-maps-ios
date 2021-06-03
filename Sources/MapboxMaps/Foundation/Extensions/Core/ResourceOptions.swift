@@ -34,7 +34,7 @@ public struct ResourceOptions {
     /// - Attention:
     ///     If you create a `ResourceOptions` (rather than using `ResourceOptionsManager`
     ///     to manage one) that uses a custom TileStore, you will need to ensure
-    ///     that you set the `TileStore`'s access token at the same time.
+    ///     that the `TileStore` is initialised with a valid access token.
     ///
     ///     For example:
     ///

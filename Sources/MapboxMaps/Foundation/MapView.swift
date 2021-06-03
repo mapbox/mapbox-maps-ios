@@ -69,6 +69,10 @@ open class MapView: UIView {
     private var displayCallback: (() -> Void)?
     @objc dynamic internal var displayLink: CADisplayLink?
 
+    /// Holding onto this value that comes from `MapOptions` since there is a race condition between
+    /// getting a `MetalView`, and intializing a `MapView`
+    private var pixelRatio: CGFloat = 0.0
+
     @IBInspectable private var styleURI__: String = ""
 
     /// Outlet that can be used when initializing a MapView with a Storyboard or
@@ -135,6 +139,9 @@ open class MapView: UIView {
         } else {
             resolvedMapInitOptions = mapInitOptions
         }
+
+        self.pixelRatio = CGFloat(resolvedMapInitOptions.mapOptions.pixelRatio)
+
         mapClient.delegate = self
         mapboxMap = MapboxMap(mapClient: mapClient, mapInitOptions: resolvedMapInitOptions)
 
@@ -341,7 +348,7 @@ extension MapView: DelegatingMapClientDelegate {
 
         metalView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         metalView.autoResizeDrawable = true
-        metalView.contentScaleFactor = UIScreen.main.scale
+        metalView.contentScaleFactor = pixelRatio
         metalView.contentMode = .center
         metalView.isOpaque = isOpaque
         metalView.layer.isOpaque = isOpaque

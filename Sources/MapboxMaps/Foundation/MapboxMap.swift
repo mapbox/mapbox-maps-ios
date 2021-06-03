@@ -295,7 +295,7 @@ extension MapboxMap: CameraManagerProtocol {
 
     // MARK: - Camera options setters/getters
 
-    public func _setCamera(to cameraOptions: CameraOptions) {
+    public func setCamera(to cameraOptions: CameraOptions) {
         __map.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
     }
 

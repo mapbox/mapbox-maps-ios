@@ -120,15 +120,18 @@ internal protocol CameraManagerProtocol {
 
     // MARK: - Camera getters/setters
 
-    /// :nodoc:
     /// Changes the map view by any combination of center, zoom, bearing, and pitch,
     /// without an animated transition. The map will retain its current values
     /// for any details not passed via the camera options argument. It is not
     /// guaranteed that the provided `CameraOptions` will be set, the map may apply
     /// constraints resulting in a different `CameraState`.
     ///
+    /// - Important:
+    ///     This method does not cancel existing animations. Call
+    ///     `CameraAnimationsManager.cancelAnimations()`to cancel existing animations.
+    ///
     /// - Parameter cameraOptions: New camera options
-    func _setCamera(to cameraOptions: CameraOptions)
+    func setCamera(to cameraOptions: CameraOptions)
 
     /// Returns the current camera state
     var cameraState: CameraState { get }

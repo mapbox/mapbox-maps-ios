@@ -29,14 +29,21 @@ extension GestureManager: GestureHandlerDelegate {
     }
 
     internal func panBegan(at point: CGPoint) {
-        cameraManager.mapView?.mapboxMap.dragStart(for: point)
+        guard let mapView = cameraManager.mapView else {
+            Log.error(forMessage: "MapView must exist when the pan gesture begins", category: "Gestures")
+            return
+        }
+        mapView.mapboxMap.dragStart(for: point)
     }
 
     // MapView has been panned
     internal func panned(from startPoint: CGPoint, to endPoint: CGPoint) {
-        if let cameraOptions = cameraManager.mapView?.mapboxMap.dragCameraOptions(from: startPoint, to: endPoint) {
-            cameraManager.setCamera(to: cameraOptions)
+        guard let mapView = cameraManager.mapView else {
+            Log.error(forMessage: "MapView must exist when the pan gesture occurs", category: "Gestures")
+            return
         }
+        let cameraOptions = mapView.mapboxMap.dragCameraOptions(from: startPoint, to: endPoint)
+        mapView.mapboxMap.setCamera(to: cameraOptions)
     }
 
     // Pan has ended on the MapView with a residual `offset`
@@ -72,23 +79,32 @@ extension GestureManager: GestureHandlerDelegate {
     }
 
     internal func pinchScaleChanged(with newScale: CGFloat, andAnchor anchor: CGPoint) {
-        cameraManager.setCamera(to: CameraOptions(anchor: anchor, zoom: newScale))
+        guard let mapView = cameraManager.mapView else {
+            Log.error(forMessage: "MapView must exist when the zoom level changes", category: "Gestures")
+            return
+        }
+        mapView.mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: newScale))
     }
 
     internal func pinchEnded(with finalScale: CGFloat, andDrift possibleDrift: Bool, andAnchor anchor: CGPoint) {
-        cameraManager.setCamera(to: CameraOptions(anchor: anchor, zoom: finalScale))
+        guard let mapView = cameraManager.mapView else {
+            Log.error(forMessage: "MapView must exist when the zoom changes end", category: "Gestures")
+            return
+        }
+        mapView.mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: finalScale))
         unrotateIfNeededForGesture(with: .ended)
     }
 
     internal func quickZoomChanged(with newScale: CGFloat, and anchor: CGPoint) {
         guard let mapView = cameraManager.mapView else {
+            Log.error(forMessage: "MapView must exist when the zoom changes", category: "Gestures")
             return
         }
 
         let minZoom = CGFloat(mapView.mapboxMap.cameraBounds.minZoom)
         let maxZoom = CGFloat(mapView.mapboxMap.cameraBounds.maxZoom)
         let zoom = newScale.clamped(to: minZoom...maxZoom)
-        cameraManager.setCamera(to: CameraOptions(anchor: anchor, zoom: zoom))
+        mapView.mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: zoom))
     }
 
     internal func quickZoomEnded() {
@@ -112,6 +128,10 @@ extension GestureManager: GestureHandlerDelegate {
     }
 
     internal func rotationChanged(with changedAngle: CGFloat, and anchor: CGPoint, and pinchScale: CGFloat) {
+        guard let mapView = cameraManager.mapView else {
+            Log.error(forMessage: "MapView must exist when the rotation changes", category: "Gestures")
+            return
+        }
 
         var changedAngleInDegrees = changedAngle * 180.0 / .pi * -1
         changedAngleInDegrees = changedAngleInDegrees.truncatingRemainder(dividingBy: 360.0)
@@ -122,14 +142,19 @@ extension GestureManager: GestureHandlerDelegate {
             changedAngleInDegrees = changedAngleInDegrees > 30.0 ? 30.0 : changedAngleInDegrees
         }
 
-        cameraManager.setCamera(
+        mapView.mapboxMap.setCamera(
             to: CameraOptions(bearing: CLLocationDirection(changedAngleInDegrees)))
     }
 
     internal func rotationEnded(with finalAngle: CGFloat, and anchor: CGPoint, with pinchState: UIGestureRecognizer.State) {
+        guard let mapView = cameraManager.mapView else {
+            Log.error(forMessage: "MapView must exist when the rotation ends", category: "Gestures")
+            return
+        }
+
         var finalAngleInDegrees = finalAngle * 180.0 / .pi * -1
         finalAngleInDegrees = finalAngleInDegrees.truncatingRemainder(dividingBy: 360.0)
-        cameraManager.setCamera(to: CameraOptions(bearing: CLLocationDirection(finalAngleInDegrees)))
+        mapView.mapboxMap.setCamera(to: CameraOptions(bearing: CLLocationDirection(finalAngleInDegrees)))
     }
 
     internal func unrotateIfNeededForGesture(with pinchState: UIGestureRecognizer.State) {
@@ -145,7 +170,7 @@ extension GestureManager: GestureHandlerDelegate {
             && pinchState != .began
             && pinchState != .changed {
             if currentBearing != 0.0 && isRotationAllowed() == false {
-                cameraManager.setCamera(to: CameraOptions(bearing: 0))
+                mapView.mapboxMap.setCamera(to: CameraOptions(bearing: 0))
             }
 
             // TODO: Add snapping behavior to "north" if bearing is less than some tolerance
@@ -169,7 +194,11 @@ extension GestureManager: GestureHandlerDelegate {
     }
 
     internal func pitchChanged(newPitch: CGFloat) {
-        cameraManager.setCamera(to: CameraOptions(pitch: newPitch))
+        guard let mapView = cameraManager.mapView else {
+            Log.error(forMessage: "MapView must exist when the pitch changes", category: "Gestures")
+            return
+        }
+        mapView.mapboxMap.setCamera(to: CameraOptions(pitch: newPitch))
     }
 
     internal func pitchEnded() {

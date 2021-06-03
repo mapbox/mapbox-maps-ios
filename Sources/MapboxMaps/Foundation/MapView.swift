@@ -174,7 +174,7 @@ open class MapView: UIView {
         }
 
         if let cameraOptions = resolvedMapInitOptions.cameraOptions {
-            mapboxMap._setCamera(to: cameraOptions)
+            mapboxMap.setCamera(to: cameraOptions)
         }
 
 //        // Set prefetchZoomDelta
@@ -271,7 +271,7 @@ open class MapView: UIView {
 
             for animator in cameraAnimatorsSet.allObjects {
                 if let cameraOptions = animator.currentCameraOptions {
-                    mapboxMap._setCamera(to: cameraOptions)
+                    mapboxMap.setCamera(to: cameraOptions)
                 }
             }
 

@@ -12,17 +12,6 @@ final class MockCameraManager: CameraAnimationsManagerProtocol {
 
     var options = CameraBoundsOptions()
 
-    struct SetCameraParameters {
-        var camera: CameraOptions
-    }
-
-    let setCameraStub = Stub<SetCameraParameters, Void>()
-
-    func setCamera(to camera: CameraOptions) {
-        setCameraStub.call(
-            with: SetCameraParameters(camera: camera))
-    }
-
     struct EaseToCameraParameters {
         var camera: CameraOptions
         var duration: TimeInterval

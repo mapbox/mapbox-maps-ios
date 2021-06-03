@@ -58,7 +58,7 @@ public class CameraAnimatorsExample: UIViewController, ExampleProtocol {
 
         mapView.mapboxMap.onNext(.styleLoaded) { _ in
             // Center the map over New York City.
-            self.mapView.camera.setCamera(to: CameraOptions(center: self.newYork))
+            self.mapView.mapboxMap.setCamera(to: CameraOptions(center: self.newYork))
         }
 
         // Allows the delegate to receive information about map events.

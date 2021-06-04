@@ -8,8 +8,6 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
     internal var mapView: MapView!
     internal var skyLayer: SkyLayer!
     internal var segmentedControl = UISegmentedControl()
-    
-    internal var skyAtmosphereSun = [Double]()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -17,32 +15,49 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
         let center = CLLocationCoordinate2D(latitude: 35.67283, longitude: 127.60597)
         let cameraOptions = CameraOptions(center: center, zoom: 14, pitch: 83)
         let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .init(url: URL(string: "mapbox://styles/mapbox-map-design/ckhqrf2tz0dt119ny6azh975y")!))
+
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
         view.addSubview(mapView)
         
-        addSliders()
+        // Add a `UISegmentedControl` that toggles the sky layer type between `gradient` and `atmosphere`.
+        addSegmentedControl()
+        
+        // Add a custom `SkyLayer` once the map's style is finished loading.
         mapView.mapboxMap.onNext(.styleLoaded) { _ in
             self.addSkyLayer()
         }
     }
 
     func addSkyLayer() {
+        // Initialize a sky layer with a sky type of `gradient`, which applies a gradient effect to the sky.
+        // Read more about sky layer types on the Mapbox blog: https://www.mapbox.com/blog/sky-api-atmospheric-scattering-algorithm-for-3d-maps
         skyLayer = SkyLayer(id: "sky-layer")
         skyLayer.skyType = .constant(.gradient)
         
-        skyAtmosphereSun = [0, 90]
-        skyLayer.skyAtmosphereSun = .constant(skyAtmosphereSun)
+        // Define the position of the sun.
+        // The azimuthal angle indicates the sun's position relative to 0 degrees north. When the map's bearing
+        // is `0` and the azimuthal angle is `0`, the sun will appear horizontally centered.
+        let azimuthalAngle: Double = 0
+        
+        // Indicates the sun's position relative to the horizon. A value of `90` places the sun's center at the
+        // horizon line. Lower values place the sun below the horizon line, while higher values place the sun's
+        // center further above the horizon line.
+        let polarAngle: Double = 90
+        skyLayer.skyAtmosphereSun = .constant([azimuthalAngle, polarAngle])
+        
+        // The intensity or brightness of the sun.
         skyLayer.skyAtmosphereSunIntensity = .constant(10)
         
+        // Set the sky's color to light blue with a light pink halo effect.
         skyLayer.skyAtmosphereColor = .constant(ColorRepresentable(color: .skyBlue))
         skyLayer.skyAtmosphereHaloColor = .constant(ColorRepresentable(color: .lightPink))
         
         try! mapView.mapboxMap.style.addLayer(skyLayer)
     }
 
-    // Update the sky layer based on changes to the `UISlider` value.
+    // Update the sky type when the `UISegmentedControl` value is changed.
     @objc func updateSkyLayer() {
         var skyType : Value<SkyType>
         if segmentedControl.selectedSegmentIndex == 0 {
@@ -50,14 +65,16 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
         } else {
             skyType = .constant(.atmosphere)
         }
+        
+        // Update the sky layer based on the updated segmented control value.
         try! mapView.mapboxMap.style.updateLayer(withId: skyLayer.id) { (layer: inout SkyLayer) throws in
-            skyLayer.skyType = skyType
-            skyLayer.skyAtmosphereSunIntensity = .constant(100)
+            layer.skyType = skyType
         }
     }
 
-    func addSliders() {
+    func addSegmentedControl() {
         segmentedControl = UISegmentedControl(items: ["Gradient", "Atmosphere"])
+        segmentedControl.backgroundColor = .lightGray
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.addTarget(self, action: #selector(updateSkyLayer), for: .valueChanged)
         view.insertSubview(segmentedControl, aboveSubview: mapView)
@@ -77,6 +94,7 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
     }
 }
 
+// An extension to store sky color values.
 extension UIColor {
     static var skyBlue: UIColor {
         return UIColor(red: 0.53, green: 0.81, blue: 0.92, alpha: 1.00)

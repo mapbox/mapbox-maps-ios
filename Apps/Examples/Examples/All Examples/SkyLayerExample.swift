@@ -18,10 +18,8 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
         var styleURI: StyleURI?
         if let url = URL(string: "mapbox://styles/mapbox-map-design/ckhqrf2tz0dt119ny6azh975y") {
             styleURI = StyleURI(url: url)
-        } else {
-            styleURI = .satelliteStreets
         }
-        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: styleURI)
+        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: styleURI ?? .satelliteStreets)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]

@@ -31,6 +31,8 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
 
             // Add a terrain layer.
             self.addTerrainLayer()
+
+            self.finish()
         }
     }
 
@@ -58,7 +60,11 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
         skyLayer.skyAtmosphereColor = .constant(ColorRepresentable(color: .skyBlue))
         skyLayer.skyAtmosphereHaloColor = .constant(ColorRepresentable(color: .lightPink))
 
-        try! mapView.mapboxMap.style.addLayer(skyLayer)
+        do {
+            try mapView.mapboxMap.style.addLayer(skyLayer)
+        } catch {
+            print("Failed to add sky layer to the map's style.")
+        }
     }
 
     // Update the sky type when the `UISegmentedControl` value is changed.
@@ -71,8 +77,12 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
         }
 
         // Update the sky layer based on the updated segmented control value.
-        try! mapView.mapboxMap.style.updateLayer(withId: skyLayer.id) { (layer: inout SkyLayer) throws in
-            layer.skyType = skyType
+        do {
+            try mapView.mapboxMap.style.updateLayer(withId: skyLayer.id) { (layer: inout SkyLayer) throws in
+                layer.skyType = skyType
+            }
+        } catch {
+            print("Failed to update the sky type for layer with id \(skyLayer.id).")
         }
     }
 
@@ -87,7 +97,11 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
         var terrain = Terrain(sourceId: "mapbox-dem")
         terrain.exaggeration = .constant(1.5)
 
-        try! mapView.mapboxMap.style.setTerrain(terrain)
+        do {
+            try mapView.mapboxMap.style.setTerrain(terrain)
+        } catch {
+            print("Failed to add a terrain layer to the map's style.")
+        }
     }
 
     func addSegmentedControl() {
@@ -103,12 +117,6 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
             segmentedControl.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -80),
             segmentedControl.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor)
         ])
-    }
-
-    override public func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-         // The below line is used for internal testing purposes only.
-        finish()
     }
 }
 

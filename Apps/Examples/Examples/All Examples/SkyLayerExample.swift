@@ -12,8 +12,9 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
+        // Set the initial camera and style URI by creating a `MapInitOptions` object.
         let center = CLLocationCoordinate2D(latitude: 35.67283, longitude: 127.60597)
-        let cameraOptions = CameraOptions(center: center, zoom: 14, pitch: 83)
+        let cameraOptions = CameraOptions(center: center, zoom: 12.5, pitch: 83)
         let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .init(url: URL(string: "mapbox://styles/mapbox-map-design/ckhqrf2tz0dt119ny6azh975y")!))
 
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
@@ -27,6 +28,9 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
         // Add a custom `SkyLayer` once the map's style is finished loading.
         mapView.mapboxMap.onNext(.styleLoaded) { _ in
             self.addSkyLayer()
+            
+            // Add a terrain layer.
+            self.addTerrainLayer()
         }
     }
 
@@ -70,6 +74,20 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
         try! mapView.mapboxMap.style.updateLayer(withId: skyLayer.id) { (layer: inout SkyLayer) throws in
             layer.skyType = skyType
         }
+    }
+
+    func addTerrainLayer() {
+        // Add a RasterDEMSource. This will be used to create and add a terrain layer. r
+        var demSource = RasterDemSource()
+        demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
+        demSource.tileSize = 512
+        demSource.maxzoom = 14.0
+        try! mapView.mapboxMap.style.addSource(demSource, id: "mapbox-dem")
+
+        var terrain = Terrain(sourceId: "mapbox-dem")
+        terrain.exaggeration = .constant(1.5)
+
+        try! mapView.mapboxMap.style.setTerrain(terrain)
     }
 
     func addSegmentedControl() {

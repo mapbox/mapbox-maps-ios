@@ -5,6 +5,7 @@ import MapboxCoreMaps
 class MapViewIntegrationTests: IntegrationTestCase {
     var rootView: UIView!
     var mapView: MapView!
+    var dataPathURL: URL!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -14,7 +15,10 @@ class MapViewIntegrationTests: IntegrationTestCase {
         }
         rootView = root
 
-        let resourceOptions = ResourceOptions(accessToken: accessToken)
+        dataPathURL = try temporaryCacheDirectory()
+
+        let resourceOptions = ResourceOptions(accessToken: accessToken,
+                                              dataPathURL: dataPathURL)
         let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
         mapView = MapView(frame: rootView.bounds, mapInitOptions: mapInitOptions)
         rootView.addSubview(mapView)
@@ -40,7 +44,8 @@ class MapViewIntegrationTests: IntegrationTestCase {
 
             let expectation = self.expectation(description: "wait for map")
 
-            let resourceOptions = ResourceOptions(accessToken: accessToken)
+            let resourceOptions = ResourceOptions(accessToken: accessToken,
+                                                  dataPathURL: dataPathURL)
             let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
             let mapView = MapView(frame: rootView.bounds, mapInitOptions: mapInitOptions)
             weakMapView = mapView

@@ -20,6 +20,11 @@ public final class MapboxMap {
         __map.destroyRenderer()
     }
 
+//    public func clearDataPath() {
+//        __map.
+//    }
+
+
     internal init(mapClient: MapClient, mapInitOptions: MapInitOptions) {
         let coreOptions = MapboxCoreMaps.ResourceOptions(mapInitOptions.resourceOptions)
 
@@ -160,6 +165,32 @@ public final class MapboxMap {
         rect = rect.extend(from: nePoint)
 
         return rect
+    }
+
+    // Render Cache
+
+    /// :nodoc:
+    ///
+    /// Enables or disables the experimental render cache feature.
+    ///
+    /// Render cache is an experimental feature aiming to reduce resource usage
+    /// of map rendering by caching intermediate rendering results of tiles into
+    /// specific cache textures for reuse between frames.
+    /// Performance benefit of the cache depends on the style as not all layers
+    /// are cacheable due to e.g. viewport aligned features. Render cache always
+    /// prefers quality over performance.
+    ///
+    /// If the return cache size (in megabytes) is zero, the feature is disabled
+    ///
+    /// - Important: This feature is experimental and may change in any future
+    ///     release.
+    public var _renderCacheOptions: RenderCacheOptions {
+        get {
+            return RenderCacheOptions(__map.getRenderCacheOptions())
+        }
+        set {
+            __map.setRenderCacheOptionsFor(MapboxCoreMaps.RenderCacheOptions(newValue))
+        }
     }
 }
 

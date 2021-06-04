@@ -86,6 +86,7 @@ internal struct ResourceEvent: Decodable {
 internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
 
     internal var mapView: MapView?
+    internal var dataPathURL: URL!
     internal var style: Style?
     internal var observer: ObservableIntegrationTestsObserver?
 
@@ -101,7 +102,10 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
             throw XCTSkip("No valid UIWindow or root view controller")
         }
 
-        let resourceOptions = ResourceOptions(accessToken: accessToken)
+        dataPathURL = try temporaryCacheDirectory()
+
+        let resourceOptions = ResourceOptions(accessToken: accessToken,
+                                              dataPathURL: dataPathURL)
         let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
         let view = MapView(frame: window.bounds, mapInitOptions: mapInitOptions)
 

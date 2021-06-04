@@ -4,15 +4,19 @@ import MapboxMaps
 class MapboxMapIntegrationTests: IntegrationTestCase {
     var rootView: UIView!
     var mapView: MapView!
+    var dataPathURL: URL!
 
     override func setUpWithError() throws {
+        try guardForMetalDevice()
+
         try super.setUpWithError()
 
-        try guardForMetalDevice()
+        dataPathURL = try temporaryCacheDirectory()
 
         guard let root = rootViewController?.view else {
             throw XCTSkip("No valid UIWindow or root view controller")
         }
+
         rootView = root
     }
 
@@ -94,7 +98,8 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
     // MARK: - Helpers
 
     private func setupMapView() {
-        let resourceOptions = ResourceOptions(accessToken: accessToken)
+        let resourceOptions = ResourceOptions(accessToken: accessToken,
+                                              dataPathURL: dataPathURL)
         let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
         mapView = MapView(frame: rootView.bounds, mapInitOptions: mapInitOptions)
         rootView.addSubview(mapView)

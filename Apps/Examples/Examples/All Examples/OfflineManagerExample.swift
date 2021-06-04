@@ -220,12 +220,6 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         // just mark the resources as not a part of the existing style pack. The
         // resources still exists in the ambient cache.
         offlineManager.removeStylePack(for: .outdoors)
-
-        // Remove the existing style resources from ambient cache using cache manager.
-        let cacheManager = CacheManager(options: mapInitOptions.resourceOptions)
-        cacheManager.clearAmbientCache { _ in
-            completion?()
-        }
     }
 
     // MARK: - State changes

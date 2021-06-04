@@ -16,12 +16,15 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
 
         try super.setUpWithError()
 
+        let dataPathURL = try temporaryCacheDirectory()
+
         guard let window = window,
               let rootView = rootViewController?.view else {
             throw XCTSkip("No valid UIWindow or root view controller")
         }
 
-        let resourceOptions = ResourceOptions(accessToken: accessToken)
+        let resourceOptions = ResourceOptions(accessToken: accessToken,
+                                              dataPathURL: dataPathURL)
         let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions,
                                             styleURI: nil)
         let view = MapView(frame: window.bounds, mapInitOptions: mapInitOptions)

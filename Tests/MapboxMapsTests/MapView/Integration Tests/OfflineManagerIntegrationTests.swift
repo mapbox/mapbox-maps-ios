@@ -28,16 +28,14 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         tileRegionId = "tile-region-\(name)"
 
         // TileStore
-        tileStorePathURL = try TileStore.fileURLForDirectory(for: name.fileSystemSafeString())
+        tileStorePathURL = try temporaryCacheDirectory()
 
-        // Ensure test starts from same conditions each time
-        try TileStore.removeDirectory(at: tileStorePathURL!)
-
-        tileStore = TileStore.shared(for: tileStorePathURL.path)
-        tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken)
+        tileStore = TileStore.shared(for: tileStorePathURL)
+        tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken as Any)
         weakTileStore = tileStore
 
         resourceOptions = ResourceOptions(accessToken: accessToken,
+                                          dataPathURL: tileStorePathURL,
                                           tileStore: tileStore)
 
         offlineManager = OfflineManager(resourceOptions: resourceOptions)
@@ -84,10 +82,6 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         XCTAssertNil(weakOfflineManager)
         if iterations > 0 {
             XCTAssertNil(weakTileStore)
-
-            if let tileStorePathURL = tileStorePathURL {
-                try TileStore.removeDirectory(at: tileStorePathURL)
-            }
         } else if weakTileStore != nil {
             print("warning: TileStore not released!")
         }

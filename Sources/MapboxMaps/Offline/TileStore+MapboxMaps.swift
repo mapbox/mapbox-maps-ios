@@ -9,7 +9,7 @@ extension TileStore {
     /// - See Also:
     ///     `shared(for:)`
     public static var `default`: TileStore {
-        return TileStore.__getInstance()
+        return TileStore.__create()
     }
 
     /// Gets a TileStore instance for the given storage path. Creates a new one
@@ -20,10 +20,13 @@ extension TileStore {
     ///
     /// On iOS, this storage path is excluded from automatic cloud backup.
     ///
-    /// - Parameter path: The path on disk where tiles and metadata will be stored
+    /// - Parameter filePathURL: The path on disk where tiles and metadata will be stored
     /// - Returns: TileStore instance.
-    public static func shared(for path: String) -> TileStore {
-        return TileStore.__getInstanceForPath(path)
+    public static func shared(for filePathURL: URL) -> TileStore {
+        guard filePathURL.isFileURL else {
+            fatalError("You must provide a file URL")
+        }
+        return TileStore.__create(forPath: filePathURL.path)
     }
 
     /// Loads a new tile region or updates the existing one.

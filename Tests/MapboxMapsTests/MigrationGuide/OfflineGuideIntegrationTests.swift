@@ -23,24 +23,16 @@ class OfflineGuideIntegrationTests: XCTestCase {
             throw XCTSkip("Mapbox access token not found")
         }
 
-        tileStorePathURL = try TileStore.fileURLForDirectory(for: name.fileSystemSafeString())
-        tileStore = TileStore.shared(for: tileStorePathURL.path)
+        tileStorePathURL = try temporaryCacheDirectory()
+        tileStore = TileStore.shared(for: tileStorePathURL)
 
-        tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken)
+        tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken as Any)
     }
 
     override func tearDownWithError() throws {
         try super.tearDownWithError()
 
         tileStore = nil
-
-        // Wait before removing directory
-        let expectation = self.expectation(description: "Wait...")
-        _ = XCTWaiter.wait(for: [expectation], timeout: 1.0)
-
-        if let tileStorePathURL = tileStorePathURL {
-            try TileStore.removeDirectory(at: tileStorePathURL)
-        }
     }
 
     // Test StylePackLoadOptions
@@ -61,9 +53,10 @@ class OfflineGuideIntegrationTests: XCTestCase {
         // the `TileStore` is correctly initialized using `setOptionForKey(_:value:)`.
         // This includes providing an access token, if you are not using a default
         // from the application's Info.plist
-        tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken)
+        tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken as Any)
 
         let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken,
+                                                                             dataPathURL: tileStorePathURL,
                                                                              tileStore: tileStore))
 
         // 1. Create the tile set descriptor
@@ -117,6 +110,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
         let expectation = self.expectation(description: "style pack should be canceled")
 
         let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken,
+                                                                             dataPathURL: tileStorePathURL,
                                                                              tileStore: tileStore))
         let stylePackLoadOptions = StylePackLoadOptions(glyphsRasterizationMode: .ideographsRasterizedLocally)!
 
@@ -166,6 +160,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
     func testLoadAndCancelTileRegion() throws {
         let expectation = self.expectation(description: "Tile region download should be canceled")
         let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken,
+                                                                             dataPathURL: tileStorePathURL,
                                                                              tileStore: tileStore))
 
         // Create the tile set descriptor
@@ -223,7 +218,9 @@ class OfflineGuideIntegrationTests: XCTestCase {
     func testFetchingAllStylePacks() throws {
         let expectation = self.expectation(description: "Style packs should be fetched without error")
 
+        let dataPathURL = try temporaryCacheDirectory()
         let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken,
+                                                                             dataPathURL: tileStorePathURL,
                                                                              tileStore: tileStore))
 
         let handleStylePacks = { (stylePacks: [StylePack]) in
@@ -301,6 +298,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
 
     func testDeleteStylePack() throws {
         let resourceOptions = ResourceOptions(accessToken: accessToken,
+                                              dataPathURL: tileStorePathURL,
                                               tileStore: tileStore)
         let offlineManager = OfflineManager(resourceOptions: resourceOptions)
 
@@ -308,26 +306,22 @@ class OfflineGuideIntegrationTests: XCTestCase {
         offlineManager.removeStylePack(for: .outdoors)
         //<--
 
-        let expectation = self.expectation(description: "Ambient Cache should be cleared successfully")
-        let handleExpected = { (result: Result<Void, Error>) in
-            switch result {
-            case .success:
-                expectation.fulfill()
-            case let .failure(error):
-                XCTFail("Delete failed: \(error)")
-            }
-        }
-
-        //-->
-        // Remove the existing style resources from the ambient cache using
-        // CacheManager
-        let cacheManager = CacheManager(options: resourceOptions)
-        cacheManager.clearAmbientCache { result in
-            handleExpected(result)
-        }
-        //<--
-
-        wait(for: [expectation], timeout: 5.0)
+//        let expectation = self.expectation(description: "Ambient Cache should be cleared successfully")
+//        let handleExpected = { (result: Result<Void, Error>) in
+//            switch result {
+//            case .success:
+//                expectation.fulfill()
+//            case let .failure(error):
+//                XCTFail("Delete failed: \(error)")
+//            }
+//        }
+//
+//        //-->
+//        // Remove the existing style resources from the ambient cache using
+//        // CacheManager
+//        try removeDirectory(at: dataPathURL)
+//        //<--
+//        print("Removed: \(dataPathURL)")
     }
 
     func testDeleteTileRegions() throws {

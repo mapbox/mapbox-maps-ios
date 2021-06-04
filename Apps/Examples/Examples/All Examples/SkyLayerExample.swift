@@ -15,7 +15,13 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
         // Set the initial camera and style URI by creating a `MapInitOptions` object.
         let center = CLLocationCoordinate2D(latitude: 35.67283, longitude: 127.60597)
         let cameraOptions = CameraOptions(center: center, zoom: 12.5, pitch: 83)
-        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .init(url: URL(string: "mapbox://styles/mapbox-map-design/ckhqrf2tz0dt119ny6azh975y")!))
+        var styleURI: StyleURI?
+        if let url = URL(string: "mapbox://styles/mapbox-map-design/ckhqrf2tz0dt119ny6azh975y") {
+            styleURI = StyleURI(url: url)
+        } else {
+            styleURI = .satelliteStreets
+        }
+        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: styleURI)
 
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]

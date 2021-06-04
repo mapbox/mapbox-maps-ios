@@ -96,6 +96,8 @@ public class OrnamentsManager: NSObject {
         let scaleBarViewConstraints = constraints(with: scalebarView,
                                                   position: options.scaleBar.position,
                                                   margins: options.scaleBar.margins)
+        let scaleBarPosition = options.scaleBar.position
+        scalebarView.isOnRight = scaleBarPosition == .bottomRight || scaleBarPosition == .topRight
         constraints.append(contentsOf: scaleBarViewConstraints)
 
         let attributionButtonConstraints = constraints(with: attributionButton,

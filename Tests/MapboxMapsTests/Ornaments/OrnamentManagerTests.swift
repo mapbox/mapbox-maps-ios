@@ -53,4 +53,20 @@ class OrnamentManagerTests: XCTestCase {
 
         XCTAssertNotEqual(isInitialCompassHidden, isUpdatedCompassHidden)
     }
+
+    func testScaleBarOnRight() throws {
+        let initialSubviews = ornamentSupportableView.subviews.filter { $0 is MapboxScaleBarOrnamentView }
+
+        let scaleBar = try XCTUnwrap(initialSubviews.first as? MapboxScaleBarOrnamentView, "The ornament supportable map view should include a scale bar")
+        XCTAssertFalse(scaleBar.isOnRight, "The default scale bar should be on the left initially.")
+
+        ornamentsManager.options.scaleBar.position = .topRight
+        XCTAssertTrue(scaleBar.isOnRight, "The scale bar should be on the right after the position has been updated to topRight.")
+
+        ornamentsManager.options.scaleBar.position = .bottomLeft
+        XCTAssertFalse(scaleBar.isOnRight, "The default scale bar should be on the left after updating position to bottomLeft.")
+
+        ornamentsManager.options.scaleBar.position = .bottomRight
+        XCTAssertTrue(scaleBar.isOnRight, "The scale bar should be on the right after the position has been updated to bottomRight.")
+    }
 }

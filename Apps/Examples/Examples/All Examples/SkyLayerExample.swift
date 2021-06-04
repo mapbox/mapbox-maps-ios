@@ -1,0 +1,132 @@
+import UIKit
+import MapboxMaps
+
+@objc(SkyLayerExample)
+
+public class SkyLayerExample: UIViewController, ExampleProtocol {
+
+    internal var mapView: MapView!
+    internal var skyLayer: SkyLayer!
+    internal var segmentedControl = UISegmentedControl()
+
+    override public func viewDidLoad() {
+        super.viewDidLoad()
+
+        // Set the initial camera and style URI by creating a `MapInitOptions` object.
+        let center = CLLocationCoordinate2D(latitude: 35.67283, longitude: 127.60597)
+        let cameraOptions = CameraOptions(center: center, zoom: 12.5, pitch: 83)
+        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .init(url: URL(string: "mapbox://styles/mapbox-map-design/ckhqrf2tz0dt119ny6azh975y")!))
+
+        mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+        view.addSubview(mapView)
+
+        // Add a `UISegmentedControl` that toggles the sky layer type between `gradient` and `atmosphere`.
+        addSegmentedControl()
+
+        // Add a custom `SkyLayer` once the map's style is finished loading.
+        mapView.mapboxMap.onNext(.styleLoaded) { _ in
+            self.addSkyLayer()
+
+            // Add a terrain layer.
+            self.addTerrainLayer()
+
+            self.finish()
+        }
+    }
+
+    func addSkyLayer() {
+        // Initialize a sky layer with a sky type of `gradient`, which applies a gradient effect to the sky.
+        // Read more about sky layer types on the Mapbox blog: https://www.mapbox.com/blog/sky-api-atmospheric-scattering-algorithm-for-3d-maps
+        skyLayer = SkyLayer(id: "sky-layer")
+        skyLayer.skyType = .constant(.gradient)
+
+        // Define the position of the sun.
+        // The azimuthal angle indicates the sun's position relative to 0 degrees north. When the map's bearing
+        // is `0` and the azimuthal angle is `0`, the sun will appear horizontally centered.
+        let azimuthalAngle: Double = 0
+
+        // Indicates the sun's position relative to the horizon. A value of `90` places the sun's center at the
+        // horizon line. Lower values place the sun below the horizon line, while higher values place the sun's
+        // center further above the horizon line.
+        let polarAngle: Double = 90
+        skyLayer.skyAtmosphereSun = .constant([azimuthalAngle, polarAngle])
+
+        // The intensity or brightness of the sun.
+        skyLayer.skyAtmosphereSunIntensity = .constant(10)
+
+        // Set the sky's color to light blue with a light pink halo effect.
+        skyLayer.skyAtmosphereColor = .constant(ColorRepresentable(color: .skyBlue))
+        skyLayer.skyAtmosphereHaloColor = .constant(ColorRepresentable(color: .lightPink))
+
+        do {
+            try mapView.mapboxMap.style.addLayer(skyLayer)
+        } catch {
+            print("Failed to add sky layer to the map's style.")
+        }
+    }
+
+    // Update the sky type when the `UISegmentedControl` value is changed.
+    @objc func updateSkyLayer() {
+        var skyType: Value<SkyType>
+        if segmentedControl.selectedSegmentIndex == 0 {
+            skyType = .constant(.gradient)
+        } else {
+            skyType = .constant(.atmosphere)
+        }
+
+        // Update the sky layer based on the updated segmented control value.
+        do {
+            try mapView.mapboxMap.style.updateLayer(withId: skyLayer.id) { (layer: inout SkyLayer) throws in
+                layer.skyType = skyType
+            }
+        } catch {
+            print("Failed to update the sky type for layer with id \(skyLayer.id).")
+        }
+    }
+
+    func addTerrainLayer() {
+        // Add a RasterDEMSource. This will be used to create and add a terrain layer. r
+        var demSource = RasterDemSource()
+        demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
+        demSource.tileSize = 512
+        demSource.maxzoom = 14.0
+        try! mapView.mapboxMap.style.addSource(demSource, id: "mapbox-dem")
+
+        var terrain = Terrain(sourceId: "mapbox-dem")
+        terrain.exaggeration = .constant(1.5)
+
+        do {
+            try mapView.mapboxMap.style.setTerrain(terrain)
+        } catch {
+            print("Failed to add a terrain layer to the map's style.")
+        }
+    }
+
+    func addSegmentedControl() {
+        segmentedControl = UISegmentedControl(items: ["Gradient", "Atmosphere"])
+        segmentedControl.backgroundColor = .lightGray
+        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.addTarget(self, action: #selector(updateSkyLayer), for: .valueChanged)
+        view.insertSubview(segmentedControl, aboveSubview: mapView)
+
+        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
+        let safeArea = view.safeAreaLayoutGuide
+        NSLayoutConstraint.activate([
+            segmentedControl.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -80),
+            segmentedControl.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor)
+        ])
+    }
+}
+
+// An extension to store sky color values.
+extension UIColor {
+    static var skyBlue: UIColor {
+        return UIColor(red: 0.53, green: 0.81, blue: 0.92, alpha: 1.00)
+    }
+
+    static var lightPink: UIColor {
+        return UIColor(red: 1.00, green: 0.82, blue: 0.88, alpha: 1.00)
+    }
+}

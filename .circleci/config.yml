@@ -135,9 +135,9 @@ workflows:
     jobs:
       - ios-build-release:
           name: "iOS Release Build"
-          # filters:
-          #   branches:
-          #     only: /Release\/.*/
+          filters:
+            branches:
+              only: /Release\/.*/
       - ios-release-tag:
           name: "iOS Release Tag & Docs"
           filters:
@@ -518,38 +518,38 @@ jobs:
   ios-build-release:
     <<: *base-job
     steps:
-      # - checkout
-      # - add_ssh_keys:
-      #      fingerprints:
-      #        - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
-      # - install-mbx-ci
-      # - configure-environment
-      # - ensure-text-exists-in-commit:
-      #     commit-text: "[release]"
-      #     always-run: << parameters.device-tests-always-run >>
-      # - run:
-      #     name: Extract Version From Commit
-      #     command: |
-      #       GIT_COMMIT_MSG=`git log --format=oneline -n 1`
-      #       export VERSION=$(echo $GIT_COMMIT_MSG| cut -d' ' -f3)
-      #       echo "export VERSION=$VERSION" >> $BASH_ENV
-      # - slack/notify:
-      #     message: '<$CIRCLE_BUILD_URL|Release build for \`$VERSION\` started.>'
-      #     include_visit_job_action: true
+      - checkout
+      - add_ssh_keys:
+           fingerprints:
+             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+      - install-mbx-ci
+      - configure-environment
+      - ensure-text-exists-in-commit:
+          commit-text: "[release]"
+          always-run: << parameters.device-tests-always-run >>
+      - run:
+          name: Extract Version From Commit
+          command: |
+            GIT_COMMIT_MSG=`git log --format=oneline -n 1`
+            export VERSION=$(echo $GIT_COMMIT_MSG| cut -d' ' -f3)
+            echo "export VERSION=$VERSION" >> $BASH_ENV
+      - slack/notify:
+          message: '<$CIRCLE_BUILD_URL|Release build for \`$VERSION\` started.>'
+          include_visit_job_action: true
       - install-dependencies
-      # - make-xcframework-bundle:
-      #     bundle_style: "dynamic"
-      # - store_artifacts:
-      #     path: MapboxMaps.zip
-      # - make-xcframework-bundle:
-      #     bundle_style: "static"
-      # - store_artifacts:
-      #     path: MapboxMaps-static.zip
-      # - run:
-      #     name: Uploading direct download bundles (static & dynamic) to SDK Registry
-      #     command: |
-      #       ./scripts/release/upload-to-registry.sh MapboxMaps.zip mobile-maps-ios ${VERSION} MapboxMaps.zip
-      #       ./scripts/release/upload-to-registry.sh MapboxMaps-static.zip mobile-maps-ios-static ${VERSION} MapboxMaps-static.zip
+      - make-xcframework-bundle:
+          bundle_style: "dynamic"
+      - store_artifacts:
+          path: MapboxMaps.zip
+      - make-xcframework-bundle:
+          bundle_style: "static"
+      - store_artifacts:
+          path: MapboxMaps-static.zip
+      - run:
+          name: Uploading direct download bundles (static & dynamic) to SDK Registry
+          command: |
+            ./scripts/release/upload-to-registry.sh MapboxMaps.zip mobile-maps-ios ${VERSION} MapboxMaps.zip
+            ./scripts/release/upload-to-registry.sh MapboxMaps-static.zip mobile-maps-ios-static ${VERSION} MapboxMaps-static.zip
       - run:
           name: Run `npm ci`
           command: |
@@ -560,11 +560,11 @@ jobs:
           name: Creating SDK Registry PR
           command: ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios ${VERSION}
           when: on_success
-      # - slack/status:
-      #     fail_only: false
-      #     include_visit_job_action: true
-      #     failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` failed.>'
-      #     success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` succeeded!> :tada:'
+      - slack/status:
+          fail_only: false
+          include_visit_job_action: true
+          failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` failed.>'
+          success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` succeeded!> :tada:'
 
   # This job is triggered when a tag is pushed so we can tag a release.
   # It is responsible for making docs, and creating a draft release on Github

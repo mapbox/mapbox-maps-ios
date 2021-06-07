@@ -53,7 +53,7 @@ internal class LocationPuckManager: LocationConsumer {
 
     /// The type of value that should be passed for bearing
     internal var puckBearingSource: PuckBearingSource = .heading {
-        didSet{
+        didSet {
             puck?.puckBearingSource = puckBearingSource
         }
     }

@@ -8,7 +8,7 @@ public struct MapSnapshotOptions {
 
     /// Glyphs rasterization options to use for client-side text rendering.
     /// By default, `GlyphsRasterizationOptions` will use `.ideographsRasterizedLocally`
-    public let glyphsRasterizationOptions: GlyphsRasterizationOptions?
+    public let glyphsRasterizationOptions: GlyphsRasterizationOptions
 
     /// Resource fetching options to be used by the snapshotter.
     public let resourceOptions: ResourceOptions
@@ -25,7 +25,7 @@ public struct MapSnapshotOptions {
     ///         `ResourceOptionsManager.default`
     public init(size: CGSize,
                 pixelRatio: CGFloat,
-                glyphsRasterizationOptions: GlyphsRasterizationOptions? = GlyphsRasterizationOptions(),
+                glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions(),
                 resourceOptions: ResourceOptions = ResourceOptionsManager.default.resourceOptions) {
         precondition(pixelRatio > 0)
         precondition(size.width * pixelRatio <= 8192, "Width or scale too great.")
@@ -42,7 +42,7 @@ extension MapSnapshotOptions {
     internal init(_ objcValue: MapboxCoreMaps.MapSnapshotOptions) {
         self.init(size: CGSize(objcValue.__size),
                   pixelRatio: CGFloat(objcValue.pixelRatio),
-                  glyphsRasterizationOptions: objcValue.glyphsRasterizationOptions,
+                  glyphsRasterizationOptions: objcValue.glyphsRasterizationOptions ?? GlyphsRasterizationOptions(),
                   resourceOptions: ResourceOptions(objcValue.resourceOptions))
     }
 }

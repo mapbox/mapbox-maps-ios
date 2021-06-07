@@ -20,10 +20,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
 
     override func tearDownWithError() throws {
         try super.tearDownWithError()
-
-        if let url = dataPathURL {
-            try removeFilesInDirectoryTree(at: url)
-        }
     }
 
     // Create snapshot options

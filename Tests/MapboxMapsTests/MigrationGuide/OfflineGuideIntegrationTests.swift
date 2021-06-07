@@ -32,10 +32,6 @@ class OfflineGuideIntegrationTests: XCTestCase {
         try super.tearDownWithError()
 
         tileStore = nil
-
-        if let url = tileStorePathURL {
-            try removeFilesInDirectoryTree(at: url)
-        }
     }
 
     // Test StylePackLoadOptions

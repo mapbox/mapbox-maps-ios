@@ -22,10 +22,6 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
 
     override func tearDownWithError() throws {
         try super.tearDownWithError()
-
-        if let url = dataPathURL {
-            try removeFilesInDirectoryTree(at: url)
-        }
     }
 
     // MARK: - Tests

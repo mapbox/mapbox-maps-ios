@@ -30,10 +30,6 @@ class MapViewIntegrationTests: IntegrationTestCase {
         rootView = nil
 
         try super.tearDownWithError()
-
-        if let url = dataPathURL {
-            try removeFilesInDirectoryTree(at: url)
-        }
     }
 
     func testMapViewIsReleasedAfterCameraTransition() throws {

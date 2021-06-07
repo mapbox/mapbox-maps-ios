@@ -85,10 +85,6 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         } else if weakTileStore != nil {
             print("warning: TileStore not released!")
         }
-
-        if let url = tileStorePathURL {
-            try removeFilesInDirectoryTree(at: url)
-        }
     }
 
     // MARK: Test Cases

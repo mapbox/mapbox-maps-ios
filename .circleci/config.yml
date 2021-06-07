@@ -131,15 +131,15 @@ workflows:
               only: main
       - create-xcframework
 
-  public-beta:
+  ios-release:
     jobs:
       - ios-build-release:
-          name: "Public Beta Release"
+          name: "iOS Release Build"
           filters:
             branches:
               only: /Release\/.*/
       - ios-release-tag:
-          name: "iOS release"
+          name: "iOS Release Tag & Docs"
           filters:
             tags:
               only: /.*/
@@ -513,10 +513,8 @@ jobs:
           report_failure: << parameters.report_failure >>
           message: "create-xcframework"
 
-  # This job was created for the public beta and is responsible for building
-  # and uploading the xcframework bundle to S3. As well as making appropriate
-  # updates to Package Manifest and Podspec. Further, this job will also
-  # create a PR in api-downloads for SDK Registry access.
+  # This job is responsible for building and uploading the xcframework bundle to S3. 
+  # This job will also create a PR in api-downloads for SDK Registry access.
   ios-build-release:
     <<: *base-job
     steps:

@@ -6,6 +6,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Breaking changes ⚠️
 
+- Converted `MapSnapshotOptions` to a struct. ([#430](https://github.com/mapbox/mapbox-maps-ios/pull/430))
 - Updated MapboxCoreMaps, MapboxCommon and Turf dependencies. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
   - Removed `CacheManager`.
   - Changed `ResourceOptions.cachePathURL` to `dataPathURL` and removed `cacheSize`.

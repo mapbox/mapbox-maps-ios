@@ -1,7 +1,4 @@
 import Foundation
-#if canImport(MapboxMapsFoundation)
-import MapboxMapsFoundation
-#endif
 import CoreLocation
 
 /// A struct to configure a `LocationManager`
@@ -23,6 +20,10 @@ public struct LocationOptions: Equatable {
 
     /// Sets the type of puck that should be used
     public var puckType: PuckType?
+
+    /// Specifies if a `Puck` should use `Heading` or `Course` for the bearing
+    /// This is an experimental option
+    public var puckBearingSource: PuckBearingSource = .heading
 
     public init() {}
 

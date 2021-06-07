@@ -2,14 +2,6 @@ import CoreLocation
 import MapboxCoreMaps
 import UIKit
 
-#if canImport(MapboxMapsFoundation)
-import MapboxMapsFoundation
-#endif
-
-#if canImport(MapboxMapsStyle)
-import MapboxMapsStyle
-#endif
-
 // MARK: PuckStyle Enum
 /// This enum represents the different styles of pucks that can be generated
 internal enum PuckStyle {
@@ -25,6 +17,16 @@ public enum PuckType: Equatable {
 
     /// A 3-dimensional puck. Provide a `Puck3DConfiguration` to configure the puck's appearance.
     case puck3D(Puck3DConfiguration)
+}
+
+// MARK: PuckBearingSource
+/// This enum controls how the puck is oriented
+public enum PuckBearingSource: Equatable {
+    /// A setting that tells the puck to orient the bearing using `heading: CLHeading`
+    case heading
+
+    /// A setting that tells the puck to orient the bearing using `course: CLLocationDirection`
+    case course
 }
 
 // MARK: LocationPuckManager
@@ -49,11 +51,20 @@ internal class LocationPuckManager: LocationConsumer {
     /// The current puck type
     internal private(set) var puckType: PuckType
 
+    /// The type of value that should be passed for bearing
+    internal var puckBearingSource: PuckBearingSource = .heading {
+        didSet {
+            puck?.puckBearingSource = puckBearingSource
+        }
+    }
+
     internal init(locationSupportableMapView: LocationSupportableMapView,
                   style: LocationStyleDelegate?,
-                  puckType: PuckType) {
+                  puckType: PuckType,
+                  puckBearingSource: PuckBearingSource) {
         puckStyle = .precise
         self.puckType = puckType
+        self.puckBearingSource = puckBearingSource
         self.locationSupportableMapView = locationSupportableMapView
         self.style = style
     }
@@ -81,11 +92,13 @@ internal class LocationPuckManager: LocationConsumer {
         switch puckType {
         case let .puck2D(configuration):
             puck = Puck2D(puckStyle: puckStyle,
+                          puckBearingSource: puckBearingSource,
                           locationSupportableMapView: locationSupportableMapView,
                           style: style,
                           configuration: configuration)
         case let .puck3D(configuration):
             puck = Puck3D(puckStyle: puckStyle,
+                          puckBearingSource: puckBearingSource,
                           locationSupportableMapView: locationSupportableMapView,
                           style: style,
                           configuration: configuration)

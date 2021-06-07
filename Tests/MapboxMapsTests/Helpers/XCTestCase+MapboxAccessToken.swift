@@ -39,20 +39,4 @@ extension XCTestCase {
 
         return try validated(token: token()).trimmingCharacters(in: .whitespacesAndNewlines)
     }
-
-//    func clearDefaultAmbientCache() throws {
-//        let token = try mapboxAccessToken()
-//        let resourceOptions = ResourceOptions(accessToken: token)
-//        let cacheManager = CacheManager(options: resourceOptions)
-//
-//        let expectation = self.expectation(description: "Clear ambient cache")
-//        cacheManager.clearAmbientCache { result in
-//            if case let .failure(error) = result {
-//                print("warning: Should have a valid expected result: \(error)")
-//            }
-//            expectation.fulfill()
-//        }
-//
-//        wait(for: [expectation], timeout: 10.0)
-//    }
 }

@@ -239,7 +239,7 @@
 		CA03F1132626948300673961 /* StylePackLoadOptions+MapboxMaps.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA03F1122626948300673961 /* StylePackLoadOptions+MapboxMaps.swift */; };
 		CA0492D6261382E900CF458A /* StyleURI.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0492D5261382E900CF458A /* StyleURI.swift */; };
 		CA050571259104E200FF7D02 /* FeatureQueryingTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B82A652548C1320048D0F2 /* FeatureQueryingTest.swift */; };
-		CA05A7202551C89600ABF902 /* CacheManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA05A71E2551C89600ABF902 /* CacheManagerIntegrationTests.swift */; };
+		CA05A7202551C89600ABF902 /* DeallocationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA05A71E2551C89600ABF902 /* DeallocationObserver.swift */; };
 		CA0B373325C4BEAE00B3396E /* MapboxMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CD34FCE242AADDB00943687 /* MapboxMaps.framework */; };
 		CA0B373925C4BEAE00B3396E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07182014256C1F6100F22489 /* Assets.xcassets */; };
 		CA0B37E725C4C00300B3396E /* HTTPIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB11C982555986F00060963 /* HTTPIntegrationTests.swift */; };
@@ -333,7 +333,6 @@
 		CAE43ED5265460FE006F43E9 /* MapFeatureQueryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43ED4265460FE006F43E9 /* MapFeatureQueryable.swift */; };
 		CAE43EDA26546192006F43E9 /* OfflineSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43ED626546191006F43E9 /* OfflineSwitch.swift */; };
 		CAE43EDB26546192006F43E9 /* HttpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43ED726546191006F43E9 /* HttpResponse.swift */; };
-		CAE43EDC26546192006F43E9 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43ED826546191006F43E9 /* CacheManager.swift */; };
 		CAE43EDD26546192006F43E9 /* OfflineRegionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43ED926546192006F43E9 /* OfflineRegionManager.swift */; };
 		CAE43EDF26546217006F43E9 /* MapboxMapIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43EDE26546217006F43E9 /* MapboxMapIntegrationTests.swift */; };
 		CAE43EE22654627E006F43E9 /* TileStore+Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE43EE12654627E006F43E9 /* TileStore+Tests.swift */; };
@@ -708,7 +707,7 @@
 		CA03F107262687AD00673961 /* MapSnapshotOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSnapshotOptions.swift; sourceTree = "<group>"; };
 		CA03F1122626948300673961 /* StylePackLoadOptions+MapboxMaps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StylePackLoadOptions+MapboxMaps.swift"; sourceTree = "<group>"; };
 		CA0492D5261382E900CF458A /* StyleURI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleURI.swift; sourceTree = "<group>"; };
-		CA05A71E2551C89600ABF902 /* CacheManagerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManagerIntegrationTests.swift; sourceTree = "<group>"; };
+		CA05A71E2551C89600ABF902 /* DeallocationObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeallocationObserver.swift; sourceTree = "<group>"; };
 		CA0B374325C4BEAE00B3396E /* MapboxMapsHTTPTestsWithHost.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxMapsHTTPTestsWithHost.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA0C427D2602BECE0054D9D0 /* LayerPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerPosition.swift; sourceTree = "<group>"; };
 		CA0C42942602BF000054D9D0 /* LayerPositionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerPositionTests.swift; sourceTree = "<group>"; };
@@ -761,7 +760,6 @@
 		CAE43ED4265460FE006F43E9 /* MapFeatureQueryable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapFeatureQueryable.swift; sourceTree = "<group>"; };
 		CAE43ED626546191006F43E9 /* OfflineSwitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineSwitch.swift; sourceTree = "<group>"; };
 		CAE43ED726546191006F43E9 /* HttpResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpResponse.swift; sourceTree = "<group>"; };
-		CAE43ED826546191006F43E9 /* CacheManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
 		CAE43ED926546192006F43E9 /* OfflineRegionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineRegionManager.swift; sourceTree = "<group>"; };
 		CAE43EDE26546217006F43E9 /* MapboxMapIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapboxMapIntegrationTests.swift; sourceTree = "<group>"; };
 		CAE43EE12654627E006F43E9 /* TileStore+Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TileStore+Tests.swift"; path = "../../Offline/TileStore+Tests.swift"; sourceTree = "<group>"; };
@@ -861,7 +859,6 @@
 		0782B1DB258C254400D5FCE5 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				CAE43ED826546191006F43E9 /* CacheManager.swift */,
 				CAE43ED726546191006F43E9 /* HttpResponse.swift */,
 				CAE43ED926546192006F43E9 /* OfflineRegionManager.swift */,
 				CAE43ED626546191006F43E9 /* OfflineSwitch.swift */,
@@ -1562,14 +1559,6 @@
 			path = ../Tests/MapboxMapsTests/MigrationGuide;
 			sourceTree = "<group>";
 		};
-		CA05A71D2551C85000ABF902 /* CacheManager */ = {
-			isa = PBXGroup;
-			children = (
-				CA05A71E2551C89600ABF902 /* CacheManagerIntegrationTests.swift */,
-			);
-			path = CacheManager;
-			sourceTree = "<group>";
-		};
 		CA0C42922602BF000054D9D0 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -1594,6 +1583,7 @@
 		CA2E498725380AE10096DEDE /* Integration Tests */ = {
 			isa = PBXGroup;
 			children = (
+				CA05A71E2551C89600ABF902 /* DeallocationObserver.swift */,
 				C6C5CDB8264C0C910097FCD1 /* OfflineManagerIntegrationTests.swift */,
 				CAD7BA0425A368DE00E64C78 /* ExampleIntegrationTest.swift */,
 				CA57257B2568D13D005ED95E /* Map */,
@@ -1601,7 +1591,6 @@
 				CA5361862537EE0600A8AE38 /* IntegrationTestCase.swift */,
 				C69F011125431AF4001AB49B /* LocationManagerIntegrationTests.swift */,
 				CA53616D2537ECA600A8AE38 /* MapViewIntegrationTestCase.swift */,
-				CA05A71D2551C85000ABF902 /* CacheManager */,
 				CAB11C972555986F00060963 /* HTTP */,
 				CA99A86D2540CCFC00D16C78 /* Style */,
 			);
@@ -2052,7 +2041,6 @@
 				B521FC98262F627300B9A446 /* Size.swift in Sources */,
 				0C26425524EECD14001FE2E3 /* AllExpressions.swift in Sources */,
 				CAB77E472654ACE90071D74C /* CameraManagerProtocol.swift in Sources */,
-				CAE43EDC26546192006F43E9 /* CacheManager.swift in Sources */,
 				0C03DD43264EE95D00D4D307 /* MapView.swift in Sources */,
 				0782B1A3258C250400D5FCE5 /* Geometry.swift in Sources */,
 				0CD62F1024588530006421D1 /* GestureManager.swift in Sources */,
@@ -2298,7 +2286,7 @@
 				0C1EBF0C266035880024E687 /* CircleAnnotationIntegrationTests.swift in Sources */,
 				0C59ED2325CC6D7E00C72E7A /* ExpressionBuilderTests.swift in Sources */,
 				CA2861EC265F3FCB002A20CA /* ResourceOptionsManagerTests.swift in Sources */,
-				CA05A7202551C89600ABF902 /* CacheManagerIntegrationTests.swift in Sources */,
+				CA05A7202551C89600ABF902 /* DeallocationObserver.swift in Sources */,
 				B53B8622260D717700C86BAA /* XCTestCase+MapboxAccessToken.swift in Sources */,
 				CA548FF0251C404B00F829A3 /* MultiPointTests.swift in Sources */,
 				CA548FF1251C404B00F829A3 /* RotateGestureHandlerTests.swift in Sources */,

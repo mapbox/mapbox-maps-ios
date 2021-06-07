@@ -540,23 +540,4 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
         wait(for: [expectation], timeout: 5.0)
     }
-
-//    func testCacheManager() {
-//        let expectation = self.expectation(description: "Cache manager invalidated")
-//        let didInvalidate = {
-//            expectation.fulfill()
-//        }
-//
-//        //-->
-//        // Default cache size and paths
-//        let resourceOptions = ResourceOptions(accessToken: accessToken)
-//        let cacheManager = CacheManager(options: resourceOptions)
-//
-//        cacheManager.invalidateAmbientCache { _ in
-//            // Business logic
-//            didInvalidate()
-//        }
-//        //<--
-//        wait(for: [expectation], timeout: 5.0)
-//    }
 }

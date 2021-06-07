@@ -18,6 +18,14 @@ class MapboxMapsSnapshotTests: XCTestCase {
         dataPathURL = try temporaryCacheDirectory()
     }
 
+    override func tearDownWithError() throws {
+        try super.tearDownWithError()
+
+        if let url = dataPathURL {
+            removeFilesInDirectoryTree(at: url)
+        }
+    }
+
     // Create snapshot options
     private func snapshotterOptions() throws -> MapSnapshotOptions {
         let accessToken = try mapboxAccessToken()

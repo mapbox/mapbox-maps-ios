@@ -6,7 +6,6 @@ import XCTest
 // Code between //--> and //<-- is used in the offline guide. Please do not modify
 // without consultation.
 
-//swiftlint:disable empty_enum_arguments
 class OfflineGuideIntegrationTests: XCTestCase {
     let tokyoCoord = CLLocationCoordinate2D(latitude: 35.682027, longitude: 139.769305)
 
@@ -33,6 +32,10 @@ class OfflineGuideIntegrationTests: XCTestCase {
         try super.tearDownWithError()
 
         tileStore = nil
+
+        if let url = tileStorePathURL {
+            removeFilesInDirectoryTree(at: url)
+        }
     }
 
     // Test StylePackLoadOptions
@@ -287,7 +290,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
             case let .failure(error) where error is TileRegionError:
                 handleTileRegionError(error)
 
-            case .failure(_):
+            case .failure:
                 handleFailure()
             }
         }
@@ -305,23 +308,6 @@ class OfflineGuideIntegrationTests: XCTestCase {
         //-->
         offlineManager.removeStylePack(for: .outdoors)
         //<--
-
-//        let expectation = self.expectation(description: "Ambient Cache should be cleared successfully")
-//        let handleExpected = { (result: Result<Void, Error>) in
-//            switch result {
-//            case .success:
-//                expectation.fulfill()
-//            case let .failure(error):
-//                XCTFail("Delete failed: \(error)")
-//            }
-//        }
-//
-//        //-->
-//        // Remove the existing style resources from the ambient cache using
-//        // CacheManager
-//        try removeDirectory(at: dataPathURL)
-//        //<--
-//        print("Removed: \(dataPathURL)")
     }
 
     func testDeleteTileRegions() throws {

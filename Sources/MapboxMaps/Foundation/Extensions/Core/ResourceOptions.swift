@@ -1,21 +1,6 @@
 import Foundation
 @_implementationOnly import MapboxCommon_Private
 
-
-//- (nonnull instancetype)initWithAccessToken:(nonnull NSString *)accessToken
-//                                    baseURL:(nullable NSString *)baseURL
-//                                   dataPath:(nullable NSString *)dataPath
-//                                  assetPath:(nullable NSString *)assetPath
-//                                  tileStore:(nullable MBXTileStore *)tileStore NS_REFINED_FOR_SWIFT;
-//
-//- (nonnull instancetype)initWithAccessToken:(nonnull NSString *)accessToken
-//                                    baseURL:(nullable NSString *)baseURL
-//                                   dataPath:(nullable NSString *)dataPath
-//                                  assetPath:(nullable NSString *)assetPath
-//                                  tileStore:(nullable MBXTileStore *)tileStore
-//                         tileStoreUsageMode:(MBMTileStoreUsageMode)tileStoreUsageMode NS_REFINED_FOR_SWIFT;
-//
-
 // MARK: - ResourceOptions
 
 /// Options to configure access to a resource
@@ -35,9 +20,6 @@ public struct ResourceOptions {
     /// The path to the assets. The default, `nil`, uses the main bundle.
     public var assetPathURL: URL?
 
-    /// The size of the cache in bytes. The default, `nil`, uses `defaultCacheSize`
-//    public var cacheSize: UInt64?
-
     /// The tile store instance
     ///
     /// This setting can be applied only if tile store usage is enabled,
@@ -49,7 +31,7 @@ public struct ResourceOptions {
     /// - Attention:
     ///     If you create a `ResourceOptions` (rather than using `ResourceOptionsManager`
     ///     to manage one) that uses a custom TileStore, you will need to ensure
-    ///     that the `TileStore` is initialised with a valid access token.
+    ///     that the `TileStore` is initialized with a valid access token.
     ///
     ///     For example:
     ///
@@ -61,18 +43,16 @@ public struct ResourceOptions {
     /// Tile store usage mode
     public var tileStoreUsageMode: TileStoreUsageMode
 
-//    /// The default size of the cache. Used if `cacheSize` is set to `nil`
-//    public static let defaultCacheSize: UInt64 = (1024*1024*50)
-
     /// Initialize a `ResourceOptions`, used by both `MapView`s and `Snapshotter`s
     /// - Parameters:
     ///   - accessToken: Mapbox access token. You must provide a valid token.
     ///   - baseUrl: Base url for resource requests; default is `nil`
-    ///   - cachePath: Path to database cache; default is `nil`, which will create
-    ///         a path in the application's "support directory"
-    ///   - assetPath: Path to assets; default is `nil`, which will use the application's
-    ///         resource bundle. `assetPath` is expected to be path to a bundle.
-    ///   - cacheSize: Size of the cache.
+    ///   - dataPathURL: Path to database cache; default is `nil`, which will create
+    ///         a path in a suitable application directory that is excluded from
+    ///         backups.
+    ///   - assetPathURL: Path to assets; default is `nil`, which will use the
+    ///         application's resource bundle. `assetPath` is expected to be path
+    ///         to a bundle.
     ///   - tileStore: A tile store is only used if `tileStoreEnabled` is `true`,
     ///         otherwise this argument is ignored. If `nil` (and `tileStoreEnabled`
     ///         is `true`, the a default tile store will be created and used.
@@ -109,34 +89,11 @@ public struct ResourceOptions {
                 tileStoreUsageMode: TileStoreUsageMode = .readOnly) {
         self.accessToken        = accessToken
         self.baseURL            = baseURL
-        self.dataPathURL        = dataPathURL //?? ResourceOptions.cacheURLIncludingSubdirectory()
+        self.dataPathURL        = dataPathURL
         self.assetPathURL       = assetPathURL ?? Bundle.main.resourceURL
-//        self.cacheSize          = cacheSize
         self.tileStore          = tileStore
         self.tileStoreUsageMode = tileStoreUsageMode
     }
-
-//    private static func cacheURLIncludingSubdirectory() -> URL {
-//        do {
-//            var cacheDirectoryURL = try FileManager.default.url(for: .applicationSupportDirectory,
-//                                                                in: .userDomainMask,
-//                                                                appropriateFor: nil,
-//                                                                create: true)
-//
-//            cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent(".mapbox")
-//            cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent("maps")
-//
-//            try FileManager.default.createDirectory(at: cacheDirectoryURL,
-//                                                    withIntermediateDirectories: true,
-//                                                    attributes: nil)
-//
-//            cacheDirectoryURL.setTemporaryResourceValue(true, forKey: .isExcludedFromBackupKey)
-//
-//            return cacheDirectoryURL.appendingPathComponent("ambient_cache.db")
-//        } catch {
-//            fatalError("Failed to create cache directory: \(error)")
-//        }
-//    }
 }
 
 extension ResourceOptions: Hashable {
@@ -150,7 +107,6 @@ extension ResourceOptions: Hashable {
                 || (lhs.dataPathURL == nil)
                 || (rhs.dataPathURL == nil))
             && (lhs.assetPathURL == rhs.assetPathURL)
-//            && (lhs.cacheSize == rhs.cacheSize)
             && ((lhs.tileStore == rhs.tileStore)
                     || (lhs.tileStore == nil)
                     || (rhs.tileStore == nil))
@@ -163,7 +119,6 @@ extension ResourceOptions: Hashable {
         hasher.combine(baseURL)
         hasher.combine(dataPathURL)
         hasher.combine(assetPathURL)
-//        hasher.combine(cacheSize)
         hasher.combine(tileStore)
         hasher.combine(tileStoreUsageMode)
     }
@@ -204,7 +159,6 @@ extension ResourceOptions {
                   baseURL: baseURL,
                   dataPathURL: dataPathURL,
                   assetPathURL: assetPathURL,
-//                  cacheSize: objcValue.__cacheSize?.uint64Value ?? Self.defaultCacheSize,
                   tileStore: objcValue.tileStore,
                   tileStoreUsageMode: objcValue.tileStoreUsageMode)
     }
@@ -216,7 +170,6 @@ extension MapboxCoreMaps.ResourceOptions {
                   baseURL: swiftValue.baseURL?.path,
                   dataPath: swiftValue.dataPathURL?.path,
                   assetPath: swiftValue.assetPathURL?.path,
-//                  cacheSize: swiftValue.cacheSize?.NSNumber,
                   tileStore: swiftValue.tileStore,
                   tileStoreUsageMode: swiftValue.tileStoreUsageMode)
     }

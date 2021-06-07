@@ -72,6 +72,10 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
         style = nil
 
         try super.tearDownWithError()
+
+        if let url = dataPathURL {
+            removeFilesInDirectoryTree(at: url)
+        }
     }
 }
 

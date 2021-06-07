@@ -10,7 +10,6 @@ internal class IntegrationTestCase: XCTestCase {
     internal override func setUpWithError() throws {
         try setupScreenAndWindow()
         accessToken = try mapboxAccessToken()
-//        try clearDefaultAmbientCache()
     }
 
     internal override func tearDownWithError() throws {

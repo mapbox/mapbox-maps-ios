@@ -164,6 +164,10 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
         rootViewController?.viewDidDisappear(false)
         rootViewController = nil
         window = nil
+
+        if let url = dataPathURL {
+            removeFilesInDirectoryTree(at: url)
+        }
     }
 
     internal func testWaitForIdle() throws {

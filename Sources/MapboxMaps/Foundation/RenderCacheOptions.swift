@@ -18,6 +18,6 @@ public struct RenderCacheOptions {
 
 extension MapboxCoreMaps.RenderCacheOptions {
     internal convenience init(_ swiftValue: RenderCacheOptions) {
-        self.init(__size: NSNumber(value: swiftValue.size)) 
+        self.init(__size: NSNumber(value: swiftValue.size))
     }
 }

@@ -20,11 +20,6 @@ public final class MapboxMap {
         __map.destroyRenderer()
     }
 
-//    public func clearDataPath() {
-//        __map.
-//    }
-
-
     internal init(mapClient: MapClient, mapInitOptions: MapInitOptions) {
         let coreOptions = MapboxCoreMaps.ResourceOptions(mapInitOptions.resourceOptions)
 

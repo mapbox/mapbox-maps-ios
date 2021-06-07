@@ -20,6 +20,14 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
         rootView = root
     }
 
+    override func tearDownWithError() throws {
+        try super.tearDownWithError()
+
+        if let url = dataPathURL {
+            removeFilesInDirectoryTree(at: url)
+        }
+    }
+
     // MARK: - Tests
 
     func testLoadStyleURICompletionIsCalled() {

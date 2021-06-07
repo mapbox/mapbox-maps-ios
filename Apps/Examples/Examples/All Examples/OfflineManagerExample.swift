@@ -19,6 +19,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
     @IBOutlet var progressContainer: UIView!
 
     private var mapView: MapView?
+    private var tileStore: TileStore?
     private var logger: OfflineManagerLogWriter!
     private var pointAnnotationsManager: PointAnnotationManager?
 
@@ -52,20 +53,24 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
     deinit {
         OfflineSwitch.shared.isMapboxStackConnected = true
         removeTileRegionAndStylePack()
+        tileStore = nil
     }
 
     override public func viewDidLoad() {
         super.viewDidLoad()
 
         // Initialize a logger that writes into the text view
-        self.logger = OfflineManagerLogWriter(textView: logView)
-
+        logger = OfflineManagerLogWriter(textView: logView)
         state = .initial
     }
 
     // MARK: - Actions
 
     internal func downloadTileRegions() {
+        guard let tileStore = tileStore else {
+            preconditionFailure()
+        }
+
         precondition(downloads.isEmpty)
 
         let dispatchGroup = DispatchGroup()
@@ -127,8 +132,8 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         // custom TileStores are are unique for a particular file path, i.e.
         // there is only ever one TileStore per unique path.
         dispatchGroup.enter()
-        let tileRegionDownload = TileStore.default.loadTileRegion(forId: tileRegionId,
-                                                                  loadOptions: tileRegionLoadOptions) { [weak self] (progress) in
+        let tileRegionDownload = tileStore.loadTileRegion(forId: tileRegionId,
+                                                          loadOptions: tileRegionLoadOptions) { [weak self] (progress) in
             // These closures do not get called from the main thread. In this case
             // we're updating the UI, so it's important to dispatch to the main
             // queue.
@@ -188,18 +193,22 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
     }
 
     private func showDownloadedRegions() {
+        guard let tileStore = tileStore else {
+            preconditionFailure()
+        }
+
         offlineManager.allStylePacks { result in
             self.logDownloadResult(message: "Style packs:", result: result)
         }
 
-        TileStore.default.allTileRegions { result in
+        tileStore.allTileRegions { result in
             self.logDownloadResult(message: "Tile regions:", result: result)
         }
         logger?.log(message: "\n", category: "Example")
     }
 
     // Remove downloaded region and style pack
-    private func removeTileRegionAndStylePack(completion: (() -> Void)? = nil ) {
+    private func removeTileRegionAndStylePack() {
         // Clean up after the example. Typically, you'll have custom business
         // logic to decide when to evict tile regions and style packs
 
@@ -207,13 +216,13 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         // Note this will not remove the downloaded tile packs, instead, it will
         // just mark the tileset as not a part of a tile region. The tiles still
         // exists in a predictive cache in the TileStore.
-        TileStore.default.removeTileRegion(forId: tileRegionId)
+        tileStore?.removeTileRegion(forId: tileRegionId)
 
         // Set the disk quota to zero, so that tile regions are fully evicted
         // when removed. The TileStore is also used when `ResourceOptions.isLoadTilePacksFromNetwork`
         // is `true`, and also by the Navigation SDK.
         // This removes the tiles from the predictive cache.
-        TileStore.default.setOptionForKey(TileStoreOptions.diskQuota, value: 0)
+        tileStore?.setOptionForKey(TileStoreOptions.diskQuota, value: 0)
 
         // Remove the style pack with the style uri.
         // Note this will not remove the downloaded style pack, instead, it will
@@ -239,10 +248,9 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
             showDownloadedRegions()
             state = .finished
         case .finished:
-            removeTileRegionAndStylePack { [weak self] in
-                self?.showDownloadedRegions()
-                self?.state = .initial
-            }
+            removeTileRegionAndStylePack()
+            showDownloadedRegions()
+            state = .initial
         }
     }
 
@@ -253,6 +261,13 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
             switch (oldValue, state) {
             case (_, .initial):
                 resetUI()
+
+                let tileStore = TileStore.default
+                let accessToken = ResourceOptionsManager.default.resourceOptions.accessToken
+                tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken as Any)
+
+                self.tileStore = tileStore
+
                 logger?.log(message: "Enabling HTTP stack network connection", category: "Example", color: .orange)
                 OfflineSwitch.shared.isMapboxStackConnected = true
 

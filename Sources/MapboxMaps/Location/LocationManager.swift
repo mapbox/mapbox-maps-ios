@@ -56,7 +56,7 @@ public class LocationManager: NSObject {
             }
 
             if options.puckBearingSource != oldValue.puckBearingSource {
-                locationPuckManager?.changePuckBearingSource(to: options.puckBearingSource)
+                locationPuckManager?.puckBearingSource = options.puckBearingSource
             }
         }
     }

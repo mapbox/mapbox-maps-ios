@@ -45,6 +45,33 @@ internal class LocationManagerIntegrationTestCase: MapViewIntegrationTestCase {
         wait(for: expectations, timeout: 5.0)
     }
 
+    internal func testChangePuckBearingSourceTakesEffect() {
+        style?.uri = .outdoors
+
+        let puckBearingSourceUsesHeading = XCTestExpectation(description: "Checks bearing updates are via heading")
+        let puckBearingSourceUsesCourse = XCTestExpectation(description: "Checks bearing updates are via course")
+
+        didBecomeIdle = { mapView in
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+
+                // Create a location manager
+                let locationManager = self.setupLocationManager(with: mapView)
+
+                // Sanity check for the default case
+                XCTAssertEqual(locationManager.options.puckBearingSource, .heading)
+                puckBearingSourceUsesHeading.fulfill()
+
+                locationManager.options.puckBearingSource = .course
+                XCTAssertEqual(locationManager.options.puckBearingSource, .course)
+                puckBearingSourceUsesCourse.fulfill()
+            }
+        }
+
+        let expectations = [puckBearingSourceUsesHeading, puckBearingSourceUsesCourse]
+        wait(for: expectations, timeout: 5.0)
+    }
+
     private func setupLocationManager(with mapView: MapView) -> LocationManager {
         let locationManager = LocationManager(locationSupportableMapView: mapView, style: mapView.mapboxMap.style)
         return locationManager

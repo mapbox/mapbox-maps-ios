@@ -59,7 +59,13 @@ internal class LocationPuckManager: LocationConsumer {
     internal private(set) var puckType: PuckType
 
     /// The type of value that should be passed for bearing
-    internal var puckBearingSource: PuckBearingSource
+    internal var puckBearingSource: PuckBearingSource = .heading {
+        didSet{
+            if puck != nil {
+                puck?.puckBearingSource = puckBearingSource
+            }
+        }
+    }
 
     internal init(locationSupportableMapView: LocationSupportableMapView,
                   style: LocationStyleDelegate?,
@@ -92,6 +98,7 @@ internal class LocationPuckManager: LocationConsumer {
 
         var puck: Puck
 
+        
         switch puckType {
         case let .puck2D(configuration):
             puck = Puck2D(puckStyle: puckStyle,
@@ -129,15 +136,5 @@ internal class LocationPuckManager: LocationConsumer {
         } else {
             createPuck()
         }
-    }
-
-    internal func changePuckBearingSource(to newPuckBearingSource: PuckBearingSource) {
-        guard var puck = self.puck else {
-            Log.warning(forMessage: "Puck must exist to change a PuckBearingSource", category: "Location")
-            return
-        }
-
-        puckBearingSource = newPuckBearingSource
-        puck.puckBearingSource = newPuckBearingSource
     }
 }

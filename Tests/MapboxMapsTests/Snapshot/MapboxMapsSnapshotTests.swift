@@ -10,16 +10,23 @@ class MapboxMapsSnapshotTests: XCTestCase {
 
     var newAttachment: XCTAttachment!
     var resourceOptions: ResourceOptions!
+    var dataPathURL: URL!
 
     override func setUpWithError() throws {
         try super.setUpWithError()
         try guardForMetalDevice()
+        dataPathURL = try temporaryCacheDirectory()
+    }
+
+    override func tearDownWithError() throws {
+        try super.tearDownWithError()
     }
 
     // Create snapshot options
     private func snapshotterOptions() throws -> MapSnapshotOptions {
         let accessToken = try mapboxAccessToken()
-        resourceOptions = ResourceOptions(accessToken: accessToken)
+        resourceOptions = ResourceOptions(accessToken: accessToken,
+                                          dataPathURL: dataPathURL)
         return MapSnapshotOptions(size: CGSize(width: 300, height: 300), pixelRatio: 4, resourceOptions: resourceOptions)
     }
 

@@ -74,7 +74,7 @@ class LineLayerIntegrationTests: MapViewIntegrationTestCase {
             }
         }
 
-        wait(for: [successfullyAddedLayerExpectation, successfullyRetrievedLayerExpectation], timeout: 5.0)
+        wait(for: [successfullyAddedLayerExpectation, successfullyRetrievedLayerExpectation], timeout: 30.0)
     }
 }
 

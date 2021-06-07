@@ -22,7 +22,10 @@ public enum PuckType: Equatable {
 // MARK: PuckBearingSource
 /// This enum controls how the puck is oriented
 public enum PuckBearingSource: Equatable {
+    /// A setting that tells the puck to orient the bearing using `heading: CLHeading`
     case heading
+
+    /// A setting that tells the puck to orient the bearing using `course: CLLocationDirection`
     case course
 }
 
@@ -51,9 +54,7 @@ internal class LocationPuckManager: LocationConsumer {
     /// The type of value that should be passed for bearing
     internal var puckBearingSource: PuckBearingSource = .heading {
         didSet{
-            if puck != nil {
-                puck?.puckBearingSource = puckBearingSource
-            }
+            puck?.puckBearingSource = puckBearingSource
         }
     }
 
@@ -87,7 +88,6 @@ internal class LocationPuckManager: LocationConsumer {
         }
 
         var puck: Puck
-
 
         switch puckType {
         case let .puck2D(configuration):

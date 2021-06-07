@@ -87,7 +87,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         }
 
         if let url = tileStorePathURL {
-            removeFilesInDirectoryTree(at: url)
+            try removeFilesInDirectoryTree(at: url)
         }
     }
 

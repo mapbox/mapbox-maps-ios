@@ -19,7 +19,7 @@ extension XCTestCase {
         return cacheDirectoryURL
     }
 
-    internal func removeFilesInDirectoryTree(at fileURL: URL) throws {
+    internal func try removeFilesInDirectoryTree(at fileURL: URL) throws {
         let fileManager = FileManager.default
         let resourceKeys = Set<URLResourceKey>([.isDirectoryKey])
         var fileURLs: [URL] = []

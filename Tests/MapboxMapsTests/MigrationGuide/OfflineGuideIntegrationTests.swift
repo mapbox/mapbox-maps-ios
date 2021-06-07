@@ -34,7 +34,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
         tileStore = nil
 
         if let url = tileStorePathURL {
-            removeFilesInDirectoryTree(at: url)
+            try removeFilesInDirectoryTree(at: url)
         }
     }
 
@@ -250,7 +250,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
             case let .failure(error) where error is StylePackError:
                 handleStylePackError(error)
 
-            case .failure(_):
+            case .failure:
                 handleFailure()
             }
         }

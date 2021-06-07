@@ -32,7 +32,7 @@ class MapViewIntegrationTests: IntegrationTestCase {
         try super.tearDownWithError()
 
         if let url = dataPathURL {
-            removeFilesInDirectoryTree(at: url)
+            try removeFilesInDirectoryTree(at: url)
         }
     }
 

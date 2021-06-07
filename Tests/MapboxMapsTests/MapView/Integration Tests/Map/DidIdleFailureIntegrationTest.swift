@@ -166,7 +166,7 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
         window = nil
 
         if let url = dataPathURL {
-            removeFilesInDirectoryTree(at: url)
+            try removeFilesInDirectoryTree(at: url)
         }
     }
 

@@ -5,6 +5,7 @@ import MetalKit
 internal class MapViewIntegrationTestCase: IntegrationTestCase {
     internal var mapView: MapView?
     internal var style: Style?
+    internal var dataPathURL: URL!
 
     /// Closures for map view delegate 
     internal var didFinishLoadingStyle: ((MapView) -> Void)?
@@ -16,7 +17,7 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
 
         try super.setUpWithError()
 
-        let dataPathURL = try temporaryCacheDirectory()
+        dataPathURL = try temporaryCacheDirectory()
 
         guard let window = window,
               let rootView = rootViewController?.view else {

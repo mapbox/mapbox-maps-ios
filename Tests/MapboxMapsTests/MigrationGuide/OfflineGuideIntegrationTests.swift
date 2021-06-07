@@ -221,7 +221,6 @@ class OfflineGuideIntegrationTests: XCTestCase {
     func testFetchingAllStylePacks() throws {
         let expectation = self.expectation(description: "Style packs should be fetched without error")
 
-        let dataPathURL = try temporaryCacheDirectory()
         let offlineManager = OfflineManager(resourceOptions: ResourceOptions(accessToken: accessToken,
                                                                              dataPathURL: tileStorePathURL,
                                                                              tileStore: tileStore))

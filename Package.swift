@@ -22,8 +22,7 @@ let package = Package(
             name: "MapboxMaps",
             dependencies: ["MapboxCoreMaps", "Turf", "MapboxMobileEvents"],
             exclude: [
-                "MapView/Info.plist",
-                "Style/README.md",
+                "MapView/Info.plist"
             ]
         ),
         .testTarget(

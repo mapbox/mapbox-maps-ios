@@ -1,7 +1,4 @@
 import Foundation
-#if canImport(MapboxMapsFoundation)
-import MapboxMapsFoundation
-#endif
 import CoreLocation
 
 /// A struct to configure a `LocationManager`

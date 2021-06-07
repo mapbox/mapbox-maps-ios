@@ -1,7 +1,3 @@
-#if canImport(MapboxMapsFoundation)
-import MapboxMapsFoundation
-#endif
-
 /// This protocol is used to help manipulate the different type of puck views we have
 internal protocol Puck {
 

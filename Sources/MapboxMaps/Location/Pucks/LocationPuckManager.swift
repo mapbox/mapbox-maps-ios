@@ -2,16 +2,6 @@ import CoreLocation
 import MapboxCoreMaps
 import UIKit
 
-@_implementationOnly import MapboxCommon_Private
-
-#if canImport(MapboxMapsFoundation)
-import MapboxMapsFoundation
-#endif
-
-#if canImport(MapboxMapsStyle)
-import MapboxMapsStyle
-#endif
-
 // MARK: PuckStyle Enum
 /// This enum represents the different styles of pucks that can be generated
 internal enum PuckStyle {
@@ -98,7 +88,7 @@ internal class LocationPuckManager: LocationConsumer {
 
         var puck: Puck
 
-        
+
         switch puckType {
         case let .puck2D(configuration):
             puck = Puck2D(puckStyle: puckStyle,

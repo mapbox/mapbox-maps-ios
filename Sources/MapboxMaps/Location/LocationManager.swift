@@ -1,10 +1,6 @@
 import CoreLocation
 import UIKit
 
-#if canImport(MapboxMapsFoundation)
-import MapboxMapsFoundation
-#endif
-
 /// An object responsible for notifying the map view about location-related events,
 /// such as a change in the device’s location.
 public class LocationManager: NSObject {

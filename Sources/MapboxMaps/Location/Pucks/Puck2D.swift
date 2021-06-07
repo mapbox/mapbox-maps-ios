@@ -3,14 +3,6 @@ import MapboxCoreMaps
 @_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
 
-#if canImport(MapboxMapsFoundation)
-import MapboxMapsFoundation
-#endif
-
-#if canImport(MapboxMapsStyle)
-import MapboxMapsStyle
-#endif
-
 public struct Puck2DConfiguration: Equatable {
 
     /// Image to use as the top of the location indicator.

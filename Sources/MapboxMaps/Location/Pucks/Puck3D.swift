@@ -2,14 +2,6 @@ import UIKit
 import MapboxCoreMaps
 import MapboxCommon
 
-#if canImport(MapboxMapsFoundation)
-import MapboxMapsFoundation
-#endif
-
-#if canImport(MapboxMapsStyle)
-import MapboxMapsStyle
-#endif
-
 public struct Puck3DConfiguration: Equatable {
 
     /// The model to use as the locaiton puck

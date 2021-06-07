@@ -86,4 +86,20 @@ internal class LocationManagerTests: XCTestCase {
         XCTAssertEqual(locationManager.options, locationOptions2)
         XCTAssertEqual(locationManager.locationPuckManager?.puckType, locationOptions2.puckType)
     }
+
+    func testUpdateLocationOptionsWithCoursePuckBearingSource() {
+        var locationOptions = LocationOptions()
+        locationOptions.puckType = .puck2D()
+        let locationManager = LocationManager(locationSupportableMapView: locationSupportableMapView,
+                                              style: locationSupportableStyle)
+
+        locationManager.options = locationOptions
+        XCTAssertEqual(locationManager.locationPuckManager?.puckBearingSource, .heading)
+
+        locationOptions.puckBearingSource = .course
+        locationManager.options = locationOptions
+
+        XCTAssertEqual(locationManager.options, locationOptions)
+        XCTAssertEqual(locationManager.locationPuckManager?.puckBearingSource, .course)
+    }
 }

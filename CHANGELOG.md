@@ -7,6 +7,12 @@ Mapbox welcomes participation and contributions from everyone.
 ### Breaking changes ⚠️
 
 - Converted `MapSnapshotOptions` to a struct. ([#430](https://github.com/mapbox/mapbox-maps-ios/pull/430))
+- Updated MapboxCoreMaps, MapboxCommon and Turf dependencies. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
+  - Removed `CacheManager`.
+  - Changed `ResourceOptions.cachePathURL` to `dataPathURL` and removed `cacheSize`.
+
+### Features ✨ and improvements 🏁
+- Fixed an issue where location updates were only happening via `heading: CLHeading`. You may now specify `mapView.location.options.puckBearingSource = .course` so that location puck will update based on `course: CLDirection`. Note that this value will use `heading: CLHeading` by default. ([#428](https://github.com/mapbox/mapbox-maps-ios/pull/428))
 
 ## 10.0.0-beta.21 - June 3, 2021
 

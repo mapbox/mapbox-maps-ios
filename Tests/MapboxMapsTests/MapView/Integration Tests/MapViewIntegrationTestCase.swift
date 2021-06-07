@@ -5,6 +5,7 @@ import MetalKit
 internal class MapViewIntegrationTestCase: IntegrationTestCase {
     internal var mapView: MapView?
     internal var style: Style?
+    internal var dataPathURL: URL!
 
     /// Closures for map view delegate 
     internal var didFinishLoadingStyle: ((MapView) -> Void)?
@@ -16,12 +17,15 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
 
         try super.setUpWithError()
 
+        dataPathURL = try temporaryCacheDirectory()
+
         guard let window = window,
               let rootView = rootViewController?.view else {
             throw XCTSkip("No valid UIWindow or root view controller")
         }
 
-        let resourceOptions = ResourceOptions(accessToken: accessToken)
+        let resourceOptions = ResourceOptions(accessToken: accessToken,
+                                              dataPathURL: dataPathURL)
         let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions,
                                             styleURI: nil)
         let view = MapView(frame: window.bounds, mapInitOptions: mapInitOptions)

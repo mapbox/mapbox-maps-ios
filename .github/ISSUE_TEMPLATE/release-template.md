@@ -16,7 +16,7 @@ assignees: ''
 - Docs buddy: 
   - The docs buddy reviews the documentation PR and assists with troubleshooting docs issues. 
 - Release commencement time:
-- SEMVER tag e.g `v10.0.0-beta.12`:
+- SEMVER tag e.g `v10.0.0-rc.1`:
 - Milestone:
 
 ## 📦 Release MapboxMaps
@@ -36,11 +36,12 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 
 - [ ] Pull the latest from main to include all code updates. Then make a new branch called "Release/{VERSION}"
 - [ ] Update the internal version pointers by running this command `./scripts/release/update-version.sh {VERSION}`. Commit these changes so they will be included in the build.
+- [ ] Bump the `maps_version` in MapboxMaps.podspec to match `VERSION`
 - [ ] Perform manual QA of this branch by running:
   - [ ] `mapbox-maps-ios` examples
   - [ ] [Studio Preview](https://github.com/mapbox/studio-preview-ios/). Update the Podfile to point to the release branch. Check for any breaking changes in the code and any visible performance issues.
 - [ ] Open a PR for the "Release/{VERSION}" branch. This allows CI to run.
-- [ ] Kickoff the build by passing an empty commit with the message "[release] {VERSION}", with the SEMVER version but no `v` prefix. For example: `git commit --allow-empty -m "[release] 10.0.0-beta.14"`. It's important that you follow the commit message as it triggers the build job.
+- [ ] Kickoff the build by passing an empty commit with the message "[release] {VERSION}", with the SEMVER version but no `v` prefix. For example: `git commit --allow-empty -m "[release] 10.0.0-rc.1"`. It's important that you follow the commit message as it triggers the build job.
 
 ***What will this job do?***
 
@@ -61,7 +62,7 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 
 **3) Create the Release Tag**
 
-- [ ] Create a SEMVER tag, e.g. `vX.Y.Z-beta.N` and push the tag to GitHub: 
+- [ ] Create a SEMVER tag, e.g. `vX.Y.Z-rc.N` and push the tag to GitHub: 
     - `git tag <version> && git push origin <version>`
     - This will trigger a CircleCI workflow that will produce the following artifacts (can be [found here](https://app.circleci.com/pipelines/github/mapbox/mapbox-maps-ios)):
         - an api-docs.zip
@@ -92,7 +93,7 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 - [ ] Merge the PR.
 - [ ] Create a `maps-{VERSION}` branch in [ios-sdk](https://github.com/mapbox/ios-sdk).
 - [ ] Add the new version (without a v prefix) as the first element in the [src/data/ios-maps-sdk-version.json](https://github.com/mapbox/ios-sdk/blob/publisher-production/src/data/ios-maps-sdk-versions.json).
-- [ ] While the beta docs site is live and for subsequent stable releases, add the version without the v to [src/constants.json](https://github.com/mapbox/ios-sdk/blob/ios/maps-v10.0.0-beta.13.1/src/constants.json#L6) as the value for `VERSION_IOS_MAPS_SDK_V10`.
+- [ ] While the rc docs site is live and for subsequent stable releases, add the version without the v to [src/constants.json](https://github.com/mapbox/ios-sdk/blob/ios/maps-v10.0.0-beta.13.1/src/constants.json#L6) as the value for `VERSION_IOS_MAPS_SDK_V10`.
 - [ ] Make sure the API Docs changes are live in production before continuing https://docs.mapbox.com/ios/maps/api/{version_without_v_prefix}/index.html
   - This is necessary because the CI checks triggered by the next step depend on them.
 - [ ] Commit and push these changes, then open a PR.

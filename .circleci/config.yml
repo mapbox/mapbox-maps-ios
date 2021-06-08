@@ -19,8 +19,8 @@ workflows:
     jobs:
       - swiftlint:
           xcode: "12.4.0"
-      # - depsvalidator:
-      #     xcode: "12.4.0"
+      - depsvalidator:
+          xcode: "12.4.0"
       - build-sdk:
           xcode: "12.4.0"
           matrix:
@@ -61,8 +61,8 @@ workflows:
     jobs:
       - swiftlint:
           xcode: "12.4.0"
-      # - depsvalidator:
-      #     xcode: "12.4.0"
+      - depsvalidator:
+          xcode: "12.4.0"
       - build-sdk:
           xcode: "12.4.0"
           matrix:

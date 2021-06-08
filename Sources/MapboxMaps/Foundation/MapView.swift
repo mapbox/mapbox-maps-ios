@@ -90,7 +90,8 @@ open class MapView: UIView {
     /// a nib.
     @IBOutlet internal private(set) weak var mapInitOptionsProvider: MapInitOptionsProvider?
 
-    internal var preferredFramesPerSecond: PreferredFPS = .maximum {
+    /// The preferred frames per second used for map rendering
+    public var preferredFramesPerSecond: PreferredFPS = .maximum {
         didSet {
             updateDisplayLinkPreferredFramesPerSecond()
         }

@@ -1,6 +1,6 @@
 {
-	"MapboxCoreMaps": "10.0.0-beta.23",
-	"MapboxCommon": "13.0.0",
-	"Turf": "v2.0.0-alpha.3",
+	"MapboxCoreMaps": "10.0.0-rc.1",
+	"MapboxCommon": "14.0.1",
+	"Turf": "v2.0.0-beta.1",
 	"MapboxMobileEvents": "v1.0.2"
 }

@@ -80,9 +80,37 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 ## 📚 Update documentation
 
 - [ ] Navigate to the [CircleCI job page](https://app.circleci.com/pipelines/github/mapbox/mapbox-maps-ios), and download the `api-docs.zip` artifact.
-
 - [ ] In the `mapbox-maps-ios` repo, `git checkout origin publisher-staging`. This is the branch that houses our API-Docs. Make a new branch off this one `git checkout -b Release/{version}_docs`
 - [ ] Unzip the `api-docs.zip` and move the new docs into our repo. This should result in a new top-level folder named after the version, but without the 'v' prefix.
+
+### Add framework docs
+
+* Temporary step while we are working on more docs automation
+- [ ] Find the `MapboxCoreMaps` [release](https://github.com/mapbox/mapbox-gl-native-internal/releases). Locate the version of `MapboxCoreMaps` being used in this release and download `MapboxCoreMaps-iOS-API-Reference.zip`.
+- [ ] Find the `MapboxCommon` [release](https://github.com/mapbox/mapbox-sdk-common/releases). Locate the version of `MapboxCommon` being used in this release and download `ios-api-reference.zip`.
+- [ ] unzip the docs using the following commands:
+    - MapboxCoreMaps `unzip <path>/MapboxCoreMaps-iOS-API-Reference.zip -d core`
+    - MapboxCommon `unzip <path>/ios-api-reference.zip -d common`
+- [ ] Move the unzipped directories, `core` and `common` to the root of the Maps SDK docs that you moved at an earlier step
+- [ ] Navigate to the Maps SDK docs and open `index.html` in a text editor. **NOTE: do not open index.html for `core` or `common`
+- [ ] Navigate to the end of the `ul` tag which is embedded inside of the `nav` tag. This will be end of the navigation list. Append the follow html code to the list so that we can link the common and core documentation
+
+```html
+<li class="nav-group-name" data-name="Frameworks">
+  <a class="small-heading" href="Frameworks.html">Frameworks<span class="anchor-icon" /></a>
+  <ul class="nav-group-tasks">
+    <li class="nav-group-task" data-name="MapboxCoreMaps">
+      <a title="MapboxCoreMaps" class="nav-group-task-link" href="./core/index.html">MapboxCoreMaps</a>
+    </li>
+    <li class="nav-group-task" data-name="MapboxCommon">
+      <a title="MapboxCommon" class="nav-group-task-link" href="./common/index.html">MapboxCommon</a>
+    </li>
+  </ul>
+</li>
+```
+
+### Commit and propogate doc changes
+
 - [ ] Commit and push those changes.
 - [ ] Make a pull request targeting the branch `publisher-staging`.
 - [ ] Share this with @mapbox/docs to approve.

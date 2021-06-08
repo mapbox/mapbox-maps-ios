@@ -56,5 +56,9 @@
 		<key>LocationAccuracyAuthorizationDescription</key>
 		<string>Debug App temporarily requires your precise location</string>
 	</dict>
+	<key>MMEDebugLogging</key>
+	<false/>
+	<key>MMECollectionEnabledInSimulator</key>
+	<false/>
 </dict>
 </plist>

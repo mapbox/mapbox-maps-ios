@@ -178,9 +178,6 @@ open class MapView: UIView {
             mapboxMap.setCamera(to: cameraOptions)
         }
 
-//        // Set prefetchZoomDelta
-//        mapboxMap.prefetchZoomDelta = options.prefetchZoomDelta
-
         // Setup Telemetry logging
         setUpTelemetryLogging()
 
@@ -334,6 +331,7 @@ open class MapView: UIView {
 
     @objc func didReceiveMemoryWarning() {
         mapboxMap.reduceMemoryUse()
+        eventsListener.push(event: .memoryWarning)
     }
 
     required public init?(coder: NSCoder) {
@@ -390,10 +388,12 @@ private class BaseMapViewProxy: NSObject {
 extension MapView {
     internal func setUpTelemetryLogging() {
         guard let validResourceOptions = resourceOptions else { return }
-        eventsListener = EventsManager(accessToken: validResourceOptions.accessToken)
+        let eventsListener = EventsManager(accessToken: validResourceOptions.accessToken)
 
-        mapboxMap.onNext(.mapLoaded) { [weak self] _ in
-            self?.eventsListener?.push(event: .map(event: .loaded))
+        DispatchQueue.main.async {
+            eventsListener.push(event: .map(event: .loaded))
         }
+
+        self.eventsListener = eventsListener
     }
 }

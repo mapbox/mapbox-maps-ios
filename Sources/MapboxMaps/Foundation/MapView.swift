@@ -267,7 +267,9 @@ open class MapView: UIView {
             return
         }
 
-        if needsDisplayRefresh {
+        if needsDisplayRefresh
+            || cameraAnimatorsSet.allObjects.count > 0
+            || !pendingAnimatorCompletionBlocks.isEmpty {
             needsDisplayRefresh = false
 
             for animator in cameraAnimatorsSet.allObjects {

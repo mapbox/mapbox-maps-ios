@@ -57,7 +57,7 @@
 		<string>Debug App temporarily requires your precise location</string>
 	</dict>
 	<key>MMEDebugLogging</key>
-	<true/>
+	<false/>
 	<key>MMECollectionEnabledInSimulator</key>
 	<false/>
 </dict>

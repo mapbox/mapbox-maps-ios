@@ -67,7 +67,7 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
     public func addLayers(for routeLine: LineString) {
 
         // Define the source data and style layer for the airplane's route line.
-        airplaneRoute.source.data = .feature(Feature(routeLine))
+        airplaneRoute.source.data = .feature(Feature(geometry: .lineString(routeLine)))
         var lineLayer = LineLayer(id: "line-layer")
         lineLayer.source = airplaneRoute.identifier
         lineLayer.lineColor = .constant(ColorRepresentable(color: UIColor.red))
@@ -76,7 +76,7 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
 
         // Define the source data and style layer for the airplane symbol.
         let point = Point(routeLine.coordinates[0])
-        airplaneSymbol.source.data = .feature(Feature(point))
+        airplaneSymbol.source.data = .feature(Feature(geometry: .point(point)))
         var airplaneSymbolLayer = SymbolLayer(id: "airplane")
         airplaneSymbolLayer.source = airplaneSymbol.identifier
         // "airport-15" is the name the image that belongs in the style's sprite by default.

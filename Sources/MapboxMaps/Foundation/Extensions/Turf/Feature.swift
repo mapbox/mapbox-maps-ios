@@ -2,15 +2,13 @@ import Foundation
 import MapboxCommon
 import Turf
 
-public typealias Feature = MapboxCommon.Feature
-
 // MARK: - Feature
 
 extension Turf.Feature {
 
     /// Initialize a `Turf.Feature` with an `Feature` object.
     /// - Parameter feature: The `Feature` to use to create the `Feature`.
-    internal init?(_ feature: Feature) {
+    internal init?(_ feature: MapboxCommon.Feature) {
         guard let geometry = Turf.Geometry(feature.geometry) else { return nil }
 
         self.init(geometry: geometry)
@@ -76,7 +74,7 @@ extension Turf.Feature {
     }
 }
 
-extension Feature {
+extension MapboxCommon.Feature {
     /// Initialize an `Feature` with a `Turf.Feature`
     internal convenience init?(_ feature: Turf.Feature) {
 

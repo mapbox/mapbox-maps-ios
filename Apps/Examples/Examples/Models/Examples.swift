@@ -98,6 +98,9 @@ public struct Examples {
         Example(title: "Use a map & annotations with SwiftUI",
                 description: "Use the UIViewRepresentable protocol to wrap a MapView in a SwiftUI view.",
                 type: SwiftUIExample.self),
+        Example(title: "Add multiple annotations to a map",
+                description: "",
+                type: MultiplePointAnnotationsExample.self)
     ]
 
     // Examples that focus on setting, animating, or otherwise changing the map's camera.

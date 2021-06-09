@@ -175,8 +175,8 @@ public class PolygonAnnotationManager: AnnotationManager {
         }
     }
 
-    /// The `UITapGestureRecognizer` that's listening to touch events on the map
-    private var tapRecognizer: UITapGestureRecognizer?
+    /// The `UITapGestureRecognizer` that's listening to touch events on the map for the annotations present in this manager
+    public var tapRecognizer: UITapGestureRecognizer?
 
     internal func setupTapRecognizer() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
@@ -211,6 +211,7 @@ public class PolygonAnnotationManager: AnnotationManager {
             }
         }
     }
+
 } 
 // End of generated file.
 // swiftlint:enable all

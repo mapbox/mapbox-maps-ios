@@ -12,7 +12,7 @@ public class PointAnnotationManager: AnnotationManager {
     /// The collection of PointAnnotations being managed
     public private(set) var annotations = [PointAnnotation]() {
         didSet {
-            addImageToStyleIfNeeded(style: style)
+            addImageToStyleIfNeeded()
             syncAnnotations()
          }
     }
@@ -495,8 +495,8 @@ public class PointAnnotationManager: AnnotationManager {
         }
     }
 
-    /// The `UITapGestureRecognizer` that's listening to touch events on the map
-    private var tapRecognizer: UITapGestureRecognizer?
+    /// The `UITapGestureRecognizer` that's listening to touch events on the map for the annotations present in this manager
+    public var tapRecognizer: UITapGestureRecognizer?
 
     internal func setupTapRecognizer() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
@@ -528,6 +528,23 @@ public class PointAnnotationManager: AnnotationManager {
             case .failure(let error):
                 Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)", 
                             category: "Annotations")
+            }
+        }
+    }
+
+    // MARK: - Image Convenience -
+    
+    func addImageToStyleIfNeeded() {
+        guard let style = style else { return }
+        let namedImages = annotations.compactMap(\.image)
+        for namedImage in namedImages {
+            do {
+                let image = style.image(withId: namedImage.name)
+                if image == nil {
+                    try style.addImage(namedImage.image, id: namedImage.name)
+                } 
+            } catch {
+                Log.warning(forMessage: "Could not add image to style in PointAnnotationManager", category: "Annnotations")
             }
         }
     }

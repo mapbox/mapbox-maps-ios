@@ -18,7 +18,6 @@ public struct PolygonAnnotation: Annotation {
         }
     }
 
-    public var type: AnnotationType = .polygon
 
     /// Create a polygon annotation with a `Turf.Polygon` and an optional identifier.
     public init(id: String = UUID().uuidString, polygon: Turf.Polygon) {

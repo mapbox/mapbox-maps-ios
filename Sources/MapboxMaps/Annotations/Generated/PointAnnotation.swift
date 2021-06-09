@@ -18,7 +18,6 @@ public struct PointAnnotation: Annotation {
         }
     }
 
-    public var type: AnnotationType = .point
 
     /// Create a point annotation with a `Turf.Point` and an optional identifier.
     public init(id: String = UUID().uuidString, point: Turf.Point) {
@@ -303,7 +302,18 @@ public struct PointAnnotation: Annotation {
     }
 
     // MARK: - Image Convenience -
-    public var image: Image? {
+    
+    public struct NamedImage {
+        public init(image: UIImage, name: String) {
+            self.image = image
+            self.name = name
+        }
+        
+        public let image: UIImage
+        public let name: String
+    }
+    
+    public var image: NamedImage? {
         didSet {
             self.iconImage = image?.name
         }

@@ -13,7 +13,7 @@ class MapboxScaleBarOrnamentViewTests: XCTestCase {
             scaleBar.metersPerPoint =  scaleBar.metersFromFeet(row.distance + 0.01)
 
             let numberOfBars = scaleBar.preferredRow().numberOfBars
-            XCTAssertEqual(numberOfBars, row.numberOfBars, "The number of scale bars should be equal when there are \(scaleBar.metersPerPoint) feet per point.")
+            XCTAssertEqual(numberOfBars, row.numberOfBars, "The number of scale bars should be \(row.numberOfBars) when there are \(scaleBar.metersPerPoint) feet per point.")
         }
     }
 
@@ -26,7 +26,8 @@ class MapboxScaleBarOrnamentViewTests: XCTestCase {
             let distance = (row.distance + 0.01) / Double(scaleBar.maximumWidth)
             scaleBar.metersPerPoint = distance
 
-            XCTAssertEqual(scaleBar.preferredRow().numberOfBars, row.numberOfBars, "The number of scale bars should be equal when there are \(scaleBar.unitsPerPoint) meters per point.")
+            let numberOfBars = scaleBar.preferredRow().numberOfBars
+            XCTAssertEqual(numberOfBars, row.numberOfBars, "The number of scale bars should be \(row.numberOfBars) when there are \(scaleBar.unitsPerPoint) meters per point.")
         }
     }
 }

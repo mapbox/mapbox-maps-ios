@@ -43,7 +43,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
         return labels
     }()
 
-    private var _bars: [UIView]?
+    internal var _bars: [UIView]?
     private var bars: [UIView] {
         if _bars == nil {
             var bars: [UIView] = []

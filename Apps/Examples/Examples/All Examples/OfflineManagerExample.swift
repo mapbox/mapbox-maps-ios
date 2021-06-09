@@ -228,7 +228,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         // Remove the style pack with the style uri.
         // Note this will not remove the downloaded style pack, instead, it will
         // just mark the resources as not a part of the existing style pack. The
-        // resources still exists in the ambient cache.
+        // resources still exists in the disk cache.
         offlineManager.removeStylePack(for: .outdoors)
     }
 

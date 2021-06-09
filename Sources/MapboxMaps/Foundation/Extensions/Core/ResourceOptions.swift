@@ -63,7 +63,7 @@ public struct ResourceOptions {
     ///     first checks the tile store when requesting a tile: If a tile pack is
     ///     already loaded, the tile will be extracted and returned. Otherwise,
     ///     the implementation falls back to requesting the individual tile and
-    ///     storing it in the ambient cache.
+    ///     storing it in the disk cache.
     ///
     ///     If `tileStoreUsageMode` is `.readAndUpdate`: *All* tile requests are
     ///     converted to tile pack requests, i.e. the tile pack that includes the
@@ -79,7 +79,7 @@ public struct ResourceOptions {
     ///     panning will download tile packs instead of using individual tiles.
     ///     Note that this means that we could first download an individual tile,
     ///     and then a tile pack that also includes this tile. The individual tile
-    ///     in the ambient cache won’t be used as long as the up-to-date tile pack
+    ///     in the disk cache won’t be used as long as the up-to-date tile pack
     ///     exists in the cache.
     public init(accessToken: String,
                 baseURL: URL? = nil,

@@ -6,4 +6,20 @@ public protocol Cancelable: AnyObject {
     func cancel()
 }
 
-extension MapboxCommon.Cancelable: Cancelable {}
+internal final class CommonCancelableWrapper: Cancelable {
+    private let cancelable: MapboxCommon.Cancelable
+
+    internal init(_ cancelable: MapboxCommon.Cancelable) {
+        self.cancelable = cancelable
+    }
+
+    internal func cancel() {
+        cancelable.cancel()
+    }
+}
+
+extension MapboxCommon.Cancelable {
+    internal func asCancelable() -> Cancelable {
+        return CommonCancelableWrapper(self)
+    }
+}

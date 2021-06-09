@@ -11,7 +11,7 @@ extension Turf.Geometry {
 
     /// Allows a Turf object to be initialized with an internal `Geometry` object.
     /// - Parameter geometry: The `Geometry` object to transform.
-    public init?(_ geometry: Geometry) {
+    internal init?(_ geometry: Geometry) {
         switch geometry.geometryType {
         case GeometryType_Point:
             guard let coordinate = geometry.extractLocations()?.coordinateValue() else {

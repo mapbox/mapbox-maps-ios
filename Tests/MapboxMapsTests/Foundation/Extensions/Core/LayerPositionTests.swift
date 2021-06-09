@@ -25,22 +25,4 @@ final class LayerPositionTests: XCTestCase {
         XCTAssertNotEqual(e, f)
         XCTAssertNotEqual(g, h)
     }
-
-    func testCoreMapsPositionEquality() {
-        let a = MapboxCoreMaps.LayerPosition(above: nil, below: nil, at: nil)
-        let b = MapboxCoreMaps.LayerPosition(above: nil, below: nil, at: nil)
-        let c = MapboxCoreMaps.LayerPosition(above: "above", below: nil, at: nil)
-        let d = MapboxCoreMaps.LayerPosition(above: "above", below: "below", at: nil)
-        let e = MapboxCoreMaps.LayerPosition(above: "above", below: "below", at: 3)
-        let f = MapboxCoreMaps.LayerPosition(above: "above", below: "below", at: 3)
-
-        XCTAssertEqual(a, b)
-        XCTAssertEqual(e, f)
-
-        XCTAssertNotEqual(a, c)
-        XCTAssertNotEqual(c, d)
-        XCTAssertNotEqual(d, e)
-
-        XCTAssertEqual(f.at, 3)
-    }
 }

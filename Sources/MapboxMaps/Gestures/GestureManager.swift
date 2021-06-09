@@ -19,6 +19,80 @@ public final class GestureManager: NSObject {
     /// Map of GestureType --> GestureHandler. We mantain a map to allow us to remove gestures arbitrarily.
     private(set) var gestureHandlers: [GestureType: GestureHandler] = [:]
 
+    /// The underlying gesture recognizer for the pan gesture
+    public var panGestureRecognizer: UIPanGestureRecognizer? {
+        if let handler = gestureHandlers[.pan],
+           let recognizer = handler.gestureRecognizer as? UIPanGestureRecognizer {
+            return recognizer
+        }
+
+        return nil
+    }
+
+    /// The underlying gesture recognizer for the "double tap to zoom in" gesture
+    public var doubleTapToZoomInGestureRecognizer: UITapGestureRecognizer? {
+        if let handler = gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 1)],
+           let recognizer = handler.gestureRecognizer as? UITapGestureRecognizer {
+            return recognizer
+        }
+
+        return nil
+    }
+
+    /// The underlying gesture recognizer for the "double tap to zoom out" gesture
+    public var doubleTapToZoomOutGestureRecognizer: UITapGestureRecognizer? {
+        if let handler = gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 2)],
+           let recognizer = handler.gestureRecognizer as? UITapGestureRecognizer {
+            return recognizer
+        }
+
+        return nil
+    }
+
+    /// The underlying gesture recognizer for the quickZoom gesture
+    public var quickZoomGestureRecognizer: UILongPressGestureRecognizer? {
+
+        if let handler = gestureHandlers[.quickZoom],
+           let recognizer = handler.gestureRecognizer as? UILongPressGestureRecognizer {
+            return recognizer
+        }
+
+        return nil
+    }
+
+    /// The underlying gesture recognizer for the pitch gesture
+    public var pitchGestureRecognizer: UIPanGestureRecognizer? {
+
+        if let handler = gestureHandlers[.pitch],
+           let recognizer = handler.gestureRecognizer as? UIPanGestureRecognizer {
+            return recognizer
+        }
+
+        return nil
+    }
+
+    /// The underlying gesture recognizer for the rotate gesture
+    public var rotationGestureRecognizer: UIRotationGestureRecognizer? {
+
+        if let handler = gestureHandlers[.rotate],
+           let recognizer = handler.gestureRecognizer as? UIRotationGestureRecognizer {
+            return recognizer
+        }
+
+        return nil
+    }
+
+    /// The underlying gesture recognizer for the "pinch to zoom" gesture
+    public var pinchGestureRecognizer: UIPinchGestureRecognizer? {
+
+        if let handler = gestureHandlers[.pinch],
+           let recognizer = handler.gestureRecognizer as? UIPinchGestureRecognizer {
+            return recognizer
+        }
+
+        return nil
+    }
+
     /// The view that all gestures operate on
     private weak var view: UIView?
 

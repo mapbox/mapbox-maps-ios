@@ -303,17 +303,7 @@ public struct PointAnnotation: Annotation {
 
     // MARK: - Image Convenience -
     
-    public struct NamedImage {
-        public init(image: UIImage, name: String) {
-            self.image = image
-            self.name = name
-        }
-        
-        public let image: UIImage
-        public let name: String
-    }
-    
-    public var image: NamedImage? {
+    public var image: Image? {
         didSet {
             self.iconImage = image?.name
         }

@@ -5,7 +5,9 @@ import Turf
 
 // MARK: - Geometry
 
-extension MapboxCommon.Geometry {
+public typealias Geometry = MapboxCommon.Geometry
+
+extension Geometry {
 
     /// Initialize a `Geometry` point from a coordinate.
     /// - Parameter coordinate: The coordinate to represent the `Geometry` point.

@@ -1,28 +1,24 @@
 import XCTest
 @testable import MapboxMaps
 
-class MapboxScaleBarOrnamentViewTests: MapViewIntegrationTestCase {
-    
+class MapboxScaleBarOrnamentViewTests: XCTestCase {
+
     func testImperialScaleBar() throws {
         let scaleBar = MockMapboxScaleBarOrnamentView()
-        
+        scaleBar._isMetricLocale = false
         let rows = MapboxScaleBarOrnamentView.Constants.imperialTable
+
         for row in rows {
             // Add 0.01 so that the converted distance is slightly greater than the distance we are comparing.
             scaleBar.metersPerPoint =  scaleBar.metersFromFeet(row.distance + 0.01)
-            
-            XCTAssertEqual(scaleBar.preferredRow().numberOfBars, row.numberOfBars, "The number of scale bars should be equal when the value for metersPerPoint is \(scaleBar.metersPerPoint). distance \(row.distance / Double(scaleBar.maximumWidth))")
 
-            let visibleBars = scaleBar._bars?.filter { $0.isHidden == false }
-            let visibleLabels = scaleBar.labelViews.filter { $0.isHidden == false }
-            
-            XCTAssertEqual(visibleLabels.count, Int(scaleBar.preferredRow().numberOfBars) + 1)
-            }
+            let numberOfBars = scaleBar.preferredRow().numberOfBars
+            XCTAssertEqual(numberOfBars, row.numberOfBars, "The number of scale bars should be equal when there are \(scaleBar.metersPerPoint) feet per point.")
+        }
     }
 
     func testMetricScaleBar() throws {
         let scaleBar = MockMapboxScaleBarOrnamentView()
-        scaleBar._isMetricLocale = false
 
         let rows = MapboxScaleBarOrnamentView.Constants.metricTable
         for row in rows {
@@ -30,7 +26,7 @@ class MapboxScaleBarOrnamentViewTests: MapViewIntegrationTestCase {
             let distance = (row.distance + 0.01) / Double(scaleBar.maximumWidth)
             scaleBar.metersPerPoint = distance
 
-            XCTAssertEqual(scaleBar.preferredRow().numberOfBars, row.numberOfBars, "The number of scale bars should be equal when the value for metersPerPoint is \(scaleBar.metersPerPoint)")
+            XCTAssertEqual(scaleBar.preferredRow().numberOfBars, row.numberOfBars, "The number of scale bars should be equal when there are \(scaleBar.unitsPerPoint) meters per point.")
         }
     }
 }

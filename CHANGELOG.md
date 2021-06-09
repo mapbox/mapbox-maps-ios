@@ -16,7 +16,6 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Features ✨ and improvements 🏁
 - Allows a developer to choose whether the puck is oriented based on `heading` or `course` via a new `puckBearingSource` option in `mapView.location.options`. By default, the puck will be oriented using `heading`. ([#428](https://github.com/mapbox/mapbox-maps-ios/pull/428))
-- Introduced `OfflineRegionManager.setOfflineMapboxTileCountLimit()` method. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
 
 ### Bug fixes 🐞
 

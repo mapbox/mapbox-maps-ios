@@ -2,7 +2,7 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## main
+## 10.0.0-rc.1 - June 9, 2021
 
 ### Breaking changes ⚠️
 
@@ -12,7 +12,7 @@ Mapbox welcomes participation and contributions from everyone.
   - Changed `ResourceOptions.cachePathURL` to `dataPathURL` and removed `cacheSize`.
 
 ### Features ✨ and improvements 🏁
-- Fixed an issue where location updates were only happening via `heading: CLHeading`. You may now specify `mapView.location.options.puckBearingSource = .course` so that location puck will update based on `course: CLDirection`. Note that this value will use `heading: CLHeading` by default. ([#428](https://github.com/mapbox/mapbox-maps-ios/pull/428))
+- Allows a developer to choose whether the puck is oriented based on `heading` or `course` via a new `puckBearingSource` option in `mapView.location.options`. By default, the puck will be oriented using `heading`. ([#428](https://github.com/mapbox/mapbox-maps-ios/pull/428))
 
 ## 10.0.0-beta.21 - June 3, 2021
 

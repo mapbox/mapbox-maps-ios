@@ -146,39 +146,4 @@ final class CameraStateTests: XCTestCase {
                 pitch: Double(pitch + 1)))
         XCTAssertNotEqual(cameraState, other)
     }
-
-    func testEquatabilityOfObjcCameraState() {
-
-        var cameraStateObjc = MapboxCoreMaps.CameraState(
-            center: center,
-            padding: padding,
-            zoom: Double(zoom),
-            bearing: bearing,
-            pitch: Double(pitch))
-
-        var otherCameraStateObjc = MapboxCoreMaps.CameraState(
-            center: center,
-            padding: padding,
-            zoom: Double(zoom),
-            bearing: bearing,
-            pitch: Double(pitch))
-
-        XCTAssertEqual(cameraStateObjc, otherCameraStateObjc)
-
-        cameraStateObjc = MapboxCoreMaps.CameraState(
-            center: center,
-            padding: padding,
-            zoom: Double(zoom),
-            bearing: bearing,
-            pitch: Double(pitch))
-
-        otherCameraStateObjc = MapboxCoreMaps.CameraState(
-            center: center,
-            padding: padding,
-            zoom: Double(zoom + 1),
-            bearing: bearing,
-            pitch: Double(pitch))
-
-        XCTAssertNotEqual(cameraStateObjc, otherCameraStateObjc)
-    }
 }

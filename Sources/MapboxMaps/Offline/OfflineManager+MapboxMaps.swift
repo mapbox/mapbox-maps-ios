@@ -50,13 +50,13 @@ extension MapboxCoreMaps.OfflineManager {
             return __loadStylePack(forStyleURI: styleURI.rawValue,
                                    loadOptions: loadOptions,
                                    onProgress: progress,
-                                   onFinished: offlineManagerClosureAdapter(for: completion, type: StylePack.self))
+                                   onFinished: offlineManagerClosureAdapter(for: completion, type: StylePack.self)).asCancelable()
         }
         // An overloaded version that does not report progess of the loading operation.
         else {
             return __loadStylePack(forStyleURI: styleURI.rawValue,
                                    loadOptions: loadOptions,
-                                   onFinished: offlineManagerClosureAdapter(for: completion, type: StylePack.self))
+                                   onFinished: offlineManagerClosureAdapter(for: completion, type: StylePack.self)).asCancelable()
         }
     }
 

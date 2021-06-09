@@ -5,13 +5,11 @@ import MapboxCommon
 
 // MARK: - Geometry
 
-public typealias Geometry = MapboxCommon.Geometry
-
 extension Turf.Geometry {
 
     /// Allows a Turf object to be initialized with an internal `Geometry` object.
     /// - Parameter geometry: The `Geometry` object to transform.
-    public init?(_ geometry: Geometry) {
+    internal init?(_ geometry: MapboxCommon.Geometry) {
         switch geometry.geometryType {
         case GeometryType_Point:
             guard let coordinate = geometry.extractLocations()?.coordinateValue() else {

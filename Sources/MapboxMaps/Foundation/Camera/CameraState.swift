@@ -38,21 +38,3 @@ public struct CameraState: Hashable {
         hasher.combine(pitch)
     }
 }
-
-extension MapboxCoreMaps.CameraState {
-
-    open override func isEqual(_ object: Any?) -> Bool {
-
-        guard let other = object as? MapboxCoreMaps.CameraState else {
-            return false
-        }
-
-        return
-            center == other.center &&
-            padding.toUIEdgeInsetsValue() == other.padding.toUIEdgeInsetsValue() &&
-            zoom == other.zoom &&
-            pitch == other.pitch &&
-            bearing == other.bearing
-    }
-
-}

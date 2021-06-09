@@ -1,9 +1,9 @@
 import XCTest
 @testable import MapboxMaps
 
-class MapboxScaleBarOrnamentViewTests: XCTestCase {
+class MapboxScaleBarOrnamentViewTests: MapViewIntegrationTestCase {
 
-    func testImperialScaleBar() throws {
+    func testImperialScaleBar() {
         let scaleBar = MockMapboxScaleBarOrnamentView()
         scaleBar._isMetricLocale = false
         let rows = MapboxScaleBarOrnamentView.Constants.imperialTable
@@ -17,7 +17,7 @@ class MapboxScaleBarOrnamentViewTests: XCTestCase {
         }
     }
 
-    func testMetricScaleBar() throws {
+    func testMetricScaleBar() {
         let scaleBar = MockMapboxScaleBarOrnamentView()
 
         let rows = MapboxScaleBarOrnamentView.Constants.metricTable
@@ -28,6 +28,27 @@ class MapboxScaleBarOrnamentViewTests: XCTestCase {
 
             let numberOfBars = scaleBar.preferredRow().numberOfBars
             XCTAssertEqual(numberOfBars, row.numberOfBars, "The number of scale bars should be \(row.numberOfBars) when there are \(scaleBar.unitsPerPoint) meters per point.")
+        }
+    }
+
+// Fails 1 time XCTAssertEqual failed: ("3") is not equal to ("2") - 2 should be visible at 10830.76928205128.
+    func testVisibleBars() throws {
+        let mapView = try XCTUnwrap(self.mapView, "Map view could not be found")
+
+        let initialSubviews = mapView.subviews.filter { $0 is MapboxScaleBarOrnamentView }
+
+        let scaleBar = try XCTUnwrap(initialSubviews.first as? MapboxScaleBarOrnamentView, "The MapView should include a scale bar as a subview")
+
+        let rows = MapboxScaleBarOrnamentView.Constants.imperialTable
+        for row in rows {
+            if !scaleBar.staticContainerView.isHidden {
+                scaleBar.metersPerPoint =  scaleBar.metersFromFeet(row.distance + 0.01)
+                scaleBar.layoutSubviews()
+
+                let numberOfBars = scaleBar.preferredRow().numberOfBars
+                let visibleBars = scaleBar.bars.filter{ $0.isHidden == false }
+                XCTAssertEqual(visibleBars.count, Int(numberOfBars), "\(numberOfBars) should be visible at \(scaleBar.unitsPerPoint).")
+            }
         }
     }
 }
@@ -42,7 +63,9 @@ final class MockMapboxScaleBarOrnamentView: MapboxScaleBarOrnamentView {
     override var isMetricLocale: Bool {
         return _isMetricLocale
     }
-    
+}
+
+fileprivate extension MapboxScaleBarOrnamentView {
     // Reverses the conversions we do to get the distance in feet for the scale bar.
     func metersFromFeet(_ distance: Double) -> Double {
         let dividedByWidth = distance / Double(maximumWidth)

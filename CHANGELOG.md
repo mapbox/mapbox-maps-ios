@@ -2,6 +2,8 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
 ## 10.0.0-rc.1 - June 9, 2021
 
 ### Breaking changes ⚠️
@@ -10,6 +12,10 @@ Mapbox welcomes participation and contributions from everyone.
 - Updated MapboxCoreMaps, MapboxCommon and Turf dependencies. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
   - Removed `CacheManager`.
   - Changed `ResourceOptions.cachePathURL` to `dataPathURL` and removed `cacheSize`.
+
+### Bug fixes 🐞
+
+- Fixed a bug where animations were not always honored. ([#443](https://github.com/mapbox/mapbox-maps-ios/pull/443))
 
 ### Features ✨ and improvements 🏁
 - Allows a developer to choose whether the puck is oriented based on `heading` or `course` via a new `puckBearingSource` option in `mapView.location.options`. By default, the puck will be oriented using `heading`. ([#428](https://github.com/mapbox/mapbox-maps-ios/pull/428))

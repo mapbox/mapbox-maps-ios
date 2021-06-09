@@ -37,7 +37,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssert(gestureManager.gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 2)] is TapGestureHandler)
         XCTAssert(gestureManager.gestureHandlers[.pan] is PanGestureHandler)
     }
-    
+
     func testGestureRecognizersReturnedAreSameAsRecognizersPresentInGestureHandlers() {
         XCTAssertTrue(gestureManager.gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 1)]?.gestureRecognizer === gestureManager.doubleTapToZoomInGestureRecognizer)
         XCTAssertTrue(gestureManager.gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 2)]?.gestureRecognizer === gestureManager.doubleTapToZoomOutGestureRecognizer)

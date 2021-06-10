@@ -183,10 +183,11 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         //-->
         let restrictedBounds = CoordinateBounds(southwest: CLLocationCoordinate2D(latitude: 10, longitude: 10),
                                                 northeast: CLLocationCoordinate2D(latitude: 11, longitude: 11))
+        let cameraBoundsOptions = CameraBoundsOptions(bounds: restrictedBounds)
 
         // Configure map to show a scale bar
         mapView.ornaments.options.scaleBar.visibility = .visible
-        mapView.camera.options = CameraBoundsOptions(bounds: restrictedBounds)
+        try mapView.mapboxMap.setCameraBounds(for: cameraBoundsOptions)
         //<--
     }
 

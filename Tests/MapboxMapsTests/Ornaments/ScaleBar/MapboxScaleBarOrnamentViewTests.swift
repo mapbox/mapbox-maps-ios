@@ -31,20 +31,18 @@ class MapboxScaleBarOrnamentViewTests: MapViewIntegrationTestCase {
         }
     }
 
-// Fails 1 time XCTAssertEqual failed: ("3") is not equal to ("2") - 2 should be visible at 10830.76928205128.
     func testImperialVisibleBars() throws {
-
         let mapView = try XCTUnwrap(self.mapView, "Map view could not be found")
         mapView.ornaments.options.scaleBar.visibility = .visible
         let initialSubviews = mapView.subviews.filter { $0 is MapboxScaleBarOrnamentView }
 
-        
         let scaleBar = try XCTUnwrap(initialSubviews.first as? MapboxScaleBarOrnamentView, "The MapView should include a scale bar as a subview")
         try XCTSkipIf(scaleBar.isMetricLocale, "This test is configured for a scale bar using imperial measurements.")
 
         let rows = MapboxScaleBarOrnamentView.Constants.imperialTable
 
-        for row in rows {
+        // The scale bar is no longer visible at 2112000.
+        for row in rows where row.distance < 2112000.0 {
             scaleBar.metersPerPoint =  scaleBar.metersFromFeet(row.distance + 0.01)
             scaleBar.layoutSubviews()
 
@@ -59,9 +57,9 @@ final class MockMapboxScaleBarOrnamentView: MapboxScaleBarOrnamentView {
     override var maximumWidth: CGFloat {
         return 200
     }
-    
+
     internal var _isMetricLocale: Bool = true
-    
+
     override var isMetricLocale: Bool {
         return _isMetricLocale
     }

@@ -4,16 +4,33 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 10.0.0-rc.1 - June 9, 2021
+
+**The Mapbox Maps SDK for iOS has moved to release candidate status and is now ready for production use.**
+
 ### Breaking changes ⚠️
 
 - Converted `MapSnapshotOptions` to a struct. ([#430](https://github.com/mapbox/mapbox-maps-ios/pull/430))
-- Updated MapboxCoreMaps, MapboxCommon and Turf dependencies. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
-  - Removed `CacheManager`.
-  - Changed `ResourceOptions.cachePathURL` to `dataPathURL` and removed `cacheSize`.
+- Removed `CacheManager`. In the following releases, an API to control temporary map data may be provided. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
+- Changed `ResourceOptions.cachePathURL` to `dataPathURL` and removed `cacheSize`. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
+- Annotations don't have a `type` property since they can be directly compared to a type. ([451](https://github.com/mapbox/mapbox-maps-ios/pull/451))
 - Internalize extensions of Core and Common types. ([#449](https://github.com/mapbox/mapbox-maps-ios/pull/449))
 
 ### Features ✨ and improvements 🏁
-- Fixed an issue where location updates were only happening via `heading: CLHeading`. You may now specify `mapView.location.options.puckBearingSource = .course` so that location puck will update based on `course: CLDirection`. Note that this value will use `heading: CLHeading` by default. ([#428](https://github.com/mapbox/mapbox-maps-ios/pull/428))
+- Allows a developer to choose whether the puck is oriented based on `heading` or `course` via a new `puckBearingSource` option in `mapView.location.options`. By default, the puck will be oriented using `heading`. ([#428](https://github.com/mapbox/mapbox-maps-ios/pull/428))
+- All stock gesture recognizers are now public on the `GestureManager`. ([450](https://github.com/mapbox/mapbox-maps-ios/pull/450))
+- The tap gesture recognizer controlled by any given annotation manager is now public. ([451](https://github.com/mapbox/mapbox-maps-ios/pull/451))
+
+### Bug fixes 🐞
+
+- Fixed a bug where animations were not always honored. ([#443](https://github.com/mapbox/mapbox-maps-ios/pull/443))
+- Fixed an issue that vertical text was not positioned correctly if the `text-offset` property was used. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
+- Emit `.mapLoadingError` when an empty token is provided for accessing Mapbox data sources. Before the fix, the application may crash if an empty token was provided and map tries to load data from Mapbox data source. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
+- Do not emit `.mapLoadingError` when an empty URL is set to GeoJSON source. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
+
+### Dependencies
+
+- Updated MapboxCoreMaps, MapboxCommon and Turf dependencies. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
 
 ## 10.0.0-beta.21 - June 3, 2021
 

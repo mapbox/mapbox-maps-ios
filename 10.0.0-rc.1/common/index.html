@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MapboxCommon  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    <link rel='shortcut icon' href='https://www.mapbox.com/img/favicon.ico' type='image/x-icon' />
+
+    <style type="text/css">
+      .nav-group-name[data-name="MapboxCommon"] > .small-heading,
+      .nav-group-task[data-name="MapboxCommon"] {
+        background-color: #f5f8fc;
+        font-family: "Open Sans Bold";
+        border-left: 3px solid #3a68d8;
+        padding-left: 5px
+      }
+    </style>
+  </head>
+  <body>
+
+
+    <a title="MapboxCommon  Reference"></a>
+
+    <header class="header-container">
+      <div class="limiter">
+        <div class="header">
+        <p class="header-col header-col--primary">
+          <a class="header-link" href="index.html">
+            <img style="height: 25px;"  class="header-icon" src="img/mapbox.svg" alt="MapboxCommon Docs"/>
+            <span class='header-tag'>SDK Common Library for iOS Reference (14.0.1)</span>
+          </a>
+          
+        </p>
+    
+    
+      </div>
+      </div>
+    </header>
+
+    <div class="breadcrumbs">
+      <div class="limiter">
+        <a class="breadcrumb" href="index.html">MapboxCommon Reference</a>
+        <img class="carat" src="img/carat.png" />
+        MapboxCommon  Reference
+      </div>
+    </div>
+
+    <div class="content-wrapper limiter">
+      <nav class="navigation">
+        <ul class="nav-groups">
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            
+            <h1 id='common-sdk' class='heading'>Common SDK</h1>
+
+<p><a href="https://codecov.io/gh/mapbox/mapbox-sdk-common"><img src="https://codecov.io/gh/mapbox/mapbox-sdk-common/branch/main/graph/badge.svg?token=fvuioJ8Qwv" alt="codecov"></a></p>
+
+<p>Library maintainer: @mapbox/core-sdk</p>
+<h2 id='description' class='heading'>Description</h2>
+
+<p>This library provides native and platform-specific common functionality among all Mapbox SDKs via <a href="https://github.com/mapbox/mapbox-bindgen/">Mapbox Bindgen</a> IDL files. These files are individual per service. We use Bindgen in order to generate bindings for all supported platforms: Linux, Android, and iOS.</p>
+
+<p>The following APIs are available:</p>
+
+<ul>
+<li><a href="bindings/accounts.mbg">Accounts API</a></li>
+<li><a href="bindings/accounts.mbg">Billing Service API</a></li>
+<li><a href="bindings/telemetry/configuration_service.mbg">Configuration Service API</a></li>
+<li><a href="bindings/events_service.mbg">Events Service API</a></li>
+<li><a href="bindings/http.mbg">HTTP Service API</a></li>
+<li><a href="bindings/location.mbg">Location Service API</a></li>
+<li><a href="bindings/logging.mbg">Logging API</a></li>
+<li><a href="bindings/network_connectivity.mbg">Network Connectivity API</a></li>
+<li><a href="bindings/reachability.mbg">Reachability API</a></li>
+<li><a href="bindings/system_information.mbg">System Information API</a></li>
+<li><a href="bindings/tile_store.mbg">Tile Store API</a></li>
+<li><a href="bindings/value.mbg">Value API</a></li>
+<li><a href="bindings/version.mbg">Version API</a></li>
+</ul>
+
+<p>Another goal of the Common SDK is to harmonize data types we use across SDKs. In order to do that, the common library provides:</p>
+
+<ul>
+<li>Shared data types (enforced via bindgen primitive types)</li>
+<li>Pinned versions of <a href="vendor/mapbox-base">Mapbox Base</a> and <a href="vendor/mapbox-bindgen">Mapbox Bindgen</a></li>
+</ul>
+<h2 id='examples' class='heading'>Examples</h2>
+
+<p>Examples are available under <a href="examples">examples folder</a>.</p>
+<h2 id='getting-started' class='heading'>Getting Started</h2>
+
+<p>C++ SDK developers can integrate with the Common SDK by including it as a <code>git submodule</code> to allow building from source and to get debugging capabilities.</p>
+
+<p>Developers can choose to link statically or dynamically but they should bear in mind that linking statically is only intended for enterprise customers, internal customers (e.g. SDK devs) should link dynamically.</p>
+
+<p>When SDK developers ship their products, they should <em>not</em> merge the Common SDK into their product. Doing this would at best only increase the binary size of the SDK but it also runs the risk of introducing clashing symbols. Instead, Common SDK is distributed separately so e.g Navigation and Maps can link with the same library. As mentioned, we strongly recommend linking against the Common SDK dynamically when building your SDKs for distribution. See <a href="DEVELOPMENT.md#Release">DEVELOPMENT#Release</a> for more information.</p>
+<h3 id='development' class='heading'>Development</h3>
+
+<p>For development please see our <a href="DEVELOPMENT.md">Developer documentation</a>.</p>
+<h2 id='metrics' class='heading'>Metrics</h2>
+
+<p>For more information on metrics collection, storage and visualisation, please see <a href="METRICS.md">METRICS</a>.</p>
+
+<ul>
+<li><a href="https://github.com/mapbox/mobile-metrics/wiki/How-to-send-metrics-to-Mode-through-CircleCI">How to send metrics to S3 through CircleCI</a></li>
+</ul>
+
+          </div>
+        </section>
+
+
+      </article>
+    </div>
+    <section class="footer limiter">
+      <p>&copy; 2021 <a class="link" href="" target="_blank" rel="external">Mapbox</a>. All rights reserved. (Last updated: 2021-06-02)</p> Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.7</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.
+    </section>
+  </body>
+</div>
+</html>

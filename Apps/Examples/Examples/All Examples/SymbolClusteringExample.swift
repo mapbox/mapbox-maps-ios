@@ -21,6 +21,7 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
     }
 
     func addSymbolClusteringLayer() {
+        let style = self.mapView.mapboxMap.style
         guard let url = Bundle.main.url(forResource: "Fire-Hydrants", withExtension: "geojson") else {
             return
         }
@@ -29,10 +30,34 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
         source.data = .url(url)
         
         source.cluster = true
-        source.clusterRadius
+        source.clusterRadius = 50
         let sourceID = "fire-hydrant-source"
         
+        var clusteredLayer = createClusteredLayer()
+        clusteredLayer.source = sourceID
         
+        try! style.addSource(source, id: sourceID)
+        try! style.addLayer(clusteredLayer)
+        
+    }
+
+    func createClusteredLayer() -> CircleLayer {
+        var clusteredLayer = CircleLayer(id: "clustered-fire-hydrant-layer")
+        clusteredLayer.filter = Exp(.has) { "point_count" }
+        
+        clusteredLayer.circleColor = .expression(Exp(.step) {
+            Exp(.get) { "point_count" }
+            UIColor.green
+            0
+            UIColor.blue
+            50
+            UIColor.red
+            100
+        })
+        return clusteredLayer
+    }
+    
+    func createUnclusteredLayer() {
     }
 
     override public func viewDidAppear(_ animated: Bool) {

@@ -18,7 +18,6 @@ public struct PolylineAnnotation: Annotation {
         }
     }
 
-    public var type: AnnotationType = .polyline
 
     /// Create a polyline annotation with a `Turf.Polyline` and an optional identifier.
     public init(id: String = UUID().uuidString, line: Turf.LineString) {

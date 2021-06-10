@@ -107,23 +107,6 @@ class HTTPIntegrationTests: MapViewIntegrationTestCase {
         HttpServiceFactory.setUserDefinedForCustom(customHTTPService)
     }
 
-    override func setUpWithError() throws {
-        try super.setUpWithError()
-
-        let expectation = self.expectation(description: "Clear ambient cache")
-        let cacheManager = CacheManager(options: ResourceOptionsManager.default.resourceOptions)
-        cacheManager.clearAmbientCache { result in
-            switch result {
-            case let .failure(error):
-                XCTFail("Should have a valid result: \(error)")
-            case .success:
-                expectation.fulfill()
-            }
-        }
-
-        wait(for: [expectation], timeout: 5.0)
-    }
-
     func testReplacingHTTPService() throws {
         let mapView = try XCTUnwrap(self.mapView)
 

@@ -33,23 +33,12 @@ public enum LayerPosition: Equatable {
 
 extension MapboxCoreMaps.LayerPosition {
 
-    public convenience init(above: String? = nil, below: String? = nil, at: Int? = nil) {
+    internal convenience init(above: String? = nil, below: String? = nil, at: Int? = nil) {
         self.init(__above: above, below: below, at: at?.NSNumber)
     }
 
     /// Layer should be positioned at a specified index in the layers stack
-    public var at: UInt32? {
+    internal var at: UInt32? {
         return __at?.uint32Value
-    }
-
-    public override func isEqual(_ object: Any?) -> Bool {
-        guard let object = object as? MapboxCoreMaps.LayerPosition else {
-            return false
-        }
-
-        return
-            (above == object.above) &&
-            (below == object.below) &&
-            (at == object.at)
     }
 }

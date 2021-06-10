@@ -14,6 +14,7 @@ Mapbox welcomes participation and contributions from everyone.
 - Removed `CacheManager`. In the following releases, an API to control temporary map data may be provided. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
 - Changed `ResourceOptions.cachePathURL` to `dataPathURL` and removed `cacheSize`. ([#440](https://github.com/mapbox/mapbox-maps-ios/pull/440))
 - Annotations don't have a `type` property since they can be directly compared to a type. ([451](https://github.com/mapbox/mapbox-maps-ios/pull/451))
+- Internalize extensions of Core and Common types. ([#449](https://github.com/mapbox/mapbox-maps-ios/pull/449))
 
 ### Features ✨ and improvements 🏁
 - Allows a developer to choose whether the puck is oriented based on `heading` or `course` via a new `puckBearingSource` option in `mapView.location.options`. By default, the puck will be oriented using `heading`. ([#428](https://github.com/mapbox/mapbox-maps-ios/pull/428))

@@ -99,7 +99,7 @@ public struct Examples {
                 description: "Use the UIViewRepresentable protocol to wrap a MapView in a SwiftUI view.",
                 type: SwiftUIExample.self),
         Example(title: "Add multiple annotations to a map",
-                description: "",
+                description: "Add default and custom annotations to a map.",
                 type: MultiplePointAnnotationsExample.self)
     ]
 

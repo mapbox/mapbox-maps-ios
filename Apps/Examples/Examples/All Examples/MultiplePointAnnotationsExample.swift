@@ -30,7 +30,6 @@ public class MultiplePointAnnotationsExample: UIViewController, ExampleProtocol 
     }
     
     func addAnnotations() {
-
         // Create the first annotation. It will use the default red marker.
         let coordinate = CLLocationCoordinate2D(latitude: 28.549545, longitude: 77.220154)
         var pointAnnotation1 = PointAnnotation(id: "first-annotation", coordinate: coordinate)

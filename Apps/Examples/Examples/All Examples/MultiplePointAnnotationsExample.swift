@@ -38,9 +38,8 @@ public class MultiplePointAnnotationsExample: UIViewController, ExampleProtocol 
         // Create the second annotation. It will use a custom image from the app's assets.
         let coordinate2 = CLLocationCoordinate2D(latitude: 19.0582239, longitude: 72.880554)
         var pointAnnotation2 = PointAnnotation(id: "second-annotation", coordinate: coordinate2)
-        pointAnnotation2.iconSize = 0.5
 
-        if let image = UIImage(named: "star") {
+        if let image = UIImage(named: "custom_marker") {
             pointAnnotation2.image = .custom(image: image, name: "custom-marker")
         }
 

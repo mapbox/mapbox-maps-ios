@@ -28,7 +28,7 @@ public class MultiplePointAnnotationsExample: UIViewController, ExampleProtocol 
             self.addAnnotations()
         }
     }
-    
+
     func addAnnotations() {
         // Create the first annotation. It will use the default red marker.
         let coordinate = CLLocationCoordinate2D(latitude: 28.549545, longitude: 77.220154)
@@ -45,7 +45,7 @@ public class MultiplePointAnnotationsExample: UIViewController, ExampleProtocol 
 
         // Initialize the map's point annotation manager.
         pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
-        
+
         // Pass the point annotations into the annotation manager.
         // This will add them to the map.
         pointAnnotationManager.syncAnnotations([pointAnnotation2, pointAnnotation1])

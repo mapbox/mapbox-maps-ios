@@ -19,6 +19,41 @@ public final class GestureManager: NSObject {
     /// Map of GestureType --> GestureHandler. We mantain a map to allow us to remove gestures arbitrarily.
     private(set) var gestureHandlers: [GestureType: GestureHandler] = [:]
 
+    /// The underlying gesture recognizer for the pan gesture
+    public var panGestureRecognizer: UIGestureRecognizer? {
+        return gestureHandlers[.pan]?.gestureRecognizer
+    }
+
+    /// The underlying gesture recognizer for the "double tap to zoom in" gesture
+    public var doubleTapToZoomInGestureRecognizer: UIGestureRecognizer? {
+        return gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 1)]?.gestureRecognizer
+    }
+
+    /// The underlying gesture recognizer for the "double tap to zoom out" gesture
+    public var doubleTapToZoomOutGestureRecognizer: UIGestureRecognizer? {
+        return gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 2)]?.gestureRecognizer
+    }
+
+    /// The underlying gesture recognizer for the quickZoom gesture
+    public var quickZoomGestureRecognizer: UIGestureRecognizer? {
+        return gestureHandlers[.quickZoom]?.gestureRecognizer
+    }
+
+    /// The underlying gesture recognizer for the pitch gesture
+    public var pitchGestureRecognizer: UIGestureRecognizer? {
+        return gestureHandlers[.pitch]?.gestureRecognizer
+    }
+
+    /// The underlying gesture recognizer for the rotate gesture
+    public var rotationGestureRecognizer: UIGestureRecognizer? {
+        return gestureHandlers[.rotate]?.gestureRecognizer
+    }
+
+    /// The underlying gesture recognizer for the "pinch to zoom" gesture
+    public var pinchGestureRecognizer: UIGestureRecognizer? {
+        return gestureHandlers[.pinch]?.gestureRecognizer
+    }
+
     /// The view that all gestures operate on
     private weak var view: UIView?
 

@@ -18,7 +18,6 @@ public struct CircleAnnotation: Annotation {
         }
     }
 
-    public var type: AnnotationType = .circle
 
     /// Create a circle annotation with a `Turf.Point` and an optional identifier.
     public init(id: String = UUID().uuidString, point: Turf.Point) {

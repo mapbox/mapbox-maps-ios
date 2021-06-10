@@ -2,13 +2,6 @@ import UIKit
 import Turf
 @_implementationOnly import MapboxCommon_Private
 
-public enum AnnotationType {
-    case point
-    case polyline
-    case polygon
-    case circle
-}
-
 public protocol Annotation {
 
     /// The unique identifier of the annotation.
@@ -16,9 +9,6 @@ public protocol Annotation {
 
     /// The feature that is backing this annotation.
     var feature: Turf.Feature { get }
-
-    /// The geometry associated with an annotation.
-    var type: AnnotationType { get }
 
     /// Properties associated with the annotation.
     var userInfo: [String: Any]? { get set }

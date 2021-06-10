@@ -488,22 +488,22 @@ public class PointAnnotationManager: AnnotationManager {
             if delegate != nil {
                 setupTapRecognizer()
             } else {
-                guard let view = view, let recognizer = tapRecognizer else { return }
+                guard let view = view, let recognizer = tapGestureRecognizer else { return }
                 view.removeGestureRecognizer(recognizer)
-                tapRecognizer = nil
+                tapGestureRecognizer = nil
             }
         }
     }
 
-    /// The `UITapGestureRecognizer` that's listening to touch events on the map
-    private var tapRecognizer: UITapGestureRecognizer?
+    /// The `UITapGestureRecognizer` that's listening to touch events on the map for the annotations present in this manager
+    public var tapGestureRecognizer: UITapGestureRecognizer?
 
     internal func setupTapRecognizer() {
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
-        tapGestureRecognizer.numberOfTapsRequired = 1
-        tapGestureRecognizer.numberOfTouchesRequired = 1
-        view?.addGestureRecognizer(tapGestureRecognizer)
-        tapRecognizer = tapGestureRecognizer
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+        tapRecognizer.numberOfTapsRequired = 1
+        tapRecognizer.numberOfTouchesRequired = 1
+        view?.addGestureRecognizer(tapRecognizer)
+        tapGestureRecognizer = tapRecognizer
     }
     
     @objc internal func handleTap(_ tap: UITapGestureRecognizer) {

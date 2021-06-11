@@ -19,9 +19,9 @@ internal class MapboxScaleBarOrnamentView: UIView {
 
     internal var metersPerPoint: CLLocationDistance = 1 {
         didSet {
-            guard metersPerPoint != oldValue else {
-                return
-            }
+//            guard metersPerPoint != oldValue else {
+//                return
+//            }
 
             updateVisibility()
             needsRecalculateSize = true
@@ -354,6 +354,12 @@ internal class MapboxScaleBarOrnamentView: UIView {
             return table.first!
         }
 
+        if let last = table.last {
+            if rowIndex == (table.count - 1) && maximumDistance > last.distance {
+                return last
+            }
+        }
+
         return table[rowIndex - 1]
     }
 
@@ -361,7 +367,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
         let maximumDistance: CLLocationDistance = Double(maximumWidth) * unitsPerPoint
         let allowedDistance = isMetricLocale ?
                               Constants.metricTable.last!.distance : Constants.imperialTable.last!.distance
-        let alpha: CGFloat = maximumDistance > allowedDistance ? 0 : 1
+        let alpha: CGFloat = maximumDistance >= allowedDistance ? 0 : 1
 
         if alpha != staticContainerView.alpha {
             UIView.animate(withDuration: 0.2,

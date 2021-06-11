@@ -25,7 +25,7 @@ class MapboxScaleBarOrnamentViewTests: XCTestCase {
             XCTAssertEqual(Int(numberOfBars), row.numberOfBars, "The number of scale bars should be \(row.numberOfBars) when there are \(row.metersPerPoint) meters per point.")
         }
     }
-    
+
     func testImperialVisibleBars() {
             let scaleBar = MockMapboxScaleBarOrnamentView()
             scaleBar._isMetricLocale = false

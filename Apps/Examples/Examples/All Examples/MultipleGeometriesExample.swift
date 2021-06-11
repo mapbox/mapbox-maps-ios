@@ -2,9 +2,9 @@ import UIKit
 import MapboxMaps
 import Turf
 
-@objc(GeoJSONSourceExample)
+@objc(MultipleGeometriesExample)
 
-public class GeoJSONSourceExample: UIViewController, ExampleProtocol {
+public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
     internal var mapView: MapView!
 
     override public func viewDidLoad() {

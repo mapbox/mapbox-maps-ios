@@ -354,10 +354,8 @@ internal class MapboxScaleBarOrnamentView: UIView {
             return table.first!
         }
 
-        if let last = table.last {
-            if rowIndex == (table.count - 1) && maximumDistance > last.distance {
-                return last
-            }
+        if rowIndex == (table.count - 1) && maximumDistance >= table[rowIndex].distance {
+            return table[rowIndex]
         }
 
         return table[rowIndex - 1]

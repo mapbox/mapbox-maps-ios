@@ -19,9 +19,9 @@ internal class MapboxScaleBarOrnamentView: UIView {
 
     internal var metersPerPoint: CLLocationDistance = 1 {
         didSet {
-//            guard metersPerPoint != oldValue else {
-//                return
-//            }
+            guard metersPerPoint != oldValue else {
+                return
+            }
 
             updateVisibility()
             needsRecalculateSize = true

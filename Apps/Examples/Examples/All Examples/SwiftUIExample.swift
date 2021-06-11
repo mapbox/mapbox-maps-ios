@@ -89,14 +89,19 @@ internal struct SwiftUIMapView: UIViewRepresentable {
     /// If your `SwiftUIMapView` is reconfigured externally, SwiftUI will invoke `updateUIView(_:context:)`
     /// to give you an opportunity to re-sync the state of the underlying map view.
     func updateUIView(_ mapView: MapView, context: Context) {
-        mapView.mapboxMap.setCamera(to: CameraOptions(center: camera.center, zoom: camera.zoom))
+        /// When setting the camera, we need to temporarily disable the coordinator's observers.
+        /// If we didn't do this, the SwiftUI state would be modified during view update, which
+        /// causes undefined behavior.
+        context.coordinator.performWithoutObservation {
+            mapView.mapboxMap.setCamera(to: CameraOptions(center: camera.center, zoom: camera.zoom))
+        }
         /// Since changing the style causes annotations to be removed from the map
         /// we only call the setter if the value has changed.
         if mapView.mapboxMap.style.uri != styleURI {
             mapView.mapboxMap.style.uri = styleURI
         }
 
-        /// The coordinator needs to manager annotations because
+        /// The coordinator needs to manage annotations because
         /// they need to be applied *after* `.mapLoaded`
         context.coordinator.annotations = annotations
     }
@@ -116,33 +121,55 @@ internal class SwiftUIMapViewCoordinator {
         }
     }
 
-    lazy var pointAnnotationManager: PointAnnotationManager? = {
-        mapView?.annotations.makePointAnnotationManager()
-    }()
+    private var pointAnnotationManager: PointAnnotationManager?
 
-    /// This `mapView` property needs to be weak because
-    /// the map view takes a strong reference to the coordinator
-    /// when we make the coordinator observe the `.cameraChanged`
-    /// event
-    weak var mapView: MapView? {
+    var mapView: MapView! {
         didSet {
+            cancelables.forEach { $0.cancel() }
+            cancelables.removeAll()
+
+            /// In the following observations, `self` is captured as an unowned reference to avoid a strong
+            /// reference cycle from mapView --> mapboxMap --> handler block --> self --> mapView.
+            /// In this situation, weak is unnecessary because the subscription will be canceled via the returned
+            /// Cancelables as soon as `self` is deinitialized.
+
             /// The coordinator observes the `.cameraChanged` event, and
-            /// whenever the camera changes, it updates the camera binding
-            mapView?.mapboxMap.onNext(.cameraChanged, handler: notify(for:))
+            /// whenever the camera changes, it updates the camera binding.
+            cancelables.append(mapView.mapboxMap.onEvery(.cameraChanged) { [unowned self] (event) in
+                notify(for: event)
+            })
 
             /// The coordinator also observes the `.mapLoaded` event
             /// so that it can sync annotations whenever the map reloads
-            mapView?.mapboxMap.onNext(.mapLoaded, handler: notify(for:))
+            cancelables.append(mapView.mapboxMap.onEvery(.mapLoaded) { [unowned self] (event) in
+                notify(for: event)
+            })
         }
     }
+
+    private var cancelables = [Cancelable]()
 
     init(camera: Binding<Camera>) {
         _camera = camera
     }
 
-    func notify(for event: Event) {
-        guard let typedEvent = MapEvents.EventKind(rawValue: event.type),
-              let mapView = mapView else {
+    deinit {
+        cancelables.forEach { $0.cancel() }
+    }
+
+    private var ignoreNotifications = false
+
+    func performWithoutObservation(_ block: () -> Void) {
+        ignoreNotifications = true
+        block()
+        ignoreNotifications = false
+    }
+
+    private func notify(for event: Event) {
+        guard !ignoreNotifications else {
+            return
+        }
+        guard let typedEvent = MapEvents.EventKind(rawValue: event.type) else {
             return
         }
         switch typedEvent {
@@ -155,7 +182,19 @@ internal class SwiftUIMapViewCoordinator {
 
         /// When the map reloads, we need to re-sync the annotations
         case .mapLoaded:
-            initialMapLoadComplete = true
+            /// The old annotation manager should be discarded and a new one created so that the
+            /// underlying layer and source are re-added. This requirement is expected to change in
+            /// an upcoming release.
+            ///
+            /// Known issue: when the old annotation manager is deinitialized, a warning will be emitted:
+            ///
+            ///     `Warning: <Annotations> Failed to remove source / layer from map for annotations due to error: StyleError(rawValue: "Layer 501B8-layer does not exist")`
+            ///
+            /// This occurs because the annotation manager is trying to clean up after itself, but its
+            /// source and layer have already been removed as a side-effect of the map reload. In this
+            /// situation, the warning is expected, and should not cause any runtime problems. We
+            /// expect to clean this up as well in an upcoming release.
+            pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
             syncAnnotations()
 
         default:
@@ -163,14 +202,7 @@ internal class SwiftUIMapViewCoordinator {
         }
     }
 
-    /// Only sync annotations once the map's initial load is complete
-    private var initialMapLoadComplete = false
-
     private func syncAnnotations() {
-        guard initialMapLoadComplete else {
-            return
-        }
-
         pointAnnotationManager?.syncAnnotations(annotations)
     }
 }
@@ -248,23 +280,19 @@ internal class SwiftUIExample: UIViewController, ExampleProtocol {
 
     override public func viewDidLoad() {
         super.viewDidLoad()
-        setupHostingController()
-    }
 
-    internal func setupHostingController() {
         if #available(iOS 13.0, *) {
             let hostingViewController = UIHostingController(rootView: ContentView())
             addChild(hostingViewController)
-            hostingViewController.view.frame = view.frame
+            hostingViewController.view.frame = view.bounds
             view.addSubview(hostingViewController.view)
             hostingViewController.didMove(toParent: self)
         } else {
             // Fallback on earlier versions
             let label = UILabel()
             label.text = "This example runs on iOS 13+"
-            label.font = UIFont.systemFont(ofSize: 20)
+            label.font = .systemFont(ofSize: 20)
             label.textColor = .white
-            label.sizeToFit()
             label.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(label)
             NSLayoutConstraint.activate([

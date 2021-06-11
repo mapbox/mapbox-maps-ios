@@ -353,6 +353,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
         if rowIndex == 0 && maximumDistance > table.last!.distance {
             return table.last!
         }
+
         guard rowIndex > 0 else {
             return table.first!
         }

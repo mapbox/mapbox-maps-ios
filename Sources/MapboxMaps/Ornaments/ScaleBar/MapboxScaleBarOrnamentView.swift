@@ -346,19 +346,21 @@ internal class MapboxScaleBarOrnamentView: UIView {
     internal func preferredRow() -> Row {
         let maximumDistance: CLLocationDistance = Double(maximumWidth) * unitsPerPoint
         let table = isMetricLocale ? Constants.metricTable : Constants.imperialTable
-        let rowIndex = table.firstIndex {
+        var rowIndex = table.firstIndex {
             return $0.distance > maximumDistance
-        } ?? 0
-
-        if rowIndex == 0 && maximumDistance > table.last!.distance {
-            return table.last!
         }
 
-        guard rowIndex > 0 else {
+        if rowIndex == nil && maximumDistance > table.last!.distance {
+            return table.last!
+        } else if rowIndex == nil {
+            rowIndex = 0
+        }
+
+        guard rowIndex! > 0 else {
             return table.first!
         }
 
-        return table[rowIndex - 1]
+        return table[rowIndex! - 1]
     }
 
     private func updateVisibility() {

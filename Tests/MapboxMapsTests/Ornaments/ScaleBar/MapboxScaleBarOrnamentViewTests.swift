@@ -28,6 +28,36 @@ class MapboxScaleBarOrnamentViewTests: XCTestCase {
             XCTAssertEqual(Int(numberOfBars), row.numberOfBars, "The number of scale bars should be \(row.numberOfBars) when there are \(row.metersPerPoint) meters per point.")
         }
     }
+    
+    func testImperialVisibleBars() {
+            let scaleBar = MockMapboxScaleBarOrnamentView()
+            scaleBar._isMetricLocale = false
+
+            for row in ScaleBarTestValues.imperialValues {
+                scaleBar.metersPerPoint = row.metersPerPoint
+
+                scaleBar.layoutSubviews()
+
+                let numberOfBars = row.numberOfBars
+                let visibleBars = scaleBar.dynamicContainerView.subviews
+                XCTAssertEqual(visibleBars.count, Int(numberOfBars), "\(numberOfBars) should be visible at \(row.metersPerPoint), distance: \(scaleBar.row.distance).")
+            }
+        }
+
+        func testMetricVisibleBars() {
+            let scaleBar = MockMapboxScaleBarOrnamentView()
+
+            for row in ScaleBarTestValues.metricValues {
+                scaleBar.metersPerPoint = row.metersPerPoint
+
+                scaleBar.layoutSubviews()
+
+                let numberOfBars = row.numberOfBars
+                let visibleBars = scaleBar.dynamicContainerView.subviews
+                XCTAssertEqual(visibleBars.count, Int(numberOfBars), "\(numberOfBars) should be visible at \(row.metersPerPoint), distance: \(scaleBar.row.distance).")
+            }
+        }
+
 }
 
 final class MockMapboxScaleBarOrnamentView: MapboxScaleBarOrnamentView {

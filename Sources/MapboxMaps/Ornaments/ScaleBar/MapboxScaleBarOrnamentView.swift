@@ -337,7 +337,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
         }
     }
 
-    // MARK: - Convenince Methods
+    // MARK: - Convenience Methods
 
     private func usesRightToLeftLayout() -> Bool {
         return UIView.userInterfaceLayoutDirection(for: semanticContentAttribute) == .rightToLeft
@@ -352,10 +352,6 @@ internal class MapboxScaleBarOrnamentView: UIView {
 
         guard rowIndex > 0 else {
             return table.first!
-        }
-
-        if rowIndex == (table.count - 1) && maximumDistance >= table[rowIndex].distance {
-            return table[rowIndex]
         }
 
         return table[rowIndex - 1]

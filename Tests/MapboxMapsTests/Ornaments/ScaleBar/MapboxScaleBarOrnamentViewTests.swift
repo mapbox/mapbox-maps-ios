@@ -1,7 +1,7 @@
 import XCTest
 @testable import MapboxMaps
 
-class MapboxScaleBarOrnamentViewTests: MapViewIntegrationTestCase {
+class MapboxScaleBarOrnamentViewTests: XCTestCase {
 
     func testImperialScaleBar() {
         let scaleBar = MockMapboxScaleBarOrnamentView()
@@ -26,37 +26,6 @@ class MapboxScaleBarOrnamentViewTests: MapViewIntegrationTestCase {
 
             let numberOfBars = scaleBar.preferredRow().numberOfBars
             XCTAssertEqual(Int(numberOfBars), row.numberOfBars, "The number of scale bars should be \(row.numberOfBars) when there are \(row.metersPerPoint) meters per point.")
-        }
-    }
-
-    func testImperialVisibleBars() {
-        let scaleBar = MockMapboxScaleBarOrnamentView()
-        scaleBar._isMetricLocale = false
-
-        for row in ScaleBarTestValues.imperialValues {
-            let distance = row.metersPerPoint
-            scaleBar.metersPerPoint = distance
-
-            scaleBar.layoutSubviews()
-
-            let numberOfBars = row.numberOfBars
-            let visibleBars = scaleBar.dynamicContainerView.subviews
-            XCTAssertEqual(visibleBars.count, Int(numberOfBars), "\(numberOfBars) should be visible at \(row.metersPerPoint), distance: \(scaleBar.row.distance).")
-        }
-    }
-
-    func testMetricVisibleBars() {
-        let scaleBar = MockMapboxScaleBarOrnamentView()
-
-        for row in ScaleBarTestValues.metricValues {
-            let distance = row.metersPerPoint
-            scaleBar.metersPerPoint = distance
-
-            scaleBar.layoutSubviews()
-
-            let numberOfBars = row.numberOfBars
-            let visibleBars = scaleBar.dynamicContainerView.subviews
-            XCTAssertEqual(visibleBars.count, Int(numberOfBars), "\(numberOfBars) should be visible at \(row.metersPerPoint), distance: \(scaleBar.row.distance).")
         }
     }
 }

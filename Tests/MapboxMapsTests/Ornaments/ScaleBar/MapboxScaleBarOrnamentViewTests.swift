@@ -30,6 +30,25 @@ class MapboxScaleBarOrnamentViewTests: MapViewIntegrationTestCase {
             XCTAssertEqual(Int(numberOfBars), row.numberOfBars, "The number of scale bars should be \(row.numberOfBars) when there are \(row.metersPerPoint) meters per point.")
         }
     }
+
+    func testImperialVisibleBars() throws {
+        let mapView = try XCTUnwrap(self.mapView, "Map view could not be found")
+        mapView.ornaments.options.scaleBar.visibility = .visible
+        let initialSubviews = mapView.subviews.filter { $0 is MapboxScaleBarOrnamentView }
+
+        let scaleBar = try XCTUnwrap(initialSubviews.first as? MapboxScaleBarOrnamentView, "The MapView should include a scale bar as a subview")
+        try XCTSkipIf(scaleBar.isMetricLocale, "This test is configured for a scale bar using imperial measurements.")
+
+        for row in ScaleBarTestValues.imperialValues {
+            scaleBar.metersPerPoint = row.metersPerPoint
+
+            scaleBar.layoutSubviews()
+
+            let numberOfBars = row.numberOfBars
+            let visibleBars = scaleBar.dynamicContainerView.subviews
+            XCTAssertEqual(visibleBars.count, Int(numberOfBars), "\(numberOfBars) should be visible at \(row.metersPerPoint), distance: \(scaleBar.row.distance).")
+        }
+    }
 }
 
 final class MockMapboxScaleBarOrnamentView: MapboxScaleBarOrnamentView {

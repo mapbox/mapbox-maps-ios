@@ -8,7 +8,6 @@ class MapboxScaleBarOrnamentViewTests: XCTestCase {
         scaleBar._isMetricLocale = false
 
         for row in ScaleBarTestValues.imperialValues {
-            // Add 0.01 so that the converted distance is slightly greater than the distance we are comparing.
             scaleBar.metersPerPoint =  row.metersPerPoint
 
             let numberOfBars = scaleBar.preferredRow().numberOfBars
@@ -20,8 +19,6 @@ class MapboxScaleBarOrnamentViewTests: XCTestCase {
         let scaleBar = MockMapboxScaleBarOrnamentView()
 
         for row in ScaleBarTestValues.metricValues {
-            // Add 0.01 so that the converted distance is slightly greater than the distance we are comparing.
-
             scaleBar.metersPerPoint = row.metersPerPoint
 
             let numberOfBars = scaleBar.preferredRow().numberOfBars

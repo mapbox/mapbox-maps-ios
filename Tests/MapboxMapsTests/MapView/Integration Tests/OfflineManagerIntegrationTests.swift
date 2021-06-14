@@ -356,12 +356,6 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         let expect = expectation(description: "Completion called")
         let closureDeallocation = expectation(description: "Closure deallocated")
 
-        // This test is currently expected to fail, due to a known issue with
-        // TileStore
-        let expectedToFail = true
-        expect.isInverted = expectedToFail
-        closureDeallocation.isInverted = expectedToFail
-
         tileStore.loadTileRegion(forId: tileRegionId,
                                  loadOptions: tileRegionLoadOptions!) { _ in
             DispatchQueue.main.async {
@@ -378,13 +372,10 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         tileStore = nil
         offlineManager = nil
 
-        // This will fail
         wait(for: [expect, closureDeallocation], timeout: 30.0)
 
         XCTAssertNil(weakTileStore)
         XCTAssertNil(weakOfflineManager)
-
-        try XCTSkipIf(expectedToFail, "Skipping since this test is expected to fail; expectations have been inverted.")
     }
 
     func testTileStoreDelayedRelease() throws {
@@ -466,13 +457,6 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         let functionName = name
         let expect = expectation(description: "Completion called")
         let closureDeallocation = expectation(description: "Closure deallocated")
-
-        // This test is currently expected to fail, due to a known issue with
-        // TileStore
-        let expectedToFail = true
-        expect.isInverted = expectedToFail
-        closureDeallocation.isInverted = expectedToFail
-
         var closure: ((Result<TileRegion, Error>) -> Void)?
 
         do {
@@ -500,7 +484,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         resourceOptions = nil
         tileStore = nil
 
-        offlineManager = nil // <--- Completion block is NOT called
+        offlineManager = nil
         XCTAssertNil(weakOfflineManager)
 
         // Wait a short time
@@ -516,7 +500,5 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         // manually.
         closure = nil
         XCTAssertNil(weakTileStore)
-
-        try XCTSkipIf(expectedToFail, "Skipping since this test is expected to fail; expectations have been inverted.")
     }
 }

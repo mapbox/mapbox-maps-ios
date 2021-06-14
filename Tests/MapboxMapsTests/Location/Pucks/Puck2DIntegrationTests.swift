@@ -132,14 +132,12 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
         }
         wait(for: [addedPrecisePuckExpectation, removedPrecisePuckExpectation, addedApproximatePuckExpectation], timeout: 5)
     }
-    
+
     func testLayerPersistence() throws {
         let style = try XCTUnwrap(self.style)
-        style.uri = .streets
 
-        let styleContainsPuckExpectation = XCTestExpectation(description: "Style contains puck layer.")
         let puckExistsAfterStyleChange = XCTestExpectation(description: "The new style should contain a precise puck layer after switching styles.")
-        didFinishLoadingStyle = { _ in
+        didBecomeIdle = { _ in
             let puck = Puck2D(puckStyle: .approximate,
                               puckBearingSource: .heading,
                               locationSupportableMapView: self.mapView!,
@@ -152,7 +150,6 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
             }
 
             let isPersistent = try! style._isPersistentLayer(id: "puck")
-            
             XCTAssertTrue(isPersistent, "The puck layer should be a persistent layer.")
         }
     }

@@ -136,8 +136,7 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
     func testLayerPersistence() throws {
         let style = try XCTUnwrap(self.style)
 
-        let puckExistsAfterStyleChange = XCTestExpectation(description: "The new style should contain a precise puck layer after switching styles.")
-        didBecomeIdle = { _ in
+        mapView?.mapboxMap.onNext(.mapLoaded, handler: { _ in
             let puck = Puck2D(puckStyle: .approximate,
                               puckBearingSource: .heading,
                               locationSupportableMapView: self.mapView!,
@@ -148,10 +147,9 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
             } catch {
                 XCTFail("Failed to create an precise location indicator layer.")
             }
-
             let isPersistent = try! style._isPersistentLayer(id: "puck")
             XCTAssertTrue(isPersistent, "The puck layer should be a persistent layer.")
-        }
+        })
     }
 }
 

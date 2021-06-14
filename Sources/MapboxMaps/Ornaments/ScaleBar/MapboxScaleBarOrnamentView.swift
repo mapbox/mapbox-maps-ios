@@ -29,7 +29,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
         }
     }
 
-    lazy private var labelViews: [UIView] = {
+    lazy internal var labelViews: [UIView] = {
         var labels: [UIView] = []
         for _ in 0..<4 {
             let view = UIView()
@@ -44,7 +44,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
     }()
 
     private var _bars: [UIView]?
-    private var bars: [UIView] {
+    internal var bars: [UIView] {
         if _bars == nil {
             var bars: [UIView] = []
             for _ in 0..<row.numberOfBars {
@@ -61,7 +61,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
     var size = CGSize()
     // This container view's size and position can change based on the size
     // of its contents. It is contained within the `staticContainerView`.
-    lazy private var dynamicContainerView: UIView = {
+    lazy internal var dynamicContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = Constants.primaryColor
         view.layer.borderColor = Constants.primaryColor.cgColor
@@ -74,7 +74,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
 
     private let formatter = DistanceFormatter()
 
-    private var row: Row = (0, 0) {
+    internal var row: Row = (0, 0) {
         didSet {
             guard row.distance != oldValue.distance else {
                 return
@@ -96,18 +96,18 @@ internal class MapboxScaleBarOrnamentView: UIView {
     private var needsRecalculateSize = false
     private var shouldLayoutBars = false
 
-    private var unitsPerPoint: Double {
+    internal var unitsPerPoint: Double {
         return isMetricLocale ? metersPerPoint : metersPerPoint * Constants.feetPerMeter
     }
 
-    private var maximumWidth: CGFloat {
+    internal var maximumWidth: CGFloat {
         guard let bounds = superview?.bounds else {
             return 0
         }
         return floor(bounds.width / 2)
     }
 
-    private var isMetricLocale: Bool {
+    internal var isMetricLocale: Bool {
         return Locale(identifier: Bundle.main.preferredLocalizations.first!).usesMetricSystem
     }
 
@@ -337,31 +337,37 @@ internal class MapboxScaleBarOrnamentView: UIView {
         }
     }
 
-    // MARK: - Convenince Methods
+    // MARK: - Convenience Methods
 
     private func usesRightToLeftLayout() -> Bool {
         return UIView.userInterfaceLayoutDirection(for: semanticContentAttribute) == .rightToLeft
     }
 
-    private func preferredRow() -> Row {
+    internal func preferredRow() -> Row {
         let maximumDistance: CLLocationDistance = Double(maximumWidth) * unitsPerPoint
         let table = isMetricLocale ? Constants.metricTable : Constants.imperialTable
-        let rowIndex = table.firstIndex {
+        var rowIndex = table.firstIndex {
             return $0.distance > maximumDistance
-        } ?? 0
+        }
 
-        guard rowIndex > 0 else {
+        if rowIndex == nil && maximumDistance > table.last!.distance {
+            return table.last!
+        } else if rowIndex == nil {
+            rowIndex = 0
+        }
+
+        guard rowIndex! > 0 else {
             return table.first!
         }
 
-        return table[rowIndex - 1]
+        return table[rowIndex! - 1]
     }
 
     private func updateVisibility() {
         let maximumDistance: CLLocationDistance = Double(maximumWidth) * unitsPerPoint
         let allowedDistance = isMetricLocale ?
                               Constants.metricTable.last!.distance : Constants.imperialTable.last!.distance
-        let alpha: CGFloat = maximumDistance > allowedDistance ? 0 : 1
+        let alpha: CGFloat = maximumDistance >= allowedDistance ? 0 : 1
 
         if alpha != staticContainerView.alpha {
             UIView.animate(withDuration: 0.2,

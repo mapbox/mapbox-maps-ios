@@ -62,7 +62,7 @@ internal protocol StyleManagerProtocol {
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
     func addLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws
-    
+
     /// Adds a new persistent style layer given its JSON properties
     ///
     /// Persistent style layers remain valid across style reloads.
@@ -77,14 +77,14 @@ internal protocol StyleManagerProtocol {
     ///
     /// - Note: This API is experimental and can change at any time
     func _addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws
-    
+
     /// Returns `true` if the id passed in is associated to a persistent layer
     ///
     /// - Note: This API is experimental and can change at any time
     ///
     /// - Parameter id: The layer identifier to test
     func _isPersistentLayer(id: String) throws -> Bool
-    
+
     /// Adds a new persistent style custom layer.
     ///
     /// Persistent style layers are valid across style reloads.

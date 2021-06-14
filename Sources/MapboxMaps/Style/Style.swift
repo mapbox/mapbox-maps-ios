@@ -326,6 +326,24 @@ extension Style: StyleManagerProtocol {
             return styleManager.addStyleLayer(forProperties: properties, layerPosition: layerPosition?.corePosition)
         }
     }
+    
+    public func _addPersistentLayer(with properties: [String : Any], layerPosition: LayerPosition?) throws {
+        return try handleExpected {
+            return styleManager.addPersistentStyleLayer(forProperties: properties, layerPosition: layerPosition?.corePosition)
+        }
+    }
+    
+    func _isPersistentLayer(id: String) throws -> Bool {
+        return try handleExpected {
+            return styleManager.isStyleLayerPersistent(forLayerId: id)
+        }
+    }
+    
+    func _addPersistentCustomLayer(withId id: String, layerHost: CustomLayerHost, layerPosition: LayerPosition?) throws {
+        return try handleExpected {
+            return styleManager.addPersistentStyleCustomLayer(forLayerId: id, layerHost: layerHost, layerPosition: layerPosition?.corePosition)
+        }
+    }
 
     public func _addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
         return try handleExpected {

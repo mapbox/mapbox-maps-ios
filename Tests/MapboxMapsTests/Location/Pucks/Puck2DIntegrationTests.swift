@@ -132,4 +132,34 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
         }
         wait(for: [addedPrecisePuckExpectation, removedPrecisePuckExpectation, addedApproximatePuckExpectation], timeout: 5)
     }
+    
+    func testLayerPersistence() throws {
+        let style = try XCTUnwrap(self.style)
+        style.uri = .streets
+
+        let styleContainsPuckExpectation = XCTestExpectation(description: "Style contains puck layer.")
+        let puckExistsAfterStyleChange = XCTestExpectation(description: "The new style should contain a precise puck layer after switching styles.")
+        didFinishLoadingStyle = { _ in
+            let puck = Puck2D(puckStyle: .approximate,
+                              puckBearingSource: .heading,
+                              locationSupportableMapView: self.mapView!,
+                              style: style,
+                              configuration: Puck2DConfiguration())
+            do {
+                try puck.createPreciseLocationIndicatorLayer(location: Location(with: CLLocation(latitude: 1, longitude: 1)))
+            } catch {
+                XCTFail("Failed to create an precise location indicator layer.")
+            }
+
+            let isPersistent = try! style._isPersistentLayer(id: "puck")
+            
+            XCTAssertTrue(isPersistent, "The puck layer should be a persistent layer.")
+        }
+    }
+}
+
+extension LocationStyleDelegate {
+    func _isPersistentLayer(id: String) throws -> Bool {
+        try _isPersistentLayer(id: id)
+    }
 }

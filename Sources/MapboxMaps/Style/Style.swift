@@ -1,9 +1,6 @@
 import Turf
 @_implementationOnly import MapboxCommon_Private
-
-#if canImport(MapboxMapsFoundation)
-import MapboxMapsFoundation
-#endif
+@_implementationOnly import MapboxCoreMaps_Private
 
 //swiftlint:disable file_length
 public class Style {
@@ -33,6 +30,19 @@ public class Style {
         try addLayer(with: layerJSON, layerPosition: layerPosition)
     }
 
+    /// Adds a  persistent `layer` to the map
+    /// Persistent layers are valid across style changes.
+    ///
+    /// - Parameters:
+    ///   - layer: The layer to apply on the map
+    ///   - layerPosition: Position at which to add the map.
+    ///
+    /// - Throws: StyleError or type conversion errors
+    internal func _addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
+        // Attempt to encode the provided layer into JSON and apply it to the map
+        let layerJSON = try layer.jsonObject()
+        try _addPersistentLayer(with: layerJSON, layerPosition: layerPosition)
+    }
     /**
      :nodoc:
      Moves a `layer` to a new layer position in the style.
@@ -314,6 +324,24 @@ extension Style: StyleManagerProtocol {
     public func addLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
         return try handleExpected {
             return styleManager.addStyleLayer(forProperties: properties, layerPosition: layerPosition?.corePosition)
+        }
+    }
+
+    public func _addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
+        return try handleExpected {
+            return styleManager.addPersistentStyleLayer(forProperties: properties, layerPosition: layerPosition?.corePosition)
+        }
+    }
+
+    func _isPersistentLayer(id: String) throws -> Bool {
+        return try handleExpected {
+            return styleManager.isStyleLayerPersistent(forLayerId: id)
+        }
+    }
+
+    func _addPersistentCustomLayer(withId id: String, layerHost: CustomLayerHost, layerPosition: LayerPosition?) throws {
+        return try handleExpected {
+            return styleManager.addPersistentStyleCustomLayer(forLayerId: id, layerHost: layerHost, layerPosition: layerPosition?.corePosition)
         }
     }
 

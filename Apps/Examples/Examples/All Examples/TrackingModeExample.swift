@@ -30,7 +30,6 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
             self.mapView.location.addLocationConsumer(newConsumer: self.cameraLocationConsumer)
 
             self.finish() // Needed for internal testing purposes.
-
         }
     }
 }

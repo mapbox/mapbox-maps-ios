@@ -206,7 +206,10 @@ public struct Examples {
                 type: SwitchStylesExample.self),
         Example(title: "Change the map's language",
                 description: "Switch between supported languages for Symbol Layers",
-                type: LocalizationExample.self)
+                type: LocalizationExample.self),
+        Example(title: "Cluster symbols",
+                description: "",
+                type: SymbolClusteringExample.self)
     ]
 
     // Examples that show use cases related to user interaction with the map.

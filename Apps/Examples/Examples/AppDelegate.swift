@@ -13,7 +13,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         let examplesTableViewController = ExampleTableViewController()
         let navigationController = UINavigationController(rootViewController: examplesTableViewController)
-        navigationController.navigationBar.prefersLargeTitles = true
+
+        let appearance = UINavigationBar.appearance()
+        appearance.prefersLargeTitles = true
+
+        if #available(iOS 13.0, *) {
+            appearance.scrollEdgeAppearance = UINavigationBarAppearance()
+        }
+
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
 

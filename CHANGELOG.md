@@ -6,7 +6,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Breaking changes ⚠️
 
-- Annotations now will persist across style changes. ([#475](https://github.com/mapbox/mapbox-maps-ios/pull/475))
+- Annotations now will persist across style changes by default. ([#475](https://github.com/mapbox/mapbox-maps-ios/pull/475))
 
 ## 10.0.0-rc.1 - June 9, 2021
 

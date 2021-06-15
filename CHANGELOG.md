@@ -4,7 +4,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
-### Breaking changes ⚠️
+### Features ✨ and improvements 🏁
 
 - Annotations now will persist across style changes by default. ([#475](https://github.com/mapbox/mapbox-maps-ios/pull/475))
 

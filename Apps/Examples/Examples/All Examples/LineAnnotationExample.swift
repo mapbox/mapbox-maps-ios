@@ -26,6 +26,10 @@ public class LineAnnotationExample: UIViewController, ExampleProtocol {
 
             // The below line is used for internal testing purposes only.
             self?.finish()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                self?.mapView.mapboxMap.style.uri = .dark
+            }
         }
     }
 

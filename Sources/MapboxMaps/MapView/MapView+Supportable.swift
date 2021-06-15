@@ -46,11 +46,6 @@ extension MapView: LocationSupportableMapView {
         }
     }
 
-    public func subscribeStyleChangeHandler(_ handler: @escaping (MapboxCoreMaps.Event) -> Void) {
-        mapboxMap.onEvery(.styleLoaded) { (event) in
-            handler(event)
-        }
-    }
 }
 
 extension Style: LocationStyleDelegate { }

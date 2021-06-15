@@ -80,16 +80,11 @@ internal class Puck3D: Puck {
 
             // TODO: On first setup "puck-model does not have a uri"
             try? style.addSource(self.modelSource, id: "puck-model-source")
-            try! style.addLayer(self.modelLayer)
+            try! style._addPersistentLayer(self.modelLayer)
         }
 
         // Do initial setup
         addStyle()
-
-        // Re-apply source, layer if style is ever changed
-        locationSupportableMapView?.subscribeStyleChangeHandler({ (_) in
-            addStyle()
-        })
     }
 
     // MARK: Protocol Implementation

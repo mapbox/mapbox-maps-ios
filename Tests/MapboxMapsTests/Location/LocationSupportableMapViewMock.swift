@@ -18,10 +18,6 @@ class LocationSupportableMapViewMock: UIView, LocationSupportableMapView {
         return .zero
     }
 
-    func subscribeStyleChangeHandler(_ handler: @escaping (MapboxCoreMaps.Event) -> Void) {
-        print("Pass through implementation")
-    }
-
     func metersPerPointAtLatitude(latitude: CLLocationDegrees) -> CLLocationDistance {
         return CLLocationDistance()
     }

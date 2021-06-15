@@ -127,9 +127,6 @@ internal class Puck2D: Puck {
         setupLocationIndicatorLayer()
 
         // Ensure that location indicator layer gets reloaded whenever the style is changed
-        locationSupportableMapView?.subscribeStyleChangeHandler({ _ in
-            setupLocationIndicatorLayer()
-        })
     }
 
     internal func removePuck() {
@@ -194,7 +191,7 @@ internal extension Puck2D {
         layer.accuracyRadiusBorderColor = .constant(ColorRepresentable(color: .lightGray))
 
         // Add layer to style
-        try style.addLayer(layer)
+        try style._addPersistentLayer(layer)
 
         locationIndicatorLayer = layer
     }
@@ -234,7 +231,7 @@ internal extension Puck2D {
         layer.accuracyRadiusBorderColor = .constant(ColorRepresentable(color: .lightGray))
 
         // Add layer to style
-        try style.addLayer(layer)
+        try style._addPersistentLayer(layer)
 
         locationIndicatorLayer = layer
     }

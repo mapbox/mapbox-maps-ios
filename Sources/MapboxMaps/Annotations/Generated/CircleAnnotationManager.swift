@@ -4,11 +4,11 @@ import Foundation
 import Turf
 @_implementationOnly import MapboxCommon_Private
 
-/// An instance of `CircleAnnotationManager` is responsible for a collection of `CircleAnnotation`s. 
+/// An instance of `CircleAnnotationManager` is responsible for a collection of `CircleAnnotation`s.
 public class CircleAnnotationManager: AnnotationManager {
 
     // MARK: - Annotations -
-    
+
     /// The collection of CircleAnnotations being managed
     public private(set) var annotations = [CircleAnnotation]() {
         didSet {
@@ -23,11 +23,11 @@ public class CircleAnnotationManager: AnnotationManager {
     }
 
     // MARK: - AnnotationManager protocol conformance -
-    
+
     public let sourceId: String
-    
+
     public let layerId: String
-    
+
     public let id: String
 
     // MARK:- Setup / Lifecycle -
@@ -72,7 +72,7 @@ public class CircleAnnotationManager: AnnotationManager {
 
     internal func makeSourceAndLayer(layerPosition: LayerPosition?) throws {
 
-        guard let style = style else { 
+        guard let style = style else {
             Log.error(forMessage: "Style must exist when adding a source and layer for annotations", category: "Annotaitons")
             return
         }
@@ -85,14 +85,14 @@ public class CircleAnnotationManager: AnnotationManager {
         // Add the correct backing layer for this annotation type
         var layer = CircleLayer(id: layerId)
         layer.source = sourceId
-        try style.addLayer(layer, layerPosition: layerPosition)
+        try style._addPersistentLayer(layer, layerPosition: layerPosition)
     }
 
     // MARK: - Sync annotations to map -
-    
+
     internal func syncAnnotations() {
 
-        guard let style = style else { 
+        guard let style = style else {
             Log.error(forMessage: "Style must exist when adding/removing annotations", category: "Annotations")
             return
         }
@@ -106,24 +106,24 @@ public class CircleAnnotationManager: AnnotationManager {
                             category: "Annotations")
             }
         }
-        
+
         let featureCollection = Turf.FeatureCollection(features: annotations.map(\.feature))
         do {
             let data = try JSONEncoder().encode(featureCollection)
             guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                Log.error(forMessage: "Could not convert annotation features to json object in CircleAnnotationManager", 
+                Log.error(forMessage: "Could not convert annotation features to json object in CircleAnnotationManager",
                             category: "Annotations")
                 return
             }
             try style.setSourceProperty(for: sourceId, property: "data", value: jsonObject )
         } catch {
-            Log.error(forMessage: "Could not update annotations in CircleAnnotationManager due to error: \(error)", 
+            Log.error(forMessage: "Could not update annotations in CircleAnnotationManager due to error: \(error)",
                         category: "Annotations")
         }
     }
 
     // MARK: - Common layer properties -
-        
+
     /// Orientation of circle when map is pitched.
     public var circlePitchAlignment: CirclePitchAlignment? {
         didSet {
@@ -135,7 +135,7 @@ public class CircleAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// Controls the scaling behavior of the circle when the map is pitched.
     public var circlePitchScale: CirclePitchScale? {
         didSet {
@@ -147,7 +147,7 @@ public class CircleAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     public var circleTranslate: [Double]? {
         didSet {
@@ -159,7 +159,7 @@ public class CircleAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// Controls the frame of reference for `circle-translate`.
     public var circleTranslateAnchor: CircleTranslateAnchor? {
         didSet {
@@ -171,7 +171,7 @@ public class CircleAnnotationManager: AnnotationManager {
             }
         }
     }
-    
+
     // MARK: - Selection Handling -
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
@@ -197,17 +197,17 @@ public class CircleAnnotationManager: AnnotationManager {
         view?.addGestureRecognizer(tapRecognizer)
         tapGestureRecognizer = tapRecognizer
     }
-    
+
     @objc internal func handleTap(_ tap: UITapGestureRecognizer) {
         let options = RenderedQueryOptions(layerIds: [layerId], filter: nil)
         mapFeatureQueryable?.queryRenderedFeatures(
             at: tap.location(in: view),
             options: options) { [weak self] (result) in
-            
+
             guard let self = self else { return }
-            
+
             switch result {
-            
+
             case .success(let queriedFeatures):
                 if let annotationIds = queriedFeatures.compactMap(\.feature.properties["annotation-id"]) as? [String] {
 
@@ -216,13 +216,13 @@ public class CircleAnnotationManager: AnnotationManager {
                         self,
                         didDetectTappedAnnotations: tappedAnnotations)
                 }
-            
+
             case .failure(let error):
-                Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)", 
+                Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)",
                             category: "Annotations")
             }
         }
     }
-} 
+}
 // End of generated file.
 // swiftlint:enable all

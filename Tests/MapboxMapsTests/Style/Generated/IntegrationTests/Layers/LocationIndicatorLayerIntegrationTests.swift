@@ -60,7 +60,7 @@ class LocationIndicatorLayerIntegrationTests: MapViewIntegrationTestCase {
             // Add the layer
             do {
                 try style._addPersistentLayer(layer)
-                successfullyAddedLayerExpectation.fulfill()
+            successfullyAddedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to add LocationIndicatorLayer because of error: \(error)")
             }
@@ -70,7 +70,7 @@ class LocationIndicatorLayerIntegrationTests: MapViewIntegrationTestCase {
                 _ = try style.layer(withId: "test-id") as LocationIndicatorLayer
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
-                XCTFail("Failed to retrieve LocationIndicatorLayer because of error: \(error)")   
+                XCTFail("Failed to retrieve LocationIndicatorLayer because of error: \(error)")
             }
         }
 

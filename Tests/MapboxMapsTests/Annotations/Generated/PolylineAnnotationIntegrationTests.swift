@@ -17,7 +17,7 @@ class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         didFinishLoadingStyle = { [weak self] _ in
 
-            guard let self = self, 
+            guard let self = self,
                   let style = try? XCTUnwrap(self.style),
                   let mapView = try? XCTUnwrap(self.mapView) else { return }
 
@@ -27,7 +27,7 @@ class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
             var annotation = PolylineAnnotation(line: .init(lineCoordinates))
-            
+
             annotation.lineJoin =  LineJoin.testConstantValue()
             annotation.lineSortKey =  Double.testConstantValue()
             annotation.lineBlur =  Double.testConstantValue()
@@ -50,7 +50,7 @@ class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func verifyFeatureContainsProperties(annotation: PolylineAnnotation)  {
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else { return }
-        
+
         XCTAssertEqual(featureProperties["line-join"] as? String, annotation.lineJoin?.rawValue)
         XCTAssertEqual(featureProperties["line-sort-key"] as? Double, annotation.lineSortKey)
         XCTAssertEqual(featureProperties["line-blur"] as? Double, annotation.lineBlur)
@@ -66,7 +66,7 @@ class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         guard let style = try? XCTUnwrap(self.style) else { return }
 
         var source: GeoJSONSource?
-        do { 
+        do {
             source = try style.source(withId: sourceId) as GeoJSONSource
         } catch {
             XCTFail("Could not retrieve source due to error: \(error)")
@@ -89,6 +89,33 @@ class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(featureProperties["line-pattern"] as? String, annotation.linePattern)
         XCTAssertEqual(featureProperties["line-width"] as? Double, annotation.lineWidth)
     }
+
+  func testAnnotationPersistence() throws {
+     let style = try XCTUnwrap(self.style)
+     style.uri = .streets
+
+     mapView?.mapboxMap.onNext(.mapLoaded, handler: { [weak self] _ in
+         guard let self = self,
+               let style = try? XCTUnwrap(self.style),
+               let mapView = try? XCTUnwrap(self.mapView) else { return }
+
+         let manager = mapView.annotations.makePolylineAnnotationManager()
+         XCTAssertTrue(style.layerExists(withId: manager.layerId))
+         XCTAssertTrue(style.sourceExists(withId: manager.sourceId))
+
+         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
+         var annotation = PolylineAnnotation(line: .init(lineCoordinates))
+         manager.syncAnnotations([annotation])
+         self.manager = manager
+
+         do {
+             let isPersistent = try style._isPersistentLayer(id: manager.layerId)
+             XCTAssertTrue(isPersistent, "The layer with id \(manager.layerId) should be persistent.")
+         } catch {
+             XCTFail("Unable to verify that the layer with id \(manager.layerId) is persistent.")
+         }
+     })
+ }
 }
 
 // End of generated file

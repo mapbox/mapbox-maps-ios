@@ -59,7 +59,7 @@ class FillLayerIntegrationTests: MapViewIntegrationTestCase {
                 _ = try style.layer(withId: "test-id") as FillLayer
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
-                XCTFail("Failed to retrieve FillLayer because of error: \(error)")   
+                XCTFail("Failed to retrieve FillLayer because of error: \(error)")
             }
         }
 

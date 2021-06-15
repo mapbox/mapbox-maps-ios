@@ -17,7 +17,7 @@ class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         didFinishLoadingStyle = { [weak self] _ in
 
-            guard let self = self, 
+            guard let self = self,
                   let style = try? XCTUnwrap(self.style),
                   let mapView = try? XCTUnwrap(self.mapView) else { return }
 
@@ -26,7 +26,7 @@ class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
             XCTAssertTrue(style.sourceExists(withId: manager.sourceId))
 
             var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
-            
+
             annotation.iconAnchor =  IconAnchor.testConstantValue()
             annotation.iconImage =  String.testConstantValue()
             annotation.iconOffset =  [Double].testConstantValue()
@@ -66,7 +66,7 @@ class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func verifyFeatureContainsProperties(annotation: PointAnnotation)  {
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else { return }
-        
+
         XCTAssertEqual(featureProperties["icon-anchor"] as? String, annotation.iconAnchor?.rawValue)
         XCTAssertEqual(featureProperties["icon-image"] as? String, annotation.iconImage)
         XCTAssertEqual(featureProperties["icon-offset"] as? [Double], annotation.iconOffset)
@@ -99,7 +99,7 @@ class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         guard let style = try? XCTUnwrap(self.style) else { return }
 
         var source: GeoJSONSource?
-        do { 
+        do {
             source = try style.source(withId: sourceId) as GeoJSONSource
         } catch {
             XCTFail("Could not retrieve source due to error: \(error)")
@@ -139,6 +139,32 @@ class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(featureProperties["text-halo-width"] as? Double, annotation.textHaloWidth)
         XCTAssertEqual(featureProperties["text-opacity"] as? Double, annotation.textOpacity)
     }
+
+  func testAnnotationPersistence() throws {
+     let style = try XCTUnwrap(self.style)
+     style.uri = .streets
+
+     mapView?.mapboxMap.onNext(.mapLoaded, handler: { [weak self] _ in
+         guard let self = self,
+               let style = try? XCTUnwrap(self.style),
+               let mapView = try? XCTUnwrap(self.mapView) else { return }
+
+         let manager = mapView.annotations.makePointAnnotationManager()
+         XCTAssertTrue(style.layerExists(withId: manager.layerId))
+         XCTAssertTrue(style.sourceExists(withId: manager.sourceId))
+
+         var annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+         manager.syncAnnotations([annotation])
+         self.manager = manager
+
+         do {
+             let isPersistent = try style._isPersistentLayer(id: manager.layerId)
+             XCTAssertTrue(isPersistent, "The layer with id \(manager.layerId) should be persistent.")
+         } catch {
+             XCTFail("Unable to verify that the layer with id \(manager.layerId) is persistent.")
+         }
+     })
+ }
 }
 
 // End of generated file

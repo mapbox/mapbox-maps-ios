@@ -17,7 +17,7 @@ class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         didFinishLoadingStyle = { [weak self] _ in
 
-            guard let self = self, 
+            guard let self = self,
                   let style = try? XCTUnwrap(self.style),
                   let mapView = try? XCTUnwrap(self.mapView) else { return }
 
@@ -33,7 +33,7 @@ class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
                 CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
             ]
             var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
-            
+
             annotation.fillSortKey =  Double.testConstantValue()
             annotation.fillColor =  ColorRepresentable.testConstantValue()
             annotation.fillOpacity =  Double.testConstantValue()
@@ -52,7 +52,7 @@ class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
     func verifyFeatureContainsProperties(annotation: PolygonAnnotation)  {
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else { return }
-        
+
         XCTAssertEqual(featureProperties["fill-sort-key"] as? Double, annotation.fillSortKey)
         XCTAssertEqual(featureProperties["fill-color"] as? String, annotation.fillColor?.rgbaDescription)
         XCTAssertEqual(featureProperties["fill-opacity"] as? Double, annotation.fillOpacity)
@@ -64,7 +64,7 @@ class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         guard let style = try? XCTUnwrap(self.style) else { return }
 
         var source: GeoJSONSource?
-        do { 
+        do {
             source = try style.source(withId: sourceId) as GeoJSONSource
         } catch {
             XCTFail("Could not retrieve source due to error: \(error)")
@@ -83,6 +83,39 @@ class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(featureProperties["fill-outline-color"] as? String, annotation.fillOutlineColor?.rgbaDescription)
         XCTAssertEqual(featureProperties["fill-pattern"] as? String, annotation.fillPattern)
     }
+
+  func testAnnotationPersistence() throws {
+     let style = try XCTUnwrap(self.style)
+     style.uri = .streets
+
+     mapView?.mapboxMap.onNext(.mapLoaded, handler: { [weak self] _ in
+         guard let self = self,
+               let style = try? XCTUnwrap(self.style),
+               let mapView = try? XCTUnwrap(self.mapView) else { return }
+
+         let manager = mapView.annotations.makePolygonAnnotationManager()
+         XCTAssertTrue(style.layerExists(withId: manager.layerId))
+         XCTAssertTrue(style.sourceExists(withId: manager.sourceId))
+
+         let polygonCoords = [
+             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),
+             CLLocationCoordinate2DMake(24.51713945052515, -87.967529296875),
+             CLLocationCoordinate2DMake(26.244156283890756, -87.967529296875),
+             CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
+             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
+         ]
+         var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+         manager.syncAnnotations([annotation])
+         self.manager = manager
+
+         do {
+             let isPersistent = try style._isPersistentLayer(id: manager.layerId)
+             XCTAssertTrue(isPersistent, "The layer with id \(manager.layerId) should be persistent.")
+         } catch {
+             XCTFail("Unable to verify that the layer with id \(manager.layerId) is persistent.")
+         }
+     })
+ }
 }
 
 // End of generated file

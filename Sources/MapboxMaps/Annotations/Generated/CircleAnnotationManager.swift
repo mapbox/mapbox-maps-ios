@@ -41,13 +41,17 @@ public class CircleAnnotationManager: AnnotationManager {
     /// Dependency required to add gesture recognizer to the MapView
     private weak var view: UIView?
 
-    internal init(id: String, style: Style, view: UIView, mapFeatureQueryable: MapFeatureQueryable, layerPosition: LayerPosition?) {
+    /// Indicates whether the style layer exists after style changes. Default value is `true`.
+    public private(set) var isPersistent: Bool
+
+    internal init(id: String, style: Style, view: UIView, mapFeatureQueryable: MapFeatureQueryable, isPersistent: Bool, layerPosition: LayerPosition?) {
         self.id = id
         self.style = style
         self.sourceId = id + "-source"
         self.layerId = id + "-layer"
         self.view = view
         self.mapFeatureQueryable = mapFeatureQueryable
+        self.isPersistent = isPersistent
 
         do {
             try makeSourceAndLayer(layerPosition: layerPosition)
@@ -85,7 +89,11 @@ public class CircleAnnotationManager: AnnotationManager {
         // Add the correct backing layer for this annotation type
         var layer = CircleLayer(id: layerId)
         layer.source = sourceId
-        try style._addPersistentLayer(layer, layerPosition: layerPosition)
+        if isPersistent {
+            try style._addPersistentLayer(layer, layerPosition: layerPosition)
+        } else {
+            try style.addLayer(layer, layerPosition: layerPosition)
+        }
     }
 
     // MARK: - Sync annotations to map -

@@ -110,7 +110,7 @@ class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
              XCTFail("Unable to verify that the layer with id \(manager.layerId) is persistent.")
          }
      })
- }
+   }
 }
 
 // End of generated file

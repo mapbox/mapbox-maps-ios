@@ -58,6 +58,7 @@ public class AnnotationOrchestrator {
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `PointAnnotationManager`
     public func makePointAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
+                                           isPersistent: Bool = true,
                                            layerPosition: LayerPosition? = nil) -> PointAnnotationManager {
 
         guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
@@ -68,6 +69,7 @@ public class AnnotationOrchestrator {
                                       style: style,
                                       view: view,
                                       mapFeatureQueryable: mapFeatureQueryable,
+                                      isPersistent: isPersistent,
                                       layerPosition: layerPosition)
     }
 
@@ -77,6 +79,7 @@ public class AnnotationOrchestrator {
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `PolygonAnnotationManager`
     public func makePolygonAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
+                                             isPersistent: Bool = true,
                                              layerPosition: LayerPosition? = nil) -> PolygonAnnotationManager {
 
         guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
@@ -87,6 +90,7 @@ public class AnnotationOrchestrator {
                                         style: style,
                                         view: view,
                                         mapFeatureQueryable: mapFeatureQueryable,
+                                        isPersistent: isPersistent,
                                         layerPosition: layerPosition)
     }
 
@@ -96,6 +100,7 @@ public class AnnotationOrchestrator {
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `PolylineAnnotationManager`
     public func makePolylineAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
+                                              isPersistent: Bool = true,
                                               layerPosition: LayerPosition? = nil) -> PolylineAnnotationManager {
 
         guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
@@ -106,6 +111,7 @@ public class AnnotationOrchestrator {
                                          style: style,
                                          view: view,
                                          mapFeatureQueryable: mapFeatureQueryable,
+                                         isPersistent: isPersistent,
                                          layerPosition: layerPosition)
     }
 
@@ -115,6 +121,7 @@ public class AnnotationOrchestrator {
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `CircleAnnotationManager`
     public func makeCircleAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
+                                            isPersistent: Bool = true,
                                             layerPosition: LayerPosition? = nil) -> CircleAnnotationManager {
 
         guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
@@ -125,6 +132,7 @@ public class AnnotationOrchestrator {
                                        style: style,
                                        view: view,
                                        mapFeatureQueryable: mapFeatureQueryable,
+                                       isPersistent: isPersistent,
                                        layerPosition: layerPosition)
     }
 }

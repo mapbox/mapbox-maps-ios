@@ -3,7 +3,7 @@
     "pins": [
       {
         "package": "MapboxCommon",
-        "repositoryURL": "https://github.com/mapbox/mapbox-common-ios.git",
+        "repositoryURL": "https://github.com/mapbox/mapbox-common-ios",
         "state": {
           "branch": null,
           "revision": "14903abc9962e8b3e747071e1e0935c70081e422",

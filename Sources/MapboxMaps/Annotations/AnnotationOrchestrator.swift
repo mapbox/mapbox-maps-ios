@@ -55,10 +55,11 @@ public class AnnotationOrchestrator {
     /// Creates a `PointAnnotationManager` which is used to manage a collection of `PointAnnotation`s.
     /// - Parameters:
     ///   - id: Optional string identifier for this manager.
+    ///   - shouldPersist: Indicates whether the annotation layer should exist in after changing the map's style. Default value is `true`.
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `PointAnnotationManager`
     public func makePointAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
-                                           isPersistent: Bool = true,
+                                           shouldPersist: Bool = true,
                                            layerPosition: LayerPosition? = nil) -> PointAnnotationManager {
 
         guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
@@ -69,17 +70,18 @@ public class AnnotationOrchestrator {
                                       style: style,
                                       view: view,
                                       mapFeatureQueryable: mapFeatureQueryable,
-                                      isPersistent: isPersistent,
+                                      shouldPersist: shouldPersist,
                                       layerPosition: layerPosition)
     }
 
     /// Creates a `PolygonAnnotationManager` which is used to manage a collection of `PolygonAnnotation`s.
     /// - Parameters:
     ///   - id: Optional string identifier for this manager.
+    ///   - shouldPersist: Indicates whether the annotation layer should exist in after changing the map's style. Default value is `true`.
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `PolygonAnnotationManager`
     public func makePolygonAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
-                                             isPersistent: Bool = true,
+                                             shouldPersist: Bool = true,
                                              layerPosition: LayerPosition? = nil) -> PolygonAnnotationManager {
 
         guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
@@ -90,17 +92,18 @@ public class AnnotationOrchestrator {
                                         style: style,
                                         view: view,
                                         mapFeatureQueryable: mapFeatureQueryable,
-                                        isPersistent: isPersistent,
+                                        shouldPersist: shouldPersist,
                                         layerPosition: layerPosition)
     }
 
     /// Creates a `PolylineAnnotationManager` which is used to manage a collection of `PolylineAnnotation`s.
     /// - Parameters:
     ///   - id: Optional string identifier for this manager.
+    ///   - shouldPersist: Indicates whether the annotation layer should exist in after changing the map's style. Default value is `true`.
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `PolylineAnnotationManager`
     public func makePolylineAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
-                                              isPersistent: Bool = true,
+                                              shouldPersist: Bool = true,
                                               layerPosition: LayerPosition? = nil) -> PolylineAnnotationManager {
 
         guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
@@ -111,17 +114,18 @@ public class AnnotationOrchestrator {
                                          style: style,
                                          view: view,
                                          mapFeatureQueryable: mapFeatureQueryable,
-                                         isPersistent: isPersistent,
+                                         shouldPersist: shouldPersist,
                                          layerPosition: layerPosition)
     }
 
     /// Creates a `CircleAnnotationManager` which is used to manage a collection of `CircleAnnotation`s.
     /// - Parameters:
     ///   - id: Optional string identifier for this manager.
+    ///   - shouldPersist: Indicates whether the annotation layer should exist in after changing the map's style. Default value is `true`.
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `CircleAnnotationManager`
     public func makeCircleAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
-                                            isPersistent: Bool = true,
+                                            shouldPersist: Bool = true,
                                             layerPosition: LayerPosition? = nil) -> CircleAnnotationManager {
 
         guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
@@ -132,7 +136,7 @@ public class AnnotationOrchestrator {
                                        style: style,
                                        view: view,
                                        mapFeatureQueryable: mapFeatureQueryable,
-                                       isPersistent: isPersistent,
+                                       shouldPersist: shouldPersist,
                                        layerPosition: layerPosition)
     }
 }

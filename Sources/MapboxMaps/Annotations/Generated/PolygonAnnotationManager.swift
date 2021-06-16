@@ -42,18 +42,16 @@ public class PolygonAnnotationManager: AnnotationManager {
     private weak var view: UIView?
 
     /// Indicates whether the style layer exists after style changes. Default value is `true`.
-    public private(set) var isPersistent: Bool
+    public private(set) var shouldPersist: Bool
 
-    /// Indicates whether the layer
-
-    internal init(id: String, style: Style, view: UIView, mapFeatureQueryable: MapFeatureQueryable, isPersistent: Bool, layerPosition: LayerPosition?) {
+    internal init(id: String, style: Style, view: UIView, mapFeatureQueryable: MapFeatureQueryable, shouldPersist: Bool, layerPosition: LayerPosition?) {
         self.id = id
         self.style = style
         self.sourceId = id + "-source"
         self.layerId = id + "-layer"
         self.view = view
         self.mapFeatureQueryable = mapFeatureQueryable
-        self.isPersistent = isPersistent
+        self.shouldPersist = shouldPersist
 
         do {
             try makeSourceAndLayer(layerPosition: layerPosition)
@@ -91,7 +89,7 @@ public class PolygonAnnotationManager: AnnotationManager {
         // Add the correct backing layer for this annotation type
         var layer = FillLayer(id: layerId)
         layer.source = sourceId
-        if isPersistent {
+        if shouldPersist {
             try style._addPersistentLayer(layer, layerPosition: layerPosition)
         } else {
             try style.addLayer(layer, layerPosition: layerPosition)

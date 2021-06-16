@@ -127,14 +127,19 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
 
         // Look for features at the tap location within the unclustered layer.
         mapView.mapboxMap.queryRenderedFeatures(at: point,
-                                                options: RenderedQueryOptions(layerIds: ["unclustered-point-layer"],
+                                                options: RenderedQueryOptions(layerIds: ["unclustered-point-layer", "clustered-fire-hydrant-layer"],
                                                 filter: nil)) { [weak self] result in
             switch result {
             case .success(let queriedfeatures):
-                // Return the first hydrant at that location, then pass attributes to the alert controller.
+                // Return the first feature at that location, then pass attributes to the alert controller.
                 if let firstFeature = queriedfeatures.first?.feature.properties,
                    let feature = firstFeature["ASSETNUM"] as? String, let location = firstFeature["LOCATIONDETAIL"] as? String {
                     self?.showAlert(with: "Hydrant \(feature)", and: "\(location)")
+                } else if let firstFeature = queriedfeatures.first?.feature.properties,
+                          let pointCount = firstFeature["point_count"],
+                          let clusterId = firstFeature["cluster_id"] {
+                    // If the tap landed on a cluster, pass the cluster ID and point count to the alert.
+                    self?.showAlert(with: "Cluster ID \(clusterId)", and: "There are \(pointCount) points in this cluster")
                 }
             case .failure(let error):
                 self?.showAlert(with: "An error occurred: \(error.localizedDescription)", and: "Please try another hydrant")

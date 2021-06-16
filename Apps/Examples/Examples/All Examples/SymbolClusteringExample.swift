@@ -12,7 +12,7 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
 
         // Create a map view centered over Washington, DC.
         let center = CLLocationCoordinate2D(latitude: 38.889215, longitude: -77.039354)
-        let cameraOptions = CameraOptions(center: center, zoom: 10)
+        let cameraOptions = CameraOptions(center: center, zoom: 11)
         let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .dark)
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -23,6 +23,9 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
         mapView.mapboxMap.onNext(.mapLoaded) { _ in
             self.addSymbolClusteringLayer()
         }
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(gestureRecognizer:)))
+        mapView.addGestureRecognizer(tap)
     }
 
     func addSymbolClusteringLayer() {
@@ -96,7 +99,7 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
     
     func createUnclusteredLayer() -> SymbolLayer {
         // Create a symbol layer to represent the points that aren't clustered.
-        var unclusteredLayer = SymbolLayer(id: "unclusteredPointLayer")
+        var unclusteredLayer = SymbolLayer(id: "unclustered-point-layer")
 
         // Filter out clusters by checking for point_count.
         unclusteredLayer.filter = Exp(.not) {
@@ -117,5 +120,36 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
         // Double the size of the icon image.
         unclusteredLayer.iconSize = .constant(2)
         return unclusteredLayer
+    }
+    
+    @objc func handleTap(gestureRecognizer: UITapGestureRecognizer) {
+        let point = gestureRecognizer.location(in: mapView)
+
+        // Look for features at the tap location within the unclustered layer.
+        mapView.mapboxMap.queryRenderedFeatures(at: point,
+                                                options: RenderedQueryOptions(layerIds: ["unclustered-point-layer"],
+                                                filter: nil)) { [weak self] result in
+            switch result {
+            case .success(let queriedfeatures):
+                // Return the first hydrant at that location, then pass attributes to the alert controller.
+                if let firstFeature = queriedfeatures.first?.feature.properties,
+                   let feature = firstFeature["ASSETNUM"] as? String, let location = firstFeature["LOCATIONDETAIL"] as? String {
+                    self?.showAlert(with: "Hydrant \(feature)", and: "\(location)")
+                }
+            case .failure(let error):
+                self?.showAlert(with: "An error occurred: \(error.localizedDescription)", and: "Please try another hydrant")
+            }
+        }
+    }
+
+    // Present an alert with a given title and message.
+    public func showAlert(with title: String, and message: String) {
+        let alertController = UIAlertController(title: title,
+                                                message: message,
+                                                preferredStyle: .alert)
+
+        alertController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+
+        present(alertController, animated: true, completion: nil)
     }
 }

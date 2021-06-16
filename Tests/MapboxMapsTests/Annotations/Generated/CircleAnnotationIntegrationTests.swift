@@ -99,7 +99,7 @@ class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
          XCTAssertTrue(style.layerExists(withId: manager.layerId))
          XCTAssertTrue(style.sourceExists(withId: manager.sourceId))
 
-         var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
+         let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
          manager.syncAnnotations([annotation])
          self.manager = manager
 

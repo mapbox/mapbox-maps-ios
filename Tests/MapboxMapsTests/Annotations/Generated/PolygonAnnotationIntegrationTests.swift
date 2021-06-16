@@ -104,7 +104,7 @@ class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
              CLLocationCoordinate2DMake(26.244156283890756, -89.857177734375),
              CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
          ]
-         var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
+         let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
          manager.syncAnnotations([annotation])
          self.manager = manager
 

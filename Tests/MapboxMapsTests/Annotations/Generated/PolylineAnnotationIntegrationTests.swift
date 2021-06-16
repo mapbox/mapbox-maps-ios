@@ -104,7 +104,7 @@ class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
          XCTAssertTrue(style.sourceExists(withId: manager.sourceId))
 
          let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-         var annotation = PolylineAnnotation(line: .init(lineCoordinates))
+         let annotation = PolylineAnnotation(line: .init(lineCoordinates))
          manager.syncAnnotations([annotation])
          self.manager = manager
 

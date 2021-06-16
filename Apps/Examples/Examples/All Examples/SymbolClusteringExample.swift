@@ -10,14 +10,16 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        let center = CLLocationCoordinate2D(latitude: 38.87031, longitude: -77.00897)
+        // Create a map view centered over Washington, DC.
+        let center = CLLocationCoordinate2D(latitude: 38.889215, longitude: -77.039354)
         let cameraOptions = CameraOptions(center: center, zoom: 10)
         let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .dark)
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
         view.addSubview(mapView)
-        
+
+        // Add the source and style layers once the
         mapView.mapboxMap.onNext(.mapLoaded) { _ in
             self.addSymbolClusteringLayer()
         }
@@ -25,34 +27,43 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
 
     func addSymbolClusteringLayer() {
         let style = self.mapView.mapboxMap.style
+
+        // Fire_Hydrants.geojson contains information about fire hydrants in the District of Columbia.
+        // It was downloaded on 6/10/21 from https://opendata.dc.gov/datasets/DCGIS::fire-hydrants/about
         guard let url = Bundle.main.url(forResource: "Fire_Hydrants", withExtension: "geojson") else {
             return
         }
 
-        // Add 
+        // Create a GeoJSONSource using the previously specified URL.
         var source = GeoJSONSource()
         source.data = .url(url)
 
+        // Enable clustering for this source.
         source.cluster = true
         source.clusterRadius = 75
         let sourceID = "fire-hydrant-source"
-        
+
         var clusteredLayer = createClusteredLayer()
         clusteredLayer.source = sourceID
-        
+
         var unclusteredLayer = createUnclusteredLayer()
         unclusteredLayer.source = sourceID
-        
+
+        // Add the source and two layers to the map.
         try! style.addSource(source, id: sourceID)
         try! style.addLayer(clusteredLayer)
         try! style.addLayer(unclusteredLayer, layerPosition: .below(clusteredLayer.id))
-        
+
+        finish()
     }
 
     func createClusteredLayer() -> CircleLayer {
+        // Create a circle layer to represent the clustered points.
         var clusteredLayer = CircleLayer(id: "clustered-fire-hydrant-layer")
         clusteredLayer.filter = Exp(.has) { "point_count" }
 
+        // Set the color of the circles based on the number of points within
+        // a given cluster. The first value is a default value.
         clusteredLayer.circleColor = .expression(Exp(.step) {
             Exp(.get) { "point_count" }
             UIColor(red: 0.85, green: 0.11, blue: 0.38, alpha: 1.00)
@@ -63,12 +74,28 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
             100
             UIColor(red: 0.85, green: 0.11, blue: 0.38, alpha: 1.00)
         })
-        clusteredLayer.circleRadius = .constant(25)
+
+        // Add an outline to the circles.
+        clusteredLayer.circleStrokeColor = .constant(.init(color: .black))
+        clusteredLayer.circleStrokeWidth = .constant(2)
+
+        // Adjust the radius of the circles based on the number of points within an
+        // individual cluster. The first value is a default value.
+        clusteredLayer.circleRadius = .expression(Exp(.step) {
+            Exp(.get) { "point_count" }
+            10
+            0
+            10
+            50
+            20
+            100
+            30
+        })
         return clusteredLayer
     }
     
     func createUnclusteredLayer() -> SymbolLayer {
-        
+        // Create a symbol layer to represent the points that aren't clustered.
         var unclusteredLayer = SymbolLayer(id: "unclusteredPointLayer")
 
         // Filter out clusters by checking for point_count.
@@ -76,15 +103,19 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
         Exp(.has) { "point_count" }
         }
 
+        // The image named `fire-station-11` is included in the app's Assets.xcassets bundle.
         unclusteredLayer.iconImage = .constant(.name("fire-station-11"))
-        unclusteredLayer.iconSize = .constant(2)
-        unclusteredLayer.iconHaloColor = .constant(ColorRepresentable(color: UIColor(red: 0.85, green: 0.11, blue: 0.38, alpha: 1.00)))
-        return unclusteredLayer
-    }
 
-    override public func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-         // The below line is used for internal testing purposes only.
-        finish()
+        // Rotate the icon image based on the recorded water flow.
+        // The `mod` operator allows you to use the remainder after dividing
+        // the specified values.
+        unclusteredLayer.iconRotate = .expression(Exp(.mod) {
+            Exp(.get) { "FLOW" }
+            360
+        })
+        
+        // Double the size of the icon image.
+        unclusteredLayer.iconSize = .constant(2)
+        return unclusteredLayer
     }
 }

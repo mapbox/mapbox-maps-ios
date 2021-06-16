@@ -60,14 +60,17 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
         finish()
     }
 
-    func createClusteredLayer() -> CircleLayer {
-        // Create a circle layer to represent the clustered points.
-        var clusteredLayer = CircleLayer(id: "clustered-fire-hydrant-layer")
+    func createClusteredLayer() -> SymbolLayer {
+        // Create a symbol layer to represent the clustered points.
+        var clusteredLayer = SymbolLayer(id: "clustered-fire-hydrant-layer")
         clusteredLayer.filter = Exp(.has) { "point_count" }
 
-        // Set the color of the circles based on the number of points within
+        // The image named `fire-station-11` is included in the app's Assets.xcassets bundle.
+        clusteredLayer.iconImage = .constant(.name("fire-station-11"))
+
+        // Set the color of the icons based on the number of points within
         // a given cluster. The first value is a default value.
-        clusteredLayer.circleColor = .expression(Exp(.step) {
+        clusteredLayer.iconColor = .expression(Exp(.step) {
             Exp(.get) { "point_count" }
             UIColor(red: 0.85, green: 0.11, blue: 0.38, alpha: 1.00)
             0
@@ -78,21 +81,21 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
             UIColor(red: 0.85, green: 0.11, blue: 0.38, alpha: 1.00)
         })
 
-        // Add an outline to the circles.
-        clusteredLayer.circleStrokeColor = .constant(.init(color: .black))
-        clusteredLayer.circleStrokeWidth = .constant(2)
+        // Add an outline to the icons.
+        clusteredLayer.iconHaloColor = .constant(.init(color: .black))
+        clusteredLayer.iconHaloWidth = .constant(4)
 
-        // Adjust the radius of the circles based on the number of points within an
+        // Adjust the scale of the icons based on the number of points within an
         // individual cluster. The first value is a default value.
-        clusteredLayer.circleRadius = .expression(Exp(.step) {
+        clusteredLayer.iconSize = .expression(Exp(.step) {
             Exp(.get) { "point_count" }
-            10
+            2.5
             0
-            10
+            2.5
             50
-            20
+            3
             100
-            30
+            3.5
         })
         return clusteredLayer
     }
@@ -105,8 +108,6 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
         unclusteredLayer.filter = Exp(.not) {
         Exp(.has) { "point_count" }
         }
-
-        // The image named `fire-station-11` is included in the app's Assets.xcassets bundle.
         unclusteredLayer.iconImage = .constant(.name("fire-station-11"))
 
         // Rotate the icon image based on the recorded water flow.

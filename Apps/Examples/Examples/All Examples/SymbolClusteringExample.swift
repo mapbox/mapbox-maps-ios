@@ -21,15 +21,18 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
 
         // Add the source and style layers once the
         mapView.mapboxMap.onNext(.mapLoaded) { _ in
-            self.addSymbolClusteringLayer()
+            self.addSymbolClusteringLayers()
         }
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(gestureRecognizer:)))
         mapView.addGestureRecognizer(tap)
     }
 
-    func addSymbolClusteringLayer() {
+    func addSymbolClusteringLayers() {
         let style = self.mapView.mapboxMap.style
+        // The image named `fire-station-11` is included in the app's Assets.xcassets bundle.
+        let image = UIImage(named: "fire-station-11")!.withRenderingMode(.alwaysTemplate)
+        try! style.addImage(image, id: "fire-station-icon")
 
         // Fire_Hydrants.geojson contains information about fire hydrants in the District of Columbia.
         // It was downloaded on 6/10/21 from https://opendata.dc.gov/datasets/DCGIS::fire-hydrants/about
@@ -65,15 +68,21 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
         var clusteredLayer = SymbolLayer(id: "clustered-fire-hydrant-layer")
         clusteredLayer.filter = Exp(.has) { "point_count" }
 
-        // The image named `fire-station-11` is included in the app's Assets.xcassets bundle.
-        clusteredLayer.iconImage = .constant(.name("fire-station-11"))
+        clusteredLayer.iconImage = .constant(.name("fire-station-icon"))
 
         // Set the color of the icons based on the number of points within
         // a given cluster. The first value is a default value.
+        /**
+         This JSON expression is transformed to swift below:
+         [
+           "interpolate",
+           ["step"],
+           ["get", "point_count"],
+           ["rgba", "30.6", "229.5", "145.35", 1], 50, ["rgba", "30.6", "135.15", "229.5", 1], 100, ["rgba", "216.75", "28.05", "96.9", 1]
+         ]
+         */
         clusteredLayer.iconColor = .expression(Exp(.step) {
             Exp(.get) { "point_count" }
-            UIColor(red: 0.85, green: 0.11, blue: 0.38, alpha: 1.00)
-            0
             UIColor(red: 0.12, green: 0.90, blue: 0.57, alpha: 1.00)
             50
             UIColor(red: 0.12, green: 0.53, blue: 0.90, alpha: 1.00)
@@ -82,8 +91,8 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
         })
 
         // Add an outline to the icons.
-        clusteredLayer.iconHaloColor = .constant(.init(color: .black))
-        clusteredLayer.iconHaloWidth = .constant(4)
+//        clusteredLayer.iconHaloColor = .constant(.init(color: .black))
+//        clusteredLayer.iconHaloWidth = .constant(4)
 
         // Adjust the scale of the icons based on the number of points within an
         // individual cluster. The first value is a default value.
@@ -97,6 +106,7 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
             100
             3.5
         })
+        print(try! clusteredLayer.jsonObject())
         return clusteredLayer
     }
     
@@ -108,8 +118,8 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
         unclusteredLayer.filter = Exp(.not) {
         Exp(.has) { "point_count" }
         }
-        unclusteredLayer.iconImage = .constant(.name("fire-station-11"))
-
+        unclusteredLayer.iconImage = .constant(.name("fire-station-icon"))
+        unclusteredLayer.iconColor = .constant(.init(color: UIColor(red: 0.12, green: 0.90, blue: 0.57, alpha: 1.00)))
         // Rotate the icon image based on the recorded water flow.
         // The `mod` operator allows you to use the remainder after dividing
         // the specified values.

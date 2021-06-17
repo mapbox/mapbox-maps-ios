@@ -161,40 +161,6 @@ public final class MapboxMap {
 
         return rect
     }
-
-    /// This function creates an expression that will localize the `textField` property of a `SymbolLayer`
-    /// - Parameter locale: A `SupportedLanguage` based `Locale`
-    internal func localizeLabels(into locale: Locale) {
-        /// Get all symbol layers that are currently on the map
-        let symbolLayers = style.styleManager.getStyleLayers().filter { layer in
-            return layer.type == LayerType.symbol.rawValue
-        }
-
-        /// Expression to be applied to the `SymbolLayer.textField`to localize the language
-        /// Sample Expression JSON: `["format",["coalesce",["get","name_en"],["get","name"]],{}]`
-        let expression = Exp(.format) {
-            Exp(.coalesce) {
-                Exp(.get) {
-                    "name_\(locale.identifier)"
-                }
-                Exp(.get) {
-                    "name"
-                }
-            }
-        }
-
-        for layer in symbolLayers {
-            do {
-                let tempLayer = try style.layer(withId: layer.id) as SymbolLayer
-
-                try style.updateLayer(withId: tempLayer.id) { (layer: inout SymbolLayer) throws in
-                    layer.textField = .expression(expression)
-                }
-            } catch {
-                Log.error(forMessage: "Error localizing textField for Symbol Layer with ID: \(layer.id)", category: "Style")
-            }
-        }
-    }
 }
 
 extension MapboxMap: MapTransformDelegate {

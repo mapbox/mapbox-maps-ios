@@ -35,9 +35,10 @@ open class MapView: UIView {
     /// Controls the addition/removal of annotations to the map.
     public internal(set) var annotations: AnnotationOrchestrator!
 
+    /// Property that describes the current language for `SymbolLayer.textField`
     public var locale: Locale = Locale.current {
         didSet {
-            mapboxMap.localizeLabels(into: locale)
+            mapboxMap.style.localizeLabels(into: locale)
         }
     }
 

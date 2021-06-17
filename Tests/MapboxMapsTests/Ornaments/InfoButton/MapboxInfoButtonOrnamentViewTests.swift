@@ -55,7 +55,7 @@ class MapboxInfoButtonOrnamentTests: MapViewIntegrationTestCase {
         telemetryAlert.tapButton(atIndex: 1)
         XCTAssertFalse(infoButton.isMetricsEnabled, "Metrics should not be enabled after selecting 'Don't Participate'.")
     }
-    
+
     func testTelemetryOptIn() throws {
         UserDefaults.standard.set(false, forKey: MapboxInfoButtonOrnament.Constants.metricsEnabledKey)
         let infoButton = MapboxInfoButtonOrnament()
@@ -81,7 +81,7 @@ class MapboxInfoButtonOrnamentTests: MapViewIntegrationTestCase {
 
         telemetryAlert.tapButton(atIndex: 2)
         XCTAssertTrue(infoButton.isMetricsEnabled, "Metrics should be enabled after selecting 'Participate'.")
-        
+
         infoButton.infoTapped()
         infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
         infoAlert.tapButton(atIndex: 0)

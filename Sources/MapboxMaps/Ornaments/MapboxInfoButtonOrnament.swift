@@ -2,7 +2,7 @@ import UIKit
 @_implementationOnly import MapboxCommon_Private
 
 internal class MapboxInfoButtonOrnament: UIView {
-    private enum Constants {
+    internal enum Constants {
         static let localizableTableName = "OrnamentsLocalizable"
         static let metricsEnabledKey = "MGLMapboxMetricsEnabled"
         static let telemetryURL = "https://www.mapbox.com/telemetry/"

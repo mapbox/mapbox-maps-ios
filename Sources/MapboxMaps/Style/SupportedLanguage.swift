@@ -1,5 +1,5 @@
 /// A list of languages that our maps support for localization
-public enum SupportedLanguages: String, Equatable {
+public enum SupportedLanguage: String, Equatable {
     case english = "en"
     case french = "fr"
     case arabic = "ar"

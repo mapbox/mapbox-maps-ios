@@ -219,6 +219,7 @@
 		B5F294BB2635EEAD00199426 /* FloatingPointTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F294BA2635EEAD00199426 /* FloatingPointTests.swift */; };
 		B5F295552635EF4E00199426 /* CompassDirectionLong.strings in Resources */ = {isa = PBXBuildFile; fileRef = B5F295512635EF4E00199426 /* CompassDirectionLong.strings */; };
 		B5F295562635EF4E00199426 /* CompassDirectionShort.strings in Resources */ = {isa = PBXBuildFile; fileRef = B5F295532635EF4E00199426 /* CompassDirectionShort.strings */; };
+		C608C133267BD04A003C86C3 /* SupportedLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C608C132267BD04A003C86C3 /* SupportedLanguage.swift */; };
 		C6334944262E28C300D17701 /* StyleTransitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6334943262E28C300D17701 /* StyleTransitionTests.swift */; };
 		C64994A9258D5ADE0052C21C /* LocationPuckManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64994A5258D5ADD0052C21C /* LocationPuckManager.swift */; };
 		C64994AB258D5ADE0052C21C /* Puck.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64994A6258D5ADE0052C21C /* Puck.swift */; };
@@ -691,6 +692,7 @@
 		B5F2957D2635EF9F00199426 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/CompassDirectionLong.strings; sourceTree = "<group>"; };
 		B5F2957E2635EF9F00199426 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/CompassDirectionLong.strings; sourceTree = "<group>"; };
 		B5F2957F2635EF9F00199426 /* lt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = lt; path = lt.lproj/CompassDirectionLong.strings; sourceTree = "<group>"; };
+		C608C132267BD04A003C86C3 /* SupportedLanguage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportedLanguage.swift; sourceTree = "<group>"; };
 		C6334943262E28C300D17701 /* StyleTransitionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleTransitionTests.swift; sourceTree = "<group>"; };
 		C64994A5258D5ADD0052C21C /* LocationPuckManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationPuckManager.swift; sourceTree = "<group>"; };
 		C64994A6258D5ADE0052C21C /* Puck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Puck.swift; sourceTree = "<group>"; };
@@ -1466,6 +1468,7 @@
 		A4519DCE2432FF03007CF39A /* MapboxMapsStyle */ = {
 			isa = PBXGroup;
 			children = (
+				C608C132267BD04A003C86C3 /* SupportedLanguage.swift */,
 				CA9F8CE22641F95C00A8BCB6 /* StyleManagerProtocol.swift */,
 				B5DDE95F2613ACB400998840 /* StyleEncodable.swift */,
 				0CBCF2D7254229630025F7B3 /* STYLE_README.md */,
@@ -2039,6 +2042,7 @@
 				0C708F2924EB1EE2003CE791 /* LocationIndicatorLayer.swift in Sources */,
 				0C708F6024EC70DD003CE791 /* Color.swift in Sources */,
 				0C708F2D24EB1EE2003CE791 /* HeatmapLayer.swift in Sources */,
+				C608C133267BD04A003C86C3 /* SupportedLanguage.swift in Sources */,
 				0C3B1E9024DDADD000CC29E8 /* EventsManager.swift in Sources */,
 				0C708F4B24EB23C7003CE791 /* ImageSource.swift in Sources */,
 				C64994AF258D5ADE0052C21C /* Puck2D.swift in Sources */,

@@ -162,6 +162,8 @@ public final class MapboxMap {
         return rect
     }
 
+    /// This function creates an expression that will localize the `textField` property of a `SymbolLayer`
+    /// - Parameter locale: A `SupportedLanguage` based `Locale`
     internal func localizeLabels(into locale: Locale) {
         /// Get all symbol layers that are currently on the map
         let symbolLayers = style.styleManager.getStyleLayers().filter { layer in

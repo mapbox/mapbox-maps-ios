@@ -50,27 +50,27 @@ public class LocalizationExample: UIViewController, ExampleProtocol {
 
         alert.addAction(UIAlertAction(title: "Spanish", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            self.mapView.locale = Locale(identifier: SupportedLanguages.spanish.rawValue)
+            self.mapView.locale = Locale(identifier: SupportedLanguage.spanish.rawValue)
         }))
 
         alert.addAction(UIAlertAction(title: "French", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            self.mapView.locale = Locale(identifier: SupportedLanguages.french.rawValue)
+            self.mapView.locale = Locale(identifier: SupportedLanguage.french.rawValue)
         }))
 
-        alert.addAction(UIAlertAction(title: "Tranditional Chinese", style: .default, handler: { [weak self] _ in
+        alert.addAction(UIAlertAction(title: "Traditional Chinese", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            self.mapView.locale = Locale(identifier: SupportedLanguages.traditionalChinese.rawValue)
+            self.mapView.locale = Locale(identifier: SupportedLanguage.traditionalChinese.rawValue)
         }))
 
         alert.addAction(UIAlertAction(title: "Arabic", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            self.mapView.locale = Locale(identifier: SupportedLanguages.arabic.rawValue)
+            self.mapView.locale = Locale(identifier: SupportedLanguage.arabic.rawValue)
         }))
 
         alert.addAction(UIAlertAction(title: "English", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            self.mapView.locale = Locale(identifier: SupportedLanguages.english.rawValue)
+            self.mapView.locale = Locale(identifier: SupportedLanguage.english.rawValue)
         }))
 
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))

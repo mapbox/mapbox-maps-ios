@@ -42,7 +42,7 @@ public class CircleAnnotationManager: AnnotationManager {
     private weak var view: UIView?
 
     /// Indicates whether the style layer exists after style changes. Default value is `true`.
-    internal private(set) var shouldPersist: Bool
+    internal let shouldPersist: Bool
 
     internal init(id: String, style: Style, view: UIView, mapFeatureQueryable: MapFeatureQueryable, shouldPersist: Bool, layerPosition: LayerPosition?) {
         self.id = id

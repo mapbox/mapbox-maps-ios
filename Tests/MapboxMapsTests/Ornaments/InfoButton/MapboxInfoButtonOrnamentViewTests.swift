@@ -26,11 +26,11 @@ class MapboxInfoButtonOrnamentTests: MapViewIntegrationTestCase {
         parentViewController.view.addSubview(infoButton)
         infoButton.infoTapped()
 
-        let infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The first alert controller could not be found.")
+        var infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
         XCTAssertNotNil(infoAlert)
         infoAlert.tapButton(atIndex: 0)
 
-        let telemetryAlert = try XCTUnwrap(parentViewController.currentAlert, "The second alert controller could not be found.")
+        var telemetryAlert = try XCTUnwrap(parentViewController.currentAlert, "The telemetry alert controller could not be found.")
 
         XCTAssertEqual(telemetryAlert.actions.count, 3, "The telemetry alert should have 3 actions.")
 
@@ -44,6 +44,16 @@ class MapboxInfoButtonOrnamentTests: MapViewIntegrationTestCase {
 
         telemetryAlert.tapButton(atIndex: 1)
         XCTAssertFalse(infoButton.isMetricsEnabled, "Metrics should not be enabled after selecting 'Stop participating'.")
+
+        infoButton.infoTapped()
+        infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
+        infoAlert.tapButton(atIndex: 0)
+
+        telemetryAlert = try XCTUnwrap(parentViewController.currentAlert, "The telemetry alert controller could not be found.")
+        let dontParticipateTitle = NSLocalizedString("Don’t Participate", comment: "Telemetry prompt button")
+        XCTAssertEqual(dontParticipateTitle, telemetryAlert.actions[1].title, "The second action should be a 'Don't Participate' button.")
+        telemetryAlert.tapButton(atIndex: 1)
+        XCTAssertFalse(infoButton.isMetricsEnabled, "Metrics should not be enabled after selecting 'Don't Participate'.")
     }
     
     func testTelemetryOptIn() throws {
@@ -53,11 +63,11 @@ class MapboxInfoButtonOrnamentTests: MapViewIntegrationTestCase {
         parentViewController.view.addSubview(infoButton)
         infoButton.infoTapped()
 
-        let infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The first alert controller could not be found.")
+        var infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
         XCTAssertNotNil(infoAlert)
         infoAlert.tapButton(atIndex: 0)
 
-        let telemetryAlert = try XCTUnwrap(parentViewController.currentAlert, "The second alert controller could not be found.")
+        var telemetryAlert = try XCTUnwrap(parentViewController.currentAlert, "The telemetry alert controller could not be found.")
 
         XCTAssertEqual(telemetryAlert.actions.count, 3, "The telemetry alert should have 3 actions.")
 
@@ -71,6 +81,15 @@ class MapboxInfoButtonOrnamentTests: MapViewIntegrationTestCase {
 
         telemetryAlert.tapButton(atIndex: 2)
         XCTAssertTrue(infoButton.isMetricsEnabled, "Metrics should be enabled after selecting 'Participate'.")
+        
+        infoButton.infoTapped()
+        infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
+        infoAlert.tapButton(atIndex: 0)
+        telemetryAlert = try XCTUnwrap(parentViewController.currentAlert, "The telemetry alert controller could not be found.")
+        let keepParticipatingTitle = NSLocalizedString("Keep Participating", comment: "Telemetry prompt button")
+        XCTAssertEqual(keepParticipatingTitle, telemetryAlert.actions[2].title, "The third action should be a 'Keep Participating' button.")
+        telemetryAlert.tapButton(atIndex: 2)
+        XCTAssertTrue(infoButton.isMetricsEnabled, "Metrics should be enabled after selecting 'Keep Participating'.")
     }
 }
 

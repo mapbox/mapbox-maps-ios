@@ -7,57 +7,79 @@ class MapboxInfoButtonOrnamentTests: MapViewIntegrationTestCase {
         let parentViewController = MockParentViewController()
         parentViewController.view.addSubview(infoButton)
         infoButton.infoTapped()
-        
+
         let firstAlert = try XCTUnwrap(parentViewController.currentAlert, "The first alert controller could not be found.")
         XCTAssertNotNil(firstAlert)
-        
+
         XCTAssertEqual(firstAlert.actions.count, 2, "There should be two alerts present.")
         let telemetryTitle = NSLocalizedString("Mapbox Telemetry", comment: "Action in attribution sheet")
         XCTAssertEqual(firstAlert.actions[0].title!, telemetryTitle)
-        
+
         let cancelTitle = NSLocalizedString("Cancel", comment: "Title of button for dismissing attribution action sheet")
         XCTAssertEqual(firstAlert.actions[1].title, cancelTitle)
     }
-    
-    func testTelemetryTapped() throws {
-        
+
+    func testTelemetryOptOut() throws {
         UserDefaults.standard.set(true, forKey: MapboxInfoButtonOrnament.Constants.metricsEnabledKey)
         let infoButton = MapboxInfoButtonOrnament()
         let parentViewController = MockParentViewController()
         parentViewController.view.addSubview(infoButton)
         infoButton.infoTapped()
-        
-        let firstAlert = try XCTUnwrap(parentViewController.currentAlert, "The first alert controller could not be found.")
-        XCTAssertNotNil(firstAlert)
 
-        firstAlert.tapButton(atIndex: 0)
-        let secondAlert = try XCTUnwrap(parentViewController.currentAlert, "The second alert controller could not be found.")
-        
-        XCTAssertEqual(secondAlert.actions.count, 3, "The telemetry alert should have 3 actions.")
-        
-        let cancelTitle = NSLocalizedString( "Keep Participating", comment: "Telemetry prompt button")
-        XCTAssertEqual(cancelTitle, secondAlert.actions[2].title, "The third action should be a cancel button.")
-        
+        let infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The first alert controller could not be found.")
+        XCTAssertNotNil(infoAlert)
+        infoAlert.tapButton(atIndex: 0)
+
+        let telemetryAlert = try XCTUnwrap(parentViewController.currentAlert, "The second alert controller could not be found.")
+
+        XCTAssertEqual(telemetryAlert.actions.count, 3, "The telemetry alert should have 3 actions.")
+
+        let participatingTitle = NSLocalizedString("Keep Participating", comment: "Telemetry prompt button")
+        XCTAssertEqual(participatingTitle, telemetryAlert.actions[2].title, "The third action should be a 'Keep Participating' button.")
+
         XCTAssertTrue(infoButton.isMetricsEnabled)
+
+        let stopParticipatingTitle = NSLocalizedString("Stop Participating", comment: "Telemetry prompt button")
+        XCTAssertEqual(stopParticipatingTitle, telemetryAlert.actions[1].title, "The second action should be a 'Stop Participating' button.")
+
+        telemetryAlert.tapButton(atIndex: 1)
+        XCTAssertFalse(infoButton.isMetricsEnabled, "Metrics should not be enabled after selecting 'Stop participating'.")
     }
     
-    func testMetricsEnabled() {
+    func testTelemetryOptIn() throws {
+        UserDefaults.standard.set(false, forKey: MapboxInfoButtonOrnament.Constants.metricsEnabledKey)
         let infoButton = MapboxInfoButtonOrnament()
-        
-        XCTAssertFalse(infoButton.isMetricsEnabled, "Metrics should be enabled by default.")
-        
-//        UserDefaults.standard.set(false, forKey: MapboxInfoButton.Constants.metricsEnabledKey)
+        let parentViewController = MockParentViewController()
+        parentViewController.view.addSubview(infoButton)
+        infoButton.infoTapped()
+
+        let infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The first alert controller could not be found.")
+        XCTAssertNotNil(infoAlert)
+        infoAlert.tapButton(atIndex: 0)
+
+        let telemetryAlert = try XCTUnwrap(parentViewController.currentAlert, "The second alert controller could not be found.")
+
+        XCTAssertEqual(telemetryAlert.actions.count, 3, "The telemetry alert should have 3 actions.")
+
+        let participatingTitle = NSLocalizedString("Participate", comment: "Telemetry prompt button")
+        XCTAssertEqual(participatingTitle, telemetryAlert.actions[2].title, "The third action should be a 'Participate' button.")
+
+        XCTAssertFalse(infoButton.isMetricsEnabled)
+
+        let dontParticipateTitle = NSLocalizedString("Don’t Participate", comment: "Telemetry prompt button")
+        XCTAssertEqual(dontParticipateTitle, telemetryAlert.actions[1].title, "The second action should be a 'Don't Participate' button.")
+
+        telemetryAlert.tapButton(atIndex: 2)
+        XCTAssertTrue(infoButton.isMetricsEnabled, "Metrics should be enabled after selecting 'Participate'.")
     }
 }
 
 class MockParentViewController: UIViewController {
-    var alertCount = 0
     var currentAlert: UIAlertController?
 
     override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
         if let vc = viewControllerToPresent as? UIAlertController {
             currentAlert = vc
-            alertCount += 1
         }
     }
 }
@@ -70,10 +92,5 @@ extension UIAlertController {
         guard let block = actions[index].value(forKey: "handler") else { return }
         let handler = unsafeBitCast(block as AnyObject, to: AlertHandler.self)
         handler(actions[index])
-    }
-    
-    override open func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
-        print("BYE")
-        super.dismiss(animated: flag, completion: completion)
     }
 }

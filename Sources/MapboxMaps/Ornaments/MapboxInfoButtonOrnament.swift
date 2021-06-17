@@ -8,7 +8,7 @@ internal class MapboxInfoButtonOrnament: UIView {
         static let telemetryURL = "https://www.mapbox.com/telemetry/"
     }
 
-    private var isMetricsEnabled: Bool {
+    internal var isMetricsEnabled: Bool {
         get {
             UserDefaults.standard.bool(forKey: Constants.metricsEnabledKey)
         }
@@ -57,7 +57,7 @@ internal class MapboxInfoButtonOrnament: UIView {
     }
 
     @objc
-    private func infoTapped() {
+    internal func infoTapped() {
         guard let viewController = parentViewController else { return }
         let alert: UIAlertController
 
@@ -97,7 +97,7 @@ internal class MapboxInfoButtonOrnament: UIView {
     }
 
     //swiftlint:disable function_body_length
-    private func showTelemetryAlertController() {
+    internal func showTelemetryAlertController() {
         guard let viewController = parentViewController else { return }
         let alert: UIAlertController
         let bundle = Bundle.mapboxMaps
@@ -176,7 +176,7 @@ internal class MapboxInfoButtonOrnament: UIView {
     }
 }
 
-private extension UIView {
+internal extension UIView {
     var parentViewController: UIViewController? {
         var parentResponder: UIResponder? = self
         while parentResponder != nil {

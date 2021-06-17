@@ -2,6 +2,7 @@
 @_exported import MapboxCommon
 @_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
+import Foundation
 import UIKit
 import Turf
 
@@ -33,6 +34,12 @@ open class MapView: UIView {
 
     /// Controls the addition/removal of annotations to the map.
     public internal(set) var annotations: AnnotationOrchestrator!
+
+    public var locale: Locale = Locale.current {
+        didSet {
+            mapboxMap.localizeLabels(into: locale)
+        }
+    }
 
     /// A reference to the `EventsManager` used for dispatching telemetry.
     internal var eventsListener: EventsListener!

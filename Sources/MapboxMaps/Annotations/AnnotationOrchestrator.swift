@@ -52,14 +52,12 @@ public class AnnotationOrchestrator {
         self.style = style
     }
 
-    /// Creates a `PointAnnotationManager` which is used to manage a collection of `PointAnnotation`s.
+    /// Creates a `PointAnnotationManager` which is used to manage a collection of `PointAnnotation`s. The collection of `PointAnnotation` collection will persist across style changes.
     /// - Parameters:
     ///   - id: Optional string identifier for this manager.
-    ///   - shouldPersist: Indicates whether the annotation layer should exist in after changing the map's style. Default value is `true`.
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `PointAnnotationManager`
     public func makePointAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
-                                           shouldPersist: Bool = true,
                                            layerPosition: LayerPosition? = nil) -> PointAnnotationManager {
 
         guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
@@ -70,18 +68,16 @@ public class AnnotationOrchestrator {
                                       style: style,
                                       view: view,
                                       mapFeatureQueryable: mapFeatureQueryable,
-                                      shouldPersist: shouldPersist,
+                                      shouldPersist: true,
                                       layerPosition: layerPosition)
     }
 
-    /// Creates a `PolygonAnnotationManager` which is used to manage a collection of `PolygonAnnotation`s.
+    /// Creates a `PolygonAnnotationManager` which is used to manage a collection of `PolygonAnnotation`s. The collection of `PolygonAnnotation`s will persist across style changes.
     /// - Parameters:
-    ///   - id: Optional string identifier for this manager.
-    ///   - shouldPersist: Indicates whether the annotation layer should exist in after changing the map's style. Default value is `true`.
+    ///   - id: Optional string identifier for this manager..
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `PolygonAnnotationManager`
     public func makePolygonAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
-                                             shouldPersist: Bool = true,
                                              layerPosition: LayerPosition? = nil) -> PolygonAnnotationManager {
 
         guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
@@ -92,18 +88,16 @@ public class AnnotationOrchestrator {
                                         style: style,
                                         view: view,
                                         mapFeatureQueryable: mapFeatureQueryable,
-                                        shouldPersist: shouldPersist,
+                                        shouldPersist: true,
                                         layerPosition: layerPosition)
     }
 
-    /// Creates a `PolylineAnnotationManager` which is used to manage a collection of `PolylineAnnotation`s.
+    /// Creates a `PolylineAnnotationManager` which is used to manage a collection of `PolylineAnnotation`s. The collection of `PolylineAnnotation`s will persist across style changes.
     /// - Parameters:
     ///   - id: Optional string identifier for this manager.
-    ///   - shouldPersist: Indicates whether the annotation layer should exist in after changing the map's style. Default value is `true`.
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `PolylineAnnotationManager`
     public func makePolylineAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
-                                              shouldPersist: Bool = true,
                                               layerPosition: LayerPosition? = nil) -> PolylineAnnotationManager {
 
         guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
@@ -114,18 +108,16 @@ public class AnnotationOrchestrator {
                                          style: style,
                                          view: view,
                                          mapFeatureQueryable: mapFeatureQueryable,
-                                         shouldPersist: shouldPersist,
+                                         shouldPersist: true,
                                          layerPosition: layerPosition)
     }
 
-    /// Creates a `CircleAnnotationManager` which is used to manage a collection of `CircleAnnotation`s.
+    /// Creates a `CircleAnnotationManager` which is used to manage a collection of `CircleAnnotation`s.  The collection of `CircleAnnotation`s will persist across style changes.
     /// - Parameters:
     ///   - id: Optional string identifier for this manager.
-    ///   - shouldPersist: Indicates whether the annotation layer should exist in after changing the map's style. Default value is `true`.
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `CircleAnnotationManager`
     public func makeCircleAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
-                                            shouldPersist: Bool = true,
                                             layerPosition: LayerPosition? = nil) -> CircleAnnotationManager {
 
         guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
@@ -136,7 +128,7 @@ public class AnnotationOrchestrator {
                                        style: style,
                                        view: view,
                                        mapFeatureQueryable: mapFeatureQueryable,
-                                       shouldPersist: shouldPersist,
+                                       shouldPersist: true,
                                        layerPosition: layerPosition)
     }
 }

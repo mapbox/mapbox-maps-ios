@@ -4,11 +4,11 @@ import Foundation
 import Turf
 @_implementationOnly import MapboxCommon_Private
 
-/// An instance of `PolygonAnnotationManager` is responsible for a collection of `PolygonAnnotation`s. 
+/// An instance of `PolygonAnnotationManager` is responsible for a collection of `PolygonAnnotation`s.
 public class PolygonAnnotationManager: AnnotationManager {
 
     // MARK: - Annotations -
-    
+
     /// The collection of PolygonAnnotations being managed
     public private(set) var annotations = [PolygonAnnotation]() {
         didSet {
@@ -23,11 +23,11 @@ public class PolygonAnnotationManager: AnnotationManager {
     }
 
     // MARK: - AnnotationManager protocol conformance -
-    
+
     public let sourceId: String
-    
+
     public let layerId: String
-    
+
     public let id: String
 
     // MARK:- Setup / Lifecycle -
@@ -41,13 +41,17 @@ public class PolygonAnnotationManager: AnnotationManager {
     /// Dependency required to add gesture recognizer to the MapView
     private weak var view: UIView?
 
-    internal init(id: String, style: Style, view: UIView, mapFeatureQueryable: MapFeatureQueryable, layerPosition: LayerPosition?) {
+    /// Indicates whether the style layer exists after style changes. Default value is `true`.
+    internal let shouldPersist: Bool
+
+    internal init(id: String, style: Style, view: UIView, mapFeatureQueryable: MapFeatureQueryable, shouldPersist: Bool, layerPosition: LayerPosition?) {
         self.id = id
         self.style = style
         self.sourceId = id + "-source"
         self.layerId = id + "-layer"
         self.view = view
         self.mapFeatureQueryable = mapFeatureQueryable
+        self.shouldPersist = shouldPersist
 
         do {
             try makeSourceAndLayer(layerPosition: layerPosition)
@@ -72,7 +76,7 @@ public class PolygonAnnotationManager: AnnotationManager {
 
     internal func makeSourceAndLayer(layerPosition: LayerPosition?) throws {
 
-        guard let style = style else { 
+        guard let style = style else {
             Log.error(forMessage: "Style must exist when adding a source and layer for annotations", category: "Annotaitons")
             return
         }
@@ -85,14 +89,18 @@ public class PolygonAnnotationManager: AnnotationManager {
         // Add the correct backing layer for this annotation type
         var layer = FillLayer(id: layerId)
         layer.source = sourceId
-        try style.addLayer(layer, layerPosition: layerPosition)
+        if shouldPersist {
+            try style._addPersistentLayer(layer, layerPosition: layerPosition)
+        } else {
+            try style.addLayer(layer, layerPosition: layerPosition)
+        }
     }
 
     // MARK: - Sync annotations to map -
-    
+
     internal func syncAnnotations() {
 
-        guard let style = style else { 
+        guard let style = style else {
             Log.error(forMessage: "Style must exist when adding/removing annotations", category: "Annotations")
             return
         }
@@ -106,24 +114,24 @@ public class PolygonAnnotationManager: AnnotationManager {
                             category: "Annotations")
             }
         }
-        
+
         let featureCollection = Turf.FeatureCollection(features: annotations.map(\.feature))
         do {
             let data = try JSONEncoder().encode(featureCollection)
             guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                Log.error(forMessage: "Could not convert annotation features to json object in PolygonAnnotationManager", 
+                Log.error(forMessage: "Could not convert annotation features to json object in PolygonAnnotationManager",
                             category: "Annotations")
                 return
             }
             try style.setSourceProperty(for: sourceId, property: "data", value: jsonObject )
         } catch {
-            Log.error(forMessage: "Could not update annotations in PolygonAnnotationManager due to error: \(error)", 
+            Log.error(forMessage: "Could not update annotations in PolygonAnnotationManager due to error: \(error)",
                         category: "Annotations")
         }
     }
 
     // MARK: - Common layer properties -
-        
+
     /// Whether or not the fill should be antialiased.
     public var fillAntialias: Bool? {
         didSet {
@@ -135,7 +143,7 @@ public class PolygonAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     public var fillTranslate: [Double]? {
         didSet {
@@ -147,7 +155,7 @@ public class PolygonAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// Controls the frame of reference for `fill-translate`.
     public var fillTranslateAnchor: FillTranslateAnchor? {
         didSet {
@@ -159,7 +167,7 @@ public class PolygonAnnotationManager: AnnotationManager {
             }
         }
     }
-    
+
     // MARK: - Selection Handling -
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
@@ -185,17 +193,17 @@ public class PolygonAnnotationManager: AnnotationManager {
         view?.addGestureRecognizer(tapRecognizer)
         tapGestureRecognizer = tapRecognizer
     }
-    
+
     @objc internal func handleTap(_ tap: UITapGestureRecognizer) {
         let options = RenderedQueryOptions(layerIds: [layerId], filter: nil)
         mapFeatureQueryable?.queryRenderedFeatures(
             at: tap.location(in: view),
             options: options) { [weak self] (result) in
-            
+
             guard let self = self else { return }
-            
+
             switch result {
-            
+
             case .success(let queriedFeatures):
                 if let annotationIds = queriedFeatures.compactMap(\.feature.properties["annotation-id"]) as? [String] {
 
@@ -204,13 +212,13 @@ public class PolygonAnnotationManager: AnnotationManager {
                         self,
                         didDetectTappedAnnotations: tappedAnnotations)
                 }
-            
+
             case .failure(let error):
-                Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)", 
+                Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)",
                             category: "Annotations")
             }
         }
     }
-} 
+}
 // End of generated file.
 // swiftlint:enable all

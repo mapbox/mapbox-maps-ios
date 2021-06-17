@@ -4,11 +4,11 @@ import Foundation
 import Turf
 @_implementationOnly import MapboxCommon_Private
 
-/// An instance of `PointAnnotationManager` is responsible for a collection of `PointAnnotation`s. 
+/// An instance of `PointAnnotationManager` is responsible for a collection of `PointAnnotation`s.
 public class PointAnnotationManager: AnnotationManager {
 
     // MARK: - Annotations -
-    
+
     /// The collection of PointAnnotations being managed
     public private(set) var annotations = [PointAnnotation]() {
         didSet {
@@ -24,11 +24,11 @@ public class PointAnnotationManager: AnnotationManager {
     }
 
     // MARK: - AnnotationManager protocol conformance -
-    
+
     public let sourceId: String
-    
+
     public let layerId: String
-    
+
     public let id: String
 
     // MARK:- Setup / Lifecycle -
@@ -42,13 +42,17 @@ public class PointAnnotationManager: AnnotationManager {
     /// Dependency required to add gesture recognizer to the MapView
     private weak var view: UIView?
 
-    internal init(id: String, style: Style, view: UIView, mapFeatureQueryable: MapFeatureQueryable, layerPosition: LayerPosition?) {
+    /// Indicates whether the style layer exists after style changes. Default value is `true`.
+    internal let shouldPersist: Bool
+
+    internal init(id: String, style: Style, view: UIView, mapFeatureQueryable: MapFeatureQueryable, shouldPersist: Bool, layerPosition: LayerPosition?) {
         self.id = id
         self.style = style
         self.sourceId = id + "-source"
         self.layerId = id + "-layer"
         self.view = view
         self.mapFeatureQueryable = mapFeatureQueryable
+        self.shouldPersist = shouldPersist
 
         do {
             try makeSourceAndLayer(layerPosition: layerPosition)
@@ -73,7 +77,7 @@ public class PointAnnotationManager: AnnotationManager {
 
     internal func makeSourceAndLayer(layerPosition: LayerPosition?) throws {
 
-        guard let style = style else { 
+        guard let style = style else {
             Log.error(forMessage: "Style must exist when adding a source and layer for annotations", category: "Annotaitons")
             return
         }
@@ -86,20 +90,24 @@ public class PointAnnotationManager: AnnotationManager {
         // Add the correct backing layer for this annotation type
         var layer = SymbolLayer(id: layerId)
         layer.source = sourceId
-            
-        // Show all icons and texts by default in point annotations. 
+
+        // Show all icons and texts by default in point annotations.
         layer.iconAllowOverlap = .constant(true)
         layer.textAllowOverlap = .constant(true)
         layer.iconIgnorePlacement = .constant(true)
         layer.textIgnorePlacement = .constant(true)
-        try style.addLayer(layer, layerPosition: layerPosition)
+        if shouldPersist {
+            try style._addPersistentLayer(layer, layerPosition: layerPosition)
+        } else {
+            try style.addLayer(layer, layerPosition: layerPosition)
+        }
     }
 
     // MARK: - Sync annotations to map -
-    
+
     internal func syncAnnotations() {
 
-        guard let style = style else { 
+        guard let style = style else {
             Log.error(forMessage: "Style must exist when adding/removing annotations", category: "Annotations")
             return
         }
@@ -113,24 +121,24 @@ public class PointAnnotationManager: AnnotationManager {
                             category: "Annotations")
             }
         }
-        
+
         let featureCollection = Turf.FeatureCollection(features: annotations.map(\.feature))
         do {
             let data = try JSONEncoder().encode(featureCollection)
             guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                Log.error(forMessage: "Could not convert annotation features to json object in PointAnnotationManager", 
+                Log.error(forMessage: "Could not convert annotation features to json object in PointAnnotationManager",
                             category: "Annotations")
                 return
             }
             try style.setSourceProperty(for: sourceId, property: "data", value: jsonObject )
         } catch {
-            Log.error(forMessage: "Could not update annotations in PointAnnotationManager due to error: \(error)", 
+            Log.error(forMessage: "Could not update annotations in PointAnnotationManager due to error: \(error)",
                         category: "Annotations")
         }
     }
 
     // MARK: - Common layer properties -
-        
+
     /// If true, the icon will be visible even if it collides with other previously drawn symbols.
     public var iconAllowOverlap: Bool? {
         didSet {
@@ -142,7 +150,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// If true, other symbols can be visible even if they collide with the icon.
     public var iconIgnorePlacement: Bool? {
         didSet {
@@ -154,7 +162,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// If true, the icon may be flipped to prevent it from being rendered upside-down.
     public var iconKeepUpright: Bool? {
         didSet {
@@ -166,7 +174,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// If true, text will display without their corresponding icons when the icon collides with other symbols and the text does not.
     public var iconOptional: Bool? {
         didSet {
@@ -178,7 +186,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// Size of the additional area around the icon bounding box used for detecting symbol collisions.
     public var iconPadding: Double? {
         didSet {
@@ -190,7 +198,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// Orientation of icon when map is pitched.
     public var iconPitchAlignment: IconPitchAlignment? {
         didSet {
@@ -202,7 +210,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// In combination with `symbol-placement`, determines the rotation behavior of icons.
     public var iconRotationAlignment: IconRotationAlignment? {
         didSet {
@@ -214,7 +222,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// Scales the icon to fit around the associated text.
     public var iconTextFit: IconTextFit? {
         didSet {
@@ -226,7 +234,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// Size of the additional area added to dimensions determined by `icon-text-fit`, in clockwise order: top, right, bottom, left.
     public var iconTextFitPadding: [Double]? {
         didSet {
@@ -238,7 +246,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// If true, the symbols will not cross tile edges to avoid mutual collisions. Recommended in layers that don't have enough padding in the vector tile to prevent collisions, or if it is a point symbol layer placed after a line symbol layer. When using a client that supports global collision detection, like Mapbox GL JS version 0.42.0 or greater, enabling this property is not needed to prevent clipped labels at tile boundaries.
     public var symbolAvoidEdges: Bool? {
         didSet {
@@ -250,7 +258,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// Label placement relative to its geometry.
     public var symbolPlacement: SymbolPlacement? {
         didSet {
@@ -262,7 +270,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// Distance between two symbol anchors.
     public var symbolSpacing: Double? {
         didSet {
@@ -274,7 +282,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// Determines whether overlapping symbols in the same layer are rendered in the order that they appear in the data source or by their y-position relative to the viewport. To control the order and prioritization of symbols otherwise, use `symbol-sort-key`.
     public var symbolZOrder: SymbolZOrder? {
         didSet {
@@ -286,7 +294,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// If true, the text will be visible even if it collides with other previously drawn symbols.
     public var textAllowOverlap: Bool? {
         didSet {
@@ -298,7 +306,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// If true, other symbols can be visible even if they collide with the text.
     public var textIgnorePlacement: Bool? {
         didSet {
@@ -310,7 +318,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// If true, the text may be flipped vertically to prevent it from being rendered upside-down.
     public var textKeepUpright: Bool? {
         didSet {
@@ -322,7 +330,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// Text leading value for multi-line text.
     public var textLineHeight: Double? {
         didSet {
@@ -334,7 +342,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// Maximum angle change between adjacent characters.
     public var textMaxAngle: Double? {
         didSet {
@@ -346,7 +354,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// If true, icons will display without their corresponding text when the text collides with other symbols and the icon does not.
     public var textOptional: Bool? {
         didSet {
@@ -358,7 +366,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// Size of the additional area around the text bounding box used for detecting symbol collisions.
     public var textPadding: Double? {
         didSet {
@@ -370,7 +378,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// Orientation of text when map is pitched.
     public var textPitchAlignment: TextPitchAlignment? {
         didSet {
@@ -382,7 +390,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// In combination with `symbol-placement`, determines the rotation behavior of the individual glyphs forming the text.
     public var textRotationAlignment: TextRotationAlignment? {
         didSet {
@@ -394,7 +402,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// To increase the chance of placing high-priority labels on the map, you can provide an array of `text-anchor` locations: the renderer will attempt to place the label at each location, in order, before moving onto the next label. Use `text-justify: auto` to choose justification based on anchor position. To apply an offset, use the `text-radial-offset` or the two-dimensional `text-offset`.
     public var textVariableAnchor: [String]? {
         didSet {
@@ -406,7 +414,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// The property allows control over a symbol's orientation. Note that the property values act as a hint, so that a symbol whose language doesn’t support the provided orientation will be laid out in its natural orientation. Example: English point symbol will be rendered horizontally even if array value contains single 'vertical' enum value. The order of elements in an array define priority order for the placement of an orientation variant.
     public var textWritingMode: [String]? {
         didSet {
@@ -418,7 +426,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// Distance that the icon's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
     public var iconTranslate: [Double]? {
         didSet {
@@ -430,7 +438,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// Controls the frame of reference for `icon-translate`.
     public var iconTranslateAnchor: IconTranslateAnchor? {
         didSet {
@@ -442,7 +450,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// Distance that the text's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.
     public var textTranslate: [Double]? {
         didSet {
@@ -454,7 +462,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-        
+
     /// Controls the frame of reference for `text-translate`.
     public var textTranslateAnchor: TextTranslateAnchor? {
         didSet {
@@ -466,7 +474,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-    
+
     /// Font stack to use for displaying text.
     public var textFont: [String]? {
         didSet {
@@ -479,7 +487,7 @@ public class PointAnnotationManager: AnnotationManager {
             }
         }
     }
-    
+
     // MARK: - Selection Handling -
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
@@ -505,17 +513,17 @@ public class PointAnnotationManager: AnnotationManager {
         view?.addGestureRecognizer(tapRecognizer)
         tapGestureRecognizer = tapRecognizer
     }
-    
+
     @objc internal func handleTap(_ tap: UITapGestureRecognizer) {
         let options = RenderedQueryOptions(layerIds: [layerId], filter: nil)
         mapFeatureQueryable?.queryRenderedFeatures(
             at: tap.location(in: view),
             options: options) { [weak self] (result) in
-            
+
             guard let self = self else { return }
-            
+
             switch result {
-            
+
             case .success(let queriedFeatures):
                 if let annotationIds = queriedFeatures.compactMap(\.feature.properties["annotation-id"]) as? [String] {
 
@@ -524,13 +532,13 @@ public class PointAnnotationManager: AnnotationManager {
                         self,
                         didDetectTappedAnnotations: tappedAnnotations)
                 }
-            
+
             case .failure(let error):
-                Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)", 
+                Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)",
                             category: "Annotations")
             }
         }
     }
-} 
+}
 // End of generated file.
 // swiftlint:enable all

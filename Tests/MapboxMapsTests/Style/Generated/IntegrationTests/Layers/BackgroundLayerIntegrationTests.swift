@@ -53,7 +53,7 @@ class BackgroundLayerIntegrationTests: MapViewIntegrationTestCase {
                 _ = try style.layer(withId: "test-id") as BackgroundLayer
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
-                XCTFail("Failed to retrieve BackgroundLayer because of error: \(error)")   
+                XCTFail("Failed to retrieve BackgroundLayer because of error: \(error)")
             }
         }
 

@@ -70,11 +70,11 @@ class LineLayerIntegrationTests: MapViewIntegrationTestCase {
                 _ = try style.layer(withId: "test-id") as LineLayer
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
-                XCTFail("Failed to retrieve LineLayer because of error: \(error)")   
+                XCTFail("Failed to retrieve LineLayer because of error: \(error)")
             }
         }
 
-        wait(for: [successfullyAddedLayerExpectation, successfullyRetrievedLayerExpectation], timeout: 30.0)
+        wait(for: [successfullyAddedLayerExpectation, successfullyRetrievedLayerExpectation], timeout: 5.0)
     }
 }
 

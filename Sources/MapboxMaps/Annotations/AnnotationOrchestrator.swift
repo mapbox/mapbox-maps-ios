@@ -52,7 +52,7 @@ public class AnnotationOrchestrator {
         self.style = style
     }
 
-    /// Creates a `PointAnnotationManager` which is used to manage a collection of `PointAnnotation`s.
+    /// Creates a `PointAnnotationManager` which is used to manage a collection of `PointAnnotation`s. The collection of `PointAnnotation` collection will persist across style changes.
     /// - Parameters:
     ///   - id: Optional string identifier for this manager.
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
@@ -68,12 +68,13 @@ public class AnnotationOrchestrator {
                                       style: style,
                                       view: view,
                                       mapFeatureQueryable: mapFeatureQueryable,
+                                      shouldPersist: true,
                                       layerPosition: layerPosition)
     }
 
-    /// Creates a `PolygonAnnotationManager` which is used to manage a collection of `PolygonAnnotation`s.
+    /// Creates a `PolygonAnnotationManager` which is used to manage a collection of `PolygonAnnotation`s. The collection of `PolygonAnnotation`s will persist across style changes.
     /// - Parameters:
-    ///   - id: Optional string identifier for this manager.
+    ///   - id: Optional string identifier for this manager..
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `PolygonAnnotationManager`
     public func makePolygonAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
@@ -87,10 +88,11 @@ public class AnnotationOrchestrator {
                                         style: style,
                                         view: view,
                                         mapFeatureQueryable: mapFeatureQueryable,
+                                        shouldPersist: true,
                                         layerPosition: layerPosition)
     }
 
-    /// Creates a `PolylineAnnotationManager` which is used to manage a collection of `PolylineAnnotation`s.
+    /// Creates a `PolylineAnnotationManager` which is used to manage a collection of `PolylineAnnotation`s. The collection of `PolylineAnnotation`s will persist across style changes.
     /// - Parameters:
     ///   - id: Optional string identifier for this manager.
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
@@ -106,10 +108,11 @@ public class AnnotationOrchestrator {
                                          style: style,
                                          view: view,
                                          mapFeatureQueryable: mapFeatureQueryable,
+                                         shouldPersist: true,
                                          layerPosition: layerPosition)
     }
 
-    /// Creates a `CircleAnnotationManager` which is used to manage a collection of `CircleAnnotation`s.
+    /// Creates a `CircleAnnotationManager` which is used to manage a collection of `CircleAnnotation`s.  The collection of `CircleAnnotation`s will persist across style changes.
     /// - Parameters:
     ///   - id: Optional string identifier for this manager.
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
@@ -125,6 +128,7 @@ public class AnnotationOrchestrator {
                                        style: style,
                                        view: view,
                                        mapFeatureQueryable: mapFeatureQueryable,
+                                       shouldPersist: true,
                                        layerPosition: layerPosition)
     }
 }

@@ -4,6 +4,10 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Features ✨ and improvements 🏁
+
+- Annotations now will persist across style changes by default. ([#475](https://github.com/mapbox/mapbox-maps-ios/pull/475))
+
 ## 10.0.0-rc.1 - June 9, 2021
 
 **The Mapbox Maps SDK for iOS has moved to release candidate status and is now ready for production use.**

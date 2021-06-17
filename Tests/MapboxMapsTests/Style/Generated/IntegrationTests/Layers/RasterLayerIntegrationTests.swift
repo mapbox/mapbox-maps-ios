@@ -61,7 +61,7 @@ class RasterLayerIntegrationTests: MapViewIntegrationTestCase {
                 _ = try style.layer(withId: "test-id") as RasterLayer
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
-                XCTFail("Failed to retrieve RasterLayer because of error: \(error)")   
+                XCTFail("Failed to retrieve RasterLayer because of error: \(error)")
             }
         }
 

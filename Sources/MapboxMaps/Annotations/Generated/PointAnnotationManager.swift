@@ -43,7 +43,7 @@ public class PointAnnotationManager: AnnotationManager {
     private weak var view: UIView?
 
     /// Indicates whether the style layer exists after style changes. Default value is `true`.
-    public private(set) var shouldPersist: Bool
+    internal private(set) var shouldPersist: Bool
 
     internal init(id: String, style: Style, view: UIView, mapFeatureQueryable: MapFeatureQueryable, shouldPersist: Bool, layerPosition: LayerPosition?) {
         self.id = id

@@ -17,7 +17,7 @@ extension Style {
         let expression = Exp(.format) {
             Exp(.coalesce) {
                 Exp(.get) {
-                    "name_\(locale.identifier)"
+                    "name_\(getLocaleValue(locale: locale))"
                 }
                 Exp(.get) {
                     "name"
@@ -36,5 +36,31 @@ extension Style {
                 Log.error(forMessage: "Error localizing textField for Symbol Layer with ID: \(layerInfo.id)", category: "Style")
             }
         }
+    }
+
+    /// Filters through source to determine supported locale styles.
+    internal func getLocaleValue(locale: Locale) -> String {
+        let vectorSources = allSourceIdentifiers.filter { source in
+            return source.type == .vector
+        }
+
+        for sourceInfo in vectorSources {
+            do {
+                let tempSource = try source(withId: sourceInfo.id) as VectorSource
+
+                if tempSource.url?.contains("mapbox.mapbox-streets-v7") == true{
+                    if locale.identifier.contains("zh") {
+                        // v7 styles does not support value of "name_zh-Hant"
+                        if locale.identifier == SupportedLanguage.traditionalChinese.rawValue {
+                            return SupportedLanguage.chinese
+                        }
+                    }
+                }
+            } catch {
+                Log.error(forMessage: "Error localizing textField for Symbol Layer", category: "Style")
+            }
+        }
+
+        return locale.identifier
     }
 }

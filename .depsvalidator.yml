@@ -1,8 +1,6 @@
 ---
 manifests:
   - type: Package.swift
-    omit_for:
-      - MapboxCommon
   - type: Package.resolved
   - type: Package.resolved
     path: Apps/Apps.xcworkspace/xcshareddata/swiftpm/Package.resolved

@@ -14,35 +14,28 @@ extension Style {
 
         /// Expression to be applied to the `SymbolLayer.textField`to localize the language
         /// Sample Expression JSON: `["format",["coalesce",["get","name_en"],["get","name"]],{}]`
-        let newVal = "[\"get\",\"name_\(getLocaleValue(locale: locale))\"]"
+        let replacement = "[\"get\",\"name_\(getLocaleValue(locale: locale))\"]"
 
-        let EXPRESSION_REGEX = try! NSRegularExpression(pattern: "\\[\"get\",\\s*\"(name_.{2,7})\"\\]",
-                                                        options: .caseInsensitive)
-        let EXPRESSION_ABBR_REGEX = try! NSRegularExpression(pattern: "\\[\"get\",\\s*\"abbr\"\\]",
-                                                             options: .caseInsensitive)
+        let expressionCoalesce = try! NSRegularExpression(pattern: "\\[\"get\",\\s*\"(name_.{2,7})\"\\]",
+                                                          options: .caseInsensitive)
+        let expressionAbbr = try! NSRegularExpression(pattern: "\\[\"get\",\\s*\"abbr\"\\]",
+                                                      options: .caseInsensitive)
 
         for layerInfo in symbolLayers {
             do {
                 let tempLayer = try layer(withId: layerInfo.id) as SymbolLayer
 
-                let encoder = JSONEncoder()
-                let jsonData = try encoder.encode(tempLayer.textField)
+                if var stringExpression = String(data: try! JSONEncoder().encode(tempLayer.textField), encoding: .utf8),
+                   stringExpression != "null" {
+                    stringExpression.updateExpression(replacement: replacement, regex: expressionCoalesce)
+                    stringExpression.updateExpression(replacement: replacement, regex: expressionAbbr)
 
-                if var stringExpression = String(data: jsonData, encoding: .utf8) {
-                    stringExpression = EXPRESSION_REGEX.stringByReplacingMatches(in: stringExpression,
-                                                                                 options: [],
-                                                                                 range: NSMakeRange(0, stringExpression.count),
-                                                                                 withTemplate: newVal)
-
-                    stringExpression = EXPRESSION_ABBR_REGEX.stringByReplacingMatches(in: stringExpression,
-                                                                                      options: [],
-                                                                                      range: NSMakeRange(0, stringExpression.count),
-                                                                                      withTemplate: newVal)
-
+                    // Turn the new json string back into an Expression
                     let data = stringExpression.data(using: .utf8)
-                    let decodedExpression = try JSONDecoder().decode(Expression.self, from: data!)
+                    let convertedExpression = try JSONDecoder().decode(Expression.self, from: data!)
+
                     try updateLayer(withId: tempLayer.id) { (layer: inout SymbolLayer) throws in
-                        layer.textField = .expression(decodedExpression)
+                        layer.textField = .expression(convertedExpression)
                     }
                 }
             } catch {
@@ -52,6 +45,7 @@ extension Style {
     }
 
     /// Filters through source to determine supported locale styles.
+    /// This is needed for v7 support
     internal func getLocaleValue(locale: Locale) -> String {
         let vectorSources = allSourceIdentifiers.filter { source in
             return source.type == .vector
@@ -75,5 +69,20 @@ extension Style {
         }
 
         return locale.identifier
+    }
+}
+
+extension String {
+    /// Updates string using a regex
+    /// - Parameters:
+    ///   - replacement: New string to replace the matched pattern
+    ///   - regex: The regex pattern that will be matched for replacement
+    internal mutating func updateExpression(replacement: String, regex: NSRegularExpression){
+        let range = NSMakeRange(0, self.count)
+
+        self = regex.stringByReplacingMatches(in: self,
+                                              options: [],
+                                              range: range,
+                                              withTemplate: replacement)
     }
 }

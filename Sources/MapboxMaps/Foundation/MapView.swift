@@ -2,7 +2,6 @@
 @_exported import MapboxCommon
 @_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
-import Foundation
 import UIKit
 import Turf
 

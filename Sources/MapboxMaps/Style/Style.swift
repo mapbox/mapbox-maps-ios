@@ -333,13 +333,13 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    func _isPersistentLayer(id: String) throws -> Bool {
+    public func _isPersistentLayer(id: String) throws -> Bool {
         return try handleExpected {
             return styleManager.isStyleLayerPersistent(forLayerId: id)
         }
     }
 
-    func _addPersistentCustomLayer(withId id: String, layerHost: CustomLayerHost, layerPosition: LayerPosition?) throws {
+    public func _addPersistentCustomLayer(withId id: String, layerHost: CustomLayerHost, layerPosition: LayerPosition?) throws {
         return try handleExpected {
             return styleManager.addPersistentStyleCustomLayer(forLayerId: id, layerHost: layerHost, layerPosition: layerPosition?.corePosition)
         }

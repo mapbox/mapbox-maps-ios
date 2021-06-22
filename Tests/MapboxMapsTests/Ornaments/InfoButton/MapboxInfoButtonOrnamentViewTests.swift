@@ -2,10 +2,17 @@ import XCTest
 @testable import MapboxMaps
 
 class MapboxInfoButtonOrnamentTests: MapViewIntegrationTestCase {
-    func testInfoButtonTapped() throws {
-        let infoButton = MapboxInfoButtonOrnament()
-        let parentViewController = MockParentViewController()
+
+    var infoButton: MapboxInfoButtonOrnament!
+    var parentViewController: MockParentViewController!
+
+    override func setUp() {
+        infoButton = MapboxInfoButtonOrnament()
+        parentViewController = MockParentViewController()
         parentViewController.view.addSubview(infoButton)
+    }
+
+    func testInfoButtonTapped() throws {
         infoButton.infoTapped()
 
         let firstAlert = try XCTUnwrap(parentViewController.currentAlert, "The first alert controller could not be found.")
@@ -21,9 +28,6 @@ class MapboxInfoButtonOrnamentTests: MapViewIntegrationTestCase {
 
     func testTelemetryOptOut() throws {
         UserDefaults.standard.set(true, forKey: MapboxInfoButtonOrnament.Constants.metricsEnabledKey)
-        let infoButton = MapboxInfoButtonOrnament()
-        let parentViewController = MockParentViewController()
-        parentViewController.view.addSubview(infoButton)
         infoButton.infoTapped()
 
         var infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")

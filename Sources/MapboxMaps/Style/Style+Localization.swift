@@ -73,7 +73,7 @@ extension String {
     ///   - replacement: New string to replace the matched pattern
     ///   - regex: The regex pattern that will be matched for replacement
     internal mutating func updateExpression(replacement: String, regex: NSRegularExpression) {
-        let range = NSMakeRange(0, self.count)
+        let range = NSRange(location: 0, length: self.count)
 
         self = regex.stringByReplacingMatches(in: self,
                                               options: [],

@@ -1,6 +1,6 @@
 @Tutorial(time: 20) {
     @Intro(title: "Add a map") {
-        This tutorial will show how to add a ``MapView`` to a `UIViewController`, then set the map's style and center coordinate. Prior to 
+        This tutorial will show how to add a ``MapView`` to a `UIViewController`, then set the map's style and center coordinate.
         
         @Image(source: Map-showing-Ohio-horizontal.png, alt: "A simulator screenshot of an iPhone showing a map. The map is centered over the state of Ohio.")
     }
@@ -12,7 +12,7 @@
         
         @Steps {
             @Step {
-                The first step is to
+                F
                 @Code(name: "Import the MapboxMaps module", file: 01-add-a-map-01.swift)
             }
             

@@ -6,7 +6,7 @@
     }
     
     @Chapter(name: "Add a map") {
-        Add a map to your app!
+        Add a map to your app. Prior to starting this tutorial, add your Mapbox access token to your project. For more information about how to add your access token, see the "Add an access token" article.
 
         @Image(source: Map-showing-Ohio-horizontal.png, alt: "A simulator screenshot of an iPhone showing a map. The map is centered over the state of Ohio.")
         

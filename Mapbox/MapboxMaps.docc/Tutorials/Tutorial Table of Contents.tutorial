@@ -1,15 +1,15 @@
-@Tutorials(name: "<#text#>") {
-    @Intro(title: "<#text#>") {
-        <#text#>
+@Tutorials(name: "Getting Starting with Mapbox Maps") {
+    @Intro(title: "Welcome") {
+        The 
         
-        @Image(source: <#file#>, alt: "<#accessible description#>")
+        @Image(source: nighttime_iphone.png, alt: "A screenshot of a simulator iPhone that is displaying a map. The map is showing satellite imagery at a slight angle.")
     }
     
-    @Chapter(name: "<#text#>") {
-        <#text#>
+    @Chapter(name: "Add a map") {
+        Add a map to your app!
+
+        @Image(source: Map-showing-Ohio-horizontal.png, alt: "A simulator screenshot of an iPhone showing a map. The map is centered over the state of Ohio.")
         
-        @Image(source: <#file#>, alt: "<#accessible description#>")
-        
-        @TutorialReference(tutorial: "doc:<#tutorial name#>")
+        @TutorialReference(tutorial: "doc:Add-a-map")
     }
 }

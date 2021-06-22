@@ -229,6 +229,7 @@
 		C64ED307253F7CF500ADADFB /* LocationSupportableMapViewMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64ED305253F7CF500ADADFB /* LocationSupportableMapViewMock.swift */; };
 		C64ED322253F7E9100ADADFB /* LocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64ED320253F7E9100ADADFB /* LocationManagerTests.swift */; };
 		C64ED33D253F819B00ADADFB /* LocationConsumerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64ED33B253F819B00ADADFB /* LocationConsumerMock.swift */; };
+		C678E42026825A1B00C7B560 /* Style+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = C678E41F26825A1B00C7B560 /* Style+Localization.swift */; };
 		C69F0142254358B3001AB49B /* LocationManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69F011125431AF4001AB49B /* LocationManagerIntegrationTests.swift */; };
 		C69F017525435C55001AB49B /* LocationProviderMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69F017325435C55001AB49B /* LocationProviderMock.swift */; };
 		C6C5CDC5264C12C80097FCD1 /* OfflineGuideIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C5CDBE264C0CBE0097FCD1 /* OfflineGuideIntegrationTests.swift */; };
@@ -702,6 +703,7 @@
 		C64ED305253F7CF500ADADFB /* LocationSupportableMapViewMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSupportableMapViewMock.swift; sourceTree = "<group>"; };
 		C64ED320253F7E9100ADADFB /* LocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerTests.swift; sourceTree = "<group>"; };
 		C64ED33B253F819B00ADADFB /* LocationConsumerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationConsumerMock.swift; sourceTree = "<group>"; };
+		C678E41F26825A1B00C7B560 /* Style+Localization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Style+Localization.swift"; sourceTree = "<group>"; };
 		C69F011125431AF4001AB49B /* LocationManagerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerIntegrationTests.swift; sourceTree = "<group>"; };
 		C69F017325435C55001AB49B /* LocationProviderMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationProviderMock.swift; sourceTree = "<group>"; };
 		C6C5CDB8264C0C910097FCD1 /* OfflineManagerIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineManagerIntegrationTests.swift; sourceTree = "<group>"; };
@@ -1468,6 +1470,7 @@
 		A4519DCE2432FF03007CF39A /* MapboxMapsStyle */ = {
 			isa = PBXGroup;
 			children = (
+				C678E41F26825A1B00C7B560 /* Style+Localization.swift */,
 				C608C132267BD04A003C86C3 /* SupportedLanguage.swift */,
 				CA9F8CE22641F95C00A8BCB6 /* StyleManagerProtocol.swift */,
 				B5DDE95F2613ACB400998840 /* StyleEncodable.swift */,
@@ -2074,6 +2077,7 @@
 				B575018F26334BB800937A9E /* OrnamentOptions.swift in Sources */,
 				0CD62F23245887C8006421D1 /* OrnamentsManager.swift in Sources */,
 				0CB90C6D264CC292003008A5 /* GestureType.swift in Sources */,
+				C678E42026825A1B00C7B560 /* Style+Localization.swift in Sources */,
 				CA0C427E2602BECE0054D9D0 /* LayerPosition.swift in Sources */,
 				07A0BCCB2582F16300B8E109 /* GeoJSONManager.swift in Sources */,
 				0C708F2724EB1EE2003CE791 /* LineLayer.swift in Sources */,

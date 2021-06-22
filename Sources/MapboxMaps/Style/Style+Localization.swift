@@ -16,7 +16,7 @@ extension Style {
         /// Sample Expression JSON: `["format",["coalesce",["get","name_en"],["get","name"]],{}]`
         let newVal = "[\"get\",\"name_\(getLocaleValue(locale: locale))\"]"
 
-        let EXPRESSION_REGEX = try! NSRegularExpression(pattern: "\\[\"get\",\\s*\"(name|name_.{2,7})\"\\]",
+        let EXPRESSION_REGEX = try! NSRegularExpression(pattern: "\\[\"get\",\\s*\"(name_.{2,7})\"\\]",
                                                         options: .caseInsensitive)
         let EXPRESSION_ABBR_REGEX = try! NSRegularExpression(pattern: "\\[\"get\",\\s*\"abbr\"\\]",
                                                              options: .caseInsensitive)
@@ -46,7 +46,7 @@ extension Style {
                     }
                 }
             } catch {
-                Log.error(forMessage: "Error localizing textField for Symbol Layer with ID: \(layerInfo.id)", category: "Style")
+                Log.warning(forMessage: "Error localizing textField for Symbol Layer with ID: \(layerInfo.id)", category: "Style")
             }
         }
     }
@@ -70,7 +70,7 @@ extension Style {
                     }
                 }
             } catch {
-                Log.error(forMessage: "Error localizing textField for Symbol Layer", category: "Style")
+                Log.warning(forMessage: "Error localizing textField for Symbol Layer", category: "Style")
             }
         }
 

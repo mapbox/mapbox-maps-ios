@@ -14,7 +14,6 @@ public class LocalizationExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
-
         configureLanguageButton()
 
         // Allows the delegate to receive information about map events.

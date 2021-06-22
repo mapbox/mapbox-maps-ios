@@ -203,7 +203,10 @@ public struct Examples {
                 type: LineGradientExample.self),
         Example(title: "Change the map's style",
                 description: "Switch between local and default Mapbox styles for the same map view.",
-                type: SwitchStylesExample.self)
+                type: SwitchStylesExample.self),
+        Example(title: "Change the map's language",
+                description: "Switch between supported languages for Symbol Layers",
+                type: LocalizationExample.self)
     ]
 
     // Examples that show use cases related to user interaction with the map.

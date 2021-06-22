@@ -1,12 +1,13 @@
 import XCTest
 @testable import MapboxMaps
 
-class MapboxInfoButtonOrnamentTests: MapViewIntegrationTestCase {
+class MapboxInfoButtonOrnamentTests: XCTestCase {
 
     var infoButton: MapboxInfoButtonOrnament!
     var parentViewController: MockParentViewController!
 
     override func setUp() {
+        super.setUp()
         infoButton = MapboxInfoButtonOrnament()
         parentViewController = MockParentViewController()
         parentViewController.view.addSubview(infoButton)

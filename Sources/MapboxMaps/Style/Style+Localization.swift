@@ -5,7 +5,7 @@ extension Style {
 
     /// This function creates an expression that will localize the `textField` property of a `SymbolLayer`
     /// - Parameter locale: A `SupportedLanguage` based `Locale`
-    internal func localizeLabels(into locale: Locale) {
+    internal func localizeLabels(into locale: Locale) throws {
 
         /// Get all symbol layers that are currently on the map
         let symbolLayers = allLayerIdentifiers.filter { layer in
@@ -16,30 +16,24 @@ extension Style {
         /// Sample Expression JSON: `["format",["coalesce",["get","name_en"],["get","name"]],{}]`
         let replacement = "[\"get\",\"name_\(getLocaleValue(locale: locale))\"]"
 
-        let expressionCoalesce = try! NSRegularExpression(pattern: "\\[\"get\",\\s*\"(name_.{2,7})\"\\]",
+        let expressionCoalesce = try NSRegularExpression(pattern: "\\[\"get\",\\s*\"(name_.{2,7})\"\\]",
                                                           options: .caseInsensitive)
-        let expressionAbbr = try! NSRegularExpression(pattern: "\\[\"get\",\\s*\"abbr\"\\]",
+        let expressionAbbr = try NSRegularExpression(pattern: "\\[\"get\",\\s*\"abbr\"\\]",
                                                       options: .caseInsensitive)
 
         for layerInfo in symbolLayers {
-            do {
-                let tempLayer = try layer(withId: layerInfo.id) as SymbolLayer
+            let tempLayer = try layer(withId: layerInfo.id) as SymbolLayer
 
-                if var stringExpression = String(data: try! JSONEncoder().encode(tempLayer.textField), encoding: .utf8),
-                   stringExpression != "null" {
-                    stringExpression.updateExpression(replacement: replacement, regex: expressionCoalesce)
-                    stringExpression.updateExpression(replacement: replacement, regex: expressionAbbr)
+            if var stringExpression = String(data: try JSONEncoder().encode(tempLayer.textField), encoding: .utf8),
+               stringExpression != "null" {
+                stringExpression.updateExpression(replacement: replacement, regex: expressionCoalesce)
+                stringExpression.updateExpression(replacement: replacement, regex: expressionAbbr)
 
-                    // Turn the new json string back into an Expression
-                    let data = stringExpression.data(using: .utf8)
-                    let convertedExpression = try JSONDecoder().decode(Expression.self, from: data!)
+                // Turn the new json string back into an Expression
+                let data = stringExpression.data(using: .utf8)
+                let convertedExpression = try JSONSerialization.jsonObject(with: data!, options: [])
 
-                    try updateLayer(withId: tempLayer.id) { (layer: inout SymbolLayer) throws in
-                        layer.textField = .expression(convertedExpression)
-                    }
-                }
-            } catch {
-                Log.warning(forMessage: "Error localizing textField for Symbol Layer with ID: \(layerInfo.id)", category: "Style")
+                try setLayerProperty(for: tempLayer.id, property: "text-field", value: convertedExpression)
             }
         }
     }

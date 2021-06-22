@@ -38,6 +38,7 @@ public enum SupportedLanguage: String, CaseIterable {
     case spanish = "es"
 
     /// Support for Traditional Chinese (if available)
+    /// NOTE: note supported in v7 styles
     case traditionalChinese = "zh-Hant"
 
     /// Support for Vietnamese (if available)

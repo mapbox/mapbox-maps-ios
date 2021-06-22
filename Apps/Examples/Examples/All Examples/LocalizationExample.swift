@@ -14,6 +14,7 @@ public class LocalizationExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
+
         configureLanguageButton()
 
         // Allows the delegate to receive information about map events.
@@ -35,8 +36,7 @@ public class LocalizationExample: UIViewController, ExampleProtocol {
         view.addSubview(button)
 
         // Set button location
-        let horizontalConstraint = button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
-                                                                  constant: -24)
+        let horizontalConstraint = button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24)
         let verticalConstraint = button.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         let widthConstraint = button.widthAnchor.constraint(equalToConstant: 200)
         let heightConstraint = button.heightAnchor.constraint(equalToConstant: 40)

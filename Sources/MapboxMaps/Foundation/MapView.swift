@@ -37,7 +37,11 @@ open class MapView: UIView {
     /// Property that describes the current language for `SymbolLayer.textField`
     public var locale: Locale = Locale.current {
         didSet {
-            mapboxMap.style.localizeLabels(into: locale)
+            do {
+                try mapboxMap.style.localizeLabels(into: locale)
+            } catch {
+                Log.warning(forMessage: "Error when localizing labels", category: "Style")
+            }
         }
     }
 

@@ -159,6 +159,7 @@
 		0CECCCCD253491A80000FC64 /* LocationSupportableMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CECCCCC253491A80000FC64 /* LocationSupportableMapView.swift */; };
 		0CF0C42924EB1779000DC118 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF0C42824EB1779000DC118 /* Enums.swift */; };
 		174CD9A2266E8E9200EB588A /* ScaleBar in Resources */ = {isa = PBXBuildFile; fileRef = 174CD9A1266E8E9200EB588A /* ScaleBar */; };
+		17AF783E26822A3E006EA30D /* MapboxMaps.docc in Sources */ = {isa = PBXBuildFile; fileRef = 17AF783D26822A3D006EA30D /* MapboxMaps.docc */; };
 		1FECC9E02474519D00B63910 /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FECC9DF2474519D00B63910 /* Expression.swift */; };
 		2B8637D52461601100698135 /* MapboxScaleBarOrnamentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8637D42461601100698135 /* MapboxScaleBarOrnamentView.swift */; };
 		2B8637E32462F5AE00698135 /* MapboxScaleBarLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8637E22462F5AE00698135 /* MapboxScaleBarLabel.swift */; };
@@ -567,6 +568,7 @@
 		0CF0C42824EB1779000DC118 /* Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		0CF118A2243D1C630097779A /* PinchGestureHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinchGestureHandler.swift; sourceTree = "<group>"; };
 		174CD9A1266E8E9200EB588A /* ScaleBar */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ScaleBar; sourceTree = "<group>"; };
+		17AF783D26822A3D006EA30D /* MapboxMaps.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = MapboxMaps.docc; sourceTree = "<group>"; };
 		1F11C11C2421B05600F8397B /* MapboxMapsFoundationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxMapsFoundationTests.swift; sourceTree = "<group>"; };
 		1F2AD73C2421C462006592F4 /* GestureManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureManagerTests.swift; sourceTree = "<group>"; };
 		1FC8DA55243BED0500A19318 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
@@ -1340,6 +1342,7 @@
 			isa = PBXGroup;
 			children = (
 				B54782AC268B9FC200E0AB24 /* MapboxMaps.h */,
+				17AF783D26822A3D006EA30D /* MapboxMaps.docc */,
 				C6C5CDBD264C0CBE0097FCD1 /* MigrationGuide */,
 				CA56648B24478722006F392C /* Configurations */,
 				1F11C1102421B05600F8397B /* MapboxMapsFoundation */,
@@ -2010,6 +2013,7 @@
 				0C7330B726409539001FAF04 /* CameraState.swift in Sources */,
 				0C708F5324EB23C7003CE791 /* RasterSource.swift in Sources */,
 				B585B8A52694EBE4002BA380 /* AnimationCompletion.swift in Sources */,
+				17AF783E26822A3E006EA30D /* MapboxMaps.docc in Sources */,
 				0CE8ED6125890F870066E56C /* ModelSource.swift in Sources */,
 				C64994A9258D5ADE0052C21C /* LocationPuckManager.swift in Sources */,
 				5A35924524644C5E00E67344 /* CompassDirectionFormatter.swift in Sources */,

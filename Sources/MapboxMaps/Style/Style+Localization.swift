@@ -17,9 +17,9 @@ extension Style {
         let replacement = "[\"get\",\"name_\(getLocaleValue(locale: locale))\"]"
 
         let expressionCoalesce = try NSRegularExpression(pattern: "\\[\"get\",\\s*\"(name_.{2,7})\"\\]",
-                                                          options: .caseInsensitive)
+                                                         options: .caseInsensitive)
         let expressionAbbr = try NSRegularExpression(pattern: "\\[\"get\",\\s*\"abbr\"\\]",
-                                                      options: .caseInsensitive)
+                                                     options: .caseInsensitive)
 
         for layerInfo in symbolLayers {
             let tempLayer = try layer(withId: layerInfo.id) as SymbolLayer
@@ -49,7 +49,7 @@ extension Style {
             do {
                 let tempSource = try source(withId: sourceInfo.id) as VectorSource
 
-                if tempSource.url?.contains("mapbox.mapbox-streets-v7") == true{
+                if tempSource.url?.contains("mapbox.mapbox-streets-v7") == true {
                     if locale.identifier.contains("zh") {
                         // v7 styles does not support value of "name_zh-Hant"
                         if locale.identifier == SupportedLanguage.traditionalChinese.rawValue {
@@ -67,11 +67,12 @@ extension Style {
 }
 
 extension String {
+
     /// Updates string using a regex
     /// - Parameters:
     ///   - replacement: New string to replace the matched pattern
     ///   - regex: The regex pattern that will be matched for replacement
-    internal mutating func updateExpression(replacement: String, regex: NSRegularExpression){
+    internal mutating func updateExpression(replacement: String, regex: NSRegularExpression) {
         let range = NSMakeRange(0, self.count)
 
         self = regex.stringByReplacingMatches(in: self,

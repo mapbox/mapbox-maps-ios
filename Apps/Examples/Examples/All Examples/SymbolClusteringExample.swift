@@ -113,7 +113,7 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
         Exp(.has) { "point_count" }
         }
         unclusteredLayer.iconImage = .constant(.name("fire-station-icon"))
-        unclusteredLayer.iconColor = .constant(.init(color: UIColor(red: 0.12, green: 0.90, blue: 0.57, alpha: 1.00)))
+        unclusteredLayer.iconColor = .constant(.init(color: .white))
         // Rotate the icon image based on the recorded water flow.
         // The `mod` operator allows you to use the remainder after dividing
         // the specified values.

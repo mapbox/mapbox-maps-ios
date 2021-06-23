@@ -52,11 +52,22 @@ extension GestureManager: GestureHandlerDelegate {
         if endPoint != driftEndPoint,
            let driftCameraOptions = cameraManager.mapView?.mapboxMap.dragCameraOptions(from: endPoint, to: driftEndPoint) {
 
-            _ = cameraManager.ease(
-                    to: driftCameraOptions,
-                    duration: Double(decelerationRate),
-                    curve: .easeOut,
-                    completion: nil)
+            // Wait until the animator's delete's camera state has been updated
+            if let mapView = cameraManager.mapView {
+                let completion = { [weak self] (_: UIViewAnimatingPosition) in
+                    guard let self = self else {
+                        return
+                    }
+
+                    _ = self.cameraManager.ease(
+                        to: driftCameraOptions,
+                        duration: Double(self.decelerationRate),
+                        curve: .easeOut,
+                        completion: nil)
+                }
+
+                mapView.pendingAnimatorCompletionBlocks.append((completion, .current))
+            }
         }
         cameraManager.mapView?.mapboxMap.dragEnd()
     }

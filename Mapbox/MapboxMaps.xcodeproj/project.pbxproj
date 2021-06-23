@@ -163,6 +163,7 @@
 		0CE8ED6125890F870066E56C /* ModelSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE8ED6025890F870066E56C /* ModelSource.swift */; };
 		0CECCCCD253491A80000FC64 /* LocationSupportableMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CECCCCC253491A80000FC64 /* LocationSupportableMapView.swift */; };
 		0CF0C42924EB1779000DC118 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF0C42824EB1779000DC118 /* Enums.swift */; };
+		172C6FC8267A976E0016B301 /* MapboxInfoButtonOrnamentViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172C6FC7267A976E0016B301 /* MapboxInfoButtonOrnamentViewTests.swift */; };
 		174CD9A2266E8E9200EB588A /* ScaleBar in Resources */ = {isa = PBXBuildFile; fileRef = 174CD9A1266E8E9200EB588A /* ScaleBar */; };
 		1FECC9E02474519D00B63910 /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FECC9DF2474519D00B63910 /* Expression.swift */; };
 		2B8637D52461601100698135 /* MapboxScaleBarOrnamentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8637D42461601100698135 /* MapboxScaleBarOrnamentView.swift */; };
@@ -570,6 +571,7 @@
 		0CECCCCC253491A80000FC64 /* LocationSupportableMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSupportableMapView.swift; sourceTree = "<group>"; };
 		0CF0C42824EB1779000DC118 /* Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		0CF118A2243D1C630097779A /* PinchGestureHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinchGestureHandler.swift; sourceTree = "<group>"; };
+		172C6FC7267A976E0016B301 /* MapboxInfoButtonOrnamentViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxInfoButtonOrnamentViewTests.swift; sourceTree = "<group>"; };
 		174CD9A1266E8E9200EB588A /* ScaleBar */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ScaleBar; sourceTree = "<group>"; };
 		1F11C11C2421B05600F8397B /* MapboxMapsFoundationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxMapsFoundationTests.swift; sourceTree = "<group>"; };
 		1F2AD73C2421C462006592F4 /* GestureManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureManagerTests.swift; sourceTree = "<group>"; };
@@ -849,6 +851,7 @@
 		07797F9F242C21BC00229F7D /* MapboxMapsOrnamentsTests */ = {
 			isa = PBXGroup;
 			children = (
+				172C6FC6267A974B0016B301 /* InfoButton */,
 				174CD9A1266E8E9200EB588A /* ScaleBar */,
 				A495048C2666BE8700130A8F /* Compass */,
 				2B8637E72464021500698135 /* DistanceFormatterTests.swift */,
@@ -1237,6 +1240,14 @@
 				0CF0C42824EB1779000DC118 /* Enums.swift */,
 			);
 			path = Enums;
+			sourceTree = "<group>";
+		};
+		172C6FC6267A974B0016B301 /* InfoButton */ = {
+			isa = PBXGroup;
+			children = (
+				172C6FC7267A976E0016B301 /* MapboxInfoButtonOrnamentViewTests.swift */,
+			);
+			path = InfoButton;
 			sourceTree = "<group>";
 		};
 		1F11C1102421B05600F8397B /* MapboxMapsFoundation */ = {
@@ -2154,6 +2165,7 @@
 				CAC1960B25AE98F400F69FEA /* GlyphsRasterizationOptions.swift in Sources */,
 				0706C49225B1128A008733C0 /* Terrain.swift in Sources */,
 				CA03F1132626948300673961 /* StylePackLoadOptions+MapboxMaps.swift in Sources */,
+				172C6FC8267A976E0016B301 /* MapboxInfoButtonOrnamentViewTests.swift in Sources */,
 				CABCDF4B2620E0D800D61635 /* Bool.swift in Sources */,
 				CA5890D6264B00B50060987A /* MapEventHandler.swift in Sources */,
 				0C350D83263278090090FA74 /* FlyToCameraAnimator.swift in Sources */,

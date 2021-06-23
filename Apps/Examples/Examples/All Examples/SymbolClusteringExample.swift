@@ -32,7 +32,8 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
         let style = self.mapView.mapboxMap.style
         // The image named `fire-station-11` is included in the app's Assets.xcassets bundle.
         let image = UIImage(named: "fire-station-11")!.withRenderingMode(.alwaysTemplate)
-        try! style.addImage(image, id: "fire-station-icon")
+        // Set `sdf` to `true`. This allows the icon images to be recolored.
+        try! style.addImage(image, id: "fire-station-icon", sdf: true)
 
         // Fire_Hydrants.geojson contains information about fire hydrants in the District of Columbia.
         // It was downloaded on 6/10/21 from https://opendata.dc.gov/datasets/DCGIS::fire-hydrants/about
@@ -60,6 +61,8 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
         try! style.addLayer(clusteredLayer)
         try! style.addLayer(unclusteredLayer, layerPosition: .below(clusteredLayer.id))
 
+        // This is used for internal testing purposes only and can be excluded
+        // from your implementation.
         finish()
     }
 
@@ -72,15 +75,6 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
 
         // Set the color of the icons based on the number of points within
         // a given cluster. The first value is a default value.
-        /**
-         This JSON expression is transformed to swift below:
-         [
-           "interpolate",
-           ["step"],
-           ["get", "point_count"],
-           ["rgba", "30.6", "229.5", "145.35", 1], 50, ["rgba", "30.6", "135.15", "229.5", 1], 100, ["rgba", "216.75", "28.05", "96.9", 1]
-         ]
-         */
         clusteredLayer.iconColor = .expression(Exp(.step) {
             Exp(.get) { "point_count" }
             UIColor(red: 0.12, green: 0.90, blue: 0.57, alpha: 1.00)
@@ -91,8 +85,8 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
         })
 
         // Add an outline to the icons.
-//        clusteredLayer.iconHaloColor = .constant(.init(color: .black))
-//        clusteredLayer.iconHaloWidth = .constant(4)
+        clusteredLayer.iconHaloColor = .constant(.init(color: .black))
+        clusteredLayer.iconHaloWidth = .constant(4)
 
         // Adjust the scale of the icons based on the number of points within an
         // individual cluster. The first value is a default value.

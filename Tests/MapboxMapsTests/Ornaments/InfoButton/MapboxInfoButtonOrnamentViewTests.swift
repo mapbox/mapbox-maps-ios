@@ -1,7 +1,7 @@
 import XCTest
 @testable import MapboxMaps
 
-class MapboxInfoButtonOrnamentTests: XCTestCase {
+class MapboxInfoButtonOrnamentTests: MapViewIntegrationTestCase {
 
     var infoButton: MapboxInfoButtonOrnament!
     var parentViewController: MockParentViewController!

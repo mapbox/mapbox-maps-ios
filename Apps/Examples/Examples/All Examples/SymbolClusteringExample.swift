@@ -137,7 +137,8 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
     @objc func handleTap(gestureRecognizer: UITapGestureRecognizer) {
         let point = gestureRecognizer.location(in: mapView)
 
-        // Look for features at the tap location within the unclustered layer.
+        // Look for features at the tap location within the clustered and
+        // unclustered layers.
         mapView.mapboxMap.queryRenderedFeatures(at: point,
                                                 options: RenderedQueryOptions(layerIds: ["unclustered-point-layer", "clustered-fire-hydrant-layer"],
                                                 filter: nil)) { [weak self] result in

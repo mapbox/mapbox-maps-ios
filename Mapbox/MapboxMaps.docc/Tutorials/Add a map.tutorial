@@ -12,14 +12,17 @@
         
         @Steps {
             @Step {
-                F
+                Import the ``MapboxMaps`` framework into your `UIViewController`. The framework also includes `UIKit`.
                 @Code(name: "Import the MapboxMaps module", file: 01-add-a-map-01.swift)
             }
             
             @Step {
-                hi
-                @Code(name: "Import the MapboxMaps module", file: 01-add-a-map-01.swift)
+                Create a ``MapView`` using the root view's bounds and add it as a subview. We also set the autoresizing mask at this point. This allows the map to resize when the device is rotated.
+                @Code(name: "Import the MapboxMaps module", file: 01-add-a-map-02.swift)
             }
+        }
+        @ContentAndMedia(layout: horizontal) {
+            @Image(source: Map-null-island.png, alt: "A simulator screenshot of an iPhone showing a map. The map is centered 'null island', which is latitude 0 and longitude 0, off the west coast of Africa.")
         }
     }
 }

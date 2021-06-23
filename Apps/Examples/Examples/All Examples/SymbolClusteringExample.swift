@@ -2,15 +2,14 @@ import UIKit
 import MapboxMaps
 
 @objc(SymbolClusteringExample)
-
-public class SymbolClusteringExample: UIViewController, ExampleProtocol {
+class SymbolClusteringExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
 
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        // Create a map view centered over Washington, DC.
+        // Create a `MapView` centered over Washington, DC.
         let center = CLLocationCoordinate2D(latitude: 38.889215, longitude: -77.039354)
         let cameraOptions = CameraOptions(center: center, zoom: 11)
         let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .dark)
@@ -19,27 +18,28 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        // Add the source and style layers once the
+        // Add the source and style layers once the map has loaded.
         mapView.mapboxMap.onNext(.mapLoaded) { _ in
             self.addSymbolClusteringLayers()
         }
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(gestureRecognizer:)))
-        mapView.addGestureRecognizer(tap)
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(gestureRecognizer:)))
+        mapView.addGestureRecognizer(tapGestureRecognizer)
     }
 
     func addSymbolClusteringLayers() {
-        let style = self.mapView.mapboxMap.style
+        let style = mapView.mapboxMap.style
         // The image named `fire-station-11` is included in the app's Assets.xcassets bundle.
+        // In order to recolor an image, you need to add a template image to the map's style.
+        // The image's rendering mode can be set programmatically or in the asset catalogue.
         let image = UIImage(named: "fire-station-11")!.withRenderingMode(.alwaysTemplate)
-        // Set `sdf` to `true`. This allows the icon images to be recolored.
+        // Add the image tp the map's style. Set `sdf` to `true`. This allows the icon images to be recolored.
+        // See https://docs.mapbox.com/help/troubleshooting/using-recolorable-images-in-mapbox-maps/#what-are-signed-distance-fields-sdf for more information about `SDF`, or Signed Distance Fields.
         try! style.addImage(image, id: "fire-station-icon", sdf: true)
 
         // Fire_Hydrants.geojson contains information about fire hydrants in the District of Columbia.
         // It was downloaded on 6/10/21 from https://opendata.dc.gov/datasets/DCGIS::fire-hydrants/about
-        guard let url = Bundle.main.url(forResource: "Fire_Hydrants", withExtension: "geojson") else {
-            return
-        }
+        let url = Bundle.main.url(forResource: "Fire_Hydrants", withExtension: "geojson")!
 
         // Create a GeoJSONSource using the previously specified URL.
         var source = GeoJSONSource()
@@ -85,7 +85,7 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
         })
 
         // Add an outline to the icons.
-        clusteredLayer.iconHaloColor = .constant(.init(color: .black))
+        clusteredLayer.iconHaloColor = .constant(ColorRepresentable(color: .black))
         clusteredLayer.iconHaloWidth = .constant(4)
 
         // Adjust the scale of the icons based on the number of points within an
@@ -100,7 +100,6 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
             100
             3.5
         })
-        print(try! clusteredLayer.jsonObject())
         return clusteredLayer
     }
     
@@ -110,10 +109,10 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
 
         // Filter out clusters by checking for point_count.
         unclusteredLayer.filter = Exp(.not) {
-        Exp(.has) { "point_count" }
+            Exp(.has) { "point_count" }
         }
         unclusteredLayer.iconImage = .constant(.name("fire-station-icon"))
-        unclusteredLayer.iconColor = .constant(.init(color: .white))
+        unclusteredLayer.iconColor = .constant(ColorRepresentable(color: .white))
 
         // Rotate the icon image based on the recorded water flow.
         // The `mod` operator allows you to use the remainder after dividing
@@ -136,30 +135,35 @@ public class SymbolClusteringExample: UIViewController, ExampleProtocol {
                                                 options: RenderedQueryOptions(layerIds: ["unclustered-point-layer", "clustered-fire-hydrant-layer"],
                                                 filter: nil)) { [weak self] result in
             switch result {
-            case .success(let queriedfeatures):
+            case .success(let queriedFeatures):
                 // Return the first feature at that location, then pass attributes to the alert controller.
-                if let firstFeature = queriedfeatures.first?.feature.properties,
-                   let feature = firstFeature["ASSETNUM"] as? String, let location = firstFeature["LOCATIONDETAIL"] as? String {
-                    self?.showAlert(with: "Hydrant \(feature)", and: "\(location)")
-                } else if let firstFeature = queriedfeatures.first?.feature.properties,
-                          let pointCount = firstFeature["point_count"],
-                          let clusterId = firstFeature["cluster_id"] {
+                // Check whether the feature has values for `ASSETNUM` and `LOCATIONDETAIL`. These properties
+                // come from the fire hydrant dataset and indicate that the selected feature is not clustered.
+                if let selectedFeatureProperties = queriedFeatures.first?.feature.properties,
+                   let featureInformation = selectedFeatureProperties["ASSETNUM"] as? String,
+                    let location = selectedFeatureProperties["LOCATIONDETAIL"] as? String {
+                    self?.showAlert(withTitle: "Hydrant \(featureInformation)", and: "\(location)")
+                // If the feature is a cluster, it will have `point_count` and `cluster_id` properties. These are assigned
+                // when the cluster is created.
+                } else if let selectedFeatureProperties = queriedFeatures.first?.feature.properties,
+                          let pointCount = selectedFeatureProperties["point_count"] as? Int,
+                          let clusterId = selectedFeatureProperties["cluster_id"] as? Int {
                     // If the tap landed on a cluster, pass the cluster ID and point count to the alert.
-                    self?.showAlert(with: "Cluster ID \(clusterId)", and: "There are \(pointCount) points in this cluster")
+                    self?.showAlert(withTitle: "Cluster ID \(clusterId)", and: "There are \(pointCount) points in this cluster")
                 }
             case .failure(let error):
-                self?.showAlert(with: "An error occurred: \(error.localizedDescription)", and: "Please try another hydrant")
+                self?.showAlert(withTitle: "An error occurred: \(error.localizedDescription)", and: "Please try another hydrant")
             }
         }
     }
 
     // Present an alert with a given title and message.
-    public func showAlert(with title: String, and message: String) {
+    func showAlert(withTitle title: String, and message: String) {
         let alertController = UIAlertController(title: title,
                                                 message: message,
                                                 preferredStyle: .alert)
 
-        alertController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 
         present(alertController, animated: true, completion: nil)
     }

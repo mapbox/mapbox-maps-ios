@@ -22,7 +22,7 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         mapView.mapboxMap.onNext(.mapLoaded) { _ in
             self.addSymbolClusteringLayers()
         }
-    
+
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(gestureRecognizer:)))
         mapView.addGestureRecognizer(tapGestureRecognizer)
     }
@@ -36,7 +36,7 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
 
         // Add the image tp the map's style. Set `sdf` to `true`. This allows the icon images to be recolored.
         // For more information about `SDF`, or Signed Distance Fields, see
-        // https://docs.mapbox.com/help/troubleshooting/using-recolorable-images-in-mapbox-maps/#what-are-signed-distance-fields-sdf 
+        // https://docs.mapbox.com/help/troubleshooting/using-recolorable-images-in-mapbox-maps/#what-are-signed-distance-fields-sdf
         try! style.addImage(image, id: "fire-station-icon", sdf: true)
 
         // Fire_Hydrants.geojson contains information about fire hydrants in the District of Columbia.
@@ -133,7 +133,7 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         unclusteredLayer.iconSize = .constant(2)
         return unclusteredLayer
     }
-    
+
     @objc func handleTap(gestureRecognizer: UITapGestureRecognizer) {
         let point = gestureRecognizer.location(in: mapView)
 

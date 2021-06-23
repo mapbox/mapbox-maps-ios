@@ -1,28 +1,33 @@
 #!/bin/bash
 
-# Usage: ./generate-debuggable-environment.sh <mapbox-maps-ios-treeish> <gl-native-internal-treeish> <sdk>
+# Usage: ./generate-debuggable-environment.sh <mapbox-maps-ios-treeish> <gl-native-internal-treeish> <turf-treeish> <mme-treeish> <sdk>
 
 MAPS_SDK_TREEISH="${1:-main}"
 GL_NATIVE_TREEISH="${2:-maps-v10.0.0-rc.2}"
-SDK="${3:-iphonesimulator}"
+TURF_TREEISH="${3:-v2.0.0-beta.1}"
+MME_TREEISH="${4:-v1.0.2}"
+SDK="${5:-iphonesimulator}"
 
 echo "$MAPS_SDK_TREEISH"
 echo "$GL_NATIVE_TREEISH"
+echo "$TURF_TREEISH"
+echo "$MME_TREEISH"
 echo "$SDK"
 
-cd mapbox-maps-ios
-git fetch --all
-git checkout "$MAPS_SDK_TREEISH"
-cd ..
+# Create a separate directory for intermediates
 
-cd mapbox-gl-native-internal
-git fetch --all
-git checkout "$GL_NATIVE_TREEISH"
-git submodule sync --recursive
-git submodule update --init --recursive
-cd ..
+mkdir -p build
+cd build
 
-# Create xcodeproj for gl-native-internal
+# Core & Common
+
+git -C mapbox-gl-native-internal fetch --all 2> /dev/null || git clone git@github.com:mapbox/mapbox-gl-native-internal.git
+git -C mapbox-gl-native-internal checkout "$GL_NATIVE_TREEISH"
+git -C mapbox-gl-native-internal submodule sync --recursive
+git -C mapbox-gl-native-internal submodule update --init --recursive
+
+## Create xcodeproj
+
 cd mapbox-gl-native-internal
 cmake -B build/ios \
   -DBUILD_SHARED_LIBS=OFF \
@@ -37,34 +42,31 @@ cmake -B build/ios \
   -DMBGL_WITH_IOS_CCACHE=ON \
   -DMBGL_WITH_METAL=ON \
   -GXcode
-cd ..
 
-rm MapboxCommon.framework
-rm MapboxCoreMaps.framework
-ln -s ./DerivedData/Umbrella/Build/Products/Debug-iphonesimulator/MapboxCoreMaps.framework .
-ln -s ./mapbox-gl-native-internal/build/ios/lib/Debug/MapboxCommon.framework .
+# xcodegen chokes on the PBXBuildStyle objects in the generated project file. They're a legacy (Xcode 3.2) construct, and everything works if you just delete them.
+sed -i '' '/Begin PBXBuildStyle section/,/End PBXBuildStyle section/d' 'build/ios/Mapbox GL Native.xcodeproj/project.pbxproj'
+
+cd ..
 
 # Turf
 
-git clone https://github.com/mapbox/turf-swift.git
-git -C turf-swift checkout 2.0.0-beta.1
-xcodebuild archive \
-  -project "turf-swift/Turf.xcodeproj" \
-  -scheme "Turf iOS" \
-  -configuration Debug \
-  -destination 'generic/platform=iOS Simulator' \
-  -archivePath 'turf-swift/iOS-Simulator.xcarchive' \
-  BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
-  SKIP_INSTALL=NO \
-  ARCHS='x86_64 arm64' \
-  ONLY_ACTIVE_ARCH=YES \
-  EXCLUDED_ARCHS= \
-  MACH_O_TYPE=mh_dylib \
-  LLVM_LTO=NO
-SIMULATOR_FRAMEWORK_PATH=$(find turf-swift/iOS-Simulator.xcarchive -name "Turf.framework")
-ln -s "$SIMULATOR_FRAMEWORK_PATH" ./
+git -C turf-swift fetch --all 2> /dev/null || git clone git@github.com:mapbox/turf-swift.git
+git -C turf-swift checkout "$TURF_TREEISH"
 
-# run xcodegen (project.yml file would specify core and common dependencies (and turf, mme))
+# Mobile Events
+
+git -C mapbox-events-ios fetch --all 2> /dev/null || git clone git@github.com:mapbox/mapbox-events-ios.git
+git -C mapbox-events-ios checkout "$MME_TREEISH"
+
+# MapboxMaps
+
+git -C mapbox-maps-ios fetch --all 2> /dev/null || git clone git@github.com:mapbox/mapbox-maps-ios.git
+git -C mapbox-maps-ios checkout "$MAPS_SDK_TREEISH"
+
+# leave build directory
+cd ..
+
+# Generate Xcode project
 
 xcodegen
 

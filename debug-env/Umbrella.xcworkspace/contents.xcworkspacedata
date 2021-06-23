@@ -5,6 +5,12 @@
       location = "group:MapboxMapsDebug.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:mapbox-gl-native-internal/build/ios/Mapbox GL Native.xcodeproj">
+      location = "group:build/mapbox-events-ios/MapboxMobileEvents.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:build/turf-swift/Turf.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:build/mapbox-gl-native-internal/build/ios/Mapbox GL Native.xcodeproj">
    </FileRef>
 </Workspace>

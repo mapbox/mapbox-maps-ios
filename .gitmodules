@@ -1,6 +1,0 @@
-[submodule "mapbox-gl-native-internal"]
-	path = debug-env/mapbox-gl-native-internal
-	url = git@github.com:mapbox/mapbox-gl-native-internal.git
-[submodule "mapbox-maps-ios"]
-	path = debug-env/mapbox-maps-ios
-	url = git@github.com:mapbox/mapbox-maps-ios.git

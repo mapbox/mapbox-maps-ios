@@ -1,16 +1,12 @@
 ---
 name: MapboxMapsDebug
-packages:
-  MapboxMobileEvents:
-    url: "https://github.com/mapbox/mapbox-events-ios.git"
-    exactVersion: "1.0.2"
 targets:
   MapboxMapsDebug:
     type: framework
     platform: iOS
     settings:
       base:
-        INFOPLIST_FILE: "mapbox-maps-ios/Sources/MapboxMaps/MapView/Info.plist"
+        INFOPLIST_FILE: "build/mapbox-maps-ios/Sources/MapboxMaps/MapView/Info.plist"
         PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.MapboxMaps
         INSTALL_PATH: $(LOCAL_LIBRARY_DIR)/Frameworks
         SKIP_INSTALL: "NO"
@@ -22,20 +18,26 @@ targets:
         DEFINES_MODULE: "YES"
         PRODUCT_NAME: $(TARGET_NAME:c99extidentifier)
         CODE_SIGN_STYLE: Automatic
-        BUILD_DIR: .build
     configFiles:
-      Debug: "mapbox-maps-ios/Mapbox/Configurations/Mapbox.xcconfig"
-      Release: "mapbox-maps-ios/Mapbox/Configurations/Mapbox.xcconfig"
+      Debug: "build/mapbox-maps-ios/Mapbox/Configurations/Mapbox.xcconfig"
+      Release: "build/mapbox-maps-ios/Mapbox/Configurations/Mapbox.xcconfig"
     sources:
-      - path: "mapbox-maps-ios/Sources/MapboxMaps/"
+      - path: "build/mapbox-maps-ios/Sources/MapboxMaps/"
         includes: "*.swift"
         excludes:
           - "**/*.plist"
           - "**/*.h"
-      - path: "mapbox-maps-ios/Sources/MapboxMaps/MapView/Info.plist"
-      - path: "mapbox-maps-ios/Sources/MapboxMaps/MapView/MapboxMaps.h"
+      - path: "build/mapbox-maps-ios/Sources/MapboxMaps/MapView/Info.plist"
+      - path: "build/mapbox-maps-ios/Sources/MapboxMaps/MapView/MapboxMaps.h"
     dependencies:
-      - framework: "./MapboxCoreMaps.framework"
-      - framework: "./MapboxCommon.framework"
-      - framework: "./Turf.framework"
-      - package: MapboxMobileEvents
+      - framework: "build/mapbox-gl-native-internal/build/ios/lib/Debug/MapboxCommon.framework"
+      - target: "MapboxCoreMaps/MapboxCoreMaps"
+      - target: "Turf/Turf"
+      - target: "MME/MapboxMobileEvents"
+projectReferences:
+  Turf:
+    path: "./build/turf-swift/Turf.xcodeproj"
+  MME:
+    path: "./build/mapbox-events-ios/MapboxMobileEvents.xcodeproj"
+  MapboxCoreMaps:
+    path: "./build/mapbox-gl-native-internal/build/ios/Mapbox GL Native.xcodeproj"

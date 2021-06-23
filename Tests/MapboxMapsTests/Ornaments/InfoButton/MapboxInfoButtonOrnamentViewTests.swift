@@ -6,8 +6,8 @@ class MapboxInfoButtonOrnamentTests: MapViewIntegrationTestCase {
     var infoButton: MapboxInfoButtonOrnament!
     var parentViewController: MockParentViewController!
 
-    override func setUp() {
-        super.setUp()
+    override func setUpWithError() throws {
+        try super.setUpWithError()
         infoButton = MapboxInfoButtonOrnament()
         parentViewController = MockParentViewController()
         parentViewController.view.addSubview(infoButton)

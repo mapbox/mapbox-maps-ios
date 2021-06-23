@@ -10,6 +10,6 @@
 
         @Image(source: Map-showing-Ohio-horizontal.png, alt: "A simulator screenshot of an iPhone showing a map. The map is centered over the state of Ohio.")
         
-        @TutorialReference(tutorial: "doc:Add-a-map")
+        @TutorialReference(tutorial: "doc:01-Add-a-map")
     }
 }

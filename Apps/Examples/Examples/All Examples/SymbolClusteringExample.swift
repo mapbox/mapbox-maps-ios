@@ -22,7 +22,7 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         mapView.mapboxMap.onNext(.mapLoaded) { _ in
             self.addSymbolClusteringLayers()
         }
-        
+    
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(gestureRecognizer:)))
         mapView.addGestureRecognizer(tapGestureRecognizer)
     }
@@ -33,6 +33,7 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         // In order to recolor an image, you need to add a template image to the map's style.
         // The image's rendering mode can be set programmatically or in the asset catalogue.
         let image = UIImage(named: "fire-station-11")!.withRenderingMode(.alwaysTemplate)
+
         // Add the image tp the map's style. Set `sdf` to `true`. This allows the icon images to be recolored.
         // See https://docs.mapbox.com/help/troubleshooting/using-recolorable-images-in-mapbox-maps/#what-are-signed-distance-fields-sdf for more information about `SDF`, or Signed Distance Fields.
         try! style.addImage(image, id: "fire-station-icon", sdf: true)
@@ -69,6 +70,11 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
     func createClusteredLayer() -> SymbolLayer {
         // Create a symbol layer to represent the clustered points.
         var clusteredLayer = SymbolLayer(id: "clustered-fire-hydrant-layer")
+
+        // Filter out unclustered features by checking for `point_count`. This
+        // is added to clusters when the cluster is created. If your source
+        // data includes a `point_count` property, consider checking
+        // for `cluster_id`.
         clusteredLayer.filter = Exp(.has) { "point_count" }
 
         clusteredLayer.iconImage = .constant(.name("fire-station-icon"))
@@ -102,12 +108,12 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         })
         return clusteredLayer
     }
-    
+
     func createUnclusteredLayer() -> SymbolLayer {
         // Create a symbol layer to represent the points that aren't clustered.
         var unclusteredLayer = SymbolLayer(id: "unclustered-point-layer")
 
-        // Filter out clusters by checking for point_count.
+        // Filter out clusters by checking for `point_count`.
         unclusteredLayer.filter = Exp(.not) {
             Exp(.has) { "point_count" }
         }
@@ -121,7 +127,7 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
             Exp(.get) { "FLOW" }
             360
         })
-        
+
         // Double the size of the icon image.
         unclusteredLayer.iconSize = .constant(2)
         return unclusteredLayer

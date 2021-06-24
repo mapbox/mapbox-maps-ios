@@ -301,6 +301,7 @@
 		CA549007251C404B00F829A3 /* point.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 2B86384F246D337200698135 /* point.geojson */; };
 		CA549008251C404B00F829A3 /* multipoint.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 2B86384E246D337200698135 /* multipoint.geojson */; };
 		CA549009251C404B00F829A3 /* multiline.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 2B86384A246D337200698135 /* multiline.geojson */; };
+		CA567F4E268527C9001D7F5D /* MapDataClearable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA567F4D268527C9001D7F5D /* MapDataClearable.swift */; };
 		CA57257E2568D15E005ED95E /* ObservableIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA57257C2568D15E005ED95E /* ObservableIntegrationTests.swift */; };
 		CA5890D5264B00B50060987A /* ObservableProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5890D3264B00B50060987A /* ObservableProtocol.swift */; };
 		CA5890D6264B00B50060987A /* MapEventHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5890D4264B00B50060987A /* MapEventHandler.swift */; };
@@ -737,6 +738,7 @@
 		CA54900D251C404B00F829A3 /* MapboxMapsTestsWithHost.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxMapsTestsWithHost.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA56648F24478722006F392C /* Mapbox.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Mapbox.xcconfig; sourceTree = "<group>"; };
 		CA56651E2447969E006F392C /* base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = base.xcconfig; sourceTree = "<group>"; };
+		CA567F4D268527C9001D7F5D /* MapDataClearable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapDataClearable.swift; sourceTree = "<group>"; };
 		CA57257C2568D15E005ED95E /* ObservableIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableIntegrationTests.swift; sourceTree = "<group>"; };
 		CA5890D3264B00B50060987A /* ObservableProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObservableProtocol.swift; sourceTree = "<group>"; };
 		CA5890D4264B00B50060987A /* MapEventHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapEventHandler.swift; sourceTree = "<group>"; };
@@ -1250,6 +1252,7 @@
 		1F11C1102421B05600F8397B /* MapboxMapsFoundation */ = {
 			isa = PBXGroup;
 			children = (
+				CA567F4D268527C9001D7F5D /* MapDataClearable.swift */,
 				CAB77E462654ACE90071D74C /* CameraManagerProtocol.swift */,
 				CA6245FF26289D6400C79547 /* Cancelable.swift */,
 				0C088AC426387EA400107B5E /* DateProvider.swift */,
@@ -2074,6 +2077,7 @@
 				CAE643E6265D7D4000C9E223 /* MapProjectionDelegate.swift in Sources */,
 				0CD62F0724588501006421D1 /* PinchGestureHandler.swift in Sources */,
 				0782B17B258C236B00D5FCE5 /* MBXGeometry.swift in Sources */,
+				CA567F4E268527C9001D7F5D /* MapDataClearable.swift in Sources */,
 				B529341D2624E9D6003B181C /* DelegatingMapClient.swift in Sources */,
 				0C350D85263278090090FA74 /* CameraTransition.swift in Sources */,
 				0C3B1E9224DDADD000CC29E8 /* MapboxMobileEvents+TelemetryProtocol.swift in Sources */,

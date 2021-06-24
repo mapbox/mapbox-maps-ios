@@ -3,6 +3,7 @@ import MapboxCoreMaps
 import Turf
 import UIKit
 @_implementationOnly import MapboxCommon_Private
+@_implementationOnly import MapboxCoreMaps_Private
 
 public final class MapboxMap {
     /// The underlying renderer object responsible for rendering the map
@@ -115,6 +116,25 @@ public final class MapboxMap {
     /// that were provided to the map's initializer.
     public var resourceOptions: ResourceOptions {
         return ResourceOptions(__map.getResourceOptions())
+    }
+
+    /// Clears temporary map data.
+    ///
+    /// Clears temporary map data from the data path defined in the given resource
+    /// options. Useful to reduce the disk usage or in case the disk cache contains
+    /// invalid data.
+    ///
+    /// - Note: Calling this API will affect all maps that use the same data path
+    ///         and does not affect persistent map data like offline style packages.
+    ///
+    /// - Parameters:
+    ///   - resourceOptions: The `resource options` that contain the map data path
+    ///         to be used
+    ///   - completion: Called once the request is complete
+    public static func clearData(for resourceOptions: ResourceOptions, completion: @escaping (Error?) -> Void) {
+        Map.clearData(for: MapboxCoreMaps.ResourceOptions(resourceOptions),
+                      callback: coreAPIClosureAdapter(for: completion,
+                                                      concreteErrorType: MapError.self))
     }
 
     /// Gets elevation for the given coordinate.
@@ -457,6 +477,25 @@ extension MapboxMap: MapEventsObservable {
         return handler
     }
 }
+
+// MARK: - MapDataClearable -
+extension MapboxMap: MapDataClearable {
+    /// Clears temporary map data.
+    ///
+    /// Clears temporary map data from the data path defined in the given resource
+    /// options. Useful to reduce the disk usage or in case the disk cache contains
+    /// invalid data.
+    ///
+    /// - Note: Calling this API will affect all maps that use the same data path
+    ///         and does not affect persistent map data like offline style packages.
+    ///
+    /// - Parameter completion: Called once the request is complete
+    public func clearData(completion: @escaping (Error?) -> Void) {
+        MapboxMap.clearData(for: resourceOptions, completion: completion)
+    }
+}
+
+// MARK: - Testing only! -
 
 extension MapboxMap {
     internal var __testingMap: Map {

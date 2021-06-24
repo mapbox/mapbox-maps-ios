@@ -4,14 +4,19 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 10.0.0-rc.2 - June 23, 2021
+
 ### Features ✨ and improvements 🏁
 
+* Introduced experimental `Style._addPersistentLayer(with:layerPosition:)`, `Style._isPersistentLayer(id:)`, `Style._addPersistentCustomLayer(withId:layerHost:layerPosition:)` APIs, so that the tagged layer and its associated resources remain when a style is reloaded. This improves performance of annotations during a style change. Experimental APIs should be considered liable to change in any SEMVER version. ([#471](https://github.com/mapbox/mapbox-maps-ios/pull/471), [#473](https://github.com/mapbox/mapbox-maps-ios/pull/473))
 - Annotations now will persist across style changes by default. ([#475](https://github.com/mapbox/mapbox-maps-ios/pull/475))
 - Adds localization support for v10 Maps SDK. This can be used by setting the `mapView.locale`. Use the `SupportedLanguages` enum, which lists currently supported `Locale`. ([#480](https://github.com/mapbox/mapbox-maps-ios/pull/480))
+- Fixed Tileset descriptor bug: Completion handler is called even if the `OfflineManager` instance goes out of scope.
+- Fixed text rendering when both 'text-rotate' and 'text-offset' are set.
 
 ### Breaking changes ⚠️
 
-- MapboxMaps now pins exactly to `MapboxCommon`. ([#481](https://github.com/mapbox/mapbox-maps-ios/pull/481))
+- MapboxMaps now pins exactly to `MapboxCommon`. ([#485](https://github.com/mapbox/mapbox-maps-ios/pull/485), [#481](https://github.com/mapbox/mapbox-maps-ios/pull/481))
 
 ## 10.0.0-rc.1 - June 9, 2021
 

@@ -2713,7 +2713,7 @@
 			repositoryURL = "https://github.com/mapbox/mapbox-common-ios";
 			requirement = {
 				kind = exactVersion;
-				version = 14.0.1;
+				version = 14.2.0;
 			};
 		};
 		CAB77E3B2654AB310071D74C /* XCRemoteSwiftPackageReference "mapbox-core-maps-ios" */ = {
@@ -2721,7 +2721,7 @@
 			repositoryURL = "https://github.com/mapbox/mapbox-core-maps-ios";
 			requirement = {
 				kind = exactVersion;
-				version = "10.0.0-rc.2";
+				version = "10.0.0-rc.3";
 			};
 		};
 		CAB77E3E2654AB4F0071D74C /* XCRemoteSwiftPackageReference "mapbox-events-ios" */ = {

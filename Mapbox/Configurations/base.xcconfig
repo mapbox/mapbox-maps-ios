@@ -11,11 +11,6 @@ ALWAYS_SEARCH_USER_PATHS = NO
 // for applications should those fail with this enabled.
 //APPLICATION_EXTENSION_API_ONLY = YES
 
-// Exclude i386 from simulator ARCHs because it's not present in libMapbox.a
-// Removed armv7 since it's also 32bit
-ARCHS[sdk=iphoneos*] = arm64
-ARCHS[sdk=iphonesimulator*] = x86_64
-
 // Why the long path here? It's because we want an xctestrun file *without*
 // absolute paths, i.e. relative to __TESTROOT__, so that the testrun file doesn't
 // have to be modified when running on Device Farm.

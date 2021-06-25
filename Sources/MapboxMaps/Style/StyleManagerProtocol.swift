@@ -334,6 +334,8 @@ internal protocol StyleManagerProtocol {
     ///   - image: Image to add.
     ///   - id: ID of the image.
     ///   - sdf: Option to treat whether image is SDF(signed distance field) or not.
+    ///         Setting this to `true` allows template images to be recolored. The
+    ///         default value is `false`.
     ///   - stretchX: An array of two-element arrays, consisting of two numbers
     ///         that represent the from position and the to position of areas
     ///         that can be stretched horizontally.

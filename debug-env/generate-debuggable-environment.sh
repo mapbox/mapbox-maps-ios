@@ -14,7 +14,7 @@ echo " - turf-swift @ $TURF_TREEISH"
 echo " - mapbox-events-ios @ $MME_TREEISH"
 
 get_branch () {
-  git -C "$1" fetch "$2":"$2" 2> /dev/null || git clone "git@github.com:mapbox/$1.git"
+  git -C "$1" fetch origin "$2":"$2" 2> /dev/null || git clone "git@github.com:mapbox/$1.git"
   git -C "$1" checkout "$2"
 }
 

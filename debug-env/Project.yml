@@ -1,7 +1,7 @@
 ---
-name: MapboxMapsDebug
+name: MapboxMaps
 targets:
-  MapboxMapsDebug:
+  MapboxMaps:
     type: framework
     platform: iOS
     settings:

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:DebugApp.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Examples.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:MapboxMaps.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:build/mapbox-events-ios/MapboxMobileEvents.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:build/turf-swift/Turf.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:build/mapbox-gl-native-internal/build/ios/Mapbox GL Native.xcodeproj">
+   </FileRef>
+</Workspace>

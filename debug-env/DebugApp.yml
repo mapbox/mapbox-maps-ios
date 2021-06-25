@@ -1,0 +1,38 @@
+---
+name: DebugApp
+configFiles:
+  Debug: build/mapbox-maps-ios/Apps/Configurations/base.xcconfig
+  Release: build/mapbox-maps-ios/Apps/Configurations/base.xcconfig
+targets:
+  DebugApp:
+    type: application
+    platform: iOS
+    settings:
+      base:
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        CODE_SIGN_STYLE: Automatic
+        INFOPLIST_FILE: build/mapbox-maps-ios/Apps/DebugApp/DebugApp/Info.plist
+        LD_RUNPATH_SEARCH_PATHS: $(inherited) @executable_path/Frameworks
+        PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.DebugApp
+        PRODUCT_NAME: $(TARGET_NAME)
+        TARGETED_DEVICE_FAMILY: 1,2
+    sources:
+      - path: build/mapbox-maps-ios/Apps/DebugApp/DebugApp/
+    dependencies:
+      - framework: build/mapbox-gl-native-internal/build/ios/lib/Debug/MapboxCommon.framework
+      - target: MapboxCoreMaps/MapboxCoreMaps
+      - target: Turf/Turf
+      - target: MME/MapboxMobileEvents
+      - target: MapboxMaps/MapboxMaps
+    postBuildScripts:
+      - path: build/mapbox-maps-ios/scripts/insert_access_token.sh
+        name: Insert Mapbox access token
+projectReferences:
+  Turf:
+    path: ./build/turf-swift/Turf.xcodeproj
+  MME:
+    path: ./build/mapbox-events-ios/MapboxMobileEvents.xcodeproj
+  MapboxCoreMaps:
+    path: ./build/mapbox-gl-native-internal/build/ios/Mapbox GL Native.xcodeproj
+  MapboxMaps:
+    path: ./MapboxMaps.xcodeproj

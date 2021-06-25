@@ -57,8 +57,9 @@ get_branch mapbox-maps-ios "$MAPS_SDK_TREEISH"
 # leave build directory
 cd ..
 
-# Generate Xcode project
-xcodegen
+# Generate Xcode projects
+xcodegen -s MapboxMaps.yml
+xcodegen -s DebugApp.yml
 
 # Open the resulting project
 xed Umbrella.xcworkspace

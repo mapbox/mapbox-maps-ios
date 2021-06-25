@@ -6,14 +6,12 @@ MAPS_SDK_TREEISH="${1:-main}"
 GL_NATIVE_TREEISH="${2:-internal}"
 TURF_TREEISH="${3:-main}"
 MME_TREEISH="${4:-main}"
-SDK="${5:-iphoneos}"
 
 echo "Using:"
 echo " - mapbox-maps-ios @ $MAPS_SDK_TREEISH"
 echo " - mapbox-gl-native-internal @ $GL_NATIVE_TREEISH"
 echo " - turf-swift @ $TURF_TREEISH"
 echo " - mapbox-events-ios @ $MME_TREEISH"
-echo "Configuring for $SDK SDK"
 
 get_branch () {
   git -C "$1" fetch "$2":"$2" 2> /dev/null || git clone "git@github.com:mapbox/$1.git"

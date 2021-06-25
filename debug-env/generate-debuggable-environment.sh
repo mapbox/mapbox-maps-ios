@@ -2,6 +2,11 @@
 
 # Usage: ./generate-debuggable-environment.sh <mapbox-maps-ios-treeish> <gl-native-internal-treeish> <turf-treeish> <mme-treeish>
 
+if [ -d build ] ; then
+  echo "build directory exists; please delete or move the directory before running this script"
+  exit 1
+fi
+
 MAPS_SDK_TREEISH="${1:-main}"
 GL_NATIVE_TREEISH="${2:-internal}"
 TURF_TREEISH="${3:-main}"
@@ -14,9 +19,8 @@ echo " - turf-swift @ $TURF_TREEISH"
 echo " - mapbox-events-ios @ $MME_TREEISH"
 
 get_branch () {
-  git -C "$1" fetch origin 2> /dev/null || git clone "git@github.com:mapbox/$1.git"
+  git clone "git@github.com:mapbox/$1.git"
   git -C "$1" checkout "$2"
-  git -C "$1" merge --ff-only "origin/$2"
 }
 
 # Create a separate directory for intermediates

@@ -22,6 +22,15 @@ class MapboxMapIntegrationTests: IntegrationTestCase {
 
     override func tearDownWithError() throws {
         try super.tearDownWithError()
+
+        if let mapView = mapView {
+            let resourceOptions = mapView.mapboxMap.resourceOptions
+            let expectation = self.expectation(description: "Clear map data")
+            MapboxMap.clearData(for: resourceOptions) { _ in
+                expectation.fulfill()
+            }
+            wait(for: [expectation], timeout: 10.0)
+        }
     }
 
     // MARK: - Tests

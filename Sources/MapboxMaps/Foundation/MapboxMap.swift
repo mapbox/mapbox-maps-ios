@@ -478,8 +478,9 @@ extension MapboxMap: MapEventsObservable {
     }
 }
 
-// MARK: - MapDataClearable -
-extension MapboxMap: MapDataClearable {
+// MARK: - Map data clearing -
+
+extension MapboxMap {
     /// Clears temporary map data.
     ///
     /// Clears temporary map data from the data path defined in the given resource

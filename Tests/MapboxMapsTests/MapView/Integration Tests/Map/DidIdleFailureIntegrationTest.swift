@@ -156,9 +156,18 @@ internal class DidIdleFailureIntegrationTest: IntegrationTestCase {
             mapView?.mapboxMap.unsubscribe(observer, events: ["resource-request"])
         }
 
+        let resourceOptions = mapView?.mapboxMap.resourceOptions
         mapView?.removeFromSuperview()
         mapView = nil
         style = nil
+
+        if let resourceOptions = resourceOptions {
+            let expectation = self.expectation(description: "Clear map data")
+            MapboxMap.clearData(for: resourceOptions) { _ in
+                expectation.fulfill()
+            }
+            wait(for: [expectation], timeout: 10.0)
+        }
 
         rootViewController?.viewWillDisappear(false)
         rootViewController?.viewDidDisappear(false)

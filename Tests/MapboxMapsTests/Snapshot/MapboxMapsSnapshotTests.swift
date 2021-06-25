@@ -19,6 +19,13 @@ class MapboxMapsSnapshotTests: XCTestCase {
     }
 
     override func tearDownWithError() throws {
+        if let resourceOptions = resourceOptions {
+            let expectation = self.expectation(description: "Clear map data")
+            MapboxMap.clearData(for: resourceOptions) { _ in
+                expectation.fulfill()
+            }
+            wait(for: [expectation], timeout: 10.0)
+        }
         try super.tearDownWithError()
     }
 
@@ -157,4 +164,27 @@ class MapboxMapsSnapshotTests: XCTestCase {
         }
         wait(for: [expectation2], timeout: 10)
     }
+
+    func testDataClearing() throws {
+        let options = try snapshotterOptions()
+        let snapshotter = Snapshotter(options: options)
+        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
+        snapshotter.setCamera(to: cameraOptions)
+        snapshotter.style.uri = .light
+
+        let snapshotExpectation = self.expectation(description: "snapshot")
+
+        snapshotter.start(overlayHandler: nil) { _ in
+            snapshotExpectation.fulfill()
+        }
+        wait(for: [snapshotExpectation], timeout: 10.0)
+
+        let expectation = self.expectation(description: "Clear data using instance function")
+        snapshotter.clearData { error in
+            XCTAssertNil(error)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 10.0)
+    }
+
 }

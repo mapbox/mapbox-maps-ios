@@ -267,9 +267,9 @@ extension Snapshotter: MapEventsObservable {
     }
 }
 
-// MARK: Clear data
+// MARK: - Clear data
 
-extension Snapshotter: MapDataClearable {
+extension Snapshotter {
     /// Clears temporary map data.
     ///
     /// Clears temporary map data from the data path defined in the given resource

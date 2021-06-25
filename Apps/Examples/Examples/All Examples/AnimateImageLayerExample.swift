@@ -16,11 +16,12 @@ class AnimateImageLayerExample: UIViewController, ExampleProtocol {
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
 
+        // Hide the `scaleBar` at all zoom levels.
         mapView.ornaments.options.scaleBar.visibility = .hidden
 
         // This also updates the color of the info button to match the map's style.
-
         mapView.tintColor = .lightGray
+
         // Set the map's `CameraBoundsOptions` to limit the map's zoom level.
         mapView.camera.options.maxZoom = 5.99
         mapView.camera.options.minZoom = 4
@@ -31,10 +32,12 @@ class AnimateImageLayerExample: UIViewController, ExampleProtocol {
             self.addImageLayer()
         }
     }
-    
+
     func addImageLayer() {
         let style = mapView.mapboxMap.style
 
+        // Create an `ImageSource`. This will manage the image displayed in the `RasterLayer` as well
+        // as the location of that image on the map.
         var imageSource = ImageSource()
 
         // Set the `coordinates` property to an array of longitude, latitude pairs.
@@ -59,6 +62,10 @@ class AnimateImageLayerExample: UIViewController, ExampleProtocol {
         do {
             try style.addSource(imageSource, id: sourceId)
             try style.addLayer(imageLayer)
+
+            // Add a tap gesture recognizer that will allow the animation to be stopped and started.
+            let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(manageTimer))
+            mapView.addGestureRecognizer(tapGestureRecognizer)
         } catch {
             print("Failed to add the source or layer to style. Error: \(error)")
         }

@@ -136,6 +136,11 @@ open class MapView: UIView {
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
 
+    @available(*, unavailable)
+    public override init(frame: CGRect) {
+        fatalError()
+    }
+
     private func commonInit(mapInitOptions: MapInitOptions, overridingStyleURI: URL?) {
         checkForMetalSupport()
 

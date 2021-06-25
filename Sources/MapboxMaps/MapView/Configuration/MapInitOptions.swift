@@ -44,6 +44,11 @@ public final class MapInitOptions: NSObject {
         self.styleURI        = styleURI
     }
 
+    @available(*, unavailable)
+    public override init() {
+        fatalError()
+    }
+
     /// :nodoc:
     public override func isEqual(_ object: Any?) -> Bool {
         guard let other = object as? MapInitOptions else {

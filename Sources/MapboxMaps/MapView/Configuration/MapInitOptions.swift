@@ -44,9 +44,11 @@ public final class MapInitOptions: NSObject {
         self.styleURI        = styleURI
     }
 
+    /// :nodoc:
+    /// See https://developer.apple.com/forums/thread/650054 for context
     @available(*, unavailable)
-    public override init() {
-        fatalError()
+    internal override init() {
+        fatalError("This initializer should not be called.")
     }
 
     /// :nodoc:

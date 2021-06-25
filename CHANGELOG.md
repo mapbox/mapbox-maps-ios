@@ -4,6 +4,10 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Bug fixes 🐞
+
+* Fixed a crash at runtime, when an application is built with the xcframework (direct download) rather than from source (i.e. Swift Package Manager). ([#497](https://github.com/mapbox/mapbox-maps-ios/pull/497))
+
 ## 10.0.0-rc.2 - June 23, 2021
 
 ### Features ✨ and improvements 🏁

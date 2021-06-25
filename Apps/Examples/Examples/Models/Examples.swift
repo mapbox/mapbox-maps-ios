@@ -209,7 +209,10 @@ public struct Examples {
                 type: LocalizationExample.self),
         Example(title: "Add an interactive clustered layer",
                 description: "Display an alert controller after selecting a feature.",
-                type: SymbolClusteringExample.self)
+                type: SymbolClusteringExample.self),
+        Example(title: "Add an animated image",
+                description: "Add an image to a raster layer on the map and animate it.",
+                type: AnimateImageLayerExample.self)
     ]
 
     // Examples that show use cases related to user interaction with the map.

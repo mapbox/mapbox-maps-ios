@@ -1,22 +1,22 @@
 #!/bin/bash
 
-# Usage: ./generate-debuggable-environment.sh <mapbox-maps-ios-treeish> <gl-native-internal-treeish> <turf-treeish> <mme-treeish>
+# Usage: ./generate-debuggable-environment.sh <mapbox-maps-ios-commit> <gl-native-internal-commit> <turf-commit> <mme-commit>
 
 if [ -d build ] ; then
   echo "build directory exists; please delete or move the directory before running this script"
   exit 1
 fi
 
-MAPS_SDK_TREEISH="${1:-main}"
-GL_NATIVE_TREEISH="${2:-internal}"
-TURF_TREEISH="${3:-main}"
-MME_TREEISH="${4:-main}"
+MAPS_SDK_COMMIT="${1:-main}"
+GL_NATIVE_COMMIT="${2:-internal}"
+TURF_COMMIT="${3:-main}"
+MME_COMMIT="${4:-main}"
 
 echo "Using:"
-echo " - mapbox-maps-ios @ $MAPS_SDK_TREEISH"
-echo " - mapbox-gl-native-internal @ $GL_NATIVE_TREEISH"
-echo " - turf-swift @ $TURF_TREEISH"
-echo " - mapbox-events-ios @ $MME_TREEISH"
+echo " - mapbox-maps-ios @ $MAPS_SDK_COMMIT"
+echo " - mapbox-gl-native-internal @ $GL_NATIVE_COMMIT"
+echo " - turf-swift @ $TURF_COMMIT"
+echo " - mapbox-events-ios @ $MME_COMMIT"
 
 get_branch () {
   git clone "git@github.com:mapbox/$1.git"
@@ -28,7 +28,7 @@ mkdir -p build
 cd build
 
 # Core & Common
-get_branch mapbox-gl-native-internal "$GL_NATIVE_TREEISH"
+get_branch mapbox-gl-native-internal "$GL_NATIVE_COMMIT"
 git -C mapbox-gl-native-internal submodule sync --recursive
 git -C mapbox-gl-native-internal submodule update --init --recursive
 cd mapbox-gl-native-internal
@@ -51,9 +51,9 @@ sed -i '' '/Begin PBXBuildStyle section/,/End PBXBuildStyle section/d' 'build/io
 cd ..
 
 # Turf, MME, MapboxMaps
-get_branch turf-swift "$TURF_TREEISH"
-get_branch mapbox-events-ios "$MME_TREEISH"
-get_branch mapbox-maps-ios "$MAPS_SDK_TREEISH"
+get_branch turf-swift "$TURF_COMMIT"
+get_branch mapbox-events-ios "$MME_COMMIT"
+get_branch mapbox-maps-ios "$MAPS_SDK_COMMIT"
 
 # leave build directory
 cd ..

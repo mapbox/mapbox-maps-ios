@@ -3,7 +3,7 @@
 ## Setup
 
 1. Clone this repository
-2. Run `$ ./generate-debuggable-environment.sh <mapbox-maps-ios-treeish> <gl-native-internal-treeish> <turf-treeish> <mme-treeish>`
+2. Run `$ ./generate-debuggable-environment.sh <mapbox-maps-ios-commit> <gl-native-internal-commit> <turf-commit> <mme-commit>`
 3. When the script completes, `Umbrella.xcworkspace` will open.
 4. Build and run the `DebugApp` or `Examples` scheme to start debugging:
 

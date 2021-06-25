@@ -1,5 +1,13 @@
 # Debuggable Environment
 
+## Prerequisites
+
+Several utilities are required to use this script. You can install them with:
+
+```
+$ brew install xcodegen cmake ccache glfw pkgconfig
+```
+
 ## Setup
 
 1. Clone this repository

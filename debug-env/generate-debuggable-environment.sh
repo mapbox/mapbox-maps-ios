@@ -1,9 +1,7 @@
 #!/bin/bash
 
-# Usage: ./generate-debuggable-environment.sh <mapbox-maps-ios-treeish> <gl-native-internal-treeish> <turf-treeish> <mme-treeish> <sdk>
+# Usage: ./generate-debuggable-environment.sh <mapbox-maps-ios-treeish> <gl-native-internal-treeish> <turf-treeish> <mme-treeish>
 
-# TODO: finish supporting device & simulator
-# TODO: Integrate Debug and Examples apps
 MAPS_SDK_TREEISH="${1:-main}"
 GL_NATIVE_TREEISH="${2:-internal}"
 TURF_TREEISH="${3:-main}"
@@ -35,7 +33,7 @@ cmake -B build/ios \
   -DBUILD_SHARED_LIBS=OFF \
   -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY="./lib"\
   -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_OSX_SYSROOT="$SDK" \
+  -DCMAKE_OSX_SYSROOT=iphoneos \
   -DCMAKE_SYSTEM_NAME=iOS \
   -DMAPBOX_COMMON_BUILD_TYPE='SHARED' \
   -DMAPBOX_COMMON_TARGET_NAME='MapboxCommon' \

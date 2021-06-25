@@ -100,4 +100,8 @@ class AnimateImageLayerExample: UIViewController, ExampleProtocol {
             timer = nil
         }
     }
+
+    deinit {
+        timer?.invalidate()
+    }
 }

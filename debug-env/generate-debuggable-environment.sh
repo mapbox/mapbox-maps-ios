@@ -60,6 +60,7 @@ cd ..
 # Generate Xcode projects
 xcodegen -s MapboxMaps.yml
 xcodegen -s DebugApp.yml
+xcodegen -s Examples.yml
 
 # Open the resulting project
 xed Umbrella.xcworkspace

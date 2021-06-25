@@ -45,6 +45,13 @@ public final class MapInitOptions: NSObject {
     }
 
     /// :nodoc:
+    /// See https://developer.apple.com/forums/thread/650054 for context
+    @available(*, unavailable)
+    internal override init() {
+        fatalError("This initializer should not be called.")
+    }
+
+    /// :nodoc:
     public override func isEqual(_ object: Any?) -> Bool {
         guard let other = object as? MapInitOptions else {
             return false

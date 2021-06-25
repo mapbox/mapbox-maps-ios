@@ -136,6 +136,13 @@ open class MapView: UIView {
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
 
+    /// :nodoc:
+    /// See https://developer.apple.com/forums/thread/650054 for context
+    @available(*, unavailable)
+    internal override init(frame: CGRect) {
+        fatalError("This initializer should not be called.")
+    }
+
     private func commonInit(mapInitOptions: MapInitOptions, overridingStyleURI: URL?) {
         checkForMetalSupport()
 

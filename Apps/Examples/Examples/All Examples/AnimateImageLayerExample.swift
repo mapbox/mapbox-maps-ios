@@ -74,7 +74,7 @@ class AnimateImageLayerExample: UIViewController, ExampleProtocol {
 
     @objc func manageTimer() {
         if timer == nil {
-            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] (timer) in
+            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
                 guard let self = self else { return }
 
                 // There are five radar images, number 0-4. Increment the count. When that would

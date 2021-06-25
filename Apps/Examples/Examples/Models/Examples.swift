@@ -211,7 +211,7 @@ public struct Examples {
                 description: "Display an alert controller after selecting a feature.",
                 type: SymbolClusteringExample.self),
         Example(title: "Add an animated image",
-                description: "Add an image layer to the map and animate it.",
+                description: "Add an image to a raster layer on the map and animate it.",
                 type: AnimateImageLayerExample.self)
     ]
 

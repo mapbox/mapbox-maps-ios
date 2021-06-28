@@ -31,7 +31,7 @@ public class TerrainExample: UIViewController, ExampleProtocol {
     func addTerrain() {
         var demSource = RasterDemSource()
         demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
-        demSource.tileSize = 512
+        demSource.tileSize = 514
         demSource.maxzoom = 14.0
         try! mapView.mapboxMap.style.addSource(demSource, id: "mapbox-dem")
 

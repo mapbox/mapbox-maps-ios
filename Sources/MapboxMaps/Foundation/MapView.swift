@@ -136,12 +136,12 @@ open class MapView: UIView {
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
-    
+
     required public init?(coder: NSCoder) {
         dependencyProvider = MapViewDependencyProvider()
         super.init(coder: coder)
     }
-    
+
     internal init(frame: CGRect,
                   mapInitOptions: MapInitOptions,
                   dependencyProvider: MapViewDependencyProviderProtocol) {

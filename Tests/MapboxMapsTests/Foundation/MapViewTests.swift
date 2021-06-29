@@ -36,10 +36,11 @@ final class MapViewTests: XCTestCase {
 
     func invokeDisplayLinkCallback() throws {
         let makeDisplayLinkParams = try XCTUnwrap(dependencyProvider.makeDisplayLinkStub.parameters.first)
+        let target = try XCTUnwrap(makeDisplayLinkParams.target as? NSObject)
 
         // Invoke the display link callback while there's an animator; verify that this alone does
         // not invoke setNeedsDisplay() on the MTKView
-        (makeDisplayLinkParams.target as! NSObject).perform(makeDisplayLinkParams.selector, with: displayLink)
+        target.perform(makeDisplayLinkParams.selector, with: displayLink)
     }
 
     // test that map view is deinited

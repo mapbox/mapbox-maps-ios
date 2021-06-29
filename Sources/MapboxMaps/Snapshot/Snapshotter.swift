@@ -266,3 +266,21 @@ extension Snapshotter: MapEventsObservable {
         return handler
     }
 }
+
+// MARK: - Clear data
+
+extension Snapshotter {
+    /// Clears temporary map data.
+    ///
+    /// Clears temporary map data from the data path defined in the given resource
+    /// options. Useful to reduce the disk usage or in case the disk cache contains
+    /// invalid data.
+    ///
+    /// - Note: Calling this API will affect all maps that use the same data path
+    ///         and does not affect persistent map data like offline style packages.
+    ///
+    /// - Parameter completion: Called once the request is complete
+    public func clearData(completion: @escaping (Error?) -> Void) {
+        MapboxMap.clearData(for: options.resourceOptions, completion: completion)
+    }
+}

@@ -38,29 +38,27 @@ internal func coreAPIClosureAdapter<T, SwiftError, ObjCType>(
 }
 
 internal func coreAPIClosureAdapter<SwiftError>(
-    for closure: @escaping (Result<Void, Error>) -> Void,
+    for closure: @escaping (Error?) -> Void,
     concreteErrorType: SwiftError.Type) -> ((Expected<AnyObject, AnyObject>?) -> Void) where SwiftError: CoreErrorRepresentable,
                                                                                                 SwiftError.CoreErrorType: AnyObject {
     return { (expected: Expected?) in
-        let result: Result<Void, Error>
+        var error: Error?
 
         defer {
-            closure(result)
+            closure(error)
         }
 
         guard let expected = expected as? Expected<AnyObject, SwiftError.CoreErrorType>  else {
             assertionFailure("Invalid MBXExpected types or none.")
-            result = .failure(TypeConversionError.unexpectedType)
+            error = TypeConversionError.unexpectedType
             return
         }
 
-        if expected.isValue() {
-            result = .success(())
-        } else if expected.isError(), let error = expected.error {
-            result = .failure(SwiftError(coreError: error))
-        } else {
+        if expected.isError(), let expectedError = expected.error {
+            error = SwiftError(coreError: expectedError)
+        } else if !expected.isValue() {
             assertionFailure("Unexpected value or error: \(expected)")
-            result = .failure(TypeConversionError.invalidObject)
+            error = TypeConversionError.invalidObject
         }
     }
 }

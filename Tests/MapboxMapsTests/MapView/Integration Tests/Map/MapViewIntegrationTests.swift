@@ -25,9 +25,20 @@ class MapViewIntegrationTests: IntegrationTestCase {
     }
 
     override func tearDownWithError() throws {
+
+        let resourceOptions = mapView?.mapboxMap.resourceOptions
+
         mapView?.removeFromSuperview()
         mapView = nil
         rootView = nil
+
+        if let resourceOptions = resourceOptions {
+            let expectation = self.expectation(description: "Clear map data")
+            MapboxMap.clearData(for: resourceOptions) { _ in
+                expectation.fulfill()
+            }
+            wait(for: [expectation], timeout: 10.0)
+        }
 
         try super.tearDownWithError()
     }
@@ -104,5 +115,23 @@ class MapViewIntegrationTests: IntegrationTestCase {
 
         XCTAssertNil(mapView.displayLink?.preferredFramesPerSecond)
         XCTAssertNotEqual(mapView.preferredFramesPerSecond.rawValue, mapView.displayLink?.preferredFramesPerSecond)
+    }
+
+    func testDataClearing() {
+        defer {
+            mapView?.removeFromSuperview()
+            mapView = nil
+        }
+
+        guard let mapView = mapView else {
+            return
+        }
+
+        let expectation = self.expectation(description: "Clear data using instance function")
+        mapView.mapboxMap.clearData { error in
+            XCTAssertNil(error)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 10.0)
     }
 }

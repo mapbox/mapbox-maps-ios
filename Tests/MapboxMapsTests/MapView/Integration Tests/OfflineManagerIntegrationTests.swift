@@ -63,12 +63,29 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         label = nil
 
         tileRegionLoadOptions = nil
-        resourceOptions = nil
         offlineManager = nil
         tileStore = nil
 
+        clearResourceOptions()
+
         XCTAssertNil(weakOfflineManager)
         XCTAssertNil(weakTileStore)
+    }
+
+    private func clearResourceOptions() {
+        defer {
+            resourceOptions = nil
+        }
+
+        guard resourceOptions != nil else {
+            return
+        }
+
+        let expectation = self.expectation(description: "Clear data")
+        MapboxMap.clearData(for: resourceOptions) { _ in
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 10)
     }
 
     // MARK: Test Cases
@@ -368,11 +385,12 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         }
 
         tileRegionLoadOptions = nil
-        resourceOptions = nil
         tileStore = nil
         offlineManager = nil
 
         wait(for: [expect, closureDeallocation], timeout: 30.0)
+
+        clearResourceOptions()
 
         XCTAssertNil(weakTileStore)
         XCTAssertNil(weakOfflineManager)
@@ -395,7 +413,6 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         }
 
         tileRegionLoadOptions = nil
-        resourceOptions = nil
 
         // Wait a short time, so download starts
         let expect2 = expectation(description: "Wait")
@@ -408,6 +425,8 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
         wait(for: [expect], timeout: 60.0)
         wait(for: [closureDeallocation], timeout: 5.0)
+
+        clearResourceOptions()
 
         XCTAssertNil(weakTileStore)
         XCTAssertNil(weakOfflineManager)
@@ -434,7 +453,6 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
             }
 
             tileRegionLoadOptions = nil
-            resourceOptions = nil
 
             // Wait a short time, so download starts
             let expect2 = expectation(description: "Wait")
@@ -446,6 +464,8 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
             offlineManager = nil
 
             wait(for: [expect, closureDeallocation], timeout: 120.0)
+
+            clearResourceOptions()
         }
 
         XCTAssertNil(weakTileStore)
@@ -481,7 +501,6 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
         // Release
         tileRegionLoadOptions = nil
-        resourceOptions = nil
         tileStore = nil
 
         offlineManager = nil
@@ -492,6 +511,8 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         _ = XCTWaiter.wait(for: [expect2], timeout: 0.25)
 
         wait(for: [expect, closureDeallocation], timeout: 60.0)
+
+        clearResourceOptions()
 
         // This fails because the completion block is holding the tilestore
         // and is not called, so does not get released afterwards.

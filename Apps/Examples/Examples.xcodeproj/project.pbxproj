@@ -261,8 +261,8 @@
 				C64ED3C42540DD6E00ADADFB /* CustomPointAnnotationExample.swift */,
 				A4AC5DEB2542CB2200995E4C /* CustomStyleURLExample.swift */,
 				C69F01EC2543646A001AB49B /* DataDrivenSymbolsExample.swift */,
-				077E3B2B2581810600564A3E /* ExternalVectorSourceExample.swift */,
 				17B48066268A4E9300CF0D5E /* DistanceExpressionExample.swift */,
+				077E3B2B2581810600564A3E /* ExternalVectorSourceExample.swift */,
 				07B0715F254789D6007F2865 /* FeaturesAtPointExample.swift */,
 				0C784D1026D002DC004AE7D0 /* FeatureStateExample.swift */,
 				077E3B8F2581966300564A3E /* FitCameraToGeometryExample.swift */,
@@ -274,6 +274,7 @@
 				17B40D2326A85500000887EF /* LiveDataExample.swift */,
 				C608C106267BC5B1003C86C3 /* LocalizationExample.swift */,
 				07B071CD2547CF2B007F2865 /* MultipleGeometriesExample.swift */,
+				C608C106267BC5B1003C86C3 /* LocalizationExample.swift */,
 				17483DFC2670113300396F8D /* MultiplePointAnnotationsExample.swift */,
 				CA628413262DFD5C00651488 /* OfflineManagerExample.storyboard */,
 				CA03F10E26268DF700673961 /* OfflineManagerExample.swift */,
@@ -296,6 +297,7 @@
 				0706C4A525B1181A008733C0 /* TerrainExample.swift */,
 				73694BD225D4B2CE0064F636 /* TrackingModeExample.swift */,
 				077E3B932581987B00564A3E /* UpdatePointAnnotationPositionExample.swift */,
+				07B071D12547CF50007F2865 /* Sample Data */,
 			);
 			path = "All Examples";
 			sourceTree = "<group>";

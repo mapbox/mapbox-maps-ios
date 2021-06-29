@@ -34,16 +34,13 @@ class RasterTileSourceExample: UIViewController, ExampleProtocol {
         // Specify the tile size for the `RasterSource`.
         rasterSource.tileSize = 256
 
-        var sourceId = "raster-source"
         var rasterLayer = RasterLayer(id: "raster-layer")
 
         // Specify that the layer should use the source with the ID `raster-source`. This ID will be
         // assigned to the `RasterSource` when it is added to the style.
+        let sourceId = "raster-source"
         rasterLayer.source = sourceId
 
-//
-//        rasterLayer.minZoom = 0
-//        rasterLayer.maxZoom = 22
         do {
             try style.addSource(rasterSource, id: sourceId)
             try style.addLayer(rasterLayer)

@@ -6,7 +6,7 @@ targets:
     platform: iOS
     settings:
       base:
-        INFOPLIST_FILE: "Sources/MapboxMaps/MapView/Info.plist"
+        INFOPLIST_FILE: "Sources/MapboxMaps/Info.plist"
         PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.MapboxMaps
         INSTALL_PATH: $(LOCAL_LIBRARY_DIR)/Frameworks
         SKIP_INSTALL: "NO"
@@ -28,8 +28,8 @@ targets:
         excludes:
           - "**/*.plist"
           - "**/*.h"
-      - path: "Sources/MapboxMaps/MapView/Info.plist"
-      - path: "Sources/MapboxMaps/MapView/MapboxMaps.h"
+      - path: "Sources/MapboxMaps/Info.plist"
+      - path: "Sources/MapboxMaps/MapboxMaps.h"
     dependencies:
       - framework: "../MapboxCoreMaps.xcframework"
       - framework: "../Turf.xcframework"

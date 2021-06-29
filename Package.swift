@@ -23,15 +23,15 @@ let package = Package(
             name: "MapboxMaps",
             dependencies: ["MapboxCoreMaps", "Turf", "MapboxMobileEvents", "MapboxCommon"],
             exclude: [
-                "MapView/Info.plist"
+                "Info.plist"
             ]
         ),
         .testTarget(
             name: "MapboxMapsTests",
             dependencies: ["MapboxMaps"],
             exclude: [
-                "MapView/Info.plist",
-                "MapView/Integration Tests/HTTP/HTTPIntegrationTests.swift",
+                "Info.plist",
+                "Foundation/Integration Tests/HTTP/HTTPIntegrationTests.swift",
             ],
             resources: [
                 .copy("Foundation/GeoJSON/Fixtures/point.geojson"),

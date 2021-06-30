@@ -7,6 +7,8 @@ Mapbox welcomes participation and contributions from everyone.
 ### Bug fixes 🐞
 
 * Fixed a crash at runtime, when an application is built with the xcframework (direct download) rather than from source (i.e. Swift Package Manager). ([#497](https://github.com/mapbox/mapbox-maps-ios/pull/497))
+* Fixed an issue where animators created by fly to and ease to were not released until the next fly to or ease to began. ([#505](https://github.com/mapbox/mapbox-maps-ios/pull/505))
+* Fixed an issue where a complete animator would trigger redrawing unnecessarily. ([#505](https://github.com/mapbox/mapbox-maps-ios/pull/505))
 
 ## 10.0.0-rc.2 - June 23, 2021
 

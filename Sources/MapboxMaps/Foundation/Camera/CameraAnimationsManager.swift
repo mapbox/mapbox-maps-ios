@@ -94,7 +94,12 @@ public class CameraAnimationsManager {
 
         mapView.addCameraAnimator(flyToAnimator)
 
-        flyToAnimator.addCompletion { (position) in
+        flyToAnimator.addCompletion { [weak self, weak flyToAnimator] (position) in
+            if let internalAnimator = self?.internalAnimator,
+               let animator = flyToAnimator,
+               internalAnimator === animator {
+                self?.internalAnimator = nil
+            }
             // Call the developer-provided completion (if present)
             completion?(position)
         }
@@ -128,7 +133,12 @@ public class CameraAnimationsManager {
         }
 
         // Nil out the `internalAnimator` once the "ease to" finishes
-        animator.addCompletion { (position) in
+        animator.addCompletion { [weak self, weak animator] (position) in
+            if let internalAnimator = self?.internalAnimator,
+               let animator = animator,
+               internalAnimator === animator {
+                self?.internalAnimator = nil
+            }
             completion?(position)
         }
 

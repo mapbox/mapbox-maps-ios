@@ -2,7 +2,7 @@ import XCTest
 @testable import MapboxMaps
 import MapboxCoreMaps
 
-class MapViewIntegrationTests: IntegrationTestCase {
+final class MapViewIntegrationTests: IntegrationTestCase {
     var rootView: UIView!
     var mapView: MapView!
     var dataPathURL: URL!
@@ -75,46 +75,6 @@ class MapViewIntegrationTests: IntegrationTestCase {
             XCTAssertNotNil(weakMapView)
         }
         XCTAssertNil(weakMapView)
-    }
-
-    func testUpdatePreferredFPS() {
-        let originalFPS = mapView.preferredFramesPerSecond
-        XCTAssertNotNil(originalFPS)
-        XCTAssertEqual(originalFPS.rawValue, 0)
-
-        let newFPS = 12
-        mapView.preferredFramesPerSecond = PreferredFPS(rawValue: newFPS)
-        XCTAssertNotEqual(originalFPS, mapView.preferredFramesPerSecond)
-        XCTAssertEqual(mapView.preferredFramesPerSecond.rawValue, newFPS)
-    }
-
-    func testUpdateFromDisplayLink() {
-        let originalFPS = mapView.preferredFramesPerSecond
-        XCTAssertNotNil(mapView.displayLink)
-        mapView.preferredFramesPerSecond = .lowPower
-        XCTAssertNotEqual(originalFPS, mapView.preferredFramesPerSecond)
-        XCTAssertEqual(mapView.preferredFramesPerSecond.rawValue, mapView.displayLink?.preferredFramesPerSecond)
-    }
-
-    func testAnimatorCompletionBlocksAreRemoved() {
-        let firstCompletion = PendingAnimationCompletion(completion: {_ in}, animatingPosition: .end)
-        let secondCompletion = PendingAnimationCompletion(completion: {_ in}, animatingPosition: .current)
-
-        mapView.pendingAnimatorCompletionBlocks.append(firstCompletion)
-        mapView.pendingAnimatorCompletionBlocks.append(secondCompletion)
-        mapView.scheduleRepaint()
-        XCTAssertEqual(mapView.pendingAnimatorCompletionBlocks.count, 2)
-
-        mapView.updateFromDisplayLink(displayLink: CADisplayLink())
-        XCTAssertEqual(mapView.pendingAnimatorCompletionBlocks.count, 0)
-    }
-
-    func testUpdateFromDisplayLinkWhenNil() {
-        mapView.displayLink = nil
-        mapView.preferredFramesPerSecond = .maximum
-
-        XCTAssertNil(mapView.displayLink?.preferredFramesPerSecond)
-        XCTAssertNotEqual(mapView.preferredFramesPerSecond.rawValue, mapView.displayLink?.preferredFramesPerSecond)
     }
 
     func testDataClearing() {

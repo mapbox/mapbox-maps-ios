@@ -103,8 +103,10 @@ extension CameraAnimationsManager: CameraAnimatorDelegate {
 
     // MARK: CameraAnimatorDelegate functions
     func schedulePendingCompletion(forAnimator animator: CameraAnimator, completion: @escaping AnimationCompletion, animatingPosition: UIViewAnimatingPosition) {
-        guard let mapView = mapView else { return }
-        mapView.pendingAnimatorCompletionBlocks.append((completion, animatingPosition))
+        mapView?.pendingAnimatorCompletionBlocks.append(
+            PendingAnimationCompletion(
+                completion: completion,
+                animatingPosition: animatingPosition))
     }
 
     var camera: CameraState {

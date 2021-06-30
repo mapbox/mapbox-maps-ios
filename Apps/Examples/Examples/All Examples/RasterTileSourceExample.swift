@@ -27,9 +27,9 @@ class RasterTileSourceExample: UIViewController, ExampleProtocol {
         // This URL points to raster tiles designed by Stamen Design.
         let sourceUrl = "https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg"
 
-        // Create a `RasterSource` and set the source's URL to the Stamen watercolor raster tiles.
+        // Create a `RasterSource` and set the source's `tiles` to the Stamen watercolor raster tiles.
         var rasterSource = RasterSource()
-        rasterSource.url = sourceUrl
+        rasterSource.tiles = [sourceUrl]
 
         // Specify the tile size for the `RasterSource`.
         rasterSource.tileSize = 256

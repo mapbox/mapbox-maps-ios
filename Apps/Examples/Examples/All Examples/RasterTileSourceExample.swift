@@ -16,6 +16,7 @@ class RasterTileSourceExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
+        // Once the map has finished loading, add the `RasterSource` and `RasterLayer` to the map's style.
         mapView.mapboxMap.onNext(.mapLoaded) { _ in
             self.addRasterSource()
         }

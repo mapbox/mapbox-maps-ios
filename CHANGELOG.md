@@ -19,10 +19,6 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix raster/v1 terrain tiles fetch failures caused by appending pixel ratio to the URLs when tile size is equal to 512 ([#496](https://github.com/mapbox/mapbox-maps-ios/pull/496))
 * Improve persistent layer pinning by keeping information about initial LayerPosition ([#496](https://github.com/mapbox/mapbox-maps-ios/pull/496))
 
-### Dependencies
-
-* Updated MapboxCoreMaps to v10.0.0-rc.3 and MapboxCommon to v14.2.0. ([#496](https://github.com/mapbox/mapbox-maps-ios/pull/496))
-
 ## 10.0.0-rc.2 - June 23, 2021
 
 ### Features ✨ and improvements 🏁

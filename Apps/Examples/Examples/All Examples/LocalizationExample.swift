@@ -49,27 +49,32 @@ public class LocalizationExample: UIViewController, ExampleProtocol {
 
         alert.addAction(UIAlertAction(title: "Spanish", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            self.mapView.locale = Locale(identifier: SupportedLanguage.spanish.rawValue)
+            try! self.mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "es"))
         }))
 
         alert.addAction(UIAlertAction(title: "French", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            self.mapView.locale = Locale(identifier: SupportedLanguage.french.rawValue)
+            try! self.mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "fr"))
         }))
 
         alert.addAction(UIAlertAction(title: "Traditional Chinese", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            self.mapView.locale = Locale(identifier: SupportedLanguage.traditionalChinese.rawValue)
+            try! self.mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "zh-Hant"))
         }))
 
         alert.addAction(UIAlertAction(title: "Arabic", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            self.mapView.locale = Locale(identifier: SupportedLanguage.arabic.rawValue)
+            try! self.mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "ar"))
         }))
 
         alert.addAction(UIAlertAction(title: "English", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            self.mapView.locale = Locale(identifier: SupportedLanguage.english.rawValue)
+            try! self.mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "en"))
+        }))
+
+        alert.addAction(UIAlertAction(title: "Japanese - Country's Only", style: .default, handler: { [weak self] _ in
+            guard let self = self else { return }
+            try! self.mapView.mapboxMap.style.localizeLabels(into: Locale(identifier: "ja"), for: ["country-label"])
         }))
 
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))

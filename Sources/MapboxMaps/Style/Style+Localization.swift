@@ -5,11 +5,23 @@ extension Style {
 
     /// This function creates an expression that will localize the `textField` property of a `SymbolLayer`
     /// - Parameter locale: A `SupportedLanguage` based `Locale`
-    internal func localizeLabels(into locale: Locale) throws {
+    public func localizeLabels(into locale: Locale, for layerIds: [String]? = nil) throws {
+
+        /// Do nothing if we do not support the locale
+        if !supportedLocales.contains(locale) {
+            return
+        }
 
         /// Get all symbol layers that are currently on the map
-        let symbolLayers = allLayerIdentifiers.filter { layer in
+        var symbolLayers = allLayerIdentifiers.filter { layer in
             return layer.type == .symbol
+        }
+
+        /// Filters for specific Ids if a list is provided
+        if let layerIds = layerIds {
+            symbolLayers = symbolLayers.filter { layer in
+                return layerIds.contains(layer.id)
+            }
         }
 
         /// Expression to be applied to the `SymbolLayer.textField`to localize the language
@@ -47,13 +59,18 @@ extension Style {
 
         for sourceInfo in vectorSources {
             do {
-                let tempSource = try source(withId: sourceInfo.id) as VectorSource
+                if locale.identifier.starts(with: "zh") {
+                    let tempSource = try source(withId: sourceInfo.id) as VectorSource
 
-                if tempSource.url?.contains("mapbox.mapbox-streets-v7") == true {
-                    if locale.identifier.contains("zh") {
+                    if tempSource.url?.contains("mapbox.mapbox-streets-v7") == true {
                         // v7 styles does not support value of "name_zh-Hant"
-                        if locale.identifier == SupportedLanguage.traditionalChinese.rawValue {
-                            return SupportedLanguage.chinese.rawValue
+                        if locale.identifier == "zh-Hant" {
+                            return "zh"
+                        }
+                    } else if tempSource.url?.contains("mapbox.mapbox-streets-v8") == true {
+                        /// Return simplified chinese if the Locale is Taiwan
+                        if locale.identifier == "zh_Hant_TW" {
+                            return "zh-Hans"
                         }
                     }
                 }

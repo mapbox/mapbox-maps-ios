@@ -1,46 +1,45 @@
 /// A list of languages that our maps support for localization
-public enum SupportedLanguage: String, CaseIterable {
+internal let supportedLocales = [
 
-    /// Support for Arabic (if available)
-    case arabic = "ar"
+    /// Support for arabic (if available)
+    Locale(identifier: "ar"),
 
     /// Support for Chinese (if available)
-    case chinese = "zh"
+    Locale(identifier: "zh"),
 
     /// Support for English (if available)
-    case english = "en"
+    Locale(identifier: "en"),
 
     /// Support for French (if available)
-    case french = "fr"
+    Locale(identifier: "fr"),
 
     /// Support for German (if available)
-    case german = "de"
+    Locale(identifier: "de"),
 
     /// Support for Italian (if available)
-    case italian = "it"
+    Locale(identifier: "it"),
 
     /// Support for Japanese (if available)
-    case japanese = "ja"
+    Locale(identifier: "ja"),
 
     /// Support for Korean (if available)
-    case korean = "ko"
+    Locale(identifier: "ko"),
 
     /// Support for Portuguese (if available)
-    case portuguese = "pt"
+    Locale(identifier: "pt"),
 
     /// Support for Russian (if available)
-    case russian = "ru"
+    Locale(identifier: "ru"),
 
     /// Support for Simplified Chinese (if available)
-    case simplifiedChinese = "zh-Hans"
+    Locale(identifier: "zh-Hans"),
 
     /// Support for Spanish (if available)
-    case spanish = "es"
+    Locale(identifier: "es"),
 
     /// Support for Traditional Chinese (if available)
-    /// NOTE: note supported in v7 styles
-    case traditionalChinese = "zh-Hant"
+    Locale(identifier: "zh-Hant"),
 
     /// Support for Vietnamese (if available)
-    case vietnamese = "vi"
-}
+    Locale(identifier: "vi"),
+]

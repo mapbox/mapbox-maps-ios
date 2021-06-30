@@ -4,11 +4,24 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 10.0.0-rc.3 - June 30, 2021
+
+### Features ✨ and improvements 🏁
+
+* Introduced static method `MapboxMap.clearData(for:completion:)` and instance methods `MapboxMap.clearData(completion:)` and `Snapshotter.clearData(completion:)`. These new methods allow clearing temporary map data. ([#496](https://github.com/mapbox/mapbox-maps-ios/pull/496))
+* `MapLoadingError` events now include source and tile information where appropriate. These new fields allow developers to understand what source or tile has failed to load and the reason for the failure. ([#496](https://github.com/mapbox/mapbox-maps-ios/pull/496))
+
 ### Bug fixes 🐞
 
-* Fixed a crash at runtime, when an application is built with the xcframework (direct download) rather than from source (i.e. Swift Package Manager). ([#497](https://github.com/mapbox/mapbox-maps-ios/pull/497))
+* Fixed a runtime crash that occurred only when the SDK was included as an XCFramework (direct download). ([#497](https://github.com/mapbox/mapbox-maps-ios/pull/497))
 * Fixed an issue where animators created by fly to and ease to were not released until the next fly to or ease to began. ([#505](https://github.com/mapbox/mapbox-maps-ios/pull/505))
 * Fixed an issue where a complete animator would trigger redrawing unnecessarily. ([#505](https://github.com/mapbox/mapbox-maps-ios/pull/505))
+* Fix raster/v1 terrain tiles fetch failures caused by appending pixel ratio to the URLs when tile size is equal to 512 ([#496](https://github.com/mapbox/mapbox-maps-ios/pull/496))
+* Improve persistent layer pinning by keeping information about initial LayerPosition ([#496](https://github.com/mapbox/mapbox-maps-ios/pull/496))
+
+### Dependencies
+
+* Updated MapboxCoreMaps to v10.0.0-rc.3 and MapboxCommon to v14.2.0. ([#496](https://github.com/mapbox/mapbox-maps-ios/pull/496))
 
 ## 10.0.0-rc.2 - June 23, 2021
 

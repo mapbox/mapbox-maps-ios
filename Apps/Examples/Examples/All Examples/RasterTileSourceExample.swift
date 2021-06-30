@@ -24,7 +24,7 @@ class RasterTileSourceExample: UIViewController, ExampleProtocol {
 
     func addRasterSource() {
         let style = mapView.mapboxMap.style
-    
+
         // This URL points to raster tiles designed by Stamen Design.
         let sourceUrl = "https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg"
 

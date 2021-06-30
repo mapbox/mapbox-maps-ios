@@ -35,11 +35,11 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 **1) Create Release Branch & Kickoff Build**
 
 - [ ] Pull the latest from main to include all code updates. Then make a new branch called "Release/{VERSION}"
-- [ ] Update the internal version pointers by running this command `./scripts/release/update-version.sh {VERSION}`. Commit these changes so they will be included in the build.
-- [ ] Bump the `maps_version` in MapboxMaps.podspec to match `VERSION`
+- [ ] Update the internal version pointers by running this command `./scripts/release/update-version.sh {VERSION}`. Commit these changes so they will be included in the build. This script also bumps the `maps_version` in MapboxMaps.podspec to match `VERSION`.
 - [ ] Perform manual QA of this branch by running:
   - [ ] `mapbox-maps-ios` examples
   - [ ] [Studio Preview](https://github.com/mapbox/studio-preview-ios/). Update the Podfile to point to the release branch. Check for any breaking changes in the code and any visible performance issues.
+- [ ] Verify installation via SPM. Open a tester single view application. Go to the Swift Package Manager menu and add our repo `https://github.com/mapbox/mapbox-maps-ios.git`. For the branch, specify the release branch. Then verify that you can load the SDK, and display a basic map on device to verify that the build is working.
 - [ ] Open a PR for the "Release/{VERSION}" branch. This allows CI to run.
 - [ ] Kickoff the build by passing an empty commit with the message "[release] {VERSION}", with the SEMVER version but no `v` prefix. For example: `git commit --allow-empty -m "[release] 10.0.0-rc.1"`. It's important that you follow the commit message as it triggers the build job.
 
@@ -48,15 +48,11 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 - Build our direct-download bundle
 - Include LICENSE.md and README.md for bundle in the zip files
 - Upload direct download to S3
-- Update the existing podspec and package manifest and commit that to the release branch
 - Create a PR [here](https://github.com/mapbox/api-downloads/pulls) so that our SDK can be consumed
 - [ ] The API Downloads PR needs to be approved and merged before continuing. You do not need to merge your PR in `mapbox-maps-ios` yet.
 
 **2) Update Distribution & Changelog**
 
-- [ ] On your local `Release/{VERSION}` branch, pull the latest from remote release branch. CI will have committed changes to podspec and package manifest.
-- [ ] This is where we need to verify SPM update was successful. Open a tester single view application. Go to the Swift Package Manager menu and add our repo `https://github.com/mapbox/mapbox-maps-ios.git`. For the branch, specify your current release branch. Then verify that you can load the SDK, and display a basic map on device to verify that the build is working.
-    - ***Note that the api-downloads PR needs to be merged and sanity checks need to complete before downloads are available here***
 - [ ] Generate the changelog manually by adding changes to the `CHANGELOG.md` file. Commit these changes have your release buddy review them. 
 - [ ] Review issues [tagged with the Release](https://app.zenhub.com/workspaces/maps-sdk-for-ios-5e9f47ffdf1ce5046f9011f4/reports/release) adding or removing the release from the Zenhub issues as necessary.
 
@@ -75,12 +71,13 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 **4) Confirm everything works as expected**
 
 - [ ] Download the artifacts from the SDK registry. The zip file will include five xcframeworks. Create a new iOS application project in Xcode, and add all the frameworks. In the view controller, load a basic map view to ensure everything works as expected.
+- [ ] Repeat the SDK registry testing for the static variant, available at `https://api.mapbox.com/downloads/v2/mobile-maps-ios-static/releases/ios/<version-without-v-previx>/MapboxMaps-static.zip`
 - [ ] Test that consumption via CocoaPods works. SPM should have been verified at an earlier step
 
 ## 📚 Update documentation
 
 - [ ] Navigate to the [CircleCI job page](https://app.circleci.com/pipelines/github/mapbox/mapbox-maps-ios), and download the `api-docs.zip` artifact.
-- [ ] In the `mapbox-maps-ios` repo, `git checkout origin publisher-staging`. This is the branch that houses our API-Docs. Make a new branch off this one `git checkout -b Release/{version}_docs`
+- [ ] In the `mapbox-maps-ios` repo, `git checkout publisher-staging && git merge --no-ff origin/publisher-staging`. This is the branch that houses our API-Docs. Make a new branch off this one `git checkout -b Release/{version}_docs`
 - [ ] Unzip the `api-docs.zip` and move the new docs into our repo. This should result in a new top-level folder named after the version, but without the 'v' prefix.
 
 ### Add framework docs
@@ -113,10 +110,10 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 - [ ] Preview the docs at the staging URL: https://docs.tilestream.net/ios/maps/api/{version_without_v_prefix}/index.html
 - [ ] Create a PR to merge `publisher-staging` into `publisher-production`.
 - [ ] Share the PR with @mapbox-docs to approve.
-- [ ] Merge the PR.
+- [ ] Merge the PR. Do not use 'Squash and merge': this causes the publisher-staging and publisher-production branches to diverge.
 - [ ] Create a `maps-{VERSION}` branch in [ios-sdk](https://github.com/mapbox/ios-sdk).
 - [ ] Add the new version (without a v prefix) as the first element in the [src/data/ios-maps-sdk-version.json](https://github.com/mapbox/ios-sdk/blob/publisher-production/src/data/ios-maps-sdk-versions.json).
-- [ ] While the rc docs site is live and for subsequent stable releases, add the version without the v to [src/constants.json](https://github.com/mapbox/ios-sdk/blob/ios/maps-v10.0.0-beta.13.1/src/constants.json#L6) as the value for `VERSION_IOS_MAPS_SDK_V10`.
+- [ ] While the rc docs site is live and for subsequent stable releases, add the version without the v to [src/constants.json](https://github.com/mapbox/ios-sdk/blob/ios/maps-v10.0.0-beta.13.1/src/constants.json#L6) as the value for `MAPS_SDK_v10_VERSION_IOS`.
 - [ ] Make sure the API Docs changes are live in production before continuing https://docs.mapbox.com/ios/maps/api/{version_without_v_prefix}/index.html
   - This is necessary because the CI checks triggered by the next step depend on them.
 - [ ] Commit and push these changes, then open a PR.
@@ -133,7 +130,7 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 
 ## 🚀 Update Studio Preview
 - [ ] Navigate to your local clone of [Studio Preview](https://github.com/mapbox/studio-preview-ios/) and ensure that it is up-to-date. Include any previous code updates that you made during QA.
-- [ ] Follow the steps outlined in the [Studio Preview iOS wiki](https://github.com/mapbox/studio-preview-ios/wiki/Release-Checklist).
+- [ ] Release Studio Preview by following the steps outlined in the [Studio Preview iOS wiki](https://github.com/mapbox/studio-preview-ios/wiki/Release-Checklist).
 
 ## 📣 Announcements
 

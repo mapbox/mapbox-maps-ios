@@ -224,7 +224,8 @@ public struct Examples {
                 type: ShowHideLayerExample.self),
         Example(title: "Add live data",
                 description: "Update feature coordinates from a geoJSON source in real time.",
-                type: LiveDataExample.self)
+                type: LiveDataExample.self),
+        Example(title: "Use a distance expression", description: "", type: DistanceExpressionExample.self)
     ]
 
     // Examples that show use cases related to user interaction with the map.

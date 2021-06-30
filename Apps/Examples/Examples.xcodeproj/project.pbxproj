@@ -32,6 +32,7 @@
 		17B4806426851C6E00CF0D5E /* radar1.gif in Resources */ = {isa = PBXBuildFile; fileRef = 17B4805F26851C6E00CF0D5E /* radar1.gif */; };
 		17B4806526851C6E00CF0D5E /* radar0.gif in Resources */ = {isa = PBXBuildFile; fileRef = 17B4806026851C6E00CF0D5E /* radar0.gif */; };
 		17B4806B268BD91000CF0D5E /* RasterTileSourceExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B4806A268BD91000CF0D5E /* RasterTileSourceExample.swift */; };
+		17B48067268A4E9300CF0D5E /* DistanceExpressionExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B48066268A4E9300CF0D5E /* DistanceExpressionExample.swift */; };
 		17E28C5C2672A1160033DF0F /* SymbolClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E28C5B2672A1160033DF0F /* SymbolClusteringExample.swift */; };
 		30F095BF270B39AF00F368DC /* GlobeViewExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F095BE270B39AF00F368DC /* GlobeViewExample.swift */; };
 		58248C2F2695FF24009AC598 /* StoryboardMapViewExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58248C2E2695FF24009AC598 /* StoryboardMapViewExample.swift */; };
@@ -160,6 +161,7 @@
 		17B4805F26851C6E00CF0D5E /* radar1.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = radar1.gif; sourceTree = "<group>"; };
 		17B4806026851C6E00CF0D5E /* radar0.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = radar0.gif; sourceTree = "<group>"; };
 		17B4806A268BD91000CF0D5E /* RasterTileSourceExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RasterTileSourceExample.swift; sourceTree = "<group>"; };
+		17B48066268A4E9300CF0D5E /* DistanceExpressionExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceExpressionExample.swift; sourceTree = "<group>"; };
 		17E28C5B2672A1160033DF0F /* SymbolClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolClusteringExample.swift; sourceTree = "<group>"; };
 		30F095BE270B39AF00F368DC /* GlobeViewExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobeViewExample.swift; sourceTree = "<group>"; };
 		58248C2E2695FF24009AC598 /* StoryboardMapViewExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardMapViewExample.swift; sourceTree = "<group>"; };
@@ -260,6 +262,7 @@
 				A4AC5DEB2542CB2200995E4C /* CustomStyleURLExample.swift */,
 				C69F01EC2543646A001AB49B /* DataDrivenSymbolsExample.swift */,
 				077E3B2B2581810600564A3E /* ExternalVectorSourceExample.swift */,
+				17B48066268A4E9300CF0D5E /* DistanceExpressionExample.swift */,
 				07B0715F254789D6007F2865 /* FeaturesAtPointExample.swift */,
 				0C784D1026D002DC004AE7D0 /* FeatureStateExample.swift */,
 				077E3B8F2581966300564A3E /* FitCameraToGeometryExample.swift */,
@@ -596,6 +599,7 @@
 				CA4F1F7225E815CF00822D2A /* SwiftUIExample.swift in Sources */,
 				CAC195B725AC098A00F69FEA /* CameraAnimatorsExample.swift in Sources */,
 				0C78AC2925BF70E40057F570 /* LineGradientExample.swift in Sources */,
+				17B48067268A4E9300CF0D5E /* DistanceExpressionExample.swift in Sources */,
 				CADCF72B2584990E0065C51B /* FlyToExample.swift in Sources */,
 				0333B84F25ED942600D667C9 /* SceneKitExample.swift in Sources */,
 				CADCF72D2584990E0065C51B /* MultipleGeometriesExample.swift in Sources */,

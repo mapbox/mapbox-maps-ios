@@ -91,15 +91,32 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
 //        let data = try! JSONEncoder().encode(point.self)
 //        let geojson = try! JSONDecoder().decode(GeoJSON.self, from: data)
 
+
+        mapView.mapboxMap.onNext(.styleLoaded) { _ in
+            self.filterPoiLabels()
+        }
+    }
+    
+    func filterPoiLabels() {
+        let style = mapView.mapboxMap.style
+        mapView.mapboxMap.querySourceFeatures(for: "source-id", options: SourceQueryOptions(sourceLayerIds: nil, filter: "")) { result in
+            switch result {
+            case let .success(features):
+                let feature = features.first!
+                var poiLabelLayer: SymbolLayer = try! style.layer(withId: "poi-label")
+                poiLabelLayer.filter = Exp(.distance) {
+                    feature.feature
+                    150
+                }
+            case let .failure(error):
+                print("Error: \(error)")
+            }
+        }
         // Get the `SymbolLayer` with the identifier `poi-label`. This layer is included
         // with the Mapbox Streets v11 style. In order to see all layers included with your
         // style, either inspect the style in Mapbox Studio or inspect the `style.allLayerIdentifiers`
         // property once the style has finished loading.
-//        var poiLabelLayer: SymbolLayer = try! style.layer(withId: "poi-label")
-//        poiLabelLayer.filter = Exp(.distance) {
-//            geojson.decodedFeature?.geometry as! ExpressionArgumentConvertible
-//            150
-//        }
+
     }
 
     func circleRadius(forZoom zoom: CGFloat) -> Double {

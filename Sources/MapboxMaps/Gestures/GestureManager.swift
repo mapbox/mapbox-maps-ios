@@ -100,6 +100,10 @@ public final class GestureManager: NSObject {
         if let pitchHandler = gestureHandlers[.pitch], let panHandler = gestureHandlers[.pan] {
             requireGestureToFail(allowedGesture: pitchHandler, failableGesture: panHandler)
         }
+        
+        if let pinchHandler = gestureHandlers[.pinch], let panHandler = gestureHandlers[.pan] {
+            requireGestureToFail(allowedGesture: pinchHandler, failableGesture: panHandler)
+        }
 
         if let doubleTapHandler = gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 1)],
            let quickZoomHandler = gestureHandlers[.quickZoom] {

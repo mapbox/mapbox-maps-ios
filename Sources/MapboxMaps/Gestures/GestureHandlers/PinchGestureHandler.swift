@@ -3,6 +3,9 @@ import UIKit
 /// The PinchGestureHandler is responsible for all `pinch` related infrastructure
 /// Tells the view to update itself when required
 internal class PinchGestureHandler: GestureHandler {
+    // Keep track of the previous pinch center point. This allows us to react
+    // to panning while zooming
+    private var previousPinchCenterPoint: CGPoint?
 
     internal var scale: CGFloat = 0.0
 
@@ -34,12 +37,20 @@ internal class PinchGestureHandler: GestureHandler {
              TODO: Handle a concurrent rotate gesture here.
              Prioritize the correct gesture by comparing the velocity of competing gestures.
              */
-
+            previousPinchCenterPoint = pinchCenterPoint
         } else if pinchGestureRecognizer.state == .changed {
-
+            
             let newScale = scale * pinchGestureRecognizer.scale
             delegate.pinchScaleChanged(with: log2(newScale), andAnchor: pinchCenterPoint)
-
+            
+            if let previousPinchCenterPoint = self.previousPinchCenterPoint {
+                let offset = CGSize(width:  pinchCenterPoint.x - previousPinchCenterPoint.x,
+                                    height:  pinchCenterPoint.y - previousPinchCenterPoint.y)
+                                
+                self.delegate.pinchCenterMoved(offset: offset)
+            }
+            
+            previousPinchCenterPoint = pinchCenterPoint
         } else if pinchGestureRecognizer.state == .ended
             || pinchGestureRecognizer.state == .cancelled {
 
@@ -62,8 +73,9 @@ internal class PinchGestureHandler: GestureHandler {
                 velocity = 0
             }
 
+            previousPinchCenterPoint = nil
+            
             let possibleDrift = velocity > 0.0 && duration > 0.0
-
             delegate.pinchEnded(with: log2(newScale), andDrift: possibleDrift, andAnchor: pinchCenterPoint)
         }
     }

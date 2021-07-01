@@ -24,6 +24,18 @@ extension CGPoint {
         return CGPoint(x: origin.x + fraction * (destination.x - origin.x),
                        y: origin.y + fraction * (destination.y - origin.y))
     }
+    
+    /// Returns a new 'CGPoint' adjusted by the input offsets
+    /// - Parameters:
+    ///   - xOffset: The offset in the x direction
+    ///   - yOffset: The offset in the y direction
+    /// - Returns: A new 'CGPoint' with the offets applied
+    internal func shifted(xOffset: CGFloat, yOffset: CGFloat) -> Self {
+        var mutable = self
+        mutable.x += xOffset
+        mutable.y += yOffset
+        return mutable
+    }
 }
 
 // MARK: - CGFloat

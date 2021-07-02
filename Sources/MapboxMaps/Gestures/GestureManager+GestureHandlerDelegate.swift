@@ -85,13 +85,13 @@ extension GestureManager: GestureHandlerDelegate {
         }
         mapView.mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: newScale))
     }
-    
+
     internal func pinchCenterMoved(offset: CGSize) {
         guard let mapView = cameraManager.mapView else {
             Log.error(forMessage: "MapView must exist when the zoom level changes", category: "Gestures")
             return
         }
-        
+
         let currentCenterCoordinate = mapView.mapboxMap.cameraState.center
         let currentCenterScreenPoint = mapView.mapboxMap.point(for: currentCenterCoordinate)
         let newCenterScreenPoint = currentCenterScreenPoint.shifted(xOffset: -offset.width,

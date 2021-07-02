@@ -24,7 +24,7 @@ extension CGPoint {
         return CGPoint(x: origin.x + fraction * (destination.x - origin.x),
                        y: origin.y + fraction * (destination.y - origin.y))
     }
-    
+
     /// Returns a new 'CGPoint' adjusted by the input offsets
     /// - Parameters:
     ///   - xOffset: The offset in the x direction

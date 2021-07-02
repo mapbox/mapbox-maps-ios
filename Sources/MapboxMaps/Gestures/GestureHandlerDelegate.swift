@@ -26,7 +26,7 @@ internal protocol GestureHandlerDelegate: AnyObject {
 
     // Scale has changed with a new value and a given anchor
     func pinchScaleChanged(with newScale: CGFloat, andAnchor anchor: CGPoint)
-    
+
     // The center point of the pinch operation has moved from the previous position
     func pinchCenterMoved(offset: CGSize)
 

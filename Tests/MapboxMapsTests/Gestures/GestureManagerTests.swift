@@ -91,10 +91,36 @@ final class GestureManagerTests: XCTestCase {
         XCTAssert(gestureManager.gestureHandlers.count == 0)
     }
 
+    func testAllowedSimultaneousGestures() {
+        let pinchGestureRecognizer = UIPinchGestureRecognizer()
+        let rotateGestureRecognizer = UIRotationGestureRecognizer()
+        XCTAssertTrue(gestureManager.gestureRecognizer(pinchGestureRecognizer,
+                                                       shouldRecognizeSimultaneouslyWith: rotateGestureRecognizer))
+    }
+
+    func testDisallowedSimultaneousGestures() {
+        let panGestureRecognizer = UIPanGestureRecognizer()
+        let tapGestureRecognizer = UITapGestureRecognizer()
+        let pinchGestureRecognizer = UIPinchGestureRecognizer()
+        let rotateGestureRecognizer = UIRotationGestureRecognizer()
+
+        XCTAssertFalse(gestureManager.gestureRecognizer(panGestureRecognizer,
+                                                       shouldRecognizeSimultaneouslyWith: pinchGestureRecognizer))
+        XCTAssertFalse(gestureManager.gestureRecognizer(panGestureRecognizer,
+                                                       shouldRecognizeSimultaneouslyWith: rotateGestureRecognizer))
+        XCTAssertFalse(gestureManager.gestureRecognizer(panGestureRecognizer,
+                                                       shouldRecognizeSimultaneouslyWith: tapGestureRecognizer))
+
+        XCTAssertFalse(gestureManager.gestureRecognizer(tapGestureRecognizer,
+                                                       shouldRecognizeSimultaneouslyWith: pinchGestureRecognizer))
+        XCTAssertFalse(gestureManager.gestureRecognizer(tapGestureRecognizer,
+                                                       shouldRecognizeSimultaneouslyWith: rotateGestureRecognizer))
+    }
+
     func testSimultaneousRotationAndPanGestures() {
         let panGestureRecognizer = UIPanGestureRecognizer()
         let rotateGestureRecognizer = UIRotationGestureRecognizer()
-        XCTAssertTrue(gestureManager.gestureRecognizer(panGestureRecognizer,
+        XCTAssertFalse(gestureManager.gestureRecognizer(panGestureRecognizer,
                                                        shouldRecognizeSimultaneouslyWith: rotateGestureRecognizer))
     }
 
@@ -103,6 +129,13 @@ final class GestureManagerTests: XCTestCase {
         let tapGestureRecognizer = UITapGestureRecognizer()
         XCTAssertFalse(gestureManager.gestureRecognizer(panGestureRecognizer,
                                                         shouldRecognizeSimultaneouslyWith: tapGestureRecognizer))
+    }
+
+    func testSimultaneousPinchAndPanGestures() {
+        let pinchGestureRecognizer = UIPinchGestureRecognizer()
+        let panGestureRecognizer = UIPanGestureRecognizer()
+        XCTAssertFalse(gestureManager.gestureRecognizer(pinchGestureRecognizer,
+                                                        shouldRecognizeSimultaneouslyWith: panGestureRecognizer))
     }
 
     func testPinchScaleChanged_SetsCamera() {

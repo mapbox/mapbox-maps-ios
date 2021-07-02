@@ -156,11 +156,9 @@ extension GestureManager: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
                                   shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
 
-        return (gestureRecognizer is UIPanGestureRecognizer
-            || gestureRecognizer is UIPinchGestureRecognizer
+        return (gestureRecognizer is UIPinchGestureRecognizer
             || gestureRecognizer is UIRotationGestureRecognizer) &&
-            (otherGestureRecognizer is UIPanGestureRecognizer
-            || otherGestureRecognizer is UIPinchGestureRecognizer
+            (otherGestureRecognizer is UIPinchGestureRecognizer
             || otherGestureRecognizer is UIRotationGestureRecognizer)
     }
 }

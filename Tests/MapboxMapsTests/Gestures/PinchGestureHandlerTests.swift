@@ -63,10 +63,10 @@ class PinchGestureHandlerTests: XCTestCase {
 
         XCTAssertTrue(delegate.pinchScaleChangedMethod.anchor == CGPoint(x: 0.0, y: 0.0),
                       "Invalid pinch center point")
-        
+
         pinchGestureRecognizerMock.mockLocationInView = CGPoint(x: 1.0, y: 1.0)
         pinchGestureHandler.handlePinch(pinchGestureRecognizerMock)
-                        
+
         XCTAssertTrue(delegate.pinchCenterMovedMethod.wasCalled, "Pinch Center not recalculated")
         XCTAssertEqual(delegate.pinchCenterMovedMethod.offset,
                        CGSize(width: 1.0, height: 1.0),

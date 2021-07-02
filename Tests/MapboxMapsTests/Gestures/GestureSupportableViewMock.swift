@@ -60,7 +60,7 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
         pinchScaleChangedMethod.newScale = newScale
         pinchScaleChangedMethod.anchor = anchor
     }
-    
+
     func pinchCenterMoved(offset: CGSize) {
         pinchCenterMovedMethod.wasCalled = true
         pinchCenterMovedMethod.offset = offset

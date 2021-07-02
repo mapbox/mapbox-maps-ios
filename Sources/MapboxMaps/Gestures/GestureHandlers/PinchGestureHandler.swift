@@ -47,7 +47,7 @@ internal class PinchGestureHandler: GestureHandler {
                 let offset = CGSize(width: pinchCenterPoint.x - previousPinchCenterPoint.x,
                                     height: pinchCenterPoint.y - previousPinchCenterPoint.y)
 
-                self.delegate.pinchCenterMoved(offset: offset)
+                self.delegate.pinchCenterChanged(offset: offset)
             }
 
             previousPinchCenterPoint = pinchCenterPoint

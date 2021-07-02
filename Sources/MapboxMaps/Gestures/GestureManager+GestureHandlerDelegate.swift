@@ -86,7 +86,7 @@ extension GestureManager: GestureHandlerDelegate {
         mapView.mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: newScale))
     }
 
-    internal func pinchCenterMoved(offset: CGSize) {
+    internal func pinchCenterChanged(offset: CGSize) {
         guard let mapView = cameraManager.mapView else {
             Log.error(forMessage: "MapView must exist when the zoom level changes", category: "Gestures")
             return

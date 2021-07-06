@@ -1,7 +1,7 @@
 import XCTest
 @testable import MapboxMaps
 
-internal let cameraOptionsTestValue = CameraOptions(
+let cameraOptionsTestValue = CameraOptions(
     center: CLLocationCoordinate2D(latitude: 10, longitude: 10),
     padding: .init(top: 10, left: 10, bottom: 10, right: 10),
     anchor: .init(x: 10.0, y: 10.0),
@@ -9,7 +9,7 @@ internal let cameraOptionsTestValue = CameraOptions(
     bearing: 10,
     pitch: 10)
 
-internal let cameraStateTestValue = CameraState(
+let cameraStateTestValue = CameraState(
     MapboxCoreMaps.CameraState(
         center: .init(
             latitude: 10,
@@ -23,16 +23,16 @@ internal let cameraStateTestValue = CameraState(
         bearing: 10,
         pitch: 10))
 
-internal class BasicCameraAnimatorTests: XCTestCase {
+final class BasicCameraAnimatorTests: XCTestCase {
 
-    var propertyAnimator: UIViewPropertyAnimatorMock!
+    var propertyAnimator: MockPropertyAnimator!
     var cameraView: CameraViewMock!
     var mapboxMap: MockBasicCameraAnimatorMapboxMap!
     var animator: BasicCameraAnimator!
 
     override func setUp() {
         super.setUp()
-        propertyAnimator = UIViewPropertyAnimatorMock()
+        propertyAnimator = MockPropertyAnimator()
         cameraView = CameraViewMock()
         mapboxMap = MockBasicCameraAnimatorMapboxMap()
         animator = BasicCameraAnimator(
@@ -62,38 +62,20 @@ internal class BasicCameraAnimatorTests: XCTestCase {
     }
 
     func testStartAndStopAnimation() {
-        animator?.addAnimations { (transition) in
+        animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
 
-        animator?.startAnimation()
+        animator.startAnimation()
 
         XCTAssertEqual(propertyAnimator.startAnimationStub.invocations.count, 1)
         XCTAssertEqual(propertyAnimator.addAnimationsStub.invocations.count, 1)
         XCTAssertNotNil(animator?.transition)
         XCTAssertEqual(animator?.transition?.toCameraOptions.zoom, 10)
 
-        animator?.stopAnimation()
+        animator.stopAnimation()
         XCTAssertEqual(propertyAnimator.stopAnimationStub.invocations.count, 1)
         XCTAssertEqual(propertyAnimator.finishAnimationStub.invocations.count, 1)
-        XCTAssertEqual(propertyAnimator.finishAnimationStub.invocations.first?.parameters.finalPosition, .current)
-
-    }
-
-    func testUpdate() {
-        animator?.addAnimations { (transition) in
-            transition.zoom.toValue = cameraOptionsTestValue.zoom!
-            transition.center.toValue = cameraOptionsTestValue.center!
-            transition.bearing.toValue = cameraOptionsTestValue.bearing!
-            transition.anchor.toValue = cameraOptionsTestValue.anchor!
-            transition.pitch.toValue = cameraOptionsTestValue.pitch!
-            transition.padding.toValue = cameraOptionsTestValue.padding!
-        }
-        animator?.startAnimation()
-        propertyAnimator.shouldReturnState = .active
-
-        animator.update()
-
-        XCTAssertEqual(mapboxMap.setCameraStub.parameters, [cameraView.localCamera])
+        XCTAssertEqual(propertyAnimator.finishAnimationStub.invocations.first?.parameters, .current)
     }
 }

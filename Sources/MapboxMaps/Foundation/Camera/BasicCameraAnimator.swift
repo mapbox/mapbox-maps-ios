@@ -82,7 +82,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
             // Set up the short lived camera view
             delegate.addViewToViewHeirarchy(cameraView)
 
-            var cameraTransition = CameraTransition(cameraState: delegate.camera, initialAnchor: delegate.anchorAfterPadding())
+            var cameraTransition = CameraTransition(cameraState: mapboxMap.cameraState, initialAnchor: mapboxMap.anchor)
             animation(&cameraTransition)
 
             propertyAnimator.addAnimations { [weak cameraView] in
@@ -196,6 +196,8 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 }
 
 protocol BasicCameraAnimatorMapboxMap: AnyObject {
+    var cameraState: CameraState { get }
+    var anchor: CGPoint { get }
     func setCamera(to cameraOptions: CameraOptions)
 }
 

@@ -8,8 +8,6 @@ import MapboxMapsFoundation
 
 final class MockCameraManager: CameraAnimationsManagerProtocol {
 
-    var mapView: MapView?
-
     var options = CameraBoundsOptions()
 
     struct EaseToCameraParameters {
@@ -18,7 +16,6 @@ final class MockCameraManager: CameraAnimationsManagerProtocol {
         var curve: UIView.AnimationCurve
         var completion: AnimationCompletion?
     }
-
     let easeToStub = Stub<EaseToCameraParameters, CameraAnimator?>(defaultReturnValue: nil)
     func ease(to camera: CameraOptions,
               duration: TimeInterval,

@@ -224,7 +224,7 @@ open class MapView: UIView {
         camera = CameraAnimationsManager(mapView: self)
 
         // Initialize/Configure gesture manager
-        gestures = GestureManager(for: self, cameraManager: camera)
+        gestures = GestureManager(view: self, cameraManager: camera, mapboxMap: mapboxMap)
 
         // Initialize/Configure ornaments manager
         ornaments = OrnamentsManager(view: self, options: OrnamentOptions())

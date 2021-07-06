@@ -2,8 +2,6 @@ import Foundation
 
 internal protocol CameraAnimationsManagerProtocol: AnyObject {
 
-    var options: CameraBoundsOptions { get }
-
     func ease(to camera: CameraOptions,
               duration: TimeInterval,
               curve: UIView.AnimationCurve,

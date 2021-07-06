@@ -1,14 +1,7 @@
 import Foundation
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-import MapboxMapsFoundation
-@testable import MapboxMapsGestures
-#endif
 
 final class MockCameraManager: CameraAnimationsManagerProtocol {
-
-    var options = CameraBoundsOptions()
 
     struct EaseToCameraParameters {
         var camera: CameraOptions

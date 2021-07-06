@@ -14,7 +14,7 @@ final class GestureManagerTests: XCTestCase {
     var mapView: MapView!
     // swiftlint:disable weak_delegate
     var delegate: GestureHandlerDelegateMock!
-    var cameraManager: MockCameraManager!
+    var cameraAnimationsManager: MockCameraAnimationsManager!
     var initialGestureOptions: GestureOptions!
     var gestureManager: GestureManager!
 
@@ -25,11 +25,11 @@ final class GestureManagerTests: XCTestCase {
                 resourceOptions: ResourceOptions(accessToken: "dummy"),
                 styleURI: nil))
         delegate = GestureHandlerDelegateMock()
-        cameraManager = MockCameraManager()
+        cameraAnimationsManager = MockCameraAnimationsManager()
         initialGestureOptions = GestureOptions()
         gestureManager = GestureManager(
             view: mapView,
-            cameraManager: cameraManager,
+            cameraAnimationsManager: cameraAnimationsManager,
             mapboxMap: mapView.mapboxMap)
     }
 
@@ -70,7 +70,7 @@ final class GestureManagerTests: XCTestCase {
         options.pitchEnabled = false
         let gestureManager = GestureManager(
             view: mapView,
-            cameraManager: cameraManager,
+            cameraAnimationsManager: cameraAnimationsManager,
             mapboxMap: mapView.mapboxMap)
 
         options.pitchEnabled = true

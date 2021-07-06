@@ -1,7 +1,7 @@
 import Foundation
 @testable import MapboxMaps
 
-final class MockCameraManager: CameraAnimationsManagerProtocol {
+final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
 
     struct EaseToCameraParameters {
         var camera: CameraOptions

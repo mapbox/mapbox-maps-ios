@@ -58,7 +58,7 @@ public final class GestureManager: NSObject {
     private weak var view: UIView?
 
     /// The camera manager that responds to gestures.
-    private let cameraManager: CameraAnimationsManagerProtocol
+    private let cameraAnimationsManager: CameraAnimationsManagerProtocol
 
     private let mapboxMap: MapboxMap
 
@@ -69,9 +69,9 @@ public final class GestureManager: NSObject {
     /// user lifts their finger.
     public var decelerationRate: CGFloat = UIScrollView.DecelerationRate.normal.rawValue
 
-    internal init(view: UIView, cameraManager: CameraAnimationsManagerProtocol, mapboxMap: MapboxMap) {
+    internal init(view: UIView, cameraAnimationsManager: CameraAnimationsManagerProtocol, mapboxMap: MapboxMap) {
         self.view = view
-        self.cameraManager = cameraManager
+        self.cameraAnimationsManager = cameraAnimationsManager
         self.mapboxMap = mapboxMap
         super.init()
         configureGestureHandlers(for: options)
@@ -204,7 +204,7 @@ extension GestureManager: GestureHandlerDelegate {
     internal func tapped(numberOfTaps: Int, numberOfTouches: Int) {
         // Single tapping twice with one finger will cause the map to zoom in
         if numberOfTaps == 2 && numberOfTouches == 1 {
-            _ = cameraManager.ease(to: CameraOptions(zoom: mapboxMap.cameraState.zoom + 1.0),
+            _ = cameraAnimationsManager.ease(to: CameraOptions(zoom: mapboxMap.cameraState.zoom + 1.0),
                                    duration: 0.3,
                                    curve: .easeOut,
                                    completion: nil)
@@ -212,7 +212,7 @@ extension GestureManager: GestureHandlerDelegate {
 
         // Double tapping twice with two fingers will cause the map to zoom out
         if numberOfTaps == 2 && numberOfTouches == 2 {
-            _ = cameraManager.ease(to: CameraOptions(zoom: mapboxMap.cameraState.zoom - 1.0),
+            _ = cameraAnimationsManager.ease(to: CameraOptions(zoom: mapboxMap.cameraState.zoom - 1.0),
                                    duration: 0.3,
                                    curve: .easeOut,
                                    completion: nil)
@@ -233,7 +233,7 @@ extension GestureManager: GestureHandlerDelegate {
     func panEnded(at endPoint: CGPoint, shouldDriftTo driftEndPoint: CGPoint) {
         if endPoint != driftEndPoint {
             let driftCameraOptions = mapboxMap.dragCameraOptions(from: endPoint, to: driftEndPoint)
-            _ = cameraManager.ease(
+            _ = cameraAnimationsManager.ease(
                     to: driftCameraOptions,
                     duration: Double(decelerationRate),
                     curve: .easeOut,
@@ -243,11 +243,11 @@ extension GestureManager: GestureHandlerDelegate {
     }
 
     internal func cancelGestureTransitions() {
-        cameraManager.cancelAnimations()
+        cameraAnimationsManager.cancelAnimations()
     }
 
     internal func gestureBegan(for gestureType: GestureType) {
-        cameraManager.cancelAnimations()
+        cameraAnimationsManager.cancelAnimations()
         delegate?.gestureBegan(for: gestureType)
     }
 

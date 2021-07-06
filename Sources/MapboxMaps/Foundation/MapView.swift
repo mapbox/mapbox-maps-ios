@@ -116,10 +116,7 @@ open class MapView: UIView {
 
     /// The map's current anchor, calculated after applying padding (if it exists)
     public var anchor: CGPoint {
-        let padding = cameraState.padding
-        let xAfterPadding = center.x + padding.left - padding.right
-        let yAfterPadding = center.y + padding.top - padding.bottom
-        return CGPoint(x: xAfterPadding, y: yAfterPadding)
+        return mapboxMap.anchor
     }
 
     deinit {

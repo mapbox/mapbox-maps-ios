@@ -13,9 +13,9 @@ extension MapView: OrnamentSupportableView {
             transition.bearing.toValue = 0
         })
 
-        animator?.addCompletion({ (_) in
+        animator?.addCompletion { (_) in
             animator = nil
-        })
+        }
 
         animator?.startAnimation()
     }

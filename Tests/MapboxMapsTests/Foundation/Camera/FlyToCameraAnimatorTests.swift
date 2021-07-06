@@ -100,7 +100,7 @@ final class FlyToCameraAnimatorTests: XCTestCase {
         XCTAssertEqual(flyToCameraAnimator.state, .active)
     }
 
-    func testAnimationBlocksAreScheduledWhenAnimationIsComplete() {
+    func testAnimationBlocksAreInvokedWhenAnimationIsComplete() {
         var animatingPositions = [UIViewAnimatingPosition]()
         flyToCameraAnimator.addCompletion { (position) in
             animatingPositions.append(position)
@@ -111,9 +111,6 @@ final class FlyToCameraAnimatorTests: XCTestCase {
         flyToCameraAnimator.update()
 
         XCTAssertEqual(flyToCameraAnimator.state, .stopped)
-        XCTAssertEqual(delegate.schedulePendingCompletionStub.parameters.map(\.animatingPosition), [.end])
-        XCTAssertTrue(animatingPositions.isEmpty)
-        delegate.schedulePendingCompletionStub.parameters.first?.completion(.end)
         XCTAssertEqual(animatingPositions, [.end])
     }
 
@@ -126,9 +123,6 @@ final class FlyToCameraAnimatorTests: XCTestCase {
 
         flyToCameraAnimator.stopAnimation()
 
-        XCTAssertEqual(delegate.schedulePendingCompletionStub.parameters.map(\.animatingPosition), [.current])
-        XCTAssertTrue(animatingPositions.isEmpty)
-        delegate.schedulePendingCompletionStub.parameters.first?.completion(.current)
         XCTAssertEqual(animatingPositions, [.current])
     }
 

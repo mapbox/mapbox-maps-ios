@@ -62,8 +62,6 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     }
 
     deinit {
-        propertyAnimator.stopAnimation(false)
-        propertyAnimator.finishAnimation(at: .current)
         cameraView.removeFromSuperview()
         delayedAnimationTimer?.invalidate()
     }
@@ -130,10 +128,10 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     }
 
     internal func wrapCompletion(_ completion: @escaping AnimationCompletion) -> (UIViewAnimatingPosition) -> Void {
-        return { [weak self] animationPosition in
+        return { [weak self] (animatingPosition) in
             guard let self = self else { return }
             self.transition = nil // Clear out the transition being animated by this animator since the animation is complete if we are here.
-            self.delegate?.schedulePendingCompletion(forAnimator: self, completion: completion, animatingPosition: animationPosition)
+            completion(animatingPosition)
 
             // Invalidate the delayed animation timer if it exists
             self.delayedAnimationTimer?.invalidate()

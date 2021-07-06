@@ -37,9 +37,6 @@ public class CameraAnimationsManager {
     /// Internal camera animator used for animated transition
     internal var internalAnimator: CameraAnimator?
 
-    /// List of completion blocks that need to be completed by the displayLink
-    internal var pendingAnimatorCompletionBlocks: [PendingAnimationCompletion] = []
-
     /// May want to convert to an enum.
     fileprivate let northBearing: CGFloat = 0
 
@@ -56,14 +53,6 @@ public class CameraAnimationsManager {
     internal func update() {
         for animator in cameraAnimatorsSet.allObjects {
             animator.update()
-        }
-
-        /// This executes the series of scheduled animation completion blocks and also removes them from the list
-        while !pendingAnimatorCompletionBlocks.isEmpty {
-            let pendingCompletion = pendingAnimatorCompletionBlocks.removeFirst()
-            let completion = pendingCompletion.completion
-            let animatingPosition = pendingCompletion.animatingPosition
-            completion(animatingPosition)
         }
     }
 
@@ -284,13 +273,6 @@ extension CameraAnimationsManager: CameraAnimatorDelegate {
     }
 
     // MARK: CameraAnimatorDelegate functions
-
-    func schedulePendingCompletion(forAnimator animator: CameraAnimator, completion: @escaping AnimationCompletion, animatingPosition: UIViewAnimatingPosition) {
-        pendingAnimatorCompletionBlocks.append(
-            PendingAnimationCompletion(
-                completion: completion,
-                animatingPosition: animatingPosition))
-    }
 
     var camera: CameraState {
         return mapboxMap.cameraState

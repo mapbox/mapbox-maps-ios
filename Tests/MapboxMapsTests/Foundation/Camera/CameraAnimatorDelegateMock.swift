@@ -3,27 +3,6 @@ import XCTest
 
 final class CameraAnimatorDelegateMock: CameraAnimatorDelegate {
 
-    struct SchedulePendingCompletionParameters {
-        var animator: CameraAnimator
-        var completion: AnimationCompletion
-        var animatingPosition: UIViewAnimatingPosition
-    }
-
-    let schedulePendingCompletionStub = Stub<SchedulePendingCompletionParameters, Void>()
-
-    public func schedulePendingCompletion(forAnimator animator: CameraAnimator,
-                                          completion: @escaping AnimationCompletion,
-                                          animatingPosition: UIViewAnimatingPosition) {
-        schedulePendingCompletionStub.call(with: SchedulePendingCompletionParameters(animator: animator,
-                                                                                     completion: completion,
-                                                                                     animatingPosition: animatingPosition))
-    }
-
-    let animatorFinishedStub = Stub<BasicCameraAnimator, Void>()
-    public func animatorIsFinished(forAnimator animator: BasicCameraAnimator) {
-        animatorFinishedStub.call(with: animator)
-    }
-
     var camera: CameraState {
         let cameraStateObjc = MapboxCoreMaps.CameraState(
             center: .init(latitude: 10, longitude: 10),
@@ -33,11 +12,6 @@ final class CameraAnimatorDelegateMock: CameraAnimatorDelegate {
             pitch: 20)
 
         return CameraState(cameraStateObjc)
-    }
-
-    let jumpToStub = Stub<CameraOptions, Void>()
-    func jumpTo(camera: CameraOptions) {
-        jumpToStub.call(with: camera)
     }
 
     let addViewToViewHeirarchyStub = Stub<CameraView, Void>()

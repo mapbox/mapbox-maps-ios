@@ -57,8 +57,8 @@ internal class BasicCameraAnimatorTests: XCTestCase {
 
     func testDeinit() {
         animator = nil
-        XCTAssertEqual(propertyAnimator.stopAnimationStub.invocations.count, 1)
-        XCTAssertEqual(propertyAnimator.finishAnimationStub.invocations.count, 1)
+        XCTAssertEqual(propertyAnimator.stopAnimationStub.invocations.count, 0)
+        XCTAssertEqual(propertyAnimator.finishAnimationStub.invocations.count, 0)
         XCTAssertEqual(cameraView.removeFromSuperviewStub.invocations.count, 1)
     }
 

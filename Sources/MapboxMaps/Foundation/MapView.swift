@@ -71,19 +71,10 @@ open class MapView: UIView {
     /// The underlying metal view that is used to render the map
     internal private(set) var metalView: MTKView?
 
+    private let cameraViewContainerView = UIView()
+
     /// Resource options for this map view
     internal private(set) var resourceOptions: ResourceOptions!
-
-    /// List of completion blocks that need to be completed by the displayLink
-    internal var pendingAnimatorCompletionBlocks: [PendingAnimationCompletion] = []
-
-    /// Pointer HashTable for holding camera animators
-    private var cameraAnimatorsSet = WeakSet<CameraAnimatorInterface>()
-
-    /// List of animators currently alive
-    internal var cameraAnimators: [CameraAnimator] {
-        return cameraAnimatorsSet.allObjects
-    }
 
     private var needsDisplayRefresh: Bool = false
     private var dormant: Bool = false
@@ -208,6 +199,9 @@ open class MapView: UIView {
             mapboxMap.setCamera(to: cameraOptions)
         }
 
+        cameraViewContainerView.isHidden = true
+        addSubview(cameraViewContainerView)
+
         // Setup Telemetry logging
         setUpTelemetryLogging()
 
@@ -218,7 +212,9 @@ open class MapView: UIView {
     internal func setupManagers() {
 
         // Initialize/Configure camera manager first since Gestures needs it as dependency
-        camera = CameraAnimationsManager(mapView: self)
+        camera = CameraAnimationsManager(
+            cameraViewContainerView: cameraViewContainerView,
+            mapboxMap: mapboxMap)
 
         // Initialize/Configure gesture manager
         gestures = GestureManager(view: self, cameraManager: camera, mapboxMap: mapboxMap)
@@ -294,29 +290,12 @@ open class MapView: UIView {
             return
         }
 
-        for animator in cameraAnimatorsSet.allObjects {
-            if let cameraOptions = animator.currentCameraOptions {
-                mapboxMap.setCamera(to: cameraOptions)
-            }
-        }
-
-        /// This executes the series of scheduled animation completion blocks and also removes them from the list
-        while !pendingAnimatorCompletionBlocks.isEmpty {
-            let pendingCompletion = pendingAnimatorCompletionBlocks.removeFirst()
-            let completion = pendingCompletion.completion
-            let animatingPosition = pendingCompletion.animatingPosition
-            completion(animatingPosition)
-        }
+        camera.update()
 
         if needsDisplayRefresh {
             needsDisplayRefresh = false
             displayCallback?()
         }
-    }
-
-    // Add an animator to the `cameraAnimatorsSet`
-    internal func addCameraAnimator(_ cameraAnimator: CameraAnimatorInterface) {
-        cameraAnimatorsSet.add(cameraAnimator)
     }
 
     func updateDisplayLinkPreferredFramesPerSecond() {

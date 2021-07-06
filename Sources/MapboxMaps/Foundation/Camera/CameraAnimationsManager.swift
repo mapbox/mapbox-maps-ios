@@ -22,30 +22,51 @@ public class CameraAnimationsManager {
     /// Used to set up camera specific configuration
     public var options: CameraBoundsOptions {
         didSet {
-            try? mapView?.mapboxMap.setCameraBounds(for: options)
+            try? mapboxMap.setCameraBounds(for: options)
         }
     }
 
     /// List of animators currently alive
     public var cameraAnimators: [CameraAnimator] {
-        guard let mapView = mapView else {
-            return []
-        }
-
-        return mapView.cameraAnimators
+        return cameraAnimatorsSet.allObjects
     }
+
+    /// Pointer HashTable for holding camera animators
+    private var cameraAnimatorsSet = WeakSet<CameraAnimatorInterface>()
 
     /// Internal camera animator used for animated transition
     internal var internalAnimator: CameraAnimator?
 
+    /// List of completion blocks that need to be completed by the displayLink
+    internal var pendingAnimatorCompletionBlocks: [PendingAnimationCompletion] = []
+
     /// May want to convert to an enum.
     fileprivate let northBearing: CGFloat = 0
 
-    internal weak var mapView: MapView?
+    private let cameraViewContainerView: UIView
 
-    internal init(mapView: MapView) {
-        self.mapView = mapView
-        self.options = CameraBoundsOptions(cameraBounds: mapView.mapboxMap.cameraBounds)
+    private let mapboxMap: MapboxMap
+
+    internal init(cameraViewContainerView: UIView, mapboxMap: MapboxMap) {
+        self.cameraViewContainerView = cameraViewContainerView
+        self.mapboxMap = mapboxMap
+        self.options = CameraBoundsOptions(cameraBounds: mapboxMap.cameraBounds)
+    }
+
+    internal func update() {
+        for animator in cameraAnimatorsSet.allObjects {
+            if let cameraOptions = animator.currentCameraOptions {
+                mapboxMap.setCamera(to: cameraOptions)
+            }
+        }
+
+        /// This executes the series of scheduled animation completion blocks and also removes them from the list
+        while !pendingAnimatorCompletionBlocks.isEmpty {
+            let pendingCompletion = pendingAnimatorCompletionBlocks.removeFirst()
+            let completion = pendingCompletion.completion
+            let animatingPosition = pendingCompletion.animatingPosition
+            completion(animatingPosition)
+        }
     }
 
     // MARK: Setting a new camera
@@ -55,8 +76,7 @@ public class CameraAnimationsManager {
     /// the camera is not reset or fast-forwarded to the end of the transition.
     /// Canceled animations cannot be restarted / resumed. The animator must be recreated.
     public func cancelAnimations() {
-        guard let validMapView = mapView else { return }
-        for animator in validMapView.cameraAnimators where animator.state == .active {
+        for animator in cameraAnimators where animator.state == .active {
             animator.stopAnimation()
         }
     }
@@ -76,14 +96,13 @@ public class CameraAnimationsManager {
                     duration: TimeInterval? = nil,
                     completion: AnimationCompletion? = nil) -> Cancelable? {
 
-        guard let mapView = mapView,
-              let flyToAnimator = FlyToCameraAnimator(
-                initial: mapView.cameraState,
+        guard let flyToAnimator = FlyToCameraAnimator(
+                initial: mapboxMap.cameraState,
                 final: camera,
-                cameraBounds: mapView.mapboxMap.cameraBounds,
+                cameraBounds: mapboxMap.cameraBounds,
                 owner: AnimationOwner(rawValue: "com.mapbox.maps.cameraAnimationsManager.flyToAnimator"),
                 duration: duration,
-                mapSize: mapView.mapboxMap.size,
+                mapSize: mapboxMap.size,
                 delegate: self) else {
             Log.warning(forMessage: "Unable to start fly-to animation", category: "CameraManager")
             return nil
@@ -92,7 +111,7 @@ public class CameraAnimationsManager {
         // Stop the `internalAnimator` before beginning a `flyTo`
         internalAnimator?.stopAnimation()
 
-        mapView.addCameraAnimator(flyToAnimator)
+        cameraAnimatorsSet.add(flyToAnimator)
 
         flyToAnimator.addCompletion { [weak self, weak flyToAnimator] (position) in
             if let internalAnimator = self?.internalAnimator,
@@ -186,7 +205,7 @@ extension CameraAnimationsManager: CameraAnimatorDelegate {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, timingParameters: parameters)
         let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimator.addAnimations(animations)
-        mapView?.addCameraAnimator(cameraAnimator)
+        cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
     }
 
@@ -210,7 +229,7 @@ extension CameraAnimationsManager: CameraAnimatorDelegate {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, curve: curve)
         let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimator.addAnimations(animations)
-        mapView?.addCameraAnimator(cameraAnimator)
+        cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
     }
 
@@ -236,7 +255,7 @@ extension CameraAnimationsManager: CameraAnimatorDelegate {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, controlPoint1: point1, controlPoint2: point2)
         let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimator.addAnimations(animations)
-        mapView?.addCameraAnimator(cameraAnimator)
+        cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
     }
 
@@ -261,42 +280,27 @@ extension CameraAnimationsManager: CameraAnimatorDelegate {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: ratio)
         let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
         cameraAnimator.addAnimations(animations)
-        mapView?.addCameraAnimator(cameraAnimator)
+        cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
     }
 
     // MARK: CameraAnimatorDelegate functions
     func schedulePendingCompletion(forAnimator animator: CameraAnimator, completion: @escaping AnimationCompletion, animatingPosition: UIViewAnimatingPosition) {
-        mapView?.pendingAnimatorCompletionBlocks.append(
+        pendingAnimatorCompletionBlocks.append(
             PendingAnimationCompletion(
                 completion: completion,
                 animatingPosition: animatingPosition))
     }
 
     var camera: CameraState {
-        guard let validMapView = mapView else {
-            fatalError("MapView cannot be nil.")
-        }
-
-        return validMapView.cameraState
+        return mapboxMap.cameraState
     }
 
     func addViewToViewHeirarchy(_ view: CameraView) {
-
-        guard let validMapView = mapView else {
-            fatalError("MapView cannot be nil.")
-        }
-
-        validMapView.addSubview(view)
-
+        cameraViewContainerView.addSubview(view)
     }
 
     func anchorAfterPadding() -> CGPoint {
-
-        guard let validMapView = mapView else {
-            fatalError("MapView cannot be nil.")
-        }
-
-        return validMapView.anchor
+        return mapboxMap.anchor
     }
 }

@@ -102,7 +102,7 @@ final class FlyToCameraAnimatorTests: XCTestCase {
 
         flyToCameraAnimator.update()
 
-        XCTAssertEqual(flyToCameraAnimator.state, .stopped)
+        XCTAssertEqual(flyToCameraAnimator.state, .inactive)
         XCTAssertEqual(animatingPositions, [.end])
     }
 
@@ -122,7 +122,7 @@ final class FlyToCameraAnimatorTests: XCTestCase {
         flyToCameraAnimator.startAnimation()
         flyToCameraAnimator.stopAnimation()
 
-        XCTAssertEqual(flyToCameraAnimator.state, .stopped)
+        XCTAssertEqual(flyToCameraAnimator.state, .inactive)
     }
 
     func testUpdateDoesNotSetCameraIfAnimationIsNotRunning() {

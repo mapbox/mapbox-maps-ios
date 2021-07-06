@@ -13,6 +13,7 @@ final class BasicCameraAnimatorIntegrationTests: XCTestCase {
         window = UIWindow()
         cameraView = CameraView()
         window.addSubview(cameraView)
+        window.makeKeyAndVisible()
         mapboxMap = MockBasicCameraAnimatorMapboxMap()
         animator = BasicCameraAnimator(
             propertyAnimator: UIViewPropertyAnimator(),

@@ -232,7 +232,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     }
 }
 
-protocol BasicCameraAnimatorMapboxMap: AnyObject {
+internal protocol BasicCameraAnimatorMapboxMap: AnyObject {
     var cameraState: CameraState { get }
     var anchor: CGPoint { get }
     func setCamera(to cameraOptions: CameraOptions)

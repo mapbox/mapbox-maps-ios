@@ -1,4 +1,3 @@
-// swiftlint:disable file_length
 @_exported import MapboxCoreMaps
 @_exported import MapboxCommon
 @_implementationOnly import MapboxCoreMaps_Private

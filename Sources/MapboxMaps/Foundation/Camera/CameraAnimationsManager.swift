@@ -90,7 +90,6 @@ public class CameraAnimationsManager {
                 owner: AnimationOwner(rawValue: "com.mapbox.maps.cameraAnimationsManager.flyToAnimator"),
                 duration: duration,
                 mapSize: mapboxMap.size,
-                delegate: self,
                 mapboxMap: mapboxMap) else {
             Log.warning(forMessage: "Unable to start fly-to animation", category: "CameraManager")
             return nil
@@ -155,25 +154,6 @@ public class CameraAnimationsManager {
         return internalAnimator
     }
 
-}
-
-fileprivate extension CoordinateBounds {
-    func contains(_ coordinates: [CLLocationCoordinate2D]) -> Bool {
-        let latitudeRange = southwest.latitude...northeast.latitude
-        let longitudeRange = southwest.longitude...northeast.longitude
-
-        for coordinate in coordinates {
-            if latitudeRange.contains(coordinate.latitude) || longitudeRange.contains(coordinate.longitude) {
-                return true
-            }
-        }
-        return false
-    }
-}
-
-// MARK: Camera Animation
-extension CameraAnimationsManager: CameraAnimatorDelegate {
-
     // MARK: Animator Functions
 
     /// Convenience to create a `CameraAnimator` and will add it to a list of `CameraAnimators` to track the lifecycle of that animation.
@@ -191,7 +171,11 @@ extension CameraAnimationsManager: CameraAnimatorDelegate {
                              animationOwner: AnimationOwner = .unspecified,
                              animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, timingParameters: parameters)
-        let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner, mapboxMap: mapboxMap)
+        let cameraAnimator = BasicCameraAnimator(
+            propertyAnimator: propertyAnimator,
+            owner: animationOwner,
+            mapboxMap: mapboxMap,
+            cameraView: getCameraView())
         cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
@@ -215,7 +199,11 @@ extension CameraAnimationsManager: CameraAnimatorDelegate {
                              animationOwner: AnimationOwner = .unspecified,
                              animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, curve: curve)
-        let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner, mapboxMap: mapboxMap)
+        let cameraAnimator = BasicCameraAnimator(
+            propertyAnimator: propertyAnimator,
+            owner: animationOwner,
+            mapboxMap: mapboxMap,
+            cameraView: getCameraView())
         cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
@@ -241,7 +229,11 @@ extension CameraAnimationsManager: CameraAnimatorDelegate {
                              animationOwner: AnimationOwner = .unspecified,
                              animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, controlPoint1: point1, controlPoint2: point2)
-        let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner, mapboxMap: mapboxMap)
+        let cameraAnimator = BasicCameraAnimator(
+            propertyAnimator: propertyAnimator,
+            owner: animationOwner,
+            mapboxMap: mapboxMap,
+            cameraView: getCameraView())
         cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
@@ -266,23 +258,23 @@ extension CameraAnimationsManager: CameraAnimatorDelegate {
                              animationOwner: AnimationOwner = .unspecified,
                              animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: ratio)
-        let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner, mapboxMap: mapboxMap)
+        let cameraAnimator = BasicCameraAnimator(
+            propertyAnimator: propertyAnimator,
+            owner: animationOwner,
+            mapboxMap: mapboxMap,
+            cameraView: getCameraView())
         cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
     }
 
-    // MARK: CameraAnimatorDelegate functions
-
-    var camera: CameraState {
-        return mapboxMap.cameraState
-    }
-
-    func addViewToViewHeirarchy(_ view: CameraView) {
-        cameraViewContainerView.addSubview(view)
-    }
-
-    func anchorAfterPadding() -> CGPoint {
-        return mapboxMap.anchor
+    private func getCameraView() -> CameraView {
+        if let cameraView = cameraViewContainerView.subviews.compactMap({ $0 as? CameraView }).first(where: { $0.inUse }) {
+            return cameraView
+        } else {
+            let cameraView = CameraView()
+            cameraViewContainerView.addSubview(cameraView)
+            return cameraView
+        }
     }
 }

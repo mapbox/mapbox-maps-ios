@@ -2,8 +2,6 @@ import UIKit
 
 public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterface {
 
-    internal private(set) weak var delegate: CameraAnimatorDelegate?
-
     private let mapboxMap: FlyToCameraAnimatorMapboxMap
 
     public private(set) var owner: AnimationOwner
@@ -28,7 +26,6 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
                    owner: AnimationOwner,
                    duration: TimeInterval? = nil,
                    mapSize: CGSize,
-                   delegate: CameraAnimatorDelegate,
                    mapboxMap: FlyToCameraAnimatorMapboxMap,
                    dateProvider: DateProvider = DefaultDateProvider()) {
         guard let flyToInterpolator = FlyToInterpolator(from: initial, to: final, cameraBounds: cameraBounds, size: mapSize) else {
@@ -40,7 +37,6 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
             }
         }
         self.interpolator = flyToInterpolator
-        self.delegate = delegate
         self.mapboxMap = mapboxMap
         self.owner = owner
         self.finalCameraOptions = final

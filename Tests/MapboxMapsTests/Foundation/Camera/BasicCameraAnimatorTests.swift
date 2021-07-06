@@ -25,8 +25,6 @@ internal let cameraStateTestValue = CameraState(
 
 internal class BasicCameraAnimatorTests: XCTestCase {
 
-    // swiftlint:disable weak_delegate
-    var delegate: CameraAnimatorDelegateMock!
     var propertyAnimator: UIViewPropertyAnimatorMock!
     var cameraView: CameraViewMock!
     var mapboxMap: MockBasicCameraAnimatorMapboxMap!
@@ -34,12 +32,10 @@ internal class BasicCameraAnimatorTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        delegate = CameraAnimatorDelegateMock()
         propertyAnimator = UIViewPropertyAnimatorMock()
         cameraView = CameraViewMock()
         mapboxMap = MockBasicCameraAnimatorMapboxMap()
         animator = BasicCameraAnimator(
-            delegate: delegate,
             propertyAnimator: propertyAnimator,
             owner: .unspecified,
             mapboxMap: mapboxMap,
@@ -51,15 +47,18 @@ internal class BasicCameraAnimatorTests: XCTestCase {
         mapboxMap = nil
         cameraView = nil
         propertyAnimator = nil
-        delegate = nil
         super.tearDown()
+    }
+
+    func testMarksCameraViewAsInUse() {
+        XCTAssertTrue(cameraView.inUse)
     }
 
     func testDeinit() {
         animator = nil
+        XCTAssertFalse(cameraView.inUse)
         XCTAssertEqual(propertyAnimator.stopAnimationStub.invocations.count, 0)
         XCTAssertEqual(propertyAnimator.finishAnimationStub.invocations.count, 0)
-        XCTAssertEqual(cameraView.removeFromSuperviewStub.invocations.count, 1)
     }
 
     func testStartAndStopAnimation() {
@@ -69,7 +68,6 @@ internal class BasicCameraAnimatorTests: XCTestCase {
 
         animator?.startAnimation()
 
-        XCTAssertEqual(delegate.addViewToViewHeirarchyStub.invocations.count, 1)
         XCTAssertEqual(propertyAnimator.startAnimationStub.invocations.count, 1)
         XCTAssertEqual(propertyAnimator.addAnimationsStub.invocations.count, 1)
         XCTAssertNotNil(animator?.transition)

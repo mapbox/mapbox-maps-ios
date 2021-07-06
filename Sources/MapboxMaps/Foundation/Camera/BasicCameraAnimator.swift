@@ -7,9 +7,6 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     /// Instance of the property animator that will run animations.
     private let propertyAnimator: UIViewPropertyAnimator
 
-    /// Delegate that conforms to `CameraAnimatorDelegate`.
-    internal private(set) weak var delegate: CameraAnimatorDelegate?
-
     /// The ID of the owner of this `CameraAnimator`.
     private let owner: AnimationOwner
 
@@ -49,20 +46,19 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     }
 
     // MARK: Initializer
-    internal init(delegate: CameraAnimatorDelegate,
-                  propertyAnimator: UIViewPropertyAnimator,
+    internal init(propertyAnimator: UIViewPropertyAnimator,
                   owner: AnimationOwner,
                   mapboxMap: BasicCameraAnimatorMapboxMap,
-                  cameraView: CameraView = CameraView()) {
-        self.delegate = delegate
+                  cameraView: CameraView) {
         self.propertyAnimator = propertyAnimator
         self.owner = owner
         self.mapboxMap = mapboxMap
         self.cameraView = cameraView
+        cameraView.inUse = true
     }
 
     deinit {
-        cameraView.removeFromSuperview()
+        cameraView.inUse = false
         delayedAnimationTimer?.invalidate()
     }
 
@@ -71,16 +67,9 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
         if self.state != .active {
 
-            guard let delegate = delegate else {
-                fatalError("CameraAnimator delegate cannot be nil when starting an animation")
-            }
-
             guard let animation = animation else {
                 fatalError("Animation cannot be nil when starting an animation")
             }
-
-            // Set up the short lived camera view
-            delegate.addViewToViewHeirarchy(cameraView)
 
             var cameraTransition = CameraTransition(cameraState: mapboxMap.cameraState, initialAnchor: mapboxMap.anchor)
             animation(&cameraTransition)

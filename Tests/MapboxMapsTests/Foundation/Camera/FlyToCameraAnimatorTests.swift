@@ -28,15 +28,12 @@ final class FlyToCameraAnimatorTests: XCTestCase {
 
     let animationOwner = AnimationOwner(rawValue: "fly-to")
     let duration: TimeInterval = 10
-    // swiftlint:disable weak_delegate
-    var delegate: CameraAnimatorDelegateMock!
     var mapboxMap: MockFlyToCameraAnimatorMapboxMap!
     var dateProvider: MockDateProvider!
     var flyToCameraAnimator: FlyToCameraAnimator!
 
     override func setUp() {
         super.setUp()
-        delegate = CameraAnimatorDelegateMock()
         mapboxMap = MockFlyToCameraAnimatorMapboxMap()
         dateProvider = MockDateProvider()
         flyToCameraAnimator = FlyToCameraAnimator(
@@ -46,7 +43,6 @@ final class FlyToCameraAnimatorTests: XCTestCase {
             owner: AnimationOwner(rawValue: "fly-to"),
             duration: duration,
             mapSize: CGSize(width: 500, height: 500),
-            delegate: delegate,
             mapboxMap: mapboxMap,
             dateProvider: dateProvider)
     }
@@ -55,12 +51,10 @@ final class FlyToCameraAnimatorTests: XCTestCase {
         flyToCameraAnimator = nil
         dateProvider = nil
         mapboxMap = nil
-        delegate = nil
         super.tearDown()
     }
 
     func testInitializationWithValidOptions() {
-        XCTAssertTrue(flyToCameraAnimator.delegate === delegate)
         XCTAssertEqual(flyToCameraAnimator.owner, animationOwner)
         XCTAssertEqual(flyToCameraAnimator.duration, duration)
         XCTAssertEqual(flyToCameraAnimator.state, .inactive)
@@ -75,7 +69,6 @@ final class FlyToCameraAnimatorTests: XCTestCase {
                 owner: AnimationOwner(rawValue: "fly-to"),
                 duration: -1,
                 mapSize: CGSize(width: 500, height: 500),
-                delegate: delegate,
                 mapboxMap: mapboxMap,
                 dateProvider: dateProvider)
         )
@@ -89,7 +82,6 @@ final class FlyToCameraAnimatorTests: XCTestCase {
             owner: AnimationOwner(rawValue: "fly-to"),
             duration: nil,
             mapSize: CGSize(width: 500, height: 500),
-            delegate: delegate,
             mapboxMap: mapboxMap,
             dateProvider: dateProvider)
         XCTAssertNotNil(animator?.duration)

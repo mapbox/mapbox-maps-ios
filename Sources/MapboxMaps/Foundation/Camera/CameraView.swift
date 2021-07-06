@@ -42,6 +42,8 @@ internal class CameraView: UIView {
                              pitch: localPitch)
     }
 
+    var inUse = false
+
     init() {
         super.init(frame: .zero)
         self.isHidden = true

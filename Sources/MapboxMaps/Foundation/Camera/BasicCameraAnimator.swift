@@ -16,6 +16,8 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     /// The `CameraView` owned by this animator
     private let cameraView: CameraView
 
+    private let mapboxMap: BasicCameraAnimatorMapboxMap
+
     /// Represents the animation that this animator is attempting to execute
     private var animation: ((inout CameraTransition) -> Void)?
 
@@ -50,10 +52,12 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     internal init(delegate: CameraAnimatorDelegate,
                   propertyAnimator: UIViewPropertyAnimator,
                   owner: AnimationOwner,
+                  mapboxMap: BasicCameraAnimatorMapboxMap,
                   cameraView: CameraView = CameraView()) {
         self.delegate = delegate
         self.propertyAnimator = propertyAnimator
         self.owner = owner
+        self.mapboxMap = mapboxMap
         self.cameraView = cameraView
     }
 
@@ -142,7 +146,13 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         propertyAnimator.continueAnimation(withTimingParameters: parameters, durationFactor: CGFloat(durationFactor))
     }
 
-    internal var currentCameraOptions: CameraOptions? {
+    internal func update() {
+        if let cameraOptions = currentCameraOptions {
+            mapboxMap.setCamera(to: cameraOptions)
+        }
+    }
+
+    private var currentCameraOptions: CameraOptions? {
 
         // Only call jumpTo if this animator is currently "active" and there are known changes to animate.
         guard propertyAnimator.state == .active,
@@ -185,4 +195,11 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     public func cancel() {
         stopAnimation()
     }
+}
+
+protocol BasicCameraAnimatorMapboxMap: AnyObject {
+    func setCamera(to cameraOptions: CameraOptions)
+}
+
+extension MapboxMap: BasicCameraAnimatorMapboxMap {
 }

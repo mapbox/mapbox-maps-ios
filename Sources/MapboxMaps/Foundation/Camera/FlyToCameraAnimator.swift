@@ -4,6 +4,8 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
     internal private(set) weak var delegate: CameraAnimatorDelegate?
 
+    private let mapboxMap: FlyToCameraAnimatorMapboxMap
+
     public private(set) var owner: AnimationOwner
 
     private let interpolator: FlyToInterpolator
@@ -27,6 +29,7 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
                    duration: TimeInterval? = nil,
                    mapSize: CGSize,
                    delegate: CameraAnimatorDelegate,
+                   mapboxMap: FlyToCameraAnimatorMapboxMap,
                    dateProvider: DateProvider = DefaultDateProvider()) {
         guard let flyToInterpolator = FlyToInterpolator(from: initial, to: final, cameraBounds: cameraBounds, size: mapSize) else {
             return nil
@@ -38,6 +41,7 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         }
         self.interpolator = flyToInterpolator
         self.delegate = delegate
+        self.mapboxMap = mapboxMap
         self.owner = owner
         self.finalCameraOptions = final
         self.duration = duration ?? flyToInterpolator.duration()
@@ -68,21 +72,22 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         completionBlocks.removeAll()
     }
 
-    internal var currentCameraOptions: CameraOptions? {
+    internal func update() {
         guard state == .active, let start = start else {
-            return nil
+            return
         }
         let fractionComplete = min(dateProvider.now.timeIntervalSince(start) / duration, 1)
         guard fractionComplete < 1 else {
             state = .stopped
             scheduleCompletionIfNecessary(position: .end)
-            return finalCameraOptions
+            mapboxMap.setCamera(to: finalCameraOptions)
+            return
         }
-        return CameraOptions(
+        mapboxMap.setCamera(to: CameraOptions(
             center: interpolator.coordinate(at: fractionComplete),
             zoom: CGFloat(interpolator.zoom(at: fractionComplete)),
             bearing: interpolator.bearing(at: fractionComplete),
-            pitch: CGFloat(interpolator.pitch(at: fractionComplete)))
+            pitch: CGFloat(interpolator.pitch(at: fractionComplete))))
     }
 
     // MARK: Cancelable
@@ -90,4 +95,11 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     public func cancel() {
         stopAnimation()
     }
+}
+
+internal protocol FlyToCameraAnimatorMapboxMap: AnyObject {
+    func setCamera(to cameraOptions: CameraOptions)
+}
+
+extension MapboxMap: FlyToCameraAnimatorMapboxMap {
 }

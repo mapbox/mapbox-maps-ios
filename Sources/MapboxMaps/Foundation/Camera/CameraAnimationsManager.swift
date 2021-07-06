@@ -13,7 +13,7 @@ public protocol CameraAnimator: Cancelable {
 
 /// Internal-facing protocol to represent camera animators
 internal protocol CameraAnimatorInterface: CameraAnimator {
-    var currentCameraOptions: CameraOptions? { get }
+    func update()
 }
 
 /// An object that manages a camera's view lifecycle.
@@ -55,9 +55,7 @@ public class CameraAnimationsManager {
 
     internal func update() {
         for animator in cameraAnimatorsSet.allObjects {
-            if let cameraOptions = animator.currentCameraOptions {
-                mapboxMap.setCamera(to: cameraOptions)
-            }
+            animator.update()
         }
 
         /// This executes the series of scheduled animation completion blocks and also removes them from the list
@@ -103,7 +101,8 @@ public class CameraAnimationsManager {
                 owner: AnimationOwner(rawValue: "com.mapbox.maps.cameraAnimationsManager.flyToAnimator"),
                 duration: duration,
                 mapSize: mapboxMap.size,
-                delegate: self) else {
+                delegate: self,
+                mapboxMap: mapboxMap) else {
             Log.warning(forMessage: "Unable to start fly-to animation", category: "CameraManager")
             return nil
         }
@@ -203,7 +202,7 @@ extension CameraAnimationsManager: CameraAnimatorDelegate {
                              animationOwner: AnimationOwner = .unspecified,
                              animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, timingParameters: parameters)
-        let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
+        let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner, mapboxMap: mapboxMap)
         cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
@@ -227,7 +226,7 @@ extension CameraAnimationsManager: CameraAnimatorDelegate {
                              animationOwner: AnimationOwner = .unspecified,
                              animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, curve: curve)
-        let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
+        let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner, mapboxMap: mapboxMap)
         cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
@@ -253,7 +252,7 @@ extension CameraAnimationsManager: CameraAnimatorDelegate {
                              animationOwner: AnimationOwner = .unspecified,
                              animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, controlPoint1: point1, controlPoint2: point2)
-        let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
+        let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner, mapboxMap: mapboxMap)
         cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
@@ -278,13 +277,14 @@ extension CameraAnimationsManager: CameraAnimatorDelegate {
                              animationOwner: AnimationOwner = .unspecified,
                              animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator {
         let propertyAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: ratio)
-        let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner)
+        let cameraAnimator = BasicCameraAnimator(delegate: self, propertyAnimator: propertyAnimator, owner: animationOwner, mapboxMap: mapboxMap)
         cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
     }
 
     // MARK: CameraAnimatorDelegate functions
+
     func schedulePendingCompletion(forAnimator animator: CameraAnimator, completion: @escaping AnimationCompletion, animatingPosition: UIViewAnimatingPosition) {
         pendingAnimatorCompletionBlocks.append(
             PendingAnimationCompletion(

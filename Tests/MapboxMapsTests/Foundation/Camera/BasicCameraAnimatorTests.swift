@@ -29,17 +29,30 @@ internal class BasicCameraAnimatorTests: XCTestCase {
     var delegate: CameraAnimatorDelegateMock!
     var propertyAnimator: UIViewPropertyAnimatorMock!
     var cameraView: CameraViewMock!
+    var mapboxMap: MockBasicCameraAnimatorMapboxMap!
     var animator: BasicCameraAnimator!
 
     override func setUp() {
+        super.setUp()
         delegate = CameraAnimatorDelegateMock()
         propertyAnimator = UIViewPropertyAnimatorMock()
         cameraView = CameraViewMock()
+        mapboxMap = MockBasicCameraAnimatorMapboxMap()
         animator = BasicCameraAnimator(
             delegate: delegate,
-            propertyAnimator: propertyAnimator ,
+            propertyAnimator: propertyAnimator,
             owner: .unspecified,
+            mapboxMap: mapboxMap,
             cameraView: cameraView)
+    }
+
+    override func tearDown() {
+        animator = nil
+        mapboxMap = nil
+        cameraView = nil
+        propertyAnimator = nil
+        delegate = nil
+        super.tearDown()
     }
 
     func testDeinit() {
@@ -69,7 +82,7 @@ internal class BasicCameraAnimatorTests: XCTestCase {
 
     }
 
-    func testCurrentCameraOptions() {
+    func testUpdate() {
         animator?.addAnimations { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
             transition.center.toValue = cameraOptionsTestValue.center!
@@ -81,8 +94,8 @@ internal class BasicCameraAnimatorTests: XCTestCase {
         animator?.startAnimation()
         propertyAnimator.shouldReturnState = .active
 
-        let cameraOptions = animator.currentCameraOptions
+        animator.update()
 
-        XCTAssertEqual(cameraOptions, cameraView.localCamera)
+        XCTAssertEqual(mapboxMap.setCameraStub.parameters, [cameraView.localCamera])
     }
 }

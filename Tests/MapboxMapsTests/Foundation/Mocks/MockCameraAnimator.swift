@@ -5,7 +5,8 @@ final class MockCameraAnimator: NSObject, CameraAnimatorInterface {
     func cancel() {
     }
 
-    var currentCameraOptions: CameraOptions?
+    func update() {
+    }
 
     var state: UIViewAnimatingState = .inactive
 

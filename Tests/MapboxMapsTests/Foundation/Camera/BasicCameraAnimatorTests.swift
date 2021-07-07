@@ -50,15 +50,11 @@ final class BasicCameraAnimatorTests: XCTestCase {
         super.tearDown()
     }
 
-    func testMarksCameraViewAsInUse() {
-        XCTAssertTrue(cameraView.inUse)
-    }
-
     func testDeinit() {
         animator = nil
-        XCTAssertFalse(cameraView.inUse)
-        XCTAssertEqual(propertyAnimator.stopAnimationStub.invocations.count, 0)
-        XCTAssertEqual(propertyAnimator.finishAnimationStub.invocations.count, 0)
+        XCTAssertEqual(cameraView.removeFromSuperviewStub.invocations.count, 1)
+        XCTAssertEqual(propertyAnimator.stopAnimationStub.parameters, [true])
+        XCTAssertTrue(propertyAnimator.finishAnimationStub.invocations.isEmpty)
     }
 
     func testStartAndStopAnimation() {

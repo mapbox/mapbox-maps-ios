@@ -269,12 +269,8 @@ public class CameraAnimationsManager {
     }
 
     private func getCameraView() -> CameraView {
-        if let cameraView = cameraViewContainerView.subviews.compactMap({ $0 as? CameraView }).first(where: { !$0.inUse }) {
-            return cameraView
-        } else {
-            let cameraView = CameraView()
-            cameraViewContainerView.addSubview(cameraView)
-            return cameraView
-        }
+        let cameraView = CameraView()
+        cameraViewContainerView.addSubview(cameraView)
+        return cameraView
     }
 }

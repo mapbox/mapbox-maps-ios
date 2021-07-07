@@ -70,11 +70,11 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         self.owner = owner
         self.mapboxMap = mapboxMap
         self.cameraView = cameraView
-        cameraView.inUse = true
     }
 
     deinit {
-        cameraView.inUse = false
+        propertyAnimator.stopAnimation(true)
+        cameraView.removeFromSuperview()
         delayedAnimationTimer?.invalidate()
     }
 

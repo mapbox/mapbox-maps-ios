@@ -12,8 +12,6 @@ internal class CameraView: UIView {
         return cameraOptions(with: layer)
     }
 
-    var inUse = false
-
     init() {
         super.init(frame: .zero)
         self.isHidden = true

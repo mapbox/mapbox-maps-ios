@@ -121,7 +121,8 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
             propertyAnimator.stopAnimation(false)
             propertyAnimator.finishAnimation(at: .current)
         case .final:
-            fatalError("Attempt to stop an animation that has already completed.")
+            // Already stopped, so do nothing
+            break
         }
     }
 

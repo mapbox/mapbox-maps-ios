@@ -4,6 +4,23 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Features ✨ and improvements 🏁
+
+* Support `text-writing-mode` property for line symbol-placement text labels ([#522](https://github.com/mapbox/mapbox-maps-ios/pull/522)).
+  Note: This change will bring following changes for CJK text block:
+  1. For vertical CJK text, all the characters including Latin and Numbers will be vertically placed now. Previously, Latin and Numbers are horizontally placed.
+  2. For horizontal CJK text, it may have a slight horizontal shift due to the anchor shift.
+
+### Breaking changes ⚠️
+
+* `TileRegionError` has a new case `tileCountExceeded(String)` ([#522](https://github.com/mapbox/mapbox-maps-ios/pull/522)).
+
+### Bug fixes 🐞
+
+* Clean up network listener after http file source gets out of scope ([#522](https://github.com/mapbox/mapbox-maps-ios/pull/522)).
+* Fix `line-center` anchor calculation when the anchor is very near to the line geometry point ([#522](https://github.com/mapbox/mapbox-maps-ios/pull/522)).
+* Fix threading issues in HTTP file source ([#522](https://github.com/mapbox/mapbox-maps-ios/pull/522)).
+
 ## 10.0.0-rc.3 - June 30, 2021
 
 ### Features ✨ and improvements 🏁

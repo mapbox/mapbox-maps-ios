@@ -6,20 +6,22 @@ Mapbox welcomes participation and contributions from everyone.
 
 ### Features ✨ and improvements 🏁
 
-* Support `text-writing-mode` property for line symbol-placement text labels ([#522](https://github.com/mapbox/mapbox-maps-ios/pull/522)).
+* Support `text-writing-mode` property for line symbol-placement text labels. ([#522](https://github.com/mapbox/mapbox-maps-ios/pull/522))
   Note: This change will bring following changes for CJK text block:
   1. For vertical CJK text, all the characters including Latin and Numbers will be vertically placed now. Previously, Latin and Numbers are horizontally placed.
   2. For horizontal CJK text, it may have a slight horizontal shift due to the anchor shift.
 
 ### Breaking changes ⚠️
 
-* `TileRegionError` has a new case `tileCountExceeded(String)` ([#522](https://github.com/mapbox/mapbox-maps-ios/pull/522)).
+* `TileRegionError` has a new case `tileCountExceeded(String)`. ([#522](https://github.com/mapbox/mapbox-maps-ios/pull/522))
+* FlyToCameraAnimator.state will now be `.inactive` after it completes or is stopped. This change makes its behavior consistent with the behavior of `BasicCameraAnimator`. ([#519](https://github.com/mapbox/mapbox-maps-ios/pull/519))
+* Completion blocks added to `BasicCameraAnimator` will no longer be invoked as a side-effect of deinitialization. ([#519](https://github.com/mapbox/mapbox-maps-ios/pull/519))
 
 ### Bug fixes 🐞
 
-* Clean up network listener after http file source gets out of scope ([#522](https://github.com/mapbox/mapbox-maps-ios/pull/522)).
-* Fix `line-center` anchor calculation when the anchor is very near to the line geometry point ([#522](https://github.com/mapbox/mapbox-maps-ios/pull/522)).
-* Fix threading issues in HTTP file source ([#522](https://github.com/mapbox/mapbox-maps-ios/pull/522)).
+* Clean up network listener after http file source gets out of scope. ([#522](https://github.com/mapbox/mapbox-maps-ios/pull/522))
+* Fix `line-center` anchor calculation when the anchor is very near to the line geometry point. ([#522](https://github.com/mapbox/mapbox-maps-ios/pull/522))
+* Fix threading issues in HTTP file source. ([#522](https://github.com/mapbox/mapbox-maps-ios/pull/522))
 * Fixed an issue that could cause flickering during ease to and basic animations ([#519](https://github.com/mapbox/mapbox-maps-ios/pull/519))
 * Fixed an issue that could result in ease to and basic animations never reaching their final values ([#519](https://github.com/mapbox/mapbox-maps-ios/pull/519))
 

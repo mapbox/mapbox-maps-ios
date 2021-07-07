@@ -2,7 +2,7 @@ import UIKit
 
 public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterface {
 
-    private let mapboxMap: FlyToCameraAnimatorMapboxMap
+    private let mapboxMap: CameraAnimatorMapboxMap
 
     public private(set) var owner: AnimationOwner
 
@@ -26,7 +26,7 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
                    owner: AnimationOwner,
                    duration: TimeInterval? = nil,
                    mapSize: CGSize,
-                   mapboxMap: FlyToCameraAnimatorMapboxMap,
+                   mapboxMap: CameraAnimatorMapboxMap,
                    dateProvider: DateProvider = DefaultDateProvider()) {
         guard let flyToInterpolator = FlyToInterpolator(from: initial, to: final, cameraBounds: cameraBounds, size: mapSize) else {
             return nil
@@ -89,11 +89,4 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     public func cancel() {
         stopAnimation()
     }
-}
-
-internal protocol FlyToCameraAnimatorMapboxMap: AnyObject {
-    func setCamera(to cameraOptions: CameraOptions)
-}
-
-extension MapboxMap: FlyToCameraAnimatorMapboxMap {
 }

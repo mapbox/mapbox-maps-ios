@@ -1,6 +1,6 @@
 @testable import MapboxMaps
 
-final class MockBasicCameraAnimatorMapboxMap: BasicCameraAnimatorMapboxMap {
+final class MockCameraAnimatorMapboxMap: CameraAnimatorMapboxMap {
 
     var cameraState = CameraState(
         MapboxCoreMaps.CameraState(

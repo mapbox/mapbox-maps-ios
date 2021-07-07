@@ -23,4 +23,3 @@ public class StoryboardMapViewExample: UIViewController, MapInitOptionsProvider,
     }
 
 }
-

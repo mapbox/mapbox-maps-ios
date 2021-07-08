@@ -166,6 +166,10 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         }
     }
 
+    // The CameraOptions returned by CameraView always includes non-nil values for each field.
+    // This method creates returns a CameraOptions that has nil for the value of each field that
+    // has a nil toValue in `transition` and has the non-nil value from
+    // `cameraViewCameraOptions` for each field that has a non-nil toValue in `transition`.
     private func cameraOptions(with transition: CameraTransition, cameraViewCameraOptions: CameraOptions) -> CameraOptions {
         var cameraOptions = CameraOptions()
 

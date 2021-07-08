@@ -156,15 +156,15 @@ public class CameraAnimationsManager {
 
     // MARK: Animator Functions
 
-    /// Convenience to create a `CameraAnimator` and will add it to a list of `CameraAnimators` to track the lifecycle of that animation.
+    /// Convenience to create a `BasicCameraAnimator` and will add it to a list of `BasicCameraAnimator`s to track the lifecycle of that animation.
     ///
-    /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. If a `CameraAnimator` is destroyed, before the animation is finished,
-    /// the animation will be interrupted and completion handlers will be called.
+    /// NOTE: Keep in mind the lifecycle of a `BasicCameraAnimator`. If a `BasicCameraAnimator` is destroyed, before the animation is finished,
+    /// the animation will be interrupted and completion handlers will not be called.
     ///
     /// - Parameters:
     ///   - duration: The duration of the animation, in seconds.
     ///   - timingParameters: The object providing the timing information. This object must adopt the `UITimingCurveProvider` protocol.
-    ///   - animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
+    ///   - animationOwner: Property that conforms to `AnimationOwner` to represent who owns that animation.
     /// - Returns: A class that represents an animator with the provided configuration.
     public func makeAnimator(duration: TimeInterval,
                              timingParameters parameters: UITimingCurveProvider,
@@ -181,15 +181,15 @@ public class CameraAnimationsManager {
         return cameraAnimator
     }
 
-    /// Convenience to create a `CameraAnimator` and will add it to a list of `CameraAnimators` to track the lifecycle of that animation.
+    /// Convenience to create a `BasicCameraAnimator` and will add it to a list of `BasicCameraAnimator` to track the lifecycle of that animation.
     ///
-    /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. If a `CameraAnimator` is destroyed, before the animation is finished,
-    /// the animation will be interrupted and completion handlers will be called.
+    /// NOTE: Keep in mind the lifecycle of a `BasicCameraAnimator`. If a `BasicCameraAnimator` is destroyed, before the animation is finished,
+    /// the animation will be interrupted and completion handlers will not be called.
     ///
     /// - Parameters:
     ///   - duration: The duration of the animation, in seconds.
     ///   - curve: The UIKit timing curve to apply to the animation.
-    ///   - animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
+    ///   - animationOwner: Property that conforms to `AnimationOwner` to represent who owns that animation.
     ///   - animations: The block containing the animations. This block has no return value and takes no parameters.
     ///                 Use this block to modify any animatable view properties. When you start the animations,
     ///                 those properties are animated from their current values to the new values using the specified animation parameters.
@@ -209,16 +209,16 @@ public class CameraAnimationsManager {
         return cameraAnimator
     }
 
-    /// Convenience to create a `CameraAnimator` and will add it to a list of `CameraAnimators` to track the lifecycle of that animation.
+    /// Convenience to create a `BasicCameraAnimator` and will add it to a list of `BasicCameraAnimator` to track the lifecycle of that animation.
     ///
-    /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. If a `CameraAnimator` is destroyed, before the animation is finished,
-    /// the animation will be interrupted and completion handlers will be called.
+    /// NOTE: Keep in mind the lifecycle of a `BasicCameraAnimator`. If a `BasicCameraAnimator` is destroyed, before the animation is finished,
+    /// the animation will be interrupted and completion handlers will not be called.
     ///
     /// - Parameters:
     ///   - duration: The duration of the animation, in seconds.
     ///   - controlPoint1: The first control point for the cubic Bézier timing curve.
     ///   - controlPoint2: The second control point for the cubic Bézier timing curve.
-    ///   - animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
+    ///   - animationOwner: Property that conforms to `AnimationOwner` to represent who owns that animation.
     ///   - animations: The block containing the animations. This block has no return value and takes no parameters.
     ///                 Use this block to modify any animatable view properties. When you start the animations,
     ///                 those properties are animated from their current values to the new values using the specified animation parameters.
@@ -239,16 +239,16 @@ public class CameraAnimationsManager {
         return cameraAnimator
     }
 
-    /// Convenience to create a `CameraAnimator` and will add it to a list of `CameraAnimators` to track the lifecycle of that animation.
+    /// Convenience to create a `BasicCameraAnimator` and will add it to a list of `BasicCameraAnimator` to track the lifecycle of that animation.
     ///
-    /// NOTE: Keep in mind the lifecycle of a `CameraAnimator`. If a `CameraAnimator` is destroyed, before the animation is finished,
-    /// the animation will be interrupted and completion handlers will be called.
+    /// NOTE: Keep in mind the lifecycle of a `BasicCameraAnimator`. If a `BasicCameraAnimator` is destroyed, before the animation is finished,
+    /// the animation will be interrupted and completion handlers will not be called.
     ///
     /// - Parameters:
     ///   - duration: The duration of the animation, in seconds.
     ///   - dampingRatio: The damping ratio to apply to the initial acceleration and oscillation. To smoothly decelerate the animation without oscillation, specify a value of 1.
     ///                   Specify values closer to 0 to create less damping and more oscillation.
-    ///   - animationOwner: Property that conforms to `AnimationOwnerProtocol` to represent who owns that animation.
+    ///   - animationOwner: Property that conforms to `AnimationOwner` to represent who owns that animation.
     ///   - animations: The block containing the animations. This block has no return value and takes no parameters.
     ///                 Use this block to modify any animatable view properties. When you start the animations,
     ///                 those properties are animated from their current values to the new values using the specified animation parameters.

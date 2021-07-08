@@ -175,7 +175,7 @@ public class CameraAnimationsManager {
             propertyAnimator: propertyAnimator,
             owner: animationOwner,
             mapboxMap: mapboxMap,
-            cameraView: getCameraView())
+            cameraView: makeCameraView())
         cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
@@ -203,7 +203,7 @@ public class CameraAnimationsManager {
             propertyAnimator: propertyAnimator,
             owner: animationOwner,
             mapboxMap: mapboxMap,
-            cameraView: getCameraView())
+            cameraView: makeCameraView())
         cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
@@ -233,7 +233,7 @@ public class CameraAnimationsManager {
             propertyAnimator: propertyAnimator,
             owner: animationOwner,
             mapboxMap: mapboxMap,
-            cameraView: getCameraView())
+            cameraView: makeCameraView())
         cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
@@ -262,13 +262,13 @@ public class CameraAnimationsManager {
             propertyAnimator: propertyAnimator,
             owner: animationOwner,
             mapboxMap: mapboxMap,
-            cameraView: getCameraView())
+            cameraView: makeCameraView())
         cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
     }
 
-    private func getCameraView() -> CameraView {
+    private func makeCameraView() -> CameraView {
         let cameraView = CameraView()
         cameraViewContainerView.addSubview(cameraView)
         return cameraView

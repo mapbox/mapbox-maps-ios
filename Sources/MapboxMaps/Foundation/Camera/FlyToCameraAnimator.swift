@@ -2,7 +2,7 @@ import UIKit
 
 public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterface {
 
-    internal private(set) weak var delegate: CameraAnimatorDelegate?
+    private let mapboxMap: CameraAnimatorMapboxMap
 
     public private(set) var owner: AnimationOwner
 
@@ -26,7 +26,7 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
                    owner: AnimationOwner,
                    duration: TimeInterval? = nil,
                    mapSize: CGSize,
-                   delegate: CameraAnimatorDelegate,
+                   mapboxMap: CameraAnimatorMapboxMap,
                    dateProvider: DateProvider = DefaultDateProvider()) {
         guard let flyToInterpolator = FlyToInterpolator(from: initial, to: final, cameraBounds: cameraBounds, size: mapSize) else {
             return nil
@@ -37,7 +37,7 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
             }
         }
         self.interpolator = flyToInterpolator
-        self.delegate = delegate
+        self.mapboxMap = mapboxMap
         self.owner = owner
         self.finalCameraOptions = final
         self.duration = duration ?? flyToInterpolator.duration()
@@ -45,8 +45,8 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     }
 
     public func stopAnimation() {
-        state = .stopped
-        scheduleCompletionIfNecessary(position: .current) // `current` represents an interrupted animation.
+        state = .inactive
+        invokeCompletionBlocks(with: .current) // `current` represents an interrupted animation.
     }
 
     internal func startAnimation() {
@@ -58,31 +58,30 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         completionBlocks.append(completion)
     }
 
-    private func scheduleCompletionIfNecessary(position: UIViewAnimatingPosition) {
-        for completion in completionBlocks {
-            delegate?.schedulePendingCompletion(
-                forAnimator: self,
-                completion: completion,
-                animatingPosition: position)
+    private func invokeCompletionBlocks(with position: UIViewAnimatingPosition) {
+        let blocks = completionBlocks
+        for block in blocks {
+            block(position)
         }
         completionBlocks.removeAll()
     }
 
-    internal var currentCameraOptions: CameraOptions? {
+    internal func update() {
         guard state == .active, let start = start else {
-            return nil
+            return
         }
         let fractionComplete = min(dateProvider.now.timeIntervalSince(start) / duration, 1)
         guard fractionComplete < 1 else {
-            state = .stopped
-            scheduleCompletionIfNecessary(position: .end)
-            return finalCameraOptions
+            state = .inactive
+            mapboxMap.setCamera(to: finalCameraOptions)
+            invokeCompletionBlocks(with: .end)
+            return
         }
-        return CameraOptions(
+        mapboxMap.setCamera(to: CameraOptions(
             center: interpolator.coordinate(at: fractionComplete),
             zoom: CGFloat(interpolator.zoom(at: fractionComplete)),
             bearing: interpolator.bearing(at: fractionComplete),
-            pitch: CGFloat(interpolator.pitch(at: fractionComplete)))
+            pitch: CGFloat(interpolator.pitch(at: fractionComplete))))
     }
 
     // MARK: Cancelable

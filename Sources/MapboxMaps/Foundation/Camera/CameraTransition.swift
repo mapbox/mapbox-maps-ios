@@ -2,7 +2,7 @@ import UIKit
 import CoreLocation
 
 /// Structure used to represent a desired change to the map's camera
-public struct CameraTransition {
+public struct CameraTransition: Equatable {
 
     /// Represents a change to the center coordinate of the map.
     /// NOTE: Setting the `toValue` of `center` overrides any `anchor` animations
@@ -28,7 +28,7 @@ public struct CameraTransition {
     public var pitch: Change<CGFloat>
 
     /// Generic struct used to represent a change in a value from a starting point (i.e. `fromValue`) to an end point (i.e. `toValue`).
-    public struct Change<T> {
+    public struct Change<T>: Equatable where T: Equatable {
         public var fromValue: T
         public var toValue: T?
 

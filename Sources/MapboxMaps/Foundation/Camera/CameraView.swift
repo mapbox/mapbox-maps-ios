@@ -3,43 +3,13 @@ import UIKit
 /// A view that represents a camera view port.
 internal class CameraView: UIView {
 
-    internal var localCenterCoordinate: CLLocationCoordinate2D {
-        let proxyCoord = layer.presentation()?.position ?? layer.position
-        return CLLocationCoordinate2D(latitude: CLLocationDegrees(proxyCoord.y),
-                                      longitude: CLLocationDegrees(proxyCoord.x))
+    /// returns nil if the presentation layer is nil
+    internal var presentationCameraOptions: CameraOptions? {
+        return layer.presentation().map(cameraOptions(with:))
     }
 
-    internal var localZoom: CGFloat {
-        return CGFloat(layer.presentation()?.opacity ?? layer.opacity)
-    }
-
-    internal var localBearing: CLLocationDirection {
-        return CLLocationDirection(layer.presentation()?.cornerRadius ?? layer.cornerRadius)
-    }
-
-    internal var localPitch: CGFloat {
-        return layer.presentation()?.transform.m11 ?? layer.transform.m11
-    }
-
-    internal var localAnchorPoint: CGPoint {
-        return layer.presentation()?.anchorPoint ?? layer.anchorPoint
-    }
-
-    internal var localPadding: UIEdgeInsets {
-        let proxyPadding = layer.presentation()?.bounds ?? layer.bounds
-        return UIEdgeInsets(top: proxyPadding.size.height,
-                            left: proxyPadding.origin.x,
-                            bottom: proxyPadding.size.width,
-                            right: proxyPadding.origin.y)
-    }
-
-    internal var localCamera: CameraOptions {
-        return CameraOptions(center: localCenterCoordinate,
-                             padding: localPadding,
-                             anchor: localAnchorPoint,
-                             zoom: localZoom,
-                             bearing: localBearing,
-                             pitch: localPitch)
+    internal var cameraOptions: CameraOptions {
+        return cameraOptions(with: layer)
     }
 
     init() {
@@ -50,6 +20,22 @@ internal class CameraView: UIView {
 
     internal required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    private func cameraOptions(with layer: CALayer) -> CameraOptions {
+        return CameraOptions(
+            center: CLLocationCoordinate2D(
+                latitude: CLLocationDegrees(layer.position.y),
+                longitude: CLLocationDegrees(layer.position.x)),
+            padding: UIEdgeInsets(
+                top: layer.bounds.size.height,
+                left: layer.bounds.origin.x,
+                bottom: layer.bounds.size.width,
+                right: layer.bounds.origin.y),
+            anchor: layer.anchorPoint,
+            zoom: CGFloat(layer.opacity),
+            bearing: CLLocationDirection(layer.cornerRadius),
+            pitch: layer.transform.m11)
     }
 
     internal func syncLayer(to cameraOptions: CameraOptions) {

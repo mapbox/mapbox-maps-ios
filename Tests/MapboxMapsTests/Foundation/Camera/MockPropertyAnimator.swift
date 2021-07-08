@@ -1,11 +1,10 @@
 import UIKit
 
-class UIViewPropertyAnimatorMock: UIViewPropertyAnimator {
+final class MockPropertyAnimator: UIViewPropertyAnimator {
 
-    var shouldReturnState: UIViewAnimatingState = .inactive
-
+    let stateStub = Stub<Void, UIViewAnimatingState>(defaultReturnValue: .inactive)
     override var state: UIViewAnimatingState {
-        return shouldReturnState
+        stateStub.call()
     }
 
     let startAnimationStub = Stub<Void, Void>()
@@ -13,12 +12,9 @@ class UIViewPropertyAnimatorMock: UIViewPropertyAnimator {
         startAnimationStub.call()
     }
 
-    struct StopAnimationParameters {
-        var withoutFinishing: Bool
-    }
-    let stopAnimationStub = Stub<StopAnimationParameters, Void>()
+    let stopAnimationStub = Stub<Bool, Void>()
     override func stopAnimation(_ withoutFinishing: Bool) {
-        stopAnimationStub.call(with: StopAnimationParameters(withoutFinishing: withoutFinishing))
+        stopAnimationStub.call(with: withoutFinishing)
     }
 
     let pauseAnimationsStub = Stub<Void, Void>()
@@ -26,12 +22,9 @@ class UIViewPropertyAnimatorMock: UIViewPropertyAnimator {
         pauseAnimationsStub.call()
     }
 
-    struct AddAnimationParameters {
-        var animation: () -> Void
-    }
-    let addAnimationsStub = Stub<AddAnimationParameters, Void>()
+    let addAnimationsStub = Stub<() -> Void, Void>()
     override func addAnimations(_ animation: @escaping () -> Void) {
-        addAnimationsStub.call(with: .init(animation: animation))
+        addAnimationsStub.call(with: animation)
     }
 
     let addCompletionStub = Stub<Void, Void>()
@@ -48,12 +41,8 @@ class UIViewPropertyAnimatorMock: UIViewPropertyAnimator {
         continueAnimationStub.call(with: .init(parameters: parameters, durationFactor: durationFactor))
     }
 
-    struct FinishAnimationParameters {
-        var finalPosition: UIViewAnimatingPosition
-    }
-
-    let finishAnimationStub = Stub<FinishAnimationParameters, Void>()
+    let finishAnimationStub = Stub<UIViewAnimatingPosition, Void>()
     override func finishAnimation(at finalPosition: UIViewAnimatingPosition) {
-        finishAnimationStub.call(with: .init(finalPosition: finalPosition))
+        finishAnimationStub.call(with: finalPosition)
     }
 }

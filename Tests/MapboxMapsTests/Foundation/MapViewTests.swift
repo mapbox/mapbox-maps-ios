@@ -80,51 +80,11 @@ final class MapViewTests: XCTestCase {
         XCTAssertEqual(displayLink.preferredFramesPerSecond, 23)
     }
 
-    func testAnimatorCompletionBlocksAreRemoved() throws {
-        let firstCompletion = PendingAnimationCompletion(completion: { _ in }, animatingPosition: .end)
-        let secondCompletion = PendingAnimationCompletion(completion: { _ in }, animatingPosition: .current)
-
-        mapView.pendingAnimatorCompletionBlocks.append(firstCompletion)
-        mapView.pendingAnimatorCompletionBlocks.append(secondCompletion)
-        XCTAssertEqual(mapView.pendingAnimatorCompletionBlocks.count, 2)
-
-        try invokeDisplayLinkCallback()
-        XCTAssertEqual(mapView.pendingAnimatorCompletionBlocks.count, 0)
-    }
-
-    func testMetalViewSetNeedsDisplayIsNotAutomaticallyTriggeredByAnimators() throws {
-        mapView.addCameraAnimator(MockCameraAnimator())
-
-        try invokeDisplayLinkCallback()
-
-        XCTAssertTrue(metalView.setNeedsDisplayStub.invocations.isEmpty)
-    }
-
-    func testMetalViewSetNeedsDisplayIsNotAutomaticallyTriggeredByPendingCompletionBlocks() throws {
-        mapView.pendingAnimatorCompletionBlocks.append(
-            PendingAnimationCompletion(completion: { (_) in }, animatingPosition: .end))
-
-        try invokeDisplayLinkCallback()
-
-        XCTAssertTrue(metalView.setNeedsDisplayStub.invocations.isEmpty)
-    }
-
     func testMetalViewSetNeedsDisplayIsTriggeredByScheduleRepaint() throws {
         mapView.scheduleRepaint()
 
         try invokeDisplayLinkCallback()
 
         XCTAssertEqual(metalView.setNeedsDisplayStub.invocations.count, 1)
-    }
-
-    func testPendingCompletionBlocksAreInvoked() throws {
-        var invocationCount = 0
-        mapView.pendingAnimatorCompletionBlocks.append(PendingAnimationCompletion(completion: { (_) in
-            invocationCount += 1
-        }, animatingPosition: .end))
-
-        try invokeDisplayLinkCallback()
-
-        XCTAssertEqual(invocationCount, 1)
     }
 }

@@ -14,21 +14,23 @@ final class GestureManagerTests: XCTestCase {
     var mapView: MapView!
     // swiftlint:disable weak_delegate
     var delegate: GestureHandlerDelegateMock!
-    var cameraManager: MockCameraManager!
+    var cameraAnimationsManager: MockCameraAnimationsManager!
     var initialGestureOptions: GestureOptions!
     var gestureManager: GestureManager!
 
     override func setUp() {
-        mapView = MapView(frame: CGRect(x: 0, y: 0, width: 100, height: 100),
-                          mapInitOptions: MapInitOptions(
-                            resourceOptions: ResourceOptions(accessToken: "dummy"),
-                            styleURI: nil))
+        mapView = MapView(
+            frame: CGRect(x: 0, y: 0, width: 100, height: 100),
+            mapInitOptions: MapInitOptions(
+                resourceOptions: ResourceOptions(accessToken: "dummy"),
+                styleURI: nil))
         delegate = GestureHandlerDelegateMock()
-        cameraManager = MockCameraManager()
-        cameraManager.mapView = mapView
+        cameraAnimationsManager = MockCameraAnimationsManager()
         initialGestureOptions = GestureOptions()
-        gestureManager = GestureManager(for: mapView,
-                                        cameraManager: cameraManager)
+        gestureManager = GestureManager(
+            view: mapView,
+            cameraAnimationsManager: cameraAnimationsManager,
+            mapboxMap: mapView.mapboxMap)
     }
 
     func testInitializer() {
@@ -67,8 +69,9 @@ final class GestureManagerTests: XCTestCase {
         var options = GestureOptions()
         options.pitchEnabled = false
         let gestureManager = GestureManager(
-            for: mapView,
-            cameraManager: cameraManager)
+            view: mapView,
+            cameraAnimationsManager: cameraAnimationsManager,
+            mapboxMap: mapView.mapboxMap)
 
         options.pitchEnabled = true
         gestureManager.options = options

@@ -1,16 +1,7 @@
 import Foundation
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-import MapboxMapsFoundation
-@testable import MapboxMapsGestures
-#endif
 
-final class MockCameraManager: CameraAnimationsManagerProtocol {
-
-    var mapView: MapView?
-
-    var options = CameraBoundsOptions()
+final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
 
     struct EaseToCameraParameters {
         var camera: CameraOptions
@@ -18,7 +9,6 @@ final class MockCameraManager: CameraAnimationsManagerProtocol {
         var curve: UIView.AnimationCurve
         var completion: AnimationCompletion?
     }
-
     let easeToStub = Stub<EaseToCameraParameters, CameraAnimator?>(defaultReturnValue: nil)
     func ease(to camera: CameraOptions,
               duration: TimeInterval,

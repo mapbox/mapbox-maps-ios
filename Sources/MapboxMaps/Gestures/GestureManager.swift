@@ -58,7 +58,9 @@ public final class GestureManager: NSObject {
     private weak var view: UIView?
 
     /// The camera manager that responds to gestures.
-    internal let cameraManager: CameraAnimationsManagerProtocol
+    private let cameraAnimationsManager: CameraAnimationsManagerProtocol
+
+    private let mapboxMap: MapboxMap
 
     /// Set this delegate to be called back if a gesture begins
     public weak var delegate: GestureManagerDelegate?
@@ -67,9 +69,10 @@ public final class GestureManager: NSObject {
     /// user lifts their finger.
     public var decelerationRate: CGFloat = UIScrollView.DecelerationRate.normal.rawValue
 
-    internal init(for view: UIView, cameraManager: CameraAnimationsManagerProtocol) {
-        self.cameraManager = cameraManager
+    internal init(view: UIView, cameraAnimationsManager: CameraAnimationsManagerProtocol, mapboxMap: MapboxMap) {
         self.view = view
+        self.cameraAnimationsManager = cameraAnimationsManager
+        self.mapboxMap = mapboxMap
         super.init()
         configureGestureHandlers(for: options)
     }
@@ -193,5 +196,145 @@ extension GestureManager: GestureContextProvider {
     internal func requireGestureToFail(allowedGesture: GestureHandler, failableGesture: GestureHandler) {
         guard let failableGesture = failableGesture.gestureRecognizer else { return }
         allowedGesture.gestureRecognizer?.require(toFail: failableGesture)
+    }
+}
+
+extension GestureManager: GestureHandlerDelegate {
+    // MapView has been tapped a certain number of times
+    internal func tapped(numberOfTaps: Int, numberOfTouches: Int) {
+        // Single tapping twice with one finger will cause the map to zoom in
+        if numberOfTaps == 2 && numberOfTouches == 1 {
+            _ = cameraAnimationsManager.ease(to: CameraOptions(zoom: mapboxMap.cameraState.zoom + 1.0),
+                                   duration: 0.3,
+                                   curve: .easeOut,
+                                   completion: nil)
+        }
+
+        // Double tapping twice with two fingers will cause the map to zoom out
+        if numberOfTaps == 2 && numberOfTouches == 2 {
+            _ = cameraAnimationsManager.ease(to: CameraOptions(zoom: mapboxMap.cameraState.zoom - 1.0),
+                                   duration: 0.3,
+                                   curve: .easeOut,
+                                   completion: nil)
+        }
+    }
+
+    internal func panBegan(at point: CGPoint) {
+        mapboxMap.dragStart(for: point)
+    }
+
+    // MapView has been panned
+    internal func panned(from startPoint: CGPoint, to endPoint: CGPoint) {
+        let cameraOptions = mapboxMap.dragCameraOptions(from: startPoint, to: endPoint)
+        mapboxMap.setCamera(to: cameraOptions)
+    }
+
+    // Pan has ended on the MapView with a residual `offset`
+    func panEnded(at endPoint: CGPoint, shouldDriftTo driftEndPoint: CGPoint) {
+        if endPoint != driftEndPoint {
+            let driftCameraOptions = mapboxMap.dragCameraOptions(from: endPoint, to: driftEndPoint)
+            _ = cameraAnimationsManager.ease(
+                    to: driftCameraOptions,
+                    duration: Double(decelerationRate),
+                    curve: .easeOut,
+                    completion: nil)
+        }
+        mapboxMap.dragEnd()
+    }
+
+    internal func cancelGestureTransitions() {
+        cameraAnimationsManager.cancelAnimations()
+    }
+
+    internal func gestureBegan(for gestureType: GestureType) {
+        cameraAnimationsManager.cancelAnimations()
+        delegate?.gestureBegan(for: gestureType)
+    }
+
+    internal func scaleForZoom() -> CGFloat {
+        return mapboxMap.cameraState.zoom
+    }
+
+    internal func pinchScaleChanged(with newScale: CGFloat, andAnchor anchor: CGPoint) {
+        mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: newScale))
+    }
+
+    internal func pinchEnded(with finalScale: CGFloat, andDrift possibleDrift: Bool, andAnchor anchor: CGPoint) {
+        mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: finalScale))
+        unrotateIfNeededForGesture(with: .ended)
+    }
+
+    internal func quickZoomChanged(with newScale: CGFloat, and anchor: CGPoint) {
+        let minZoom = CGFloat(mapboxMap.cameraBounds.minZoom)
+        let maxZoom = CGFloat(mapboxMap.cameraBounds.maxZoom)
+        let zoom = newScale.clamped(to: minZoom...maxZoom)
+        mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: zoom))
+    }
+
+    internal func quickZoomEnded() {
+        unrotateIfNeededForGesture(with: .ended)
+    }
+    internal func isRotationAllowed() -> Bool {
+        let minZoom = CGFloat(mapboxMap.cameraBounds.minZoom)
+        return mapboxMap.cameraState.zoom >= minZoom
+    }
+
+    internal func rotationStartAngle() -> CGFloat {
+        return CGFloat((mapboxMap.cameraState.bearing * .pi) / 180.0 * -1)
+    }
+
+    internal func rotationChanged(with changedAngle: CGFloat, and anchor: CGPoint, and pinchScale: CGFloat) {
+        var changedAngleInDegrees = changedAngle * 180.0 / .pi * -1
+        changedAngleInDegrees = changedAngleInDegrees.truncatingRemainder(dividingBy: 360.0)
+
+        // Constraining `changedAngleInDegrees` to -30.0 to +30.0 degrees
+        if isRotationAllowed() == false && abs(pinchScale) < 10 {
+            changedAngleInDegrees = changedAngleInDegrees < -30.0 ? -30.0 : changedAngleInDegrees
+            changedAngleInDegrees = changedAngleInDegrees > 30.0 ? 30.0 : changedAngleInDegrees
+        }
+
+        mapboxMap.setCamera(
+            to: CameraOptions(bearing: CLLocationDirection(changedAngleInDegrees)))
+    }
+
+    internal func rotationEnded(with finalAngle: CGFloat, and anchor: CGPoint, with pinchState: UIGestureRecognizer.State) {
+        var finalAngleInDegrees = finalAngle * 180.0 / .pi * -1
+        finalAngleInDegrees = finalAngleInDegrees.truncatingRemainder(dividingBy: 360.0)
+        mapboxMap.setCamera(to: CameraOptions(bearing: CLLocationDirection(finalAngleInDegrees)))
+    }
+
+    internal func unrotateIfNeededForGesture(with pinchState: UIGestureRecognizer.State) {
+        let currentBearing = mapboxMap.cameraState.bearing
+
+        // Avoid contention with in-progress gestures
+        // let toleranceForSnappingToNorth: CGFloat = 7.0
+        if currentBearing != 0.0
+            && pinchState != .began
+            && pinchState != .changed {
+            if currentBearing != 0.0 && isRotationAllowed() == false {
+                mapboxMap.setCamera(to: CameraOptions(bearing: 0))
+            }
+
+            // TODO: Add snapping behavior to "north" if bearing is less than some tolerance
+            // else if abs(self.mapView.cameraView.bearing) < toleranceForSnappingToNorth
+            //            || abs(self.mapView.cameraView.bearing) > 360.0 - toleranceForSnappingToNorth {
+            //    self.transitionBearing(to: 0.0, animated: true)
+            //}
+        }
+    }
+
+    internal func initialPitch() -> CGFloat {
+        return mapboxMap.cameraState.pitch
+    }
+
+    internal func horizontalPitchTiltTolerance() -> Double {
+        return 45.0
+    }
+
+    internal func pitchChanged(newPitch: CGFloat) {
+        mapboxMap.setCamera(to: CameraOptions(pitch: newPitch))
+    }
+
+    internal func pitchEnded() {
     }
 }

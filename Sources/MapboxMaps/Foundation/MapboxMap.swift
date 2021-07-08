@@ -323,6 +323,12 @@ extension MapboxMap: CameraManagerProtocol {
         return CameraState(__map.getCameraState())
     }
 
+    /// The map's current anchor, calculated after applying padding (if it exists)
+    internal var anchor: CGPoint {
+        let rect = CGRect(origin: .zero, size: size).inset(by: cameraState.padding)
+        return CGPoint(x: rect.midX, y: rect.midY)
+    }
+
     public var freeCameraOptions: FreeCameraOptions {
         get {
             return __map.getFreeCameraOptions()

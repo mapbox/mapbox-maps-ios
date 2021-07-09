@@ -80,6 +80,30 @@ final class MapViewTests: XCTestCase {
         XCTAssertEqual(displayLink.preferredFramesPerSecond, 23)
     }
 
+    func testDisplayLinkTimestampIsNilWhenDisplayLinkIsNil() {
+        mapView.removeFromSuperview()
+
+        XCTAssertNil(mapView.displayLinkTimestamp)
+    }
+
+    func testDisplayLinkTimestampWhenDisplayLinkIsNonNil() {
+        displayLink.timestamp = .random(in: 0..<CFTimeInterval.greatestFiniteMagnitude)
+
+        XCTAssertEqual(mapView.displayLinkTimestamp, displayLink.timestamp)
+    }
+
+    func testDisplayLinkDurationIsNilWhenDisplayLinkIsNil() {
+        mapView.removeFromSuperview()
+
+        XCTAssertNil(mapView.displayLinkDuration)
+    }
+
+    func testDisplayLinkDurationWhenDisplayLinkIsNonNil() {
+        displayLink.duration = .random(in: 0..<CFTimeInterval.greatestFiniteMagnitude)
+
+        XCTAssertEqual(mapView.displayLinkDuration, displayLink.duration)
+    }
+
     func testMetalViewSetNeedsDisplayIsTriggeredByScheduleRepaint() throws {
         mapView.scheduleRepaint()
 

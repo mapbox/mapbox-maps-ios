@@ -2,6 +2,11 @@ import Foundation
 @testable import MapboxMaps
 
 final class MockDisplayLink: DisplayLinkProtocol {
+
+    var timestamp: CFTimeInterval = 0
+
+    var duration: CFTimeInterval = 0
+
     var preferredFramesPerSecond: Int = 0
 
     struct AddParams {

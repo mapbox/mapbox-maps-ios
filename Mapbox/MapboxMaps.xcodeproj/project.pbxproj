@@ -219,6 +219,8 @@
 		B54782E9268BA18E00E0AB24 /* HTTPIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B547828A268B9FA400E0AB24 /* HTTPIntegrationTests.swift */; };
 		B54B7F0B25DB192C003FD6CA /* MockCameraAnimationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54B7F0925DB192C003FD6CA /* MockCameraAnimationsManager.swift */; };
 		B54B7F2125DB1ABA003FD6CA /* Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54B7F1F25DB1ABA003FD6CA /* Stub.swift */; };
+		B552F041269894B800315B00 /* CameraAnimatorMapboxMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = B552F040269894B800315B00 /* CameraAnimatorMapboxMap.swift */; };
+		B552F0432698994600315B00 /* MockCameraAnimatorMapboxMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = B552F0422698994600315B00 /* MockCameraAnimatorMapboxMap.swift */; };
 		B55F8FE9268BFF7D001CA084 /* MapViewIntegrationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B547827C268B9FA400E0AB24 /* MapViewIntegrationTestCase.swift */; };
 		B55F8FEA268BFF88001CA084 /* IntegrationTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B547827E268B9FA400E0AB24 /* IntegrationTestCase.swift */; };
 		B55F8FEB268BFFA3001CA084 /* XCTestCase+MapboxAccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53B8620260D717700C86BAA /* XCTestCase+MapboxAccessToken.swift */; };
@@ -228,11 +230,9 @@
 		B575018A26334BA700937A9E /* MapboxScaleBarConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B575018926334BA700937A9E /* MapboxScaleBarConstants.swift */; };
 		B575018F26334BB800937A9E /* OrnamentOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B575018E26334BB800937A9E /* OrnamentOptions.swift */; };
 		B585B8A52694EBE4002BA380 /* AnimationCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = B585B8A42694EBE4002BA380 /* AnimationCompletion.swift */; };
-		B585B8AC2694EC0A002BA380 /* MockFlyToCameraAnimatorMapboxMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = B585B8A62694EC0A002BA380 /* MockFlyToCameraAnimatorMapboxMap.swift */; };
 		B585B8AD2694EC0A002BA380 /* BasicCameraAnimatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B585B8A72694EC0A002BA380 /* BasicCameraAnimatorTests.swift */; };
 		B585B8AE2694EC0A002BA380 /* FlyToCameraAnimatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B585B8A82694EC0A002BA380 /* FlyToCameraAnimatorTests.swift */; };
 		B585B8AF2694EC0A002BA380 /* BasicCameraAnimatorIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B585B8A92694EC0A002BA380 /* BasicCameraAnimatorIntegrationTests.swift */; };
-		B585B8B02694EC0A002BA380 /* MockBasicCameraAnimatorMapboxMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = B585B8AA2694EC0A002BA380 /* MockBasicCameraAnimatorMapboxMap.swift */; };
 		B585B8B12694EC0A002BA380 /* MockPropertyAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B585B8AB2694EC0A002BA380 /* MockPropertyAnimator.swift */; };
 		B585B8B32694EC1D002BA380 /* MockDateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B585B8B22694EC1D002BA380 /* MockDateProvider.swift */; };
 		B5A6921B262754DF00A03412 /* DelegatingObserverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A69216262754DF00A03412 /* DelegatingObserverTests.swift */; };
@@ -660,14 +660,14 @@
 		B54782AC268B9FC200E0AB24 /* MapboxMaps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MapboxMaps.h; path = ../Sources/MapboxMaps/MapboxMaps.h; sourceTree = "<group>"; };
 		B54B7F0925DB192C003FD6CA /* MockCameraAnimationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCameraAnimationsManager.swift; sourceTree = "<group>"; };
 		B54B7F1F25DB1ABA003FD6CA /* Stub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stub.swift; sourceTree = "<group>"; };
+		B552F040269894B800315B00 /* CameraAnimatorMapboxMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimatorMapboxMap.swift; sourceTree = "<group>"; };
+		B552F0422698994600315B00 /* MockCameraAnimatorMapboxMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockCameraAnimatorMapboxMap.swift; sourceTree = "<group>"; };
 		B575018926334BA700937A9E /* MapboxScaleBarConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapboxScaleBarConstants.swift; sourceTree = "<group>"; };
 		B575018E26334BB800937A9E /* OrnamentOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrnamentOptions.swift; sourceTree = "<group>"; };
 		B585B8A42694EBE4002BA380 /* AnimationCompletion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationCompletion.swift; sourceTree = "<group>"; };
-		B585B8A62694EC0A002BA380 /* MockFlyToCameraAnimatorMapboxMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockFlyToCameraAnimatorMapboxMap.swift; sourceTree = "<group>"; };
 		B585B8A72694EC0A002BA380 /* BasicCameraAnimatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicCameraAnimatorTests.swift; sourceTree = "<group>"; };
 		B585B8A82694EC0A002BA380 /* FlyToCameraAnimatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlyToCameraAnimatorTests.swift; sourceTree = "<group>"; };
 		B585B8A92694EC0A002BA380 /* BasicCameraAnimatorIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicCameraAnimatorIntegrationTests.swift; sourceTree = "<group>"; };
-		B585B8AA2694EC0A002BA380 /* MockBasicCameraAnimatorMapboxMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockBasicCameraAnimatorMapboxMap.swift; sourceTree = "<group>"; };
 		B585B8AB2694EC0A002BA380 /* MockPropertyAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockPropertyAnimator.swift; sourceTree = "<group>"; };
 		B585B8B22694EC1D002BA380 /* MockDateProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockDateProvider.swift; sourceTree = "<group>"; };
 		B5A69216262754DF00A03412 /* DelegatingObserverTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DelegatingObserverTests.swift; sourceTree = "<group>"; };
@@ -754,7 +754,6 @@
 		CA4E2DBD264DC5FD0039D80E /* MockLocationStyleDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockLocationStyleDelegate.swift; sourceTree = "<group>"; };
 		CA4E2DC2264DC6300039D80E /* LocationStyleDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationStyleDelegate.swift; sourceTree = "<group>"; };
 		CA54900D251C404B00F829A3 /* MapboxMapsTestsWithHost.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxMapsTestsWithHost.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		CA56648F24478722006F392C /* Mapbox.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Mapbox.xcconfig; sourceTree = "<group>"; };
 		CA56651E2447969E006F392C /* base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = base.xcconfig; sourceTree = "<group>"; };
 		CA5890D3264B00B50060987A /* ObservableProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObservableProtocol.swift; sourceTree = "<group>"; };
 		CA5890D4264B00B50060987A /* MapEventHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapEventHandler.swift; sourceTree = "<group>"; };
@@ -1322,6 +1321,7 @@
 		1F4B7D7A2464C36E00745F05 /* Camera */ = {
 			isa = PBXGroup;
 			children = (
+				B552F040269894B800315B00 /* CameraAnimatorMapboxMap.swift */,
 				B585B8A42694EBE4002BA380 /* AnimationCompletion.swift */,
 				CA8CBA342668A2F800D50553 /* CameraBounds.swift */,
 				CAC2A8DF266844ED0051971E /* CameraBoundsOptions.swift */,
@@ -1500,11 +1500,10 @@
 		A4FE887B255F364600FBF117 /* Camera */ = {
 			isa = PBXGroup;
 			children = (
+				B552F0422698994600315B00 /* MockCameraAnimatorMapboxMap.swift */,
 				B585B8A92694EC0A002BA380 /* BasicCameraAnimatorIntegrationTests.swift */,
 				B585B8A72694EC0A002BA380 /* BasicCameraAnimatorTests.swift */,
 				B585B8A82694EC0A002BA380 /* FlyToCameraAnimatorTests.swift */,
-				B585B8AA2694EC0A002BA380 /* MockBasicCameraAnimatorMapboxMap.swift */,
-				B585B8A62694EC0A002BA380 /* MockFlyToCameraAnimatorMapboxMap.swift */,
 				B585B8AB2694EC0A002BA380 /* MockPropertyAnimator.swift */,
 				0C350D89263278420090FA74 /* CameraTransitionTests.swift */,
 				0C350D8C263278420090FA74 /* CameraViewMock.swift */,
@@ -1654,7 +1653,6 @@
 			isa = PBXGroup;
 			children = (
 				CA56651E2447969E006F392C /* base.xcconfig */,
-				CA56648F24478722006F392C /* Mapbox.xcconfig */,
 				0C8CD15E24DAF6DD00DC3713 /* unitTests.xcconfig */,
 			);
 			path = Configurations;
@@ -2159,6 +2157,7 @@
 				B521FC93262F626900B9A446 /* MapboxMap.swift in Sources */,
 				CA2861F0265F4003002A20CA /* ResourceOptionsManager.swift in Sources */,
 				B575018A26334BA700937A9E /* MapboxScaleBarConstants.swift in Sources */,
+				B552F041269894B800315B00 /* CameraAnimatorMapboxMap.swift in Sources */,
 				0C45894F263AFCDA00A11A26 /* ExpressionArgumentBuilder.swift in Sources */,
 				0CD62F1124588532006421D1 /* GestureHandlerDelegate.swift in Sources */,
 				0782B061258C16B200D5FCE5 /* Utils.swift in Sources */,
@@ -2231,7 +2230,6 @@
 				CA548FDB251C404B00F829A3 /* LineStringTests.swift in Sources */,
 				0CC6EF1125C3263400BFB153 /* CircleLayerIntegrationTests.swift in Sources */,
 				C6C5CDC9264C12D00097FCD1 /* MigrationGuideIntegrationTests.swift in Sources */,
-				B585B8B02694EC0A002BA380 /* MockBasicCameraAnimatorMapboxMap.swift in Sources */,
 				0C5CFCF425BB951B0001E753 /* FillLayerTests.swift in Sources */,
 				CA4E2DBE264DC5FD0039D80E /* MockLocationStyleDelegate.swift in Sources */,
 				B54B7F0B25DB192C003FD6CA /* MockCameraAnimationsManager.swift in Sources */,
@@ -2275,6 +2273,7 @@
 				0C2CDA2F25D1A51C006D068F /* PuckTypeTests.swift in Sources */,
 				CA548FE9251C404B00F829A3 /* GeometryCollectionTests.swift in Sources */,
 				0C5CFCD925BB951B0001E753 /* CircleLayerTests.swift in Sources */,
+				B552F0432698994600315B00 /* MockCameraAnimatorMapboxMap.swift in Sources */,
 				58549A1A265D9867009BC19C /* MapboxMapsSnapshotTests.swift in Sources */,
 				0C5CFCE525BB951B0001E753 /* HeatmapLayerTests.swift in Sources */,
 				0C32C9B225F979680057ED31 /* RasterSourceIntegrationTests.swift in Sources */,
@@ -2305,7 +2304,6 @@
 				B54782B0268BA05100E0AB24 /* IntegrationTestCase.swift in Sources */,
 				B54782B9268BA05100E0AB24 /* ExampleIntegrationTest.swift in Sources */,
 				B54782B1268BA05100E0AB24 /* StyleLoadIntegrationTests.swift in Sources */,
-				B585B8AC2694EC0A002BA380 /* MockFlyToCameraAnimatorMapboxMap.swift in Sources */,
 				0C37B1E425CB05F000DCDD3D /* ColorTests.swift in Sources */,
 				B54782DB268BA06000E0AB24 /* MapInitOptionsTests.swift in Sources */,
 				0C32CA2125F982300057ED31 /* RasterDemSourceTests.swift in Sources */,
@@ -2490,7 +2488,7 @@
 		};
 		1FEE78C92421884000337895 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CA56648F24478722006F392C /* Mapbox.xcconfig */;
+			baseConfigurationReference = CA56651E2447969E006F392C /* base.xcconfig */;
 			buildSettings = {
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				COPY_PHASE_STRIP = NO;
@@ -2509,7 +2507,7 @@
 		};
 		1FEE78CA2421884000337895 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CA56648F24478722006F392C /* Mapbox.xcconfig */;
+			baseConfigurationReference = CA56651E2447969E006F392C /* base.xcconfig */;
 			buildSettings = {
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				COPY_PHASE_STRIP = NO;

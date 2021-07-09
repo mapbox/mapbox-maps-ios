@@ -99,6 +99,16 @@ open class MapView: UIView {
         }
     }
 
+    /// The `timestamp` from the underlying `CADisplayLink` if it exists, otherwise `nil`
+    @_spi(Metrics) public var displayLinkTimestamp: CFTimeInterval? {
+        return displayLink?.timestamp
+    }
+
+    /// The `duration` from the underlying `CADisplayLink` if it exists, otherwise `nil`
+    @_spi(Metrics) public var displayLinkDuration: CFTimeInterval? {
+        return displayLink?.duration
+    }
+
     /// The map's current camera
     public var cameraState: CameraState {
         return mapboxMap.cameraState

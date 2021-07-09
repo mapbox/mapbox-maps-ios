@@ -57,18 +57,18 @@ class PinchGestureHandlerTests: XCTestCase {
         XCTAssertTrue(delegate.cancelTransitionsCalled,
                       "Cancel Transitions was not called before commencing gesture processing")
 
-        XCTAssertTrue(delegate.pinchScaleChangedMethod.wasCalled, "Pinch scale not recalculated")
+        XCTAssertTrue(delegate.pinchChangedMethod.wasCalled, "Pinch scale not recalculated")
 
-        XCTAssertEqual(delegate.pinchScaleChangedMethod.newScale, 11.0, "New scale not calculated properly")
+        XCTAssertEqual(delegate.pinchChangedMethod.newZoom, 11.0, "New scale not calculated properly")
 
-        XCTAssertTrue(delegate.pinchScaleChangedMethod.anchor == CGPoint(x: 0.0, y: 0.0),
+        XCTAssertTrue(delegate.pinchChangedMethod.anchor == CGPoint(x: 0.0, y: 0.0),
                       "Invalid pinch center point")
 
         pinchGestureRecognizerMock.mockLocationInView = CGPoint(x: 1.0, y: 1.0)
         pinchGestureHandler.handlePinch(pinchGestureRecognizerMock)
 
-        XCTAssertTrue(delegate.pinchCenterChangedMethod.wasCalled, "Pinch Center not recalculated")
-        XCTAssertEqual(delegate.pinchCenterChangedMethod.offset,
+        XCTAssertTrue(delegate.pinchChangedMethod.wasCalled, "Pinch Center not recalculated")
+        XCTAssertEqual(delegate.pinchChangedMethod.offset,
                        CGSize(width: 1.0, height: 1.0),
                        "Offset not calculated correctly")
     }

@@ -1,7 +1,6 @@
 import XCTest
 @testable @_spi(Metrics) import MapboxMaps
 
-
 final class MapViewTests: XCTestCase {
 
     var displayLink: MockDisplayLink!

@@ -68,7 +68,6 @@ extension Style {
         return supportedLocaleIdentifiers.contains(locale.identifier) ? locale.identifier : locale.languageCode!
     }
 
-
     /// Converts the `SymbolLayer.textField` into the new locale
     /// - Parameters:
     ///   - symbolLayer: The layer that should be localized

@@ -261,6 +261,15 @@ extension GestureManager: GestureHandlerDelegate {
         mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: newScale))
     }
 
+    internal func pinchCenterChanged(offset: CGSize) {
+        let currentCenterCoordinate = mapboxMap.cameraState.center
+        let currentCenterScreenPoint = mapboxMap.point(for: currentCenterCoordinate)
+        let newCenterScreenPoint = currentCenterScreenPoint.shifted(xOffset: -offset.width,
+                                                                    yOffset: -offset.height)
+        let newCenterCoordinate = mapboxMap.coordinate(for: newCenterScreenPoint)
+        mapboxMap.setCamera(to: CameraOptions(center: newCenterCoordinate))
+    }
+
     internal func pinchEnded(with finalScale: CGFloat, andDrift possibleDrift: Bool, andAnchor anchor: CGPoint) {
         mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: finalScale))
         unrotateIfNeededForGesture(with: .ended)

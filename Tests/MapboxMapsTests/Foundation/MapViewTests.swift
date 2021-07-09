@@ -1,5 +1,6 @@
 import XCTest
-@testable import MapboxMaps
+@testable @_spi(Metrics) import MapboxMaps
+
 
 final class MapViewTests: XCTestCase {
 

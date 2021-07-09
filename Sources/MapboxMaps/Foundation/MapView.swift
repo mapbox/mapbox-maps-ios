@@ -100,12 +100,12 @@ open class MapView: UIView {
     }
 
     /// The `timestamp` from the underlying `CADisplayLink` if it exists, otherwise `nil`
-    public var displayLinkTimestamp: CFTimeInterval? {
+    @_spi(Metrics) public var displayLinkTimestamp: CFTimeInterval? {
         return displayLink?.timestamp
     }
 
     /// The `duration` from the underlying `CADisplayLink` if it exists, otherwise `nil`
-    public var displayLinkDuration: CFTimeInterval? {
+    @_spi(Metrics) public var displayLinkDuration: CFTimeInterval? {
         return displayLink?.duration
     }
 

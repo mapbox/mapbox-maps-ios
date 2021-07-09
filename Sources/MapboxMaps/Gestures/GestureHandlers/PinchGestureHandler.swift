@@ -19,6 +19,7 @@ internal class PinchGestureHandler: GestureHandler {
     override internal init(for view: UIView, withDelegate delegate: GestureHandlerDelegate) {
         super.init(for: view, withDelegate: delegate)
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
+
         view.addGestureRecognizer(pinch)
         gestureRecognizer = pinch
     }
@@ -40,15 +41,16 @@ internal class PinchGestureHandler: GestureHandler {
              Prioritize the correct gesture by comparing the velocity of competing gestures.
              */
         } else if pinchGestureRecognizer.state == .changed {
+            if pinchGestureRecognizer.numberOfTouches < 2 {
+                return
+            }
 
             let newScale = scale * pinchGestureRecognizer.scale
             let newZoom = log2(newScale)
+            delegate.pinchChanged(with: newZoom, anchor: pinchCenterPoint, previousAnchor: previousPinchCenterPoint)
 
-            let offset = CGSize(width: pinchCenterPoint.x - previousPinchCenterPoint.x,
-                                height: pinchCenterPoint.y - previousPinchCenterPoint.y)
             previousPinchCenterPoint = pinchCenterPoint
 
-            delegate.pinchChanged(with: newZoom, anchor: pinchCenterPoint, offset: offset)
         } else if pinchGestureRecognizer.state == .ended
             || pinchGestureRecognizer.state == .cancelled {
 

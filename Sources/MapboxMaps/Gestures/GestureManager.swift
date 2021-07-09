@@ -257,15 +257,23 @@ extension GestureManager: GestureHandlerDelegate {
         return mapboxMap.cameraState.zoom
     }
 
-    internal func pinchChanged(with zoom: CGFloat, anchor: CGPoint, offset: CGSize) {
+    internal func pinchChanged(with zoom: CGFloat, anchor: CGPoint, previousCenter: CGPoint) {
+        // Set the camera with the scale change from pinching
         mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: zoom))
 
-        let currentCenterCoordinate = mapboxMap.cameraState.center
-        let currentCenterScreenPoint = mapboxMap.point(for: currentCenterCoordinate)
-        let newCenterScreenPoint = currentCenterScreenPoint.shifted(xOffset: -offset.width,
-                                                                    yOffset: -offset.height)
-        let newCenterCoordinate = mapboxMap.coordinate(for: newCenterScreenPoint)
-        mapboxMap.setCamera(to: CameraOptions(center: newCenterCoordinate))
+        let offset = CGSize(width: anchor.x - previousCenter.x,
+                            height: anchor.y - previousCenter.y)
+
+        // If we have a new anchor point, perform dragging operation and immediately stop dragging.
+        // We start and stop the drag operation because the pivot point is constantly changing.
+        if abs(offset.height) > 0 || abs(offset.width) > 0 {
+            mapboxMap.dragStart(for: anchor)
+
+            let dragOptions = mapboxMap.dragCameraOptions(from: previousCenter, to: anchor)
+            mapboxMap.setCamera(to: dragOptions)
+
+            mapboxMap.dragEnd()
+        }
     }
 
     internal func pinchEnded(with finalScale: CGFloat, andDrift possibleDrift: Bool, andAnchor anchor: CGPoint) {

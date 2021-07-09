@@ -10,12 +10,15 @@ Mapbox welcomes participation and contributions from everyone.
   Note: This change will bring following changes for CJK text block:
   1. For vertical CJK text, all the characters including Latin and Numbers will be vertically placed now. Previously, Latin and Numbers are horizontally placed.
   2. For horizontal CJK text, it may have a slight horizontal shift due to the anchor shift.
+* Expanded `localizeLabels(into: Locale)` to accept a `[String]`. This array will contain a list of layer ids that you will want to localize. ([#512](https://github.com/mapbox/mapbox-maps-ios/pull/512))
 
 ### Breaking changes ⚠️
 
 * `TileRegionError` has a new case `tileCountExceeded(String)`. ([#522](https://github.com/mapbox/mapbox-maps-ios/pull/522))
 * FlyToCameraAnimator.state will now be `.inactive` after it completes or is stopped. This change makes its behavior consistent with the behavior of `BasicCameraAnimator`. ([#519](https://github.com/mapbox/mapbox-maps-ios/pull/519))
 * Completion blocks added to `BasicCameraAnimator` will no longer be invoked as a side-effect of deinitialization. ([#519](https://github.com/mapbox/mapbox-maps-ios/pull/519))
+* Removed the `SupportedLanguage` enum. You may now use `Locale(identifier: String)` as intended. ([#512](https://github.com/mapbox/mapbox-maps-ios/pull/512))
+* Removed the `MapView.locale` property. Now, in order to localize values, you must call `mapView.mapboxMap.style.localizeLabels(into: Locale)`. ([#512](https://github.com/mapbox/mapbox-maps-ios/pull/512))
 
 ### Bug fixes 🐞
 

@@ -129,4 +129,70 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
 
         wait(for: [expectation], timeout: 5.0)
     }
+
+    func testGetLocaleValueBaseCase() {
+        let locale = Locale(identifier: "es")
+        let localeValue = style!.getLocaleValue(locale: locale)
+
+        XCTAssertEqual(localeValue, "es")
+    }
+
+    func testGetLocaleValueForUnsupportedScriptAndRegionCode() {
+        let locale = Locale(identifier: "en-US")
+        let localeValue = style!.getLocaleValue(locale: locale)
+
+        XCTAssertEqual(localeValue, "en")
+    }
+
+    func testGetLocaleValueForUnsupportedLanguage() {
+        let locale = Locale(identifier: "hi")
+        let localeValue = style!.getLocaleValue(locale: locale)
+
+        XCTAssertNil(localeValue)
+    }
+
+    func testGetLocaleValueForCustomV8Style() {
+        var source = VectorSource()
+        source.url = "https://mapbox.mapbox-streets-v8"
+        try! style!.addSource(source, id: "v8-source")
+
+        let locale = Locale(identifier: "zh-Hant-TW")
+        let localeValue = style!.getLocaleValue(locale: locale)
+
+        XCTAssertEqual(localeValue, "zh-Hant")
+    }
+
+    func testGetLocaleValueForCustomV7Style() {
+        var source = VectorSource()
+        source.url = "https://mapbox.mapbox-streets-v7"
+        try! style!.addSource(source, id: "v7-source")
+
+        let locale = Locale(identifier: "zh-Hant")
+        let localeValue = style!.getLocaleValue(locale: locale)
+
+        XCTAssertEqual(localeValue, "zh")
+    }
+
+    func testConvertExpression() {
+        var symbolLayer = SymbolLayer(id: "testLayer")
+        let originalExpression = Exp(.format) {
+            Exp(.coalesce) {
+                Exp(.get) {
+                    "name_en"
+                }
+                Exp(.get) {
+                    "name"
+                }
+            }
+        }
+        symbolLayer.textField = .expression(originalExpression)
+
+        let convertedExpression = try! style!.convertExpressionForLocalization(symbolLayer: symbolLayer, localeValue: "zh")
+
+        let data = try! JSONSerialization.data(withJSONObject: convertedExpression!, options: [.prettyPrinted])
+        let convertedString = String(data: data, encoding: .utf8)!.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "\n", with: "")
+
+        let result = "[\"format\",[\"coalesce\",[\"get\",\"name_zh\"],[\"get\",\"name\"]]]"
+        XCTAssertEqual(result, convertedString)
+    }
 }

@@ -32,17 +32,6 @@ open class MapView: UIView {
     /// Controls the addition/removal of annotations to the map.
     public internal(set) var annotations: AnnotationOrchestrator!
 
-    /// Property that describes the current language for `SymbolLayer.textField`
-    public var locale: Locale = Locale.current {
-        didSet {
-            do {
-                try mapboxMap.style.localizeLabels(into: locale)
-            } catch {
-                Log.warning(forMessage: "Error when localizing labels", category: "Style")
-            }
-        }
-    }
-
     /// A reference to the `EventsManager` used for dispatching telemetry.
     internal var eventsListener: EventsListener!
 

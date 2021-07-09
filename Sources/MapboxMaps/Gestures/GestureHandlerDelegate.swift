@@ -74,7 +74,7 @@ internal extension GestureHandlerDelegate {
 
     func scaleForZoom() -> CGFloat { return 0.0 }
 
-    func pinchScaleChanged(with newScale: CGFloat, andAnchor anchor: CGPoint) {}
+    func pinchChanged(with zoom: CGFloat, anchor: CGPoint, offset: CGSize) { }
 
     func pinchEnded(with finalScale: CGFloat, andDrift possibleDrift: Bool, andAnchor anchor: CGPoint) {}
 

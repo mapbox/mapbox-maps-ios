@@ -176,8 +176,8 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
     func testConvertExpression() {
         var symbolLayer = SymbolLayer(id: "testLayer")
         let originalExpression = Exp(.format) {
-            Exp(.coalesce){
-                Exp(.get){
+            Exp(.coalesce) {
+                Exp(.get) {
                     "name_en"
                 }
                 Exp(.get) {

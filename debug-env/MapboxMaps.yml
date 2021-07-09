@@ -19,8 +19,8 @@ targets:
         PRODUCT_NAME: $(TARGET_NAME:c99extidentifier)
         CODE_SIGN_STYLE: Automatic
     configFiles:
-      Debug: "build/mapbox-maps-ios/Mapbox/Configurations/Mapbox.xcconfig"
-      Release: "build/mapbox-maps-ios/Mapbox/Configurations/Mapbox.xcconfig"
+      Debug: "build/mapbox-maps-ios/Mapbox/Configurations/base.xcconfig"
+      Release: "build/mapbox-maps-ios/Mapbox/Configurations/base.xcconfig"
     sources:
       - path: "build/mapbox-maps-ios/Sources/MapboxMaps/"
         includes: "*.swift"

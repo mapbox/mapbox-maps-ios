@@ -3,6 +3,12 @@ name: Examples
 configFiles:
   Debug: build/mapbox-maps-ios/Apps/Configurations/base.xcconfig
   Release: build/mapbox-maps-ios/Apps/Configurations/base.xcconfig
+settings:
+  configs:
+    Debug:
+      ENABLE_TESTABILITY: "YES"
+      COPY_PHASE_STRIP: "NO"
+    Release:
 targets:
   Examples:
     type: application
@@ -28,6 +34,17 @@ targets:
     postBuildScripts:
       - path: build/mapbox-maps-ios/scripts/insert_access_token.sh
         name: Insert Mapbox access token
+  ExamplesTests:
+    type: bundle.unit-test
+    platform: iOS
+    settings:
+      base:
+        BUNDLE_LOADER: $(TEST_HOST)
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/Examples.app/Examples
+    sources:
+      - path: build/mapbox-maps-ios/Apps/Examples/ExamplesTests/
+    dependencies:
+      - target: Examples
 projectReferences:
   Turf:
     path: ./build/turf-swift/Turf.xcodeproj

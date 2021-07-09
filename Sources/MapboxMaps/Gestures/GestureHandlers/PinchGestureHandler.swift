@@ -5,7 +5,7 @@ import UIKit
 internal class PinchGestureHandler: GestureHandler {
     // Keep track of the previous pinch center point. This allows us to react
     // to panning while zooming
-    private var previousPinchCenterPoint: CGPoint?
+    private var previousPinchCenterPoint: CGPoint = .zero
 
     internal var scale: CGFloat = 0.0
 
@@ -33,24 +33,22 @@ internal class PinchGestureHandler: GestureHandler {
             scale = pow(2, delegate.scaleForZoom())
             delegate.gestureBegan(for: .pinch)
 
+            previousPinchCenterPoint = pinchCenterPoint
+
             /**
              TODO: Handle a concurrent rotate gesture here.
              Prioritize the correct gesture by comparing the velocity of competing gestures.
              */
-            previousPinchCenterPoint = pinchCenterPoint
         } else if pinchGestureRecognizer.state == .changed {
 
             let newScale = scale * pinchGestureRecognizer.scale
-            delegate.pinchScaleChanged(with: log2(newScale), andAnchor: pinchCenterPoint)
+            let newZoom = log2(newScale)
 
-            if let previousPinchCenterPoint = self.previousPinchCenterPoint {
-                let offset = CGSize(width: pinchCenterPoint.x - previousPinchCenterPoint.x,
-                                    height: pinchCenterPoint.y - previousPinchCenterPoint.y)
-
-                self.delegate.pinchCenterChanged(offset: offset)
-            }
-
+            let offset = CGSize(width: pinchCenterPoint.x - previousPinchCenterPoint.x,
+                                height: pinchCenterPoint.y - previousPinchCenterPoint.y)
             previousPinchCenterPoint = pinchCenterPoint
+
+            delegate.pinchChanged(with: newZoom, anchor: pinchCenterPoint, offset: offset)
         } else if pinchGestureRecognizer.state == .ended
             || pinchGestureRecognizer.state == .cancelled {
 
@@ -72,8 +70,6 @@ internal class PinchGestureHandler: GestureHandler {
             if newScale <= 0 || log2(newScale) < minZoom {
                 velocity = 0
             }
-
-            previousPinchCenterPoint = nil
 
             let possibleDrift = velocity > 0.0 && duration > 0.0
             delegate.pinchEnded(with: log2(newScale), andDrift: possibleDrift, andAnchor: pinchCenterPoint)

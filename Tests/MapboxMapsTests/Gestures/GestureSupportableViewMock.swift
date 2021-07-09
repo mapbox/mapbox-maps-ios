@@ -15,8 +15,7 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
 
     var pannedCalled = false
 
-    var pinchScaleChangedMethod: (wasCalled: Bool, newScale: CGFloat?, anchor: CGPoint?) = (false, nil, nil)
-    var pinchCenterChangedMethod: (wasCalled: Bool, offset: CGSize?) = (false, nil)
+    var pinchChangedMethod: (wasCalled: Bool, newZoom: CGFloat?, anchor: CGPoint?, offset: CGSize?) = (false, nil, nil, nil)
     var pinchEndedMethod: (wasCalled: Bool, drift: Bool?, anchor: CGPoint?) = (false, nil, nil)
 
     var cancelTransitionsCalled = false
@@ -55,15 +54,11 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
         scaleForZoomStub.call()
     }
 
-    func pinchScaleChanged(with newScale: CGFloat, andAnchor anchor: CGPoint) {
-        pinchScaleChangedMethod.wasCalled = true
-        pinchScaleChangedMethod.newScale = newScale
-        pinchScaleChangedMethod.anchor = anchor
-    }
-
-    func pinchCenterChanged(offset: CGSize) {
-        pinchCenterChangedMethod.wasCalled = true
-        pinchCenterChangedMethod.offset = offset
+    func pinchChanged(with zoom: CGFloat, anchor: CGPoint, offset: CGSize) {
+        pinchChangedMethod.wasCalled = true
+        pinchChangedMethod.newZoom = zoom
+        pinchChangedMethod.anchor = anchor
+        pinchChangedMethod.offset = offset
     }
 
     func pinchEnded(with finalScale: CGFloat, andDrift possibleDrift: Bool, andAnchor anchor: CGPoint) {

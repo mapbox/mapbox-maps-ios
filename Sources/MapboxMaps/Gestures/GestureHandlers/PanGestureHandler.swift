@@ -28,6 +28,7 @@ internal class PanGestureHandler: GestureHandler {
             delegate.gestureBegan(for: .pan)
 
         case .changed:
+            print("panning")
             let start = pan.location(in: pan.view)
             let delta = pan.translation(in: pan.view).applyPanScrollingMode(panScrollingMode: scrollMode)
             let end = CGPoint(x: start.x + delta.x, y: start.y + delta.y)

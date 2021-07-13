@@ -33,6 +33,7 @@ internal class PinchGestureHandler: GestureHandler {
 
             scale = pow(2, delegate.scaleForZoom())
             delegate.gestureBegan(for: .pinch)
+            delegate.pinchBegan(with: pinchCenterPoint)
 
             previousPinchCenterPoint = pinchCenterPoint
 

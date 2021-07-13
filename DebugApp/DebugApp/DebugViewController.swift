@@ -2,7 +2,7 @@ import UIKit
 import SceneKit
 import MapboxMaps
 import Turf
-import MapboxDirections
+// import MapboxDirections
 
 let start = CLLocationCoordinate2D(latitude: 37.762708812633562, longitude: -122.43520083917338)
 let end = CLLocationCoordinate2D(latitude: 37.7597, longitude: -122.4482)
@@ -39,16 +39,15 @@ public class DebugViewController: UIViewController, CustomLayerHost {
 
         mapView.cameraManager.setCamera(
             centerCoordinate: start,
-            padding: UIEdgeInsets(top: self.view.bounds.height * 0.2, left: 0, bottom: 0, right: 0),
+            padding: UIEdgeInsets(top: self.view.bounds.height * 0.5, left: 0, bottom: 0, right: 0),
             zoom: 19.7,
             bearing: startBearing,
-            pitch: 45
+            pitch: 69
         )
         
         mapView.on(.styleLoadingFinished) { [weak self] _ in
             self?.addTerrain()
             self?.addFillExtrusion()
-            // self?.startRouteAnimation_MapboxDirections()
 
             try! self?.mapView.__map.addStyleCustomLayer(forLayerId: "Custom",
                                                          layerHost: self!,
@@ -71,6 +70,13 @@ public class DebugViewController: UIViewController, CustomLayerHost {
         var terrain = Terrain(sourceId: "mapbox-dem");
         terrain.exaggeration = .constant(1)
         _ = self.mapView.style.setTerrain(terrain)
+        
+        let light = [
+            "anchor": "map",
+            "color": "white",
+            "intensity": 0.1
+        ] as [ String: Any ]
+        try! self.mapView.style.styleManager.setStyleLightForProperties(light)
 
         var skyLayer = SkyLayer(id: "sky-layer")
         skyLayer.paint?.skyType = .atmosphere
@@ -78,6 +84,11 @@ public class DebugViewController: UIViewController, CustomLayerHost {
         skyLayer.paint?.skyAtmosphereSunIntensity = .constant(12.0)
 
         _ = self.mapView.style.addLayer(layer: skyLayer)
+        
+        var hillshadeLayer = HillshadeLayer(id: "terrain-hillshade")
+        hillshadeLayer.paint?.hillshadeIlluminationAnchor = .map
+        hillshadeLayer.source = "mapbox-dem"
+        _ = self.mapView.style.addLayer(layer: hillshadeLayer, layerPosition: LayerPosition(above: nil, below: "water", at: nil))
     }
     
     func addFillExtrusion() {
@@ -91,10 +102,10 @@ public class DebugViewController: UIViewController, CustomLayerHost {
                 "minzoom": 15.0,
                 "source-layer": "building",
                 "filter": ["==", "extrude", "true"],
-                "fill-extrusion-color": ["interpolate", ["linear"], ["get", "height"], 0, "#160e23", 50, "#00615f", 100, "#55e9ff"],
+                "fill-extrusion-color": "white",
                 "fill-extrusion-height": ["get", "height"],
-                "fill-extrusion-base": ["get", "min_height"],
-                "fill-extrusion-opacity": 0.6
+                "fill-extrusion-vertical-gradient": true,
+                "fill-extrusion-base": ["get", "min_height"]
             ] as [String : Any]
             
             try map.addStyleLayer(forProperties: properties, layerPosition: nil)
@@ -110,11 +121,14 @@ public class DebugViewController: UIViewController, CustomLayerHost {
         self.coordinates = [[-122.435203,37.76271],[-122.436078,37.762436],[-122.450598,37.761565],
                             [-122.450288,37.760062],[-122.449234,37.759618],[-122.448173,37.759675]].map { CLLocationCoordinate2D(latitude:$0[1], longitude:$0[0]) };
         self.routeLength = self.ruler.lineDistance(points: self.coordinates)
+        
+        // let routeLine = LineAnnotation(coordinates: self.coordinates)
+        // self.mapView.annotationManager.addAnnotation(routeLine)
     }
     
     public override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        mapView.cameraManager.setCamera(padding: UIEdgeInsets(top: self.view.bounds.height * 0.2, left: 0, bottom: 0, right: 0))
+        mapView.cameraManager.setCamera(padding: UIEdgeInsets(top: self.view.bounds.height * 0.5, left: 0, bottom: 0, right: 0))
     }
 
     func easing(from: Double, to: Double) -> Double {
@@ -181,17 +195,16 @@ public class DebugViewController: UIViewController, CustomLayerHost {
         mapView.needsDisplayRefresh = true
     }
     
-    func positionCarOverTerrain(elevationData: ElevationData, modelToMapRotation: inout simd_quatd) throws -> Double {
+    func positionCarOverTerrain(elevationData: ElevationData, scale: Double, modelToMapRotation: inout simd_quatd) throws -> Double {
         // let elevationValue = elevationData.getElevationFor(position)
-        
-        let mercatorPosition = try Projection.project(for: self.position, zoomScale: 1.0 / 512.0)
+        let mercatorPosition = try Projection.project(for: self.position, zoomScale: scale)
         var dataNotAvailable = false;
         let ps = try wheels.map {
             (wheel: SCNNode) -> simd_double3 in
             let pos = wheel.convertPosition(SCNVector3Zero, to: self.scene.rootNode)
-            let rotated = modelToMapRotation.act(SIMD3<Double>(Double(pos.x), Double(pos.y), 0.0))
-            let wheelRotated = MercatorCoordinate(x: mercatorPosition.x + rotated.x * meterInMercatorCoordinateUnits / 512.0, y: mercatorPosition.y + rotated.y * meterInMercatorCoordinateUnits / 512.0)
-            let elevation = try elevationData.getElevationFor(Projection.unproject(for: wheelRotated, zoomScale: 1.0 / 512.0))
+            let rotated = modelToMapRotation.act(SIMD3<Double>(Double(pos.x), -Double(pos.y), 0.0))
+            let wheelRotated = MercatorCoordinate(x: mercatorPosition.x + rotated.x * meterInMercatorCoordinateUnits, y: mercatorPosition.y + rotated.y * meterInMercatorCoordinateUnits)
+            let elevation = try elevationData.getElevationFor(Projection.unproject(for: wheelRotated, zoomScale: scale))
             dataNotAvailable = dataNotAvailable || elevation == nil
             return simd_make_double3(rotated.x, rotated.y, elevation != nil ? elevation!.doubleValue : 0.0)
         }
@@ -230,7 +243,7 @@ public class DebugViewController: UIViewController, CustomLayerHost {
         return max(d03, d12)
     }
 
-    func startRouteAnimation_MapboxDirections() {
+/*    func startRouteAnimation_MapboxDirections() {
         // Code copied from https://github.com/mapbox/mapbox-directions-swift/blob/main/Directions%20Example/ViewController.swift#L65
         let wp1 = Waypoint(coordinate: start)
         let wp2 = Waypoint(coordinate: end)
@@ -271,7 +284,7 @@ public class DebugViewController: UIViewController, CustomLayerHost {
                 }
             }
         }
-    }
+    }*/
     
     func setupVehicle() {
         wheels = [
@@ -299,14 +312,26 @@ public class DebugViewController: UIViewController, CustomLayerHost {
         lightNode.light?.zNear = 1
         lightNode.light?.zFar = 1000
         lightNode.light?.intensity = 2000
+        lightNode.light?.castsShadow = true
         lightNode.look(at: modelNode.worldPosition)
         modelNode.addChildNode(lightNode)
+        
         let pointNode = SCNNode()
         pointNode.light = SCNLight()
         pointNode.light?.type = SCNLight.LightType.omni
         pointNode.light?.intensity = 3000
+        pointNode.light?.castsShadow = true
         pointNode.position = SCNVector3Make(0, 25, 0)
         modelNode.addChildNode(pointNode)
+
+                let floor = SCNNode()
+floor.geometry = SCNFloor()
+floor.geometry?.firstMaterial!.colorBufferWriteMask = []
+floor.geometry?.firstMaterial!.readsFromDepthBuffer = true
+floor.geometry?.firstMaterial!.writesToDepthBuffer = true
+floor.geometry?.firstMaterial!.lightingModel = .constant
+modelNode.addChildNode(floor)
+
 
     }
     
@@ -330,6 +355,7 @@ public class DebugViewController: UIViewController, CustomLayerHost {
 
         car = SCNScene(named:"rc_car")?.rootNode.childNode(withName:"rccarBody", recursively:false);
         modelNode.addChildNode(car)
+        
         
         setupVehicle()
         setupLight()
@@ -372,6 +398,27 @@ public class DebugViewController: UIViewController, CustomLayerHost {
     
         return matrix
     }
+    
+    func toSCNMatrix(transform: simd_double4x4) -> SCNMatrix4 {
+                var scnMat = SCNMatrix4()
+            scnMat.m11 = Float(transform[0, 0])
+            scnMat.m12 = Float(transform[0, 1])
+            scnMat.m13 = Float(transform[0, 2])
+            scnMat.m14 = Float(transform[0, 3])
+            scnMat.m21 = Float(transform[1, 0])
+            scnMat.m22 = Float(transform[1, 1])
+            scnMat.m23 = Float(transform[1, 2])
+            scnMat.m24 = Float(transform[1, 3])
+            scnMat.m31 = Float(transform[2, 0])
+            scnMat.m32 = Float(transform[2, 1])
+            scnMat.m33 = Float(transform[2, 2])
+            scnMat.m34 = Float(transform[2, 3])
+            scnMat.m41 = Float(transform[3, 0])
+            scnMat.m42 = Float(transform[3, 1])
+            scnMat.m43 = Float(transform[3, 2])
+            scnMat.m44 = Float(transform[3, 3])
+        return scnMat;
+    }
 
     public func render(_ parameters: CustomLayerRenderParameters, mtlCommandBuffer: MTLCommandBuffer, mtlRenderPassDescriptor: MTLRenderPassDescriptor) {
         let m = parameters.projectionMatrix;
@@ -397,45 +444,26 @@ public class DebugViewController: UIViewController, CustomLayerHost {
             
             let zRotation = .pi + modelBearing * .pi / 180.0
             let scale = pow(2, parameters.zoom);
-            let start = try Projection.project(for: position, zoomScale: 1.0);
-            self.meterInMercatorCoordinateUnits = try 1.0 / (Projection.getMetersPerPixelAtLatitude(forLatitude: position.latitude, zoom: 0));
+            let start = try Projection.project(for: position, zoomScale: scale);
             let metersPerPixel = try Projection.getMetersPerPixelAtLatitude(forLatitude: position.latitude, zoom: parameters.zoom);
+            self.meterInMercatorCoordinateUnits = 1.0 / metersPerPixel;
             var elevation = 0.0;
             var quaternion = simd_quatd(angle: zRotation, axis: SIMD3(0, 0, 1));
             if let elevationData = parameters.elevationData {
-                elevation = try self.positionCarOverTerrain(elevationData: elevationData, modelToMapRotation: &quaternion)
+                elevation = try self.positionCarOverTerrain(elevationData: elevationData, scale: scale, modelToMapRotation: &quaternion)
                 let pixel = try! self.mapView.__map.pixelForCoordinate(for: position)
                 print(pixel.x, pixel.y)
             }
             
             let modelRotation = simd_double4x4(quaternion)
-            let transformModel = makeTranslationMatrix(tx: start.x, ty: start.y, tz: elevation * meterInMercatorCoordinateUnits)
-            let scale1 = makeScaleMatrix(xScale: meterInMercatorCoordinateUnits, yScale: -meterInMercatorCoordinateUnits, zScale: meterInMercatorCoordinateUnits)
-            let scale2 = makeScaleMatrix(xScale: scale, yScale: scale, zScale: scale * metersPerPixel)
-            // Order of operands in simd multiplication is inverted compared to e.g. SceneKit or other mapbox 3D examples:
-            // the order here corresponds to order of how matrice transforms are applied to an input.
-            let transformModel1 = transformModel * modelRotation * scale1
-            let transform = (transformSimd * scale2) * transformModel1
-                        
-            var scnMat = SCNMatrix4()
-            scnMat.m11 = Float(transform[0, 0])
-            scnMat.m12 = Float(transform[0, 1])
-            scnMat.m13 = Float(transform[0, 2])
-            scnMat.m14 = Float(transform[0, 3])
-            scnMat.m21 = Float(transform[1, 0])
-            scnMat.m22 = Float(transform[1, 1])
-            scnMat.m23 = Float(transform[1, 2])
-            scnMat.m24 = Float(transform[1, 3])
-            scnMat.m31 = Float(transform[2, 0])
-            scnMat.m32 = Float(transform[2, 1])
-            scnMat.m33 = Float(transform[2, 2])
-            scnMat.m34 = Float(transform[2, 3])
-            scnMat.m41 = Float(transform[3, 0])
-            scnMat.m42 = Float(transform[3, 1])
-            scnMat.m43 = Float(transform[3, 2])
-            scnMat.m44 = Float(transform[3, 3])
-            
-            cameraNode.camera!.projectionTransform = scnMat;
+            let transformModel = makeTranslationMatrix(tx: start.x, ty: start.y, tz: elevation)
+            let modelScale = makeScaleMatrix(xScale: meterInMercatorCoordinateUnits, yScale: meterInMercatorCoordinateUnits, zScale: 1)
+            let flipYScale = makeScaleMatrix(xScale: 1, yScale: -1, zScale: 1)
+            let transform = transformSimd * transformModel * modelScale * modelRotation * flipYScale
+//            modelNode.transform = toSCNMatrix(transform: flipYScale)
+
+            cameraNode.camera!.projectionTransform = toSCNMatrix(transform: transform)
+            SCNTransaction.flush()
 
             if let colorTexture = mtlRenderPassDescriptor.colorAttachments[0].texture {
                 renderer.render(withViewport: CGRect(x: 0, y: 0, width: CGFloat(colorTexture.width), height: CGFloat(colorTexture.height)), commandBuffer:mtlCommandBuffer, passDescriptor:mtlRenderPassDescriptor)

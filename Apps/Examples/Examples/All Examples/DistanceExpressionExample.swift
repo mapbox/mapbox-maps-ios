@@ -4,7 +4,7 @@ import Turf
 @objc(DistanceExpressionExample)
 class DistanceExpressionExample: UIViewController, ExampleProtocol {
     var mapView: MapView!
-
+    var point: Turf.Point
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -28,7 +28,7 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
 
         // Create a `GeoJSONSource` from a Turf geometry.
         var source = GeoJSONSource()
-        let point = Feature(geometry: .point(Point(center)))
+        point = Feature(geometry: .point(Point(center)))
 
         // Set the source's data property to the feature.
         source.data = .feature(point)
@@ -87,11 +87,6 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
         try! style.addSource(source, id: "source-id")
         try! style.addLayer(circleLayer)
 
-        //
-//        let data = try! JSONEncoder().encode(point.self)
-//        let geojson = try! JSONDecoder().decode(GeoJSON.self, from: data)
-
-
         mapView.mapboxMap.onNext(.styleLoaded) { _ in
             self.filterPoiLabels()
         }
@@ -99,19 +94,17 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
     
     func filterPoiLabels() {
         let style = mapView.mapboxMap.style
-        mapView.mapboxMap.querySourceFeatures(for: "source-id", options: SourceQueryOptions(sourceLayerIds: nil, filter: "")) { result in
-            switch result {
-            case let .success(features):
-                let feature = features.first!
-                var poiLabelLayer: SymbolLayer = try! style.layer(withId: "poi-label")
-                poiLabelLayer.filter = Exp(.distance) {
-                    feature.feature
-                    150
+        // look at throws in
+        // Ticket out that we need to improve support for 
+        try! style.updateLayer(withId: "poi-label") { (layer: inout SymbolLayer) throws in
+            layer.filter = Exp(.lt) {
+                Exp(.distance) {
+                    
                 }
-            case let .failure(error):
-                print("Error: \(error)")
+                150 // this stays outside distance exp
             }
         }
+
         // Get the `SymbolLayer` with the identifier `poi-label`. This layer is included
         // with the Mapbox Streets v11 style. In order to see all layers included with your
         // style, either inspect the style in Mapbox Studio or inspect the `style.allLayerIdentifiers`
@@ -129,5 +122,11 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
         // pixels that radius needs to be.
         let radius = 150 / metersPerPoint
         return radius
+    }
+}
+
+extension Turf.Point: ExpressionArgumentConvertible {
+    public var expressionArguments: [Expression.Argument] {
+        <#code#>
     }
 }

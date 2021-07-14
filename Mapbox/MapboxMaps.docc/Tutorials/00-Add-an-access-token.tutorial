@@ -1,26 +1,42 @@
-@Tutorial(time: <#number#>) {
-    @Intro(title: "<#text#>") {
-        <#text#>
+@Tutorial(time: 10) {
+    @Intro(title: "Add a Mapbox Access Token") {
         
-        @Image(source: <#file#>, alt: "<#accessible description#>")
+        The first step to working with Mapbox Maps is to create an access token and integrate it with your app. For more information about creating a Mapbox access token, please see the [access token guide on our website](https://docs.mapbox.com/help/getting-started/access-tokens/). This article will discuss how to configure your Mapbox access token via a bash script or your `AppDelegate.swift` file.
+
+        For open-source or shared code bases, you will want to keep your access token private. In this case, you may want to insert your Mapbox access into your project via a bash script. If you are working in a project that will not have a public code base, you can set your access token via your `AppDelegate.swift` file. We will walk through how to implement each of these options.
     }
     
-    @Section(title: "<#text#>") {
+    @Section(title: "Via your AppDelegate file") {
         @ContentAndMedia(layout: horizontal) {
-            <#text#>
-            
-            @Image(source: <#file#>, alt: "<#accessible description#>")
+            If you are working in a project that will not be shared publicly, you may want to [keep your access token private](https://docs.mapbox.com/help/troubleshooting/private-access-token-android-and-ios/). In this case, one approach is to insert your access token using a bash script.
         }
         
         @Steps {
             @Step {
-                <#text#>
-                @Image(source: <#file#>, alt: "<#accessible description#>")
+                Create a file outside your project directory called either `.mapbox` or `mapbox` that contains your access token.
+                @Image(source: 00-access-token-01.png, alt: "A screenshot of a Terminal window. It shows the commands touch ~/mapbox then on the next line echo \"YOUR ACCESS TOKEN\" >> ~/mapbox.")
             }
             
             @Step {
-                <#text#>
-                @Code(name: "<#display name#>", file: <#filename.swift#>)
+                Navigate to the `Build Phases` tab in the project editor.
+                @Image(source: 00-access-token-02.png, alt: "A screenshot that shows the Build Phases tab in the project editor.")
+            }
+            
+            @Step {
+                Click on the + button to create a new Run Script Phase.
+                @Image(source: 00-access-token-03.png, alt: "A screenshot that shows the menu that appears when you click on the + button in the Build Phases tab. 'New Run Script Phase' is highlighted in blue.")
+            }
+            
+            @Step {
+                Add the following script to your Run Script Phase. Change `~/mapbox` and `~/.mapbox` on lines 4 and 5 to match the paths to your access token file.
+                @Code(name: "Insert access token", file: 00-access-token-01.swift)
+            }
+        }
+        
+        @Steps {
+            @Step {
+                In your `AppDelegate.swift` file, set your ``ResourceOptionsManager/default/resourceOptions/accessToken`` to your access token as a ``String`` value.
+                @Code(name: "Add access token to you AppDelegate.swift", file: 00-access-token-02.swift)
             }
         }
     }

@@ -76,7 +76,7 @@ public class ShowHideLayerExample: UIViewController, ExampleProtocol {
         contourLayer.visibility = .constant(.visible)
         let contourLineColor = UIColor(red: 0.53, green: 0.48, blue: 0.35, alpha: 1.00)
         contourLayer.lineColor = .constant(ColorRepresentable(color: contourLineColor))
-    
+
         let style = mapView.mapboxMap.style
 
         // Add the sources and layers to the map's style.

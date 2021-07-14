@@ -362,7 +362,7 @@ extension MapView: DelegatingMapClientDelegate {
     }
 
     internal func getMetalView(for metalDevice: MTLDevice?) -> MTKView? {
-        let metalView = dependencyProvider.makeMetalView(frame: frame, device: metalDevice)
+        let metalView = dependencyProvider.makeMetalView(frame: bounds, device: metalDevice)
         displayCallback = {
             metalView.setNeedsDisplay()
         }

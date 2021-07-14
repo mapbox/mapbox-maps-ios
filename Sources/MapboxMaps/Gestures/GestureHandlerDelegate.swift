@@ -24,6 +24,9 @@ internal protocol GestureHandlerDelegate: AnyObject {
     // Returns initial scale of the map
     func scaleForZoom() -> CGFloat
 
+    // Pinch began on the view
+    func pinchBegan(with anchor: CGPoint)
+
     // Pinch on the view has changed with a new zoom and anchor
     func pinchChanged(with zoom: CGFloat, anchor: CGPoint, previousAnchor: CGPoint)
 

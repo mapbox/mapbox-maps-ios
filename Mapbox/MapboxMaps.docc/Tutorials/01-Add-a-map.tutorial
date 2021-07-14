@@ -1,6 +1,6 @@
 @Tutorial(time: 20) {
     @Intro(title: "Add a map") {
-        This tutorial will show how to add a ``MapView`` to a `UIViewController`, then set the map's style and center coordinate.
+        This tutorial will show how to add a ``MapboxMaps/MapView`` to a `UIViewController`, then set the map's style and center coordinate.
 
         @Image(source: Map-showing-Ohio-horizontal.png, alt: "A simulator screenshot of an iPhone showing a map. The map is centered over the state of Ohio.")
     }
@@ -17,30 +17,30 @@
             }
 
             @Step {
-                Create a ``MapView`` using the root view's bounds and add it as a subview. We also set the autoresizing mask at this point. This allows the map to resize when the device is rotated.
+                Create a ``MapboxMaps/MapView`` using the root view's bounds and add it as a subview. We also set the autoresizing mask at this point. This allows the map to resize when the device is rotated.
                 @Code(name: "Create a map view", file: 01-add-a-map-02.swift) {
-                    @Image(source: Map-null-island.png, alt: "A simulator screenshot of an iPhone showing a map. The map is centered over 'null island', which is latitude 0 and longitude 0, off the west coast of Africa.")
+                    @Image(source: 01-add-a-map-03.png, alt: "A simulator screenshot of an iPhone showing a map. The map is centered over 'null island', which is latitude 0 and longitude 0, off the west coast of Africa.")
                 }
             }
 
             @Step {
-                Specify a center coordinate of `CLLocationCoordinate2D(latitude: 39.964175, longitude: -82.955368)` and initial zoom level of `5.5`. Use these values to create a ``CameraOptions`` object. The map will still be centered over latitude `0`, longitude `0`. We will apply these changes to the map in the next step.
+                Specify a center coordinate of `CLLocationCoordinate2D(latitude: 39.964175, longitude: -82.955368)` and initial zoom level of `5.5`. Use these values to create a ``MapboxMaps/CameraOptions`` object. The map will still be centered over latitude `0`, longitude `0`. We will apply these changes to the map in the next step.
                 @Code(name: "Create an initial camera", file: 01-add-a-map-03.swift) {
-                    @Image(source: Map-null-island.png, alt: "A simulator screenshot of an iPhone showing a map. The map is centered over 'null island', which is latitude 0 and longitude 0, off the west coast of Africa.")
+                    @Image(source: 01-add-a-map-03.png, alt: "A simulator screenshot of an iPhone showing a map. The map is centered over 'null island', which is latitude 0 and longitude 0, off the west coast of Africa.")
                 }
             }
 
             @Step {
                 Create a ``MapboxMaps/MapInitOptions`` object using the previously created `cameraOptions`. Then update the initializer for the ``MapboxMaps/MapView`` in order to pass in the new `mapInitOptions`. This sets the intial camera for the map.
                 @Code(name: "Initialize the map with new camera", file: 01-add-a-map-04.swift) {
-                    @Image(source: Map-streets-over-Ohio.png, alt: "A simulator screenshot of an iPhone showing a map. The map is centered over Ohio, with surrounding area visible. The map uses the default Mapbox Streets style.")
+                    @Image(source: 01-add-a-map-04.png, alt: "A simulator screenshot of an iPhone showing a map. The map is centered over Ohio, with surrounding area visible. The map uses the default Mapbox Streets style.")
                 }
             }
 
             @Step {
-                The intializer for ``MapInitOptions`` also allows you to pass in a ``StyleURI``.
-                @Code(name: "Initialize the map with new camera", file: 01-add-a-map-04.swift) {
-                    @Image(source: Map-streets-over-Ohio.png, alt: "A simulator screenshot of an iPhone showing a map. The map is centered over Ohio, with surrounding area visible. The map uses the Mapbox Outdoors style.")
+                The intializer for ``MapboxMaps/MapInitOptions`` also allows you to pass in a ``MapboxMaps/StyleURI`` object. This allows you 
+                @Code(name: "Set the map's style", file: 01-add-a-map-05.swift) {
+                    @Image(source: 01-add-a-map-05.png, alt: "A simulator screenshot of an iPhone showing a map. The map is centered over Ohio, with surrounding area visible. The map uses the Mapbox Satellite Streets style.")
                 }
             }
         }

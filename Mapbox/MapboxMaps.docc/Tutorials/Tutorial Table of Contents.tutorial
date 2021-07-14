@@ -1,13 +1,20 @@
 @Tutorials(name: "Getting Starting with Mapbox Maps") {
     @Intro(title: "Welcome") {
         
-        @Image(source: nighttime_iphone.png, alt: "A screenshot of a simulator iPhone that is displaying a map. The map is showing satellite imagery at a slight angle.")
     }
     
-    @Chapter(name: "Add a map") {
-        Add a map to your app. Prior to starting this tutorial, add your Mapbox access token to your project. For more information about how to add your access token, see the "Add an access token" article.
+    @Chapter(name: "Add an access token") {
+        Add your access token to your Mapbox project.
 
-        @Image(source: Map-showing-Ohio-horizontal.png, alt: "A simulator screenshot of an iPhone showing a map. The map is centered over the state of Ohio.")
+        @Image(source: "mapbox-logo-black~dark.png", alt: "A simulator screenshot of an iPhone showing a map. The map is centered over the state of Ohio.")
+        
+        @TutorialReference(tutorial: "doc:00-Add-an-access-token")
+    }
+
+    @Chapter(name: "Add a map") {
+        Add a map to your app. Prior to starting this tutorial, add your Mapbox access token to your project. For more information about how to add your access token, see the "Add an access token" tutorial.
+
+        @Image(source: 01-add-a-map-05.png, alt: "A simulator screenshot of an iPhone showing a map. The map is centered over the state of Ohio.")
         
         @TutorialReference(tutorial: "doc:01-Add-a-map")
     }

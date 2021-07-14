@@ -2,7 +2,7 @@
   "object": {
     "pins": [
       {
-        "package": "MapboxCommon",
+        "package": "mapbox-common-ios",
         "repositoryURL": "https://github.com/mapbox/mapbox-common-ios",
         "state": {
           "branch": null,
@@ -11,7 +11,7 @@
         }
       },
       {
-        "package": "MapboxCoreMaps",
+        "package": "mapbox-core-maps-ios",
         "repositoryURL": "https://github.com/mapbox/mapbox-core-maps-ios",
         "state": {
           "branch": null,
@@ -20,7 +20,7 @@
         }
       },
       {
-        "package": "MapboxMobileEvents",
+        "package": "mapbox-events-ios",
         "repositoryURL": "https://github.com/mapbox/mapbox-events-ios",
         "state": {
           "branch": null,
@@ -29,7 +29,7 @@
         }
       },
       {
-        "package": "Turf",
+        "package": "turf-swift",
         "repositoryURL": "https://github.com/mapbox/turf-swift/",
         "state": {
           "branch": null,

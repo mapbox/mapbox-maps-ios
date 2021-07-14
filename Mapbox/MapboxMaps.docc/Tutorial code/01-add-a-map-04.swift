@@ -9,7 +9,7 @@ class ViewController: UIViewController {
 
         let centerCoordinate = CLLocationCoordinate2D(latitude: 39.964175, longitude: -82.955368)
         let cameraOptions = CameraOptions(center: centerCoordinate, zoom: 5.5)
-        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .outdoors)
+        let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions)
 
         let mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]

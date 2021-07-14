@@ -31,9 +31,16 @@
             }
 
             @Step {
-                Create a ``MapInitOptions`` object using the previously created `cameraOptions`. Then update the initializer for the ``MapView`` in order to pass in the new `mapInitOptions`. This sets the intial camera for the map.
+                Create a ``MapboxMaps/MapInitOptions`` object using the previously created `cameraOptions`. Then update the initializer for the ``MapboxMaps/MapView`` in order to pass in the new `mapInitOptions`. This sets the intial camera for the map.
                 @Code(name: "Initialize the map with new camera", file: 01-add-a-map-04.swift) {
                     @Image(source: Map-streets-over-Ohio.png, alt: "A simulator screenshot of an iPhone showing a map. The map is centered over Ohio, with surrounding area visible. The map uses the default Mapbox Streets style.")
+                }
+            }
+
+            @Step {
+                The intializer for ``MapInitOptions`` also allows you to pass in a ``StyleURI``.
+                @Code(name: "Initialize the map with new camera", file: 01-add-a-map-04.swift) {
+                    @Image(source: Map-streets-over-Ohio.png, alt: "A simulator screenshot of an iPhone showing a map. The map is centered over Ohio, with surrounding area visible. The map uses the Mapbox Outdoors style.")
                 }
             }
         }

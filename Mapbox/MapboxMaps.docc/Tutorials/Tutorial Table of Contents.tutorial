@@ -1,6 +1,5 @@
 @Tutorials(name: "Getting Starting with Mapbox Maps") {
     @Intro(title: "Welcome") {
-        The 
         
         @Image(source: nighttime_iphone.png, alt: "A screenshot of a simulator iPhone that is displaying a map. The map is showing satellite imagery at a slight angle.")
     }

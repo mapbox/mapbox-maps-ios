@@ -11,24 +11,16 @@ targets:
         INSTALL_PATH: $(LOCAL_LIBRARY_DIR)/Frameworks
         SKIP_INSTALL: "NO"
         TARGETED_DEVICE_FAMILY: 1,2
-        DYLIB_COMPATIBILITY_VERSION: 1
-        DYLIB_CURRENT_VERSION: 3
         LD_RUNPATH_SEARCH_PATHS: $(inherited) @executable_path/Frameworks @loader_path/Frameworks
         MACH_O_TYPE: mh_dylib
         DEFINES_MODULE: "YES"
         PRODUCT_NAME: $(TARGET_NAME:c99extidentifier)
         CODE_SIGN_STYLE: Automatic
     configFiles:
-      Debug: "build/mapbox-maps-ios/Mapbox/Configurations/base.xcconfig"
-      Release: "build/mapbox-maps-ios/Mapbox/Configurations/base.xcconfig"
+      Debug: "build/mapbox-maps-ios/Configurations/base.xcconfig"
+      Release: "build/mapbox-maps-ios/Configurations/base.xcconfig"
     sources:
       - path: "build/mapbox-maps-ios/Sources/MapboxMaps/"
-        includes: "*.swift"
-        excludes:
-          - "**/*.plist"
-          - "**/*.h"
-      - path: "build/mapbox-maps-ios/Sources/MapboxMaps/Info.plist"
-      - path: "build/mapbox-maps-ios/Sources/MapboxMaps/MapboxMaps.h"
     dependencies:
       - framework: "build/mapbox-gl-native-internal/build/ios/lib/Debug/MapboxCommon.framework"
       - target: "MapboxCoreMaps/MapboxCoreMaps"

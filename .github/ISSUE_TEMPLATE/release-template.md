@@ -35,6 +35,7 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 **1) Create Release Branch & Kickoff Build**
 
 - [ ] Pull the latest from main to include all code updates. Then make a new branch called "Release/{VERSION}"
+- [ ] Ensure you have `jq` installed: `$ brew install jq`
 - [ ] Update the internal version pointers by running this command `./scripts/release/update-version.sh {VERSION}`. Commit these changes so they will be included in the build. This script also bumps the `maps_version` in MapboxMaps.podspec to match `VERSION`.
 - [ ] Perform manual QA of this branch by running:
   - [ ] `mapbox-maps-ios` examples

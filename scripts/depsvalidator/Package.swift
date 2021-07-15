@@ -9,9 +9,9 @@ let package = Package(
         .library(name: "DepsValidatorLibrary", targets: ["DepsValidatorLibrary"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "0.4.1"),
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "0.4.3"),
         .package(url: "https://github.com/jpsim/Yams", from: "4.0.6"),
-        .package(url: "https://github.com/Carthage/Carthage", from: "0.37.0"),
+        .package(url: "https://github.com/Carthage/Carthage", from: "0.38.0"),
     ],
     targets: [
         .target(

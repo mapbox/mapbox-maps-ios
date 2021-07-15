@@ -1,2 +1,0 @@
-TEST_HOST = $(BUILT_PRODUCTS_DIR)/MapboxTestHost.app/MapboxTestHost
-ENABLE_TESTABILITY = YES

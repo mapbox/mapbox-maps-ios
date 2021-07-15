@@ -51,23 +51,28 @@ CircleCI's [YAML](https://en.wikipedia.org/wiki/YAML) format can be picky. You c
 
 To run device tests there are few options:
 
-1. Run via Xcode: test (Cmd-U) the `MapboxTestsWithHost` scheme.
+1. Run via Xcode:
+
+  - Install [xcodegen](https://github.com/yonaskolb/XcodeGen).
+  - Run `$ xcodegen` in the root of the repo.
+  - Open the resulting `MapboxMaps.xcodeproj`.
+  - Test (Cmd-U) the `MapboxTestHost` scheme.
 
 2. Trigger via CI by adding `[run device tests]` to a git commit message. These tests also run "nightly". 
 (Examples can also be run as tests on CI by adding `[run app device tests]`.)
 
-3. Trigger tests on AWS Device Farm from the command line by running `make test-with-device-farm SCHEME=MapboxMapsTestsWithHost APP_NAME=MapboxTestHost`. This requires certain environment variables to be set; please see the makefile for these.
+3. Trigger tests on AWS Device Farm from the command line by running `make test-with-device-farm SCHEME=MapboxTestHost APP_NAME=MapboxTestHost`. This requires certain environment variables to be set; please see the makefile for these.
 
 4. Trigger tests on a local device (connected by USB) using the same setup as Device Farm testing by running:
-`make local-test-with-device-farm-ipa SCHEME=MapboxTestsWithHost CONFIGURATION=Release ENABLE_CODE_SIGNING=1`
+`make local-test-with-device-farm-ipa SCHEME=MapboxTestHost CONFIGURATION=Release ENABLE_CODE_SIGNING=1`
 
 ## Integration Tests
 
 Integration tests typically test the integration between components. As such most will require a `MapView`. These can be run locally and on AWS Device Farm.
 
-Integration tests should be added to the `MapboxMapsTests` and `MapboxMapsTestsWithHosts` targets. Since these tests require a map view, they also need a `UIWindow` and Metal rendering to work. For both testing scenarios, if there's no valid Metal device the test will be skipped (i.e. not failure/success).
+Since these tests require a map view, they also need a `UIWindow` and Metal rendering to work. For both testing scenarios, if there's no valid Metal device the test will be skipped (i.e. not failure/success).
 
-### What happens if I run from `MapboxMapsTestsWithHost` ?
+### What happens if I run from `MapboxTestHost`?
 
 There **is** a host application, so `MapViewIntegrationTestCase` fetches the existing window and view controller before adding the MapView to it.
 
@@ -80,7 +85,7 @@ There is **no host application**, so `MapViewIntegrationTestCase` creates its ow
 
 - These tests cannot be run on devices.
 - Tests will be skipped on simulators < iOS 13 because there's no valid Metal device.
-- Tests will be skipped entirely on CircleCI because of the VM (no Metal). **So for CI purposes, integration tests should be run on AWS Device Farm via `MapboxMapsTestsWithHost`**
+- Tests will be skipped entirely on CircleCI because of the VM (no Metal). **So for CI purposes, integration tests should be run on AWS Device Farm via `MapboxTestHost`**
 
 As you can see the most useful case is to run within from the host application. Be aware that this has the potential for side-effects, since the application is not restarted for each test.
 

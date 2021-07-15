@@ -300,7 +300,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
                     break
                 case .timedOut:
                     // TODO: check if this is a failure
-                    print("Example timed out, was this intentional? Call finish() if possible.")
+                    print("Timed out.")
                     fallthrough
                 default:
                     XCTFail("Expectation failed with \(result). Aborting test.")

@@ -46,7 +46,7 @@ mkdir .xcode
 cp ../project.yml .xcode/
 pushd .xcode
 ln -s ../../../../../Sources
-ln -s ../../../../../Mapbox/Configurations
+ln -s ../../../../../Configurations
 xcodegen
 popd
 

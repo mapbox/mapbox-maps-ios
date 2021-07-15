@@ -228,20 +228,20 @@ open class MapView: UIView {
     }
 
     private func checkForMetalSupport() {
+        #if targetEnvironment(simulator)
         guard MTLCreateSystemDefaultDevice() == nil else {
             return
         }
 
         // Metal is unavailable on older simulators
-        #if targetEnvironment(simulator)
         guard ProcessInfo().isOperatingSystemAtLeast(OperatingSystemVersion(majorVersion: 13, minorVersion: 0, patchVersion: 0)) else {
-            Log.warning(forMessage: "Metal rendering is not supported on iOS versions < iOS 13. Please test on device or on iOS version >= 13.", category: "MapView")
+            Log.warning(forMessage: "Metal rendering is not supported on iOS versions < iOS 13. Please test on device or on iOS simulators version >= 13.", category: "MapView")
             return
         }
-        #endif
 
         // Metal is unavailable for a different reason
-        Log.error(forMessage: "No suitable Metal device or simulator can be found.", category: "MapView")
+        Log.error(forMessage: "No suitable Metal simulator can be found.", category: "MapView")
+        #endif
     }
 
     class internal func parseIBString(ibString: String) -> String? {

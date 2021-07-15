@@ -4,11 +4,11 @@ import Turf
 @objc(DistanceExpressionExample)
 class DistanceExpressionExample: UIViewController, ExampleProtocol {
     var mapView: MapView!
-    var point: Turf.Point
+    var point: Turf.Feature!
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
         let center = CLLocationCoordinate2D(latitude: 37.787945, longitude: -122.407522)
         let cameraOptions = CameraOptions(center: center, zoom: 16)
         let mapInitOptions = MapInitOptions(cameraOptions: cameraOptions, styleURI: .streets)
@@ -125,8 +125,8 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
     }
 }
 
-extension Turf.Point: ExpressionArgumentConvertible {
-    public var expressionArguments: [Expression.Argument] {
-        <#code#>
-    }
-}
+//extension Turf.Point: ExpressionArgumentConvertible {
+//    public var expressionArguments: [Expression.Argument] {
+//
+//    }
+//}

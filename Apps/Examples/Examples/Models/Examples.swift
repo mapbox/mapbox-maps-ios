@@ -100,7 +100,11 @@ public struct Examples {
                 type: SwiftUIExample.self),
         Example(title: "Add multiple annotations to a map",
                 description: "Add default and custom annotations to a map.",
-                type: MultiplePointAnnotationsExample.self)
+                type: MultiplePointAnnotationsExample.self),
+        Example(title: "Add anchored annotations with a custom map layer.",
+                description: "Add custom annotations to the map with a SymbolLayer. The custom annotations are styled based on feature attributes and are anchored to specific points on the map.",
+                type: CustomAnchoredSymbolExample.self),
+
     ]
 
     // Examples that focus on setting, animating, or otherwise changing the map's camera.

@@ -195,8 +195,6 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
             self.annotationManager?.syncAnnotations(annotations)
         }
 
-        
-
         return FeatureCollection(features: features)
     }
 
@@ -218,7 +216,6 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
         }
 
         shapeLayer.source = CustomSymbolAnnotationsExample.annotations
-
 
         shapeLayer.textField = .expression(Exp(.get) {
             "text"
@@ -272,24 +269,24 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
                 0
             }
             Exp(.literal) {
-                [0.7,-2.0]
+                [0.7, -2.0]
             }
             Exp(.eq) {
                 Exp(.get) { "tailPosition" }
                 1
             }
             Exp(.literal) {
-                [-0.7,-2.0]
+                [-0.7, -2.0]
             }
             Exp(.eq) {
                 Exp(.get) { "tailPosition" }
                 2
             }
             Exp(.literal) {
-                [-0.2,-2.0]
+                [-0.2, -2.0]
             }
             Exp(.literal) {
-                [0.0,-2.0]
+                [0.0, -2.0]
             }
         }
         shapeLayer.textOffset = .expression(offsetExpression)

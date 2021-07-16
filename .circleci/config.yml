@@ -64,9 +64,9 @@ workflows:
       - depsvalidator:
           xcode: "12.5.0"
       - build-sdk:
-          xcode: ["12.5.0", "13.0.0"]
           matrix:
             parameters:
+              xcode: ["12.5.0", "13.0.0"]
               configuration: ["Debug", "Release"]
       - build-debug-app:
           xcode: "12.5.0"

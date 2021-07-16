@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1240"
+   LastUpgradeVersion = "1250"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -53,6 +53,16 @@
                   Identifier = "HTTPIntegrationTests/testReplacingHTTPService()">
                </Test>
             </SkippedTests>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CA548FCF251C404B00F829A3"
+               BuildableName = "MapboxMapsTestsWithHost.xctest"
+               BlueprintName = "MapboxMapsTestsWithHost"
+               ReferencedContainer = "container:MapboxMaps.xcodeproj">
+            </BuildableReference>
          </TestableReference>
       </Testables>
    </TestAction>

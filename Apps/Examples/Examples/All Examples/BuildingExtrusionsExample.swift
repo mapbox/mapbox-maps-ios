@@ -26,7 +26,7 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
                                           zoom: 15.5,
                                           bearing: -17.6,
                                           pitch: 45)
-        mapView.camera.setCamera(to: cameraOptions)
+        mapView.mapboxMap.setCamera(to: cameraOptions)
 
         // The below lines are used for internal testing purposes only.
         DispatchQueue.main.asyncAfter(deadline: .now()+5.0) {
@@ -41,8 +41,8 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
         layer.source                      = "composite"
         layer.minZoom                     = 15
         layer.sourceLayer                 = "building"
-        layer.paint?.fillExtrusionColor   = .constant(ColorRepresentable(color: .lightGray))
-        layer.paint?.fillExtrusionOpacity = .constant(0.6)
+        layer.fillExtrusionColor   = .constant(ColorRepresentable(color: .lightGray))
+        layer.fillExtrusionOpacity = .constant(0.6)
 
         layer.filter = Exp(.eq) {
             Exp(.get) {
@@ -51,7 +51,7 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
             "true"
         }
 
-        layer.paint?.fillExtrusionHeight = .expression(
+        layer.fillExtrusionHeight = .expression(
             Exp(.interpolate) {
                 Exp(.linear)
                 Exp(.zoom)
@@ -64,7 +64,7 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
             }
         )
 
-        layer.paint?.fillExtrusionBase = .expression(
+        layer.fillExtrusionBase = .expression(
             Exp(.interpolate) {
                 Exp(.linear)
                 Exp(.zoom)

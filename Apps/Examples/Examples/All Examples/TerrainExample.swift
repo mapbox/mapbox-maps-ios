@@ -31,7 +31,9 @@ public class TerrainExample: UIViewController, ExampleProtocol {
     func addTerrain() {
         var demSource = RasterDemSource()
         demSource.url = "mapbox://mapbox.mapbox-terrain-dem-v1"
-        demSource.tileSize = 512
+        // Setting the `tileSize` to 514 provides better performance and adds padding around the outside
+        // of the tiles.
+        demSource.tileSize = 514
         demSource.maxzoom = 14.0
         try! mapView.mapboxMap.style.addSource(demSource, id: "mapbox-dem")
 
@@ -41,9 +43,9 @@ public class TerrainExample: UIViewController, ExampleProtocol {
         try! mapView.mapboxMap.style.setTerrain(terrain)
 
         var skyLayer = SkyLayer(id: "sky-layer")
-        skyLayer.paint?.skyType = .constant(.atmosphere)
-        skyLayer.paint?.skyAtmosphereSun = .constant([0.0, 0.0])
-        skyLayer.paint?.skyAtmosphereSunIntensity = .constant(15.0)
+        skyLayer.skyType = .constant(.atmosphere)
+        skyLayer.skyAtmosphereSun = .constant([0.0, 0.0])
+        skyLayer.skyAtmosphereSunIntensity = .constant(15.0)
 
         try! mapView.mapboxMap.style.addLayer(skyLayer)
     }

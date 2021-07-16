@@ -2,14 +2,6 @@ import UIKit
 import MapboxCoreMaps
 import MapboxCommon
 
-#if canImport(MapboxMapsFoundation)
-import MapboxMapsFoundation
-#endif
-
-#if canImport(MapboxMapsStyle)
-import MapboxMapsStyle
-#endif
-
 public struct Puck3DConfiguration: Equatable {
 
     /// The model to use as the locaiton puck
@@ -39,12 +31,18 @@ internal class Puck3D: Puck {
 
     // MARK: Protocol Properties
     internal var puckStyle: PuckStyle
+    internal var puckBearingSource: PuckBearingSource
     internal weak var locationSupportableMapView: LocationSupportableMapView?
     internal weak var style: LocationStyleDelegate?
 
     // MARK: Initializers
-    internal init(puckStyle: PuckStyle, locationSupportableMapView: LocationSupportableMapView, style: LocationStyleDelegate, configuration: Puck3DConfiguration) {
+    internal init(puckStyle: PuckStyle,
+                  puckBearingSource: PuckBearingSource,
+                  locationSupportableMapView: LocationSupportableMapView,
+                  style: LocationStyleDelegate,
+                  configuration: Puck3DConfiguration) {
         self.puckStyle = puckStyle
+        self.puckBearingSource = puckBearingSource
         self.locationSupportableMapView = locationSupportableMapView
         self.style = style
         self.configuration = configuration
@@ -82,16 +80,11 @@ internal class Puck3D: Puck {
 
             // TODO: On first setup "puck-model does not have a uri"
             try? style.addSource(self.modelSource, id: "puck-model-source")
-            try! style.addLayer(self.modelLayer)
+            try! style._addPersistentLayer(self.modelLayer)
         }
 
         // Do initial setup
         addStyle()
-
-        // Re-apply source, layer if style is ever changed
-        locationSupportableMapView?.subscribeStyleChangeHandler({ (_) in
-            addStyle()
-        })
     }
 
     // MARK: Protocol Implementation
@@ -101,9 +94,18 @@ internal class Puck3D: Puck {
               var model = modelSource.models?.values.first else { return }
 
         model.position = [location.coordinate.longitude, location.coordinate.latitude]
-        if var orientation = model.orientation,
-           let validDirection = location.headingDirection {
 
+        var validDirection: Double = 0.0
+        switch puckBearingSource {
+        case .heading:
+            if let validHeadingDirection = location.headingDirection {
+                validDirection = validHeadingDirection
+            }
+        case .course:
+            validDirection = location.course
+        }
+
+        if var orientation = model.orientation {
             let initalOrientation = initialPuckOrientation != nil ? initialPuckOrientation![2] : 0
             orientation[2] = initalOrientation + validDirection
             model.orientation = orientation

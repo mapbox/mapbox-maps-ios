@@ -1,9 +1,32 @@
 import Foundation
+@_implementationOnly import MapboxCommon_Private
 
 extension TileStore {
-    /// Convenience to set the access token for a TileStore
-    public func setAccessToken(_ accessToken: String) {
-        setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken)
+
+    /// Returns a shared TileStore instance at the default location. Creates a
+    /// new one if one doesn't yet exist.
+    ///
+    /// - See Also:
+    ///     `shared(for:)`
+    public static var `default`: TileStore {
+        return TileStore.__create()
+    }
+
+    /// Gets a TileStore instance for the given storage path. Creates a new one
+    /// if one doesn't exist.
+    ///
+    /// If the given path is empty, the tile store at the default location is
+    /// returned.
+    ///
+    /// On iOS, this storage path is excluded from automatic cloud backup.
+    ///
+    /// - Parameter filePathURL: The path on disk where tiles and metadata will be stored
+    /// - Returns: TileStore instance.
+    public static func shared(for filePathURL: URL) -> TileStore {
+        guard filePathURL.isFileURL else {
+            fatalError("You must provide a file URL")
+        }
+        return TileStore.__create(forPath: filePathURL.path)
     }
 
     /// Loads a new tile region or updates the existing one.
@@ -55,13 +78,13 @@ extension TileStore {
             return __loadTileRegion(forId: id,
                                     loadOptions: loadOptions,
                                     onProgress: progress,
-                                    onFinished: tileStoreClosureAdapter(for: completion, type: TileRegion.self))
+                                    onFinished: tileStoreClosureAdapter(for: completion, type: TileRegion.self)).asCancelable()
         }
         // Use overloaded version
         else {
             return __loadTileRegion(forId: id,
                                     loadOptions: loadOptions,
-                                    onFinished: tileStoreClosureAdapter(for: completion, type: TileRegion.self))
+                                    onFinished: tileStoreClosureAdapter(for: completion, type: TileRegion.self)).asCancelable()
         }
     }
 
@@ -132,9 +155,9 @@ extension TileStore {
     ///     worker thread; it is the responsibility of the user to dispatch to a
     ///     user-controlled thread.
     public func tileRegionGeometry(forId id: String,
-                                   completion: @escaping (Result<MBXGeometry, Error>) -> Void) {
-        __getTileRegion(forId: id,
-                        callback: tileStoreClosureAdapter(for: completion, type: MBXGeometry.self))
+                                   completion: @escaping (Result<Geometry, Error>) -> Void) {
+        __getTileRegionGeometry(forId: id,
+                                callback: tileStoreClosureAdapter(for: completion, type: Geometry.self))
     }
 
     /// Fetch a tile region's associated metadata
@@ -154,6 +177,6 @@ extension TileStore {
 
 private func tileStoreClosureAdapter<T, ObjCType>(
     for closure: @escaping (Result<T, Error>) -> Void,
-    type: ObjCType.Type) -> ((MBXExpected<AnyObject, AnyObject>?) -> Void) where ObjCType: AnyObject {
+    type: ObjCType.Type) -> ((Expected<AnyObject, AnyObject>?) -> Void) where ObjCType: AnyObject {
     return coreAPIClosureAdapter(for: closure, type: type, concreteErrorType: TileRegionError.self)
 }

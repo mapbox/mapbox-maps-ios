@@ -17,7 +17,11 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
         let styleContainsPuckExpectation = XCTestExpectation(description: "Style contains puck layer.")
 
         didFinishLoadingStyle = { _ in
-            let puck = Puck2D(puckStyle: .precise, locationSupportableMapView: self.mapView!, configuration: Puck2DConfiguration())
+            let puck = Puck2D(puckStyle: .precise,
+                              puckBearingSource: .heading,
+                              locationSupportableMapView: self.mapView!,
+                              style: style,
+                              configuration: Puck2DConfiguration())
             do {
                 try puck.createPreciseLocationIndicatorLayer(location: Location(with: CLLocation(latitude: 1, longitude: 1)))
                 createPuckExpectation.fulfill()
@@ -41,7 +45,11 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
         let styleContainsPuckExpectation = XCTestExpectation(description: "style contains puck layer.")
 
         didFinishLoadingStyle = { _ in
-            let puck = Puck2D(puckStyle: .approximate, locationSupportableMapView: self.mapView!, configuration: Puck2DConfiguration())
+            let puck = Puck2D(puckStyle: .approximate,
+                              puckBearingSource: .heading,
+                              locationSupportableMapView: self.mapView!,
+                              style: style,
+                              configuration: Puck2DConfiguration())
             do {
                 try puck.createApproximateLocationIndicatorLayer(location: Location(with: CLLocation(latitude: 1, longitude: 1)))
                 createPuckExpectation.fulfill()
@@ -64,7 +72,11 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
         let removePuckExpectation = XCTestExpectation(description: "Remove a precise Puck2D.")
 
         didFinishLoadingStyle = { _ in
-            let puck = Puck2D(puckStyle: .precise, locationSupportableMapView: self.mapView!, configuration: Puck2DConfiguration())
+            let puck = Puck2D(puckStyle: .precise,
+                              puckBearingSource: .heading,
+                              locationSupportableMapView: self.mapView!,
+                              style: style,
+                              configuration: Puck2DConfiguration())
 
             do {
                 try puck.createPreciseLocationIndicatorLayer(location: Location(with: CLLocation(latitude: 1, longitude: 1)))
@@ -93,7 +105,11 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
         let addedApproximatePuckExpectation = XCTestExpectation(description: "Style contains approximate puck layer.")
 
         didFinishLoadingStyle = { _ in
-            let puck = Puck2D(puckStyle: .precise, locationSupportableMapView: self.mapView!, configuration: Puck2DConfiguration())
+            let puck = Puck2D(puckStyle: .precise,
+                              puckBearingSource: .heading,
+                              locationSupportableMapView: self.mapView!,
+                              style: style,
+                              configuration: Puck2DConfiguration())
             do {
                 try puck.createPreciseLocationIndicatorLayer(location: location)
             } catch {
@@ -115,5 +131,30 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
             }
         }
         wait(for: [addedPrecisePuckExpectation, removedPrecisePuckExpectation, addedApproximatePuckExpectation], timeout: 5)
+    }
+
+    func testLayerPersistence() throws {
+        let style = try XCTUnwrap(self.style)
+
+        mapView?.mapboxMap.onNext(.mapLoaded, handler: { _ in
+            let puck = Puck2D(puckStyle: .approximate,
+                              puckBearingSource: .heading,
+                              locationSupportableMapView: self.mapView!,
+                              style: style,
+                              configuration: Puck2DConfiguration())
+            do {
+                try puck.createPreciseLocationIndicatorLayer(location: Location(with: CLLocation(latitude: 1, longitude: 1)))
+            } catch {
+                XCTFail("Failed to create an precise location indicator layer.")
+            }
+            let isPersistent = try! style._isPersistentLayer(id: "puck")
+            XCTAssertTrue(isPersistent, "The puck layer should be a persistent layer.")
+        })
+    }
+}
+
+extension LocationStyleDelegate {
+    func _isPersistentLayer(id: String) throws -> Bool {
+        try _isPersistentLayer(id: id)
     }
 }

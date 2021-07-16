@@ -11,11 +11,6 @@ ALWAYS_SEARCH_USER_PATHS = NO
 // for applications should those fail with this enabled.
 //APPLICATION_EXTENSION_API_ONLY = YES
 
-// Exclude i386 from simulator ARCHs because it's not present in libMapbox.a
-// Removed armv7 since it's also 32bit
-ARCHS[sdk=iphoneos*] = arm64
-ARCHS[sdk=iphonesimulator*] = x86_64
-
 // Why the long path here? It's because we want an xctestrun file *without*
 // absolute paths, i.e. relative to __TESTROOT__, so that the testrun file doesn't
 // have to be modified when running on Device Farm.
@@ -38,7 +33,7 @@ ARCHS[sdk=iphonesimulator*] = x86_64
 //
 // and then use that in the various build scripts.
 //
-BUILD_DIR = ../build/Build/Products
+//BUILD_DIR = ../build/Build/Products
 
 // TODO: Move into developer config?
 DEVELOPMENT_TEAM = GJZR2MEM28
@@ -59,7 +54,7 @@ SUPPORTS_MACCATALYST = NO
 // -----------------------------------------------------------------------------
 // Swift
 
-SWIFT_VERSION = 5.0
+SWIFT_VERSION = 5.3
 
 SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Debug] = DEBUG
 SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Release] = RELEASE
@@ -158,14 +153,6 @@ RUN_CLANG_STATIC_ANALYZER = YES
 
 SWIFT_TREAT_WARNINGS_AS_ERRORS[config=Debug] = NO
 SWIFT_TREAT_WARNINGS_AS_ERRORS[config=Release] = NO
-
-
-// -----------------------------------------------------------------------------
-// Search paths
-
-FRAMEWORK_SEARCH_PATHS = $(inherited) $(PLATFORM_DIR)/Developer/Library/Frameworks $(PROJECT_DIR)/../lib/
-HEADER_SEARCH_PATHS = $(inherited)
-LIBRARY_SEARCH_PATHS = $(inherited)
 
 // -----------------------------------------------------------------------------
 // Custom

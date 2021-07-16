@@ -3,7 +3,7 @@ import MetalKit
 @testable import DebugApp
 
 class ApplicationTestCase: XCTestCase {
-    var vc: DebugViewController?
+    var vc: UIViewController?
 
     override class func tearDown() {
         super.tearDown()
@@ -24,7 +24,7 @@ class ApplicationTestCase: XCTestCase {
         }
 
         let expect = expectation(description: "Present view controller")
-        mvc.showViewController { vc in
+        mvc.showViewController(withIdentifier: "viewControllerId") { vc in
             self.vc = vc
 
             // TODO: Configure the DebugViewController. For example, override

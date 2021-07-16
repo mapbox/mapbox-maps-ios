@@ -31,27 +31,27 @@ class CircleLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.layout?.visibility = .constant(.visible)
-            layer.layout?.circleSortKey = Value<Double>.testConstantValue()
+            layer.visibility = .constant(.visible)
+            layer.circleSortKey = Value<Double>.testConstantValue()
 
-            layer.paint?.circleBlur = Value<Double>.testConstantValue()
-            layer.paint?.circleBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.circleColor = Value<ColorRepresentable>.testConstantValue()
-            layer.paint?.circleColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.circleOpacity = Value<Double>.testConstantValue()
-            layer.paint?.circleOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.circlePitchAlignment = Value<CirclePitchAlignment>.testConstantValue()
-            layer.paint?.circlePitchScale = Value<CirclePitchScale>.testConstantValue()
-            layer.paint?.circleRadius = Value<Double>.testConstantValue()
-            layer.paint?.circleRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.circleStrokeColor = Value<ColorRepresentable>.testConstantValue()
-            layer.paint?.circleStrokeColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.circleStrokeOpacity = Value<Double>.testConstantValue()
-            layer.paint?.circleStrokeOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.circleStrokeWidth = Value<Double>.testConstantValue()
-            layer.paint?.circleStrokeWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.circleTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.circleTranslateAnchor = Value<CircleTranslateAnchor>.testConstantValue()
+            layer.circleBlur = Value<Double>.testConstantValue()
+            layer.circleBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.circleColor = Value<ColorRepresentable>.testConstantValue()
+            layer.circleColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.circleOpacity = Value<Double>.testConstantValue()
+            layer.circleOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.circlePitchAlignment = Value<CirclePitchAlignment>.testConstantValue()
+            layer.circlePitchScale = Value<CirclePitchScale>.testConstantValue()
+            layer.circleRadius = Value<Double>.testConstantValue()
+            layer.circleRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.circleStrokeColor = Value<ColorRepresentable>.testConstantValue()
+            layer.circleStrokeColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.circleStrokeOpacity = Value<Double>.testConstantValue()
+            layer.circleStrokeOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.circleStrokeWidth = Value<Double>.testConstantValue()
+            layer.circleStrokeWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.circleTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.circleTranslateAnchor = Value<CircleTranslateAnchor>.testConstantValue()
 
             // Add the layer
             do {
@@ -66,7 +66,7 @@ class CircleLayerIntegrationTests: MapViewIntegrationTestCase {
                 _ = try style.layer(withId: "test-id") as CircleLayer
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
-                XCTFail("Failed to retrieve CircleLayer because of error: \(error)")   
+                XCTFail("Failed to retrieve CircleLayer because of error: \(error)")
             }
         }
 

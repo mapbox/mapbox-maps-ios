@@ -17,6 +17,7 @@ extension MapboxCoreMaps.MapOptions {
                             viewportMode: ViewportMode = .default,
                             orientation: NorthOrientation = .upwards,
                             crossSourceCollisions: Bool = true,
+                            optimizeForTerrain: Bool = true,
                             size: CGSize? = nil,
                             pixelRatio: CGFloat = UIScreen.main.scale,
                             glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions(fontFamilies: [])) {
@@ -34,6 +35,7 @@ extension MapboxCoreMaps.MapOptions {
                   viewportMode: viewportMode.NSNumber,
                   orientation: orientation.NSNumber,
                   crossSourceCollisions: crossSourceCollisions.NSNumber,
+                  optimizeForTerrain: optimizeForTerrain.NSNumber,
                   size: mbmSize,
                   pixelRatio: Float(pixelRatio),
                   glyphsRasterizationOptions: glyphsRasterizationOptions)
@@ -60,6 +62,18 @@ extension MapboxCoreMaps.MapOptions {
     /// enabled. Default is `true`.
     public var crossSourceCollisions: Bool {
         return __crossSourceCollisions?.boolValue ?? true
+    }
+
+    /// With terrain on, if `true`, the map will render for performance priority,
+    /// which may lead to layer reordering allowing to maximize performance
+    /// (layers that are draped over terrain will be drawn first, including fill,
+    /// line, background, hillshade and raster). Any layers that are positioned
+    /// after symbols are draped last, over symbols. Otherwise, if set to `false`,
+    /// the map will always be drawn for layer order priority.
+    ///
+    /// By default, it is set to true.
+    public var optimizeForTerrain: Bool {
+        return __optimizeForTerrain?.boolValue ?? true
     }
 
     /// The size of the map object and renderer backend. For Apple platforms this

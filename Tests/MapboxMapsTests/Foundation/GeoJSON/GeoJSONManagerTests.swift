@@ -19,7 +19,7 @@ class GeoJSONManagerTests: XCTestCase {
         return try! Fixture.geojsonData(from: "featurecollection")!
     }
 
-    var pointFeature: Feature {
+    var pointFeature: Turf.Feature {
         return try! GeoJSON.parse(Feature.self, from: pointJSON)
     }
 
@@ -36,7 +36,7 @@ class GeoJSONManagerTests: XCTestCase {
 
         // Then
         XCTAssertNotNil(potentialFeature)
-        XCTAssertTrue(potentialFeature is Feature)
+        XCTAssertTrue(potentialFeature is Turf.Feature)
         XCTAssertFalse(potentialFeature is FeatureCollection)
     }
 
@@ -49,13 +49,13 @@ class GeoJSONManagerTests: XCTestCase {
 
         // Then
         XCTAssertNotNil(potentialFeatureCollection)
-        XCTAssertFalse(potentialFeatureCollection is Feature)
+        XCTAssertFalse(potentialFeatureCollection is Turf.Feature)
         XCTAssertTrue(potentialFeatureCollection is FeatureCollection)
     }
 
     func testDecodeKnownMethodDecodesGeoJSONFeatureData() throws {
         // Given
-        let potentialFeature: Feature?
+        let potentialFeature: Turf.Feature?
 
         // When
         potentialFeature = try! GeoJSONManager.decodeKnown(pointJSON)
@@ -81,7 +81,7 @@ class GeoJSONManagerTests: XCTestCase {
 
         // When
         let encodedFeatureData = try! GeoJSONManager.encode(pointFeature)
-        let decodedFeature: Feature? = try! GeoJSONManager.decodeKnown(encodedFeatureData)
+        let decodedFeature: Turf.Feature? = try! GeoJSONManager.decodeKnown(encodedFeatureData)
 
         // Then
         XCTAssertNotNil(decodedFeature)

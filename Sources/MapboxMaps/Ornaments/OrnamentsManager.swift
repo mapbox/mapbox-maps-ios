@@ -40,6 +40,9 @@ public class OrnamentsManager: NSObject {
 
         // Scalebar View
         scalebarView = MapboxScaleBarOrnamentView()
+        // Check whether the scale bar is position on the right side of the map view.
+        let scaleBarPosition = options.scaleBar.position
+        scalebarView.isOnRight = scaleBarPosition == .bottomRight || scaleBarPosition == .topRight
         scalebarView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scalebarView)
 
@@ -64,9 +67,9 @@ public class OrnamentsManager: NSObject {
         view.subscribeCameraChangeHandler { [scalebarView, compassView] (cameraState) in
 
             // Update the scale bar
-            scalebarView.metersPerPoint = Projection.getMetersPerPixelAtLatitude(
-                forLatitude: cameraState.center.latitude,
-                zoom: Double(cameraState.zoom))
+            scalebarView.metersPerPoint = Projection.metersPerPoint(
+                for: cameraState.center.latitude,
+                zoom: cameraState.zoom)
 
             // Update the compass
             compassView.currentBearing = Double(cameraState.bearing)
@@ -93,6 +96,8 @@ public class OrnamentsManager: NSObject {
         let scaleBarViewConstraints = constraints(with: scalebarView,
                                                   position: options.scaleBar.position,
                                                   margins: options.scaleBar.margins)
+        let scaleBarPosition = options.scaleBar.position
+        scalebarView.isOnRight = scaleBarPosition == .bottomRight || scaleBarPosition == .topRight
         constraints.append(contentsOf: scaleBarViewConstraints)
 
         let attributionButtonConstraints = constraints(with: attributionButton,

@@ -51,7 +51,7 @@ internal struct FlyToInterpolator {
     ///   - dest: End camera (parameters ARE clamped to properties from MapCameraOptions)
     ///   - mapCameraOptions: Camera-specific capabilities of the map, for example, min-zoom, max-pitch
     ///   - size: Map View size in points
-    internal init?(from source: CameraState, to dest: CameraOptions, with mapCameraOptions: MapCameraOptions = MapCameraOptions(), size: CGSize) {
+    internal init?(from source: CameraState, to dest: CameraOptions, cameraBounds: CameraBounds, size: CGSize) {
         // Initial conditions
         let sourcePaddingParam   = source.padding
         let sourceCoord          = source.center
@@ -71,15 +71,15 @@ internal struct FlyToInterpolator {
 
         // Note that the source arguments are NOT clamped - these are assumed to be valid parameters
         let compilerWorkaround = sourceZoom
-        let destZoom = (dest.zoom ?? compilerWorkaround).clamped(to: mapCameraOptions.minimumZoomLevel...mapCameraOptions.maximumZoomLevel)
-        destPitch = (dest.pitch ?? sourcePitchParam).clamped(to: mapCameraOptions.minimumPitch...mapCameraOptions.maximumPitch)
+        let destZoom = (dest.zoom ?? compilerWorkaround).clamped(to: CGFloat(cameraBounds.minZoom)...CGFloat(cameraBounds.maxZoom))
+        destPitch = (dest.pitch ?? sourcePitchParam).clamped(to: CGFloat(cameraBounds.minPitch)...CGFloat(cameraBounds.maxPitch))
         destBearing = dest.bearing ?? sourceBearingParam
 
         // Unwrap
         let sourceCoordUnwrapped = sourceCoord.unwrapForShortestPath(destCoord)
 
-        let sourcePointTemp = Projection.project(for: sourceCoordUnwrapped, zoomScale: Double(sourceScale))
-        let destPointTemp   = Projection.project(for: destCoord, zoomScale: Double(sourceScale))
+        let sourcePointTemp = Projection.project(sourceCoordUnwrapped, zoomScale: sourceScale)
+        let destPointTemp   = Projection.project(destCoord, zoomScale: sourceScale)
         sourcePoint         = CGPoint(x: sourcePointTemp.x, y: sourcePointTemp.y)
         destPoint           = CGPoint(x: destPointTemp.x, y: destPointTemp.y)
 
@@ -215,7 +215,7 @@ internal struct FlyToInterpolator {
 
         let position = MercatorCoordinate(x: Double(interpolated.x), y: Double(interpolated.y))
 
-        return Projection.unproject(for: position, zoomScale: Double(sourceScale))
+        return Projection.unproject(position, zoomScale: sourceScale)
     }
 
     /// Calculates the zoom level given a fraction in [0,1].

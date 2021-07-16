@@ -15,6 +15,7 @@ internal class EventsManager: EventsListener {
         mmeEventsManager.initialize(withAccessToken: accessToken,
                                     userAgentBase: Constants.MGLAPIClientUserAgentBase,
                                     hostSDKVersion: sdkVersion)
+        mmeEventsManager.skuId = "00"
     }
 
     init(with telemetry: TelemetryProtocol?) {

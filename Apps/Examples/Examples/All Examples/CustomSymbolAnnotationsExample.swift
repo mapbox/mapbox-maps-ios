@@ -23,6 +23,8 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
 
+    internal var annotationManager: CircleAnnotationManager?
+
     // Configure a label
     public lazy var label: UILabel = {
         let label = UILabel(frame: CGRect.zero)
@@ -79,25 +81,26 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
     }
 
     @objc private func mapSymbolTap(sender: UITapGestureRecognizer) {
-        if sender.state == .recognized {
-            let annotationLayers: Set<String> = [CustomSymbolAnnotationsExample.annotations]
-
-            mapView.visibleFeatures(at: sender.location(in: mapView), styleLayers: annotationLayers, filter: nil) { result in
-                switch result {
-                case .success(let features):
-                    if features.count > 0 {
-                        guard let featureText = features[0].feature.properties["text"] as? String else { return }
-                        self.label.text = featureText
-                    }
-                case .failure(let error):
-                    print("An error occurred: \(error.localizedDescription)")
-                }
-            }
-        }
+//        if sender.state == .recognized {
+//            let annotationLayers: Set<String> = [CustomSymbolAnnotationsExample.annotations]
+//
+//            mapView.visibleFeatures(at: sender.location(in: mapView), styleLayers: annotationLayers, filter: nil) { result in
+//                switch result {
+//                case .success(let features):
+//                    if features.count > 0 {
+//                        guard let featureText = features[0].feature.properties["text"] as? String else { return }
+//                        self.label.text = featureText
+//                    }
+//                case .failure(let error):
+//                    print("An error occurred: \(error.localizedDescription)")
+//                }
+//            }
+//        }
     }
 
     private func updateAnnotationSymbolImages() {
-        guard let style = mapView.style, style.image(withId: "AnnotationLeftHanded") == nil, style.image(withId: "AnnotationRightHanded") == nil else { return }
+        let style = mapView.mapboxMap.style
+//        guard let style = mapView.mapboxMap.style, style.image(withId: "AnnotationLeftHanded") == nil, style.image(withId: "AnnotationRightHanded") == nil else { return }
 
         let annotationHighlightedColor = UIColor(hue: 0.831372549, saturation: 0.72, brightness: 0.59, alpha: 1.0)
         let annotationColor = UIColor.white
@@ -129,6 +132,13 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
             let highlightedAnnotationImage = image.tint(annotationHighlightedColor)
 
             try? style.addImage(highlightedAnnotationImage, id: "AnnotationRightHanded-Highlighted", sdf: false, stretchX: stretchX, stretchY: stretchY, content: imageContent)
+
+//            try? style.addImage(UIImage.solid()!, id: "AnnotationRightHanded-Highlighted", sdf: false, stretchX: stretchX, stretchY: stretchY, content: imageContent)
+//
+//            try? style.addImage(UIImage.solid()!,
+//                                id: "AnnotationRightHanded-Highlighted",
+//                                sdf: false,
+//                                content: imageContent)
         }
 
         // Left-hand pin
@@ -146,7 +156,9 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
     static let annotations = "annotations"
 
     private func addDebugFeatures() -> FeatureCollection {
-        var features = [Feature]()
+
+        var features = [Turf.Feature]()
+
         let featureList = [
             DebugFeature(coordinate: CLLocationCoordinate2DMake(40.714203, -74.006314), highlighted: false, sortOrder: 0, tailPosition: .left, label: "Chambers & Broadway - Lefthand Stem", imageName: "AnnotationLeftHanded"),
             DebugFeature(coordinate: CLLocationCoordinate2DMake(40.707918, -74.006008), highlighted: false, sortOrder: 0, tailPosition: .right, label: "Cliff & John - Righthand Stem", imageName: "AnnotationRightHanded"),
@@ -156,47 +168,67 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
             DebugFeature(coordinate: CLLocationCoordinate2DMake(40.711427, -74.008614), highlighted: false, sortOrder: 3, tailPosition: .center, label: "Broadway & Vesey - Centered Stem", imageName: "AnnotationCentered")
         ]
 
+        self.annotationManager = mapView.annotations.makeCircleAnnotationManager()
+        var annotations = [CircleAnnotation]()
+
         for (index, feature) in featureList.enumerated() {
-            var featurePoint = Feature(Point(feature.coordinate))
+            // var featurePoint = Feature(Point(feature.coordinate))
+
+            let point = Turf.Point(feature.coordinate)
+//            let feature = Turf.Feature(geometry: point)
+            var pointFeature = Feature(geometry: .point(point))
 
             // set the feature attributes which will be used in styling the symbol style layer
-            featurePoint.properties = ["highlighted": feature.highlighted, "tailPosition": feature.tailPosition.rawValue, "text": feature.label, "imageName": feature.imageName, "sortOrder": feature.highlighted == true ? index : -index]
+            pointFeature.properties = ["highlighted": feature.highlighted,
+                                       "tailPosition": feature.tailPosition.rawValue,
+                                       "text": feature.label,
+                                       "imageName": feature.imageName,
+                                       "sortOrder": feature.highlighted == true ? index : -index]
 
-            features.append(featurePoint)
+            features.append(pointFeature)
+
+            var annotation = CircleAnnotation(centerCoordinate: feature.coordinate)
+            annotation.circleColor = .init(color: .red)
+            annotation.circleRadius = 10
+            annotations.append(annotation)
+
+            self.annotationManager?.syncAnnotations(annotations)
         }
+
+        
 
         return FeatureCollection(features: features)
     }
 
     private func addAnnotationSymbolLayer(features: FeatureCollection) {
-        guard let style = mapView.style else { return }
-        if mapView.style.sourceExists(withId: CustomSymbolAnnotationsExample.annotations) {
-            try? mapView.style.updateGeoJSONSource(withId: CustomSymbolAnnotationsExample.annotations, geoJSON: features)
+        if mapView.mapboxMap.style.sourceExists(withId: CustomSymbolAnnotationsExample.annotations) {
+            try? mapView.mapboxMap.style.updateGeoJSONSource(withId: CustomSymbolAnnotationsExample.annotations, geoJSON: features)
         } else {
             var dataSource = GeoJSONSource()
             dataSource.data = .featureCollection(features)
-            try? mapView.style.addSource(dataSource, id: CustomSymbolAnnotationsExample.annotations)
+            try? mapView.mapboxMap.style.addSource(dataSource, id: CustomSymbolAnnotationsExample.annotations)
         }
 
         var shapeLayer: SymbolLayer
 
-        if mapView.style.layerExists(withId: CustomSymbolAnnotationsExample.annotations) {
-            shapeLayer = try! mapView.style.layer(withId: CustomSymbolAnnotationsExample.annotations) as SymbolLayer
+        if mapView.mapboxMap.style.layerExists(withId: CustomSymbolAnnotationsExample.annotations) {
+            shapeLayer = try! mapView.mapboxMap.style.layer(withId: CustomSymbolAnnotationsExample.annotations) as SymbolLayer
         } else {
             shapeLayer = SymbolLayer(id: CustomSymbolAnnotationsExample.annotations)
         }
 
         shapeLayer.source = CustomSymbolAnnotationsExample.annotations
 
-        shapeLayer.layout?.textField = .expression(Exp(.get) {
+
+        shapeLayer.textField = .expression(Exp(.get) {
             "text"
         })
 
-        shapeLayer.layout?.iconImage = .expression(Exp(.get) {
+        shapeLayer.iconImage = .expression(Exp(.get) {
             "imageName"
         })
 
-        shapeLayer.paint?.textColor = .expression(Exp(.switchCase) {
+        shapeLayer.textColor = .expression(Exp(.switchCase) {
             Exp(.any) {
                 Exp(.get) {
                     "highlighted"
@@ -206,57 +238,63 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
             UIColor.black
         })
 
-        shapeLayer.layout?.textSize = .constant(16)
-        shapeLayer.layout?.iconTextFit = .constant(.both)
-        shapeLayer.layout?.iconAllowOverlap = .constant(true)
-        shapeLayer.layout?.textAllowOverlap = .constant(true)
-        shapeLayer.layout?.textJustify = .constant(.left)
-        shapeLayer.layout?.symbolZOrder = .constant(.auto)
-        shapeLayer.layout?.textFont = .constant(["DIN Pro Medium"])
+        shapeLayer.textSize = .constant(16)
+        shapeLayer.iconTextFit = .constant(.both)
+        shapeLayer.iconAllowOverlap = .constant(true)
+        shapeLayer.textAllowOverlap = .constant(true)
+        shapeLayer.textJustify = .constant(.left)
+        shapeLayer.symbolZOrder = .constant(.auto)
+        shapeLayer.textFont = .constant(["DIN Pro Medium"])
 
-        try? style.addLayer(shapeLayer)
-
-        let symbolSortKeyString =
-        """
-        ["get", "sortOrder"]
-        """
-
-        if let expressionData = symbolSortKeyString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
-
-            try! mapView.mapboxMap.style.setLayerProperties(for: CustomSymbolAnnotationsExample.annotations, properties: ["symbol-sort-key": expJSONObject])
-        }
-
-        let myExpression = Exp(.match) {
-             Exp(.get) { "tailPosition" }
-             [0]
-             "bottom-left"
-             [1]
-             "bottom-right"
-             "center"
+        let expression = Exp(.switchCase) {
+            Exp(.eq) {
+                Exp(.get) { "tailPosition" }
+                0
             }
-//        shapeLayer.layout?.iconAnchor = .expression(myExpression)
+            "bottom-left"
+            Exp(.eq) {
+                Exp(.get) { "tailPosition" }
+                1
+            }
+            "bottom-right"
+            Exp(.eq) {
+                Exp(.get) { "tailPosition" }
+                2
+            }
+            "bottom"
+            ""
+        }
+        shapeLayer.textAnchor = .expression(expression)
 
-        let offsetExpressionString =
-        """
-        [
-          "match",
-          ["get", "tailPosition"],
-          [0],
-          ["literal", [0.5, -1]],
-          [1],
-          ["literal", [-0.5, -1]],
-          [2],
-          ["literal", [0.0, -1]],
-          ["literal", [0.0, 0.0]]
-        ]
-        """
+        let offsetExpression = Exp(.switchCase) {
+            Exp(.eq) {
+                Exp(.get) { "tailPosition" }
+                0
+            }
+            Exp(.literal) {
+                [0.7,-2.0]
+            }
+            Exp(.eq) {
+                Exp(.get) { "tailPosition" }
+                1
+            }
+            Exp(.literal) {
+                [-0.7,-2.0]
+            }
+            Exp(.eq) {
+                Exp(.get) { "tailPosition" }
+                2
+            }
+            Exp(.literal) {
+                [-0.2,-2.0]
+            }
+            Exp(.literal) {
+                [0.0,-2.0]
+            }
+        }
+        shapeLayer.textOffset = .expression(offsetExpression)
 
-//        if let expressionData = offsetExpressionString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
-//
-//            try! mapView.mapboxMap.style.setLayerProperties(for: CustomSymbolAnnotationsExample.annotations, properties: ["icon-offset": expJSONObject])
-//
-//            try! mapView.mapboxMap.style.setLayerProperties(for: CustomSymbolAnnotationsExample.annotations, properties: ["text-anchor": expJSONObject])
-//        }
+        try! mapView.mapboxMap.style.addLayer(shapeLayer)
     }
 }
 

@@ -14,19 +14,23 @@ final class GestureManagerTests: XCTestCase {
     var mapView: MapView!
     // swiftlint:disable weak_delegate
     var delegate: GestureHandlerDelegateMock!
-    var cameraManager: MockCameraManager!
+    var cameraAnimationsManager: MockCameraAnimationsManager!
     var initialGestureOptions: GestureOptions!
     var gestureManager: GestureManager!
 
     override func setUp() {
-        mapView = MapView(frame: CGRect(x: 0, y: 0, width: 100, height: 100),
-                              mapInitOptions: MapInitOptions(styleURI: nil))
+        mapView = MapView(
+            frame: CGRect(x: 0, y: 0, width: 100, height: 100),
+            mapInitOptions: MapInitOptions(
+                resourceOptions: ResourceOptions(accessToken: "dummy"),
+                styleURI: nil))
         delegate = GestureHandlerDelegateMock()
-        cameraManager = MockCameraManager()
-        cameraManager.mapView = mapView
+        cameraAnimationsManager = MockCameraAnimationsManager()
         initialGestureOptions = GestureOptions()
-        gestureManager = GestureManager(for: mapView,
-                                        cameraManager: cameraManager)
+        gestureManager = GestureManager(
+            view: mapView,
+            cameraAnimationsManager: cameraAnimationsManager,
+            mapboxMap: mapView.mapboxMap)
     }
 
     func testInitializer() {
@@ -34,6 +38,16 @@ final class GestureManagerTests: XCTestCase {
         XCTAssert(gestureManager.gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 1)] is TapGestureHandler)
         XCTAssert(gestureManager.gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 2)] is TapGestureHandler)
         XCTAssert(gestureManager.gestureHandlers[.pan] is PanGestureHandler)
+    }
+
+    func testGestureRecognizersReturnedAreSameAsRecognizersPresentInGestureHandlers() {
+        XCTAssertTrue(gestureManager.gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 1)]?.gestureRecognizer === gestureManager.doubleTapToZoomInGestureRecognizer)
+        XCTAssertTrue(gestureManager.gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 2)]?.gestureRecognizer === gestureManager.doubleTapToZoomOutGestureRecognizer)
+        XCTAssertTrue(gestureManager.gestureHandlers[.pan]?.gestureRecognizer === gestureManager.panGestureRecognizer)
+        XCTAssertTrue(gestureManager.gestureHandlers[.pinch]?.gestureRecognizer === gestureManager.pinchGestureRecognizer)
+        XCTAssertTrue(gestureManager.gestureHandlers[.pitch]?.gestureRecognizer === gestureManager.pitchGestureRecognizer)
+        XCTAssertTrue(gestureManager.gestureHandlers[.quickZoom]?.gestureRecognizer === gestureManager.quickZoomGestureRecognizer)
+        XCTAssertTrue(gestureManager.gestureHandlers[.rotate]?.gestureRecognizer === gestureManager.rotationGestureRecognizer)
     }
 
     func testTapGesturesTypesAreEqual() {
@@ -55,8 +69,9 @@ final class GestureManagerTests: XCTestCase {
         var options = GestureOptions()
         options.pitchEnabled = false
         let gestureManager = GestureManager(
-            for: mapView,
-            cameraManager: cameraManager)
+            view: mapView,
+            cameraAnimationsManager: cameraAnimationsManager,
+            mapboxMap: mapView.mapboxMap)
 
         options.pitchEnabled = true
         gestureManager.options = options
@@ -93,20 +108,18 @@ final class GestureManagerTests: XCTestCase {
     func testPinchScaleChanged_SetsCamera() {
         let zoom = CGFloat.random(in: 0...22)
 
+        XCTAssertNotEqual(mapView.cameraState.zoom, zoom, "The map's zoom should not equal `zoom` before it is provided to the gesture manager.")
         gestureManager.pinchScaleChanged(with: zoom, andAnchor: .zero)
 
-        XCTAssertEqual(cameraManager.setCameraStub.invocations.count, 1)
-        XCTAssertEqual(cameraManager.setCameraStub.parameters.first?.camera.zoom, zoom)
-        XCTAssertEqual(cameraManager.setCameraStub.parameters.first?.camera.anchor, .zero)
+        XCTAssertEqual(mapView.cameraState.zoom, zoom, accuracy: 0.00001, "The map's zoom should equal the zoom level provided by the gesture manager.")
     }
 
     func testPinchEnded_SetsCamera() {
         let zoom = CGFloat.random(in: 0...22)
 
+        XCTAssertNotEqual(mapView.cameraState.zoom, zoom, "The map's zoom should not equal `zoom` before it is provided to the gesture manager.")
         gestureManager.pinchEnded(with: zoom, andDrift: true, andAnchor: .zero)
 
-        XCTAssertEqual(cameraManager.setCameraStub.invocations.count, 1)
-        XCTAssertEqual(cameraManager.setCameraStub.parameters.first?.camera.zoom, zoom)
-        XCTAssertEqual(cameraManager.setCameraStub.parameters.first?.camera.anchor, .zero)
+        XCTAssertEqual(mapView.cameraState.zoom, zoom, accuracy: 0.00001, "The map's zoom should equal the zoom level provided by the gesture manager after the drift.")
     }
 }

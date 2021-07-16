@@ -1,6 +1,15 @@
 import Foundation
+@_implementationOnly import MapboxCommon_Private
 
 extension MapboxCoreMaps.OfflineManager {
+
+    /// Construct a new offline manager
+    ///
+    /// - Parameter resourceOptions: ResourceOptions the resource options to manage.
+    public convenience init(resourceOptions: ResourceOptions) {
+        self.init(resourceOptions: MapboxCoreMaps.ResourceOptions(resourceOptions))
+    }
+
     /// Loads a new style package or updates the existing one.
     ///
     /// - Parameters:
@@ -41,13 +50,13 @@ extension MapboxCoreMaps.OfflineManager {
             return __loadStylePack(forStyleURI: styleURI.rawValue,
                                    loadOptions: loadOptions,
                                    onProgress: progress,
-                                   onFinished: offlineManagerClosureAdapter(for: completion, type: StylePack.self))
+                                   onFinished: offlineManagerClosureAdapter(for: completion, type: StylePack.self)).asCancelable()
         }
         // An overloaded version that does not report progess of the loading operation.
         else {
             return __loadStylePack(forStyleURI: styleURI.rawValue,
                                    loadOptions: loadOptions,
-                                   onFinished: offlineManagerClosureAdapter(for: completion, type: StylePack.self))
+                                   onFinished: offlineManagerClosureAdapter(for: completion, type: StylePack.self)).asCancelable()
         }
     }
 
@@ -108,6 +117,6 @@ extension MapboxCoreMaps.OfflineManager {
 
 private func offlineManagerClosureAdapter<T, ObjCType>(
     for closure: @escaping (Result<T, Error>) -> Void,
-    type: ObjCType.Type) -> ((MBXExpected<AnyObject, AnyObject>?) -> Void) where ObjCType: AnyObject {
+    type: ObjCType.Type) -> ((Expected<AnyObject, AnyObject>?) -> Void) where ObjCType: AnyObject {
     return coreAPIClosureAdapter(for: closure, type: type, concreteErrorType: StylePackError.self)
 }

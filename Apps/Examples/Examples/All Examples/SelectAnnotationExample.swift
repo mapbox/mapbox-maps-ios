@@ -7,6 +7,23 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
 
+    /// Keep a reference to the `PointAnnotationManager` since the annotations will only show if their corresponding manager is alive
+    internal lazy var pointAnnotationManager: PointAnnotationManager = {
+        return mapView.annotations.makePointAnnotationManager()
+    }()
+
+    internal var annotationSelected: Bool = false {
+        didSet {
+            if annotationSelected {
+                label.backgroundColor = UIColor.systemGreen
+                label.text = "Selected annotation!"
+            } else {
+                label.backgroundColor = UIColor.systemGray
+                label.text = "Deselected annotation"
+            }
+        }
+    }
+
     // Configure a label
     public lazy var label: UILabel = {
         let label = UILabel(frame: CGRect.zero)
@@ -57,13 +74,14 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
 
         // Create the point annotation, which will be rendered with the default red pin.
         let coordinate = mapView.cameraState.center
-        let pointAnnotation = PointAnnotation(coordinate: coordinate)
+        var pointAnnotation = PointAnnotation(coordinate: coordinate)
+        pointAnnotation.image = .default
 
         // Allow the view controller to accept annotation selection events.
-        mapView.annotations.interactionDelegate = self
+        pointAnnotationManager.delegate = self
 
         // Add the annotation to the map.
-        mapView.annotations.addAnnotation(pointAnnotation)
+        pointAnnotationManager.syncAnnotations([pointAnnotation])
 
         // The below line is used for internal testing purposes only.
         finish()
@@ -72,13 +90,8 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
 
 // Change the label's text and style when it is selected or deselected.
 extension SelectAnnotationExample: AnnotationInteractionDelegate {
-    public func didDeselectAnnotation(annotation: Annotation) {
-        label.backgroundColor = UIColor.systemGray
-        label.text = "Deselected annotation"
-    }
-
-    public func didSelectAnnotation(annotation: Annotation) {
-        label.backgroundColor = UIColor.systemGreen
-        label.text = "Selected annotation!"
+    public func annotationManager(_ manager: AnnotationManager,
+                                  didDetectTappedAnnotations annotations: [Annotation]) {
+        annotationSelected.toggle()
     }
 }

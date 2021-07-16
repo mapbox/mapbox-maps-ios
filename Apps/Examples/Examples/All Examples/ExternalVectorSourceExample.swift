@@ -38,10 +38,10 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         lineLayer.source = sourceIdentifier
         lineLayer.sourceLayer = "mapillary-sequences"
         let lineColor = ColorRepresentable(color: UIColor(red: 0.21, green: 0.69, blue: 0.43, alpha: 1.00))
-        lineLayer.paint?.lineColor = .constant(lineColor)
-        lineLayer.paint?.lineOpacity = .constant(0.6)
-        lineLayer.paint?.lineWidth = .constant(2.0)
-        lineLayer.layout?.lineCap = .constant(.round)
+        lineLayer.lineColor = .constant(lineColor)
+        lineLayer.lineOpacity = .constant(0.6)
+        lineLayer.lineWidth = .constant(2.0)
+        lineLayer.lineCap = .constant(.round)
 
         do {
             try mapView.mapboxMap.style.addSource(vectorSource, id: sourceIdentifier)
@@ -52,7 +52,7 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         // Define the layer's positioning within the layer stack so
         // that it doesn't obscure other important labels.
         do {
-            try mapView.style.addLayer(lineLayer, layerPosition: .below("waterway-label"))
+            try mapView.mapboxMap.style.addLayer(lineLayer, layerPosition: .below("waterway-label"))
         } catch let layerError {
             displayAlert(message: layerError.localizedDescription)
         }

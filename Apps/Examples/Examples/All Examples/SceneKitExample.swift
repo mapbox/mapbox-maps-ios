@@ -55,9 +55,9 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
         try! mapView.mapboxMap.style.setTerrain(terrain)
 
         var skyLayer = SkyLayer(id: "sky-layer")
-        skyLayer.paint?.skyType = .constant(.atmosphere)
-        skyLayer.paint?.skyAtmosphereSun = .constant([0, 0])
-        skyLayer.paint?.skyAtmosphereSunIntensity = .constant(15.0)
+        skyLayer.skyType = .constant(.atmosphere)
+        skyLayer.skyAtmosphereSun = .constant([0, 0])
+        skyLayer.skyAtmosphereSunIntensity = .constant(15.0)
 
         try! mapView.mapboxMap.style.addLayer(skyLayer)
 
@@ -69,7 +69,7 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
             "hillshade-illumination-anchor": "map"
         ] as [ String: Any ]
 
-        try! mapView.style.addLayer(with: properties, layerPosition: .below("water"))
+        try! mapView.mapboxMap.style.addLayer(with: properties, layerPosition: .below("water"))
     }
 
     public func renderingWillStart(_ metalDevice: MTLDevice, colorPixelFormat: UInt, depthStencilPixelFormat: UInt) {
@@ -170,11 +170,11 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
         transformSimd[3, 3] = m[15].doubleValue
 
         // Model is using metric unit system: scale x and y from meters to mercator and keep z is in meters.
-        let meterInMercatorCoordinateUnits = 1.0 / (Projection.getMetersPerPixelAtLatitude(forLatitude: modelOrigin.latitude, zoom: parameters.zoom))
-        let modelScale = makeScaleMatrix(xScale: meterInMercatorCoordinateUnits, yScale: -meterInMercatorCoordinateUnits, zScale: 1)
+        let meterInMercatorCoordinateUnits = 1.0 / (Projection.metersPerPoint(for: modelOrigin.latitude, zoom: CGFloat(parameters.zoom)))
+        let modelScale = makeScaleMatrix(xScale: meterInMercatorCoordinateUnits, yScale: Double(-meterInMercatorCoordinateUnits), zScale: 1)
 
         // Translate scaled model to model origin (in web mercator coordinates) and elevate to model origin's altitude (in meters).
-        let origin = Projection.project(for: modelOrigin, zoomScale: pow(2, parameters.zoom))
+        let origin = Projection.project(modelOrigin, zoomScale: CGFloat(pow(2, parameters.zoom)))
         var elevation = 0.0
         if let elevationData = parameters.elevationData, let elevationValue = elevationData.getElevationFor(self.modelOrigin) {
             elevation = elevationValue.doubleValue

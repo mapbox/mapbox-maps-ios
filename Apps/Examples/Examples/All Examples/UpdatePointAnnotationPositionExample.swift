@@ -7,7 +7,11 @@ import Turf
 public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
-    internal var pointAnnotation: PointAnnotation!
+
+    /// Keep a reference to the `PointAnnotationManager` since the annotations will only show if their corresponding manager is alive
+    internal lazy var pointAnnotationManager: PointAnnotationManager = {
+        return mapView.annotations.makePointAnnotationManager()
+    }()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -30,27 +34,27 @@ public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProt
     }
 
     public func addPointAnnotation() {
-        pointAnnotation = PointAnnotation(coordinate: mapView.cameraState.center)
-        mapView.annotations.addAnnotation(pointAnnotation)
+        // Create the point annotation with the default marker image
+        var pointAnnotation = PointAnnotation(coordinate: mapView.cameraState.center)
+        pointAnnotation.image = .default
+
+        // Add the annotation to the map
+        pointAnnotationManager.syncAnnotations([pointAnnotation])
+
+        // Add a gesture recognizer to the map
         mapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(updatePosition)))
     }
 
     @objc public func updatePosition(_ sender: UITapGestureRecognizer) {
+
+        // Get the coordinate of the position tapped on the mapView
         let newCoordinate = mapView.mapboxMap.coordinate(for: sender.location(in: mapView))
-        pointAnnotation.coordinate = newCoordinate
 
-        do {
-            try mapView.annotations.updateAnnotation(pointAnnotation)
-        } catch let error {
-            displayAlert(message: error.localizedDescription)
-        }
-    }
+        // Create a new point annotation with the new coordinate
+        var pointAnnotation = PointAnnotation(coordinate: newCoordinate)
+        pointAnnotation.image = .default
 
-    fileprivate func displayAlert(message: String) {
-        let alertController = UIAlertController(title: "Error:",
-                                                message: message,
-                                                preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
-        present(alertController, animated: true, completion: nil)
+        // Update the annotations being managed by the manager
+        pointAnnotationManager.syncAnnotations([pointAnnotation])
     }
 }

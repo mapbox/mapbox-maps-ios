@@ -1,6 +1,11 @@
 // This file is generated
 import XCTest
+
+#if canImport(MapboxMaps)
 @testable import MapboxMaps
+#else
+@testable import MapboxMapsStyle
+#endif
 
 class HeatmapLayerIntegrationTests: MapViewIntegrationTestCase {
 
@@ -26,16 +31,16 @@ class HeatmapLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.sourceLayer = nil
             layer.minZoom = 10.0
             layer.maxZoom = 20.0
-            layer.layout?.visibility = .constant(.visible)
+            layer.visibility = .constant(.visible)
 
-            layer.paint?.heatmapColor = Value<ColorRepresentable>.testConstantValue()
-            layer.paint?.heatmapIntensity = Value<Double>.testConstantValue()
-            layer.paint?.heatmapIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.heatmapOpacity = Value<Double>.testConstantValue()
-            layer.paint?.heatmapOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.heatmapRadius = Value<Double>.testConstantValue()
-            layer.paint?.heatmapRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.paint?.heatmapWeight = Value<Double>.testConstantValue()
+            layer.heatmapColor = Value<ColorRepresentable>.testConstantValue()
+            layer.heatmapIntensity = Value<Double>.testConstantValue()
+            layer.heatmapIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.heatmapOpacity = Value<Double>.testConstantValue()
+            layer.heatmapOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.heatmapRadius = Value<Double>.testConstantValue()
+            layer.heatmapRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
+            layer.heatmapWeight = Value<Double>.testConstantValue()
 
             // Add the layer
             do {
@@ -50,7 +55,7 @@ class HeatmapLayerIntegrationTests: MapViewIntegrationTestCase {
                 _ = try style.layer(withId: "test-id") as HeatmapLayer
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
-                XCTFail("Failed to retrieve HeatmapLayer because of error: \(error)")   
+                XCTFail("Failed to retrieve HeatmapLayer because of error: \(error)")
             }
         }
 

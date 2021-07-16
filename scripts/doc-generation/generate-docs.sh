@@ -86,7 +86,7 @@ jazzy \
     --module MapboxMaps \
     --title "Mapbox Maps SDK for iOS" \
     --swift-build-tool xcodebuild \
-    --build-tool-arguments -scheme,MapboxMaps \
+    --build-tool-arguments -project,Mapbox/MapboxMaps.xcodeproj,-scheme,MapboxMaps \
     --sdk iphonesimulator \
     --theme jazzy-theme \
     --output api-docs/$GIT_REV

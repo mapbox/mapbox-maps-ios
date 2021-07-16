@@ -1,28 +1,28 @@
 {
   "binary_name": "MapboxMaps.xcframework",
-  "created": "2021-03-31T16:37:26.179795",
-  "binary_size": 6251124,
+  "created": "2021-05-28T15:27:17.126067",
+  "binary_size": 7023701,
   "platform": {
-    "MapboxMaps_arm64": 1604864,
+    "MapboxMaps_arm64": 1723016,
     "MapboxMaps_arm64_bitcodeSize": 0,
     "MapboxMaps_arm64_debugSymbolsSize": 0,
-    "MapboxMaps_arm64_humanReadableSize": "1.5 MB",
-    "MapboxMaps_x86_64": 1718944,
+    "MapboxMaps_arm64_humanReadableSize": "1.6 MB",
+    "MapboxMaps_x86_64": 1804896,
     "MapboxMaps_x86_64_bitcodeSize": 0,
-    "MapboxMaps_x86_64_debugSymbolsSize": 99312,
-    "MapboxMaps_x86_64_humanReadableSize": "1.6 MB"
+    "MapboxMaps_x86_64_debugSymbolsSize": 114512,
+    "MapboxMaps_x86_64_humanReadableSize": "1.7 MB"
   },
   "core": {},
   "build": {
-    "build": 22726,
+    "build": 25985,
     "project": "mapbox-maps-ios",
     "branch": "HEAD",
-    "sha": "9504d44e61da587f44c021b98073e0301fe39e38",
+    "sha": "dfec4ffce994f07f4a691c6dfd3535ac8133d00c",
     "author": "Julian Rex",
-    "timestamp": 1617205117,
-    "message": "Create non-generic versions of getLayer/getSource (#241)\n\n",
-    "xcode": "Xcode 12.0 Build version 12A7209",
-    "metrics-sha": "7ea1daa8a2b9dbc7cc650b707f3a4257ea05b383"
+    "timestamp": 1622214891,
+    "message": "[run device tests] [run app device tests]\n",
+    "xcode": "Xcode 12.0.1 Build version 12A7300",
+    "metrics-sha": "d84a166c4bc7db0a4921cab4f7598f53ed9ed127"
   },
   "name": "ios-maps-v10",
   "version": "3"

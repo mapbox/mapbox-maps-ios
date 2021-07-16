@@ -62,7 +62,7 @@ class BackgroundLayerTests: XCTestCase {
     func testEncodingAndDecodingOfLayoutProperties() {
 
        var layer = BackgroundLayer(id: "test-id")	
-       layer.layout?.visibility = .constant(.visible)
+       layer.visibility = .constant(.visible)
 
        var data: Data?
        do {
@@ -78,7 +78,7 @@ class BackgroundLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(BackgroundLayer.self, from: validData)
-           XCTAssert(decodedLayer.layout?.visibility == .constant(.visible))
+           XCTAssert(decodedLayer.visibility == .constant(.visible))
  
        } catch {
            XCTFail("Failed to decode BackgroundLayer")
@@ -88,12 +88,12 @@ class BackgroundLayerTests: XCTestCase {
     func testEncodingAndDecodingOfPaintProperties() {
 
        var layer = BackgroundLayer(id: "test-id")	
-       layer.paint?.backgroundColor = Value<ColorRepresentable>.testConstantValue()
-       layer.paint?.backgroundColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.paint?.backgroundOpacity = Value<Double>.testConstantValue()
-       layer.paint?.backgroundOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.paint?.backgroundPattern = Value<ResolvedImage>.testConstantValue()
-       layer.paint?.backgroundPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.backgroundColor = Value<ColorRepresentable>.testConstantValue()
+       layer.backgroundColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.backgroundOpacity = Value<Double>.testConstantValue()
+       layer.backgroundOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
+       layer.backgroundPattern = Value<ResolvedImage>.testConstantValue()
+       layer.backgroundPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
 
        var data: Data?
        do {
@@ -109,10 +109,10 @@ class BackgroundLayerTests: XCTestCase {
 
        do {
            let decodedLayer = try JSONDecoder().decode(BackgroundLayer.self, from: validData)
-           XCTAssert(decodedLayer.layout?.visibility == .constant(.visible))
-       	   XCTAssert(layer.paint?.backgroundColor == Value<ColorRepresentable>.testConstantValue())
-       	   XCTAssert(layer.paint?.backgroundOpacity == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.paint?.backgroundPattern == Value<ResolvedImage>.testConstantValue())
+           XCTAssert(decodedLayer.visibility == .constant(.visible))
+       	   XCTAssert(layer.backgroundColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.backgroundOpacity == Value<Double>.testConstantValue())
+       	   XCTAssert(layer.backgroundPattern == Value<ResolvedImage>.testConstantValue())
  
        } catch {
            XCTFail("Failed to decode BackgroundLayer")

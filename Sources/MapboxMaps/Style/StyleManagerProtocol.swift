@@ -2,7 +2,7 @@ import Foundation
 import Turf
 
 // swiftlint:disable file_length function_parameter_count
-public protocol StyleManagerProtocol {
+internal protocol StyleManagerProtocol {
     /// `true` if and only if the style JSON contents, the style specified sprite
     /// and sources are all loaded, otherwise returns `false`.
     var isLoaded: Bool { get }
@@ -62,6 +62,46 @@ public protocol StyleManagerProtocol {
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
     func addLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws
+
+    /// Adds a new persistent style layer given its JSON properties
+    ///
+    /// Persistent style layers remain valid across style reloads.
+    ///
+    /// - Parameters:
+    ///   - properties: A JSON dictionary of style layer properties
+    ///   - layerPosition: If not empty, the new layer will be positioned according
+    ///         to `LayerPosition` parameters.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful
+    ///
+    /// - Note: This API is experimental and can change at any time
+    func _addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws
+
+    /// Returns `true` if the id passed in is associated to a persistent layer
+    ///
+    /// - Note: This API is experimental and can change at any time
+    ///
+    /// - Parameter id: The layer identifier to test
+    func _isPersistentLayer(id: String) throws -> Bool
+
+    /// Adds a new persistent style custom layer.
+    ///
+    /// Persistent style layers are valid across style reloads.
+    ///
+    /// - See Also: https://docs.mapbox.com/mapbox-gl-js/style-spec/#layers
+    ///
+    /// - Parameters:
+    ///   - id: Style layer id.
+    ///   - layerHost: Style custom layer host.
+    ///   - layerPosition: If not empty, the new layer will be positioned according
+    ///         to `LayerPosition` parameters.
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    ///
+    /// - Note: This API is experimental and can change at any time
+    func _addPersistentCustomLayer(withId id: String, layerHost: CustomLayerHost, layerPosition: LayerPosition?) throws
 
     /// Adds a new style custom layer.
     ///
@@ -294,6 +334,8 @@ public protocol StyleManagerProtocol {
     ///   - image: Image to add.
     ///   - id: ID of the image.
     ///   - sdf: Option to treat whether image is SDF(signed distance field) or not.
+    ///         Setting this to `true` allows template images to be recolored. The
+    ///         default value is `false`.
     ///   - stretchX: An array of two-element arrays, consisting of two numbers
     ///         that represent the from position and the to position of areas
     ///         that can be stretched horizontally.
@@ -413,7 +455,7 @@ public protocol StyleManagerProtocol {
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.\
-    func _setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Feature]) throws
+    func _setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Turf.Feature]) throws
 
     /// Invalidate tile for provided custom geometry source.
     ///

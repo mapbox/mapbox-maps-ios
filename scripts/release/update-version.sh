@@ -31,3 +31,10 @@ step "Updating Xcode targets to version ${SHORT_VERSION}…"
 xcrun agvtool bump -all
 xcrun agvtool new-marketing-version "${SHORT_VERSION}"
 
+cd ..
+
+# Update MapboxMaps.podspec
+step "Update Podspec"
+sed -i '' s/"maps_version = '.*'"/"maps_version = '${SEM_VERSION}'"/ MapboxMaps.podspec
+
+finish "Completed updating versions"

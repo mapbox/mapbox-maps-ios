@@ -1,24 +1,27 @@
 import XCTest
-import MapboxMaps
+@testable import MapboxMaps
 import Turf
 
-// swiftlint:disable force_cast file_length orphaned_doc_comment
-
+// swiftlint:disable file_length orphaned_doc_comment type_body_length
 class MigrationGuideIntegrationTests: IntegrationTestCase {
+
+    var view: UIView?
 
     private var testRect = CGRect(origin: .zero, size: CGSize(width: 100, height: 100))
 
-    var originalToken: String!
-
     override func setUpWithError() throws {
         try super.setUpWithError()
-        originalToken = CredentialsManager.default.accessToken
-        CredentialsManager.default.accessToken = accessToken
+        try guardForMetalDevice()
+
+        ResourceOptionsManager.default.resourceOptions.accessToken = self.accessToken
     }
 
     override func tearDownWithError() throws {
         try super.tearDownWithError()
-        CredentialsManager.default.accessToken = originalToken
+
+        view?.removeFromSuperview()
+        view = nil
+        ResourceOptionsManager.destroyDefault()
     }
 
     func testBasicMapViewController() throws {
@@ -34,7 +37,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
             override func viewDidLoad() {
                 super.viewDidLoad()
 
-                CredentialsManager.default.accessToken = accessToken
+                ResourceOptionsManager.default.resourceOptions.accessToken = self.accessToken
 
                 mapView = MapView(frame: view.bounds)
                 view.addSubview(mapView)
@@ -50,6 +53,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         }
 
         rootViewController?.view.addSubview(vc.view)
+        view = vc.view
 
         wait(for: [expectation], timeout: 5)
     }
@@ -67,7 +71,8 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
             override func viewDidLoad() {
                 super.viewDidLoad()
-                CredentialsManager.default.accessToken = accessToken
+
+                ResourceOptionsManager.default.resourceOptions.accessToken = self.accessToken
 
                 mapView = MapView(frame: view.bounds)
                 view.addSubview(mapView)
@@ -166,6 +171,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         }
 
         rootViewController?.view.addSubview(vc.view)
+        view = vc.view
 
         wait(for: [expectation], timeout: 5)
     }
@@ -173,12 +179,15 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
     func testMapViewConfiguration() throws {
 
         let mapView = MapView(frame: .zero)
-        let someBounds = CoordinateBounds()
 
         //-->
+        let restrictedBounds = CoordinateBounds(southwest: CLLocationCoordinate2D(latitude: 10, longitude: 10),
+                                                northeast: CLLocationCoordinate2D(latitude: 11, longitude: 11))
+        let cameraBoundsOptions = CameraBoundsOptions(bounds: restrictedBounds)
+
         // Configure map to show a scale bar
         mapView.ornaments.options.scaleBar.visibility = .visible
-        mapView.camera.options.restrictedCoordinateBounds = someBounds
+        try mapView.mapboxMap.setCameraBounds(for: cameraBoundsOptions)
         //<--
     }
 
@@ -220,14 +229,14 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
                 let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
 
-                    // `HttpResponse` takes an `MBXExpected` type. This is very similar to Swift's
-                    // `Result` type. APIs using `MBXExpected` are prone to future changes.
-                    let expected: MBXExpected<HttpResponseData, HttpRequestError>
+                    // `HttpResponse` takes an `Expected` type. This is very similar to Swift's
+                    // `Result` type. APIs using `Expected` are prone to future changes.
+                    let result: Result<HttpResponseData, HttpRequestError>
 
                     if let error = error {
                         // Map NSURLError to HttpRequestErrorType
                         let requestError = HttpRequestError(type: .otherError, message: error.localizedDescription)
-                        expected = MBXExpected(error: requestError)
+                        result = .failure(requestError)
                     } else if let response = response as? HTTPURLResponse,
                             let data = data {
 
@@ -243,14 +252,14 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                         }
 
                         let responseData = HttpResponseData(headers: headers, code: Int64(response.statusCode), data: data)
-                        expected = MBXExpected(value: responseData)
+                        result = .success(responseData)
                     } else {
                         // Error
                         let requestError = HttpRequestError(type: .otherError, message: "Invalid response")
-                        expected = MBXExpected(error: requestError)
+                        result = .failure(requestError)
                     }
 
-                    let response = HttpResponse(request: request, result: expected as! MBXExpected<AnyObject, AnyObject>)
+                    let response = HttpResponse(request: request, result: result)
                     callback(response)
                 }
 
@@ -348,10 +357,15 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         let sw = CLLocationCoordinate2DMake(-12, -46)
         let ne = CLLocationCoordinate2DMake(2, 43)
         let restrictedBounds = CoordinateBounds(southwest: sw, northeast: ne)
-        mapView.camera.options.minimumZoomLevel = 8.0
-        mapView.camera.options.maximumZoomLevel = 15.0
-        mapView.camera.options.restrictedCoordinateBounds = restrictedBounds
+        mapView.camera.options = CameraBoundsOptions(bounds: restrictedBounds,
+                                                     maxZoom: 15.0,
+                                                     minZoom: 8.0)
         //<--
+
+        // Can also set directly, though this will trigger 3 didSets
+        mapView.camera.options.bounds = restrictedBounds
+        mapView.camera.options.minZoom = 8.0
+        mapView.camera.options.maxZoom = 15.0
     }
 
     func testGeoJSONSource() {
@@ -374,8 +388,6 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
     }
 
     func testAddGeoJSONSource() {
-        CredentialsManager.default.accessToken = accessToken
-
         var myGeoJSONSource = GeoJSONSource()
         myGeoJSONSource.maxzoom = 14
         myGeoJSONSource.data = .url(Fixture.geoJSONURL(from: "polygon")!)
@@ -396,13 +408,15 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
                 //-->
                 var myBackgroundLayer = BackgroundLayer(id: "my-background-layer")
-                myBackgroundLayer.paint?.backgroundColor = .constant(ColorRepresentable(color: .red))
+                myBackgroundLayer.backgroundColor = .constant(ColorRepresentable(color: .red))
                 //<--
 
                 /*
                 Once a layer is created, add it to the map:
                 */
+                //-->
                 try mapView.mapboxMap.style.addLayer(myBackgroundLayer)
+                //<--
 
                 expectation.fulfill()
             } catch {
@@ -413,9 +427,86 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         wait(for: [expectation], timeout: 5.0)
     }
 
-    func testAdd3DTerrain() {
-        CredentialsManager.default.accessToken = accessToken
+    func testExpression() throws {
+        let mapView = MapView(frame: testRect)
+        let expectation = self.expectation(description: "layer updated")
+        mapView.mapboxMap.onNext(.styleLoaded) { _ in
+            do {
 
+                //-->
+                let expressionString =
+                    """
+                    [
+                        "interpolate",
+                        ["linear"],
+                        ["zoom"],
+                        0,
+                        "hsl(0, 79%, 53%)",
+                        14,
+                        "hsl(233, 80%, 47%)"
+                    ]
+                    """
+
+                if let expressionData = expressionString.data(using: .utf8) {
+                    let expJSONObject = try JSONSerialization.jsonObject(with: expressionData, options: [])
+
+                    try mapView.mapboxMap.style.setLayerProperty(for: "land",
+                                                                 property: "background-color",
+                                                                 value: expJSONObject)
+                }
+                //<--
+                expectation.fulfill()
+            } catch {
+                XCTFail("Failed with \(error)")
+            }
+        }
+        wait(for: [expectation], timeout: 10.0)
+    }
+
+    func todo_testAnnotationInteraction() {
+        //-->
+        class MyViewController: UIViewController, AnnotationInteractionDelegate {
+            @IBOutlet var mapView: MapView!
+
+            lazy var pointAnnotationManager: PointAnnotationManager = {
+                return mapView.annotations.makePointAnnotationManager()
+            }()
+
+            override func viewDidLoad() {
+                super.viewDidLoad()
+                mapView.mapboxMap.onNext(.mapLoaded) { _ in
+                    self.pointAnnotationManager.delegate = self
+                    let coordinate = CLLocationCoordinate2DMake(24, -89)
+                    var pointAnnotation = PointAnnotation(coordinate: coordinate)
+                    pointAnnotation.image = .default
+                    self.pointAnnotationManager.syncAnnotations([pointAnnotation])
+                }
+            }
+
+            // MARK: - AnnotationInteractionDelegate
+            func annotationManager(_ manager: AnnotationManager,
+                                   didDetectTappedAnnotations annotations: [Annotation]) {
+                print("Annotations tapped: \(annotations)")
+            }
+        }
+        //<--
+
+        // TODO: Test above
+    }
+
+    func testEnableLocation() {
+        let mapView = MapView(frame: testRect)
+        //-->
+        mapView.location.options.puckType = .puck2D()
+        //<--
+
+        let customLocationProvider = LocationProviderMock(options: LocationOptions())
+        //-->
+        mapView.location.overrideLocationProvider(with: customLocationProvider)
+        //<--
+    }
+
+    func testAdd3DTerrain() {
         let mapView = MapView(frame: testRect)
         let expectation = self.expectation(description: "Source was added")
         mapView.mapboxMap.onNext(.styleLoaded) { _ in
@@ -435,9 +526,9 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                 try mapView.mapboxMap.style.setTerrain(terrain)
 
                 var skyLayer = SkyLayer(id: "sky-layer")
-                skyLayer.paint?.skyType = .constant(.atmosphere)
-                skyLayer.paint?.skyAtmosphereSun = .constant([0.0, 0.0])
-                skyLayer.paint?.skyAtmosphereSunIntensity = .constant(15.0)
+                skyLayer.skyType = .constant(.atmosphere)
+                skyLayer.skyAtmosphereSun = .constant([0.0, 0.0])
+                skyLayer.skyAtmosphereSunIntensity = .constant(15.0)
 
                 try mapView.mapboxMap.style.addLayer(skyLayer)
                 //<--

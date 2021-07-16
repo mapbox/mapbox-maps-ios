@@ -24,6 +24,9 @@ public enum TileRegionError: LocalizedError, CoreErrorRepresentable, Equatable {
     /// Some other failure reason.
     case other(String)
 
+    /// The region contains more tiles than allowed
+    case tileCountExceeded(String)
+
     internal init(coreError: MapboxCommon.TileRegionError) {
         let message = coreError.message
         switch coreError.type {
@@ -37,20 +40,21 @@ public enum TileRegionError: LocalizedError, CoreErrorRepresentable, Equatable {
             self = .diskFull(message)
         case .other:
             self = .other(message)
+        case .tileCountExceeded:
+            self = .tileCountExceeded(message)
+        @unknown default:
+            self = .other(message)
         }
     }
 
     public var errorDescription: String? {
         switch self {
-        case let .canceled(message):
-            return message
-        case let .doesNotExist(message):
-            return message
-        case let .tilesetDescriptor(message):
-            return message
-        case let .diskFull(message):
-            return message
-        case let .other(message):
+        case let .canceled(message),
+             let .doesNotExist(message),
+             let .tilesetDescriptor(message),
+             let .diskFull(message),
+             let .other(message),
+             let .tileCountExceeded(message):
             return message
         }
     }
@@ -82,6 +86,8 @@ public enum StylePackError: LocalizedError, CoreErrorRepresentable, Equatable {
         case .diskFull:
             self = .diskFull(message)
         case .other:
+            self = .other(message)
+        @unknown default:
             self = .other(message)
         }
     }

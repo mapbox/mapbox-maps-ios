@@ -58,15 +58,15 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
 
         alert.addAction(UIAlertAction(title: "Above state label", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            try? self.mapView.style.removeLayer(withId: self.layer.id)
-            try? self.mapView.style.addLayer(self.layer,
+            try? self.mapView.mapboxMap.style.removeLayer(withId: self.layer.id)
+            try? self.mapView.mapboxMap.style.addLayer(self.layer,
                                              layerPosition: .above("state-label"))
         }))
 
         alert.addAction(UIAlertAction(title: "Below state label", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            try? self.mapView.style.removeLayer(withId: self.layer.id)
-            try? self.mapView.style.addLayer(self.layer,
+            try? self.mapView.mapboxMap.style.removeLayer(withId: self.layer.id)
+            try? self.mapView.mapboxMap.style.addLayer(self.layer,
                                              layerPosition: .below("state-label"))
         }))
 
@@ -79,8 +79,8 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
 
         alert.addAction(UIAlertAction(title: "Below all", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            try? self.mapView.style.removeLayer(withId: self.layer.id)
-            try? self.mapView.style.addLayer(self.layer,
+            try? self.mapView.mapboxMap.style.removeLayer(withId: self.layer.id)
+            try? self.mapView.mapboxMap.style.addLayer(self.layer,
                                              layerPosition: .at(0))
         }))
 
@@ -94,8 +94,8 @@ public class LayerPositionExample: UIViewController, ExampleProtocol {
         layer = FillLayer(id: "polygon-layer")
         layer.source = sourceIdentifier
         // Apply basic styling to the fill layer.
-        layer.paint?.fillColor = .constant(ColorRepresentable(color: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)))
-        layer.paint?.fillOutlineColor = .constant(ColorRepresentable(color: #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)))
+        layer.fillColor = .constant(ColorRepresentable(color: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)))
+        layer.fillOutlineColor = .constant(ColorRepresentable(color: #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)))
 
         // Create a new GeoJSON data source which gets its data from a polygon.
         source = GeoJSONSource()

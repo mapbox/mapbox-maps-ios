@@ -46,7 +46,7 @@ public class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
     internal func setupExample() {
         let uriString = mapView.mapboxMap.style.uri!.rawValue
         let offlineRegionDef = OfflineRegionGeometryDefinition(styleURL: uriString,
-                                                               geometry: MBXGeometry(coordinate: coord),
+                                                               geometry: Geometry(coordinate: coord),
                                                                minZoom: zoom - 2,
                                                                maxZoom: zoom + 2,
                                                                pixelRatio: Float(UIScreen.main.scale),
@@ -54,24 +54,16 @@ public class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
 
         // Please note - this is using a deprecated API, and will be removed in a future release.
         offlineManager = OfflineRegionManager(resourceOptions: resourceOptions())
-        offlineManager.createOfflineRegion(for: offlineRegionDef, callback: { [weak self] (expected: MBXExpected<AnyObject, AnyObject>?) in
-            guard let expected = expected else {
-                print("No offline region created. Unexpected result.")
-                return
-            }
 
-            guard !expected.isError() else {
-                print("Error creating offline region: \(String(describing: expected.error))")
-                return
-            }
+        offlineManager.createOfflineRegion(for: offlineRegionDef) { [weak self] result in
+            switch result {
+            case let .failure(error):
+                print("Error creating offline region: \(error)")
 
-            guard let region = expected.value as? OfflineRegion else {
-                print("Unexpected value: \(type(of: expected.value))")
-                return
+            case let .success(region):
+                self?.startDownload(for: region)
             }
-
-            self?.startDownload(for: region)
-        })
+        }
     }
 
     func startDownload(for region: OfflineRegion) {

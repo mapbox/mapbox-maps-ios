@@ -16,3 +16,4 @@ disabled_rules:
   - shorthand_operator
   - todo
   - trailing_comma
+  - type_name

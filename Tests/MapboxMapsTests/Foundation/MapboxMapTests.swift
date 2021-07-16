@@ -25,8 +25,7 @@ final class MapboxMapTests: XCTestCase {
     }
 
     func testInitializationOfResourceOptions() {
-        let actualResourceOptions = mapboxMap.__map.getResourceOptions()
-
+        let actualResourceOptions = mapboxMap.resourceOptions
         XCTAssertEqual(actualResourceOptions, mapInitOptions.resourceOptions)
     }
 
@@ -36,12 +35,13 @@ final class MapboxMapTests: XCTestCase {
             constrainMode: NSNumber(value: mapInitOptions.mapOptions.constrainMode.rawValue),
             viewportMode: mapInitOptions.mapOptions.viewportMode.map { NSNumber(value: $0.rawValue) },
             orientation: NSNumber(value: mapInitOptions.mapOptions.orientation.rawValue),
-            crossSourceCollisions: NSNumber(value: mapInitOptions.mapOptions.crossSourceCollisions),
+            crossSourceCollisions: mapInitOptions.mapOptions.crossSourceCollisions.NSNumber,
+            optimizeForTerrain: mapInitOptions.mapOptions.optimizeForTerrain.NSNumber,
             size: mapInitOptions.mapOptions.size.map(Size.init),
             pixelRatio: mapInitOptions.mapOptions.pixelRatio,
             glyphsRasterizationOptions: nil) // __map.getOptions() always returns nil for glyphsRasterizationOptions
 
-        let actualMapOptions = mapboxMap.__map.getOptions()
+        let actualMapOptions = mapboxMap.options
 
         XCTAssertEqual(actualMapOptions, expectedMapOptions)
     }
@@ -57,14 +57,14 @@ final class MapboxMapTests: XCTestCase {
 
         mapboxMap.size = expectedSize
 
-        XCTAssertEqual(CGSize(mapboxMap.__map.getSize()), expectedSize)
+        XCTAssertEqual(CGSize(mapboxMap.__testingMap.getSize()), expectedSize)
     }
 
     func testGetSize() {
         let expectedSize = Size(
             width: .random(in: 100...1000),
             height: .random(in: 100...1000))
-        mapboxMap.__map.setSizeFor(expectedSize)
+        mapboxMap.__testingMap.setSizeFor(expectedSize)
 
         let actualSize = mapboxMap.size
 
@@ -72,7 +72,7 @@ final class MapboxMapTests: XCTestCase {
     }
 
     func testGetCameraOptions() {
-        XCTAssertEqual(mapboxMap.cameraState, CameraState(mapboxMap.__map.getCameraState()))
+        XCTAssertEqual(mapboxMap.cameraState, CameraState(mapboxMap.__testingMap.getCameraState()))
     }
 
     func testCameraForCoordinateArray() {
@@ -139,5 +139,16 @@ final class MapboxMapTests: XCTestCase {
         XCTAssertEqual(camera.bearing, 0)
         XCTAssertEqual(camera.padding, .zero)
         XCTAssertEqual(camera.pitch, 0)
+    }
+
+    func testProtocolConformance() {
+        let map = MapboxMap(mapClient: MockMapClient(), mapInitOptions: MapInitOptions())
+
+        // Compilation check only
+        _ = map as MapTransformDelegate
+        _ = map as CameraManagerProtocol
+        _ = map as MapFeatureQueryable
+        _ = map as ObservableProtocol
+        _ = map as MapEventsObservable
     }
 }

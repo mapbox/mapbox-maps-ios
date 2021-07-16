@@ -1,12 +1,14 @@
 ---
 name: MapboxMaps
+options:
+  xcodeVersion: 1250
 targets:
   MapboxMaps:
     type: framework
     platform: iOS
     settings:
       base:
-        INFOPLIST_FILE: "Sources/MapboxMaps/MapView/Info.plist"
+        INFOPLIST_FILE: "Sources/MapboxMaps/Info.plist"
         PRODUCT_BUNDLE_IDENTIFIER: com.mapbox.MapboxMaps
         INSTALL_PATH: $(LOCAL_LIBRARY_DIR)/Frameworks
         SKIP_INSTALL: "NO"
@@ -19,17 +21,23 @@ targets:
         PRODUCT_NAME: $(TARGET_NAME:c99extidentifier)
         CODE_SIGN_STYLE: Automatic
         BUILD_DIR: .build
+        SWIFT_TREAT_WARNINGS_AS_ERRORS: "YES"
+      configs:
+        Debug:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) USING_TURF_WITH_LIBRARY_EVOLUTION
+        Release:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) RELEASE USING_TURF_WITH_LIBRARY_EVOLUTION
     configFiles:
-      Debug: "Configurations/Mapbox.xcconfig"
-      Release: "Configurations/Mapbox.xcconfig"
+      Debug: "Configurations/base.xcconfig"
+      Release: "Configurations/base.xcconfig"
     sources:
       - path: "Sources/MapboxMaps/"
         includes: "*.swift"
         excludes:
           - "**/*.plist"
           - "**/*.h"
-      - path: "Sources/MapboxMaps/MapView/Info.plist"
-      - path: "Sources/MapboxMaps/MapView/MapboxMaps.h"
+      - path: "Sources/MapboxMaps/Info.plist"
+      - path: "Sources/MapboxMaps/MapboxMaps.h"
     dependencies:
       - framework: "../MapboxCoreMaps.xcframework"
       - framework: "../Turf.xcframework"

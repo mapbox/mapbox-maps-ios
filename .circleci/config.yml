@@ -18,37 +18,37 @@ workflows:
                 - main
     jobs:
       - swiftlint:
-          xcode: "12.4.0"
-      # - depsvalidator:
-      #     xcode: "12.4.0"
+          xcode: "12.5.0"
+      - depsvalidator:
+          xcode: "12.5.0"
       - build-sdk:
-          xcode: "12.4.0"
+          xcode: "12.5.0"
           matrix:
             parameters:
               configuration: ["Debug", "Release"]
               report_failure: [true]
       - build-debug-app:
           report_failure: true
-          xcode: "12.4.0"
+          xcode: "12.5.0"
       - unit-test-sdk:
-          xcode: "12.4.0"
+          xcode: "12.5.0"
           matrix:
             parameters:
               configuration: ["Debug", "Release"]
               report_failure: [true]
       - run-tests-on-devices:
           name: "Run MapboxTestHost tests on devices"
-          device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
-          device-pool: $(AWS_DEVICE_FARM_5_DEVICE_POOL)
+          device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
+          device-pool: $(DEVICE_FARM_5_DEVICE_POOL)
           scheme: "MapboxMapsTestsWithHost"
           app-name: "MapboxTestHost"
           device-tests-always-run: true
           report_failure: true
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
-          xcode: "12.4.0"
-          device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
-          device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
+          xcode: "12.5.0"
+          device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
+          device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
           app-name: "Examples"
           device-tests-always-run: true
@@ -60,16 +60,16 @@ workflows:
   steve:
     jobs:
       - swiftlint:
-          xcode: "12.4.0"
-      # - depsvalidator:
-      #     xcode: "12.4.0"
+          xcode: "12.5.0"
+      - depsvalidator:
+          xcode: "12.5.0"
       - build-sdk:
-          xcode: "12.4.0"
+          xcode: "12.5.0"
           matrix:
             parameters:
               configuration: ["Debug", "Release"]
       - build-debug-app:
-          xcode: "12.4.0"
+          xcode: "12.5.0"
       - trigger-binary-size:
           requires:
             - build-sdk
@@ -84,12 +84,12 @@ workflows:
               only: main
       - unit-test-sdk:
           name: "Run Unit tests"
-          xcode: "12.4.0"
+          xcode: "12.5.0"
       # Not on main
       - run-tests-on-devices:
           name: "Run MapboxTestHost tests on devices"
-          device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
-          device-pool: $(AWS_DEVICE_FARM_1_PHONE_POOL)
+          device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
+          device-pool: $(DEVICE_FARM_1_PHONE_POOL)
           scheme: "MapboxMapsTestsWithHost"
           app-name: "MapboxTestHost"
           filters:
@@ -97,9 +97,9 @@ workflows:
               ignore: main
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
-          xcode: "12.4.0"
-          device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
-          device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
+          xcode: "12.5.0"
+          device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
+          device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
           app-name: "Examples"
           filters:
@@ -108,8 +108,8 @@ workflows:
       # On main
       - run-tests-on-devices:
           name: "Run MapboxTestHost tests on devices (main)"
-          device-farm-project: $(AWS_DEVICE_FARM_PROJECT_MAPS)
-          device-pool: $(AWS_DEVICE_FARM_5_DEVICE_POOL)
+          device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
+          device-pool: $(DEVICE_FARM_5_DEVICE_POOL)
           scheme: "MapboxMapsTestsWithHost"
           app-name: "MapboxTestHost"
           device-tests-always-run: true
@@ -119,9 +119,9 @@ workflows:
               only: main
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices (main)"
-          xcode: "12.4.0"
-          device-farm-project: $(AWS_DEVICE_FARM_PROJECT_EXAMPLES)
-          device-pool: $(AWS_DEVICE_FARM_EXAMPLES_POOL)
+          xcode: "12.5.0"
+          device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
+          device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
           app-name: "Examples"
           device-tests-always-run: true
@@ -131,15 +131,15 @@ workflows:
               only: main
       - create-xcframework
 
-  public-beta:
+  ios-release:
     jobs:
       - ios-build-release:
-          name: "Public Beta Release"
+          name: "iOS Release Build"
           filters:
             branches:
               only: /Release\/.*/
       - ios-release-tag:
-          name: "iOS release"
+          name: "iOS Release Tag & Docs"
           filters:
             tags:
               only: /.*/
@@ -160,10 +160,10 @@ jobs:
         default: "12.2.0"
       device-farm-project:
         type: string
-        default: $(AWS_DEVICE_FARM_PROJECT_MAPS)
+        default: $(DEVICE_FARM_PROJECT_MAPS)
       device-pool:
         type: string
-        default: $(AWS_DEVICE_FARM_1_PHONE_POOL)
+        default: $(DEVICE_FARM_1_PHONE_POOL)
       device-tests-always-run:
         type: boolean
         default: false
@@ -187,8 +187,8 @@ jobs:
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
       HOMEBREW_NO_INSTALL_CLEANUP: 1
-      AWS_DEVICE_FARM_DEVICE_POOL: << parameters.device-pool >>
-      AWS_DEVICE_FARM_PROJECT: << parameters.device-farm-project >>
+      DEVICE_FARM_DEVICE_POOL: << parameters.device-pool >>
+      DEVICE_FARM_PROJECT: << parameters.device-farm-project >>
       CONFIGURATION: << parameters.configuration >>
     steps:
       # Don't run the default job
@@ -217,9 +217,6 @@ jobs:
     steps:
       - checkout
       - configure-environment
-      - run:
-          name: Delete Xcode Workspace so we can build with SPM
-          command: rm -rf MapboxMaps.xcworkspace
       - run:
           name: Building MapboxMaps for simulator
           command: make build-sdk-for-simulator
@@ -313,10 +310,11 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - add_ssh_keys:
+           fingerprints:
+             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+      - install-mbx-ci
       - configure-environment
-      - run:
-          name: Delete Xcode Workspace so we can build with SPM
-          command: rm -rf MapboxMaps.xcworkspace
       # Building and testing are split into 2, with the aim that we'll be able to reuse
       # the build product and test on multiple simulators
       - run:
@@ -329,11 +327,11 @@ jobs:
           no_output_timeout: 5m
       - locate-derived-data-directory:
           base_name: $(basename $(pwd))
-      # - run:
-      #     name: Converting and uploading coverage
-      #     command: |
-      #       pip3 install awscli gitpython
-      #       make update-codecov-with-profdata SCHEME=MapboxMaps BUILD_DIR="$DERIVED_DATA_PATH"
+      - run:
+          name: Converting and uploading coverage
+          command: |
+            pip3 install awscli gitpython
+            make update-codecov-with-profdata SCHEME=MapboxMaps BUILD_DIR="$DERIVED_DATA_PATH"
       - store-logs:
           artifact_name: MapboxMaps
           derived_data_path: $DERIVED_DATA_PATH
@@ -346,6 +344,11 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - add_ssh_keys:
+           fingerprints:
+             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+      - install-mbx-ci
+      - configure-environment
       - ensure-text-exists-in-commit:
           commit-text: "[run device tests]"
           always-run: << parameters.device-tests-always-run >>
@@ -354,35 +357,60 @@ jobs:
           name: Install Device Farm Dependencies
           command: make install-devicefarm-dependencies
       - install-dependencies
+
+    # There's a command for this, but it only works if run *after* the build.
+      # In this case, we need to determine the derived data path *before* building.
+      - run:
+          name: Locate derived data directory
+          command: |
+            xcodebuild \
+              -showBuildSettings \
+              -project Mapbox/MapboxMaps.xcodeproj \
+              -scheme 'MapboxTestHost' \
+              | sed -n 's:^ *BUILD_DIR = \(.*\)/Build/Products$:export DERIVED_DATA_PATH="\1":p' \
+              >> $BASH_ENV
       - run:
           name: Testing << parameters.scheme >> on AWS Device Farm
-          command: make test-with-device-farm SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
+          command: |
+            make test-with-device-farm \
+              SCHEME=<< parameters.scheme >> \
+              APP_NAME=<< parameters.app-name >> \
+              CONFIGURATION=Release \
+              BUILD_DIR="$DERIVED_DATA_PATH"
           when: always
       # get xcresults here, may be zipped with more than one result
       - run:
           name: "Gathering results"
-          command: make gather-results
+          command: make gather-results BUILD_DIR="$DERIVED_DATA_PATH"
           when: always
       - run:
           name: "Parsing xcresults for errors"
           command: |
-            RESULTS=`find build/testruns -name '*.xcresult'`
-            xargs swift run --package-path scripts/xcparty xcparty \<<< "$RESULTS" | tee build/testruns/failures.txt
+            RESULTS=`find "$DERIVED_DATA_PATH/testruns" -name '*.xcresult'`
+            xargs swift run --package-path scripts/xcparty xcparty \<<< "$RESULTS" | tee "$DERIVED_DATA_PATH/testruns/failures.txt"
           when: on_fail
       - run:
           name: Symbolicate crash logs
-          command: make symbolicate SCHEME=<< parameters.scheme >> APP_NAME=<< parameters.app-name >> CONFIGURATION=Release
-          when: always
-      # - run:
-      #     name: Converting and uploading coverage
-      #     command: |
-      #       make device-update-codecov-with-profdata \
-      #         SCHEME=<< parameters.scheme >> \
-      #         APP_NAME=<< parameters.app-name >> \
-      #         CONFIGURATION=Release \
-      #         COVERAGE_MAPBOX_MAPS_DEVICE=build/Build/Products/Release-iphoneos/MapboxMaps.framework/MapboxMaps
-      - store-device-farm-artifacts
-      - store-logs
+          command: |
+            make symbolicate \
+              SCHEME=<< parameters.scheme >> \
+              APP_NAME=<< parameters.app-name >> \
+              CONFIGURATION=Release \
+              BUILD_DIR="$DERIVED_DATA_PATH"
+          when: always          
+      - run:
+          name: Converting and uploading coverage
+          command: |
+            make device-update-codecov-with-profdata \
+              SCHEME=<< parameters.scheme >> \
+              APP_NAME=<< parameters.app-name >> \
+              CONFIGURATION=Release \
+              BUILD_DIR="$DERIVED_DATA_PATH" \
+              COVERAGE_MAPBOX_MAPS_DEVICE="$DERIVED_DATA_PATH/Build/Products/Release-iphoneos/MapboxMaps.framework/MapboxMaps"
+      - store-device-farm-artifacts:
+          derived_data_path: $DERIVED_DATA_PATH
+      - store-logs:
+          derived_data_path: $DERIVED_DATA_PATH
       - report-failure:
           report_failure: << parameters.report_failure >>
           message: "<< parameters.scheme >> device tests"
@@ -391,6 +419,10 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - add_ssh_keys:
+           fingerprints:
+             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+      - install-mbx-ci
       - ensure-text-exists-in-commit:
           commit-text: "[run app device tests]"
           always-run: << parameters.device-tests-always-run >>
@@ -439,15 +471,15 @@ jobs:
               CONFIGURATION=Release \
               BUILD_DIR="$DERIVED_DATA_PATH"
           when: always
-      # - run:
-      #     name: Converting and uploading coverage
-      #     command: |
-      #       pip3 install awscli gitpython
-      #       make device-update-codecov-with-profdata \
-      #         SCHEME=<< parameters.scheme >> \
-      #         APP_NAME=<< parameters.app-name >> \
-      #         CONFIGURATION=Release \
-      #         BUILD_DIR="$DERIVED_DATA_PATH"
+      - run:
+          name: Converting and uploading coverage
+          command: |
+            pip3 install awscli gitpython
+            make device-update-codecov-with-profdata \
+              SCHEME=<< parameters.scheme >> \
+              APP_NAME=<< parameters.app-name >> \
+              CONFIGURATION=Release \
+              BUILD_DIR="$DERIVED_DATA_PATH"
       - store-device-farm-artifacts:
           derived_data_path: $DERIVED_DATA_PATH
       - store-logs:
@@ -460,6 +492,11 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - add_ssh_keys:
+           fingerprints:
+             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+      - install-mbx-ci
+      - configure-environment
       - ensure-text-exists-in-commit:
           commit-text: "[create xcframework]"
           always-run: << parameters.create-xcframework-always-run >>
@@ -476,14 +513,17 @@ jobs:
           report_failure: << parameters.report_failure >>
           message: "create-xcframework"
 
-  # This job was created for the public beta and is responsible for building
-  # and uploading the xcframework bundle to S3. As well as making appropriate
-  # updates to Package Manifest and Podspec. Further, this job will also
-  # create a PR in api-downloads for SDK Registry access.
+  # This job is responsible for building and uploading the xcframework bundle to S3. 
+  # This job will also create a PR in api-downloads for SDK Registry access.
   ios-build-release:
     <<: *base-job
     steps:
       - checkout
+      - add_ssh_keys:
+           fingerprints:
+             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+      - install-mbx-ci
+      - configure-environment
       - ensure-text-exists-in-commit:
           commit-text: "[release]"
           always-run: << parameters.device-tests-always-run >>
@@ -542,6 +582,11 @@ jobs:
           message: '<$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` started.>'
           include_visit_job_action: true
       - checkout
+      - add_ssh_keys:
+           fingerprints:
+             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+      - install-mbx-ci
+      - configure-environment
       - install-dependencies
       - make-docs
       - run:
@@ -586,6 +631,15 @@ commands:
           command: |
             echo "MAPBOX_ACCESS_TOKEN = ${MAPBOX_ACCESS_TOKEN}" > ./developer.xcconfig
             echo "${MAPBOX_ACCESS_TOKEN}" > ~/.mapbox
+            echo "${MAPBOX_ACCESS_TOKEN}" > ./Tests/MapboxMapsTests/Helpers/MapboxAccessToken
+
+  install-mbx-ci:
+    steps:
+      - run:
+          name: Install latest mbx-ci
+          command: |
+            curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/latest/mbx-ci-darwin-amd64 > mbx-ci && chmod 755 ./mbx-ci
+            ./mbx-ci aws setup
 
   ensure-text-exists-in-commit:
     parameters:
@@ -656,7 +710,6 @@ commands:
   install-dependencies:
     description: "Install Dependencies"
     steps:
-      - run: make deps
       - run: pip3 install awscli gitpython requests python-dateutil
 
   make-docs:

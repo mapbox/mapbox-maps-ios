@@ -38,8 +38,8 @@ public class FitCameraToGeometryExample: UIViewController, ExampleProtocol {
         source.data = .feature(polygonFeature)
 
         var polygonLayer = FillLayer(id: "triangle-style")
-        polygonLayer.paint?.fillOpacity = .constant(0.5)
-        polygonLayer.paint?.fillColor = .constant(ColorRepresentable(color: .gray))
+        polygonLayer.fillOpacity = .constant(0.5)
+        polygonLayer.fillColor = .constant(ColorRepresentable(color: .gray))
         polygonLayer.source = sourceIdentifier
 
         do {
@@ -55,7 +55,7 @@ public class FitCameraToGeometryExample: UIViewController, ExampleProtocol {
         }
 
         let newCamera = mapView.mapboxMap.camera(for: polygon, padding: .zero, bearing: 0, pitch: 0)
-        mapView.camera.setCamera(to: newCamera)
+        mapView.mapboxMap.setCamera(to: newCamera)
         // The below line is used for internal testing purposes only.
         self.finish()
     }

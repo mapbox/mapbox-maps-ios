@@ -101,6 +101,10 @@ public final class GestureManager: NSObject {
             requireGestureToFail(allowedGesture: pitchHandler, failableGesture: panHandler)
         }
 
+        if let pinchHandler = gestureHandlers[.pinch], let panHandler = gestureHandlers[.pan] {
+            requireGestureToFail(allowedGesture: pinchHandler, failableGesture: panHandler)
+        }
+
         if let doubleTapHandler = gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 1)],
            let quickZoomHandler = gestureHandlers[.quickZoom] {
             requireGestureToFail(allowedGesture: quickZoomHandler, failableGesture: doubleTapHandler)
@@ -152,11 +156,9 @@ extension GestureManager: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
                                   shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
 
-        return (gestureRecognizer is UIPanGestureRecognizer
-            || gestureRecognizer is UIPinchGestureRecognizer
+        return (gestureRecognizer is UIPinchGestureRecognizer
             || gestureRecognizer is UIRotationGestureRecognizer) &&
-            (otherGestureRecognizer is UIPanGestureRecognizer
-            || otherGestureRecognizer is UIPinchGestureRecognizer
+            (otherGestureRecognizer is UIPinchGestureRecognizer
             || otherGestureRecognizer is UIRotationGestureRecognizer)
     }
 }
@@ -255,8 +257,15 @@ extension GestureManager: GestureHandlerDelegate {
         return mapboxMap.cameraState.zoom
     }
 
-    internal func pinchScaleChanged(with newScale: CGFloat, andAnchor anchor: CGPoint) {
-        mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: newScale))
+    internal func pinchChanged(with zoom: CGFloat, anchor: CGPoint, offset: CGSize) {
+        mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: zoom))
+
+        let currentCenterCoordinate = mapboxMap.cameraState.center
+        let currentCenterScreenPoint = mapboxMap.point(for: currentCenterCoordinate)
+        let newCenterScreenPoint = currentCenterScreenPoint.shifted(xOffset: -offset.width,
+                                                                    yOffset: -offset.height)
+        let newCenterCoordinate = mapboxMap.coordinate(for: newCenterScreenPoint)
+        mapboxMap.setCamera(to: CameraOptions(center: newCenterCoordinate))
     }
 
     internal func pinchEnded(with finalScale: CGFloat, andDrift possibleDrift: Bool, andAnchor anchor: CGPoint) {

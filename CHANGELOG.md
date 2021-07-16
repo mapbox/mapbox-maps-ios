@@ -29,6 +29,10 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix threading issues in HTTP file source. ([#522](https://github.com/mapbox/mapbox-maps-ios/pull/522))
 * Fixed an issue that could cause flickering during ease to and basic animations ([#519](https://github.com/mapbox/mapbox-maps-ios/pull/519))
 * Fixed an issue that could result in ease to and basic animations never reaching their final values ([#519](https://github.com/mapbox/mapbox-maps-ios/pull/519))
+* Fixed an issue where panning was not enabled while zooming. ([#474](https://github.com/mapbox/mapbox-maps-ios/pull/474))
+
+
+
 
 ## 10.0.0-rc.3 - June 30, 2021
 

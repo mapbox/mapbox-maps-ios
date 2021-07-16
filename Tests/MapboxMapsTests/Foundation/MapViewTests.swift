@@ -111,4 +111,17 @@ final class MapViewTests: XCTestCase {
 
         XCTAssertEqual(metalView.setNeedsDisplayStub.invocations.count, 1)
     }
+
+    func testMetalViewDoesFitMapView() {
+        let mapView = MapView(frame: .init(x: 50, y: 50, width: 100, height: 100))
+
+        XCTAssertEqual(mapView.bounds, mapView.metalView?.frame)
+    }
+
+    func testMetalViewDoesResizeToFitMapView() {
+        let mapView = MapView(frame: .init(x: 50, y: 50, width: 100, height: 100))
+        mapView.frame = .init(x: 0, y: 0, width: 100, height: 100)
+
+        XCTAssertEqual(mapView.bounds, mapView.metalView?.frame)
+    }
 }

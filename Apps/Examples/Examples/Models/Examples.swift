@@ -57,6 +57,9 @@ public struct Examples {
         Example(title: "Use a custom map style",
                 description: "Set and use a custom map style URL.",
                 type: CustomStyleURLExample.self),
+        Example(title: "Display a map view using storyboard",
+                description: "Create and display a map using a storyboard.",
+                type: StoryboardMapViewExample.self),
     ]
 
     // Examples that show how to use 3D terrain or fill extrusions.

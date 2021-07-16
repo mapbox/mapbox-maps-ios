@@ -81,21 +81,21 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
     }
 
     @objc private func mapSymbolTap(sender: UITapGestureRecognizer) {
-//        if sender.state == .recognized {
-//            let annotationLayers: Set<String> = [CustomSymbolAnnotationsExample.annotations]
-//
-//            mapView.visibleFeatures(at: sender.location(in: mapView), styleLayers: annotationLayers, filter: nil) { result in
-//                switch result {
-//                case .success(let features):
-//                    if features.count > 0 {
-//                        guard let featureText = features[0].feature.properties["text"] as? String else { return }
-//                        self.label.text = featureText
-//                    }
-//                case .failure(let error):
-//                    print("An error occurred: \(error.localizedDescription)")
-//                }
-//            }
-//        }
+        if sender.state == .recognized {
+            let annotationLayers: [String] = [CustomSymbolAnnotationsExample.annotations]
+
+            mapView.mapboxMap.queryRenderedFeatures(at: sender.location(in: mapView), options: RenderedQueryOptions(layerIds: annotationLayers, filter: nil)) { result in
+                switch result {
+                case .success(let features):
+                    if features.count > 0 {
+                        guard  let featureText = features[0].feature.properties["text"] as? String else { return }
+                        self.label.text = featureText
+                    }
+                case .failure(let error):
+                    print("An error occurred: \(error.localizedDescription)")
+                }
+            }
+        }
     }
 
     private func updateAnnotationSymbolImages() {
@@ -241,6 +241,7 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
         shapeLayer.textAllowOverlap = .constant(true)
         shapeLayer.textJustify = .constant(.left)
         shapeLayer.symbolZOrder = .constant(.auto)
+        shapeLayer.symbolSortKey = .expression(Exp(.get) { "sortOrder" })
         shapeLayer.textFont = .constant(["DIN Pro Medium"])
 
         let expression = Exp(.switchCase) {

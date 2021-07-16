@@ -22,14 +22,16 @@ workflows:
       - depsvalidator:
           xcode: "12.5.0"
       - build-sdk:
-          xcode: "12.5.0"
           matrix:
             parameters:
+              xcode: ["12.5.0", "13.0.0"]
               configuration: ["Debug", "Release"]
               report_failure: [true]
       - build-debug-app:
-          report_failure: true
-          xcode: "12.5.0"
+          matrix:
+            parameters:
+              xcode: ["12.5.0", "13.0.0"]
+              report_failure: true
       - unit-test-sdk:
           xcode: "12.5.0"
           matrix:

@@ -18,7 +18,6 @@ private struct DebugFeature {
 }
 
 @objc(CustomSymbolAnnotationsExample)
-
 public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
@@ -57,7 +56,7 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
             guard let self = self else { return }
 
             self.updateAnnotationSymbolImages()
-            let features = self.addDebugFeatures()
+            let features = self.addFeatures()()
             self.addAnnotationSymbolLayer(features: features)
 
             // The below line is used for internal testing purposes only.
@@ -100,7 +99,6 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
 
     private func updateAnnotationSymbolImages() {
         let style = mapView.mapboxMap.style
-//        guard let style = mapView.mapboxMap.style, style.image(withId: "AnnotationLeftHanded") == nil, style.image(withId: "AnnotationRightHanded") == nil else { return }
 
         let annotationHighlightedColor = UIColor(hue: 0.831372549, saturation: 0.72, brightness: 0.59, alpha: 1.0)
         let annotationColor = UIColor.white
@@ -132,13 +130,6 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
             let highlightedAnnotationImage = image.tint(annotationHighlightedColor)
 
             try? style.addImage(highlightedAnnotationImage, id: "AnnotationRightHanded-Highlighted", sdf: false, stretchX: stretchX, stretchY: stretchY, content: imageContent)
-
-//            try? style.addImage(UIImage.solid()!, id: "AnnotationRightHanded-Highlighted", sdf: false, stretchX: stretchX, stretchY: stretchY, content: imageContent)
-//
-//            try? style.addImage(UIImage.solid()!,
-//                                id: "AnnotationRightHanded-Highlighted",
-//                                sdf: false,
-//                                content: imageContent)
         }
 
         // Left-hand pin
@@ -155,7 +146,7 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
 
     static let annotations = "annotations"
 
-    private func addDebugFeatures() -> FeatureCollection {
+    private func addFeatures() -> FeatureCollection {
 
         var features = [Turf.Feature]()
 
@@ -168,17 +159,11 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
             DebugFeature(coordinate: CLLocationCoordinate2DMake(40.711427, -74.008614), highlighted: false, sortOrder: 3, tailPosition: .center, label: "Broadway & Vesey - Centered Stem", imageName: "AnnotationCentered")
         ]
 
-        self.annotationManager = mapView.annotations.makeCircleAnnotationManager()
-        var annotations = [CircleAnnotation]()
-
         for (index, feature) in featureList.enumerated() {
-            // var featurePoint = Feature(Point(feature.coordinate))
-
             let point = Turf.Point(feature.coordinate)
-//            let feature = Turf.Feature(geometry: point)
             var pointFeature = Feature(geometry: .point(point))
 
-            // set the feature attributes which will be used in styling the symbol style layer
+            // Set the feature attributes which will be used in styling the symbol style layer.
             pointFeature.properties = ["highlighted": feature.highlighted,
                                        "tailPosition": feature.tailPosition.rawValue,
                                        "text": feature.label,
@@ -186,13 +171,6 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
                                        "sortOrder": feature.highlighted == true ? index : -index]
 
             features.append(pointFeature)
-
-            var annotation = CircleAnnotation(centerCoordinate: feature.coordinate)
-            annotation.circleColor = .init(color: .red)
-            annotation.circleRadius = 10
-            annotations.append(annotation)
-
-            self.annotationManager?.syncAnnotations(annotations)
         }
 
         return FeatureCollection(features: features)
@@ -292,7 +270,7 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
         }
         shapeLayer.textOffset = .expression(offsetExpression)
 
-        try! mapView.mapboxMap.style.addLayer(shapeLayer)
+        try? mapView.mapboxMap.style.addLayer(shapeLayer)
     }
 }
 

@@ -74,7 +74,7 @@
 		CADCF73C258499200065C51B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077C4EED252F7E88007636F1 /* AppDelegate.swift */; };
 		CADCF743258499570065C51B /* BasicMapExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADCF742258499570065C51B /* BasicMapExample.swift */; };
 		CAF9A9812583E49B007EF9EC /* TestableExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF9A9802583E49B007EF9EC /* TestableExampleTests.swift */; };
-		F46FF17B26025A40007CC0E0 /* CustomSymbolAnnotationsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46FF17A26025A3F007CC0E0 /* CustomSymbolAnnotationsExample.swift */; };
+		F46FF17B26025A40007CC0E0 /* CustomAnchoredSymbolExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46FF17A26025A3F007CC0E0 /* CustomAnchoredSymbolExample.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -181,7 +181,7 @@
 		CAC195B625AC098A00F69FEA /* CameraAnimatorsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimatorsExample.swift; sourceTree = "<group>"; };
 		CADCF742258499570065C51B /* BasicMapExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicMapExample.swift; sourceTree = "<group>"; };
 		CAF9A9802583E49B007EF9EC /* TestableExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestableExampleTests.swift; sourceTree = "<group>"; };
-		F46FF17A26025A3F007CC0E0 /* CustomSymbolAnnotationsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomSymbolAnnotationsExample.swift; sourceTree = "<group>"; };
+		F46FF17A26025A3F007CC0E0 /* CustomAnchoredSymbolExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomAnchoredSymbolExample.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -242,21 +242,15 @@
 				58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */,
 				17B480592684FB2300CF0D5E /* AnimateImageLayerExample.swift */,
 				07DBDC91254C94C500F89304 /* AnimateLayerExample.swift */,
-				F46FF17A26025A3F007CC0E0 /* CustomSymbolAnnotationsExample.swift */,
-				07B071D12547CF50007F2865 /* Sample Data */,
-				CAEF7554257AE02B0003EFF7 /* MapViewExample.swift */,
 				CADCF742258499570065C51B /* BasicMapExample.swift */,
 				CA86E81725BE7C2200E5A1D9 /* BuildingExtrusionsExample.swift */,
 				C64ED3842540A2BE00ADADFB /* CameraAnimationExample.swift */,
-				CAC195B625AC098A00F69FEA /* CameraAnimatorsExample.swift */,
 				0CE3D3BE25818626000585A2 /* ColorExpressionExample.swift */,
 				0CC4ECE925B8AD3000F998B8 /* Custom2DPuckExample.swift */,
 				0C52BA9725AF8C880054ECA8 /* Custom3DPuckExample.swift */,
 				073475D625AFAE520049B0B8 /* CustomLayerExample.swift */,
-				CAC195B625AC098A00F69FEA /* CameraUIViewAnimationExample.swift */,
-				A4AC5DEB2542CB2200995E4C /* CustomStyleURLExample.swift */,
-				F46FF17A26025A3F007CC0E0 /* CustomSymbolAnnotationsExample.swift */,
-				C64ED3882540BA0700ADADFB /* PointAnnotationExample.swift */,
+				CAC195B625AC098A00F69FEA /* CameraAnimatorsExample.swift */,
+				F46FF17A26025A3F007CC0E0 /* CustomAnchoredSymbolExample.swift */,
 				C64ED3C42540DD6E00ADADFB /* CustomPointAnnotationExample.swift */,
 				A4AC5DEB2542CB2200995E4C /* CustomStyleURLExample.swift */,
 				C69F01EC2543646A001AB49B /* DataDrivenSymbolsExample.swift */,
@@ -573,7 +567,7 @@
 				CADCF7222584990E0065C51B /* ColorExpressionExample.swift in Sources */,
 				17E28C5C2672A1160033DF0F /* SymbolClusteringExample.swift in Sources */,
 				CADCF733258499130065C51B /* Examples.swift in Sources */,
-				F46FF17B26025A40007CC0E0 /* CustomSymbolAnnotationsExample.swift in Sources */,
+				F46FF17B26025A40007CC0E0 /* CustomAnchoredSymbolExample.swift in Sources */,
 				CADCF743258499570065C51B /* BasicMapExample.swift in Sources */,
 				CADCF7232584990E0065C51B /* UpdatePointAnnotationPositionExample.swift in Sources */,
 				CADCF72C2584990E0065C51B /* PointAnnotationExample.swift in Sources */,

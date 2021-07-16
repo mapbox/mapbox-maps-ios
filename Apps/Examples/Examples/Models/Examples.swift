@@ -101,10 +101,10 @@ public struct Examples {
         Example(title: "Add multiple annotations to a map",
                 description: "Add default and custom annotations to a map.",
                 type: MultiplePointAnnotationsExample.self),
+        Example(title: "Add anchored annotations with a custom map layer.",
+                description: "Add anchored image annotations to the map with a custom SymbolLayer. Annotations are styled via feature attributes.",
+                type: CustomSymbolAnnotationsExample.self),
 
-        Example(title: "Add customer annotation images with anchor",
-                description: "Add customer annotation images with anchor.",
-                type: CustomSymbolAnnotationsExample.self)
     ]
 
     // Examples that focus on setting, animating, or otherwise changing the map's camera.

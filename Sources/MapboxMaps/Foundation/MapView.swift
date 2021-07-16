@@ -219,7 +219,7 @@ open class MapView: UIView {
         gestures = GestureManager(view: self, cameraAnimationsManager: camera, mapboxMap: mapboxMap)
 
         // Initialize/Configure ornaments manager
-        ornaments = OrnamentsManager(view: self, options: OrnamentOptions())
+        ornaments = OrnamentsManager(view: self, options: OrnamentOptions(), attributionDataSource: mapboxMap)
 
         // Initialize/Configure location manager
         location = LocationManager(locationSupportableMapView: self, style: mapboxMap.style)

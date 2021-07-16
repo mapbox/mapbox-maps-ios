@@ -31,11 +31,11 @@ public class OrnamentsManager: NSObject {
 
     private var constraints = [NSLayoutConstraint]()
 
-    internal init(view: OrnamentSupportableView, options: OrnamentOptions) {
+    internal init(view: OrnamentSupportableView, options: OrnamentOptions, attributionDataSource: AttributionDataSource) {
         self.options = options
 
         // Logo View
-        logoView = LogoView(logoSize: .regular)
+        logoView = LogoView(logoSize: .regular())
         logoView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(logoView)
 
@@ -57,6 +57,7 @@ public class OrnamentsManager: NSObject {
 
         // Info Button
         attributionButton = MapboxInfoButtonOrnament()
+        attributionButton.attributionDataSource = attributionDataSource
         attributionButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(attributionButton)
 

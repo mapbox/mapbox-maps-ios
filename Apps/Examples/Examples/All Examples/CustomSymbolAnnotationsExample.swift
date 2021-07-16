@@ -56,7 +56,7 @@ public class CustomSymbolAnnotationsExample: UIViewController, ExampleProtocol {
             guard let self = self else { return }
 
             self.updateAnnotationSymbolImages()
-            let features = self.addFeatures()()
+            let features = self.addFeatures()
             self.addAnnotationSymbolLayer(features: features)
 
             // The below line is used for internal testing purposes only.

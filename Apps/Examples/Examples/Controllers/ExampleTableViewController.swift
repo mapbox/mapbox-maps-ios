@@ -20,11 +20,6 @@ public class ExampleTableViewController: UITableViewController {
 
         searchBar.delegate = self
 
-        DispatchQueue.main.async {
-            let vc = CustomSymbolAnnotationsExample()
-            self.navigationController?.pushViewController(vc, animated: false)
-        }
-
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
     }
 }

@@ -207,15 +207,15 @@ public struct Examples {
         Example(title: "Change the map's language",
                 description: "Switch between supported languages for Symbol Layers",
                 type: LocalizationExample.self),
-        Example(title: "Add an interactive clustered layer",
-                description: "Display an alert controller after selecting a feature.",
-                type: SymbolClusteringExample.self),
         Example(title: "Add an animated image",
                 description: "Add an image to a raster layer on the map and animate it.",
                 type: AnimateImageLayerExample.self),
         Example(title: "Add a raster tile source",
                 description: "Add third-party raster tiles to a map.",
-                type: RasterTileSourceExample.self)
+                type: RasterTileSourceExample.self),
+        Example(title: "Show and hide layers",
+                description: "Enable and disable two different map layers at runtime.",
+                type: ShowHideLayerExample.self)
     ]
 
     // Examples that show use cases related to user interaction with the map.
@@ -226,6 +226,9 @@ public struct Examples {
         Example(title: "Restrict the map's coordinate bounds",
                 description: "Prevent the map from panning outside the specified coordinate bounds.",
                 type: RestrictCoordinateBoundsExample.self),
+        Example(title: "Add an interactive clustered layer",
+                description: "Display an alert controller after selecting a feature.",
+                type: SymbolClusteringExample.self),
     ]
 }
 

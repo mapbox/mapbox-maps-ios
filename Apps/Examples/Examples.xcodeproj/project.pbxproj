@@ -23,6 +23,7 @@
 		0CC4ECEA25B8AD3000F998B8 /* Custom2DPuckExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC4ECE925B8AD3000F998B8 /* Custom2DPuckExample.swift */; };
 		0CE8ED88258928200066E56C /* race_car_model.gltf in Resources */ = {isa = PBXBuildFile; fileRef = 0CE8ED87258928200066E56C /* race_car_model.gltf */; };
 		17483DFD2670113300396F8D /* MultiplePointAnnotationsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17483DFC2670113300396F8D /* MultiplePointAnnotationsExample.swift */; };
+		177C9D47269CA61100D13A2D /* ShowHideLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177C9D46269CA61100D13A2D /* ShowHideLayerExample.swift */; };
 		17AF784026837E91006EA30D /* Fire_Hydrants.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 17AF783F26837E91006EA30D /* Fire_Hydrants.geojson */; };
 		17B4805A2684FB2300CF0D5E /* AnimateImageLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B480592684FB2300CF0D5E /* AnimateImageLayerExample.swift */; };
 		17B4806126851C6E00CF0D5E /* radar4.gif in Resources */ = {isa = PBXBuildFile; fileRef = 17B4805C26851C6E00CF0D5E /* radar4.gif */; };
@@ -147,6 +148,7 @@
 		0CE3D3C225818786000585A2 /* FlyToExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyToExample.swift; sourceTree = "<group>"; };
 		0CE8ED87258928200066E56C /* race_car_model.gltf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = race_car_model.gltf; sourceTree = "<group>"; };
 		17483DFC2670113300396F8D /* MultiplePointAnnotationsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplePointAnnotationsExample.swift; sourceTree = "<group>"; };
+		177C9D46269CA61100D13A2D /* ShowHideLayerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowHideLayerExample.swift; sourceTree = "<group>"; };
 		17AF783F26837E91006EA30D /* Fire_Hydrants.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Fire_Hydrants.geojson; sourceTree = "<group>"; };
 		17B480592684FB2300CF0D5E /* AnimateImageLayerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateImageLayerExample.swift; sourceTree = "<group>"; };
 		17B4805C26851C6E00CF0D5E /* radar4.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = radar4.gif; sourceTree = "<group>"; };
@@ -270,6 +272,7 @@
 				A4211CE52592549900D215B4 /* RestrictCoordinateBoundsExample.swift */,
 				0333B84E25ED942600D667C9 /* SceneKitExample.swift */,
 				0773528E25438CCA00B48DB6 /* SelectAnnotationExample.swift */,
+				177C9D46269CA61100D13A2D /* ShowHideLayerExample.swift */,
 				A495049A2667D64F00130A8F /* SkyLayerExample.swift */,
 				07C1A60C257EF7CF00531205 /* SnapshotterCoreGraphicsExample.swift */,
 				072C79EA25685D23006E47A7 /* SnapshotterExample.swift */,
@@ -561,6 +564,7 @@
 				A41E584C26555A3400D8B946 /* PointClusteringExample.swift in Sources */,
 				CADCF7252584990E0065C51B /* CameraAnimationExample.swift in Sources */,
 				CADCF72A2584990E0065C51B /* CustomStyleURLExample.swift in Sources */,
+				177C9D47269CA61100D13A2D /* ShowHideLayerExample.swift in Sources */,
 				CADCF7222584990E0065C51B /* ColorExpressionExample.swift in Sources */,
 				17E28C5C2672A1160033DF0F /* SymbolClusteringExample.swift in Sources */,
 				CADCF733258499130065C51B /* Examples.swift in Sources */,

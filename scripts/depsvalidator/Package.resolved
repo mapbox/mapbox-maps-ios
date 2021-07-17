@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/Carthage/Carthage",
         "state": {
           "branch": null,
-          "revision": "0668de43eb5d323d2e816eaab83677f50a8eeb24",
-          "version": "0.37.0"
+          "revision": "9a3d1799ba8f8b9e2d4514cfa53a2cca6064136e",
+          "version": "0.38.0"
         }
       },
       {
@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
-          "revision": "831ed5e860a70e745bc1337830af4786b2576881",
-          "version": "0.4.1"
+          "revision": "986d191f94cec88f6350056da59c2e59e83d1229",
+          "version": "0.4.3"
         }
       },
       {

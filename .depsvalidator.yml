@@ -4,22 +4,15 @@ manifests:
   - type: Package.resolved
   - type: Package.resolved
     path: Apps/Apps.xcworkspace/xcshareddata/swiftpm/Package.resolved
-  - type: Package.resolved
-    path: Mapbox/MapboxMaps.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
   - type: Podspec
-    path: MapboxMaps.podspec
-  - type: JSON
-    path: scripts/release/packager/versions.json
+  - type: packager
 dependencies:
   - name: MapboxCoreMaps
-    variations:
-      Carthage: MapboxCoreMaps-dynamic
   - name: MapboxCommon
-    variations:
-      Carthage: MapboxCommon-ios
   - name: Turf
-    variations:
-      Carthage: turf-swift
   - name: MapboxMobileEvents
-    variations:
-      Carthage: mapbox-events-ios
+manifest_definitions:
+  - name: packager
+    type: SemanticVersion
+    default_path: scripts/release/packager/versions.json
+    command: jq -r ".$DEPSVALIDATOR_DEPENDENCY_NAME" "$DEPSVALIDATOR_MANIFEST_PATH"

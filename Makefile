@@ -3,9 +3,10 @@
 ifneq ($(XCODE_WORKSPACE),)
 	XCODE_PROJECT := -workspace $(XCODE_WORKSPACE)
 else
-	XCODE_PROJECT ?= -project Mapbox/MapboxMaps.xcodeproj
+	XCODE_PROJECT ?= -project MapboxMaps.xcodeproj
 endif
 
+XCODE_PROJECT_FILE := MapboxMaps.xcodeproj/project.pbxproj
 
 # Default to Debug since Release will require testability. (See #157)
 CONFIGURATION    ?= Debug
@@ -24,7 +25,6 @@ XCTESTRUN_PACKAGE         := $(BUILD_DIR)/$(SCHEME)-$(CONFIGURATION)-testrun.zip
 TEST_ROOT                 := $(BUILD_DIR)/test-root
 PAYLOAD_DIR               := $(BUILD_DIR)/Payload
 DEVICE_TEST_PATH          := $(BUILD_DIR)/DeviceFarmResults
-BUILT_XCFRAMEWORK_PATH    := $(BUILD_DIR)/Build/Products/XCFramework/MapboxMaps.xcframework
 
 # Netrc
 NETRC_FILE=~/.netrc
@@ -77,7 +77,7 @@ clean:
 distclean: clean
 	-rm Package.resolved
 	-rm Apps/Apps.xcworkspace/xcshareddata/swiftpm/Package.resolved
-	-rm Mapbox/MapboxMaps.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+	-rm MapboxMaps.xcodeproj
 
 $(PAYLOAD_DIR) $(TEST_ROOT) $(DEVICE_TEST_PATH):
 	-mkdir -p $@
@@ -168,21 +168,25 @@ build-sdk-for-device:
 .PHONY: build-for-testing-device
 build-for-testing-device: $(XCTESTRUN_PACKAGE)
 
+$(XCODE_PROJECT_FILE): project.yml
+	xcodegen
+
 # For the moment since this PR deals with testing unit-tests on device, this target
 # assumes that the tests require the "test host" app
-$(XCTESTRUN_PACKAGE): | $(PAYLOAD_DIR) $(TEST_ROOT)
-ifneq ($(SCHEME),MapboxMapsTestsWithHost)
+$(XCTESTRUN_PACKAGE): $(XCODE_PROJECT_FILE) | $(PAYLOAD_DIR) $(TEST_ROOT)
+ifneq ($(SCHEME),MapboxTestHost)
 ifneq ($(SCHEME),Examples)
-	$(error SCHEME should be MapboxMapsTestsWithHost or Examples)
+	$(error SCHEME should be MapboxTestHost or Examples)
 endif
 endif
 
 	# Build for testing
 	set -o pipefail && $(XCODE_BUILD_DEVICE) \
 		-scheme '$(SCHEME)' \
-		-xcconfig $(CURDIR)/Mapbox/Configurations/$(APP_NAME)_testhost.xcconfig \
 		-enableCodeCoverage YES \
-		build-for-testing
+		build-for-testing \
+		ENABLE_TESTABILITY=YES \
+		SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
 
 	# Gather app, frameworks and xctestrun
 	-mkdir $(TEST_ROOT)/$(CONFIGURATION)-iphoneos
@@ -241,7 +245,7 @@ clean-for-device-build:
 #	AWS_DEVICE_FARM_PROJECT
 #	AWS_DEVICE_FARM_DEVICE_POOL
 #
-# 	make test-with-device-farm SCHEME=MapboxMapsTestsWithHost APP_NAME=MapboxTestHost
+# 	make test-with-device-farm SCHEME=MapboxTestHost APP_NAME=MapboxTestHost
 #
 # If token expires while the tests are in progress, run `mbx env` again followed by restarting
 # the test call.
@@ -268,7 +272,7 @@ $(DEVICE_FARM_RESULTS): $(DEVICE_FARM_RUN)
 # This should match what happens on Device Farm (except for processing of results). The devicefarm.mk makefile
 # ought to match the contents of the testspec.yml file (ideally it would be shared).
 #
-# make local-test-with-device-farm-ipa SCHEME=MapboxMapsTestsWithHost APP_NAME=MapboxTestHost CONFIGURATION=Release ENABLE_CODE_SIGNING=1
+# make local-test-with-device-farm-ipa SCHEME=MapboxTestHost APP_NAME=MapboxTestHost CONFIGURATION=Release ENABLE_CODE_SIGNING=1
 
 .PHONY: local-test-with-device-farm-ipa
 local-test-with-device-farm-ipa: $(DEVICE_FARM_UPLOAD_IPA)
@@ -329,33 +333,23 @@ $(DEVICE_FARM_UPLOAD_IPA): $(XCTESTRUN_PACKAGE) | $(DEVICE_TEST_PATH) $(PAYLOAD_
 gather-results:
 	python3 ./scripts/device-farm/extract-xcresult.py --artifacts-dir $(BUILD_DIR) --output-dir $(BUILD_DIR)/testruns
 
-# Although symbolicatecrash is supposed to work with a search directory, this call needed explicit paths
 .PHONY: symbolicate
 symbolicate:
 	@echo Symbolicating crash reports
 
-	@export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer; \
-	TEST_DSYMS=`find $(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Plugins -name *.xctest.dSYM | \
-		sed 's/\(.*\/\(.*\)\.xctest\.dSYM\)/\1\/Contents\/Resources\/DWARF\/\2/g' | \
-		tr '\n' ' '` ; \
+	@export DEVELOPER_DIR=$$(xcode-select -p); \
 	CRASHES=`find $(DEVICE_TEST_PATH) -name Application_Crash_Report.ips` ; \
 	for CRASH in $${CRASHES[@]} ; \
 	do \
 		if [ ! -f $${CRASH}.symbolicated.txt ]; then \
-			echo "Symbolicating $${CRASH}" . ; \
-			ls -la $(BUILT_DEVICE_PRODUCTS_DIR) || true ; \
-			/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/iOSSupport/Library/PrivateFrameworks/DVTFoundation.framework/Versions/A/Resources/symbolicatecrash \
+			echo "Symbolicating $${CRASH}" ; \
+			$${DEVELOPER_DIR}/Platforms/MacOSX.platform/Developer/iOSSupport/Library/PrivateFrameworks/DVTFoundation.framework/Versions/A/Resources/symbolicatecrash \
 				$${CRASH} \
-				$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/$(APP_NAME) \
-				$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app.dSYM/Contents/Resources/DWARF/$(APP_NAME) \
-				$(BUILT_DEVICE_PRODUCTS_DIR)/MapboxMaps.framework/Mapbox \
-				$(BUILT_DEVICE_PRODUCTS_DIR)/MapboxMaps.framework.dSYM/Contents/Resources/DWARF/MapboxMaps \
-				$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Frameworks/MapboxCoreMaps.framework/Mapbox \
-				$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Frameworks/MapboxCommon.framework/Mapbox \
-				$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Frameworks/MapboxMobileEvents.framework/MapboxMobileEvents \
-				$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Frameworks/Turf.framework/Mapbox \
-				$(TEST_DSYMS) \
+				$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/ \
+				$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Frameworks/ \
+				$(BUILT_DEVICE_PRODUCTS_DIR)/$(APP_NAME).app/Plugins/ \
 				-o $${CRASH}.symbolicated.txt ; \
+			cat $${CRASH}.symbolicated.txt ; \
 		fi ; \
 	done
 
@@ -412,15 +406,13 @@ COVERAGE_ARCH ?= x86_64
 
 .PHONY: update-codecov-with-profdata
 update-codecov-with-profdata:
-	@PROF_DATA=`find $(COVERAGE_ROOT_DIR) -regex '.*\.profraw'` ; \
+	@PROF_DATA=`find $(COVERAGE_ROOT_DIR) -regex '.*\.profdata'` ; \
 	for RESULT in $${PROF_DATA[@]} ; \
 	do \
-		echo "Generating $${RESULT}.lcov" ; \
-		xcrun llvm-profdata merge -o $${RESULT}.profdata $${RESULT} ; \
 		echo "Generating lcov JSON" ; \
 		xcrun llvm-cov export \
 			$(COVERAGE_MAPBOX_MAPS) \
-			-instr-profile=$${RESULT}.profdata \
+			-instr-profile=$${RESULT} \
 			-arch=$(COVERAGE_ARCH) \
 			-format=text | python3 -m json.tool > $${RESULT}.json ; \
 		echo "Uploading to S3" ; \
@@ -432,14 +424,12 @@ update-codecov-with-profdata:
 	done
 	@echo "Done"
 
-COVERAGE_MAPBOX_MAPS_DEVICE ?= $(BUILT_DEVICE_PRODUCTS_DIR)/MapboxMaps.o
-
 .PHONY: device-update-codecov-with-profdata
 device-update-codecov-with-profdata:
 	make update-codecov-with-profdata \
 		COVERAGE_ARCH=arm64 \
 		COVERAGE_ROOT_DIR=$(BUILD_DIR)/testruns \
-		COVERAGE_MAPBOX_MAPS='$(COVERAGE_MAPBOX_MAPS_DEVICE)'
+		COVERAGE_MAPBOX_MAPS='$(BUILT_DEVICE_PRODUCTS_DIR)/MapboxMaps.o'
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Dependencies
@@ -467,38 +457,3 @@ validate: $(CIRCLE_CI_CLI)
 
 $(CIRCLE_CI_CLI):
 	curl -fLSs https://circle.ci/cli | bash
-
-
-# # ----------------------------------------------------------------------------------------------------------------------
-# Create an XCFramework
-
-XCODE_ARCHIVE_SIM = xcodebuild archive \
-	$(XCODE_PROJECT) \
-	-scheme MapboxMaps \
-	-destination="iOS Simulator" \
-	-archivePath /tmp/xcf/iossimulator.xcarchive \
-	-derivedDataPath /tmp/iphoneos \
-	-sdk iphonesimulator \
-	SKIP_INSTALL=NO \
-	BUILD_LIBRARIES_FOR_DISTRIBUTION=YES
-
-XCODE_ARCHIVE_DEVICE = xcodebuild archive \
-	$(XCODE_PROJECT) \
-	-scheme MapboxMaps \
-	-destination="iOS" \
-	-archivePath /tmp/xcf/ios.xcarchive \
-	-derivedDataPath /tmp/iphoneos \
-	-sdk iphoneos \
-	SKIP_INSTALL=NO \
-	BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
-	$(CODE_SIGNING)
-
-XCODE_CREATE_XCFRAMEWORK = xcodebuild \
-	-create-xcframework \
-	-framework /tmp/xcf/ios.xcarchive/Products/Library/Frameworks/MapboxMaps.framework \
-	-framework /tmp/xcf/iossimulator.xcarchive/Products/Library/Frameworks/MapboxMaps.framework \
-	-output $(BUILT_XCFRAMEWORK_PATH)
-
-.PHONY: xcframework
-xcframework:
-	set -o pipefail && $(XCODE_ARCHIVE_SIM) && $(XCODE_ARCHIVE_DEVICE) && $(XCODE_CREATE_XCFRAMEWORK)

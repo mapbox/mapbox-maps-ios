@@ -40,7 +40,7 @@ workflows:
           name: "Run MapboxTestHost tests on devices"
           device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
           device-pool: $(DEVICE_FARM_5_DEVICE_POOL)
-          scheme: "MapboxMapsTestsWithHost"
+          scheme: "MapboxTestHost"
           app-name: "MapboxTestHost"
           device-tests-always-run: true
           report_failure: true
@@ -88,9 +88,10 @@ workflows:
       # Not on main
       - run-tests-on-devices:
           name: "Run MapboxTestHost tests on devices"
+          xcode: "12.5.0"
           device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
           device-pool: $(DEVICE_FARM_1_PHONE_POOL)
-          scheme: "MapboxMapsTestsWithHost"
+          scheme: "MapboxTestHost"
           app-name: "MapboxTestHost"
           filters:
             branches:
@@ -108,9 +109,10 @@ workflows:
       # On main
       - run-tests-on-devices:
           name: "Run MapboxTestHost tests on devices (main)"
+          xcode: "12.5.0"
           device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
           device-pool: $(DEVICE_FARM_5_DEVICE_POOL)
-          scheme: "MapboxMapsTestsWithHost"
+          scheme: "MapboxTestHost"
           app-name: "MapboxTestHost"
           device-tests-always-run: true
           report_failure: true
@@ -178,7 +180,7 @@ jobs:
         default: false
       scheme:
         type: string
-        default: "MapboxMapsTestsWithHost"
+        default: "MapboxTestHost"
       app-name:
         type: string
         default: "MapboxTestHost"
@@ -206,10 +208,10 @@ jobs:
     steps:
       - checkout
       - run:
-          name: build depsvalidator
+          name: Build depsvalidator
           command: swift build --package-path scripts/depsvalidator
       - run:
-          name: run depsvalidator
+          name: Run depsvalidator
           command: swift run --package-path scripts/depsvalidator depsvalidator
 
   build-sdk:
@@ -358,14 +360,15 @@ jobs:
           command: make install-devicefarm-dependencies
       - install-dependencies
 
-    # There's a command for this, but it only works if run *after* the build.
+      # There's a command for this, but it only works if run *after* the build.
       # In this case, we need to determine the derived data path *before* building.
       - run:
           name: Locate derived data directory
           command: |
+            xcodegen
             xcodebuild \
               -showBuildSettings \
-              -project Mapbox/MapboxMaps.xcodeproj \
+              -project MapboxMaps.xcodeproj \
               -scheme 'MapboxTestHost' \
               | sed -n 's:^ *BUILD_DIR = \(.*\)/Build/Products$:export DERIVED_DATA_PATH="\1":p' \
               >> $BASH_ENV
@@ -405,8 +408,7 @@ jobs:
               SCHEME=<< parameters.scheme >> \
               APP_NAME=<< parameters.app-name >> \
               CONFIGURATION=Release \
-              BUILD_DIR="$DERIVED_DATA_PATH" \
-              COVERAGE_MAPBOX_MAPS_DEVICE="$DERIVED_DATA_PATH/Build/Products/Release-iphoneos/MapboxMaps.framework/MapboxMaps"
+              BUILD_DIR="$DERIVED_DATA_PATH"
       - store-device-farm-artifacts:
           derived_data_path: $DERIVED_DATA_PATH
       - store-logs:
@@ -430,6 +432,7 @@ jobs:
       - run:
           name: Install Device Farm Dependencies
           command: make install-devicefarm-dependencies
+      - install-dependencies
       # There's a command for this, but it only works if run *after* the build.
       # In this case, we need to determine the derived data path *before* building.
       - run:
@@ -711,6 +714,7 @@ commands:
     description: "Install Dependencies"
     steps:
       - run: pip3 install awscli gitpython requests python-dateutil
+      - run: brew install jq xcodegen
 
   make-docs:
     description: "Generate Documentation"
@@ -728,9 +732,6 @@ commands:
         default: "dynamic"
     description: "Create << parameters.bundle_style >> xcframework bundle"
     steps:
-      - run:
-          name: Install xcframework dependencies
-          command: brew install jq xcodegen
       - run:
           name: Creating << parameters.bundle_style >> bundled artifact
           command: |

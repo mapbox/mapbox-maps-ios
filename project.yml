@@ -1,0 +1,102 @@
+---
+name: MapboxMaps
+configFiles:
+  Debug: Configurations/base.xcconfig
+  Release: Configurations/base.xcconfig
+options:
+  defaultConfig: Release
+  parallelizeBuild: false
+  xcodeVersion: "1250"
+packages:
+  MapboxMaps:
+    path: ./
+settings:
+  base:
+    VALIDATE_WORKSPACE: "NO"
+    COPY_PHASE_STRIP: "NO"
+    GCC_WARN_64_TO_32_BIT_CONVERSION: $(GCC_WARN_64_TO_32_BIT_CONVERSION)
+    CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: "YES"
+    MTL_FAST_MATH: "YES"
+  configs:
+    Debug:
+      ONLY_ACTIVE_ARCH: "YES"
+      DEBUG_INFORMATION_FORMAT: dwarf
+      ENABLE_TESTABILITY: "YES"
+      MTL_ENABLE_DEBUG_INFO: INCLUDE_SOURCE
+    Release:
+      DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+      VALIDATE_PRODUCT: "YES"
+      ENABLE_NS_ASSERTIONS: "NO"
+      SWIFT_COMPILATION_MODE: wholemodule
+      MTL_ENABLE_DEBUG_INFO: "NO"
+targets:
+  MapboxMapsTestsWithHost:
+    type: bundle.unit-test
+    platform: iOS
+    settings:
+      base:
+        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: "YES"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @loader_path/Frameworks"
+        INFOPLIST_FILE: "Tests/MapboxMapsTests/Info.plist"
+        PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxTests"
+        PRODUCT_NAME: "$(TARGET_NAME)"
+        CODE_SIGN_STYLE: "Automatic"
+        COMPRESS_PNG_FILES: "NO"
+        STRIP_PNG_TEXT: "NO"
+    configFiles:
+      Debug: Configurations/unitTests.xcconfig
+      Release: Configurations/unitTests.xcconfig
+    sources:
+      - path: "Tests/MapboxMapsTests"
+        excludes:
+          - "Foundation/Integration Tests/HTTP/HTTPIntegrationTests.swift"
+    dependencies:
+      - target: MapboxTestHost
+  MapboxMapsHTTPTestsWithHost:
+    type: bundle.unit-test
+    platform: iOS
+    settings:
+      base:
+        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: "YES"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @loader_path/Frameworks"
+        INFOPLIST_FILE: "Tests/MapboxMapsTests/Info.plist"
+        PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxTests"
+        PRODUCT_NAME: "$(TARGET_NAME)"
+        CODE_SIGN_STYLE: "Automatic"
+    configFiles:
+      Debug: Configurations/unitTests.xcconfig
+      Release: Configurations/unitTests.xcconfig
+    sources:
+      - path: "Tests/MapboxMapsTests"
+        includes:
+          - "Foundation/Integration Tests/HTTP/HTTPIntegrationTests.swift"
+          - "Foundation/Integration Tests/MapViewIntegrationTestCase.swift"
+          - "Foundation/Integration Tests/IntegrationTestCase.swift"
+          - "Helpers/Bundle+MapboxMapsTests.swift"
+          - "Helpers/TestConveniences.swift"
+          - "Helpers/XCTestCase+MapboxAccessToken.swift"
+          - "Offline/TileStore+Tests.swift"
+    dependencies:
+      - target: MapboxTestHost
+  MapboxTestHost:
+    type: application
+    platform: iOS
+    deploymentTarget: "11.0"
+    settings:
+      base:
+        ENABLE_BITCODE: "NO"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks"
+        INFOPLIST_FILE: "MapboxTestHost/Info.plist"
+        PRODUCT_BUNDLE_IDENTIFIER: "com.mapbox.MapboxMapsTestHost"
+        PRODUCT_NAME: "$(TARGET_NAME)"
+        SYSTEM_FRAMEWORK_SEARCH_PATHS: "$(PLATFORM_DEVELOPER_LIBRARY_DIR)/PrivateFrameworks"
+        CODE_SIGN_STYLE: "Automatic"
+        ASSETCATALOG_COMPILER_APPICON_NAME: "AppIcon"
+        SWIFT_VERSION: "5.0"
+    sources:
+      - path: MapboxTestHost
+    dependencies:
+      - package: MapboxMaps

@@ -1,13 +1,12 @@
 import Foundation
 
-struct Podspec: Decodable, SemanticVersionRequirementProviding {
+struct Podspec: Decodable, SemanticValueProviding {
     enum Error: Swift.Error {
         case unsupportedDependencyRequirement(DependencyRequirement)
     }
 
     private static let cache = ManifestCache { (url) -> Self in
-        let podExecutable = ProcessInfo.processInfo.environment["DEPSVALIDATOR_POD_EXECUTABLE_PATH"] ?? "pod"
-        let data = Process.shell("LANG=en_US.UTF-8 \(podExecutable) ipc spec \(url.path)").output
+        let data = Process.shell("LANG=en_US.UTF-8 pod ipc spec \(url.path)").output
         return try JSONDecoder().decode(Self.self, from: data)
     }
 
@@ -71,8 +70,8 @@ struct Podspec: Decodable, SemanticVersionRequirementProviding {
 
     var dependencies: [String: DependencyRequirement]
 
-    func semanticVersionRequirement(for dependency: Config.Dependency) throws -> SemanticVersionRequirement {
-        try SemanticVersionRequirement(dependencies[dependency.name(for: .cocoapods)]!)
+    func semanticValue(for dependency: Dependency) throws -> SemanticValue {
+        try .versionRequirement(SemanticVersionRequirement(dependencies[dependency.name(for: .podspec)]!))
     }
 }
 

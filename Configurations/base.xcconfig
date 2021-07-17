@@ -158,5 +158,5 @@ SWIFT_TREAT_WARNINGS_AS_ERRORS[config=Release] = NO
 // Custom
 
 CURRENT_COMMIT_HASH = deadbeef
-#include? "../../developer.xcconfig"
+#include? "../developer.xcconfig"
 

@@ -40,9 +40,9 @@ final class Validate: ParsableCommand {
 
     // Ensure that all of the semantic version requirements are equivalent.
     // Does nothing if there are none.
-    private func validateSemanticVersionRequirements(for dependency: Config.Dependency,
+    private func validateSemanticVersionRequirements(for dependency: Dependency,
                                                      in config: Config) throws -> Bool {
-        let versionRequirements = try Set(config.semanticVersionRequirements(for: dependency))
+        let versionRequirements = try Set(config.semanticValues(for: dependency).compactMap(\.versionRequirement))
         // There's only an error if there's more than 1 version requirement
         guard versionRequirements.count > 1 else {
             return true
@@ -54,8 +54,11 @@ final class Validate: ParsableCommand {
         print("  Inconsistent version requirements: \(versionRequirementsString)")
 
         // Also print out which manifests contained each version requirement
-        let groupedManifests = try config.manifestsGroupedBySemanticVersionRequirement(for: dependency)
-        for (semanticVersionRequirement, manifests) in groupedManifests {
+        let groupedManifests = try config.manifestsGroupedBySemanticValue(for: dependency)
+        for (semanticValue, manifests) in groupedManifests {
+            guard let semanticVersionRequirement = semanticValue.versionRequirement else {
+                continue
+            }
             print("    Manifests with '\(semanticVersionRequirement)':")
             for manifest in manifests {
                 print("      - \(manifest.url.relativePath)")
@@ -66,9 +69,9 @@ final class Validate: ParsableCommand {
 
     // Ensure that all of the semantic versions are equivalent.
     // Does nothing if there are none.
-    private func validateSemanticVersions(for dependency: Config.Dependency,
+    private func validateSemanticVersions(for dependency: Dependency,
                                           in config: Config) throws -> Bool {
-        let versions = try Set(config.semanticVersions(for: dependency))
+        let versions = try Set(config.semanticValues(for: dependency).compactMap(\.version))
         // There's only an error if there's more than 1 version
         guard versions.count > 1 else {
             return true
@@ -80,8 +83,11 @@ final class Validate: ParsableCommand {
         print("  Inconsistent pinned versions: \(versionsString)")
 
         // Also print out which manifests contained each version
-        let groupedManifests = try config.manifestsGroupedBySemanticVersion(for: dependency)
-        for (semanticVersion, manifests) in groupedManifests {
+        let groupedManifests = try config.manifestsGroupedBySemanticValue(for: dependency)
+        for (semanticValue, manifests) in groupedManifests {
+            guard let semanticVersion = semanticValue.version else {
+                continue
+            }
             print("    Manifests with '\(semanticVersion)':")
             for manifest in manifests {
                 print("      - \(manifest.url.relativePath)")
@@ -90,14 +96,14 @@ final class Validate: ParsableCommand {
         return false
     }
 
-    private func validateRequirementsSatisfiedByVersions(for dependency: Config.Dependency,
+    private func validateRequirementsSatisfiedByVersions(for dependency: Dependency,
                                                          in config: Config) throws -> Bool {
         // Ensure that the semantic version requirement is satisfied by the semantic version.
         // Skip this step if we do not have one of each. A previous validation step ensures that
         // there is not more than one requirement or more than one version, so that is not
         // verified here.
-        guard let versionRequirement = try config.semanticVersionRequirements(for: dependency).first,
-              let version = try config.semanticVersions(for: dependency).first,
+        guard let versionRequirement = try config.semanticValues(for: dependency).compactMap(\.versionRequirement).first,
+              let version = try config.semanticValues(for: dependency).compactMap(\.version).first,
               !versionRequirement.isSatisfied(by: version) else {
             return true
         }

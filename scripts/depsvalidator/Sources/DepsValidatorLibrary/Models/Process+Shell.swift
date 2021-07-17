@@ -1,10 +1,14 @@
 import Foundation
 
 extension Process {
-    static func shell(_ command: String) -> Self {
+    static func shell(_ command: String, environment: [String: String]? = nil) -> Self {
         let process = Self()
         process.launchPath = "/bin/bash"
         process.arguments = ["-c", command]
+        if let environment = environment {
+            process.environment = process.environment ?? [:]
+            process.environment?.merge(environment, uniquingKeysWith: { (_, rhs) in rhs })
+        }
         return process
     }
 

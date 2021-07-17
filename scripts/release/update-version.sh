@@ -24,14 +24,10 @@ SHORT_VERSION=${SEM_VERSION%-*}
 
 step "Version ${SEM_VERSION}"
 
-cd Mapbox
-
-step "Updating Xcode targets to version ${SHORT_VERSION}…"
-
-xcrun agvtool bump -all
-xcrun agvtool new-marketing-version "${SHORT_VERSION}"
-
-cd ..
+# Update Info.plist
+step "Update Info.plist"
+plutil -replace CFBundleShortVersionString -string "$SHORT_VERSION" Sources/MapboxMaps/Info.plist
+plutil -convert json -o - Sources/MapboxMaps/Info.plist | jq -r '.CFBundleVersion = ((.CFBundleVersion|tonumber + 1)|tostring)' | plutil -convert xml1 -o Sources/MapboxMaps/Info.plist -
 
 # Update MapboxMaps.podspec
 step "Update Podspec"

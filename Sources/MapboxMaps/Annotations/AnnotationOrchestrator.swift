@@ -38,15 +38,21 @@ public protocol AnnotationInteractionDelegate: AnyObject {
 
 }
 
+public protocol AnnotationDragDelegate: AnyObject {
+    func annotationManager(_manager: AnnotationManager, didDragStart annotations: Annotation)
+    func annotationManager(_manager: AnnotationManager, didDrag annotations: Annotation)
+    func annotationManager(_manager: AnnotationManager, didDragEnd annotations: Annotation)
+}
+
 public class AnnotationOrchestrator {
 
-    private weak var view: UIView?
+    private weak var view: MapView?
 
     private weak var style: Style?
 
     private weak var mapFeatureQueryable: MapFeatureQueryable?
 
-    internal init(view: UIView, mapFeatureQueryable: MapFeatureQueryable, style: Style) {
+    internal init(view: MapView, mapFeatureQueryable: MapFeatureQueryable, style: Style) {
         self.view = view
         self.mapFeatureQueryable = mapFeatureQueryable
         self.style = style

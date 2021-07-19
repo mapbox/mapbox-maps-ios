@@ -40,12 +40,12 @@ public class PointAnnotationManager: AnnotationManager {
     private weak var mapFeatureQueryable: MapFeatureQueryable?
 
     /// Dependency required to add gesture recognizer to the MapView
-    private weak var view: UIView?
+    private weak var view: MapView?
 
     /// Indicates whether the style layer exists after style changes. Default value is `true`.
     internal let shouldPersist: Bool
 
-    internal init(id: String, style: Style, view: UIView, mapFeatureQueryable: MapFeatureQueryable, shouldPersist: Bool, layerPosition: LayerPosition?) {
+    internal init(id: String, style: Style, view: MapView, mapFeatureQueryable: MapFeatureQueryable, shouldPersist: Bool, layerPosition: LayerPosition?) {
         self.id = id
         self.style = style
         self.sourceId = id + "-source"
@@ -53,6 +53,11 @@ public class PointAnnotationManager: AnnotationManager {
         self.view = view
         self.mapFeatureQueryable = mapFeatureQueryable
         self.shouldPersist = shouldPersist
+        
+        let panGesture = UIPanGestureRecognizer.init(target: self, action: #selector(onPan))
+        panGesture.minimumNumberOfTouches = 1
+        panGesture.maximumNumberOfTouches = 1
+        view.addGestureRecognizer(panGesture)
 
         do {
             try makeSourceAndLayer(layerPosition: layerPosition)
@@ -537,6 +542,63 @@ public class PointAnnotationManager: AnnotationManager {
                 Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)",
                             category: "Annotations")
             }
+        }
+    }
+    
+    // MARK: - Drag Handling -
+    
+    /// Set this delegate in order to be called back if an annotation being dragget
+    public weak var dragDelegate: AnnotationDragDelegate?
+
+    private var draggedAnnotation: PointAnnotation? = nil
+    
+    @objc func onPan(_ gestureRecognizer: UIPanGestureRecognizer) {
+        switch gestureRecognizer.state {
+        case .began:
+            let options = RenderedQueryOptions.init(layerIds: [self.layerId], filter: nil)
+            mapFeatureQueryable?.queryRenderedFeatures(
+                at: gestureRecognizer.location(in: view),
+                options: options,
+                completion: { result in
+                    switch result {
+                    case .success(let queriedFeatures):
+                        if let annotationIds = queriedFeatures
+                            .filter({ annotation in
+                                return annotation.feature.properties["is-draggable"] != nil
+                            })
+                            .compactMap(\.feature.properties["annotation-id"]) as? [String] {
+                                let pannedAnnotations = self.annotations.filter { annotationIds.contains($0.id) }
+                                if (pannedAnnotations.count > 0) {
+                                    self.draggedAnnotation = pannedAnnotations.first!
+                                    self.dragDelegate?.annotationManager(_manager: self, didDragStart: pannedAnnotations.first!)
+                                }
+                            }
+                    case .failure:
+                        return
+                    }
+                }
+            )
+        case .changed:
+            guard var annotation = draggedAnnotation else {
+                return
+            }
+            if let targetPoint = self.view?.mapboxMap.coordinate(for: gestureRecognizer.location(in: self.view)) {
+                annotation.feature.geometry = Turf.Geometry.point(.init(targetPoint))
+                var newAnnotations = self.annotations.filter { an in
+                    return an.id != annotation.id
+                }
+                newAnnotations.append(annotation)
+                self.syncAnnotations(newAnnotations)
+                self.dragDelegate?.annotationManager(_manager: self, didDrag: annotation)
+            }
+        case .ended:
+            guard let annotation = draggedAnnotation else {
+                return
+            }
+            self.dragDelegate?.annotationManager(_manager: self, didDragEnd: annotation)
+            self.draggedAnnotation = nil
+        default:
+            return
         }
     }
 }

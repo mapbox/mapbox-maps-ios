@@ -1,6 +1,6 @@
 import Foundation
 
-struct ResolvedPackage: Decodable, SemanticVersionProviding {
+struct ResolvedPackage: Decodable, SemanticValueProviding {
     enum Error: Swift.Error {
         case unsupportedPin(ResolvedPackageObject.Pin)
     }
@@ -31,8 +31,8 @@ struct ResolvedPackage: Decodable, SemanticVersionProviding {
         }
     }
 
-    func semanticVersion(for dependency: Config.Dependency) throws -> SemanticVersion {
-        try SemanticVersion(object.pins.first { $0.package == dependency.name(for: .spm) }!)
+    func semanticValue(for dependency: Dependency) throws -> SemanticValue {
+        try .version(SemanticVersion(object.pins.first { $0.package == dependency.name(for: .resolvedPackage) }!))
     }
 }
 

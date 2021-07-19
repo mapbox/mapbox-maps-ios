@@ -1,6 +1,6 @@
 import Foundation
 
-struct Package: Decodable, SemanticVersionRequirementProviding {
+struct Package: Decodable, SemanticValueProviding {
     enum Error: Swift.Error {
         case unsupportedVersionRequirements(String)
     }
@@ -69,8 +69,8 @@ struct Package: Decodable, SemanticVersionRequirementProviding {
         }
     }
 
-    func semanticVersionRequirement(for dependency: Config.Dependency) throws -> SemanticVersionRequirement {
-        try SemanticVersionRequirement(dependencies.first { $0.name == dependency.name(for: .spm) }!.requirement)
+    func semanticValue(for dependency: DepsValidatorLibrary.Dependency) throws -> SemanticValue {
+        try .versionRequirement(SemanticVersionRequirement(dependencies.first { $0.name == dependency.name(for: .package) }!.requirement))
     }
 }
 

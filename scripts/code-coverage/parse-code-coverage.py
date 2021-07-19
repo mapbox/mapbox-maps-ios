@@ -43,7 +43,7 @@ def publish_coverage_report(report, fileName):
 
 if __name__ == "__main__":
     # Example:
-    # ./scripts/code-coverage/parse-code-coverage.py --report data.profraw.json --scheme MapboxMapsTestsWithHost -c MapboxMaps -g . -d
+    # ./scripts/code-coverage/parse-code-coverage.py --report data.profraw.json --scheme MapboxTestHost -c MapboxMaps -g . -d
     parser = argparse.ArgumentParser(description='Script to parse the lcov JSON coverage report.')
     parser.add_argument('--report', help= 'Provide path the lcov JSON report', required=True)
     parser.add_argument('--scheme', help= 'Xcode scheme', required=True)

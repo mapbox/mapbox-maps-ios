@@ -8,7 +8,7 @@ final class PackageTests: XCTestCase {
         let url = Bundle.module.url(forResource: "Package.swift", withExtension: "example")!
 
         let packageDir = FileManager.default.temporaryDirectory.appendingPathComponent("MyLibrary")
-        try FileManager.default.removeItem(at: packageDir)
+        try? FileManager.default.removeItem(at: packageDir)
         try FileManager.default.createDirectory(at: packageDir, withIntermediateDirectories: true, attributes: nil)
         let packageURL = packageDir.appendingPathComponent("Package.swift")
         try FileManager.default.copyItem(at: url, to: packageURL)

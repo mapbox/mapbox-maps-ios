@@ -37,10 +37,31 @@ function finish { >&2 echo -e "\033[1m\033[32m✔ $@\033[0m"; }
 
 SCRIPT_DIR=`dirname "$0"`
 
-# Search for Jazzy and install documentation dependencies if necessary.
-if [ -z `which jazzy` ]; then
-    $SCRIPT_DIR/install-documentation-dependencies.sh
+# Install documentation dependencies
+
+# VARIABLES
+JAZZY_VERSION="0.13.6"
+CIRCLECI=${CIRCLECI:-false}
+
+## Install Jazzy
+if [[ -z `which jazzy` || $(jazzy -v) != "jazzy version: ${JAZZY_VERSION}" ]]; then
+    step "Installing Jazzy…"
+
+    if [[ "${CIRCLECI}" == true ]]; then
+        sudo gem install jazzy -v $JAZZY_VERSION --no-document
+    else
+        gem install jazzy -v $JAZZY_VERSION --no-document
+    fi
+
+    if [ -z `which jazzy` ]; then
+        error "Unable to install Jazzy ($JAZZY_VERSION). See https://github.com/mapbox/mapbox-gl-native-ios/blob/main/platform/ios/INSTALL.md"
+        exit 1
+    fi
+else
+    step "Found Jazzy (${JAZZY_VERSION})"
 fi
+
+finish "Finished installing documentation dependencies"
 
 # The git tag used to generate docs. If one is not provided, HEAD is used.
 
@@ -80,13 +101,14 @@ if [ -n "$GIT_TAG"]; then
 fi
 
 cd $SCRIPT_DIR/../.. &&
+rm -rf MapboxMaps.xcodeproj &&
 jazzy \
     --author Mapbox \
     --module-version $GIT_REV \
     --module MapboxMaps \
     --title "Mapbox Maps SDK for iOS" \
     --swift-build-tool xcodebuild \
-    --build-tool-arguments -project,Mapbox/MapboxMaps.xcodeproj,-scheme,MapboxMaps \
+    --build-tool-arguments '-scheme,MapboxMaps,-destination,generic/platform=iOS Simulator' \
     --sdk iphonesimulator \
     --theme jazzy-theme \
     --output api-docs/$GIT_REV

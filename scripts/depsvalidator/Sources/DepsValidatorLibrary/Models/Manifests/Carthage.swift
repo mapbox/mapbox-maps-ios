@@ -31,13 +31,13 @@ private let cartfileCache = ManifestCache {
     try Cartfile.from(file: $0).get()
 }
 
-extension Cartfile: SemanticVersionRequirementProviding {
+extension Cartfile: SemanticValueProviding {
     static func from(file fileURL: URL) throws -> Cartfile {
         try cartfileCache.manifest(for: fileURL)
     }
 
-    func semanticVersionRequirement(for dependency: Config.Dependency) throws -> SemanticVersionRequirement {
-        try SemanticVersionRequirement(dependencies.first { $0.key.name == dependency.name(for: .carthage) }!.value)
+    func semanticValue(for dependency: Dependency) throws -> SemanticValue {
+        try .versionRequirement(SemanticVersionRequirement(dependencies.first { $0.key.name == dependency.name(for: .cartfile) }!.value))
     }
 }
 
@@ -51,12 +51,12 @@ private let resolvedCartfileCache = ManifestCache {
     try ResolvedCartfile.from(string: String(contentsOf: $0)).get()
 }
 
-extension ResolvedCartfile: SemanticVersionProviding {
+extension ResolvedCartfile: SemanticValueProviding {
     static func from(file fileURL: URL) throws -> ResolvedCartfile {
         try resolvedCartfileCache.manifest(for: fileURL)
     }
 
-    func semanticVersion(for dependency: Config.Dependency) throws -> SemanticVersion {
-        try SemanticVersion(dependencies.first { $0.key.name == dependency.name(for: .carthage) }!.value)
+    func semanticValue(for dependency: Dependency) throws -> SemanticValue {
+        try .version(SemanticVersion(dependencies.first { $0.key.name == dependency.name(for: .resolvedCartfile) }!.value))
     }
 }

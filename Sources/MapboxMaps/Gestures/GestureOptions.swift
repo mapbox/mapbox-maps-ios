@@ -117,6 +117,8 @@ public struct GestureOptions: Equatable {
     internal func supportedGestureTypes() -> Set<GestureType> {
         var supportedGestureTypes = Set<GestureType>()
 
+        supportedGestureTypes.insert(.tap(numberOfTaps: 1, numberOfTouches: 1))
+
         if scrollEnabled {
             supportedGestureTypes.insert(.pan)
         }

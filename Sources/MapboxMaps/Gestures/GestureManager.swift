@@ -24,6 +24,10 @@ public final class GestureManager: NSObject {
         return gestureHandlers[.pan]?.gestureRecognizer
     }
 
+    public var tapGestureRecognizer: UIGestureRecognizer? {
+        return gestureHandlers[.tap(numberOfTaps: 1, numberOfTouches: 1)]?.gestureRecognizer
+    }
+
     /// The underlying gesture recognizer for the "double tap to zoom in" gesture
     public var doubleTapToZoomInGestureRecognizer: UIGestureRecognizer? {
         return gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 1)]?.gestureRecognizer

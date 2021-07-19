@@ -36,6 +36,12 @@ public struct PointAnnotation: Annotation {
     }
 
     // MARK: - Properties -
+    
+    public var isDraggable: Bool? {
+        didSet {
+            feature.properties?["is-draggable"] = isDraggable
+        }
+    }
 
     /// Set of used data driven properties
     internal var dataDrivenPropertiesUsedSet: Set<String> = []

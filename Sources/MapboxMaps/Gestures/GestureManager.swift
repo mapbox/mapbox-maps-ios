@@ -8,6 +8,7 @@ public protocol GestureManagerDelegate: AnyObject {
 }
 
 public final class GestureManager: NSObject {
+    private var isDraggingEnabled: Bool = false
 
     /// The `GestureOptions` that are used to set up the required gestures on the map
     public var options = GestureOptions() {
@@ -220,13 +221,33 @@ extension GestureManager: GestureHandlerDelegate {
     }
 
     internal func panBegan(at point: CGPoint) {
-        mapboxMap.dragStart(for: point)
+        // TODO(landyrev): use filters
+        let options = RenderedQueryOptions.init(layerIds: nil, filter: nil)
+
+        mapboxMap.queryRenderedFeatures(at: point, options: options, completion: { result in
+            switch result {
+            case .success(let items):
+                let draggableItems = items.filter { item in
+                    return item.feature.properties["is-draggable"] != nil
+                }
+                if (draggableItems.count > 0) {
+                    self.isDraggingEnabled = false
+                } else {
+                    self.isDraggingEnabled = true
+                }
+            case .failure:
+                self.isDraggingEnabled = true
+            }
+            self.mapboxMap.dragStart(for: point)
+        })
     }
 
     // MapView has been panned
     internal func panned(from startPoint: CGPoint, to endPoint: CGPoint) {
-        let cameraOptions = mapboxMap.dragCameraOptions(from: startPoint, to: endPoint)
-        mapboxMap.setCamera(to: cameraOptions)
+        if (isDraggingEnabled) {
+            let cameraOptions = mapboxMap.dragCameraOptions(from: startPoint, to: endPoint)
+            mapboxMap.setCamera(to: cameraOptions)
+        }
     }
 
     // Pan has ended on the MapView with a residual `offset`
@@ -240,6 +261,7 @@ extension GestureManager: GestureHandlerDelegate {
                     completion: nil)
         }
         mapboxMap.dragEnd()
+        self.isDraggingEnabled = false
     }
 
     internal func cancelGestureTransitions() {

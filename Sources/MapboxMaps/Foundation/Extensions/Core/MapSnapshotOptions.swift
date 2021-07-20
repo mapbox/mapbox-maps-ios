@@ -13,6 +13,10 @@ public struct MapSnapshotOptions {
     /// Resource fetching options to be used by the snapshotter.
     public let resourceOptions: ResourceOptions
 
+    public let showsLogo: Bool
+
+    public let showsAttribution: Bool
+
     /// Initializes a `MapSnapshotOptions`
     /// - Parameters:
     ///   - size: Dimensions of the snapshot in points
@@ -26,7 +30,9 @@ public struct MapSnapshotOptions {
     public init(size: CGSize,
                 pixelRatio: CGFloat,
                 glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions(),
-                resourceOptions: ResourceOptions = ResourceOptionsManager.default.resourceOptions) {
+                resourceOptions: ResourceOptions = ResourceOptionsManager.default.resourceOptions,
+                showsLogo: Bool = true,
+                showsAttribution: Bool = true) {
         precondition(pixelRatio > 0)
         precondition(size.width * pixelRatio <= 8192, "Width or scale too great.")
         precondition(size.height * pixelRatio <= 8192, "Height or scale too great.")
@@ -35,6 +41,8 @@ public struct MapSnapshotOptions {
         self.pixelRatio = pixelRatio
         self.glyphsRasterizationOptions = glyphsRasterizationOptions
         self.resourceOptions = resourceOptions
+        self.showsLogo = showsLogo
+        self.showsAttribution = showsAttribution
     }
 }
 

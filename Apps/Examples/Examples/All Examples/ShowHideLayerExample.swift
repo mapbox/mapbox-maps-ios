@@ -8,7 +8,7 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
 
     let museumLayerId = "museum-circle-layer"
     let contourLayerId = "contour-line-layer"
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         // Create an initial camera that is centered over Cusco, Peru and use it

@@ -92,7 +92,7 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
 extension SelectAnnotationExample: AnnotationInteractionDelegate {
     public func annotationManager(_ manager: AnnotationManager,
                                   didDetectTappedAnnotations annotations: [Annotation]) {
-        if annotationSelected || annotations.count > 0 {
+        if annotationSelected || !annotations.isEmpty {
             annotationSelected.toggle()
         }
     }

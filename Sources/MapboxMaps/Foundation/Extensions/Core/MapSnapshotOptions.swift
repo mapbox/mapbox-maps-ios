@@ -13,8 +13,10 @@ public struct MapSnapshotOptions {
     /// Resource fetching options to be used by the snapshotter.
     public let resourceOptions: ResourceOptions
 
+    /// Flag that determines if the logo should be shown on the snapshot
     public let showsLogo: Bool
 
+    /// Flag that determines if attribution should be shown on the snapshot
     public let showsAttribution: Bool
 
     /// Initializes a `MapSnapshotOptions`
@@ -27,6 +29,8 @@ public struct MapSnapshotOptions {
     ///   - resourceOptions: Resource fetching options to be used by the
     ///         snapshotter. Default uses the access token provided by
     ///         `ResourceOptionsManager.default`
+    ///   - showsLogo:Flag that determines if the logo should be shown on the snapshot
+    ///   - showsAttribution:Flag that determines if attribution should be shown on the snapshot
     public init(size: CGSize,
                 pixelRatio: CGFloat,
                 glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions(),

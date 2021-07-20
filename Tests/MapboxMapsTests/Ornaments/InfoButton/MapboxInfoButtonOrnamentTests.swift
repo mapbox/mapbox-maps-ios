@@ -45,7 +45,7 @@ class MapboxInfoButtonOrnamentTests: XCTestCase {
 
         telemetryAlert.tapButton(atIndex: 1)
         XCTAssertFalse(infoButton.isMetricsEnabled, "Metrics should not be enabled after selecting 'Stop participating'.")
-        
+
         infoButton.infoTapped()
         infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
         infoAlert.tapButton(atIndex: 0)

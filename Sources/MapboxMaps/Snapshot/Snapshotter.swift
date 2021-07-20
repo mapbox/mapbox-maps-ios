@@ -2,6 +2,8 @@ import UIKit
 import CoreLocation
 import CoreImage.CIFilterBuiltins
 
+@_implementationOnly import MapboxCommon_Private
+
 // MARK: - Snapshotter
 public class Snapshotter {
 

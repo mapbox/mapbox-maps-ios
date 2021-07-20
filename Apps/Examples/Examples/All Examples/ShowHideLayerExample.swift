@@ -2,12 +2,12 @@ import MapboxMaps
 
 @objc(ShowHideLayerExample)
 
-public class ShowHideLayerExample: UIViewController, ExampleProtocol {
+class ShowHideLayerExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
 
-    var museumLayerId = "museum-circle-layer"
-    var contourLayerId = "contour-line-layer"
+    let museumLayerId = "museum-circle-layer"
+    let contourLayerId = "contour-line-layer"
     override public func viewDidLoad() {
         super.viewDidLoad()
 
@@ -122,43 +122,37 @@ public class ShowHideLayerExample: UIViewController, ExampleProtocol {
         museumSwitch.addTarget(self, action: #selector(toggleMuseumLayerVisibility(sender:)), for: .valueChanged)
         museumSwitch.isOn = true
         museumSwitch.translatesAutoresizingMaskIntoConstraints = false
-        view.insertSubview(museumSwitch, aboveSubview: mapView)
+        view.addSubview(museumSwitch)
 
         let contourSwitch = UISwitch()
         contourSwitch.addTarget(self, action: #selector(toggleContourLayerVisibility(sender:)), for: .valueChanged)
         contourSwitch.isOn = true
         contourSwitch.translatesAutoresizingMaskIntoConstraints = false
-        view.insertSubview(contourSwitch, aboveSubview: mapView)
+        view.addSubview(contourSwitch)
 
         // Add labels for the toggles.
         let museumLabel = UILabel()
         museumLabel.text = "Show museums"
-        museumLabel.adjustsFontSizeToFitWidth = true
         museumLabel.backgroundColor = .white
         museumLabel.translatesAutoresizingMaskIntoConstraints = false
-        view.insertSubview(museumLabel, aboveSubview: mapView)
+        view.addSubview(museumLabel)
 
         let contourLabel = UILabel()
         contourLabel.text = "Show contours"
-        contourLabel.adjustsFontSizeToFitWidth = true
         contourLabel.backgroundColor = .white
         contourLabel.translatesAutoresizingMaskIntoConstraints = false
-        view.insertSubview(contourLabel, aboveSubview: mapView)
+        view.addSubview(contourLabel)
 
         // Layout the switches and labels.
         NSLayoutConstraint.activate([
             museumSwitch.topAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.topAnchor, constant: 20),
             museumSwitch.leadingAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            museumLabel.widthAnchor.constraint(equalToConstant: 100),
             museumLabel.leadingAnchor.constraint(equalTo: museumSwitch.trailingAnchor, constant: 10),
-            museumLabel.heightAnchor.constraint(equalTo: museumSwitch.heightAnchor),
             museumLabel.centerYAnchor.constraint(equalTo: museumSwitch.centerYAnchor),
             contourSwitch.topAnchor.constraint(equalTo: museumSwitch.bottomAnchor, constant: 20),
-            contourSwitch.centerXAnchor.constraint(equalTo: museumSwitch.centerXAnchor),
+            contourSwitch.leadingAnchor.constraint(equalTo: mapView.leadingAnchor, constant: 20),
             contourLabel.centerYAnchor.constraint(equalTo: contourSwitch.centerYAnchor),
-            contourLabel.centerXAnchor.constraint(equalTo: museumLabel.centerXAnchor),
-            contourLabel.widthAnchor.constraint(equalToConstant: 100),
-            contourLabel.heightAnchor.constraint(equalTo: contourSwitch.heightAnchor)
+            contourLabel.leadingAnchor.constraint(equalTo: contourSwitch.trailingAnchor, constant: 10)
         ])
     }
 }

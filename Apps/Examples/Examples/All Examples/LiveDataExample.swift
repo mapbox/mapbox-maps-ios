@@ -40,7 +40,7 @@ class LiveDataExample: UIViewController, ExampleProtocol {
             try mapView.mapboxMap.style.addSource(source, id: sourceId)
             try mapView.mapboxMap.style.addLayer(rocketLayer)
             // Create a `Timer` that updates the `GeoJSONSource`.
-            droneTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
+            droneTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
                 self.parseGeoJSON { result in
                     switch result {
                     case .success(let feature):
@@ -55,7 +55,7 @@ class LiveDataExample: UIViewController, ExampleProtocol {
         }
     }
 
-    func parseGeoJSON(completion: @escaping(Result<Turf.Feature, Error>)->()) {
+    func parseGeoJSON(completion: @escaping(Result<Turf.Feature, Error>)->Void) {
         let url = URL(string: "https://wanderdrone.appspot.com/")!
 
         DispatchQueue.global().async {
@@ -67,7 +67,7 @@ class LiveDataExample: UIViewController, ExampleProtocol {
 
                 if let geoJSON = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
                    let geometry = geoJSON["geometry"] as? [String: Any],
-                   let coordinates = geometry["coordinates"] as? Array<Double> {
+                   let coordinates = geometry["coordinates"] as? [Double] {
                     let location = CLLocationCoordinate2D(latitude: coordinates[1], longitude: coordinates[0])
 
                     // Create a `Turf.Point` and `Turf.Feature` from the geoJSON data.

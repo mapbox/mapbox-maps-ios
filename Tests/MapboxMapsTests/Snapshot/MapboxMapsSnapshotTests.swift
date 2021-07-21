@@ -226,10 +226,52 @@ class MapboxMapsSnapshotTests: XCTestCase {
         snapshotter.start(overlayHandler: nil, completion: { result in
             switch result {
             case let .success(image) :
+                // This code block is used to generate an image for comparison.
+                let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("\(#function).png")
+                do {
+                    try image.pngData()?.write(to: url)
+                } catch {
+                    print(error)
+                }
+
                 // Compare snapshot asset data vs snapshot image data
                 let path = Bundle.mapboxMapsTests.path(forResource: "\(#function)", ofType: "png")!
-                let url = URL(fileURLWithPath: path)
-                let expectedImageData = try! Data(contentsOf: url)
+                let compareUrl = URL(fileURLWithPath: path)
+                let expectedImageData = try! Data(contentsOf: compareUrl)
+
+                XCTAssertEqual(expectedImageData, image.pngData())
+            case.failure :
+                XCTFail("Failure: snapshot asset and snapshot image do not match")
+            }
+            expectation.fulfill()
+        })
+        wait(for: [expectation], timeout: 10)
+    }
+
+    func testDoNotShowsLogo() throws {
+        var options = try snapshotterOptions()
+        options.showsLogo = false
+        let snapshotter = Snapshotter(options: options)
+
+        // Adding a simple custom style
+        snapshotter.style.JSON = #"{"version":8,"sources":{},"layers":[{"id":"background","type":"background","paint":{"background-color":"white"}}]}"#
+
+        let expectation = self.expectation(description: "snapshot")
+        snapshotter.start(overlayHandler: nil, completion: { result in
+            switch result {
+            case let .success(image) :
+                // This code block is used to generate an image for comparison.
+                let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("\(#function).png")
+                do {
+                    try image.pngData()?.write(to: url)
+                } catch {
+                    print(error)
+                }
+
+                // Compare snapshot asset data vs snapshot image data
+                let path = Bundle.mapboxMapsTests.path(forResource: "\(#function)", ofType: "png")!
+                let compareUrl = URL(fileURLWithPath: path)
+                let expectedImageData = try! Data(contentsOf: compareUrl)
 
                 XCTAssertEqual(expectedImageData, image.pngData())
             case.failure :

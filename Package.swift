@@ -48,6 +48,7 @@ let package = Package(
                 .process("Snapshot/Snapshot.xcassets"),
                 .copy("Resources/Snapshot-Asset.png"),
                 .copy("Resources/testShowsLogo().png"),
+                .copy("Resources/testDoNotShowsLogo().png"),
                 .process("Resources/MapInitOptionsTests.xib"),
             ]
         )

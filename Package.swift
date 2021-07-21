@@ -46,6 +46,8 @@ let package = Package(
                 .copy("Helpers/MapboxAccessToken"),
                 .copy("Resources/empty-style-chicago.json"),
                 .process("Snapshot/Snapshot.xcassets"),
+                .copy("Resources/Snapshot-Asset.png"),
+                .copy("Resources/testShowsLogo().png"),
                 .process("Resources/MapInitOptionsTests.xib"),
             ]
         )

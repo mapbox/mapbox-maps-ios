@@ -1,23 +1,23 @@
 /// Set of options for taking map snapshot with Snapshotter.
 public struct MapSnapshotOptions {
     /// Dimensions of the snapshot in points.
-    public let size: CGSize
+    public var size: CGSize
 
     /// Ratio between the number device-independent and screen pixels.
-    public let pixelRatio: CGFloat
+    public var pixelRatio: CGFloat
 
     /// Glyphs rasterization options to use for client-side text rendering.
     /// By default, `GlyphsRasterizationOptions` will use `.ideographsRasterizedLocally`
-    public let glyphsRasterizationOptions: GlyphsRasterizationOptions
+    public var glyphsRasterizationOptions: GlyphsRasterizationOptions
 
     /// Resource fetching options to be used by the snapshotter.
-    public let resourceOptions: ResourceOptions
+    public var resourceOptions: ResourceOptions
 
     /// Flag that determines if the logo should be shown on the snapshot
-    public let showsLogo: Bool
+    public var showsLogo: Bool
 
     /// Flag that determines if attribution should be shown on the snapshot
-    public let showsAttribution: Bool
+    public var showsAttribution: Bool
 
     /// Initializes a `MapSnapshotOptions`
     /// - Parameters:

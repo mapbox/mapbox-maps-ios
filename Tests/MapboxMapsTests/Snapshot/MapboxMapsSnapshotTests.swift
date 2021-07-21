@@ -213,6 +213,35 @@ class MapboxMapsSnapshotTests: XCTestCase {
             }
             wait(for: [expectation], timeout: 10)
         }
+
+    func testShowsLogo() throws {
+        var options = try snapshotterOptions()
+        options.showsLogo = true
+        let snapshotter = Snapshotter(options: options)
+
+        // Adding a simple custom style
+        snapshotter.style.JSON = #"{"version":8,"sources":{},"layers":[{"id":"background","type":"background","paint":{"background-color":"white"}}]}"#
+
+        let expectation = self.expectation(description: "snapshot")
+        snapshotter.start(overlayHandler: nil, completion: { result in
+            switch result {
+            case let .success(image) :
+                // Compare snapshot asset data vs snapshot image data
+                let path = Bundle.mapboxMapsTests.path(forResource: "\(#function)", ofType: "png")!
+                let url = URL(fileURLWithPath: path)
+                let expectedImageData = try! Data(contentsOf: url)
+
+                if expectedImageData != image.pngData() {
+                    XCTFail("Snapshot asset and snapshot image do not match")
+                }
+
+                XCTAssertEqual(expectedImageData.count, image.pngData()!.count, accuracy: 5000)
+            case.failure :
+                XCTFail("Failure: snapshot asset and snapshot image do not match")
+            }
+            expectation.fulfill()
+        })
+        wait(for: [expectation], timeout: 10)
     }
 
 }

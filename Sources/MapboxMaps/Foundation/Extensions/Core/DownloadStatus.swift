@@ -16,7 +16,7 @@ extension DownloadStatus {
     ///   - downloadId: Download id which was created by download request.
     ///   - state: State of download request.
     ///   - error: Contains error information in case of failure when state is
-    ///         set to DownloadState::Failed.
+    ///         set to `DownloadState.failed`.
     ///   - totalBytes: Total amount of bytes to receive. In some cases this
     ///         value is unknown until we get final part of the file.
     ///   - receivedBytes: Amount of bytes already received and saved on the disk.
@@ -28,7 +28,7 @@ extension DownloadStatus {
     ///   - httpResult: HTTP result. This field is only set for `DownloadState.failed`
     ///         and `DownloadState.finished`.
     ///         For `.failed` expect `HttpRequestError` to be provided for cases when
-    ///         DownloadErrorCode` is `NetworkError`. For `.finished` `HttpResponseData`
+    ///         `DownloadErrorCode` is `NetworkError`. For `.finished` `HttpResponseData`
     ///         is set, but with empty data field (since all the data was written
     ///         to the disk).
     public convenience init(downloadId: UInt64,

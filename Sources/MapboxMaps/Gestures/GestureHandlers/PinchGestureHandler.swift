@@ -7,7 +7,7 @@ internal class PinchGestureHandler: GestureHandler {
     // to panning while zooming
     private var previousPinchCenterPoint: CGPoint = .zero
 
-    internal var scale: CGFloat = 0.0
+    internal var previousScale: CGFloat = 1.0
 
     // TODO: Inject the deceleration rate as part of a configuration structure
     internal let decelerationRate = UIScrollView.DecelerationRate.normal.rawValue
@@ -31,7 +31,7 @@ internal class PinchGestureHandler: GestureHandler {
 
         if pinchGestureRecognizer.state == .began {
 
-            scale = pow(2, delegate.scaleForZoom())
+            self.previousScale = 1.0
             delegate.gestureBegan(for: .pinch)
             delegate.pinchBegan(with: pinchCenterPoint)
 
@@ -46,36 +46,15 @@ internal class PinchGestureHandler: GestureHandler {
                 return
             }
 
-            let newScale = scale * pinchGestureRecognizer.scale
-            let newZoom = log2(newScale)
-            delegate.pinchChanged(with: newZoom, anchor: pinchCenterPoint, previousAnchor: previousPinchCenterPoint)
+            let zoomIncrement = log2(pinchGestureRecognizer.scale / previousScale);
+            previousScale = pinchGestureRecognizer.scale;
+            delegate.pinchChanged(with: zoomIncrement, anchor: pinchCenterPoint, previousAnchor: previousPinchCenterPoint)
 
             previousPinchCenterPoint = pinchCenterPoint
 
         } else if pinchGestureRecognizer.state == .ended
             || pinchGestureRecognizer.state == .cancelled {
-
-            var velocity = pinchGestureRecognizer.velocity
-            if velocity > -0.5 && velocity < 3 {
-                velocity = 0
-            }
-
-            let duration = ((velocity > 0) ? 1 : 0.25) * decelerationRate
-            let scale = self.scale * pinchGestureRecognizer.scale
-            var newScale = scale
-
-            if velocity >= 0 {
-                newScale += scale * velocity * duration * 0.1
-            } else {
-                newScale += scale / (velocity * duration) * 0.1
-            }
-
-            if newScale <= 0 || log2(newScale) < minZoom {
-                velocity = 0
-            }
-
-            let possibleDrift = velocity > 0.0 && duration > 0.0
-            delegate.pinchEnded(with: log2(newScale), andDrift: possibleDrift, andAnchor: pinchCenterPoint)
+            delegate.pinchEnded(with: log2(pinchGestureRecognizer.scale / previousScale), andDrift: true, andAnchor: pinchCenterPoint)
         }
     }
 }

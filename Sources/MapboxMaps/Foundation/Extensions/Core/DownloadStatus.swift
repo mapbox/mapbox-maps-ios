@@ -58,18 +58,18 @@ extension DownloadStatus {
                   httpResult: expected)
     }
 
-    /// Convenice to initialize a `DownloadStatus` when the download state is `.pending`
+    /// Convenience to initialize a `DownloadStatus` when the download state is `.pending`
     ///
     /// - Parameters:
     ///   - error: Contains error information in case of failure when state is
-    ///         set to DownloadState::Failed.
+    ///         set to `DownloadState.failed`.
     ///   - totalBytes: Total amount of bytes to receive. In some cases this
     ///         value is unknown until we get final part of the file.
     ///   - downloadOptions: Download options used to send the download request.
     ///   - httpResult: HTTP result. This field is only set for `DownloadState.failed`
     ///         and `DownloadState.finished`.
     ///         For `.failed` expect `HttpRequestError` to be provided for cases when
-    ///         DownloadErrorCode` is `NetworkError`. For `.finished` `HttpResponseData`
+    ///         `DownloadErrorCode` is `NetworkError`. For `.finished` `HttpResponseData`
     ///         is set, but with empty data field (since all the data was written
     ///         to the disk).
     public convenience init(error: DownloadError?,
@@ -115,7 +115,7 @@ extension DownloadStatus {
     }
 
     /// Total amount of bytes to receive. In some cases this value is unknown
-    /// until we get final part of the file.
+    /// until we get final part of the file being downloaded.
     public var totalBytes: UInt64? {
         return __totalBytes?.uint64Value
     }

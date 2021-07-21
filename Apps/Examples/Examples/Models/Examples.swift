@@ -218,7 +218,10 @@ public struct Examples {
                 type: RasterTileSourceExample.self),
         Example(title: "Show and hide layers",
                 description: "Enable and disable two different map layers at runtime.",
-                type: ShowHideLayerExample.self)
+                type: ShowHideLayerExample.self),
+        Example(title: "Add live data",
+                description: "Update feature coordinates in real time.",
+                type: LiveDataExample.self)
     ]
 
     // Examples that show use cases related to user interaction with the map.

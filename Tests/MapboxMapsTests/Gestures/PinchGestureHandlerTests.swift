@@ -36,8 +36,6 @@ class PinchGestureHandlerTests: XCTestCase {
         XCTAssertTrue(delegate.cancelTransitionsCalled,
                       "Cancel Transitions was not called before commencing gesture processing")
 
-        XCTAssertEqual(delegate.scaleForZoomStub.invocations.count, 1, "Initial scale was not calculated")
-
         XCTAssertTrue(delegate.gestureBeganMethod.wasCalled,
                       "Gesture Supportable view should be notified when gesture begins")
     }
@@ -45,7 +43,6 @@ class PinchGestureHandlerTests: XCTestCase {
     func testPinchChanged() {
 
         let pinchGestureHandler = PinchGestureHandler(for: view, withDelegate: delegate)
-        pinchGestureHandler.scale = pow(2, 10.0)
 
         let pinchGestureRecognizerMock = UIPinchGestureRecognizerMock()
         pinchGestureRecognizerMock.mockState = .changed
@@ -59,8 +56,6 @@ class PinchGestureHandlerTests: XCTestCase {
 
         XCTAssertTrue(delegate.pinchChangedMethod.wasCalled, "Pinch scale not recalculated")
 
-        XCTAssertEqual(delegate.pinchChangedMethod.newZoom, 11.0, "New scale not calculated properly")
-
         XCTAssertTrue(delegate.pinchChangedMethod.anchor == CGPoint(x: 0.0, y: 0.0),
                       "Invalid pinch center point")
 
@@ -68,19 +63,20 @@ class PinchGestureHandlerTests: XCTestCase {
         pinchGestureHandler.handlePinch(pinchGestureRecognizerMock)
 
         XCTAssertTrue(delegate.pinchChangedMethod.wasCalled, "Pinch Center not recalculated")
-        XCTAssertEqual(delegate.pinchChangedMethod.offset,
-                       CGSize(width: 1.0, height: 1.0),
+        XCTAssertEqual(delegate.pinchChangedMethod.anchor,
+                       CGPoint(x: 1.0, y: 1.0),
+                       "Offset not calculated correctly")
+        XCTAssertEqual(delegate.pinchChangedMethod.previousAnchor,
+                       CGPoint(x: 0.0, y: 0.0),
                        "Offset not calculated correctly")
     }
 
     func testPinchEnded() {
 
         let pinchGestureHandler = PinchGestureHandler(for: view, withDelegate: delegate)
-        pinchGestureHandler.scale = 10.0
 
         let pinchGestureRecognizerMock = UIPinchGestureRecognizerMock()
         pinchGestureRecognizerMock.mockState = .ended
-        pinchGestureRecognizerMock.mockScale = 2.0
 
         pinchGestureHandler.handlePinch(pinchGestureRecognizerMock)
 
@@ -92,9 +88,6 @@ class PinchGestureHandlerTests: XCTestCase {
 
         XCTAssertTrue(delegate.pinchEndedMethod.anchor == CGPoint(x: 0.0, y: 0.0),
                       "Anchor not calculated correctly")
-
-        XCTAssertTrue(delegate.pinchEndedMethod.drift == false,
-                      "Drift not correctly calculated")
     }
 }
 

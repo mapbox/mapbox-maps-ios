@@ -266,7 +266,7 @@ extension GestureManager: GestureHandlerDelegate {
         mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: zoom + mapboxMap.cameraState.zoom))
     }
 
-    internal func pinchEnded(with finalScale: CGFloat, andDrift possibleDrift: Bool, andAnchor anchor: CGPoint) {
+    internal func pinchEnded(with finalScale: CGFloat, andAnchor anchor: CGPoint) {
         mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: finalScale + mapboxMap.cameraState.zoom))
         unrotateIfNeededForGesture(with: .ended)
     }

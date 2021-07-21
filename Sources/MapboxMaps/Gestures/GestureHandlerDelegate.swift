@@ -28,7 +28,7 @@ internal protocol GestureHandlerDelegate: AnyObject {
     func pinchChanged(with zoom: CGFloat, anchor: CGPoint, previousAnchor: CGPoint)
 
     // Pinch has completed with a final scale and possible drift
-    func pinchEnded(with finalScale: CGFloat, andDrift possibleDrift: Bool, andAnchor anchor: CGPoint)
+    func pinchEnded(with finalScale: CGFloat, andAnchor anchor: CGPoint)
 
     // Requests initial bearing of the map
     func rotationStartAngle() -> CGFloat

@@ -8,15 +8,14 @@ import UIKit
 //swiftlint:disable explicit_acl explicit_top_level_acl large_tuple
 // Mock class that flags true when `GestureSupportableView` protocol methods have been called on it
 class GestureHandlerDelegateMock: GestureHandlerDelegate {
-
     var tapCalled = false
     var tapCalledWithNumberOfTaps = 0
     var tapCalledWithNumberOfTouches = 0
 
     var pannedCalled = false
 
-    var pinchChangedMethod: (wasCalled: Bool, newZoom: CGFloat?, anchor: CGPoint?, offset: CGSize?) = (false, nil, nil, nil)
-    var pinchEndedMethod: (wasCalled: Bool, drift: Bool?, anchor: CGPoint?) = (false, nil, nil)
+    var pinchChangedMethod: (wasCalled: Bool, newZoom: CGFloat?, anchor: CGPoint?, previousAnchor: CGPoint?) = (false, nil, nil, nil)
+    var pinchEndedMethod: (wasCalled: Bool, anchor: CGPoint?) = (false, nil)
 
     var cancelTransitionsCalled = false
     var gestureBeganMethod: (wasCalled: Bool, type: GestureType?) = (false, nil)
@@ -25,7 +24,7 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
     var rotationChangedMethod: (wasCalled: Bool, newAngle: CGFloat?, anchor: CGPoint?) = (false, nil, nil)
     var rotationEndedMethod: (wasCalled: Bool, finalAngle: CGFloat?, anchor: CGPoint?) = (false, nil, nil)
 
-    var initialPitch = 0.0
+    var defaultPitch: CGFloat = 0.0
     var pitchTolerance = 45.0
     var pitchChangedMethod: (wasCalled: Bool, newPitch: CGFloat) = (false, 0.0)
     var pitchEndedMethod = false
@@ -54,16 +53,15 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
         scaleForZoomStub.call()
     }
 
-    func pinchChanged(with zoom: CGFloat, anchor: CGPoint, offset: CGSize) {
+    func pinchChanged(with zoom: CGFloat, anchor: CGPoint, previousAnchor: CGPoint) {
         pinchChangedMethod.wasCalled = true
         pinchChangedMethod.newZoom = zoom
         pinchChangedMethod.anchor = anchor
-        pinchChangedMethod.offset = offset
+        pinchChangedMethod.previousAnchor = previousAnchor
     }
 
-    func pinchEnded(with finalScale: CGFloat, andDrift possibleDrift: Bool, andAnchor anchor: CGPoint) {
+    func pinchEnded(with finalScale: CGFloat, andAnchor anchor: CGPoint) {
         pinchEndedMethod.wasCalled = true
-        pinchEndedMethod.drift = possibleDrift
         pinchEndedMethod.anchor = anchor
     }
 
@@ -108,4 +106,12 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
     func pitchEnded() {
         pitchEndedMethod = true
     }
+
+    func panBegan(at point: CGPoint) { }
+
+    func panEnded(at endPoint: CGPoint, shouldDriftTo driftEndPoint: CGPoint) { }
+
+    func initialPitch() -> CGFloat { return self.defaultPitch }
+
+    func horizontalPitchTiltTolerance() -> Double { return pitchTolerance }
 }

@@ -7,7 +7,7 @@ internal class PinchGestureHandler: GestureHandler {
     // to panning while zooming
     private var previousPinchCenterPoint: CGPoint = .zero
 
-    internal var previousScale: CGFloat = 0.0
+    private var previousScale: CGFloat = 0.0
 
     // TODO: Inject the deceleration rate as part of a configuration structure
     internal let decelerationRate = UIScrollView.DecelerationRate.normal.rawValue
@@ -41,15 +41,15 @@ internal class PinchGestureHandler: GestureHandler {
              */
         } else if pinchGestureRecognizer.state == .changed {
 
-            let zoomIncrement = log2(pinchGestureRecognizer.scale / previousScale);
+            let zoomIncrement = log2(pinchGestureRecognizer.scale / previousScale)
             delegate.pinchChanged(with: zoomIncrement, anchor: pinchCenterPoint, previousAnchor: previousPinchCenterPoint)
 
-            previousScale = pinchGestureRecognizer.scale;
+            previousScale = pinchGestureRecognizer.scale
             previousPinchCenterPoint = pinchCenterPoint
         } else if pinchGestureRecognizer.state == .ended
             || pinchGestureRecognizer.state == .cancelled {
 
-            delegate.pinchEnded(with: log2(pinchGestureRecognizer.scale / previousScale), andDrift: true, andAnchor: pinchCenterPoint)
+            delegate.pinchEnded(with: log2(pinchGestureRecognizer.scale / previousScale), andAnchor: pinchCenterPoint)
         }
     }
 }

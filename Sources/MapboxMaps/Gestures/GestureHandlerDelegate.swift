@@ -25,7 +25,7 @@ internal protocol GestureHandlerDelegate: AnyObject {
     func scaleForZoom() -> CGFloat
 
     // Pinch on the view has changed the zoom, anchor and offset
-    func pinchChanged(with zoom: CGFloat, anchor: CGPoint, offset: CGSize)
+    func pinchChanged(with zoom: CGFloat, anchor: CGPoint, previousAnchor: CGPoint)
 
     // Pinch has completed with a final scale and possible drift
     func pinchEnded(with finalScale: CGFloat, andDrift possibleDrift: Bool, andAnchor anchor: CGPoint)
@@ -53,46 +53,7 @@ internal protocol GestureHandlerDelegate: AnyObject {
 
     // Pitch gesture ended
     func pitchEnded()
-}
 
-// Provides default implementation of GestureSupportableView methods.
-internal extension GestureHandlerDelegate {
-
-    func tapped(numberOfTaps: Int, numberOfTouches: Int) {}
-
-    func panBegan(at point: CGPoint) {}
-
-    // View has been panned
-    func panned(from startPoint: CGPoint, to endPoint: CGPoint) {}
-
-    // Pan on the view has ended (with a potential drift)
-    func panEnded(at endPoint: CGPoint, shouldDriftTo driftEndPoint: CGPoint) {}
-
-    func cancelGestureTransitions() {}
-
-    func gestureBegan(for gestureType: GestureType) {}
-
-    func scaleForZoom() -> CGFloat { return 0.0 }
-
-    func pinchChanged(with zoom: CGFloat, anchor: CGPoint, offset: CGSize) { }
-
-    func pinchEnded(with finalScale: CGFloat, andDrift possibleDrift: Bool, andAnchor anchor: CGPoint) {}
-
-    func rotationStartAngle() -> CGFloat { return 0.0 }
-
-    func rotationChanged(with changedAngle: CGFloat, and anchor: CGPoint, and pinchScale: CGFloat) {}
-
-    func rotationEnded(with finalAngle: CGFloat, and anchor: CGPoint, with pinchState: UIGestureRecognizer.State) {}
-
-    func quickZoomChanged(with newScale: CGFloat, and anchor: CGPoint) {}
-
-    func quickZoomEnded() {}
-
-    func initialPitch() -> CGFloat { return 0.0 }
-
-    func horizontalPitchTiltTolerance() -> Double { return 45.0 }
-
-    func pitchChanged(newPitch: CGFloat) {}
-
-    func pitchEnded() {}
+    // The tilt tolerance associated with the pitch gesture
+    func horizontalPitchTiltTolerance() -> Double
 }

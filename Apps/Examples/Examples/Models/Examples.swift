@@ -220,7 +220,7 @@ public struct Examples {
                 description: "Enable and disable two different map layers at runtime.",
                 type: ShowHideLayerExample.self),
         Example(title: "Add live data",
-                description: "Update feature coordinates in real time.",
+                description: "Update feature coordinates from a geoJSON source in real time.",
                 type: LiveDataExample.self)
     ]
 

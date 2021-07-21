@@ -161,7 +161,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "12.2.0"
+        default: "12.5.0"
       device-farm-project:
         type: string
         default: $(DEVICE_FARM_PROJECT_MAPS)

@@ -2,7 +2,6 @@ import MapboxMaps
 import Turf
 
 @objc(LiveDataExample)
-
 class LiveDataExample: UIViewController, ExampleProtocol {
     var mapView: MapView!
     let sourceId = "drone-source"
@@ -26,7 +25,7 @@ class LiveDataExample: UIViewController, ExampleProtocol {
     func addStyleLayer() {
         // Set the data for the `GeoJSONSource`. This URL simulates paths
         // for drones.
-        guard let url = URL(string: "https://wanderdrone.appspot.com/") else { return }
+        let url = URL(string: "https://wanderdrone.appspot.com/")!
         var source = GeoJSONSource()
         source.data = .url(url)
 
@@ -38,8 +37,8 @@ class LiveDataExample: UIViewController, ExampleProtocol {
 
         do {
             try mapView.mapboxMap.style.addSource(source, id: sourceId)
-//            try mapView.mapboxMap.style.addLayer(rocketLayer)
-            try mapView.mapboxMap.style._addPersistentLayer(with: try rocketLayer.jsonObject(), layerPosition: nil)
+            try mapView.mapboxMap.style.addLayer(rocketLayer)
+
             // Create a `Timer` that updates the `GeoJSONSource`.
             droneTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
                 self.parseGeoJSON { result in
@@ -56,32 +55,24 @@ class LiveDataExample: UIViewController, ExampleProtocol {
         }
     }
 
-    func parseGeoJSON(completion: @escaping(Result<Turf.Feature, Error>) -> Void) {
+    func parseGeoJSON(completion: @escaping (Result<Turf.Feature, Error>) -> Void) {
         let url = URL(string: "https://wanderdrone.appspot.com/")!
 
         DispatchQueue.global().async {
             let result: Result<Turf.Feature, Error>
             do {
-                // Parse the geoJSON from the URL. An example response:
-                // {"geometry": {"type": "Point", "coordinates": [-50.26804118917149, 38.76944015557226]}, "type": "Feature", "properties": {}}
                 let data = try Data(contentsOf: url)
 
-                if let geoJSON = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-                   let geometry = geoJSON["geometry"] as? [String: Any],
-                   let coordinates = geometry["coordinates"] as? [Double] {
-                    let location = CLLocationCoordinate2D(latitude: coordinates[1], longitude: coordinates[0])
-
-                    // Create a `Turf.Point` and `Turf.Feature` from the geoJSON data.
-                    let point = Point(location)
-                    let feature = Feature.init(geometry: Turf.Geometry.point(point))
+                let geoJSON = try Turf.GeoJSON.parse(data)
+                if let feature = geoJSON.decodedFeature {
                     result = .success(feature)
                 } else {
-                    let error = TypeConversionError.invalidObject
-                    result = .failure(error)
+                    result = .failure(TypeConversionError.invalidObject)
                 }
             } catch {
                 result = .failure(error)
-            }
+                }
+
             DispatchQueue.main.async {
                 completion(result)
             }

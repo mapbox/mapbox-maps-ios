@@ -25,6 +25,7 @@
 		17483DFD2670113300396F8D /* MultiplePointAnnotationsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17483DFC2670113300396F8D /* MultiplePointAnnotationsExample.swift */; };
 		177C9D47269CA61100D13A2D /* ShowHideLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177C9D46269CA61100D13A2D /* ShowHideLayerExample.swift */; };
 		17AF784026837E91006EA30D /* Fire_Hydrants.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 17AF783F26837E91006EA30D /* Fire_Hydrants.geojson */; };
+		17B40D2426A85500000887EF /* LiveDataExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B40D2326A85500000887EF /* LiveDataExample.swift */; };
 		17B4805A2684FB2300CF0D5E /* AnimateImageLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B480592684FB2300CF0D5E /* AnimateImageLayerExample.swift */; };
 		17B4806126851C6E00CF0D5E /* radar4.gif in Resources */ = {isa = PBXBuildFile; fileRef = 17B4805C26851C6E00CF0D5E /* radar4.gif */; };
 		17B4806226851C6E00CF0D5E /* radar2.gif in Resources */ = {isa = PBXBuildFile; fileRef = 17B4805D26851C6E00CF0D5E /* radar2.gif */; };
@@ -152,6 +153,7 @@
 		17483DFC2670113300396F8D /* MultiplePointAnnotationsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplePointAnnotationsExample.swift; sourceTree = "<group>"; };
 		177C9D46269CA61100D13A2D /* ShowHideLayerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowHideLayerExample.swift; sourceTree = "<group>"; };
 		17AF783F26837E91006EA30D /* Fire_Hydrants.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Fire_Hydrants.geojson; sourceTree = "<group>"; };
+		17B40D2326A85500000887EF /* LiveDataExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveDataExample.swift; sourceTree = "<group>"; };
 		17B480592684FB2300CF0D5E /* AnimateImageLayerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateImageLayerExample.swift; sourceTree = "<group>"; };
 		17B4805C26851C6E00CF0D5E /* radar4.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = radar4.gif; sourceTree = "<group>"; };
 		17B4805D26851C6E00CF0D5E /* radar2.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = radar2.gif; sourceTree = "<group>"; };
@@ -266,6 +268,7 @@
 				666E0D4925664EE7000B8AF5 /* LayerPositionExample.swift */,
 				C64ED3C82541CA3A00ADADFB /* LineAnnotationExample.swift */,
 				0C78AC2825BF70E40057F570 /* LineGradientExample.swift */,
+				17B40D2326A85500000887EF /* LiveDataExample.swift */,
 				17483DFC2670113300396F8D /* MultiplePointAnnotationsExample.swift */,
 				CA03F10E26268DF700673961 /* OfflineManagerExample.swift */,
 				CA628413262DFD5C00651488 /* OfflineManagerExample.storyboard */,
@@ -579,6 +582,7 @@
 				CADCF743258499570065C51B /* BasicMapExample.swift in Sources */,
 				CADCF7232584990E0065C51B /* UpdatePointAnnotationPositionExample.swift in Sources */,
 				CADCF72C2584990E0065C51B /* PointAnnotationExample.swift in Sources */,
+				17B40D2426A85500000887EF /* LiveDataExample.swift in Sources */,
 				CADCF7242584990E0065C51B /* AnimateLayerExample.swift in Sources */,
 				073475D725AFAE520049B0B8 /* CustomLayerExample.swift in Sources */,
 				0CC4ECEA25B8AD3000F998B8 /* Custom2DPuckExample.swift in Sources */,

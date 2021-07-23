@@ -3,8 +3,9 @@ import Turf
 
 @objc(LiveDataExample)
 class LiveDataExample: UIViewController, ExampleProtocol {
-    var mapView: MapView!
+    let url = URL(string: "https://wanderdrone.appspot.com/")!
     let sourceId = "drone-source"
+    var mapView: MapView!
     var droneTimer: Timer?
 
     override func viewDidLoad() {
@@ -25,7 +26,6 @@ class LiveDataExample: UIViewController, ExampleProtocol {
     func addStyleLayer() {
         // Set the data for the `GeoJSONSource`. This URL simulates paths
         // for drones.
-        let url = URL(string: "https://wanderdrone.appspot.com/")!
         var source = GeoJSONSource()
         source.data = .url(url)
 
@@ -40,39 +40,31 @@ class LiveDataExample: UIViewController, ExampleProtocol {
             try mapView.mapboxMap.style.addLayer(rocketLayer)
 
             // Create a `Timer` that updates the `GeoJSONSource`.
-            droneTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
+            droneTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
                 self.parseGeoJSON { result in
                     switch result {
                     case .success(let feature):
-                       try! self.mapView.mapboxMap.style.updateGeoJSONSource(withId: self.sourceId, geoJSON: feature)
+                        try! self.mapView.mapboxMap.style.updateGeoJSONSource(withId: self.sourceId, geoJSON: feature)
                     case .failure(let error):
                         print("Error: \(error.localizedDescription)")
                     }
                 }
-            })
+            }
         } catch {
             print("Failed to update the style. Error: \(error.localizedDescription)")
         }
     }
 
     func parseGeoJSON(completion: @escaping (Result<Turf.Feature, Error>) -> Void) {
-        let url = URL(string: "https://wanderdrone.appspot.com/")!
-
-        DispatchQueue.global().async {
+        DispatchQueue.global().async { [url] in
             let result: Result<Turf.Feature, Error>
             do {
                 let data = try Data(contentsOf: url)
-
-                let geoJSON = try Turf.GeoJSON.parse(data)
-                if let feature = geoJSON.decodedFeature {
-                    result = .success(feature)
-                } else {
-                    result = .failure(TypeConversionError.invalidObject)
-                }
+                let feature = try JSONDecoder().decode(Turf.Feature.self, from: data)
+                result = .success(feature)
             } catch {
                 result = .failure(error)
-                }
-
+            }
             DispatchQueue.main.async {
                 completion(result)
             }

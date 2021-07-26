@@ -60,6 +60,9 @@ public struct Examples {
         Example(title: "Display a map view using storyboard",
                 description: "Create and display a map using a storyboard.",
                 type: StoryboardMapViewExample.self),
+        Example(title: "土砂災害",
+                description: "土砂災害警戒区域の表示",
+                type: DoshaExample.self)
     ]
 
     // Examples that show how to use 3D terrain or fill extrusions.

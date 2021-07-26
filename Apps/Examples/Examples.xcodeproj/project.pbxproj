@@ -38,6 +38,7 @@
 		58882E5D26962A7200E5C1C6 /* StoryboardMapViewExample.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 58882E5C26962A7200E5C1C6 /* StoryboardMapViewExample.storyboard */; };
 		58A3C0C925C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */; };
 		73694BD325D4B2CE0064F636 /* TrackingModeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73694BD225D4B2CE0064F636 /* TrackingModeExample.swift */; };
+		8F547B3D26AE602E00220055 /* DoshaExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F547B3C26AE602E00220055 /* DoshaExample.swift */; };
 		A41E58342654593500D8B946 /* SwitchStylesExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E58332654593500D8B946 /* SwitchStylesExample.swift */; };
 		A41E584C26555A3400D8B946 /* PointClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E584B26555A3400D8B946 /* PointClusteringExample.swift */; };
 		A41E58F4265C005300D8B946 /* blueprint_style.json in Resources */ = {isa = PBXBuildFile; fileRef = A41E58F3265C005300D8B946 /* blueprint_style.json */; };
@@ -167,6 +168,7 @@
 		58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateGeoJSONLineExample.swift; sourceTree = "<group>"; };
 		666E0D4925664EE7000B8AF5 /* LayerPositionExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerPositionExample.swift; sourceTree = "<group>"; };
 		73694BD225D4B2CE0064F636 /* TrackingModeExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingModeExample.swift; sourceTree = "<group>"; };
+		8F547B3C26AE602E00220055 /* DoshaExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoshaExample.swift; sourceTree = "<group>"; };
 		A41E58332654593500D8B946 /* SwitchStylesExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchStylesExample.swift; sourceTree = "<group>"; };
 		A41E584B26555A3400D8B946 /* PointClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointClusteringExample.swift; sourceTree = "<group>"; };
 		A41E58F3265C005300D8B946 /* blueprint_style.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = blueprint_style.json; sourceTree = "<group>"; };
@@ -292,6 +294,7 @@
 				077E3B932581987B00564A3E /* UpdatePointAnnotationPositionExample.swift */,
 				07B071D12547CF50007F2865 /* Sample Data */,
 				C608C106267BC5B1003C86C3 /* LocalizationExample.swift */,
+				8F547B3C26AE602E00220055 /* DoshaExample.swift */,
 			);
 			path = "All Examples";
 			sourceTree = "<group>";
@@ -607,6 +610,7 @@
 				A4211CE62592549900D215B4 /* RestrictCoordinateBoundsExample.swift in Sources */,
 				0C52BA9825AF8C880054ECA8 /* Custom3DPuckExample.swift in Sources */,
 				CADCF7292584990E0065C51B /* FeaturesAtPointExample.swift in Sources */,
+				8F547B3D26AE602E00220055 /* DoshaExample.swift in Sources */,
 				CADCF71E2584990E0065C51B /* ExternalVectorSourceExample.swift in Sources */,
 				73694BD325D4B2CE0064F636 /* TrackingModeExample.swift in Sources */,
 				CADCF7202584990E0065C51B /* SelectAnnotationExample.swift in Sources */,

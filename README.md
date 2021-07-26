@@ -10,6 +10,11 @@ This README is intended for developers who are interested in contributing to the
 ## Developing
 If you are interested in contributing to the Maps SDK, please see the [DEVELOPING.md](DEVELOPING.md) file for information on setting up, running and building the SDK. 
 
+
+## Demo App
+If you are interested in running the Example App, please follow the [docs/example.md](docs/example.md) file for more information.
+
+
 ## Reporting issues / Need help?
 
 #### Report a bug :beetle:

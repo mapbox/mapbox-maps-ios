@@ -14,6 +14,7 @@ public enum OrnamentVisibility: String, Equatable {
     case visible
 }
 
+@available(iOSApplicationExtension, unavailable)
 public class OrnamentsManager: NSObject {
 
     /// The `OrnamentOptions` object that is used to set up and update the required ornaments on the map.

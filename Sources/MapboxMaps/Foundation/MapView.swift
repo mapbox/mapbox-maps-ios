@@ -5,6 +5,7 @@
 import UIKit
 import Turf
 
+@available(iOSApplicationExtension, unavailable)
 open class MapView: UIView {
 
     // mapbox map depends on MapInitOptions, which is not available until
@@ -352,6 +353,7 @@ open class MapView: UIView {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension MapView: DelegatingMapClientDelegate {
     internal func scheduleRepaint() {
         needsDisplayRefresh = true

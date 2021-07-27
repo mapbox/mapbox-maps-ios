@@ -1,6 +1,7 @@
 import UIKit
 import CoreLocation
 
+@available(iOSApplicationExtension, unavailable)
 extension MapView: OrnamentSupportableView {
     // User has tapped on an ornament
     internal func tapped() {
@@ -30,6 +31,7 @@ extension MapView: OrnamentSupportableView {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension MapView: LocationSupportableMapView {
 
     public func point(for coordinate: CLLocationCoordinate2D) -> CGPoint {

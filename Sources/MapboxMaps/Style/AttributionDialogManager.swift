@@ -1,9 +1,9 @@
-protocol AttributionDialogManagerDelegate: AnyObject {
+internal protocol AttributionDialogManagerDelegate: AnyObject {
     func attributionDialogManager(_ attributionDialogManager: AttributionDialogManager, viewControllerForPresentingFromView view: UIView) -> UIViewController
     func triggerAction(for attribution: Attribution)
 }
 
-protocol MapAttributionDelegate {
+internal protocol MapAttributionDelegate: AnyObject {
     func parseAttributions() -> [Attribution]
 }
 
@@ -24,7 +24,7 @@ internal extension UIView {
     }
 }
 
-class AttributionDialogManager {
+internal class AttributionDialogManager {
 
     deinit {
         print("\(#function)-\(#file)\(#line)")

@@ -566,7 +566,7 @@ extension Style: StyleManagerProtocol {
 // MARK: - Attribution -
 
 extension Style {
-    public func sourceAttributions() -> [String] {
+    internal func sourceAttributions() -> [String] {
         return allSourceIdentifiers.compactMap {
             sourceProperty(for: $0.id, property: "attribution") as? String
         }

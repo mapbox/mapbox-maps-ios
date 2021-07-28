@@ -505,12 +505,11 @@ extension MapboxMap {
 // MARK: - Attribution -
 
 extension MapboxMap: AttributionDataSource {
-    func attributions() -> [Attribution] {
-        let attributions = AttributionParser.parse(style.sourceAttributions())
+    internal func attributions() -> [Attribution] {
+        let attributions = Attribution.parse(style.sourceAttributions())
         return attributions
     }
 }
-
 
 // MARK: - Testing only! -
 

@@ -85,9 +85,8 @@ public class Snapshotter {
     public func start(overlayHandler: SnapshotOverlayHandler?,
                       completion: @escaping (Result<UIImage, SnapshotError>) -> Void) {
 
+        let sourceAttributions = style.sourceAttributions()
         let scale = CGFloat(options.pixelRatio)
-
-        let attributions = AttributionParser.parse(style.sourceAttributions())
 
         mapSnapshotter.start { (expected) in
             if expected.isError() {
@@ -96,7 +95,6 @@ public class Snapshotter {
             }
 
             guard expected.isValue(), let snapshot = expected.value as? MapSnapshot else {
-
                 completion(.failure(.snapshotFailed(reason: expected.error as? String)))
                 return
             }
@@ -108,177 +106,97 @@ public class Snapshotter {
                 return
             }
 
+            // Render attributions over the snapshot
+            let attributions = Attribution.parse(sourceAttributions)
+
+            let margin: CGFloat = 10
             let rect = CGRect(origin: .zero, size: uiImage.size)
-            let format = UIGraphicsImageRendererFormat()
-            format.scale = scale
-            let renderer = UIGraphicsImageRenderer(size: uiImage.size, format: format)
-            let compositeImage = renderer.image { rendererContext in
 
-                // First draw the snaphot image into the context
-                let context = rendererContext.cgContext
+            let (logoSize, text) = AttributionMeasure.logoAndAttributionThatFits(rect: rect,
+                                                                                 attributions: attributions,
+                                                                                 margin: margin)
 
-                if let cgImage = uiImage.cgImage {
-                    context.draw(cgImage, in: rect)
-                }
+            // Create views on the main thread
+            let logoView = LogoView(logoSize: logoSize)
 
-                let pointForCoordinate = { (coordinate: CLLocationCoordinate2D) -> CGPoint in
-                    let screenCoordinate = snapshot.screenCoordinate(for: coordinate)
-                    return CGPoint(x: screenCoordinate.x, y: screenCoordinate.y)
-                }
+            // Center logo horizontally if not enough space
+            logoView.frame.origin = CGPoint(x: min(margin, (rect.width - logoView.bounds.width)/2),
+                                            y: rect.height - logoView.bounds.height - margin)
 
-                let coordinateForPoint = { (point: CGPoint) -> CLLocationCoordinate2D in
-                    // TODO: Fix circular dependency issues with MapboxMapsStyle/Foundation in order to use point.screenCoordinate extension
-                    let screenCoordinate = ScreenCoordinate(x: Double(point.x), y: Double(point.y))
-                    return snapshot.coordinate(for: screenCoordinate)
-                }
+            let attributionView: AttributionView!
+            if let text = text {
+                attributionView = AttributionView(text: text)
 
-                // Apply the overlay, if provided.
-                let overlay = SnapshotOverlay(context: context,
-                                              scale: scale,
-                                              pointForCoordinate: pointForCoordinate,
-                                              coordinateForPoint: coordinateForPoint)
+                // Attribution on RHS centered vertically with logo
+                let textSize = attributionView.bounds.size
+                let logoHeight = logoView.bounds.height
+                let h1 = logoHeight > 0 ? logoHeight : textSize.height
 
-                if let overlayHandler = overlayHandler {
-                    context.saveGState()
-                    overlayHandler(overlay)
-                    context.restoreGState()
-                }
+                attributionView.frame.origin = CGPoint(x: rect.width - textSize.width - margin,
+                                                       y: rect.height - ((h1 + textSize.height)/2) - margin)
+            } else {
+                attributionView = nil
+            }
 
-//                // Composite the logo on the snapshot,
-//                // only after everything else has been drawn.
-//                let logoView = LogoView(logoSize: .compact())
-//                let logoPadding = CGFloat(10.0)
-//                let logoOrigin = CGPoint(x: logoPadding,
-//                                         y: uiImage.size.height - logoView.frame.size.height - logoPadding)
-//                context.translateBy(x: logoOrigin.x, y: logoOrigin.y)
-//                logoView.layer.render(in: context)
+            // Composite custom overlay, logo and attribution
+            let compositor = { (blurredImage: CGImage?) in
+                let format = UIGraphicsImageRendererFormat()
+                format.scale = scale
+                let renderer = UIGraphicsImageRenderer(size: uiImage.size, format: format)
+                let compositeImage = renderer.image { rendererContext in
 
-                // $$JR: Add attribution here
-                print("attributions = \(attributions)")
+                    // First draw the snaphot image into the context
+                    let context = rendererContext.cgContext
 
-                let measure = AttributionMeasure()
-                let margin = CGFloat(10)
-                let (_, logoSize, text) = measure.attributionThatFits(rect: rect, attributions: attributions, margin: margin)
-
-                var logoHeight: CGFloat?
-                if let logoSize = logoSize {
-                    context.saveGState()
-                    let logoView = LogoView(logoSize: logoSize)
-
-                    let originX = min(margin, (rect.width - logoView.bounds.width)/2)
-
-
-                    let logoOrigin = CGPoint(x: originX,
-                                             y: rect.height - logoView.bounds.height - margin)
-//                    y: uiImage.size.height - logoView.frame.size.height - margin)
-                    context.translateBy(x: logoOrigin.x, y: logoOrigin.y)
-                    logoView.layer.render(in: context)
-                    context.restoreGState()
-
-                    logoHeight = logoView.frame.size.height
-                }
-
-                if let text = text {
-                    context.saveGState()
-
-                    let attributionTextView = AttributionView(text: text)
-                    let textSize = attributionTextView.bounds.size
-
-                    let h1 = logoHeight ?? textSize.height
-
-                    let textOrigin = CGPoint(x: rect.width - textSize.width - margin,
-                                             y: rect.height - ((h1 + textSize.height)/2) - margin)
-//                    let textOrigin = CGPoint(x: uiImage.size.width - textSize.width - margin,
-//                                             y: uiImage.size.height - ((h1 + textSize.height)/2) - margin)
-
-                    /////////
-
-                    let cropRect = CGRect(origin: textOrigin, size: textSize)
-                    let cropRect2 = CGRect(x: cropRect.origin.x * 2,
-                                           y: cropRect.origin.y * 2,
-                                           width: cropRect.width * 2,
-                                           height: cropRect.height * 2)
-                    if let currentImage = UIGraphicsGetImageFromCurrentImageContext(),
-                       let croppedImage = currentImage.cgImage?.cropping(to: cropRect2) {
-
-                        // Create a ciImage
-                        let ciImage = CIImage(cgImage: croppedImage)
-                        var blurredCIImage = ciImage.applyingGaussianBlur(sigma: 5)
-
-                        if let filter = CIFilter(name: "CIColorControls") {
-                            filter.setValue(blurredCIImage, forKey: kCIInputImageKey)
-                            filter.setValue(0.05, forKey: kCIInputBrightnessKey)
-                            blurredCIImage = filter.outputImage!
-                        }
-
-
-                        let cicontext = CIContext(cgContext: context, options: nil)
-                        var textSize2 = textSize
-                        textSize2.width *= 2
-                        textSize2.height *= 2
-                        if let blurredCGImage = cicontext.createCGImage(blurredCIImage, from: CGRect(origin: .zero, size: textSize2)) {
-
-//                            if #available(iOS 13.0, *) {
-//                                let blurredUIImage = UIImage(cgImage: blurredCGImage).withTintColor(.red)
-                                attributionTextView.layer.contents = blurredCGImage
-//                            attributionTextView.layer.opacity = 0.8
-
-                            //withTintColor(.red)
-//                            withTintColor(_ color: UIColor)
-
-                        }
+                    if let cgImage = uiImage.cgImage {
+                        context.draw(cgImage, in: rect)
                     }
 
+                    let pointForCoordinate = { (coordinate: CLLocationCoordinate2D) -> CGPoint in
+                        let screenCoordinate = snapshot.screenCoordinate(for: coordinate)
+                        return CGPoint(x: screenCoordinate.x, y: screenCoordinate.y)
+                    }
 
-                    /////////
+                    let coordinateForPoint = { (point: CGPoint) -> CLLocationCoordinate2D in
+                        // TODO: Fix circular dependency issues with MapboxMapsStyle/Foundation in order to use point.screenCoordinate extension
+                        let screenCoordinate = ScreenCoordinate(x: Double(point.x), y: Double(point.y))
+                        return snapshot.coordinate(for: screenCoordinate)
+                    }
 
+                    // Apply the overlay, if provided.
+                    let overlay = SnapshotOverlay(context: context,
+                                                  scale: scale,
+                                                  pointForCoordinate: pointForCoordinate,
+                                                  coordinateForPoint: coordinateForPoint)
 
-                    context.translateBy(x: textOrigin.x, y: textOrigin.y)
+                    if let overlayHandler = overlayHandler {
+                        context.saveGState()
+                        overlayHandler(overlay)
+                        context.restoreGState()
+                    }
 
-                    attributionTextView.layer.render(in: context)
-                    context.restoreGState()
+                    if true { // options.showsLogo
+                        Snapshotter.renderLogoView(logoView, context: context)
+                    }
+
+                    if let attributionView = attributionView, true { // options.showsAttribution
+                        Snapshotter.renderAttributionView(attributionView,
+                                                          blurredImage: blurredImage,
+                                                          context: context)
+                    }
                 }
+                completion(.success(compositeImage))
             }
-            completion(.success(compositeImage))
+
+            if text != nil {
+                // Generate blurred background for
+                Snapshotter.blurredAttributionBackground(for: uiImage, rect: attributionView.frame, completion: compositor)
+            } else {
+                compositor(nil)
+            }
         }
     }
 
-
-/*
-     + (MGLImage *)blurredAttributionBackground:(CIImage *)backgroundImage
-     {
-         CGAffineTransform transform = CGAffineTransformIdentity;
-         CIFilter *clamp = [CIFilter filterWithName:@"CIAffineClamp"];
-         [clamp setValue:backgroundImage forKey:kCIInputImageKey];
-         [clamp setValue:[NSValue valueWithBytes:&transform objCType:@encode(CGAffineTransform)] forKey:@"inputTransform"];
-
-         CIFilter *attributionBlurFilter = [CIFilter filterWithName:@"CIGaussianBlur"];
-         [attributionBlurFilter setValue:[clamp outputImage] forKey:kCIInputImageKey];
-         [attributionBlurFilter setValue:@10 forKey:kCIInputRadiusKey];
-
-         CIFilter *attributionColorFilter = [CIFilter filterWithName:@"CIColorControls"];
-         [attributionColorFilter setValue:[attributionBlurFilter outputImage] forKey:kCIInputImageKey];
-         [attributionColorFilter setValue:@(0.1) forKey:kCIInputBrightnessKey];
-
-         CIImage *blurredImage = attributionColorFilter.outputImage;
-
-         CIContext *ctx = [CIContext contextWithOptions:nil];
-         CGImageRef cgimg = [ctx createCGImage:blurredImage fromRect:[backgroundImage extent]];
-         MGLImage *image;
-
-     #if TARGET_OS_IPHONE
-         image = [UIImage imageWithCGImage:cgimg];
-     #else
-         image = [[NSImage alloc] initWithCGImage:cgimg size:[backgroundImage extent].size];
-     #endif
-
-         CGImageRelease(cgimg);
-         return image;
-     }
-*/
-
-
-     
     /**
      Cancels the current snapshot operation.The callback passed to the start
      method is called with error parameter set.
@@ -293,36 +211,6 @@ public class Snapshotter {
         /// Snapshot failed with error description
         case snapshotFailed(reason: String?)
     }
-
-//    internal func compositeLogo(for snapshotImage: UIImage) -> UIImage {
-//        let rect = CGRect(origin: .zero, size: snapshotImage.size)
-//        let logoView = LogoView(logoSize: .regular())
-//
-//        let renderer = UIGraphicsImageRenderer(size: snapshotImage.size)
-//
-//        let compositeImage = renderer.image { rendererContext in
-//
-//            // First draw the snaphot
-//            let context = rendererContext.cgContext
-//
-//            if let cgImage = snapshotImage.cgImage {
-//                context.draw(cgImage, in: rect)
-//            }
-//
-//            // Padding between the edges of the logo and the snapshot
-//            let logoPadding = CGFloat(10.0)
-//
-//            // Position the logo
-//            let logoOrigin = CGPoint(x: logoPadding,
-//                                     y: snapshotImage.size.height - logoView.frame.size.height - logoPadding)
-//            context.translateBy(x: logoOrigin.x, y: logoOrigin.y)
-//
-//            // Composite the logo on the snapshot
-//            logoView.layer.render(in: context)
-//        }
-//
-//        return compositeImage
-//    }
 
     // MARK: - Camera
 
@@ -407,5 +295,79 @@ extension Snapshotter {
     /// - Parameter completion: Called once the request is complete
     public func clearData(completion: @escaping (Error?) -> Void) {
         MapboxMap.clearData(for: options.resourceOptions, completion: completion)
+    }
+
+    // MARK: - Attribution
+
+    private static func blurredAttributionBackground(for image: UIImage, rect: CGRect, completion: @escaping (CGImage?) -> Void) {
+        DispatchQueue.global().async {
+            var blurredImage: CGImage?
+
+            defer {
+                DispatchQueue.main.async {
+                    completion(blurredImage)
+                }
+            }
+
+            let scale = image.scale
+
+            // Image from mbxImage is flipped vertically
+            let scaledCropRect = CGRect(x: rect.origin.x * scale,
+                                        y: (image.size.height - rect.origin.y - rect.height) * scale,
+                                        width: rect.width * scale,
+                                        height: rect.height * scale)
+
+            guard let croppedImage = image.cgImage?.cropping(to: scaledCropRect) else {
+                return
+            }
+
+            // Create a ciImage
+            var ciImage = CIImage(cgImage: croppedImage)
+
+            // Store original extent (needed for the cropping below)
+            let extent = ciImage.extent
+
+            ciImage = ciImage
+                .clampedToExtent()
+                .applyingGaussianBlur(sigma: 5)
+                .cropped(to: extent)
+
+            if let filter = CIFilter(name: "CIColorControls") {
+                filter.setValue(ciImage, forKey: kCIInputImageKey)
+                filter.setValue(0.1, forKey: kCIInputBrightnessKey)
+                ciImage = filter.outputImage!
+            }
+
+            ciImage = ciImage.oriented(.downMirrored)
+
+            let cicontext = CIContext(options: nil)
+            blurredImage = cicontext.createCGImage(ciImage, from: extent)
+        }
+    }
+
+    private static func renderLogoView(_ logoView: LogoView, context: CGContext) {
+        // Don't bother rendering empty logos
+        if case .none = logoView.logoSize {
+            return
+        }
+
+        context.saveGState()
+        defer {
+            context.restoreGState()
+        }
+
+        context.translateBy(x: logoView.frame.origin.x, y: logoView.frame.origin.y)
+        logoView.layer.render(in: context)
+    }
+
+    private static func renderAttributionView(_ attributionView: AttributionView, blurredImage: CGImage?, context: CGContext) {
+        context.saveGState()
+        defer {
+            context.restoreGState()
+        }
+
+        context.translateBy(x: attributionView.frame.origin.x, y: attributionView.frame.origin.y)
+        attributionView.layer.contents = blurredImage
+        attributionView.layer.render(in: context)
     }
 }

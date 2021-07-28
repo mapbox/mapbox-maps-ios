@@ -1129,7 +1129,6 @@ internal class LogoView: UIView {
         bezier11Path.fill()
     }
 
-
     @objc(StyleKitNameResizingBehavior)
     internal enum ResizingBehavior: Int {
         case aspectFit  // The content is proportionally resized to fit into the target rectangle.

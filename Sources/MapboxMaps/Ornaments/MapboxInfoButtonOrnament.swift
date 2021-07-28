@@ -1,7 +1,7 @@
 import UIKit
 @_implementationOnly import MapboxCommon_Private
 
-struct Ornaments {
+internal struct Ornaments {
     static let localizableTableName = "OrnamentsLocalizable"
     static let metricsEnabledKey = "MGLMapboxMetricsEnabled"
     static let telemetryURL = "https://www.mapbox.com/telemetry/"

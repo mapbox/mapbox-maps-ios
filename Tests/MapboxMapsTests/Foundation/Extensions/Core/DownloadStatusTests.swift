@@ -135,10 +135,13 @@ final class DownloadStatusTests: XCTestCase {
 
     func testConvenienceInitFailure() throws {
         let status = DownloadStatus(downloadId: 1,
-                                            state: .finished, error: downloadError, totalBytes: 1234,
-                                            receivedBytes: 1234, transferredBytes: 1234,
-                                            downloadOptions: downloadOptions,
-                                            httpResult: .failure(httpRequestError))
+                                        state: .finished,
+                                        error: downloadError,
+                                        totalBytes: 1234,
+                                        receivedBytes: 1234,
+                                        transferredBytes: 1234,
+                                        downloadOptions: downloadOptions,
+                                        httpResult: .failure(httpRequestError))
 
         let httpResult = status.__httpResult as! Expected<HttpResponseData, HttpRequestError>
         let error = try XCTUnwrap(status.error, "Expected a download error")
@@ -152,30 +155,25 @@ final class DownloadStatusTests: XCTestCase {
 
     func testNilHttpResult() {
         let status = DownloadStatus(downloadId: 1,
-                                    state: .finished, error: .none, totalBytes: 1234,
-                                            receivedBytes: 1234, transferredBytes: 1234,
-                                            downloadOptions: downloadOptions,
-                                            httpResult: .success(httpResponseData))
+                                    state: .finished,
+                                    error: .none,
+                                    totalBytes: 1234,
+                                    receivedBytes: 1234,
+                                    transferredBytes: 1234,
+                                    downloadOptions: downloadOptions,
+                                    httpResult: .success(httpResponseData))
         status.__httpResult = nil
         XCTAssertNil(status.__httpResult)
         XCTAssertNil(status.httpResult)
     }
 
     func testValueHttpResult() throws {
-        let httpResult = Expected<HttpResponseData, AnyObject>(value: httpResponseData)
-        XCTAssertEqual(httpResult.value, httpResponseData)
-        XCTAssertNil(httpResult.error, "The error should be nil.")
-
-        let httpResultWrapped: Result<HttpResponseData, Error> = .success(httpResult.value)
+        let httpResultWrapped: Result<HttpResponseData, Error> = .success(httpResponseData)
         let result = try XCTUnwrap(httpResultWrapped.get())
         XCTAssertEqual(result, httpResponseData, "The two HttpResponseData va;ues should be equal.")
     }
 
     func testErrorHttpResult() throws {
-        let httpResult = Expected<AnyObject, HttpRequestError>(error: httpRequestError)
-        XCTAssertEqual(httpResult.error, httpRequestError)
-        XCTAssertNil(httpResult.value, "The value should be nil.")
-
         let httpErrorWrapped: Result<HttpResponseData, HttpRequestError> = .failure(httpRequestError)
         guard case .failure(let error) = httpErrorWrapped else {
             XCTFail("Not a failure")

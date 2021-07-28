@@ -5,24 +5,24 @@
 // Attribution view has a subview label with attributed text
 internal final class AttributionView: UIView {
 
-    private let labelMargin = CGPoint(x: 10, y: 5)
+    internal static let padding = CGPoint(x: 10, y: 5)
 
     init(text: NSAttributedString) {
         // Label
         let label = UILabel()
         label.attributedText = text
         var labelSize = label.sizeThatFits(.zero)
-        label.frame.origin = labelMargin
+        label.frame.origin = AttributionView.padding
         label.frame.size = labelSize
 
         super.init(frame: .zero)
 
-        labelSize.width += labelMargin.x*2
-        labelSize.height += labelMargin.y*2
+        labelSize.width += AttributionView.padding.x*2
+        labelSize.height += AttributionView.padding.y*2
 
         frame = CGRect(origin: .zero, size: labelSize)
         addSubview(label)
-        layer.cornerRadius = labelMargin.x
+        layer.cornerRadius = AttributionView.padding.x
         layer.masksToBounds = true
     }
 

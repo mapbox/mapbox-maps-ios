@@ -61,6 +61,7 @@ internal class AttributionDialogManager {
 
         let bundle = Bundle.mapboxMaps
 
+        /*
         if let attributions = dataSource?.attributions() {
             for attribution in attributions {
                 let action = UIAlertAction(title: attribution.title, style: .default) { _ in
@@ -69,6 +70,7 @@ internal class AttributionDialogManager {
                 alert.addAction(action)
             }
         }
+        */
 
         let telemetryTitle = NSLocalizedString("TELEMETRY_NAME",
                                                tableName: Ornaments.localizableTableName,

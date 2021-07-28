@@ -120,7 +120,19 @@ public class Snapshotter {
             let logoView = LogoView(logoSize: logoSize)
 
             // Center logo horizontally if not enough space
-            logoView.frame.origin = CGPoint(x: min(margin, (rect.width - logoView.bounds.width)/2),
+            let logoCenteredX = (rect.width - logoView.bounds.width)/2
+            let logoOriginX: CGFloat
+
+            if case .compact = logoSize, text == nil {
+                // Center
+                logoOriginX = logoCenteredX
+            } else {
+                // Otherwise, position logo on the left hand side with margin
+                // if possible
+                logoOriginX = min(margin, logoCenteredX)
+            }
+
+            logoView.frame.origin = CGPoint(x: logoOriginX,
                                             y: rect.height - logoView.bounds.height - margin)
 
             let attributionView: AttributionView!

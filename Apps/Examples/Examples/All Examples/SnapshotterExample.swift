@@ -16,7 +16,7 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
         // Create a vertical stack view to hold both the map view and the snapshot.
         let stackView = UIStackView(frame: view.safeAreaLayoutGuide.layoutFrame)
         stackView.axis = .vertical
-        stackView.distribution = .fillEqually
+        stackView.distribution = .fill
         stackView.alignment = .center
         stackView.spacing = 12.0
 
@@ -41,7 +41,8 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
 
         NSLayoutConstraint.activate([
             mapView.widthAnchor.constraint(equalToConstant: view.bounds.size.width),
-            snapshotView.widthAnchor.constraint(equalToConstant: stackViewBounds.width)
+            snapshotView.widthAnchor.constraint(equalToConstant: stackViewBounds.width),
+            snapshotView.heightAnchor.constraint(equalToConstant: stackViewBounds.height)
         ])
 
         // Add the stack view to the root view.

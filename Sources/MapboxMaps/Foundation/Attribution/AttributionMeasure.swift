@@ -40,7 +40,7 @@ internal struct AttributionMeasure {
             // Check attribution
             let text = Attribution.text(for: attributions, style: pair.1)
             if let textSize = text?.size() {
-                totalSize.width += margin + textSize.width + margin
+                totalSize.width += (2 * margin) + (2 * AttributionView.padding.x) + textSize.width
                 totalSize.height = max(textSize.height, totalSize.height)
             }
 

@@ -25,7 +25,7 @@ extension DownloadStatus {
     ///         attempt. For downloads that weren't resumed, this value will be
     ///         the same as receivedBytes.
     ///   - downloadOptions: Download options used to send the download request.
-    ///   - httpResult: HTTP result. This field is only set for `DownloadState.failed`
+    ///   - httpResult: An optional HTTP result. This field is only set for `DownloadState.failed`
     ///         and `DownloadState.finished`.
     ///         For `.failed` expect `HttpRequestError` to be provided for cases when
     ///         `DownloadErrorCode` is `NetworkError`. For `.finished` `HttpResponseData`
@@ -38,14 +38,16 @@ extension DownloadStatus {
                             receivedBytes: UInt64,
                             transferredBytes: UInt64,
                             downloadOptions: DownloadOptions,
-                            httpResult: Result<HttpResponseData, HttpRequestError>) {
+                            httpResult: Result<HttpResponseData, HttpRequestError>?) {
 
-        let expected: Expected<AnyObject, AnyObject>
+        let expected: Expected<AnyObject, AnyObject>?
         switch httpResult {
         case let .success(response):
             expected = Expected(value: response)
         case let .failure(error):
             expected = Expected(error: error)
+        case .none:
+            expected = nil
         }
 
         self.init(downloadId: downloadId,
@@ -66,7 +68,7 @@ extension DownloadStatus {
     ///   - totalBytes: Total amount of bytes to receive. In some cases this
     ///         value is unknown until we get final part of the file.
     ///   - downloadOptions: Download options used to send the download request.
-    ///   - httpResult: HTTP result. This field is only set for `DownloadState.failed`
+    ///   - httpResult: An optional HTTP result. This field is only set for `DownloadState.failed`
     ///         and `DownloadState.finished`.
     ///         For `.failed` expect `HttpRequestError` to be provided for cases when
     ///         `DownloadErrorCode` is `NetworkError`. For `.finished` `HttpResponseData`
@@ -75,14 +77,16 @@ extension DownloadStatus {
     public convenience init(error: DownloadError?,
                             totalBytes: UInt64?,
                             downloadOptions: DownloadOptions,
-                            httpResult: Result<HttpResponseData, HttpRequestError>) {
+                            httpResult: Result<HttpResponseData, HttpRequestError>?) {
 
-        let expected: Expected<AnyObject, AnyObject>
+        let expected: Expected<AnyObject, AnyObject>?
         switch httpResult {
         case let .success(response):
             expected = Expected(value: response)
         case let .failure(error):
             expected = Expected(error: error)
+        case .none:
+            expected = nil
         }
 
         self.init(error: error,
@@ -103,14 +107,12 @@ extension DownloadStatus {
             return nil
         }
 
-        guard let expected = httpExpected as? Expected<HttpResponseData, HttpRequestError>  else {
-            fatalError("Invalid Expected types or none.")
-        }
-
-        if expected.isValue() {
-            return .success(expected.value!)
+        if httpExpected.isValue(), let value = httpExpected.value as? HttpResponseData {
+            return .success(value)
+        } else if httpExpected.isError(), let error = httpExpected.error as? HttpRequestError {
+            return .failure(error)
         } else {
-            return .failure(expected.error!)
+            fatalError("Found unexpected types.")
         }
     }
 

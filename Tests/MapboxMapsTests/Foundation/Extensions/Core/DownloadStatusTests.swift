@@ -2,6 +2,7 @@ import XCTest
 @testable import MapboxMaps
 @_implementationOnly import MapboxCommon_Private
 
+//swiftlint:disable force_cast
 final class DownloadStatusTests: XCTestCase {
     var httpRequest: HttpRequest!
     var downloadOptions: DownloadOptions!
@@ -132,7 +133,7 @@ final class DownloadStatusTests: XCTestCase {
         }
     }
 
-    func testConvenienceInitFailure() throws{
+    func testConvenienceInitFailure() throws {
         let status = DownloadStatus(downloadId: 1,
                                             state: .finished, error: downloadError, totalBytes: 1234,
                                             receivedBytes: 1234, transferredBytes: 1234,

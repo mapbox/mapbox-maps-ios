@@ -100,7 +100,7 @@ final class DownloadStatusTests: XCTestCase {
             XCTFail("This should be a value. Instead got \(status.__httpResult.debugDescription).")
         }
     }
-    
+
     func testFailedShortInitializer() {
         let status = DownloadStatus(error: downloadError,
                                     totalBytes: 1234,

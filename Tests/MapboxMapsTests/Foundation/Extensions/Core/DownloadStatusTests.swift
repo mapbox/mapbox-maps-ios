@@ -143,7 +143,7 @@ final class DownloadStatusTests: XCTestCase {
         let httpResult = status.__httpResult as! Expected<HttpResponseData, HttpRequestError>
         let error = try XCTUnwrap(status.error, "Expected a download error")
         if httpResult.isError() {
-            XCTAssertEqual(httpResult.value, httpRequestError, "The")
+            XCTAssertEqual(httpResult.error, httpRequestError, "The initial error should equal the error for __httpResult.error")
             XCTAssertEqual(error, downloadError, "The error for the DownloadStatus should equal the initial download error.")
         } else {
             XCTFail("The __httpResult should be an error.")

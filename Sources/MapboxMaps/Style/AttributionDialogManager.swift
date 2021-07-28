@@ -1,14 +1,13 @@
-internal protocol AttributionDialogManagerDelegate: AnyObject {
-    func attributionDialogManager(_ attributionDialogManager: AttributionDialogManager, viewControllerForPresentingFromView view: UIView) -> UIViewController
-    func triggerAction(for attribution: Attribution)
-}
-
-internal protocol MapAttributionDelegate: AnyObject {
-    func parseAttributions() -> [Attribution]
-}
+// WIP
+import MapboxCommon_Private
 
 internal protocol AttributionDataSource: AnyObject {
     func attributions() -> [Attribution]
+}
+
+internal protocol AttributionDialogManagerDelegate: AnyObject {
+    func attributionDialogManager(_ attributionDialogManager: AttributionDialogManager, viewControllerForPresentingFromView view: UIView) -> UIViewController
+    func triggerAction(for attribution: Attribution)
 }
 
 internal extension UIView {
@@ -25,11 +24,6 @@ internal extension UIView {
 }
 
 internal class AttributionDialogManager {
-
-    deinit {
-        print("\(#function)-\(#file)\(#line)")
-    }
-
     init() {
         delegate = self
     }
@@ -75,34 +69,6 @@ internal class AttributionDialogManager {
                 alert.addAction(action)
             }
         }
-
-        /*
-         NSArray *attributionInfos = [self.style attributionInfosWithFontSize:[UIFont buttonFontSize]
-                                                                    linkColor:nil];
-         for (MGLAttributionInfo *info in attributionInfos)
-         {
-             UIAlertAction *action = [UIAlertAction actionWithTitle:[info.title.string mgl_titleCasedStringWithLocale:[NSLocale currentLocale]]
-                                                              style:UIAlertActionStyleDefault
-                                                            handler:^(UIAlertAction * _Nonnull actionBlock) {
-                 NSURL *url = info.URL;
-                 if (url)
-                 {
-                     if (info.feedbackLink)
-                     {
-                         MGLMapCamera *camera = self.camera;
-                         url = [info feedbackURLForStyleURL:self.styleURL
-                                         atCenterCoordinate:camera.centerCoordinate
-                                                  zoomLevel:self.zoomLevel
-                                                  direction:camera.heading
-                                                      pitch:camera.pitch];
-                     }
-                     [self.application mgl_openURL:url completionHandler:NULL];
-                 }
-             }];
-             [attributionController addAction:action];
-         }
-
-         */
 
         let telemetryTitle = NSLocalizedString("TELEMETRY_NAME",
                                                tableName: Ornaments.localizableTableName,
@@ -207,23 +173,24 @@ internal class AttributionDialogManager {
 
 extension AttributionDialogManager: AttributionDialogManagerDelegate {
     func triggerAction(for attribution: Attribution) {
-        print("doing url \(attribution.url))")
+
+        Log.info(forMessage: "Attribution url: \(attribution.url))", category: "Attribution")
+
+        if attribution.isFeedbackURL {
+            // TODO: Create Feedback URL from map
+            /*
+            url = [info feedbackURLForStyleURL:self.styleURL
+                            atCenterCoordinate:camera.centerCoordinate
+                                     zoomLevel:self.zoomLevel
+                                     direction:camera.heading
+                                         pitch:camera.pitch];
+            */
+        }
+
+        // TODO: Open URL
     }
 
     func attributionDialogManager(_ attributionDialogManager: AttributionDialogManager, viewControllerForPresentingFromView view: UIView) -> UIViewController {
         return view.parentViewController!
     }
 }
-
-/*
- import Foundation
-
-
- internal weak var attributionProvider: AttributionProvider?
-
-
-
-
-
-
- */

@@ -133,7 +133,7 @@ final class DownloadStatusTests: XCTestCase {
         let status = DownloadStatus(downloadId: 1,
                                     state: .finished,
                                     error: .none,
-                                    totalBytes: UInt64(2),
+                                    totalBytes: NSNumber(value: 2), // forces using the unrefined initializer
                                     receivedBytes: 3,
                                     transferredBytes: 4,
                                     downloadOptions: downloadOptions,

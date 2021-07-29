@@ -138,16 +138,16 @@ extension LocationManager: LocationProviderDelegate {
             // are opposites (see UIApplication.h)
             var orientation: CLDeviceOrientation
 
-            switch UIApplication.shared.statusBarOrientation {
-            case .landscapeLeft:
+//            switch UIApplication.shared.statusBarOrientation {
+//            case .landscapeLeft:
                 orientation = .landscapeRight
-            case .landscapeRight:
-                orientation = .landscapeLeft
-            case .portraitUpsideDown:
-                orientation = .portraitUpsideDown
-            default:
-                orientation = .portrait
-            }
+//            case .landscapeRight:
+//                orientation = .landscapeLeft
+//            case .portraitUpsideDown:
+//                orientation = .portraitUpsideDown
+//            default:
+//                orientation = .portrait
+//            }
 
             // Setting the location manager's heading orientation causes it to send
             // a heading event, which in turn makes us redraw, which kicks off a

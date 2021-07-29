@@ -159,8 +159,8 @@ internal class MapboxInfoButtonOrnament: UIView {
                                           bundle: bundle, value: "Tell Me More",
                                           comment: "Telemetry prompt button")
         let moreAction = UIAlertAction(title: moreTitle, style: .default) { _ in
-            guard let url = URL(string: Constants.telemetryURL) else { return }
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+//            guard let url = URL(string: Constants.telemetryURL) else { return }
+//            UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
         alert.addAction(moreAction)
 

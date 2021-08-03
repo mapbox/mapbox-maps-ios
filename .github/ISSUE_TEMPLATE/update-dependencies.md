@@ -2,7 +2,7 @@
 name: Update dependencies template
 about: This is the template for updating dependencies in our repo
 title: 'Update Dependencies For Maps SDK (see description for versions)'
-labels: ''
+labels: 'release'
 assignees: ''
 
 ---

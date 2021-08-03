@@ -85,9 +85,9 @@ public class Snapshotter {
     public func start(overlayHandler: SnapshotOverlayHandler?,
                       completion: @escaping (Result<UIImage, SnapshotError>) -> Void) {
 
-        let sourceAttributions = style.sourceAttributions()
         let scale = CGFloat(options.pixelRatio)
 
+        let style = self.style
         mapSnapshotter.start { (expected) in
             if expected.isError() {
                 completion(.failure(.snapshotFailed(reason: expected.error as? String)))
@@ -107,6 +107,7 @@ public class Snapshotter {
             }
 
             // Render attributions over the snapshot
+            let sourceAttributions = style.sourceAttributions()
             let attributions = Attribution.parse(sourceAttributions)
 
             let margin: CGFloat = 10

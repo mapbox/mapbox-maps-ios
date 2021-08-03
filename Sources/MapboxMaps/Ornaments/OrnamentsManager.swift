@@ -14,7 +14,12 @@ public enum OrnamentVisibility: String, Equatable {
     case visible
 }
 
-@available(iOSApplicationExtension, unavailable)
+internal struct Ornaments {
+    static let localizableTableName = "OrnamentsLocalizable"
+    static let metricsEnabledKey = "MGLMapboxMetricsEnabled"
+    static let telemetryURL = "https://www.mapbox.com/telemetry/"
+}
+
 public class OrnamentsManager: NSObject {
 
     /// The `OrnamentOptions` object that is used to set up and update the required ornaments on the map.

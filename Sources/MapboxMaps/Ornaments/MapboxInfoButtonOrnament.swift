@@ -1,12 +1,6 @@
 import UIKit
 @_implementationOnly import MapboxCommon_Private
 
-internal struct Ornaments {
-    static let localizableTableName = "OrnamentsLocalizable"
-    static let metricsEnabledKey = "MGLMapboxMetricsEnabled"
-    static let telemetryURL = "https://www.mapbox.com/telemetry/"
-}
-
 internal class MapboxInfoButtonOrnament: UIView {
     internal weak var attributionDataSource: AttributionDataSource?
 
@@ -18,6 +12,10 @@ internal class MapboxInfoButtonOrnament: UIView {
         }
     }
 
+    internal var isMetricsEnabled: Bool {
+        return UserDefaults.standard.bool(forKey: Ornaments.metricsEnabledKey)
+    }
+    
     internal init() {
         super.init(frame: CGRect(origin: .zero, size: CGSize(width: 44, height: 44)))
         NSLayoutConstraint.activate([

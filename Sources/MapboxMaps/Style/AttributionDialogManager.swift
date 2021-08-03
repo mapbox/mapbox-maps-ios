@@ -1,5 +1,5 @@
 // WIP
-import MapboxCommon_Private
+@_implementationOnly import MapboxCommon_Private
 
 internal protocol AttributionDataSource: AnyObject {
     func attributions() -> [Attribution]

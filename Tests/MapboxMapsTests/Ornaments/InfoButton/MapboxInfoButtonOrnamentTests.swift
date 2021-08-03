@@ -24,7 +24,7 @@ class MapboxInfoButtonOrnamentTests: XCTestCase {
         let infoButton = MapboxInfoButtonOrnament()
         let parentViewController = MockParentViewController()
         parentViewController.view.addSubview(infoButton)
-        UserDefaults.standard.set(true, forKey: MapboxInfoButtonOrnament.Constants.metricsEnabledKey)
+        UserDefaults.standard.set(true, forKey: Ornaments.metricsEnabledKey)
         infoButton.infoTapped()
 
         var infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
@@ -58,7 +58,7 @@ class MapboxInfoButtonOrnamentTests: XCTestCase {
     }
 
     func testTelemetryOptIn() throws {
-        UserDefaults.standard.set(false, forKey: MapboxInfoButtonOrnament.Constants.metricsEnabledKey)
+        UserDefaults.standard.set(false, forKey: Ornaments.metricsEnabledKey)
         let infoButton = MapboxInfoButtonOrnament()
         let parentViewController = MockParentViewController()
         parentViewController.view.addSubview(infoButton)

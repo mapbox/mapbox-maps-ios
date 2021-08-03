@@ -25,6 +25,6 @@ Turf: <current version> -> <new version>
 - [ ] Build the project
     - [ ] Fix any compile/build issues and commit to this branch
     - [ ] Document any necessary changes in the `CHANGELOG.md`
-- [ ] It is important that you commit the changes to the `project` file, and the `Package.resolved`
+- [ ] It is important that you commit the changes to all the `Package.resolved` files
 - [ ] Open `Apps/Apps.xcworkspace` and ensure that all the projects build and run successfully
 - [ ] Create a PR and have the team review changes and the `CHANGELOG.md`

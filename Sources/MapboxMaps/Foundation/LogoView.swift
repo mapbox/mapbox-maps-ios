@@ -4,7 +4,7 @@ import UIKit
 // swiftlint:disable function_body_length file_length type_body_length
 internal class LogoView: UIView {
 
-    internal enum LogoSize {
+    internal enum LogoSize: Equatable {
 
         static let defaultRegularSize = CGSize(width: 85, height: 21)
         static let defaultCompactSize = CGSize(width: 21, height: 21)

@@ -10,8 +10,8 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
     public var snapshotView: UIImageView!
     private var snapshotting = false
 
-    override public func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override public func viewDidLoad() {
+        super.viewDidLoad()
 
         // Create a vertical stack view to hold both the map view and the snapshot.
         let stackView = UIStackView(frame: view.safeAreaLayoutGuide.layoutFrame)
@@ -20,13 +20,13 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
         stackView.alignment = .center
         stackView.spacing = 12.0
 
-        let testRect = CGRect(x: 0, y: 0, width: view.bounds.width/2, height: view.bounds.height / 2)
+        let mapViewRect = CGRect(x: 0, y: 0, width: view.bounds.width/2, height: view.bounds.height / 2)
 
         let mapInitOptions = MapInitOptions(cameraOptions: CameraOptions(center: CLLocationCoordinate2D(latitude: 50, longitude: 138.482),
                                                                          zoom: 3.5),
                                             styleURI: .dark)
 
-        mapView = MapView(frame: testRect, mapInitOptions: mapInitOptions)
+        mapView = MapView(frame: mapViewRect, mapInitOptions: mapInitOptions)
         // Add the `MapViewController`'s view to the stack view as a
         // child view controller.
         stackView.addArrangedSubview(mapView)

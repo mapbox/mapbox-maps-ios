@@ -5,9 +5,11 @@
 // Attribution view has a subview label with attributed text
 internal final class AttributionView: UIView {
 
+    // Padding around the label. This is also used by `AttributionMeasure` when
+    // determining what style of attribution fits within a certain space.
     internal static let padding = CGPoint(x: 10, y: 5)
 
-    init(text: NSAttributedString) {
+    internal init(text: NSAttributedString) {
         // Label
         let label = UILabel()
         label.attributedText = text

@@ -2,11 +2,7 @@ internal struct AttributionMeasure {
 
     private init() {}
 
-    /// Determine the appropriate logo and attribution text that fits in a given
-    /// rect
-    ///
-    /// Todo: Consider replacing this with layout constraint version (and LogoView
-    /// and AttributionView that automatically modify their content
+    /// Determine the appropriate logo and attribution text that fits in a given rect
     ///
     /// - Parameters:
     ///   - rect: Rect that logo and attribution should fit within
@@ -25,13 +21,14 @@ internal struct AttributionMeasure {
             (.none, .none),
         ]
 
+        // TODO: Consider replacing this with layout constraint version (and
+        // LogoView and AttributionView that automatically modify their content)
         for pair in options {
             var totalSize = CGSize.zero
 
             // Check the logo
             let logoSize = pair.0
-            if case .none = logoSize {
-            } else {
+            if logoSize != .none {
                 let imageSize = logoSize.size
                 totalSize.width += margin + imageSize.width
                 totalSize.height = imageSize.height

@@ -2,14 +2,6 @@ import UIKit
 import CoreLocation
 import CoreImage.CIFilterBuiltins
 
-#if canImport(MapboxMapsFoundation)
-import MapboxMapsFoundation
-#endif
-
-#if canImport(MapboxMapsStyle)
-import MapboxMapsStyle
-#endif
-
 // MARK: - Snapshotter
 public class Snapshotter {
 

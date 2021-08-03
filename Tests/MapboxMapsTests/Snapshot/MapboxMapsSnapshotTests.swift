@@ -183,7 +183,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
         wait(for: [expectation], timeout: 10.0)
     }
 
-
     func testSnapshotAttribution() throws {
 
         // Test range of widths

@@ -15,7 +15,7 @@ internal class MapboxInfoButtonOrnament: UIView {
     internal var isMetricsEnabled: Bool {
         return UserDefaults.standard.bool(forKey: Ornaments.metricsEnabledKey)
     }
-    
+
     internal init() {
         super.init(frame: CGRect(origin: .zero, size: CGSize(width: 44, height: 44)))
         NSLayoutConstraint.activate([

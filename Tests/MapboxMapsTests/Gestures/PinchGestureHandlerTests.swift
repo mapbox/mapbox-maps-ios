@@ -45,28 +45,28 @@ class PinchGestureHandlerTests: XCTestCase {
         let pinchGestureHandler = PinchGestureHandler(for: view, withDelegate: delegate)
 
         let pinchGestureRecognizerMock = UIPinchGestureRecognizerMock()
-        pinchGestureRecognizerMock.mockState = .changed
+        pinchGestureRecognizerMock.mockState = .began
         pinchGestureRecognizerMock.mockScale = 2.0
         pinchGestureRecognizerMock.mockLocationInView = CGPoint(x: 0.0, y: 0.0)
+        pinchGestureRecognizerMock.mockNumberOfTouches = 2
 
+        pinchGestureHandler.handlePinch(pinchGestureRecognizerMock)
+
+        pinchGestureRecognizerMock.mockState = .changed
         pinchGestureHandler.handlePinch(pinchGestureRecognizerMock)
 
         XCTAssertTrue(delegate.cancelTransitionsCalled,
                       "Cancel Transitions was not called before commencing gesture processing")
-
-        XCTAssertTrue(delegate.pinchChangedMethod.wasCalled, "Pinch scale not recalculated")
-
-        XCTAssertTrue(delegate.pinchChangedMethod.anchor == CGPoint(x: 0.0, y: 0.0),
-                      "Invalid pinch center point")
+        XCTAssertEqual(delegate.pinchChangedStub.invocations.count, 1)
 
         pinchGestureRecognizerMock.mockLocationInView = CGPoint(x: 1.0, y: 1.0)
         pinchGestureHandler.handlePinch(pinchGestureRecognizerMock)
 
-        XCTAssertTrue(delegate.pinchChangedMethod.wasCalled, "Pinch Center not recalculated")
-        XCTAssertEqual(delegate.pinchChangedMethod.anchor,
+        XCTAssertEqual(delegate.pinchChangedStub.invocations.count, 2)
+        XCTAssertEqual(delegate.pinchChangedStub.invocations.last?.parameters.targetAnchor,
                        CGPoint(x: 1.0, y: 1.0),
                        "Offset not calculated correctly")
-        XCTAssertEqual(delegate.pinchChangedMethod.previousAnchor,
+        XCTAssertEqual(delegate.pinchChangedStub.invocations.last?.parameters.initialAnchor,
                        CGPoint(x: 0.0, y: 0.0),
                        "Offset not calculated correctly")
     }
@@ -83,11 +83,9 @@ class PinchGestureHandlerTests: XCTestCase {
         XCTAssertTrue(delegate.cancelTransitionsCalled,
                       "Cancel Transitions was not called before commencing gesture processing")
 
-        XCTAssertTrue(delegate.pinchEndedMethod.wasCalled,
+        XCTAssertEqual(delegate.pinchEndedStub.invocations.count,
+                       1,
                       "View was not informed that gesture was ended")
-
-        XCTAssertTrue(delegate.pinchEndedMethod.anchor == CGPoint(x: 0.0, y: 0.0),
-                      "Anchor not calculated correctly")
     }
 }
 
@@ -97,6 +95,7 @@ private class UIPinchGestureRecognizerMock: UIPinchGestureRecognizer {
     var mockScale: CGFloat = 2.0
     var mockCenter: CGPoint = .zero
     var mockLocationInView: CGPoint = .zero
+    var mockNumberOfTouches: Int = 1
 
     override var state: UIGestureRecognizer.State {
         get {
@@ -112,6 +111,10 @@ private class UIPinchGestureRecognizerMock: UIPinchGestureRecognizer {
         } set {
             self.scale = newValue
         }
+    }
+
+    override var numberOfTouches: Int {
+        return self.mockNumberOfTouches
     }
 
     override func location(in view: UIView?) -> CGPoint {

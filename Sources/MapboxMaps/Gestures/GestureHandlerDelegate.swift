@@ -3,6 +3,8 @@ import UIKit
 /// The `GestureHandlerDelegate` protocol supports communication
 /// from the Gestures module to the `MapView`.
 internal protocol GestureHandlerDelegate: AnyObject {
+    // The maps current camera state
+    func cameraState() -> CameraState
 
     // View has been tapped with a number of taps and number of finger touches
     func tapped(numberOfTaps: Int, numberOfTouches: Int)
@@ -24,11 +26,14 @@ internal protocol GestureHandlerDelegate: AnyObject {
     // Returns initial scale of the map
     func scaleForZoom() -> CGFloat
 
-    // Pinch on the view has changed the zoom, anchor and offset
-    func pinchChanged(with zoom: CGFloat, anchor: CGPoint, previousAnchor: CGPoint)
+    // Pinch has changed from the initial center/anchor
+    func pinchChanged(withZoomIncrement zoomIncrement: CGFloat,
+                      targetAnchor: CGPoint,
+                      initialAnchor: CGPoint,
+                      initialCameraState: CameraState)
 
-    // Pinch has completed with a final scale and possible drift
-    func pinchEnded(with finalScale: CGFloat, andAnchor anchor: CGPoint)
+    // Pinch has ended
+    func pinchEnded()
 
     // Requests initial bearing of the map
     func rotationStartAngle() -> CGFloat

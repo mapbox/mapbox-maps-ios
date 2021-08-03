@@ -8,13 +8,19 @@ import UIKit
 //swiftlint:disable explicit_acl explicit_top_level_acl large_tuple
 // Mock class that flags true when `GestureSupportableView` protocol methods have been called on it
 class GestureHandlerDelegateMock: GestureHandlerDelegate {
+
+    var coreCameraState = MapboxCoreMaps.CameraState(center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0),
+                                                     padding: EdgeInsets(top: 0, left: 0, bottom: 0, right: 0),
+                                                     zoom: 10,
+                                                     bearing: 0.0,
+                                                     pitch: 0.0)
+
     var tapCalled = false
     var tapCalledWithNumberOfTaps = 0
     var tapCalledWithNumberOfTouches = 0
 
     var pannedCalled = false
 
-    var pinchChangedMethod: (wasCalled: Bool, newZoom: CGFloat?, anchor: CGPoint?, previousAnchor: CGPoint?) = (false, nil, nil, nil)
     var pinchEndedMethod: (wasCalled: Bool, anchor: CGPoint?) = (false, nil)
 
     var cancelTransitionsCalled = false
@@ -28,6 +34,10 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
     var pitchTolerance = 45.0
     var pitchChangedMethod: (wasCalled: Bool, newPitch: CGFloat) = (false, 0.0)
     var pitchEndedMethod = false
+
+    func cameraState() -> CameraState {
+        return CameraState(coreCameraState)
+    }
 
     public func tapped(numberOfTaps: Int, numberOfTouches: Int) {
         tapCalled = true
@@ -53,16 +63,27 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
         scaleForZoomStub.call()
     }
 
-    func pinchChanged(with zoom: CGFloat, anchor: CGPoint, previousAnchor: CGPoint) {
-        pinchChangedMethod.wasCalled = true
-        pinchChangedMethod.newZoom = zoom
-        pinchChangedMethod.anchor = anchor
-        pinchChangedMethod.previousAnchor = previousAnchor
+    struct PinchChangedParameters {
+        var zoomIncrement: CGFloat
+        var targetAnchor: CGPoint
+        var initialAnchor: CGPoint
+        var initialCameraState: CameraState
     }
 
-    func pinchEnded(with finalScale: CGFloat, andAnchor anchor: CGPoint) {
-        pinchEndedMethod.wasCalled = true
-        pinchEndedMethod.anchor = anchor
+    let pinchChangedStub = Stub<PinchChangedParameters, Void>()
+    func pinchChanged(withZoomIncrement zoomIncrement: CGFloat,
+                      targetAnchor: CGPoint,
+                      initialAnchor: CGPoint,
+                      initialCameraState: CameraState) {
+        pinchChangedStub.call(with: .init(zoomIncrement: zoomIncrement,
+                                          targetAnchor: targetAnchor,
+                                          initialAnchor: initialAnchor,
+                                          initialCameraState: cameraState()))
+    }
+
+    let pinchEndedStub = Stub<Void, Void>()
+    func pinchEnded() {
+        pinchEndedStub.call()
     }
 
     func rotationStartAngle() -> CGFloat {

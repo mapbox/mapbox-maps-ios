@@ -3,11 +3,13 @@ import UIKit
 /// The PinchGestureHandler is responsible for all `pinch` related infrastructure
 /// Tells the view to update itself when required
 internal class PinchGestureHandler: GestureHandler {
-    // Keep track of the previous pinch center point. This allows us to react
-    // to panning while zooming
-    private var previousPinchCenterPoint: CGPoint = .zero
-
     private var previousScale: CGFloat = 0.0
+
+    // The center point where the pinch gesture began
+    private var initialPinchCenterPoint: CGPoint = .zero
+
+    // The camera state when the pinch gesture began
+    private var initialCameraState: CameraState!
 
     // TODO: Inject the deceleration rate as part of a configuration structure
     internal let decelerationRate = UIScrollView.DecelerationRate.normal.rawValue
@@ -33,23 +35,29 @@ internal class PinchGestureHandler: GestureHandler {
             self.previousScale = 1.0
             delegate.gestureBegan(for: .pinch)
 
-            previousPinchCenterPoint = pinchCenterPoint
+            self.initialCameraState = self.delegate.cameraState()
+            self.initialPinchCenterPoint = pinchCenterPoint
 
             /**
              TODO: Handle a concurrent rotate gesture here.
              Prioritize the correct gesture by comparing the velocity of competing gestures.
              */
         } else if pinchGestureRecognizer.state == .changed {
+            if pinchGestureRecognizer.numberOfTouches < 2 {
+                return
+            }
 
-            let zoomIncrement = log2(pinchGestureRecognizer.scale / previousScale)
-            delegate.pinchChanged(with: zoomIncrement, anchor: pinchCenterPoint, previousAnchor: previousPinchCenterPoint)
+            let zoomIncrement = log2(pinchGestureRecognizer.scale)
+            delegate.pinchChanged(withZoomIncrement: zoomIncrement,
+                                  targetAnchor: pinchCenterPoint,
+                                  initialAnchor: self.initialPinchCenterPoint,
+                                  initialCameraState: self.initialCameraState)
 
             previousScale = pinchGestureRecognizer.scale
-            previousPinchCenterPoint = pinchCenterPoint
         } else if pinchGestureRecognizer.state == .ended
             || pinchGestureRecognizer.state == .cancelled {
 
-            delegate.pinchEnded(with: log2(pinchGestureRecognizer.scale / previousScale), andAnchor: pinchCenterPoint)
+            delegate.pinchEnded()
         }
     }
 }

@@ -152,7 +152,7 @@ final class GestureManagerTests: XCTestCase {
     func testPinchEndedDoesNotUnrotate() {
         mapView.mapboxMap.setCamera(to: CameraOptions(zoom: 3.0,
                                                       bearing: CLLocationDirection(5.0)))
-        
+
         let newOptions = CameraBoundsOptions(minZoom: 2.0)
         try! mapView.mapboxMap.setCameraBounds(for: newOptions)
 

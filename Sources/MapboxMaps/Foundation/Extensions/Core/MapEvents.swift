@@ -2,11 +2,7 @@ import Foundation
 
 // MARK: - MapEvents
 
-/**
-* List of supported event types by the MapView and Snapshotter objects,
-* and event data format specification for each event.
-*
-* Simplified diagram for events emitted by the Map object.
+/* Simplified diagram for events emitted by the Map object.
 *
 * ┌─────────────┐               ┌─────────┐                   ┌──────────────┐
 * │ Application │               │   Map   │                   │ResourceLoader│
@@ -70,6 +66,11 @@ import Foundation
 *        │                           │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘  │
 *        │                           │                                │
 *
+*/
+
+/**
+* List of supported event types by the MapView and Snapshotter objects,
+* and event data format specification for each event.
 */
 public extension MapEvents {
     /// Events emitted by the SDK

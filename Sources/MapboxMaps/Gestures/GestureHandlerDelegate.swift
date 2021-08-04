@@ -3,6 +3,8 @@ import UIKit
 /// The `GestureHandlerDelegate` protocol supports communication
 /// from the Gestures module to the `MapView`.
 internal protocol GestureHandlerDelegate: AnyObject {
+    // The maps current camera state
+    func cameraState() -> CameraState
 
     // View has been tapped with a number of taps and number of finger touches
     func tapped(numberOfTaps: Int, numberOfTouches: Int)
@@ -24,11 +26,14 @@ internal protocol GestureHandlerDelegate: AnyObject {
     // Returns initial scale of the map
     func scaleForZoom() -> CGFloat
 
-    // Scale has changed with a new value and a given anchor
-    func pinchScaleChanged(with newScale: CGFloat, andAnchor anchor: CGPoint)
+    // Pinch has changed from the initial center/anchor
+    func pinchChanged(withZoomIncrement zoomIncrement: CGFloat,
+                      targetAnchor: CGPoint,
+                      initialAnchor: CGPoint,
+                      initialCameraState: CameraState)
 
-    // Pinch has completed with a final scale and possible drift
-    func pinchEnded(with finalScale: CGFloat, andDrift possibleDrift: Bool, andAnchor anchor: CGPoint)
+    // Pinch has ended
+    func pinchEnded()
 
     // Requests initial bearing of the map
     func rotationStartAngle() -> CGFloat
@@ -53,46 +58,7 @@ internal protocol GestureHandlerDelegate: AnyObject {
 
     // Pitch gesture ended
     func pitchEnded()
-}
 
-// Provides default implementation of GestureSupportableView methods.
-internal extension GestureHandlerDelegate {
-
-    func tapped(numberOfTaps: Int, numberOfTouches: Int) {}
-
-    func panBegan(at point: CGPoint) {}
-
-    // View has been panned
-    func panned(from startPoint: CGPoint, to endPoint: CGPoint) {}
-
-    // Pan on the view has ended (with a potential drift)
-    func panEnded(at endPoint: CGPoint, shouldDriftTo driftEndPoint: CGPoint) {}
-
-    func cancelGestureTransitions() {}
-
-    func gestureBegan(for gestureType: GestureType) {}
-
-    func scaleForZoom() -> CGFloat { return 0.0 }
-
-    func pinchScaleChanged(with newScale: CGFloat, andAnchor anchor: CGPoint) {}
-
-    func pinchEnded(with finalScale: CGFloat, andDrift possibleDrift: Bool, andAnchor anchor: CGPoint) {}
-
-    func rotationStartAngle() -> CGFloat { return 0.0 }
-
-    func rotationChanged(with changedAngle: CGFloat, and anchor: CGPoint, and pinchScale: CGFloat) {}
-
-    func rotationEnded(with finalAngle: CGFloat, and anchor: CGPoint, with pinchState: UIGestureRecognizer.State) {}
-
-    func quickZoomChanged(with newScale: CGFloat, and anchor: CGPoint) {}
-
-    func quickZoomEnded() {}
-
-    func initialPitch() -> CGFloat { return 0.0 }
-
-    func horizontalPitchTiltTolerance() -> Double { return 45.0 }
-
-    func pitchChanged(newPitch: CGFloat) {}
-
-    func pitchEnded() {}
+    // The tilt tolerance associated with the pitch gesture
+    func horizontalPitchTiltTolerance() -> Double
 }

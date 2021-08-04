@@ -8,9 +8,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Added support for building with Xcode 13b3. ([#564](https://github.com/mapbox/mapbox-maps-ios/pull/564))
 
-## 10.0.0-rc.5 - July 28, 2021
-
 ### Bug fixes 🐞
+
+* Fixed an issue where panning was not enabled while zooming. ([#474](https://github.com/mapbox/mapbox-maps-ios/pull/474))
+
+## 10.0.0-rc.5 - July 28, 2021
 
 * Fixed an issue where `MapView` positioning wasn't correct when used in containers such as UIStackView. ([#533](https://github.com/mapbox/mapbox-maps-ios/pull/533)) 
 
@@ -39,6 +41,9 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix threading issues in HTTP file source. ([#522](https://github.com/mapbox/mapbox-maps-ios/pull/522))
 * Fixed an issue that could cause flickering during ease to and basic animations ([#519](https://github.com/mapbox/mapbox-maps-ios/pull/519))
 * Fixed an issue that could result in ease to and basic animations never reaching their final values ([#519](https://github.com/mapbox/mapbox-maps-ios/pull/519))
+
+
+
 
 ## 10.0.0-rc.3 - June 30, 2021
 

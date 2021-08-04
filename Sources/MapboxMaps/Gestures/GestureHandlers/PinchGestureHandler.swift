@@ -3,8 +3,13 @@ import UIKit
 /// The PinchGestureHandler is responsible for all `pinch` related infrastructure
 /// Tells the view to update itself when required
 internal class PinchGestureHandler: GestureHandler {
+    private var previousScale: CGFloat = 0.0
 
-    internal var scale: CGFloat = 0.0
+    // The center point where the pinch gesture began
+    private var initialPinchCenterPoint: CGPoint = .zero
+
+    // The camera state when the pinch gesture began
+    private var initialCameraState: CameraState!
 
     // TODO: Inject the deceleration rate as part of a configuration structure
     internal let decelerationRate = UIScrollView.DecelerationRate.normal.rawValue
@@ -27,44 +32,32 @@ internal class PinchGestureHandler: GestureHandler {
 
         if pinchGestureRecognizer.state == .began {
 
-            scale = pow(2, delegate.scaleForZoom())
+            self.previousScale = 1.0
             delegate.gestureBegan(for: .pinch)
+
+            self.initialCameraState = self.delegate.cameraState()
+            self.initialPinchCenterPoint = pinchCenterPoint
 
             /**
              TODO: Handle a concurrent rotate gesture here.
              Prioritize the correct gesture by comparing the velocity of competing gestures.
              */
-
         } else if pinchGestureRecognizer.state == .changed {
+            if pinchGestureRecognizer.numberOfTouches < 2 {
+                return
+            }
 
-            let newScale = scale * pinchGestureRecognizer.scale
-            delegate.pinchScaleChanged(with: log2(newScale), andAnchor: pinchCenterPoint)
+            let zoomIncrement = log2(pinchGestureRecognizer.scale)
+            delegate.pinchChanged(withZoomIncrement: zoomIncrement,
+                                  targetAnchor: pinchCenterPoint,
+                                  initialAnchor: self.initialPinchCenterPoint,
+                                  initialCameraState: self.initialCameraState)
 
+            previousScale = pinchGestureRecognizer.scale
         } else if pinchGestureRecognizer.state == .ended
             || pinchGestureRecognizer.state == .cancelled {
 
-            var velocity = pinchGestureRecognizer.velocity
-            if velocity > -0.5 && velocity < 3 {
-                velocity = 0
-            }
-
-            let duration = ((velocity > 0) ? 1 : 0.25) * decelerationRate
-            let scale = self.scale * pinchGestureRecognizer.scale
-            var newScale = scale
-
-            if velocity >= 0 {
-                newScale += scale * velocity * duration * 0.1
-            } else {
-                newScale += scale / (velocity * duration) * 0.1
-            }
-
-            if newScale <= 0 || log2(newScale) < minZoom {
-                velocity = 0
-            }
-
-            let possibleDrift = velocity > 0.0 && duration > 0.0
-
-            delegate.pinchEnded(with: log2(newScale), andDrift: possibleDrift, andAnchor: pinchCenterPoint)
+            delegate.pinchEnded()
         }
     }
 }

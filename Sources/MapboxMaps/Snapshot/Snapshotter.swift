@@ -82,6 +82,8 @@ public class Snapshotter {
         let scale = CGFloat(options.pixelRatio)
 
         let style = self.style
+        let options = self.options
+
         mapSnapshotter.start { (expected) in
             if expected.isError() {
                 completion(.failure(.snapshotFailed(reason: expected.error as? String)))
@@ -182,12 +184,12 @@ public class Snapshotter {
                         context.restoreGState()
                     }
 
-                    if self.options.showsLogo {
+                    if options.showsLogo {
                         Snapshotter.renderLogoView(logoView, context: context)
                     }
 
                     if let attributionView = attributionView,
-                       self.options.showsAttribution {
+                       options.showsAttribution {
                         Snapshotter.renderAttributionView(attributionView,
                                                           blurredImage: blurredImage,
                                                           context: context)

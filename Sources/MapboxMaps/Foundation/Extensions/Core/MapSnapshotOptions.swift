@@ -29,8 +29,8 @@ public struct MapSnapshotOptions {
     ///   - resourceOptions: Resource fetching options to be used by the
     ///         snapshotter. Default uses the access token provided by
     ///         `ResourceOptionsManager.default`
-    ///   - showsLogo:Flag that determines if the logo should be shown on the snapshot
-    ///   - showsAttribution:Flag that determines if attribution should be shown on the snapshot
+    ///   - showsLogo: Flag that determines if the logo should be shown on the snapshot
+    ///   - showsAttribution: Flag that determines if attribution should be shown on the snapshot
     public init(size: CGSize,
                 pixelRatio: CGFloat,
                 glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions(),

@@ -10,7 +10,6 @@ internal final class AttributionView: UIView {
     internal static let padding = CGPoint(x: 10, y: 5)
 
     internal init(text: NSAttributedString) {
-        // Label
         let label = UILabel()
         label.attributedText = text
         var labelSize = label.sizeThatFits(.zero)

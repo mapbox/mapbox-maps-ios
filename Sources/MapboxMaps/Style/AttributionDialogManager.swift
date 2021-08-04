@@ -1,28 +1,16 @@
-// WIP
 @_implementationOnly import MapboxCommon_Private
 
 internal protocol AttributionDataSource: AnyObject {
     func attributions() -> [Attribution]
 }
 
+@available(iOSApplicationExtension, unavailable)
 internal protocol AttributionDialogManagerDelegate: AnyObject {
     func attributionDialogManager(_ attributionDialogManager: AttributionDialogManager, viewControllerForPresentingFromView view: UIView) -> UIViewController
     func triggerAction(for attribution: Attribution)
 }
 
-internal extension UIView {
-    var parentViewController: UIViewController? {
-        var parentResponder: UIResponder? = self
-        while parentResponder != nil {
-            parentResponder = parentResponder?.next
-            if let viewController = parentResponder as? UIViewController {
-                return viewController
-            }
-        }
-        return nil
-    }
-}
-
+@available(iOSApplicationExtension, unavailable)
 internal class AttributionDialogManager {
     init() {
         delegate = self
@@ -173,6 +161,7 @@ internal class AttributionDialogManager {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension AttributionDialogManager: AttributionDialogManagerDelegate {
     func triggerAction(for attribution: Attribution) {
 

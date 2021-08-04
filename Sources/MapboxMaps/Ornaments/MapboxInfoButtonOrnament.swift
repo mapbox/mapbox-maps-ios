@@ -1,6 +1,7 @@
 import UIKit
 @_implementationOnly import MapboxCommon_Private
 
+@available(iOSApplicationExtension, unavailable)
 internal class MapboxInfoButtonOrnament: UIView {
     internal weak var attributionDataSource: AttributionDataSource?
 

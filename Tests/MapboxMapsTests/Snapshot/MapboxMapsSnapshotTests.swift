@@ -266,7 +266,8 @@ class MapboxMapsSnapshotTests: XCTestCase {
                 let compareUrl = URL(fileURLWithPath: path)
                 let expectedImageData = try! Data(contentsOf: compareUrl)
 
-                XCTAssertEqual(expectedImageData, image.pngData())
+                let expectedImage = UIImage(data: expectedImageData)!
+                XCTAssertEqual(expectedImage.pngData(), image.pngData())
             case.failure :
                 XCTFail("Failure: snapshot asset and snapshot image do not match")
             }

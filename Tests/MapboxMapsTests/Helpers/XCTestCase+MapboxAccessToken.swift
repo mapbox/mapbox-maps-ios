@@ -56,6 +56,9 @@ extension XCTestCase {
             return false
         }
 
+        // This comparison will NOT work for images embedded in an xcassets
+        // package. Images appear to be "optimized" modifying the RGB colors.
+        // In future, this should be replaced by a `pixelmatch` comparison.
         let equal = (expectedImage.pngData() == observedImage.pngData())
 
         if !equal {

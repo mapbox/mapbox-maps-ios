@@ -17,6 +17,11 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Fixed an issue where `MapView` positioning wasn't correct when used in containers such as UIStackView. ([#533](https://github.com/mapbox/mapbox-maps-ios/pull/533)) 
 
+### Features ✨ and improvements 🏁
+* Added new options to `MapSnapshotOptions`
+    * `showsLogo` is a flag that will decide whether the logo will be shown on a snapshot
+    * `showsAttribution` is a flag that will decide whether the attribution will be shown on a snapshot
+
 ## 10.0.0-rc.4 - July 14, 2021
 
 ### Features ✨ and improvements 🏁

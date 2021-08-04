@@ -2,6 +2,8 @@ import UIKit
 import CoreLocation
 import CoreImage.CIFilterBuiltins
 
+@_implementationOnly import MapboxCommon_Private
+
 // MARK: - Snapshotter
 public class Snapshotter {
 
@@ -80,6 +82,8 @@ public class Snapshotter {
         let scale = CGFloat(options.pixelRatio)
 
         let style = self.style
+        let options = self.options
+
         mapSnapshotter.start { (expected) in
             if expected.isError() {
                 completion(.failure(.snapshotFailed(reason: expected.error as? String)))
@@ -180,11 +184,12 @@ public class Snapshotter {
                         context.restoreGState()
                     }
 
-                    if true { // options.showsLogo
+                    if options.showsLogo {
                         Snapshotter.renderLogoView(logoView, context: context)
                     }
 
-                    if let attributionView = attributionView, true { // options.showsAttribution
+                    if let attributionView = attributionView,
+                       options.showsAttribution {
                         Snapshotter.renderAttributionView(attributionView,
                                                           blurredImage: blurredImage,
                                                           context: context)

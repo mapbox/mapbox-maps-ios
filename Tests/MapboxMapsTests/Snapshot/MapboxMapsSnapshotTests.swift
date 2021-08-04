@@ -29,12 +29,16 @@ class MapboxMapsSnapshotTests: XCTestCase {
         try super.tearDownWithError()
     }
 
+    private static var snapshotSize = CGSize(width: 300, height: 300)
+    private static var snapshotScale: CGFloat = 4
+
     // Create snapshot options
-    private func snapshotterOptions() throws -> MapSnapshotOptions {
+    private func snapshotterOptions(size: CGSize = MapboxMapsSnapshotTests.snapshotSize,
+                                    scale: CGFloat = MapboxMapsSnapshotTests.snapshotScale) throws -> MapSnapshotOptions {
         let accessToken = try mapboxAccessToken()
         resourceOptions = ResourceOptions(accessToken: accessToken,
                                           dataPathURL: dataPathURL)
-        return MapSnapshotOptions(size: CGSize(width: 300, height: 300), pixelRatio: 4, resourceOptions: resourceOptions)
+        return MapSnapshotOptions(size: size, pixelRatio: scale, resourceOptions: resourceOptions)
     }
 
     // Testing creating the snapshot
@@ -140,22 +144,14 @@ class MapboxMapsSnapshotTests: XCTestCase {
         snapshotterNew.setCamera(to: cameraOptions)
         snapshotterNew.style.uri = .light
         let expectation2 = self.expectation(description: "snapshot logo")
-        snapshotterNew.start(overlayHandler: nil) { (result) in
+        snapshotterNew.start(overlayHandler: nil) { [self] (result) in
             switch result {
             case let .success(image) :
-                // Compare snapshot asset data vs snapshot image data
-                let path = Bundle.mapboxMapsTests.path(forResource: "Snapshot-Asset", ofType: "png")!
-                let url = URL(fileURLWithPath: path)
-                let expectedImageData = try! Data(contentsOf: url)
-
-                if expectedImageData != image.pngData() {
-                    // TODO: Image comparison
-                    print("warning: Image data does not match.")
-                    let newAttachment = XCTAttachment(image: image)
-                    newAttachment.lifetime = .keepAlways
-                    self.add(newAttachment)
-                }
-                XCTAssertEqual(expectedImageData.count, image.pngData()!.count, accuracy: 5000)
+                let imageEqual = self.compare(observedImage: image,
+                                              expectedImageNamed: "testSnapshotLogoVisibility",
+                                              expectedImageScale: MapboxMapsSnapshotTests.snapshotScale,
+                                              attachmentName: self.name)
+                XCTAssert(imageEqual, "Snapshot does not match expected image")
 
             case.failure :
                 XCTFail("snapshot asset and snapshot image do not match")
@@ -185,6 +181,38 @@ class MapboxMapsSnapshotTests: XCTestCase {
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 10.0)
+    }
+
+    func testSnapshotAttribution() throws {
+
+        // Test range of widths
+        for imageWidth in stride(from: 50, through: 300, by: 50) {
+
+            let size = CGSize(width: imageWidth, height: 100)
+            let options = try snapshotterOptions(size: size, scale: 2)
+            let snapshotter = Snapshotter(options: options)
+            let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
+
+            snapshotter.setCamera(to: cameraOptions)
+            snapshotter.style.uri = .streets
+            let expectation = self.expectation(description: "snapshot")
+
+            snapshotter.start(overlayHandler: nil) { result in
+                switch result {
+                case let .success(image) :
+                    let imageEqual = self.compare(observedImage: image,
+                                                  expectedImageNamed: "testSnapshotAttribution-\(imageWidth)",
+                                                  expectedImageScale: 2,
+                                                  attachmentName: "testSnapshotAttribution-\(imageWidth)")
+                    XCTAssert(imageEqual, "Snapshot does not match expected image")
+
+                case.failure :
+                    XCTFail("snapshot asset and snapshot image do not match")
+                }
+                expectation.fulfill()
+            }
+            wait(for: [expectation], timeout: 10)
+        }
     }
 
 }

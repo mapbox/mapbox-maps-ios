@@ -7,7 +7,7 @@ import XCTest
 #endif
 
 //swiftlint:disable explicit_acl explicit_top_level_acl
-class OrnamentManagerTests: XCTestCase {
+class OrnamentManagerTests: XCTestCase, AttributionDataSource {
 
     var ornamentSupportableView: OrnamentSupportableViewMock!
     var options: OrnamentOptions!
@@ -17,7 +17,7 @@ class OrnamentManagerTests: XCTestCase {
         ornamentSupportableView = OrnamentSupportableViewMock(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
 
         options = OrnamentOptions()
-        ornamentsManager = OrnamentsManager(view: ornamentSupportableView, options: options)
+        ornamentsManager = OrnamentsManager(view: ornamentSupportableView, options: options, attributionDataSource: self)
 
     }
 
@@ -68,5 +68,9 @@ class OrnamentManagerTests: XCTestCase {
 
         ornamentsManager.options.scaleBar.position = .bottomRight
         XCTAssertTrue(scaleBar.isOnRight, "The scale bar should be on the right after the position has been updated to bottomRight.")
+    }
+
+    func attributions() -> [Attribution] {
+        return [ Attribution(title: "This is a test", url: URL(string: "https://example.com/this-is-a-test")!)]
     }
 }

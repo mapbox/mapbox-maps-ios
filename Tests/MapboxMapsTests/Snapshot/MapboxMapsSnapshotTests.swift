@@ -30,7 +30,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
     }
 
     private static var snapshotSize = CGSize(width: 300, height: 300)
-    private static var snapshotScale: CGFloat = 4
+    private static var snapshotScale: CGFloat = 2
 
     // Create snapshot options
     private func snapshotterOptions(size: CGSize = MapboxMapsSnapshotTests.snapshotSize,
@@ -215,59 +215,71 @@ class MapboxMapsSnapshotTests: XCTestCase {
         }
     }
 
-    func testShowsLogo() throws {
-        var options = try snapshotterOptions()
-        options.showsLogo = true
-
+    func testShowsLogoAndAttribution() throws {
+        let options = try snapshotterOptions()
         showLogoAttributionHelper(options: options, fileName: "\(#function)")
     }
 
-    func testDoNotShowsLogo() throws {
+    func testDoesNotShowLogo() throws {
         var options = try snapshotterOptions()
         options.showsLogo = false
 
         showLogoAttributionHelper(options: options, fileName: "\(#function)")
     }
 
-    func testShowsAttribution() throws {
-        var options = try snapshotterOptions()
-        options.showsAttribution = true
-
-        showLogoAttributionHelper(options: options, fileName: "\(#function)")
-    }
-
-    func testDoNotShowsAttribution() throws {
+    func testDoesNotShowAttribution() throws {
         var options = try snapshotterOptions()
         options.showsAttribution = false
 
         showLogoAttributionHelper(options: options, fileName: "\(#function)")
     }
 
+    func testDoesNotShowLogoAndAttribution() throws {
+        var options = try snapshotterOptions()
+        options.showsLogo = false
+        options.showsAttribution = false
+
+        showLogoAttributionHelper(options: options, fileName: "\(#function)")
+    }
+
+
     private func showLogoAttributionHelper(options: MapSnapshotOptions, fileName: String) {
         let snapshotter = Snapshotter(options: options)
 
         // Adding a simple custom style
-        snapshotter.style.JSON = #"{"version":8,"sources":{},"layers":[{"id":"background","type":"background","paint":{"background-color":"white"}}]}"#
+        snapshotter.style.JSON =
+            #"""
+            {
+                "version": 8,
+                "sources": {
+                    "dummy" : {
+                        "type": "vector",
+                        "tiles": [],
+                        "attribution" : "<a href=\"https://www.mapbox.com/about/maps/\" target=\"_blank\">&copy; Mapbox</a> <a href=\"http://www.openstreetmap.org/about/\" target=\"_blank\">&copy; OpenStreetMap</a> <a class=\"mapbox-improve-map\" href=\"https://apps.mapbox.com/feedback/\" target=\"_blank\">Improve this map</a>"
+                    }
+                },
+                "layers": [{
+                    "id": "background",
+                    "type": "background",
+                    "paint": {
+                        "background-color": "blue"
+                    }
+                }]
+            }
+            """#
 
         let expectation = self.expectation(description: "snapshot")
-        snapshotter.start(overlayHandler: nil, completion: { result in
+        snapshotter.start(overlayHandler: nil, completion: { [weak self] result in
+            guard let self = self else { return }
+
             switch result {
             case let .success(image) :
-                // This code block is used to generate an image for comparison.
-                let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("\(fileName).png")
-                do {
-                    try image.pngData()?.write(to: url)
-                } catch {
-                    print(error)
-                }
+                let result = self.compare(observedImage: image,
+                                          expectedImageNamed: fileName,
+                                          expectedImageScale: MapboxMapsSnapshotTests.snapshotScale,
+                                          attachmentName: fileName)
+                XCTAssert(result)
 
-                // Compare snapshot asset data vs snapshot image data
-                let path = Bundle.mapboxMapsTests.path(forResource: "\(fileName)", ofType: "png")!
-                let compareUrl = URL(fileURLWithPath: path)
-                let expectedImageData = try! Data(contentsOf: compareUrl)
-
-                let expectedImage = UIImage(data: expectedImageData)!
-                XCTAssertEqual(expectedImage.pngData(), image.pngData())
             case.failure :
                 XCTFail("Failure: snapshot asset and snapshot image do not match")
             }

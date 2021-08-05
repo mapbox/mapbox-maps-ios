@@ -52,10 +52,10 @@ let package = Package(
                 .copy("Snapshot/testSnapshotAttribution-200.png"),
                 .copy("Snapshot/testSnapshotAttribution-250.png"),
                 .copy("Snapshot/testSnapshotAttribution-300.png"),
-                .copy("Snapshot/testShowsLogo().png"),
-                .copy("Snapshot/testDoNotShowsLogo().png"),
-                .copy("Snapshot/testShowsAttribution().png"),
-                .copy("Snapshot/testDoNotShowsAttribution().png"),
+                .copy("Snapshot/testShowsLogoAndAttribution().png"),
+                .copy("Snapshot/testDoesNotShowLogo().png"),
+                .copy("Snapshot/testDoesNotShowAttribution().png"),
+                .copy("Snapshot/testDoesNotShowLogoAndAttribution().png"),
                 .process("Resources/MapInitOptionsTests.xib"),
             ]
         )

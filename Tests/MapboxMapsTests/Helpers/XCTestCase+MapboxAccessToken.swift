@@ -59,7 +59,7 @@ extension XCTestCase {
             print("warning: Missing expected image from bundle")
             return false
         }
-        
+
         let expectedImage = UIImage(cgImage: bundleCGImage,
                                     scale: expectedImageScale,
                                     orientation: bundleImage.imageOrientation)

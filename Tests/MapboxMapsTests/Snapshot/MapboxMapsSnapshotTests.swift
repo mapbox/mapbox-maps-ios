@@ -248,7 +248,6 @@ class MapboxMapsSnapshotTests: XCTestCase {
         showLogoAttributionHelper(options: options, fileName: "\(#function)")
     }
 
-
     private func showLogoAttributionHelper(options: MapSnapshotOptions, fileName: String) {
         let snapshotter = Snapshotter(options: options)
 

@@ -96,7 +96,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
                 XCTAssertNotNil(result)
                 print(snapshotter)
             }
-            wait(for: [expectation], timeout: 10)
+            wait(for: [expectation], timeout: 15)
         }
         XCTAssertNil(weakSnapshotter)
     }

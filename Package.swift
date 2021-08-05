@@ -17,6 +17,7 @@ let package = Package(
         .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", .exact("1.0.2")),
         .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .exact("16.2.0")),
         .package(name: "Turf", url: "https://github.com/mapbox/turf-swift.git", .exact("2.0.0-rc.1")),
+        .package(name: "CocoaImageHashing", url: "https://github.com/ameingast/cocoaimagehashing", .exact("1.9.0"))
     ],
     targets: [
         .target(
@@ -28,7 +29,7 @@ let package = Package(
         ),
         .testTarget(
             name: "MapboxMapsTests",
-            dependencies: ["MapboxMaps"],
+            dependencies: ["MapboxMaps", "CocoaImageHashing"],
             exclude: [
                 "Info.plist",
                 "Foundation/Integration Tests/HTTP/HTTPIntegrationTests.swift",

@@ -1,5 +1,6 @@
 import XCTest
 import MapboxMaps
+import CocoaImageHashing
 
 extension XCTestCase {
     func guardForMetalDevice() throws {
@@ -70,10 +71,18 @@ extension XCTestCase {
             return false
         }
 
-        // This comparison will NOT work for images embedded in an xcassets
-        // package. Images appear to be "optimized" modifying the RGB colors.
-        // In future, this should be replaced by a `pixelmatch` comparison.
-        equal = (expectedImage.pngData() == observedImage.pngData())
+        // See https://github.com/ameingast/cocoaimagehashing, http://phash.org
+        // and https://github.com/aetilius/pHash
+        let start = CACurrentMediaTime()
+        let imageHashing = OSImageHashing.sharedInstance()
+        let observedHash = imageHashing.hashImage(observedImage, with: .pHash)
+        let expectedHash = imageHashing.hashImage(expectedImage, with: .pHash)
+        let imageDistance = imageHashing.hashDistance(observedHash, to: expectedHash, with: .pHash)
+        let end = CACurrentMediaTime()
+
+        equal = (imageDistance <= 2)
+
+        print("Image comparison took \(end-start) seconds, distance = \(imageDistance)")
 
         return equal
     }

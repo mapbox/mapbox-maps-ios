@@ -12,6 +12,27 @@ class MapboxMapsSnapshotTests: XCTestCase {
     var resourceOptions: ResourceOptions!
     var dataPathURL: URL!
 
+    let emptyBlueStyle =
+        #"""
+        {
+            "version": 8,
+            "sources": {
+                "dummy" : {
+                    "type": "vector",
+                    "tiles": [],
+                    "attribution" : "<a href=\"https://www.mapbox.com/about/maps/\" target=\"_blank\">&copy; Mapbox</a> <a href=\"https://www.mapbox.com/about/maps/\" target=\"_blank\">Mapbox Tests</a> <a class=\"mapbox-improve-map\" href=\"https://apps.mapbox.com/feedback/\" target=\"_blank\">Improve this map</a>"
+                }
+            },
+            "layers": [{
+                "id": "background",
+                "type": "background",
+                "paint": {
+                    "background-color": "blue"
+                }
+            }]
+        }
+        """#
+
     override func setUpWithError() throws {
         try super.setUpWithError()
         try guardForMetalDevice()
@@ -50,7 +71,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
             let snapshotter = Snapshotter(options: options)
             weakSnapshotter = snapshotter
             weakSnapshotter?.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5))
-            weakSnapshotter?.style.uri = .light
+            weakSnapshotter?.style.JSON = emptyBlueStyle
             weakSnapshotter?.start(overlayHandler: nil) { (result) in
                 expectation.fulfill()
                 XCTAssertNotNil(result)
@@ -69,7 +90,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
             let snapshotter = Snapshotter(options: options)
             weakSnapshotter = snapshotter
             weakSnapshotter?.setCamera(to: CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5))
-            weakSnapshotter?.style.uri = .light
+            weakSnapshotter?.style.JSON = emptyBlueStyle
             weakSnapshotter?.start(overlayHandler: nil) { (result) in
                 expectation.fulfill()
                 XCTAssertNotNil(result)
@@ -86,51 +107,36 @@ class MapboxMapsSnapshotTests: XCTestCase {
         let snapshotter = Snapshotter(options: options)
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
         snapshotter.setCamera(to: cameraOptions)
-        snapshotter.style.uri = .light
+        snapshotter.style.JSON = emptyBlueStyle
         let expectation = self.expectation(description: "snapshot")
         expectation.expectedFulfillmentCount = 2
-        snapshotter.start { (overlay) in
-            guard overlay.context.makeImage() != nil else {
-                XCTFail("failed to create snapshot overlay")
-                return
-            }
+        snapshotter.start { overlayHandler in
+
+            let context = overlayHandler.context
+
+            // Draw a yellow line between Berlin and Kraków.
+            context.setStrokeColor(UIColor.yellow.cgColor)
+            context.setLineWidth(6.0)
+            context.setLineCap(.round)
+            context.move(to: CGPoint(x: 20, y: 20))
+            context.addLine(to: CGPoint(x: 280, y: 280))
+            context.strokePath()
+
             expectation.fulfill()
         } completion: { (result) in
-            if case let .success(image) = result {
-                let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Snapshot Asset.png")
-                do {
-                    try image.pngData()?.write(to: url)
-                } catch {
-                    print(error)
-                }
-            }
-            expectation.fulfill()
-        }
-        wait(for: [expectation], timeout: 10)
-    }
-
-    func testSnapshotSizeAndScaleAccuracy() {
-        let imageRect = CGRect(x: 0, y: 0, width: 300, height: 300)
-        let options = try! snapshotterOptions()
-        let snapshotter = Snapshotter(options: options) //should have protocol for GLnative (may have been ticketed)
-        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
-        snapshotter.setCamera(to: cameraOptions)
-        snapshotter.style.uri = .light
-        let expectation = self.expectation(description: "snapshot accuracy")
-        expectation.expectedFulfillmentCount = 2
-        snapshotter.start { (_) in
-            expectation.fulfill()
-        } completion: { (result) in
-            // size comparison for snapshotter
-            XCTAssertEqual(snapshotter.snapshotSize, imageRect.size)
-
-            //scale and size comparison for image
             switch result {
             case let .success(image) :
+                let imageEqual = self.compare(observedImage: image,
+                                              expectedImageNamed: "testSnapshotOverlay",
+                                              expectedImageScale: MapboxMapsSnapshotTests.snapshotScale,
+                                              attachmentName: "testSnapshotOverlay")
+                XCTAssert(imageEqual, "Snapshot does not match expected image")
+
+                XCTAssertEqual(image.size, options.size)
                 XCTAssertEqual(image.scale, CGFloat(options.pixelRatio))
-                XCTAssertEqual(image.size, imageRect.size)
+
             case.failure :
-                XCTFail("image scale and/or size does not match snapshotter")
+                XCTFail("Failed to render snapshot")
             }
             expectation.fulfill()
         }
@@ -142,7 +148,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
         let snapshotterNew = Snapshotter(options: options)
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
         snapshotterNew.setCamera(to: cameraOptions)
-        snapshotterNew.style.uri = .light
+        snapshotterNew.style.JSON = emptyBlueStyle
         let expectation2 = self.expectation(description: "snapshot logo")
         snapshotterNew.start(overlayHandler: nil) { [self] (result) in
             switch result {
@@ -166,7 +172,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
         let snapshotter = Snapshotter(options: options)
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
         snapshotter.setCamera(to: cameraOptions)
-        snapshotter.style.uri = .light
+        snapshotter.style.JSON = emptyBlueStyle
 
         let snapshotExpectation = self.expectation(description: "snapshot")
 
@@ -194,7 +200,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
             let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 38.9180379, longitude: -77.0600235), zoom: 5)
 
             snapshotter.setCamera(to: cameraOptions)
-            snapshotter.style.uri = .streets
+            snapshotter.style.uri = .light
             let expectation = self.expectation(description: "snapshot")
 
             snapshotter.start(overlayHandler: nil) { result in
@@ -247,26 +253,7 @@ class MapboxMapsSnapshotTests: XCTestCase {
         let snapshotter = Snapshotter(options: options)
 
         // Adding a simple custom style
-        snapshotter.style.JSON =
-            #"""
-            {
-                "version": 8,
-                "sources": {
-                    "dummy" : {
-                        "type": "vector",
-                        "tiles": [],
-                        "attribution" : "<a href=\"https://www.mapbox.com/about/maps/\" target=\"_blank\">&copy; Mapbox</a> <a href=\"http://www.openstreetmap.org/about/\" target=\"_blank\">&copy; OpenStreetMap</a> <a class=\"mapbox-improve-map\" href=\"https://apps.mapbox.com/feedback/\" target=\"_blank\">Improve this map</a>"
-                    }
-                },
-                "layers": [{
-                    "id": "background",
-                    "type": "background",
-                    "paint": {
-                        "background-color": "blue"
-                    }
-                }]
-            }
-            """#
+        snapshotter.style.JSON = emptyBlueStyle
 
         let expectation = self.expectation(description: "snapshot")
         snapshotter.start(overlayHandler: nil, completion: { [weak self] result in

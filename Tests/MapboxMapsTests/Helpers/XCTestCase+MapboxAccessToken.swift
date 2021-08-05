@@ -41,11 +41,25 @@ extension XCTestCase {
     }
 
     func compare(observedImage: UIImage, expectedImageNamed expectedImageName: String, expectedImageScale: CGFloat, attachmentName: String? = nil) -> Bool {
+
+        var equal = false
+
+        defer {
+            if !equal {
+                let attachment = XCTAttachment(image: observedImage, quality: .original)
+                attachment.name = attachmentName ?? "observedImage"
+                attachment.lifetime = .keepAlways
+                add(attachment)
+             }
+        }
+
         guard
             let bundleImage = UIImage(named: expectedImageName, in: .mapboxMapsTests, compatibleWith: nil),
             let bundleCGImage = bundleImage.cgImage else {
-            fatalError("Missing expected image from bundle")
+            print("warning: Missing expected image from bundle")
+            return false
         }
+
         let expectedImage = UIImage(cgImage: bundleCGImage,
                                     scale: expectedImageScale,
                                     orientation: bundleImage.imageOrientation)
@@ -59,14 +73,7 @@ extension XCTestCase {
         // This comparison will NOT work for images embedded in an xcassets
         // package. Images appear to be "optimized" modifying the RGB colors.
         // In future, this should be replaced by a `pixelmatch` comparison.
-        let equal = (expectedImage.pngData() == observedImage.pngData())
-
-        if !equal {
-            let attachment = XCTAttachment(image: observedImage)
-            attachment.name = attachmentName ?? "observedImage"
-            attachment.lifetime = .keepAlways
-            add(attachment)
-        }
+        equal = (expectedImage.pngData() == observedImage.pngData())
 
         return equal
     }

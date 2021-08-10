@@ -76,10 +76,8 @@ extension CGImage {
         let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
         let uint32Pointer = UnsafeRawPointer(data).bindMemory(to: UInt32.self, capacity: size)
 
-        for x in 0..<size {
-            if uint32Pointer[x] != 0 {
-                return false
-            }
+        for x in 0..<size where uint32Pointer[x] != 0 {
+            return false
         }
 
         return true

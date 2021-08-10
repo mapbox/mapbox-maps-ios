@@ -52,8 +52,7 @@ extension MapView {
                 return
             }
 
-            // This results in an image where the colors appear slightly washed
-            // out.
+            // This results in an image where the colors appear slightly washed out
             guard let ciImage = CIImage(mtlTexture: texture, options: nil),
                   let cgImage = CIContext().createCGImage(ciImage, from: ciImage.extent) else {
                 return

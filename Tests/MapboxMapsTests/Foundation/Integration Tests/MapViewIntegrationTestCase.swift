@@ -85,36 +85,3 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
         try super.tearDownWithError()
     }
 }
-
-// TODO: Cleanup & move the follow somewhere more appropriate
-extension MapView {
-    func snapshot() -> UIImage? {
-        // Calling mapView.layer.render(in:) isn't sufficient for
-        // capturing the Metal rendering. This is modified from
-        // https://stackoverflow.com/a/47632198 and might not be
-        // sufficient.
-
-        guard let metalView = subviews.first as? MTKView,
-              let texture = metalView.currentDrawable?.texture else {
-            return nil
-        }
-
-        guard let ciImage = CIImage(mtlTexture: texture, options: nil),
-              let cgImage = CIContext().createCGImage(ciImage, from: ciImage.extent) else {
-            return nil
-        }
-
-        // Need to check what the metal view is setting for scale.
-        let mapViewSnapshot = UIImage(cgImage: cgImage, scale: 2.0, orientation: .downMirrored)
-
-        // For other subviews, we *can* use render(in:). Again, check scale factor.
-        UIGraphicsBeginImageContextWithOptions(bounds.size, false, 1.0)
-        let context = UIGraphicsGetCurrentContext()
-        mapViewSnapshot.draw(at: .zero)
-        layer.render(in: context!)
-        let snapshot = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-
-        return snapshot
-    }
-}

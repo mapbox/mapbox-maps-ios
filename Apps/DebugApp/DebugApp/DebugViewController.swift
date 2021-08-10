@@ -113,9 +113,9 @@ public class DebugViewController: UIViewController {
                 return
             }
 
-            mapView.snapshot() { snapshot in
-                if snapshot != nil {
-                    imageView.image = snapshot
+            mapView.snapshot { image in
+                if image != nil {
+                    imageView.image = image
                 }
             }
         }

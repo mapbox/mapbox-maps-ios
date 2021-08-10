@@ -41,6 +41,10 @@ extension XCTestCase {
         return try validated(token: token()).trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
+    private var imageComparisonHashDistanceMax: OSHashDistanceType {
+        return 2
+    }
+
     func compare(observedImage: UIImage, expectedImageNamed expectedImageName: String, expectedImageScale: CGFloat, attachmentName: String? = nil) -> Bool {
 
         var equal = false
@@ -73,16 +77,14 @@ extension XCTestCase {
 
         // See https://github.com/ameingast/cocoaimagehashing, http://phash.org
         // and https://github.com/aetilius/pHash
-        let start = CACurrentMediaTime()
         let imageHashing = OSImageHashing.sharedInstance()
         let observedHash = imageHashing.hashImage(observedImage, with: .pHash)
         let expectedHash = imageHashing.hashImage(expectedImage, with: .pHash)
         let imageDistance = imageHashing.hashDistance(observedHash, to: expectedHash, with: .pHash)
-        let end = CACurrentMediaTime()
 
-        equal = (imageDistance <= 2)
+        equal = (imageDistance <= imageComparisonHashDistanceMax)
 
-        print("Image comparison took \(end-start) seconds, distance = \(imageDistance)")
+        print("Image comparison distance = \(imageDistance)")
 
         return equal
     }

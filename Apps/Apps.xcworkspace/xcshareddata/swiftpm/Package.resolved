@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "CocoaImageHashing",
+        "repositoryURL": "https://github.com/ameingast/cocoaimagehashing",
+        "state": {
+          "branch": null,
+          "revision": "ad01eee3c3f91bd181f7f4eba7f48f7cb211b51c",
+          "version": "1.9.0"
+        }
+      },
+      {
         "package": "MapboxCommon",
         "repositoryURL": "https://github.com/mapbox/mapbox-common-ios.git",
         "state": {

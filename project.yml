@@ -100,3 +100,6 @@ targets:
       - path: MapboxTestHost
     dependencies:
       - package: MapboxMaps
+        product: MapboxMaps
+      - package: MapboxMaps
+        product: CocoaImageHashing

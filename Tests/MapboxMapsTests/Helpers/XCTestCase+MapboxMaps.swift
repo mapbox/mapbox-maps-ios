@@ -1,5 +1,6 @@
 import XCTest
 import MapboxMaps
+import CocoaImageHashing
 
 extension XCTestCase {
     func guardForMetalDevice() throws {
@@ -40,6 +41,10 @@ extension XCTestCase {
         return try validated(token: token()).trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
+    private var imageComparisonHashDistanceMax: OSHashDistanceType {
+        return 2
+    }
+
     func compare(observedImage: UIImage, expectedImageNamed expectedImageName: String, expectedImageScale: CGFloat, attachmentName: String? = nil) -> Bool {
 
         var equal = false
@@ -70,10 +75,16 @@ extension XCTestCase {
             return false
         }
 
-        // This comparison will NOT work for images embedded in an xcassets
-        // package. Images appear to be "optimized" modifying the RGB colors.
-        // In future, this should be replaced by a `pixelmatch` comparison.
-        equal = (expectedImage.pngData() == observedImage.pngData())
+        // See https://github.com/ameingast/cocoaimagehashing, http://phash.org
+        // and https://github.com/aetilius/pHash
+        let imageHashing = OSImageHashing.sharedInstance()
+        let observedHash = imageHashing.hashImage(observedImage, with: .pHash)
+        let expectedHash = imageHashing.hashImage(expectedImage, with: .pHash)
+        let imageDistance = imageHashing.hashDistance(observedHash, to: expectedHash, with: .pHash)
+
+        equal = (imageDistance <= imageComparisonHashDistanceMax)
+
+        print("Image comparison distance = \(imageDistance)")
 
         return equal
     }

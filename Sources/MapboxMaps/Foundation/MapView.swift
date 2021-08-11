@@ -4,8 +4,130 @@
 @_implementationOnly import MapboxCommon_Private
 import UIKit
 import Turf
+import GameController
 
 open class MapView: UIView {
+
+    /////////////////
+    // GAME CONTROLLER
+    var gameController: GameController?
+
+    public func setupController() {
+        gameController = GameController()
+        gameController?.setupGameController()
+        //        gameController?.leftThumbstickHandler = leftStickHandler(x:y:)
+        //        gameController?.rightThumbstickHandler = rightStickHandler(x:y:)
+        gameController?.buttonAHandler = buttonAHandler
+        gameController?.buttonBHandler = buttonBHandler
+    }
+    /*
+     private func leftStickHandler(x: Float, y: Float) {
+     }
+
+     private func rightStickHandler(x: Float, y: Float) {
+     }
+     */
+    private func updateController() {
+        guard let gamePadLeft = gameController?.gamePadLeft,
+              let gamePadRight = gameController?.gamePadRight else {
+                  return
+              }
+
+
+        let lx = gamePadLeft.xAxis.value
+        let ly = gamePadLeft.yAxis.value
+        let rx = gamePadRight.xAxis.value
+        let ry = gamePadRight.yAxis.value
+
+        let freeCameraOptions = mapboxMap.freeCameraOptions
+
+        guard let posVec = freeCameraOptions.getPosition(),
+              let orientationVec = freeCameraOptions.getOrientation() else {
+                  return
+              }
+
+        // Try moving in the direction of the camera
+        let orientationQuat = simd_quatd(mbmVec4: orientationVec)
+        let pos = simd_double4(mbmVec3: posVec)
+
+        // Convert to matrix
+        let matrix = simd_double4x4(orientationQuat)
+
+        // 1. POSITION
+        var updated = false
+
+        if abs(lx) > 0.2 || abs(ly) > 0.2 {
+
+            let center = mapboxMap.cameraState.center
+            if let elevation = mapboxMap.elevation(at: center) {
+                print("elevation = \(elevation)")
+            }
+
+            //          altitudeMeters * pixelsPerMeter / worldSize`.
+
+            // Use Projection for the above? Some scaling based on altitude/zoom required here.
+            let zoom = mapboxMap.cameraState.zoom
+            let zoomScale = 100 / (zoom*zoom)
+
+            // First update FORWARD position
+            var updatedPosition = pos
+
+            var forwardDelta = matrix[2] * Double(ly) * -0.00001 * zoomScale //-.00001 /// 0 is to the right, 1 is down, 2 is backwards (LH???). Scale factor?
+
+            let newPos = updatedPosition + forwardDelta
+
+            // Clamp so we don't crash through the floor
+            if (newPos.z < 2e-05) {
+                forwardDelta.z = 0
+            }
+
+            updatedPosition += forwardDelta
+
+            // Update SIDEWAYS position
+            let rightDelta = matrix[0] * Double(lx) * 0.00001  * zoomScale/// 0 is to the right, 1 is down, 2 is backwards (LH???). Scale factor?
+            updatedPosition += rightDelta
+
+            if updatedPosition.z >= 2e-05 {
+                let updatedPos = Vec3(simdPos: updatedPosition)
+                freeCameraOptions.setPositionForPosition(updatedPos)
+            }
+            updated = true
+        }
+
+
+        // 2. ORIENTATION
+        if abs(rx) > 0.2 || abs(ry) > 0.2 {
+            // Rotate around the x-axis (pitch)
+            let angle: Double = Double(ry) * .pi * 0.01
+            let rotation = simd_quatd(angle: angle, axis: simd_double3(1, 0, 0))
+
+            let angle2: Double = Double(rx) * .pi * -0.01
+            let rotation2 = simd_quatd(angle: angle2, axis: simd_double3(0, 1, 0))
+
+            // Apply rotation
+            let newRotation = orientationQuat * rotation2 * rotation
+
+            let updatedRotation = Vec4(simdVec: newRotation.vector)
+
+            freeCameraOptions.setOrientationForOrientation(updatedRotation)
+
+            updated = true
+        }
+
+        if updated {
+            mapboxMap.freeCameraOptions = freeCameraOptions
+        }
+    }
+
+
+    private func buttonAHandler() {
+    }
+
+    private func buttonBHandler() {
+    }
+
+    //
+    /////////////////
 
     // mapbox map depends on MapInitOptions, which is not available until
     // awakeFromNib() when instantiating MapView from a xib or storyboard.
@@ -288,6 +410,7 @@ open class MapView: UIView {
             return
         }
 
+        updateController()
         camera.update()
 
         if needsDisplayRefresh {
@@ -314,6 +437,7 @@ open class MapView: UIView {
 
         if window != nil {
             validateDisplayLink()
+            setupController()
         } else {
             // TODO: Fix this up correctly.
             displayLink?.invalidate()
@@ -383,3 +507,4 @@ extension MapView: DelegatingMapClientDelegate {
         return metalView
     }
 }
+

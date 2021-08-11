@@ -59,6 +59,8 @@ public struct CompassViewOptions: OrnamentOptionsProtocol, Equatable {
     public var margins: CGPoint = defaultOrnamentsMargin
     /// The default value for this property is `.adaptive`.
     public var visibility: OrnamentVisibility = .adaptive
+    /// The default value for this property is `.default`.
+    public var image: CompassImage = .default
 }
 
 /// Used to configure position, margin, and visibility for the map's attribution button.

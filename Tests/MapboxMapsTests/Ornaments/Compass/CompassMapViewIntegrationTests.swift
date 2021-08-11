@@ -11,7 +11,7 @@ class CompassMapViewIntegrationTests: MapViewIntegrationTestCase {
         let compass = try XCTUnwrap(initialSubviews.first as? MapboxCompassOrnamentView, "The MapView should include a compass view as a subview")
 
         XCTAssertEqual(mapView.mapboxMap.cameraState.bearing, 0, "The map's initial bearing should be equal to 0")
-        XCTAssertTrue(compass.containerView.isHidden, "The compass should be hidden initially")
+        XCTAssertTrue(compass.isHidden, "The compass should be hidden initially")
         XCTAssertEqual(mapView.mapboxMap.cameraState.bearing, compass.currentBearing, "The map's initial bearing should be equal to the compass' bearing")
 
         mapView.mapboxMap.setCamera(to: CameraOptions(bearing: 30))
@@ -20,7 +20,7 @@ class CompassMapViewIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(mapView.mapboxMap.cameraState.bearing, 30, accuracy: 0.2, "The map's bearing should be equal to 30 with an accuracy of 0.2.")
 
         mapView.mapboxMap.setCamera(to: CameraOptions(bearing: 0))
-        XCTAssertTrue(compass.containerView.isHidden)
+        XCTAssertTrue(compass.isHidden)
         XCTAssertEqual(mapView.mapboxMap.cameraState.bearing, 0)
     }
 

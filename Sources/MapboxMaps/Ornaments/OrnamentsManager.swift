@@ -13,6 +13,10 @@ public enum OrnamentVisibility: String, Equatable {
     case hidden
     case visible
 }
+public enum CompassImage: Equatable {
+    case `default`
+    case custom(UIImage)
+}
 
 public class OrnamentsManager: NSObject {
 
@@ -47,7 +51,7 @@ public class OrnamentsManager: NSObject {
         view.addSubview(scalebarView)
 
         // Compass View
-        compassView = MapboxCompassOrnamentView(visibility: options.compass.visibility)
+        compassView = MapboxCompassOrnamentView(visibility: options.compass.visibility, image: options.compass.image)
         compassView.translatesAutoresizingMaskIntoConstraints = false
         compassView.tapAction = { [weak view] in
             view?.compassTapped()
@@ -110,11 +114,11 @@ public class OrnamentsManager: NSObject {
 
         logoView.isHidden = options.logo._visibility == .hidden
         scalebarView.isHidden = options.scaleBar.visibility == .hidden
-        compassView.isHidden = options.compass.visibility == .hidden
         attributionButton.isHidden = options.attributionButton._visibility == .hidden
 
-        // Update compass visibility
+        // Update compass
         compassView.visibility = options.compass.visibility
+        compassView.image = options.compass.image
     }
 
     private func constraints(with view: UIView, position: OrnamentPosition, margins: CGPoint) -> [NSLayoutConstraint] {

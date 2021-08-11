@@ -44,7 +44,12 @@ public struct Examples {
         [
             "title": "User Interaction",
             "examples": userInteractionExamples
+        ],
+        [
+            "title": "Ornaments",
+            "examples": ornamentsExamples
         ]
+
     ]
 
     // Examples that show how to get started with Mapbox, such as creating a basic map view or setting a style once.
@@ -235,6 +240,15 @@ public struct Examples {
         Example(title: "Add an interactive clustered layer",
                 description: "Display an alert controller after selecting a feature.",
                 type: SymbolClusteringExample.self),
+    ]
+
+    // Examples that show map ornaments
+    public static let ornamentsExamples = [
+        Example(title: "Display a map view with compass",
+                description: """
+                Create and display a map that shows a compass. This example also shows how to style the compass.
+                """,
+                type: OrnamentsCompassExample.self),
     ]
 }
 

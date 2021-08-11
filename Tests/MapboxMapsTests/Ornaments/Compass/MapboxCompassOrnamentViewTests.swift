@@ -22,7 +22,7 @@ class MapboxCompassOrnamentViewTests: XCTestCase {
             //When bearing is not zero
             compass.currentBearing = Double.random(in: 1...180) * [-1, 1][Int.random(in: 0...1)]
             // Then
-            XCTAssertFalse(compass.containerView.isHidden)
+            XCTAssertFalse(compass.isHidden)
         }
     }
 
@@ -32,13 +32,13 @@ class MapboxCompassOrnamentViewTests: XCTestCase {
         // When
         compass.currentBearing = 0
         // Then
-        XCTAssertTrue(compass.containerView.isHidden)
+        XCTAssertTrue(compass.isHidden)
 
         for _ in 0...100 {
             //When bearing is not zero
             compass.currentBearing = Double.random(in: 1...180) * [-1, 1][Int.random(in: 0...1)]
             // Then
-            XCTAssertTrue(compass.containerView.isHidden)
+            XCTAssertTrue(compass.isHidden)
         }
     }
 
@@ -48,13 +48,13 @@ class MapboxCompassOrnamentViewTests: XCTestCase {
         // When
         compass.currentBearing = 0
         // Then
-        XCTAssertTrue(compass.containerView.isHidden)
+        XCTAssertTrue(compass.isHidden)
 
         for _ in 0...100 {
             //When bearing is not zero
             compass.currentBearing = Double.random(in: 1...180) * [-1, 1][Int.random(in: 0...1)]
             // Then
-            XCTAssertFalse(compass.containerView.isHidden)
+            XCTAssertFalse(compass.isHidden)
         }
     }
 
@@ -65,17 +65,17 @@ class MapboxCompassOrnamentViewTests: XCTestCase {
         // When
         compass.visibility = .visible
         // Then
-        XCTAssertFalse(compass.containerView.isHidden)
+        XCTAssertFalse(compass.isHidden)
 
         // When
         compass.visibility = .hidden
         // Then
-        XCTAssertTrue(compass.containerView.isHidden)
+        XCTAssertTrue(compass.isHidden)
 
         // When
         compass.visibility = .adaptive
         // Then
-        XCTAssertTrue(compass.containerView.isHidden)
+        XCTAssertTrue(compass.isHidden)
     }
 
     func testCompassVisibilityStyleChangingWithBearing() {
@@ -85,16 +85,16 @@ class MapboxCompassOrnamentViewTests: XCTestCase {
         // When
         compass.visibility = .visible
         // Then
-        XCTAssertFalse(compass.containerView.isHidden)
+        XCTAssertFalse(compass.isHidden)
 
         // When
         compass.visibility = .hidden
         // Then
-        XCTAssertTrue(compass.containerView.isHidden)
+        XCTAssertTrue(compass.isHidden)
 
         // When
         compass.visibility = .adaptive
         // Then
-        XCTAssertFalse(compass.containerView.isHidden)
+        XCTAssertFalse(compass.isHidden)
     }
 }

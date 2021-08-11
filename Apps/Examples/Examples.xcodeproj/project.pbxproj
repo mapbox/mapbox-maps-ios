@@ -34,6 +34,7 @@
 		17B4806526851C6E00CF0D5E /* radar0.gif in Resources */ = {isa = PBXBuildFile; fileRef = 17B4806026851C6E00CF0D5E /* radar0.gif */; };
 		17B4806B268BD91000CF0D5E /* RasterTileSourceExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B4806A268BD91000CF0D5E /* RasterTileSourceExample.swift */; };
 		17E28C5C2672A1160033DF0F /* SymbolClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E28C5B2672A1160033DF0F /* SymbolClusteringExample.swift */; };
+		1B2F7B7E26C42C08005E10BC /* OrnamentsCompassExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2F7B7D26C42C08005E10BC /* OrnamentsCompassExample.swift */; };
 		58248C2F2695FF24009AC598 /* StoryboardMapViewExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58248C2E2695FF24009AC598 /* StoryboardMapViewExample.swift */; };
 		58882E5D26962A7200E5C1C6 /* StoryboardMapViewExample.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 58882E5C26962A7200E5C1C6 /* StoryboardMapViewExample.storyboard */; };
 		58A3C0C925C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */; };
@@ -162,6 +163,7 @@
 		17B4806026851C6E00CF0D5E /* radar0.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = radar0.gif; sourceTree = "<group>"; };
 		17B4806A268BD91000CF0D5E /* RasterTileSourceExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RasterTileSourceExample.swift; sourceTree = "<group>"; };
 		17E28C5B2672A1160033DF0F /* SymbolClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolClusteringExample.swift; sourceTree = "<group>"; };
+		1B2F7B7D26C42C08005E10BC /* OrnamentsCompassExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrnamentsCompassExample.swift; sourceTree = "<group>"; };
 		58248C2E2695FF24009AC598 /* StoryboardMapViewExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardMapViewExample.swift; sourceTree = "<group>"; };
 		58882E5C26962A7200E5C1C6 /* StoryboardMapViewExample.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = StoryboardMapViewExample.storyboard; sourceTree = "<group>"; };
 		58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateGeoJSONLineExample.swift; sourceTree = "<group>"; };
@@ -273,6 +275,7 @@
 				CA03F10E26268DF700673961 /* OfflineManagerExample.swift */,
 				CA628413262DFD5C00651488 /* OfflineManagerExample.storyboard */,
 				A41E590C265C263700D8B946 /* OfflineRegionManagerExample.swift */,
+				1B2F7B7D26C42C08005E10BC /* OrnamentsCompassExample.swift */,
 				C64ED3882540BA0700ADADFB /* PointAnnotationExample.swift */,
 				A41E584B26555A3400D8B946 /* PointClusteringExample.swift */,
 				07A8D86825422C190068D50D /* PolygonAnnotationExample.swift */,
@@ -584,6 +587,7 @@
 				CADCF72C2584990E0065C51B /* PointAnnotationExample.swift in Sources */,
 				17B40D2426A85500000887EF /* LiveDataExample.swift in Sources */,
 				CADCF7242584990E0065C51B /* AnimateLayerExample.swift in Sources */,
+				1B2F7B7E26C42C08005E10BC /* OrnamentsCompassExample.swift in Sources */,
 				073475D725AFAE520049B0B8 /* CustomLayerExample.swift in Sources */,
 				0CC4ECEA25B8AD3000F998B8 /* Custom2DPuckExample.swift in Sources */,
 				CADCF71F2584990E0065C51B /* DataDrivenSymbolsExample.swift in Sources */,

@@ -2,12 +2,21 @@
   "object": {
     "pins": [
       {
+        "package": "CocoaImageHashing",
+        "repositoryURL": "https://github.com/ameingast/cocoaimagehashing",
+        "state": {
+          "branch": null,
+          "revision": "ad01eee3c3f91bd181f7f4eba7f48f7cb211b51c",
+          "version": "1.9.0"
+        }
+      },
+      {
         "package": "MapboxCommon",
         "repositoryURL": "https://github.com/mapbox/mapbox-common-ios.git",
         "state": {
           "branch": null,
-          "revision": "d2f66c3a218b0a360f02eb32b1bdb8c7f66327ce",
-          "version": "16.2.0"
+          "revision": "44340bb1b59731f8f6e30d4bfcce0ed84acc7e8f",
+          "version": "17.0.0"
         }
       },
       {
@@ -15,8 +24,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-core-maps-ios.git",
         "state": {
           "branch": null,
-          "revision": "877ba379f773b364385bc519f89764f6939c35bf",
-          "version": "10.0.0-rc.6"
+          "revision": "e71d8d6648f52f064082c5fcb74535bb6c2402a5",
+          "version": "10.0.0-rc.7"
         }
       },
       {

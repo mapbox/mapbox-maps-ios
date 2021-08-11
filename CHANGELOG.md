@@ -4,6 +4,9 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Features ✨ and improvements 🏁
+* Added the new `moveStyleLayer(layedId: String, layerPosition: LayerPosition?)` API. ([#588](https://github.com/mapbox/mapbox-maps-ios/pull/588))
+
 ## 10.0.0-rc.6 - August 11, 2021
 
 ### Features ✨ and improvements 🏁

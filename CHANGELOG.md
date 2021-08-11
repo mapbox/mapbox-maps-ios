@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 10.0.0-rc.6 - August 11, 2021
+
 ### Features ✨ and improvements 🏁
 
 * Added support for building with Xcode 13b3. ([#564](https://github.com/mapbox/mapbox-maps-ios/pull/564))

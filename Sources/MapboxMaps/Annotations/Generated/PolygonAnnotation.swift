@@ -38,7 +38,7 @@ public struct PolygonAnnotation: Annotation {
             return feature.properties?["fill-sort-key"] as? Double 
         }
         set {
-            feature.properties?["fill-sort-key"] = newValue
+            feature.properties?["fill-sort-key"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("fill-sort-key")
             } else {
@@ -53,7 +53,7 @@ public struct PolygonAnnotation: Annotation {
             return feature.properties?["fill-color"] as? ColorRepresentable 
         }
         set {
-            feature.properties?["fill-color"] = newValue
+            feature.properties?["fill-color"] = newValue?.rgbaDescription 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("fill-color")
             } else {
@@ -68,7 +68,7 @@ public struct PolygonAnnotation: Annotation {
             return feature.properties?["fill-opacity"] as? Double 
         }
         set {
-            feature.properties?["fill-opacity"] = newValue
+            feature.properties?["fill-opacity"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("fill-opacity")
             } else {
@@ -83,7 +83,7 @@ public struct PolygonAnnotation: Annotation {
             return feature.properties?["fill-outline-color"] as? ColorRepresentable 
         }
         set {
-            feature.properties?["fill-outline-color"] = newValue
+            feature.properties?["fill-outline-color"] = newValue?.rgbaDescription 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("fill-outline-color")
             } else {
@@ -98,7 +98,7 @@ public struct PolygonAnnotation: Annotation {
             return feature.properties?["fill-pattern"] as? String 
         }
         set {
-            feature.properties?["fill-pattern"] = newValue
+            feature.properties?["fill-pattern"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("fill-pattern")
             } else {

@@ -47,7 +47,7 @@ public struct CircleAnnotation: Annotation {
             return feature.properties?["circle-sort-key"] as? Double 
         }
         set {
-            feature.properties?["circle-sort-key"] = newValue
+            feature.properties?["circle-sort-key"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("circle-sort-key")
             } else {
@@ -62,7 +62,7 @@ public struct CircleAnnotation: Annotation {
             return feature.properties?["circle-blur"] as? Double 
         }
         set {
-            feature.properties?["circle-blur"] = newValue
+            feature.properties?["circle-blur"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("circle-blur")
             } else {
@@ -77,7 +77,7 @@ public struct CircleAnnotation: Annotation {
             return feature.properties?["circle-color"] as? ColorRepresentable 
         }
         set {
-            feature.properties?["circle-color"] = newValue
+            feature.properties?["circle-color"] = newValue?.rgbaDescription 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("circle-color")
             } else {
@@ -92,7 +92,7 @@ public struct CircleAnnotation: Annotation {
             return feature.properties?["circle-opacity"] as? Double 
         }
         set {
-            feature.properties?["circle-opacity"] = newValue
+            feature.properties?["circle-opacity"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("circle-opacity")
             } else {
@@ -107,7 +107,7 @@ public struct CircleAnnotation: Annotation {
             return feature.properties?["circle-radius"] as? Double 
         }
         set {
-            feature.properties?["circle-radius"] = newValue
+            feature.properties?["circle-radius"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("circle-radius")
             } else {
@@ -122,7 +122,7 @@ public struct CircleAnnotation: Annotation {
             return feature.properties?["circle-stroke-color"] as? ColorRepresentable 
         }
         set {
-            feature.properties?["circle-stroke-color"] = newValue
+            feature.properties?["circle-stroke-color"] = newValue?.rgbaDescription 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("circle-stroke-color")
             } else {
@@ -137,7 +137,7 @@ public struct CircleAnnotation: Annotation {
             return feature.properties?["circle-stroke-opacity"] as? Double 
         }
         set {
-            feature.properties?["circle-stroke-opacity"] = newValue
+            feature.properties?["circle-stroke-opacity"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("circle-stroke-opacity")
             } else {
@@ -152,7 +152,7 @@ public struct CircleAnnotation: Annotation {
             return feature.properties?["circle-stroke-width"] as? Double 
         }
         set {
-            feature.properties?["circle-stroke-width"] = newValue
+            feature.properties?["circle-stroke-width"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("circle-stroke-width")
             } else {

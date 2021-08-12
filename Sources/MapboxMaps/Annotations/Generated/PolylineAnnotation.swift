@@ -44,7 +44,7 @@ public struct PolylineAnnotation: Annotation {
             return feature.properties?["line-join"] as? LineJoin 
         }
         set {
-            feature.properties?["line-join"] = newValue
+            feature.properties?["line-join"] = newValue?.rawValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("line-join")
             } else {
@@ -59,7 +59,7 @@ public struct PolylineAnnotation: Annotation {
             return feature.properties?["line-sort-key"] as? Double 
         }
         set {
-            feature.properties?["line-sort-key"] = newValue
+            feature.properties?["line-sort-key"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("line-sort-key")
             } else {
@@ -74,7 +74,7 @@ public struct PolylineAnnotation: Annotation {
             return feature.properties?["line-blur"] as? Double 
         }
         set {
-            feature.properties?["line-blur"] = newValue
+            feature.properties?["line-blur"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("line-blur")
             } else {
@@ -89,7 +89,7 @@ public struct PolylineAnnotation: Annotation {
             return feature.properties?["line-color"] as? ColorRepresentable 
         }
         set {
-            feature.properties?["line-color"] = newValue
+            feature.properties?["line-color"] = newValue?.rgbaDescription 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("line-color")
             } else {
@@ -104,7 +104,7 @@ public struct PolylineAnnotation: Annotation {
             return feature.properties?["line-gap-width"] as? Double 
         }
         set {
-            feature.properties?["line-gap-width"] = newValue
+            feature.properties?["line-gap-width"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("line-gap-width")
             } else {
@@ -119,7 +119,7 @@ public struct PolylineAnnotation: Annotation {
             return feature.properties?["line-offset"] as? Double 
         }
         set {
-            feature.properties?["line-offset"] = newValue
+            feature.properties?["line-offset"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("line-offset")
             } else {
@@ -134,7 +134,7 @@ public struct PolylineAnnotation: Annotation {
             return feature.properties?["line-opacity"] as? Double 
         }
         set {
-            feature.properties?["line-opacity"] = newValue
+            feature.properties?["line-opacity"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("line-opacity")
             } else {
@@ -149,7 +149,7 @@ public struct PolylineAnnotation: Annotation {
             return feature.properties?["line-pattern"] as? String 
         }
         set {
-            feature.properties?["line-pattern"] = newValue
+            feature.properties?["line-pattern"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("line-pattern")
             } else {
@@ -164,7 +164,7 @@ public struct PolylineAnnotation: Annotation {
             return feature.properties?["line-width"] as? Double 
         }
         set {
-            feature.properties?["line-width"] = newValue
+            feature.properties?["line-width"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("line-width")
             } else {

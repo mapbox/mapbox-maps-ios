@@ -47,7 +47,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["icon-anchor"] as? IconAnchor 
         }
         set {
-            feature.properties?["icon-anchor"] = newValue
+            feature.properties?["icon-anchor"] = newValue?.rawValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("icon-anchor")
             } else {
@@ -62,7 +62,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["icon-image"] as? String 
         }
         set {
-            feature.properties?["icon-image"] = newValue
+            feature.properties?["icon-image"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("icon-image")
             } else {
@@ -77,7 +77,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["icon-offset"] as? [Double] 
         }
         set {
-            feature.properties?["icon-offset"] = newValue
+            feature.properties?["icon-offset"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("icon-offset")
             } else {
@@ -92,7 +92,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["icon-rotate"] as? Double 
         }
         set {
-            feature.properties?["icon-rotate"] = newValue
+            feature.properties?["icon-rotate"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("icon-rotate")
             } else {
@@ -107,7 +107,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["icon-size"] as? Double 
         }
         set {
-            feature.properties?["icon-size"] = newValue
+            feature.properties?["icon-size"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("icon-size")
             } else {
@@ -122,7 +122,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["symbol-sort-key"] as? Double 
         }
         set {
-            feature.properties?["symbol-sort-key"] = newValue
+            feature.properties?["symbol-sort-key"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("symbol-sort-key")
             } else {
@@ -137,7 +137,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["text-anchor"] as? TextAnchor 
         }
         set {
-            feature.properties?["text-anchor"] = newValue
+            feature.properties?["text-anchor"] = newValue?.rawValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-anchor")
             } else {
@@ -152,7 +152,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["text-field"] as? String 
         }
         set {
-            feature.properties?["text-field"] = newValue
+            feature.properties?["text-field"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-field")
             } else {
@@ -167,7 +167,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["text-justify"] as? TextJustify 
         }
         set {
-            feature.properties?["text-justify"] = newValue
+            feature.properties?["text-justify"] = newValue?.rawValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-justify")
             } else {
@@ -182,7 +182,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["text-letter-spacing"] as? Double 
         }
         set {
-            feature.properties?["text-letter-spacing"] = newValue
+            feature.properties?["text-letter-spacing"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-letter-spacing")
             } else {
@@ -197,7 +197,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["text-max-width"] as? Double 
         }
         set {
-            feature.properties?["text-max-width"] = newValue
+            feature.properties?["text-max-width"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-max-width")
             } else {
@@ -212,7 +212,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["text-offset"] as? [Double] 
         }
         set {
-            feature.properties?["text-offset"] = newValue
+            feature.properties?["text-offset"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-offset")
             } else {
@@ -227,7 +227,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["text-radial-offset"] as? Double 
         }
         set {
-            feature.properties?["text-radial-offset"] = newValue
+            feature.properties?["text-radial-offset"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-radial-offset")
             } else {
@@ -242,7 +242,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["text-rotate"] as? Double 
         }
         set {
-            feature.properties?["text-rotate"] = newValue
+            feature.properties?["text-rotate"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-rotate")
             } else {
@@ -257,7 +257,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["text-size"] as? Double 
         }
         set {
-            feature.properties?["text-size"] = newValue
+            feature.properties?["text-size"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-size")
             } else {
@@ -272,7 +272,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["text-transform"] as? TextTransform 
         }
         set {
-            feature.properties?["text-transform"] = newValue
+            feature.properties?["text-transform"] = newValue?.rawValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-transform")
             } else {
@@ -287,7 +287,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["icon-color"] as? ColorRepresentable 
         }
         set {
-            feature.properties?["icon-color"] = newValue
+            feature.properties?["icon-color"] = newValue?.rgbaDescription 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("icon-color")
             } else {
@@ -302,7 +302,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["icon-halo-blur"] as? Double 
         }
         set {
-            feature.properties?["icon-halo-blur"] = newValue
+            feature.properties?["icon-halo-blur"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("icon-halo-blur")
             } else {
@@ -317,7 +317,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["icon-halo-color"] as? ColorRepresentable 
         }
         set {
-            feature.properties?["icon-halo-color"] = newValue
+            feature.properties?["icon-halo-color"] = newValue?.rgbaDescription 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("icon-halo-color")
             } else {
@@ -332,7 +332,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["icon-halo-width"] as? Double 
         }
         set {
-            feature.properties?["icon-halo-width"] = newValue
+            feature.properties?["icon-halo-width"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("icon-halo-width")
             } else {
@@ -347,7 +347,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["icon-opacity"] as? Double 
         }
         set {
-            feature.properties?["icon-opacity"] = newValue
+            feature.properties?["icon-opacity"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("icon-opacity")
             } else {
@@ -362,7 +362,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["text-color"] as? ColorRepresentable 
         }
         set {
-            feature.properties?["text-color"] = newValue
+            feature.properties?["text-color"] = newValue?.rgbaDescription 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-color")
             } else {
@@ -377,7 +377,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["text-halo-blur"] as? Double 
         }
         set {
-            feature.properties?["text-halo-blur"] = newValue
+            feature.properties?["text-halo-blur"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-halo-blur")
             } else {
@@ -392,7 +392,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["text-halo-color"] as? ColorRepresentable 
         }
         set {
-            feature.properties?["text-halo-color"] = newValue
+            feature.properties?["text-halo-color"] = newValue?.rgbaDescription 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-halo-color")
             } else {
@@ -407,7 +407,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["text-halo-width"] as? Double 
         }
         set {
-            feature.properties?["text-halo-width"] = newValue
+            feature.properties?["text-halo-width"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-halo-width")
             } else {
@@ -422,7 +422,7 @@ public struct PointAnnotation: Annotation {
             return feature.properties?["text-opacity"] as? Double 
         }
         set {
-            feature.properties?["text-opacity"] = newValue
+            feature.properties?["text-opacity"] = newValue 
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-opacity")
             } else {

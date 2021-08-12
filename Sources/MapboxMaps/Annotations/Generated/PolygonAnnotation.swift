@@ -35,7 +35,7 @@ public struct PolygonAnnotation: Annotation {
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var fillSortKey: Double? {
         get {
-            return feature.properties?[""fill-sort-key""] as? Double 
+            return feature.properties?["fill-sort-key"] as? Double 
         }
         set {
             feature.properties?["fill-sort-key"] = newValue
@@ -50,7 +50,7 @@ public struct PolygonAnnotation: Annotation {
     /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
     public var fillColor: ColorRepresentable? {
         get {
-            return feature.properties?[""fill-color""] as? ColorRepresentable 
+            return feature.properties?["fill-color"] as? ColorRepresentable 
         }
         set {
             feature.properties?["fill-color"] = newValue
@@ -65,7 +65,7 @@ public struct PolygonAnnotation: Annotation {
     /// The opacity of the entire fill layer. In contrast to the `fill-color`, this value will also affect the 1px stroke around the fill, if the stroke is used.
     public var fillOpacity: Double? {
         get {
-            return feature.properties?[""fill-opacity""] as? Double 
+            return feature.properties?["fill-opacity"] as? Double 
         }
         set {
             feature.properties?["fill-opacity"] = newValue
@@ -80,7 +80,7 @@ public struct PolygonAnnotation: Annotation {
     /// The outline color of the fill. Matches the value of `fill-color` if unspecified.
     public var fillOutlineColor: ColorRepresentable? {
         get {
-            return feature.properties?[""fill-outline-color""] as? ColorRepresentable 
+            return feature.properties?["fill-outline-color"] as? ColorRepresentable 
         }
         set {
             feature.properties?["fill-outline-color"] = newValue
@@ -95,7 +95,7 @@ public struct PolygonAnnotation: Annotation {
     /// Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512). Note that zoom-dependent expressions will be evaluated only at integer zoom levels.
     public var fillPattern: String? {
         get {
-            return feature.properties?[""fill-pattern""] as? String 
+            return feature.properties?["fill-pattern"] as? String 
         }
         set {
             feature.properties?["fill-pattern"] = newValue

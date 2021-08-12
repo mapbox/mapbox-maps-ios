@@ -44,7 +44,7 @@ public struct CircleAnnotation: Annotation {
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var circleSortKey: Double? {
         get {
-            return feature.properties?[""circle-sort-key""] as? Double 
+            return feature.properties?["circle-sort-key"] as? Double 
         }
         set {
             feature.properties?["circle-sort-key"] = newValue
@@ -59,7 +59,7 @@ public struct CircleAnnotation: Annotation {
     /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
     public var circleBlur: Double? {
         get {
-            return feature.properties?[""circle-blur""] as? Double 
+            return feature.properties?["circle-blur"] as? Double 
         }
         set {
             feature.properties?["circle-blur"] = newValue
@@ -74,7 +74,7 @@ public struct CircleAnnotation: Annotation {
     /// The fill color of the circle.
     public var circleColor: ColorRepresentable? {
         get {
-            return feature.properties?[""circle-color""] as? ColorRepresentable 
+            return feature.properties?["circle-color"] as? ColorRepresentable 
         }
         set {
             feature.properties?["circle-color"] = newValue
@@ -89,7 +89,7 @@ public struct CircleAnnotation: Annotation {
     /// The opacity at which the circle will be drawn.
     public var circleOpacity: Double? {
         get {
-            return feature.properties?[""circle-opacity""] as? Double 
+            return feature.properties?["circle-opacity"] as? Double 
         }
         set {
             feature.properties?["circle-opacity"] = newValue
@@ -104,7 +104,7 @@ public struct CircleAnnotation: Annotation {
     /// Circle radius.
     public var circleRadius: Double? {
         get {
-            return feature.properties?[""circle-radius""] as? Double 
+            return feature.properties?["circle-radius"] as? Double 
         }
         set {
             feature.properties?["circle-radius"] = newValue
@@ -119,7 +119,7 @@ public struct CircleAnnotation: Annotation {
     /// The stroke color of the circle.
     public var circleStrokeColor: ColorRepresentable? {
         get {
-            return feature.properties?[""circle-stroke-color""] as? ColorRepresentable 
+            return feature.properties?["circle-stroke-color"] as? ColorRepresentable 
         }
         set {
             feature.properties?["circle-stroke-color"] = newValue
@@ -134,7 +134,7 @@ public struct CircleAnnotation: Annotation {
     /// The opacity of the circle's stroke.
     public var circleStrokeOpacity: Double? {
         get {
-            return feature.properties?[""circle-stroke-opacity""] as? Double 
+            return feature.properties?["circle-stroke-opacity"] as? Double 
         }
         set {
             feature.properties?["circle-stroke-opacity"] = newValue
@@ -149,7 +149,7 @@ public struct CircleAnnotation: Annotation {
     /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
     public var circleStrokeWidth: Double? {
         get {
-            return feature.properties?[""circle-stroke-width""] as? Double 
+            return feature.properties?["circle-stroke-width"] as? Double 
         }
         set {
             feature.properties?["circle-stroke-width"] = newValue

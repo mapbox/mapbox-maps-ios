@@ -44,7 +44,7 @@ public struct PointAnnotation: Annotation {
     /// Part of the icon placed closest to the anchor.
     public var iconAnchor: IconAnchor? {
         get {
-            return feature.properties?[""icon-anchor""] as? IconAnchor 
+            return feature.properties?["icon-anchor"] as? IconAnchor 
         }
         set {
             feature.properties?["icon-anchor"] = newValue
@@ -59,7 +59,7 @@ public struct PointAnnotation: Annotation {
     /// Name of image in sprite to use for drawing an image background.
     public var iconImage: String? {
         get {
-            return feature.properties?[""icon-image""] as? String 
+            return feature.properties?["icon-image"] as? String 
         }
         set {
             feature.properties?["icon-image"] = newValue
@@ -74,7 +74,7 @@ public struct PointAnnotation: Annotation {
     /// Offset distance of icon from its anchor. Positive values indicate right and down, while negative values indicate left and up. Each component is multiplied by the value of `icon-size` to obtain the final offset in pixels. When combined with `icon-rotate` the offset will be as if the rotated direction was up.
     public var iconOffset: [Double]? {
         get {
-            return feature.properties?[""icon-offset""] as? [Double] 
+            return feature.properties?["icon-offset"] as? [Double] 
         }
         set {
             feature.properties?["icon-offset"] = newValue
@@ -89,7 +89,7 @@ public struct PointAnnotation: Annotation {
     /// Rotates the icon clockwise.
     public var iconRotate: Double? {
         get {
-            return feature.properties?[""icon-rotate""] as? Double 
+            return feature.properties?["icon-rotate"] as? Double 
         }
         set {
             feature.properties?["icon-rotate"] = newValue
@@ -104,7 +104,7 @@ public struct PointAnnotation: Annotation {
     /// Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by `icon-size`. 1 is the original size; 3 triples the size of the image.
     public var iconSize: Double? {
         get {
-            return feature.properties?[""icon-size""] as? Double 
+            return feature.properties?["icon-size"] as? Double 
         }
         set {
             feature.properties?["icon-size"] = newValue
@@ -119,7 +119,7 @@ public struct PointAnnotation: Annotation {
     /// Sorts features in ascending order based on this value. Features with lower sort keys are drawn and placed first.  When `icon-allow-overlap` or `text-allow-overlap` is `false`, features with a lower sort key will have priority during placement. When `icon-allow-overlap` or `text-allow-overlap` is set to `true`, features with a higher sort key will overlap over features with a lower sort key.
     public var symbolSortKey: Double? {
         get {
-            return feature.properties?[""symbol-sort-key""] as? Double 
+            return feature.properties?["symbol-sort-key"] as? Double 
         }
         set {
             feature.properties?["symbol-sort-key"] = newValue
@@ -134,7 +134,7 @@ public struct PointAnnotation: Annotation {
     /// Part of the text placed closest to the anchor.
     public var textAnchor: TextAnchor? {
         get {
-            return feature.properties?[""text-anchor""] as? TextAnchor 
+            return feature.properties?["text-anchor"] as? TextAnchor 
         }
         set {
             feature.properties?["text-anchor"] = newValue
@@ -149,7 +149,7 @@ public struct PointAnnotation: Annotation {
     /// Value to use for a text label. If a plain `string` is provided, it will be treated as a `formatted` with default/inherited formatting options.
     public var textField: String? {
         get {
-            return feature.properties?[""text-field""] as? String 
+            return feature.properties?["text-field"] as? String 
         }
         set {
             feature.properties?["text-field"] = newValue
@@ -164,7 +164,7 @@ public struct PointAnnotation: Annotation {
     /// Text justification options.
     public var textJustify: TextJustify? {
         get {
-            return feature.properties?[""text-justify""] as? TextJustify 
+            return feature.properties?["text-justify"] as? TextJustify 
         }
         set {
             feature.properties?["text-justify"] = newValue
@@ -179,7 +179,7 @@ public struct PointAnnotation: Annotation {
     /// Text tracking amount.
     public var textLetterSpacing: Double? {
         get {
-            return feature.properties?[""text-letter-spacing""] as? Double 
+            return feature.properties?["text-letter-spacing"] as? Double 
         }
         set {
             feature.properties?["text-letter-spacing"] = newValue
@@ -194,7 +194,7 @@ public struct PointAnnotation: Annotation {
     /// The maximum line width for text wrapping.
     public var textMaxWidth: Double? {
         get {
-            return feature.properties?[""text-max-width""] as? Double 
+            return feature.properties?["text-max-width"] as? Double 
         }
         set {
             feature.properties?["text-max-width"] = newValue
@@ -209,7 +209,7 @@ public struct PointAnnotation: Annotation {
     /// Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up. If used with text-variable-anchor, input values will be taken as absolute values. Offsets along the x- and y-axis will be applied automatically based on the anchor position.
     public var textOffset: [Double]? {
         get {
-            return feature.properties?[""text-offset""] as? [Double] 
+            return feature.properties?["text-offset"] as? [Double] 
         }
         set {
             feature.properties?["text-offset"] = newValue
@@ -224,7 +224,7 @@ public struct PointAnnotation: Annotation {
     /// Radial offset of text, in the direction of the symbol's anchor. Useful in combination with `text-variable-anchor`, which defaults to using the two-dimensional `text-offset` if present.
     public var textRadialOffset: Double? {
         get {
-            return feature.properties?[""text-radial-offset""] as? Double 
+            return feature.properties?["text-radial-offset"] as? Double 
         }
         set {
             feature.properties?["text-radial-offset"] = newValue
@@ -239,7 +239,7 @@ public struct PointAnnotation: Annotation {
     /// Rotates the text clockwise.
     public var textRotate: Double? {
         get {
-            return feature.properties?[""text-rotate""] as? Double 
+            return feature.properties?["text-rotate"] as? Double 
         }
         set {
             feature.properties?["text-rotate"] = newValue
@@ -254,7 +254,7 @@ public struct PointAnnotation: Annotation {
     /// Font size.
     public var textSize: Double? {
         get {
-            return feature.properties?[""text-size""] as? Double 
+            return feature.properties?["text-size"] as? Double 
         }
         set {
             feature.properties?["text-size"] = newValue
@@ -269,7 +269,7 @@ public struct PointAnnotation: Annotation {
     /// Specifies how to capitalize text, similar to the CSS `text-transform` property.
     public var textTransform: TextTransform? {
         get {
-            return feature.properties?[""text-transform""] as? TextTransform 
+            return feature.properties?["text-transform"] as? TextTransform 
         }
         set {
             feature.properties?["text-transform"] = newValue
@@ -284,7 +284,7 @@ public struct PointAnnotation: Annotation {
     /// The color of the icon. This can only be used with sdf icons.
     public var iconColor: ColorRepresentable? {
         get {
-            return feature.properties?[""icon-color""] as? ColorRepresentable 
+            return feature.properties?["icon-color"] as? ColorRepresentable 
         }
         set {
             feature.properties?["icon-color"] = newValue
@@ -299,7 +299,7 @@ public struct PointAnnotation: Annotation {
     /// Fade out the halo towards the outside.
     public var iconHaloBlur: Double? {
         get {
-            return feature.properties?[""icon-halo-blur""] as? Double 
+            return feature.properties?["icon-halo-blur"] as? Double 
         }
         set {
             feature.properties?["icon-halo-blur"] = newValue
@@ -314,7 +314,7 @@ public struct PointAnnotation: Annotation {
     /// The color of the icon's halo. Icon halos can only be used with SDF icons.
     public var iconHaloColor: ColorRepresentable? {
         get {
-            return feature.properties?[""icon-halo-color""] as? ColorRepresentable 
+            return feature.properties?["icon-halo-color"] as? ColorRepresentable 
         }
         set {
             feature.properties?["icon-halo-color"] = newValue
@@ -329,7 +329,7 @@ public struct PointAnnotation: Annotation {
     /// Distance of halo to the icon outline.
     public var iconHaloWidth: Double? {
         get {
-            return feature.properties?[""icon-halo-width""] as? Double 
+            return feature.properties?["icon-halo-width"] as? Double 
         }
         set {
             feature.properties?["icon-halo-width"] = newValue
@@ -344,7 +344,7 @@ public struct PointAnnotation: Annotation {
     /// The opacity at which the icon will be drawn.
     public var iconOpacity: Double? {
         get {
-            return feature.properties?[""icon-opacity""] as? Double 
+            return feature.properties?["icon-opacity"] as? Double 
         }
         set {
             feature.properties?["icon-opacity"] = newValue
@@ -359,7 +359,7 @@ public struct PointAnnotation: Annotation {
     /// The color with which the text will be drawn.
     public var textColor: ColorRepresentable? {
         get {
-            return feature.properties?[""text-color""] as? ColorRepresentable 
+            return feature.properties?["text-color"] as? ColorRepresentable 
         }
         set {
             feature.properties?["text-color"] = newValue
@@ -374,7 +374,7 @@ public struct PointAnnotation: Annotation {
     /// The halo's fadeout distance towards the outside.
     public var textHaloBlur: Double? {
         get {
-            return feature.properties?[""text-halo-blur""] as? Double 
+            return feature.properties?["text-halo-blur"] as? Double 
         }
         set {
             feature.properties?["text-halo-blur"] = newValue
@@ -389,7 +389,7 @@ public struct PointAnnotation: Annotation {
     /// The color of the text's halo, which helps it stand out from backgrounds.
     public var textHaloColor: ColorRepresentable? {
         get {
-            return feature.properties?[""text-halo-color""] as? ColorRepresentable 
+            return feature.properties?["text-halo-color"] as? ColorRepresentable 
         }
         set {
             feature.properties?["text-halo-color"] = newValue
@@ -404,7 +404,7 @@ public struct PointAnnotation: Annotation {
     /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
     public var textHaloWidth: Double? {
         get {
-            return feature.properties?[""text-halo-width""] as? Double 
+            return feature.properties?["text-halo-width"] as? Double 
         }
         set {
             feature.properties?["text-halo-width"] = newValue
@@ -419,7 +419,7 @@ public struct PointAnnotation: Annotation {
     /// The opacity at which the text will be drawn.
     public var textOpacity: Double? {
         get {
-            return feature.properties?[""text-opacity""] as? Double 
+            return feature.properties?["text-opacity"] as? Double 
         }
         set {
             feature.properties?["text-opacity"] = newValue

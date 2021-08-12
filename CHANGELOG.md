@@ -4,6 +4,9 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Bug fixes 🐞
+* Update all Annotation files to use `get/set` instead of `didSet`. This fixes an issue where properties were not being set at `init`. ([#590](https://github.com/mapbox/mapbox-maps-ios/pull/590))
+
 ## 10.0.0-rc.6 - August 11, 2021
 
 ### Features ✨ and improvements 🏁

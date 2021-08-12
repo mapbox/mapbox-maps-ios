@@ -43,80 +43,120 @@ public struct CircleAnnotation: Annotation {
     
     /// Sorts features in ascending order based on this value. Features with a higher sort key will appear above features with a lower sort key.
     public var circleSortKey: Double? {
-        didSet {
-            feature.properties?["circle-sort-key"] = circleSortKey 
-            if circleSortKey != nil {
+        get {
+            return feature.properties?["circle-sort-key"] as? Double 
+        }
+        set {
+            feature.properties?["circle-sort-key"] = newValue 
+            if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("circle-sort-key")
+            } else {
+                dataDrivenPropertiesUsedSet.remove("circle-sort-key")
             }
         }
     }
     
     /// Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.
     public var circleBlur: Double? {
-        didSet {
-            feature.properties?["circle-blur"] = circleBlur 
-            if circleBlur != nil {
+        get {
+            return feature.properties?["circle-blur"] as? Double 
+        }
+        set {
+            feature.properties?["circle-blur"] = newValue 
+            if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("circle-blur")
+            } else {
+                dataDrivenPropertiesUsedSet.remove("circle-blur")
             }
         }
     }
     
     /// The fill color of the circle.
     public var circleColor: ColorRepresentable? {
-        didSet {
-            feature.properties?["circle-color"] = circleColor?.rgbaDescription 
-            if circleColor != nil {
+        get {
+            return feature.properties?["circle-color"] as? ColorRepresentable 
+        }
+        set {
+            feature.properties?["circle-color"] = newValue?.rgbaDescription 
+            if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("circle-color")
+            } else {
+                dataDrivenPropertiesUsedSet.remove("circle-color")
             }
         }
     }
     
     /// The opacity at which the circle will be drawn.
     public var circleOpacity: Double? {
-        didSet {
-            feature.properties?["circle-opacity"] = circleOpacity 
-            if circleOpacity != nil {
+        get {
+            return feature.properties?["circle-opacity"] as? Double 
+        }
+        set {
+            feature.properties?["circle-opacity"] = newValue 
+            if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("circle-opacity")
+            } else {
+                dataDrivenPropertiesUsedSet.remove("circle-opacity")
             }
         }
     }
     
     /// Circle radius.
     public var circleRadius: Double? {
-        didSet {
-            feature.properties?["circle-radius"] = circleRadius 
-            if circleRadius != nil {
+        get {
+            return feature.properties?["circle-radius"] as? Double 
+        }
+        set {
+            feature.properties?["circle-radius"] = newValue 
+            if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("circle-radius")
+            } else {
+                dataDrivenPropertiesUsedSet.remove("circle-radius")
             }
         }
     }
     
     /// The stroke color of the circle.
     public var circleStrokeColor: ColorRepresentable? {
-        didSet {
-            feature.properties?["circle-stroke-color"] = circleStrokeColor?.rgbaDescription 
-            if circleStrokeColor != nil {
+        get {
+            return feature.properties?["circle-stroke-color"] as? ColorRepresentable 
+        }
+        set {
+            feature.properties?["circle-stroke-color"] = newValue?.rgbaDescription 
+            if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("circle-stroke-color")
+            } else {
+                dataDrivenPropertiesUsedSet.remove("circle-stroke-color")
             }
         }
     }
     
     /// The opacity of the circle's stroke.
     public var circleStrokeOpacity: Double? {
-        didSet {
-            feature.properties?["circle-stroke-opacity"] = circleStrokeOpacity 
-            if circleStrokeOpacity != nil {
+        get {
+            return feature.properties?["circle-stroke-opacity"] as? Double 
+        }
+        set {
+            feature.properties?["circle-stroke-opacity"] = newValue 
+            if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("circle-stroke-opacity")
+            } else {
+                dataDrivenPropertiesUsedSet.remove("circle-stroke-opacity")
             }
         }
     }
     
     /// The width of the circle's stroke. Strokes are placed outside of the `circle-radius`.
     public var circleStrokeWidth: Double? {
-        didSet {
-            feature.properties?["circle-stroke-width"] = circleStrokeWidth 
-            if circleStrokeWidth != nil {
+        get {
+            return feature.properties?["circle-stroke-width"] as? Double 
+        }
+        set {
+            feature.properties?["circle-stroke-width"] = newValue 
+            if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("circle-stroke-width")
+            } else {
+                dataDrivenPropertiesUsedSet.remove("circle-stroke-width")
             }
         }
     }

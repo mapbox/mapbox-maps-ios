@@ -76,7 +76,7 @@ targets:
           - "Foundation/Integration Tests/IntegrationTestCase.swift"
           - "Helpers/Bundle+MapboxMapsTests.swift"
           - "Helpers/TestConveniences.swift"
-          - "Helpers/XCTestCase+MapboxAccessToken.swift"
+          - "Helpers/XCTestCase+MapboxMaps.swift"
           - "Offline/TileStore+Tests.swift"
     dependencies:
       - target: MapboxTestHost
@@ -100,3 +100,6 @@ targets:
       - path: MapboxTestHost
     dependencies:
       - package: MapboxMaps
+        product: MapboxMaps
+      - package: MapboxMaps
+        product: CocoaImageHashing

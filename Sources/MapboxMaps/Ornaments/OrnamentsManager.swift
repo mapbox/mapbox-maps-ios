@@ -18,6 +18,13 @@ public enum CompassImage: Equatable {
     case custom(UIImage)
 }
 
+internal struct Ornaments {
+    static let localizableTableName = "OrnamentsLocalizable"
+    static let metricsEnabledKey = "MGLMapboxMetricsEnabled"
+    static let telemetryURL = "https://www.mapbox.com/telemetry/"
+}
+
+@available(iOSApplicationExtension, unavailable)
 public class OrnamentsManager: NSObject {
 
     /// The `OrnamentOptions` object that is used to set up and update the required ornaments on the map.
@@ -34,11 +41,11 @@ public class OrnamentsManager: NSObject {
 
     private var constraints = [NSLayoutConstraint]()
 
-    internal init(view: OrnamentSupportableView, options: OrnamentOptions) {
+    internal init(view: OrnamentSupportableView, options: OrnamentOptions, attributionDataSource: AttributionDataSource) {
         self.options = options
 
         // Logo View
-        logoView = LogoView(logoSize: .regular)
+        logoView = LogoView(logoSize: .regular())
         logoView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(logoView)
 
@@ -60,6 +67,7 @@ public class OrnamentsManager: NSObject {
 
         // Info Button
         attributionButton = MapboxInfoButtonOrnament()
+        attributionButton.attributionDataSource = attributionDataSource
         attributionButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(attributionButton)
 

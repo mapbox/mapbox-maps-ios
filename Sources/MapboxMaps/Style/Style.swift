@@ -563,6 +563,16 @@ extension Style: StyleManagerProtocol {
     }
 }
 
+// MARK: - Attribution -
+
+extension Style {
+    internal func sourceAttributions() -> [String] {
+        return allSourceIdentifiers.compactMap {
+            sourceProperty(for: $0.id, property: "attribution") as? String
+        }
+    }
+}
+
 // MARK: - StyleTransition -
 
 /**

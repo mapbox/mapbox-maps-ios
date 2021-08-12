@@ -9,14 +9,19 @@ import UIKit
 // Mock class that flags true when `GestureSupportableView` protocol methods have been called on it
 class GestureHandlerDelegateMock: GestureHandlerDelegate {
 
+    var coreCameraState = MapboxCoreMaps.CameraState(center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0),
+                                                     padding: EdgeInsets(top: 0, left: 0, bottom: 0, right: 0),
+                                                     zoom: 10,
+                                                     bearing: 0.0,
+                                                     pitch: 0.0)
+
     var tapCalled = false
     var tapCalledWithNumberOfTaps = 0
     var tapCalledWithNumberOfTouches = 0
 
     var pannedCalled = false
 
-    var pinchScaleChangedMethod: (wasCalled: Bool, newScale: CGFloat?, anchor: CGPoint?) = (false, nil, nil)
-    var pinchEndedMethod: (wasCalled: Bool, drift: Bool?, anchor: CGPoint?) = (false, nil, nil)
+    var pinchEndedMethod: (wasCalled: Bool, anchor: CGPoint?) = (false, nil)
 
     var cancelTransitionsCalled = false
     var gestureBeganMethod: (wasCalled: Bool, type: GestureType?) = (false, nil)
@@ -25,10 +30,14 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
     var rotationChangedMethod: (wasCalled: Bool, newAngle: CGFloat?, anchor: CGPoint?) = (false, nil, nil)
     var rotationEndedMethod: (wasCalled: Bool, finalAngle: CGFloat?, anchor: CGPoint?) = (false, nil, nil)
 
-    var initialPitch = 0.0
+    var defaultPitch: CGFloat = 0.0
     var pitchTolerance = 45.0
     var pitchChangedMethod: (wasCalled: Bool, newPitch: CGFloat) = (false, 0.0)
     var pitchEndedMethod = false
+
+    func cameraState() -> CameraState {
+        return CameraState(coreCameraState)
+    }
 
     public func tapped(numberOfTaps: Int, numberOfTouches: Int) {
         tapCalled = true
@@ -54,16 +63,27 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
         scaleForZoomStub.call()
     }
 
-    func pinchScaleChanged(with newScale: CGFloat, andAnchor anchor: CGPoint) {
-        pinchScaleChangedMethod.wasCalled = true
-        pinchScaleChangedMethod.newScale = newScale
-        pinchScaleChangedMethod.anchor = anchor
+    struct PinchChangedParameters {
+        var zoomIncrement: CGFloat
+        var targetAnchor: CGPoint
+        var initialAnchor: CGPoint
+        var initialCameraState: CameraState
     }
 
-    func pinchEnded(with finalScale: CGFloat, andDrift possibleDrift: Bool, andAnchor anchor: CGPoint) {
-        pinchEndedMethod.wasCalled = true
-        pinchEndedMethod.drift = possibleDrift
-        pinchEndedMethod.anchor = anchor
+    let pinchChangedStub = Stub<PinchChangedParameters, Void>()
+    func pinchChanged(withZoomIncrement zoomIncrement: CGFloat,
+                      targetAnchor: CGPoint,
+                      initialAnchor: CGPoint,
+                      initialCameraState: CameraState) {
+        pinchChangedStub.call(with: .init(zoomIncrement: zoomIncrement,
+                                          targetAnchor: targetAnchor,
+                                          initialAnchor: initialAnchor,
+                                          initialCameraState: cameraState()))
+    }
+
+    let pinchEndedStub = Stub<Void, Void>()
+    func pinchEnded() {
+        pinchEndedStub.call()
     }
 
     func rotationStartAngle() -> CGFloat {
@@ -107,4 +127,12 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
     func pitchEnded() {
         pitchEndedMethod = true
     }
+
+    func panBegan(at point: CGPoint) { }
+
+    func panEnded(at endPoint: CGPoint, shouldDriftTo driftEndPoint: CGPoint) { }
+
+    func initialPitch() -> CGFloat { return self.defaultPitch }
+
+    func horizontalPitchTiltTolerance() -> Double { return pitchTolerance }
 }

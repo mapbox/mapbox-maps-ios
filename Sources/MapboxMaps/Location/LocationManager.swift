@@ -103,6 +103,7 @@ public class LocationManager: NSObject {
 }
 
 // MARK: LocationProviderDelegate functions
+@available(iOSApplicationExtension, unavailable)
 extension LocationManager: LocationProviderDelegate {
 
     public func locationProvider(_ provider: LocationProvider, didUpdateLocations locations: [CLLocation]) {

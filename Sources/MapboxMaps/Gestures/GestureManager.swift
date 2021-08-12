@@ -101,6 +101,10 @@ public final class GestureManager: NSObject {
             requireGestureToFail(allowedGesture: pitchHandler, failableGesture: panHandler)
         }
 
+        if let pinchHandler = gestureHandlers[.pinch], let panHandler = gestureHandlers[.pan] {
+            requireGestureToFail(allowedGesture: pinchHandler, failableGesture: panHandler)
+        }
+
         if let doubleTapHandler = gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 1)],
            let quickZoomHandler = gestureHandlers[.quickZoom] {
             requireGestureToFail(allowedGesture: quickZoomHandler, failableGesture: doubleTapHandler)
@@ -152,11 +156,9 @@ extension GestureManager: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
                                   shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
 
-        return (gestureRecognizer is UIPanGestureRecognizer
-            || gestureRecognizer is UIPinchGestureRecognizer
+        return (gestureRecognizer is UIPinchGestureRecognizer
             || gestureRecognizer is UIRotationGestureRecognizer) &&
-            (otherGestureRecognizer is UIPanGestureRecognizer
-            || otherGestureRecognizer is UIPinchGestureRecognizer
+            (otherGestureRecognizer is UIPinchGestureRecognizer
             || otherGestureRecognizer is UIRotationGestureRecognizer)
     }
 }
@@ -255,12 +257,32 @@ extension GestureManager: GestureHandlerDelegate {
         return mapboxMap.cameraState.zoom
     }
 
-    internal func pinchScaleChanged(with newScale: CGFloat, andAnchor anchor: CGPoint) {
-        mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: newScale))
+    internal func cameraState() -> CameraState {
+        return self.mapboxMap.cameraState
     }
 
-    internal func pinchEnded(with finalScale: CGFloat, andDrift possibleDrift: Bool, andAnchor anchor: CGPoint) {
-        mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: finalScale))
+    func pinchChanged(withZoomIncrement zoomIncrement: CGFloat,
+                      targetAnchor: CGPoint,
+                      initialAnchor: CGPoint,
+                      initialCameraState: CameraState) {
+
+        var cameraOptions = CameraOptions()
+        cameraOptions.center     = initialCameraState.center
+        cameraOptions.padding    = initialCameraState.padding
+        cameraOptions.zoom       = initialCameraState.zoom
+
+        mapboxMap.setCamera(to: cameraOptions)
+
+        mapboxMap.dragStart(for: initialAnchor)
+        let dragOptions = mapboxMap.dragCameraOptions(from: initialAnchor, to: targetAnchor)
+        mapboxMap.setCamera(to: dragOptions)
+        mapboxMap.dragEnd()
+
+        mapboxMap.setCamera(to: CameraOptions(anchor: targetAnchor,
+                                              zoom: mapboxMap.cameraState.zoom + zoomIncrement))
+    }
+
+    internal func pinchEnded() {
         unrotateIfNeededForGesture(with: .ended)
     }
 

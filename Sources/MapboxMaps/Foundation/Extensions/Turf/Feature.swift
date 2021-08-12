@@ -45,7 +45,7 @@ extension Turf.Feature {
 
     /// Initialize a `Turf.Feature` with a `Polygon`.
     /// - Parameter polygon: The `Polygon` to use to create the `Turf.Feature`.
-    internal init(_ polygon: Polygon) {
+    internal init(_ polygon: Turf.Polygon) {
         self.init(geometry: Turf.Geometry.polygon(polygon))
     }
 

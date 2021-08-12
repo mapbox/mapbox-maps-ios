@@ -5,6 +5,7 @@
 import UIKit
 import Turf
 
+@available(iOSApplicationExtension, unavailable)
 open class MapView: UIView {
 
     // mapbox map depends on MapInitOptions, which is not available until
@@ -218,7 +219,7 @@ open class MapView: UIView {
         gestures = GestureManager(view: self, cameraAnimationsManager: camera, mapboxMap: mapboxMap)
 
         // Initialize/Configure ornaments manager
-        ornaments = OrnamentsManager(view: self, options: OrnamentOptions())
+        ornaments = OrnamentsManager(view: self, options: OrnamentOptions(), attributionDataSource: mapboxMap)
 
         // Initialize/Configure location manager
         location = LocationManager(locationSupportableMapView: self, style: mapboxMap.style)
@@ -352,6 +353,7 @@ open class MapView: UIView {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension MapView: DelegatingMapClientDelegate {
     internal func scheduleRepaint() {
         needsDisplayRefresh = true

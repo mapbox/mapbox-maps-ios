@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-core-maps-ios.git",
         "state": {
           "branch": null,
-          "revision": "e71d8d6648f52f064082c5fcb74535bb6c2402a5",
-          "version": "10.0.0-rc.7"
+          "revision": "ca0b8f493f6e22bffeb411f9a0378761fe276cee",
+          "version": "10.0.0-rc.7.1"
         }
       },
       {

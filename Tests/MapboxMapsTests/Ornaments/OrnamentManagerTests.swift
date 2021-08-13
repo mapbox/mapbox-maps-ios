@@ -7,12 +7,14 @@ class OrnamentManagerTests: XCTestCase, AttributionDataSource {
     var ornamentSupportableView: OrnamentSupportableViewMock!
     var options: OrnamentOptions!
     var ornamentsManager: OrnamentsManager!
+    var attributionDialogManager: AttributionDialogManager!
 
     override func setUp() {
         ornamentSupportableView = OrnamentSupportableViewMock(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
 
         options = OrnamentOptions()
-        ornamentsManager = OrnamentsManager(view: ornamentSupportableView, options: options, attributionDataSource: self)
+        attributionDialogManager = AttributionDialogManager(dataSource: self, delegate: nil)
+        ornamentsManager = OrnamentsManager(view: ornamentSupportableView, options: options, attributionDialogManager: attributionDialogManager)
 
     }
 

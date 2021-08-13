@@ -14,7 +14,7 @@ internal class AttributionDialogManager {
     private weak var dataSource: AttributionDataSource?
     private weak var delegate: AttributionDialogManagerDelegate?
 
-    internal init(dataSource: AttributionDataSource, delegate: AttributionDialogManagerDelegate) {
+    internal init(dataSource: AttributionDataSource, delegate: AttributionDialogManagerDelegate?) {
         self.dataSource = dataSource
         self.delegate = delegate
     }

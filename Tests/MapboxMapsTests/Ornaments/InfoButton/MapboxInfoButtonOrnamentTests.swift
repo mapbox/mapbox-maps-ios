@@ -3,9 +3,20 @@ import XCTest
 
 class InfoButtonOrnamentTests: XCTestCase {
 
+    var parentViewController: MockParentViewController!
+    var attributionDialogManager: AttributionDialogManager!
+    var tapCompletion: (() -> Void)?
+
+    override func setUp() {
+        super.setUp()
+        parentViewController = MockParentViewController()
+        attributionDialogManager = AttributionDialogManager(dataSource: self, delegate: self)
+    }
+
     func testInfoButtonTapped() throws {
         let infoButton = InfoButtonOrnament()
-        let parentViewController = MockParentViewController()
+        infoButton.delegate = self
+
         parentViewController.view.addSubview(infoButton)
         infoButton.infoTapped()
 
@@ -22,7 +33,8 @@ class InfoButtonOrnamentTests: XCTestCase {
 
     func testTelemetryOptOut() throws {
         let infoButton = InfoButtonOrnament()
-        let parentViewController = MockParentViewController()
+        infoButton.delegate = self
+
         parentViewController.view.addSubview(infoButton)
         UserDefaults.standard.set(true, forKey: Ornaments.metricsEnabledKey)
         infoButton.infoTapped()
@@ -60,7 +72,8 @@ class InfoButtonOrnamentTests: XCTestCase {
     func testTelemetryOptIn() throws {
         UserDefaults.standard.set(false, forKey: Ornaments.metricsEnabledKey)
         let infoButton = InfoButtonOrnament()
-        let parentViewController = MockParentViewController()
+        infoButton.delegate = self
+
         parentViewController.view.addSubview(infoButton)
         infoButton.infoTapped()
 
@@ -91,6 +104,28 @@ class InfoButtonOrnamentTests: XCTestCase {
         XCTAssertEqual(keepParticipatingTitle, telemetryAlert.actions[2].title, "The third action should be a 'Keep Participating' button.")
         telemetryAlert.tapButton(atIndex: 2)
         XCTAssertTrue(infoButton.isMetricsEnabled, "Metrics should be enabled after selecting 'Keep Participating'.")
+    }
+}
+
+extension InfoButtonOrnamentTests: InfoButtonOrnamentDelegate {
+    func didTap(_ infoButtonOrnament: InfoButtonOrnament) {
+        attributionDialogManager.showAttributionDialog(completion: tapCompletion)
+    }
+}
+
+extension InfoButtonOrnamentTests: AttributionDataSource {
+    func attributions() -> [Attribution] {
+        return []
+    }
+}
+
+extension InfoButtonOrnamentTests: AttributionDialogManagerDelegate {
+    func viewControllerForPresenting(_ attributionDialogManager: AttributionDialogManager) -> UIViewController {
+        return parentViewController
+    }
+
+    func attributionDialogManager(_ attributionDialogManager: AttributionDialogManager, didTriggerActionFor attribution: Attribution) {
+        print("Trigger action for \(attribution)")
     }
 }
 

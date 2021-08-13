@@ -9,12 +9,12 @@ class AttributionTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        Bundle.mapboxMapsMetadata = ["version" : "AttributionTests"]
+        Bundle.mapboxMapsMetadata = ["version": "AttributionTests"]
     }
 
     override func tearDown() {
         super.tearDown()
-        Bundle.mapboxMapsMetadata = ["version" : sdkVersion]
+        Bundle.mapboxMapsMetadata = ["version": sdkVersion]
     }
 
     func testAttribution() {

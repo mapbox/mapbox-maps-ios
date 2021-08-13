@@ -2,8 +2,12 @@ import UIKit
 @_implementationOnly import MapboxCommon_Private
 
 @available(iOSApplicationExtension, unavailable)
-internal class MapboxInfoButtonOrnament: UIView {
-    internal weak var attributionDataSource: AttributionDataSource?
+internal protocol InfoButtonOrnamentDelegate: AnyObject {
+    func didTap(_ infoButtonOrnament: InfoButtonOrnament)
+}
+
+@available(iOSApplicationExtension, unavailable)
+internal class InfoButtonOrnament: UIView {
 
     public override var isHidden: Bool {
         didSet {
@@ -16,6 +20,8 @@ internal class MapboxInfoButtonOrnament: UIView {
     internal var isMetricsEnabled: Bool {
         return UserDefaults.standard.bool(forKey: Ornaments.metricsEnabledKey)
     }
+
+    internal weak var delegate: InfoButtonOrnamentDelegate?
 
     internal init() {
         super.init(frame: CGRect(origin: .zero, size: CGSize(width: 44, height: 44)))
@@ -48,12 +54,7 @@ internal class MapboxInfoButtonOrnament: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    @objc
-    internal func infoTapped() {
-        let dialogManager = AttributionDialogManager()
-        dialogManager.dataSource = attributionDataSource
-
-        dialogManager.showAttributionDialog(from: self) {
-        }
+    @objc internal func infoTapped() {
+        delegate?.didTap(self)
     }
 }

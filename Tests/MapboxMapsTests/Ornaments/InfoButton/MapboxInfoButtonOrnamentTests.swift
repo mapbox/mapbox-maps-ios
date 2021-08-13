@@ -1,10 +1,10 @@
 import XCTest
 @testable import MapboxMaps
 
-class MapboxInfoButtonOrnamentTests: XCTestCase {
+class InfoButtonOrnamentTests: XCTestCase {
 
     func testInfoButtonTapped() throws {
-        let infoButton = MapboxInfoButtonOrnament()
+        let infoButton = InfoButtonOrnament()
         let parentViewController = MockParentViewController()
         parentViewController.view.addSubview(infoButton)
         infoButton.infoTapped()
@@ -21,7 +21,7 @@ class MapboxInfoButtonOrnamentTests: XCTestCase {
     }
 
     func testTelemetryOptOut() throws {
-        let infoButton = MapboxInfoButtonOrnament()
+        let infoButton = InfoButtonOrnament()
         let parentViewController = MockParentViewController()
         parentViewController.view.addSubview(infoButton)
         UserDefaults.standard.set(true, forKey: Ornaments.metricsEnabledKey)
@@ -59,7 +59,7 @@ class MapboxInfoButtonOrnamentTests: XCTestCase {
 
     func testTelemetryOptIn() throws {
         UserDefaults.standard.set(false, forKey: Ornaments.metricsEnabledKey)
-        let infoButton = MapboxInfoButtonOrnament()
+        let infoButton = InfoButtonOrnament()
         let parentViewController = MockParentViewController()
         parentViewController.view.addSubview(infoButton)
         infoButton.infoTapped()

@@ -10,4 +10,8 @@ extension Bundle {
         return Bundle(for: BundleLocator.self)
         #endif
     }
+
+    static var mapboxMapsMetadata: [String: Any]? = {
+        return [ "version" : "10.0.0-rc.6" ]
+    }()
 }

@@ -32,6 +32,7 @@ class GeoJSONSourceIntegrationTests: MapViewIntegrationTestCase {
             source.clusterRadius = Double.testSourceValue()
             source.clusterMaxZoom = Double.testSourceValue()
             source.lineMetrics = Bool.testSourceValue()
+            source.generateId = Bool.testSourceValue()
             source.prefetchZoomDelta = Double.testSourceValue()
             
             // Add the source

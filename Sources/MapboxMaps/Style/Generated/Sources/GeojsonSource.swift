@@ -75,6 +75,11 @@ For more advanced use cases, in place of `operator`, you can use a custom reduce
     public var lineMetrics: Bool?
       
     /** 
+     * Whether to generate ids for the geojson features. When enabled, the `feature.id` property will be auto assigned based on its index in the `features` array, over-writing any previous values. 
+    */
+    public var generateId: Bool?
+      
+    /** 
      * When loading a map, if `PrefetchZoomDelta` is set to any number greater than 0, the map will first request a tile for `zoom - delta` in a attempt to display a full map at lower resolution as quick as possible. It will get clamped at the tile source minimum zoom. The default `delta` is 4. 
     */
     public var prefetchZoomDelta: Double?

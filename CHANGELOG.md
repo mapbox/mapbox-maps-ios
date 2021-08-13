@@ -14,6 +14,8 @@ Mapbox welcomes participation and contributions from everyone.
 * `GeoJSONSource.clusterProperties` is now correctly modeled per the style spec. ([#597](https://github.com/mapbox/mapbox-maps-ios/pull/597))
 * Fixes a crash caused by `MapboxMap.clearData()`. ([#609](https://github.com/mapbox/mapbox-maps-ios/pull/609))
 
+* Added missing attribution and links to info alert controller. ([#591](https://github.com/mapbox/mapbox-maps-ios/pull/591))
+
 ## 10.0.0-rc.6 - August 11, 2021
 
 ### Features ✨ and improvements 🏁

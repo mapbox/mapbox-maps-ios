@@ -21,7 +21,7 @@ extension MapView: AttributionDialogManagerDelegate {
         UIApplication.shared.open(url)
     }
 
-    private func mapboxFeedbackURL() -> URL {
+    internal func mapboxFeedbackURL() -> URL {
         let cameraState = self.cameraState
 
         var components = URLComponents(string: "https://apps.mapbox.com/feedback/")!
@@ -32,7 +32,7 @@ extension MapView: AttributionDialogManagerDelegate {
                                      cameraState.bearing,
                                      Int(round(cameraState.pitch)))
 
-        let applicationBundleId = Bundle.main.bundleIdentifier
+        let applicationBundleId = Bundle.main.bundleIdentifier // com.apple.dt.xctest.tool during testing
         let referrerQueryItem = URLQueryItem(name: "referrer", value: applicationBundleId)
 
         var queryItems = [referrerQueryItem]
@@ -45,11 +45,14 @@ extension MapView: AttributionDialogManagerDelegate {
 
             let sdkVersion = Bundle.mapboxMapsMetadata?["version"] as? String ?? "unknown"
 
+            var accessToken = resourceOptions?.accessToken ?? "unknown"
+            accessToken = accessToken.isEmpty ? "unknown" : accessToken
+
             if pathComponents.count >= 3 {
                 queryItems.append(contentsOf: [
                     URLQueryItem(name: "owner", value: pathComponents[1]),
                     URLQueryItem(name: "id", value: pathComponents[2]),
-                    URLQueryItem(name: "access_token", value: resourceOptions?.accessToken ?? "unknown"),
+                    URLQueryItem(name: "access_token", value: accessToken),
                     URLQueryItem(name: "map_sdk_version", value: sdkVersion),
                 ])
             }

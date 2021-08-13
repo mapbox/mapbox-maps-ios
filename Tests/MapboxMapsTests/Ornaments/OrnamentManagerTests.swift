@@ -15,7 +15,6 @@ class OrnamentManagerTests: XCTestCase, AttributionDataSource {
         options = OrnamentOptions()
         attributionDialogManager = AttributionDialogManager(dataSource: self, delegate: nil)
         ornamentsManager = OrnamentsManager(view: ornamentSupportableView, options: options, attributionDialogManager: attributionDialogManager)
-
     }
 
     override func tearDown() {
@@ -25,7 +24,6 @@ class OrnamentManagerTests: XCTestCase, AttributionDataSource {
     func testInitializer() {
         XCTAssertEqual(ornamentSupportableView.subviews.count, 4)
         XCTAssertEqual(ornamentsManager.options.attributionButton.margins, options.attributionButton.margins)
-
     }
 
     func testHidingOrnament() {

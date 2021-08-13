@@ -27,7 +27,7 @@ let package = Package(
                 "Info.plist"
             ],
             resources: [
-                .copy("Foundation/MapboxMaps.json")
+                .copy("MapboxMaps.json")
                 ]
         ),
         .testTarget(

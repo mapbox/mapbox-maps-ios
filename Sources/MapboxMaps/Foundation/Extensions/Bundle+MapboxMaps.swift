@@ -12,6 +12,11 @@ extension Bundle {
     }
 
     static var mapboxMapsMetadata: [String: Any]? = {
-        return [ "version" : "10.0.0-rc.6" ]
+        guard let metadataPath = Bundle.mapboxMaps.url(forResource: "MapboxMaps", withExtension: "json"),
+              let data = try? Data(contentsOf: metadataPath),
+              let metadata = try? JSONSerialization.jsonObject(with: data, options: []) else {
+            return nil
+        }
+        return metadata as? [String: Any]
     }()
 }

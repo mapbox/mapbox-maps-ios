@@ -22,6 +22,7 @@ class GeoJSONSourceTests: XCTestCase {
         source.clusterRadius = Double.testSourceValue()
         source.clusterMaxZoom = Double.testSourceValue()
         source.lineMetrics = Bool.testSourceValue()
+        source.generateId = Bool.testSourceValue()
         source.prefetchZoomDelta = Double.testSourceValue()
 
         var data: Data?
@@ -48,6 +49,7 @@ class GeoJSONSourceTests: XCTestCase {
             XCTAssert(decodedSource.clusterRadius == Double.testSourceValue())
             XCTAssert(decodedSource.clusterMaxZoom == Double.testSourceValue())
             XCTAssert(decodedSource.lineMetrics == Bool.testSourceValue())
+            XCTAssert(decodedSource.generateId == Bool.testSourceValue())
             XCTAssert(decodedSource.prefetchZoomDelta == Double.testSourceValue())
         } catch {
             XCTFail("Failed to decode GeoJSONSource.")

@@ -2,6 +2,10 @@ import Foundation
 
 private class BundleLocator {}
 
+internal struct MapboxMapsMetaData: Codable {
+    var version: String
+}
+
 extension Bundle {
     class var mapboxMaps: Bundle {
         #if SWIFT_PACKAGE
@@ -11,12 +15,12 @@ extension Bundle {
         #endif
     }
 
-    static var mapboxMapsMetadata: [String: Any]? = {
+    static var mapboxMapsMetadata: MapboxMapsMetaData? = {
         guard let metadataPath = Bundle.mapboxMaps.url(forResource: "MapboxMaps", withExtension: "json"),
-              let data = try? Data(contentsOf: metadataPath),
-              let metadata = try? JSONSerialization.jsonObject(with: data, options: []) else {
+              let data = try? Data(contentsOf: metadataPath) else {
             return nil
         }
-        return metadata as? [String: Any]
+
+        return try? JSONDecoder().decode(MapboxMapsMetaData.self, from: data)
     }()
 }

@@ -5,16 +5,18 @@ import UIKit
 
 class AttributionTests: XCTestCase {
 
-    let sdkVersion = Bundle.mapboxMapsMetadata!["version"]!
+    let sdkVersion = Bundle.mapboxMapsMetadata?.version
 
     override func setUp() {
         super.setUp()
-        Bundle.mapboxMapsMetadata = ["version": "AttributionTests"]
+        Bundle.mapboxMapsMetadata?.version = "AttributionTests"
     }
 
     override func tearDown() {
         super.tearDown()
-        Bundle.mapboxMapsMetadata = ["version": sdkVersion]
+        if let sdkVersion = sdkVersion {
+            Bundle.mapboxMapsMetadata?.version = sdkVersion
+        }
     }
 
     func testAttribution() {

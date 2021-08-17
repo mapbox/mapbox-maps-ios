@@ -3,7 +3,6 @@ import Turf
 import CoreLocation
 @testable import MapboxMaps
 
-
 internal class GeometryMBXGeometryTests: XCTestCase {
 
     // MARK: - Geometry → Turf Geometry

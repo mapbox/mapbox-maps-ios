@@ -7,6 +7,9 @@ The Mapbox Maps SDK for iOS is a public library for displaying interactive, thor
 ## Getting Started
 This README is intended for developers who are interested in contributing to the Mapbox Maps SDK for iOS. Please visit https://docs.mapbox.com/ios/beta/maps/guides/ for general information and instructions on using the Maps SDK in your iOS application.
 
+## Examples App
+The Examples app shows how to use many of the features in the Maps SDK. See the [Examples README](Apps/Examples/README.md) for more information.
+
 ## Developing
 If you are interested in contributing to the Maps SDK, please see the [DEVELOPING.md](DEVELOPING.md) file for information on setting up, running and building the SDK. 
 

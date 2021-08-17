@@ -196,9 +196,9 @@ public class Style {
               sourceInfo.type == .geoJson else {
             fatalError("updateGeoJSONSource: Source with id '\(id)' is not a GeoJSONSource.")
         }
-
-        let geoJSONDictionary = try GeoJSONManager.dictionaryFrom(geoJSON)
-        try setSourceProperty(for: id, property: "data", value: geoJSONDictionary as Any)
+        let data = try JSONEncoder().encode(geoJSON)
+        let value = try JSONSerialization.jsonObject(with: data)
+        try setSourceProperty(for: id, property: "data", value: value)
     }
 
     // MARK: - Light

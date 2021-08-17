@@ -1,12 +1,7 @@
 import XCTest
 import CoreLocation
 import Turf
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsFoundation
-#endif
 
 // swiftlint:disable explicit_top_level_acl explicit_acl force_try force_cast
 let metersPerMile: CLLocationDistance = 1_609.344

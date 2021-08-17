@@ -1,10 +1,5 @@
 import XCTest
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsFoundation
-#endif
 
 final class LayerPositionTests: XCTestCase {
 

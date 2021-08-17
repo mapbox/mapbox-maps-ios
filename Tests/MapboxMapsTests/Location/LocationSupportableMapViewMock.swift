@@ -1,16 +1,6 @@
 import MapboxCoreMaps
 import UIKit
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsLocation
-@testable import MapboxMapsStyle
-#endif
-
-#if canImport(MapboxMapsStyle)
-@testable import MapboxMapsStyle
-#endif
 
 class LocationSupportableMapViewMock: UIView, LocationSupportableMapView {
 

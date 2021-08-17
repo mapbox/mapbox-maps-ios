@@ -1,10 +1,6 @@
 import UIKit
 import CoreLocation
 
-#if canImport(MapboxMapsFoundation)
-import MapboxMapsFoundation
-#endif
-
 //swiftlint:disable type_body_length
 internal class MapboxScaleBarOrnamentView: UIView {
 

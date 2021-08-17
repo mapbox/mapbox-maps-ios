@@ -1,10 +1,6 @@
 import CoreLocation
 import UIKit
 
-#if canImport(MapboxMapsFoundation)
-import MapboxMapsFoundation
-#endif
-
 internal class MapboxCompassOrnamentView: UIButton {
     private enum Constants {
         static let localizableTableName = "OrnamentsLocalizable"

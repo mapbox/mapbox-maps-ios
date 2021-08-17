@@ -1,10 +1,5 @@
 import CoreLocation
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsLocation
-#endif
 
 class LocationProviderMock: LocationProvider {
     var locationProviderOptions: LocationOptions

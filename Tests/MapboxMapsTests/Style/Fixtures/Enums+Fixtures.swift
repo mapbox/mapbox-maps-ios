@@ -1,12 +1,7 @@
 // swiftlint:disable all
 // This file is generated.
 import Foundation
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsStyle
-#endif
 
 extension Value where T == Visibility {
 

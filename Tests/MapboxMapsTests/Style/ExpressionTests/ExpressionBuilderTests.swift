@@ -1,9 +1,5 @@
 import XCTest
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsStyle
-#endif
 
 internal class ExpressionBuilderTests: XCTestCase {
 

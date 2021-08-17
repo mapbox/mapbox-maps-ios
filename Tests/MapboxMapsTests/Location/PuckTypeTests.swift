@@ -1,12 +1,5 @@
 import XCTest
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsLocation
-import MapboxMapsFoundation
-import MapboxMapsStyle
-#endif
 
 internal class PuckTypeTests: XCTestCase {
 

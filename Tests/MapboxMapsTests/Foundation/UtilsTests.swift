@@ -1,9 +1,5 @@
 import XCTest
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsFoundation
-#endif
 
 class UtilsTests: XCTestCase {
 

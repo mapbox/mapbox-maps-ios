@@ -1,9 +1,5 @@
 import XCTest
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsGestures
-#endif
 
 //swiftlint:disable explicit_top_level_acl explicit_acl
 class RotateGestureHandlerTests: XCTestCase {

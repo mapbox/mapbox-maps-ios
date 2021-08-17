@@ -1,9 +1,5 @@
 import UIKit
 
-#if canImport(MapboxMapsFoundation)
-import MapboxMapsFoundation
-#endif
-
 /// The `OrnamentSupportableView` protocol supports communication
 /// from the MapboxMapsOrnaments module to the `MapView`.
 internal protocol OrnamentSupportableView: UIView {

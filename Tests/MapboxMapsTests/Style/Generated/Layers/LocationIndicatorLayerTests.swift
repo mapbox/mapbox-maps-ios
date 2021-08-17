@@ -1,11 +1,6 @@
 // This file is generated
 import XCTest
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsStyle
-#endif
 
 class LocationIndicatorLayerTests: XCTestCase {
 
@@ -61,7 +56,7 @@ class LocationIndicatorLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
 
-       var layer = LocationIndicatorLayer(id: "test-id")	
+       var layer = LocationIndicatorLayer(id: "test-id")
        layer.visibility = .constant(.visible)
        layer.bearingImage = Value<ResolvedImage>.testConstantValue()
        layer.shadowImage = Value<ResolvedImage>.testConstantValue()
@@ -85,7 +80,6 @@ class LocationIndicatorLayerTests: XCTestCase {
        	   XCTAssert(layer.bearingImage == Value<ResolvedImage>.testConstantValue())
        	   XCTAssert(layer.shadowImage == Value<ResolvedImage>.testConstantValue())
        	   XCTAssert(layer.topImage == Value<ResolvedImage>.testConstantValue())
- 
        } catch {
            XCTFail("Failed to decode LocationIndicatorLayer")
        }
@@ -93,7 +87,7 @@ class LocationIndicatorLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfPaintProperties() {
 
-       var layer = LocationIndicatorLayer(id: "test-id")	
+       var layer = LocationIndicatorLayer(id: "test-id")
        layer.accuracyRadius = Value<Double>.testConstantValue()
        layer.accuracyRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.accuracyRadiusBorderColor = Value<ColorRepresentable>.testConstantValue()
@@ -143,7 +137,6 @@ class LocationIndicatorLayerTests: XCTestCase {
        	   XCTAssert(layer.perspectiveCompensation == Value<Double>.testConstantValue())
        	   XCTAssert(layer.shadowImageSize == Value<Double>.testConstantValue())
        	   XCTAssert(layer.topImageSize == Value<Double>.testConstantValue())
- 
        } catch {
            XCTFail("Failed to decode LocationIndicatorLayer")
        }

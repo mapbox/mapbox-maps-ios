@@ -1,16 +1,12 @@
 // This file is generated.
 
 import XCTest
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsStyle
 import Turf
-#endif
+
 
 class ImageSourceTests: XCTestCase {
-    
+
     func testEncodingAndDecoding() {
         var source = ImageSource()
         source.url = String.testSourceValue()

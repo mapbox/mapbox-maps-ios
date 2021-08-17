@@ -1,11 +1,6 @@
 // This file is generated
 import XCTest
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsStyle
-#endif
 
 class HillshadeLayerTests: XCTestCase {
 
@@ -61,7 +56,7 @@ class HillshadeLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
 
-       var layer = HillshadeLayer(id: "test-id")	
+       var layer = HillshadeLayer(id: "test-id")
        layer.visibility = .constant(.visible)
 
        var data: Data?
@@ -79,7 +74,6 @@ class HillshadeLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(HillshadeLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
- 
        } catch {
            XCTFail("Failed to decode HillshadeLayer")
        }
@@ -87,7 +81,7 @@ class HillshadeLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfPaintProperties() {
 
-       var layer = HillshadeLayer(id: "test-id")	
+       var layer = HillshadeLayer(id: "test-id")
        layer.hillshadeAccentColor = Value<ColorRepresentable>.testConstantValue()
        layer.hillshadeAccentColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.hillshadeExaggeration = Value<Double>.testConstantValue()
@@ -120,7 +114,6 @@ class HillshadeLayerTests: XCTestCase {
        	   XCTAssert(layer.hillshadeIlluminationAnchor == Value<HillshadeIlluminationAnchor>.testConstantValue())
        	   XCTAssert(layer.hillshadeIlluminationDirection == Value<Double>.testConstantValue())
        	   XCTAssert(layer.hillshadeShadowColor == Value<ColorRepresentable>.testConstantValue())
- 
        } catch {
            XCTFail("Failed to decode HillshadeLayer")
        }

@@ -2,14 +2,11 @@
 
 import XCTest
 import Turf
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsStyle
-#endif
+
 
 class ImageSourceIntegrationTests: MapViewIntegrationTestCase {
-    
+
     func testAdditionAndRemovalOfSource() throws {
         let style = try XCTUnwrap(self.style)
 
@@ -26,7 +23,7 @@ class ImageSourceIntegrationTests: MapViewIntegrationTestCase {
             source.url = String.testSourceValue()
             source.coordinates = [[Double]].testSourceValue()
             source.prefetchZoomDelta = Double.testSourceValue()
-            
+
             // Add the source
             do {
                 try style.addSource(source, id: "test-source")

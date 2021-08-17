@@ -1,11 +1,6 @@
 // This file is generated
 import XCTest
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsStyle
-#endif
 
 class SymbolLayerTests: XCTestCase {
 
@@ -61,7 +56,7 @@ class SymbolLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
 
-       var layer = SymbolLayer(id: "test-id")	
+       var layer = SymbolLayer(id: "test-id")
        layer.visibility = .constant(.visible)
        layer.iconAllowOverlap = Value<Bool>.testConstantValue()
        layer.iconAnchor = Value<IconAnchor>.testConstantValue()
@@ -161,7 +156,6 @@ class SymbolLayerTests: XCTestCase {
        	   XCTAssert(layer.textTransform == Value<TextTransform>.testConstantValue())
        	   XCTAssert(layer.textVariableAnchor == Value<[TextAnchor]>.testConstantValue())
        	   XCTAssert(layer.textWritingMode == Value<[TextWritingMode]>.testConstantValue())
- 
        } catch {
            XCTFail("Failed to decode SymbolLayer")
        }
@@ -169,7 +163,7 @@ class SymbolLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfPaintProperties() {
 
-       var layer = SymbolLayer(id: "test-id")	
+       var layer = SymbolLayer(id: "test-id")
        layer.iconColor = Value<ColorRepresentable>.testConstantValue()
        layer.iconColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.iconHaloBlur = Value<Double>.testConstantValue()
@@ -226,7 +220,6 @@ class SymbolLayerTests: XCTestCase {
        	   XCTAssert(layer.textOpacity == Value<Double>.testConstantValue())
        	   XCTAssert(layer.textTranslate == Value<[Double]>.testConstantValue())
        	   XCTAssert(layer.textTranslateAnchor == Value<TextTranslateAnchor>.testConstantValue())
- 
        } catch {
            XCTFail("Failed to decode SymbolLayer")
        }

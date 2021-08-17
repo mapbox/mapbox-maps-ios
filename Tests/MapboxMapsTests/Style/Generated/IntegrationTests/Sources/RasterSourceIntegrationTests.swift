@@ -2,14 +2,11 @@
 
 import XCTest
 import Turf
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsStyle
-#endif
+
 
 class RasterSourceIntegrationTests: MapViewIntegrationTestCase {
-    
+
     func testAdditionAndRemovalOfSource() throws {
         let style = try XCTUnwrap(self.style)
 
@@ -35,7 +32,7 @@ class RasterSourceIntegrationTests: MapViewIntegrationTestCase {
             source.prefetchZoomDelta = Double.testSourceValue()
             source.minimumTileUpdateInterval = Double.testSourceValue()
             source.maxOverscaleFactorForParentTiles = Double.testSourceValue()
-            
+
             // Add the source
             do {
                 try style.addSource(source, id: "test-source")

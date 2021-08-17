@@ -1,11 +1,6 @@
 // This file is generated
 import XCTest
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsStyle
-#endif
 
 class SkyLayerTests: XCTestCase {
 
@@ -61,7 +56,7 @@ class SkyLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
 
-       var layer = SkyLayer(id: "test-id")	
+       var layer = SkyLayer(id: "test-id")
        layer.visibility = .constant(.visible)
 
        var data: Data?
@@ -79,7 +74,6 @@ class SkyLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(SkyLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
- 
        } catch {
            XCTFail("Failed to decode SkyLayer")
        }
@@ -87,7 +81,7 @@ class SkyLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfPaintProperties() {
 
-       var layer = SkyLayer(id: "test-id")	
+       var layer = SkyLayer(id: "test-id")
        layer.skyAtmosphereColor = Value<ColorRepresentable>.testConstantValue()
        layer.skyAtmosphereHaloColor = Value<ColorRepresentable>.testConstantValue()
        layer.skyAtmosphereSun = Value<[Double]>.testConstantValue()
@@ -123,7 +117,6 @@ class SkyLayerTests: XCTestCase {
        	   XCTAssert(layer.skyGradientRadius == Value<Double>.testConstantValue())
        	   XCTAssert(layer.skyOpacity == Value<Double>.testConstantValue())
        	   XCTAssert(layer.skyType == Value<SkyType>.testConstantValue())
- 
        } catch {
            XCTFail("Failed to decode SkyLayer")
        }

@@ -1,11 +1,6 @@
 // This file is generated
 import XCTest
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsStyle
-#endif
 
 class FillExtrusionLayerTests: XCTestCase {
 
@@ -61,7 +56,7 @@ class FillExtrusionLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
 
-       var layer = FillExtrusionLayer(id: "test-id")	
+       var layer = FillExtrusionLayer(id: "test-id")
        layer.visibility = .constant(.visible)
 
        var data: Data?
@@ -79,7 +74,6 @@ class FillExtrusionLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(FillExtrusionLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
- 
        } catch {
            XCTFail("Failed to decode FillExtrusionLayer")
        }
@@ -87,7 +81,7 @@ class FillExtrusionLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfPaintProperties() {
 
-       var layer = FillExtrusionLayer(id: "test-id")	
+       var layer = FillExtrusionLayer(id: "test-id")
        layer.fillExtrusionBase = Value<Double>.testConstantValue()
        layer.fillExtrusionBaseTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.fillExtrusionColor = Value<ColorRepresentable>.testConstantValue()
@@ -126,7 +120,6 @@ class FillExtrusionLayerTests: XCTestCase {
        	   XCTAssert(layer.fillExtrusionTranslate == Value<[Double]>.testConstantValue())
        	   XCTAssert(layer.fillExtrusionTranslateAnchor == Value<FillExtrusionTranslateAnchor>.testConstantValue())
        	   XCTAssert(layer.fillExtrusionVerticalGradient == Value<Bool>.testConstantValue())
- 
        } catch {
            XCTFail("Failed to decode FillExtrusionLayer")
        }

@@ -1,11 +1,6 @@
 // This file is generated
 import XCTest
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsStyle
-#endif
 
 class HeatmapLayerTests: XCTestCase {
 
@@ -61,7 +56,7 @@ class HeatmapLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
 
-       var layer = HeatmapLayer(id: "test-id")	
+       var layer = HeatmapLayer(id: "test-id")
        layer.visibility = .constant(.visible)
 
        var data: Data?
@@ -79,7 +74,6 @@ class HeatmapLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(HeatmapLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
- 
        } catch {
            XCTFail("Failed to decode HeatmapLayer")
        }
@@ -87,7 +81,7 @@ class HeatmapLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfPaintProperties() {
 
-       var layer = HeatmapLayer(id: "test-id")	
+       var layer = HeatmapLayer(id: "test-id")
        layer.heatmapColor = Value<ColorRepresentable>.testConstantValue()
        layer.heatmapIntensity = Value<Double>.testConstantValue()
        layer.heatmapIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -117,7 +111,6 @@ class HeatmapLayerTests: XCTestCase {
        	   XCTAssert(layer.heatmapOpacity == Value<Double>.testConstantValue())
        	   XCTAssert(layer.heatmapRadius == Value<Double>.testConstantValue())
        	   XCTAssert(layer.heatmapWeight == Value<Double>.testConstantValue())
- 
        } catch {
            XCTFail("Failed to decode HeatmapLayer")
        }

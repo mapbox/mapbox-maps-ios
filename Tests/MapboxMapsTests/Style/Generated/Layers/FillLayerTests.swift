@@ -1,11 +1,6 @@
 // This file is generated
 import XCTest
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsStyle
-#endif
 
 class FillLayerTests: XCTestCase {
 
@@ -61,7 +56,7 @@ class FillLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
 
-       var layer = FillLayer(id: "test-id")	
+       var layer = FillLayer(id: "test-id")
        layer.visibility = .constant(.visible)
        layer.fillSortKey = Value<Double>.testConstantValue()
 
@@ -81,7 +76,6 @@ class FillLayerTests: XCTestCase {
            let decodedLayer = try JSONDecoder().decode(FillLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
        	   XCTAssert(layer.fillSortKey == Value<Double>.testConstantValue())
- 
        } catch {
            XCTFail("Failed to decode FillLayer")
        }
@@ -89,7 +83,7 @@ class FillLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfPaintProperties() {
 
-       var layer = FillLayer(id: "test-id")	
+       var layer = FillLayer(id: "test-id")
        layer.fillAntialias = Value<Bool>.testConstantValue()
        layer.fillColor = Value<ColorRepresentable>.testConstantValue()
        layer.fillColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -125,7 +119,6 @@ class FillLayerTests: XCTestCase {
        	   XCTAssert(layer.fillPattern == Value<ResolvedImage>.testConstantValue())
        	   XCTAssert(layer.fillTranslate == Value<[Double]>.testConstantValue())
        	   XCTAssert(layer.fillTranslateAnchor == Value<FillTranslateAnchor>.testConstantValue())
- 
        } catch {
            XCTFail("Failed to decode FillLayer")
        }

@@ -1,11 +1,6 @@
 // This file is generated
 import XCTest
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsStyle
-#endif
 
 class BackgroundLayerTests: XCTestCase {
 
@@ -61,7 +56,7 @@ class BackgroundLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
 
-       var layer = BackgroundLayer(id: "test-id")	
+       var layer = BackgroundLayer(id: "test-id")
        layer.visibility = .constant(.visible)
 
        var data: Data?
@@ -79,7 +74,6 @@ class BackgroundLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(BackgroundLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
- 
        } catch {
            XCTFail("Failed to decode BackgroundLayer")
        }
@@ -87,7 +81,7 @@ class BackgroundLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfPaintProperties() {
 
-       var layer = BackgroundLayer(id: "test-id")	
+       var layer = BackgroundLayer(id: "test-id")
        layer.backgroundColor = Value<ColorRepresentable>.testConstantValue()
        layer.backgroundColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.backgroundOpacity = Value<Double>.testConstantValue()
@@ -113,7 +107,6 @@ class BackgroundLayerTests: XCTestCase {
        	   XCTAssert(layer.backgroundColor == Value<ColorRepresentable>.testConstantValue())
        	   XCTAssert(layer.backgroundOpacity == Value<Double>.testConstantValue())
        	   XCTAssert(layer.backgroundPattern == Value<ResolvedImage>.testConstantValue())
- 
        } catch {
            XCTFail("Failed to decode BackgroundLayer")
        }

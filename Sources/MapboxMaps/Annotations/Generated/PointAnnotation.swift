@@ -44,10 +44,10 @@ public struct PointAnnotation: Annotation {
     /// Part of the icon placed closest to the anchor.
     public var iconAnchor: IconAnchor? {
         get {
-            return feature.properties?["icon-anchor"] as? IconAnchor 
+            return feature.properties?["icon-anchor"].flatMap { $0 as? String }.flatMap { IconAnchor(rawValue: $0) }
         }
         set {
-            feature.properties?["icon-anchor"] = newValue?.rawValue 
+            feature.properties?["icon-anchor"] = newValue?.rawValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("icon-anchor")
             } else {
@@ -59,10 +59,10 @@ public struct PointAnnotation: Annotation {
     /// Name of image in sprite to use for drawing an image background.
     public var iconImage: String? {
         get {
-            return feature.properties?["icon-image"] as? String 
+            return feature.properties?["icon-image"] as? String
         }
         set {
-            feature.properties?["icon-image"] = newValue 
+            feature.properties?["icon-image"] = newValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("icon-image")
             } else {
@@ -74,10 +74,10 @@ public struct PointAnnotation: Annotation {
     /// Offset distance of icon from its anchor. Positive values indicate right and down, while negative values indicate left and up. Each component is multiplied by the value of `icon-size` to obtain the final offset in pixels. When combined with `icon-rotate` the offset will be as if the rotated direction was up.
     public var iconOffset: [Double]? {
         get {
-            return feature.properties?["icon-offset"] as? [Double] 
+            return feature.properties?["icon-offset"] as? [Double]
         }
         set {
-            feature.properties?["icon-offset"] = newValue 
+            feature.properties?["icon-offset"] = newValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("icon-offset")
             } else {
@@ -89,10 +89,10 @@ public struct PointAnnotation: Annotation {
     /// Rotates the icon clockwise.
     public var iconRotate: Double? {
         get {
-            return feature.properties?["icon-rotate"] as? Double 
+            return feature.properties?["icon-rotate"] as? Double
         }
         set {
-            feature.properties?["icon-rotate"] = newValue 
+            feature.properties?["icon-rotate"] = newValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("icon-rotate")
             } else {
@@ -104,10 +104,10 @@ public struct PointAnnotation: Annotation {
     /// Scales the original size of the icon by the provided factor. The new pixel size of the image will be the original pixel size multiplied by `icon-size`. 1 is the original size; 3 triples the size of the image.
     public var iconSize: Double? {
         get {
-            return feature.properties?["icon-size"] as? Double 
+            return feature.properties?["icon-size"] as? Double
         }
         set {
-            feature.properties?["icon-size"] = newValue 
+            feature.properties?["icon-size"] = newValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("icon-size")
             } else {
@@ -119,10 +119,10 @@ public struct PointAnnotation: Annotation {
     /// Sorts features in ascending order based on this value. Features with lower sort keys are drawn and placed first.  When `icon-allow-overlap` or `text-allow-overlap` is `false`, features with a lower sort key will have priority during placement. When `icon-allow-overlap` or `text-allow-overlap` is set to `true`, features with a higher sort key will overlap over features with a lower sort key.
     public var symbolSortKey: Double? {
         get {
-            return feature.properties?["symbol-sort-key"] as? Double 
+            return feature.properties?["symbol-sort-key"] as? Double
         }
         set {
-            feature.properties?["symbol-sort-key"] = newValue 
+            feature.properties?["symbol-sort-key"] = newValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("symbol-sort-key")
             } else {
@@ -134,10 +134,10 @@ public struct PointAnnotation: Annotation {
     /// Part of the text placed closest to the anchor.
     public var textAnchor: TextAnchor? {
         get {
-            return feature.properties?["text-anchor"] as? TextAnchor 
+            return feature.properties?["text-anchor"].flatMap { $0 as? String }.flatMap { TextAnchor(rawValue: $0) }
         }
         set {
-            feature.properties?["text-anchor"] = newValue?.rawValue 
+            feature.properties?["text-anchor"] = newValue?.rawValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-anchor")
             } else {
@@ -149,10 +149,10 @@ public struct PointAnnotation: Annotation {
     /// Value to use for a text label. If a plain `string` is provided, it will be treated as a `formatted` with default/inherited formatting options.
     public var textField: String? {
         get {
-            return feature.properties?["text-field"] as? String 
+            return feature.properties?["text-field"] as? String
         }
         set {
-            feature.properties?["text-field"] = newValue 
+            feature.properties?["text-field"] = newValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-field")
             } else {
@@ -164,10 +164,10 @@ public struct PointAnnotation: Annotation {
     /// Text justification options.
     public var textJustify: TextJustify? {
         get {
-            return feature.properties?["text-justify"] as? TextJustify 
+            return feature.properties?["text-justify"].flatMap { $0 as? String }.flatMap { TextJustify(rawValue: $0) }
         }
         set {
-            feature.properties?["text-justify"] = newValue?.rawValue 
+            feature.properties?["text-justify"] = newValue?.rawValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-justify")
             } else {
@@ -179,10 +179,10 @@ public struct PointAnnotation: Annotation {
     /// Text tracking amount.
     public var textLetterSpacing: Double? {
         get {
-            return feature.properties?["text-letter-spacing"] as? Double 
+            return feature.properties?["text-letter-spacing"] as? Double
         }
         set {
-            feature.properties?["text-letter-spacing"] = newValue 
+            feature.properties?["text-letter-spacing"] = newValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-letter-spacing")
             } else {
@@ -194,10 +194,10 @@ public struct PointAnnotation: Annotation {
     /// The maximum line width for text wrapping.
     public var textMaxWidth: Double? {
         get {
-            return feature.properties?["text-max-width"] as? Double 
+            return feature.properties?["text-max-width"] as? Double
         }
         set {
-            feature.properties?["text-max-width"] = newValue 
+            feature.properties?["text-max-width"] = newValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-max-width")
             } else {
@@ -209,10 +209,10 @@ public struct PointAnnotation: Annotation {
     /// Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up. If used with text-variable-anchor, input values will be taken as absolute values. Offsets along the x- and y-axis will be applied automatically based on the anchor position.
     public var textOffset: [Double]? {
         get {
-            return feature.properties?["text-offset"] as? [Double] 
+            return feature.properties?["text-offset"] as? [Double]
         }
         set {
-            feature.properties?["text-offset"] = newValue 
+            feature.properties?["text-offset"] = newValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-offset")
             } else {
@@ -224,10 +224,10 @@ public struct PointAnnotation: Annotation {
     /// Radial offset of text, in the direction of the symbol's anchor. Useful in combination with `text-variable-anchor`, which defaults to using the two-dimensional `text-offset` if present.
     public var textRadialOffset: Double? {
         get {
-            return feature.properties?["text-radial-offset"] as? Double 
+            return feature.properties?["text-radial-offset"] as? Double
         }
         set {
-            feature.properties?["text-radial-offset"] = newValue 
+            feature.properties?["text-radial-offset"] = newValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-radial-offset")
             } else {
@@ -239,10 +239,10 @@ public struct PointAnnotation: Annotation {
     /// Rotates the text clockwise.
     public var textRotate: Double? {
         get {
-            return feature.properties?["text-rotate"] as? Double 
+            return feature.properties?["text-rotate"] as? Double
         }
         set {
-            feature.properties?["text-rotate"] = newValue 
+            feature.properties?["text-rotate"] = newValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-rotate")
             } else {
@@ -254,10 +254,10 @@ public struct PointAnnotation: Annotation {
     /// Font size.
     public var textSize: Double? {
         get {
-            return feature.properties?["text-size"] as? Double 
+            return feature.properties?["text-size"] as? Double
         }
         set {
-            feature.properties?["text-size"] = newValue 
+            feature.properties?["text-size"] = newValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-size")
             } else {
@@ -269,10 +269,10 @@ public struct PointAnnotation: Annotation {
     /// Specifies how to capitalize text, similar to the CSS `text-transform` property.
     public var textTransform: TextTransform? {
         get {
-            return feature.properties?["text-transform"] as? TextTransform 
+            return feature.properties?["text-transform"].flatMap { $0 as? String }.flatMap { TextTransform(rawValue: $0) }
         }
         set {
-            feature.properties?["text-transform"] = newValue?.rawValue 
+            feature.properties?["text-transform"] = newValue?.rawValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-transform")
             } else {
@@ -284,10 +284,10 @@ public struct PointAnnotation: Annotation {
     /// The color of the icon. This can only be used with sdf icons.
     public var iconColor: ColorRepresentable? {
         get {
-            return feature.properties?["icon-color"] as? ColorRepresentable 
+            return feature.properties?["icon-color"].flatMap { $0 as? String }.flatMap { try? JSONDecoder().decode(ColorRepresentable.self, from: $0.data(using: .utf8)!) }
         }
         set {
-            feature.properties?["icon-color"] = newValue?.rgbaDescription 
+            feature.properties?["icon-color"] = newValue.flatMap { try? String(data: JSONEncoder().encode($0), encoding: .utf8) }
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("icon-color")
             } else {
@@ -299,10 +299,10 @@ public struct PointAnnotation: Annotation {
     /// Fade out the halo towards the outside.
     public var iconHaloBlur: Double? {
         get {
-            return feature.properties?["icon-halo-blur"] as? Double 
+            return feature.properties?["icon-halo-blur"] as? Double
         }
         set {
-            feature.properties?["icon-halo-blur"] = newValue 
+            feature.properties?["icon-halo-blur"] = newValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("icon-halo-blur")
             } else {
@@ -314,10 +314,10 @@ public struct PointAnnotation: Annotation {
     /// The color of the icon's halo. Icon halos can only be used with SDF icons.
     public var iconHaloColor: ColorRepresentable? {
         get {
-            return feature.properties?["icon-halo-color"] as? ColorRepresentable 
+            return feature.properties?["icon-halo-color"].flatMap { $0 as? String }.flatMap { try? JSONDecoder().decode(ColorRepresentable.self, from: $0.data(using: .utf8)!) }
         }
         set {
-            feature.properties?["icon-halo-color"] = newValue?.rgbaDescription 
+            feature.properties?["icon-halo-color"] = newValue.flatMap { try? String(data: JSONEncoder().encode($0), encoding: .utf8) }
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("icon-halo-color")
             } else {
@@ -329,10 +329,10 @@ public struct PointAnnotation: Annotation {
     /// Distance of halo to the icon outline.
     public var iconHaloWidth: Double? {
         get {
-            return feature.properties?["icon-halo-width"] as? Double 
+            return feature.properties?["icon-halo-width"] as? Double
         }
         set {
-            feature.properties?["icon-halo-width"] = newValue 
+            feature.properties?["icon-halo-width"] = newValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("icon-halo-width")
             } else {
@@ -344,10 +344,10 @@ public struct PointAnnotation: Annotation {
     /// The opacity at which the icon will be drawn.
     public var iconOpacity: Double? {
         get {
-            return feature.properties?["icon-opacity"] as? Double 
+            return feature.properties?["icon-opacity"] as? Double
         }
         set {
-            feature.properties?["icon-opacity"] = newValue 
+            feature.properties?["icon-opacity"] = newValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("icon-opacity")
             } else {
@@ -359,10 +359,10 @@ public struct PointAnnotation: Annotation {
     /// The color with which the text will be drawn.
     public var textColor: ColorRepresentable? {
         get {
-            return feature.properties?["text-color"] as? ColorRepresentable 
+            return feature.properties?["text-color"].flatMap { $0 as? String }.flatMap { try? JSONDecoder().decode(ColorRepresentable.self, from: $0.data(using: .utf8)!) }
         }
         set {
-            feature.properties?["text-color"] = newValue?.rgbaDescription 
+            feature.properties?["text-color"] = newValue.flatMap { try? String(data: JSONEncoder().encode($0), encoding: .utf8) }
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-color")
             } else {
@@ -374,10 +374,10 @@ public struct PointAnnotation: Annotation {
     /// The halo's fadeout distance towards the outside.
     public var textHaloBlur: Double? {
         get {
-            return feature.properties?["text-halo-blur"] as? Double 
+            return feature.properties?["text-halo-blur"] as? Double
         }
         set {
-            feature.properties?["text-halo-blur"] = newValue 
+            feature.properties?["text-halo-blur"] = newValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-halo-blur")
             } else {
@@ -389,10 +389,10 @@ public struct PointAnnotation: Annotation {
     /// The color of the text's halo, which helps it stand out from backgrounds.
     public var textHaloColor: ColorRepresentable? {
         get {
-            return feature.properties?["text-halo-color"] as? ColorRepresentable 
+            return feature.properties?["text-halo-color"].flatMap { $0 as? String }.flatMap { try? JSONDecoder().decode(ColorRepresentable.self, from: $0.data(using: .utf8)!) }
         }
         set {
-            feature.properties?["text-halo-color"] = newValue?.rgbaDescription 
+            feature.properties?["text-halo-color"] = newValue.flatMap { try? String(data: JSONEncoder().encode($0), encoding: .utf8) }
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-halo-color")
             } else {
@@ -404,10 +404,10 @@ public struct PointAnnotation: Annotation {
     /// Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.
     public var textHaloWidth: Double? {
         get {
-            return feature.properties?["text-halo-width"] as? Double 
+            return feature.properties?["text-halo-width"] as? Double
         }
         set {
-            feature.properties?["text-halo-width"] = newValue 
+            feature.properties?["text-halo-width"] = newValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-halo-width")
             } else {
@@ -419,10 +419,10 @@ public struct PointAnnotation: Annotation {
     /// The opacity at which the text will be drawn.
     public var textOpacity: Double? {
         get {
-            return feature.properties?["text-opacity"] as? Double 
+            return feature.properties?["text-opacity"] as? Double
         }
         set {
-            feature.properties?["text-opacity"] = newValue 
+            feature.properties?["text-opacity"] = newValue
             if newValue != nil {
                 dataDrivenPropertiesUsedSet.insert("text-opacity")
             } else {

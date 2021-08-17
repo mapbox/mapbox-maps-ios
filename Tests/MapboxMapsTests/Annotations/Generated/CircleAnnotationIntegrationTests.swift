@@ -36,7 +36,6 @@ class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
             annotation.circleStrokeOpacity =  Double.testConstantValue()
             annotation.circleStrokeWidth =  Double.testConstantValue()
 
-            self.verifyFeatureContainsProperties(annotation: annotation)
             manager.syncAnnotations([annotation])
             self.manager = manager
             successfullyLoadedStyleExpectation.fulfill()
@@ -45,72 +44,32 @@ class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         wait(for: [successfullyLoadedStyleExpectation], timeout: 5.0)
     }
 
-    func verifyFeatureContainsProperties(annotation: CircleAnnotation)  {
+    func testAnnotationPersistence() throws {
+        let style = try XCTUnwrap(self.style)
+        style.uri = .streets
 
-        guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else { return }
+        mapView?.mapboxMap.onNext(.mapLoaded, handler: { [weak self] _ in
+            guard let self = self,
+                let style = try? XCTUnwrap(self.style),
+                let mapView = try? XCTUnwrap(self.mapView) else { return }
 
-        XCTAssertEqual(featureProperties["circle-sort-key"] as? Double, annotation.circleSortKey)
-        XCTAssertEqual(featureProperties["circle-blur"] as? Double, annotation.circleBlur)
-        XCTAssertEqual(featureProperties["circle-color"] as? String, annotation.circleColor?.rgbaDescription)
-        XCTAssertEqual(featureProperties["circle-opacity"] as? Double, annotation.circleOpacity)
-        XCTAssertEqual(featureProperties["circle-radius"] as? Double, annotation.circleRadius)
-        XCTAssertEqual(featureProperties["circle-stroke-color"] as? String, annotation.circleStrokeColor?.rgbaDescription)
-        XCTAssertEqual(featureProperties["circle-stroke-opacity"] as? Double, annotation.circleStrokeOpacity)
-        XCTAssertEqual(featureProperties["circle-stroke-width"] as? Double, annotation.circleStrokeWidth)
-    }
+            let manager = mapView.annotations.makeCircleAnnotationManager()
+            XCTAssertTrue(style.layerExists(withId: manager.layerId))
+            XCTAssertTrue(style.sourceExists(withId: manager.sourceId))
 
-    func verifySourceContainsProperties(sourceId: String, annotation: CircleAnnotation) {
-        guard let style = try? XCTUnwrap(self.style) else { return }
+            let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
 
-        var source: GeoJSONSource?
-        do {
-            source = try style.source(withId: sourceId) as GeoJSONSource
-        } catch {
-            XCTFail("Could not retrieve source due to error: \(error)")
-            return
-        }
-        guard case let .featureCollection(featureCollection) = source!.data,
-              let feature = featureCollection.features.first,
-              let featureProperties = feature.properties else {
-            XCTFail("Could not find feature collection in source data")
-            return
-        }
+            manager.syncAnnotations([annotation])
+            self.manager = manager
 
-        XCTAssertEqual(featureProperties["circle-sort-key"] as? Double, annotation.circleSortKey)
-        XCTAssertEqual(featureProperties["circle-blur"] as? Double, annotation.circleBlur)
-        XCTAssertEqual(featureProperties["circle-color"] as? String, annotation.circleColor?.rgbaDescription)
-        XCTAssertEqual(featureProperties["circle-opacity"] as? Double, annotation.circleOpacity)
-        XCTAssertEqual(featureProperties["circle-radius"] as? Double, annotation.circleRadius)
-        XCTAssertEqual(featureProperties["circle-stroke-color"] as? String, annotation.circleStrokeColor?.rgbaDescription)
-        XCTAssertEqual(featureProperties["circle-stroke-opacity"] as? Double, annotation.circleStrokeOpacity)
-        XCTAssertEqual(featureProperties["circle-stroke-width"] as? Double, annotation.circleStrokeWidth)
-    }
-
-  func testAnnotationPersistence() throws {
-     let style = try XCTUnwrap(self.style)
-     style.uri = .streets
-
-     mapView?.mapboxMap.onNext(.mapLoaded, handler: { [weak self] _ in
-         guard let self = self,
-               let style = try? XCTUnwrap(self.style),
-               let mapView = try? XCTUnwrap(self.mapView) else { return }
-
-         let manager = mapView.annotations.makeCircleAnnotationManager()
-         XCTAssertTrue(style.layerExists(withId: manager.layerId))
-         XCTAssertTrue(style.sourceExists(withId: manager.sourceId))
-
-         let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
-         manager.syncAnnotations([annotation])
-         self.manager = manager
-
-         do {
+            do {
              let isPersistent = try style._isPersistentLayer(id: manager.layerId)
              XCTAssertTrue(isPersistent, "The layer with id \(manager.layerId) should be persistent.")
-         } catch {
+            } catch {
              XCTFail("Unable to verify that the layer with id \(manager.layerId) is persistent.")
-         }
-     })
-   }
+            }
+        })
+    }
 }
 
 // End of generated file

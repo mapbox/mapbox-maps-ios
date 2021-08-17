@@ -23,15 +23,16 @@ internal class CameraView: UIView {
     }
 
     private func cameraOptions(with layer: CALayer) -> CameraOptions {
+        let center = CLLocationCoordinate2D(latitude: CLLocationDegrees(layer.position.y),
+                                            longitude: CLLocationDegrees(layer.position.x))
+        let padding = UIEdgeInsets(top: layer.contentsRect.origin.x,
+                                   left: layer.bounds.origin.x,
+                                   bottom: layer.contentsRect.origin.y,
+                                   right: layer.bounds.origin.y)
+
         return CameraOptions(
-            center: CLLocationCoordinate2D(
-                latitude: CLLocationDegrees(layer.position.y),
-                longitude: CLLocationDegrees(layer.position.x)),
-            padding: UIEdgeInsets(
-                top: layer.bounds.size.height,
-                left: layer.bounds.origin.x,
-                bottom: layer.bounds.size.width,
-                right: layer.bounds.origin.y),
+            center: center,
+            padding: padding,
             anchor: layer.anchorPoint,
             zoom: CGFloat(layer.opacity),
             bearing: CLLocationDirection(layer.cornerRadius),
@@ -52,10 +53,8 @@ internal class CameraView: UIView {
         }
 
         if let padding = cameraOptions.padding {
-            layer.bounds = CGRect(x: padding.left,
-                                  y: padding.right,
-                                  width: padding.bottom,
-                                  height: padding.top)
+            layer.bounds.origin = CGPoint(x: padding.left, y: padding.right)
+            layer.contentsRect.origin = CGPoint(x: padding.top, y: padding.bottom)
         }
 
         if let pitch = cameraOptions.pitch {

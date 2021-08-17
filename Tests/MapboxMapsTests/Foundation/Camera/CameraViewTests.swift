@@ -36,10 +36,8 @@ final class CameraViewTests: XCTestCase {
         XCTAssertEqual(cameraView.layer.opacity, Float(cameraOptions.zoom!))
         XCTAssertEqual(cameraView.layer.cornerRadius, CGFloat(cameraOptions.bearing!))
         let padding = cameraOptions.padding!
-        XCTAssertEqual(cameraView.layer.bounds, CGRect(x: padding.left,
-                                                         y: padding.right,
-                                                         width: padding.bottom,
-                                                         height: padding.top))
+        XCTAssertEqual(cameraView.layer.bounds.origin, CGPoint(x: padding.left, y: padding.right))
+        XCTAssertEqual(cameraView.layer.contentsRect.origin, CGPoint(x: padding.top, y: padding.bottom))
         let center = cameraOptions.center!
         XCTAssertEqual(cameraView.layer.position, CGPoint(x: center.longitude,
                                                           y: center.latitude))

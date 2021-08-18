@@ -47,6 +47,17 @@ internal extension Array where Element == Double {
     }
 }
 
+internal extension Dictionary where Key == String, Value == Expression {
+    static func testSourceValue() -> [String: Expression] {
+        let exp = Exp(.sum) {
+            10
+            12
+        }
+
+        return ["sum": exp]
+    }
+}
+
 internal extension Array where Element == [Double] {
     static func testSourceValue() -> [[Double]] {
         return [[30.0, 30.0], [0.0, 0.0], [30.0, 30.0], [0.0, 0.0]]

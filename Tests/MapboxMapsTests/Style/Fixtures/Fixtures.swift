@@ -53,7 +53,7 @@ internal extension Dictionary where Key == String, Value == Expression {
             10
             12
         }
-        
+
         return ["sum": exp]
     }
 }

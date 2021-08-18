@@ -1,7 +1,6 @@
 import XCTest
 @testable import MapboxMaps
 
-
 //swiftlint:disable explicit_acl explicit_top_level_acl
 class PanGestureHandlerTests: XCTestCase {
 

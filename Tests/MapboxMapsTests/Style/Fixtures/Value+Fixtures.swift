@@ -1,7 +1,6 @@
 import UIKit
 @testable import MapboxMaps
 
-
 internal extension Value where T == Double {
     static func testConstantValue() -> Value<Double> {
         return .constant(1.0)

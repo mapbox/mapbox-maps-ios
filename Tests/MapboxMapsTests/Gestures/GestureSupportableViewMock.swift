@@ -1,9 +1,5 @@
 import UIKit
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsGestures
-#endif
 
 //swiftlint:disable explicit_acl explicit_top_level_acl large_tuple
 // Mock class that flags true when `GestureSupportableView` protocol methods have been called on it

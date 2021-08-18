@@ -1,12 +1,6 @@
 import XCTest
 import UIKit
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsGestures
-import MapboxMapsFoundation
-#endif
 
 //swiftlint:disable explicit_acl explicit_top_level_acl
 final class GestureManagerTests: XCTestCase {

@@ -1,10 +1,5 @@
 import XCTest
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsFoundation
-#endif
 
 // swiftlint:disable explicit_top_level_acl explicit_acl
 class GlyphsRasterizationOptionsTests: XCTestCase {

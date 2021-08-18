@@ -1,11 +1,6 @@
 import CoreLocation
 import XCTest
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsOrnaments
-#endif
 
 //swiftlint:disable explicit_acl explicit_top_level_acl
 class MapboxCompassOrnamentViewTests: XCTestCase {

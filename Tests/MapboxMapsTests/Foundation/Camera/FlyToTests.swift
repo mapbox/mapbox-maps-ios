@@ -1,11 +1,6 @@
 import XCTest
 import Turf
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsFoundation
-#endif
 
 internal class FlyToTests: XCTestCase {
 

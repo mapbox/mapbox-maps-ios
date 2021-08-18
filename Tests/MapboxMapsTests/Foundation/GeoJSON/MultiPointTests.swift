@@ -1,12 +1,7 @@
 import XCTest
 import CoreLocation
 import Turf
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsFoundation
-#endif
 
 // Disabling rules against force try for test file.
 // swiftlint:disable explicit_top_level_acl explicit_acl force_try

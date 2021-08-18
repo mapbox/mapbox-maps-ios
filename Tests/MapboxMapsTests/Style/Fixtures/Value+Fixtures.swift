@@ -1,9 +1,5 @@
 import UIKit
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsStyle
-#endif
 
 internal extension Value where T == Double {
     static func testConstantValue() -> Value<Double> {

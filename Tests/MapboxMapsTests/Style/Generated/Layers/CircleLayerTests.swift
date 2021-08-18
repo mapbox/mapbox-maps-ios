@@ -1,11 +1,6 @@
 // This file is generated
 import XCTest
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsStyle
-#endif
 
 class CircleLayerTests: XCTestCase {
 
@@ -61,7 +56,7 @@ class CircleLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
 
-       var layer = CircleLayer(id: "test-id")	
+       var layer = CircleLayer(id: "test-id")
        layer.visibility = .constant(.visible)
        layer.circleSortKey = Value<Double>.testConstantValue()
 
@@ -81,7 +76,6 @@ class CircleLayerTests: XCTestCase {
            let decodedLayer = try JSONDecoder().decode(CircleLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
        	   XCTAssert(layer.circleSortKey == Value<Double>.testConstantValue())
- 
        } catch {
            XCTFail("Failed to decode CircleLayer")
        }
@@ -89,7 +83,7 @@ class CircleLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfPaintProperties() {
 
-       var layer = CircleLayer(id: "test-id")	
+       var layer = CircleLayer(id: "test-id")
        layer.circleBlur = Value<Double>.testConstantValue()
        layer.circleBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.circleColor = Value<ColorRepresentable>.testConstantValue()
@@ -136,7 +130,6 @@ class CircleLayerTests: XCTestCase {
        	   XCTAssert(layer.circleStrokeWidth == Value<Double>.testConstantValue())
        	   XCTAssert(layer.circleTranslate == Value<[Double]>.testConstantValue())
        	   XCTAssert(layer.circleTranslateAnchor == Value<CircleTranslateAnchor>.testConstantValue())
- 
        } catch {
            XCTFail("Failed to decode CircleLayer")
        }

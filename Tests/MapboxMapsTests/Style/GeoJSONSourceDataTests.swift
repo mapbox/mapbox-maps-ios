@@ -1,12 +1,7 @@
 import CoreLocation
 import XCTest
 import Turf
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsStyle
-#endif
 
 //swiftlint:disable explicit_acl explicit_top_level_acl
 class GeoJSONSourceDataTests: XCTestCase {

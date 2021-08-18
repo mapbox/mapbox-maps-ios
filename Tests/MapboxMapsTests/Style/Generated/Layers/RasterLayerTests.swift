@@ -1,11 +1,6 @@
 // This file is generated
 import XCTest
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsStyle
-#endif
 
 class RasterLayerTests: XCTestCase {
 
@@ -61,7 +56,7 @@ class RasterLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
 
-       var layer = RasterLayer(id: "test-id")	
+       var layer = RasterLayer(id: "test-id")
        layer.visibility = .constant(.visible)
 
        var data: Data?
@@ -79,7 +74,6 @@ class RasterLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(RasterLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
- 
        } catch {
            XCTFail("Failed to decode RasterLayer")
        }
@@ -87,7 +81,7 @@ class RasterLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfPaintProperties() {
 
-       var layer = RasterLayer(id: "test-id")	
+       var layer = RasterLayer(id: "test-id")
        layer.rasterBrightnessMax = Value<Double>.testConstantValue()
        layer.rasterBrightnessMaxTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.rasterBrightnessMin = Value<Double>.testConstantValue()
@@ -126,7 +120,6 @@ class RasterLayerTests: XCTestCase {
        	   XCTAssert(layer.rasterOpacity == Value<Double>.testConstantValue())
        	   XCTAssert(layer.rasterResampling == Value<RasterResampling>.testConstantValue())
        	   XCTAssert(layer.rasterSaturation == Value<Double>.testConstantValue())
- 
        } catch {
            XCTFail("Failed to decode RasterLayer")
        }

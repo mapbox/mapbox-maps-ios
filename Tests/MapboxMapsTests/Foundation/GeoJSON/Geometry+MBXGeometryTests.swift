@@ -1,12 +1,7 @@
 import XCTest
 import Turf
 import CoreLocation
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsFoundation
-#endif
 
 internal class GeometryMBXGeometryTests: XCTestCase {
 

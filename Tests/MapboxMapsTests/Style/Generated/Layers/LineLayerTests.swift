@@ -1,11 +1,6 @@
 // This file is generated
 import XCTest
-
-#if canImport(MapboxMaps)
 @testable import MapboxMaps
-#else
-@testable import MapboxMapsStyle
-#endif
 
 class LineLayerTests: XCTestCase {
 
@@ -61,7 +56,7 @@ class LineLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfLayoutProperties() {
 
-       var layer = LineLayer(id: "test-id")	
+       var layer = LineLayer(id: "test-id")
        layer.visibility = .constant(.visible)
        layer.lineCap = Value<LineCap>.testConstantValue()
        layer.lineJoin = Value<LineJoin>.testConstantValue()
@@ -89,7 +84,6 @@ class LineLayerTests: XCTestCase {
        	   XCTAssert(layer.lineMiterLimit == Value<Double>.testConstantValue())
        	   XCTAssert(layer.lineRoundLimit == Value<Double>.testConstantValue())
        	   XCTAssert(layer.lineSortKey == Value<Double>.testConstantValue())
- 
        } catch {
            XCTFail("Failed to decode LineLayer")
        }
@@ -97,7 +91,7 @@ class LineLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfPaintProperties() {
 
-       var layer = LineLayer(id: "test-id")	
+       var layer = LineLayer(id: "test-id")
        layer.lineBlur = Value<Double>.testConstantValue()
        layer.lineBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineColor = Value<ColorRepresentable>.testConstantValue()
@@ -145,7 +139,6 @@ class LineLayerTests: XCTestCase {
        	   XCTAssert(layer.lineTranslate == Value<[Double]>.testConstantValue())
        	   XCTAssert(layer.lineTranslateAnchor == Value<LineTranslateAnchor>.testConstantValue())
        	   XCTAssert(layer.lineWidth == Value<Double>.testConstantValue())
- 
        } catch {
            XCTFail("Failed to decode LineLayer")
        }

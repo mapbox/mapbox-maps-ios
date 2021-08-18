@@ -4,7 +4,12 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Breaking changes ⚠️
+
+* Removed GeoJSONManager. Please use Turf directly instead to serialize and deserialize GeoJSON. ([#603](https://github.com/mapbox/mapbox-maps-ios/pull/603))
+
 ### Bug fixes 🐞
+
 * Update all Annotation files to use `get/set` instead of `didSet`. This fixes an issue where properties were not being set at `init`. ([#590](https://github.com/mapbox/mapbox-maps-ios/pull/590))
 
 ## 10.0.0-rc.6 - August 11, 2021
@@ -53,9 +58,6 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix threading issues in HTTP file source. ([#522](https://github.com/mapbox/mapbox-maps-ios/pull/522))
 * Fixed an issue that could cause flickering during ease to and basic animations ([#519](https://github.com/mapbox/mapbox-maps-ios/pull/519))
 * Fixed an issue that could result in ease to and basic animations never reaching their final values ([#519](https://github.com/mapbox/mapbox-maps-ios/pull/519))
-
-
-
 
 ## 10.0.0-rc.3 - June 30, 2021
 

@@ -37,7 +37,7 @@ public class OrnamentsManager: NSObject {
 
     private var constraints = [NSLayoutConstraint]()
 
-    private weak var attributionDialogManager: AttributionDialogManager?
+    private var attributionDialogManager: AttributionDialogManager?
 
     internal init(view: OrnamentSupportableView,
                   options: OrnamentOptions,

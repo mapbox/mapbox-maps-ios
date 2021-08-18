@@ -28,7 +28,7 @@ let package = Package(
             ],
             resources: [
                 .copy("MapboxMaps.json")
-                ]
+            ]
         ),
         .testTarget(
             name: "MapboxMapsTests",

@@ -15,12 +15,10 @@ extension Bundle {
         #endif
     }
 
-    static var mapboxMapsMetadata: MapboxMapsMetaData? = {
-        guard let metadataPath = Bundle.mapboxMaps.url(forResource: "MapboxMaps", withExtension: "json"),
-              let data = try? Data(contentsOf: metadataPath) else {
-            return nil
-        }
+    static var mapboxMapsMetadata: MapboxMapsMetaData = {
+        let metadataPath = Bundle.mapboxMaps.url(forResource: "MapboxMaps", withExtension: "json")
+        let data = try! Data(contentsOf: metadataPath!)
 
-        return try? JSONDecoder().decode(MapboxMapsMetaData.self, from: data)
+        return try! JSONDecoder().decode(MapboxMapsMetaData.self, from: data)
     }()
 }

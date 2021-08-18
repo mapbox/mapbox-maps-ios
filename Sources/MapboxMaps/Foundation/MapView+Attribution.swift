@@ -42,8 +42,7 @@ extension MapView: AttributionDialogManagerDelegate {
            styleURL.scheme == "mapbox",
            styleURL.host == "styles" {
             let pathComponents = styleURL.pathComponents
-
-            let sdkVersion = Bundle.mapboxMapsMetadata?.version ?? "unknown"
+            let sdkVersion = Bundle.mapboxMapsMetadata.version
 
             var accessToken = resourceOptions?.accessToken ?? "unknown"
             accessToken = accessToken.isEmpty ? "unknown" : accessToken

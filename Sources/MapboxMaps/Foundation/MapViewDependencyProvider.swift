@@ -3,6 +3,7 @@ import MetalKit
 internal protocol MapViewDependencyProviderProtocol {
     func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView
     func makeDisplayLink(window: UIWindow, target: Any, selector: Selector) -> DisplayLinkProtocol?
+    // mimic attributionDialogManager
 }
 
 internal final class MapViewDependencyProvider: MapViewDependencyProviderProtocol {

@@ -14,7 +14,7 @@ class OrnamentManagerTests: XCTestCase, AttributionDataSource {
 
         options = OrnamentOptions()
         attributionDialogManager = AttributionDialogManager(dataSource: self, delegate: nil)
-        ornamentsManager = OrnamentsManager(view: ornamentSupportableView, options: options, attributionDialogManager: attributionDialogManager)
+        ornamentsManager = OrnamentsManager(view: ornamentSupportableView, options: options, infoButtonOrnamentDelegate: attributionDialogManager)
     }
 
     override func tearDown() {

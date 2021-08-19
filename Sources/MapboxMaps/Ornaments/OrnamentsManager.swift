@@ -37,13 +37,10 @@ public class OrnamentsManager: NSObject {
 
     private var constraints = [NSLayoutConstraint]()
 
-    private var attributionDialogManager: AttributionDialogManager?
-
     internal init(view: OrnamentSupportableView,
                   options: OrnamentOptions,
-                  attributionDialogManager: AttributionDialogManager) {
+                  infoButtonOrnamentDelegate: InfoButtonOrnamentDelegate) {
         self.options = options
-        self.attributionDialogManager = attributionDialogManager
 
         // Logo View
         logoView = LogoView(logoSize: .regular())
@@ -73,7 +70,7 @@ public class OrnamentsManager: NSObject {
 
         super.init()
 
-        attributionButton.delegate = self
+        attributionButton.delegate = infoButtonOrnamentDelegate
 
         updateOrnaments()
 
@@ -148,14 +145,5 @@ public class OrnamentsManager: NSObject {
                 view.rightAnchor.constraint(equalTo: layoutGuide.rightAnchor, constant: -margins.x),
                 view.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -margins.y)]
         }
-    }
-}
-
-// MARK: - InfoButtonOrnamentDelegate
-
-@available(iOSApplicationExtension, unavailable)
-extension OrnamentsManager: InfoButtonOrnamentDelegate {
-    internal func didTap(_ infoButtonOrnament: InfoButtonOrnament) {
-        attributionDialogManager?.showAttributionDialog()
     }
 }

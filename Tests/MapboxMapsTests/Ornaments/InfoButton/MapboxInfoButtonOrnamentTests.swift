@@ -15,7 +15,7 @@ class InfoButtonOrnamentTests: XCTestCase {
 
     func testInfoButtonTapped() throws {
         let infoButton = InfoButtonOrnament()
-        infoButton.delegate = self
+        infoButton.delegate = attributionDialogManager
 
         parentViewController.view.addSubview(infoButton)
         infoButton.infoTapped()
@@ -33,7 +33,7 @@ class InfoButtonOrnamentTests: XCTestCase {
 
     func testTelemetryOptOut() throws {
         let infoButton = InfoButtonOrnament()
-        infoButton.delegate = self
+        infoButton.delegate = attributionDialogManager
 
         parentViewController.view.addSubview(infoButton)
         UserDefaults.standard.set(true, forKey: Ornaments.metricsEnabledKey)
@@ -72,7 +72,7 @@ class InfoButtonOrnamentTests: XCTestCase {
     func testTelemetryOptIn() throws {
         UserDefaults.standard.set(false, forKey: Ornaments.metricsEnabledKey)
         let infoButton = InfoButtonOrnament()
-        infoButton.delegate = self
+        infoButton.delegate = attributionDialogManager
 
         parentViewController.view.addSubview(infoButton)
         infoButton.infoTapped()
@@ -104,12 +104,6 @@ class InfoButtonOrnamentTests: XCTestCase {
         XCTAssertEqual(keepParticipatingTitle, telemetryAlert.actions[2].title, "The third action should be a 'Keep Participating' button.")
         telemetryAlert.tapButton(atIndex: 2)
         XCTAssertTrue(infoButton.isMetricsEnabled, "Metrics should be enabled after selecting 'Keep Participating'.")
-    }
-}
-
-extension InfoButtonOrnamentTests: InfoButtonOrnamentDelegate {
-    func didTap(_ infoButtonOrnament: InfoButtonOrnament) {
-        attributionDialogManager.showAttributionDialog(completion: tapCompletion)
     }
 }
 

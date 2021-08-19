@@ -14,9 +14,7 @@ class AttributionTests: XCTestCase {
 
     override func tearDown() {
         super.tearDown()
-        if let sdkVersion = sdkVersion {
-            Bundle.mapboxMapsMetadata?.version = sdkVersion
-        }
+        Bundle.mapboxMapsMetadata.version = sdkVersion
     }
 
     func testAttribution() {

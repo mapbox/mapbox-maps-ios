@@ -34,7 +34,7 @@ open class MapView: UIView {
     public internal(set) var annotations: AnnotationOrchestrator!
 
     /// Controls the display of attribution dialogs
-    internal var attributionDialogManager: AttributionDialogManager!
+    private var attributionDialogManager: AttributionDialogManager!
 
     /// A reference to the `EventsManager` used for dispatching telemetry.
     internal var eventsListener: EventsListener!

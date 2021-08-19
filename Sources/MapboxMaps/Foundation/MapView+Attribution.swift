@@ -28,15 +28,15 @@ extension MapView: AttributionDialogManagerDelegate {
 
         var queryItems = [referrerQueryItem]
 
+        let sdkVersion = Bundle.mapboxMapsMetadata.version
+        var accessToken = resourceOptions?.accessToken ?? "unknown"
+        accessToken = accessToken.isEmpty ? "unknown" : accessToken
+
         if let styleURIString = mapboxMap.style.uri?.rawValue,
            let styleURL = URL(string: styleURIString),
            styleURL.scheme == "mapbox",
            styleURL.host == "styles" {
             let pathComponents = styleURL.pathComponents
-            let sdkVersion = Bundle.mapboxMapsMetadata.version
-
-            var accessToken = resourceOptions?.accessToken ?? "unknown"
-            accessToken = accessToken.isEmpty ? "unknown" : accessToken
 
             if pathComponents.count >= 3 {
                 queryItems.append(contentsOf: [

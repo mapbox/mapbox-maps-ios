@@ -2,7 +2,7 @@ import Foundation
 
 private class BundleLocator {}
 
-internal struct MapboxMapsMetaData: Codable {
+internal struct MapboxMapsMetadata: Codable {
     var version: String
 }
 
@@ -15,10 +15,9 @@ extension Bundle {
         #endif
     }
 
-    static var mapboxMapsMetadata: MapboxMapsMetaData = {
-        let metadataPath = Bundle.mapboxMaps.url(forResource: "MapboxMaps", withExtension: "json")
-        let data = try! Data(contentsOf: metadataPath!)
-
-        return try! JSONDecoder().decode(MapboxMapsMetaData.self, from: data)
+    static var mapboxMapsMetadata: MapboxMapsMetadata = {
+        let metadataPath = Bundle.mapboxMaps.url(forResource: "MapboxMaps", withExtension: "json")!
+        let data = try! Data(contentsOf: metadataPath)
+        return try! JSONDecoder().decode(MapboxMapsMetadata.self, from: data)
     }()
 }

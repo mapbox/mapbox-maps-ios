@@ -3,21 +3,12 @@
 @available(iOSApplicationExtension, unavailable)
 extension MapView: AttributionDialogManagerDelegate {
     func viewControllerForPresenting(_ attributionDialogManager: AttributionDialogManager) -> UIViewController {
-        // Consider delegating out to a delegate
         return parentViewController!
     }
 
     func attributionDialogManager(_ attributionDialogManager: AttributionDialogManager, didTriggerActionFor attribution: Attribution) {
-        let url: URL
-
-        if attribution.isFeedbackURL {
-            url = mapboxFeedbackURL()
-        } else {
-            url = attribution.url
-        }
-
+        let url: URL = attribution.isFeedbackURL ? mapboxFeedbackURL() : attribution.url
         Log.debug(forMessage: "Open url: \(url))", category: "Attribution")
-
         UIApplication.shared.open(url)
     }
 

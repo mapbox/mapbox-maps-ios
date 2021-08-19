@@ -42,11 +42,14 @@ extension MapView: AttributionDialogManagerDelegate {
                 queryItems.append(contentsOf: [
                     URLQueryItem(name: "owner", value: pathComponents[1]),
                     URLQueryItem(name: "id", value: pathComponents[2]),
-                    URLQueryItem(name: "access_token", value: accessToken),
-                    URLQueryItem(name: "map_sdk_version", value: sdkVersion),
                 ])
             }
         }
+
+        queryItems.append(contentsOf: [
+            URLQueryItem(name: "access_token", value: accessToken),
+            URLQueryItem(name: "map_sdk_version", value: sdkVersion),
+        ])
 
         components.queryItems = queryItems
 

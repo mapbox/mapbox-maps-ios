@@ -12,6 +12,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Update all Annotation files to use `get/set` instead of `didSet`. This fixes an issue where properties were not being set at `init`. ([#590](https://github.com/mapbox/mapbox-maps-ios/pull/590))
 * `GeoJSONSource.clusterProperties` is now correctly modeled per the style spec. ([#597](https://github.com/mapbox/mapbox-maps-ios/pull/597))
+* Fixes a crash caused by `MapboxMap.clearData()`. ([#]())
 
 ## 10.0.0-rc.6 - August 11, 2021
 

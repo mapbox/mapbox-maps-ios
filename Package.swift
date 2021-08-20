@@ -25,6 +25,9 @@ let package = Package(
             dependencies: ["MapboxCoreMaps", "Turf", "MapboxMobileEvents", "MapboxCommon"],
             exclude: [
                 "Info.plist"
+            ],
+            resources: [
+                .copy("MapboxMaps.json")
             ]
         ),
         .testTarget(

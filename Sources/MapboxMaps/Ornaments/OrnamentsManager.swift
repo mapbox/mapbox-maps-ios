@@ -33,11 +33,13 @@ public class OrnamentsManager: NSObject {
     private let logoView: LogoView
     private let scalebarView: MapboxScaleBarOrnamentView
     private let compassView: MapboxCompassOrnamentView
-    private let attributionButton: MapboxInfoButtonOrnament
+    private let attributionButton: InfoButtonOrnament
 
     private var constraints = [NSLayoutConstraint]()
 
-    internal init(view: OrnamentSupportableView, options: OrnamentOptions, attributionDataSource: AttributionDataSource) {
+    internal init(view: OrnamentSupportableView,
+                  options: OrnamentOptions,
+                  infoButtonOrnamentDelegate: InfoButtonOrnamentDelegate) {
         self.options = options
 
         // Logo View
@@ -62,12 +64,13 @@ public class OrnamentsManager: NSObject {
         view.addSubview(compassView)
 
         // Info Button
-        attributionButton = MapboxInfoButtonOrnament()
-        attributionButton.attributionDataSource = attributionDataSource
+        attributionButton = InfoButtonOrnament()
         attributionButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(attributionButton)
 
         super.init()
+
+        attributionButton.delegate = infoButtonOrnamentDelegate
 
         updateOrnaments()
 

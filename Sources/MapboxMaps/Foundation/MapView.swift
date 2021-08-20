@@ -33,6 +33,9 @@ open class MapView: UIView {
     /// Controls the addition/removal of annotations to the map.
     public internal(set) var annotations: AnnotationOrchestrator!
 
+    /// Controls the display of attribution dialogs
+    private var attributionDialogManager: AttributionDialogManager!
+
     /// A reference to the `EventsManager` used for dispatching telemetry.
     internal var eventsListener: EventsListener!
 
@@ -218,8 +221,11 @@ open class MapView: UIView {
         // Initialize/Configure gesture manager
         gestures = GestureManager(view: self, cameraAnimationsManager: camera, mapboxMap: mapboxMap)
 
+        // Initialize the attribution manager
+        attributionDialogManager = AttributionDialogManager(dataSource: mapboxMap, delegate: self)
+
         // Initialize/Configure ornaments manager
-        ornaments = OrnamentsManager(view: self, options: OrnamentOptions(), attributionDataSource: mapboxMap)
+        ornaments = OrnamentsManager(view: self, options: OrnamentOptions(), infoButtonOrnamentDelegate: attributionDialogManager)
 
         // Initialize/Configure location manager
         location = LocationManager(locationSupportableMapView: self, style: mapboxMap.style)

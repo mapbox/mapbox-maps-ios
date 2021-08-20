@@ -1,23 +1,23 @@
-@_implementationOnly import MapboxCommon_Private
-
 internal protocol AttributionDataSource: AnyObject {
     func attributions() -> [Attribution]
 }
 
 @available(iOSApplicationExtension, unavailable)
 internal protocol AttributionDialogManagerDelegate: AnyObject {
-    func attributionDialogManager(_ attributionDialogManager: AttributionDialogManager, viewControllerForPresentingFromView view: UIView) -> UIViewController
-    func triggerAction(for attribution: Attribution)
+    func viewControllerForPresenting(_ attributionDialogManager: AttributionDialogManager) -> UIViewController
+    func attributionDialogManager(_ attributionDialogManager: AttributionDialogManager, didTriggerActionFor attribution: Attribution)
 }
 
 @available(iOSApplicationExtension, unavailable)
 internal class AttributionDialogManager {
-    init() {
-        delegate = self
-    }
 
-    weak var delegate: AttributionDialogManagerDelegate?
-    weak var dataSource: AttributionDataSource?
+    private weak var dataSource: AttributionDataSource?
+    private weak var delegate: AttributionDialogManagerDelegate?
+
+    internal init(dataSource: AttributionDataSource, delegate: AttributionDialogManagerDelegate?) {
+        self.dataSource = dataSource
+        self.delegate = delegate
+    }
 
     internal var isMetricsEnabled: Bool {
         get {
@@ -26,60 +26,6 @@ internal class AttributionDialogManager {
         set {
             UserDefaults.standard.set(newValue, forKey: Ornaments.metricsEnabledKey)
         }
-    }
-
-    func showAttributionDialog(from view: UIView, completion: (() -> Void)? = nil) {
-
-        guard let viewController = delegate?.attributionDialogManager(self, viewControllerForPresentingFromView: view) else {
-            fatalError("No view controller found")
-        }
-
-        let title = NSLocalizedString("SDK_NAME",
-                                      tableName: nil,
-                                      value: "Mapbox Maps SDK for iOS",
-                                      comment: "Action sheet title")
-
-        let alert: UIAlertController
-
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-        } else {
-            alert = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
-        }
-
-        let bundle = Bundle.mapboxMaps
-
-        /*
-        if let attributions = dataSource?.attributions() {
-            for attribution in attributions {
-                let action = UIAlertAction(title: attribution.title, style: .default) { _ in
-                    self.delegate?.triggerAction(for: attribution)
-                }
-                alert.addAction(action)
-            }
-        }
-        */
-
-        let telemetryTitle = NSLocalizedString("TELEMETRY_NAME",
-                                               tableName: Ornaments.localizableTableName,
-                                               bundle: bundle,
-                                               value: "Mapbox Telemetry",
-                                               comment: "Action in attribution sheet")
-        let telemetryAction = UIAlertAction(title: telemetryTitle, style: .default) { _ in
-            self.showTelemetryAlertController(from: viewController)
-        }
-
-        alert.addAction(telemetryAction)
-
-        let cancelTitle = NSLocalizedString("CANCEL",
-                                            tableName: Ornaments.localizableTableName,
-                                            bundle: bundle,
-                                            value: "Cancel",
-                                            comment: "Title of button for dismissing attribution action sheet")
-
-        alert.addAction(UIAlertAction(title: cancelTitle, style: .cancel))
-
-        viewController.present(alert, animated: true, completion: completion)
     }
 
     //swiftlint:disable function_body_length
@@ -161,27 +107,57 @@ internal class AttributionDialogManager {
     }
 }
 
+// MARK: InfoButtonOrnamentDelegate Implementation
 @available(iOSApplicationExtension, unavailable)
-extension AttributionDialogManager: AttributionDialogManagerDelegate {
-    func triggerAction(for attribution: Attribution) {
-
-        Log.info(forMessage: "Attribution url: \(attribution.url))", category: "Attribution")
-
-        if attribution.isFeedbackURL {
-            // TODO: Create Feedback URL from map
-            /*
-            url = [info feedbackURLForStyleURL:self.styleURL
-                            atCenterCoordinate:camera.centerCoordinate
-                                     zoomLevel:self.zoomLevel
-                                     direction:camera.heading
-                                         pitch:camera.pitch];
-            */
+extension AttributionDialogManager: InfoButtonOrnamentDelegate {
+    func didTap(_ infoButtonOrnament: InfoButtonOrnament) {
+        guard let viewController = delegate?.viewControllerForPresenting(self) else {
+            fatalError("No view controller found")
         }
 
-        // TODO: Open URL
-    }
+        let title = NSLocalizedString("SDK_NAME",
+                                      tableName: nil,
+                                      value: "Mapbox Maps SDK for iOS",
+                                      comment: "Action sheet title")
 
-    func attributionDialogManager(_ attributionDialogManager: AttributionDialogManager, viewControllerForPresentingFromView view: UIView) -> UIViewController {
-        return view.parentViewController!
+        let alert: UIAlertController
+
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+        } else {
+            alert = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
+        }
+
+        let bundle = Bundle.mapboxMaps
+
+        if let attributions = dataSource?.attributions() {
+            for attribution in attributions {
+                let action = UIAlertAction(title: attribution.title, style: .default) { _ in
+                    self.delegate?.attributionDialogManager(self, didTriggerActionFor: attribution)
+                }
+                alert.addAction(action)
+            }
+        }
+
+        let telemetryTitle = NSLocalizedString("TELEMETRY_NAME",
+                                               tableName: Ornaments.localizableTableName,
+                                               bundle: bundle,
+                                               value: "Mapbox Telemetry",
+                                               comment: "Action in attribution sheet")
+        let telemetryAction = UIAlertAction(title: telemetryTitle, style: .default) { _ in
+            self.showTelemetryAlertController(from: viewController)
+        }
+
+        alert.addAction(telemetryAction)
+
+        let cancelTitle = NSLocalizedString("CANCEL",
+                                            tableName: Ornaments.localizableTableName,
+                                            bundle: bundle,
+                                            value: "Cancel",
+                                            comment: "Title of button for dismissing attribution action sheet")
+
+        alert.addAction(UIAlertAction(title: cancelTitle, style: .cancel))
+
+        viewController.present(alert, animated: true, completion: nil)
     }
 }

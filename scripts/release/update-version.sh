@@ -33,4 +33,8 @@ plutil -convert json -o - Sources/MapboxMaps/Info.plist | jq -r '.CFBundleVersio
 step "Update Podspec"
 sed -i '' s/"maps_version = '.*'"/"maps_version = '${SEM_VERSION}'"/ MapboxMaps.podspec
 
+# Update MapboxMaps.json
+step "Update MapboxMaps.json"
+sed -i '' s/"\"version\" : \".*\""/"\"version\" : \"${SEM_VERSION}\""/ Sources/MapboxMaps/MapboxMaps.json
+
 finish "Completed updating versions"

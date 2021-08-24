@@ -1,6 +1,5 @@
 import UIKit
 import MapboxMaps
-import MapKit
 
 @objc(FeatureStateExample)
 

@@ -41,14 +41,17 @@ public class AnnotationOrchestrator {
 
     private weak var view: UIView?
 
-    private weak var style: Style?
+    private let style: Style
 
-    private weak var mapFeatureQueryable: MapFeatureQueryable?
+    private let mapFeatureQueryable: MapFeatureQueryable
 
-    internal init(view: UIView, mapFeatureQueryable: MapFeatureQueryable, style: Style) {
+    private weak var displayLinkCoordinator: DisplayLinkCoordinator?
+
+    internal init(view: UIView, mapFeatureQueryable: MapFeatureQueryable, style: Style, displayLinkCoordinator: DisplayLinkCoordinator) {
         self.view = view
         self.mapFeatureQueryable = mapFeatureQueryable
         self.style = style
+        self.displayLinkCoordinator = displayLinkCoordinator
     }
 
     /// Creates a `PointAnnotationManager` which is used to manage a collection of `PointAnnotation`s. The collection of `PointAnnotation` collection will persist across style changes.
@@ -59,8 +62,9 @@ public class AnnotationOrchestrator {
     public func makePointAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
                                            layerPosition: LayerPosition? = nil) -> PointAnnotationManager {
 
-        guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
-            fatalError("Style must be present when creating an annotation manager")
+        guard let view = view,
+              let displayLinkCoordinator = displayLinkCoordinator else {
+            fatalError("View and displayLinkCoordinator must be present when creating an annotation manager")
         }
 
         return PointAnnotationManager(id: id,
@@ -68,7 +72,8 @@ public class AnnotationOrchestrator {
                                       view: view,
                                       mapFeatureQueryable: mapFeatureQueryable,
                                       shouldPersist: true,
-                                      layerPosition: layerPosition)
+                                      layerPosition: layerPosition,
+                                      displayLinkCoordinator: displayLinkCoordinator)
     }
 
     /// Creates a `PolygonAnnotationManager` which is used to manage a collection of `PolygonAnnotation`s. The collection of `PolygonAnnotation`s will persist across style changes.
@@ -79,8 +84,9 @@ public class AnnotationOrchestrator {
     public func makePolygonAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
                                              layerPosition: LayerPosition? = nil) -> PolygonAnnotationManager {
 
-        guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
-            fatalError("Style must be present when creating an annotation manager")
+        guard let view = view,
+              let displayLinkCoordinator = displayLinkCoordinator else {
+            fatalError("View and displayLinkCoordinator must be present when creating an annotation manager")
         }
 
         return PolygonAnnotationManager(id: id,
@@ -88,7 +94,8 @@ public class AnnotationOrchestrator {
                                         view: view,
                                         mapFeatureQueryable: mapFeatureQueryable,
                                         shouldPersist: true,
-                                        layerPosition: layerPosition)
+                                        layerPosition: layerPosition,
+                                        displayLinkCoordinator: displayLinkCoordinator)
     }
 
     /// Creates a `PolylineAnnotationManager` which is used to manage a collection of `PolylineAnnotation`s. The collection of `PolylineAnnotation`s will persist across style changes.
@@ -99,8 +106,9 @@ public class AnnotationOrchestrator {
     public func makePolylineAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
                                               layerPosition: LayerPosition? = nil) -> PolylineAnnotationManager {
 
-        guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
-            fatalError("Style must be present when creating an annotation manager")
+        guard let view = view,
+              let displayLinkCoordinator = displayLinkCoordinator else {
+            fatalError("View and displayLinkCoordinator must be present when creating an annotation manager")
         }
 
         return PolylineAnnotationManager(id: id,
@@ -108,7 +116,8 @@ public class AnnotationOrchestrator {
                                          view: view,
                                          mapFeatureQueryable: mapFeatureQueryable,
                                          shouldPersist: true,
-                                         layerPosition: layerPosition)
+                                         layerPosition: layerPosition,
+                                         displayLinkCoordinator: displayLinkCoordinator)
     }
 
     /// Creates a `CircleAnnotationManager` which is used to manage a collection of `CircleAnnotation`s.  The collection of `CircleAnnotation`s will persist across style changes.
@@ -119,8 +128,9 @@ public class AnnotationOrchestrator {
     public func makeCircleAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
                                             layerPosition: LayerPosition? = nil) -> CircleAnnotationManager {
 
-        guard let view = view, let mapFeatureQueryable = mapFeatureQueryable, let style = style else {
-            fatalError("Style must be present when creating an annotation manager")
+        guard let view = view,
+              let displayLinkCoordinator = displayLinkCoordinator else {
+            fatalError("View and displayLinkCoordinator must be present when creating an annotation manager")
         }
 
         return CircleAnnotationManager(id: id,
@@ -128,6 +138,7 @@ public class AnnotationOrchestrator {
                                        view: view,
                                        mapFeatureQueryable: mapFeatureQueryable,
                                        shouldPersist: true,
-                                       layerPosition: layerPosition)
+                                       layerPosition: layerPosition,
+                                       displayLinkCoordinator: displayLinkCoordinator)
     }
 }

@@ -82,6 +82,10 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
             wait(for: [expectation], timeout: 10.0)
         }
 
+        didFinishLoadingStyle = nil
+        didBecomeIdle = nil
+        didFailLoadingMap = nil
+
         try super.tearDownWithError()
     }
 }

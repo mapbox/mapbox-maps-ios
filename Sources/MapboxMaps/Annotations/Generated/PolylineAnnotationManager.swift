@@ -10,16 +10,10 @@ public class PolylineAnnotationManager: AnnotationManager {
     // MARK: - Annotations -
 
     /// The collection of PolylineAnnotations being managed
-    public private(set) var annotations = [PolylineAnnotation]() {
+    public var annotations = [PolylineAnnotation]() {
         didSet {
             syncAnnotations()
          }
-    }
-
-    /// Syncs `PolylineAnnotation`s to the map
-    /// NOTE: calling this repeatedly results in degraded performance
-    public func syncAnnotations(_ annotations: [PolylineAnnotation]) {
-        self.annotations = annotations
     }
 
     // MARK: - AnnotationManager protocol conformance -

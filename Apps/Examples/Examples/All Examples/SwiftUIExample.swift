@@ -117,7 +117,7 @@ internal class SwiftUIMapViewCoordinator {
     /// are set, it synchronizes them to the map
     var annotations = [PointAnnotation]() {
         didSet {
-            syncAnnotations()
+            pointAnnotationManager?.annotations = annotations
         }
     }
 
@@ -195,15 +195,11 @@ internal class SwiftUIMapViewCoordinator {
             /// situation, the warning is expected, and should not cause any runtime problems. We
             /// expect to clean this up as well in an upcoming release.
             pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
-            syncAnnotations()
+            pointAnnotationManager?.annotations = annotations
 
         default:
             break
         }
-    }
-
-    private func syncAnnotations() {
-        pointAnnotationManager?.syncAnnotations(annotations)
     }
 }
 

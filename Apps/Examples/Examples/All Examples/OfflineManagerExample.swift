@@ -337,7 +337,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
             pointAnnotation.image = .default
 
             self.pointAnnotationsManager = mapView.annotations.makePointAnnotationManager()
-            self.pointAnnotationsManager?.syncAnnotations([pointAnnotation])
+            self.pointAnnotationsManager?.annotations = [pointAnnotation]
         }
 
         self.mapView = mapView

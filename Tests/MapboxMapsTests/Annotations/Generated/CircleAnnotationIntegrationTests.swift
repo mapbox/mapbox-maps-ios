@@ -36,7 +36,7 @@ class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
             annotation.circleStrokeOpacity =  Double.testConstantValue()
             annotation.circleStrokeWidth =  Double.testConstantValue()
 
-            manager.syncAnnotations([annotation])
+            manager.annotations = [annotation]
             self.manager = manager
             successfullyLoadedStyleExpectation.fulfill()
         }
@@ -59,7 +59,7 @@ class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
             let annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
 
-            manager.syncAnnotations([annotation])
+            manager.annotations = [annotation]
             self.manager = manager
 
             do {

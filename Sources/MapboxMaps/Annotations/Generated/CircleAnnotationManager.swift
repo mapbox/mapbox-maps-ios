@@ -10,16 +10,10 @@ public class CircleAnnotationManager: AnnotationManager {
     // MARK: - Annotations -
 
     /// The collection of CircleAnnotations being managed
-    public private(set) var annotations = [CircleAnnotation]() {
+    public var annotations = [CircleAnnotation]() {
         didSet {
             syncAnnotations()
          }
-    }
-
-    /// Syncs `CircleAnnotation`s to the map
-    /// NOTE: calling this repeatedly results in degraded performance
-    public func syncAnnotations(_ annotations: [CircleAnnotation]) {
-        self.annotations = annotations
     }
 
     // MARK: - AnnotationManager protocol conformance -

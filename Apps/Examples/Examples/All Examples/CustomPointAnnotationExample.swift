@@ -48,7 +48,7 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
         customPointAnnotation.image = .custom(image: customImage, name: "my-custom-image-name")
 
         // Add the annotation to the manager in order to render it on the mao.
-        pointAnnotationManager.syncAnnotations([customPointAnnotation])
+        pointAnnotationManager.annotations = [customPointAnnotation]
 
         // The annotations added above will show as long as the `PointAnnotationManager` is alive,
         // so keep a reference to it.

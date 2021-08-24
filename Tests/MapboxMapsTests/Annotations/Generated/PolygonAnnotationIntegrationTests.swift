@@ -40,7 +40,7 @@ class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
             annotation.fillOutlineColor =  ColorRepresentable.testConstantValue()
             annotation.fillPattern =  String.testConstantValue()
 
-            manager.syncAnnotations([annotation])
+            manager.annotations = [annotation]
             self.manager = manager
             successfullyLoadedStyleExpectation.fulfill()
         }
@@ -70,7 +70,7 @@ class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
             ]
             let annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
 
-            manager.syncAnnotations([annotation])
+            manager.annotations = [annotation]
             self.manager = manager
 
             do {

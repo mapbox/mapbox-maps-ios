@@ -39,7 +39,7 @@ public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProt
         pointAnnotation.image = .default
 
         // Add the annotation to the map
-        pointAnnotationManager.syncAnnotations([pointAnnotation])
+        pointAnnotationManager.annotations = [pointAnnotation]
 
         // Add a gesture recognizer to the map
         mapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(updatePosition)))
@@ -55,6 +55,6 @@ public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProt
         pointAnnotation.image = .default
 
         // Update the annotations being managed by the manager
-        pointAnnotationManager.syncAnnotations([pointAnnotation])
+        pointAnnotationManager.annotations = [pointAnnotation]
     }
 }

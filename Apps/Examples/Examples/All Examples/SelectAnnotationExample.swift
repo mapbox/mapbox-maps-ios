@@ -81,7 +81,7 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
         pointAnnotationManager.delegate = self
 
         // Add the annotation to the map.
-        pointAnnotationManager.syncAnnotations([pointAnnotation])
+        pointAnnotationManager.annotations = [pointAnnotation]
 
         // The below line is used for internal testing purposes only.
         finish()

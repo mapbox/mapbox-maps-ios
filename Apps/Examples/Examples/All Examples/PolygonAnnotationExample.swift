@@ -41,7 +41,7 @@ public class PolygonAnnotationExample: UIViewController, ExampleProtocol {
         polygonAnnotation.fillOpacity = 0.8
 
         // Add the polygon annotation to the manager
-        polygonAnnotationManager.syncAnnotations([polygonAnnotation])
+        polygonAnnotationManager.annotations = [polygonAnnotation]
 
         // The annotations added above will show as long as the `PolygonAnnotationManager` is alive,
         // so keep a reference to it.

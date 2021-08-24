@@ -519,9 +519,6 @@ extension MapboxMap {
     /// Update entries in the state map of a given feature within a style source. Only entries listed in the state map
     /// will be updated. An entry in the feature state map that is not listed in `state` will retain its previous value.
     ///
-    /// - Note: updates to feature state are asynchronous, so changes made by this method migth
-    ///         not be immediately visible using getStateFeature().
-    ///
     /// - Parameters:
     ///   - sourceId: Style source identifier
     ///   - sourceLayerId: Style source layer identifier (for multi-layer sources such as vector sources). Defaults to `nil`.
@@ -535,8 +532,7 @@ extension MapboxMap {
     }
 
     /// Get the state map of a feature within a style source.
-    ///
-    /// - Note: Updates to feature state are asynchronous, so changes made by other methods might not be immediately visible.
+    /// 
     /// - Parameters:
     ///   - sourceId: Style source identifier.
     ///   - sourceLayerId: Style source layer identifier (for multi-layer sources such as vector sources).
@@ -553,9 +549,6 @@ extension MapboxMap {
 
     /// Removes entries from a feature state object.
     /// Remove a specified property or all property from a feature's state object, depending on the value of `stateKey`.
-    ///
-    /// - Note: Updates to feature state are asynchronous, so changes made by this method
-    ///         might not be immediately visible using `getStateFeature`.
     ///
     /// - Parameters:
     ///   - sourceId: The style source identifier

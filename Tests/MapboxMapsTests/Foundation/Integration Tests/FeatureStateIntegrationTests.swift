@@ -7,7 +7,7 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
     internal func testSetFeatureState() {
         style?.uri = .streets
         let featureStateExpectation = XCTestExpectation(description: "Wait for feature state  map to be updated.")
-
+            
         didFinishLoadingStyle = { mapView in
 
             do {
@@ -24,16 +24,14 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
 
         didBecomeIdle = { mapView in
             mapView.mapboxMap.setFeatureState(sourceId: "test-source", featureId: "0", state: ["testKey": true])
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak mapView] in
-                mapView?.mapboxMap.getFeatureState(sourceId: "test-source", featureId: "0") { result in
-                    switch result {
-                    case .success(let map):
-                        XCTAssertEqual(map["testKey"] as? Bool, true)
-                        featureStateExpectation.fulfill()
-                    case .failure(let error):
-                        XCTFail("Could not retrieve feature state: \(error)")
-                    }
+            
+            mapView.mapboxMap.getFeatureState(sourceId: "test-source", featureId: "0") { result in
+                switch result {
+                case .success(let map):
+                    XCTAssertEqual(map["testKey"] as? Bool, true)
+                    featureStateExpectation.fulfill()
+                case .failure(let error):
+                    XCTFail("Could not retrieve feature state: \(error)")
                 }
             }
         }
@@ -59,26 +57,23 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
 
         didBecomeIdle = { mapView in
             mapView.mapboxMap.setFeatureState(sourceId: "test-source", featureId: "0", state: ["testKey": true])
+            
+            mapView.mapboxMap.removeFeatureState(sourceId: "test-source", featureId: "0")
+            
+            mapView.mapboxMap.getFeatureState(
+                sourceId: "test-source",
+                featureId: "0") { result in
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak mapView] in
-
-                mapView?.mapboxMap.removeFeatureState(sourceId: "test-source", featureId: "0")
-
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak mapView] in
-                    mapView?.mapboxMap.getFeatureState(
-                        sourceId: "test-source",
-                        featureId: "0") { result in
-
-                        switch result {
-                        case .success(let map):
-                            XCTAssert(map.isEmpty)
-                            featureStateExpectation.fulfill()
-                        case .failure(let error):
-                            XCTFail("Could not retrieve feature state: \(error)")
-                        }
-                    }
+                switch result {
+                case .success(let map):
+                    XCTAssert(map.isEmpty)
+                    featureStateExpectation.fulfill()
+                case .failure(let error):
+                    XCTFail("Could not retrieve feature state: \(error)")
                 }
             }
+
+            
         }
 
         wait(for: [featureStateExpectation], timeout: 5.0)

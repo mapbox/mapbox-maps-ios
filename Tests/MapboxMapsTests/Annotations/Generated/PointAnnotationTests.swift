@@ -14,7 +14,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["icon-anchor"] as? String, annotation.iconAnchor?.rawValue)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["icon-anchor"] as? String, annotation.iconAnchor?.rawValue)
     }
 
     func testIconImage() {
@@ -25,7 +25,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["icon-image"] as? String, annotation.iconImage)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["icon-image"] as? String, annotation.iconImage)
     }
 
     func testIconOffset() {
@@ -36,7 +36,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["icon-offset"] as? [Double], annotation.iconOffset)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["icon-offset"] as? [Double], annotation.iconOffset)
     }
 
     func testIconRotate() {
@@ -47,7 +47,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["icon-rotate"] as? Double, annotation.iconRotate)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["icon-rotate"] as? Double, annotation.iconRotate)
     }
 
     func testIconSize() {
@@ -58,7 +58,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["icon-size"] as? Double, annotation.iconSize)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["icon-size"] as? Double, annotation.iconSize)
     }
 
     func testSymbolSortKey() {
@@ -69,7 +69,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["symbol-sort-key"] as? Double, annotation.symbolSortKey)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["symbol-sort-key"] as? Double, annotation.symbolSortKey)
     }
 
     func testTextAnchor() {
@@ -80,7 +80,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["text-anchor"] as? String, annotation.textAnchor?.rawValue)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["text-anchor"] as? String, annotation.textAnchor?.rawValue)
     }
 
     func testTextField() {
@@ -91,7 +91,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["text-field"] as? String, annotation.textField)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["text-field"] as? String, annotation.textField)
     }
 
     func testTextJustify() {
@@ -102,7 +102,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["text-justify"] as? String, annotation.textJustify?.rawValue)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["text-justify"] as? String, annotation.textJustify?.rawValue)
     }
 
     func testTextLetterSpacing() {
@@ -113,7 +113,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["text-letter-spacing"] as? Double, annotation.textLetterSpacing)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["text-letter-spacing"] as? Double, annotation.textLetterSpacing)
     }
 
     func testTextMaxWidth() {
@@ -124,7 +124,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["text-max-width"] as? Double, annotation.textMaxWidth)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["text-max-width"] as? Double, annotation.textMaxWidth)
     }
 
     func testTextOffset() {
@@ -135,7 +135,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["text-offset"] as? [Double], annotation.textOffset)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["text-offset"] as? [Double], annotation.textOffset)
     }
 
     func testTextRadialOffset() {
@@ -146,7 +146,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["text-radial-offset"] as? Double, annotation.textRadialOffset)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["text-radial-offset"] as? Double, annotation.textRadialOffset)
     }
 
     func testTextRotate() {
@@ -157,7 +157,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["text-rotate"] as? Double, annotation.textRotate)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["text-rotate"] as? Double, annotation.textRotate)
     }
 
     func testTextSize() {
@@ -168,7 +168,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["text-size"] as? Double, annotation.textSize)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["text-size"] as? Double, annotation.textSize)
     }
 
     func testTextTransform() {
@@ -179,7 +179,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["text-transform"] as? String, annotation.textTransform?.rawValue)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["text-transform"] as? String, annotation.textTransform?.rawValue)
     }
 
     func testIconColor() {
@@ -190,7 +190,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["icon-color"] as? String, annotation.iconColor.flatMap { try? $0.jsonString() })
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["icon-color"] as? String, annotation.iconColor.flatMap { try? $0.jsonString() })
     }
 
     func testIconHaloBlur() {
@@ -201,7 +201,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["icon-halo-blur"] as? Double, annotation.iconHaloBlur)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["icon-halo-blur"] as? Double, annotation.iconHaloBlur)
     }
 
     func testIconHaloColor() {
@@ -212,7 +212,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["icon-halo-color"] as? String, annotation.iconHaloColor.flatMap { try? $0.jsonString() })
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["icon-halo-color"] as? String, annotation.iconHaloColor.flatMap { try? $0.jsonString() })
     }
 
     func testIconHaloWidth() {
@@ -223,7 +223,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["icon-halo-width"] as? Double, annotation.iconHaloWidth)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["icon-halo-width"] as? Double, annotation.iconHaloWidth)
     }
 
     func testIconOpacity() {
@@ -234,7 +234,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["icon-opacity"] as? Double, annotation.iconOpacity)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["icon-opacity"] as? Double, annotation.iconOpacity)
     }
 
     func testTextColor() {
@@ -245,7 +245,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["text-color"] as? String, annotation.textColor.flatMap { try? $0.jsonString() })
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["text-color"] as? String, annotation.textColor.flatMap { try? $0.jsonString() })
     }
 
     func testTextHaloBlur() {
@@ -256,7 +256,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["text-halo-blur"] as? Double, annotation.textHaloBlur)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["text-halo-blur"] as? Double, annotation.textHaloBlur)
     }
 
     func testTextHaloColor() {
@@ -267,7 +267,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["text-halo-color"] as? String, annotation.textHaloColor.flatMap { try? $0.jsonString() })
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["text-halo-color"] as? String, annotation.textHaloColor.flatMap { try? $0.jsonString() })
     }
 
     func testTextHaloWidth() {
@@ -278,7 +278,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["text-halo-width"] as? Double, annotation.textHaloWidth)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["text-halo-width"] as? Double, annotation.textHaloWidth)
     }
 
     func testTextOpacity() {
@@ -289,7 +289,7 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["text-opacity"] as? Double, annotation.textOpacity)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["text-opacity"] as? Double, annotation.textOpacity)
     }
 }
 

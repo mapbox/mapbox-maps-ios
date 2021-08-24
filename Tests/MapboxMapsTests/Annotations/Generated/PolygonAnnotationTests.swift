@@ -21,7 +21,7 @@ final class PolygonAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["fill-sort-key"] as? Double, annotation.fillSortKey)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["fill-sort-key"] as? Double, annotation.fillSortKey)
     }
 
     func testFillColor() {
@@ -39,7 +39,7 @@ final class PolygonAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["fill-color"] as? String, annotation.fillColor.flatMap { try? $0.jsonString() })
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["fill-color"] as? String, annotation.fillColor.flatMap { try? $0.jsonString() })
     }
 
     func testFillOpacity() {
@@ -57,7 +57,7 @@ final class PolygonAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["fill-opacity"] as? Double, annotation.fillOpacity)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["fill-opacity"] as? Double, annotation.fillOpacity)
     }
 
     func testFillOutlineColor() {
@@ -75,7 +75,7 @@ final class PolygonAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["fill-outline-color"] as? String, annotation.fillOutlineColor.flatMap { try? $0.jsonString() })
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["fill-outline-color"] as? String, annotation.fillOutlineColor.flatMap { try? $0.jsonString() })
     }
 
     func testFillPattern() {
@@ -93,7 +93,7 @@ final class PolygonAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["fill-pattern"] as? String, annotation.fillPattern)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["fill-pattern"] as? String, annotation.fillPattern)
     }
 }
 

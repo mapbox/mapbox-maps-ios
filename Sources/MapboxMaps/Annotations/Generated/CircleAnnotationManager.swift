@@ -105,10 +105,10 @@ public class CircleAnnotationManager: AnnotationManager {
             return
         }
 
-        let allDataDrivenPropertiesUsed = Set(annotations.flatMap(\.dataDrivenPropertiesUsedSet))
+        let allDataDrivenPropertiesUsed = Set(annotations.flatMap { $0.styles.keys })
         for property in allDataDrivenPropertiesUsed {
             do {
-                try style.setLayerProperty(for: layerId, property: property, value: ["get", property] )
+                try style.setLayerProperty(for: layerId, property: property, value: ["get", property, ["get", "styles"]] )
             } catch {
                 Log.error(forMessage: "Could not set layer property \(property) in CircleAnnotationManager",
                             category: "Annotations")

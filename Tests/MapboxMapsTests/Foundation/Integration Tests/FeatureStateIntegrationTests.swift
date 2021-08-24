@@ -12,10 +12,10 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
 
             do {
                 try mapView.mapboxMap.style.addSource(
-                    makeGeoJSONSource(),
+                    self.makeGeoJSONSource(),
                     id: "test-source")
                 try mapView.mapboxMap.style.addLayer(
-                    makeLayer())
+                    self.makeLayer())
 
             } catch {
                 XCTFail("Failed to add geojson source / layer due to error: \(error)")
@@ -48,10 +48,10 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
         didFinishLoadingStyle = { mapView in
             do {
                 try mapView.mapboxMap.style.addSource(
-                    makeGeoJSONSource(),
+                    self.makeGeoJSONSource(),
                     id: "test-source")
                 try mapView.mapboxMap.style.addLayer(
-                    makeLayer())
+                    self.makeLayer())
             } catch {
                 XCTFail("Failed to add geojson source / layer due to error: \(error)")
             }

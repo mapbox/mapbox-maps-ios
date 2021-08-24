@@ -11,13 +11,13 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
     static let earthquakeSourceId: String = "earthquakes"
     static let earthquakeLayerId: String = "earthquake-viz"
     private var previouslyTappedEarthquakeId: String = ""
-    
+
     private lazy var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.timeStyle = DateFormatter.Style.medium //Set time style
         dateFormatter.dateStyle = DateFormatter.Style.medium //Set date style
         dateFormatter.timeZone = .current
-        
+
         return dateFormatter
     }()
 
@@ -34,7 +34,7 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
         mapView.ornaments.options.scaleBar.visibility = .hidden
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
-        
+
         // Set up description view
         descriptionView = EarthquakeDescriptionView(frame: .zero)
         view.addSubview(descriptionView)
@@ -43,16 +43,16 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
         descriptionView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         descriptionView.widthAnchor.constraint(equalToConstant: 200).isActive = true
         descriptionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2.0).isActive = true
-        
+
         mapView.mapboxMap.onNext(.mapLoaded) { [weak self] _ in
             guard let self = self else { return }
-            
+
             self.setupSourceAndLayer()
-            
+
             // Set up tap gesture
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.findFeatures))
             self.mapView.addGestureRecognizer(tapGesture)
-        
+
             // The below lines are used for internal testing purposes only.
             DispatchQueue.main.asyncAfter(deadline: .now()+3.0) { [weak self] in
                 self?.finish()
@@ -66,31 +66,31 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
         guard let sevenDaysAgo = Calendar.current.date(byAdding: .day, value: -7, to: Date()) else {
             preconditionFailure("Could not calculate date for seven days ago.")
         }
-        
+
         // Format the date to ISO8601 as required by the earthquakes API
         let iso8601DateFormatter = ISO8601DateFormatter()
         iso8601DateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         let startTime = iso8601DateFormatter.string(from: sevenDaysAgo)
-        
+
         // Create the url required for the GeoJSONSource
         guard let earthquakeURL = URL(string: "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&minmagnitude=1&starttime=" + startTime) else {
             preconditionFailure("URL is not valid")
         }
-        
+
         var earthquakeSource = GeoJSONSource()
         earthquakeSource.data = .url(earthquakeURL)
         earthquakeSource.generateId = true
-        
+
         do {
             try mapView.mapboxMap.style.addSource(earthquakeSource, id: Self.earthquakeSourceId)
         } catch {
             print("Ran into an error adding a source: \(error)")
         }
-        
+
         // Add earthquake-viz layer
         var earthquakeVizLayer = CircleLayer(id: Self.earthquakeLayerId)
         earthquakeVizLayer.source = Self.earthquakeSourceId
-        
+
         // The feature-state dependent circle-radius expression will render
         // the radius size according to its magnitude when
         // a feature's selected state is set to true
@@ -130,7 +130,7 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
         earthquakeVizLayer.circleRadiusTransition = StyleTransition(duration: 0.5, delay: 0)
         earthquakeVizLayer.circleStrokeColor = .constant(.init(color: .black))
         earthquakeVizLayer.circleStrokeWidth = .constant(1)
-        
+
         // The feature-state dependent circle-color expression will render
         // the color according to its magnitude when
         // a feature's hover state is set to true
@@ -168,14 +168,14 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
             }
         )
         earthquakeVizLayer.circleColorTransition = StyleTransition(duration: 0.5, delay: 0)
-        
+
         do {
             try mapView.mapboxMap.style.addLayer(earthquakeVizLayer)
         } catch {
             print("Ran into an error adding a layer: \(error)")
         }
     }
-    
+
     /**
      Use the tap point received from the gesture recognizer to query
      the map for rendered features at the given point within the layer specified.
@@ -186,12 +186,12 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
         mapView.mapboxMap.queryRenderedFeatures(
             at: tapPoint,
             options: RenderedQueryOptions(layerIds: ["earthquake-viz"], filter: nil)) { [weak self] result in
-            
+
             guard let self = self else { return }
-            
+
             switch result {
             case .success(let queriedfeatures):
-                
+
                 // Extract the earthquake feature from the queried features
                 if let earthquakeFeature = queriedfeatures.first?.feature,
                    let earthquakeId = (earthquakeFeature.identifier as? NSNumber)?.stringValue,
@@ -199,19 +199,19 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
                    let magnitude = earthquakeFeature.properties["mag"] as? NSNumber,
                    let place = earthquakeFeature.properties["place"] as? String,
                    let timestamp = earthquakeFeature.properties["time"] as? NSNumber {
-                    
+
                     // Set the description of the earthquake from the `properties` object
                     self.setDescription(magnitude: magnitude.doubleValue, timeStamp: timestamp.doubleValue, location: place)
-                    
+
                     // Set the earthquake to be "selected"
                     self.setSelectedState(earthquakeId: earthquakeId)
-                    
+
                     // Reset a previously tapped earthquake to be "unselected".
                     self.resetPreviouslySelectedStateIfNeeded(currentTappedEarthquakeId: earthquakeId)
-                    
+
                     // Store the currently tapped earthquake so it can be reset when another earthquake is tapped.
                     self.previouslyTappedEarthquakeId = earthquakeId
-                    
+
                     // Center the selected earthquake on the screen
                     let coord = CLLocationCoordinate2D(latitude: CLLocationDegrees(point.x), longitude: CLLocationDegrees(point.y))
                     self.mapView.camera.fly(to: CameraOptions(center: coord, zoom: 10))
@@ -221,15 +221,14 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
             }
         }
     }
-    
-    
+
     func setDescription(magnitude: Double, timeStamp: Double, location: String) {
         self.descriptionView.magnitudeLabel.text = "Magnitude: \(magnitude)"
         self.descriptionView.locationLabel.text = "Location: \(location)"
         self.descriptionView.dateLabel.text = "Date: " + self.dateFormatter.string(
             from: Date(timeIntervalSince1970: timeStamp / 1000.0))
     }
-    
+
     // Sets a particular earthquake to be selected
     func setSelectedState(earthquakeId: String) {
         self.mapView.mapboxMap.setFeatureState(sourceId: Self.earthquakeSourceId,
@@ -237,12 +236,12 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
                                                featureId: earthquakeId,
                                                state: ["selected": true])
     }
-    
+
     // Resets the previously selected earthquake to be "unselected" if needed.
     func resetPreviouslySelectedStateIfNeeded(currentTappedEarthquakeId: String) {
-        
+
         if self.previouslyTappedEarthquakeId != ""
-            && currentTappedEarthquakeId != self.previouslyTappedEarthquakeId  {
+            && currentTappedEarthquakeId != self.previouslyTappedEarthquakeId {
             // Reset a previously tapped earthquake to be "unselected".
             self.mapView.mapboxMap.setFeatureState(sourceId: Self.earthquakeSourceId,
                                                     sourceLayerId: nil,
@@ -263,14 +262,13 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
     }
 }
 
+private class EarthquakeDescriptionView: UIView {
 
-fileprivate class EarthquakeDescriptionView: UIView {
-    
     var magnitudeLabel: UILabel!
     var locationLabel: UILabel!
     var dateLabel: UILabel!
     var stackView: UIStackView!
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
@@ -279,13 +277,13 @@ fileprivate class EarthquakeDescriptionView: UIView {
         layer.borderColor = UIColor.black.cgColor
         createSubviews()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func createSubviews() {
-        
+
         func createLabel(placeholder: String) -> UILabel {
             let label = UILabel(frame: .zero)
             label.font = UIFont.systemFont(ofSize: 10)
@@ -294,11 +292,11 @@ fileprivate class EarthquakeDescriptionView: UIView {
             label.textColor = .black
             return label
         }
-        
+
         magnitudeLabel = createLabel(placeholder: "Magnitude: ---")
         locationLabel = createLabel(placeholder: "Location: ---")
         dateLabel = createLabel(placeholder: "Date: ---")
-        
+
         let stackview = UIStackView()
         stackview.axis = .vertical
         stackview.spacing = 1
@@ -310,7 +308,7 @@ fileprivate class EarthquakeDescriptionView: UIView {
 
         stackview.addArrangedSubview(locationLabel)
         locationLabel.widthAnchor.constraint(equalTo: stackview.widthAnchor).isActive = true
-        
+
         stackview.addArrangedSubview(dateLabel)
         dateLabel.widthAnchor.constraint(equalTo: stackview.widthAnchor).isActive = true
 
@@ -319,6 +317,6 @@ fileprivate class EarthquakeDescriptionView: UIView {
         stackview.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         stackview.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         stackview.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        
+
     }
 }

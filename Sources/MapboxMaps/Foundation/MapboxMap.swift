@@ -514,7 +514,7 @@ extension MapboxMap: AttributionDataSource {
 // MARK: - Feature State -
 
 extension MapboxMap {
-    
+
     /// Update the state map of a feature within a style source.
     /// Update entries in the state map of a given feature within a style source. Only entries listed in the state map
     /// will be updated. An entry in the feature state map that is not listed in `state` will retain its previous value.
@@ -533,7 +533,24 @@ extension MapboxMap {
                                          featureId: featureId,
                                          state: state)
     }
-    
+
+    /// Get the state map of a feature within a style source.
+    ///
+    /// - Note: Updates to feature state are asynchronous, so changes made by other methods might not be immediately visible.
+    /// - Parameters:
+    ///   - sourceId: Style source identifier.
+    ///   - sourceLayerId: Style source layer identifier (for multi-layer sources such as vector sources).
+    ///   - featureId: Identifier of the feature whose state should be queried.
+    ///   - callback: Feature's state map or an empty map if the feature could not be found.
+    public func getFeatureState(sourceId: String, sourceLayerId: String? = nil, featureId: String, callback: @escaping (Result<[String: Any], Error>) -> Void) {
+        __map.getFeatureState(forSourceId: sourceId,
+                              sourceLayerId: sourceLayerId,
+                              featureId: featureId,
+                              callback: coreAPIClosureAdapter(for: callback,
+                                                              type: NSDictionary.self,
+                                                              concreteErrorType: MapError.self))
+    }
+
     /// Removes entries from a feature state object.
     /// Remove a specified property or all property from a feature's state object, depending on the value of `stateKey`.
     ///
@@ -543,7 +560,7 @@ extension MapboxMap {
     /// - Parameters:
     ///   - sourceId: The style source identifier
     ///   - sourceLayerId: The style source layer identifier (for multi-layer sources such as vector sources). Defaults to `nil`.
-    ///   - featureId: The feature identifier of the feature whose state should be removed
+    ///   - featureId: The feature identifier of the feature whose state should be removed.
     ///   - stateKey: The key of the property to remove. If `nil`, all feature's state object properties are removed. Defaults to `nil`.
     public func removeFeatureState(sourceId: String, sourceLayerId: String? = nil, featureId: String, stateKey: String? = nil) {
         __map.removeFeatureState(forSourceId: sourceId,
@@ -551,7 +568,7 @@ extension MapboxMap {
                                  featureId: featureId,
                                  stateKey: stateKey)
     }
-    
+
 }
 
 // MARK: - Testing only! -

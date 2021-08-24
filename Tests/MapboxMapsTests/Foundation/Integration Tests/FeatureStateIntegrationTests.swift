@@ -7,7 +7,7 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
     internal func testSetFeatureState() {
         style?.uri = .streets
         let featureStateExpectation = XCTestExpectation(description: "Wait for feature state  map to be updated.")
-            
+
         didFinishLoadingStyle = { mapView in
 
             do {
@@ -24,7 +24,7 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
 
         didBecomeIdle = { mapView in
             mapView.mapboxMap.setFeatureState(sourceId: "test-source", featureId: "0", state: ["testKey": true])
-            
+
             mapView.mapboxMap.getFeatureState(sourceId: "test-source", featureId: "0") { result in
                 switch result {
                 case .success(let map):
@@ -57,9 +57,9 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
 
         didBecomeIdle = { mapView in
             mapView.mapboxMap.setFeatureState(sourceId: "test-source", featureId: "0", state: ["testKey": true])
-            
+
             mapView.mapboxMap.removeFeatureState(sourceId: "test-source", featureId: "0")
-            
+
             mapView.mapboxMap.getFeatureState(
                 sourceId: "test-source",
                 featureId: "0") { result in
@@ -73,7 +73,6 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
                 }
             }
 
-            
         }
 
         wait(for: [featureStateExpectation], timeout: 5.0)

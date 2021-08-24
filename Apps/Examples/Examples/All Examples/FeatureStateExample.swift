@@ -90,6 +90,10 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
         // Add earthquake-viz layer
         var earthquakeVizLayer = CircleLayer(id: Self.earthquakeLayerId)
         earthquakeVizLayer.source = Self.earthquakeSourceId
+        
+        // The feature-state dependent circle-radius expression will render
+        // the radius size according to its magnitude when
+        // a feature's selected state is set to true
         earthquakeVizLayer.circleRadius = .expression(
             Exp(.switchCase) {
                 Exp(.boolean) {
@@ -126,6 +130,10 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
         earthquakeVizLayer.circleRadiusTransition = StyleTransition(duration: 0.5, delay: 0)
         earthquakeVizLayer.circleStrokeColor = .constant(.init(color: .black))
         earthquakeVizLayer.circleStrokeWidth = .constant(1)
+        
+        // The feature-state dependent circle-color expression will render
+        // the color according to its magnitude when
+        // a feature's hover state is set to true
         earthquakeVizLayer.circleColor = .expression(
             Exp(.switchCase) {
                 Exp(.boolean) {

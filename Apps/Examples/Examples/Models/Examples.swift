@@ -230,7 +230,7 @@ public struct Examples {
                 description: "Query the map for rendered features belonging to a specific layer.",
                 type: FeaturesAtPointExample.self),
         Example(title: "Use Feature State",
-                description: "Query the map with feature state APIs.",
+                description: "Manipulate map styling with feature states and expressions.",
                 type: FeatureStateExample.self),
         Example(title: "Restrict the map's coordinate bounds",
                 description: "Prevent the map from panning outside the specified coordinate bounds.",

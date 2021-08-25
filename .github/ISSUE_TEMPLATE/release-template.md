@@ -78,7 +78,9 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 ## 📚 Update documentation
 
 - [ ] Navigate to the [CircleCI job page](https://app.circleci.com/pipelines/github/mapbox/mapbox-maps-ios), and download the `api-docs.zip` artifact.
-- [ ] In the `mapbox-maps-ios` repo, `git checkout publisher-staging && git merge --no-ff origin/publisher-staging`. This is the branch that houses our API-Docs. Make a new branch off this one `git checkout -b Release/{version}_docs`
+- [ ] In the `mapbox-maps-ios` repo, checkout branch `publisher-staging` and make sure it is up-to-date with `origin/publisher-staging`.
+- [ ] Ensure that `publisher-staging` also points to the same commit as `origin/publisher-production`. If it does not, make sure there's nothing on `publisher-staging` that needs to be saved, reset `publisher-staging` to point to the same commit as `publisher-production` (while on `publisher-staging`, `$ git reset --hard origin/publisher-production`), and force push `publisher-staging` to origin (`$ git push origin publisher-staging -f`).
+- [ ] Make a new branch off this one `git checkout -b Release/{version}_docs`
 - [ ] Unzip the `api-docs.zip` and move the new docs into our repo. This should result in a new top-level folder named after the version, but without the 'v' prefix.
 
 ### Add framework docs

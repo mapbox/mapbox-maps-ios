@@ -26,7 +26,7 @@ class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
             XCTAssertTrue(style.sourceExists(withId: manager.sourceId))
 
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            var annotation = PolylineAnnotation(line: .init(lineCoordinates))
+            var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
 
             annotation.lineJoin =  LineJoin.testConstantValue()
             annotation.lineSortKey =  Double.testConstantValue()
@@ -60,7 +60,7 @@ class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
             XCTAssertTrue(style.sourceExists(withId: manager.sourceId))
 
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
-            let annotation = PolylineAnnotation(line: .init(lineCoordinates))
+            let annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
 
             manager.syncAnnotations([annotation])
             self.manager = manager

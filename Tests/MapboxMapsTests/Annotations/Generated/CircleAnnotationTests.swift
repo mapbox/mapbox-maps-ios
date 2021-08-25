@@ -14,7 +14,7 @@ final class CircleAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["circle-sort-key"] as? Double, annotation.circleSortKey)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["circle-sort-key"] as? Double, annotation.circleSortKey)
     }
 
     func testCircleBlur() {
@@ -25,7 +25,7 @@ final class CircleAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["circle-blur"] as? Double, annotation.circleBlur)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["circle-blur"] as? Double, annotation.circleBlur)
     }
 
     func testCircleColor() {
@@ -36,7 +36,7 @@ final class CircleAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["circle-color"] as? String, annotation.circleColor.flatMap { try? $0.jsonString() })
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["circle-color"] as? String, annotation.circleColor.flatMap { try? $0.jsonString() })
     }
 
     func testCircleOpacity() {
@@ -47,7 +47,7 @@ final class CircleAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["circle-opacity"] as? Double, annotation.circleOpacity)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["circle-opacity"] as? Double, annotation.circleOpacity)
     }
 
     func testCircleRadius() {
@@ -58,7 +58,7 @@ final class CircleAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["circle-radius"] as? Double, annotation.circleRadius)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["circle-radius"] as? Double, annotation.circleRadius)
     }
 
     func testCircleStrokeColor() {
@@ -69,7 +69,7 @@ final class CircleAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["circle-stroke-color"] as? String, annotation.circleStrokeColor.flatMap { try? $0.jsonString() })
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["circle-stroke-color"] as? String, annotation.circleStrokeColor.flatMap { try? $0.jsonString() })
     }
 
     func testCircleStrokeOpacity() {
@@ -80,7 +80,7 @@ final class CircleAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["circle-stroke-opacity"] as? Double, annotation.circleStrokeOpacity)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["circle-stroke-opacity"] as? Double, annotation.circleStrokeOpacity)
     }
 
     func testCircleStrokeWidth() {
@@ -91,7 +91,7 @@ final class CircleAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual(featureProperties["circle-stroke-width"] as? Double, annotation.circleStrokeWidth)
+        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["circle-stroke-width"] as? Double, annotation.circleStrokeWidth)
     }
 }
 

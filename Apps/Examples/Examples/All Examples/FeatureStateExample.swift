@@ -2,7 +2,6 @@ import UIKit
 import MapboxMaps
 
 @objc(FeatureStateExample)
-
 public class FeatureStateExample: UIViewController, ExampleProtocol {
 
     private var mapView: MapView!

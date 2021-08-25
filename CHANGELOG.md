@@ -4,6 +4,13 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Features ✨ and improvements 🏁
+
+* Add support for `FeatureState` in GeoJSON sources. ([#611](https://github.com/mapbox/mapbox-maps-ios/pull/611))
+    * `setFeatureState(sourceId:sourceLayerId:featureId:state:)` is used to associate a `stateMap` for a particular feature
+    * `getFeatureState(sourceId:sourceLayerId:featureId:callback:)` is used to retrieve a previously stored `stateMap` for a feature
+    * `removeFeatureState(sourceId:sourceLayerId:featureId:stateKey:)` is used to remove a previously stored `stateMap` for a feature
+
 ### Breaking changes ⚠️
 
 * Removed GeoJSONManager. Please use Turf directly instead to serialize and deserialize GeoJSON. ([#603](https://github.com/mapbox/mapbox-maps-ios/pull/603))

@@ -152,9 +152,3 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
         })
     }
 }
-
-extension LocationStyleDelegate {
-    func _isPersistentLayer(id: String) throws -> Bool {
-        try _isPersistentLayer(id: id)
-    }
-}

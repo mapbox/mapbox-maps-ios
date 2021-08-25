@@ -479,7 +479,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                     let coordinate = CLLocationCoordinate2DMake(24, -89)
                     var pointAnnotation = PointAnnotation(coordinate: coordinate)
                     pointAnnotation.image = .default
-                    self.pointAnnotationManager.syncAnnotations([pointAnnotation])
+                    self.pointAnnotationManager.annotations = [pointAnnotation]
                 }
             }
 

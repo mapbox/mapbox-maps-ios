@@ -50,7 +50,7 @@ public class LineAnnotationExample: UIViewController, ExampleProtocol {
         let lineAnnnotationManager = mapView.annotations.makePolylineAnnotationManager()
 
         // Sync the annotation to the manager.
-        lineAnnnotationManager.syncAnnotations([lineAnnotation])
+        lineAnnnotationManager.annotations = [lineAnnotation]
 
         // The annotations added above will show as long as the lineAnnotationManager is alive,
         // so keep a reference to it.

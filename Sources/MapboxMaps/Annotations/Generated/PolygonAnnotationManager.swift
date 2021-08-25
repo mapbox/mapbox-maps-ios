@@ -10,16 +10,10 @@ public class PolygonAnnotationManager: AnnotationManager {
     // MARK: - Annotations -
 
     /// The collection of PolygonAnnotations being managed
-    public private(set) var annotations = [PolygonAnnotation]() {
+    public var annotations = [PolygonAnnotation]() {
         didSet {
             syncAnnotations()
          }
-    }
-
-    /// Syncs `PolygonAnnotation`s to the map
-    /// NOTE: calling this repeatedly results in degraded performance
-    public func syncAnnotations(_ annotations: [PolygonAnnotation]) {
-        self.annotations = annotations
     }
 
     // MARK: - AnnotationManager protocol conformance -

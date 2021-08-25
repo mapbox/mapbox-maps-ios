@@ -48,7 +48,7 @@ public class MultiplePointAnnotationsExample: UIViewController, ExampleProtocol 
 
         // Pass the point annotations into the annotation manager.
         // This will add them to the map.
-        pointAnnotationManager.syncAnnotations([pointAnnotation2, pointAnnotation1])
+        pointAnnotationManager.annotations = [pointAnnotation2, pointAnnotation1]
 
         // The next line is used for internal testing purposes only.
         finish()

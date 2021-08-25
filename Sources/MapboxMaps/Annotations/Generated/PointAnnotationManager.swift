@@ -10,17 +10,11 @@ public class PointAnnotationManager: AnnotationManager {
     // MARK: - Annotations -
 
     /// The collection of PointAnnotations being managed
-    public private(set) var annotations = [PointAnnotation]() {
+    public var annotations = [PointAnnotation]() {
         didSet {
             addImageToStyleIfNeeded(style: style)
             syncAnnotations()
          }
-    }
-
-    /// Syncs `PointAnnotation`s to the map
-    /// NOTE: calling this repeatedly results in degraded performance
-    public func syncAnnotations(_ annotations: [PointAnnotation]) {
-        self.annotations = annotations
     }
 
     // MARK: - AnnotationManager protocol conformance -

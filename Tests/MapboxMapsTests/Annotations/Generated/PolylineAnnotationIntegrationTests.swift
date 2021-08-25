@@ -38,7 +38,7 @@ class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
             annotation.linePattern =  String.testConstantValue()
             annotation.lineWidth =  Double.testConstantValue()
 
-            manager.syncAnnotations([annotation])
+            manager.annotations = [annotation]
             self.manager = manager
             successfullyLoadedStyleExpectation.fulfill()
         }
@@ -62,7 +62,7 @@ class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
             let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
             let annotation = PolylineAnnotation(lineString: .init(lineCoordinates))
 
-            manager.syncAnnotations([annotation])
+            manager.annotations = [annotation]
             self.manager = manager
 
             do {

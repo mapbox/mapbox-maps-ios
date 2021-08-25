@@ -15,6 +15,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Removed GeoJSONManager. Please use Turf directly instead to serialize and deserialize GeoJSON. ([#603](https://github.com/mapbox/mapbox-maps-ios/pull/603))
 * Add specific geometry types to annotations. ([#612](https://github.com/mapbox/mapbox-maps-ios/pull/612))
+* Replace syncAnnotations with property setter. ([#614](https://github.com/mapbox/mapbox-maps-ios/pull/614))
 
 ### Bug fixes 🐞
 

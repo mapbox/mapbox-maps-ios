@@ -54,7 +54,7 @@ class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
             annotation.textHaloWidth =  Double.testConstantValue()
             annotation.textOpacity =  Double.testConstantValue()
 
-            manager.syncAnnotations([annotation])
+            manager.annotations = [annotation]
             self.manager = manager
             successfullyLoadedStyleExpectation.fulfill()
         }
@@ -77,7 +77,7 @@ class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
             let annotation = PointAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
 
-            manager.syncAnnotations([annotation])
+            manager.annotations = [annotation]
             self.manager = manager
 
             do {

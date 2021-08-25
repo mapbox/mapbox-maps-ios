@@ -2,6 +2,13 @@
 
 @available(iOSApplicationExtension, unavailable)
 extension MapView {
+    
+    @_spi(Experimental) public enum RenderedSnapshotError: Error {
+        case noMetalView
+        case invalidTexture
+        case textureConversionFailed
+    }
+    
     /// :nodoc:
     ///
     /// Schedules the capturing of the "last rendered map view" (if available),
@@ -13,55 +20,96 @@ extension MapView {
     /// - Parameter completion: Closure that is passed a snapshot image if available
     ///
     /// - Note: This is an experimental API and subject to change.
-    @_spi(Experimental) public func snapshot(completion: @escaping (UIImage?) -> Void ) {
-
-        // Calling mapView.layer.render(in:) isn't sufficient for
-        // capturing the Metal rendering. This is modified from
-        // https://stackoverflow.com/a/47632198 and might not be
-        // sufficient.
-        guard let metalView = subviews.first as? MTKView else {
-            completion(nil)
+    @_spi(Experimental) public func snapshot(completion: @escaping (Result<UIImage, RenderedSnapshotError>) -> Void) {
+        
+        guard let metalView = subviews.first(where: { $0 is MTKView }) as? MTKView else {
+            completion(.failure(.noMetalView))
             return
         }
-
-        // If Metal API validation is enabled, the call to CIContext().createCGImage
-        // below will crash with the following message:
-        //
-        //  -[MTLDebugComputeCommandEncoder setTexture:atIndex:]:373: failed
-        //  assertion `frameBufferOnly texture not supported for compute.'
-        guard getenv("METAL_DEVICE_WRAPPER_TYPE") == nil else {
-            Log.warning(forMessage: "Metal API validation is enabled - MapView snapshot is being skipped.", category: "MapView")
-            completion(nil)
-            return
-        }
-
-        // This needs to be captured on the main thread
-        let scale = metalView.contentScaleFactor
-
+        
         DispatchQueue.global().async {
-            var snapshot: UIImage?
-
-            defer {
-                DispatchQueue.main.async {
-                    completion(snapshot)
-                }
-            }
-
+            
             // May need to schedule this for after rendering has occurred
             guard let texture = metalView.currentDrawable?.texture else {
+                DispatchQueue.main.async {
+                    completion(.failure(.invalidTexture))
+                }
                 return
             }
-
-            // This results in an image where the colors appear slightly washed out
-            guard let ciImage = CIImage(mtlTexture: texture, options: nil),
-                  let cgImage = CIContext().createCGImage(ciImage, from: ciImage.extent) else {
+            
+            guard let imageRef = texture.makeCGImage() else  {
+                DispatchQueue.main.async {
+                    completion(.failure(.textureConversionFailed))
+                }
                 return
             }
-
-            // Sometimes (observed on simulator) the image returned is blank
-            if !cgImage.isEmpty() {
-                snapshot = UIImage(cgImage: cgImage, scale: scale, orientation: .downMirrored)
+            
+            let snapshot = UIImage(cgImage: imageRef)
+            DispatchQueue.main.async {
+                completion(.success(snapshot))
             }
         }
+    }
+}
+
+
+extension MTLTexture {
+    
+    func bytes() -> UnsafeMutableRawPointer? {
+        let width = self.width
+        let height   = self.height
+        let rowBytes = self.width * 4
+        
+        guard let p = malloc(width * height * 4) else {
+            return nil
+        }
+        
+        self.getBytes(
+            p,
+            bytesPerRow: rowBytes,
+            from: MTLRegionMake2D(0, 0, width, height),
+            mipmapLevel: 0
+        )
+        
+        return p
+    }
+    
+    func makeCGImage() -> CGImage? {
+        guard let p = bytes() else {
+            return nil
+        }
+        
+        let pColorSpace = CGColorSpaceCreateDeviceRGB()
+        
+        let rawBitmapInfo = CGImageAlphaInfo.noneSkipFirst.rawValue
+            | CGBitmapInfo.byteOrder32Little.rawValue
+        let bitmapInfo = CGBitmapInfo(rawValue: rawBitmapInfo)
+        let rowBytes = self.width * 4
+        let releaseMaskImagePixelData: CGDataProviderReleaseDataCallback = { (info: UnsafeMutableRawPointer?, data: UnsafeRawPointer, size: Int) -> () in
+            return
+        }
+        guard let provider = CGDataProvider(
+                dataInfo: nil,
+                data: p,
+                size: self.width * self.height * 4,
+                releaseData: releaseMaskImagePixelData) else {
+            return nil
+        }
+        
+        guard let cgImageRef = CGImage(width: self.width,
+                                       height: self.height,
+                                       bitsPerComponent: 8,
+                                       bitsPerPixel: 32,
+                                       bytesPerRow: rowBytes,
+                                       space: pColorSpace,
+                                       bitmapInfo: bitmapInfo,
+                                       provider: provider,
+                                       decode: nil,
+                                       shouldInterpolate: true,
+                                       intent: CGColorRenderingIntent.defaultIntent) else {
+            return nil
+        }
+        
+        return cgImageRef
     }
 }

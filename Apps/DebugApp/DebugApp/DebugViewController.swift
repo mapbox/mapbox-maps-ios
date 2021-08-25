@@ -112,10 +112,13 @@ public class DebugViewController: UIViewController {
             guard let mapView = self?.mapView else {
                 return
             }
-
-            mapView.snapshot { image in
-                if image != nil {
+            
+            mapView.snapshot { imageResult in
+                switch imageResult {
+                case .success(let image):
                     imageView.image = image
+                case .failure(let error):
+                    print("Error: \(error)")
                 }
             }
         }

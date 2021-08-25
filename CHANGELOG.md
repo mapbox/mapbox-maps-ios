@@ -4,12 +4,17 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 10.0.0-rc.7 - August 25, 2021
+
 ### Features ✨ and improvements 🏁
 
 * Add support for `FeatureState` in GeoJSON sources. ([#611](https://github.com/mapbox/mapbox-maps-ios/pull/611))
     * `setFeatureState(sourceId:sourceLayerId:featureId:state:)` is used to associate a `stateMap` for a particular feature
     * `getFeatureState(sourceId:sourceLayerId:featureId:callback:)` is used to retrieve a previously stored `stateMap` for a feature
     * `removeFeatureState(sourceId:sourceLayerId:featureId:stateKey:)` is used to remove a previously stored `stateMap` for a feature
+* Added `GeoJSONSource.generateId` ([#593](https://github.com/mapbox/mapbox-maps-ios/pull/593))
+* Enable the combined usage of line-dasharray with line-gradient ([#588](https://github.com/mapbox/mapbox-maps-ios/pull/588))
+* Fixed rendering issue for round line-join in line gradients ([#594](https://github.com/mapbox/mapbox-maps-ios/pull/594))
 
 ### Breaking changes ⚠️
 
@@ -23,6 +28,7 @@ Mapbox welcomes participation and contributions from everyone.
 * `GeoJSONSource.clusterProperties` is now correctly modeled per the style spec. ([#597](https://github.com/mapbox/mapbox-maps-ios/pull/597))
 * Fixes a crash caused by `MapboxMap.clearData()`. ([#609](https://github.com/mapbox/mapbox-maps-ios/pull/609))
 * Added missing attribution and links to info alert controller. ([#591](https://github.com/mapbox/mapbox-maps-ios/pull/591))
+* Fixed issue that caused incorrect animation of negative padding values ([#602](https://github.com/mapbox/mapbox-maps-ios/pull/602))
 
 ## 10.0.0-rc.6 - August 11, 2021
 

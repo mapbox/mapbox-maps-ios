@@ -1,0 +1,1601 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Annotations/AnnotationOrchestrator.swift",
+      "line": 5,
+      "symbol": "Annotation",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Annotations/AnnotationOrchestrator.swift",
+      "line": 17,
+      "symbol": "AnnotationManager",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Annotations/AnnotationOrchestrator.swift",
+      "line": 41,
+      "symbol": "AnnotationOrchestrator",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Annotations/Generated/CircleAnnotation.swift",
+      "line": 6,
+      "symbol": "CircleAnnotation",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Annotations/Generated/PointAnnotation.swift",
+      "line": 4,
+      "symbol": "PointAnnotation",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Annotations/Generated/PointAnnotation.swift",
+      "line": 6,
+      "symbol": "PointAnnotation",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Annotations/Generated/PointAnnotation.swift",
+      "line": 315,
+      "symbol": "PointAnnotation.image",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Annotations/Generated/PolygonAnnotation.swift",
+      "line": 6,
+      "symbol": "PolygonAnnotation",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Annotations/Generated/PolylineAnnotation.swift",
+      "line": 6,
+      "symbol": "PolylineAnnotation",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Annotations/PointAnnotation+ImageHandling.swift",
+      "line": 5,
+      "symbol": "PointAnnotation.Image",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Annotations/PointAnnotation+ImageHandling.swift",
+      "line": 6,
+      "symbol": "PointAnnotation.Image.default",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Annotations/PointAnnotation+ImageHandling.swift",
+      "line": 7,
+      "symbol": "PointAnnotation.Image.custom(image:name:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/AnimationCompletion.swift",
+      "line": 3,
+      "symbol": "AnimationCompletion",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/AnimationOwner.swift",
+      "line": 1,
+      "symbol": "AnimationOwner",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/AnimationOwner.swift",
+      "line": 10,
+      "symbol": "AnimationOwner.gestures",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/AnimationOwner.swift",
+      "line": 11,
+      "symbol": "AnimationOwner.unspecified",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/BasicCameraAnimator.swift",
+      "line": 5,
+      "symbol": "BasicCameraAnimator",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/BasicCameraAnimator.swift",
+      "line": 235,
+      "symbol": "BasicCameraAnimator.cancel()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/CameraAnimationsManager.swift",
+      "line": 5,
+      "symbol": "CameraAnimator",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/CameraOptions.swift",
+      "line": 5,
+      "symbol": "CameraOptions",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/CameraOptions.swift",
+      "line": 6,
+      "symbol": "CameraOptions.center",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/CameraOptions.swift",
+      "line": 7,
+      "symbol": "CameraOptions.padding",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/CameraOptions.swift",
+      "line": 8,
+      "symbol": "CameraOptions.anchor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/CameraOptions.swift",
+      "line": 9,
+      "symbol": "CameraOptions.zoom",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/CameraOptions.swift",
+      "line": 10,
+      "symbol": "CameraOptions.bearing",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/CameraOptions.swift",
+      "line": 11,
+      "symbol": "CameraOptions.pitch",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/CameraOptions.swift",
+      "line": 38,
+      "symbol": "CameraOptions.init(cameraState:anchor:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/CameraState.swift",
+      "line": 5,
+      "symbol": "CameraState",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/CameraState.swift",
+      "line": 6,
+      "symbol": "CameraState.center",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/CameraState.swift",
+      "line": 7,
+      "symbol": "CameraState.padding",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/CameraState.swift",
+      "line": 8,
+      "symbol": "CameraState.zoom",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/CameraState.swift",
+      "line": 9,
+      "symbol": "CameraState.bearing",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/CameraState.swift",
+      "line": 10,
+      "symbol": "CameraState.pitch",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/CameraTransition.swift",
+      "line": 32,
+      "symbol": "CameraTransition.Change.fromValue",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/CameraTransition.swift",
+      "line": 33,
+      "symbol": "CameraTransition.Change.toValue",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/FlyToCameraAnimator.swift",
+      "line": 3,
+      "symbol": "FlyToCameraAnimator",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/FlyToCameraAnimator.swift",
+      "line": 7,
+      "symbol": "FlyToCameraAnimator.owner",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/FlyToCameraAnimator.swift",
+      "line": 11,
+      "symbol": "FlyToCameraAnimator.duration",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Camera/FlyToCameraAnimator.swift",
+      "line": 89,
+      "symbol": "FlyToCameraAnimator.cancel()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Cancelable.swift",
+      "line": 6,
+      "symbol": "Cancelable.cancel()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Events/Event.swift",
+      "line": 3,
+      "symbol": "Event",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Extensions/Core/MBXGeometry.swift",
+      "line": 8,
+      "symbol": "Geometry",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Extensions/Core/MBXGeometry.swift",
+      "line": 10,
+      "symbol": "Geometry",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Extensions/Core/OfflineRegionManager.swift",
+      "line": 7,
+      "symbol": "OfflineRegionManager.init(resourceOptions:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Extensions/Core/OfflineRegionManager.swift",
+      "line": 12,
+      "symbol": "OfflineRegionManager.offlineRegions(completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Extensions/Core/OfflineRegionManager.swift",
+      "line": 19,
+      "symbol": "OfflineRegionManager.createOfflineRegion(for:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Extensions/Core/OfflineRegionManager.swift",
+      "line": 27,
+      "symbol": "OfflineRegionManager.createOfflineRegion(for:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Extensions/Core/OfflineRegionManager.swift",
+      "line": 35,
+      "symbol": "OfflineRegionManager.mergeOfflineDatabase(for:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/Extensions/Core/OfflineSwitch.swift",
+      "line": 1,
+      "symbol": "OfflineSwitch",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapEventHandler.swift",
+      "line": 3,
+      "symbol": "MapEventsObservable",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapInitOptions.swift",
+      "line": 3,
+      "symbol": "MapInitOptionsProvider",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapInitOptions.swift",
+      "line": 4,
+      "symbol": "MapInitOptionsProvider.mapInitOptions()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapProjectionDelegate.swift",
+      "line": 56,
+      "symbol": "Projection",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapProjectionDelegate.swift",
+      "line": 57,
+      "symbol": "Projection.latitudeMax",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapProjectionDelegate.swift",
+      "line": 58,
+      "symbol": "Projection.latitudeMin",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapView+Supportable.swift",
+      "line": 45,
+      "symbol": "MapView.subscribeRenderFrameHandler(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapView.swift",
+      "line": 9,
+      "symbol": "MapView",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapView.swift",
+      "line": 15,
+      "symbol": "MapView.mapboxMap",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapView.swift",
+      "line": 35,
+      "symbol": "MapView",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapView.swift",
+      "line": 130,
+      "symbol": "MapView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapView.swift",
+      "line": 264,
+      "symbol": "MapView.awakeFromNib()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapView.swift",
+      "line": 275,
+      "symbol": "MapView.layoutSubviews()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapView.swift",
+      "line": 312,
+      "symbol": "MapView.willMove(toWindow:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapView.swift",
+      "line": 319,
+      "symbol": "MapView.didMoveToWindow()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapView.swift",
+      "line": 331,
+      "symbol": "MapView.didMoveToSuperview()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapboxMap.swift",
+      "line": 8,
+      "symbol": "MapboxMap",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapboxMap.swift",
+      "line": 186,
+      "symbol": "MapboxMap",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapboxMap.swift",
+      "line": 233,
+      "symbol": "MapboxMap",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapboxMap.swift",
+      "line": 380,
+      "symbol": "MapboxMap",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapboxMap.swift",
+      "line": 440,
+      "symbol": "MapboxMap",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapboxMap.swift",
+      "line": 456,
+      "symbol": "MapboxMap",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapboxMap.swift",
+      "line": 489,
+      "symbol": "MapboxMap",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/MapboxMap.swift",
+      "line": 516,
+      "symbol": "MapboxMap",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/PreferredFPS.swift",
+      "line": 1,
+      "symbol": "PreferredFPS",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Foundation/ResourceOptionsManager.swift",
+      "line": 79,
+      "symbol": "ResourceOptionsManager.init(resourceOptions:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Gestures/GestureManager.swift",
+      "line": 4,
+      "symbol": "GestureManagerDelegate",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Gestures/GestureManager.swift",
+      "line": 10,
+      "symbol": "GestureManager",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Gestures/GestureManager.swift",
+      "line": 129,
+      "symbol": "GestureManager",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Gestures/GestureManager.swift",
+      "line": 131,
+      "symbol": "GestureManager.gestureRecognizerShouldBegin(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Gestures/GestureManager.swift",
+      "line": 156,
+      "symbol": "GestureManager.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Gestures/GestureOptions.swift",
+      "line": 3,
+      "symbol": "PanScrollingMode",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Gestures/GestureOptions.swift",
+      "line": 114,
+      "symbol": "GestureOptions.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Gestures/GestureType.swift",
+      "line": 3,
+      "symbol": "GestureType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/AppleLocationProvider.swift",
+      "line": 4,
+      "symbol": "AppleLocationProvider",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/AppleLocationProvider.swift",
+      "line": 15,
+      "symbol": "AppleLocationProvider.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/AppleLocationProvider.swift",
+      "line": 23,
+      "symbol": "AppleLocationProvider",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/AppleLocationProvider.swift",
+      "line": 100,
+      "symbol": "AppleLocationProvider",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/AppleLocationProvider.swift",
+      "line": 101,
+      "symbol": "AppleLocationProvider.locationManager(_:didUpdateLocations:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/AppleLocationProvider.swift",
+      "line": 105,
+      "symbol": "AppleLocationProvider.locationManager(_:didUpdateHeading:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/AppleLocationProvider.swift",
+      "line": 109,
+      "symbol": "AppleLocationProvider.locationManager(_:didFailWithError:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/AppleLocationProvider.swift",
+      "line": 114,
+      "symbol": "AppleLocationProvider.locationManagerDidChangeAuthorization(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/LocationConsumer.swift",
+      "line": 4,
+      "symbol": "Location",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/LocationConsumer.swift",
+      "line": 5,
+      "symbol": "Location.heading",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/LocationConsumer.swift",
+      "line": 8,
+      "symbol": "Location.coordinate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/LocationConsumer.swift",
+      "line": 12,
+      "symbol": "Location.course",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/LocationConsumer.swift",
+      "line": 16,
+      "symbol": "Location.horizontalAccuracy",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/LocationConsumer.swift",
+      "line": 20,
+      "symbol": "Location.headingDirection",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/LocationConsumer.swift",
+      "line": 30,
+      "symbol": "Location.init(with:heading:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/LocationManager.swift",
+      "line": 41,
+      "symbol": "LocationManager.options",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/LocationManager.swift",
+      "line": 77,
+      "symbol": "LocationManager.overrideLocationProvider(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/LocationManager.swift",
+      "line": 94,
+      "symbol": "LocationManager.removeLocationConsumer(consumer:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/LocationManager.swift",
+      "line": 135,
+      "symbol": "LocationManager.updateHeadingForCurrentDeviceOrientation()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/LocationOptions.swift",
+      "line": 28,
+      "symbol": "LocationOptions.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/Pucks/Puck2D.swift",
+      "line": 6,
+      "symbol": "Puck2DConfiguration",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/Pucks/Puck2D.swift",
+      "line": 20,
+      "symbol": "Puck2DConfiguration.init(topImage:bearingImage:shadowImage:scale:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Location/Pucks/Puck3D.swift",
+      "line": 5,
+      "symbol": "Puck3DConfiguration",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Ornaments/OrnamentOptions.swift",
+      "line": 30,
+      "symbol": "OrnamentOptions.logo",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Ornaments/OrnamentOptions.swift",
+      "line": 38,
+      "symbol": "OrnamentOptionsProtocol",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Ornaments/OrnamentOptions.swift",
+      "line": 39,
+      "symbol": "OrnamentOptionsProtocol.position",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Ornaments/OrnamentsManager.swift",
+      "line": 3,
+      "symbol": "OrnamentPosition",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Ornaments/OrnamentsManager.swift",
+      "line": 5,
+      "symbol": "OrnamentPosition.topLeft",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Ornaments/OrnamentsManager.swift",
+      "line": 6,
+      "symbol": "OrnamentPosition.topRight",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Ornaments/OrnamentsManager.swift",
+      "line": 7,
+      "symbol": "OrnamentPosition.bottomRight",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Ornaments/OrnamentsManager.swift",
+      "line": 8,
+      "symbol": "OrnamentPosition.bottomLeft",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Ornaments/OrnamentsManager.swift",
+      "line": 11,
+      "symbol": "OrnamentVisibility",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Ornaments/OrnamentsManager.swift",
+      "line": 12,
+      "symbol": "OrnamentVisibility.adaptive",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Ornaments/OrnamentsManager.swift",
+      "line": 13,
+      "symbol": "OrnamentVisibility.hidden",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Ornaments/OrnamentsManager.swift",
+      "line": 14,
+      "symbol": "OrnamentVisibility.visible",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Ornaments/OrnamentsManager.swift",
+      "line": 24,
+      "symbol": "OrnamentsManager",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Snapshot/SnapshotOverlay.swift",
+      "line": 9,
+      "symbol": "SnapshotOverlay.context",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Snapshot/SnapshotOverlay.swift",
+      "line": 12,
+      "symbol": "SnapshotOverlay.scale",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Snapshot/SnapshotOverlay.swift",
+      "line": 16,
+      "symbol": "SnapshotOverlay.pointForCoordinate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Snapshot/SnapshotOverlay.swift",
+      "line": 20,
+      "symbol": "SnapshotOverlay.coordinateForPoint",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Snapshot/SnapshotOverlay.swift",
+      "line": 23,
+      "symbol": "SnapshotOverlayHandler",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Snapshot/Snapshotter.swift",
+      "line": 8,
+      "symbol": "Snapshotter",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Snapshot/Snapshotter.swift",
+      "line": 218,
+      "symbol": "Snapshotter.SnapshotError",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Snapshot/Snapshotter.swift",
+      "line": 219,
+      "symbol": "Snapshotter.SnapshotError.unknown",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Snapshot/Snapshotter.swift",
+      "line": 255,
+      "symbol": "Snapshotter",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Snapshot/Snapshotter.swift",
+      "line": 269,
+      "symbol": "Snapshotter",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Snapshot/Snapshotter.swift",
+      "line": 295,
+      "symbol": "Snapshotter",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Enums/Enums.swift",
+      "line": 5,
+      "symbol": "Visibility",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Expressions/AllExpressions.swift",
+      "line": 6,
+      "symbol": "Expression.Operator",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Expressions/AllExpressions.swift",
+      "line": 424,
+      "symbol": "Expression.Operator.linear",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Expressions/AllExpressions.swift",
+      "line": 433,
+      "symbol": "Expression.Operator.exponential",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Expressions/AllExpressions.swift",
+      "line": 439,
+      "symbol": "Expression.Operator.cubicBezier",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Layers/BackgroundLayer.swift",
+      "line": 45,
+      "symbol": "BackgroundLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Layers/CircleLayer.swift",
+      "line": 87,
+      "symbol": "CircleLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Layers/FillExtrusionLayer.swift",
+      "line": 69,
+      "symbol": "FillExtrusionLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Layers/FillLayer.swift",
+      "line": 66,
+      "symbol": "FillLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Layers/HeatmapLayer.swift",
+      "line": 51,
+      "symbol": "HeatmapLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Layers/HillshadeLayer.swift",
+      "line": 57,
+      "symbol": "HillshadeLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Layers/LineLayer.swift",
+      "line": 102,
+      "symbol": "LineLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Layers/LocationIndicatorLayer.swift",
+      "line": 102,
+      "symbol": "LocationIndicatorLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Layers/RasterLayer.swift",
+      "line": 69,
+      "symbol": "RasterLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Layers/SkyLayer.swift",
+      "line": 57,
+      "symbol": "SkyLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Layers/SymbolLayer.swift",
+      "line": 228,
+      "symbol": "SymbolLayer.init(id:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Light/Light.swift",
+      "line": 35,
+      "symbol": "Light.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Sources/GeoJSONSource.swift",
+      "line": 15,
+      "symbol": "GeoJSONSource.type",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Sources/GeoJSONSource.swift",
+      "line": 87,
+      "symbol": "GeoJSONSource.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Sources/ImageSource.swift",
+      "line": 15,
+      "symbol": "ImageSource.type",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Sources/ImageSource.swift",
+      "line": 33,
+      "symbol": "ImageSource.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Sources/RasterDemSource.swift",
+      "line": 15,
+      "symbol": "RasterDemSource.type",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Sources/RasterDemSource.swift",
+      "line": 79,
+      "symbol": "RasterDemSource.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Sources/RasterSource.swift",
+      "line": 15,
+      "symbol": "RasterSource.type",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Sources/RasterSource.swift",
+      "line": 79,
+      "symbol": "RasterSource.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Sources/VectorSource.swift",
+      "line": 15,
+      "symbol": "VectorSource.type",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Sources/VectorSource.swift",
+      "line": 74,
+      "symbol": "VectorSource.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Terrain.swift",
+      "line": 12,
+      "symbol": "Terrain.source",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Generated/Terrain.swift",
+      "line": 14,
+      "symbol": "Terrain.init(sourceId:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Layers.swift",
+      "line": 74,
+      "symbol": "Layer",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Layers.swift",
+      "line": 110,
+      "symbol": "Layer",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/ModelSource.swift",
+      "line": 15,
+      "symbol": "Model.init(uri:position:orientation:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Sources.swift",
+      "line": 38,
+      "symbol": "Source",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Sources.swift",
+      "line": 40,
+      "symbol": "Source",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Style.swift",
+      "line": 4,
+      "symbol": "Style",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Style.swift",
+      "line": 6,
+      "symbol": "Style",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Style.swift",
+      "line": 8,
+      "symbol": "Style.styleManager",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Style.swift",
+      "line": 274,
+      "symbol": "Style",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/StyleEncodable.swift",
+      "line": 1,
+      "symbol": "StyleEncodable",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/StyleEncodable.swift",
+      "line": 2,
+      "symbol": "StyleEncodable.jsonObject()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/StyleEncodable.swift",
+      "line": 5,
+      "symbol": "StyleDecodable",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/StyleEncodable.swift",
+      "line": 6,
+      "symbol": "StyleDecodable.init(jsonObject:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/StyleEncodable.swift",
+      "line": 9,
+      "symbol": "StyleEncodable",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/StyleErrors.swift",
+      "line": 28,
+      "symbol": "TypeConversionError",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/StyleErrors.swift",
+      "line": 29,
+      "symbol": "TypeConversionError.invalidObject",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/StyleErrors.swift",
+      "line": 30,
+      "symbol": "TypeConversionError.unexpectedType",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Color.swift",
+      "line": 9,
+      "symbol": "ColorRepresentable.rgbaDescription",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Color.swift",
+      "line": 94,
+      "symbol": "UIColor.expressionArguments",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 3,
+      "symbol": "Exp",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 3,
+      "symbol": "Expression",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 5,
+      "symbol": "Expression",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 5,
+      "symbol": "Expression",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 29,
+      "symbol": "Expression.init(_:content:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 68,
+      "symbol": "Expression",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 71,
+      "symbol": "Expression.Element.operator(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 72,
+      "symbol": "Expression.Element.argument(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 128,
+      "symbol": "Expression.Argument.number(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 129,
+      "symbol": "Expression.Argument.string(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 130,
+      "symbol": "Expression.Argument.boolean(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 131,
+      "symbol": "Expression.Argument.numberArray(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 132,
+      "symbol": "Expression.Argument.stringArray(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 133,
+      "symbol": "Expression.Argument.option(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 134,
+      "symbol": "Expression.Argument.null",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Expression.swift",
+      "line": 135,
+      "symbol": "Expression.Argument.expression(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionArgumentBuilder.swift",
+      "line": 7,
+      "symbol": "ExpressionArgumentBuilder",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionArgumentBuilder.swift",
+      "line": 8,
+      "symbol": "ExpressionArgumentBuilder.buildBlock(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionArgumentBuilder.swift",
+      "line": 21,
+      "symbol": "ExpressionArgumentConvertible",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionArgumentBuilder.swift",
+      "line": 22,
+      "symbol": "ExpressionArgumentConvertible.expressionArguments",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionArgumentBuilder.swift",
+      "line": 26,
+      "symbol": "Int.expressionArguments",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionArgumentBuilder.swift",
+      "line": 32,
+      "symbol": "UInt.expressionArguments",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionArgumentBuilder.swift",
+      "line": 38,
+      "symbol": "Double.expressionArguments",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionArgumentBuilder.swift",
+      "line": 44,
+      "symbol": "String.expressionArguments",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionArgumentBuilder.swift",
+      "line": 50,
+      "symbol": "Bool.expressionArguments",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionArgumentBuilder.swift",
+      "line": 56,
+      "symbol": "Array.expressionArguments",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionArgumentBuilder.swift",
+      "line": 69,
+      "symbol": "Expression.expressionArguments",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionArgumentBuilder.swift",
+      "line": 76,
+      "symbol": "Dictionary.expressionArguments",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 5,
+      "symbol": "Expression.Option",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 6,
+      "symbol": "Expression.Option.format(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 7,
+      "symbol": "Expression.Option.numberFormat(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 8,
+      "symbol": "Expression.Option.collator(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 46,
+      "symbol": "FormatOptions",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 63,
+      "symbol": "FormatOptions.expressionArguments",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 67,
+      "symbol": "FormatOptions.init(fontScale:textFont:textColor:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 77,
+      "symbol": "NumberFormatOptions",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 91,
+      "symbol": "NumberFormatOptions.expressionArguments",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 102,
+      "symbol": "NumberFormatOptions.init(locale:currency:minFractionDigits:maxFractionDigits:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 110,
+      "symbol": "CollatorOptions",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 128,
+      "symbol": "CollatorOptions.expressionArguments",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ExpressionOptions.swift",
+      "line": 132,
+      "symbol": "CollatorOptions.init(caseSensitive:diacriticSensitive:locale:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ResolvedImage.swift",
+      "line": 6,
+      "symbol": "ResolvedImage",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ResolvedImage.swift",
+      "line": 44,
+      "symbol": "ResolvedImageData",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ResolvedImage.swift",
+      "line": 45,
+      "symbol": "ResolvedImageData.available",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ResolvedImage.swift",
+      "line": 46,
+      "symbol": "ResolvedImageData.name",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/ResolvedImage.swift",
+      "line": 49,
+      "symbol": "ResolvedImage",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Value.swift",
+      "line": 3,
+      "symbol": "Value",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Value.swift",
+      "line": 4,
+      "symbol": "Value.constant(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Value.swift",
+      "line": 5,
+      "symbol": "Value.expression(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxMaps/Style/Types/Value.swift",
+      "line": 37,
+      "symbol": "Value",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/distiller/project"
+}

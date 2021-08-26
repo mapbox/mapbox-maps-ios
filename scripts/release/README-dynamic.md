@@ -14,7 +14,7 @@
 2. On the General tab for the target, scroll to the section labeled "Frameworks,
    Libraries and Embedded Content".
 
-3. Change `Embed` from "Do Not Embed" to "Embed & Sign" for all 5 linked XCFrameworks
+3. Ensure `Embed` is set to "Embed & Sign" for all 5 linked XCFrameworks.
 
 4. Add `import MapboxMaps` to your Swift source file.
 

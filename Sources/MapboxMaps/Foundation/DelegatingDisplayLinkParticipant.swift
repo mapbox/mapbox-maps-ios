@@ -1,6 +1,6 @@
 import Foundation
 
-protocol DelegatingDisplayLinkParticipantDelegate: AnyObject {
+internal protocol DelegatingDisplayLinkParticipantDelegate: AnyObject {
     func participate(for participant: DelegatingDisplayLinkParticipant)
 }
 

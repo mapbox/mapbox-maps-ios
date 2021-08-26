@@ -94,7 +94,7 @@ XCODE_BUILD_SIM_SDK = set -o pipefail && xcodebuild \
 .PHONY: build-sdk-for-simulator
 build-sdk-for-simulator:
 	$(XCODE_BUILD_SIM_SDK) \
-	    -destination 'platform=iOS Simulator,OS=latest,name=iPhone 11' \
+		-destination 'platform=iOS Simulator,OS=latest,name=iPhone 11' \
 		build \
 		ONLY_ACTIVE_ARCH=NO
 

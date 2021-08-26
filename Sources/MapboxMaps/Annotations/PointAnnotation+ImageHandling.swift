@@ -19,8 +19,7 @@ extension PointAnnotation {
 
 extension PointAnnotationManager {
 
-    func addImageToStyleIfNeeded(style: Style?) {
-        guard let style = style else { return }
+    func addImageToStyleIfNeeded(style: Style) {
         let pointAnnotationImages = Set(annotations.compactMap(\.image))
         for pointAnnotationImage in pointAnnotationImages {
             do {

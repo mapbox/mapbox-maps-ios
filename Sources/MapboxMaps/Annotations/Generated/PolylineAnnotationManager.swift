@@ -11,9 +11,11 @@ public class PolylineAnnotationManager: AnnotationManager {
     /// The collection of PolylineAnnotations being managed
     public var annotations = [PolylineAnnotation]() {
         didSet {
-            syncAnnotations()
-         }
+            needsSyncAnnotations = true
+        }
     }
+
+    private var needsSyncAnnotations = false
 
     // MARK: - AnnotationManager protocol conformance -
 
@@ -26,10 +28,10 @@ public class PolylineAnnotationManager: AnnotationManager {
     // MARK:- Setup / Lifecycle -
 
     /// Dependency required to add sources/layers to the map
-    private weak var style: Style?
+    private let style: Style
 
     /// Dependency Required to query for rendered features on tap
-    private weak var mapFeatureQueryable: MapFeatureQueryable?
+    private let mapFeatureQueryable: MapFeatureQueryable
 
     /// Dependency required to add gesture recognizer to the MapView
     private weak var view: UIView?
@@ -37,7 +39,15 @@ public class PolylineAnnotationManager: AnnotationManager {
     /// Indicates whether the style layer exists after style changes. Default value is `true`.
     internal let shouldPersist: Bool
 
-    internal init(id: String, style: Style, view: UIView, mapFeatureQueryable: MapFeatureQueryable, shouldPersist: Bool, layerPosition: LayerPosition?) {
+    private let displayLinkParticipant = DelegatingDisplayLinkParticipant()
+
+    internal init(id: String,
+                  style: Style,
+                  view: UIView,
+                  mapFeatureQueryable: MapFeatureQueryable,
+                  shouldPersist: Bool,
+                  layerPosition: LayerPosition?,
+                  displayLinkCoordinator: DisplayLinkCoordinator) {
         self.id = id
         self.style = style
         self.sourceId = id + "-source"
@@ -51,6 +61,10 @@ public class PolylineAnnotationManager: AnnotationManager {
         } catch {
             Log.error(forMessage: "Failed to create source / layer in PolylineAnnotationManager", category: "Annotations")
         }
+
+        self.displayLinkParticipant.delegate = self
+
+        displayLinkCoordinator.add(displayLinkParticipant)
     }
 
     deinit {
@@ -59,8 +73,8 @@ public class PolylineAnnotationManager: AnnotationManager {
 
     func removeBackingSourceAndLayer() {
         do {
-            try style?.removeLayer(withId: layerId)
-            try style?.removeSource(withId: layerId)
+            try style.removeLayer(withId: layerId)
+            try style.removeSource(withId: layerId)
         } catch {
             Log.warning(forMessage: "Failed to remove source / layer from map for annotations due to error: \(error)",
                         category: "Annotations")
@@ -68,11 +82,6 @@ public class PolylineAnnotationManager: AnnotationManager {
     }
 
     internal func makeSourceAndLayer(layerPosition: LayerPosition?) throws {
-
-        guard let style = style else {
-            Log.error(forMessage: "Style must exist when adding a source and layer for annotations", category: "Annotaitons")
-            return
-        }
 
         // Add the source with empty `data` property
         var source = GeoJSONSource()
@@ -91,12 +100,15 @@ public class PolylineAnnotationManager: AnnotationManager {
 
     // MARK: - Sync annotations to map -
 
-    internal func syncAnnotations() {
-
-        guard let style = style else {
-            Log.error(forMessage: "Style must exist when adding/removing annotations", category: "Annotations")
+    /// Synchronizes the backing source and layer with the current set of annotations.
+    /// This method is called automatically with each display link, but it may also be
+    /// called manually in situations where the backing source and layer need to be
+    /// updated earlier.
+    public func syncAnnotationsIfNeeded() {
+        guard needsSyncAnnotations else {
             return
         }
+        needsSyncAnnotations = false
 
         let allDataDrivenPropertiesUsed = Set(annotations.flatMap { $0.styles.keys })
         for property in allDataDrivenPropertiesUsed {
@@ -129,7 +141,7 @@ public class PolylineAnnotationManager: AnnotationManager {
     public var lineCap: LineCap? {
         didSet {
             do {
-                try style?.setLayerProperty(for: layerId, property: "line-cap", value: lineCap?.rawValue as Any)
+                try style.setLayerProperty(for: layerId, property: "line-cap", value: lineCap?.rawValue as Any)
             } catch {
                 Log.warning(forMessage: "Could not set PolylineAnnotationManager.lineCap due to error: \(error)",
                             category: "Annotations")
@@ -141,7 +153,7 @@ public class PolylineAnnotationManager: AnnotationManager {
     public var lineMiterLimit: Double? {
         didSet {
             do {
-                try style?.setLayerProperty(for: layerId, property: "line-miter-limit", value: lineMiterLimit as Any)
+                try style.setLayerProperty(for: layerId, property: "line-miter-limit", value: lineMiterLimit as Any)
             } catch {
                 Log.warning(forMessage: "Could not set PolylineAnnotationManager.lineMiterLimit due to error: \(error)",
                             category: "Annotations")
@@ -153,7 +165,7 @@ public class PolylineAnnotationManager: AnnotationManager {
     public var lineRoundLimit: Double? {
         didSet {
             do {
-                try style?.setLayerProperty(for: layerId, property: "line-round-limit", value: lineRoundLimit as Any)
+                try style.setLayerProperty(for: layerId, property: "line-round-limit", value: lineRoundLimit as Any)
             } catch {
                 Log.warning(forMessage: "Could not set PolylineAnnotationManager.lineRoundLimit due to error: \(error)",
                             category: "Annotations")
@@ -165,7 +177,7 @@ public class PolylineAnnotationManager: AnnotationManager {
     public var lineDasharray: [Double]? {
         didSet {
             do {
-                try style?.setLayerProperty(for: layerId, property: "line-dasharray", value: lineDasharray as Any)
+                try style.setLayerProperty(for: layerId, property: "line-dasharray", value: lineDasharray as Any)
             } catch {
                 Log.warning(forMessage: "Could not set PolylineAnnotationManager.lineDasharray due to error: \(error)",
                             category: "Annotations")
@@ -177,7 +189,7 @@ public class PolylineAnnotationManager: AnnotationManager {
     public var lineGradient: ColorRepresentable? {
         didSet {
             do {
-                try style?.setLayerProperty(for: layerId, property: "line-gradient", value: lineGradient?.rgbaDescription as Any)
+                try style.setLayerProperty(for: layerId, property: "line-gradient", value: lineGradient?.rgbaDescription as Any)
             } catch {
                 Log.warning(forMessage: "Could not set PolylineAnnotationManager.lineGradient due to error: \(error)",
                             category: "Annotations")
@@ -189,7 +201,7 @@ public class PolylineAnnotationManager: AnnotationManager {
     public var lineTranslate: [Double]? {
         didSet {
             do {
-                try style?.setLayerProperty(for: layerId, property: "line-translate", value: lineTranslate as Any)
+                try style.setLayerProperty(for: layerId, property: "line-translate", value: lineTranslate as Any)
             } catch {
                 Log.warning(forMessage: "Could not set PolylineAnnotationManager.lineTranslate due to error: \(error)",
                             category: "Annotations")
@@ -201,7 +213,7 @@ public class PolylineAnnotationManager: AnnotationManager {
     public var lineTranslateAnchor: LineTranslateAnchor? {
         didSet {
             do {
-                try style?.setLayerProperty(for: layerId, property: "line-translate-anchor", value: lineTranslateAnchor?.rawValue as Any)
+                try style.setLayerProperty(for: layerId, property: "line-translate-anchor", value: lineTranslateAnchor?.rawValue as Any)
             } catch {
                 Log.warning(forMessage: "Could not set PolylineAnnotationManager.lineTranslateAnchor due to error: \(error)",
                             category: "Annotations")
@@ -237,7 +249,7 @@ public class PolylineAnnotationManager: AnnotationManager {
 
     @objc internal func handleTap(_ tap: UITapGestureRecognizer) {
         let options = RenderedQueryOptions(layerIds: [layerId], filter: nil)
-        mapFeatureQueryable?.queryRenderedFeatures(
+        mapFeatureQueryable.queryRenderedFeatures(
             at: tap.location(in: view),
             options: options) { [weak self] (result) in
 
@@ -261,5 +273,12 @@ public class PolylineAnnotationManager: AnnotationManager {
         }
     }
 }
+
+extension PolylineAnnotationManager: DelegatingDisplayLinkParticipantDelegate {
+    func participate(for participant: DelegatingDisplayLinkParticipant) {
+        syncAnnotationsIfNeeded()
+    }
+}
+
 // End of generated file.
 // swiftlint:enable all

@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 @_exported import MapboxCoreMaps
 @_exported import MapboxCommon
 @_exported import Turf
@@ -84,6 +85,8 @@ open class MapView: UIView {
     @IBOutlet internal private(set) weak var mapInitOptionsProvider: MapInitOptionsProvider?
 
     private let dependencyProvider: MapViewDependencyProviderProtocol
+
+    private var displayLinkParticipants = WeakSet<DisplayLinkParticipant>()
 
     /// The preferred frames per second used for map rendering
     public var preferredFramesPerSecond: PreferredFPS = .maximum {
@@ -231,7 +234,7 @@ open class MapView: UIView {
         location = LocationManager(locationSupportableMapView: self, style: mapboxMap.style)
 
         // Initialize/Configure annotations orchestrator
-        annotations = AnnotationOrchestrator(view: self, mapFeatureQueryable: mapboxMap, style: mapboxMap.style)
+        annotations = AnnotationOrchestrator(view: self, mapFeatureQueryable: mapboxMap, style: mapboxMap.style, displayLinkCoordinator: self)
     }
 
     private func checkForMetalSupport() {
@@ -293,6 +296,10 @@ open class MapView: UIView {
     private func updateFromDisplayLink(displayLink: CADisplayLink) {
         if window == nil {
             return
+        }
+
+        for participant in displayLinkParticipants.allObjects {
+            participant.participate()
         }
 
         camera.update()
@@ -389,5 +396,15 @@ extension MapView: DelegatingMapClientDelegate {
         self.metalView = metalView
 
         return metalView
+    }
+}
+
+extension MapView: DisplayLinkCoordinator {
+    func add(_ participant: DisplayLinkParticipant) {
+        displayLinkParticipants.add(participant)
+    }
+
+    func remove(_ participant: DisplayLinkParticipant) {
+        displayLinkParticipants.remove(participant)
     }
 }

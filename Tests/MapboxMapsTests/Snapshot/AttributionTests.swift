@@ -44,7 +44,7 @@ class AttributionTests: XCTestCase {
         let mapView = MapView(frame: .zero, mapInitOptions: mapInitOptions)
         let url = mapView.mapboxFeedbackURL()
 
-        let expectedURL = try XCTUnwrap(URL(string: "https://apps.mapbox.com/feedback/?referrer=com.apple.dt.xctest.tool&owner=mapbox&id=streets-v11&access_token=test-token&map_sdk_version=AttributionTests#/2.00000/1.00000/3.00/4.0/5"))
+        let expectedURL = try XCTUnwrap(URL(string: "https://apps.mapbox.com/feedback/?referrer=\(Bundle.main.bundleIdentifier!)&owner=mapbox&id=streets-v11&access_token=test-token&map_sdk_version=AttributionTests#/2.00000/1.00000/3.00/4.0/5"))
         XCTAssertEqual(expectedURL, url)
     }
 }

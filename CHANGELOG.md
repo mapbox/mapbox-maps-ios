@@ -4,6 +4,9 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Features ✨ and improvements 🏁
+* Turf has been reexported. Developers no longer need to import Turf in their code base. If you are using `Turf.Geometry` directly in your code, you will need to `import Turf`. [#622](https://github.com/mapbox/mapbox-maps-ios/pull/622)
+
 ## 10.0.0-rc.7 - August 25, 2021
 
 ### Features ✨ and improvements 🏁

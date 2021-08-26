@@ -8,6 +8,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 * It is no longer necessary to `import Turf`. [#622](https://github.com/mapbox/mapbox-maps-ios/pull/622)
 * `Geometry` now refers to `Turf.Geometry` instead of `MapboxCommon.Geometry`. [#622](https://github.com/mapbox/mapbox-maps-ios/pull/622)
+* Annotation managers now sync their annotations to their backing source and layer only once per display link. ([#621](https://github.com/mapbox/mapbox-maps-ios/pull/621))
+    * Use `syncAnnotationsIfNeeded()` to force the sync to happen earlier if needed.
 
 ## 10.0.0-rc.7 - August 25, 2021
 

@@ -1,5 +1,4 @@
 import Foundation
-import Turf
 
 /// Captures potential values of the `data` property of a GeoJSONSource
 public enum GeoJSONSourceData: Codable {

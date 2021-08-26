@@ -1,9 +1,9 @@
 @_exported import MapboxCoreMaps
 @_exported import MapboxCommon
+@_exported import Turf
 @_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
 import UIKit
-import Turf
 
 @available(iOSApplicationExtension, unavailable)
 open class MapView: UIView {

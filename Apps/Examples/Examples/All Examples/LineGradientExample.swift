@@ -1,6 +1,5 @@
 import Foundation
 import MapboxMaps
-import Turf
 
 @objc(LineGradientExample)
 public class LineGradientExample: UIViewController, ExampleProtocol {

@@ -2,7 +2,6 @@
 // This file is generated.
 
 import Foundation
-import Turf
 
 /**
  * A vector tile source.

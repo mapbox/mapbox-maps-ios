@@ -2,7 +2,6 @@
 // This file is generated.
 
 import Foundation
-import Turf
 
 /**
  * A RGB-encoded raster DEM source

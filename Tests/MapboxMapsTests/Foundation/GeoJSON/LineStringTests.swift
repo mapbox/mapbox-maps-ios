@@ -1,6 +1,5 @@
 import XCTest
 import CoreLocation
-import Turf
 @testable import MapboxMaps
 
 // swiftlint:disable explicit_top_level_acl explicit_acl force_try force_cast

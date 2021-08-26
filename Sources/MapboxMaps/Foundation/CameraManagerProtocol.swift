@@ -1,5 +1,3 @@
-import Turf
-
 internal protocol CameraManagerProtocol {
 
     /// Calculates a `CameraOptions` to fit a `CoordinateBounds`

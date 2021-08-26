@@ -1,4 +1,3 @@
-import Turf
 import XCTest
 @testable import MapboxMaps
 

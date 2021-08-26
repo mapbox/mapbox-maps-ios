@@ -1,5 +1,4 @@
 import MapboxMaps
-import Turf
 
 @objc(LiveDataExample)
 class LiveDataExample: UIViewController, ExampleProtocol {

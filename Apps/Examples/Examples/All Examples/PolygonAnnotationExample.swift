@@ -1,6 +1,5 @@
 import UIKit
 import MapboxMaps
-import Turf
 
 @objc(PolygonAnnotationExample)
 

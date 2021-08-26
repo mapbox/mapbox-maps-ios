@@ -1,6 +1,5 @@
 import UIKit
 import MapboxMaps
-import Turf
 
 /**
  NOTE: This view controller should be used as a scratchpad

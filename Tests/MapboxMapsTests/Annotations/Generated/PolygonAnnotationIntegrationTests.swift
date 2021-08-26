@@ -1,7 +1,6 @@
 // swiftlint:disable all
 // This file is generated
 import XCTest
-import Turf
 @testable import MapboxMaps
 
 class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {

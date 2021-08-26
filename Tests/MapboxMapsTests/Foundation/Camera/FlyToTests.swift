@@ -1,5 +1,4 @@
 import XCTest
-import Turf
 @testable import MapboxMaps
 
 internal class FlyToTests: XCTestCase {

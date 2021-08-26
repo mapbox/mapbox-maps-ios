@@ -1,5 +1,4 @@
 import Foundation
-import Turf
 
 // swiftlint:disable file_length function_parameter_count
 internal protocol StyleManagerProtocol {

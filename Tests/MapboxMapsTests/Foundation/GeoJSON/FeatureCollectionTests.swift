@@ -1,6 +1,5 @@
 import XCTest
 import CoreLocation
-import Turf
 @testable import MapboxMaps
 
 // Disabling rules against force casting for test file.

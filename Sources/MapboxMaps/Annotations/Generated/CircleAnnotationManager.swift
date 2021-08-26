@@ -1,7 +1,6 @@
 // swiftlint:disable all
 // This file is generated.
 import Foundation
-import Turf
 @_implementationOnly import MapboxCommon_Private
 
 /// An instance of `CircleAnnotationManager` is responsible for a collection of `CircleAnnotation`s.

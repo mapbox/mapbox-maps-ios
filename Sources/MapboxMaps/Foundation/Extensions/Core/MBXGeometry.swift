@@ -1,7 +1,6 @@
 import Foundation
 import MapboxCommon
 import CoreLocation
-import Turf
 
 // MARK: - Geometry
 

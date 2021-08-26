@@ -1,7 +1,6 @@
 // This file is generated.
 
 import XCTest
-import Turf
 @testable import MapboxMaps
 
 

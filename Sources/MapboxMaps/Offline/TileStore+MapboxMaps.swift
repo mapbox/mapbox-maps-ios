@@ -134,7 +134,7 @@ extension TileStore {
     ///     worker thread; it is the responsibility of the user to dispatch to a
     ///     user-controlled thread.
     public func tileRegion(forId id: String,
-                           completion: @escaping (Result<TileRegion, Error>) -> Void) {
+                           completion: @escaping (Result<Turf.Geometry, Error>) -> Void) {
         __getTileRegion(forId: id,
                         callback: tileStoreClosureAdapter(for: completion, type: TileRegion.self))
     }

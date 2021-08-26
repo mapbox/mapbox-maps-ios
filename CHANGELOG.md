@@ -46,6 +46,9 @@ Mapbox welcomes participation and contributions from everyone.
 * Annotation managers now properly restore the default values of any annotation or common style properties that are reset to nil, with the exception of `text-field` and `line-gradient` for which there are currently issues to resolve between mapbox-maps-ios and mapbox-core-maps-ios. ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
 * Fixed Expression decoding when second array element could be an operator ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
 
+### Breaking changes ⚠️
+* `TileStore.tileRegion(forId: String, completion: @escaping (Result<TileRegion, Error>) -> Void)` has been updated to `TileStore.tileRegion(forId: String, completion: @escaping (Result<Turf.Geometry, Error>) -> Void)`.
+
 ## 10.0.0-rc.7 - August 25, 2021
 
 ### Features ✨ and improvements 🏁

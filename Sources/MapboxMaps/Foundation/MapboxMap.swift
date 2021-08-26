@@ -271,7 +271,7 @@ extension MapboxMap: CameraManagerProtocol {
                        pitch: CGFloat?) -> CameraOptions {
         return CameraOptions(
             __map.cameraForGeometry(
-                for: Geometry(geometry: geometry),
+                for: MapboxCommon.Geometry(geometry: geometry),
                 padding: padding.toMBXEdgeInsetsValue(),
                 bearing: bearing?.NSNumber,
                 pitch: pitch?.NSNumber))

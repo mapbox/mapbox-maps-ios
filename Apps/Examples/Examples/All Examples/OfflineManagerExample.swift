@@ -124,7 +124,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
 
         // Load the tile region
         let tileRegionLoadOptions = TileRegionLoadOptions(
-            geometry: Geometry(coordinate: tokyoCoord),
+            geometry: MapboxCommon.Geometry(coordinate: tokyoCoord),
             descriptors: [outdoorsDescriptor],
             metadata: ["tag": "my-outdoors-tile-region"],
             acceptExpired: true)!

@@ -56,6 +56,9 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix issue where annotations were not being returned to annotation interaction delegates ([638](https://github.com/mapbox/mapbox-maps-ios/issues/638))
 >>>>>>> 4431ea67 (add changelog)
 
+### Breaking changes ⚠️
+* `TileStore.tileRegion(forId: String, completion: @escaping (Result<TileRegion, Error>) -> Void)` has been updated to `TileStore.tileRegion(forId: String, completion: @escaping (Result<Turf.Geometry, Error>) -> Void)`.
+
 ## 10.0.0-rc.7 - August 25, 2021
 
 ### Features ✨ and improvements 🏁

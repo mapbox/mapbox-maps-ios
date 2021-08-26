@@ -62,16 +62,16 @@ workflows:
   steve:
     jobs:
       - swiftlint:
-          xcode: "12.5.0"
+          xcode: "13.0.0"
       - depsvalidator:
-          xcode: "12.5.0"
+          xcode: "13.0.0"
       - build-sdk:
-          xcode: "12.5.0"
+          xcode: "13.0.0"
           matrix:
             parameters:
               configuration: ["Debug", "Release"]
       - build-debug-app:
-          xcode: "12.5.0"
+          xcode: "13.0.0"
       - trigger-binary-size:
           requires:
             - build-sdk
@@ -86,7 +86,7 @@ workflows:
               only: main
       - unit-test-sdk:
           name: "Run Unit tests"
-          xcode: "12.5.0"
+          xcode: "13.0.0"
       # Not on main
       - run-tests-on-devices:
           name: "Run MapboxTestHost tests on devices"
@@ -133,7 +133,8 @@ workflows:
           filters:
             branches:
               only: main
-      - create-xcframework
+      - create-xcframework:
+          xcode: "13.0.0"
 
   ios-release:
     jobs:

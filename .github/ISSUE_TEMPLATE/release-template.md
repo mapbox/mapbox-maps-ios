@@ -78,7 +78,9 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 ## 📚 Update documentation
 
 - [ ] Navigate to the [CircleCI job page](https://app.circleci.com/pipelines/github/mapbox/mapbox-maps-ios), and download the `api-docs.zip` artifact.
-- [ ] In the `mapbox-maps-ios` repo, `git checkout publisher-staging && git merge --no-ff origin/publisher-staging`. This is the branch that houses our API-Docs. Make a new branch off this one `git checkout -b Release/{version}_docs`
+- [ ] In the `mapbox-maps-ios` repo, checkout branch `publisher-staging` and make sure it is up-to-date with `origin/publisher-staging`.
+- [ ] Ensure that `publisher-staging` also points to the same commit as `origin/publisher-production`. If it does not, make sure there's nothing on `publisher-staging` that needs to be saved, reset `publisher-staging` to point to the same commit as `publisher-production` (while on `publisher-staging`, `$ git reset --hard origin/publisher-production`), and force push `publisher-staging` to origin (`$ git push origin publisher-staging -f`).
+- [ ] Make a new branch off this one `git checkout -b Release/{version}_docs`
 - [ ] Unzip the `api-docs.zip` and move the new docs into our repo. This should result in a new top-level folder named after the version, but without the 'v' prefix.
 
 ### Add framework docs
@@ -116,7 +118,7 @@ Before you begin, check that the [MapboxCommon](https://github.com/mapbox/mapbox
 - [ ] Preview the docs at the staging URL: https://docs.tilestream.net/ios/maps/api/{version_without_v_prefix}/index.html
 - [ ] Create a PR to merge `publisher-staging` into `publisher-production`.
 - [ ] Share the PR with @mapbox-docs to approve.
-- [ ] Merge the PR. Do not use 'Squash and merge': this causes the publisher-staging and publisher-production branches to diverge.
+- [ ] Merge the PR. Do not use 'Squash and merge': this causes the publisher-staging and publisher-production branches to diverge. Merge manually using the command line if necessary.
 - [ ] Create a `maps-{VERSION}` branch in [ios-sdk](https://github.com/mapbox/ios-sdk).
 - [ ] Add the new version (without a v prefix) as the first element in the [src/data/ios-maps-sdk-version.json](https://github.com/mapbox/ios-sdk/blob/publisher-production/src/data/ios-maps-sdk-versions.json).
 - [ ] While the rc docs site is live and for subsequent stable releases, add the version without the v to [src/constants.json](https://github.com/mapbox/ios-sdk/blob/ios/maps-v10.0.0-beta.13.1/src/constants.json#L6) as the value for `MAPS_SDK_v10_VERSION_IOS`.

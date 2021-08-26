@@ -123,6 +123,7 @@ build-app-for-simulator:
 		-workspace Apps/Apps.xcworkspace \
 		-scheme '$(SCHEME)' \
 		-sdk iphonesimulator \
+		-destination 'platform=iOS Simulator,OS=latest,name=iPhone 11' \
 		-configuration $(CONFIGURATION) \
 		-jobs $(JOBS) \
 		build \

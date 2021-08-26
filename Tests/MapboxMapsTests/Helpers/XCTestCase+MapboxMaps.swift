@@ -42,7 +42,7 @@ extension XCTestCase {
     }
 
     private var imageComparisonHashDistanceMax: OSHashDistanceType {
-        return 2
+        return 3
     }
 
     func compare(observedImage: UIImage, expectedImageNamed expectedImageName: String, expectedImageScale: CGFloat, attachmentName: String? = nil) -> Bool {

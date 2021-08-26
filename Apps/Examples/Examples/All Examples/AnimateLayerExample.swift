@@ -1,9 +1,7 @@
 import UIKit
 import MapboxMaps
-import Turf
 
 @objc(AnimateLayerExample)
-
 public class AnimateLayerExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!

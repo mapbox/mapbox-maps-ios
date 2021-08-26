@@ -1,7 +1,6 @@
 // swiftlint:disable all
 // This file is generated.
 import Foundation
-import Turf
 
 public struct PointAnnotation: Annotation {
 

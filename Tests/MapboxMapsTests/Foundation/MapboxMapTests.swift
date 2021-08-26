@@ -1,6 +1,5 @@
 import XCTest
 @testable import MapboxMaps
-import Turf
 
 final class MapboxMapTests: XCTestCase {
 

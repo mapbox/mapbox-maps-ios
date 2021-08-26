@@ -2,8 +2,6 @@
 
 import XCTest
 @testable import MapboxMaps
-import Turf
-
 
 class VectorSourceTests: XCTestCase {
 

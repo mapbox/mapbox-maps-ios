@@ -1,6 +1,5 @@
 // swiftlint:disable file_length
 import MapboxCoreMaps
-import Turf
 import UIKit
 @_implementationOnly import MapboxCommon_Private
 @_implementationOnly import MapboxCoreMaps_Private
@@ -272,7 +271,7 @@ extension MapboxMap: CameraManagerProtocol {
                        pitch: CGFloat?) -> CameraOptions {
         return CameraOptions(
             __map.cameraForGeometry(
-                for: Geometry(geometry: geometry),
+                for: MapboxCommon.Geometry(geometry: geometry),
                 padding: padding.toMBXEdgeInsetsValue(),
                 bearing: bearing?.NSNumber,
                 pitch: pitch?.NSNumber))

@@ -1,6 +1,5 @@
 import Foundation
 import MapboxCommon
-import Turf
 
 // MARK: - Feature
 
@@ -97,7 +96,7 @@ extension MapboxCommon.Feature {
         #endif
         }
 
-        let geometry = Geometry(geometry: feature.geometry)
+        let geometry = MapboxCommon.Geometry(geometry: feature.geometry)
         let properties = feature.properties
 
         guard let nsIdentifier = identifier as? NSObject,

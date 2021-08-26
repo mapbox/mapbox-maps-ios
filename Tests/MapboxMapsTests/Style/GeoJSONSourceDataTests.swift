@@ -1,6 +1,5 @@
 import CoreLocation
 import XCTest
-import Turf
 @testable import MapboxMaps
 
 //swiftlint:disable explicit_acl explicit_top_level_acl

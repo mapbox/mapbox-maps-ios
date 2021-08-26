@@ -2,7 +2,6 @@
 // This file is generated.
 
 import Foundation
-import Turf
 
 /**
  * An image data source.

@@ -1,4 +1,3 @@
-import Turf
 @_implementationOnly import MapboxCoreMaps_Private
 
 internal protocol MapFeatureQueryable: AnyObject {

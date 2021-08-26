@@ -1,13 +1,12 @@
 import Foundation
 import MapboxCommon
 import CoreLocation
-import Turf
 
 // MARK: - Geometry
 
-public typealias Geometry = MapboxCommon.Geometry
+public typealias Geometry = Turf.Geometry
 
-extension Geometry {
+extension MapboxCommon.Geometry {
 
     /// Initialize a `Geometry` point from a coordinate.
     /// - Parameter coordinate: The coordinate to represent the `Geometry` point.
@@ -77,7 +76,7 @@ extension Geometry {
             self.init(multiPolygon: multiPolygon.coordinates)
 
         case .geometryCollection(let geometryCollection):
-            let geometryValues = geometryCollection.geometries.map {( Geometry(geometry: $0) )}
+            let geometryValues = geometryCollection.geometries.map {( MapboxCommon.Geometry(geometry: $0) )}
             self.init(geometryCollection: geometryValues)
 
         #if USING_TURF_WITH_LIBRARY_EVOLUTION

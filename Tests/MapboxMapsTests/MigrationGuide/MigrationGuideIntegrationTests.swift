@@ -1,6 +1,5 @@
 import XCTest
 @testable import MapboxMaps
-import Turf
 
 // swiftlint:disable file_length orphaned_doc_comment type_body_length
 class MigrationGuideIntegrationTests: IntegrationTestCase {

@@ -57,7 +57,7 @@ Mapbox welcomes participation and contributions from everyone.
 >>>>>>> 4431ea67 (add changelog)
 
 ### Breaking changes ⚠️
-* `TileStore.tileRegion(forId: String, completion: @escaping (Result<TileRegion, Error>) -> Void)` has been updated to `TileStore.tileRegion(forId: String, completion: @escaping (Result<Turf.Geometry, Error>) -> Void)`.
+* `TileStore.tileRegion(forId: String, completion: @escaping (Result<TileRegion, Error>) -> Void)` has been updated to `TileStore.tileRegion(forId: String, completion: @escaping (Result<Geometry, Error>) -> Void)`.
 
 ## 10.0.0-rc.7 - August 25, 2021
 

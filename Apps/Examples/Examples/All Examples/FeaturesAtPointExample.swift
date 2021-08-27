@@ -73,7 +73,7 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
             options: RenderedQueryOptions(layerIds: ["US-states"], filter: nil)) { [weak self] result in
             switch result {
             case .success(let queriedfeatures):
-                if let firstFeature = queriedfeatures.first?.feature.properties,
+                if let firstFeature = queriedfeatures.first?.feature?.properties,
                    let stateName = firstFeature["STATE_NAME"] as? String {
                     self?.showAlert(with: "You selected \(stateName)")
                 }

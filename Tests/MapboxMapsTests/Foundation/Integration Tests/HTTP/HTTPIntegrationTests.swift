@@ -95,6 +95,10 @@ class CustomHttpService: HttpServiceInterface {
         print("TODO: download(for:callback:) conformance")
         return 0
     }
+
+    func setInterceptorForInterceptor(_ interceptor: HttpServiceInterceptorInterface?) {
+        print("TODO: setInterceptorForInterceptor(_:) conformance")
+    }
 }
 
 class HTTPIntegrationTests: MapViewIntegrationTestCase {

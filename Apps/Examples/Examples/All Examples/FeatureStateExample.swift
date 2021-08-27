@@ -37,7 +37,7 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
         descriptionView = EarthquakeDescriptionView(frame: .zero)
         view.addSubview(descriptionView)
         descriptionView.translatesAutoresizingMaskIntoConstraints = false
-        descriptionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 75.0).isActive = true
+        descriptionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 2.0).isActive = true
         descriptionView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         descriptionView.widthAnchor.constraint(equalToConstant: 200).isActive = true
         descriptionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2.0).isActive = true
@@ -192,14 +192,16 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
 
                 // Extract the earthquake feature from the queried features
                 if let earthquakeFeature = queriedfeatures.first?.feature,
-                   let earthquakeId = (earthquakeFeature.identifier as? NSNumber)?.stringValue,
-                   let point = earthquakeFeature.geometry.extractLocations()?.cgPointValue,
-                   let magnitude = earthquakeFeature.properties["mag"] as? NSNumber,
-                   let place = earthquakeFeature.properties["place"] as? String,
-                   let timestamp = earthquakeFeature.properties["time"] as? NSNumber {
+                   case .number(.double(let earthquakeIdDouble)) = earthquakeFeature.identifier,
+                   case .point(let point) = earthquakeFeature.geometry,
+                   let magnitude = earthquakeFeature.properties?["mag"] as? Double,
+                   let place = earthquakeFeature.properties?["place"] as? String,
+                   let timestamp = earthquakeFeature.properties?["time"] as? Double {
+
+                    let earthquakeId = Int(earthquakeIdDouble).description
 
                     // Set the description of the earthquake from the `properties` object
-                    self.setDescription(magnitude: magnitude.doubleValue, timeStamp: timestamp.doubleValue, location: place)
+                    self.setDescription(magnitude: magnitude, timeStamp: timestamp, location: place)
 
                     // Set the earthquake to be "selected"
                     self.setSelectedState(earthquakeId: earthquakeId)
@@ -211,8 +213,7 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
                     self.previouslyTappedEarthquakeId = earthquakeId
 
                     // Center the selected earthquake on the screen
-                    let coord = CLLocationCoordinate2D(latitude: CLLocationDegrees(point.x), longitude: CLLocationDegrees(point.y))
-                    self.mapView.camera.fly(to: CameraOptions(center: coord, zoom: 10))
+                    self.mapView.camera.fly(to: CameraOptions(center: point.coordinates, zoom: 10))
                 }
             case .failure(let error):
                 self.showAlert(with: "An error occurred: \(error.localizedDescription)")

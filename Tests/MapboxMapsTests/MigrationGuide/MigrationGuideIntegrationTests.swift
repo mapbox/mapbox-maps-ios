@@ -284,6 +284,10 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
             func download(for options: DownloadOptions, callback: @escaping DownloadStatusCallback) -> UInt64 {
                 fatalError("TODO")
             }
+
+            func setInterceptorForInterceptor(_ interceptor: HttpServiceInterceptorInterface?) {
+                fatalError("TODO")
+            }
         }
 
         let appDelegate = AppDelegate()

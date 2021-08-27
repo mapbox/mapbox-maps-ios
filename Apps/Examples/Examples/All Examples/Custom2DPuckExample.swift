@@ -57,11 +57,11 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
     @objc func showHideAccuracyRadius() {
         var configuration = Puck2DConfiguration(topImage: UIImage(named: "star"))
         if shouldToggleAccuracyRadius {
-            configuration.showAccuracyRadius = true
+            configuration.showAccuracyRing = true
             shouldToggleAccuracyRadius = false
             self.toggleAccuracyRadiusButton!.setTitle("Disable Accuracy Radius", for: .normal)
         } else {
-            configuration.showAccuracyRadius = false
+            configuration.showAccuracyRing = false
             shouldToggleAccuracyRadius = true
             self.toggleAccuracyRadiusButton!.setTitle("Enable Accuracy Radius", for: .normal)
         }

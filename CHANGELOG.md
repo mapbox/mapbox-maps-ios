@@ -30,9 +30,12 @@ Mapbox welcomes participation and contributions from everyone.
 * Enable instant transitions for data driven paint layer properties ([#628](https://github.com/mapbox/mapbox-maps-ios/pull/628))
 * Offload networking tasks at the init phase ([#631](https://github.com/mapbox/mapbox-maps-ios/pull/631))
 * 3D pucks will now be rendered over other 3D content and occluded by terrain ([#641](https://github.com/mapbox/mapbox-maps-ios/pull/641))
+<<<<<<< HEAD
 * Added a public, failable, component-wise initializer to `StyleColor` ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
 * Updated `StyleColor`'s `Decodable` support to be able to handle rgba color strings as well as rgba expressions ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
 * Made generated enums conform to `CaseIterable` ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
+* Offload networking tasks at the init phase ([#](https://github.com/mapbox/mapbox-maps-ios/pull/))
+* Location puck can now hide the accuracy ring. The default value is to hide the accuracy ring. In order to enable the ring, set the `showAccuracyRing` property in `Puck2DConfiguration` to `true`. [#629](https://github.com/mapbox/mapbox-maps-ios/pull/629)
 
 ### Bug fixes 🐞
 

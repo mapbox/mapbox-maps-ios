@@ -4,7 +4,7 @@ import MapboxMaps
 @objc(Custom2DPuckExample)
 public class Custom2DPuckExample: UIViewController, ExampleProtocol {
 
-    internal var toggleAccuracyRadiusButton: UIButton? = nil
+    internal var toggleAccuracyRadiusButton: UIButton?
     internal var mapView: MapView!
     internal var shouldToggleAccuracyRadius: Bool = true
 
@@ -55,17 +55,18 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
     }
 
     @objc func showHideAccuracyRadius() {
+        var configuration = Puck2DConfiguration(topImage: UIImage(named: "star"))
         if shouldToggleAccuracyRadius {
-            let configuration = Puck2DConfiguration(topImage: UIImage(named: "star"), showAccuracyRadius: true)
-            mapView.location.options.puckType = .puck2D(configuration)
+            configuration.showAccuracyRadius = true
             shouldToggleAccuracyRadius = false
             self.toggleAccuracyRadiusButton!.setTitle("Disable Accuracy Radius", for: .normal)
         } else {
-            let configuration = Puck2DConfiguration(topImage: UIImage(named: "star"), showAccuracyRadius: false)
-            mapView.location.options.puckType = .puck2D(configuration)
+            configuration.showAccuracyRadius = false
             shouldToggleAccuracyRadius = true
             self.toggleAccuracyRadiusButton!.setTitle("Enable Accuracy Radius", for: .normal)
         }
+
+        mapView.location.options.puckType = .puck2D(configuration)
     }
 
     private func setupToggleShowAccuracyButton() {

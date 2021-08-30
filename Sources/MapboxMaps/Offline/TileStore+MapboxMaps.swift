@@ -127,7 +127,7 @@ extension TileStore {
     /// - Parameters:
     ///   - id: The tile region id.
     ///   - completion: The Result callback. Any `Result` error could be of type
-    ///         `TileRegionError`.
+    ///         `Geometry`.
     ///
     /// - Note:
     ///     The user-provided callbacks will be executed on a TileStore-controlled

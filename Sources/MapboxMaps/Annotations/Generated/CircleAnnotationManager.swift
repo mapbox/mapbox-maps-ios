@@ -74,7 +74,7 @@ public class CircleAnnotationManager: AnnotationManager {
     func removeBackingSourceAndLayer() {
         do {
             try style.removeLayer(withId: layerId)
-            try style.removeSource(withId: layerId)
+            try style.removeSource(withId: sourceId)
         } catch {
             Log.warning(forMessage: "Failed to remove source / layer from map for annotations due to error: \(error)",
                         category: "Annotations")

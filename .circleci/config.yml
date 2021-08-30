@@ -163,28 +163,28 @@ workflows:
           requires:
             - start-create-xcframework
 
-  ios-release-branch:
-    when:
-      and:
-        - equal: [<< pipeline.git.tag >>, ""]
-        - matches: 
-            pattern: "^Release/.*$"
-            value: << pipeline.git.branch >>
-    jobs:
-      - ios-build-release:
-          name: "iOS Release Build"
+  # ios-release-branch:
+  #   when:
+  #     and:
+  #       - equal: [<< pipeline.git.tag >>, ""]
+  #       - matches: 
+  #           pattern: "^Release/.*$"
+  #           value: << pipeline.git.branch >>
+  #   jobs:
+  #     - ios-build-release:
+  #         name: "iOS Release Build"
 
   debug:
     jobs:
       - debug-job
 
-  ios-release-tag:
-    when:
-      not:
-        equal: [<< pipeline.git.tag >>, ""]
-    jobs:
-      - ios-release-tag:
-          name: "iOS Release Tag & Docs"
+  # ios-release-tag:
+  #   when:
+  #     not:
+  #       equal: [<< pipeline.git.tag >>, ""]
+  #   jobs:
+  #     - ios-release-tag:
+  #         name: "iOS Release Tag & Docs"
 
 # ==============================================================================
 
@@ -231,8 +231,8 @@ jobs:
   debug-job:
     <<: *base-job
     steps:
-      - run: "cat \"Git tag: '<< pipeline.git.tag >>'\""
-      - run: "cat \"Git branch: '<< pipeline.git.branch >>'\""
+      - run: "echo \"Git tag: '<< pipeline.git.tag >>'\""
+      - run: "echo \"Git branch: '<< pipeline.git.branch >>'\""
 
   swiftlint:
     <<: *base-job

@@ -15,6 +15,9 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
+        // Setup and create button for toggling accuracy ring
+        self.setupToggleShowAccuracyButton()
+
         // Granularly configure the location puck with a `Puck2DConfiguration`
         let configuration = Puck2DConfiguration(topImage: UIImage(named: "star"))
         mapView.location.options.puckType = .puck2D(configuration)
@@ -25,25 +28,23 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
             guard let self = self else { return }
 
             if let currentLocation = self.mapView.location.latestLocation {
-                let cameraOptions = CameraOptions(center: currentLocation.coordinate, zoom: 17.0)
+                let cameraOptions = CameraOptions(center: currentLocation.coordinate, zoom: 18.0)
                 self.mapView.camera.ease(to: cameraOptions, duration: 2.0)
             }
         })
 
         // Setup a toggle button to show how to toggle the accuracy radius
         mapView.mapboxMap.onEvery(.cameraChanged, handler: { [weak self] _ in
-            guard let self = self else { return }
+            guard let self = self,
+                  let button = self.toggleAccuracyRadiusButton else {
+                return
+            }
 
-            if self.mapView.cameraState.zoom >= 17.0 {
-                if let button = self.toggleAccuracyRadiusButton {
-                    button.isHidden = false
-                } else {
-                    self.setupToggleShowAccuracyButton()
-                }
+            if self.mapView.cameraState.zoom >= 18.0 {
+                button.isHidden = false
+
             } else {
-                if let button = self.toggleAccuracyRadiusButton {
-                    button.isHidden = true
-                }
+                button.isHidden = true
             }
         })
     }
@@ -57,11 +58,11 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
     @objc func showHideAccuracyRadius() {
         var configuration = Puck2DConfiguration(topImage: UIImage(named: "star"))
         if shouldToggleAccuracyRadius {
-            configuration.showAccuracyRing = true
+            configuration.showsAccuracyRing = true
             shouldToggleAccuracyRadius = false
             self.toggleAccuracyRadiusButton!.setTitle("Disable Accuracy Radius", for: .normal)
         } else {
-            configuration.showAccuracyRing = false
+            configuration.showsAccuracyRing = false
             shouldToggleAccuracyRadius = true
             self.toggleAccuracyRadiusButton!.setTitle("Enable Accuracy Radius", for: .normal)
         }
@@ -82,7 +83,6 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         // Constraints
         button.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20.0).isActive = true
         button.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20.0).isActive = true
-        button.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         button.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 650.0).isActive = true
 
         self.toggleAccuracyRadiusButton = button

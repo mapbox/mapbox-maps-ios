@@ -18,18 +18,18 @@ public struct Puck2DConfiguration: Equatable {
     public var scale: Value<Double>?
 
     /// Flag determining if the horizontal accuracy ring should be shown arround the Puck. default value is false
-    public var showAccuracyRing: Bool
+    public var showsAccuracyRing: Bool
 
     public init(topImage: UIImage? = nil,
                 bearingImage: UIImage? = nil,
                 shadowImage: UIImage? = nil,
                 scale: Value<Double>? = nil,
-                showAccuracyRing: Bool = false) {
+                showsAccuracyRing: Bool = false) {
         self.topImage = topImage
         self.bearingImage = bearingImage
         self.shadowImage = shadowImage
         self.scale = scale
-        self.showAccuracyRing = showAccuracyRing
+        self.showsAccuracyRing = showsAccuracyRing
     }
 
     internal var resolvedTopImage: UIImage? {
@@ -190,7 +190,7 @@ internal extension Puck2D {
         layer.bearingTransition = StyleTransition(duration: 0, delay: 0)
 
         // Horizontal accuracy ring is an optional visual for the 2D Puck
-        if configuration.showAccuracyRing {
+        if configuration.showsAccuracyRing {
             layer.accuracyRadius = .constant(location.horizontalAccuracy)
             layer.accuracyRadiusColor = .constant(ColorRepresentable(color: UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
             layer.accuracyRadiusBorderColor = .constant(ColorRepresentable(color: .lightGray))

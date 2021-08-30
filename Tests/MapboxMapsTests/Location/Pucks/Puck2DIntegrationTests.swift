@@ -168,7 +168,7 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
                               puckBearingSource: .heading,
                               locationSupportableMapView: self.mapView!,
                               style: style,
-                              configuration: Puck2DConfiguration(showAccuracyRing: true))
+                              configuration: Puck2DConfiguration(showsAccuracyRing: true))
             do {
                 try puck.createPreciseLocationIndicatorLayer(location: location)
             } catch {

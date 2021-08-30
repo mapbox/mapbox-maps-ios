@@ -181,7 +181,7 @@ workflows:
   debug2:
     when:
       not:
-        equal: ["", ""]
+        equal: ["<< pipeline.git.tag >>", ""]
     jobs:
       - debug-job
 

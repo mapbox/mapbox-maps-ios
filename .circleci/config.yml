@@ -178,6 +178,13 @@ workflows:
     jobs:
       - debug-job
 
+  debug2:
+    when:
+      not:
+        equal: ["", ""]
+    jobs:
+      - debug-job
+
   # ios-release-tag:
   #   when:
   #     not:

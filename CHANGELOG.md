@@ -19,12 +19,15 @@ Mapbox welcomes participation and contributions from everyone.
 * Annotation managers now sync their annotations to their backing source and layer only once per display link. ([#621](https://github.com/mapbox/mapbox-maps-ios/pull/621))
     * Use `syncAnnotationsIfNeeded()` to force the sync to happen earlier if needed.
 * Enable instant transitions for data driven paint layer properties ([#628](https://github.com/mapbox/mapbox-maps-ios/pull/628))
+* Offload networking tasks at the init phase ([#](https://github.com/mapbox/mapbox-maps-ios/pull/))
 
 ### Bug fixes 🐞
 
 * Fix volatile tiles disappearing on "not modified" response ([#628](https://github.com/mapbox/mapbox-maps-ios/pull/628))
 * Fix crash in MapboxMap.clearData() ([#628](https://github.com/mapbox/mapbox-maps-ios/pull/628))
 * Trigger map redraw when feature state changes ([#628](https://github.com/mapbox/mapbox-maps-ios/pull/628))
+* Do not start background task if telemetry collection is disabled ([#](https://github.com/mapbox/mapbox-maps-ios/pull/))
+* Fix KVC decoding for iOS 15 ([#](https://github.com/mapbox/mapbox-maps-ios/pull/))
 
 ## 10.0.0-rc.7 - August 25, 2021
 

@@ -44,7 +44,6 @@ workflows:
           device-pool: $(DEVICE_FARM_5_DEVICE_POOL)
           scheme: "MapboxTestHost"
           app-name: "MapboxTestHost"
-          device-tests-always-run: true
           report_failure: true
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
@@ -53,16 +52,16 @@ workflows:
           device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
           app-name: "Examples"
-          device-tests-always-run: true
           report_failure: true
       - create-xcframework:
-          create-xcframework-always-run: true
           report_failure: true
           matrix:
             parameters:
               xcode: ["12.5.0", "13.0.0"]
 
-  steve:
+  main:
+    when:
+      equal: [<< pipeline.git.branch >>, main]
     jobs:
       - swiftlint:
           xcode: "12.5.0"
@@ -84,34 +83,9 @@ workflows:
       - trigger-metrics-collection:
           requires:
             - build-sdk
-          filters:
-            branches:
-              only: main
       - unit-test-sdk:
           name: "Run Unit tests"
           xcode: "12.5.0"
-      # Not on main
-      - run-tests-on-devices:
-          name: "Run MapboxTestHost tests on devices"
-          xcode: "12.5.0"
-          device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
-          device-pool: $(DEVICE_FARM_1_PHONE_POOL)
-          scheme: "MapboxTestHost"
-          app-name: "MapboxTestHost"
-          filters:
-            branches:
-              ignore: main
-      - run-app-tests-on-devices:
-          name: "Run Examples tests on devices"
-          xcode: "12.5.0"
-          device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
-          device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
-          scheme: "Examples"
-          app-name: "Examples"
-          filters:
-            branches:
-              ignore: main
-      # On main
       - run-tests-on-devices:
           name: "Run MapboxTestHost tests on devices (main)"
           xcode: "12.5.0"
@@ -119,11 +93,7 @@ workflows:
           device-pool: $(DEVICE_FARM_5_DEVICE_POOL)
           scheme: "MapboxTestHost"
           app-name: "MapboxTestHost"
-          device-tests-always-run: true
           report_failure: true
-          filters:
-            branches:
-              only: main
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices (main)"
           xcode: "12.5.0"
@@ -131,27 +101,97 @@ workflows:
           device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
           app-name: "Examples"
-          device-tests-always-run: true
           report_failure: true
-          filters:
-            branches:
-              only: main
       - create-xcframework
 
-  ios-release:
+  feature:
+    when:
+      not:
+        equal: [<< pipeline.git.branch >>, main]
     jobs:
+      - swiftlint:
+          xcode: "12.5.0"
+      - depsvalidator:
+          xcode: "12.5.0"
+      - build-sdk:
+          xcode: "12.5.0"
+          matrix:
+            parameters:
+              configuration: ["Debug", "Release"]
+      - build-debug-app:
+          xcode: "12.5.0"
+      - trigger-binary-size:
+          requires:
+            - build-sdk
+      - trigger-metrics-build:
+          requires:
+            - build-sdk
+      - start-trigger-metrics-collection:
+          type: approval
+      - trigger-metrics-collection:
+          requires:
+            - build-sdk
+            - start-trigger-metrics-collection
+      - unit-test-sdk:
+          name: "Run Unit tests"
+          xcode: "12.5.0"
+      - start-run-tests-on-devices:
+          type: approval
+      - run-tests-on-devices:
+          name: "Run MapboxTestHost tests on devices"
+          xcode: "12.5.0"
+          device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
+          device-pool: $(DEVICE_FARM_1_PHONE_POOL)
+          scheme: "MapboxTestHost"
+          app-name: "MapboxTestHost"
+          requires:
+            - start-run-tests-on-devices
+      - start-run-app-tests-on-devices:
+          type: approval
+      - run-app-tests-on-devices:
+          name: "Run Examples tests on devices"
+          xcode: "12.5.0"
+          device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
+          device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
+          scheme: "Examples"
+          app-name: "Examples"
+          requires:
+            - start-run-app-tests-on-devices
+      - start-create-xcframework:
+          type: approval
+      - create-xcframework:
+          requires:
+            - start-create-xcframework
+
+  ios-release-branch:
+    when:
+      and:
+        - matches:
+            pattern: "^$"
+            value: << pipeline.git.tag >>
+        - matches: 
+            pattern: "^Release/.*$"
+            value: << pipeline.git.branch >>
+    jobs:
+      - start-ios-build-release:
+          type: approval
       - ios-build-release:
           name: "iOS Release Build"
-          filters:
-            branches:
-              only: /Release\/.*/
+          requires:
+            - start-ios-build-release
+
+  ios-release-tag:
+    when:
+      not:
+        matches:
+          pattern: "^$"
+          value: << pipeline.git.tag >>
+    jobs:
       - ios-release-tag:
           name: "iOS Release Tag & Docs"
           filters:
             tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
+              only: /v.+/
 
 # ==============================================================================
 
@@ -171,12 +211,6 @@ jobs:
       device-pool:
         type: string
         default: $(DEVICE_FARM_1_PHONE_POOL)
-      device-tests-always-run:
-        type: boolean
-        default: false
-      create-xcframework-always-run:
-        type: boolean
-        default: false
       configuration:
         type: string
         default: "Debug"
@@ -356,9 +390,6 @@ jobs:
              - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
       - install-mbx-ci
       - configure-environment
-      - ensure-text-exists-in-commit:
-          commit-text: "[run device tests]"
-          always-run: << parameters.device-tests-always-run >>
       - inject-mapbox-public-token
       - run:
           name: Install Device Farm Dependencies
@@ -430,9 +461,6 @@ jobs:
            fingerprints:
              - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
       - install-mbx-ci
-      - ensure-text-exists-in-commit:
-          commit-text: "[run app device tests]"
-          always-run: << parameters.device-tests-always-run >>
       - configure-environment
       - run:
           name: Install Device Farm Dependencies
@@ -505,9 +533,6 @@ jobs:
              - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
       - install-mbx-ci
       - configure-environment
-      - ensure-text-exists-in-commit:
-          commit-text: "[create xcframework]"
-          always-run: << parameters.create-xcframework-always-run >>
       - install-dependencies
       - make-xcframework-bundle:
           bundle_style: "dynamic"
@@ -532,9 +557,6 @@ jobs:
              - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
       - install-mbx-ci
       - configure-environment
-      - ensure-text-exists-in-commit:
-          commit-text: "[release]"
-          always-run: << parameters.device-tests-always-run >>
       - run:
           name: Extract Version From Commit
           command: |
@@ -648,26 +670,6 @@ commands:
           command: |
             curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/latest/mbx-ci-darwin-amd64 > mbx-ci && chmod 755 ./mbx-ci
             ./mbx-ci aws setup
-
-  ensure-text-exists-in-commit:
-    parameters:
-      commit-text:
-        type: string
-      always-run:
-        type: boolean
-    steps:
-      - run:
-          name: Check for "<< parameters.commit-text >>" in commit message
-          command: |
-            export RUN_JOB="$(git log -1 --pretty=%B | fgrep "<< parameters.commit-text >>" | wc -l)"
-            if << parameters.always-run >>; then
-              echo "Job configured to always run"
-            elif [[ "$RUN_JOB" -ne "0" ]]; then
-              echo "<< parameters.commit-text >> found."
-            else
-              echo "Skipping job"
-              circleci-agent step halt
-            fi
 
   store-logs:
     parameters:

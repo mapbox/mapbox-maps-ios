@@ -33,9 +33,9 @@ workflows:
             parameters:
               xcode: ["12.5.0", "13.0.0"]
       - unit-test-sdk:
+          xcode: "12.5.0"
           matrix:
             parameters:
-              xcode: ["12.5.0", "13.0.0"]
               configuration: ["Debug", "Release"]
               report_failure: [true]
       - run-tests-on-devices:
@@ -58,9 +58,6 @@ workflows:
       - create-xcframework:
           create-xcframework-always-run: true
           report_failure: true
-          matrix:
-            parameters:
-              xcode: ["12.5.0", "13.0.0"]
 
   steve:
     jobs:
@@ -292,7 +289,7 @@ jobs:
                   echo "Falling back to `master` branch:"
                   curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_METRICS_TOKEN}
                 fi
-              fi  
+              fi
             else
               echo "CIRCLECI_METRICS_TOKEN not provided"
             fi
@@ -405,7 +402,7 @@ jobs:
               APP_NAME=<< parameters.app-name >> \
               CONFIGURATION=Release \
               BUILD_DIR="$DERIVED_DATA_PATH"
-          when: always          
+          when: always
       - run:
           name: Converting and uploading coverage
           command: |
@@ -509,6 +506,10 @@ jobs:
           commit-text: "[create xcframework]"
           always-run: << parameters.create-xcframework-always-run >>
       - install-dependencies
+      - run:
+          name: Install sourcekitten and jq
+          command: |
+            brew install sourcekitten jq
       - make-xcframework-bundle:
           bundle_style: "dynamic"
       - store_artifacts:
@@ -521,7 +522,7 @@ jobs:
           report_failure: << parameters.report_failure >>
           message: "create-xcframework"
 
-  # This job is responsible for building and uploading the xcframework bundle to S3. 
+  # This job is responsible for building and uploading the xcframework bundle to S3.
   # This job will also create a PR in api-downloads for SDK Registry access.
   ios-build-release:
     <<: *base-job

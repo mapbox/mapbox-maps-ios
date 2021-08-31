@@ -63,5 +63,10 @@ cp "$README_PATH" artifacts/README.md
 step 'Zip Bundle'
 zip -r "$ZIP_ARCHIVE_NAME" artifacts
 
+if [ -z ${CIRCLE_TAG+x} ]; then
+  # Check API compatibility with non-tagged changes.
+  ../../api-compatibility-check/maps-api-check.sh "" ./MapboxMaps.zip
+fi
+
 step 'Delete Artifacts Directory'
 rm -rf artifacts

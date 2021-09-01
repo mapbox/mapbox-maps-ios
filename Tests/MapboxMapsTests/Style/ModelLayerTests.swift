@@ -30,7 +30,7 @@ class ModelLayerTests: XCTestCase {
 
        var data: Data?
        do {
-       	   data = try JSONEncoder().encode(layer)
+           data = try JSONEncoder().encode(layer)
        } catch {
            XCTFail("Failed to encode ModelLayer")
        }
@@ -43,7 +43,7 @@ class ModelLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(ModelLayer.self, from: validData)
            XCTAssert(decodedLayer.id == "test-id")
-       	   XCTAssert(decodedLayer.type == LayerType.model)
+           XCTAssert(decodedLayer.type == LayerType.model)
            XCTAssert(decodedLayer.filter == nil)
            XCTAssert(decodedLayer.source == "some-source")
            XCTAssertNil(decodedLayer.sourceLayer)
@@ -61,7 +61,7 @@ class ModelLayerTests: XCTestCase {
 
        var data: Data?
        do {
-       	   data = try JSONEncoder().encode(layer)
+           data = try JSONEncoder().encode(layer)
        } catch {
            XCTFail("Failed to encode ModelLayer")
        }
@@ -82,7 +82,8 @@ class ModelLayerTests: XCTestCase {
 
     func testEncodingAndDecodingOfPaintProperties() {
 
-       var layer = ModelLayer(id: "test-id")	
+       var layer = ModelLayer(id: "test-id")
+       layer.paint?.modelLayerType = Value<ModelLayerType>.testConstantValue()
        layer.paint?.modelOpacity = Value<Double>.testConstantValue()
        layer.paint?.modelOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.paint?.modelRotation = Value<[Double]>.testConstantValue()
@@ -92,7 +93,7 @@ class ModelLayerTests: XCTestCase {
 
        var data: Data?
        do {
-       	   data = try JSONEncoder().encode(layer)
+           data = try JSONEncoder().encode(layer)
        } catch {
            XCTFail("Failed to encode ModelLayer")
        }
@@ -105,10 +106,11 @@ class ModelLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(ModelLayer.self, from: validData)
            XCTAssert(decodedLayer.layout?.visibility == .constant(.visible))
-       	   XCTAssert(layer.paint?.modelOpacity == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.paint?.modelRotation == Value<[Double]>.testConstantValue())
-       	   XCTAssert(layer.paint?.modelScale == Value<[Double]>.testConstantValue())
-       	   XCTAssert(layer.paint?.modelTranslation == Value<[Double]>.testConstantValue())
+           XCTAssert(decodedLayer.paint?.modelLayerType == Value<ModelLayerType>.testConstantValue())
+           XCTAssert(layer.paint?.modelOpacity == Value<Double>.testConstantValue())
+           XCTAssert(layer.paint?.modelRotation == Value<[Double]>.testConstantValue())
+           XCTAssert(layer.paint?.modelScale == Value<[Double]>.testConstantValue())
+           XCTAssert(layer.paint?.modelTranslation == Value<[Double]>.testConstantValue())
  
        } catch {
            XCTFail("Failed to decode ModelLayer")

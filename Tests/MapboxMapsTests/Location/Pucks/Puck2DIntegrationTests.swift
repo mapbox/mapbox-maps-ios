@@ -19,7 +19,6 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
         didFinishLoadingStyle = { _ in
             let puck = Puck2D(puckStyle: .precise,
                               puckBearingSource: .heading,
-                              locationSupportableMapView: self.mapView!,
                               style: style,
                               configuration: Puck2DConfiguration())
             do {
@@ -47,7 +46,6 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
         didFinishLoadingStyle = { _ in
             let puck = Puck2D(puckStyle: .approximate,
                               puckBearingSource: .heading,
-                              locationSupportableMapView: self.mapView!,
                               style: style,
                               configuration: Puck2DConfiguration())
             do {
@@ -74,7 +72,6 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
         didFinishLoadingStyle = { _ in
             let puck = Puck2D(puckStyle: .precise,
                               puckBearingSource: .heading,
-                              locationSupportableMapView: self.mapView!,
                               style: style,
                               configuration: Puck2DConfiguration())
 
@@ -107,7 +104,6 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
         didFinishLoadingStyle = { _ in
             let puck = Puck2D(puckStyle: .precise,
                               puckBearingSource: .heading,
-                              locationSupportableMapView: self.mapView!,
                               style: style,
                               configuration: Puck2DConfiguration())
             do {
@@ -139,7 +135,6 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
         mapView?.mapboxMap.onNext(.mapLoaded, handler: { _ in
             let puck = Puck2D(puckStyle: .approximate,
                               puckBearingSource: .heading,
-                              locationSupportableMapView: self.mapView!,
                               style: style,
                               configuration: Puck2DConfiguration())
             do {

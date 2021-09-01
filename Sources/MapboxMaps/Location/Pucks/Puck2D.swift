@@ -50,18 +50,15 @@ internal class Puck2D: Puck {
     internal var puckStyle: PuckStyle
     internal var puckBearingSource: PuckBearingSource
 
-    internal weak var locationSupportableMapView: LocationSupportableMapView?
-    internal weak var style: LocationStyleDelegate?
+    internal weak var style: LocationStyleProtocol?
 
     // MARK: Initializers
     internal init(puckStyle: PuckStyle,
                   puckBearingSource: PuckBearingSource,
-                  locationSupportableMapView: LocationSupportableMapView,
-                  style: LocationStyleDelegate,
+                  style: LocationStyleProtocol,
                   configuration: Puck2DConfiguration) {
         self.puckStyle = puckStyle
         self.puckBearingSource = puckBearingSource
-        self.locationSupportableMapView = locationSupportableMapView
         self.style = style
         self.configuration = configuration
     }

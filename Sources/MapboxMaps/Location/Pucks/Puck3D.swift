@@ -32,21 +32,19 @@ internal class Puck3D: Puck {
     // MARK: Protocol Properties
     internal var puckStyle: PuckStyle
     internal var puckBearingSource: PuckBearingSource
-    internal weak var locationSupportableMapView: LocationSupportableMapView?
-    internal weak var style: LocationStyleDelegate?
+    internal weak var style: LocationStyleProtocol?
 
     // MARK: Initializers
     internal init(puckStyle: PuckStyle,
                   puckBearingSource: PuckBearingSource,
-                  locationSupportableMapView: LocationSupportableMapView,
-                  style: LocationStyleDelegate,
+                  style: LocationStyleProtocol,
                   configuration: Puck3DConfiguration) {
         self.puckStyle = puckStyle
         self.puckBearingSource = puckBearingSource
-        self.locationSupportableMapView = locationSupportableMapView
         self.style = style
         self.configuration = configuration
         modelLayer = ModelLayer(id: "puck-model-layer")
+        modelLayer.paint?.modelLayerType = .constant(.locationIndicator)
         modelSource = ModelSource()
         setup()
     }

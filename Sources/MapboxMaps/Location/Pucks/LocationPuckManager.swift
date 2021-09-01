@@ -39,11 +39,8 @@ internal class LocationPuckManager: LocationConsumer {
     /// The visual representation of a location on a map
     private var puck: Puck?
 
-    /// MapView that supports location events
-    internal private(set) weak var locationSupportableMapView: LocationSupportableMapView?
-
     /// Style protocol that supports limited style APIs
-    internal private(set) weak var style: LocationStyleDelegate?
+    internal private(set) weak var style: LocationStyleProtocol?
 
     /// The current  puck style
     internal private(set) var puckStyle: PuckStyle
@@ -58,14 +55,12 @@ internal class LocationPuckManager: LocationConsumer {
         }
     }
 
-    internal init(locationSupportableMapView: LocationSupportableMapView,
-                  style: LocationStyleDelegate?,
+    internal init(style: LocationStyleProtocol?,
                   puckType: PuckType,
                   puckBearingSource: PuckBearingSource) {
         puckStyle = .precise
         self.puckType = puckType
         self.puckBearingSource = puckBearingSource
-        self.locationSupportableMapView = locationSupportableMapView
         self.style = style
     }
 
@@ -82,8 +77,7 @@ internal class LocationPuckManager: LocationConsumer {
     }
 
     internal func createPuck() {
-        guard let locationSupportableMapView = locationSupportableMapView,
-              let style = style else {
+        guard let style = style else {
             return
         }
 
@@ -93,13 +87,11 @@ internal class LocationPuckManager: LocationConsumer {
         case let .puck2D(configuration):
             puck = Puck2D(puckStyle: puckStyle,
                           puckBearingSource: puckBearingSource,
-                          locationSupportableMapView: locationSupportableMapView,
                           style: style,
                           configuration: configuration)
         case let .puck3D(configuration):
             puck = Puck3D(puckStyle: puckStyle,
                           puckBearingSource: puckBearingSource,
-                          locationSupportableMapView: locationSupportableMapView,
                           style: style,
                           configuration: configuration)
         }

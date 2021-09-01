@@ -57,7 +57,7 @@ generateSourceKittenDoc() {
     pushd ${OUT_DIR} > /dev/null
     mkdir MapboxMaps
     unzip -qq MapboxMaps.zip -d .
-    cp -r artifacts/MapboxMaps.framework/ios-arm64/MapboxMaps.framework/* ./MapboxMaps/
+    cp -r artifacts/MapboxMaps.xcframework/ios-arm64/MapboxMaps.framework/* ./MapboxMaps/
 
     # Generate doc for public headers
     sourcekitten doc --module-name MapboxMaps ./Apps/Apps.xcworkspace \

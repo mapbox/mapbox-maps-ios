@@ -38,7 +38,7 @@ LAST_VERSION=${LAST_VERSION:1}
 
 if [[ -z $3 ]]; then
   echo "Path to previous version of MapboxMaps.zip is not set, using ${LAST_VERSION}"
-  aws s3 https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/${LAST_VERSION}/MapboxMaps.zip ${PREVIOUS_RELEASE}
+  aws s3 cp s3://mapbox-api-downloads-production/v2/mobile-maps-ios/releases/ios/${LAST_VERSION}/mapbox-maps-ios.zip ${PREVIOUS_RELEASE}
 else
   cp $3 ${TMPDIR}/previous/MapboxMaps.zip
 fi

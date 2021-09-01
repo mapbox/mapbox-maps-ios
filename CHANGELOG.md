@@ -11,11 +11,12 @@ Mapbox welcomes participation and contributions from everyone.
 * Suppresses error notifications on missing volatile tiles in offline mode ([#628](https://github.com/mapbox/mapbox-maps-ios/pull/628))
 * Adapt setBounds to gl-js behavior: constraining of coordinates and zoom level is now stricter to prevent out of bounds map area to be visible in the viewport ([#628](https://github.com/mapbox/mapbox-maps-ios/pull/628))
 * Add HTTP interceptor API - HttpServiceInterface has a new method `setInterceptor` that must be implemented ([#628](https://github.com/mapbox/mapbox-maps-ios/pull/628))
+* `Geometry` now refers to `Turf.Geometry` instead of `MapboxCommon.Geometry`. ([#622](https://github.com/mapbox/mapbox-maps-ios/pull/622))
+* `Feature` now refers to `Turf.Feature` instead of `MapboxCommon.Feature`. ([#642](https://github.com/mapbox/mapbox-maps-ios/pull/642))
 
 ### Features ✨ and improvements 🏁
 
 * It is no longer necessary to `import Turf`. ([#622](https://github.com/mapbox/mapbox-maps-ios/pull/622))
-* `Geometry` now refers to `Turf.Geometry` instead of `MapboxCommon.Geometry`. ([#622](https://github.com/mapbox/mapbox-maps-ios/pull/622))
 * Annotation managers now sync their annotations to their backing source and layer only once per display link. ([#621](https://github.com/mapbox/mapbox-maps-ios/pull/621))
     * Use `syncAnnotationsIfNeeded()` to force the sync to happen earlier if needed.
 * Enable instant transitions for data driven paint layer properties ([#628](https://github.com/mapbox/mapbox-maps-ios/pull/628))

@@ -60,9 +60,8 @@ generateSourceKittenDoc() {
     cp -r artifacts/MapboxMaps.xcframework/ios-arm64/MapboxMaps.framework/* ./MapboxMaps/
 
     # Generate doc for public headers
-    sourcekitten doc --module-name MapboxMaps ./Apps/Apps.xcworkspace \
-        -- -x swift  -isysroot $(xcrun --show-sdk-path --sdk iphonesimulator) \
-        -I . -fmodules > swift_public.json
+    sourcekitten doc --module-name sourcekitten doc -- -workspace Apps/Apps.xcworkspace \
+        -scheme MapboxMaps -sdk iphonesimulator > swift_public.json
 
     # Merge the output for the public and external modules
     jq -s \

@@ -418,7 +418,7 @@ extension MapboxMap: MapFeatureQueryable {
                                       args: [String: Any]? = nil,
                                       completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) {
 
-        guard let feature = Feature(feature) else {
+        guard let feature = MapboxCommon.Feature(feature) else {
             completion(.failure(TypeConversionError.unexpectedType))
             return
         }

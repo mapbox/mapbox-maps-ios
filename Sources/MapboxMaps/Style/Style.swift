@@ -543,7 +543,7 @@ extension Style: StyleManagerProtocol {
     }
 
     public func _setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Turf.Feature]) throws {
-        let mbxFeatures = features.compactMap { Feature($0) }
+        let mbxFeatures = features.compactMap { MapboxCommon.Feature($0) }
         return try handleExpected {
             return styleManager.setStyleCustomGeometrySourceTileDataForSourceId(sourceId, tileId: tileId, featureCollection: mbxFeatures)
         }

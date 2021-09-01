@@ -234,7 +234,7 @@ open class MapView: UIView {
         location = LocationManager(locationSupportableMapView: self, style: mapboxMap.style)
 
         // Initialize/Configure annotations orchestrator
-        annotations = AnnotationOrchestrator(view: self, mapFeatureQueryable: mapboxMap, style: mapboxMap.style, displayLinkCoordinator: self)
+        annotations = AnnotationOrchestrator(view: self, mapFeatureQueryable: mapboxMap, mapViewAnnotationHandler: mapboxMap, style: mapboxMap.style, displayLinkCoordinator: self)
     }
 
     private func checkForMetalSupport() {
@@ -296,6 +296,12 @@ open class MapView: UIView {
     private func updateFromDisplayLink(displayLink: CADisplayLink) {
         if window == nil {
             return
+        }
+
+        // TODO: Make AnnotationsOrchestrator a displaylink participant
+        if !annotations.viewAnnotationsById.isEmpty {
+            let newPositions = mapboxMap.calculateViewAnnotationsPosition()
+            annotations.placeAnnotations(for: newPositions)
         }
 
         for participant in displayLinkParticipants.allObjects {

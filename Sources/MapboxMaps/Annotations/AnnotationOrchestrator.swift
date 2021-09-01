@@ -1,5 +1,6 @@
 import UIKit
 @_implementationOnly import MapboxCommon_Private
+@_implementationOnly import MapboxCoreMaps_Private
 
 public protocol Annotation {
 
@@ -45,13 +46,16 @@ public class AnnotationOrchestrator {
 
     private let mapFeatureQueryable: MapFeatureQueryable
 
+    private let mapViewAnnotationHandler: MapViewAnnotationInterface
+
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
-    internal init(view: UIView, mapFeatureQueryable: MapFeatureQueryable, style: Style, displayLinkCoordinator: DisplayLinkCoordinator) {
+    internal init(view: UIView, mapFeatureQueryable: MapFeatureQueryable, mapViewAnnotationHandler: MapViewAnnotationInterface, style: Style, displayLinkCoordinator: DisplayLinkCoordinator) {
         self.view = view
         self.mapFeatureQueryable = mapFeatureQueryable
         self.style = style
         self.displayLinkCoordinator = displayLinkCoordinator
+        self.mapViewAnnotationHandler = mapViewAnnotationHandler
     }
 
     /// Creates a `PointAnnotationManager` which is used to manage a collection of `PointAnnotation`s. The collection of `PointAnnotation` collection will persist across style changes.
@@ -140,5 +144,98 @@ public class AnnotationOrchestrator {
                                        shouldPersist: true,
                                        layerPosition: layerPosition,
                                        displayLinkCoordinator: displayLinkCoordinator)
+    }
+
+
+    // MARK: - View backed annotations -
+
+    internal var viewAnnotationsById: [String: ViewAnnotation] = [:]
+
+    public func addViewAnnotation(_ viewAnnotation: ViewAnnotation) {
+        guard let annotationsPosition = mapViewAnnotationHandler.addViewAnnotation(forIdentifier: viewAnnotation.id,
+                                                                                   options: viewAnnotation.options) else {
+            fatalError("Could not add view annotation")
+        }
+
+        viewAnnotationsById[viewAnnotation.id] = viewAnnotation
+        view?.addSubview(viewAnnotation)
+        placeAnnotations(for: annotationsPosition)
+    }
+
+    public func removeViewAnnotation(_ viewAnnotation: ViewAnnotation) {
+
+        guard let annotationsPosition = mapViewAnnotationHandler.removeViewAnnotation(
+            forIdentifier: viewAnnotation.id) else {
+            fatalError("Could not remove view annotation for id: \(viewAnnotation.id)")
+        }
+
+
+        placeAnnotations(for: annotationsPosition)
+
+        // cleanup the view
+        viewAnnotation.removeFromSuperview()
+        viewAnnotationsById.removeValue(forKey: viewAnnotation.id)
+    }
+
+    public func updateViewAnnotation(_ viewAnnotation: ViewAnnotation) {
+        guard let positions = mapViewAnnotationHandler.updateViewAnnotation(
+            forIdentifier: viewAnnotation.id,
+            options: viewAnnotation.options) else {
+            fatalError()
+        }
+
+        viewAnnotationsById[viewAnnotation.id] = viewAnnotation
+        placeAnnotations(for: positions)
+    }
+
+
+    internal func placeAnnotations(for viewAnnotationsPosition: ViewAnnotationsPosition) {
+
+        guard let mapView = view else { return }
+
+        for position in viewAnnotationsPosition.positions {
+
+            // Approach:
+            // 1. Get the view for this position's identifier
+            // 2. Adjust the origin of the view. If the view is off screen, then hide the view
+
+            let viewAnnotation = viewAnnotationsById[position.identifier]
+            let newOriginForAnnotation = position.leftTopCoordinate.point
+
+            if mapView.frame.contains(newOriginForAnnotation) {
+                viewAnnotation?.frame.origin = newOriginForAnnotation
+                viewAnnotation?.isHidden = false
+            } else {
+                viewAnnotation?.isHidden = true
+            }
+        }
+
+    }
+}
+
+public protocol ViewAnnotation: UIView {
+    var id: String { get }
+    var options: ViewAnnotationOptions { get }
+}
+
+
+extension ViewAnnotationsPosition: CustomStringConvertible {
+
+    open override var description: String {
+
+        var description = "-------\n"
+
+        for position in self.positions {
+
+            let positionDescription = """
+            annotaiton id: \(position.identifier)
+            origin.x: \(position.leftTopCoordinate.x)
+            origin.y: \(position.leftTopCoordinate.y)
+            """
+
+            description += positionDescription
+        }
+
+        return description
     }
 }

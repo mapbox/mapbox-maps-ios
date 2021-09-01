@@ -1,6 +1,7 @@
 import UIKit
 import MapboxMaps
 
+
 /**
  NOTE: This view controller should be used as a scratchpad
  while you develop new features. Changes to this file
@@ -16,7 +17,9 @@ public class DebugViewController: UIViewController {
         super.viewDidLoad()
 
         // Deliberately set nil style
-        mapView = MapView(frame: view.bounds, mapInitOptions: MapInitOptions(styleURI: nil))
+        let resourceOptions = ResourceOptions(
+            accessToken: "pk.eyJ1IjoibmlzaGFudGthcmFqZ2lrYXIiLCJhIjoiY2tudHMxNDdsMDRvaTJ2cmtiOHdyOHVuYyJ9.Yco9Jbc3BYRApy5iQmkEUA")
+        mapView = MapView(frame: view.bounds, mapInitOptions: MapInitOptions(resourceOptions: resourceOptions))
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.location.options.puckType = .puck2D()
 
@@ -34,6 +37,8 @@ public class DebugViewController: UIViewController {
             case let .failure(error):
                 print("The map failed to load the style: \(error)")
             }
+
+            self.setupAnnotations()
         }
 
         /**
@@ -81,8 +86,10 @@ public class DebugViewController: UIViewController {
          map and ensures that these layers would only be shown after the map has
          been fully rendered.
          */
-        mapView.mapboxMap.onNext(.mapLoaded) { (event) in
+        mapView.mapboxMap.onNext(.mapLoaded) { [weak self] (event) in
             print("The map has finished loading... Event = \(event)")
+
+
         }
 
         /**
@@ -102,5 +109,83 @@ public class DebugViewController: UIViewController {
 
             print("The map failed to load.. \(type) = \(message)")
         }
+
+
+    }
+
+
+    let sanfrancisco = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
+    let boston = CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589)
+    let nullIsland = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    let calloutViewHeight = 50
+    let calloutViewWidth = 80
+
+    func setupAnnotations() {
+
+        let frame = CGRect(origin: .zero, size: .init(width: calloutViewWidth, height: calloutViewHeight))
+        mapView.annotations.addViewAnnotation(
+            CalloutView(
+                frame: frame,
+                coordinate: nullIsland))
+
+    }
+
+
+
+    func makeCalloutView() -> UIView {
+        let calloutView = UIView(frame: .init(origin: .zero,
+                                              size: .init(width: calloutViewWidth,
+                                                          height: calloutViewHeight)))
+        calloutView.layer.backgroundColor = UIColor.blue.cgColor
+
+        let labelOrigin = CGPoint(x: 20, y: 20)
+        let label = UILabel(
+            frame: CGRect(
+                origin: labelOrigin,
+                size: .init(
+                    width: 50,
+                    height: 30)))
+        label.text = "Callout #\(1)"
+
+        calloutView.addSubview(label)
+        return calloutView
     }
 }
+
+final class CalloutView: UIView, ViewAnnotation {
+    public var id: String
+    public var options: ViewAnnotationOptions
+
+    init(frame: CGRect, coordinate: CLLocationCoordinate2D, id: String = UUID().uuidString) {
+
+        self.id = id
+        let options = ViewAnnotationOptions()
+        options.geometry = MapboxCommon.Geometry(coordinate: coordinate)
+        options.width = UInt32(frame.size.width)
+        options.height = UInt32(frame.size.height)
+        self.options = options
+
+        super.init(frame: frame)
+
+        // Draw things
+        self.backgroundColor = UIColor.blue
+
+        let labelOrigin = CGPoint(x: 20, y: 20)
+        let label = UILabel(
+            frame: CGRect(
+                origin: labelOrigin,
+                size: .init(
+                    width: 50,
+                    height: 30)))
+
+        label.text = "Callout #\(id)"
+        self.addSubview(label)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+}
+
+

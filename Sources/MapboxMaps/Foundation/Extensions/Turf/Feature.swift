@@ -1,7 +1,7 @@
 import Foundation
 import MapboxCommon
 
-// MARK: - Feature
+public typealias Feature = Turf.Feature
 
 extension Turf.Feature {
 

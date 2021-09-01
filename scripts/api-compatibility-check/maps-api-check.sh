@@ -30,15 +30,15 @@ CURRENT_RELEASE_DIR=$(dirname ${CURRENT_RELEASE})
 PREVIOUS_RELEASE_DIR=$(dirname ${PREVIOUS_RELEASE})
 
 if [[ -z ${TAGGED_RELEASE_VERSION} ]]; then
-    LAST_VERSION=$(git describe --tags --abbrev=0)
+    LAST_VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
 else
-    LAST_VERSION=$(git describe HEAD~1 --tags --abbrev=0)
+    LAST_VERSION=$(git describe --tags $(git rev-list --tags --max-count=1 --skip=1 --no-walk))
 fi
-LAST_VERSION=${LAST_VERSION:6}
+LAST_VERSION=${LAST_VERSION:1}
 
 if [[ -z $3 ]]; then
   echo "Path to previous version of MapboxMaps.zip is not set, using ${LAST_VERSION}"
-  aws s3 chttps://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/${LAST_VERSION}/MapboxMaps.zip ${PREVIOUS_RELEASE}
+  aws s3 https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/${LAST_VERSION}/MapboxMaps.zip ${PREVIOUS_RELEASE}
 else
   cp $3 ${TMPDIR}/previous/MapboxMaps.zip
 fi

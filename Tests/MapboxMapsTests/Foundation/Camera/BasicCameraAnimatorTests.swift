@@ -74,23 +74,4 @@ final class BasicCameraAnimatorTests: XCTestCase {
         XCTAssertEqual(propertyAnimator.finishAnimationStub.invocations.count, 1)
         XCTAssertEqual(propertyAnimator.finishAnimationStub.invocations.first?.parameters, .current)
     }
-
-    func testLocalAnimatorStartPause() {
-        let cameraAnimator = BasicCameraAnimator(propertyAnimator: propertyAnimator,
-                                                 owner: .unspecified,
-                                                 mapboxMap: mapboxMap,
-                                                 cameraView: cameraView)
-        cameraAnimator.addAnimations { (transition) in
-            transition.pitch.toValue = cameraOptionsTestValue.pitch
-        }
-
-        cameraAnimator.startAnimation()
-        XCTAssertEqual(propertyAnimator.startAnimationStub.invocations.count, 1)
-        XCTAssertEqual(propertyAnimator.addAnimationsStub.invocations.count, 1)
-        XCTAssertNotNil(cameraAnimator.transition)
-        XCTAssertEqual(cameraAnimator.transition?.toCameraOptions.pitch, 10)
-
-        cameraAnimator.pauseAnimation()
-        XCTAssertEqual(propertyAnimator.pauseAnimationsStub.invocations.count, 1)
-    }
 }

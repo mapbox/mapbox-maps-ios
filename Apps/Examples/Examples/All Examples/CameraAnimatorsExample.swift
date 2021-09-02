@@ -35,7 +35,7 @@ class CameraAnimatorsExample: UIViewController, ExampleProtocol {
         var bearingAnimator = mapView.camera.makeAnimator(duration: 4, curve: .easeInOut) { (transition) in
             transition.bearing.toValue = -45
         }
-        
+    
         bearingAnimator.addCompletion { (_) in
             print("All animations complete!")
         }

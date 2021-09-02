@@ -302,7 +302,8 @@ open class MapView: UIView {
         if !annotations.viewAnnotationsById.isEmpty {
             mapboxMap.calculateViewAnnotationsPosition { [weak self] positions in
                 DispatchQueue.main.async { [weak self] in
-                    self?.annotations.placeAnnotations(for: newPositions)
+                    print("Placing annotations at positions: \(positions)")
+                    self?.annotations.placeAnnotations(for: positions)
                 }
             }
         }
@@ -415,5 +416,15 @@ extension MapView: DisplayLinkCoordinator {
 
     func remove(_ participant: DisplayLinkParticipant) {
         displayLinkParticipants.remove(participant)
+    }
+}
+
+extension ViewAnnotationPositionDescriptor: CustomStringConvertible {
+    open override var description: String {
+        """
+        id: \(self.identifier)
+        x: \(self.leftTopCoordinate.x)
+        y: \(self.leftTopCoordinate.y)
+        """
     }
 }

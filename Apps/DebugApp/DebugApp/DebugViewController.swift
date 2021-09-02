@@ -159,10 +159,17 @@ final class CalloutView: UIView, ViewAnnotation {
     init(frame: CGRect, coordinate: CLLocationCoordinate2D, id: String = UUID().uuidString) {
 
         self.id = id
-        let options = ViewAnnotationOptions()
-        options.geometry = MapboxCommon.Geometry(coordinate: coordinate)
-        options.width = UInt32(frame.size.width)
-        options.height = UInt32(frame.size.height)
+        
+        
+        let options = ViewAnnotationOptions(__geometry: MapboxCommon.Geometry(coordinate: coordinate),
+                                            width: UInt32(frame.size.width),
+                                            height: UInt32(frame.size.height),
+                                            allowViewAnnotationsCollision: true,
+                                            anchor: nil,
+                                            offsetX: 0,
+                                            offsetY: 0,
+                                            selected: false)
+        
         self.options = options
 
         super.init(frame: frame)

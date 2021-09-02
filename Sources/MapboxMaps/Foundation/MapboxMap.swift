@@ -572,11 +572,18 @@ extension MapboxMap: MapViewAnnotationInterface {
         coordinate: CLLocationCoordinate2D,
         width: UInt32,
         height: UInt32) -> ViewAnnotationOptions {
-
-        let options = ViewAnnotationOptions()
-        options.geometry = MapboxCommon.Geometry(coordinate: coordinate)
-        options.width = width
-        options.height = height
+        
+        let options = ViewAnnotationOptions(__geometry: MapboxCommon.Geometry(coordinate: coordinate),
+                                            width: width,
+                                            height: height,
+                                            allowViewAnnotationsCollision: true,
+                                            anchor: nil,
+                                            offsetX: 0,
+                                            offsetY: 0,
+                                            selected: false)
+        
+        
+        
         return options
     }
     public func calculateViewAnnotationsPosition(callback: @escaping ([ViewAnnotationPositionDescriptor]) -> Void) {
@@ -660,3 +667,34 @@ public protocol MapViewAnnotationInterface: AnyObject {
     func removeViewAnnotation(forIdentifier identifier: String, callback: @escaping ([ViewAnnotationPositionDescriptor]) -> Void)
 }
 
+
+internal protocol DelegatingDisplayLinkParticipantDelegate: AnyObject {
+    func participate(for participant: DelegatingDisplayLinkParticipant)
+}
+
+final internal class DelegatingDisplayLinkParticipant: NSObject, DisplayLinkParticipant {
+
+    weak var delegate: DelegatingDisplayLinkParticipantDelegate?
+
+    func participate() {
+        delegate?.participate(for: self)
+    }
+}
+
+internal protocol DisplayLinkCoordinator: AnyObject {
+    // The coordinator must only keep weak references to participants
+    func add(_ participant: DisplayLinkParticipant)
+    // Removal is be based on object identity
+    func remove(_ participant: DisplayLinkParticipant)
+}
+
+// The participants must be NSObjects so that the DisplayLinkCoordinator implementation can use WeakSet
+internal protocol DisplayLinkParticipant: NSObject {
+    func participate()
+}
+
+extension QueriedFeature {
+    public var feature: Turf.Feature? {
+        return Turf.Feature(__feature)
+    }
+}

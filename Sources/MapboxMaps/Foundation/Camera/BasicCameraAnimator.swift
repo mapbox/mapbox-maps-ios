@@ -25,6 +25,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
     private var completions = [AnimationCompletion]()
 
+    // Keep the animator alive.
     private var storedAnimator: BasicCameraAnimator?
 
     /// Defines the transition that will occur to the `CameraOptions` of the renderer due to this animator
@@ -232,7 +233,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
             for completion in self.completions {
                 completion(animatingPosition)
             }
-            storedAnimator = nil
+            self.storedAnimator = nil
             self.completions.removeAll()
         }
 

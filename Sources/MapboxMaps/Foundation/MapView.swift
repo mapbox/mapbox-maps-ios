@@ -302,7 +302,6 @@ open class MapView: UIView {
         if !annotations.viewAnnotationsById.isEmpty {
             mapboxMap.calculateViewAnnotationsPosition { [weak self] positions in
                 DispatchQueue.main.async { [weak self] in
-                    print("Placing annotations at positions: \(positions)")
                     self?.annotations.placeAnnotations(for: positions)
                 }
             }

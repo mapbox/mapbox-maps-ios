@@ -39,6 +39,18 @@ public class DebugViewController: UIViewController {
             }
 
             self.setupAnnotations()
+            
+            
+            var source = GeoJSONSource()
+            source.data = .feature(.init(geometry: .point(.init(self.nullIsland))))
+            
+            try! self.mapView.mapboxMap.style.addSource(source, id: "my-source")
+            
+            var layer = CircleLayer(id: "circle-layer")
+            layer.source = "my-source"
+            layer.circleRadius = .constant(10.0)
+            try! self.mapView.mapboxMap.style.addLayer(layer)
+            
         }
 
         /**
@@ -129,27 +141,6 @@ public class DebugViewController: UIViewController {
                 coordinate: nullIsland))
 
     }
-
-
-
-    func makeCalloutView() -> UIView {
-        let calloutView = UIView(frame: .init(origin: .zero,
-                                              size: .init(width: calloutViewWidth,
-                                                          height: calloutViewHeight)))
-        calloutView.layer.backgroundColor = UIColor.blue.cgColor
-
-        let labelOrigin = CGPoint(x: 20, y: 20)
-        let label = UILabel(
-            frame: CGRect(
-                origin: labelOrigin,
-                size: .init(
-                    width: 50,
-                    height: 30)))
-        label.text = "Callout #\(1)"
-
-        calloutView.addSubview(label)
-        return calloutView
-    }
 }
 
 final class CalloutView: UIView, ViewAnnotation {
@@ -165,7 +156,7 @@ final class CalloutView: UIView, ViewAnnotation {
                                             width: UInt32(frame.size.width),
                                             height: UInt32(frame.size.height),
                                             allowViewAnnotationsCollision: true,
-                                            anchor: nil,
+                                            anchor: NSNumber.init(value: 6),
                                             offsetX: 0,
                                             offsetY: 0,
                                             selected: false)

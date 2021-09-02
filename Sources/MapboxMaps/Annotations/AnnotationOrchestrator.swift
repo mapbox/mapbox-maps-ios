@@ -149,6 +149,7 @@ public class AnnotationOrchestrator {
 
     // MARK: - View backed annotations -
 
+    // TODO: Maybe convert to a weak dictionary?
     internal var viewAnnotationsById: [String: ViewAnnotation] = [:]
 
     public func addViewAnnotation(_ viewAnnotation: ViewAnnotation) {
@@ -157,6 +158,7 @@ public class AnnotationOrchestrator {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self, let view = self.view else { return  }
                 self.viewAnnotationsById[viewAnnotation.id] = viewAnnotation
+                viewAnnotation.isHidden = true
                 view.addSubview(viewAnnotation)
                 self.placeAnnotations(for: positions)
             }
@@ -201,12 +203,14 @@ public class AnnotationOrchestrator {
 
             // Approach:
             // 1. Get the view for this position's identifier
-            // 2. Adjust the origin of the view. If the view is off screen, then hide the view
+            // 2. Adjust the origin of the view. If the view's center is off screen, then hide the view
 
             let viewAnnotation = viewAnnotationsById[position.identifier]
             let newOriginForAnnotation = position.leftTopCoordinate.point
+            let newCenterOfAnnotation = CGPoint(x: newOriginForAnnotation.x + viewAnnotation!.bounds.width / 2,
+                                                y: newOriginForAnnotation.y + viewAnnotation!.bounds.height / 2)
 
-            if mapView.frame.contains(newOriginForAnnotation) {
+            if mapView.frame.contains(newCenterOfAnnotation) {
                 viewAnnotation?.frame.origin = newOriginForAnnotation
                 viewAnnotation?.isHidden = false
             } else {
@@ -221,25 +225,3 @@ public protocol ViewAnnotation: UIView {
     var id: String { get }
     var options: ViewAnnotationOptions { get }
 }
-
-//
-//extension ViewAnnotationsPosition: CustomStringConvertible {
-//
-//    open override var description: String {
-//
-//        var description = "-------\n"
-//
-//        for position in self.positions {
-//
-//            let positionDescription = """
-//            annotaiton id: \(position.identifier)
-//            origin.x: \(position.leftTopCoordinate.x)
-//            origin.y: \(position.leftTopCoordinate.y)
-//            """
-//
-//            description += positionDescription
-//        }
-//
-//        return description
-//    }
-//}

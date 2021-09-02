@@ -152,48 +152,52 @@ public class AnnotationOrchestrator {
     internal var viewAnnotationsById: [String: ViewAnnotation] = [:]
 
     public func addViewAnnotation(_ viewAnnotation: ViewAnnotation) {
-        guard let annotationsPosition = mapViewAnnotationHandler.addViewAnnotation(forIdentifier: viewAnnotation.id,
-                                                                                   options: viewAnnotation.options) else {
-            fatalError("Could not add view annotation")
+        
+        mapViewAnnotationHandler.addViewAnnotation(forIdentifier: viewAnnotation.id, options: viewAnnotation.options) { [weak self] positions in
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self, let view = self.view else { return  }
+                self.viewAnnotationsById[viewAnnotation.id] = viewAnnotation
+                view.addSubview(viewAnnotation)
+                self.placeAnnotations(for: positions)
+            }
         }
-
-        viewAnnotationsById[viewAnnotation.id] = viewAnnotation
-        view?.addSubview(viewAnnotation)
-        placeAnnotations(for: annotationsPosition)
     }
 
     public func removeViewAnnotation(_ viewAnnotation: ViewAnnotation) {
-
-        guard let annotationsPosition = mapViewAnnotationHandler.removeViewAnnotation(
-            forIdentifier: viewAnnotation.id) else {
-            fatalError("Could not remove view annotation for id: \(viewAnnotation.id)")
+        
+        mapViewAnnotationHandler.removeViewAnnotation(forIdentifier: viewAnnotation.id) { [weak self ] positions in
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return  }
+                self.placeAnnotations(for: positions)
+                
+                // cleanup the view
+                viewAnnotation.removeFromSuperview()
+                self.viewAnnotationsById.removeValue(forKey: viewAnnotation.id)
+            }
         }
-
-
-        placeAnnotations(for: annotationsPosition)
-
-        // cleanup the view
-        viewAnnotation.removeFromSuperview()
-        viewAnnotationsById.removeValue(forKey: viewAnnotation.id)
+        
     }
 
     public func updateViewAnnotation(_ viewAnnotation: ViewAnnotation) {
-        guard let positions = mapViewAnnotationHandler.updateViewAnnotation(
-            forIdentifier: viewAnnotation.id,
-            options: viewAnnotation.options) else {
-            fatalError()
+        mapViewAnnotationHandler.updateViewAnnotation(forIdentifier: viewAnnotation.id, options: viewAnnotation.options) { [weak self] positions in
+            
+            DispatchQueue.main.async { [weak self] in
+                
+                guard let self = self else { return }
+                
+                self.viewAnnotationsById[viewAnnotation.id] = viewAnnotation
+                self.placeAnnotations(for: positions)
+            }
         }
-
-        viewAnnotationsById[viewAnnotation.id] = viewAnnotation
-        placeAnnotations(for: positions)
     }
 
-
-    internal func placeAnnotations(for viewAnnotationsPosition: ViewAnnotationsPosition) {
+    
+    
+    internal func placeAnnotations(for positions: [ViewAnnotationPositionDescriptor]) {
 
         guard let mapView = view else { return }
 
-        for position in viewAnnotationsPosition.positions {
+        for position in positions {
 
             // Approach:
             // 1. Get the view for this position's identifier
@@ -218,24 +222,24 @@ public protocol ViewAnnotation: UIView {
     var options: ViewAnnotationOptions { get }
 }
 
-
-extension ViewAnnotationsPosition: CustomStringConvertible {
-
-    open override var description: String {
-
-        var description = "-------\n"
-
-        for position in self.positions {
-
-            let positionDescription = """
-            annotaiton id: \(position.identifier)
-            origin.x: \(position.leftTopCoordinate.x)
-            origin.y: \(position.leftTopCoordinate.y)
-            """
-
-            description += positionDescription
-        }
-
-        return description
-    }
-}
+//
+//extension ViewAnnotationsPosition: CustomStringConvertible {
+//
+//    open override var description: String {
+//
+//        var description = "-------\n"
+//
+//        for position in self.positions {
+//
+//            let positionDescription = """
+//            annotaiton id: \(position.identifier)
+//            origin.x: \(position.leftTopCoordinate.x)
+//            origin.y: \(position.leftTopCoordinate.y)
+//            """
+//
+//            description += positionDescription
+//        }
+//
+//        return description
+//    }
+//}

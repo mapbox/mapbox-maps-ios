@@ -300,8 +300,11 @@ open class MapView: UIView {
 
         // TODO: Make AnnotationsOrchestrator a displaylink participant
         if !annotations.viewAnnotationsById.isEmpty {
-            let newPositions = mapboxMap.calculateViewAnnotationsPosition()
-            annotations.placeAnnotations(for: newPositions)
+            mapboxMap.calculateViewAnnotationsPosition { [weak self] positions in
+                DispatchQueue.main.async { [weak self] in
+                    self?.annotations.placeAnnotations(for: newPositions)
+                }
+            }
         }
 
         for participant in displayLinkParticipants.allObjects {

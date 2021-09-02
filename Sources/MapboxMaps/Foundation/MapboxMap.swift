@@ -579,18 +579,8 @@ extension MapboxMap: MapViewAnnotationInterface {
         options.height = height
         return options
     }
-
-
-    /**
-     * Calculate screen position for visible view annotations.
-     *
-     * Should not be called explicitly in most cases,
-     * will be called automatically in correct moment of time by View Annotation manager / plugin.
-     *
-     * @return position for all views that need to be updated on the screen.
-     */
-    public func calculateViewAnnotationsPosition() -> ViewAnnotationsPosition {
-        return __map.calculateViewAnnotationsPosition()
+    public func calculateViewAnnotationsPosition(callback: @escaping ([ViewAnnotationPositionDescriptor]) -> Void) {
+        __map.calculateViewAnnotationsPosition(forCallback: callback)
     }
 
 
@@ -599,8 +589,8 @@ extension MapboxMap: MapViewAnnotationInterface {
      *
      * @return position for all views that need to be updated on the screen or null if views' placement remained the same.
      */
-    public func addViewAnnotation(forIdentifier identifier: String, options: ViewAnnotationOptions) -> ViewAnnotationsPosition? {
-        return __map.addViewAnnotation(forIdentifier: identifier, options: options)
+    public func addViewAnnotation(forIdentifier identifier: String, options: ViewAnnotationOptions, callback: @escaping ([ViewAnnotationPositionDescriptor]) -> Void) {
+        __map.addViewAnnotation(forIdentifier: identifier, options: options, callback: callback)
     }
 
 
@@ -609,8 +599,8 @@ extension MapboxMap: MapViewAnnotationInterface {
      *
      * @return position for all views that need to be updated on the screen or null if views' placement remained the same.
      */
-    public func updateViewAnnotation(forIdentifier identifier: String, options: ViewAnnotationOptions) -> ViewAnnotationsPosition? {
-        return __map.updateViewAnnotation(forIdentifier: identifier, options: options)
+    public func updateViewAnnotation(forIdentifier identifier: String, options: ViewAnnotationOptions, callback: @escaping ([ViewAnnotationPositionDescriptor]) -> Void) {
+        __map.updateViewAnnotation(forIdentifier: identifier, options: options, callback: callback)
     }
 
 
@@ -619,8 +609,8 @@ extension MapboxMap: MapViewAnnotationInterface {
      *
      * @return position for all views that need to be updated on the screen or null if views' placement remained the same.
      */
-    public func removeViewAnnotation(forIdentifier identifier: String) -> ViewAnnotationsPosition? {
-        return __map.removeViewAnnotation(forIdentifier: identifier)
+    public func removeViewAnnotation(forIdentifier identifier: String, callback: @escaping ([ViewAnnotationPositionDescriptor]) -> Void) {
+        __map.removeViewAnnotation(forIdentifier: identifier, callback: callback)
     }
 
 }
@@ -633,3 +623,40 @@ extension MapboxMap {
         return __map
     }
 }
+
+public protocol MapViewAnnotationInterface: AnyObject {
+    /**
+     * Calculate screen position for visible view annotations.
+     *
+     * Should not be called explicitly in most cases,
+     * will be called automatically in correct moment of time by View Annotation manager / plugin.
+     *
+     * @return position for all views that need to be updated on the screen.
+     */
+    func calculateViewAnnotationsPosition(callback: @escaping ([ViewAnnotationPositionDescriptor]) -> Void)
+
+
+    /**
+     * Add view annotation.
+     *
+     * @return position for all views that need to be updated on the screen or null if views' placement remained the same.
+     */
+    func addViewAnnotation(forIdentifier identifier: String, options: ViewAnnotationOptions, callback: @escaping ([ViewAnnotationPositionDescriptor]) -> Void)
+
+
+    /**
+     * Update view annotation if it exists.
+     *
+     * @return position for all views that need to be updated on the screen or null if views' placement remained the same.
+     */
+    func updateViewAnnotation(forIdentifier identifier: String, options: ViewAnnotationOptions, callback: @escaping ([ViewAnnotationPositionDescriptor]) -> Void)
+
+
+    /**
+     * Remove view annotation if it exists.
+     *
+     * @return position for all views that need to be updated on the screen or null if views' placement remained the same.
+     */
+    func removeViewAnnotation(forIdentifier identifier: String, callback: @escaping ([ViewAnnotationPositionDescriptor]) -> Void)
+}
+

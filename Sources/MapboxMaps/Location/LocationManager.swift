@@ -28,11 +28,8 @@ public class LocationManager: NSObject {
         return hashTable
     }()
 
-    /// `MapView` that has specific functionality to support location
-    internal weak var locationSupportableMapView: LocationSupportableMapView!
-
     /// Style that has limited functionality to support location
-    internal weak var style: LocationStyleDelegate?
+    internal weak var style: LocationStyleProtocol?
 
     /// Manager that handles the visual puck element.
     /// Only created if `showsUserLocation` is `true`
@@ -57,10 +54,7 @@ public class LocationManager: NSObject {
         }
     }
 
-    internal init(locationSupportableMapView: LocationSupportableMapView, style: LocationStyleDelegate) {
-
-        /// Allows location updates to be reflected on screen using delegate method
-        self.locationSupportableMapView = locationSupportableMapView
+    internal init(style: LocationStyleProtocol) {
 
         self.style = style
 
@@ -200,8 +194,7 @@ private extension LocationManager {
                 // This serves as a reset and handles the case if permissions were changed for accuracy 
                 locationPuckManager.changePuckStyle(to: currentPuckStyle)
             } else {
-                let locationPuckManager = LocationPuckManager(locationSupportableMapView: locationSupportableMapView,
-                                                              style: style,
+                let locationPuckManager = LocationPuckManager(style: style,
                                                               puckType: puckType,
                                                               puckBearingSource: options.puckBearingSource)
                 consumers.add(locationPuckManager)

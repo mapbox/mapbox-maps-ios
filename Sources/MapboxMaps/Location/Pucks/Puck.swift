@@ -7,9 +7,6 @@ internal protocol Puck {
     /// Property that stores the current `PuckBearingSource` of the puck
     var puckBearingSource: PuckBearingSource { get set }
 
-    /// Property that references the mapView that the puck should be draw
-    var locationSupportableMapView: LocationSupportableMapView? { get }
-
     /// This function takes in a location object and will update the current `Puck` with that location
     func updateLocation(location: Location)
 

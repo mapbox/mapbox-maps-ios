@@ -31,23 +31,4 @@ extension MapView: OrnamentSupportableView {
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
-extension MapView: LocationSupportableMapView {
-
-    public func point(for coordinate: CLLocationCoordinate2D) -> CGPoint {
-        return mapboxMap.point(for: coordinate)
-    }
-
-    public func metersPerPointAtLatitude(latitude: CLLocationDegrees) -> CLLocationDistance {
-        return Projection.metersPerPoint(for: latitude, zoom: cameraState.zoom)
-    }
-
-    public func subscribeRenderFrameHandler(_ handler: @escaping (MapboxCoreMaps.Event) -> Void) {
-        mapboxMap.onEvery(.renderFrameStarted) { (event) in
-            handler(event)
-        }
-    }
-
-}
-
-extension Style: LocationStyleDelegate { }
+extension Style: LocationStyleProtocol { }

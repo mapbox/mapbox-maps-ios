@@ -1,4 +1,4 @@
-internal protocol LocationStyleDelegate: AnyObject {
+internal protocol LocationStyleProtocol: AnyObject {
     func _addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition?) throws
     func removeLayer(withId id: String) throws
     func layerExists(withId id: String) -> Bool
@@ -11,7 +11,7 @@ internal protocol LocationStyleDelegate: AnyObject {
     func addImage(_ image: UIImage, id: String, sdf: Bool, stretchX: [ImageStretches], stretchY: [ImageStretches], content: ImageContent?) throws
 }
 
-extension LocationStyleDelegate {
+extension LocationStyleProtocol {
     internal func _addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
         try _addPersistentLayer(layer, layerPosition: layerPosition)
     }

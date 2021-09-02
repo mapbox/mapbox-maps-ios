@@ -21,6 +21,7 @@ Mapbox welcomes participation and contributions from everyone.
     * Use `syncAnnotationsIfNeeded()` to force the sync to happen earlier if needed.
 * Enable instant transitions for data driven paint layer properties ([#628](https://github.com/mapbox/mapbox-maps-ios/pull/628))
 * Offload networking tasks at the init phase ([#631](https://github.com/mapbox/mapbox-maps-ios/pull/631))
+* 3D pucks will now be rendered over other 3D content and occluded by terrain ([#641](https://github.com/mapbox/mapbox-maps-ios/pull/641))
 
 ### Bug fixes 🐞
 

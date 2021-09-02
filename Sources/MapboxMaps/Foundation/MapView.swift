@@ -231,7 +231,7 @@ open class MapView: UIView {
         ornaments = OrnamentsManager(view: self, options: OrnamentOptions(), infoButtonOrnamentDelegate: attributionDialogManager)
 
         // Initialize/Configure location manager
-        location = LocationManager(locationSupportableMapView: self, style: mapboxMap.style)
+        location = LocationManager(style: mapboxMap.style)
 
         // Initialize/Configure annotations orchestrator
         annotations = AnnotationOrchestrator(view: self, mapFeatureQueryable: mapboxMap, style: mapboxMap.style, displayLinkCoordinator: self)

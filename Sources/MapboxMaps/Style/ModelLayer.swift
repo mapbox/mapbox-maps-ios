@@ -46,6 +46,9 @@ internal struct ModelLayer: Layer {
 
       internal init() {}
 
+      /// Defines rendering behavior of model in respect to other 3D scene objects. Defaults to .common3D.
+      internal var modelLayerType: Value<ModelLayerType>?
+
       /// The opacity of the model layer.
       internal var modelOpacity: Value<Double>?
 
@@ -65,6 +68,7 @@ internal struct ModelLayer: Layer {
       internal var modelTranslation: Value<[Double]>?
 
       enum CodingKeys: String, CodingKey {
+        case modelLayerType = "model-type"
         case modelOpacity = "model-opacity"
         case modelOpacityTransition = "model-opacity-transition"
         case modelRotation = "model-rotation"

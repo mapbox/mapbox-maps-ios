@@ -9,7 +9,7 @@ set -eo pipefail
 
 TAGGED_RELEASE_VERSION=$1
 
-CURRENT_DIR=$(dirname ${CIRCLE_TAG})
+CURRENT_DIR=$(dirname '${CIRCLE_TAG}')
 ROOT_DIR="${CURRENT_DIR}/../.."
 REPORT_DIR=${ROOT_DIR}/api_compat_report
 mkdir -p ${REPORT_DIR}

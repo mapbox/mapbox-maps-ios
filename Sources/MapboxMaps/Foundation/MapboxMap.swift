@@ -193,7 +193,7 @@ public final class MapboxMap {
         }
         set {
             // Remove the previously visible options, then update the debug options to the new array.
-            var oldOptions = debugOptions.map { NSNumber(value: $0.rawValue) }
+            let oldOptions = debugOptions.map { NSNumber(value: $0.rawValue) }
             __map.setDebugForDebugOptions(oldOptions, value: false)
 
             let options = newValue.map { NSNumber(value: $0.rawValue) }

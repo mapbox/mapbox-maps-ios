@@ -15,10 +15,10 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
     internal var annotationSelected: Bool = false {
         didSet {
             if annotationSelected {
-                label.backgroundColor = UIColor.systemGreen
+                label.backgroundColor = .systemGreen
                 label.text = "Selected annotation!"
             } else {
-                label.backgroundColor = UIColor.systemGray
+                label.backgroundColor = .systemGray
                 label.text = "Deselected annotation"
             }
         }
@@ -28,9 +28,9 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
     public lazy var label: UILabel = {
         let label = UILabel(frame: CGRect.zero)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = UIColor.systemBlue
+        label.backgroundColor = .systemBlue
         label.layer.cornerRadius = 12.0
-        label.textColor = UIColor.white
+        label.textColor = .white
         label.textAlignment = .center
         label.font = UIFont.boldSystemFont(ofSize: 24.0)
         return label

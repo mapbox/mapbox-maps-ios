@@ -1,5 +1,5 @@
-// swiftlint:disable all
 // This file is generated.
+// swiftlint:disable file_length
 import Foundation
 @testable import MapboxMaps
 
@@ -15,7 +15,6 @@ extension Visibility {
 		return .visible
 	}
 }
-
 
 // MARK: LINE_CAP
 
@@ -460,4 +459,3 @@ extension TextWritingMode {
 
 }
 // End of generated file.
-// swiftlint:enable all

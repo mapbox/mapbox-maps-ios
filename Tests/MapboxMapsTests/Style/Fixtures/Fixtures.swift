@@ -11,9 +11,9 @@ internal extension Double {
     }
 }
 
-internal extension ColorRepresentable {
-    static func testConstantValue() -> ColorRepresentable {
-        return ColorRepresentable(color: .red)
+internal extension StyleColor {
+    static func testConstantValue() -> StyleColor {
+        return StyleColor(.red)
     }
 }
 

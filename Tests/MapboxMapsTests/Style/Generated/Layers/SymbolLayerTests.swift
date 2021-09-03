@@ -2,7 +2,7 @@
 import XCTest
 @testable import MapboxMaps
 
-class SymbolLayerTests: XCTestCase {
+final class SymbolLayerTests: XCTestCase {
 
     func testLayerProtocolMembers() {
 
@@ -164,11 +164,11 @@ class SymbolLayerTests: XCTestCase {
     func testEncodingAndDecodingOfPaintProperties() {
 
        var layer = SymbolLayer(id: "test-id")
-       layer.iconColor = Value<ColorRepresentable>.testConstantValue()
+       layer.iconColor = Value<StyleColor>.testConstantValue()
        layer.iconColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.iconHaloBlur = Value<Double>.testConstantValue()
        layer.iconHaloBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.iconHaloColor = Value<ColorRepresentable>.testConstantValue()
+       layer.iconHaloColor = Value<StyleColor>.testConstantValue()
        layer.iconHaloColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.iconHaloWidth = Value<Double>.testConstantValue()
        layer.iconHaloWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -177,11 +177,11 @@ class SymbolLayerTests: XCTestCase {
        layer.iconTranslate = Value<[Double]>.testConstantValue()
        layer.iconTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.iconTranslateAnchor = Value<IconTranslateAnchor>.testConstantValue()
-       layer.textColor = Value<ColorRepresentable>.testConstantValue()
+       layer.textColor = Value<StyleColor>.testConstantValue()
        layer.textColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.textHaloBlur = Value<Double>.testConstantValue()
        layer.textHaloBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.textHaloColor = Value<ColorRepresentable>.testConstantValue()
+       layer.textHaloColor = Value<StyleColor>.testConstantValue()
        layer.textHaloColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.textHaloWidth = Value<Double>.testConstantValue()
        layer.textHaloWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -206,16 +206,16 @@ class SymbolLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(SymbolLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
-       	   XCTAssert(layer.iconColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.iconColor == Value<StyleColor>.testConstantValue())
        	   XCTAssert(layer.iconHaloBlur == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.iconHaloColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.iconHaloColor == Value<StyleColor>.testConstantValue())
        	   XCTAssert(layer.iconHaloWidth == Value<Double>.testConstantValue())
        	   XCTAssert(layer.iconOpacity == Value<Double>.testConstantValue())
        	   XCTAssert(layer.iconTranslate == Value<[Double]>.testConstantValue())
        	   XCTAssert(layer.iconTranslateAnchor == Value<IconTranslateAnchor>.testConstantValue())
-       	   XCTAssert(layer.textColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.textColor == Value<StyleColor>.testConstantValue())
        	   XCTAssert(layer.textHaloBlur == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.textHaloColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.textHaloColor == Value<StyleColor>.testConstantValue())
        	   XCTAssert(layer.textHaloWidth == Value<Double>.testConstantValue())
        	   XCTAssert(layer.textOpacity == Value<Double>.testConstantValue())
        	   XCTAssert(layer.textTranslate == Value<[Double]>.testConstantValue())

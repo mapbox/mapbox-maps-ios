@@ -2,7 +2,7 @@
 import XCTest
 @testable import MapboxMaps
 
-class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
+final class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
 
     internal func testBaseClass() throws {
         // Do nothing
@@ -66,11 +66,11 @@ class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.textVariableAnchor = Value<[TextAnchor]>.testConstantValue()
             layer.textWritingMode = Value<[TextWritingMode]>.testConstantValue()
 
-            layer.iconColor = Value<ColorRepresentable>.testConstantValue()
+            layer.iconColor = Value<StyleColor>.testConstantValue()
             layer.iconColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.iconHaloBlur = Value<Double>.testConstantValue()
             layer.iconHaloBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.iconHaloColor = Value<ColorRepresentable>.testConstantValue()
+            layer.iconHaloColor = Value<StyleColor>.testConstantValue()
             layer.iconHaloColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.iconHaloWidth = Value<Double>.testConstantValue()
             layer.iconHaloWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -78,11 +78,11 @@ class SymbolLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.iconOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.iconTranslateTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.iconTranslateAnchor = Value<IconTranslateAnchor>.testConstantValue()
-            layer.textColor = Value<ColorRepresentable>.testConstantValue()
+            layer.textColor = Value<StyleColor>.testConstantValue()
             layer.textColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.textHaloBlur = Value<Double>.testConstantValue()
             layer.textHaloBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.textHaloColor = Value<ColorRepresentable>.testConstantValue()
+            layer.textHaloColor = Value<StyleColor>.testConstantValue()
             layer.textHaloColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.textHaloWidth = Value<Double>.testConstantValue()
             layer.textHaloWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)

@@ -2,7 +2,7 @@
 import XCTest
 @testable import MapboxMaps
 
-class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
+final class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
 
     internal func testBaseClass() throws {
         // Do nothing
@@ -30,7 +30,7 @@ class FillExtrusionLayerIntegrationTests: MapViewIntegrationTestCase {
 
             layer.fillExtrusionBase = Value<Double>.testConstantValue()
             layer.fillExtrusionBaseTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.fillExtrusionColor = Value<ColorRepresentable>.testConstantValue()
+            layer.fillExtrusionColor = Value<StyleColor>.testConstantValue()
             layer.fillExtrusionColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillExtrusionHeight = Value<Double>.testConstantValue()
             layer.fillExtrusionHeightTransition = StyleTransition(duration: 10.0, delay: 10.0)

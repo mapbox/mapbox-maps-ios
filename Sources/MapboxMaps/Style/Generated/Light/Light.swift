@@ -1,8 +1,5 @@
 // This file is generated.
-
-import UIKit
-import MapboxCoreMaps
-import MapboxCommon
+import Foundation
 
 /**
  * The global light source.
@@ -14,7 +11,7 @@ public struct Light: Codable {
     /// Whether extruded geometries are lit relative to the map or viewport.
   public var anchor: Anchor?
   /// Color tint for lighting extruded geometries.
-  public var color: ColorRepresentable?
+  public var color: StyleColor?
   
   /// Transition property for `color`
   public var colorTransition: StyleTransition?

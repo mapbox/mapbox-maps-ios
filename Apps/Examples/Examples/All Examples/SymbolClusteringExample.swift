@@ -92,7 +92,7 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         })
 
         // Add an outline to the icons.
-        clusteredLayer.iconHaloColor = .constant(ColorRepresentable(color: .black))
+        clusteredLayer.iconHaloColor = .constant(StyleColor(.black))
         clusteredLayer.iconHaloWidth = .constant(4)
 
         // Adjust the scale of the icons based on the number of points within an
@@ -119,7 +119,7 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
             Exp(.has) { "point_count" }
         }
         unclusteredLayer.iconImage = .constant(.name("fire-station-icon"))
-        unclusteredLayer.iconColor = .constant(ColorRepresentable(color: .white))
+        unclusteredLayer.iconColor = .constant(StyleColor(.white))
 
         // Rotate the icon image based on the recorded water flow.
         // The `mod` operator allows you to use the remainder after dividing

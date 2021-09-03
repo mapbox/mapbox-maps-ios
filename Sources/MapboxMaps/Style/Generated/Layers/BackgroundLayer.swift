@@ -1,8 +1,5 @@
 // This file is generated.
-
 import Foundation
-import MapboxCoreMaps
-import MapboxCommon
 
 /**
  * The background color or pattern of the map.
@@ -25,7 +22,7 @@ public struct BackgroundLayer: Layer {
     public var visibility: Value<Visibility>?
     
     /// The color with which the background will be drawn.
-    public var backgroundColor: Value<ColorRepresentable>?
+    public var backgroundColor: Value<StyleColor>?
     
     /// Transition options for `backgroundColor`.
     public var backgroundColorTransition: StyleTransition?
@@ -81,7 +78,7 @@ public struct BackgroundLayer: Layer {
       maxZoom = try container.decodeIfPresent(Double.self, forKey: .maxZoom)
       
       if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
-        backgroundColor = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .backgroundColor)
+        backgroundColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .backgroundColor)
         backgroundColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .backgroundColorTransition)
         backgroundOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .backgroundOpacity)
         backgroundOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .backgroundOpacityTransition)

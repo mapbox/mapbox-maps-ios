@@ -126,7 +126,7 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
             }
         )
         earthquakeVizLayer.circleRadiusTransition = StyleTransition(duration: 0.5, delay: 0)
-        earthquakeVizLayer.circleStrokeColor = .constant(.init(color: .black))
+        earthquakeVizLayer.circleStrokeColor = .constant(StyleColor(.black))
         earthquakeVizLayer.circleStrokeWidth = .constant(1)
 
         // The feature-state dependent circle-color expression will render

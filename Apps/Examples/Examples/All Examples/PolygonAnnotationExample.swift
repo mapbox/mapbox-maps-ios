@@ -36,7 +36,7 @@ public class PolygonAnnotationExample: UIViewController, ExampleProtocol {
         var polygonAnnotation = PolygonAnnotation(polygon: makePolygon())
 
         // Style the polygon annotation
-        polygonAnnotation.fillColor = ColorRepresentable(color: .red)
+        polygonAnnotation.fillColor = StyleColor(.red)
         polygonAnnotation.fillOpacity = 0.8
 
         // Add the polygon annotation to the manager

@@ -1,4 +1,3 @@
-// swiftlint:disable all
 // This file is generated.
 import Foundation
 @_implementationOnly import MapboxCommon_Private
@@ -11,11 +10,11 @@ public class CircleAnnotationManager: AnnotationManager {
     /// The collection of CircleAnnotations being managed
     public var annotations = [CircleAnnotation]() {
         didSet {
-            needsSyncAnnotations = true
+            needsSyncSourceAndLayer = true
         }
     }
 
-    private var needsSyncAnnotations = false
+    private var needsSyncSourceAndLayer = false
 
     // MARK: - AnnotationManager protocol conformance -
 
@@ -25,7 +24,7 @@ public class CircleAnnotationManager: AnnotationManager {
 
     public let id: String
 
-    // MARK:- Setup / Lifecycle -
+    // MARK: - Setup / Lifecycle -
 
     /// Dependency required to add sources/layers to the map
     private let style: Style
@@ -35,6 +34,18 @@ public class CircleAnnotationManager: AnnotationManager {
 
     /// Dependency required to add gesture recognizer to the MapView
     private weak var view: UIView?
+
+    /// Storage for common layer properties
+    private var layerProperties: [String: Any] = [:] {
+        didSet {
+            needsSyncSourceAndLayer = true
+        }
+    }
+
+    /// The keys of the style properties that were set during the previous sync.
+    /// Used to identify which styles need to be restored to their default values in
+    /// the subsequent sync.
+    private var previouslySetLayerPropertyKeys: Set<String> = []
 
     /// Indicates whether the style layer exists after style changes. Default value is `true`.
     internal let shouldPersist: Bool
@@ -100,35 +111,71 @@ public class CircleAnnotationManager: AnnotationManager {
 
     // MARK: - Sync annotations to map -
 
-    /// Synchronizes the backing source and layer with the current set of annotations.
-    /// This method is called automatically with each display link, but it may also be
-    /// called manually in situations where the backing source and layer need to be
-    /// updated earlier.
-    public func syncAnnotationsIfNeeded() {
-        guard needsSyncAnnotations else {
+    /// Synchronizes the backing source and layer with the current `annotations`
+    /// and common layer properties. This method is called automatically with
+    /// each display link, but it may also be called manually in situations
+    /// where the backing source and layer need to be updated earlier.
+    public func syncSourceAndLayerIfNeeded() {
+        guard needsSyncSourceAndLayer else {
             return
         }
-        needsSyncAnnotations = false
+        needsSyncSourceAndLayer = false
 
-        let allDataDrivenPropertiesUsed = Set(annotations.flatMap { $0.styles.keys })
-        for property in allDataDrivenPropertiesUsed {
-            do {
-                try style.setLayerProperty(for: layerId, property: property, value: ["get", property, ["get", "styles"]] )
-            } catch {
-                Log.error(forMessage: "Could not set layer property \(property) in CircleAnnotationManager",
+        // Construct the properties dictionary from the annotations
+        let dataDrivenLayerPropertyKeys = Set(annotations.flatMap { $0.layerProperties.keys })
+        let dataDrivenProperties = Dictionary(
+            uniqueKeysWithValues: dataDrivenLayerPropertyKeys
+                .map { (key) -> (String, Any) in
+                    (key, ["get", key, ["get", "layerProperties"]])
+                })
+
+        // Merge the common layer properties
+        let newLayerProperties = dataDrivenProperties.merging(layerProperties, uniquingKeysWith: { $1 })
+
+        // Construct the properties dictionary to reset any properties that are no longer used
+        let unusedPropertyKeys = previouslySetLayerPropertyKeys.subtracting(newLayerProperties.keys)
+        let unusedProperties = Dictionary(uniqueKeysWithValues: unusedPropertyKeys.compactMap { (key) -> (String, Any)? in
+            if key == "text-field" {
+                // default value for text-field is currently `{ kind: constant, value: ["format"] }`.
+                // Attempting to set `text-field` to `["format"]` yields:
+                //
+                //     "Cannot set layer property: text-field error: Expected at least one argument."
+                //
+                Log.warning(forMessage: "There is a known issue with resetting text-field to its default value.",
                             category: "Annotations")
+                return (key, ["format", ""])
+            } else if key == "line-gradient" {
+                // default value for line-gradient is currently `{ kind: undefined, value: NSNull }`,
+                // but `style.setLayerProperties(for:properties:)` requires all values to be non-nil,
+                // and doesn't accept NSNull, so for now, this property cannot be reset to its default.
+                Log.error(forMessage: "line-gradient cannot currently be reset to its default value.",
+                          category: "Annotations")
+                return nil
+            } else {
+                return (key, Style._layerPropertyDefaultValue(for: .circle, property: key).value)
             }
+        })
+
+        // Store the new set of property keys
+        previouslySetLayerPropertyKeys = Set(newLayerProperties.keys)
+
+        // Merge the new and unused properties
+        let allLayerProperties = newLayerProperties.merging(unusedProperties, uniquingKeysWith: { $1 })
+
+        // make a single call into MapboxCoreMaps to set layer properties
+        do {
+            try style.setLayerProperties(for: layerId, properties: allLayerProperties)
+        } catch {
+            Log.error(forMessage: "Could not set layer properties in CircleAnnotationManager due to error \(error)",
+                      category: "Annotations")
         }
 
+        // build and update the source data
         let featureCollection = Turf.FeatureCollection(features: annotations.map(\.feature))
         do {
             let data = try JSONEncoder().encode(featureCollection)
-            guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                Log.error(forMessage: "Could not convert annotation features to json object in CircleAnnotationManager",
-                            category: "Annotations")
-                return
-            }
-            try style.setSourceProperty(for: sourceId, property: "data", value: jsonObject )
+            let jsonObject = try JSONSerialization.jsonObject(with: data) as! [String: Any]
+            try style.setSourceProperty(for: sourceId, property: "data", value: jsonObject)
         } catch {
             Log.error(forMessage: "Could not update annotations in CircleAnnotationManager due to error: \(error)",
                         category: "Annotations")
@@ -139,49 +186,41 @@ public class CircleAnnotationManager: AnnotationManager {
 
     /// Orientation of circle when map is pitched.
     public var circlePitchAlignment: CirclePitchAlignment? {
-        didSet {
-            do {
-                try style.setLayerProperty(for: layerId, property: "circle-pitch-alignment", value: circlePitchAlignment?.rawValue as Any)
-            } catch {
-                Log.warning(forMessage: "Could not set CircleAnnotationManager.circlePitchAlignment due to error: \(error)",
-                            category: "Annotations")
-            }
+        get {
+            return layerProperties["circle-pitch-alignment"].flatMap { $0 as? String }.flatMap(CirclePitchAlignment.init(rawValue:))
+        }
+        set {
+            layerProperties["circle-pitch-alignment"] = newValue?.rawValue
         }
     }
 
     /// Controls the scaling behavior of the circle when the map is pitched.
     public var circlePitchScale: CirclePitchScale? {
-        didSet {
-            do {
-                try style.setLayerProperty(for: layerId, property: "circle-pitch-scale", value: circlePitchScale?.rawValue as Any)
-            } catch {
-                Log.warning(forMessage: "Could not set CircleAnnotationManager.circlePitchScale due to error: \(error)",
-                            category: "Annotations")
-            }
+        get {
+            return layerProperties["circle-pitch-scale"].flatMap { $0 as? String }.flatMap(CirclePitchScale.init(rawValue:))
+        }
+        set {
+            layerProperties["circle-pitch-scale"] = newValue?.rawValue
         }
     }
 
     /// The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.
     public var circleTranslate: [Double]? {
-        didSet {
-            do {
-                try style.setLayerProperty(for: layerId, property: "circle-translate", value: circleTranslate as Any)
-            } catch {
-                Log.warning(forMessage: "Could not set CircleAnnotationManager.circleTranslate due to error: \(error)",
-                            category: "Annotations")
-            }
+        get {
+            return layerProperties["circle-translate"] as? [Double]
+        }
+        set {
+            layerProperties["circle-translate"] = newValue
         }
     }
 
     /// Controls the frame of reference for `circle-translate`.
     public var circleTranslateAnchor: CircleTranslateAnchor? {
-        didSet {
-            do {
-                try style.setLayerProperty(for: layerId, property: "circle-translate-anchor", value: circleTranslateAnchor?.rawValue as Any)
-            } catch {
-                Log.warning(forMessage: "Could not set CircleAnnotationManager.circleTranslateAnchor due to error: \(error)",
-                            category: "Annotations")
-            }
+        get {
+            return layerProperties["circle-translate-anchor"].flatMap { $0 as? String }.flatMap(CircleTranslateAnchor.init(rawValue:))
+        }
+        set {
+            layerProperties["circle-translate-anchor"] = newValue?.rawValue
         }
     }
 
@@ -240,9 +279,8 @@ public class CircleAnnotationManager: AnnotationManager {
 
 extension CircleAnnotationManager: DelegatingDisplayLinkParticipantDelegate {
     func participate(for participant: DelegatingDisplayLinkParticipant) {
-        syncAnnotationsIfNeeded()
+        syncSourceAndLayerIfNeeded()
     }
 }
 
 // End of generated file.
-// swiftlint:enable all

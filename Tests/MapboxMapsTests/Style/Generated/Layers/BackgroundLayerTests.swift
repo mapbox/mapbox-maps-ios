@@ -2,7 +2,7 @@
 import XCTest
 @testable import MapboxMaps
 
-class BackgroundLayerTests: XCTestCase {
+final class BackgroundLayerTests: XCTestCase {
 
     func testLayerProtocolMembers() {
 
@@ -82,7 +82,7 @@ class BackgroundLayerTests: XCTestCase {
     func testEncodingAndDecodingOfPaintProperties() {
 
        var layer = BackgroundLayer(id: "test-id")
-       layer.backgroundColor = Value<ColorRepresentable>.testConstantValue()
+       layer.backgroundColor = Value<StyleColor>.testConstantValue()
        layer.backgroundColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.backgroundOpacity = Value<Double>.testConstantValue()
        layer.backgroundOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -104,7 +104,7 @@ class BackgroundLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(BackgroundLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
-       	   XCTAssert(layer.backgroundColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.backgroundColor == Value<StyleColor>.testConstantValue())
        	   XCTAssert(layer.backgroundOpacity == Value<Double>.testConstantValue())
        	   XCTAssert(layer.backgroundPattern == Value<ResolvedImage>.testConstantValue())
        } catch {

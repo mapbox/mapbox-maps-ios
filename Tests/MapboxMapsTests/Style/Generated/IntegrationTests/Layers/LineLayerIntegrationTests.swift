@@ -2,7 +2,7 @@
 import XCTest
 @testable import MapboxMaps
 
-class LineLayerIntegrationTests: MapViewIntegrationTestCase {
+final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
 
     internal func testBaseClass() throws {
         // Do nothing
@@ -35,12 +35,12 @@ class LineLayerIntegrationTests: MapViewIntegrationTestCase {
 
             layer.lineBlur = Value<Double>.testConstantValue()
             layer.lineBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.lineColor = Value<ColorRepresentable>.testConstantValue()
+            layer.lineColor = Value<StyleColor>.testConstantValue()
             layer.lineColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineDasharrayTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineGapWidth = Value<Double>.testConstantValue()
             layer.lineGapWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.lineGradient = Value<ColorRepresentable>.testConstantValue()
+            layer.lineGradient = Value<StyleColor>.testConstantValue()
             layer.lineOffset = Value<Double>.testConstantValue()
             layer.lineOffsetTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.lineOpacity = Value<Double>.testConstantValue()

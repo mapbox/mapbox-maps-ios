@@ -1,8 +1,5 @@
 // This file is generated.
-
 import Foundation
-import MapboxCoreMaps
-import MapboxCommon
 
 /**
  * A spherical dome around the map that is always rendered behind all other layers.
@@ -25,10 +22,10 @@ public struct SkyLayer: Layer {
     public var visibility: Value<Visibility>?
     
     /// A color used to tweak the main atmospheric scattering coefficients. Using white applies the default coefficients giving the natural blue color to the atmosphere. This color affects how heavily the corresponding wavelength is represented during scattering. The alpha channel describes the density of the atmosphere, with 1 maximum density and 0 no density.
-    public var skyAtmosphereColor: Value<ColorRepresentable>?
+    public var skyAtmosphereColor: Value<StyleColor>?
     
     /// A color applied to the atmosphere sun halo. The alpha channel describes how strongly the sun halo is represented in an atmosphere sky layer.
-    public var skyAtmosphereHaloColor: Value<ColorRepresentable>?
+    public var skyAtmosphereHaloColor: Value<StyleColor>?
     
     /// Position of the sun center [a azimuthal angle, p polar angle]. The azimuthal angle indicates the position of the sun relative to 0 degree north, where degrees proceed clockwise. The polar angle indicates the height of the sun, where 0 degree is directly above, at zenith, and 90 degree at the horizon. When this property is ommitted, the sun center is directly inherited from the light position.
     public var skyAtmosphereSun: Value<[Double]>?
@@ -37,7 +34,7 @@ public struct SkyLayer: Layer {
     public var skyAtmosphereSunIntensity: Value<Double>?
     
     /// Defines a radial color gradient with which to color the sky. The color values can be interpolated with an expression using `sky-radial-progress`. The range [0, 1] for the interpolant covers a radial distance (in degrees) of [0, `sky-gradient-radius`] centered at the position specified by `sky-gradient-center`.
-    public var skyGradient: Value<ColorRepresentable>?
+    public var skyGradient: Value<StyleColor>?
     
     /// Position of the gradient center [a azimuthal angle, p polar angle]. The azimuthal angle indicates the position of the gradient center relative to 0 degree north, where degrees proceed clockwise. The polar angle indicates the height of the gradient center, where 0 degree is directly above, at zenith, and 90 degree at the horizon.
     public var skyGradientCenter: Value<[Double]>?
@@ -97,11 +94,11 @@ public struct SkyLayer: Layer {
       maxZoom = try container.decodeIfPresent(Double.self, forKey: .maxZoom)
       
       if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
-        skyAtmosphereColor = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .skyAtmosphereColor)
-        skyAtmosphereHaloColor = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .skyAtmosphereHaloColor)
+        skyAtmosphereColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .skyAtmosphereColor)
+        skyAtmosphereHaloColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .skyAtmosphereHaloColor)
         skyAtmosphereSun = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .skyAtmosphereSun)
         skyAtmosphereSunIntensity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .skyAtmosphereSunIntensity)
-        skyGradient = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .skyGradient)
+        skyGradient = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .skyGradient)
         skyGradientCenter = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .skyGradientCenter)
         skyGradientRadius = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .skyGradientRadius)
         skyOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .skyOpacity)

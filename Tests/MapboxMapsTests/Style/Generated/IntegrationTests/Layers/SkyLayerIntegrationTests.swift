@@ -2,7 +2,7 @@
 import XCTest
 @testable import MapboxMaps
 
-class SkyLayerIntegrationTests: MapViewIntegrationTestCase {
+final class SkyLayerIntegrationTests: MapViewIntegrationTestCase {
 
     internal func testBaseClass() throws {
         // Do nothing
@@ -28,10 +28,10 @@ class SkyLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
 
-            layer.skyAtmosphereColor = Value<ColorRepresentable>.testConstantValue()
-            layer.skyAtmosphereHaloColor = Value<ColorRepresentable>.testConstantValue()
+            layer.skyAtmosphereColor = Value<StyleColor>.testConstantValue()
+            layer.skyAtmosphereHaloColor = Value<StyleColor>.testConstantValue()
             layer.skyAtmosphereSunIntensity = Value<Double>.testConstantValue()
-            layer.skyGradient = Value<ColorRepresentable>.testConstantValue()
+            layer.skyGradient = Value<StyleColor>.testConstantValue()
             layer.skyGradientRadius = Value<Double>.testConstantValue()
             layer.skyOpacity = Value<Double>.testConstantValue()
             layer.skyOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)

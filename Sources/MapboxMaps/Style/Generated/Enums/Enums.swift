@@ -1,5 +1,4 @@
 // This file is generated.
-// swiftlint:disable all
 import Foundation
 
 public enum Visibility: String, Codable {
@@ -15,7 +14,7 @@ public enum Visibility: String, Codable {
 // MARK: LINE_CAP
 
 /// The display of line endings.
-public enum LineCap: String, Codable {
+public enum LineCap: String, Codable, CaseIterable {
 
   /// A cap with a squared-off end which is drawn to the exact endpoint of the line.
   case butt = "butt"
@@ -30,7 +29,7 @@ public enum LineCap: String, Codable {
 // MARK: LINE_JOIN
 
 /// The display of lines when joining.
-public enum LineJoin: String, Codable {
+public enum LineJoin: String, Codable, CaseIterable {
 
   /// A join with a squared-off end which is drawn beyond the endpoint of the line at a distance of one-half of the line's width.
   case bevel = "bevel"
@@ -45,7 +44,7 @@ public enum LineJoin: String, Codable {
 // MARK: ICON_ANCHOR
 
 /// Part of the icon placed closest to the anchor.
-public enum IconAnchor: String, Codable {
+public enum IconAnchor: String, Codable, CaseIterable {
 
   /// The center of the icon is placed closest to the anchor.
   case center = "center"
@@ -78,7 +77,7 @@ public enum IconAnchor: String, Codable {
 // MARK: ICON_PITCH_ALIGNMENT
 
 /// Orientation of icon when map is pitched.
-public enum IconPitchAlignment: String, Codable {
+public enum IconPitchAlignment: String, Codable, CaseIterable {
 
   /// The icon is aligned to the plane of the map.
   case map = "map"
@@ -93,7 +92,7 @@ public enum IconPitchAlignment: String, Codable {
 // MARK: ICON_ROTATION_ALIGNMENT
 
 /// In combination with `symbol-placement`, determines the rotation behavior of icons.
-public enum IconRotationAlignment: String, Codable {
+public enum IconRotationAlignment: String, Codable, CaseIterable {
 
   /// When {@link SYMBOL_PLACEMENT} is set to {@link Property#SYMBOL_PLACEMENT_POINT}, aligns icons east-west. When {@link SYMBOL_PLACEMENT} is set to {@link Property#SYMBOL_PLACEMENT_LINE} or {@link Property#SYMBOL_PLACEMENT_LINE_CENTER}, aligns icon x-axes with the line.
   case map = "map"
@@ -108,7 +107,7 @@ public enum IconRotationAlignment: String, Codable {
 // MARK: ICON_TEXT_FIT
 
 /// Scales the icon to fit around the associated text.
-public enum IconTextFit: String, Codable {
+public enum IconTextFit: String, Codable, CaseIterable {
 
   /// The icon is displayed at its intrinsic aspect ratio.
   case none = "none"
@@ -126,7 +125,7 @@ public enum IconTextFit: String, Codable {
 // MARK: SYMBOL_PLACEMENT
 
 /// Label placement relative to its geometry.
-public enum SymbolPlacement: String, Codable {
+public enum SymbolPlacement: String, Codable, CaseIterable {
 
   /// The label is placed at the point where the geometry is located.
   case point = "point"
@@ -141,7 +140,7 @@ public enum SymbolPlacement: String, Codable {
 // MARK: SYMBOL_Z_ORDER
 
 /// Determines whether overlapping symbols in the same layer are rendered in the order that they appear in the data source or by their y-position relative to the viewport. To control the order and prioritization of symbols otherwise, use `symbol-sort-key`.
-public enum SymbolZOrder: String, Codable {
+public enum SymbolZOrder: String, Codable, CaseIterable {
 
   /// Sorts symbols by symbol sort key if set. Otherwise, sorts symbols by their y-position relative to the viewport if {@link ICON_ALLOW_OVERLAP} or {@link TEXT_ALLOW_OVERLAP} is set to {@link TRUE} or {@link ICON_IGNORE_PLACEMENT} or {@link TEXT_IGNORE_PLACEMENT} is {@link FALSE}.
   case auto = "auto"
@@ -156,7 +155,7 @@ public enum SymbolZOrder: String, Codable {
 // MARK: TEXT_ANCHOR
 
 /// Part of the text placed closest to the anchor.
-public enum TextAnchor: String, Codable {
+public enum TextAnchor: String, Codable, CaseIterable {
 
   /// The center of the text is placed closest to the anchor.
   case center = "center"
@@ -189,7 +188,7 @@ public enum TextAnchor: String, Codable {
 // MARK: TEXT_JUSTIFY
 
 /// Text justification options.
-public enum TextJustify: String, Codable {
+public enum TextJustify: String, Codable, CaseIterable {
 
   /// The text is aligned towards the anchor position.
   case auto = "auto"
@@ -207,7 +206,7 @@ public enum TextJustify: String, Codable {
 // MARK: TEXT_PITCH_ALIGNMENT
 
 /// Orientation of text when map is pitched.
-public enum TextPitchAlignment: String, Codable {
+public enum TextPitchAlignment: String, Codable, CaseIterable {
 
   /// The text is aligned to the plane of the map.
   case map = "map"
@@ -222,7 +221,7 @@ public enum TextPitchAlignment: String, Codable {
 // MARK: TEXT_ROTATION_ALIGNMENT
 
 /// In combination with `symbol-placement`, determines the rotation behavior of the individual glyphs forming the text.
-public enum TextRotationAlignment: String, Codable {
+public enum TextRotationAlignment: String, Codable, CaseIterable {
 
   /// When {@link SYMBOL_PLACEMENT} is set to {@link Property#SYMBOL_PLACEMENT_POINT}, aligns text east-west. When {@link SYMBOL_PLACEMENT} is set to {@link Property#SYMBOL_PLACEMENT_LINE} or {@link Property#SYMBOL_PLACEMENT_LINE_CENTER}, aligns text x-axes with the line.
   case map = "map"
@@ -237,7 +236,7 @@ public enum TextRotationAlignment: String, Codable {
 // MARK: TEXT_TRANSFORM
 
 /// Specifies how to capitalize text, similar to the CSS `text-transform` property.
-public enum TextTransform: String, Codable {
+public enum TextTransform: String, Codable, CaseIterable {
 
   /// The text is not altered.
   case none = "none"
@@ -252,7 +251,7 @@ public enum TextTransform: String, Codable {
 // MARK: FILL_TRANSLATE_ANCHOR
 
 /// Controls the frame of reference for `fill-translate`.
-public enum FillTranslateAnchor: String, Codable {
+public enum FillTranslateAnchor: String, Codable, CaseIterable {
 
   /// The fill is translated relative to the map.
   case map = "map"
@@ -264,7 +263,7 @@ public enum FillTranslateAnchor: String, Codable {
 // MARK: LINE_TRANSLATE_ANCHOR
 
 /// Controls the frame of reference for `line-translate`.
-public enum LineTranslateAnchor: String, Codable {
+public enum LineTranslateAnchor: String, Codable, CaseIterable {
 
   /// The line is translated relative to the map.
   case map = "map"
@@ -276,7 +275,7 @@ public enum LineTranslateAnchor: String, Codable {
 // MARK: ICON_TRANSLATE_ANCHOR
 
 /// Controls the frame of reference for `icon-translate`.
-public enum IconTranslateAnchor: String, Codable {
+public enum IconTranslateAnchor: String, Codable, CaseIterable {
 
   /// Icons are translated relative to the map.
   case map = "map"
@@ -288,7 +287,7 @@ public enum IconTranslateAnchor: String, Codable {
 // MARK: TEXT_TRANSLATE_ANCHOR
 
 /// Controls the frame of reference for `text-translate`.
-public enum TextTranslateAnchor: String, Codable {
+public enum TextTranslateAnchor: String, Codable, CaseIterable {
 
   /// The text is translated relative to the map.
   case map = "map"
@@ -300,7 +299,7 @@ public enum TextTranslateAnchor: String, Codable {
 // MARK: CIRCLE_PITCH_ALIGNMENT
 
 /// Orientation of circle when map is pitched.
-public enum CirclePitchAlignment: String, Codable {
+public enum CirclePitchAlignment: String, Codable, CaseIterable {
 
   /// The circle is aligned to the plane of the map.
   case map = "map"
@@ -312,7 +311,7 @@ public enum CirclePitchAlignment: String, Codable {
 // MARK: CIRCLE_PITCH_SCALE
 
 /// Controls the scaling behavior of the circle when the map is pitched.
-public enum CirclePitchScale: String, Codable {
+public enum CirclePitchScale: String, Codable, CaseIterable {
 
   /// Circles are scaled according to their apparent distance to the camera.
   case map = "map"
@@ -324,7 +323,7 @@ public enum CirclePitchScale: String, Codable {
 // MARK: CIRCLE_TRANSLATE_ANCHOR
 
 /// Controls the frame of reference for `circle-translate`.
-public enum CircleTranslateAnchor: String, Codable {
+public enum CircleTranslateAnchor: String, Codable, CaseIterable {
 
   /// The circle is translated relative to the map.
   case map = "map"
@@ -336,7 +335,7 @@ public enum CircleTranslateAnchor: String, Codable {
 // MARK: FILL_EXTRUSION_TRANSLATE_ANCHOR
 
 /// Controls the frame of reference for `fill-extrusion-translate`.
-public enum FillExtrusionTranslateAnchor: String, Codable {
+public enum FillExtrusionTranslateAnchor: String, Codable, CaseIterable {
 
   /// The fill extrusion is translated relative to the map.
   case map = "map"
@@ -348,7 +347,7 @@ public enum FillExtrusionTranslateAnchor: String, Codable {
 // MARK: RASTER_RESAMPLING
 
 /// The resampling/interpolation method to use for overscaling, also known as texture magnification filter
-public enum RasterResampling: String, Codable {
+public enum RasterResampling: String, Codable, CaseIterable {
 
   /// (Bi)linear filtering interpolates pixel values using the weighted average of the four closest original source pixels creating a smooth but blurry look when overscaled
   case linear = "linear"
@@ -360,7 +359,7 @@ public enum RasterResampling: String, Codable {
 // MARK: HILLSHADE_ILLUMINATION_ANCHOR
 
 /// Direction of light source when map is rotated.
-public enum HillshadeIlluminationAnchor: String, Codable {
+public enum HillshadeIlluminationAnchor: String, Codable, CaseIterable {
 
   /// The hillshade illumination is relative to the north direction.
   case map = "map"
@@ -372,7 +371,7 @@ public enum HillshadeIlluminationAnchor: String, Codable {
 // MARK: SKY_TYPE
 
 /// The type of the sky
-public enum SkyType: String, Codable {
+public enum SkyType: String, Codable, CaseIterable {
 
   /// Renders the sky with a gradient that can be configured with {@link SKY_GRADIENT_RADIUS} and {@link SKY_GRADIENT}.
   case gradient = "gradient"
@@ -384,7 +383,7 @@ public enum SkyType: String, Codable {
 // MARK: ANCHOR
 
 /// Whether extruded geometries are lit relative to the map or viewport.
-public enum Anchor: String, Codable {
+public enum Anchor: String, Codable, CaseIterable {
 
   /// The position of the light source is aligned to the rotation of the map.
   case map = "map"
@@ -396,7 +395,7 @@ public enum Anchor: String, Codable {
 // MARK: TEXT_WRITING_MODE
 
 /// The property allows control over a symbol's orientation. Note that the property values act as a hint, so that a symbol whose language doesn’t support the provided orientation will be laid out in its natural orientation. Example: English point symbol will be rendered horizontally even if array value contains single 'vertical' enum value. The order of elements in an array define priority order for the placement of an orientation variant.
-public enum TextWritingMode: String, Codable {
+public enum TextWritingMode: String, Codable, CaseIterable {
 
   /// If a text's language supports horizontal writing mode, symbols with point placement would be laid out horizontally.
   case horizontal = "horizontal"
@@ -406,5 +405,4 @@ public enum TextWritingMode: String, Codable {
   
 }
 
-// // swiftlint:enable all
 // End of generated file.

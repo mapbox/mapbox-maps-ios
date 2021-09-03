@@ -43,9 +43,9 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
         fillLayer.source = sourceIdentifier
 
         // Apply basic styling to the fill layer.
-        fillLayer.fillColor = .constant(ColorRepresentable(color: UIColor.blue))
+        fillLayer.fillColor = .constant(StyleColor(.blue))
         fillLayer.fillOpacity = .constant(0.3)
-        fillLayer.fillOutlineColor = .constant(ColorRepresentable(color: UIColor.black))
+        fillLayer.fillOutlineColor = .constant(StyleColor(.black))
 
         // Add the data source and style layer to the map.
         try! mapView.mapboxMap.style.addSource(geoJSONSource, id: sourceIdentifier)

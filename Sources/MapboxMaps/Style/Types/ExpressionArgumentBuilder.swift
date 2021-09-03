@@ -84,3 +84,9 @@ extension Dictionary: ExpressionArgumentConvertible where Key == Double,
         return arguments
     }
 }
+
+extension UIColor: ExpressionArgumentConvertible {
+    public var expressionArguments: [Expression.Argument] {
+        return [.string(StyleColor(self).rgbaString)]
+    }
+}

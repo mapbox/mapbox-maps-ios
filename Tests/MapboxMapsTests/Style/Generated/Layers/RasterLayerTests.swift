@@ -2,7 +2,7 @@
 import XCTest
 @testable import MapboxMaps
 
-class RasterLayerTests: XCTestCase {
+final class RasterLayerTests: XCTestCase {
 
     func testLayerProtocolMembers() {
 

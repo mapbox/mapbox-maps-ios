@@ -1,8 +1,5 @@
 // This file is generated.
-
 import Foundation
-import MapboxCoreMaps
-import MapboxCommon
 
 /**
  * A heatmap.
@@ -25,7 +22,7 @@ public struct HeatmapLayer: Layer {
     public var visibility: Value<Visibility>?
     
     /// Defines the color of each pixel based on its density value in a heatmap.  Should be an expression that uses `["heatmap-density"]` as input.
-    public var heatmapColor: Value<ColorRepresentable>?
+    public var heatmapColor: Value<StyleColor>?
     
     /// Similar to `heatmap-weight` but controls the intensity of the heatmap globally. Primarily used for adjusting the heatmap based on zoom level.
     public var heatmapIntensity: Value<Double>?
@@ -89,7 +86,7 @@ public struct HeatmapLayer: Layer {
       maxZoom = try container.decodeIfPresent(Double.self, forKey: .maxZoom)
       
       if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
-        heatmapColor = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .heatmapColor)
+        heatmapColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .heatmapColor)
         heatmapIntensity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .heatmapIntensity)
         heatmapIntensityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .heatmapIntensityTransition)
         heatmapOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .heatmapOpacity)

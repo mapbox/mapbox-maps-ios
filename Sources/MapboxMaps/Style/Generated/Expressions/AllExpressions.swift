@@ -1,9 +1,8 @@
 // This file is generated.
-
 import Foundation
 
 public extension Expression {
-    enum Operator: String, Codable {
+    enum Operator: String, Codable, CaseIterable {
         
         /** 
          *  For two inputs, returns the result of subtracting the second input from the first. For a single input, returns the result of subtracting it from 0. 

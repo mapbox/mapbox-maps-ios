@@ -1,5 +1,4 @@
 // This file is generated.
-
 import Foundation
 
 /// Influences the y direction of the tile coordinates. The global-mercator (aka Spherical Mercator) profile is assumed.

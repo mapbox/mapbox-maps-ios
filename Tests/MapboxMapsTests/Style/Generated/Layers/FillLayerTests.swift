@@ -2,7 +2,7 @@
 import XCTest
 @testable import MapboxMaps
 
-class FillLayerTests: XCTestCase {
+final class FillLayerTests: XCTestCase {
 
     func testLayerProtocolMembers() {
 
@@ -85,11 +85,11 @@ class FillLayerTests: XCTestCase {
 
        var layer = FillLayer(id: "test-id")
        layer.fillAntialias = Value<Bool>.testConstantValue()
-       layer.fillColor = Value<ColorRepresentable>.testConstantValue()
+       layer.fillColor = Value<StyleColor>.testConstantValue()
        layer.fillColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.fillOpacity = Value<Double>.testConstantValue()
        layer.fillOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.fillOutlineColor = Value<ColorRepresentable>.testConstantValue()
+       layer.fillOutlineColor = Value<StyleColor>.testConstantValue()
        layer.fillOutlineColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.fillPattern = Value<ResolvedImage>.testConstantValue()
        layer.fillPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -113,9 +113,9 @@ class FillLayerTests: XCTestCase {
            let decodedLayer = try JSONDecoder().decode(FillLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
        	   XCTAssert(layer.fillAntialias == Value<Bool>.testConstantValue())
-       	   XCTAssert(layer.fillColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.fillColor == Value<StyleColor>.testConstantValue())
        	   XCTAssert(layer.fillOpacity == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.fillOutlineColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.fillOutlineColor == Value<StyleColor>.testConstantValue())
        	   XCTAssert(layer.fillPattern == Value<ResolvedImage>.testConstantValue())
        	   XCTAssert(layer.fillTranslate == Value<[Double]>.testConstantValue())
        	   XCTAssert(layer.fillTranslateAnchor == Value<FillTranslateAnchor>.testConstantValue())

@@ -64,7 +64,7 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
             "Point"
         }
         circleLayer.source = geoJSONDataSourceIdentifier
-        circleLayer.circleColor = .constant(ColorRepresentable(color: UIColor.yellow))
+        circleLayer.circleColor = .constant(StyleColor(.yellow))
         circleLayer.circleOpacity = .constant(0.6)
         circleLayer.circleRadius = .constant(8.0)
         // Follow the same steps to create a line layer
@@ -74,7 +74,7 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
             "LineString"
         }
         lineLayer.source = geoJSONDataSourceIdentifier
-        lineLayer.lineColor = .constant(ColorRepresentable(color: UIColor.red))
+        lineLayer.lineColor = .constant(StyleColor(.red))
         lineLayer.lineWidth = .constant(1.4)
         // Follow the same steps to create a polygon (fill) layer
         var polygonLayer = FillLayer(id: "fill-layer")
@@ -83,9 +83,9 @@ public class MultipleGeometriesExample: UIViewController, ExampleProtocol {
             "Polygon"
         }
         polygonLayer.source = geoJSONDataSourceIdentifier
-        polygonLayer.fillColor = .constant(ColorRepresentable(color: UIColor.green))
+        polygonLayer.fillColor = .constant(StyleColor(.green))
         polygonLayer.fillOpacity = .constant(0.3)
-        polygonLayer.fillOutlineColor = .constant(ColorRepresentable(color: UIColor.purple))
+        polygonLayer.fillOutlineColor = .constant(StyleColor(.purple))
         // Add the source and style layers to the map style.
         try! mapView.mapboxMap.style.addSource(geoJSONSource, id: geoJSONDataSourceIdentifier)
         try! mapView.mapboxMap.style.addLayer(circleLayer)

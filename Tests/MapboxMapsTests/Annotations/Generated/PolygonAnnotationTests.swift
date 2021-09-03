@@ -1,4 +1,3 @@
-// swiftlint:disable all
 // This file is generated
 import XCTest
 @testable import MapboxMaps
@@ -14,13 +13,12 @@ final class PolygonAnnotationTests: XCTestCase {
             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
         ]
         var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
-
         annotation.fillSortKey =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["fill-sort-key"] as? Double, annotation.fillSortKey)
+        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["fill-sort-key"] as? Double, annotation.fillSortKey)
     }
 
     func testFillColor() {
@@ -32,13 +30,12 @@ final class PolygonAnnotationTests: XCTestCase {
             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
         ]
         var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
-
-        annotation.fillColor =  ColorRepresentable.testConstantValue()
+        annotation.fillColor =  StyleColor.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["fill-color"] as? String, annotation.fillColor.flatMap { try? $0.jsonString() })
+        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["fill-color"] as? String, annotation.fillColor.flatMap { $0.rgbaString })
     }
 
     func testFillOpacity() {
@@ -50,13 +47,12 @@ final class PolygonAnnotationTests: XCTestCase {
             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
         ]
         var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
-
         annotation.fillOpacity =  Double.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["fill-opacity"] as? Double, annotation.fillOpacity)
+        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["fill-opacity"] as? Double, annotation.fillOpacity)
     }
 
     func testFillOutlineColor() {
@@ -68,13 +64,12 @@ final class PolygonAnnotationTests: XCTestCase {
             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
         ]
         var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
-
-        annotation.fillOutlineColor =  ColorRepresentable.testConstantValue()
+        annotation.fillOutlineColor =  StyleColor.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["fill-outline-color"] as? String, annotation.fillOutlineColor.flatMap { try? $0.jsonString() })
+        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["fill-outline-color"] as? String, annotation.fillOutlineColor.flatMap { $0.rgbaString })
     }
 
     func testFillPattern() {
@@ -86,15 +81,13 @@ final class PolygonAnnotationTests: XCTestCase {
             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375)
         ]
         var annotation = PolygonAnnotation(polygon: .init(outerRing: .init(coordinates: polygonCoords)))
-
         annotation.fillPattern =  String.testConstantValue()
 
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["styles"] as! [String: Any])["fill-pattern"] as? String, annotation.fillPattern)
+        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["fill-pattern"] as? String, annotation.fillPattern)
     }
 }
 
 // End of generated file
-// swiftlint:enable all

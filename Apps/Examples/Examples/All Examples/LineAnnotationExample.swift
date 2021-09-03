@@ -41,7 +41,7 @@ public class LineAnnotationExample: UIViewController, ExampleProtocol {
         var lineAnnotation = PolylineAnnotation(lineCoordinates: lineCoordinates)
 
         // Customize the style of the line annotation
-        lineAnnotation.lineColor = ColorRepresentable(color: .red)
+        lineAnnotation.lineColor = StyleColor(.red)
         lineAnnotation.lineOpacity = 0.8
         lineAnnotation.lineWidth = 10.0
 

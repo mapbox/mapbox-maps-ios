@@ -98,10 +98,10 @@ public class PointClusteringExample: UIViewController, ExampleProtocol {
         Exp(.has) { "point_count" }
         }
 
-        unclusteredLayer.circleColor = .constant(ColorRepresentable(color: UIColor(red: 0.07, green: 0.71, blue: 0.85, alpha: 1.00)))
+        unclusteredLayer.circleColor = .constant(StyleColor(UIColor(red: 0.07, green: 0.71, blue: 0.85, alpha: 1.00)))
         unclusteredLayer.circleRadius = .constant(4)
         unclusteredLayer.circleStrokeWidth = .constant(1)
-        unclusteredLayer.circleStrokeColor = .constant(ColorRepresentable(color: .black))
+        unclusteredLayer.circleStrokeColor = .constant(StyleColor(.black))
         return unclusteredLayer
     }
 

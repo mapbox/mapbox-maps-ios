@@ -2,7 +2,7 @@
 import XCTest
 @testable import MapboxMaps
 
-class LineLayerTests: XCTestCase {
+final class LineLayerTests: XCTestCase {
 
     func testLayerProtocolMembers() {
 
@@ -94,13 +94,13 @@ class LineLayerTests: XCTestCase {
        var layer = LineLayer(id: "test-id")
        layer.lineBlur = Value<Double>.testConstantValue()
        layer.lineBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.lineColor = Value<ColorRepresentable>.testConstantValue()
+       layer.lineColor = Value<StyleColor>.testConstantValue()
        layer.lineColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineDasharray = Value<[Double]>.testConstantValue()
        layer.lineDasharrayTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineGapWidth = Value<Double>.testConstantValue()
        layer.lineGapWidthTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.lineGradient = Value<ColorRepresentable>.testConstantValue()
+       layer.lineGradient = Value<StyleColor>.testConstantValue()
        layer.lineOffset = Value<Double>.testConstantValue()
        layer.lineOffsetTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.lineOpacity = Value<Double>.testConstantValue()
@@ -129,10 +129,10 @@ class LineLayerTests: XCTestCase {
            let decodedLayer = try JSONDecoder().decode(LineLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
        	   XCTAssert(layer.lineBlur == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.lineColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.lineColor == Value<StyleColor>.testConstantValue())
        	   XCTAssert(layer.lineDasharray == Value<[Double]>.testConstantValue())
        	   XCTAssert(layer.lineGapWidth == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.lineGradient == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.lineGradient == Value<StyleColor>.testConstantValue())
        	   XCTAssert(layer.lineOffset == Value<Double>.testConstantValue())
        	   XCTAssert(layer.lineOpacity == Value<Double>.testConstantValue())
        	   XCTAssert(layer.linePattern == Value<ResolvedImage>.testConstantValue())

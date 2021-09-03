@@ -204,7 +204,7 @@ class ViewController: UIViewController {
         let start = startOptions.center
 
         var lineAnnotation = PolylineAnnotation(lineCoordinates: [start, end])
-        lineAnnotation.lineColor = .init(color: .red)
+        lineAnnotation.lineColor = StyleColor(.red)
 
         // Add the annotation to the map.
         print("Adding line annotation")

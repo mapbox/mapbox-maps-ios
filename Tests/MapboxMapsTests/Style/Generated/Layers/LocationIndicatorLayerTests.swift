@@ -2,7 +2,7 @@
 import XCTest
 @testable import MapboxMaps
 
-class LocationIndicatorLayerTests: XCTestCase {
+final class LocationIndicatorLayerTests: XCTestCase {
 
     func testLayerProtocolMembers() {
 
@@ -90,14 +90,14 @@ class LocationIndicatorLayerTests: XCTestCase {
        var layer = LocationIndicatorLayer(id: "test-id")
        layer.accuracyRadius = Value<Double>.testConstantValue()
        layer.accuracyRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.accuracyRadiusBorderColor = Value<ColorRepresentable>.testConstantValue()
+       layer.accuracyRadiusBorderColor = Value<StyleColor>.testConstantValue()
        layer.accuracyRadiusBorderColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.accuracyRadiusColor = Value<ColorRepresentable>.testConstantValue()
+       layer.accuracyRadiusColor = Value<StyleColor>.testConstantValue()
        layer.accuracyRadiusColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.bearing = Value<Double>.testConstantValue()
        layer.bearingImageSize = Value<Double>.testConstantValue()
        layer.bearingImageSizeTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.emphasisCircleColor = Value<ColorRepresentable>.testConstantValue()
+       layer.emphasisCircleColor = Value<StyleColor>.testConstantValue()
        layer.emphasisCircleColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.emphasisCircleRadius = Value<Double>.testConstantValue()
        layer.emphasisCircleRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -126,11 +126,11 @@ class LocationIndicatorLayerTests: XCTestCase {
            let decodedLayer = try JSONDecoder().decode(LocationIndicatorLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
        	   XCTAssert(layer.accuracyRadius == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.accuracyRadiusBorderColor == Value<ColorRepresentable>.testConstantValue())
-       	   XCTAssert(layer.accuracyRadiusColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.accuracyRadiusBorderColor == Value<StyleColor>.testConstantValue())
+       	   XCTAssert(layer.accuracyRadiusColor == Value<StyleColor>.testConstantValue())
        	   XCTAssert(layer.bearing == Value<Double>.testConstantValue())
        	   XCTAssert(layer.bearingImageSize == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.emphasisCircleColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.emphasisCircleColor == Value<StyleColor>.testConstantValue())
        	   XCTAssert(layer.emphasisCircleRadius == Value<Double>.testConstantValue())
        	   XCTAssert(layer.imagePitchDisplacement == Value<Double>.testConstantValue())
        	   XCTAssert(layer.location == Value<[Double]>.testConstantValue())

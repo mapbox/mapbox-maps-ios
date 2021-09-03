@@ -1,9 +1,8 @@
 // This file is generated.
-
 import XCTest
 @testable import MapboxMaps
 
-class VectorSourceTests: XCTestCase {
+final class VectorSourceTests: XCTestCase {
 
     func testEncodingAndDecoding() {
         var source = VectorSource()
@@ -50,4 +49,5 @@ class VectorSourceTests: XCTestCase {
         }
     }
 }
+
 // End of generated file

@@ -382,8 +382,8 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    public static func _layerPropertyDefaultValue(for layerType: String, property: String) -> StylePropertyValue {
-        return StyleManager.getStyleLayerPropertyDefaultValue(forLayerType: layerType, property: property)
+    public static func _layerPropertyDefaultValue(for layerType: LayerType, property: String) -> StylePropertyValue {
+        return StyleManager.getStyleLayerPropertyDefaultValue(forLayerType: layerType.rawValue, property: property)
     }
 
     public func layerProperties(for layerId: String) throws -> [String: Any] {

@@ -55,7 +55,7 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         museumLayer.visibility = .constant(.visible)
 
         let museumColor = UIColor(red: 0.22, green: 0.58, blue: 0.70, alpha: 1.00)
-        museumLayer.circleColor = .constant(ColorRepresentable(color: museumColor))
+        museumLayer.circleColor = .constant(StyleColor(museumColor))
 
         var contourSource = VectorSource()
         // Add the Mapbox Terrain v2 vector tileset. Documentation for this vector tileset
@@ -75,7 +75,7 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         // `visibility` is `nil` by default. Set to `visible`.
         contourLayer.visibility = .constant(.visible)
         let contourLineColor = UIColor(red: 0.53, green: 0.48, blue: 0.35, alpha: 1.00)
-        contourLayer.lineColor = .constant(ColorRepresentable(color: contourLineColor))
+        contourLayer.lineColor = .constant(StyleColor(contourLineColor))
 
         let style = mapView.mapboxMap.style
 

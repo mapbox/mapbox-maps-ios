@@ -40,7 +40,7 @@ As mentioned earlier, all Layers are also simple Swift structs. The following co
 
 ```swift
 var myBackgroundLayer = BackgroundLayer(id: "my-background-layer")
-myBackgroundLayer.paint?.backgroundColor = .constant(ColorRepresentable(color: .red))
+myBackgroundLayer.paint?.backgroundColor = .constant(StyleColor(.red))
 ```
 
 Adding a layer to the map is similar to the way we added sources above:
@@ -76,9 +76,9 @@ Exp(.interpolate) {
     Exp(.linear)
     Exp(.zoom)
     0
-    UIColor.red.expression
+    UIColor.red
     14
-    UIColor.blue.expression
+    UIColor.blue
 }
 ```
 
@@ -91,9 +91,9 @@ Exp(.interpolate) {
     Exp(.linear)
     Exp(.zoom)
     0
-    isDarkModeEnabled? UIColor.black.expression : UIColor.red.expression
+    isDarkModeEnabled ? UIColor.black : UIColor.red
     14
-    isDarkModeEnabled? UIColor.grey.expression : UIColor.blue.expression
+    isDarkModeEnabled ? UIColor.grey : UIColor.blue
 }
 
 ```
@@ -109,14 +109,14 @@ Exp(.interpolate) {
         10
         3
     }
-    UIColor.red.expression
+    UIColor.red
     Exp(.sum) {
         7
         7
     }
-    UIColor.blue.expression
+    UIColor.blue
 }
 ```
 
 #### Other Expression Examples
-- This (example)[https://github.com/mapbox/mapbox-maps-ios/blob/77a82d96c7c94741f7dcc4d6481e6bc863f34152/Examples/Examples/All%20Examples/DataDrivenSymbolsExample.swift#L85] highlights the use of a match, and a switchcase expression
+- This (example)[Apps/Examples/Examples/All%20Examples/DataDrivenSymbolsExample.swift#L74] highlights the use of a match, and a switchcase expression

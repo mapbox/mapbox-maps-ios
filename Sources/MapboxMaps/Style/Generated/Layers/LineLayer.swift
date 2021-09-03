@@ -1,8 +1,5 @@
 // This file is generated.
-
 import Foundation
-import MapboxCoreMaps
-import MapboxCommon
 
 /**
  * A stroked line.
@@ -46,7 +43,7 @@ public struct LineLayer: Layer {
     public var lineBlurTransition: StyleTransition?
     
     /// The color with which the line will be drawn.
-    public var lineColor: Value<ColorRepresentable>?
+    public var lineColor: Value<StyleColor>?
     
     /// Transition options for `lineColor`.
     public var lineColorTransition: StyleTransition?
@@ -64,7 +61,7 @@ public struct LineLayer: Layer {
     public var lineGapWidthTransition: StyleTransition?
     
     /// Defines a gradient with which to color a line feature. Can only be used with GeoJSON sources that specify `"lineMetrics": true`.
-    public var lineGradient: Value<ColorRepresentable>?
+    public var lineGradient: Value<StyleColor>?
     
     /// The line's offset. For linear features, a positive value offsets the line to the right, relative to the direction of the line, and a negative value to the left. For polygon features, a positive value results in an inset, and a negative value results in an outset.
     public var lineOffset: Value<Double>?
@@ -159,13 +156,13 @@ public struct LineLayer: Layer {
       if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
         lineBlur = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineBlur)
         lineBlurTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineBlurTransition)
-        lineColor = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .lineColor)
+        lineColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .lineColor)
         lineColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineColorTransition)
         lineDasharray = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .lineDasharray)
         lineDasharrayTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineDasharrayTransition)
         lineGapWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineGapWidth)
         lineGapWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineGapWidthTransition)
-        lineGradient = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .lineGradient)
+        lineGradient = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .lineGradient)
         lineOffset = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineOffset)
         lineOffsetTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .lineOffsetTransition)
         lineOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .lineOpacity)

@@ -32,7 +32,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
         // Cache the created tile store
         tileStore = TileStore.shared(for: tileStorePathURL)
-        tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken as Any)
+        tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken!)
         weakTileStore = tileStore
 
         resourceOptions = ResourceOptions(accessToken: accessToken,

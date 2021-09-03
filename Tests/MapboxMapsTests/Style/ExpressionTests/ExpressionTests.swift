@@ -1,9 +1,9 @@
 import XCTest
 @testable import MapboxMaps
 
-internal class ExpressionTests: XCTestCase {
+final class ExpressionTests: XCTestCase {
 
-    internal func testExpressionValidity() {
+    func testExpressionValidity() {
         let sumExp = Exp(.sum) {
             10
             12
@@ -17,12 +17,12 @@ internal class ExpressionTests: XCTestCase {
     //swiftlint:enable statement_position
 
     // Validates basic expression semantics
-    internal func expressionValidator(exp: Exp) {
+    func expressionValidator(exp: Exp) {
         XCTAssertNotNil(exp.operator)
         XCTAssertTrue(exp.arguments.count >= 1)
     }
 
-    internal func testColorBasedExpression() throws {
+    func testColorBasedExpression() throws {
         let expression = Exp(.interpolate) {
             Exp(.linear)
             Exp(.zoom)
@@ -34,7 +34,7 @@ internal class ExpressionTests: XCTestCase {
         expressionValidator(exp: expression)
     }
 
-    internal func testExpressionDecodingOnEmptyJSON() throws {
+    func testExpressionDecodingOnEmptyJSON() throws {
 
         let jsonString =
         """
@@ -58,8 +58,30 @@ internal class ExpressionTests: XCTestCase {
         }
     }
 
+    func testExpressionDecodingWhenSecondArgumentCouldBeAnOperator() {
+        let jsonString = #"["array","number"]"#
+        let data = jsonString.data(using: .utf8)!
+
+        do {
+            let actual = try JSONDecoder().decode(Expression.self, from: data)
+
+            XCTAssertEqual(actual, Exp(.array) {
+                "number"
+            })
+        } catch {
+            XCTFail("Decoding failed with error \(error)")
+        }
+    }
+
+    func testExpressionDecodingFailsWhenOperatorIsMissing() {
+        let jsonString = #"[]"#
+        let data = jsonString.data(using: .utf8)!
+
+        XCTAssertThrowsError(try JSONDecoder().decode(Expression.self, from: data))
+    }
+
     // MARK: - Helpers
-    internal func verifyExpressionArgument(for expression: Expression, toMatch argument: Expression.Argument, at index: Int) {
+    func verifyExpressionArgument(for expression: Expression, toMatch argument: Expression.Argument, at index: Int) {
 
         guard let op = expression.elements.first, case .operator = op else {
             XCTFail("There was no valid operator in the first element of the expression array")

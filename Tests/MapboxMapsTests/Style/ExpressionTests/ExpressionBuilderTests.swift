@@ -4,11 +4,10 @@ import XCTest
 internal class ExpressionBuilderTests: XCTestCase {
 
     func testStopsDictionariesAreSorted() {
-        let stopsDictionary = [
-            0.0: UIColor.red,
-            10.0: UIColor.blue,
-            7.0: UIColor.green
-        ]
+        let stopsDictionary: [Double: UIColor] = [
+            0.0: .red,
+            10.0: .blue,
+            7.0: .green]
 
         let args = stopsDictionary.expressionArguments
 

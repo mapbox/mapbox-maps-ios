@@ -180,6 +180,26 @@ public final class MapboxMap {
 
         return rect
     }
+
+    // MARK: Debug options
+    /// The array of `MapDebugOptions`. Setting this property to an empty array
+    /// disables previously enabled `MapDebugOptions`.
+    /// The default value is an empty array.
+    public var debugOptions: [MapDebugOptions] {
+        get {
+            let options = __map.getDebug()
+            let debugOptions = options.compactMap { MapDebugOptions(rawValue: $0.intValue) }
+            return debugOptions
+        }
+        set {
+            // Remove the previously visible options, then update the debug options to the new array.
+            var oldOptions = debugOptions.map { NSNumber(value: $0.rawValue) }
+            __map.setDebugForDebugOptions(oldOptions, value: false)
+
+            let options = newValue.map { NSNumber(value: $0.rawValue) }
+            __map.setDebugForDebugOptions(options, value: true)
+        }
+    }
 }
 
 extension MapboxMap: MapTransformDelegate {
@@ -530,7 +550,7 @@ extension MapboxMap {
     }
 
     /// Get the state map of a feature within a style source.
-    /// 
+    ///
     /// - Parameters:
     ///   - sourceId: Style source identifier.
     ///   - sourceLayerId: Style source layer identifier (for multi-layer sources such as vector sources).

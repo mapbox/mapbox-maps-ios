@@ -33,9 +33,9 @@ workflows:
             parameters:
               xcode: ["12.5.0", "13.0.0"]
       - unit-test-sdk:
-          xcode: "12.5.0"
           matrix:
             parameters:
+              xcode: ["12.5.0", "13.0.0"]
               configuration: ["Debug", "Release"]
               report_failure: [true]
       - run-tests-on-devices:
@@ -58,6 +58,9 @@ workflows:
       - create-xcframework:
           create-xcframework-always-run: true
           report_failure: true
+          matrix:
+            parameters:
+              xcode: ["12.5.0", "13.0.0"]
 
   steve:
     jobs:

@@ -127,14 +127,14 @@ extension TileStore {
     /// - Parameters:
     ///   - id: The tile region id.
     ///   - completion: The Result callback. Any `Result` error could be of type
-    ///         `Geometry`.
+    ///         `TileRegionError`.
     ///
     /// - Note:
     ///     The user-provided callbacks will be executed on a TileStore-controlled
     ///     worker thread; it is the responsibility of the user to dispatch to a
     ///     user-controlled thread.
     public func tileRegion(forId id: String,
-                           completion: @escaping (Result<Geometry, Error>) -> Void) {
+                           completion: @escaping (Result<TileRegion, Error>) -> Void) {
         __getTileRegion(forId: id,
                         callback: tileStoreClosureAdapter(for: completion, type: TileRegion.self))
     }
@@ -155,7 +155,7 @@ extension TileStore {
     ///     worker thread; it is the responsibility of the user to dispatch to a
     ///     user-controlled thread.
     public func tileRegionGeometry(forId id: String,
-                                   completion: @escaping (Result<MapboxCommon.Geometry, Error>) -> Void) {
+                                   completion: @escaping (Result<Geometry, Error>) -> Void) {
         __getTileRegionGeometry(forId: id,
                                 callback: tileStoreClosureAdapter(for: completion, type: MapboxCommon.Geometry.self))
     }

@@ -134,15 +134,6 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         // there is only ever one TileStore per unique path.
         dispatchGroup.enter()
 
-        let tester = tileStore.tileRegion(forId: tileRegionId, completion: { result in
-            switch result {
-            case .success(let geo):
-                print(geo)
-            case .failure(let error):
-                print(error)
-            }
-        })
-
         let tileRegionDownload = tileStore.loadTileRegion(forId: tileRegionId,
                                                           loadOptions: tileRegionLoadOptions) { [weak self] (progress) in
             // These closures do not get called from the main thread. In this case
@@ -172,6 +163,15 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
                     self?.logger?.log(message: "tileRegion download Error = \(error)", category: "Example", color: .red)
                     downloadError = true
                 }
+
+                let tester = tileStore.tileRegionGeometry(forId: self!.tileRegionId, completion: { result in
+                    switch result {
+                    case .success(let geo):
+                        print(geo)
+                    case .failure(let error):
+                        print(error)
+                    }
+                })
             }
         }
 

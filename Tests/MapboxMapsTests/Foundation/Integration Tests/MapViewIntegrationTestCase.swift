@@ -31,21 +31,21 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
         let view = MapView(frame: window.bounds, mapInitOptions: mapInitOptions)
 
         view.mapboxMap.onEvery(.styleLoaded) { [weak self] _ in
-            guard let self = self else { return }
-            self.didFinishLoadingStyle?(self.mapView!)
+            guard let self = self, let mapView = self.mapView else { return }
+            self.didFinishLoadingStyle?(mapView)
         }
 
         view.mapboxMap.onEvery(.mapIdle) { [weak self] _ in
-            guard let self = self else { return }
-            self.didBecomeIdle?(self.mapView!)
+            guard let self = self, let mapView = self.mapView else { return }
+            self.didBecomeIdle?(mapView)
         }
 
         view.mapboxMap.onEvery(.mapLoadingError) { [weak self] event in
-            guard let self = self else { return }
+            guard let self = self, let mapView = self.mapView else { return }
 
             let userInfo: [String: Any] = (event.data as? [String: Any]) ?? [:]
             let error = NSError(domain: "MapLoadError", code: -1, userInfo: userInfo)
-            self.didFailLoadingMap?(self.mapView!, error)
+            self.didFailLoadingMap?(mapView, error)
         }
 
         style = view.mapboxMap.style

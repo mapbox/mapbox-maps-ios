@@ -512,9 +512,24 @@ public class PointAnnotationManager: AnnotationManager {
             switch result {
 
             case .success(let queriedFeatures):
-                if let annotationIds = queriedFeatures.compactMap({ $0.feature?.properties?["annotation-id"] }) as? [String] {
-
-                    let tappedAnnotations = self.annotations.filter { annotationIds.contains($0.id) }
+                
+                // Get the identifiers of all the queried features
+                let queriedFeatureIds: [String] = queriedFeatures.compactMap {
+                    guard let feature = $0.feature,
+                          let identifier = feature.identifier,
+                          case let FeatureIdentifier.string(featureId) = identifier else {
+                    
+                        return nil
+                    }
+                    
+                    return featureId
+                }
+                
+                // Find if any `queriedFeatureIds` match an annotation's `id`
+                let tappedAnnotations = self.annotations.filter { queriedFeatureIds.contains($0.id) }
+                
+                // If `tappedAnnotations` is not empty, call delegate
+                if !tappedAnnotations.isEmpty {
                     self.delegate?.annotationManager(
                         self,
                         didDetectTappedAnnotations: tappedAnnotations)

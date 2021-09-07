@@ -325,6 +325,16 @@ public class PointAnnotationManager: AnnotationManager {
         }
     }
 
+    /// Font stack to use for displaying text.
+    public var textFont: [String]? {
+        get {
+            return layerProperties["text-font"] as? [String]
+        }
+        set {
+            layerProperties["text-font"] = newValue
+        }
+    }
+
     /// If true, other symbols can be visible even if they collide with the text.
     public var textIgnorePlacement: Bool? {
         get {
@@ -462,16 +472,6 @@ public class PointAnnotationManager: AnnotationManager {
         }
         set {
             layerProperties["text-translate-anchor"] = newValue?.rawValue
-        }
-    }
-
-    /// Font stack to use for displaying text.
-    public var textFont: [String]? {
-        get {
-            return layerProperties["text-font"] as? [String]
-        }
-        set {
-            layerProperties["text-font"] = newValue
         }
     }
 

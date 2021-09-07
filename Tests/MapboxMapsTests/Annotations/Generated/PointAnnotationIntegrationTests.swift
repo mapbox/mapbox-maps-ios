@@ -368,6 +368,28 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.textAllowOverlap, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "text-allow-overlap").value as! NSNumber).boolValue))
     }
 
+    func testTextFont() throws {
+        // Test that the setter and getter work
+        let value = Array.random(withLength: .random(in: 0...10), generator: { String.randomASCII(withLength: .random(in: 0...100)) })
+        manager.textFont = value
+        XCTAssertEqual(manager.textFont, value)
+
+        // Test that the value is synced to the layer
+        manager.syncSourceAndLayerIfNeeded()
+        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        XCTAssertEqual(layer.textFont, .constant(value))
+
+        // Test that the property can be reset to nil
+        manager.textFont = nil
+        XCTAssertNil(manager.textFont)
+
+        // Verify that when the property is reset to nil,
+        // the layer is returned to the default value
+        manager.syncSourceAndLayerIfNeeded()
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        XCTAssertEqual(layer.textFont, .constant(Style._layerPropertyDefaultValue(for: .symbol, property: "text-font").value as! [String]))
+    }
+
     func testTextIgnorePlacement() throws {
         // Test that the setter and getter work
         let value = Bool.random()

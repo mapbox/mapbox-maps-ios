@@ -142,7 +142,7 @@ public class PointAnnotationManager: AnnotationManager {
 
         // Construct the properties dictionary to reset any properties that are no longer used
         let unusedPropertyKeys = previouslySetLayerPropertyKeys.subtracting(newLayerProperties.keys)
-        let unusedProperties = Dictionary(uniqueKeysWithValues: unusedPropertyKeys.compactMap { (key) -> (String, Any)? in
+        let unusedProperties = Dictionary(uniqueKeysWithValues: unusedPropertyKeys.map { (key) -> (String, Any) in
             if key == "text-field" {
                 // default value for text-field is currently `{ kind: constant, value: ["format"] }`.
                 // Attempting to set `text-field` to `["format"]` yields:
@@ -152,13 +152,6 @@ public class PointAnnotationManager: AnnotationManager {
                 Log.warning(forMessage: "There is a known issue with resetting text-field to its default value.",
                             category: "Annotations")
                 return (key, ["format", ""])
-            } else if key == "line-gradient" {
-                // default value for line-gradient is currently `{ kind: undefined, value: NSNull }`,
-                // but `style.setLayerProperties(for:properties:)` requires all values to be non-nil,
-                // and doesn't accept NSNull, so for now, this property cannot be reset to its default.
-                Log.error(forMessage: "line-gradient cannot currently be reset to its default value.",
-                          category: "Annotations")
-                return nil
             } else {
                 return (key, Style._layerPropertyDefaultValue(for: .symbol, property: key).value)
             }

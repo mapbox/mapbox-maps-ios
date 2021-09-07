@@ -134,7 +134,7 @@ public class PolylineAnnotationManager: AnnotationManager {
 
         // Construct the properties dictionary to reset any properties that are no longer used
         let unusedPropertyKeys = previouslySetLayerPropertyKeys.subtracting(newLayerProperties.keys)
-        let unusedProperties = Dictionary(uniqueKeysWithValues: unusedPropertyKeys.compactMap { (key) -> (String, Any)? in
+        let unusedProperties = Dictionary(uniqueKeysWithValues: unusedPropertyKeys.map { (key) -> (String, Any) in
             if key == "text-field" {
                 // default value for text-field is currently `{ kind: constant, value: ["format"] }`.
                 // Attempting to set `text-field` to `["format"]` yields:
@@ -144,13 +144,6 @@ public class PolylineAnnotationManager: AnnotationManager {
                 Log.warning(forMessage: "There is a known issue with resetting text-field to its default value.",
                             category: "Annotations")
                 return (key, ["format", ""])
-            } else if key == "line-gradient" {
-                // default value for line-gradient is currently `{ kind: undefined, value: NSNull }`,
-                // but `style.setLayerProperties(for:properties:)` requires all values to be non-nil,
-                // and doesn't accept NSNull, so for now, this property cannot be reset to its default.
-                Log.error(forMessage: "line-gradient cannot currently be reset to its default value.",
-                          category: "Annotations")
-                return nil
             } else {
                 return (key, Style._layerPropertyDefaultValue(for: .line, property: key).value)
             }
@@ -221,16 +214,6 @@ public class PolylineAnnotationManager: AnnotationManager {
         }
         set {
             layerProperties["line-dasharray"] = newValue
-        }
-    }
-
-    /// Defines a gradient with which to color a line feature. Can only be used with GeoJSON sources that specify `"lineMetrics": true`.
-    public var lineGradient: StyleColor? {
-        get {
-            return layerProperties["line-gradient"].flatMap { $0 as? String }.flatMap(StyleColor.init(rgbaString:))
-        }
-        set {
-            layerProperties["line-gradient"] = newValue?.rgbaString
         }
     }
 

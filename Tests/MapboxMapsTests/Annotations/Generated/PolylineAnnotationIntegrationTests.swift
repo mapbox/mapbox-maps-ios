@@ -149,17 +149,6 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertEqual(layer.lineDasharray, .constant(Style._layerPropertyDefaultValue(for: .line, property: "line-dasharray").value as! [Double]))
     }
 
-    func testLineGradient() throws {
-        // Test that the setter and getter work
-        let value = StyleColor.random()
-        manager.lineGradient = value
-        XCTAssertEqual(manager.lineGradient, value)
-
-        // Test that the property can be reset to nil
-        manager.lineGradient = nil
-        XCTAssertNil(manager.lineGradient)
-    }
-
     func testLineTranslate() throws {
         // Test that the setter and getter work
         let value = Array.random(withLength: 2, generator: { Double.random(in: -100000...100000) })

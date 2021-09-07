@@ -1,9 +1,8 @@
 // This file is generated.
-
 import XCTest
 @testable import MapboxMaps
 
-class RasterDemSourceTests: XCTestCase {
+final class RasterDemSourceTests: XCTestCase {
 
     func testEncodingAndDecoding() {
         var source = RasterDemSource()
@@ -52,4 +51,5 @@ class RasterDemSourceTests: XCTestCase {
         }
     }
 }
+
 // End of generated file

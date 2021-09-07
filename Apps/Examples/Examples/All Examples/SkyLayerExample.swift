@@ -61,8 +61,8 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
         skyLayer.skyAtmosphereSunIntensity = .constant(10)
 
         // Set the sky's color to light blue with a light pink halo effect.
-        skyLayer.skyAtmosphereColor = .constant(ColorRepresentable(color: .skyBlue))
-        skyLayer.skyAtmosphereHaloColor = .constant(ColorRepresentable(color: .lightPink))
+        skyLayer.skyAtmosphereColor = .constant(StyleColor(.skyBlue))
+        skyLayer.skyAtmosphereHaloColor = .constant(StyleColor(.lightPink))
 
         do {
             try mapView.mapboxMap.style.addLayer(skyLayer)

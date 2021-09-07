@@ -265,7 +265,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
 
                 let tileStore = TileStore.default
                 let accessToken = ResourceOptionsManager.default.resourceOptions.accessToken
-                tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken as Any)
+                tileStore.setOptionForKey(TileStoreOptions.mapboxAccessToken, value: accessToken)
 
                 self.tileStore = tileStore
 

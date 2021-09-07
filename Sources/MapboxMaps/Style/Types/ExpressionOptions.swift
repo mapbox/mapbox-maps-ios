@@ -52,7 +52,7 @@ public struct FormatOptions: Codable, Equatable, ExpressionArgumentConvertible {
     public var textFont: [String]?
 
     /// Overrides the color specified by the root paint property.
-    public var textColor: ColorRepresentable?
+    public var textColor: StyleColor?
 
     internal enum CodingKeys: String, CodingKey {
         case fontScale = "font-scale"
@@ -69,7 +69,7 @@ public struct FormatOptions: Codable, Equatable, ExpressionArgumentConvertible {
         self.textFont = textFont
 
         if let textColor = textColor {
-            self.textColor = ColorRepresentable(color: textColor)
+            self.textColor = StyleColor(textColor)
         }
     }
 }

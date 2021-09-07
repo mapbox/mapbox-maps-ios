@@ -1,8 +1,5 @@
 // This file is generated.
-
 import Foundation
-import MapboxCoreMaps
-import MapboxCommon
 
 /**
  * Location Indicator layer.
@@ -40,13 +37,13 @@ public struct LocationIndicatorLayer: Layer {
     public var accuracyRadiusTransition: StyleTransition?
     
     /// The color for drawing the accuracy radius border. To adjust transparency, set the alpha component of the color accordingly.
-    public var accuracyRadiusBorderColor: Value<ColorRepresentable>?
+    public var accuracyRadiusBorderColor: Value<StyleColor>?
     
     /// Transition options for `accuracyRadiusBorderColor`.
     public var accuracyRadiusBorderColorTransition: StyleTransition?
     
     /// The color for drawing the accuracy radius, as a circle. To adjust transparency, set the alpha component of the color accordingly.
-    public var accuracyRadiusColor: Value<ColorRepresentable>?
+    public var accuracyRadiusColor: Value<StyleColor>?
     
     /// Transition options for `accuracyRadiusColor`.
     public var accuracyRadiusColorTransition: StyleTransition?
@@ -61,7 +58,7 @@ public struct LocationIndicatorLayer: Layer {
     public var bearingImageSizeTransition: StyleTransition?
     
     /// The color of the circle emphasizing the indicator. To adjust transparency, set the alpha component of the color accordingly.
-    public var emphasisCircleColor: Value<ColorRepresentable>?
+    public var emphasisCircleColor: Value<StyleColor>?
     
     /// Transition options for `emphasisCircleColor`.
     public var emphasisCircleColorTransition: StyleTransition?
@@ -159,14 +156,14 @@ public struct LocationIndicatorLayer: Layer {
       if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
         accuracyRadius = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .accuracyRadius)
         accuracyRadiusTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .accuracyRadiusTransition)
-        accuracyRadiusBorderColor = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .accuracyRadiusBorderColor)
+        accuracyRadiusBorderColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .accuracyRadiusBorderColor)
         accuracyRadiusBorderColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .accuracyRadiusBorderColorTransition)
-        accuracyRadiusColor = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .accuracyRadiusColor)
+        accuracyRadiusColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .accuracyRadiusColor)
         accuracyRadiusColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .accuracyRadiusColorTransition)
         bearing = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .bearing)
         bearingImageSize = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .bearingImageSize)
         bearingImageSizeTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .bearingImageSizeTransition)
-        emphasisCircleColor = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .emphasisCircleColor)
+        emphasisCircleColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .emphasisCircleColor)
         emphasisCircleColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .emphasisCircleColorTransition)
         emphasisCircleRadius = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .emphasisCircleRadius)
         emphasisCircleRadiusTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .emphasisCircleRadiusTransition)

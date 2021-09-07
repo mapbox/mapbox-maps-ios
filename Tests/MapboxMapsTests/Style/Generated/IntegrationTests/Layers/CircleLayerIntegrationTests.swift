@@ -2,7 +2,7 @@
 import XCTest
 @testable import MapboxMaps
 
-class CircleLayerIntegrationTests: MapViewIntegrationTestCase {
+final class CircleLayerIntegrationTests: MapViewIntegrationTestCase {
 
     internal func testBaseClass() throws {
         // Do nothing
@@ -31,7 +31,7 @@ class CircleLayerIntegrationTests: MapViewIntegrationTestCase {
 
             layer.circleBlur = Value<Double>.testConstantValue()
             layer.circleBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.circleColor = Value<ColorRepresentable>.testConstantValue()
+            layer.circleColor = Value<StyleColor>.testConstantValue()
             layer.circleColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.circleOpacity = Value<Double>.testConstantValue()
             layer.circleOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -39,7 +39,7 @@ class CircleLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.circlePitchScale = Value<CirclePitchScale>.testConstantValue()
             layer.circleRadius = Value<Double>.testConstantValue()
             layer.circleRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.circleStrokeColor = Value<ColorRepresentable>.testConstantValue()
+            layer.circleStrokeColor = Value<StyleColor>.testConstantValue()
             layer.circleStrokeColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.circleStrokeOpacity = Value<Double>.testConstantValue()
             layer.circleStrokeOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)

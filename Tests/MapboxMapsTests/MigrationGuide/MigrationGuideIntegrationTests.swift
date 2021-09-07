@@ -411,7 +411,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
                 //-->
                 var myBackgroundLayer = BackgroundLayer(id: "my-background-layer")
-                myBackgroundLayer.backgroundColor = .constant(ColorRepresentable(color: .red))
+                myBackgroundLayer.backgroundColor = .constant(StyleColor(.red))
                 //<--
 
                 /*

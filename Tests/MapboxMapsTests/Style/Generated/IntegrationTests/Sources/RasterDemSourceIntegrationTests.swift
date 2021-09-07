@@ -1,10 +1,8 @@
 // This file is generated.
-
 import XCTest
 @testable import MapboxMaps
 
-
-class RasterDemSourceIntegrationTests: MapViewIntegrationTestCase {
+final class RasterDemSourceIntegrationTests: MapViewIntegrationTestCase {
 
     func testAdditionAndRemovalOfSource() throws {
         let style = try XCTUnwrap(self.style)
@@ -52,4 +50,5 @@ class RasterDemSourceIntegrationTests: MapViewIntegrationTestCase {
         wait(for: [successfullyAddedSourceExpectation, successfullyRetrievedSourceExpectation], timeout: 5.0)
     }
 }
+
 // End of generated file

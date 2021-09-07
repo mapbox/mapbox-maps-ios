@@ -42,7 +42,7 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
         // Create a line layer
         var lineLayer = LineLayer(id: "line-layer")
         lineLayer.source = sourceIdentifier
-        lineLayer.lineColor = .constant(ColorRepresentable(color: UIColor.red))
+        lineLayer.lineColor = .constant(StyleColor(.red))
 
         let lowZoomWidth = 5
         let highZoomWidth = 20

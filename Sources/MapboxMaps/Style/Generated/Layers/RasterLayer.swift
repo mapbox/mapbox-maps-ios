@@ -1,8 +1,5 @@
 // This file is generated.
-
 import Foundation
-import MapboxCoreMaps
-import MapboxCommon
 
 /**
  * Raster map textures such as satellite imagery.

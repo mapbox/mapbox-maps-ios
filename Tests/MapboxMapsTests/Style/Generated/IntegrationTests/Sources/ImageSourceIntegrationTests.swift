@@ -1,10 +1,8 @@
 // This file is generated.
-
 import XCTest
 @testable import MapboxMaps
 
-
-class ImageSourceIntegrationTests: MapViewIntegrationTestCase {
+final class ImageSourceIntegrationTests: MapViewIntegrationTestCase {
 
     func testAdditionAndRemovalOfSource() throws {
         let style = try XCTUnwrap(self.style)
@@ -43,4 +41,5 @@ class ImageSourceIntegrationTests: MapViewIntegrationTestCase {
         wait(for: [successfullyAddedSourceExpectation, successfullyRetrievedSourceExpectation], timeout: 5.0)
     }
 }
+
 // End of generated file

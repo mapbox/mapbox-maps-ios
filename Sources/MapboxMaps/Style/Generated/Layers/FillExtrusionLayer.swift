@@ -1,8 +1,5 @@
 // This file is generated.
-
 import Foundation
-import MapboxCoreMaps
-import MapboxCommon
 
 /**
  * An extruded (3D) polygon.
@@ -31,7 +28,7 @@ public struct FillExtrusionLayer: Layer {
     public var fillExtrusionBaseTransition: StyleTransition?
     
     /// The base color of the extruded fill. The extrusion's surfaces will be shaded differently based on this color in combination with the root `light` settings. If this color is specified as `rgba` with an alpha component, the alpha component will be ignored; use `fill-extrusion-opacity` to set layer opacity.
-    public var fillExtrusionColor: Value<ColorRepresentable>?
+    public var fillExtrusionColor: Value<StyleColor>?
     
     /// Transition options for `fillExtrusionColor`.
     public var fillExtrusionColorTransition: StyleTransition?
@@ -115,7 +112,7 @@ public struct FillExtrusionLayer: Layer {
       if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
         fillExtrusionBase = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionBase)
         fillExtrusionBaseTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionBaseTransition)
-        fillExtrusionColor = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .fillExtrusionColor)
+        fillExtrusionColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .fillExtrusionColor)
         fillExtrusionColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionColorTransition)
         fillExtrusionHeight = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillExtrusionHeight)
         fillExtrusionHeightTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillExtrusionHeightTransition)

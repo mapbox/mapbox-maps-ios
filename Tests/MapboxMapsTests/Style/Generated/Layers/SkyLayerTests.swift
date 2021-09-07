@@ -2,7 +2,7 @@
 import XCTest
 @testable import MapboxMaps
 
-class SkyLayerTests: XCTestCase {
+final class SkyLayerTests: XCTestCase {
 
     func testLayerProtocolMembers() {
 
@@ -82,11 +82,11 @@ class SkyLayerTests: XCTestCase {
     func testEncodingAndDecodingOfPaintProperties() {
 
        var layer = SkyLayer(id: "test-id")
-       layer.skyAtmosphereColor = Value<ColorRepresentable>.testConstantValue()
-       layer.skyAtmosphereHaloColor = Value<ColorRepresentable>.testConstantValue()
+       layer.skyAtmosphereColor = Value<StyleColor>.testConstantValue()
+       layer.skyAtmosphereHaloColor = Value<StyleColor>.testConstantValue()
        layer.skyAtmosphereSun = Value<[Double]>.testConstantValue()
        layer.skyAtmosphereSunIntensity = Value<Double>.testConstantValue()
-       layer.skyGradient = Value<ColorRepresentable>.testConstantValue()
+       layer.skyGradient = Value<StyleColor>.testConstantValue()
        layer.skyGradientCenter = Value<[Double]>.testConstantValue()
        layer.skyGradientRadius = Value<Double>.testConstantValue()
        layer.skyOpacity = Value<Double>.testConstantValue()
@@ -108,11 +108,11 @@ class SkyLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(SkyLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
-       	   XCTAssert(layer.skyAtmosphereColor == Value<ColorRepresentable>.testConstantValue())
-       	   XCTAssert(layer.skyAtmosphereHaloColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.skyAtmosphereColor == Value<StyleColor>.testConstantValue())
+       	   XCTAssert(layer.skyAtmosphereHaloColor == Value<StyleColor>.testConstantValue())
        	   XCTAssert(layer.skyAtmosphereSun == Value<[Double]>.testConstantValue())
        	   XCTAssert(layer.skyAtmosphereSunIntensity == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.skyGradient == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.skyGradient == Value<StyleColor>.testConstantValue())
        	   XCTAssert(layer.skyGradientCenter == Value<[Double]>.testConstantValue())
        	   XCTAssert(layer.skyGradientRadius == Value<Double>.testConstantValue())
        	   XCTAssert(layer.skyOpacity == Value<Double>.testConstantValue())

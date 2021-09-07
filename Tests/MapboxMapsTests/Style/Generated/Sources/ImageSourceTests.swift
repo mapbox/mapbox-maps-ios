@@ -1,9 +1,8 @@
 // This file is generated.
-
 import XCTest
 @testable import MapboxMaps
 
-class ImageSourceTests: XCTestCase {
+final class ImageSourceTests: XCTestCase {
 
     func testEncodingAndDecoding() {
         var source = ImageSource()
@@ -34,4 +33,5 @@ class ImageSourceTests: XCTestCase {
         }
     }
 }
+
 // End of generated file

@@ -2,7 +2,7 @@
 import XCTest
 @testable import MapboxMaps
 
-class FillLayerIntegrationTests: MapViewIntegrationTestCase {
+final class FillLayerIntegrationTests: MapViewIntegrationTestCase {
 
     internal func testBaseClass() throws {
         // Do nothing
@@ -30,11 +30,11 @@ class FillLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.fillSortKey = Value<Double>.testConstantValue()
 
             layer.fillAntialias = Value<Bool>.testConstantValue()
-            layer.fillColor = Value<ColorRepresentable>.testConstantValue()
+            layer.fillColor = Value<StyleColor>.testConstantValue()
             layer.fillColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillOpacity = Value<Double>.testConstantValue()
             layer.fillOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.fillOutlineColor = Value<ColorRepresentable>.testConstantValue()
+            layer.fillOutlineColor = Value<StyleColor>.testConstantValue()
             layer.fillOutlineColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.fillPattern = Value<ResolvedImage>.testConstantValue()
             layer.fillPatternTransition = StyleTransition(duration: 10.0, delay: 10.0)

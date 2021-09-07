@@ -375,7 +375,6 @@ extension MapboxMap: CameraManagerProtocol {
 
 // MARK: - MapFeatureQueryable -
 
-// TODO: Turf feature property of QueriedFeature
 extension MapboxMap: MapFeatureQueryable {
     public func queryRenderedFeatures(for shape: [CGPoint], options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
         __map.queryRenderedFeatures(forShape: shape.map { $0.screenCoordinate },

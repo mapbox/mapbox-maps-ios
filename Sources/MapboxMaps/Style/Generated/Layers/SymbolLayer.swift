@@ -1,8 +1,5 @@
 // This file is generated.
-
 import Foundation
-import MapboxCoreMaps
-import MapboxCommon
 
 /**
  * An icon or a text label.
@@ -148,7 +145,7 @@ public struct SymbolLayer: Layer {
     public var textWritingMode: Value<[TextWritingMode]>?
     
     /// The color of the icon. This can only be used with sdf icons.
-    public var iconColor: Value<ColorRepresentable>?
+    public var iconColor: Value<StyleColor>?
     
     /// Transition options for `iconColor`.
     public var iconColorTransition: StyleTransition?
@@ -160,7 +157,7 @@ public struct SymbolLayer: Layer {
     public var iconHaloBlurTransition: StyleTransition?
     
     /// The color of the icon's halo. Icon halos can only be used with SDF icons.
-    public var iconHaloColor: Value<ColorRepresentable>?
+    public var iconHaloColor: Value<StyleColor>?
     
     /// Transition options for `iconHaloColor`.
     public var iconHaloColorTransition: StyleTransition?
@@ -187,7 +184,7 @@ public struct SymbolLayer: Layer {
     public var iconTranslateAnchor: Value<IconTranslateAnchor>?
     
     /// The color with which the text will be drawn.
-    public var textColor: Value<ColorRepresentable>?
+    public var textColor: Value<StyleColor>?
     
     /// Transition options for `textColor`.
     public var textColorTransition: StyleTransition?
@@ -199,7 +196,7 @@ public struct SymbolLayer: Layer {
     public var textHaloBlurTransition: StyleTransition?
     
     /// The color of the text's halo, which helps it stand out from backgrounds.
-    public var textHaloColor: Value<ColorRepresentable>?
+    public var textHaloColor: Value<StyleColor>?
     
     /// Transition options for `textHaloColor`.
     public var textHaloColorTransition: StyleTransition?
@@ -325,11 +322,11 @@ public struct SymbolLayer: Layer {
       maxZoom = try container.decodeIfPresent(Double.self, forKey: .maxZoom)
       
       if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
-        iconColor = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .iconColor)
+        iconColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .iconColor)
         iconColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconColorTransition)
         iconHaloBlur = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconHaloBlur)
         iconHaloBlurTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconHaloBlurTransition)
-        iconHaloColor = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .iconHaloColor)
+        iconHaloColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .iconHaloColor)
         iconHaloColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconHaloColorTransition)
         iconHaloWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .iconHaloWidth)
         iconHaloWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconHaloWidthTransition)
@@ -338,11 +335,11 @@ public struct SymbolLayer: Layer {
         iconTranslate = try paintContainer.decodeIfPresent(Value<[Double]>.self, forKey: .iconTranslate)
         iconTranslateTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .iconTranslateTransition)
         iconTranslateAnchor = try paintContainer.decodeIfPresent(Value<IconTranslateAnchor>.self, forKey: .iconTranslateAnchor)
-        textColor = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .textColor)
+        textColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .textColor)
         textColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .textColorTransition)
         textHaloBlur = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .textHaloBlur)
         textHaloBlurTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .textHaloBlurTransition)
-        textHaloColor = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .textHaloColor)
+        textHaloColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .textHaloColor)
         textHaloColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .textHaloColorTransition)
         textHaloWidth = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .textHaloWidth)
         textHaloWidthTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .textHaloWidthTransition)

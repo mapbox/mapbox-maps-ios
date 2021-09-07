@@ -2,7 +2,7 @@
 import XCTest
 @testable import MapboxMaps
 
-class RasterLayerIntegrationTests: MapViewIntegrationTestCase {
+final class RasterLayerIntegrationTests: MapViewIntegrationTestCase {
 
     internal func testBaseClass() throws {
         // Do nothing

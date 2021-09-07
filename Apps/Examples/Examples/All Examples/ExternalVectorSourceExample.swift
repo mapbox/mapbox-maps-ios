@@ -37,7 +37,7 @@ public class ExternalVectorSourceExample: UIViewController, ExampleProtocol {
         var lineLayer = LineLayer(id: "line-layer")
         lineLayer.source = sourceIdentifier
         lineLayer.sourceLayer = "mapillary-sequences"
-        let lineColor = ColorRepresentable(color: UIColor(red: 0.21, green: 0.69, blue: 0.43, alpha: 1.00))
+        let lineColor = StyleColor(UIColor(red: 0.21, green: 0.69, blue: 0.43, alpha: 1.00))
         lineLayer.lineColor = .constant(lineColor)
         lineLayer.lineOpacity = .constant(0.6)
         lineLayer.lineWidth = .constant(2.0)

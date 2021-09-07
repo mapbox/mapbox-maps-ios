@@ -12,7 +12,6 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
         guard let first = elements.first, case Element.operator(let op) = first else {
             fatalError("First element of the expression is not an operator.")
         }
-
         return op
     }
 
@@ -56,9 +55,16 @@ public struct Expression: Codable, CustomStringConvertible, Equatable {
     public init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
         elements = []
+        guard !container.isAtEnd else {
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Expression requires an operator, but no operator was present.")
+        }
+        // First element must be an operator
+        let decodedOperator = try container.decode(Operator.self)
+        elements.append(.operator(decodedOperator))
+        // Subsequent elemenets must be arguments
         while !container.isAtEnd {
-            let decodedElement = try container.decode(Element.self)
-            elements.append(decodedElement)
+            let decodedArgument = try container.decode(Argument.self)
+            elements.append(.argument(decodedArgument))
         }
     }
 

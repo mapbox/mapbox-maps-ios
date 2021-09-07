@@ -1,9 +1,8 @@
 // This file is generated.
-
 import XCTest
 @testable import MapboxMaps
 
-class GeoJSONSourceTests: XCTestCase {
+final class GeoJSONSourceTests: XCTestCase {
 
     func testEncodingAndDecoding() {
         var source = GeoJSONSource()
@@ -52,4 +51,5 @@ class GeoJSONSourceTests: XCTestCase {
         }
     }
 }
+
 // End of generated file

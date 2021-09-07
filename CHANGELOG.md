@@ -13,15 +13,26 @@ Mapbox welcomes participation and contributions from everyone.
 * Add HTTP interceptor API - HttpServiceInterface has a new method `setInterceptor` that must be implemented ([#628](https://github.com/mapbox/mapbox-maps-ios/pull/628))
 * `Geometry` now refers to `Turf.Geometry` instead of `MapboxCommon.Geometry`. ([#622](https://github.com/mapbox/mapbox-maps-ios/pull/622))
 * `Feature` now refers to `Turf.Feature` instead of `MapboxCommon.Feature`. ([#642](https://github.com/mapbox/mapbox-maps-ios/pull/642))
+* Renamed `ColorRepresentable` to `StyleColor` ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
+* Removed the argument label from `StyleColor`'s `UIColor` initializer ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
+* Renamed `ColorRepresentable.rgbaDescription` to `StyleColor.rgbaString`. ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
+* Changed `StyleColor`'s `Encodable` implementation to always encode an rgba color string instead of encoding an rgba expression ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
+* Updated the extension on `UIColor` that adds `ExpressionArgumentConvertible` to return an rgba color string instead of an rgba expression. ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
+* Annotation managers now sync with their backing source and layer only once per display link. Use `syncSourceAndLayerIfNeeded()` to force the sync to happen earlier. ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650), [#621](https://github.com/mapbox/mapbox-maps-ios/pull/621))
+* The `layerType` argument to `Style._layerPropertyDefaultValue(for:property:)` is now of type `LayerType` instead of `String` ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
+* `Expression` decoding will now fail if the operator is missing ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
+* `PointAnnotationManager.textVariableAnchor` is now of type `[TextAnchor]?` instead of `[String]?` ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
+* `PointAnnotationManager.textWritingMode` is now of type `[TextWritingMode]?` instead of `[String]?` ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
 
 ### Features ✨ and improvements 🏁
 
 * It is no longer necessary to `import Turf`. ([#622](https://github.com/mapbox/mapbox-maps-ios/pull/622))
-* Annotation managers now sync their annotations to their backing source and layer only once per display link. ([#621](https://github.com/mapbox/mapbox-maps-ios/pull/621))
-    * Use `syncAnnotationsIfNeeded()` to force the sync to happen earlier if needed.
 * Enable instant transitions for data driven paint layer properties ([#628](https://github.com/mapbox/mapbox-maps-ios/pull/628))
 * Offload networking tasks at the init phase ([#631](https://github.com/mapbox/mapbox-maps-ios/pull/631))
 * 3D pucks will now be rendered over other 3D content and occluded by terrain ([#641](https://github.com/mapbox/mapbox-maps-ios/pull/641))
+* Added a public, failable, component-wise initializer to `StyleColor` ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
+* Updated `StyleColor`'s `Decodable` support to be able to handle rgba color strings as well as rgba expressions ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
+* Made generated enums conform to `CaseIterable` ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
 
 ### Bug fixes 🐞
 
@@ -31,6 +42,9 @@ Mapbox welcomes participation and contributions from everyone.
 * Do not start background task if telemetry collection is disabled ([#631](https://github.com/mapbox/mapbox-maps-ios/pull/631))
 * Fix KVC decoding for iOS 15 ([#631](https://github.com/mapbox/mapbox-maps-ios/pull/631))
 * The GeoJSON source backing an `AnnotationMnager` is now removed correctly when an `AnnotationManager` is deallocated ([#633](https://github.com/mapbox/mapbox-maps-ios/pull/633))
+* Updated annotations to use `rgbaString` and `init(rgbaString:)` when serializing and deserializing `StyleColor`s ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
+* Annotation managers now properly restore the default values of any annotation or common style properties that are reset to nil, with the exception of `text-field` and `line-gradient` for which there are currently issues to resolve between mapbox-maps-ios and mapbox-core-maps-ios. ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
+* Fixed Expression decoding when second array element could be an operator ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
 
 ## 10.0.0-rc.7 - August 25, 2021
 

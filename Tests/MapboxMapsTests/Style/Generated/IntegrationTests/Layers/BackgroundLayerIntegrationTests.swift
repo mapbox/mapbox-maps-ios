@@ -2,7 +2,7 @@
 import XCTest
 @testable import MapboxMaps
 
-class BackgroundLayerIntegrationTests: MapViewIntegrationTestCase {
+final class BackgroundLayerIntegrationTests: MapViewIntegrationTestCase {
 
     internal func testBaseClass() throws {
         // Do nothing
@@ -28,7 +28,7 @@ class BackgroundLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
 
-            layer.backgroundColor = Value<ColorRepresentable>.testConstantValue()
+            layer.backgroundColor = Value<StyleColor>.testConstantValue()
             layer.backgroundColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.backgroundOpacity = Value<Double>.testConstantValue()
             layer.backgroundOpacityTransition = StyleTransition(duration: 10.0, delay: 10.0)

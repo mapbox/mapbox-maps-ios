@@ -1,8 +1,5 @@
 // This file is generated.
-
 import Foundation
-import MapboxCoreMaps
-import MapboxCommon
 
 /**
  * A filled polygon with an optional stroked border.
@@ -31,7 +28,7 @@ public struct FillLayer: Layer {
     public var fillAntialias: Value<Bool>?
     
     /// The color of the filled part of this layer. This color can be specified as `rgba` with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.
-    public var fillColor: Value<ColorRepresentable>?
+    public var fillColor: Value<StyleColor>?
     
     /// Transition options for `fillColor`.
     public var fillColorTransition: StyleTransition?
@@ -43,7 +40,7 @@ public struct FillLayer: Layer {
     public var fillOpacityTransition: StyleTransition?
     
     /// The outline color of the fill. Matches the value of `fill-color` if unspecified.
-    public var fillOutlineColor: Value<ColorRepresentable>?
+    public var fillOutlineColor: Value<StyleColor>?
     
     /// Transition options for `fillOutlineColor`.
     public var fillOutlineColorTransition: StyleTransition?
@@ -110,11 +107,11 @@ public struct FillLayer: Layer {
       
       if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
         fillAntialias = try paintContainer.decodeIfPresent(Value<Bool>.self, forKey: .fillAntialias)
-        fillColor = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .fillColor)
+        fillColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .fillColor)
         fillColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillColorTransition)
         fillOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .fillOpacity)
         fillOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillOpacityTransition)
-        fillOutlineColor = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .fillOutlineColor)
+        fillOutlineColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .fillOutlineColor)
         fillOutlineColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillOutlineColorTransition)
         fillPattern = try paintContainer.decodeIfPresent(Value<ResolvedImage>.self, forKey: .fillPattern)
         fillPatternTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .fillPatternTransition)

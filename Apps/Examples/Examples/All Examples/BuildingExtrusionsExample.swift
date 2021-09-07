@@ -41,7 +41,7 @@ public class BuildingExtrusionsExample: UIViewController, ExampleProtocol {
         layer.source                      = "composite"
         layer.minZoom                     = 15
         layer.sourceLayer                 = "building"
-        layer.fillExtrusionColor   = .constant(ColorRepresentable(color: .lightGray))
+        layer.fillExtrusionColor   = .constant(StyleColor(.lightGray))
         layer.fillExtrusionOpacity = .constant(0.6)
 
         layer.filter = Exp(.eq) {

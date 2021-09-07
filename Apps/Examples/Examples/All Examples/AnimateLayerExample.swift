@@ -68,7 +68,7 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
         airplaneRoute.source.data = .feature(Feature(geometry: .lineString(routeLine)))
         var lineLayer = LineLayer(id: "line-layer")
         lineLayer.source = airplaneRoute.identifier
-        lineLayer.lineColor = .constant(ColorRepresentable(color: UIColor.red))
+        lineLayer.lineColor = .constant(StyleColor(.red))
         lineLayer.lineWidth = .constant(3.0)
         lineLayer.lineCap = .constant(.round)
 

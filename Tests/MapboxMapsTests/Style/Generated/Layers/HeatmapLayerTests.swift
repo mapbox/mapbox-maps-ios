@@ -2,7 +2,7 @@
 import XCTest
 @testable import MapboxMaps
 
-class HeatmapLayerTests: XCTestCase {
+final class HeatmapLayerTests: XCTestCase {
 
     func testLayerProtocolMembers() {
 
@@ -82,7 +82,7 @@ class HeatmapLayerTests: XCTestCase {
     func testEncodingAndDecodingOfPaintProperties() {
 
        var layer = HeatmapLayer(id: "test-id")
-       layer.heatmapColor = Value<ColorRepresentable>.testConstantValue()
+       layer.heatmapColor = Value<StyleColor>.testConstantValue()
        layer.heatmapIntensity = Value<Double>.testConstantValue()
        layer.heatmapIntensityTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.heatmapOpacity = Value<Double>.testConstantValue()
@@ -106,7 +106,7 @@ class HeatmapLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(HeatmapLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
-       	   XCTAssert(layer.heatmapColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.heatmapColor == Value<StyleColor>.testConstantValue())
        	   XCTAssert(layer.heatmapIntensity == Value<Double>.testConstantValue())
        	   XCTAssert(layer.heatmapOpacity == Value<Double>.testConstantValue())
        	   XCTAssert(layer.heatmapRadius == Value<Double>.testConstantValue())

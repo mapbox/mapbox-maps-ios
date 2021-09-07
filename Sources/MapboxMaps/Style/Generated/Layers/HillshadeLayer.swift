@@ -1,8 +1,5 @@
 // This file is generated.
-
 import Foundation
-import MapboxCoreMaps
-import MapboxCommon
 
 /**
  * Client-side hillshading visualization based on DEM data. Currently, the implementation only supports Mapbox Terrain RGB and Mapzen Terrarium tiles.
@@ -25,7 +22,7 @@ public struct HillshadeLayer: Layer {
     public var visibility: Value<Visibility>?
     
     /// The shading color used to accentuate rugged terrain like sharp cliffs and gorges.
-    public var hillshadeAccentColor: Value<ColorRepresentable>?
+    public var hillshadeAccentColor: Value<StyleColor>?
     
     /// Transition options for `hillshadeAccentColor`.
     public var hillshadeAccentColorTransition: StyleTransition?
@@ -37,7 +34,7 @@ public struct HillshadeLayer: Layer {
     public var hillshadeExaggerationTransition: StyleTransition?
     
     /// The shading color of areas that faces towards the light source.
-    public var hillshadeHighlightColor: Value<ColorRepresentable>?
+    public var hillshadeHighlightColor: Value<StyleColor>?
     
     /// Transition options for `hillshadeHighlightColor`.
     public var hillshadeHighlightColorTransition: StyleTransition?
@@ -49,7 +46,7 @@ public struct HillshadeLayer: Layer {
     public var hillshadeIlluminationDirection: Value<Double>?
     
     /// The shading color of areas that face away from the light source.
-    public var hillshadeShadowColor: Value<ColorRepresentable>?
+    public var hillshadeShadowColor: Value<StyleColor>?
     
     /// Transition options for `hillshadeShadowColor`.
     public var hillshadeShadowColorTransition: StyleTransition?
@@ -97,15 +94,15 @@ public struct HillshadeLayer: Layer {
       maxZoom = try container.decodeIfPresent(Double.self, forKey: .maxZoom)
       
       if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
-        hillshadeAccentColor = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .hillshadeAccentColor)
+        hillshadeAccentColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .hillshadeAccentColor)
         hillshadeAccentColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .hillshadeAccentColorTransition)
         hillshadeExaggeration = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .hillshadeExaggeration)
         hillshadeExaggerationTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .hillshadeExaggerationTransition)
-        hillshadeHighlightColor = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .hillshadeHighlightColor)
+        hillshadeHighlightColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .hillshadeHighlightColor)
         hillshadeHighlightColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .hillshadeHighlightColorTransition)
         hillshadeIlluminationAnchor = try paintContainer.decodeIfPresent(Value<HillshadeIlluminationAnchor>.self, forKey: .hillshadeIlluminationAnchor)
         hillshadeIlluminationDirection = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .hillshadeIlluminationDirection)
-        hillshadeShadowColor = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .hillshadeShadowColor)
+        hillshadeShadowColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .hillshadeShadowColor)
         hillshadeShadowColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .hillshadeShadowColorTransition)
       }
       

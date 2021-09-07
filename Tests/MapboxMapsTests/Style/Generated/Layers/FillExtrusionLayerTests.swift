@@ -2,7 +2,7 @@
 import XCTest
 @testable import MapboxMaps
 
-class FillExtrusionLayerTests: XCTestCase {
+final class FillExtrusionLayerTests: XCTestCase {
 
     func testLayerProtocolMembers() {
 
@@ -84,7 +84,7 @@ class FillExtrusionLayerTests: XCTestCase {
        var layer = FillExtrusionLayer(id: "test-id")
        layer.fillExtrusionBase = Value<Double>.testConstantValue()
        layer.fillExtrusionBaseTransition = StyleTransition(duration: 10.0, delay: 10.0)
-       layer.fillExtrusionColor = Value<ColorRepresentable>.testConstantValue()
+       layer.fillExtrusionColor = Value<StyleColor>.testConstantValue()
        layer.fillExtrusionColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
        layer.fillExtrusionHeight = Value<Double>.testConstantValue()
        layer.fillExtrusionHeightTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -113,7 +113,7 @@ class FillExtrusionLayerTests: XCTestCase {
            let decodedLayer = try JSONDecoder().decode(FillExtrusionLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
        	   XCTAssert(layer.fillExtrusionBase == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.fillExtrusionColor == Value<ColorRepresentable>.testConstantValue())
+       	   XCTAssert(layer.fillExtrusionColor == Value<StyleColor>.testConstantValue())
        	   XCTAssert(layer.fillExtrusionHeight == Value<Double>.testConstantValue())
        	   XCTAssert(layer.fillExtrusionOpacity == Value<Double>.testConstantValue())
        	   XCTAssert(layer.fillExtrusionPattern == Value<ResolvedImage>.testConstantValue())

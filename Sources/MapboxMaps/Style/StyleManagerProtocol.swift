@@ -176,7 +176,7 @@ internal protocol StyleManagerProtocol {
     ///
     /// - Returns:
     ///     The default value of the property for the layers with type layerType.
-    static func _layerPropertyDefaultValue(for layerType: String, property: String) -> StylePropertyValue
+    static func _layerPropertyDefaultValue(for layerType: LayerType, property: String) -> StylePropertyValue
 
     /// Gets the properties for a style layer.
     ///

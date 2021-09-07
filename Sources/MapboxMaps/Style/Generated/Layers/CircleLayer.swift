@@ -1,8 +1,5 @@
 // This file is generated.
-
 import Foundation
-import MapboxCoreMaps
-import MapboxCommon
 
 /**
  * A filled circle.
@@ -34,7 +31,7 @@ public struct CircleLayer: Layer {
     public var circleBlurTransition: StyleTransition?
     
     /// The fill color of the circle.
-    public var circleColor: Value<ColorRepresentable>?
+    public var circleColor: Value<StyleColor>?
     
     /// Transition options for `circleColor`.
     public var circleColorTransition: StyleTransition?
@@ -58,7 +55,7 @@ public struct CircleLayer: Layer {
     public var circleRadiusTransition: StyleTransition?
     
     /// The stroke color of the circle.
-    public var circleStrokeColor: Value<ColorRepresentable>?
+    public var circleStrokeColor: Value<StyleColor>?
     
     /// Transition options for `circleStrokeColor`.
     public var circleStrokeColorTransition: StyleTransition?
@@ -139,7 +136,7 @@ public struct CircleLayer: Layer {
       if let paintContainer = try? container.nestedContainer(keyedBy: PaintCodingKeys.self, forKey: .paint) {
         circleBlur = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .circleBlur)
         circleBlurTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .circleBlurTransition)
-        circleColor = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .circleColor)
+        circleColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .circleColor)
         circleColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .circleColorTransition)
         circleOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .circleOpacity)
         circleOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .circleOpacityTransition)
@@ -147,7 +144,7 @@ public struct CircleLayer: Layer {
         circlePitchScale = try paintContainer.decodeIfPresent(Value<CirclePitchScale>.self, forKey: .circlePitchScale)
         circleRadius = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .circleRadius)
         circleRadiusTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .circleRadiusTransition)
-        circleStrokeColor = try paintContainer.decodeIfPresent(Value<ColorRepresentable>.self, forKey: .circleStrokeColor)
+        circleStrokeColor = try paintContainer.decodeIfPresent(Value<StyleColor>.self, forKey: .circleStrokeColor)
         circleStrokeColorTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .circleStrokeColorTransition)
         circleStrokeOpacity = try paintContainer.decodeIfPresent(Value<Double>.self, forKey: .circleStrokeOpacity)
         circleStrokeOpacityTransition = try paintContainer.decodeIfPresent(StyleTransition.self, forKey: .circleStrokeOpacityTransition)

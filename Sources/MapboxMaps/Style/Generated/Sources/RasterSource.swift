@@ -1,6 +1,4 @@
 // This file is generated.
-// This file is generated.
-
 import Foundation
 
 /**

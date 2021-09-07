@@ -69,7 +69,7 @@ internal struct Attribution: Hashable {
         let attributionText = "© \(titleArray.joined(separator: " / "))"
 
         let attributes: [NSAttributedString.Key: Any] = [
-            .font: font as Any,
+            .font: font,
             .foregroundColor: UIColor(white: 0.2, alpha: 1.0),
         ]
 

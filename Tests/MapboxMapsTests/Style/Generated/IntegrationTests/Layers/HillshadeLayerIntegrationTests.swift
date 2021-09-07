@@ -2,7 +2,7 @@
 import XCTest
 @testable import MapboxMaps
 
-class HillshadeLayerIntegrationTests: MapViewIntegrationTestCase {
+final class HillshadeLayerIntegrationTests: MapViewIntegrationTestCase {
 
     internal func testBaseClass() throws {
         // Do nothing
@@ -28,15 +28,15 @@ class HillshadeLayerIntegrationTests: MapViewIntegrationTestCase {
             layer.maxZoom = 20.0
             layer.visibility = .constant(.visible)
 
-            layer.hillshadeAccentColor = Value<ColorRepresentable>.testConstantValue()
+            layer.hillshadeAccentColor = Value<StyleColor>.testConstantValue()
             layer.hillshadeAccentColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.hillshadeExaggeration = Value<Double>.testConstantValue()
             layer.hillshadeExaggerationTransition = StyleTransition(duration: 10.0, delay: 10.0)
-            layer.hillshadeHighlightColor = Value<ColorRepresentable>.testConstantValue()
+            layer.hillshadeHighlightColor = Value<StyleColor>.testConstantValue()
             layer.hillshadeHighlightColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
             layer.hillshadeIlluminationAnchor = Value<HillshadeIlluminationAnchor>.testConstantValue()
             layer.hillshadeIlluminationDirection = Value<Double>.testConstantValue()
-            layer.hillshadeShadowColor = Value<ColorRepresentable>.testConstantValue()
+            layer.hillshadeShadowColor = Value<StyleColor>.testConstantValue()
             layer.hillshadeShadowColorTransition = StyleTransition(duration: 10.0, delay: 10.0)
 
             // Add the layer

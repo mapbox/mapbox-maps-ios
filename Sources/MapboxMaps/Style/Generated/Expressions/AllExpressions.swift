@@ -219,6 +219,11 @@ public extension Expression {
         case inExpression = "in"
 
         /** 
+         *  Returns the first position at which an item can be found in an array or a substring can be found in a string, or `-1` if the input cannot be found. Accepts an optional index from where to begin the search. 
+         */
+        case indexOf = "index-of"
+
+        /** 
          *  Produces continuous, smooth results by interpolating between pairs of input and output values ("stops"). The `input` may be any numeric expression (e.g., `["get", "population"]`). Stop inputs must be numeric literals in strictly ascending order. The output type must be `number`, `array<number>`, or `color`.
 
 Interpolation types:
@@ -345,6 +350,11 @@ Each label must be unique. If the input type does not match the type of the labe
          *  Gets the distance of a point on the sky from the sun position. Returns 0 at sun position and 1 when the distance reaches `sky-gradient-radius`. Can only be used in the `sky-gradient` property. 
          */
         case skyRadialProgress = "sky-radial-progress"
+
+        /** 
+         *  Returns an item from an array or a substring from a string from a specified start index, or between a start index and an end index if set. The return value is inclusive of the start index but not of the end index. 
+         */
+        case slice = "slice"
 
         /** 
          *  Returns the square root of the input. 

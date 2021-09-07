@@ -111,7 +111,7 @@ final class StyleColorTests: XCTestCase {
     }
 
     func testExpressionInitFailureTooManyArguments() {
-        XCTAssertNil(StyleColor(expression: Exp(operator: .rgba, arguments: Array(repeating: .number(0), count: .random(in: 4...20)))))
+        XCTAssertNil(StyleColor(expression: Exp(operator: .rgba, arguments: Array(repeating: .number(0), count: .random(in: 5...20)))))
     }
 
     func testRGBAStringInit() {

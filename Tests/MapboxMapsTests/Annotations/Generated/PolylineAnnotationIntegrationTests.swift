@@ -9,7 +9,6 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
         let managerCreatedExpectation = XCTestExpectation(description: "Successfully created annotation manager.")
-        style?.uri = .streets
         didFinishLoadingStyle = { _ in
             guard let mapView = self.mapView else {
                 return
@@ -18,6 +17,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
             managerCreatedExpectation.fulfill()
         }
         continueAfterFailure = false
+        style?.uri = .streets
         wait(for: [managerCreatedExpectation], timeout: 5.0)
         continueAfterFailure = true
     }

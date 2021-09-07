@@ -81,7 +81,7 @@ public struct StyleColor: Codable, Equatable {
     /// - Parameter rgbaString: An rgba color string
     internal init?(rgbaString: String) {
         let nsString = NSString(string: rgbaString)
-        let regex = try! NSRegularExpression(pattern: "rgba\\( *([0-9.]+) *, *([0-9.]+) *, *([0-9.]+) *, *([0-9.]+) *\\)", options: [])
+        let regex = try! NSRegularExpression(pattern: "^ *rgba\\( *([0-9.]+) *, *([0-9.]+) *, *([0-9.]+) *, *([0-9.]+) *\\) *$", options: [])
         let matches = regex.matches(in: rgbaString, options: [], range: NSRange(location: 0, length: nsString.length))
         guard matches.count == 1, let firstMatch = matches.first else {
             return nil

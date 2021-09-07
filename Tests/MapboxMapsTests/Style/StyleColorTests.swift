@@ -14,10 +14,10 @@ final class StyleColorTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        red = Double.random(in: 0...255)
-        green = Double.random(in: 0...255)
-        blue = Double.random(in: 0...255)
-        alpha = Double.random(in: 0...1)
+        red = .random(in: 0...255)
+        green = .random(in: 0...255)
+        blue = .random(in: 0...255)
+        alpha = .random(in: 0...1)
     }
 
     override func tearDown() {
@@ -82,7 +82,12 @@ final class StyleColorTests: XCTestCase {
 
     func testExpressionInitFailureWrongOperator() {
         let op = Expression.Operator.allCases.filter { $0 != .rgba }.randomElement()!
-        let expression = Exp(op) {}
+        let expression = Exp(op) {
+            red!
+            green!
+            blue!
+            alpha!
+        }
         XCTAssertNil(StyleColor(expression: expression))
     }
 
@@ -113,7 +118,7 @@ final class StyleColorTests: XCTestCase {
         func randomSpaces() -> String {
             String(repeating: " ", count: .random(in: 0...100))
         }
-        verify(StyleColor(rgbaString: "rgba(\(randomSpaces())\(red!)\(randomSpaces()),\(randomSpaces())\(green!)\(randomSpaces()),\(randomSpaces())\(blue!)\(randomSpaces()),\(randomSpaces())\(alpha!)\(randomSpaces()))"))
+        verify(StyleColor(rgbaString: "\(randomSpaces())rgba(\(randomSpaces())\(red!)\(randomSpaces()),\(randomSpaces())\(green!)\(randomSpaces()),\(randomSpaces())\(blue!)\(randomSpaces()),\(randomSpaces())\(alpha!)\(randomSpaces()))\(randomSpaces())"))
     }
 
     func testRGBAStringInitNoDecimals() {
@@ -132,6 +137,8 @@ final class StyleColorTests: XCTestCase {
         XCTAssertNil(StyleColor(rgbaString: "rgba(0, 0, 0)"))
         XCTAssertNil(StyleColor(rgbaString: "rgba(a, b, c)"))
         XCTAssertNil(StyleColor(rgbaString: "rgba(0.0.0, 0.0.0, 0.0.0, 0.0.0)"))
+        XCTAssertNil(StyleColor(rgbaString: "abcdrgba(1,2,3,0)"))
+        XCTAssertNil(StyleColor(rgbaString: "rgba(1,2,3,0)abcd"))
     }
 
     func testRGBAStringInitFailureValuesOutOfBounds() {

@@ -33,6 +33,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Added a public, failable, component-wise initializer to `StyleColor` ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
 * Updated `StyleColor`'s `Decodable` support to be able to handle rgba color strings as well as rgba expressions ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
 * Made generated enums conform to `CaseIterable` ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
+* Allow users to set the map's `MapDebugOptions`. ([#648](https://github.com/mapbox/mapbox-maps-ios/pull/648))
 
 ### Bug fixes 🐞
 
@@ -86,7 +87,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## 10.0.0-rc.5 - July 28, 2021
 
-* Fixed an issue where `MapView` positioning wasn't correct when used in containers such as UIStackView. ([#533](https://github.com/mapbox/mapbox-maps-ios/pull/533)) 
+* Fixed an issue where `MapView` positioning wasn't correct when used in containers such as UIStackView. ([#533](https://github.com/mapbox/mapbox-maps-ios/pull/533))
 
 ### Features ✨ and improvements 🏁
 * Added new options to `MapSnapshotOptions`

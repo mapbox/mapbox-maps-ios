@@ -157,7 +157,7 @@ extension TileStore {
     public func tileRegionGeometry(forId id: String,
                                    completion: @escaping (Result<Geometry, Error>) -> Void) {
         __getTileRegionGeometry(forId: id,
-                                callback: tileStoreClosureAdapter(for: completion, type: MapboxCommon.Geometry.self))
+                                callback: tileStoreClosureAdapterForGeometry(for: completion))
     }
 
     /// Fetch a tile region's associated metadata
@@ -179,4 +179,32 @@ private func tileStoreClosureAdapter<T, ObjCType>(
     for closure: @escaping (Result<T, Error>) -> Void,
     type: ObjCType.Type) -> ((Expected<AnyObject, AnyObject>?) -> Void) where ObjCType: AnyObject {
     return coreAPIClosureAdapter(for: closure, type: type, concreteErrorType: TileRegionError.self)
+}
+
+private func tileStoreClosureAdapterForGeometry(
+    for closure: @escaping (Result<Geometry, Error>) -> Void) -> ((Expected<AnyObject, AnyObject>?) -> Void) {
+    return { (expected: Expected?) in
+        let result: Result<Geometry, Error>
+
+        defer {
+            closure(result)
+        }
+
+        guard let expected = expected as? Expected< MapboxCommon.Geometry, MapboxCommon.TileRegionError>  else {
+            assertionFailure("Invalid MBXExpected types or none.")
+            result = .failure(TypeConversionError.unexpectedType)
+            return
+        }
+
+        if expected.isValue(),
+           let value = expected.value,
+           let geometry = Geometry(value) {
+            result = .success(geometry)
+        } else if expected.isError(), let error = expected.error {
+            result = .failure(TileRegionError(coreError: error))
+        } else {
+            assertionFailure("Unexpected value or error: \(expected), expected: \(Geometry.self)")
+            result = .failure(TypeConversionError.invalidObject)
+        }
+    }
 }

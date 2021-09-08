@@ -45,6 +45,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Updated annotations to use `rgbaString` and `init(rgbaString:)` when serializing and deserializing `StyleColor`s ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
 * Annotation managers now properly restore the default values of any annotation or common style properties that are reset to nil, with the exception of `text-field` and `line-gradient` for which there are currently issues to resolve between mapbox-maps-ios and mapbox-core-maps-ios. ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
 * Fixed Expression decoding when second array element could be an operator ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
+* Fixed an issue where layer persistence was not maintained after calling `Style._moveLayer`. ([#643](https://github.com/mapbox/mapbox-maps-ios/pull/643))
 
 ## 10.0.0-rc.7 - August 25, 2021
 
@@ -86,7 +87,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## 10.0.0-rc.5 - July 28, 2021
 
-* Fixed an issue where `MapView` positioning wasn't correct when used in containers such as UIStackView. ([#533](https://github.com/mapbox/mapbox-maps-ios/pull/533)) 
+* Fixed an issue where `MapView` positioning wasn't correct when used in containers such as UIStackView. ([#533](https://github.com/mapbox/mapbox-maps-ios/pull/533))
 
 ### Features ✨ and improvements 🏁
 * Added new options to `MapSnapshotOptions`

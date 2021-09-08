@@ -83,16 +83,14 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
     /// Starts the animation if this animator is in `inactive` state. Also used to resume a "paused" animation.
     public func startAnimation() {
+        storedAnimator = self
         switch internalState {
         case .initial:
-            storedAnimator = self
             createTransition()
             propertyAnimator.startAnimation()
         case .inProgress:
-            storedAnimator = self
             propertyAnimator.startAnimation()
         case .final:
-            storedAnimator = self
             fatalError("Attempt to restart an animation that has already completed.")
         }
     }

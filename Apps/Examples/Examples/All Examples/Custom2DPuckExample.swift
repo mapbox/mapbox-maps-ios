@@ -4,9 +4,13 @@ import MapboxMaps
 @objc(Custom2DPuckExample)
 public class Custom2DPuckExample: UIViewController, ExampleProtocol {
 
-    internal var toggleAccuracyRadiusButton: UIButton?
+    internal let toggleAccuracyRadiusButton: UIButton = UIButton(frame: .zero)
     internal var mapView: MapView!
-    internal var shouldToggleAccuracyRadius: Bool = true
+    internal var showsAccuracyRing: Bool = false {
+        didSet {
+            syncPuckAndButton()
+        }
+    }
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -16,7 +20,7 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         // Setup and create button for toggling accuracy ring
-        self.setupToggleShowAccuracyButton()
+        setupToggleShowAccuracyButton()
 
         // Granularly configure the location puck with a `Puck2DConfiguration`
         let configuration = Puck2DConfiguration(topImage: UIImage(named: "star"))
@@ -28,24 +32,15 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
             guard let self = self else { return }
 
             if let currentLocation = self.mapView.location.latestLocation {
-                let cameraOptions = CameraOptions(center: currentLocation.coordinate, zoom: 18.0)
+                let cameraOptions = CameraOptions(center: currentLocation.coordinate, zoom: 20.0)
                 self.mapView.camera.ease(to: cameraOptions, duration: 2.0)
             }
         })
 
-        // Setup a toggle button to show how to toggle the accuracy radius
+        // Accuracy ring is only shown when zoom is greater than or equal to 18
         mapView.mapboxMap.onEvery(.cameraChanged, handler: { [weak self] _ in
-            guard let self = self,
-                  let button = self.toggleAccuracyRadiusButton else {
-                return
-            }
-
-            if self.mapView.cameraState.zoom >= 18.0 {
-                button.isHidden = false
-
-            } else {
-                button.isHidden = true
-            }
+            guard let self = self else { return }
+            self.toggleAccuracyRadiusButton.isHidden = self.mapView.cameraState.zoom < 18.0
         })
     }
 
@@ -56,35 +51,33 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
     }
 
     @objc func showHideAccuracyRadius() {
-        var configuration = Puck2DConfiguration(topImage: UIImage(named: "star"))
-        if shouldToggleAccuracyRadius {
-            configuration.showsAccuracyRing = true
-            shouldToggleAccuracyRadius = false
-            self.toggleAccuracyRadiusButton!.setTitle("Disable Accuracy Radius", for: .normal)
-        } else {
-            configuration.showsAccuracyRing = false
-            shouldToggleAccuracyRadius = true
-            self.toggleAccuracyRadiusButton!.setTitle("Enable Accuracy Radius", for: .normal)
-        }
+        showsAccuracyRing.toggle()
+    }
 
+    func syncPuckAndButton() {
+        // Update puck config
+        var configuration = Puck2DConfiguration(topImage: UIImage(named: "star"))
+        configuration.showsAccuracyRing = showsAccuracyRing
         mapView.location.options.puckType = .puck2D(configuration)
+
+        // Update button title
+        let title: String = showsAccuracyRing ? "Disable Accuracy Radius" : "Enable Accuracy Radius"
+        toggleAccuracyRadiusButton.setTitle(title, for: .normal)
     }
 
     private func setupToggleShowAccuracyButton() {
-        // Button setup
-        let button = UIButton(frame: CGRect.zero)
-        button.backgroundColor = .systemBlue
-        button.addTarget(self, action: #selector(self.showHideAccuracyRadius), for: .touchUpInside)
-        button.setTitle("Enable Accuracy Radius", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(button)
+        // Styling
+        toggleAccuracyRadiusButton.backgroundColor = .systemBlue
+        toggleAccuracyRadiusButton.addTarget(self, action: #selector(showHideAccuracyRadius), for: .touchUpInside)
+        toggleAccuracyRadiusButton.setTitleColor(.white, for: .normal)
+        toggleAccuracyRadiusButton.isHidden = true
+        syncPuckAndButton()
+        toggleAccuracyRadiusButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(toggleAccuracyRadiusButton)
 
         // Constraints
-        button.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20.0).isActive = true
-        button.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20.0).isActive = true
-        button.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 650.0).isActive = true
-
-        self.toggleAccuracyRadiusButton = button
+        toggleAccuracyRadiusButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20.0).isActive = true
+        toggleAccuracyRadiusButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20.0).isActive = true
+        toggleAccuracyRadiusButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 650.0).isActive = true
     }
 }

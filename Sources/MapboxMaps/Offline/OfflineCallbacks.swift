@@ -10,7 +10,8 @@ import Foundation
 internal func coreAPIClosureAdapter<T, SwiftError, ObjCType>(
     for closure: @escaping (Result<T, Error>) -> Void,
     type: ObjCType.Type,
-    concreteErrorType: SwiftError.Type) -> ((Expected<AnyObject, AnyObject>?) -> Void) where ObjCType: AnyObject,
+    concreteErrorType: SwiftError.Type,
+    converter: @escaping (ObjCType) -> T? = { $0 as? T }) -> ((Expected<AnyObject, AnyObject>?) -> Void) where ObjCType: AnyObject,
                                                                                                 SwiftError: CoreErrorRepresentable,
                                                                                                 SwiftError.CoreErrorType: AnyObject {
     return { (expected: Expected?) in
@@ -26,7 +27,7 @@ internal func coreAPIClosureAdapter<T, SwiftError, ObjCType>(
             return
         }
 
-        if expected.isValue(), let value = expected.value as? T {
+        if expected.isValue(), let value = expected.value.flatMap(converter) {
             result = .success(value)
         } else if expected.isError(), let error = expected.error {
             result = .failure(SwiftError(coreError: error))

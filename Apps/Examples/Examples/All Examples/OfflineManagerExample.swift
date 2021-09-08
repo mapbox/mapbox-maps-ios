@@ -163,15 +163,6 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
                     self?.logger?.log(message: "tileRegion download Error = \(error)", category: "Example", color: .red)
                     downloadError = true
                 }
-
-                let tester = tileStore.tileRegionGeometry(forId: self!.tileRegionId, completion: { result in
-                    switch result {
-                    case .success(let geo):
-                        print(geo)
-                    case .failure(let error):
-                        print(error)
-                    }
-                })
             }
         }
 

@@ -156,8 +156,9 @@ extension TileStore {
     ///     user-controlled thread.
     public func tileRegionGeometry(forId id: String,
                                    completion: @escaping (Result<Geometry, Error>) -> Void) {
+        let callback = coreAPIClosureAdapter(for: completion, type: MapboxCommon.Geometry.self, concreteErrorType: TileRegionError.self, converter: Geometry.init(_:))
         __getTileRegionGeometry(forId: id,
-                                callback: tileStoreClosureAdapter(for: completion, type: MapboxCommon.Geometry.self))
+                                callback: callback)
     }
 
     /// Fetch a tile region's associated metadata

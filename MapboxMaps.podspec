@@ -12,7 +12,7 @@ Pod::Spec.new do |m|
   m.author = { 'Mapbox' => 'mobile@mapbox.com' }
   m.social_media_url = 'https://twitter.com/mapbox'
   m.documentation_url = 'https://docs.mapbox.com/ios/beta/maps/api-reference/'
-  
+
   m.source = { :git => 'https://github.com/mapbox/mapbox-maps-ios.git', :tag => "v#{maps_version}" }
   m.platform = :ios
   m.ios.deployment_target = '11.0'
@@ -23,7 +23,7 @@ Pod::Spec.new do |m|
 
   m.dependency 'MapboxCoreMaps', '10.0.0-rc.8'
   m.dependency 'MapboxCommon', '18.0.0'
-  m.dependency 'MapboxMobileEvents', '1.0.3'
+  m.dependency 'MapboxMobileEvents', '1.0.4'
   m.dependency 'Turf', '2.0.0-rc.1'
 
 end

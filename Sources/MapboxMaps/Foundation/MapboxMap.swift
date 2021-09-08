@@ -187,9 +187,7 @@ public final class MapboxMap {
     /// The default value is an empty array.
     public var debugOptions: [MapDebugOptions] {
         get {
-            let options = __map.getDebug()
-            let debugOptions = options.compactMap { MapDebugOptions(rawValue: $0.intValue) }
-            return debugOptions
+            return __map.getDebug().compactMap { MapDebugOptions(rawValue: $0.intValue) }
         }
         set {
             // Remove the previously visible options, then update the debug options to the new array.

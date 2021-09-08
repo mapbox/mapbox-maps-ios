@@ -92,21 +92,6 @@ public struct GestureOptions: Equatable {
     public var pitchEnabled: Bool = true
 
     /**
-        A Boolean value that determines whether the user will receive haptic feedback
-        for certain interactions with the map.
-
-        When this property is set to `true`, the default, a `UIImpactFeedbackStyleLight`
-        haptic feedback event be played when the user rotates the map to due north
-        (0°).
-
-        This feature requires a device that supports haptic feedback, running iOS 10 or
-        newer.
-
-        The default value of this property is `true`.
-    */
-    public var hapticFeedbackEnabled: Bool = true
-
-    /**
         A floating-point value that determines the rate of deceleration after the user lifts their finger.
     */
     public var decelerationRate: CGFloat = UIScrollView.DecelerationRate.normal.rawValue

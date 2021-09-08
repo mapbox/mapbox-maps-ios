@@ -30,7 +30,7 @@ Mapbox welcomes participation and contributions from everyone.
 * `PointAnnotationManager.textVariableAnchor` is now of type `[TextAnchor]?` instead of `[String]?` ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
 * `PointAnnotationManager.textWritingMode` is now of type `[TextWritingMode]?` instead of `[String]?` ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
 * `GestureOptions.hapticFeedbackEnabled` has been removed. ([#663](https://github.com/mapbox/mapbox-maps-ios/pull/663))
-* `GestureManager.decelarationRate` has been removed and `GestureOptions.decelerationRate` is the single source of truth. ([#]())
+* `GestureManager.decelarationRate` has been removed and `GestureOptions.decelerationRate` is the single source of truth. ([#662](https://github.com/mapbox/mapbox-maps-ios/pull/662))
 
 ### Features ✨ and improvements 🏁
 

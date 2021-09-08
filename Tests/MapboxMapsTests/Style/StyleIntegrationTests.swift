@@ -103,20 +103,20 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             return
         }
 
-        let expectation = XCTestExpectation(description: "Move persistent style layer succeeded")
-        expectation.expectedFulfillmentCount = 2
+        let addLayerExpectation = XCTestExpectation(description: "Adding a persistent style layer succeeded.")
+        let persistenceExpectation = XCTestExpectation(description: "The layer should still be persistent after repeatedly moving.")
 
         let layerId = "test-id"
         style.uri = .streets
 
         didFinishLoadingStyle = { _ in
 
-            let layers = style.styleManager.getStyleLayers()
+            let layers = style.allLayerIdentifiers
             let newBackgroundLayer = BackgroundLayer(id: layerId)
 
             do {
                 try style._addPersistentLayer(newBackgroundLayer)
-                expectation.fulfill()
+                addLayerExpectation.fulfill()
             } catch {
                 XCTFail("Could not add background layer due to error: \(error)")
             }
@@ -138,13 +138,13 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
                     XCTAssertTrue(isPersistent)
                 }
 
-                expectation.fulfill()
+                persistenceExpectation.fulfill()
             } catch {
                 XCTFail("_moveLayer failed with \(error)")
             }
         }
 
-        wait(for: [expectation], timeout: 5.0)
+        wait(for: [addLayerExpectation, persistenceExpectation], timeout: 5.0)
     }
 
     func testDecodingOfAllLayersInStreetsv11() {

@@ -77,3 +77,9 @@ internal extension Bool {
         return true
     }
 }
+
+internal extension PromoteId {
+    static func testSourceValue() -> PromoteId {
+        return .string("test-promote-id")
+    }
+}

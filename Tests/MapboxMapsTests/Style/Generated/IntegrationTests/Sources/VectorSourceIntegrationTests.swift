@@ -24,6 +24,7 @@ final class VectorSourceIntegrationTests: MapViewIntegrationTestCase {
             source.minzoom = Double.testSourceValue()
             source.maxzoom = Double.testSourceValue()
             source.attribution = String.testSourceValue()
+            source.promoteId = PromoteId.testSourceValue()
             source.volatile = Bool.testSourceValue()
             source.prefetchZoomDelta = Double.testSourceValue()
             source.minimumTileUpdateInterval = Double.testSourceValue()

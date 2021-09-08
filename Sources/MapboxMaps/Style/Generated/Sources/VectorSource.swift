@@ -48,6 +48,11 @@ public struct VectorSource: Source {
     public var attribution: String?
       
     /** 
+     * A property to use as a feature id (for feature state). Either a property name, or an object of the form `{<sourceLayer>: <propertyName>}`. If specified as a string for a vector tile source, the same property is used across all its source layers. 
+    */
+    public var promoteId: PromoteId?
+      
+    /** 
      * A setting to determine whether a source's tiles are cached locally. 
     */
     public var volatile: Bool?

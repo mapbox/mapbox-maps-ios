@@ -192,8 +192,8 @@ internal extension Puck2D {
         // Horizontal accuracy ring is an optional visual for the 2D Puck
         if configuration.showsAccuracyRing {
             layer.accuracyRadius = .constant(location.horizontalAccuracy)
-            layer.accuracyRadiusColor = .constant(ColorRepresentable(color: UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
-            layer.accuracyRadiusBorderColor = .constant(ColorRepresentable(color: .lightGray))
+            layer.accuracyRadiusColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
+            layer.accuracyRadiusBorderColor = .constant(StyleColor(.lightGray))
         }
 
         // Add layer to style

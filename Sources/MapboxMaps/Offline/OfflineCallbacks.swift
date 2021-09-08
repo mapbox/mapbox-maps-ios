@@ -12,8 +12,8 @@ internal func coreAPIClosureAdapter<T, SwiftError, ObjCType>(
     type: ObjCType.Type,
     concreteErrorType: SwiftError.Type,
     converter: @escaping (ObjCType) -> T? = { $0 as? T }) -> ((Expected<AnyObject, AnyObject>?) -> Void) where ObjCType: AnyObject,
-                                                                                                SwiftError: CoreErrorRepresentable,
-                                                                                                SwiftError.CoreErrorType: AnyObject {
+                                                                                                               SwiftError: CoreErrorRepresentable,
+                                                                                                               SwiftError.CoreErrorType: AnyObject {
     return { (expected: Expected?) in
         let result: Result<T, Error>
 
@@ -41,7 +41,7 @@ internal func coreAPIClosureAdapter<T, SwiftError, ObjCType>(
 internal func coreAPIClosureAdapter<SwiftError>(
     for closure: @escaping (Error?) -> Void,
     concreteErrorType: SwiftError.Type) -> ((Expected<AnyObject, AnyObject>?) -> Void) where SwiftError: CoreErrorRepresentable,
-                                                                                                SwiftError.CoreErrorType: AnyObject {
+                                                                                             SwiftError.CoreErrorType: AnyObject {
     return { (expected: Expected?) in
         var error: Error?
 

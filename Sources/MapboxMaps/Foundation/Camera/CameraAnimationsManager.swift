@@ -182,6 +182,9 @@ public class CameraAnimationsManager {
 
     /// Convenience to create a `BasicCameraAnimator` and will add it to a list of `BasicCameraAnimator` to track the lifecycle of that animation.
     ///
+    /// NOTE: Keep in mind the lifecycle of a `BasicCameraAnimator`. If a `BasicCameraAnimator` is destroyed, before the animation is finished,
+    /// the animation will be interrupted and completion handlers will not be called.
+    ///
     /// - Parameters:
     ///   - duration: The duration of the animation, in seconds.
     ///   - curve: The UIKit timing curve to apply to the animation.

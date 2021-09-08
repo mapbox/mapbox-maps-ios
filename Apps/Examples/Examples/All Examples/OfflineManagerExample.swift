@@ -133,7 +133,6 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         // custom TileStores are are unique for a particular file path, i.e.
         // there is only ever one TileStore per unique path.
         dispatchGroup.enter()
-
         let tileRegionDownload = tileStore.loadTileRegion(forId: tileRegionId,
                                                           loadOptions: tileRegionLoadOptions) { [weak self] (progress) in
             // These closures do not get called from the main thread. In this case

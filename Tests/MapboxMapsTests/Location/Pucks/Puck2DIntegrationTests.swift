@@ -139,19 +139,17 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
         didFinishLoadingStyle = { _ in
             let puck = Puck2D(puckStyle: .precise,
                               puckBearingSource: .heading,
-                              locationSupportableMapView: self.mapView!,
                               style: style,
                               configuration: Puck2DConfiguration())
             do {
                 try puck.createPreciseLocationIndicatorLayer(location: location)
+                let layer = try style.layer(withId: "puck") as LocationIndicatorLayer
+                XCTAssertNil(layer.accuracyRadius)
             } catch {
                 XCTFail("Failed to create a precise location indicator layer.")
             }
 
-            let layer = try! style.layer(withId: "puck") as LocationIndicatorLayer
-            if layer.accuracyRadius == nil {
-                accuracyRingIsHiddenExpectation.fulfill()
-            }
+            accuracyRingIsHiddenExpectation.fulfill()
         }
         wait(for: [accuracyRingIsHiddenExpectation], timeout: 5)
     }
@@ -166,19 +164,17 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
         didFinishLoadingStyle = { _ in
             let puck = Puck2D(puckStyle: .precise,
                               puckBearingSource: .heading,
-                              locationSupportableMapView: self.mapView!,
                               style: style,
                               configuration: Puck2DConfiguration(showsAccuracyRing: true))
             do {
                 try puck.createPreciseLocationIndicatorLayer(location: location)
+                let layer = try style.layer(withId: "puck") as LocationIndicatorLayer
+                XCTAssertNotNil(layer.accuracyRadius)
             } catch {
                 XCTFail("Failed to create a precise location indicator layer.")
             }
 
-            let layer = try! style.layer(withId: "puck") as LocationIndicatorLayer
-            if layer.accuracyRadius != nil {
-                accuracyRingIsVisibleExpectation.fulfill()
-            }
+            accuracyRingIsVisibleExpectation.fulfill()
         }
         wait(for: [accuracyRingIsVisibleExpectation], timeout: 5)
     }

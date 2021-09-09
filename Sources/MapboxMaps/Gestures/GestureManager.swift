@@ -233,7 +233,7 @@ extension GestureManager: GestureHandlerDelegate {
             let driftCameraOptions = mapboxMap.dragCameraOptions(from: endPoint, to: driftEndPoint)
             _ = cameraAnimationsManager.ease(
                     to: driftCameraOptions,
-                duration: Double(options.decelerationRate),
+                    duration: Double(options.decelerationRate),
                     curve: .easeOut,
                     completion: nil)
         }

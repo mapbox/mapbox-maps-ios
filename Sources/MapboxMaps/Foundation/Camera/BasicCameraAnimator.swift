@@ -25,6 +25,9 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
     private var completions = [AnimationCompletion]()
 
+    // Keep the animator alive.
+    private var storedAnimator: BasicCameraAnimator?
+
     /// Defines the transition that will occur to the `CameraOptions` of the renderer due to this animator
     public var transition: CameraTransition? {
         switch internalState {
@@ -80,6 +83,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
     /// Starts the animation if this animator is in `inactive` state. Also used to resume a "paused" animation.
     public func startAnimation() {
+        storedAnimator = self
         switch internalState {
         case .initial:
             createTransition()
@@ -94,6 +98,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     /// Starts the animation after a delay
     /// - Parameter delay: Delay (in seconds) after which the animation should start
     public func startAnimation(afterDelay delay: TimeInterval) {
+        storedAnimator = self
         delayedAnimationTimer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [unowned self] (_) in
             startAnimation()
         }
@@ -106,6 +111,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
             createTransition()
             propertyAnimator.pauseAnimation()
         case .inProgress:
+            storedAnimator = nil
             propertyAnimator.pauseAnimation()
         case .final:
             fatalError("Attempt to pause an animation that has already completed.")
@@ -118,6 +124,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         case .initial:
             fatalError("Attempt to stop an animation that has not started.")
         case .inProgress:
+            storedAnimator = nil
             propertyAnimator.stopAnimation(false)
             propertyAnimator.finishAnimation(at: .current)
         case .final:
@@ -144,6 +151,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         case .initial:
             fatalError("Attempt to continue an animation that has not started.")
         case .inProgress:
+            storedAnimator = self
             propertyAnimator.continueAnimation(withTimingParameters: parameters, durationFactor: CGFloat(durationFactor))
         case .final:
             precondition(internalState != .final, "Attempt to continue an animation that has already completed.")
@@ -223,6 +231,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
             for completion in self.completions {
                 completion(animatingPosition)
             }
+            self.storedAnimator = nil
             self.completions.removeAll()
         }
 

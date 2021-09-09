@@ -66,12 +66,14 @@ public final class GestureManager {
     public weak var delegate: GestureManagerDelegate?
 
     /// Internal delegate for gesture recognizers
-    internal weak var gestureRecognizerDelegate: GestureRecognizerDelegate?
+    // swiftlint:disable:next weak_delegate
+    internal let gestureRecognizerDelegate: GestureRecognizerDelegate
 
     internal init(view: UIView, cameraAnimationsManager: CameraAnimationsManagerProtocol, mapboxMap: MapboxMap) {
         self.view = view
         self.cameraAnimationsManager = cameraAnimationsManager
         self.mapboxMap = mapboxMap
+        self.gestureRecognizerDelegate = GestureRecognizerDelegate()
         configureGestureHandlers(for: options)
     }
 

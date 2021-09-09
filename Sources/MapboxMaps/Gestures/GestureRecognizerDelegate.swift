@@ -2,14 +2,8 @@ import UIKit
 
 internal class GestureRecognizerDelegate: NSObject, UIGestureRecognizerDelegate {
 
-    /// The view that all gestures operate on
-    private weak var view: UIView?
-
-    internal init(view: UIView) {
-        self.view = view
-    }
-
     internal func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard let view = gestureRecognizer.view else { return false }
 
         // Handle pitch tilt gesture
         if let panGesture = gestureRecognizer as? UIPanGestureRecognizer {

@@ -7,7 +7,7 @@ public protocol GestureManagerDelegate: AnyObject {
     func gestureBegan(for gestureType: GestureType)
 }
 
-public final class GestureManager: NSObject {
+public final class GestureManager {
 
     /// The `GestureOptions` that are used to set up the required gestures on the map
     public var options = GestureOptions() {
@@ -65,11 +65,13 @@ public final class GestureManager: NSObject {
     /// Set this delegate to be called back if a gesture begins
     public weak var delegate: GestureManagerDelegate?
 
+    internal let gestureRecognizerDelegate: GestureRecognizerDelegate
+
     internal init(view: UIView, cameraAnimationsManager: CameraAnimationsManagerProtocol, mapboxMap: MapboxMap) {
         self.view = view
         self.cameraAnimationsManager = cameraAnimationsManager
         self.mapboxMap = mapboxMap
-        super.init()
+        self.gestureRecognizerDelegate = GestureRecognizerDelegate(view: view)
         configureGestureHandlers(for: options)
     }
 
@@ -117,45 +119,8 @@ public final class GestureManager: NSObject {
         }
 
         for gestureRecognizer in validGestureRecognizers {
-            gestureRecognizer.delegate = self
+            gestureRecognizer.delegate = gestureRecognizerDelegate
         }
-    }
-}
-
-extension GestureManager: UIGestureRecognizerDelegate {
-
-    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-
-        // Handle pitch tilt gesture
-        if let panGesture = gestureRecognizer as? UIPanGestureRecognizer {
-            if panGesture.minimumNumberOfTouches == 2 {
-
-                let leftTouchPoint = panGesture.location(ofTouch: 0, in: view)
-                let rightTouchPoint = panGesture.location(ofTouch: 1, in: view)
-
-                guard let touchPointAngle = GestureUtilities.angleBetweenPoints(leftTouchPoint,
-                                                                                rightTouchPoint) else { return false }
-
-                let horizontalTiltTolerance = horizontalPitchTiltTolerance()
-
-                // If the angle between the pan touchpoints is greater then the
-                // tolerance specified, don't start the gesture.
-                if fabs(touchPointAngle) > horizontalTiltTolerance {
-                    return false
-                }
-            }
-        }
-
-        return true
-    }
-
-    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
-                                  shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-
-        return (gestureRecognizer is UIPinchGestureRecognizer
-            || gestureRecognizer is UIRotationGestureRecognizer) &&
-            (otherGestureRecognizer is UIPinchGestureRecognizer
-            || otherGestureRecognizer is UIRotationGestureRecognizer)
     }
 }
 

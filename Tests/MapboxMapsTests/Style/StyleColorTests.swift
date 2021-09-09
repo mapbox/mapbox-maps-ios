@@ -187,7 +187,11 @@ final class StyleColorTests: XCTestCase {
 
         let color = try JSONDecoder().decode(StyleColor.self, from: expressionData)
 
-        XCTAssertEqual(color, StyleColor(red: red, green: green, blue: blue, alpha: alpha)!)
+        // Accuracy can be removed if https://bugs.swift.org/browse/SR-15172 is fixed
+        XCTAssertEqual(color.red, red!, accuracy: 1e-16)
+        XCTAssertEqual(color.green, green!, accuracy: 1e-16)
+        XCTAssertEqual(color.blue, blue!, accuracy: 1e-16)
+        XCTAssertEqual(color.alpha, alpha!, accuracy: 1e-16)
     }
 
     func testDecodingRGBAString() throws {

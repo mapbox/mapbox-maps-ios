@@ -96,6 +96,57 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         wait(for: [expectation], timeout: 5.0)
     }
 
+    func testMovePersistentLayer() {
+        guard
+            let style = style else {
+            XCTFail("There should be valid MapView and Style objects created by setUp.")
+            return
+        }
+
+        let addLayerExpectation = XCTestExpectation(description: "Adding a persistent style layer succeeded.")
+        let persistenceExpectation = XCTestExpectation(description: "The layer should still be persistent after repeatedly moving.")
+
+        let layerId = "test-id"
+        style.uri = .streets
+
+        didFinishLoadingStyle = { _ in
+
+            let layers = style.allLayerIdentifiers
+            let newBackgroundLayer = BackgroundLayer(id: layerId)
+
+            do {
+                try style._addPersistentLayer(newBackgroundLayer)
+                addLayerExpectation.fulfill()
+            } catch {
+                XCTFail("Could not add background layer due to error: \(error)")
+            }
+
+            // Move layer, repeatedly
+            do {
+                for step in stride(from: 0, to: layers.count, by: 3) {
+
+                    try style._moveLayer(withId: layerId, to: .at(step))
+
+                    // Get layer position
+                    let layers = style.styleManager.getStyleLayers()
+                    let layerIds = layers.map { $0.id }
+
+                    let position = layerIds.firstIndex(of: layerId)
+                    XCTAssertEqual(position, step)
+
+                    let isPersistent = try style._isPersistentLayer(id: layerId)
+                    XCTAssertTrue(isPersistent)
+                }
+
+                persistenceExpectation.fulfill()
+            } catch {
+                XCTFail("_moveLayer failed with \(error)")
+            }
+        }
+
+        wait(for: [addLayerExpectation, persistenceExpectation], timeout: 5.0)
+    }
+
     func testDecodingOfAllLayersInStreetsv11() {
         guard let style = style else {
             XCTFail("There should be valid MapView and Style objects created by setUp.")

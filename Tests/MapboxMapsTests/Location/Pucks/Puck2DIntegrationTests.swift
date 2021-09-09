@@ -129,6 +129,56 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
         wait(for: [addedPrecisePuckExpectation, removedPrecisePuckExpectation, addedApproximatePuckExpectation], timeout: 5)
     }
 
+    func testAccuracyRadiusIsHidden() throws {
+        let style = try XCTUnwrap(self.style)
+        style.uri = .streets
+
+        let location = Location(with: CLLocation(latitude: 1, longitude: 1))
+        let accuracyRingIsHiddenExpectation = XCTestExpectation(description: "Layer does not contain an accuracy ring")
+
+        didFinishLoadingStyle = { _ in
+            let puck = Puck2D(puckStyle: .precise,
+                              puckBearingSource: .heading,
+                              style: style,
+                              configuration: Puck2DConfiguration())
+            do {
+                try puck.createPreciseLocationIndicatorLayer(location: location)
+                let layer = try style.layer(withId: "puck") as LocationIndicatorLayer
+                XCTAssertNil(layer.accuracyRadius)
+            } catch {
+                XCTFail("Failed to create a precise location indicator layer.")
+            }
+
+            accuracyRingIsHiddenExpectation.fulfill()
+        }
+        wait(for: [accuracyRingIsHiddenExpectation], timeout: 5)
+    }
+
+    func testAccuracyRadiusIsShown() throws {
+        let style = try XCTUnwrap(self.style)
+        style.uri = .streets
+
+        let location = Location(with: CLLocation(latitude: 1, longitude: 1))
+        let accuracyRingIsVisibleExpectation = XCTestExpectation(description: "Layer contains an accuracy ring")
+
+        didFinishLoadingStyle = { _ in
+            let puck = Puck2D(puckStyle: .precise,
+                              puckBearingSource: .heading,
+                              style: style,
+                              configuration: Puck2DConfiguration(showsAccuracyRing: true))
+            do {
+                try puck.createPreciseLocationIndicatorLayer(location: location)
+                let layer = try style.layer(withId: "puck") as LocationIndicatorLayer
+                XCTAssertNotNil(layer.accuracyRadius)
+            } catch {
+                XCTFail("Failed to create a precise location indicator layer.")
+            }
+
+            accuracyRingIsVisibleExpectation.fulfill()
+        }
+        wait(for: [accuracyRingIsVisibleExpectation], timeout: 5)
+    }
+
     func testLayerPersistence() throws {
         let style = try XCTUnwrap(self.style)
 

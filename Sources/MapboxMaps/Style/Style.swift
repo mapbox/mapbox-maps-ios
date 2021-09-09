@@ -52,8 +52,14 @@ public class Style {
      */
     public func _moveLayer(withId id: String, to position: LayerPosition) throws {
         let properties = try layerProperties(for: id)
+        let isPersistent = try _isPersistentLayer(id: id)
         try removeLayer(withId: id)
-        try addLayer(with: properties, layerPosition: position)
+
+        if isPersistent {
+            try _addPersistentLayer(with: properties, layerPosition: position)
+        } else {
+            try addLayer(with: properties, layerPosition: position)
+        }
     }
 
     /**

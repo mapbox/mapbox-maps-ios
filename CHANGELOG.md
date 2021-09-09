@@ -4,6 +4,12 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+### Features ✨ and improvements 🏁
+
+* Allow users to set the map's `MapDebugOptions`. ([#648](https://github.com/mapbox/mapbox-maps-ios/pull/648))
+
+## 10.0.0-rc.8 - Sept 8, 2021
+
 ### Breaking changes ⚠️
 
 * `QueriedFeature.feature` is now of type `Turf.Feature?` instead of `MapboxCommon.Feature`. ([#628](https://github.com/mapbox/mapbox-maps-ios/pull/628))
@@ -33,7 +39,9 @@ Mapbox welcomes participation and contributions from everyone.
 * Added a public, failable, component-wise initializer to `StyleColor` ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
 * Updated `StyleColor`'s `Decodable` support to be able to handle rgba color strings as well as rgba expressions ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
 * Made generated enums conform to `CaseIterable` ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
-* Allow users to set the map's `MapDebugOptions`. ([#648](https://github.com/mapbox/mapbox-maps-ios/pull/648))
+* Location puck can now hide the accuracy ring. The default value is to hide the accuracy ring. In order to enable the ring, set the `showAccuracyRing` property in `Puck2DConfiguration` to `true`. [#629](https://github.com/mapbox/mapbox-maps-ios/pull/629)
+* Annotation interaction delegates are only called when at least one annotation is detected to have been tapped ([638](https://github.com/mapbox/mapbox-maps-ios/issues/638))
+
 
 ### Bug fixes 🐞
 
@@ -46,6 +54,11 @@ Mapbox welcomes participation and contributions from everyone.
 * Updated annotations to use `rgbaString` and `init(rgbaString:)` when serializing and deserializing `StyleColor`s ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
 * Annotation managers now properly restore the default values of any annotation or common style properties that are reset to nil, with the exception of `text-field` and `line-gradient` for which there are currently issues to resolve between mapbox-maps-ios and mapbox-core-maps-ios. ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
 * Fixed Expression decoding when second array element could be an operator ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
+* Fixed an issue where layer persistence was not maintained after calling `Style._moveLayer`. ([#643](https://github.com/mapbox/mapbox-maps-ios/pull/643))
+* Fix issue where annotations were not being returned to annotation interaction delegates ([638](https://github.com/mapbox/mapbox-maps-ios/issues/638))
+
+### Breaking changes ⚠️
+* `TileStore.tileRegionGeometry(forId: String, completion: @escaping (Result<MapboxCommon.Geometry, Error>) -> Void)` has been updated to `TileStore.tileRegionGeometry(forId: String, completion: @escaping (Result<Geometry, Error>) -> Void)`. ([#661](https://github.com/mapbox/mapbox-maps-ios/pull/661))
 
 ## 10.0.0-rc.7 - August 25, 2021
 

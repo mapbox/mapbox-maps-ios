@@ -17,14 +17,19 @@ public struct Puck2DConfiguration: Equatable {
     /// The size of the images, as a scale factor applied to the size of the specified image.
     public var scale: Value<Double>?
 
+    /// Flag determining if the horizontal accuracy ring should be shown arround the Puck. default value is false
+    public var showsAccuracyRing: Bool
+
     public init(topImage: UIImage? = nil,
                 bearingImage: UIImage? = nil,
                 shadowImage: UIImage? = nil,
-                scale: Value<Double>? = nil) {
+                scale: Value<Double>? = nil,
+                showsAccuracyRing: Bool = false) {
         self.topImage = topImage
         self.bearingImage = bearingImage
         self.shadowImage = shadowImage
         self.scale = scale
+        self.showsAccuracyRing = showsAccuracyRing
     }
 
     internal var resolvedTopImage: UIImage? {
@@ -181,11 +186,15 @@ internal extension Puck2D {
         layer.topImageSize = configuration.resolvedScale
         layer.bearingImageSize = configuration.resolvedScale
         layer.shadowImageSize = configuration.resolvedScale
-        layer.accuracyRadius = .constant(location.horizontalAccuracy)
         layer.emphasisCircleRadiusTransition = StyleTransition(duration: 0, delay: 0)
         layer.bearingTransition = StyleTransition(duration: 0, delay: 0)
-        layer.accuracyRadiusColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
-        layer.accuracyRadiusBorderColor = .constant(StyleColor(.lightGray))
+
+        // Horizontal accuracy ring is an optional visual for the 2D Puck
+        if configuration.showsAccuracyRing {
+            layer.accuracyRadius = .constant(location.horizontalAccuracy)
+            layer.accuracyRadiusColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
+            layer.accuracyRadiusBorderColor = .constant(StyleColor(.lightGray))
+        }
 
         // Add layer to style
         try style._addPersistentLayer(layer)

@@ -29,6 +29,7 @@ Mapbox welcomes participation and contributions from everyone.
 * `Expression` decoding will now fail if the operator is missing ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
 * `PointAnnotationManager.textVariableAnchor` is now of type `[TextAnchor]?` instead of `[String]?` ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
 * `PointAnnotationManager.textWritingMode` is now of type `[TextWritingMode]?` instead of `[String]?` ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
+* `GestureOptions.hapticFeedbackEnabled` has been removed. ([#663](https://github.com/mapbox/mapbox-maps-ios/pull/663))
 
 ### Features ✨ and improvements 🏁
 

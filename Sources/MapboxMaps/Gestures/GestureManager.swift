@@ -65,10 +65,6 @@ public final class GestureManager: NSObject {
     /// Set this delegate to be called back if a gesture begins
     public weak var delegate: GestureManagerDelegate?
 
-    /// A floating-point value that determines the rate of deceleration after the
-    /// user lifts their finger.
-    public var decelerationRate: CGFloat = UIScrollView.DecelerationRate.normal.rawValue
-
     internal init(view: UIView, cameraAnimationsManager: CameraAnimationsManagerProtocol, mapboxMap: MapboxMap) {
         self.view = view
         self.cameraAnimationsManager = cameraAnimationsManager
@@ -237,7 +233,7 @@ extension GestureManager: GestureHandlerDelegate {
             let driftCameraOptions = mapboxMap.dragCameraOptions(from: endPoint, to: driftEndPoint)
             _ = cameraAnimationsManager.ease(
                     to: driftCameraOptions,
-                    duration: Double(decelerationRate),
+                    duration: Double(options.decelerationRate),
                     curve: .easeOut,
                     completion: nil)
         }

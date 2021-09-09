@@ -2,5 +2,5 @@
 	"MapboxCoreMaps": "10.0.0-rc.8",
 	"MapboxCommon": "18.0.0",
 	"Turf": "v2.0.0-rc.1",
-	"MapboxMobileEvents": "v1.0.3"
+	"MapboxMobileEvents": "v1.0.4"
 }

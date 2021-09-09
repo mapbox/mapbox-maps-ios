@@ -21,11 +21,9 @@ internal class GestureRecognizerDelegate: NSObject, UIGestureRecognizerDelegate 
                 guard let touchPointAngle = GestureUtilities.angleBetweenPoints(leftTouchPoint,
                                                                                 rightTouchPoint) else { return false }
 
-                let horizontalTiltTolerance = 45.0
-
                 // If the angle between the pan touchpoints is greater then the
                 // tolerance specified, don't start the gesture.
-                if fabs(touchPointAngle) > horizontalTiltTolerance {
+                if fabs(touchPointAngle) > 45.0 {
                     return false
                 }
             }

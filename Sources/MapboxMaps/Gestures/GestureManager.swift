@@ -65,13 +65,12 @@ public final class GestureManager {
     /// Set this delegate to be called back if a gesture begins
     public weak var delegate: GestureManagerDelegate?
 
-    internal let gestureRecognizerDelegate: GestureRecognizerDelegate
+    internal weak var gestureRecognizerDelegate: GestureRecognizerDelegate?
 
     internal init(view: UIView, cameraAnimationsManager: CameraAnimationsManagerProtocol, mapboxMap: MapboxMap) {
         self.view = view
         self.cameraAnimationsManager = cameraAnimationsManager
         self.mapboxMap = mapboxMap
-        self.gestureRecognizerDelegate = GestureRecognizerDelegate(view: view)
         configureGestureHandlers(for: options)
     }
 

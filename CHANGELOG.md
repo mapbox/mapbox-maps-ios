@@ -2,6 +2,12 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+### Breaking changes ⚠️
+
+* `BasicCameraAnimator` now keeps animators alive without the user storing the animator. ([#646](https://github.com/mapbox/mapbox-maps-ios/pull/646/))
+
 ## 10.0.0-rc.8 - Sept 8, 2021
 
 ### Breaking changes ⚠️

@@ -28,13 +28,13 @@ final class FlyToCameraAnimatorTests: XCTestCase {
 
     let animationOwner = AnimationOwner(rawValue: "fly-to")
     let duration: TimeInterval = 10
-    var mapboxMap: MockCameraAnimatorMapboxMap!
+    var mapboxMap: MockMapboxMap!
     var dateProvider: MockDateProvider!
     var flyToCameraAnimator: FlyToCameraAnimator!
 
     override func setUp() {
         super.setUp()
-        mapboxMap = MockCameraAnimatorMapboxMap()
+        mapboxMap = MockMapboxMap()
         dateProvider = MockDateProvider()
         flyToCameraAnimator = FlyToCameraAnimator(
             initial: initialCameraState,

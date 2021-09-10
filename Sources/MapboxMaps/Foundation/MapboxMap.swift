@@ -4,7 +4,13 @@ import UIKit
 @_implementationOnly import MapboxCommon_Private
 @_implementationOnly import MapboxCoreMaps_Private
 
-public final class MapboxMap {
+internal protocol MapboxMapProtocol: AnyObject {
+    var cameraState: CameraState { get }
+    var anchor: CGPoint { get }
+    func setCamera(to cameraOptions: CameraOptions)
+}
+
+public final class MapboxMap: MapboxMapProtocol {
     /// The underlying renderer object responsible for rendering the map
     private let __map: Map
 

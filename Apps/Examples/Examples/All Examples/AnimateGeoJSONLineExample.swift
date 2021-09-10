@@ -7,7 +7,9 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
     internal var mapView: MapView!
     internal let sourceIdentifier = "route-source-identifier"
     internal var routeLineSource: GeoJSONSource!
+    internal var lineLayer: LineLayer!
     var currentIndex = 0
+    var lineProgress = Double(0)
 
     public var geoJSONLine = (identifier: "routeLine", source: GeoJSONSource())
 
@@ -26,7 +28,8 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
         mapView.mapboxMap.onNext(.mapLoaded) { _ in
 
             self.addLine()
-            self.animatePolyline()
+//            self.animatePolyline()
+            self.createGradient()
 
             // The below line is used for internal testing purposes only.
             self.finish()
@@ -37,10 +40,11 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
 
         // Create a GeoJSON data source.
         routeLineSource = GeoJSONSource()
-        routeLineSource.data = .feature(Feature(geometry: .lineString(LineString([allCoordinates[currentIndex]]))))
+        routeLineSource.data = .feature(Feature(geometry: .lineString(LineString(allCoordinates))))
+        routeLineSource.lineMetrics = true
 
         // Create a line layer
-        var lineLayer = LineLayer(id: "line-layer")
+        lineLayer = LineLayer(id: "line-layer")
         lineLayer.source = sourceIdentifier
         lineLayer.lineColor = .constant(StyleColor(.red))
 
@@ -64,28 +68,81 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
         // Add the lineLayer to the map.
         try! mapView.mapboxMap.style.addSource(routeLineSource, id: sourceIdentifier)
         try! mapView.mapboxMap.style.addLayer(lineLayer)
+
+//        let updatedLine = Feature(geometry: .lineString(LineString(self.allCoordinates)))
+//        self.routeLineSource.data = .feature(updatedLine)
+//        try! self.mapView.mapboxMap.style.updateGeoJSONSource(withId: self.sourceIdentifier,
+//                                                              geoJSON: updatedLine)
+    }
+
+    func createGradient() {
+//        let stops: [Double: UIColor] = [
+//            0: .blue,
+//            0.1: .purple,
+//            0.3: .cyan,
+//            0.5: .green,
+//            0.7: .yellow,
+//            1: .red
+//        ]
+//
+//        let gradientExpression = Exp(.interpolate) {
+//                Exp(.linear)
+//                Exp(.lineProgress)
+//                stops
+//            }
+//
+//        let data = try? JSONEncoder().encode(gradientExpression)
+//        let jsonExpression = try? JSONSerialization.jsonObject(with: data!, options: [])
+
+        timer = Timer(timeInterval: 1.0/30.0, target: self, selector: #selector(timerFired), userInfo: nil, repeats: false)
+
+        RunLoop.current.add(timer, forMode: .common)
+
+//        Timer.scheduledTimer(withTimeInterval: 1.0/30.0, repeats: false) { ( timer ) in
+//            try! self.mapView.mapboxMap.style.setLayerProperty(for: "line-layer", property: "line-gradient", value: jsonExpression)
+//        }
+
+
+        print("line-layer created")
+    }
+
+    var timer: Timer!
+
+    @objc func timerFired() {
+        print("Timer Fired")
+
+        let stops: [Double: UIColor] = [
+            0: .blue,
+            0.1: .purple,
+            0.3: .cyan,
+            0.5: .green,
+            0.7: .yellow,
+            1: .red
+        ]
+
+        let gradientExpression = Exp(.interpolate) {
+                Exp(.linear)
+                Exp(.lineProgress)
+                stops
+            }
+
+        let data = try? JSONEncoder().encode(gradientExpression)
+        let jsonExpression = try? JSONSerialization.jsonObject(with: data!, options: [])
+
+        try! self.mapView.mapboxMap.style.setLayerProperty(for: "line-layer", property: "line-gradient", value: jsonExpression)
     }
 
     func animatePolyline() {
         var currentCoordinates = [CLLocationCoordinate2D]()
 
         // Start a timer that will add a new coordinate to the line and redraw it every time it repeats.
-        Timer.scheduledTimer(withTimeInterval: 0.10, repeats: true) { ( timer ) in
-
-            if self.currentIndex > self.allCoordinates.count {
-                timer.invalidate()
-                return
+        Timer.scheduledTimer(withTimeInterval: 1.0/30.0, repeats: true) { ( timer ) in
+            print("progress: \(self.lineProgress)")
+            self.lineProgress = max(0,min(1,self.lineProgress + 0.005))
+            if self.lineProgress == 1 {
+                self.lineProgress = 0
             }
-
             self.currentIndex += 1
-
-            // Create a subarray of locations up to the current index.
-            currentCoordinates = Array(self.allCoordinates[0..<self.currentIndex - 1])
-
-            let updatedLine = Feature(geometry: .lineString(LineString(currentCoordinates)))
-            self.routeLineSource.data = .feature(updatedLine)
-            try! self.mapView.mapboxMap.style.updateGeoJSONSource(withId: self.sourceIdentifier,
-                                                        geoJSON: updatedLine)
         }
     }
 

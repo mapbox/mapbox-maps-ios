@@ -8,6 +8,10 @@ Mapbox welcomes participation and contributions from everyone.
 
 * `BasicCameraAnimator` now keeps animators alive without the user storing the animator. ([#646](https://github.com/mapbox/mapbox-maps-ios/pull/646/))
 
+### Features ✨ and improvements 🏁
+
+* Allow users to set the map's `MapDebugOptions`. ([#648](https://github.com/mapbox/mapbox-maps-ios/pull/648))
+
 ## 10.0.0-rc.8 - Sept 8, 2021
 
 ### Breaking changes ⚠️
@@ -41,6 +45,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Made generated enums conform to `CaseIterable` ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
 * Location puck can now hide the accuracy ring. The default value is to hide the accuracy ring. In order to enable the ring, set the `showAccuracyRing` property in `Puck2DConfiguration` to `true`. [#629](https://github.com/mapbox/mapbox-maps-ios/pull/629)
 * Annotation interaction delegates are only called when at least one annotation is detected to have been tapped ([638](https://github.com/mapbox/mapbox-maps-ios/issues/638))
+
 
 ### Bug fixes 🐞
 

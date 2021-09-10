@@ -202,4 +202,24 @@ class MapboxMapsFoundationTests: XCTestCase {
          // amount of byte difference that can't be accounted for.
          // XCTAssertEqual(original.pngData(), roundtripped.pngData())
     }
+
+// MARK: Debug options
+    func testDebugOptions() {
+        let initialOptions = mapView.mapboxMap.debugOptions
+        XCTAssertEqual(initialOptions, [], "The initial debug options should be an empty array.")
+
+        let setOptions1: [MapDebugOptions] = [.tileBorders, .timestamps]
+        mapView.mapboxMap.debugOptions = setOptions1
+        let getOptions1 =  mapView.mapboxMap.debugOptions
+        XCTAssertEqual(setOptions1, getOptions1, "Tile borders and timestamp should be enabled.")
+
+        let setOptions2: [MapDebugOptions] = [.tileBorders]
+        mapView.mapboxMap.debugOptions = setOptions2
+        let getOptions2 = mapView.mapboxMap.debugOptions
+        XCTAssertEqual(setOptions2, getOptions2, "Tile borders should be enabled.")
+
+        mapView.mapboxMap.debugOptions = []
+        let getOptions3 = mapView.mapboxMap.debugOptions
+        XCTAssert(getOptions3.isEmpty, "The array of debug options should be empty.")
+    }
 }

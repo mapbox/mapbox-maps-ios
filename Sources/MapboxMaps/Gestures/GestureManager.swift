@@ -87,6 +87,7 @@ public final class GestureManager {
         for gestureType in options.supportedGestureTypes() {
             if gestureHandlers[gestureType] == nil {
                 newGestureHandlerMap[gestureType] = gestureType.makeHandler(for: view,
+                                                                            cameraAnimationsManager: cameraAnimationsManager,
                                                                             mapboxMap: mapboxMap,
                                                                             delegate: self,
                                                                             contextProvider: self,
@@ -166,25 +167,6 @@ extension GestureManager: GestureContextProvider {
 }
 
 extension GestureManager: GestureHandlerDelegate {
-    // MapView has been tapped a certain number of times
-    internal func tapped(numberOfTaps: Int, numberOfTouches: Int) {
-        // Single tapping twice with one finger will cause the map to zoom in
-        if numberOfTaps == 2 && numberOfTouches == 1 {
-            _ = cameraAnimationsManager.ease(to: CameraOptions(zoom: mapboxMap.cameraState.zoom + 1.0),
-                                   duration: 0.3,
-                                   curve: .easeOut,
-                                   completion: nil)
-        }
-
-        // Double tapping twice with two fingers will cause the map to zoom out
-        if numberOfTaps == 2 && numberOfTouches == 2 {
-            _ = cameraAnimationsManager.ease(to: CameraOptions(zoom: mapboxMap.cameraState.zoom - 1.0),
-                                   duration: 0.3,
-                                   curve: .easeOut,
-                                   completion: nil)
-        }
-    }
-
     internal func panBegan(at point: CGPoint) {
         mapboxMap.dragStart(for: point)
     }

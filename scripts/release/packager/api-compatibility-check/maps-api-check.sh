@@ -16,8 +16,10 @@ mkdir -p ${REPORT_DIR}
 
 if [[ -z ${TAGGED_RELEASE_VERSION} ]]; then
     LAST_VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
+    VERSION=$GITHUB_REF
 else
     LAST_VERSION=$(git describe --tags $(git rev-list --tags --max-count=1 --skip=1 --no-walk))
+    VERSION=$TAGGED_RELEASE_VERSION
 fi
 
 if [[ ! -d ~/mapbox-apidiff ]]; then
@@ -60,7 +62,7 @@ compareAPI() {
     set -eo pipefail
     JSON_TMP_FILE=$(mktemp)
     git checkout jk/iphone-simulator
-    src/apidiff $LAST_VERSION $GITHUB_REF swift ../../Apps/App.xcworkspace MapboxMaps > $JSON_TMP_FILE
+    src/apidiff $LAST_VERSION $VERSION swift ../../Apps/App.xcworkspace MapboxMaps > $JSON_TMP_FILE
 
     eval "$(parse_json_report ${JSON_TMP_FILE})"
     mv "${JSON_TMP_FILE}" ${REPORT_DIR}/api_compat.json
@@ -74,4 +76,4 @@ compareAPI() {
     fi
 }
 
-${CURRENT_DIR}/api-compatibility-check/semver-check.sh "${TAGGED_RELEASE_VERSION}" "${LAST_VERSION}" "${api_compat}"
+${CURRENT_DIR}/api-compatibility-check/semver-check.sh "${VERSION}" "${LAST_VERSION}" "${api_compat}"

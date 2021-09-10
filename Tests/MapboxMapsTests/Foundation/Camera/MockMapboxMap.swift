@@ -32,4 +32,7 @@ final class MockMapboxMap: MapboxMapProtocol {
     func dragCameraOptions(from: CGPoint, to: CGPoint) -> CameraOptions {
         dragCameraOptionsStub.call(with: DragCameraOptionsParams(from: from, to: to))
     }
+
+    func dragEnd() {
+    }
 }

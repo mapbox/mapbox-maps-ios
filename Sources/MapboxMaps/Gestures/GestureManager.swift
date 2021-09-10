@@ -167,19 +167,6 @@ extension GestureManager: GestureContextProvider {
 }
 
 extension GestureManager: GestureHandlerDelegate {
-    // Pan has ended on the MapView with a residual `offset`
-    func panEnded(at endPoint: CGPoint, shouldDriftTo driftEndPoint: CGPoint) {
-        if endPoint != driftEndPoint {
-            let driftCameraOptions = mapboxMap.dragCameraOptions(from: endPoint, to: driftEndPoint)
-            _ = cameraAnimationsManager.ease(
-                    to: driftCameraOptions,
-                    duration: Double(options.decelerationRate),
-                    curve: .easeOut,
-                    completion: nil)
-        }
-        mapboxMap.dragEnd()
-    }
-
     internal func cancelGestureTransitions() {
         cameraAnimationsManager.cancelAnimations()
     }

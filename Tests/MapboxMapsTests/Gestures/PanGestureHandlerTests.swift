@@ -7,15 +7,18 @@ final class PanGestureHandlerTests: XCTestCase {
     // swiftlint:disable weak_delegate
     var delegate: GestureHandlerDelegateMock!
     var mapboxMap: MockMapboxMap!
+    var cameraAnimationsManager: MockCameraAnimationsManager!
 
     override func setUp() {
         super.setUp()
         view = UIView()
         delegate = GestureHandlerDelegateMock()
         mapboxMap = MockMapboxMap()
+        cameraAnimationsManager = MockCameraAnimationsManager()
     }
 
     override func tearDown() {
+        cameraAnimationsManager = nil
         mapboxMap = nil
         delegate = nil
         view = nil
@@ -26,7 +29,8 @@ final class PanGestureHandlerTests: XCTestCase {
         let panGestureHandler = PanGestureHandler(for: view,
                                                   withDelegate: delegate,
                                                   panScrollMode: .horizontalAndVertical,
-                                                  mapboxMap: mapboxMap)
+                                                  mapboxMap: mapboxMap,
+                                                  cameraAnimationsManager: cameraAnimationsManager)
         XCTAssertTrue(panGestureHandler.view?.gestureRecognizers?.first is UIPanGestureRecognizer)
     }
 
@@ -34,7 +38,8 @@ final class PanGestureHandlerTests: XCTestCase {
         let panGestureHandler = PanGestureHandler(for: view,
                                                   withDelegate: delegate,
                                                   panScrollMode: .horizontal,
-                                                  mapboxMap: mapboxMap)
+                                                  mapboxMap: mapboxMap,
+                                                  cameraAnimationsManager: cameraAnimationsManager)
         let panMock = UIPanGestureRecognizerMock()
         panGestureHandler.handlePan(panMock)
 

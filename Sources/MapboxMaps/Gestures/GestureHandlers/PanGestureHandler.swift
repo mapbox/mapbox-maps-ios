@@ -8,10 +8,12 @@ internal class PanGestureHandler: GestureHandler {
     internal var scrollMode = PanScrollingMode.horizontalAndVertical
 
     private let mapboxMap: MapboxMapProtocol
+    private let cameraAnimationsManager: CameraAnimationsManagerProtocol
 
     // Initialize the handler which creates the panGestureRecognizer and adds to the view
-    internal init(for view: UIView, withDelegate delegate: GestureHandlerDelegate, panScrollMode: PanScrollingMode, mapboxMap: MapboxMapProtocol) {
+    internal init(for view: UIView, withDelegate delegate: GestureHandlerDelegate, panScrollMode: PanScrollingMode, mapboxMap: MapboxMapProtocol, cameraAnimationsManager: CameraAnimationsManagerProtocol) {
         self.mapboxMap = mapboxMap
+        self.cameraAnimationsManager = cameraAnimationsManager
         super.init(for: view, withDelegate: delegate)
         let pan = UIPanGestureRecognizer(target: self,
                                          action: #selector(handlePan(_:)))
@@ -57,7 +59,15 @@ internal class PanGestureHandler: GestureHandler {
             let driftEndPoint = CGPoint(x: endPoint.x + driftOffset.x,
                                         y: endPoint.y + driftOffset.y)
 
-            delegate.panEnded(at: endPoint, shouldDriftTo: driftEndPoint)
+            if endPoint != driftEndPoint {
+                let driftCameraOptions = mapboxMap.dragCameraOptions(from: endPoint, to: driftEndPoint)
+                _ = cameraAnimationsManager.ease(
+                        to: driftCameraOptions,
+                        duration: Double(decelerationRate),
+                        curve: .easeOut,
+                        completion: nil)
+            }
+            mapboxMap.dragEnd()
         default:
             break
         }

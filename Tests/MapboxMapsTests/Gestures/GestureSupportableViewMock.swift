@@ -98,8 +98,6 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
         pitchEndedMethod = true
     }
 
-    func panEnded(at endPoint: CGPoint, shouldDriftTo driftEndPoint: CGPoint) { }
-
     func initialPitch() -> CGFloat { return self.defaultPitch }
 
     func horizontalPitchTiltTolerance() -> Double { return pitchTolerance }

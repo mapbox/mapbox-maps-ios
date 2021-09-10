@@ -28,11 +28,6 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
         gestureBeganMethod.type = gestureType
     }
 
-    let scaleForZoomStub = Stub<Void, CGFloat>(defaultReturnValue: 0)
-    func scaleForZoom() -> CGFloat {
-        scaleForZoomStub.call()
-    }
-
     struct PinchChangedParameters {
         var zoomIncrement: CGFloat
         var targetAnchor: CGPoint

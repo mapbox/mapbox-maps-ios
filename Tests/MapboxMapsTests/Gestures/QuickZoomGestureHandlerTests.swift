@@ -1,17 +1,27 @@
 import XCTest
 @testable import MapboxMaps
 
-//swiftlint:disable explicit_acl explicit_top_level_acl
 final class QuickZoomGestureHandlerTest: XCTestCase {
     var view: UIView!
     // swiftlint:disable weak_delegate
     var delegate: GestureHandlerDelegateMock!
+    var mapboxMap: MockMapboxMap!
     var quickZoomHandler: QuickZoomGestureHandler!
 
     override func setUp() {
+        super.setUp()
         view = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
         delegate = GestureHandlerDelegateMock()
-        quickZoomHandler = QuickZoomGestureHandler(for: view, withDelegate: delegate)
+        mapboxMap = MockMapboxMap()
+        quickZoomHandler = QuickZoomGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
+    }
+
+    override func tearDown() {
+        quickZoomHandler = nil
+        mapboxMap = nil
+        delegate = nil
+        view = nil
+        super.tearDown()
     }
 
     func testQuickZoomSetUp() {
@@ -41,7 +51,7 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
         // Send the began event
         mockGestureRecognizer.mockState = .began
         mockGestureRecognizer.locationStub.defaultReturnValue.y = 100
-        delegate.scaleForZoomStub.defaultReturnValue = initialZoom
+        mapboxMap.cameraState.zoom = initialZoom
         quickZoomHandler.handleQuickZoom(mockGestureRecognizer)
 
         // Send a changed event that should correspond to zooming in by 1 level

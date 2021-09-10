@@ -176,10 +176,6 @@ extension GestureManager: GestureHandlerDelegate {
         delegate?.gestureBegan(for: gestureType)
     }
 
-    internal func scaleForZoom() -> CGFloat {
-        return mapboxMap.cameraState.zoom
-    }
-
     func pinchChanged(withZoomIncrement zoomIncrement: CGFloat,
                       targetAnchor: CGPoint,
                       initialAnchor: CGPoint,

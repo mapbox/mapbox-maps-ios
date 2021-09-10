@@ -6,8 +6,10 @@ import UIKit
 internal class QuickZoomGestureHandler: GestureHandler {
     private var quickZoomStart: CGFloat = 0.0
     private var scale: CGFloat = 0.0
+    private let mapboxMap: MapboxMapProtocol
 
-    override init(for view: UIView, withDelegate delegate: GestureHandlerDelegate) {
+    init(for view: UIView, withDelegate delegate: GestureHandlerDelegate, mapboxMap: MapboxMapProtocol) {
+        self.mapboxMap = mapboxMap
         super.init(for: view, withDelegate: delegate)
 
         let quickZoom = UILongPressGestureRecognizer(target: self, action: #selector(handleQuickZoom(_:)))
@@ -28,7 +30,7 @@ internal class QuickZoomGestureHandler: GestureHandler {
         if gestureRecognizer.state == .began {
             delegate.gestureBegan(for: .quickZoom)
             quickZoomStart = touchPoint.y
-            scale = delegate.scaleForZoom()
+            scale = mapboxMap.cameraState.zoom
         } else if gestureRecognizer.state == .changed {
             let distance = touchPoint.y - quickZoomStart
             let bounds = view.bounds

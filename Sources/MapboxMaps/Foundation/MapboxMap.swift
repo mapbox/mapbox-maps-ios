@@ -378,7 +378,7 @@ extension MapboxMap: CameraManagerProtocol {
 extension MapboxMap: MapFeatureQueryable {
     public func queryRenderedFeatures(for shape: [CGPoint], options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
         __map.queryRenderedFeatures(forShape: shape.map { $0.screenCoordinate },
-                                    options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
+                                    options: options ?? RenderedQueryOptions(__layerIds: nil, filter: nil),
                                     callback: coreAPIClosureAdapter(for: completion,
                                                                     type: NSArray.self,
                                                                     concreteErrorType: MapError.self))
@@ -386,7 +386,7 @@ extension MapboxMap: MapFeatureQueryable {
 
     public func queryRenderedFeatures(in rect: CGRect, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
         __map.queryRenderedFeatures(for: ScreenBox(rect),
-                                    options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
+                                    options: options ?? RenderedQueryOptions(__layerIds: nil, filter: nil),
                                     callback: coreAPIClosureAdapter(for: completion,
                                                                     type: NSArray.self,
                                                                     concreteErrorType: MapError.self))
@@ -394,7 +394,7 @@ extension MapboxMap: MapFeatureQueryable {
 
     public func queryRenderedFeatures(at point: CGPoint, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
         __map.queryRenderedFeatures(forPixel: point.screenCoordinate,
-                                    options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
+                                    options: options ?? RenderedQueryOptions(__layerIds: nil, filter: nil),
                                     callback: coreAPIClosureAdapter(for: completion,
                                                                     type: NSArray.self,
                                                                     concreteErrorType: MapError.self))

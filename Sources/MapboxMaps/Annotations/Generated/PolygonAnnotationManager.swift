@@ -234,7 +234,7 @@ public class PolygonAnnotationManager: AnnotationManager {
     }
 
     @objc internal func handleTap(_ tap: UITapGestureRecognizer) {
-        let options = RenderedQueryOptions(layerIds: [layerId], filter: nil)
+        let options = RenderedQueryOptions(__layerIds: [layerId], filter: nil)
         mapFeatureQueryable.queryRenderedFeatures(
             at: tap.location(in: view),
             options: options) { [weak self] (result) in

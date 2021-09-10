@@ -21,9 +21,6 @@ internal protocol GestureHandlerDelegate: AnyObject {
     // Zoom changes based on new location of gesture
     func quickZoomChanged(with newScale: CGFloat, and anchor: CGPoint)
 
-    // Returns initial pitch of the map
-    func initialPitch() -> CGFloat
-
     // Pitch gesture changed
     func pitchChanged(newPitch: CGFloat)
 

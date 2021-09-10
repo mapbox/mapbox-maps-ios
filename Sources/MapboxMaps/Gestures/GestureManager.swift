@@ -212,10 +212,6 @@ extension GestureManager: GestureHandlerDelegate {
         mapboxMap.setCamera(to: CameraOptions(bearing: CLLocationDirection(finalAngleInDegrees)))
     }
 
-    internal func initialPitch() -> CGFloat {
-        return mapboxMap.cameraState.pitch
-    }
-
     internal func horizontalPitchTiltTolerance() -> Double {
         return 45.0
     }

@@ -44,7 +44,7 @@ public enum GestureType: Hashable {
         case .quickZoom:
             return QuickZoomGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
         case .pitch:
-            return PitchGestureHandler(for: view, withDelegate: delegate)
+            return PitchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
         }
     }
 

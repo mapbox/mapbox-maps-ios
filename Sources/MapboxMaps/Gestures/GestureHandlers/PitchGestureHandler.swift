@@ -18,8 +18,10 @@ import CoreLocation
 internal class PitchGestureHandler: GestureHandler {
     internal var initialPitch = CGFloat.zero
     internal var dragGestureTranslation: CGPoint!
+    private let mapboxMap: MapboxMapProtocol
 
-    internal override init(for view: UIView, withDelegate delegate: GestureHandlerDelegate) {
+    internal init(for view: UIView, withDelegate delegate: GestureHandlerDelegate, mapboxMap: MapboxMapProtocol) {
+        self.mapboxMap = mapboxMap
         super.init(for: view, withDelegate: delegate)
 
         let pitchGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePitchGesture(_:)))
@@ -50,7 +52,7 @@ internal class PitchGestureHandler: GestureHandler {
              making the gesture avoid the delay.
             */
             dragGestureTranslation = CGPoint(x: gestureTranslation.x, y: gestureTranslation.y-1)
-            initialPitch = delegate.initialPitch()
+            initialPitch = mapboxMap.cameraState.pitch
             delegate.gestureBegan(for: .pitch)
 
         } else if gesture.state == .changed {

@@ -64,14 +64,6 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
         XCTAssertEqual(delegate.quickZoomChangedStub.parameters.first?.anchor,
                        CGPoint(x: view.bounds.midX, y: view.bounds.midY))
     }
-
-    func testQuickZoomEnded_InformsTheDelegate() {
-        let quickZoom = MockLongPressGestureRecognizer()
-        quickZoom.mockState = .ended
-        quickZoomHandler.handleQuickZoom(quickZoom)
-
-        XCTAssertEqual(delegate.quickZoomEndedStub.invocations.count, 1)
-    }
 }
 
 private class MockLongPressGestureRecognizer: UILongPressGestureRecognizer {

@@ -35,11 +35,6 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
         var initialCameraState: CameraState
     }
 
-    let pinchEndedStub = Stub<Void, Void>()
-    func pinchEnded() {
-        pinchEndedStub.call()
-    }
-
     func rotationStartAngle() -> CGFloat {
         rotationStartCalled = true
         return -1.0
@@ -66,11 +61,6 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
         quickZoomChangedStub.call(
             with: QuickZoomChangedParameters(newScale: newScale,
                                              anchor: anchor))
-    }
-
-    let quickZoomEndedStub = Stub<Void, Void>()
-    func quickZoomEnded() {
-        quickZoomEndedStub.call()
     }
 
     func pitchChanged(newPitch: CGFloat) {

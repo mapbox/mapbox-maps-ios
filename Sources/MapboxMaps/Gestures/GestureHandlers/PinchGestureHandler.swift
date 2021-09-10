@@ -67,10 +67,6 @@ internal class PinchGestureHandler: GestureHandler {
                                                   zoom: mapboxMap.cameraState.zoom + zoomIncrement))
 
             previousScale = pinchGestureRecognizer.scale
-        } else if pinchGestureRecognizer.state == .ended
-            || pinchGestureRecognizer.state == .cancelled {
-
-            delegate.pinchEnded()
         }
     }
 }

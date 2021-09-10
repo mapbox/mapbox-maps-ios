@@ -41,8 +41,6 @@ internal class QuickZoomGestureHandler: GestureHandler {
             if newScale.isNaN { newScale = 0 }
 
             delegate.quickZoomChanged(with: newScale, and: anchor)
-        } else if gestureRecognizer.state == .ended || gestureRecognizer.state == .cancelled {
-            delegate.quickZoomEnded()
         }
     }
 }

@@ -117,18 +117,4 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertFalse(gestureManager.gestureRecognizerDelegate.gestureRecognizer(panGestureRecognizer,
                                                                                   shouldRecognizeSimultaneouslyWith: tapGestureRecognizer))
     }
-
-    func testPinchEndedDoesNotUnrotate() {
-        mapView.mapboxMap.setCamera(to: CameraOptions(zoom: 3.0,
-                                                      bearing: CLLocationDirection(5.0)))
-
-        let newOptions = CameraBoundsOptions(minZoom: 2.0)
-        try! mapView.mapboxMap.setCameraBounds(for: newOptions)
-
-        gestureManager.pinchEnded()
-
-        XCTAssertEqual(mapView.mapboxMap.cameraState.bearing,
-                       5.0,
-                       "The maps bearing should not reset")
-    }
 }

@@ -176,10 +176,6 @@ extension GestureManager: GestureHandlerDelegate {
         delegate?.gestureBegan(for: gestureType)
     }
 
-    internal func pinchEnded() {
-        unrotateIfNeededForGesture(with: .ended)
-    }
-
     internal func quickZoomChanged(with newScale: CGFloat, and anchor: CGPoint) {
         let minZoom = CGFloat(mapboxMap.cameraBounds.minZoom)
         let maxZoom = CGFloat(mapboxMap.cameraBounds.maxZoom)
@@ -187,9 +183,6 @@ extension GestureManager: GestureHandlerDelegate {
         mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: zoom))
     }
 
-    internal func quickZoomEnded() {
-        unrotateIfNeededForGesture(with: .ended)
-    }
     internal func isRotationAllowed() -> Bool {
         let minZoom = CGFloat(mapboxMap.cameraBounds.minZoom)
         return mapboxMap.cameraState.zoom >= minZoom
@@ -217,26 +210,6 @@ extension GestureManager: GestureHandlerDelegate {
         var finalAngleInDegrees = finalAngle * 180.0 / .pi * -1
         finalAngleInDegrees = finalAngleInDegrees.truncatingRemainder(dividingBy: 360.0)
         mapboxMap.setCamera(to: CameraOptions(bearing: CLLocationDirection(finalAngleInDegrees)))
-    }
-
-    internal func unrotateIfNeededForGesture(with pinchState: UIGestureRecognizer.State) {
-        let currentBearing = mapboxMap.cameraState.bearing
-
-        // Avoid contention with in-progress gestures
-        // let toleranceForSnappingToNorth: CGFloat = 7.0
-        if currentBearing != 0.0
-            && pinchState != .began
-            && pinchState != .changed {
-            if currentBearing != 0.0 && isRotationAllowed() == false {
-                mapboxMap.setCamera(to: CameraOptions(bearing: 0))
-            }
-
-            // TODO: Add snapping behavior to "north" if bearing is less than some tolerance
-            // else if abs(self.mapView.cameraView.bearing) < toleranceForSnappingToNorth
-            //            || abs(self.mapView.cameraView.bearing) > 360.0 - toleranceForSnappingToNorth {
-            //    self.transitionBearing(to: 0.0, animated: true)
-            //}
-        }
     }
 
     internal func initialPitch() -> CGFloat {

@@ -109,10 +109,6 @@ final class PinchGestureHandlerTests: XCTestCase {
 
         XCTAssertTrue(delegate.cancelTransitionsCalled,
                       "Cancel Transitions was not called before commencing gesture processing")
-
-        XCTAssertEqual(delegate.pinchEndedStub.invocations.count,
-                       1,
-                      "View was not informed that gesture was ended")
     }
 }
 

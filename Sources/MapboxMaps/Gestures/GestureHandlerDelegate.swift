@@ -9,9 +9,6 @@ internal protocol GestureHandlerDelegate: AnyObject {
     // Notifies conformer that a gesture has begun
     func gestureBegan(for gestureType: GestureType)
 
-    // Pinch has ended
-    func pinchEnded()
-
     // Requests initial bearing of the map
     func rotationStartAngle() -> CGFloat
 
@@ -23,9 +20,6 @@ internal protocol GestureHandlerDelegate: AnyObject {
 
     // Zoom changes based on new location of gesture
     func quickZoomChanged(with newScale: CGFloat, and anchor: CGPoint)
-
-    // Quick zoom gesture ended
-    func quickZoomEnded()
 
     // Returns initial pitch of the map
     func initialPitch() -> CGFloat

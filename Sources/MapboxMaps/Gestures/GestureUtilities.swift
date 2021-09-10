@@ -17,7 +17,7 @@ internal class GestureUtilities {
      Calculates the angle in degrees between two points.
      For example, the angle between (0,0) and (45, 45) would be 45°
      */
-    internal static func angleBetweenPoints(_ originPoint: CGPoint, _ endPoint: CGPoint) -> CLLocationDegrees? {
+    internal static func angleBetweenPoints(_ originPoint: CGPoint, _ endPoint: CGPoint) -> CLLocationDegrees {
         var origin = originPoint
         var end = endPoint
 
@@ -30,8 +30,6 @@ internal class GestureUtilities {
         let deltaY = end.y - origin.y
 
         let angleInRadians = atan2(deltaY, deltaX)
-        let degreeDouble = (Double(angleInRadians) * 180) / Double.pi
-
-        return CLLocationDegrees(exactly: degreeDouble)
+        return (Double(angleInRadians) * 180) / Double.pi
     }
 }

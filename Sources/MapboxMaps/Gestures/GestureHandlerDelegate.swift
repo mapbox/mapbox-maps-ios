@@ -20,7 +20,4 @@ internal protocol GestureHandlerDelegate: AnyObject {
 
     // Zoom changes based on new location of gesture
     func quickZoomChanged(with newScale: CGFloat, and anchor: CGPoint)
-
-    // Pitch gesture changed
-    func pitchChanged(newPitch: CGFloat)
 }

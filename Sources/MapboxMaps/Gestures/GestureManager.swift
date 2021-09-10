@@ -211,8 +211,4 @@ extension GestureManager: GestureHandlerDelegate {
         finalAngleInDegrees = finalAngleInDegrees.truncatingRemainder(dividingBy: 360.0)
         mapboxMap.setCamera(to: CameraOptions(bearing: CLLocationDirection(finalAngleInDegrees)))
     }
-
-    internal func pitchChanged(newPitch: CGFloat) {
-        mapboxMap.setCamera(to: CameraOptions(pitch: newPitch))
-    }
 }

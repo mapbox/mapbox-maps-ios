@@ -42,15 +42,15 @@ final class PitchGestureHandlerTests: XCTestCase {
 
     func testPitchChanged() {
         let pitchHandler = PitchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
-        let pitch = UIPanGestureRecognizerMock()
         pitchHandler.dragGestureTranslation = CGPoint.zero
-        pitchHandler.handlePitchGesture(pitch) // Start gesture to set it to .began
+        let panGestureRecognizer = UIPanGestureRecognizerMock()
+        mapboxMap.cameraState.pitch = .random(in: 0...25)
+        pitchHandler.handlePitchGesture(panGestureRecognizer) // Start gesture to set it to .began
+        panGestureRecognizer.mockState = .changed
 
-        pitch.mockState = .changed
-        pitchHandler.handlePitchGesture(pitch)
-        XCTAssert(delegate.pitchChangedMethod.wasCalled)
-        let mockPitch = pitch.mockPitchChanged
-        XCTAssertEqual(delegate.pitchChangedMethod.newPitch, mockPitch)
+        pitchHandler.handlePitchGesture(panGestureRecognizer)
+
+        XCTAssertEqual(mapboxMap.setCameraStub.parameters, [CameraOptions(pitch: mapboxMap.cameraState.pitch - (panGestureRecognizer.mockTranslation.y / 2))])
     }
 
     func testPitchWillNotTrigger() {
@@ -61,18 +61,16 @@ final class PitchGestureHandlerTests: XCTestCase {
 
         pitch.mockState = .changed
         pitch.mockTouchPointA = CGPoint(x: 0, y: 0)
-        pitch.mockTouchPointB = CGPoint(x: 100, y: 100)
+        pitch.mockTouchPointB = CGPoint(x: 100, y: .random(in: 100...200))
         pitchHandler.handlePitchGesture(pitch)
-        XCTAssertFalse(delegate.pitchChangedMethod.wasCalled,
-                       "pitch gesture isn't triggered if touch points exceed 45°")
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 0,
+                       "pitch gesture isn't triggered if touch points equals or exceeds 45°")
     }
 }
 
-// TODO: This would be better off as a UI test
 private class UIPanGestureRecognizerMock: UIPanGestureRecognizer {
     var mockState: UIGestureRecognizer.State! = .began
     var mockNumberOfTouches: Int = 2
-    var mockPitchChanged: CGFloat = -12.5
     var mockTouchPointA = CGPoint(x: 0, y: 0)
     var mockTouchPointB = CGPoint(x: 100, y: 25)
     var mockTranslation: CGPoint {

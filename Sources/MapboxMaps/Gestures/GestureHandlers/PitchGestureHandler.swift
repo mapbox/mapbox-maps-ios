@@ -60,18 +60,14 @@ internal class PitchGestureHandler: GestureHandler {
             let rightTouchPoint = gesture.location(ofTouch: 1, in: gesture.view)
 
             // Calculate the angle between the first and second finger touches
-            guard let touchPointAngle = GestureUtilities.angleBetweenPoints(leftTouchPoint, rightTouchPoint) else {
-                gesture.state = .ended
-                return
-            }
+            let touchPointAngle = GestureUtilities.angleBetweenPoints(leftTouchPoint, rightTouchPoint)
 
             // The total direction the gesture has moved
             let gestureTranslation = gesture.translation(in: gesture.view)
 
             // The angle between the translation at the start of the gesture
             // and the current changed translation
-            guard let gestureSlopeAngle = GestureUtilities.angleBetweenPoints(dragGestureTranslation,
-                                                                              gestureTranslation) else { return }
+            let gestureSlopeAngle = GestureUtilities.angleBetweenPoints(dragGestureTranslation, gestureTranslation)
             dragGestureTranslation = gestureTranslation
 
             // If the angle between the pan touchpoints is less than
@@ -81,7 +77,7 @@ internal class PitchGestureHandler: GestureHandler {
                 let verticalGestureTranslation = gestureTranslation.y
                 let slowDown = CGFloat(2.0)
                 let newPitch = initialPitch - ( verticalGestureTranslation / slowDown )
-                delegate.pitchChanged(newPitch: newPitch)
+                mapboxMap.setCamera(to: CameraOptions(pitch: newPitch))
             }
         }
     }

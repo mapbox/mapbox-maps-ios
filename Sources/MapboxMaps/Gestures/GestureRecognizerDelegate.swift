@@ -12,8 +12,7 @@ internal class GestureRecognizerDelegate: NSObject, UIGestureRecognizerDelegate 
                 let leftTouchPoint = panGesture.location(ofTouch: 0, in: view)
                 let rightTouchPoint = panGesture.location(ofTouch: 1, in: view)
 
-                guard let touchPointAngle = GestureUtilities.angleBetweenPoints(leftTouchPoint,
-                                                                                rightTouchPoint) else { return false }
+                let touchPointAngle = GestureUtilities.angleBetweenPoints(leftTouchPoint, rightTouchPoint)
 
                 // If the angle between the pan touchpoints is greater then the
                 // tolerance specified, don't start the gesture.

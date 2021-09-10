@@ -12,8 +12,6 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
     var rotationChangedMethod: (wasCalled: Bool, newAngle: CGFloat?, anchor: CGPoint?) = (false, nil, nil)
     var rotationEndedMethod: (wasCalled: Bool, finalAngle: CGFloat?, anchor: CGPoint?) = (false, nil, nil)
 
-    var pitchChangedMethod: (wasCalled: Bool, newPitch: CGFloat) = (false, 0.0)
-
     public func cancelGestureTransitions() {
         cancelTransitionsCalled = true
     }
@@ -56,10 +54,5 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
         quickZoomChangedStub.call(
             with: QuickZoomChangedParameters(newScale: newScale,
                                              anchor: anchor))
-    }
-
-    func pitchChanged(newPitch: CGFloat) {
-        pitchChangedMethod.wasCalled = true
-        pitchChangedMethod.newPitch = newPitch
     }
 }

@@ -176,27 +176,6 @@ extension GestureManager: GestureHandlerDelegate {
         delegate?.gestureBegan(for: gestureType)
     }
 
-    func pinchChanged(withZoomIncrement zoomIncrement: CGFloat,
-                      targetAnchor: CGPoint,
-                      initialAnchor: CGPoint,
-                      initialCameraState: CameraState) {
-
-        var cameraOptions = CameraOptions()
-        cameraOptions.center     = initialCameraState.center
-        cameraOptions.padding    = initialCameraState.padding
-        cameraOptions.zoom       = initialCameraState.zoom
-
-        mapboxMap.setCamera(to: cameraOptions)
-
-        mapboxMap.dragStart(for: initialAnchor)
-        let dragOptions = mapboxMap.dragCameraOptions(from: initialAnchor, to: targetAnchor)
-        mapboxMap.setCamera(to: dragOptions)
-        mapboxMap.dragEnd()
-
-        mapboxMap.setCamera(to: CameraOptions(anchor: targetAnchor,
-                                              zoom: mapboxMap.cameraState.zoom + zoomIncrement))
-    }
-
     internal func pinchEnded() {
         unrotateIfNeededForGesture(with: .ended)
     }

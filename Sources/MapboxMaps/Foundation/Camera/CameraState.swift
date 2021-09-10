@@ -9,6 +9,18 @@ public struct CameraState: Hashable {
     public var bearing: CLLocationDirection
     public var pitch: CGFloat
 
+    public init(center: CLLocationCoordinate2D,
+                padding: UIEdgeInsets,
+                zoom: CGFloat,
+                bearing: CLLocationDirection,
+                pitch: CGFloat) {
+        self.center = center
+        self.padding = padding
+        self.zoom = zoom
+        self.bearing = bearing
+        self.pitch = pitch
+    }
+
     internal init(_ objcValue: MapboxCoreMaps.CameraState) {
         self.center = objcValue.center
         self.padding = objcValue.padding.toUIEdgeInsetsValue()

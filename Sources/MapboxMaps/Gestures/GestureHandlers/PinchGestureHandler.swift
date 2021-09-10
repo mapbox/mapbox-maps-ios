@@ -51,10 +51,20 @@ internal class PinchGestureHandler: GestureHandler {
             }
 
             let zoomIncrement = log2(pinchGestureRecognizer.scale)
-            delegate.pinchChanged(withZoomIncrement: zoomIncrement,
-                                  targetAnchor: pinchCenterPoint,
-                                  initialAnchor: self.initialPinchCenterPoint,
-                                  initialCameraState: self.initialCameraState)
+            var cameraOptions = CameraOptions()
+            cameraOptions.center = initialCameraState.center
+            cameraOptions.padding = initialCameraState.padding
+            cameraOptions.zoom = initialCameraState.zoom
+
+            mapboxMap.setCamera(to: cameraOptions)
+
+            mapboxMap.dragStart(for: initialPinchCenterPoint)
+            let dragOptions = mapboxMap.dragCameraOptions(from: initialPinchCenterPoint, to: pinchCenterPoint)
+            mapboxMap.setCamera(to: dragOptions)
+            mapboxMap.dragEnd()
+
+            mapboxMap.setCamera(to: CameraOptions(anchor: pinchCenterPoint,
+                                                  zoom: mapboxMap.cameraState.zoom + zoomIncrement))
 
             previousScale = pinchGestureRecognizer.scale
         } else if pinchGestureRecognizer.state == .ended

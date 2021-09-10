@@ -9,12 +9,6 @@ internal protocol GestureHandlerDelegate: AnyObject {
     // Notifies conformer that a gesture has begun
     func gestureBegan(for gestureType: GestureType)
 
-    // Pinch has changed from the initial center/anchor
-    func pinchChanged(withZoomIncrement zoomIncrement: CGFloat,
-                      targetAnchor: CGPoint,
-                      initialAnchor: CGPoint,
-                      initialCameraState: CameraState)
-
     // Pinch has ended
     func pinchEnded()
 

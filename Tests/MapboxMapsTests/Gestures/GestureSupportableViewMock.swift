@@ -35,17 +35,6 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
         var initialCameraState: CameraState
     }
 
-    let pinchChangedStub = Stub<PinchChangedParameters, Void>()
-    func pinchChanged(withZoomIncrement zoomIncrement: CGFloat,
-                      targetAnchor: CGPoint,
-                      initialAnchor: CGPoint,
-                      initialCameraState: CameraState) {
-        pinchChangedStub.call(with: .init(zoomIncrement: zoomIncrement,
-                                          targetAnchor: targetAnchor,
-                                          initialAnchor: initialAnchor,
-                                          initialCameraState: initialCameraState))
-    }
-
     let pinchEndedStub = Stub<Void, Void>()
     func pinchEnded() {
         pinchEndedStub.call()

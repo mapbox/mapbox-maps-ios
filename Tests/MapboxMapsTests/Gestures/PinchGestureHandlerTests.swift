@@ -1,30 +1,35 @@
 import XCTest
 @testable import MapboxMaps
 
-//swiftlint:disable explicit_acl explicit_top_level_acl
-class PinchGestureHandlerTests: XCTestCase {
+final class PinchGestureHandlerTests: XCTestCase {
 
     var view: UIView!
     // swiftlint:disable weak_delegate
     var delegate: GestureHandlerDelegateMock!
+    var mapboxMap: MockMapboxMap!
 
     override func setUp() {
+        super.setUp()
         view = UIView()
         delegate = GestureHandlerDelegateMock()
+        mapboxMap = MockMapboxMap()
     }
 
     override func tearDown() {
+        mapboxMap = nil
+        delegate = nil
         view = nil
+        super.tearDown()
     }
 
-    func testSetup() {
-        let pinch = PinchGestureHandler(for: view, withDelegate: delegate)
-        XCTAssert(pinch.gestureRecognizer is UIPinchGestureRecognizer)
+    func testInit() {
+        let pinchGestureHandler = PinchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
+        XCTAssertTrue(pinchGestureHandler.gestureRecognizer is UIPinchGestureRecognizer)
     }
 
     func testPinchBegan() {
 
-        let pinchGestureHandler = PinchGestureHandler(for: view, withDelegate: delegate)
+        let pinchGestureHandler = PinchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
         let pinchGestureRecognizerMock = UIPinchGestureRecognizerMock()
         pinchGestureHandler.handlePinch(pinchGestureRecognizerMock)
 
@@ -37,7 +42,7 @@ class PinchGestureHandlerTests: XCTestCase {
 
     func testPinchChanged() {
 
-        let pinchGestureHandler = PinchGestureHandler(for: view, withDelegate: delegate)
+        let pinchGestureHandler = PinchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
 
         let pinchGestureRecognizerMock = UIPinchGestureRecognizerMock()
         pinchGestureRecognizerMock.mockState = .began
@@ -68,7 +73,7 @@ class PinchGestureHandlerTests: XCTestCase {
 
     func testPinchEnded() {
 
-        let pinchGestureHandler = PinchGestureHandler(for: view, withDelegate: delegate)
+        let pinchGestureHandler = PinchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
 
         let pinchGestureRecognizerMock = UIPinchGestureRecognizerMock()
         pinchGestureRecognizerMock.mockState = .ended
@@ -94,22 +99,24 @@ private class UIPinchGestureRecognizerMock: UIPinchGestureRecognizer {
 
     override var state: UIGestureRecognizer.State {
         get {
-            return self.mockState
-        } set {
-            self.state = newValue
+            return mockState
+        }
+        set {
+            fatalError("unimplemented")
         }
     }
 
     override var scale: CGFloat {
         get {
             return mockScale
-        } set {
-            self.scale = newValue
+        }
+        set {
+            fatalError("unimplemented")
         }
     }
 
     override var numberOfTouches: Int {
-        return self.mockNumberOfTouches
+        return mockNumberOfTouches
     }
 
     override func location(in view: UIView?) -> CGPoint {

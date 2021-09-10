@@ -87,6 +87,7 @@ public final class GestureManager {
         for gestureType in options.supportedGestureTypes() {
             if gestureHandlers[gestureType] == nil {
                 newGestureHandlerMap[gestureType] = gestureType.makeHandler(for: view,
+                                                                            mapboxMap: mapboxMap,
                                                                             delegate: self,
                                                                             contextProvider: self,
                                                                             gestureOptions: options)
@@ -218,10 +219,6 @@ extension GestureManager: GestureHandlerDelegate {
 
     internal func scaleForZoom() -> CGFloat {
         return mapboxMap.cameraState.zoom
-    }
-
-    internal func cameraState() -> CameraState {
-        return self.mapboxMap.cameraState
     }
 
     func pinchChanged(withZoomIncrement zoomIncrement: CGFloat,

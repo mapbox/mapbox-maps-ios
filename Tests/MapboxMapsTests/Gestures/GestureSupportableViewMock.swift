@@ -5,12 +5,6 @@ import UIKit
 // Mock class that flags true when `GestureSupportableView` protocol methods have been called on it
 class GestureHandlerDelegateMock: GestureHandlerDelegate {
 
-    var coreCameraState = MapboxCoreMaps.CameraState(center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0),
-                                                     padding: EdgeInsets(top: 0, left: 0, bottom: 0, right: 0),
-                                                     zoom: 10,
-                                                     bearing: 0.0,
-                                                     pitch: 0.0)
-
     var tapCalled = false
     var tapCalledWithNumberOfTaps = 0
     var tapCalledWithNumberOfTouches = 0
@@ -30,10 +24,6 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
     var pitchTolerance = 45.0
     var pitchChangedMethod: (wasCalled: Bool, newPitch: CGFloat) = (false, 0.0)
     var pitchEndedMethod = false
-
-    func cameraState() -> CameraState {
-        return CameraState(coreCameraState)
-    }
 
     public func tapped(numberOfTaps: Int, numberOfTouches: Int) {
         tapCalled = true
@@ -74,7 +64,7 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
         pinchChangedStub.call(with: .init(zoomIncrement: zoomIncrement,
                                           targetAnchor: targetAnchor,
                                           initialAnchor: initialAnchor,
-                                          initialCameraState: cameraState()))
+                                          initialCameraState: initialCameraState))
     }
 
     let pinchEndedStub = Stub<Void, Void>()

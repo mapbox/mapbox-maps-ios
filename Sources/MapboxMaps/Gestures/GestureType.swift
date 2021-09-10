@@ -22,6 +22,7 @@ public enum GestureType: Hashable {
     // Generates a handler for every gesture type
     // swiftlint:disable explicit_acl
     func makeHandler(for view: UIView,
+                     mapboxMap: MapboxMap,
                      delegate: GestureHandlerDelegate,
                      contextProvider: GestureContextProvider,
                      gestureOptions: GestureOptions) -> GestureHandler {
@@ -34,7 +35,7 @@ public enum GestureType: Hashable {
                                      numberOfTouchesRequired: numberOfTouches,
                                      withDelegate: delegate)
         case .pinch:
-            return PinchGestureHandler(for: view, withDelegate: delegate)
+            return PinchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
         case .rotate:
             return RotateGestureHandler(for: view, withDelegate: delegate, andContextProvider: contextProvider)
         case .quickZoom:

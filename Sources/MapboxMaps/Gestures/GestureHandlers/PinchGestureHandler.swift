@@ -17,8 +17,11 @@ internal class PinchGestureHandler: GestureHandler {
     // TODO: Inject the minimum zoom as part of a configuration structure
     internal let minZoom: CGFloat = 0.0
 
+    private let mapboxMap: MapboxMapProtocol
+
     // Initialize the handler which creates the panGestureRecognizer and adds to the view
-    override internal init(for view: UIView, withDelegate delegate: GestureHandlerDelegate) {
+    internal init(for view: UIView, withDelegate delegate: GestureHandlerDelegate, mapboxMap: MapboxMapProtocol) {
+        self.mapboxMap = mapboxMap
         super.init(for: view, withDelegate: delegate)
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
         view.addGestureRecognizer(pinch)
@@ -35,7 +38,7 @@ internal class PinchGestureHandler: GestureHandler {
             self.previousScale = 1.0
             delegate.gestureBegan(for: .pinch)
 
-            self.initialCameraState = self.delegate.cameraState()
+            self.initialCameraState = mapboxMap.cameraState
             self.initialPinchCenterPoint = pinchCenterPoint
 
             /**

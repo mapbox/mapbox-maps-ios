@@ -23,4 +23,13 @@ final class MockMapboxMap: MapboxMapProtocol {
     }
 
     func dragStart(for point: CGPoint) {}
+
+    struct DragCameraOptionsParams {
+        var from: CGPoint
+        var to: CGPoint
+    }
+    let dragCameraOptionsStub = Stub<DragCameraOptionsParams, CameraOptions>(defaultReturnValue: CameraOptions())
+    func dragCameraOptions(from: CGPoint, to: CGPoint) -> CameraOptions {
+        dragCameraOptionsStub.call(with: DragCameraOptionsParams(from: from, to: to))
+    }
 }

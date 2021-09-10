@@ -5,8 +5,6 @@ import UIKit
 // Mock class that flags true when `GestureSupportableView` protocol methods have been called on it
 class GestureHandlerDelegateMock: GestureHandlerDelegate {
 
-    var pannedCalled = false
-
     var pinchEndedMethod: (wasCalled: Bool, anchor: CGPoint?) = (false, nil)
 
     var cancelTransitionsCalled = false
@@ -20,10 +18,6 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
     var pitchTolerance = 45.0
     var pitchChangedMethod: (wasCalled: Bool, newPitch: CGFloat) = (false, 0.0)
     var pitchEndedMethod = false
-
-    public func panned(from startPoint: CGPoint, to endPoint: CGPoint) {
-        pannedCalled = true
-    }
 
     public func cancelGestureTransitions() {
         cancelTransitionsCalled = true

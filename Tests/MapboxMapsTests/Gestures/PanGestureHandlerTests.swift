@@ -38,7 +38,7 @@ final class PanGestureHandlerTests: XCTestCase {
         let panMock = UIPanGestureRecognizerMock()
         panGestureHandler.handlePan(panMock)
 
-        XCTAssertTrue(delegate.pannedCalled)
+        XCTAssertEqual(mapboxMap.dragCameraOptionsStub.invocations.count, 1)
     }
 }
 

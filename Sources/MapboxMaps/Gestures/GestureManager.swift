@@ -167,12 +167,6 @@ extension GestureManager: GestureContextProvider {
 }
 
 extension GestureManager: GestureHandlerDelegate {
-    // MapView has been panned
-    internal func panned(from startPoint: CGPoint, to endPoint: CGPoint) {
-        let cameraOptions = mapboxMap.dragCameraOptions(from: startPoint, to: endPoint)
-        mapboxMap.setCamera(to: cameraOptions)
-    }
-
     // Pan has ended on the MapView with a residual `offset`
     func panEnded(at endPoint: CGPoint, shouldDriftTo driftEndPoint: CGPoint) {
         if endPoint != driftEndPoint {

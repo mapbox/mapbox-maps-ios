@@ -9,6 +9,7 @@ internal protocol MapboxMapProtocol: AnyObject {
     var anchor: CGPoint { get }
     func setCamera(to cameraOptions: CameraOptions)
     func dragStart(for point: CGPoint)
+    func dragCameraOptions(from: CGPoint, to: CGPoint) -> CameraOptions
 }
 
 public final class MapboxMap: MapboxMapProtocol {

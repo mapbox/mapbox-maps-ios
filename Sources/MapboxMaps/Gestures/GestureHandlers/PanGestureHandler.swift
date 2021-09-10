@@ -34,7 +34,8 @@ internal class PanGestureHandler: GestureHandler {
             let start = pan.location(in: pan.view)
             let delta = pan.translation(in: pan.view).applyPanScrollingMode(panScrollingMode: scrollMode)
             let end = CGPoint(x: start.x + delta.x, y: start.y + delta.y)
-            delegate.panned(from: start, to: end)
+            let cameraOptions = mapboxMap.dragCameraOptions(from: start, to: end)
+            mapboxMap.setCamera(to: cameraOptions)
             pan.setTranslation(.zero, in: pan.view)
 
         case .ended, .cancelled:

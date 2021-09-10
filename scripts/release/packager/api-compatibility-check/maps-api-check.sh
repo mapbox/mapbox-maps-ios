@@ -74,4 +74,4 @@ compareAPI() {
     fi
 }
 
-${CURRENT_DIR}/semver-check.sh "${TAGGED_RELEASE_VERSION}" "${LAST_VERSION}" "${api_compat}"
+${CURRENT_DIR}/api-compatibility-check/semver-check.sh "${TAGGED_RELEASE_VERSION}" "${LAST_VERSION}" "${api_compat}"

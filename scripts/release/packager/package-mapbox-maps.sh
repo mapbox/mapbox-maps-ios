@@ -65,7 +65,7 @@ zip -r "$ZIP_ARCHIVE_NAME" artifacts
 
 if [ -z ${CIRCLE_TAG+x} ]; then
   # Check API compatibility with non-tagged changes.
-  ../../api-compatibility-check/maps-api-check.sh "" ./MapboxMaps.zip
+  ../api-compatibility-check/maps-api-check.sh ""
 fi
 
 step 'Delete Artifacts Directory'

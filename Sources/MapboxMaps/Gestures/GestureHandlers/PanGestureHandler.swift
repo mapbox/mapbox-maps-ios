@@ -7,8 +7,11 @@ internal class PanGestureHandler: GestureHandler {
     internal let decelerationRate = UIScrollView.DecelerationRate.normal.rawValue
     internal var scrollMode = PanScrollingMode.horizontalAndVertical
 
+    private let mapboxMap: MapboxMapProtocol
+
     // Initialize the handler which creates the panGestureRecognizer and adds to the view
-    internal init(for view: UIView, withDelegate delegate: GestureHandlerDelegate, panScrollMode: PanScrollingMode) {
+    internal init(for view: UIView, withDelegate delegate: GestureHandlerDelegate, panScrollMode: PanScrollingMode, mapboxMap: MapboxMapProtocol) {
+        self.mapboxMap = mapboxMap
         super.init(for: view, withDelegate: delegate)
         let pan = UIPanGestureRecognizer(target: self,
                                          action: #selector(handlePan(_:)))
@@ -24,7 +27,7 @@ internal class PanGestureHandler: GestureHandler {
         case .began:
 
             let point = pan.location(in: pan.view)
-            delegate.panBegan(at: point)
+            mapboxMap.dragStart(for: point)
             delegate.gestureBegan(for: .pan)
 
         case .changed:

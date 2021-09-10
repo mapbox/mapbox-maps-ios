@@ -1,34 +1,40 @@
 import XCTest
 @testable import MapboxMaps
 
-//swiftlint:disable explicit_acl explicit_top_level_acl
-class PanGestureHandlerTests: XCTestCase {
+final class PanGestureHandlerTests: XCTestCase {
 
     var view: UIView!
     // swiftlint:disable weak_delegate
     var delegate: GestureHandlerDelegateMock!
+    var mapboxMap: MockMapboxMap!
 
     override func setUp() {
+        super.setUp()
         view = UIView()
         delegate = GestureHandlerDelegateMock()
+        mapboxMap = MockMapboxMap()
     }
 
     override func tearDown() {
-        view = nil
+        mapboxMap = nil
         delegate = nil
+        view = nil
+        super.tearDown()
     }
 
     func testSetup() {
         let panGestureHandler = PanGestureHandler(for: view,
                                                   withDelegate: delegate,
-                                                  panScrollMode: .horizontalAndVertical)
+                                                  panScrollMode: .horizontalAndVertical,
+                                                  mapboxMap: mapboxMap)
         XCTAssertTrue(panGestureHandler.view?.gestureRecognizers?.first is UIPanGestureRecognizer)
     }
 
     func testHandlePan() {
         let panGestureHandler = PanGestureHandler(for: view,
                                                   withDelegate: delegate,
-                                                  panScrollMode: .horizontal)
+                                                  panScrollMode: .horizontal,
+                                                  mapboxMap: mapboxMap)
         let panMock = UIPanGestureRecognizerMock()
         panGestureHandler.handlePan(panMock)
 
@@ -41,8 +47,9 @@ private class UIPanGestureRecognizerMock: UIPanGestureRecognizer {
     override var state: UIGestureRecognizer.State {
         get {
             return .changed // returning default of changed for test
-        } set {
-            self.state = newValue
+        }
+        set {
+            fatalError("unimplemented")
         }
     }
 }

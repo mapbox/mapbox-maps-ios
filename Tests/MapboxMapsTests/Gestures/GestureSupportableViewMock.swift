@@ -104,8 +104,6 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
         pitchEndedMethod = true
     }
 
-    func panBegan(at point: CGPoint) { }
-
     func panEnded(at endPoint: CGPoint, shouldDriftTo driftEndPoint: CGPoint) { }
 
     func initialPitch() -> CGFloat { return self.defaultPitch }

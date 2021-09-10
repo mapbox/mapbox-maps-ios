@@ -3,8 +3,6 @@ import UIKit
 /// The `GestureHandlerDelegate` protocol supports communication
 /// from the Gestures module to the `MapView`.
 internal protocol GestureHandlerDelegate: AnyObject {
-    func panBegan(at point: CGPoint)
-
     // View has been panned
     func panned(from startPoint: CGPoint, to: CGPoint)
 

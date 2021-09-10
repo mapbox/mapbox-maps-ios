@@ -21,4 +21,6 @@ final class MockMapboxMap: MapboxMapProtocol {
     func setCamera(to cameraOptions: CameraOptions) {
         setCameraStub.call(with: cameraOptions)
     }
+
+    func dragStart(for point: CGPoint) {}
 }

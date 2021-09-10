@@ -167,10 +167,6 @@ extension GestureManager: GestureContextProvider {
 }
 
 extension GestureManager: GestureHandlerDelegate {
-    internal func panBegan(at point: CGPoint) {
-        mapboxMap.dragStart(for: point)
-    }
-
     // MapView has been panned
     internal func panned(from startPoint: CGPoint, to endPoint: CGPoint) {
         let cameraOptions = mapboxMap.dragCameraOptions(from: startPoint, to: endPoint)

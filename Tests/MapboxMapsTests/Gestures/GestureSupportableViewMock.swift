@@ -14,7 +14,6 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
     var rotationChangedMethod: (wasCalled: Bool, newAngle: CGFloat?, anchor: CGPoint?) = (false, nil, nil)
     var rotationEndedMethod: (wasCalled: Bool, finalAngle: CGFloat?, anchor: CGPoint?) = (false, nil, nil)
 
-    var pitchTolerance = 45.0
     var pitchChangedMethod: (wasCalled: Bool, newPitch: CGFloat) = (false, 0.0)
     var pitchEndedMethod = false
 
@@ -70,6 +69,4 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
     func pitchEnded() {
         pitchEndedMethod = true
     }
-
-    func horizontalPitchTiltTolerance() -> Double { return pitchTolerance }
 }

@@ -33,7 +33,7 @@ internal class PitchGestureHandler: GestureHandler {
 
     @objc internal func handlePitchGesture(_ gesture: UIPanGestureRecognizer) {
 
-        let horizontalTiltTolerance = delegate.horizontalPitchTiltTolerance()
+        let horizontalTiltTolerance = 45.0
 
         if gesture.numberOfTouches != 2 {
             gesture.state = .ended

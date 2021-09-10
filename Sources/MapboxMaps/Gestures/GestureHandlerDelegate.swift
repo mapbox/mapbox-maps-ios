@@ -26,7 +26,4 @@ internal protocol GestureHandlerDelegate: AnyObject {
 
     // Pitch gesture ended
     func pitchEnded()
-
-    // The tilt tolerance associated with the pitch gesture
-    func horizontalPitchTiltTolerance() -> Double
 }

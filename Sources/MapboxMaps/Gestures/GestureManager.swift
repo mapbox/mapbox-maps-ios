@@ -215,7 +215,4 @@ extension GestureManager: GestureHandlerDelegate {
     internal func pitchChanged(newPitch: CGFloat) {
         mapboxMap.setCamera(to: CameraOptions(pitch: newPitch))
     }
-
-    internal func pitchEnded() {
-    }
 }

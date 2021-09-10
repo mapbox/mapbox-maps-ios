@@ -83,8 +83,6 @@ internal class PitchGestureHandler: GestureHandler {
                 let newPitch = initialPitch - ( verticalGestureTranslation / slowDown )
                 delegate.pitchChanged(newPitch: newPitch)
             }
-        } else if gesture.state == .ended || gesture.state == .cancelled {
-            delegate.pitchEnded()
         }
     }
 }

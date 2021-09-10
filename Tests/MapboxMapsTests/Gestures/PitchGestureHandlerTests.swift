@@ -66,15 +66,6 @@ final class PitchGestureHandlerTests: XCTestCase {
         XCTAssertFalse(delegate.pitchChangedMethod.wasCalled,
                        "pitch gesture isn't triggered if touch points exceed 45°")
     }
-
-    func testPitchEnded() {
-        let pitchHandler = PitchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
-        let pitch = UIPanGestureRecognizerMock()
-        pitch.mockState = .ended
-        pitchHandler.handlePitchGesture(pitch)
-
-        XCTAssertTrue(delegate.pitchEndedMethod)
-    }
 }
 
 // TODO: This would be better off as a UI test

@@ -23,7 +23,4 @@ internal protocol GestureHandlerDelegate: AnyObject {
 
     // Pitch gesture changed
     func pitchChanged(newPitch: CGFloat)
-
-    // Pitch gesture ended
-    func pitchEnded()
 }

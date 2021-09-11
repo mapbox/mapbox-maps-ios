@@ -72,22 +72,6 @@ final class RotateGestureHandlerTests: XCTestCase {
         XCTAssertTrue(delegate.rotationChangedMethod.wasCalled)
         XCTAssertTrue(delegate.rotationChangedMethod.newAngle! == 10.0)
     }
-
-    func testRotationEnded() {
-
-        let rotateGestureHandler = RotateGestureHandler(for: view,
-                                                        withDelegate: delegate,
-                                                        andContextProvider: gestureManagerMock,
-                                                        mapboxMap: mapboxMap,
-                                                        cameraAnimationsManager: cameraAnimationsManager)
-
-        let rotationGestureRecognizerMock = UIRotationGestureRecognizerMock()
-        rotationGestureRecognizerMock.mockState = .ended
-        rotateGestureHandler.handleRotate(rotationGestureRecognizerMock)
-
-        XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1)
-        XCTAssertTrue(delegate.rotationEndedMethod.wasCalled)
-    }
 }
 
 private class UIRotationGestureRecognizerMock: UIRotationGestureRecognizer {

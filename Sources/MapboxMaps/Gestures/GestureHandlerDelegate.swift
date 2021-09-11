@@ -8,7 +8,4 @@ internal protocol GestureHandlerDelegate: AnyObject {
 
     // Bearing should change with `changedAngle` at a given `anchor`
     func rotationChanged(with changedAngle: CGFloat, and anchor: CGPoint, and pinchScale: CGFloat)
-
-    // Rotation gesture is complete with a `finalAngle` and a given `anchor`
-    func rotationEnded(with finalAngle: CGFloat, and anchor: CGPoint, with pinchState: UIGestureRecognizer.State)
 }

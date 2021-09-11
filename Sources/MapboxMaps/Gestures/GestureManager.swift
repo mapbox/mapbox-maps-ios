@@ -190,10 +190,4 @@ extension GestureManager: GestureHandlerDelegate {
         mapboxMap.setCamera(
             to: CameraOptions(bearing: CLLocationDirection(changedAngleInDegrees)))
     }
-
-    internal func rotationEnded(with finalAngle: CGFloat, and anchor: CGPoint, with pinchState: UIGestureRecognizer.State) {
-        var finalAngleInDegrees = finalAngle * 180.0 / .pi * -1
-        finalAngleInDegrees = finalAngleInDegrees.truncatingRemainder(dividingBy: 360.0)
-        mapboxMap.setCamera(to: CameraOptions(bearing: CLLocationDirection(finalAngleInDegrees)))
-    }
 }

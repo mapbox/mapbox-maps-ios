@@ -7,15 +7,18 @@ final class PinchGestureHandlerTests: XCTestCase {
     // swiftlint:disable weak_delegate
     var delegate: GestureHandlerDelegateMock!
     var mapboxMap: MockMapboxMap!
+    var cameraAnimationsManager: MockCameraAnimationsManager!
 
     override func setUp() {
         super.setUp()
         view = UIView()
         delegate = GestureHandlerDelegateMock()
         mapboxMap = MockMapboxMap()
+        cameraAnimationsManager = MockCameraAnimationsManager()
     }
 
     override func tearDown() {
+        cameraAnimationsManager = nil
         mapboxMap = nil
         delegate = nil
         view = nil
@@ -23,23 +26,23 @@ final class PinchGestureHandlerTests: XCTestCase {
     }
 
     func testInit() {
-        let pinchGestureHandler = PinchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
+        let pinchGestureHandler = PinchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
         XCTAssertTrue(pinchGestureHandler.gestureRecognizer is UIPinchGestureRecognizer)
     }
 
     func testPinchBegan() {
-        let pinchGestureHandler = PinchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
+        let pinchGestureHandler = PinchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
         let pinchGestureRecognizerMock = UIPinchGestureRecognizerMock()
         pinchGestureHandler.handlePinch(pinchGestureRecognizerMock)
 
-        XCTAssertTrue(delegate.cancelTransitionsCalled,
-                      "Cancel Transitions was not called before commencing gesture processing")
+        XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1,
+                      "Cancel animations was not called before commencing gesture processing")
         XCTAssertTrue(delegate.gestureBeganMethod.wasCalled,
                       "Gesture Supportable view should be notified when gesture begins")
     }
 
     func testPinchChanged() {
-        let pinchGestureHandler = PinchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
+        let pinchGestureHandler = PinchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
         let pinchGestureRecognizer = UIPinchGestureRecognizerMock()
         let initialCameraState = CameraState.random()
         let initialPinchCenterPoint = CGPoint(x: 0.0, y: 0.0)
@@ -55,16 +58,16 @@ final class PinchGestureHandlerTests: XCTestCase {
         pinchGestureRecognizer.mockLocationInView = initialPinchCenterPoint
         pinchGestureRecognizer.mockNumberOfTouches = 2
         pinchGestureHandler.handlePinch(pinchGestureRecognizer)
-        // reset the delegate stub so we can verify
+        // reset cancelAnimationsStub so we can verify
         // that it's called when state is .changed
-        delegate.cancelTransitionsCalled = false
+        cameraAnimationsManager.cancelAnimationsStub.reset()
         pinchGestureRecognizer.mockState = .changed
         pinchGestureRecognizer.mockLocationInView = changedPinchCenterPoint
 
         pinchGestureHandler.handlePinch(pinchGestureRecognizer)
 
-        XCTAssertTrue(delegate.cancelTransitionsCalled,
-                      "Cancel Transitions was not called before commencing gesture processing")
+        XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1,
+                      "Cancel animations was not called before commencing gesture processing")
         XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 3)
         guard mapboxMap.setCameraStub.invocations.count == 3 else {
             return
@@ -100,15 +103,15 @@ final class PinchGestureHandlerTests: XCTestCase {
     }
 
     func testPinchEnded() {
-        let pinchGestureHandler = PinchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
+        let pinchGestureHandler = PinchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
 
         let pinchGestureRecognizerMock = UIPinchGestureRecognizerMock()
         pinchGestureRecognizerMock.mockState = .ended
 
         pinchGestureHandler.handlePinch(pinchGestureRecognizerMock)
 
-        XCTAssertTrue(delegate.cancelTransitionsCalled,
-                      "Cancel Transitions was not called before commencing gesture processing")
+        XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1,
+                      "Cancel animations was not called before commencing gesture processing")
     }
 }
 

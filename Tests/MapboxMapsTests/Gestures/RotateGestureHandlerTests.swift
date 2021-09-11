@@ -11,15 +11,19 @@ final class RotateGestureHandlerTests: XCTestCase {
 
     var mapboxMap: MockMapboxMap!
 
+    var cameraAnimationsManager: MockCameraAnimationsManager!
+
     override func setUp() {
         super.setUp()
         view = UIView()
         delegate = GestureHandlerDelegateMock()
         gestureManagerMock = GestureManagerMock()
         mapboxMap = MockMapboxMap()
+        cameraAnimationsManager = MockCameraAnimationsManager()
     }
 
     override func tearDown() {
+        cameraAnimationsManager = nil
         mapboxMap = nil
         gestureManagerMock = nil
         delegate = nil
@@ -31,7 +35,8 @@ final class RotateGestureHandlerTests: XCTestCase {
         let rotate = RotateGestureHandler(for: view,
                                           withDelegate: delegate,
                                           andContextProvider: GestureManagerMock(),
-                                          mapboxMap: mapboxMap)
+                                          mapboxMap: mapboxMap,
+                                          cameraAnimationsManager: cameraAnimationsManager)
         XCTAssert(rotate.gestureRecognizer is UIRotationGestureRecognizer)
     }
 
@@ -40,13 +45,14 @@ final class RotateGestureHandlerTests: XCTestCase {
         let rotateGestureHandler = RotateGestureHandler(for: view,
                                                         withDelegate: delegate,
                                                         andContextProvider: gestureManagerMock,
-                                                        mapboxMap: mapboxMap)
+                                                        mapboxMap: mapboxMap,
+                                                        cameraAnimationsManager: cameraAnimationsManager)
 
         let rotationGestureRecognizerMock = UIRotationGestureRecognizerMock()
         rotateGestureHandler.handleRotate(rotationGestureRecognizerMock)
 
-        XCTAssert(delegate.cancelTransitionsCalled)
-        XCTAssert(delegate.gestureBeganMethod.wasCalled)
+        XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1)
+        XCTAssertTrue(delegate.gestureBeganMethod.wasCalled)
     }
 
     func testRotationChanged() {
@@ -54,16 +60,17 @@ final class RotateGestureHandlerTests: XCTestCase {
         let rotateGestureHandler = RotateGestureHandler(for: view,
                                                         withDelegate: delegate,
                                                         andContextProvider: gestureManagerMock,
-                                                        mapboxMap: mapboxMap)
+                                                        mapboxMap: mapboxMap,
+                                                        cameraAnimationsManager: cameraAnimationsManager)
 
         let rotationGestureRecognizerMock = UIRotationGestureRecognizerMock()
         rotationGestureRecognizerMock.mockAngle = 10.0
         rotationGestureRecognizerMock.mockState = .changed
         rotateGestureHandler.handleRotate(rotationGestureRecognizerMock)
 
-        XCTAssert(delegate.cancelTransitionsCalled)
-        XCTAssert(delegate.rotationChangedMethod.wasCalled)
-        XCTAssert(delegate.rotationChangedMethod.newAngle! == 10.0)
+        XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1)
+        XCTAssertTrue(delegate.rotationChangedMethod.wasCalled)
+        XCTAssertTrue(delegate.rotationChangedMethod.newAngle! == 10.0)
     }
 
     func testRotationEnded() {
@@ -71,14 +78,15 @@ final class RotateGestureHandlerTests: XCTestCase {
         let rotateGestureHandler = RotateGestureHandler(for: view,
                                                         withDelegate: delegate,
                                                         andContextProvider: gestureManagerMock,
-                                                        mapboxMap: mapboxMap)
+                                                        mapboxMap: mapboxMap,
+                                                        cameraAnimationsManager: cameraAnimationsManager)
 
         let rotationGestureRecognizerMock = UIRotationGestureRecognizerMock()
         rotationGestureRecognizerMock.mockState = .ended
         rotateGestureHandler.handleRotate(rotationGestureRecognizerMock)
 
-        XCTAssert(delegate.cancelTransitionsCalled)
-        XCTAssert(delegate.rotationEndedMethod.wasCalled)
+        XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1)
+        XCTAssertTrue(delegate.rotationEndedMethod.wasCalled)
     }
 }
 

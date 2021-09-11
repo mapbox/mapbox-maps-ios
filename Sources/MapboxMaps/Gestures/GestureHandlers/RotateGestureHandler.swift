@@ -10,12 +10,15 @@ internal class RotateGestureHandler: GestureHandler {
     // TODO: Inject the deceleration rate as part of a configuration structure
     internal let decelerationRate = UIScrollView.DecelerationRate.normal.rawValue
     private let mapboxMap: MapboxMapProtocol
+    private let cameraAnimationsManager: CameraAnimationsManagerProtocol
 
     internal init(for view: UIView,
                   withDelegate delegate: GestureHandlerDelegate,
                   andContextProvider contextProvider: GestureContextProvider,
-                  mapboxMap: MapboxMapProtocol) {
+                  mapboxMap: MapboxMapProtocol,
+                  cameraAnimationsManager: CameraAnimationsManagerProtocol) {
         self.mapboxMap = mapboxMap
+        self.cameraAnimationsManager = cameraAnimationsManager
         super.init(for: view, withDelegate: delegate)
 
         let rotate = UIRotationGestureRecognizer(target: self, action: #selector(handleRotate(_:)))
@@ -26,7 +29,7 @@ internal class RotateGestureHandler: GestureHandler {
 
     @objc internal func handleRotate(_ rotate: UIRotationGestureRecognizer) {
 
-        delegate.cancelGestureTransitions()
+        cameraAnimationsManager.cancelAnimations()
         let anchor = rotate.location(in: view)
 
         // TODO: Handle simultaneous zoom & rotate gestures

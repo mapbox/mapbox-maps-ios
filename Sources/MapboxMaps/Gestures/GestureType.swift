@@ -38,9 +38,9 @@ public enum GestureType: Hashable {
                                      cameraAnimationsManager: cameraAnimationsManager,
                                      mapboxMap: mapboxMap)
         case .pinch:
-            return PinchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
+            return PinchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
         case .rotate:
-            return RotateGestureHandler(for: view, withDelegate: delegate, andContextProvider: contextProvider, mapboxMap: mapboxMap)
+            return RotateGestureHandler(for: view, withDelegate: delegate, andContextProvider: contextProvider, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
         case .quickZoom:
             return QuickZoomGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
         case .pitch:

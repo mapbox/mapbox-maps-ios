@@ -18,10 +18,12 @@ internal class PinchGestureHandler: GestureHandler {
     internal let minZoom: CGFloat = 0.0
 
     private let mapboxMap: MapboxMapProtocol
+    private let cameraAnimationsManager: CameraAnimationsManagerProtocol
 
     // Initialize the handler which creates the panGestureRecognizer and adds to the view
-    internal init(for view: UIView, withDelegate delegate: GestureHandlerDelegate, mapboxMap: MapboxMapProtocol) {
+    internal init(for view: UIView, withDelegate delegate: GestureHandlerDelegate, mapboxMap: MapboxMapProtocol, cameraAnimationsManager: CameraAnimationsManagerProtocol) {
         self.mapboxMap = mapboxMap
+        self.cameraAnimationsManager = cameraAnimationsManager
         super.init(for: view, withDelegate: delegate)
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
         view.addGestureRecognizer(pinch)
@@ -30,7 +32,7 @@ internal class PinchGestureHandler: GestureHandler {
 
     @objc internal func handlePinch(_ pinchGestureRecognizer: UIPinchGestureRecognizer) {
 
-        delegate.cancelGestureTransitions()
+        cameraAnimationsManager.cancelAnimations()
         let pinchCenterPoint = pinchGestureRecognizer.location(in: view)
 
         if pinchGestureRecognizer.state == .began {

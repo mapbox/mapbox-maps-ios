@@ -167,10 +167,6 @@ extension GestureManager: GestureContextProvider {
 }
 
 extension GestureManager: GestureHandlerDelegate {
-    internal func cancelGestureTransitions() {
-        cameraAnimationsManager.cancelAnimations()
-    }
-
     internal func gestureBegan(for gestureType: GestureType) {
         cameraAnimationsManager.cancelAnimations()
         delegate?.gestureBegan(for: gestureType)

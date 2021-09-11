@@ -7,16 +7,8 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
 
     var gestureBeganMethod: (wasCalled: Bool, type: GestureType?) = (false, nil)
 
-    var rotationChangedMethod: (wasCalled: Bool, newAngle: CGFloat?, anchor: CGPoint?) = (false, nil, nil)
-
     func gestureBegan(for gestureType: GestureType) {
         gestureBeganMethod.wasCalled = true
         gestureBeganMethod.type = gestureType
-    }
-
-    func rotationChanged(with changedAngle: CGFloat, and anchor: CGPoint, and pinchScale: CGFloat) {
-        rotationChangedMethod.wasCalled = true
-        rotationChangedMethod.newAngle = changedAngle
-        rotationChangedMethod.anchor = anchor
     }
 }

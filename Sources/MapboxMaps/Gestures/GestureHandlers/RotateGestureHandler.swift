@@ -27,17 +27,15 @@ internal class RotateGestureHandler: GestureHandler {
 
     @objc internal func handleRotate(_ rotate: UIRotationGestureRecognizer) {
         cameraAnimationsManager.cancelAnimations()
-        let anchor = rotate.location(in: view)
         if rotate.state == .began {
-
             delegate.gestureBegan(for: .rotate)
             initialAngle = CGFloat((mapboxMap.cameraState.bearing * .pi) / 180.0 * -1)
         } else if rotate.state == .changed {
-
             let changedAngle = initialAngle + rotate.rotation
-            delegate.rotationChanged(with: changedAngle,
-                                     and: anchor,
-                                     and: contextProvider?.fetchPinchScale() ?? 0.0)
+            var changedAngleInDegrees = changedAngle * 180.0 / .pi * -1
+            changedAngleInDegrees = changedAngleInDegrees.truncatingRemainder(dividingBy: 360.0)
+            mapboxMap.setCamera(
+                to: CameraOptions(bearing: CLLocationDirection(changedAngleInDegrees)))
         }
     }
 }

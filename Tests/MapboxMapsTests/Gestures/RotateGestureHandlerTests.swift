@@ -56,28 +56,35 @@ final class RotateGestureHandlerTests: XCTestCase {
     }
 
     func testRotationChanged() {
-
         let rotateGestureHandler = RotateGestureHandler(for: view,
                                                         withDelegate: delegate,
                                                         andContextProvider: gestureManagerMock,
                                                         mapboxMap: mapboxMap,
                                                         cameraAnimationsManager: cameraAnimationsManager)
 
-        let rotationGestureRecognizerMock = UIRotationGestureRecognizerMock()
-        rotationGestureRecognizerMock.mockAngle = 10.0
-        rotationGestureRecognizerMock.mockState = .changed
-        rotateGestureHandler.handleRotate(rotationGestureRecognizerMock)
+        // Capture the initial rotation
+        mapboxMap.cameraState.bearing = .random(in: 0..<360)
+        let rotationGestureRecognizer = UIRotationGestureRecognizerMock()
+        rotationGestureRecognizer.mockState = .began
+        rotateGestureHandler.handleRotate(rotationGestureRecognizer)
+        cameraAnimationsManager.cancelAnimationsStub.reset()
+
+        // Execute the change
+        rotationGestureRecognizer.mockState = .changed
+        rotationGestureRecognizer.mockRotation = -.pi / 2
+        rotateGestureHandler.handleRotate(rotationGestureRecognizer)
 
         XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1)
-        XCTAssertTrue(delegate.rotationChangedMethod.wasCalled)
-        XCTAssertTrue(delegate.rotationChangedMethod.newAngle! == 10.0)
+        XCTAssertEqual(
+            mapboxMap.setCameraStub.parameters,
+            [CameraOptions(bearing: (mapboxMap.cameraState.bearing + 90).truncatingRemainder(dividingBy: 360))])
     }
 }
 
 private class UIRotationGestureRecognizerMock: UIRotationGestureRecognizer {
 
     var mockState: UIGestureRecognizer.State = .began
-    var mockAngle: CGFloat = 2.0
+    var mockRotation: CGFloat = 2.0
 
     override var state: UIGestureRecognizer.State {
         get {
@@ -90,7 +97,7 @@ private class UIRotationGestureRecognizerMock: UIRotationGestureRecognizer {
 
     override var rotation: CGFloat {
         get {
-            return mockAngle
+            return mockRotation
         }
         set {
             fatalError("unimplemented")

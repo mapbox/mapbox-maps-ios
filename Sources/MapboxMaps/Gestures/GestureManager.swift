@@ -171,23 +171,4 @@ extension GestureManager: GestureHandlerDelegate {
         cameraAnimationsManager.cancelAnimations()
         delegate?.gestureBegan(for: gestureType)
     }
-
-    internal func isRotationAllowed() -> Bool {
-        let minZoom = CGFloat(mapboxMap.cameraBounds.minZoom)
-        return mapboxMap.cameraState.zoom >= minZoom
-    }
-
-    internal func rotationChanged(with changedAngle: CGFloat, and anchor: CGPoint, and pinchScale: CGFloat) {
-        var changedAngleInDegrees = changedAngle * 180.0 / .pi * -1
-        changedAngleInDegrees = changedAngleInDegrees.truncatingRemainder(dividingBy: 360.0)
-
-        // Constraining `changedAngleInDegrees` to -30.0 to +30.0 degrees
-        if isRotationAllowed() == false && abs(pinchScale) < 10 {
-            changedAngleInDegrees = changedAngleInDegrees < -30.0 ? -30.0 : changedAngleInDegrees
-            changedAngleInDegrees = changedAngleInDegrees > 30.0 ? 30.0 : changedAngleInDegrees
-        }
-
-        mapboxMap.setCamera(
-            to: CameraOptions(bearing: CLLocationDirection(changedAngleInDegrees)))
-    }
 }

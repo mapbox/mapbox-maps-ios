@@ -2,6 +2,19 @@
 
 final class MockMapboxMap: MapboxMapProtocol {
 
+    var cameraBounds = CameraBounds(
+        bounds: CoordinateBounds(
+            southwest: CLLocationCoordinate2D(
+                latitude: -90,
+                longitude: -180),
+            northeast: CLLocationCoordinate2D(
+                latitude: 90,
+                longitude: 180)),
+        maxZoom: 20,
+        minZoom: 0,
+        maxPitch: 50,
+        minPitch: 0)
+
     var cameraState = CameraState(
         MapboxCoreMaps.CameraState(
             center: CLLocationCoordinate2D(

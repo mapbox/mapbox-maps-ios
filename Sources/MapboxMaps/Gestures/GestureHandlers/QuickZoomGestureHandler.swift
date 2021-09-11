@@ -5,7 +5,7 @@ import UIKit
 /// a tap gesture followed by a long press gesture.
 internal class QuickZoomGestureHandler: GestureHandler {
     private var quickZoomStart: CGFloat = 0.0
-    private var scale: CGFloat = 0.0
+    private var initialZoom: CGFloat = 0.0
     private let mapboxMap: MapboxMapProtocol
 
     init(for view: UIView, withDelegate delegate: GestureHandlerDelegate, mapboxMap: MapboxMapProtocol) {
@@ -30,17 +30,22 @@ internal class QuickZoomGestureHandler: GestureHandler {
         if gestureRecognizer.state == .began {
             delegate.gestureBegan(for: .quickZoom)
             quickZoomStart = touchPoint.y
-            scale = mapboxMap.cameraState.zoom
+            initialZoom = mapboxMap.cameraState.zoom
         } else if gestureRecognizer.state == .changed {
             let distance = touchPoint.y - quickZoomStart
             let bounds = view.bounds
             let anchor = CGPoint(x: bounds.midX, y: bounds.midY)
 
-            var newScale = scale + distance / 75
+            var newZoom = initialZoom + distance / 75
 
-            if newScale.isNaN { newScale = 0 }
+            if newZoom.isNaN {
+                newZoom = 0
+            }
 
-            delegate.quickZoomChanged(with: newScale, and: anchor)
+            let minZoom = CGFloat(mapboxMap.cameraBounds.minZoom)
+            let maxZoom = CGFloat(mapboxMap.cameraBounds.maxZoom)
+            newZoom = newZoom.clamped(to: minZoom...maxZoom)
+            mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: newZoom))
         }
     }
 }

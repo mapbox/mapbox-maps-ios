@@ -15,13 +15,6 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
         gestureBeganMethod.type = gestureType
     }
 
-    struct PinchChangedParameters {
-        var zoomIncrement: CGFloat
-        var targetAnchor: CGPoint
-        var initialAnchor: CGPoint
-        var initialCameraState: CameraState
-    }
-
     func rotationChanged(with changedAngle: CGFloat, and anchor: CGPoint, and pinchScale: CGFloat) {
         rotationChangedMethod.wasCalled = true
         rotationChangedMethod.newAngle = changedAngle
@@ -32,16 +25,5 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
         rotationEndedMethod.wasCalled = true
         rotationEndedMethod.finalAngle = finalAngle
         rotationEndedMethod.anchor = anchor
-    }
-
-    struct QuickZoomChangedParameters {
-        var newScale: CGFloat
-        var anchor: CGPoint
-    }
-    let quickZoomChangedStub = Stub<QuickZoomChangedParameters, Void>()
-    func quickZoomChanged(with newScale: CGFloat, and anchor: CGPoint) {
-        quickZoomChangedStub.call(
-            with: QuickZoomChangedParameters(newScale: newScale,
-                                             anchor: anchor))
     }
 }

@@ -45,7 +45,7 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
     }
 
     func testWhenGestureValueChanges_ProvidesTheNewZoomScaleAndAnchorToTheDelegate() {
-        let initialZoom = CGFloat.random(in: 0...24.5)
+        let initialZoom = CGFloat.random(in: 0...15)
         let mockGestureRecognizer = MockLongPressGestureRecognizer()
 
         // Send the began event
@@ -59,10 +59,11 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
         mockGestureRecognizer.locationStub.defaultReturnValue.y = 175
         quickZoomHandler.handleQuickZoom(mockGestureRecognizer)
 
-        XCTAssertEqual(delegate.quickZoomChangedStub.invocations.count, 1)
-        XCTAssertEqual(delegate.quickZoomChangedStub.parameters.first?.newScale, initialZoom + 1)
-        XCTAssertEqual(delegate.quickZoomChangedStub.parameters.first?.anchor,
-                       CGPoint(x: view.bounds.midX, y: view.bounds.midY))
+        XCTAssertEqual(
+            mapboxMap.setCameraStub.parameters,
+            [CameraOptions(
+                anchor: CGPoint(x: view.bounds.midX, y: view.bounds.midY),
+                zoom: initialZoom + 1)])
     }
 }
 

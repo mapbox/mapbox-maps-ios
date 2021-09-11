@@ -5,6 +5,7 @@ import UIKit
 @_implementationOnly import MapboxCoreMaps_Private
 
 internal protocol MapboxMapProtocol: AnyObject {
+    var cameraBounds: CameraBounds { get }
     var cameraState: CameraState { get }
     var anchor: CGPoint { get }
     func setCamera(to cameraOptions: CameraOptions)

@@ -11,7 +11,4 @@ internal protocol GestureHandlerDelegate: AnyObject {
 
     // Rotation gesture is complete with a `finalAngle` and a given `anchor`
     func rotationEnded(with finalAngle: CGFloat, and anchor: CGPoint, with pinchState: UIGestureRecognizer.State)
-
-    // Zoom changes based on new location of gesture
-    func quickZoomChanged(with newScale: CGFloat, and anchor: CGPoint)
 }

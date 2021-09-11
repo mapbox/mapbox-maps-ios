@@ -172,13 +172,6 @@ extension GestureManager: GestureHandlerDelegate {
         delegate?.gestureBegan(for: gestureType)
     }
 
-    internal func quickZoomChanged(with newScale: CGFloat, and anchor: CGPoint) {
-        let minZoom = CGFloat(mapboxMap.cameraBounds.minZoom)
-        let maxZoom = CGFloat(mapboxMap.cameraBounds.maxZoom)
-        let zoom = newScale.clamped(to: minZoom...maxZoom)
-        mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: zoom))
-    }
-
     internal func isRotationAllowed() -> Bool {
         let minZoom = CGFloat(mapboxMap.cameraBounds.minZoom)
         return mapboxMap.cameraState.zoom >= minZoom

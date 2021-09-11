@@ -9,10 +9,13 @@ internal class RotateGestureHandler: GestureHandler {
 
     // TODO: Inject the deceleration rate as part of a configuration structure
     internal let decelerationRate = UIScrollView.DecelerationRate.normal.rawValue
+    private let mapboxMap: MapboxMapProtocol
 
     internal init(for view: UIView,
                   withDelegate delegate: GestureHandlerDelegate,
-                  andContextProvider contextProvider: GestureContextProvider) {
+                  andContextProvider contextProvider: GestureContextProvider,
+                  mapboxMap: MapboxMapProtocol) {
+        self.mapboxMap = mapboxMap
         super.init(for: view, withDelegate: delegate)
 
         let rotate = UIRotationGestureRecognizer(target: self, action: #selector(handleRotate(_:)))
@@ -30,8 +33,7 @@ internal class RotateGestureHandler: GestureHandler {
         if rotate.state == .began {
 
             delegate.gestureBegan(for: .rotate)
-            initialAngle = delegate.rotationStartAngle()
-
+            initialAngle = CGFloat((mapboxMap.cameraState.bearing * .pi) / 180.0 * -1)
         } else if rotate.state == .changed {
 
             let changedAngle = initialAngle + rotate.rotation

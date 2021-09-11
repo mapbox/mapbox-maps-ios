@@ -8,7 +8,6 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
     var cancelTransitionsCalled = false
     var gestureBeganMethod: (wasCalled: Bool, type: GestureType?) = (false, nil)
 
-    var rotationStartCalled = false
     var rotationChangedMethod: (wasCalled: Bool, newAngle: CGFloat?, anchor: CGPoint?) = (false, nil, nil)
     var rotationEndedMethod: (wasCalled: Bool, finalAngle: CGFloat?, anchor: CGPoint?) = (false, nil, nil)
 
@@ -26,11 +25,6 @@ class GestureHandlerDelegateMock: GestureHandlerDelegate {
         var targetAnchor: CGPoint
         var initialAnchor: CGPoint
         var initialCameraState: CameraState
-    }
-
-    func rotationStartAngle() -> CGFloat {
-        rotationStartCalled = true
-        return -1.0
     }
 
     func rotationChanged(with changedAngle: CGFloat, and anchor: CGPoint, and pinchScale: CGFloat) {

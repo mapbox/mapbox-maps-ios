@@ -1,8 +1,7 @@
 import XCTest
 @testable import MapboxMaps
 
-//swiftlint:disable explicit_top_level_acl explicit_acl
-class RotateGestureHandlerTests: XCTestCase {
+final class RotateGestureHandlerTests: XCTestCase {
 
     var view: UIView!
     // swiftlint:disable weak_delegate
@@ -10,22 +9,29 @@ class RotateGestureHandlerTests: XCTestCase {
 
     fileprivate var gestureManagerMock: GestureManagerMock!
 
+    var mapboxMap: MockMapboxMap!
+
     override func setUp() {
+        super.setUp()
         view = UIView()
         delegate = GestureHandlerDelegateMock()
         gestureManagerMock = GestureManagerMock()
+        mapboxMap = MockMapboxMap()
     }
 
     override func tearDown() {
-        view = nil
-        delegate = nil
+        mapboxMap = nil
         gestureManagerMock = nil
+        delegate = nil
+        view = nil
+        super.setUp()
     }
 
     func testSetup() {
         let rotate = RotateGestureHandler(for: view,
                                           withDelegate: delegate,
-                                          andContextProvider: GestureManagerMock())
+                                          andContextProvider: GestureManagerMock(),
+                                          mapboxMap: mapboxMap)
         XCTAssert(rotate.gestureRecognizer is UIRotationGestureRecognizer)
     }
 
@@ -33,21 +39,22 @@ class RotateGestureHandlerTests: XCTestCase {
 
         let rotateGestureHandler = RotateGestureHandler(for: view,
                                                         withDelegate: delegate,
-                                                        andContextProvider: gestureManagerMock)
+                                                        andContextProvider: gestureManagerMock,
+                                                        mapboxMap: mapboxMap)
 
         let rotationGestureRecognizerMock = UIRotationGestureRecognizerMock()
         rotateGestureHandler.handleRotate(rotationGestureRecognizerMock)
 
         XCTAssert(delegate.cancelTransitionsCalled)
         XCTAssert(delegate.gestureBeganMethod.wasCalled)
-        XCTAssert(delegate.rotationStartCalled)
     }
 
     func testRotationChanged() {
 
         let rotateGestureHandler = RotateGestureHandler(for: view,
                                                         withDelegate: delegate,
-                                                        andContextProvider: gestureManagerMock)
+                                                        andContextProvider: gestureManagerMock,
+                                                        mapboxMap: mapboxMap)
 
         let rotationGestureRecognizerMock = UIRotationGestureRecognizerMock()
         rotationGestureRecognizerMock.mockAngle = 10.0
@@ -63,7 +70,8 @@ class RotateGestureHandlerTests: XCTestCase {
 
         let rotateGestureHandler = RotateGestureHandler(for: view,
                                                         withDelegate: delegate,
-                                                        andContextProvider: gestureManagerMock)
+                                                        andContextProvider: gestureManagerMock,
+                                                        mapboxMap: mapboxMap)
 
         let rotationGestureRecognizerMock = UIRotationGestureRecognizerMock()
         rotationGestureRecognizerMock.mockState = .ended
@@ -81,17 +89,19 @@ private class UIRotationGestureRecognizerMock: UIRotationGestureRecognizer {
 
     override var state: UIGestureRecognizer.State {
         get {
-            return self.mockState
-        } set {
-            self.state = newValue
+            return mockState
+        }
+        set {
+            fatalError("unimplemented")
         }
     }
 
     override var rotation: CGFloat {
         get {
             return mockAngle
-        } set {
-            self.rotation = newValue
+        }
+        set {
+            fatalError("unimplemented")
         }
     }
 

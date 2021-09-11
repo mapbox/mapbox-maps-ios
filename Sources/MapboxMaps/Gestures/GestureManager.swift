@@ -188,10 +188,6 @@ extension GestureManager: GestureHandlerDelegate {
         return mapboxMap.cameraState.zoom >= minZoom
     }
 
-    internal func rotationStartAngle() -> CGFloat {
-        return CGFloat((mapboxMap.cameraState.bearing * .pi) / 180.0 * -1)
-    }
-
     internal func rotationChanged(with changedAngle: CGFloat, and anchor: CGPoint, and pinchScale: CGFloat) {
         var changedAngleInDegrees = changedAngle * 180.0 / .pi * -1
         changedAngleInDegrees = changedAngleInDegrees.truncatingRemainder(dividingBy: 360.0)

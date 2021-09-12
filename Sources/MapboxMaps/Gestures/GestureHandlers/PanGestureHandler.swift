@@ -11,10 +11,10 @@ internal class PanGestureHandler: GestureHandler {
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol
 
     // Initialize the handler which creates the panGestureRecognizer and adds to the view
-    internal init(for view: UIView, withDelegate delegate: GestureHandlerDelegate, panScrollMode: PanScrollingMode, mapboxMap: MapboxMapProtocol, cameraAnimationsManager: CameraAnimationsManagerProtocol) {
+    internal init(for view: UIView, panScrollMode: PanScrollingMode, mapboxMap: MapboxMapProtocol, cameraAnimationsManager: CameraAnimationsManagerProtocol) {
         self.mapboxMap = mapboxMap
         self.cameraAnimationsManager = cameraAnimationsManager
-        super.init(for: view, withDelegate: delegate)
+        super.init(for: view)
         let pan = UIPanGestureRecognizer(target: self,
                                          action: #selector(handlePan(_:)))
         pan.maximumNumberOfTouches = 1
@@ -30,7 +30,8 @@ internal class PanGestureHandler: GestureHandler {
 
             let point = pan.location(in: pan.view)
             mapboxMap.dragStart(for: point)
-            delegate.gestureBegan(for: .pan)
+            cameraAnimationsManager.cancelAnimations()
+            delegate?.gestureBegan(for: .pan)
 
         case .changed:
             let start = pan.location(in: pan.view)

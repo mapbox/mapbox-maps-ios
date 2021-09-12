@@ -19,10 +19,12 @@ internal class PitchGestureHandler: GestureHandler {
     internal var initialPitch = CGFloat.zero
     internal var dragGestureTranslation: CGPoint!
     private let mapboxMap: MapboxMapProtocol
+    private let cameraAnimationsManager: CameraAnimationsManagerProtocol
 
-    internal init(for view: UIView, withDelegate delegate: GestureHandlerDelegate, mapboxMap: MapboxMapProtocol) {
+    internal init(for view: UIView, mapboxMap: MapboxMapProtocol, cameraAnimationsManager: CameraAnimationsManagerProtocol) {
         self.mapboxMap = mapboxMap
-        super.init(for: view, withDelegate: delegate)
+        self.cameraAnimationsManager = cameraAnimationsManager
+        super.init(for: view)
 
         let pitchGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePitchGesture(_:)))
         pitchGesture.minimumNumberOfTouches = 2
@@ -53,7 +55,8 @@ internal class PitchGestureHandler: GestureHandler {
             */
             dragGestureTranslation = CGPoint(x: gestureTranslation.x, y: gestureTranslation.y-1)
             initialPitch = mapboxMap.cameraState.pitch
-            delegate.gestureBegan(for: .pitch)
+            cameraAnimationsManager.cancelAnimations()
+            delegate?.gestureBegan(for: .pitch)
 
         } else if gesture.state == .changed {
             let leftTouchPoint = gesture.location(ofTouch: 0, in: gesture.view)

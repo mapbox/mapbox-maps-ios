@@ -63,7 +63,11 @@ public final class GestureManager {
     private let mapboxMap: MapboxMap
 
     /// Set this delegate to be called back if a gesture begins
-    public weak var delegate: GestureManagerDelegate?
+    public weak var delegate: GestureManagerDelegate? {
+        didSet {
+            gestureHandlers.forEach { $0.value.delegate = delegate }
+        }
+    }
 
     /// Internal delegate for gesture recognizers
     // swiftlint:disable:next weak_delegate
@@ -89,9 +93,9 @@ public final class GestureManager {
                 newGestureHandlerMap[gestureType] = gestureType.makeHandler(for: view,
                                                                             cameraAnimationsManager: cameraAnimationsManager,
                                                                             mapboxMap: mapboxMap,
-                                                                            delegate: self,
                                                                             contextProvider: self,
                                                                             gestureOptions: options)
+                newGestureHandlerMap[gestureType]?.delegate = delegate
             } else {
                 newGestureHandlerMap[gestureType] = gestureHandlers[gestureType]
             }
@@ -163,12 +167,5 @@ extension GestureManager: GestureContextProvider {
     internal func requireGestureToFail(allowedGesture: GestureHandler, failableGesture: GestureHandler) {
         guard let failableGesture = failableGesture.gestureRecognizer else { return }
         allowedGesture.gestureRecognizer?.require(toFail: failableGesture)
-    }
-}
-
-extension GestureManager: GestureHandlerDelegate {
-    internal func gestureBegan(for gestureType: GestureType) {
-        cameraAnimationsManager.cancelAnimations()
-        delegate?.gestureBegan(for: gestureType)
     }
 }

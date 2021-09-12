@@ -4,8 +4,6 @@ import XCTest
 final class RotateGestureHandlerTests: XCTestCase {
 
     var view: UIView!
-    // swiftlint:disable weak_delegate
-    var delegate: GestureHandlerDelegateMock!
 
     fileprivate var gestureManagerMock: GestureManagerMock!
 
@@ -13,27 +11,28 @@ final class RotateGestureHandlerTests: XCTestCase {
 
     var cameraAnimationsManager: MockCameraAnimationsManager!
 
+    var delegate: MockGestureManagerDelegate!
+
     override func setUp() {
         super.setUp()
         view = UIView()
-        delegate = GestureHandlerDelegateMock()
         gestureManagerMock = GestureManagerMock()
         mapboxMap = MockMapboxMap()
         cameraAnimationsManager = MockCameraAnimationsManager()
+        delegate = MockGestureManagerDelegate()
     }
 
     override func tearDown() {
+        delegate = nil
         cameraAnimationsManager = nil
         mapboxMap = nil
         gestureManagerMock = nil
-        delegate = nil
         view = nil
         super.setUp()
     }
 
     func testSetup() {
         let rotate = RotateGestureHandler(for: view,
-                                          withDelegate: delegate,
                                           andContextProvider: GestureManagerMock(),
                                           mapboxMap: mapboxMap,
                                           cameraAnimationsManager: cameraAnimationsManager)
@@ -41,23 +40,21 @@ final class RotateGestureHandlerTests: XCTestCase {
     }
 
     func testRotationBegan() {
-
         let rotateGestureHandler = RotateGestureHandler(for: view,
-                                                        withDelegate: delegate,
                                                         andContextProvider: gestureManagerMock,
                                                         mapboxMap: mapboxMap,
                                                         cameraAnimationsManager: cameraAnimationsManager)
+        rotateGestureHandler.delegate = delegate
 
         let rotationGestureRecognizerMock = UIRotationGestureRecognizerMock()
         rotateGestureHandler.handleRotate(rotationGestureRecognizerMock)
 
         XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1)
-        XCTAssertTrue(delegate.gestureBeganMethod.wasCalled)
+        XCTAssertEqual(delegate.gestureBeganStub.parameters, [.rotate])
     }
 
-    func testRotationChanged() {
+    func testRotationChanged() throws {
         let rotateGestureHandler = RotateGestureHandler(for: view,
-                                                        withDelegate: delegate,
                                                         andContextProvider: gestureManagerMock,
                                                         mapboxMap: mapboxMap,
                                                         cameraAnimationsManager: cameraAnimationsManager)
@@ -75,9 +72,17 @@ final class RotateGestureHandlerTests: XCTestCase {
         rotateGestureHandler.handleRotate(rotationGestureRecognizer)
 
         XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1)
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 1)
+        let params = try XCTUnwrap(mapboxMap.setCameraStub.parameters.first)
+        let bearing = try XCTUnwrap(params.bearing)
         XCTAssertEqual(
-            mapboxMap.setCameraStub.parameters,
-            [CameraOptions(bearing: (mapboxMap.cameraState.bearing + 90).truncatingRemainder(dividingBy: 360))])
+            bearing,
+            (mapboxMap.cameraState.bearing + 90).truncatingRemainder(dividingBy: 360), accuracy: 1e-13)
+        XCTAssertNil(params.center)
+        XCTAssertNil(params.zoom)
+        XCTAssertNil(params.pitch)
+        XCTAssertNil(params.anchor)
+        XCTAssertNil(params.padding)
     }
 }
 

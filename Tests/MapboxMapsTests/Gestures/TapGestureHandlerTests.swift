@@ -4,15 +4,12 @@ import XCTest
 final class TapGestureHandlerTests: XCTestCase {
 
     var view: UIView!
-    // swiftlint:disable weak_delegate
-    var delegate: GestureHandlerDelegateMock!
     var cameraAnimationsManager: MockCameraAnimationsManager!
     var mapboxMap: MockMapboxMap!
 
     override func setUp() {
         super.setUp()
         view = UIView()
-        delegate = GestureHandlerDelegateMock()
         cameraAnimationsManager = MockCameraAnimationsManager()
         mapboxMap = MockMapboxMap()
     }
@@ -20,7 +17,6 @@ final class TapGestureHandlerTests: XCTestCase {
     override func tearDown() {
         mapboxMap = nil
         cameraAnimationsManager = nil
-        delegate = nil
         view = nil
         super.tearDown()
     }
@@ -29,7 +25,6 @@ final class TapGestureHandlerTests: XCTestCase {
         let tapGestureHandler = TapGestureHandler(for: view,
                                                   numberOfTapsRequired: 1,
                                                   numberOfTouchesRequired: 1,
-                                                  withDelegate: delegate,
                                                   cameraAnimationsManager: cameraAnimationsManager,
                                                   mapboxMap: mapboxMap)
 
@@ -47,7 +42,6 @@ final class TapGestureHandlerTests: XCTestCase {
         let tapGestureHandler = TapGestureHandler(for: view,
                                                   numberOfTapsRequired: 2,
                                                   numberOfTouchesRequired: 1,
-                                                  withDelegate: delegate,
                                                   cameraAnimationsManager: cameraAnimationsManager,
                                                   mapboxMap: mapboxMap)
 
@@ -65,7 +59,6 @@ final class TapGestureHandlerTests: XCTestCase {
         let tapGestureHandler = TapGestureHandler(for: view,
                                                   numberOfTapsRequired: 2,
                                                   numberOfTouchesRequired: 2,
-                                                  withDelegate: delegate,
                                                   cameraAnimationsManager: cameraAnimationsManager,
                                                   mapboxMap: mapboxMap)
 
@@ -83,7 +76,6 @@ final class TapGestureHandlerTests: XCTestCase {
         let tapGestureHandler = TapGestureHandler(for: view,
                                                   numberOfTapsRequired: 2,
                                                   numberOfTouchesRequired: 1,
-                                                  withDelegate: delegate,
                                                   cameraAnimationsManager: cameraAnimationsManager,
                                                   mapboxMap: mapboxMap)
 
@@ -105,7 +97,6 @@ final class TapGestureHandlerTests: XCTestCase {
         let tapGestureHandler = TapGestureHandler(for: view,
                                                   numberOfTapsRequired: 2,
                                                   numberOfTouchesRequired: 2,
-                                                  withDelegate: delegate,
                                                   cameraAnimationsManager: cameraAnimationsManager,
                                                   mapboxMap: mapboxMap)
 

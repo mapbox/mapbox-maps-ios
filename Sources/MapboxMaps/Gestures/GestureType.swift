@@ -24,27 +24,25 @@ public enum GestureType: Hashable {
     func makeHandler(for view: UIView,
                      cameraAnimationsManager: CameraAnimationsManagerProtocol,
                      mapboxMap: MapboxMapProtocol,
-                     delegate: GestureHandlerDelegate,
                      contextProvider: GestureContextProvider,
                      gestureOptions: GestureOptions) -> GestureHandler {
         switch self {
         case .pan:
-            return PanGestureHandler(for: view, withDelegate: delegate, panScrollMode: gestureOptions.scrollingMode, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
+            return PanGestureHandler(for: view, panScrollMode: gestureOptions.scrollingMode, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
         case .tap(let numberOfTaps, let numberOfTouches):
             return TapGestureHandler(for: view,
                                      numberOfTapsRequired: numberOfTaps,
                                      numberOfTouchesRequired: numberOfTouches,
-                                     withDelegate: delegate,
                                      cameraAnimationsManager: cameraAnimationsManager,
                                      mapboxMap: mapboxMap)
         case .pinch:
-            return PinchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
+            return PinchGestureHandler(for: view, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
         case .rotate:
-            return RotateGestureHandler(for: view, withDelegate: delegate, andContextProvider: contextProvider, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
+            return RotateGestureHandler(for: view, andContextProvider: contextProvider, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
         case .quickZoom:
-            return QuickZoomGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
+            return QuickZoomGestureHandler(for: view, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
         case .pitch:
-            return PitchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
+            return PitchGestureHandler(for: view, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
         }
     }
 

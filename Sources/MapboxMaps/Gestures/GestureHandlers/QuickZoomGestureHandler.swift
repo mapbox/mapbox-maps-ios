@@ -7,10 +7,12 @@ internal class QuickZoomGestureHandler: GestureHandler {
     private var quickZoomStart: CGFloat = 0.0
     private var initialZoom: CGFloat = 0.0
     private let mapboxMap: MapboxMapProtocol
+    private let cameraAnimationsManager: CameraAnimationsManagerProtocol
 
-    init(for view: UIView, withDelegate delegate: GestureHandlerDelegate, mapboxMap: MapboxMapProtocol) {
+    init(for view: UIView, mapboxMap: MapboxMapProtocol, cameraAnimationsManager: CameraAnimationsManagerProtocol) {
         self.mapboxMap = mapboxMap
-        super.init(for: view, withDelegate: delegate)
+        self.cameraAnimationsManager = cameraAnimationsManager
+        super.init(for: view)
 
         let quickZoom = UILongPressGestureRecognizer(target: self, action: #selector(handleQuickZoom(_:)))
         quickZoom.numberOfTapsRequired = 1
@@ -28,7 +30,8 @@ internal class QuickZoomGestureHandler: GestureHandler {
         let touchPoint = gestureRecognizer.location(in: view)
 
         if gestureRecognizer.state == .began {
-            delegate.gestureBegan(for: .quickZoom)
+            cameraAnimationsManager.cancelAnimations()
+            delegate?.gestureBegan(for: .quickZoom)
             quickZoomStart = touchPoint.y
             initialZoom = mapboxMap.cameraState.zoom
         } else if gestureRecognizer.state == .changed {

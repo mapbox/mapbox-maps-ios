@@ -4,15 +4,12 @@ import XCTest
 final class PanGestureHandlerTests: XCTestCase {
 
     var view: UIView!
-    // swiftlint:disable weak_delegate
-    var delegate: GestureHandlerDelegateMock!
     var mapboxMap: MockMapboxMap!
     var cameraAnimationsManager: MockCameraAnimationsManager!
 
     override func setUp() {
         super.setUp()
         view = UIView()
-        delegate = GestureHandlerDelegateMock()
         mapboxMap = MockMapboxMap()
         cameraAnimationsManager = MockCameraAnimationsManager()
     }
@@ -20,14 +17,12 @@ final class PanGestureHandlerTests: XCTestCase {
     override func tearDown() {
         cameraAnimationsManager = nil
         mapboxMap = nil
-        delegate = nil
         view = nil
         super.tearDown()
     }
 
     func testSetup() {
         let panGestureHandler = PanGestureHandler(for: view,
-                                                  withDelegate: delegate,
                                                   panScrollMode: .horizontalAndVertical,
                                                   mapboxMap: mapboxMap,
                                                   cameraAnimationsManager: cameraAnimationsManager)
@@ -36,7 +31,6 @@ final class PanGestureHandlerTests: XCTestCase {
 
     func testHandlePan() {
         let panGestureHandler = PanGestureHandler(for: view,
-                                                  withDelegate: delegate,
                                                   panScrollMode: .horizontal,
                                                   mapboxMap: mapboxMap,
                                                   cameraAnimationsManager: cameraAnimationsManager)

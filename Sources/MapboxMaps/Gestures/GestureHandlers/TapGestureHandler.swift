@@ -11,12 +11,11 @@ internal class TapGestureHandler: GestureHandler {
     public required init(for view: UIView,
                          numberOfTapsRequired numberOfTaps: Int = 1,
                          numberOfTouchesRequired: Int = 1,
-                         withDelegate delegate: GestureHandlerDelegate,
                          cameraAnimationsManager: CameraAnimationsManagerProtocol,
                          mapboxMap: MapboxMapProtocol) {
         self.cameraAnimationsManager = cameraAnimationsManager
         self.mapboxMap = mapboxMap
-        super.init(for: view, withDelegate: delegate)
+        super.init(for: view)
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self,
                                                           action: #selector(handleTap(_:)))
@@ -28,7 +27,8 @@ internal class TapGestureHandler: GestureHandler {
 
     // Calls view to process the tap gesture
     @objc internal func handleTap(_ tap: UITapGestureRecognizer) {
-        delegate.gestureBegan(for: .tap(numberOfTaps: tap.numberOfTapsRequired, numberOfTouches: tap.numberOfTouchesRequired))
+        cameraAnimationsManager.cancelAnimations()
+        delegate?.gestureBegan(for: .tap(numberOfTaps: tap.numberOfTapsRequired, numberOfTouches: tap.numberOfTouchesRequired))
 
         // Single tapping twice with one finger will cause the map to zoom in
         if tap.numberOfTapsRequired == 2 && tap.numberOfTouchesRequired == 1 {

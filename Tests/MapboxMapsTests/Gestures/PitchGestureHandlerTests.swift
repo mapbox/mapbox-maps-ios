@@ -4,26 +4,29 @@ import XCTest
 final class PitchGestureHandlerTests: XCTestCase {
 
     var view: UIView!
-    // swiftlint:disable weak_delegate
-    var delegate: GestureHandlerDelegateMock!
     var mapboxMap: MockMapboxMap!
+    var cameraAnimationsManager: MockCameraAnimationsManager!
+    // swiftlint:disable:next weak_delegate
+    var delegate: MockGestureManagerDelegate!
 
     override func setUp() {
         super.setUp()
         view = UIView()
-        delegate = GestureHandlerDelegateMock()
         mapboxMap = MockMapboxMap()
+        cameraAnimationsManager = MockCameraAnimationsManager()
+        delegate = MockGestureManagerDelegate()
     }
 
     override func tearDown() {
-        mapboxMap = nil
         delegate = nil
+        cameraAnimationsManager = nil
+        mapboxMap = nil
         view = nil
         super.tearDown()
     }
 
     func testPitchSetUp() {
-        let pitchGestureHandler = PitchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
+        let pitchGestureHandler = PitchGestureHandler(for: view, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
         XCTAssert(pitchGestureHandler.gestureRecognizer is UIPanGestureRecognizer)
 
         // swiftlint:disable force_cast
@@ -33,15 +36,15 @@ final class PitchGestureHandlerTests: XCTestCase {
     }
 
     func testPitchBegan() {
-        let pitchGestureHandler = PitchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
+        let pitchGestureHandler = PitchGestureHandler(for: view, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
+        pitchGestureHandler.delegate = delegate
         let pitch = UIPanGestureRecognizerMock()
         pitchGestureHandler.handlePitchGesture(pitch)
-        XCTAssertTrue(delegate.gestureBeganMethod.wasCalled)
-        XCTAssertEqual(delegate.gestureBeganMethod.type, GestureType.pitch)
+        XCTAssertEqual(delegate.gestureBeganStub.parameters, [.pitch])
     }
 
     func testPitchChanged() {
-        let pitchHandler = PitchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
+        let pitchHandler = PitchGestureHandler(for: view, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
         pitchHandler.dragGestureTranslation = CGPoint.zero
         let panGestureRecognizer = UIPanGestureRecognizerMock()
         mapboxMap.cameraState.pitch = .random(in: 0...25)
@@ -54,7 +57,7 @@ final class PitchGestureHandlerTests: XCTestCase {
     }
 
     func testPitchWillNotTrigger() {
-        let pitchHandler = PitchGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
+        let pitchHandler = PitchGestureHandler(for: view, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
         let pitch = UIPanGestureRecognizerMock()
         pitchHandler.dragGestureTranslation = CGPoint.zero
         pitchHandler.handlePitchGesture(pitch) // Start gesture to set it to .began

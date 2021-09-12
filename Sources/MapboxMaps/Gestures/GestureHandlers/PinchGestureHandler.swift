@@ -21,10 +21,10 @@ internal class PinchGestureHandler: GestureHandler {
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol
 
     // Initialize the handler which creates the panGestureRecognizer and adds to the view
-    internal init(for view: UIView, withDelegate delegate: GestureHandlerDelegate, mapboxMap: MapboxMapProtocol, cameraAnimationsManager: CameraAnimationsManagerProtocol) {
+    internal init(for view: UIView, mapboxMap: MapboxMapProtocol, cameraAnimationsManager: CameraAnimationsManagerProtocol) {
         self.mapboxMap = mapboxMap
         self.cameraAnimationsManager = cameraAnimationsManager
-        super.init(for: view, withDelegate: delegate)
+        super.init(for: view)
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
         view.addGestureRecognizer(pinch)
         gestureRecognizer = pinch
@@ -32,13 +32,13 @@ internal class PinchGestureHandler: GestureHandler {
 
     @objc internal func handlePinch(_ pinchGestureRecognizer: UIPinchGestureRecognizer) {
 
-        cameraAnimationsManager.cancelAnimations()
         let pinchCenterPoint = pinchGestureRecognizer.location(in: view)
 
         if pinchGestureRecognizer.state == .began {
 
             self.previousScale = 1.0
-            delegate.gestureBegan(for: .pinch)
+            cameraAnimationsManager.cancelAnimations()
+            delegate?.gestureBegan(for: .pinch)
 
             self.initialCameraState = mapboxMap.cameraState
             self.initialPinchCenterPoint = pinchCenterPoint
@@ -51,6 +51,7 @@ internal class PinchGestureHandler: GestureHandler {
             if pinchGestureRecognizer.numberOfTouches < 2 {
                 return
             }
+            cameraAnimationsManager.cancelAnimations()
 
             let zoomIncrement = log2(pinchGestureRecognizer.scale)
             var cameraOptions = CameraOptions()

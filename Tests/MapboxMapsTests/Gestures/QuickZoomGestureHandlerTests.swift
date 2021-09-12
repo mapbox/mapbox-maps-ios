@@ -3,23 +3,27 @@ import XCTest
 
 final class QuickZoomGestureHandlerTest: XCTestCase {
     var view: UIView!
-    // swiftlint:disable weak_delegate
-    var delegate: GestureHandlerDelegateMock!
     var mapboxMap: MockMapboxMap!
+    var cameraAnimationsManager: MockCameraAnimationsManager!
     var quickZoomHandler: QuickZoomGestureHandler!
+    // swiftlint:disable weak_delegate
+    var delegate: MockGestureManagerDelegate!
 
     override func setUp() {
         super.setUp()
         view = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-        delegate = GestureHandlerDelegateMock()
         mapboxMap = MockMapboxMap()
-        quickZoomHandler = QuickZoomGestureHandler(for: view, withDelegate: delegate, mapboxMap: mapboxMap)
+        cameraAnimationsManager = MockCameraAnimationsManager()
+        quickZoomHandler = QuickZoomGestureHandler(for: view, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
+        delegate = MockGestureManagerDelegate()
+        quickZoomHandler.delegate = delegate
     }
 
     override func tearDown() {
-        quickZoomHandler = nil
-        mapboxMap = nil
         delegate = nil
+        quickZoomHandler = nil
+        cameraAnimationsManager = nil
+        mapboxMap = nil
         view = nil
         super.tearDown()
     }
@@ -40,8 +44,7 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
 
         quickZoomHandler.handleQuickZoom(mockGestureRecognizer)
 
-        XCTAssertTrue(delegate.gestureBeganMethod.wasCalled)
-        XCTAssertEqual(delegate.gestureBeganMethod.type, GestureType.quickZoom)
+        XCTAssertEqual(delegate.gestureBeganStub.parameters, [.quickZoom])
     }
 
     func testWhenGestureValueChanges_ProvidesTheNewZoomScaleAndAnchorToTheDelegate() {

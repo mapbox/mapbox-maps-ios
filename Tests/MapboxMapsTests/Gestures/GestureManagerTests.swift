@@ -6,8 +6,6 @@ import UIKit
 final class GestureManagerTests: XCTestCase {
 
     var mapView: MapView!
-    // swiftlint:disable weak_delegate
-    var delegate: GestureHandlerDelegateMock!
     var cameraAnimationsManager: MockCameraAnimationsManager!
     var initialGestureOptions: GestureOptions!
     var gestureManager: GestureManager!
@@ -18,7 +16,6 @@ final class GestureManagerTests: XCTestCase {
             mapInitOptions: MapInitOptions(
                 resourceOptions: ResourceOptions(accessToken: "dummy"),
                 styleURI: nil))
-        delegate = GestureHandlerDelegateMock()
         cameraAnimationsManager = MockCameraAnimationsManager()
         initialGestureOptions = GestureOptions()
         gestureManager = GestureManager(

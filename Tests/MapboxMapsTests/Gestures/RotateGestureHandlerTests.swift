@@ -5,8 +5,6 @@ final class RotateGestureHandlerTests: XCTestCase {
 
     var view: UIView!
 
-    fileprivate var gestureManagerMock: GestureManagerMock!
-
     var mapboxMap: MockMapboxMap!
 
     var cameraAnimationsManager: MockCameraAnimationsManager!
@@ -16,7 +14,6 @@ final class RotateGestureHandlerTests: XCTestCase {
     override func setUp() {
         super.setUp()
         view = UIView()
-        gestureManagerMock = GestureManagerMock()
         mapboxMap = MockMapboxMap()
         cameraAnimationsManager = MockCameraAnimationsManager()
         delegate = MockGestureManagerDelegate()
@@ -26,14 +23,12 @@ final class RotateGestureHandlerTests: XCTestCase {
         delegate = nil
         cameraAnimationsManager = nil
         mapboxMap = nil
-        gestureManagerMock = nil
         view = nil
         super.setUp()
     }
 
     func testSetup() {
         let rotate = RotateGestureHandler(for: view,
-                                          andContextProvider: GestureManagerMock(),
                                           mapboxMap: mapboxMap,
                                           cameraAnimationsManager: cameraAnimationsManager)
         XCTAssert(rotate.gestureRecognizer is UIRotationGestureRecognizer)
@@ -41,7 +36,6 @@ final class RotateGestureHandlerTests: XCTestCase {
 
     func testRotationBegan() {
         let rotateGestureHandler = RotateGestureHandler(for: view,
-                                                        andContextProvider: gestureManagerMock,
                                                         mapboxMap: mapboxMap,
                                                         cameraAnimationsManager: cameraAnimationsManager)
         rotateGestureHandler.delegate = delegate
@@ -55,7 +49,6 @@ final class RotateGestureHandlerTests: XCTestCase {
 
     func testRotationChanged() throws {
         let rotateGestureHandler = RotateGestureHandler(for: view,
-                                                        andContextProvider: gestureManagerMock,
                                                         mapboxMap: mapboxMap,
                                                         cameraAnimationsManager: cameraAnimationsManager)
 
@@ -109,19 +102,4 @@ private class UIRotationGestureRecognizerMock: UIRotationGestureRecognizer {
         }
     }
 
-}
-
-private class GestureManagerMock: GestureContextProvider {
-    func requireGestureToFail(allowedGesture: GestureHandler, failableGesture: GestureHandler) {
-        guard let failableGesture = failableGesture.gestureRecognizer else { return }
-        allowedGesture.gestureRecognizer?.require(toFail: failableGesture)
-    }
-
-    func fetchPinchState() -> UIGestureRecognizer.State? {
-        return .began
-    }
-
-    func fetchPinchScale() -> CGFloat? {
-        return 10.0
-    }
 }

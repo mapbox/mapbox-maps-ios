@@ -15,8 +15,17 @@ internal protocol CameraAnimatorInterface: CameraAnimator {
     func update()
 }
 
+internal protocol CameraAnimationsManagerProtocol: AnyObject {
+    func ease(to camera: CameraOptions,
+              duration: TimeInterval,
+              curve: UIView.AnimationCurve,
+              completion: AnimationCompletion?) -> Cancelable?
+
+    func cancelAnimations()
+}
+
 /// An object that manages a camera's view lifecycle.
-public class CameraAnimationsManager {
+public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
 
     /// Used to set up camera specific configuration
     public var options: CameraBoundsOptions {

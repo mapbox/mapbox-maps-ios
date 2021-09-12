@@ -93,7 +93,6 @@ public final class GestureManager {
                 newGestureHandlerMap[gestureType] = gestureType.makeHandler(for: view,
                                                                             cameraAnimationsManager: cameraAnimationsManager,
                                                                             mapboxMap: mapboxMap,
-                                                                            contextProvider: self,
                                                                             gestureOptions: options)
                 newGestureHandlerMap[gestureType]?.delegate = delegate
             } else {
@@ -129,39 +128,6 @@ public final class GestureManager {
         for gestureRecognizer in validGestureRecognizers {
             gestureRecognizer.delegate = gestureRecognizerDelegate
         }
-    }
-}
-
-/**
- Declare protocol with AnyObject so that it can
- be specified as weak.
- */
-internal protocol GestureContextProvider: AnyObject {
-    func fetchPinchState() -> UIGestureRecognizer.State?
-    func fetchPinchScale() -> CGFloat?
-    func requireGestureToFail(allowedGesture: GestureHandler, failableGesture: GestureHandler)
-}
-
-extension GestureManager: GestureContextProvider {
-
-    internal func fetchPinchState() -> UIGestureRecognizer.State? {
-
-        guard let validPinchHandler = gestureHandlers[.pinch],
-            let validPinchRecognizer = validPinchHandler.gestureRecognizer as? UIPinchGestureRecognizer else {
-                return nil
-        }
-
-        return validPinchRecognizer.state
-    }
-
-    internal func fetchPinchScale() -> CGFloat? {
-
-        guard let validPinchHandler = gestureHandlers[.pinch],
-            let validPinchRecognizer = validPinchHandler.gestureRecognizer as? UIPinchGestureRecognizer else {
-                return nil
-        }
-
-        return validPinchRecognizer.scale
     }
 
     internal func requireGestureToFail(allowedGesture: GestureHandler, failableGesture: GestureHandler) {

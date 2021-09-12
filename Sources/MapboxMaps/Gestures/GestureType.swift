@@ -24,7 +24,6 @@ public enum GestureType: Hashable {
     func makeHandler(for view: UIView,
                      cameraAnimationsManager: CameraAnimationsManagerProtocol,
                      mapboxMap: MapboxMapProtocol,
-                     contextProvider: GestureContextProvider,
                      gestureOptions: GestureOptions) -> GestureHandler {
         switch self {
         case .pan:
@@ -38,7 +37,7 @@ public enum GestureType: Hashable {
         case .pinch:
             return PinchGestureHandler(for: view, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
         case .rotate:
-            return RotateGestureHandler(for: view, andContextProvider: contextProvider, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
+            return RotateGestureHandler(for: view, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
         case .quickZoom:
             return QuickZoomGestureHandler(for: view, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
         case .pitch:

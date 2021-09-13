@@ -21,6 +21,11 @@ internal protocol CameraAnimationsManagerProtocol: AnyObject {
               curve: UIView.AnimationCurve,
               completion: AnimationCompletion?) -> Cancelable?
 
+    func decelerate(location: CGPoint,
+                    velocity: CGPoint,
+                    decelerationRate: CGFloat,
+                    locationChangeHandler: @escaping (CGPoint) -> Void)
+
     func cancelAnimations()
 }
 
@@ -281,4 +286,34 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
         cameraViewContainerView.addSubview(cameraView)
         return cameraView
     }
+
+    internal func decelerate(location: CGPoint,
+                             velocity: CGPoint,
+                             decelerationRate: CGFloat,
+                             locationChangeHandler: @escaping (CGPoint) -> Void) {
+
+        let animator = GestureDecelerationCameraAnimator(location: location,
+                                                         velocity: velocity,
+                                                         decelerationRate: decelerationRate,
+                                                         locationChangeHandler: locationChangeHandler)
+
+        // Stop the `internalAnimator` before beginning a `flyTo`
+        internalAnimator?.stopAnimation()
+
+        cameraAnimatorsSet.add(animator)
+
+//        animator.addCompletion { [weak self, weak animator] (position) in
+//            if let internalAnimator = self?.internalAnimator,
+//               let animator = flyToAnimator,
+//               internalAnimator === animator {
+//                self?.internalAnimator = nil
+//            }
+//            // Call the developer-provided completion (if present)
+//            completion?(position)
+//        }
+
+        animator.startAnimation()
+        internalAnimator = animator
+    }
+
 }

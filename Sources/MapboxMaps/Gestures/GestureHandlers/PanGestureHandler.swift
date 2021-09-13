@@ -8,6 +8,8 @@ internal final class PanGestureHandler: GestureHandler {
     // The camera state when the gesture began
     private var initialCameraState: CameraState?
 
+    private var lastChangedDate: Date?
+
     internal init(gestureRecognizer: UIPanGestureRecognizer,
                   mapboxMap: MapboxMapProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol) {
@@ -38,6 +40,8 @@ internal final class PanGestureHandler: GestureHandler {
                   let panScrollingMode = delegate?.panScrollingMode else {
                 return
             }
+            lastChangedDate = Date()
+
             cameraAnimationsManager.cancelAnimations()
 
             // Reset the camera to its state when the gesture began
@@ -60,9 +64,42 @@ internal final class PanGestureHandler: GestureHandler {
                 to: clampedTouchLocation)
             mapboxMap.setCamera(to: dragCameraOptions)
             mapboxMap.dragEnd()
-        case .ended, .cancelled:
+        case .ended:
+            // decelerate
+            guard let lastChangedDate = lastChangedDate,
+                  // if it's been more than 2 frames at 60 Hz since the last change, don't drift
+                  Date().timeIntervalSince(lastChangedDate) < 2.0 / 60.0,
+                  let initialTouchLocation = initialTouchLocation,
+                  let initialCameraState = initialCameraState,
+                  let decelerationRate = delegate?.decelerationRate else {
+                return
+            }
+
+            let velocity = gestureRecognizer.velocity(in: view)
+
+            cameraAnimationsManager.decelerate(location: touchLocation,
+                                               velocity: velocity,
+                                               decelerationRate: decelerationRate) { [mapboxMap] location in
+                // Reset the camera to its state when the gesture began
+                mapboxMap.setCamera(to: CameraOptions(cameraState: initialCameraState))
+
+                // Execute the drag relative to the initial touch location
+                mapboxMap.dragStart(for: initialTouchLocation)
+                let dragCameraOptions = mapboxMap.dragCameraOptions(
+                    from: initialTouchLocation,
+                    to: location)
+                mapboxMap.setCamera(to: dragCameraOptions)
+                mapboxMap.dragEnd()
+            }
+
+            self.initialTouchLocation = nil
+            self.initialCameraState = nil
+            self.lastChangedDate = nil
+        case .cancelled:
+            // no deceleration
             initialTouchLocation = nil
             initialCameraState = nil
+            lastChangedDate = nil
         default:
             break
         }

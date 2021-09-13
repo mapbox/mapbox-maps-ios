@@ -1,49 +1,54 @@
 import UIKit
 
-/// The TapGestureHandler is responsible for all `tap`
-/// related infrastructure and tells the view to update itself when required
+/// `TapGestureHandler` updates the map camera in response
+/// to double tap gestures with 1 or 2 touches
 internal class TapGestureHandler: GestureHandler {
 
-    private let cameraAnimationsManager: CameraAnimationsManagerProtocol
-    private let mapboxMap: MapboxMapProtocol
-
-    // Configures the TapGestureRecognizer to handle a tap
-    public required init(for view: UIView,
-                         numberOfTapsRequired numberOfTaps: Int = 1,
-                         numberOfTouchesRequired: Int = 1,
-                         cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                         mapboxMap: MapboxMapProtocol) {
-        self.cameraAnimationsManager = cameraAnimationsManager
-        self.mapboxMap = mapboxMap
-        super.init(for: view)
-
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self,
-                                                          action: #selector(handleTap(_:)))
-        tapGestureRecognizer.numberOfTapsRequired = numberOfTaps
+    internal required init(numberOfTouchesRequired: Int,
+                           view: UIView,
+                           mapboxMap: MapboxMapProtocol,
+                           cameraAnimationsManager: CameraAnimationsManagerProtocol) {
+        precondition((1...2).contains(numberOfTouchesRequired))
+        let tapGestureRecognizer = UITapGestureRecognizer()
+        tapGestureRecognizer.numberOfTapsRequired = 2
         tapGestureRecognizer.numberOfTouchesRequired = numberOfTouchesRequired
         view.addGestureRecognizer(tapGestureRecognizer)
-        gestureRecognizer = tapGestureRecognizer
+        super.init(
+            gestureRecognizer: tapGestureRecognizer,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
+        tapGestureRecognizer.addTarget(self, action: #selector(handleTap(_:)))
     }
 
     // Calls view to process the tap gesture
-    @objc internal func handleTap(_ tap: UITapGestureRecognizer) {
-        cameraAnimationsManager.cancelAnimations()
-        delegate?.gestureBegan(for: .tap(numberOfTaps: tap.numberOfTapsRequired, numberOfTouches: tap.numberOfTouchesRequired))
-
-        // Single tapping twice with one finger will cause the map to zoom in
-        if tap.numberOfTapsRequired == 2 && tap.numberOfTouchesRequired == 1 {
-            _ = cameraAnimationsManager.ease(to: CameraOptions(zoom: mapboxMap.cameraState.zoom + 1.0),
+    @objc internal func handleTap(_ gestureRecognizer: UITapGestureRecognizer) {
+        switch gestureRecognizer.state {
+        case .ended:
+            guard gestureRecognizer.numberOfTapsRequired == 2 else {
+                return
+            }
+            let zoomDelta: CGFloat?
+            switch gestureRecognizer.numberOfTouchesRequired {
+            case 1:
+                // Double tapping with one finger will cause the map to zoom out by 1 level
+                zoomDelta = 1
+            case 2:
+                // Double tapping with two fingers will cause the map to zoom in by 1 level
+                zoomDelta = -1
+            default:
+                zoomDelta = nil
+            }
+            guard let zoomDelta = zoomDelta else {
+                return
+            }
+            cameraAnimationsManager.cancelAnimations()
+            delegate?.gestureBegan(for: .tap(numberOfTouches: gestureRecognizer.numberOfTouchesRequired))
+            _ = cameraAnimationsManager.ease(to: CameraOptions(zoom: mapboxMap.cameraState.zoom + zoomDelta),
                                              duration: 0.3,
                                              curve: .easeOut,
                                              completion: nil)
-        }
-
-        // Double tapping twice with two fingers will cause the map to zoom out
-        if tap.numberOfTapsRequired == 2 && tap.numberOfTouchesRequired == 2 {
-            _ = cameraAnimationsManager.ease(to: CameraOptions(zoom: mapboxMap.cameraState.zoom - 1.0),
-                                             duration: 0.3,
-                                             curve: .easeOut,
-                                             completion: nil)
+        default:
+            break
         }
     }
 }

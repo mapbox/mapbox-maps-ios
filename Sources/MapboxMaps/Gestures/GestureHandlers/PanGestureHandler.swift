@@ -1,98 +1,84 @@
 import UIKit
 
-/// The PanGestureHandler is responsible for all `pan` related infrastructure
-/// Tells the view to update itself when required
-internal class PanGestureHandler: GestureHandler {
+/// `PanGestureHandler` updates the map camera in response to a single-touch pan gesture
+internal final class PanGestureHandler: GestureHandler {
 
-    internal let decelerationRate = UIScrollView.DecelerationRate.normal.rawValue
-    internal var scrollMode = PanScrollingMode.horizontalAndVertical
+    // The deceleration rate in points/ms^2
+    internal var decelerationRate: CGFloat
 
-    private let mapboxMap: MapboxMapProtocol
-    private let cameraAnimationsManager: CameraAnimationsManagerProtocol
+    // Determines whether the horizontal translation, vertical
+    // translation, or both are considered when panning
+    internal var panScrollingMode: PanScrollingMode
 
-    // Initialize the handler which creates the panGestureRecognizer and adds to the view
-    internal init(for view: UIView, panScrollMode: PanScrollingMode, mapboxMap: MapboxMapProtocol, cameraAnimationsManager: CameraAnimationsManagerProtocol) {
-        self.mapboxMap = mapboxMap
-        self.cameraAnimationsManager = cameraAnimationsManager
-        super.init(for: view)
-        let pan = UIPanGestureRecognizer(target: self,
-                                         action: #selector(handlePan(_:)))
-        pan.maximumNumberOfTouches = 1
-        view.addGestureRecognizer(pan)
-        gestureRecognizer = pan
-        scrollMode = panScrollMode
+    // The touch location in the gesture's view when the gesture began
+    private var initialTouchLocation: CGPoint?
+
+    // The camera state when the gesture began
+    private var initialCameraState: CameraState?
+
+    internal init(decelerationRate: CGFloat,
+                  panScrollingMode: PanScrollingMode,
+                  view: UIView,
+                  mapboxMap: MapboxMapProtocol,
+                  cameraAnimationsManager: CameraAnimationsManagerProtocol) {
+        self.decelerationRate = decelerationRate
+        self.panScrollingMode = panScrollingMode
+        let panGestureRecognizer = UIPanGestureRecognizer()
+        panGestureRecognizer.maximumNumberOfTouches = 1
+        view.addGestureRecognizer(panGestureRecognizer)
+        super.init(
+            gestureRecognizer: panGestureRecognizer,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
+        panGestureRecognizer.addTarget(self, action: #selector(handlePan(_:)))
     }
 
     // Handles the pan operation and calls the associated view
-    @objc internal func handlePan(_ pan: UIPanGestureRecognizer) {
-        switch pan.state {
-        case .began:
+    @objc internal func handlePan(_ panGestureRecognizer: UIPanGestureRecognizer) {
+        guard let view = panGestureRecognizer.view else {
+            return
+        }
 
-            let point = pan.location(in: pan.view)
-            mapboxMap.dragStart(for: point)
+        let touchLocation = panGestureRecognizer.location(in: view)
+
+        switch panGestureRecognizer.state {
+        case .began:
+            initialTouchLocation = touchLocation
+            initialCameraState = mapboxMap.cameraState
             cameraAnimationsManager.cancelAnimations()
             delegate?.gestureBegan(for: .pan)
-
         case .changed:
-            let start = pan.location(in: pan.view)
-            let delta = pan.translation(in: pan.view).applyPanScrollingMode(panScrollingMode: scrollMode)
-            let end = CGPoint(x: start.x + delta.x, y: start.y + delta.y)
-            let cameraOptions = mapboxMap.dragCameraOptions(from: start, to: end)
-            mapboxMap.setCamera(to: cameraOptions)
-            pan.setTranslation(.zero, in: pan.view)
+            guard let initialTouchLocation = initialTouchLocation,
+                  let initialCameraState = initialCameraState else {
+                return
+            }
+            cameraAnimationsManager.cancelAnimations()
 
-        case .ended, .cancelled:
-            let endPoint = pan.location(in: pan.view)
-            var velocity = pan.velocity(in: pan.view)
-            let velocityHypot = sqrt(pow(velocity.x, 2) + pow(velocity.y, 2))
+            // Reset the camera to its state when the gesture began
+            mapboxMap.setCamera(to: CameraOptions(cameraState: initialCameraState))
 
-            if decelerationRate == 0.0 || velocityHypot < 1000 {
-                velocity = CGPoint.zero
+            let clampedTouchLocation: CGPoint
+            switch (panScrollingMode) {
+            case .horizontal:
+                clampedTouchLocation = CGPoint(x: touchLocation.x, y: initialTouchLocation.y)
+            case .vertical:
+                clampedTouchLocation = CGPoint(x: initialTouchLocation.x, y: touchLocation.y)
+            case .horizontalAndVertical:
+                clampedTouchLocation = touchLocation
             }
 
-            var driftOffset = CGPoint.zero
-            if velocity != CGPoint.zero { // There is a potential drift after the gesture has ended
-                driftOffset = CGPoint(x: velocity.x * decelerationRate / 4,
-                                     y: velocity.y * decelerationRate / 4)
-                                    .applyPanScrollingMode(panScrollingMode: scrollMode)
-            }
-
-            let driftEndPoint = CGPoint(x: endPoint.x + driftOffset.x,
-                                        y: endPoint.y + driftOffset.y)
-
-            if endPoint != driftEndPoint {
-                let driftCameraOptions = mapboxMap.dragCameraOptions(from: endPoint, to: driftEndPoint)
-                _ = cameraAnimationsManager.ease(
-                        to: driftCameraOptions,
-                        duration: Double(decelerationRate),
-                        curve: .easeOut,
-                        completion: nil)
-            }
+            // Execute the drag relative to the initial touch location
+            mapboxMap.dragStart(for: initialTouchLocation)
+            let dragCameraOptions = mapboxMap.dragCameraOptions(
+                from: initialTouchLocation,
+                to: clampedTouchLocation)
+            mapboxMap.setCamera(to: dragCameraOptions)
             mapboxMap.dragEnd()
+        case .ended, .cancelled:
+            initialTouchLocation = nil
+            initialCameraState = nil
         default:
             break
-        }
-    }
-}
-
-fileprivate extension CGPoint {
-
-    /**
-     Returns a new CGPoint after applying a pan scrolling mode,
-     i.e. zero-ing out the `x` OR `y` coordinate if required.
-     */
-    func applyPanScrollingMode(panScrollingMode: PanScrollingMode) -> CGPoint {
-        switch panScrollingMode {
-        case .horizontalAndVertical:
-            return self
-        case .horizontal:
-            var point = self
-            point.y = 0.0
-            return point
-        case .vertical:
-            var point = self
-            point.x = 0.0
-            return point
         }
     }
 }

@@ -26,12 +26,12 @@ public final class GestureManager {
 
     /// The underlying gesture recognizer for the "double tap to zoom in" gesture
     public var doubleTapToZoomInGestureRecognizer: UIGestureRecognizer? {
-        return gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 1)]?.gestureRecognizer
+        return gestureHandlers[.tap(numberOfTouches: 1)]?.gestureRecognizer
     }
 
     /// The underlying gesture recognizer for the "double tap to zoom out" gesture
     public var doubleTapToZoomOutGestureRecognizer: UIGestureRecognizer? {
-        return gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 2)]?.gestureRecognizer
+        return gestureHandlers[.tap(numberOfTouches: 2)]?.gestureRecognizer
     }
 
     /// The underlying gesture recognizer for the quickZoom gesture
@@ -83,17 +83,10 @@ public final class GestureManager {
 
     // Loops through supported gestures and generate associated handlers that are to be kept alive
     internal func configureGestureHandlers(for options: GestureOptions) {
-        guard let view = view else {
-            assertionFailure("GestureManager view is nil.")
-            return
-        }
         var newGestureHandlerMap: [GestureType: GestureHandler] = [:]
         for gestureType in options.supportedGestureTypes() {
             if gestureHandlers[gestureType] == nil {
-                newGestureHandlerMap[gestureType] = gestureType.makeHandler(for: view,
-                                                                            cameraAnimationsManager: cameraAnimationsManager,
-                                                                            mapboxMap: mapboxMap,
-                                                                            gestureOptions: options)
+                newGestureHandlerMap[gestureType] = makeHandler(for: gestureType)
                 newGestureHandlerMap[gestureType]?.delegate = delegate
             } else {
                 newGestureHandlerMap[gestureType] = gestureHandlers[gestureType]
@@ -110,7 +103,7 @@ public final class GestureManager {
             requireGestureToFail(allowedGesture: pinchHandler, failableGesture: panHandler)
         }
 
-        if let doubleTapHandler = gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 1)],
+        if let doubleTapHandler = gestureHandlers[.tap(numberOfTouches: 1)],
            let quickZoomHandler = gestureHandlers[.quickZoom] {
             requireGestureToFail(allowedGesture: quickZoomHandler, failableGesture: doubleTapHandler)
         }
@@ -131,7 +124,48 @@ public final class GestureManager {
     }
 
     internal func requireGestureToFail(allowedGesture: GestureHandler, failableGesture: GestureHandler) {
-        guard let failableGesture = failableGesture.gestureRecognizer else { return }
-        allowedGesture.gestureRecognizer?.require(toFail: failableGesture)
+        allowedGesture.gestureRecognizer.require(toFail: failableGesture.gestureRecognizer)
+    }
+
+    // Generates a handler for every gesture type
+    private func makeHandler(for type: GestureType) -> GestureHandler {
+        guard let view = view else {
+            fatalError("GestureManager view is nil.")
+        }
+        switch type {
+        case .pan:
+            return PanGestureHandler(
+                decelerationRate: options.decelerationRate,
+                panScrollingMode: options.scrollingMode,
+                view: view,
+                mapboxMap: mapboxMap,
+                cameraAnimationsManager: cameraAnimationsManager)
+        case .tap(let numberOfTouches):
+            return TapGestureHandler(
+                numberOfTouchesRequired: numberOfTouches,
+                view: view,
+                mapboxMap: mapboxMap,
+                cameraAnimationsManager: cameraAnimationsManager)
+        case .pinch:
+            return PinchGestureHandler(
+                view: view,
+                mapboxMap: mapboxMap,
+                cameraAnimationsManager: cameraAnimationsManager)
+        case .rotate:
+            return RotateGestureHandler(
+                view: view,
+                mapboxMap: mapboxMap,
+                cameraAnimationsManager: cameraAnimationsManager)
+        case .quickZoom:
+            return QuickZoomGestureHandler(
+                view: view,
+                mapboxMap: mapboxMap,
+                cameraAnimationsManager: cameraAnimationsManager)
+        case .pitch:
+            return PitchGestureHandler(
+                view: view,
+                mapboxMap: mapboxMap,
+                cameraAnimationsManager: cameraAnimationsManager)
+        }
     }
 }

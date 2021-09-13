@@ -1,54 +1,44 @@
 import UIKit
 
-/// The PinchGestureHandler is responsible for all `pinch` related infrastructure
-/// Tells the view to update itself when required
-internal class PinchGestureHandler: GestureHandler {
-    private var previousScale: CGFloat = 0.0
+/// `PinchGestureHandler` updates the map camera in response to a 2-touch
+/// gesture that may consist of translation and scaling
+internal final class PinchGestureHandler: GestureHandler {
+    // The midpoint of the touches in the gesture's view when the gesture began
+    private var initialPinchMidpoint: CGPoint?
 
-    // The center point where the pinch gesture began
-    private var initialPinchCenterPoint: CGPoint = .zero
-
-    // The camera state when the pinch gesture began
-    private var initialCameraState: CameraState!
-
-    // TODO: Inject the deceleration rate as part of a configuration structure
-    internal let decelerationRate = UIScrollView.DecelerationRate.normal.rawValue
-
-    // TODO: Inject the minimum zoom as part of a configuration structure
-    internal let minZoom: CGFloat = 0.0
-
-    private let mapboxMap: MapboxMapProtocol
-    private let cameraAnimationsManager: CameraAnimationsManagerProtocol
+    // The camera state when the gesture began
+    private var initialCameraState: CameraState?
 
     // Initialize the handler which creates the panGestureRecognizer and adds to the view
-    internal init(for view: UIView, mapboxMap: MapboxMapProtocol, cameraAnimationsManager: CameraAnimationsManagerProtocol) {
-        self.mapboxMap = mapboxMap
-        self.cameraAnimationsManager = cameraAnimationsManager
-        super.init(for: view)
-        let pinch = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
-        view.addGestureRecognizer(pinch)
-        gestureRecognizer = pinch
+    internal init(view: UIView,
+                  mapboxMap: MapboxMapProtocol,
+                  cameraAnimationsManager: CameraAnimationsManagerProtocol) {
+        let pinchGestureRecognizer = UIPinchGestureRecognizer()
+        view.addGestureRecognizer(pinchGestureRecognizer)
+        super.init(
+            gestureRecognizer: pinchGestureRecognizer,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
+        pinchGestureRecognizer.addTarget(self, action: #selector(handlePinch(_:)))
     }
 
     @objc internal func handlePinch(_ pinchGestureRecognizer: UIPinchGestureRecognizer) {
+        guard let view = pinchGestureRecognizer.view else {
+            return
+        }
 
         let pinchCenterPoint = pinchGestureRecognizer.location(in: view)
 
-        if pinchGestureRecognizer.state == .began {
-
-            self.previousScale = 1.0
+        switch pinchGestureRecognizer.state {
+        case .began:
+            initialPinchMidpoint = pinchCenterPoint
+            initialCameraState = mapboxMap.cameraState
             cameraAnimationsManager.cancelAnimations()
             delegate?.gestureBegan(for: .pinch)
-
-            self.initialCameraState = mapboxMap.cameraState
-            self.initialPinchCenterPoint = pinchCenterPoint
-
-            /**
-             TODO: Handle a concurrent rotate gesture here.
-             Prioritize the correct gesture by comparing the velocity of competing gestures.
-             */
-        } else if pinchGestureRecognizer.state == .changed {
-            if pinchGestureRecognizer.numberOfTouches < 2 {
+        case .changed:
+            guard pinchGestureRecognizer.numberOfTouches == 2,
+                  let initialCameraState = initialCameraState,
+                  let initialPinchCenterPoint = initialPinchMidpoint else {
                 return
             }
             cameraAnimationsManager.cancelAnimations()
@@ -62,14 +52,21 @@ internal class PinchGestureHandler: GestureHandler {
             mapboxMap.setCamera(to: cameraOptions)
 
             mapboxMap.dragStart(for: initialPinchCenterPoint)
-            let dragOptions = mapboxMap.dragCameraOptions(from: initialPinchCenterPoint, to: pinchCenterPoint)
+            let dragOptions = mapboxMap.dragCameraOptions(
+                from: initialPinchCenterPoint,
+                to: pinchCenterPoint)
             mapboxMap.setCamera(to: dragOptions)
             mapboxMap.dragEnd()
 
-            mapboxMap.setCamera(to: CameraOptions(anchor: pinchCenterPoint,
-                                                  zoom: mapboxMap.cameraState.zoom + zoomIncrement))
-
-            previousScale = pinchGestureRecognizer.scale
+            mapboxMap.setCamera(
+                to: CameraOptions(
+                    anchor: pinchCenterPoint,
+                    zoom: mapboxMap.cameraState.zoom + zoomIncrement))
+        case .ended, .cancelled:
+            initialPinchMidpoint = nil
+            initialCameraState = nil
+        default:
+            break
         }
     }
 }

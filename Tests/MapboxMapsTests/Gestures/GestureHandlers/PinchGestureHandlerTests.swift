@@ -6,18 +6,29 @@ final class PinchGestureHandlerTests: XCTestCase {
     var view: UIView!
     var mapboxMap: MockMapboxMap!
     var cameraAnimationsManager: MockCameraAnimationsManager!
+    var pinchGestureHandler: PinchGestureHandler!
     // swiftlint:disable:next weak_delegate
     var delegate: MockGestureManagerDelegate!
+    var gestureRecognizer: MockPinchGestureRecognizer!
 
     override func setUp() {
         super.setUp()
         view = UIView()
         mapboxMap = MockMapboxMap()
         cameraAnimationsManager = MockCameraAnimationsManager()
+        pinchGestureHandler = PinchGestureHandler(
+            view: view,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
         delegate = MockGestureManagerDelegate()
+        pinchGestureHandler.delegate = delegate
+        gestureRecognizer = MockPinchGestureRecognizer()
+        gestureRecognizer.getViewStub.defaultReturnValue = view
     }
 
     override func tearDown() {
+        gestureRecognizer = nil
+        pinchGestureHandler = nil
         delegate = nil
         cameraAnimationsManager = nil
         mapboxMap = nil
@@ -25,26 +36,21 @@ final class PinchGestureHandlerTests: XCTestCase {
         super.tearDown()
     }
 
-    func testInit() {
-        let pinchGestureHandler = PinchGestureHandler(for: view, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
-        XCTAssertTrue(pinchGestureHandler.gestureRecognizer is UIPinchGestureRecognizer)
+    func testInitialization() throws {
+        let gestureRecognizer = try XCTUnwrap(pinchGestureHandler.gestureRecognizer as? UIPinchGestureRecognizer)
+        XCTAssertTrue(view.gestureRecognizers?.last === gestureRecognizer)
     }
 
     func testPinchBegan() {
-        let pinchGestureHandler = PinchGestureHandler(for: view, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
-        pinchGestureHandler.delegate = delegate
-        let pinchGestureRecognizerMock = UIPinchGestureRecognizerMock()
-        pinchGestureHandler.handlePinch(pinchGestureRecognizerMock)
+        gestureRecognizer.getStateStub.defaultReturnValue = .began
 
-        XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1,
-                      "Cancel animations was not called before commencing gesture processing")
-        XCTAssertEqual(delegate.gestureBeganStub.parameters, [.pinch],
-                      "Delegate should be notified when gesture begins")
+        pinchGestureHandler.handlePinch(gestureRecognizer)
+
+        XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1)
+        XCTAssertEqual(delegate.gestureBeganStub.parameters, [.pinch])
     }
 
-    func testPinchChanged() {
-        let pinchGestureHandler = PinchGestureHandler(for: view, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
-        let pinchGestureRecognizer = UIPinchGestureRecognizerMock()
+    func testPinchChanged() throws {
         let initialCameraState = CameraState.random()
         let initialPinchCenterPoint = CGPoint(x: 0.0, y: 0.0)
         let changedPinchCenterPoint = CGPoint(x: 1.0, y: 1.0)
@@ -54,18 +60,18 @@ final class PinchGestureHandlerTests: XCTestCase {
             zoom: .random(in: 0...20))
 
         // set up internal state by calling handlePinch in the .began state
-        pinchGestureRecognizer.mockState = .began
-        pinchGestureRecognizer.mockScale = 2.0
-        pinchGestureRecognizer.mockLocationInView = initialPinchCenterPoint
-        pinchGestureRecognizer.mockNumberOfTouches = 2
-        pinchGestureHandler.handlePinch(pinchGestureRecognizer)
+        gestureRecognizer.getStateStub.defaultReturnValue = .began
+        gestureRecognizer.getScaleStub.defaultReturnValue = 2.0
+        gestureRecognizer.locationStub.defaultReturnValue = initialPinchCenterPoint
+        gestureRecognizer.getNumberOfTouchesStub.defaultReturnValue = 2
+        pinchGestureHandler.handlePinch(gestureRecognizer)
         // reset cancelAnimationsStub so we can verify
         // that it's called when state is .changed
         cameraAnimationsManager.cancelAnimationsStub.reset()
-        pinchGestureRecognizer.mockState = .changed
-        pinchGestureRecognizer.mockLocationInView = changedPinchCenterPoint
+        gestureRecognizer.getStateStub.defaultReturnValue = .changed
+        gestureRecognizer.locationStub.defaultReturnValue = changedPinchCenterPoint
 
-        pinchGestureHandler.handlePinch(pinchGestureRecognizer)
+        pinchGestureHandler.handlePinch(gestureRecognizer)
 
         XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1,
                       "Cancel animations was not called before commencing gesture processing")
@@ -96,45 +102,11 @@ final class PinchGestureHandlerTests: XCTestCase {
             mapboxMap.setCameraStub.parameters[1],
             mapboxMap.dragCameraOptionsStub.returnedValues.first)
 
+        let returnedScale = try XCTUnwrap(gestureRecognizer.getScaleStub.returnedValues.last)
         XCTAssertEqual(
             mapboxMap.setCameraStub.parameters[2],
             CameraOptions(
                 anchor: changedPinchCenterPoint,
-                zoom: mapboxMap.cameraState.zoom + log2(pinchGestureRecognizer.mockScale)))
-    }
-}
-
-private class UIPinchGestureRecognizerMock: UIPinchGestureRecognizer {
-
-    var mockState: UIGestureRecognizer.State = .began
-    var mockScale: CGFloat = 2.0
-    var mockCenter: CGPoint = .zero
-    var mockLocationInView: CGPoint = .zero
-    var mockNumberOfTouches: Int = 1
-
-    override var state: UIGestureRecognizer.State {
-        get {
-            return mockState
-        }
-        set {
-            fatalError("unimplemented")
-        }
-    }
-
-    override var scale: CGFloat {
-        get {
-            return mockScale
-        }
-        set {
-            fatalError("unimplemented")
-        }
-    }
-
-    override var numberOfTouches: Int {
-        return mockNumberOfTouches
-    }
-
-    override func location(in view: UIView?) -> CGPoint {
-        return mockLocationInView
+                zoom: mapboxMap.cameraState.zoom + log2(returnedScale)))
     }
 }

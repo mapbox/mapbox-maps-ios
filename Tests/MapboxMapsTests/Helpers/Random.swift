@@ -40,6 +40,26 @@ extension CameraState {
     }
 }
 
+extension CameraOptions {
+    static func random() -> Self {
+        return CameraOptions(
+            center: .random(),
+            padding: .random(),
+            anchor: .random(),
+            zoom: .random(in: 0...20),
+            bearing: .random(in: 0..<360),
+            pitch: .random(in: 0...50))
+    }
+}
+
+extension CGPoint {
+    static func random() -> Self {
+        return CGPoint(
+            x: .random(in: -100...100),
+            y: .random(in: -100...100))
+    }
+}
+
 extension CLLocationCoordinate2D {
     static func random() -> Self {
         return CLLocationCoordinate2D(

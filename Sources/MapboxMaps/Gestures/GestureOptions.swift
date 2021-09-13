@@ -108,10 +108,8 @@ public struct GestureOptions: Equatable {
 
         if zoomEnabled {
             supportedGestureTypes.insert(.pinch)
-            supportedGestureTypes.insert(.tap(numberOfTaps: 2,
-                                              numberOfTouches: 1))
-            supportedGestureTypes.insert(.tap(numberOfTaps: 2,
-                                              numberOfTouches: 2))
+            supportedGestureTypes.insert(.tap(numberOfTouches: 1))
+            supportedGestureTypes.insert(.tap(numberOfTouches: 2))
             supportedGestureTypes.insert(.quickZoom)
         }
 

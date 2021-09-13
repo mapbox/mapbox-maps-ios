@@ -1,21 +1,23 @@
-import Foundation
+import UIKit
 
 internal class GestureHandler {
+    internal let gestureRecognizer: UIGestureRecognizer
 
-    /// The view that the gesture handler is operating on
-    weak var view: UIView?
+    internal let mapboxMap: MapboxMapProtocol
+
+    internal let cameraAnimationsManager: CameraAnimationsManagerProtocol
+
     internal weak var delegate: GestureManagerDelegate?
 
-    /// The underlying gestureRecognizer that this handler is managing
-    var gestureRecognizer: UIGestureRecognizer?
-
-    init(for view: UIView) {
-        self.view = view
+    init(gestureRecognizer: UIGestureRecognizer,
+         mapboxMap: MapboxMapProtocol,
+         cameraAnimationsManager: CameraAnimationsManagerProtocol) {
+        self.gestureRecognizer = gestureRecognizer
+        self.mapboxMap = mapboxMap
+        self.cameraAnimationsManager = cameraAnimationsManager
     }
 
     deinit {
-        if let validGestureRecognizer = self.gestureRecognizer {
-            self.view?.removeGestureRecognizer(validGestureRecognizer)
-        }
+        gestureRecognizer.view?.removeGestureRecognizer(gestureRecognizer)
     }
 }

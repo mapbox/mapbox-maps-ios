@@ -1,54 +1,57 @@
 import UIKit
 
-/// The QuickZoomGestureHandler is responsible for handling all `quickZoom` related
-/// infrastructure. The `quickZoom` gesture recognizer is triggered by
-/// a tap gesture followed by a long press gesture.
+/// `QuickZoomGestureHandler` updates the map camera in response to double tap and drag gestures
 internal class QuickZoomGestureHandler: GestureHandler {
-    private var quickZoomStart: CGFloat = 0.0
-    private var initialZoom: CGFloat = 0.0
-    private let mapboxMap: MapboxMapProtocol
-    private let cameraAnimationsManager: CameraAnimationsManagerProtocol
+    private var initialLocation: CGPoint?
+    private var initialZoom: CGFloat?
 
-    init(for view: UIView, mapboxMap: MapboxMapProtocol, cameraAnimationsManager: CameraAnimationsManagerProtocol) {
-        self.mapboxMap = mapboxMap
-        self.cameraAnimationsManager = cameraAnimationsManager
-        super.init(for: view)
-
-        let quickZoom = UILongPressGestureRecognizer(target: self, action: #selector(handleQuickZoom(_:)))
+    init(view: UIView,
+         mapboxMap: MapboxMapProtocol,
+         cameraAnimationsManager: CameraAnimationsManagerProtocol) {
+        let quickZoom = UILongPressGestureRecognizer()
         quickZoom.numberOfTapsRequired = 1
         quickZoom.minimumPressDuration = 0
-        gestureRecognizer = quickZoom
         view.addGestureRecognizer(quickZoom)
+        super.init(
+            gestureRecognizer: quickZoom,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
+        quickZoom.addTarget(self, action: #selector(handleQuickZoom(_:)))
     }
 
     // Register the location of the touches in the view.
     @objc func handleQuickZoom(_ gestureRecognizer: UILongPressGestureRecognizer) {
-        guard let view = view else {
+        guard let view = gestureRecognizer.view else {
             return
         }
-
-        let touchPoint = gestureRecognizer.location(in: view)
-
-        if gestureRecognizer.state == .began {
+        let location = gestureRecognizer.location(in: view)
+        switch gestureRecognizer.state {
+        case .began:
             cameraAnimationsManager.cancelAnimations()
             delegate?.gestureBegan(for: .quickZoom)
-            quickZoomStart = touchPoint.y
+            initialLocation = location
             initialZoom = mapboxMap.cameraState.zoom
-        } else if gestureRecognizer.state == .changed {
-            let distance = touchPoint.y - quickZoomStart
+        case .changed:
+            guard let initialLocation = initialLocation,
+                  let initialZoom = initialZoom else {
+                return
+            }
+            let distance = location.y - initialLocation.y
             let bounds = view.bounds
             let anchor = CGPoint(x: bounds.midX, y: bounds.midY)
-
             var newZoom = initialZoom + distance / 75
-
             if newZoom.isNaN {
                 newZoom = 0
             }
-
             let minZoom = CGFloat(mapboxMap.cameraBounds.minZoom)
             let maxZoom = CGFloat(mapboxMap.cameraBounds.maxZoom)
             newZoom = newZoom.clamped(to: minZoom...maxZoom)
             mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: newZoom))
+        case .ended, .cancelled:
+            initialLocation = nil
+            initialZoom = nil
+        default:
+            break
         }
     }
 }

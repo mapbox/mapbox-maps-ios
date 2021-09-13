@@ -1,38 +1,40 @@
 import UIKit
 
-/// The RotateGestureHandler is responsible for all `rotate` related infrastructure
-/// Tells the view to update itself when required
+/// `RotateGestureHandler` updates the map camera in response to 2-touch rotate gestures
 internal class RotateGestureHandler: GestureHandler {
 
-    internal var initialAngle: CGFloat = 0.0
-    internal let decelerationRate = UIScrollView.DecelerationRate.normal.rawValue
-    private let mapboxMap: MapboxMapProtocol
-    private let cameraAnimationsManager: CameraAnimationsManagerProtocol
+    private var initialBearing: Double?
 
-    internal init(for view: UIView,
+    internal init(view: UIView,
                   mapboxMap: MapboxMapProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol) {
-        self.mapboxMap = mapboxMap
-        self.cameraAnimationsManager = cameraAnimationsManager
-        super.init(for: view)
-
-        let rotate = UIRotationGestureRecognizer(target: self, action: #selector(handleRotate(_:)))
-        view.addGestureRecognizer(rotate)
-        gestureRecognizer = rotate
+        let rotateGestureRecognizer = UIRotationGestureRecognizer()
+        view.addGestureRecognizer(rotateGestureRecognizer)
+        super.init(
+            gestureRecognizer: rotateGestureRecognizer,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
+        rotateGestureRecognizer.addTarget(self, action: #selector(handleRotate(_:)))
     }
 
-    @objc internal func handleRotate(_ rotate: UIRotationGestureRecognizer) {
-        if rotate.state == .began {
+    @objc internal func handleRotate(_ gestureRecognizer: UIRotationGestureRecognizer) {
+        switch gestureRecognizer.state {
+        case .began:
             cameraAnimationsManager.cancelAnimations()
             delegate?.gestureBegan(for: .rotate)
-            initialAngle = CGFloat((mapboxMap.cameraState.bearing * .pi) / 180.0 * -1)
-        } else if rotate.state == .changed {
+            initialBearing = mapboxMap.cameraState.bearing
+        case .changed:
+            guard let initialBearing = initialBearing else {
+                return
+            }
             cameraAnimationsManager.cancelAnimations()
-            let changedAngle = initialAngle + rotate.rotation
-            var changedAngleInDegrees = changedAngle * 180.0 / .pi * -1
-            changedAngleInDegrees = changedAngleInDegrees.truncatingRemainder(dividingBy: 360.0)
+            let rotationInDegrees = Double(gestureRecognizer.rotation * 180.0 / .pi * -1)
             mapboxMap.setCamera(
-                to: CameraOptions(bearing: CLLocationDirection(changedAngleInDegrees)))
+                to: CameraOptions(bearing: (initialBearing + rotationInDegrees).truncatingRemainder(dividingBy: 360.0)))
+        case .ended, .cancelled:
+            initialBearing = nil
+        default:
+            break
         }
     }
 }

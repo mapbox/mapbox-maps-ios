@@ -17,6 +17,11 @@ final class MockPanGestureRecognizer: UIPanGestureRecognizer {
         locationStub.call(with: view)
     }
 
+    let velocityStub = Stub<UIView?, CGPoint>(defaultReturnValue: .zero)
+    override func velocity(in view: UIView?) -> CGPoint {
+        velocityStub.call(with: view)
+    }
+
     struct LocationOfTouchParams {
         var touchIndex: Int
         var view: UIView?

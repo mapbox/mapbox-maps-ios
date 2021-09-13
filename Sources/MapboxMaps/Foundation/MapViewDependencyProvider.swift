@@ -25,7 +25,8 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
         return PanGestureHandler(
             gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap,
-            cameraAnimationsManager: cameraAnimationsManager)
+            cameraAnimationsManager: cameraAnimationsManager,
+            dateProvider: DefaultDateProvider())
     }
 
     func makePinchGestureHandler(view: UIView,

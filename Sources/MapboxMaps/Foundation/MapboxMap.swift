@@ -835,9 +835,70 @@ extension MapboxMap {
                                  featureId: featureId,
                                  stateKey: stateKey)
     }
+
 }
 
-// MARK: - Testing only!
+// MARK: - View Annotations
+
+extension MapboxMap: MapViewAnnotationInterface {
+
+    // Dummy
+    public func makeViewAnnotationOptions(
+        coordinate: CLLocationCoordinate2D,
+        width: UInt32,
+        height: UInt32) -> ViewAnnotationOptions {
+        
+        let options = ViewAnnotationOptions(__geometry: MapboxCommon.Geometry(coordinate: coordinate),
+                                            width: width,
+                                            height: height,
+                                            allowViewAnnotationsCollision: true,
+                                            anchor: nil,
+                                            offsetX: 0,
+                                            offsetY: 0,
+                                            selected: false,
+                                            iconIdentifier: "")
+        
+        
+        
+        return options
+    }
+    public func calculateViewAnnotationsPosition(callback: @escaping ([ViewAnnotationPositionDescriptor]) -> Void) {
+        __map.calculateViewAnnotationsPosition(forCallback: callback)
+    }
+
+
+    /**
+     * Add view annotation.
+     *
+     * @return position for all views that need to be updated on the screen or null if views' placement remained the same.
+     */
+    public func addViewAnnotation(forIdentifier identifier: String, options: ViewAnnotationOptions) {
+        __map.addViewAnnotation(forIdentifier: identifier, options: options)
+    }
+
+
+    /**
+     * Update view annotation if it exists.
+     *
+     * @return position for all views that need to be updated on the screen or null if views' placement remained the same.
+     */
+    public func updateViewAnnotation(forIdentifier identifier: String, options: ViewAnnotationOptions) {
+        __map.updateViewAnnotation(forIdentifier: identifier, options: options)
+    }
+
+
+    /**
+     * Remove view annotation if it exists.
+     *
+     * @return position for all views that need to be updated on the screen or null if views' placement remained the same.
+     */
+    public func removeViewAnnotation(forIdentifier identifier: String) {
+        __map.removeViewAnnotation(forIdentifier: identifier)
+    }
+
+}
+
+// MARK: - Testing only! -
 
 extension MapboxMap {
     internal var __testingMap: Map {

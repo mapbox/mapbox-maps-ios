@@ -286,11 +286,7 @@ open class MapView: UIView {
         location = LocationManager(style: mapboxMap.style)
 
         // Initialize/Configure annotations orchestrator
-        annotations = AnnotationOrchestrator(
-            gestureRecognizer: gestures.singleTapGestureRecognizer,
-            mapFeatureQueryable: mapboxMap,
-            style: mapboxMap.style,
-            displayLinkCoordinator: self)
+        annotations = AnnotationOrchestrator(view: self, mapFeatureQueryable: mapboxMap, style: mapboxMap.style, displayLinkCoordinator: self, mapViewAnnotationHandler: mapboxMap)
     }
 
     private func checkForMetalSupport() {
@@ -352,6 +348,11 @@ open class MapView: UIView {
     private func updateFromDisplayLink(displayLink: CADisplayLink) {
         if window == nil {
             return
+        }
+        
+        // TODO: Make AnnotationsOrchestrator a displaylink participant
+        if !annotations.viewAnnotationsById.isEmpty {
+            annotations.placeAnnotations()
         }
 
         for participant in displayLinkParticipants.allObjects {
@@ -457,7 +458,7 @@ extension MapView: DelegatingMapClientDelegate {
         metalView.layer.isOpaque = isOpaque
         metalView.isPaused = true
         metalView.enableSetNeedsDisplay = true
-        metalView.presentsWithTransaction = false
+        metalView.presentsWithTransaction = true
 
         insertSubview(metalView, at: 0)
         self.metalView = metalView

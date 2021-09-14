@@ -1,5 +1,6 @@
 import UIKit
 @_implementationOnly import MapboxCommon_Private
+@_implementationOnly import MapboxCoreMaps_Private
 
 public protocol Annotation {
 
@@ -41,6 +42,36 @@ public protocol AnnotationInteractionDelegate: AnyObject {
 
 }
 
+public protocol MapViewAnnotationInterface: AnyObject {
+    
+    func calculateViewAnnotationsPosition(callback: @escaping ([ViewAnnotationPositionDescriptor]) -> Void)
+
+    /**
+     * Add view annotation.
+     *
+     * @return position for all views that need to be updated on the screen or null if views' placement remained the same.
+     */
+    func addViewAnnotation(forIdentifier identifier: String, options: ViewAnnotationOptions)
+
+
+    /**
+     * Update view annotation if it exists.
+     *
+     * @return position for all views that need to be updated on the screen or null if views' placement remained the same.
+     */
+    func updateViewAnnotation(forIdentifier identifier: String, options: ViewAnnotationOptions)
+
+
+    /**
+     * Remove view annotation if it exists.
+     *
+     * @return position for all views that need to be updated on the screen or null if views' placement remained the same.
+     */
+    func removeViewAnnotation(forIdentifier identifier: String)
+}
+
+
+
 public class AnnotationOrchestrator {
 
     private let gestureRecognizer: UIGestureRecognizer
@@ -48,17 +79,17 @@ public class AnnotationOrchestrator {
     private let style: Style
 
     private let mapFeatureQueryable: MapFeatureQueryable
+    
+    private let mapViewAnnotationHandler: MapViewAnnotationInterface
 
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
-    internal init(gestureRecognizer: UIGestureRecognizer,
-                  mapFeatureQueryable: MapFeatureQueryable,
-                  style: Style,
-                  displayLinkCoordinator: DisplayLinkCoordinator) {
-        self.gestureRecognizer = gestureRecognizer
+    internal init(view: UIView, mapFeatureQueryable: MapFeatureQueryable, style: Style, displayLinkCoordinator: DisplayLinkCoordinator, mapViewAnnotationHandler: MapViewAnnotationInterface) {
+        self.view = view
         self.mapFeatureQueryable = mapFeatureQueryable
         self.style = style
         self.displayLinkCoordinator = displayLinkCoordinator
+        self.mapViewAnnotationHandler = mapViewAnnotationHandler
     }
 
     /// Dictionary of annotation managers keyed by their identifiers.
@@ -186,4 +217,94 @@ public class AnnotationOrchestrator {
                 category: "Annotations")
         }
     }
+
+    
+    // MARK: - View backed annotations -
+
+    // TODO: Maybe convert to a weak dictionary?
+    internal var viewAnnotationsById: [String: ViewAnnotation] = [:]
+
+    public func addViewAnnotation(_ viewAnnotation: ViewAnnotation) {
+        
+        guard let view = view else { return }
+        
+        mapViewAnnotationHandler.addViewAnnotation(
+            forIdentifier: viewAnnotation.id,
+            options: viewAnnotation.options)
+        
+        viewAnnotationsById[viewAnnotation.id] = viewAnnotation
+        viewAnnotation.isHidden = false
+        view.addSubview(viewAnnotation)
+        
+        
+        placeAnnotations()
+    }
+
+    public func removeViewAnnotation(_ viewAnnotation: ViewAnnotation) {
+        mapViewAnnotationHandler.removeViewAnnotation(
+            forIdentifier: viewAnnotation.id)
+        viewAnnotation.removeFromSuperview()
+        viewAnnotationsById.removeValue(forKey: viewAnnotation.id)
+        placeAnnotations()
+    }
+
+    public func updateViewAnnotation(_ viewAnnotation: ViewAnnotation) {
+        mapViewAnnotationHandler.updateViewAnnotation(forIdentifier: viewAnnotation.id, options: viewAnnotation.options)
+
+        viewAnnotationsById[viewAnnotation.id] = viewAnnotation
+        placeAnnotations()
+    }
+    
+    internal func placeAnnotations() {
+
+        mapViewAnnotationHandler.calculateViewAnnotationsPosition { [weak self] positions in
+            
+            DispatchQueue.main.async { [weak self] in
+                
+                guard let self = self else { return }
+                
+                var visibleAnnotationIds: Set<String> = []
+                
+                for position in positions {
+
+                    // Approach:
+                    // 1. Get the view for this position's identifier
+                    // 2. Adjust the origin of the view. If the view's center is off screen, then hide the view
+
+                    guard let viewAnnotation = self.viewAnnotationsById[position.identifier] else {
+                        fatalError()
+                    }
+                    
+                    viewAnnotation.frame = CGRect(
+                        origin: CGPoint(
+                            x: position.leftTopCoordinate.point.x / 2,
+                            y: position.leftTopCoordinate.point.y / 2),
+                        size: viewAnnotation.frame.size)
+
+                    viewAnnotation.isHidden = false
+                    
+                    visibleAnnotationIds.insert(position.identifier)
+                }
+                
+                // Hide annotations that are off screen
+                for id in Set(self.viewAnnotationsById.keys) {
+                    guard let viewAnnotation = self.viewAnnotationsById[id] else {
+                        fatalError()
+                    }
+                    
+                    if !visibleAnnotationIds.contains(id) {
+                        viewAnnotation.isHidden = true
+                    }
+                    
+                }
+            }
+        }
+    }
 }
+
+public protocol ViewAnnotation: UIView {
+    var id: String { get }
+    var options: ViewAnnotationOptions { get }
+}
+
+

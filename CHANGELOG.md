@@ -10,10 +10,22 @@ Mapbox welcomes participation and contributions from everyone.
 * `GestureOptions.hapticFeedbackEnabled` has been removed. ([#663](https://github.com/mapbox/mapbox-maps-ios/pull/663))
 * `GestureManager.decelarationRate` has been removed and `GestureOptions.decelerationRate` is the single source of truth. ([#662](https://github.com/mapbox/mapbox-maps-ios/pull/662))
 * `GestureManager` no longer conforms to `NSObject` and is not a `UIGestureRecognizerDelegate`. ([#669](https://github.com/mapbox/mapbox-maps-ios/pull/669))
+* Pan deceleration has been temporarily removed. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
+* `TapGestureHandler.init` was previously public by mistake and is now internal. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
+* The behavior of `GestureManager.options` has been updated to better reflect the `isEnabled` state of the associated gesture recognizers. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
+* The gesture recognizer properties of `GestureManager` are no longer `Optional`. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
+* `GestureType` has been redesigned so that its cases have a 1-1 relationship with the built-in gestures. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
 
 ### Features ✨ and improvements 🏁
 
 * Allow users to set the map's `MapDebugOptions`. ([#648](https://github.com/mapbox/mapbox-maps-ios/pull/648))
+* `CameraState`'s fields are now `var`s instead of `let`s for testing purposes, and a public, memberwise initializer has been added. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
+* `PanScrollingMode` now conforms to `CaseIterable`. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
+* `GestureType` now conforms to `CaseIterable`. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
+
+### Bug fixes 🐞
+
+* GestureManager no longer sets itself as the delegate of all gestures in MapView when its options change. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
 
 ## 10.0.0-rc.8 - Sept 8, 2021
 
@@ -48,7 +60,6 @@ Mapbox welcomes participation and contributions from everyone.
 * Made generated enums conform to `CaseIterable` ([#650](https://github.com/mapbox/mapbox-maps-ios/pull/650))
 * Location puck can now hide the accuracy ring. The default value is to hide the accuracy ring. In order to enable the ring, set the `showAccuracyRing` property in `Puck2DConfiguration` to `true`. [#629](https://github.com/mapbox/mapbox-maps-ios/pull/629)
 * Annotation interaction delegates are only called when at least one annotation is detected to have been tapped ([638](https://github.com/mapbox/mapbox-maps-ios/issues/638))
-
 
 ### Bug fixes 🐞
 

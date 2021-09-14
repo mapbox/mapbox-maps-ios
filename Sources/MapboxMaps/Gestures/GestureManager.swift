@@ -121,8 +121,9 @@ public final class GestureManager: GestureHandlerDelegate {
         doubleTapToZoomOutGestureHandler.delegate = self
         quickZoomGestureHandler.delegate = self
 
+        pinchGestureHandler.gestureRecognizer.require(toFail: panGestureHandler.gestureRecognizer)
         pitchGestureHandler.gestureRecognizer.require(toFail: panGestureHandler.gestureRecognizer)
-        quickZoomGestureHandler.gestureRecognizer.require(toFail: doubleTapToZoomOutGestureHandler.gestureRecognizer)
+        quickZoomGestureHandler.gestureRecognizer.require(toFail: doubleTapToZoomInGestureHandler.gestureRecognizer)
     }
 
     func gestureBegan(for gestureType: GestureType) {

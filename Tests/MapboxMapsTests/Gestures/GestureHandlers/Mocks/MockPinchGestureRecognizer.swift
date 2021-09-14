@@ -6,6 +6,7 @@ final class MockPinchGestureRecognizer: UIPinchGestureRecognizer {
         get {
             getStateStub.call()
         }
+        // swiftlint:disable:next unused_setter_value
         set {
             fatalError("unimplemented")
         }
@@ -16,6 +17,7 @@ final class MockPinchGestureRecognizer: UIPinchGestureRecognizer {
         get {
             getScaleStub.call()
         }
+        // swiftlint:disable:next unused_setter_value
         set {
             fatalError("unimplemented")
         }

@@ -6,6 +6,7 @@ final class MockLongPressGestureRecognizer: UILongPressGestureRecognizer {
         get {
             getStateStub.call()
         }
+        // swiftlint:disable:next unused_setter_value
         set {
             fatalError("unimplemented")
         }

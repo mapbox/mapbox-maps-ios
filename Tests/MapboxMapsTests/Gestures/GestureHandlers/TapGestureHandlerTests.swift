@@ -6,6 +6,7 @@ final class TapGestureHandlerTests: XCTestCase {
     var gestureRecognizer: MockTapGestureRecognizer!
     var cameraAnimationsManager: MockCameraAnimationsManager!
     var mapboxMap: MockMapboxMap!
+    // swiftlint:disable:next weak_delegate
     var delegate: MockGestureHandlerDelegate!
 
     override func setUp() {

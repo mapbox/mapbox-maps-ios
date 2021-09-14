@@ -145,16 +145,16 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertTrue(quickZoomGestureHandler.delegate === gestureManager)
     }
 
-    func testPitchGestureRecognizerRequiresPanGestureRecognizerToFail() {
-        let pitchGestureRecognizer = pitchGestureHandler.gestureRecognizer as! MockGestureRecognizer
+    func testPitchGestureRecognizerRequiresPanGestureRecognizerToFail() throws {
+        let pitchGestureRecognizer = try XCTUnwrap(pitchGestureHandler.gestureRecognizer as? MockGestureRecognizer)
 
         XCTAssertEqual(pitchGestureRecognizer.requireToFailStub.invocations.count, 1)
         XCTAssertTrue(pitchGestureRecognizer.requireToFailStub.parameters.first
                         === panGestureHandler.gestureRecognizer)
     }
 
-    func testQuickZoomGestureRecognizerRequiresDoubleTapToZoomOutGestureRecognizerToFail() {
-        let quickZoomGestureRecognizer = quickZoomGestureHandler.gestureRecognizer as! MockGestureRecognizer
+    func testQuickZoomGestureRecognizerRequiresDoubleTapToZoomOutGestureRecognizerToFail() throws {
+        let quickZoomGestureRecognizer = try XCTUnwrap(quickZoomGestureHandler.gestureRecognizer as? MockGestureRecognizer)
 
         XCTAssertEqual(quickZoomGestureRecognizer.requireToFailStub.invocations.count, 1)
         XCTAssertTrue(quickZoomGestureRecognizer.requireToFailStub.parameters.first

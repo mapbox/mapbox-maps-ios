@@ -45,7 +45,7 @@ internal final class PanGestureHandler: GestureHandler {
             mapboxMap.setCamera(to: CameraOptions(cameraState: initialCameraState))
 
             let clampedTouchLocation: CGPoint
-            switch (panScrollingMode) {
+            switch panScrollingMode {
             case .horizontal:
                 clampedTouchLocation = CGPoint(x: touchLocation.x, y: initialTouchLocation.y)
             case .vertical:

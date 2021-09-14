@@ -6,6 +6,7 @@ final class RotateGestureHandlerTests: XCTestCase {
     var mapboxMap: MockMapboxMap!
     var cameraAnimationsManager: MockCameraAnimationsManager!
     var rotateGestureHandler: RotateGestureHandler!
+    // swiftlint:disable:next weak_delegate
     var delegate: MockGestureHandlerDelegate!
 
     override func setUp() {

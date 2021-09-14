@@ -6,6 +6,7 @@ final class MockPanGestureRecognizer: UIPanGestureRecognizer {
         get {
             getStateStub.call()
         }
+        // swiftlint:disable:next unused_setter_value
         set {
             fatalError("unimplemented")
         }

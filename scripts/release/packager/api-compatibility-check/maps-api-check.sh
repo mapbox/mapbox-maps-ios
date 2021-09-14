@@ -16,9 +16,11 @@ mkdir -p ${REPORT_DIR}
 
 if [[ -z ${TAGGED_RELEASE_VERSION} ]]; then
     LAST_VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
+    echo $LAST_VERSION
     VERSION=$GITHUB_REF
 else
     LAST_VERSION=$(git describe --tags $(git rev-list --tags --max-count=1 --skip=1 --no-walk))
+    echo $LAST_VERSION
     VERSION=$TAGGED_RELEASE_VERSION
 fi
 
@@ -26,6 +28,7 @@ if [[ ! -d ~/mapbox-apidiff ]]; then
     git clone --depth 1 https://github.com/mapbox/apidiff ~/mapbox-apidiff
     pushd ~/mapbox-apidiff/apple/diffreport > /dev/null
     swift build
+    echo "cloned"
     popd > /dev/null
 fi
 
@@ -61,10 +64,17 @@ EOF
 compareAPI() {
     set -eo pipefail
     JSON_TMP_FILE=$(mktemp)
-    git checkout jk/iphone-simulator
+    pushd ~/mapbox-apidiff/ > /dev/null
+    git fetch
+    git checkout origin/jk/iphone-simulator
     src/apidiff $LAST_VERSION $VERSION swift ../../Apps/App.xcworkspace MapboxMaps > $JSON_TMP_FILE
+    popd > /dev/null
 
+
+
+    cat $JSON_TMP_FILE
     eval "$(parse_json_report ${JSON_TMP_FILE})"
+    cat $JSON_TMP_FILE
     mv "${JSON_TMP_FILE}" ${REPORT_DIR}/api_compat.json
 
     if (( MAJOR_PROBLEMS > 0 )); then
@@ -75,5 +85,8 @@ compareAPI() {
         echo patch
     fi
 }
+
+api_compat=$(compareAPI)
+rm -rf ${TMPDIR}
 
 ${CURRENT_DIR}/api-compatibility-check/semver-check.sh "${VERSION}" "${LAST_VERSION}" "${api_compat}"

@@ -8,15 +8,13 @@ final class PanGestureHandlerTests: XCTestCase {
     var mapboxMap: MockMapboxMap!
     var cameraAnimationsManager: MockCameraAnimationsManager!
     var panGestureHandler: PanGestureHandler!
-    var delegate: MockGestureManagerDelegate!
+    var delegate: MockGestureHandlerDelegate!
     var gestureRecognizer: MockPanGestureRecognizer!
 
     override func setUp() {
         super.setUp()
         decelerationRate = .random(in: 0.99...0.999)
-        let allPanScrollingModes: [PanScrollingMode] = [
-            .horizontal, .vertical, .horizontalAndVertical]
-        panScrollingMode = allPanScrollingModes.randomElement()
+        panScrollingMode = PanScrollingMode.allCases.randomElement()
         view = UIView()
         mapboxMap = MockMapboxMap()
         cameraAnimationsManager = MockCameraAnimationsManager()
@@ -26,7 +24,7 @@ final class PanGestureHandlerTests: XCTestCase {
             view: view,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
-        delegate = MockGestureManagerDelegate()
+        delegate = MockGestureHandlerDelegate()
         panGestureHandler.delegate = delegate
         gestureRecognizer = MockPanGestureRecognizer()
         gestureRecognizer.getViewStub.defaultReturnValue = view
@@ -44,12 +42,11 @@ final class PanGestureHandlerTests: XCTestCase {
         super.tearDown()
     }
 
-    func testInitialization() throws {
+    func testInitialization() {
         XCTAssertEqual(panGestureHandler.decelerationRate, decelerationRate)
         XCTAssertEqual(panGestureHandler.panScrollingMode, panScrollingMode)
-        let gestureRecognizer = try XCTUnwrap(panGestureHandler.gestureRecognizer as? UIPanGestureRecognizer)
-        XCTAssertTrue(view.gestureRecognizers?.last === gestureRecognizer)
-        XCTAssertEqual(gestureRecognizer.maximumNumberOfTouches, 1)
+        XCTAssertTrue(view.gestureRecognizers?.last === panGestureHandler.gestureRecognizer)
+        XCTAssertEqual(panGestureHandler.gestureRecognizer.maximumNumberOfTouches, 1)
     }
 
     func testHandlePanBegan() {

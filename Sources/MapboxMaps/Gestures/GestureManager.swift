@@ -10,162 +10,129 @@ public protocol GestureManagerDelegate: AnyObject {
 public final class GestureManager {
 
     /// The `GestureOptions` that are used to set up the required gestures on the map
-    public var options = GestureOptions() {
-        didSet {
-            configureGestureHandlers(for: options)
+    public var options: GestureOptions {
+        set {
+            panGestureRecognizer.isEnabled = newValue.scrollEnabled
+            doubleTapToZoomOutGestureRecognizer.isEnabled = newValue.zoomEnabled
+            doubleTapToZoomInGestureRecognizer.isEnabled = newValue.zoomEnabled
+            pinchGestureRecognizer.isEnabled = newValue.scrollEnabled && newValue.zoomEnabled
+            rotationGestureRecognizer.isEnabled = newValue.rotateEnabled
+            quickZoomGestureRecognizer.isEnabled = newValue.zoomEnabled
+            pitchGestureRecognizer.isEnabled = newValue.pitchEnabled
+            panGestureHandler.panScrollingMode = newValue.scrollingMode
+            panGestureHandler.decelerationRate = newValue.decelerationRate
+        }
+        get {
+            var gestureOptions = GestureOptions()
+            gestureOptions.scrollEnabled = panGestureRecognizer.isEnabled
+                || pinchGestureRecognizer.isEnabled
+            gestureOptions.rotateEnabled = rotationGestureRecognizer.isEnabled
+            gestureOptions.zoomEnabled = quickZoomGestureRecognizer.isEnabled
+                || pinchGestureRecognizer.isEnabled
+                || doubleTapToZoomInGestureRecognizer.isEnabled
+                || doubleTapToZoomOutGestureRecognizer.isEnabled
+            gestureOptions.pitchEnabled = pitchGestureRecognizer.isEnabled
+            gestureOptions.scrollingMode = panGestureHandler.panScrollingMode
+            gestureOptions.decelerationRate = panGestureHandler.decelerationRate
+            return gestureOptions
         }
     }
 
-    /// Map of GestureType --> GestureHandler. We mantain a map to allow us to remove gestures arbitrarily.
-    private(set) var gestureHandlers: [GestureType: GestureHandler] = [:]
+    private let panGestureHandler: PanGestureHandler
 
-    /// The underlying gesture recognizer for the pan gesture
-    public var panGestureRecognizer: UIGestureRecognizer? {
-        return gestureHandlers[.pan]?.gestureRecognizer
+    /// The gesture recognizer for the pan gesture
+    public var panGestureRecognizer: UIGestureRecognizer {
+        return panGestureHandler.gestureRecognizer
     }
 
-    /// The underlying gesture recognizer for the "double tap to zoom in" gesture
-    public var doubleTapToZoomInGestureRecognizer: UIGestureRecognizer? {
-        return gestureHandlers[.tap(numberOfTouches: 1)]?.gestureRecognizer
+    private let doubleTapToZoomInGestureHandler: TapGestureHandler
+
+    /// The gesture recognizer for the "double tap to zoom in" gesture
+    public var doubleTapToZoomInGestureRecognizer: UIGestureRecognizer {
+        return doubleTapToZoomInGestureHandler.gestureRecognizer
     }
 
-    /// The underlying gesture recognizer for the "double tap to zoom out" gesture
-    public var doubleTapToZoomOutGestureRecognizer: UIGestureRecognizer? {
-        return gestureHandlers[.tap(numberOfTouches: 2)]?.gestureRecognizer
+    private let doubleTapToZoomOutGestureHandler: TapGestureHandler
+
+    /// The gesture recognizer for the "double tap to zoom out" gesture
+    public var doubleTapToZoomOutGestureRecognizer: UIGestureRecognizer {
+        return doubleTapToZoomOutGestureHandler.gestureRecognizer
     }
 
-    /// The underlying gesture recognizer for the quickZoom gesture
-    public var quickZoomGestureRecognizer: UIGestureRecognizer? {
-        return gestureHandlers[.quickZoom]?.gestureRecognizer
+    private let quickZoomGestureHandler: QuickZoomGestureHandler
+
+    /// The gesture recognizer for the quickZoom gesture
+    public var quickZoomGestureRecognizer: UIGestureRecognizer {
+        return quickZoomGestureHandler.gestureRecognizer
     }
 
-    /// The underlying gesture recognizer for the pitch gesture
-    public var pitchGestureRecognizer: UIGestureRecognizer? {
-        return gestureHandlers[.pitch]?.gestureRecognizer
+    private let pitchGestureHandler: PitchGestureHandler
+
+    /// The gesture recognizer for the pitch gesture
+    public var pitchGestureRecognizer: UIGestureRecognizer {
+        return pitchGestureHandler.gestureRecognizer
     }
 
-    /// The underlying gesture recognizer for the rotate gesture
-    public var rotationGestureRecognizer: UIGestureRecognizer? {
-        return gestureHandlers[.rotate]?.gestureRecognizer
+    private let rotationGestureHandler: RotateGestureHandler
+
+    /// The gesture recognizer for the rotate gesture
+    public var rotationGestureRecognizer: UIGestureRecognizer {
+        return rotationGestureHandler.gestureRecognizer
     }
 
-    /// The underlying gesture recognizer for the "pinch to zoom" gesture
-    public var pinchGestureRecognizer: UIGestureRecognizer? {
-        return gestureHandlers[.pinch]?.gestureRecognizer
+    private let pinchGestureHandler: PinchGestureHandler
+
+    /// The gesture recognizer for the "pinch to zoom" gesture
+    public var pinchGestureRecognizer: UIGestureRecognizer {
+        return pinchGestureHandler.gestureRecognizer
     }
-
-    /// The view that all gestures operate on
-    private weak var view: UIView?
-
-    /// The camera manager that responds to gestures.
-    private let cameraAnimationsManager: CameraAnimationsManagerProtocol
-
-    private let mapboxMap: MapboxMap
 
     /// Set this delegate to be called back if a gesture begins
-    public weak var delegate: GestureManagerDelegate? {
-        didSet {
-            gestureHandlers.forEach { $0.value.delegate = delegate }
-        }
+    public weak var delegate: GestureManagerDelegate?
+
+    internal init(view: UIView,
+                  mapboxMap: MapboxMapProtocol,
+                  cameraAnimationsManager: CameraAnimationsManagerProtocol) {
+        self.panGestureHandler = PanGestureHandler(
+            decelerationRate: UIScrollView.DecelerationRate.normal.rawValue,
+            panScrollingMode: .horizontalAndVertical,
+            view: view,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
+        self.doubleTapToZoomInGestureHandler = TapGestureHandler(
+            numberOfTouchesRequired: 1,
+            view: view,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
+        self.doubleTapToZoomOutGestureHandler = TapGestureHandler(
+            numberOfTouchesRequired: 2,
+            view: view,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
+        self.pinchGestureHandler = PinchGestureHandler(
+            view: view,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
+        self.rotationGestureHandler = RotateGestureHandler(
+            view: view,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
+        self.quickZoomGestureHandler = QuickZoomGestureHandler(
+            view: view,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
+        self.pitchGestureHandler = PitchGestureHandler(
+            view: view,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
+
+        pitchGestureHandler.gestureRecognizer.require(toFail: panGestureHandler.gestureRecognizer)
+        quickZoomGestureHandler.gestureRecognizer.require(toFail: doubleTapToZoomOutGestureHandler.gestureRecognizer)
     }
+}
 
-    /// Internal delegate for gesture recognizers
-    // swiftlint:disable:next weak_delegate
-    internal let gestureRecognizerDelegate: GestureRecognizerDelegate
-
-    internal init(view: UIView, cameraAnimationsManager: CameraAnimationsManagerProtocol, mapboxMap: MapboxMap) {
-        self.view = view
-        self.cameraAnimationsManager = cameraAnimationsManager
-        self.mapboxMap = mapboxMap
-        self.gestureRecognizerDelegate = GestureRecognizerDelegate()
-        configureGestureHandlers(for: options)
-    }
-
-    // Loops through supported gestures and generate associated handlers that are to be kept alive
-    internal func configureGestureHandlers(for options: GestureOptions) {
-        var newGestureHandlerMap: [GestureType: GestureHandler] = [:]
-        for gestureType in options.supportedGestureTypes() {
-            if gestureHandlers[gestureType] == nil {
-                newGestureHandlerMap[gestureType] = makeHandler(for: gestureType)
-                newGestureHandlerMap[gestureType]?.delegate = delegate
-            } else {
-                newGestureHandlerMap[gestureType] = gestureHandlers[gestureType]
-            }
-        }
-
-        gestureHandlers = newGestureHandlerMap
-
-        if let pitchHandler = gestureHandlers[.pitch], let panHandler = gestureHandlers[.pan] {
-            requireGestureToFail(allowedGesture: pitchHandler, failableGesture: panHandler)
-        }
-
-        if let pinchHandler = gestureHandlers[.pinch], let panHandler = gestureHandlers[.pan] {
-            requireGestureToFail(allowedGesture: pinchHandler, failableGesture: panHandler)
-        }
-
-        if let doubleTapHandler = gestureHandlers[.tap(numberOfTouches: 1)],
-           let quickZoomHandler = gestureHandlers[.quickZoom] {
-            requireGestureToFail(allowedGesture: quickZoomHandler, failableGesture: doubleTapHandler)
-        }
-
-        registerAsDelegate()
-    }
-
-    internal func registerAsDelegate() {
-
-        guard let view = view,
-              let validGestureRecognizers = view.gestureRecognizers else {
-            return
-        }
-
-        for gestureRecognizer in validGestureRecognizers {
-            gestureRecognizer.delegate = gestureRecognizerDelegate
-        }
-    }
-
-    internal func requireGestureToFail(allowedGesture: GestureHandler, failableGesture: GestureHandler) {
-        allowedGesture.gestureRecognizer.require(toFail: failableGesture.gestureRecognizer)
-    }
-
-    // Generates a handler for every gesture type
-    private func makeHandler(for type: GestureType) -> GestureHandler {
-        guard let view = view else {
-            fatalError("GestureManager view is nil.")
-        }
-        switch type {
-        case .pan:
-            return PanGestureHandler(
-                decelerationRate: options.decelerationRate,
-                panScrollingMode: options.scrollingMode,
-                view: view,
-                mapboxMap: mapboxMap,
-                cameraAnimationsManager: cameraAnimationsManager)
-        case .tap(let numberOfTouches):
-            return TapGestureHandler(
-                numberOfTouchesRequired: numberOfTouches,
-                view: view,
-                mapboxMap: mapboxMap,
-                cameraAnimationsManager: cameraAnimationsManager)
-        case .pinch:
-            return PinchGestureHandler(
-                view: view,
-                mapboxMap: mapboxMap,
-                cameraAnimationsManager: cameraAnimationsManager)
-        case .rotate:
-            return RotateGestureHandler(
-                view: view,
-                mapboxMap: mapboxMap,
-                cameraAnimationsManager: cameraAnimationsManager)
-        case .quickZoom:
-            return QuickZoomGestureHandler(
-                view: view,
-                mapboxMap: mapboxMap,
-                cameraAnimationsManager: cameraAnimationsManager)
-        case .pitch:
-            return PitchGestureHandler(
-                view: view,
-                mapboxMap: mapboxMap,
-                cameraAnimationsManager: cameraAnimationsManager)
-        }
+extension GestureManager: GestureHandlerDelegate {
+    func gestureBegan(for gestureType: GestureType) {
+        delegate?.gestureBegan(for: gestureType)
     }
 }

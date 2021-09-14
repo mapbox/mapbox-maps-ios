@@ -8,7 +8,7 @@ final class PinchGestureHandlerTests: XCTestCase {
     var cameraAnimationsManager: MockCameraAnimationsManager!
     var pinchGestureHandler: PinchGestureHandler!
     // swiftlint:disable:next weak_delegate
-    var delegate: MockGestureManagerDelegate!
+    var delegate: MockGestureHandlerDelegate!
     var gestureRecognizer: MockPinchGestureRecognizer!
 
     override func setUp() {
@@ -20,7 +20,7 @@ final class PinchGestureHandlerTests: XCTestCase {
             view: view,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
-        delegate = MockGestureManagerDelegate()
+        delegate = MockGestureHandlerDelegate()
         pinchGestureHandler.delegate = delegate
         gestureRecognizer = MockPinchGestureRecognizer()
         gestureRecognizer.getViewStub.defaultReturnValue = view
@@ -36,9 +36,8 @@ final class PinchGestureHandlerTests: XCTestCase {
         super.tearDown()
     }
 
-    func testInitialization() throws {
-        let gestureRecognizer = try XCTUnwrap(pinchGestureHandler.gestureRecognizer as? UIPinchGestureRecognizer)
-        XCTAssertTrue(view.gestureRecognizers?.last === gestureRecognizer)
+    func testInitialization() {
+        XCTAssertTrue(view.gestureRecognizers?.last === pinchGestureHandler.gestureRecognizer)
     }
 
     func testPinchBegan() {

@@ -8,7 +8,7 @@ final class PitchGestureHandlerTests: XCTestCase {
     var cameraAnimationsManager: MockCameraAnimationsManager!
     var pitchGestureHandler: PitchGestureHandler!
     // swiftlint:disable:next weak_delegate
-    var delegate: MockGestureManagerDelegate!
+    var delegate: MockGestureHandlerDelegate!
     var gestureRecognizer: MockPanGestureRecognizer!
 
     override func setUp() {
@@ -20,7 +20,7 @@ final class PitchGestureHandlerTests: XCTestCase {
             view: view,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
-        delegate = MockGestureManagerDelegate()
+        delegate = MockGestureHandlerDelegate()
         pitchGestureHandler.delegate = delegate
         gestureRecognizer = MockPanGestureRecognizer()
         gestureRecognizer.getViewStub.defaultReturnValue = view
@@ -37,11 +37,10 @@ final class PitchGestureHandlerTests: XCTestCase {
         super.tearDown()
     }
 
-    func testInitialization() throws {
-        let gestureRecognizer = try XCTUnwrap(pitchGestureHandler.gestureRecognizer as? UIPanGestureRecognizer)
-        XCTAssertTrue(view.gestureRecognizers?.last === gestureRecognizer)
-        XCTAssertEqual(gestureRecognizer.minimumNumberOfTouches, 2)
-        XCTAssertEqual(gestureRecognizer.maximumNumberOfTouches, 2)
+    func testInitialization() {
+        XCTAssertTrue(view.gestureRecognizers?.last === pitchGestureHandler.gestureRecognizer)
+        XCTAssertEqual(pitchGestureHandler.gestureRecognizer.minimumNumberOfTouches, 2)
+        XCTAssertEqual(pitchGestureHandler.gestureRecognizer.maximumNumberOfTouches, 2)
     }
 
     func testPitchBegan() {
@@ -60,6 +59,7 @@ final class PitchGestureHandlerTests: XCTestCase {
         pitchGestureHandler.handlePitchGesture(gestureRecognizer) // Start gesture to set it to .began
         gestureRecognizer.locationOfTouchStub.returnValueQueue = [CGPoint(x: 0, y: 0), CGPoint(x: 100, y: 0)]
         gestureRecognizer.getStateStub.defaultReturnValue = .changed
+        gestureRecognizer.minimumNumberOfTouches = 2
         gestureRecognizer.translationStub.defaultReturnValue = CGPoint(x: 0, y: 25)
 
         pitchGestureHandler.handlePitchGesture(gestureRecognizer)

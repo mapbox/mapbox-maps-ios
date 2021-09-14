@@ -2,7 +2,7 @@ import UIKit
 
 /// `TapGestureHandler` updates the map camera in response
 /// to double tap gestures with 1 or 2 touches
-internal class TapGestureHandler: GestureHandler {
+internal class TapGestureHandler: GestureHandler<UITapGestureRecognizer> {
 
     internal required init(numberOfTouchesRequired: Int,
                            view: UIView,
@@ -27,22 +27,25 @@ internal class TapGestureHandler: GestureHandler {
             guard gestureRecognizer.numberOfTapsRequired == 2 else {
                 return
             }
+            let gestureType: GestureType?
             let zoomDelta: CGFloat?
             switch gestureRecognizer.numberOfTouchesRequired {
             case 1:
-                // Double tapping with one finger will cause the map to zoom out by 1 level
+                gestureType = .doubleTapToZoomIn
                 zoomDelta = 1
             case 2:
-                // Double tapping with two fingers will cause the map to zoom in by 1 level
+                gestureType = .doubleTapToZoomOut
                 zoomDelta = -1
             default:
+                gestureType = nil
                 zoomDelta = nil
             }
-            guard let zoomDelta = zoomDelta else {
+            guard let gestureType = gestureType,
+                  let zoomDelta = zoomDelta else {
                 return
             }
             cameraAnimationsManager.cancelAnimations()
-            delegate?.gestureBegan(for: .tap(numberOfTouches: gestureRecognizer.numberOfTouchesRequired))
+            delegate?.gestureBegan(for: gestureType)
             _ = cameraAnimationsManager.ease(to: CameraOptions(zoom: mapboxMap.cameraState.zoom + zoomDelta),
                                              duration: 0.3,
                                              curve: .easeOut,

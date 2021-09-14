@@ -1,6 +1,6 @@
 import UIKit
 
-public enum PanScrollingMode: String, Equatable {
+public enum PanScrollingMode: String, Equatable, CaseIterable {
     /// The map allows the user to only scroll horizontally.
     case horizontal
 
@@ -97,30 +97,4 @@ public struct GestureOptions: Equatable {
     public var decelerationRate: CGFloat = UIScrollView.DecelerationRate.normal.rawValue
 
     public init() {}
-
-    /// Emits the supported gesture types for the current set of options
-    internal func supportedGestureTypes() -> Set<GestureType> {
-        var supportedGestureTypes = Set<GestureType>()
-
-        if scrollEnabled {
-            supportedGestureTypes.insert(.pan)
-        }
-
-        if zoomEnabled {
-            supportedGestureTypes.insert(.pinch)
-            supportedGestureTypes.insert(.tap(numberOfTouches: 1))
-            supportedGestureTypes.insert(.tap(numberOfTouches: 2))
-            supportedGestureTypes.insert(.quickZoom)
-        }
-
-        if rotateEnabled {
-            supportedGestureTypes.insert(.rotate)
-        }
-
-        if pitchEnabled {
-            supportedGestureTypes.insert(.pitch)
-        }
-
-        return supportedGestureTypes
-    }
 }

@@ -1,7 +1,7 @@
 import UIKit
 
 /// `PanGestureHandler` updates the map camera in response to a single-touch pan gesture
-internal final class PanGestureHandler: GestureHandler {
+internal final class PanGestureHandler: GestureHandler<UIPanGestureRecognizer> {
 
     // The deceleration rate in points/ms^2
     internal var decelerationRate: CGFloat

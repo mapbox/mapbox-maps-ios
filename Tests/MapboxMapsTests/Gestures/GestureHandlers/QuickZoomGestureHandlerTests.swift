@@ -7,7 +7,7 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
     var cameraAnimationsManager: MockCameraAnimationsManager!
     var quickZoomHandler: QuickZoomGestureHandler!
     // swiftlint:disable weak_delegate
-    var delegate: MockGestureManagerDelegate!
+    var delegate: MockGestureHandlerDelegate!
     var gestureRecognizer: MockLongPressGestureRecognizer!
 
     override func setUp() {
@@ -16,7 +16,7 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
         mapboxMap = MockMapboxMap()
         cameraAnimationsManager = MockCameraAnimationsManager()
         quickZoomHandler = QuickZoomGestureHandler(view: view, mapboxMap: mapboxMap, cameraAnimationsManager: cameraAnimationsManager)
-        delegate = MockGestureManagerDelegate()
+        delegate = MockGestureHandlerDelegate()
         quickZoomHandler.delegate = delegate
         gestureRecognizer = MockLongPressGestureRecognizer()
         gestureRecognizer.getViewStub.defaultReturnValue = view
@@ -32,11 +32,10 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
         super.tearDown()
     }
 
-    func testInitialization() throws {
-        let gestureRecognizer = try XCTUnwrap(quickZoomHandler.gestureRecognizer as? UILongPressGestureRecognizer)
-        XCTAssertEqual(gestureRecognizer.numberOfTapsRequired, 1)
-        XCTAssertEqual(gestureRecognizer.minimumPressDuration, 0)
-        XCTAssertTrue(view.gestureRecognizers?.last === gestureRecognizer)
+    func testInitialization() {
+        XCTAssertEqual(quickZoomHandler.gestureRecognizer.numberOfTapsRequired, 1)
+        XCTAssertEqual(quickZoomHandler.gestureRecognizer.minimumPressDuration, 0)
+        XCTAssertTrue(view.gestureRecognizers?.last === quickZoomHandler.gestureRecognizer)
     }
 
     func testGestureBegan() {

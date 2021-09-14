@@ -1,21 +1,24 @@
 import Foundation
 
-public enum GestureType: Hashable {
-    /// The pan gesture type
+public enum GestureType: Hashable, CaseIterable {
+    /// The pan gesture
     case pan
 
-    /// The tap gesture type
-    case tap(numberOfTouches: Int)
+    /// The double tap to zoom in gesture
+    case doubleTapToZoomIn
 
-    /// The zoom gesture type
+    /// The double tap to zoom out gesture
+    case doubleTapToZoomOut
+
+    /// The pinch gesture
     case pinch
 
-    /// The rotate gesture type
+    /// The rotate gesture
     case rotate
 
-    /// The quick zoom gesture type
+    /// The quick zoom gesture
     case quickZoom
 
-    /// The pitch gesture type
+    /// The pitch gesture
     case pitch
 }

@@ -1,78 +1,176 @@
 import XCTest
-import UIKit
 @testable import MapboxMaps
 
 final class GestureManagerTests: XCTestCase {
 
-    var mapView: MapView!
+    var view: UIView!
+    var mapboxMap: MockMapboxMap!
     var cameraAnimationsManager: MockCameraAnimationsManager!
-    var initialGestureOptions: GestureOptions!
     var gestureManager: GestureManager!
+    // swiftlint:disable:next weak_delegate
+    var delegate: MockGestureManagerDelegate!
 
     override func setUp() {
         super.setUp()
-        mapView = MapView(
-            frame: CGRect(x: 0, y: 0, width: 100, height: 100),
-            mapInitOptions: MapInitOptions(
-                resourceOptions: ResourceOptions(accessToken: "dummy"),
-                styleURI: nil))
+        view = UIView()
+        mapboxMap = MockMapboxMap()
         cameraAnimationsManager = MockCameraAnimationsManager()
-        initialGestureOptions = GestureOptions()
         gestureManager = GestureManager(
-            view: mapView,
-            cameraAnimationsManager: cameraAnimationsManager,
-            mapboxMap: mapView.mapboxMap)
+            view: view,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
+        delegate =  MockGestureManagerDelegate()
+        gestureManager.delegate = delegate
     }
 
     override func tearDown() {
+        delegate = nil
         gestureManager = nil
-        initialGestureOptions = nil
         cameraAnimationsManager = nil
-        mapView = nil
+        mapboxMap = nil
+        view = nil
         super.tearDown()
     }
 
-    func testInitializer() {
-        XCTAssert(gestureManager.gestureHandlers.count == 7)
-        XCTAssert(gestureManager.gestureHandlers[.tap(numberOfTouches: 1)] is TapGestureHandler)
-        XCTAssert(gestureManager.gestureHandlers[.tap(numberOfTouches: 2)] is TapGestureHandler)
-        XCTAssert(gestureManager.gestureHandlers[.pan] is PanGestureHandler)
+    func testGestureBegan() {
+        let gestureType = GestureType.allCases.randomElement()!
+
+        gestureManager.gestureBegan(for: gestureType)
+
+        XCTAssertEqual(delegate.gestureBeganStub.parameters, [gestureType])
     }
 
-    func testGestureRecognizersReturnedAreSameAsRecognizersPresentInGestureHandlers() {
-        XCTAssertTrue(gestureManager.gestureHandlers[.tap(numberOfTouches: 1)]?.gestureRecognizer === gestureManager.doubleTapToZoomInGestureRecognizer)
-        XCTAssertTrue(gestureManager.gestureHandlers[.tap(numberOfTouches: 2)]?.gestureRecognizer === gestureManager.doubleTapToZoomOutGestureRecognizer)
-        XCTAssertTrue(gestureManager.gestureHandlers[.pan]?.gestureRecognizer === gestureManager.panGestureRecognizer)
-        XCTAssertTrue(gestureManager.gestureHandlers[.pinch]?.gestureRecognizer === gestureManager.pinchGestureRecognizer)
-        XCTAssertTrue(gestureManager.gestureHandlers[.pitch]?.gestureRecognizer === gestureManager.pitchGestureRecognizer)
-        XCTAssertTrue(gestureManager.gestureHandlers[.quickZoom]?.gestureRecognizer === gestureManager.quickZoomGestureRecognizer)
-        XCTAssertTrue(gestureManager.gestureHandlers[.rotate]?.gestureRecognizer === gestureManager.rotationGestureRecognizer)
+    func testOptionsPitchEnabled() {
+        XCTAssertTrue(gestureManager.options.pitchEnabled)
+        XCTAssertTrue(gestureManager.pitchGestureRecognizer.isEnabled)
+
+        gestureManager.options.pitchEnabled = false
+
+        XCTAssertFalse(gestureManager.options.pitchEnabled)
+        XCTAssertFalse(gestureManager.pitchGestureRecognizer.isEnabled)
+
+        gestureManager.options.pitchEnabled = true
+
+        XCTAssertTrue(gestureManager.options.pitchEnabled)
+        XCTAssertTrue(gestureManager.pitchGestureRecognizer.isEnabled)
+
+        gestureManager.pitchGestureRecognizer.isEnabled = false
+
+        XCTAssertFalse(gestureManager.options.pitchEnabled)
+        XCTAssertFalse(gestureManager.pitchGestureRecognizer.isEnabled)
+
+        gestureManager.pitchGestureRecognizer.isEnabled = true
+
+        XCTAssertTrue(gestureManager.options.pitchEnabled)
+        XCTAssertTrue(gestureManager.pitchGestureRecognizer.isEnabled)
     }
 
-    func testUpdateOfGestureConfigByAddingNewGestures() {
+    func testOptionsRotateEnabled() {
+        XCTAssertTrue(gestureManager.options.rotateEnabled)
+        XCTAssertTrue(gestureManager.rotationGestureRecognizer.isEnabled)
 
-        var options = GestureOptions()
-        options.pitchEnabled = false
-        let gestureManager = GestureManager(
-            view: mapView,
-            cameraAnimationsManager: cameraAnimationsManager,
-            mapboxMap: mapView.mapboxMap)
+        gestureManager.options.rotateEnabled = false
 
-        options.pitchEnabled = true
-        gestureManager.options = options
+        XCTAssertFalse(gestureManager.options.rotateEnabled)
+        XCTAssertFalse(gestureManager.rotationGestureRecognizer.isEnabled)
 
-        XCTAssert(gestureManager.gestureHandlers.count == 7)
+        gestureManager.options.rotateEnabled = true
+
+        XCTAssertTrue(gestureManager.options.rotateEnabled)
+        XCTAssertTrue(gestureManager.rotationGestureRecognizer.isEnabled)
+
+        gestureManager.rotationGestureRecognizer.isEnabled = false
+
+        XCTAssertFalse(gestureManager.options.rotateEnabled)
+        XCTAssertFalse(gestureManager.rotationGestureRecognizer.isEnabled)
+
+        gestureManager.rotationGestureRecognizer.isEnabled = true
+
+        XCTAssertTrue(gestureManager.options.rotateEnabled)
+        XCTAssertTrue(gestureManager.rotationGestureRecognizer.isEnabled)
     }
 
-    func testUpdateOfGestureConfigByRemovingAllGestures() {
-        var options = GestureOptions()
-        options.pitchEnabled = false
-        options.scrollEnabled = false
-        options.zoomEnabled = false
-        options.rotateEnabled = false
+    func testOptionsScrollEnabled() {
+        let scrollingGestureRecognizers: [UIGestureRecognizer] = [
+            gestureManager.panGestureRecognizer,
+            gestureManager.pinchGestureRecognizer]
 
-        gestureManager.options = options
+        XCTAssertTrue(gestureManager.options.scrollEnabled)
+        XCTAssertTrue(scrollingGestureRecognizers.allSatisfy { $0.isEnabled })
 
-        XCTAssert(gestureManager.gestureHandlers.count == 0)
+        gestureManager.options.scrollEnabled = false
+
+        XCTAssertFalse(gestureManager.options.scrollEnabled)
+        XCTAssertTrue(scrollingGestureRecognizers.allSatisfy { !$0.isEnabled })
+
+        gestureManager.options.scrollEnabled = true
+
+        XCTAssertTrue(gestureManager.options.scrollEnabled)
+        XCTAssertTrue(scrollingGestureRecognizers.allSatisfy { $0.isEnabled })
+
+        let recognizer = scrollingGestureRecognizers.randomElement()!
+        recognizer.isEnabled = false
+
+        XCTAssertTrue(gestureManager.options.scrollEnabled)
+        XCTAssertFalse(recognizer.isEnabled)
+        XCTAssertTrue(scrollingGestureRecognizers.filter { $0 !== recognizer }.allSatisfy { $0.isEnabled })
+
+        recognizer.isEnabled = true
+
+        XCTAssertTrue(gestureManager.options.scrollEnabled)
+        XCTAssertTrue(scrollingGestureRecognizers.allSatisfy { $0.isEnabled })
+
+        scrollingGestureRecognizers.forEach { $0.isEnabled = false }
+
+        XCTAssertFalse(gestureManager.options.scrollEnabled)
+        XCTAssertTrue(scrollingGestureRecognizers.allSatisfy { !$0.isEnabled })
+
+        scrollingGestureRecognizers.forEach { $0.isEnabled = true }
+
+        XCTAssertTrue(gestureManager.options.scrollEnabled)
+        XCTAssertTrue(scrollingGestureRecognizers.allSatisfy { $0.isEnabled })
+    }
+
+    func testOptionsZoomEnabled() {
+        let zoomingGestureRecognizers: [UIGestureRecognizer] = [
+            gestureManager.pinchGestureRecognizer,
+            gestureManager.quickZoomGestureRecognizer,
+            gestureManager.doubleTapToZoomOutGestureRecognizer,
+            gestureManager.doubleTapToZoomInGestureRecognizer]
+
+        XCTAssertTrue(gestureManager.options.zoomEnabled)
+        XCTAssertTrue(zoomingGestureRecognizers.allSatisfy { $0.isEnabled })
+
+        gestureManager.options.zoomEnabled = false
+
+        XCTAssertFalse(gestureManager.options.zoomEnabled)
+        XCTAssertTrue(zoomingGestureRecognizers.allSatisfy { !$0.isEnabled })
+
+        gestureManager.options.zoomEnabled = true
+
+        XCTAssertTrue(gestureManager.options.zoomEnabled)
+        XCTAssertTrue(zoomingGestureRecognizers.allSatisfy { $0.isEnabled })
+
+        let recognizer = zoomingGestureRecognizers.randomElement()!
+        recognizer.isEnabled = false
+
+        XCTAssertTrue(gestureManager.options.zoomEnabled)
+        XCTAssertFalse(recognizer.isEnabled)
+        XCTAssertTrue(zoomingGestureRecognizers.filter { $0 !== recognizer }.allSatisfy { $0.isEnabled })
+
+        recognizer.isEnabled = true
+
+        XCTAssertTrue(gestureManager.options.zoomEnabled)
+        XCTAssertTrue(zoomingGestureRecognizers.allSatisfy { $0.isEnabled })
+
+        zoomingGestureRecognizers.forEach { $0.isEnabled = false }
+
+        XCTAssertFalse(gestureManager.options.zoomEnabled)
+        XCTAssertTrue(zoomingGestureRecognizers.allSatisfy { !$0.isEnabled })
+
+        zoomingGestureRecognizers.forEach { $0.isEnabled = true }
+
+        XCTAssertTrue(gestureManager.options.zoomEnabled)
+        XCTAssertTrue(zoomingGestureRecognizers.allSatisfy { $0.isEnabled })
     }
 }

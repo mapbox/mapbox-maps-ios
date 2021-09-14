@@ -6,7 +6,7 @@ final class RotateGestureHandlerTests: XCTestCase {
     var mapboxMap: MockMapboxMap!
     var cameraAnimationsManager: MockCameraAnimationsManager!
     var rotateGestureHandler: RotateGestureHandler!
-    var delegate: MockGestureManagerDelegate!
+    var delegate: MockGestureHandlerDelegate!
     var gestureRecognizer: MockRotationGestureRecognizer!
 
     override func setUp() {
@@ -18,7 +18,7 @@ final class RotateGestureHandlerTests: XCTestCase {
             view: view,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
-        delegate = MockGestureManagerDelegate()
+        delegate = MockGestureHandlerDelegate()
         rotateGestureHandler.delegate = delegate
         gestureRecognizer = MockRotationGestureRecognizer()
     }
@@ -33,9 +33,26 @@ final class RotateGestureHandlerTests: XCTestCase {
         super.setUp()
     }
 
-    func testInitialization() throws {
-        let gestureRecognizer = try XCTUnwrap(rotateGestureHandler.gestureRecognizer as? UIRotationGestureRecognizer)
-        XCTAssertTrue(view.gestureRecognizers?.last === gestureRecognizer)
+    func testInitialization() {
+        XCTAssertTrue(view.gestureRecognizers?.last === rotateGestureHandler.gestureRecognizer)
+    }
+
+    func testAllowedSimultaneousGestures() {
+        XCTAssertTrue(rotateGestureHandler.gestureRecognizer(
+                        rotateGestureHandler.gestureRecognizer,
+                        shouldRecognizeSimultaneouslyWith: UIPinchGestureRecognizer()))
+    }
+
+    func testDisallowedSimultaneousGestures() {
+        XCTAssertFalse(rotateGestureHandler.gestureRecognizer(
+                        rotateGestureHandler.gestureRecognizer,
+                        shouldRecognizeSimultaneouslyWith: UIPanGestureRecognizer()))
+        XCTAssertFalse(rotateGestureHandler.gestureRecognizer(
+                        rotateGestureHandler.gestureRecognizer,
+                        shouldRecognizeSimultaneouslyWith: UITapGestureRecognizer()))
+        XCTAssertFalse(rotateGestureHandler.gestureRecognizer(
+                        rotateGestureHandler.gestureRecognizer,
+                        shouldRecognizeSimultaneouslyWith: UIRotationGestureRecognizer()))
     }
 
     func testRotationBegan() {

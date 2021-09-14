@@ -1,20 +1,26 @@
 import UIKit
 
 /// `RotateGestureHandler` updates the map camera in response to 2-touch rotate gestures
-internal class RotateGestureHandler: GestureHandler {
+internal class RotateGestureHandler: GestureHandler<UIRotationGestureRecognizer>, UIGestureRecognizerDelegate {
 
     private var initialBearing: Double?
 
     internal init(view: UIView,
                   mapboxMap: MapboxMapProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol) {
-        let rotateGestureRecognizer = UIRotationGestureRecognizer()
-        view.addGestureRecognizer(rotateGestureRecognizer)
+        let rotationGestureRecognizer = UIRotationGestureRecognizer()
+        view.addGestureRecognizer(rotationGestureRecognizer)
         super.init(
-            gestureRecognizer: rotateGestureRecognizer,
+            gestureRecognizer: rotationGestureRecognizer,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
-        rotateGestureRecognizer.addTarget(self, action: #selector(handleRotate(_:)))
+        rotationGestureRecognizer.delegate = self
+        rotationGestureRecognizer.addTarget(self, action: #selector(handleRotate(_:)))
+    }
+
+    internal func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                                    shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return self.gestureRecognizer === gestureRecognizer && otherGestureRecognizer is UIPinchGestureRecognizer
     }
 
     @objc internal func handleRotate(_ gestureRecognizer: UIRotationGestureRecognizer) {

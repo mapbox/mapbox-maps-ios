@@ -2,7 +2,7 @@ import UIKit
 
 /// `PinchGestureHandler` updates the map camera in response to a 2-touch
 /// gesture that may consist of translation and scaling
-internal final class PinchGestureHandler: GestureHandler {
+internal final class PinchGestureHandler: GestureHandler<UIPinchGestureRecognizer> {
     // The midpoint of the touches in the gesture's view when the gesture began
     private var initialPinchMidpoint: CGPoint?
 

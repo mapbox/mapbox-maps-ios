@@ -1,7 +1,7 @@
 import UIKit
 
 /// `QuickZoomGestureHandler` updates the map camera in response to double tap and drag gestures
-internal class QuickZoomGestureHandler: GestureHandler {
+internal class QuickZoomGestureHandler: GestureHandler<UILongPressGestureRecognizer> {
     private var initialLocation: CGPoint?
     private var initialZoom: CGFloat?
 

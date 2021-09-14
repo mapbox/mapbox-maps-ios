@@ -6,22 +6,25 @@ final class TapGestureHandlerTests: XCTestCase {
     var view: UIView!
     var cameraAnimationsManager: MockCameraAnimationsManager!
     var mapboxMap: MockMapboxMap!
+    var delegate: MockGestureHandlerDelegate!
 
     override func setUp() {
         super.setUp()
         view = UIView()
         cameraAnimationsManager = MockCameraAnimationsManager()
         mapboxMap = MockMapboxMap()
+        delegate = MockGestureHandlerDelegate()
     }
 
     override func tearDown() {
+        delegate = nil
         mapboxMap = nil
         cameraAnimationsManager = nil
         view = nil
         super.tearDown()
     }
 
-    func testSetupOfDoubleTapSingleTouchGestureHandler() throws {
+    func testSetupOfDoubleTapSingleTouchGestureHandler() {
         let numberOfTouchesRequired = Int.random(in: 1...2)
 
         let tapGestureHandler = TapGestureHandler(
@@ -30,18 +33,18 @@ final class TapGestureHandlerTests: XCTestCase {
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
 
-        let gestureRecognizer = try XCTUnwrap(tapGestureHandler.gestureRecognizer as? UITapGestureRecognizer)
-        XCTAssertTrue(view.gestureRecognizers?.last === gestureRecognizer)
-        XCTAssertEqual(gestureRecognizer.numberOfTapsRequired, 2)
-        XCTAssertEqual(gestureRecognizer.numberOfTouchesRequired, numberOfTouchesRequired)
+        XCTAssertTrue(view.gestureRecognizers?.last === tapGestureHandler.gestureRecognizer)
+        XCTAssertEqual(tapGestureHandler.gestureRecognizer.numberOfTapsRequired, 2)
+        XCTAssertEqual(tapGestureHandler.gestureRecognizer.numberOfTouchesRequired, numberOfTouchesRequired)
     }
 
-    func testHandlerSingleTouch() {
+    func testHandlerDoubleTapToZoomIn() {
         let tapGestureHandler = TapGestureHandler(
             numberOfTouchesRequired: 1,
             view: view,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
+        tapGestureHandler.delegate = delegate
         let gestureRecognizer = MockTapGestureRecognizer()
         gestureRecognizer.getStateStub.defaultReturnValue = .ended
         gestureRecognizer.numberOfTouchesRequired = 1
@@ -49,6 +52,7 @@ final class TapGestureHandlerTests: XCTestCase {
 
         tapGestureHandler.handleTap(gestureRecognizer)
 
+        XCTAssertEqual(delegate.gestureBeganStub.parameters, [.doubleTapToZoomIn])
         XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 1)
         XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.camera, CameraOptions(zoom: mapboxMap.cameraState.zoom + 1))
         XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.duration, 0.3)
@@ -56,12 +60,13 @@ final class TapGestureHandlerTests: XCTestCase {
         XCTAssertNil(cameraAnimationsManager.easeToStub.parameters.first?.completion)
     }
 
-    func testHandlerDoubleTapDoubleTouch() {
+    func testHandlerDoubleTapToZoomOut() {
         let tapGestureHandler = TapGestureHandler(
             numberOfTouchesRequired: 2,
             view: view,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
+        tapGestureHandler.delegate = delegate
         let gestureRecognizer = MockTapGestureRecognizer()
         gestureRecognizer.getStateStub.defaultReturnValue = .ended
         gestureRecognizer.numberOfTouchesRequired = 2
@@ -69,6 +74,7 @@ final class TapGestureHandlerTests: XCTestCase {
 
         tapGestureHandler.handleTap(gestureRecognizer)
 
+        XCTAssertEqual(delegate.gestureBeganStub.parameters, [.doubleTapToZoomOut])
         XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 1)
         XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.camera, CameraOptions(zoom: mapboxMap.cameraState.zoom - 1))
         XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.duration, 0.3)

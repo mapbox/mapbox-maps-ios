@@ -19,7 +19,12 @@ extension Turf.Feature {
         switch feature.identifier {
         case let identifier where identifier is NSNumber:
             guard let value = identifier as? NSNumber else { break }
-            self.identifier = FeatureIdentifier.number(Number.double(value.doubleValue))
+            let objCTypeString = String(cString: value.objCType)
+            if objCTypeString == "q" {
+                self.identifier = FeatureIdentifier.number(Number.int(value.intValue))
+            } else {
+                self.identifier = FeatureIdentifier.number(Number.double(value.doubleValue))
+            }
         case let identifier where identifier is NSString:
             guard let value = identifier as? NSString else { break }
             self.identifier = FeatureIdentifier.string(value as String)

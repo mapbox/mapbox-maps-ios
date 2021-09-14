@@ -42,6 +42,7 @@ public class Style {
         let layerJSON = try layer.jsonObject()
         try _addPersistentLayer(with: layerJSON, layerPosition: layerPosition)
     }
+
     /**
      :nodoc:
      Moves a `layer` to a new layer position in the style.
@@ -50,6 +51,7 @@ public class Style {
 
      - Throws: `StyleError` on failure, or `NSError` with a _domain of "com.mapbox.bindgen"
      */
+    @_spi(experimental)
     public func _moveLayer(withId id: String, to position: LayerPosition) throws {
         let properties = try layerProperties(for: id)
         let isPersistent = try _isPersistentLayer(id: id)
@@ -88,6 +90,7 @@ public class Style {
      - Returns: The fully formed `layer` object of type equal to `type`
      - Throws: StyleError or type conversion errors
      */
+    @_spi(experimental)
     public func _layer(withId id: String, type: Layer.Type) throws -> Layer {
         // Get the layer properties from the map
         let properties = try layerProperties(for: id)
@@ -166,6 +169,7 @@ public class Style {
      - Returns: The fully formed `source` object of type equal to `type`.
      - Throws: StyleError or type conversion errors
      */
+    @_spi(experimental)
     public func _source(withId id: String, type: Source.Type) throws  -> Source {
         // Get the source properties for a given identifier
         let sourceProps = try sourceProperties(for: id)
@@ -332,18 +336,21 @@ extension Style: StyleManagerProtocol {
         }
     }
 
+    @_spi(experimental)
     public func _addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
         return try handleExpected {
             return styleManager.addPersistentStyleLayer(forProperties: properties, layerPosition: layerPosition?.corePosition)
         }
     }
 
+    @_spi(experimental)
     public func _isPersistentLayer(id: String) throws -> Bool {
         return try handleExpected {
             return styleManager.isStyleLayerPersistent(forLayerId: id)
         }
     }
 
+    @_spi(experimental)
     public func _addPersistentCustomLayer(withId id: String, layerHost: CustomLayerHost, layerPosition: LayerPosition?) throws {
         return try handleExpected {
             return styleManager.addPersistentStyleCustomLayer(forLayerId: id, layerHost: layerHost, layerPosition: layerPosition?.corePosition)
@@ -378,6 +385,7 @@ extension Style: StyleManagerProtocol {
 
     // MARK: - Layer Properties
 
+    @_spi(experimental)
     public func _layerProperty(for layerId: String, property: String) -> StylePropertyValue {
         return styleManager.getStyleLayerProperty(forLayerId: layerId, property: property)
     }
@@ -388,6 +396,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 
+    @_spi(experimental)
     public static func _layerPropertyDefaultValue(for layerType: LayerType, property: String) -> StylePropertyValue {
         return StyleManager.getStyleLayerPropertyDefaultValue(forLayerType: layerType.rawValue, property: property)
     }
@@ -434,6 +443,7 @@ extension Style: StyleManagerProtocol {
 
     // MARK: - Source properties
 
+    @_spi(experimental)
     public func _sourceProperty(for sourceId: String, property: String) -> StylePropertyValue {
         return styleManager.getStyleSourceProperty(forSourceId: sourceId, property: property)
     }
@@ -456,6 +466,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 
+    @_spi(experimental)
     public static func _sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue {
         return StyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
     }
@@ -512,6 +523,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 
+    @_spi(experimental)
     public func _lightProperty(_ property: String) -> StylePropertyValue {
         return styleManager.getStyleLightProperty(forProperty: property)
     }
@@ -530,6 +542,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 
+    @_spi(experimental)
     public func _terrainProperty(_ property: String) -> StylePropertyValue {
         return styleManager.getStyleTerrainProperty(forProperty: property)
     }
@@ -548,6 +561,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 
+    @_spi(experimental)
     public func _setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Turf.Feature]) throws {
         let mbxFeatures = features.compactMap { MapboxCommon.Feature($0) }
         return try handleExpected {

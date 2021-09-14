@@ -2,7 +2,7 @@ import UIKit
 
 /// `PinchGestureHandler` updates the map camera in response to a 2-touch
 /// gesture that may consist of translation and scaling
-internal final class PinchGestureHandler: GestureHandler<UIPinchGestureRecognizer> {
+internal final class PinchGestureHandler: GestureHandler {
     // The midpoint of the touches in the gesture's view when the gesture began
     private var initialPinchMidpoint: CGPoint?
 
@@ -10,40 +10,38 @@ internal final class PinchGestureHandler: GestureHandler<UIPinchGestureRecognize
     private var initialCameraState: CameraState?
 
     // Initialize the handler which creates the panGestureRecognizer and adds to the view
-    internal init(view: UIView,
+    internal init(gestureRecognizer: UIPinchGestureRecognizer,
                   mapboxMap: MapboxMapProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol) {
-        let pinchGestureRecognizer = UIPinchGestureRecognizer()
-        view.addGestureRecognizer(pinchGestureRecognizer)
         super.init(
-            gestureRecognizer: pinchGestureRecognizer,
+            gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
-        pinchGestureRecognizer.addTarget(self, action: #selector(handlePinch(_:)))
+        gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
 
-    @objc internal func handlePinch(_ pinchGestureRecognizer: UIPinchGestureRecognizer) {
-        guard let view = pinchGestureRecognizer.view else {
+    @objc private func handleGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {
+        guard let view = gestureRecognizer.view else {
             return
         }
 
-        let pinchCenterPoint = pinchGestureRecognizer.location(in: view)
+        let pinchCenterPoint = gestureRecognizer.location(in: view)
 
-        switch pinchGestureRecognizer.state {
+        switch gestureRecognizer.state {
         case .began:
             initialPinchMidpoint = pinchCenterPoint
             initialCameraState = mapboxMap.cameraState
             cameraAnimationsManager.cancelAnimations()
             delegate?.gestureBegan(for: .pinch)
         case .changed:
-            guard pinchGestureRecognizer.numberOfTouches == 2,
+            guard gestureRecognizer.numberOfTouches == 2,
                   let initialCameraState = initialCameraState,
                   let initialPinchCenterPoint = initialPinchMidpoint else {
                 return
             }
             cameraAnimationsManager.cancelAnimations()
 
-            let zoomIncrement = log2(pinchGestureRecognizer.scale)
+            let zoomIncrement = log2(gestureRecognizer.scale)
             var cameraOptions = CameraOptions()
             cameraOptions.center = initialCameraState.center
             cameraOptions.padding = initialCameraState.padding

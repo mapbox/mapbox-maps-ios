@@ -30,13 +30,23 @@ final class MockPanGestureRecognizer: UIPanGestureRecognizer {
         translationStub.call(with: view)
     }
 
-    let getViewStub = Stub<Void, UIView?>(defaultReturnValue: nil)
-    override var view: UIView? {
-        getViewStub.call()
-    }
-
     let getNumberOfTouchesStub = Stub<Void, Int>(defaultReturnValue: 0)
     override var numberOfTouches: Int {
         getNumberOfTouchesStub.call()
+    }
+
+    struct AddTargetParams {
+        var target: Any
+        var action: Selector
+    }
+    let addTargetStub = Stub<AddTargetParams, Void>()
+    override func addTarget(_ target: Any, action: Selector) {
+        addTargetStub.call(with: AddTargetParams(target: target, action: action))
+    }
+
+    func sendActions() {
+        for param in addTargetStub.parameters {
+            (param.target as? NSObject)?.perform(param.action, with: self)
+        }
     }
 }

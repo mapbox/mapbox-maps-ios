@@ -2,26 +2,24 @@ import UIKit
 
 /// `TapGestureHandler` updates the map camera in response
 /// to double tap gestures with 1 or 2 touches
-internal class TapGestureHandler: GestureHandler<UITapGestureRecognizer> {
+internal class TapGestureHandler: GestureHandler {
 
-    internal required init(numberOfTouchesRequired: Int,
-                           view: UIView,
-                           mapboxMap: MapboxMapProtocol,
-                           cameraAnimationsManager: CameraAnimationsManagerProtocol) {
+    internal init(numberOfTouchesRequired: Int,
+                  gestureRecognizer: UITapGestureRecognizer,
+                  mapboxMap: MapboxMapProtocol,
+                  cameraAnimationsManager: CameraAnimationsManagerProtocol) {
         precondition((1...2).contains(numberOfTouchesRequired))
-        let tapGestureRecognizer = UITapGestureRecognizer()
-        tapGestureRecognizer.numberOfTapsRequired = 2
-        tapGestureRecognizer.numberOfTouchesRequired = numberOfTouchesRequired
-        view.addGestureRecognizer(tapGestureRecognizer)
+        gestureRecognizer.numberOfTapsRequired = 2
+        gestureRecognizer.numberOfTouchesRequired = numberOfTouchesRequired
         super.init(
-            gestureRecognizer: tapGestureRecognizer,
+            gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
-        tapGestureRecognizer.addTarget(self, action: #selector(handleTap(_:)))
+        gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
 
     // Calls view to process the tap gesture
-    @objc internal func handleTap(_ gestureRecognizer: UITapGestureRecognizer) {
+    @objc private func handleGesture(_ gestureRecognizer: UITapGestureRecognizer) {
         switch gestureRecognizer.state {
         case .ended:
             guard gestureRecognizer.numberOfTapsRequired == 2 else {

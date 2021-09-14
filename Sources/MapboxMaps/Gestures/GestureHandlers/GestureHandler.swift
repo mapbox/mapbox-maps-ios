@@ -1,11 +1,15 @@
 import UIKit
 
 internal protocol GestureHandlerDelegate: AnyObject {
+    var decelerationRate: CGFloat { get }
+
+    var panScrollingMode: PanScrollingMode { get }
+
     func gestureBegan(for gestureType: GestureType)
 }
 
-internal class GestureHandler<T>: NSObject where T: UIGestureRecognizer {
-    internal let gestureRecognizer: T
+internal class GestureHandler: NSObject {
+    internal let gestureRecognizer: UIGestureRecognizer
 
     internal let mapboxMap: MapboxMapProtocol
 
@@ -13,7 +17,7 @@ internal class GestureHandler<T>: NSObject where T: UIGestureRecognizer {
 
     internal weak var delegate: GestureHandlerDelegate?
 
-    init(gestureRecognizer: T,
+    init(gestureRecognizer: UIGestureRecognizer,
          mapboxMap: MapboxMapProtocol,
          cameraAnimationsManager: CameraAnimationsManagerProtocol) {
         self.gestureRecognizer = gestureRecognizer

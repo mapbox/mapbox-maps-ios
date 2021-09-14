@@ -2,34 +2,32 @@ import UIKit
 
 /// `PitchGestureHandler` updates the map camera in response to a vertical,
 /// 2-touch pan gesture in which the angle between the touch points is less than 45°.
-internal class PitchGestureHandler: GestureHandler<UIPanGestureRecognizer>, UIGestureRecognizerDelegate {
+internal class PitchGestureHandler: GestureHandler, UIGestureRecognizerDelegate {
     private let maximumAngleBetweenTouchPoints: CGFloat = 45
 
     private var initialPitch: CGFloat?
 
-    internal init(view: UIView,
+    internal init(gestureRecognizer: UIPanGestureRecognizer,
                   mapboxMap: MapboxMapProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol) {
-        let panGestureRecognizer = UIPanGestureRecognizer()
-        panGestureRecognizer.minimumNumberOfTouches = 2
-        panGestureRecognizer.maximumNumberOfTouches = 2
-        view.addGestureRecognizer(panGestureRecognizer)
+        gestureRecognizer.minimumNumberOfTouches = 2
+        gestureRecognizer.maximumNumberOfTouches = 2
         super.init(
-            gestureRecognizer: panGestureRecognizer,
+            gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
-        panGestureRecognizer.delegate = self
-        panGestureRecognizer.addTarget(self, action: #selector(handlePitchGesture(_:)))
+        gestureRecognizer.delegate = self
+        gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
 
     private func touchAngleIsLessThanMaximum(for gestureRecognizer: UIGestureRecognizer) -> Bool {
         guard let view = gestureRecognizer.view,
-              let gestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer,
-              gestureRecognizer.minimumNumberOfTouches == 2 else {
+              gestureRecognizer === self.gestureRecognizer,
+              self.gestureRecognizer.numberOfTouches == 2 else {
             return false
         }
-        let touchLocation0 = gestureRecognizer.location(ofTouch: 0, in: view)
-        let touchLocation1 = gestureRecognizer.location(ofTouch: 1, in: view)
+        let touchLocation0 = self.gestureRecognizer.location(ofTouch: 0, in: view)
+        let touchLocation1 = self.gestureRecognizer.location(ofTouch: 1, in: view)
         let angleBetweenTouchLocations = angleOfLine(from: touchLocation0, to: touchLocation1)
         return abs(angleBetweenTouchLocations) < maximumAngleBetweenTouchPoints
     }
@@ -38,10 +36,7 @@ internal class PitchGestureHandler: GestureHandler<UIPanGestureRecognizer>, UIGe
         return touchAngleIsLessThanMaximum(for: gestureRecognizer)
     }
 
-    @objc internal func handlePitchGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
-        guard gestureRecognizer.numberOfTouches == 2 else {
-            return
-        }
+    @objc private func handleGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
         switch gestureRecognizer.state {
         case .began:
             initialPitch = mapboxMap.cameraState.pitch

@@ -1,26 +1,24 @@
 import UIKit
 
 /// `QuickZoomGestureHandler` updates the map camera in response to double tap and drag gestures
-internal class QuickZoomGestureHandler: GestureHandler<UILongPressGestureRecognizer> {
+internal class QuickZoomGestureHandler: GestureHandler {
     private var initialLocation: CGPoint?
     private var initialZoom: CGFloat?
 
-    init(view: UIView,
-         mapboxMap: MapboxMapProtocol,
-         cameraAnimationsManager: CameraAnimationsManagerProtocol) {
-        let quickZoom = UILongPressGestureRecognizer()
-        quickZoom.numberOfTapsRequired = 1
-        quickZoom.minimumPressDuration = 0
-        view.addGestureRecognizer(quickZoom)
+    internal init(gestureRecognizer: UILongPressGestureRecognizer,
+                  mapboxMap: MapboxMapProtocol,
+                  cameraAnimationsManager: CameraAnimationsManagerProtocol) {
+        gestureRecognizer.numberOfTapsRequired = 1
+        gestureRecognizer.minimumPressDuration = 0
         super.init(
-            gestureRecognizer: quickZoom,
+            gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
-        quickZoom.addTarget(self, action: #selector(handleQuickZoom(_:)))
+        gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
 
     // Register the location of the touches in the view.
-    @objc func handleQuickZoom(_ gestureRecognizer: UILongPressGestureRecognizer) {
+    @objc private func handleGesture(_ gestureRecognizer: UILongPressGestureRecognizer) {
         guard let view = gestureRecognizer.view else {
             return
         }

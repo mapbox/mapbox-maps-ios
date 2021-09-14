@@ -2,39 +2,36 @@ import XCTest
 @testable import MapboxMaps
 
 final class RotateGestureHandlerTests: XCTestCase {
-    var view: UIView!
+    var gestureRecognizer: MockRotationGestureRecognizer!
     var mapboxMap: MockMapboxMap!
     var cameraAnimationsManager: MockCameraAnimationsManager!
     var rotateGestureHandler: RotateGestureHandler!
     var delegate: MockGestureHandlerDelegate!
-    var gestureRecognizer: MockRotationGestureRecognizer!
 
     override func setUp() {
         super.setUp()
-        view = UIView()
+        gestureRecognizer = MockRotationGestureRecognizer()
         mapboxMap = MockMapboxMap()
         cameraAnimationsManager = MockCameraAnimationsManager()
         rotateGestureHandler = RotateGestureHandler(
-            view: view,
+            gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
         delegate = MockGestureHandlerDelegate()
         rotateGestureHandler.delegate = delegate
-        gestureRecognizer = MockRotationGestureRecognizer()
     }
 
     override func tearDown() {
-        gestureRecognizer = nil
         delegate = nil
         rotateGestureHandler = nil
         cameraAnimationsManager = nil
         mapboxMap = nil
-        view = nil
+        gestureRecognizer = nil
         super.setUp()
     }
 
     func testInitialization() {
-        XCTAssertTrue(view.gestureRecognizers?.last === rotateGestureHandler.gestureRecognizer)
+        XCTAssertTrue(gestureRecognizer === rotateGestureHandler.gestureRecognizer)
     }
 
     func testAllowedSimultaneousGestures() {
@@ -57,7 +54,7 @@ final class RotateGestureHandlerTests: XCTestCase {
 
     func testRotationBegan() {
         gestureRecognizer.getStateStub.defaultReturnValue = .began
-        rotateGestureHandler.handleRotate(gestureRecognizer)
+        gestureRecognizer.sendActions()
 
         XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1)
         XCTAssertEqual(delegate.gestureBeganStub.parameters, [.rotate])
@@ -67,13 +64,13 @@ final class RotateGestureHandlerTests: XCTestCase {
         // Capture the initial rotation
         mapboxMap.cameraState.bearing = .random(in: 0..<360)
         gestureRecognizer.getStateStub.defaultReturnValue = .began
-        rotateGestureHandler.handleRotate(gestureRecognizer)
+        gestureRecognizer.sendActions()
         cameraAnimationsManager.cancelAnimationsStub.reset()
 
         // Execute the change
         gestureRecognizer.getStateStub.defaultReturnValue = .changed
         gestureRecognizer.getRotationStub.defaultReturnValue = -.pi / 2
-        rotateGestureHandler.handleRotate(gestureRecognizer)
+        gestureRecognizer.sendActions()
 
         XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1)
         XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 1)

@@ -2,57 +2,50 @@ import XCTest
 @testable import MapboxMaps
 
 final class PanGestureHandlerTests: XCTestCase {
-    var decelerationRate: CGFloat!
-    var panScrollingMode: PanScrollingMode!
     var view: UIView!
+    var gestureRecognizer: MockPanGestureRecognizer!
     var mapboxMap: MockMapboxMap!
     var cameraAnimationsManager: MockCameraAnimationsManager!
     var panGestureHandler: PanGestureHandler!
+    // swiftlint:disable:next weak_delegate
     var delegate: MockGestureHandlerDelegate!
-    var gestureRecognizer: MockPanGestureRecognizer!
 
     override func setUp() {
         super.setUp()
-        decelerationRate = .random(in: 0.99...0.999)
-        panScrollingMode = PanScrollingMode.allCases.randomElement()
         view = UIView()
+        gestureRecognizer = MockPanGestureRecognizer()
+        view.addGestureRecognizer(gestureRecognizer)
         mapboxMap = MockMapboxMap()
         cameraAnimationsManager = MockCameraAnimationsManager()
         panGestureHandler = PanGestureHandler(
-            decelerationRate: decelerationRate,
-            panScrollingMode: panScrollingMode,
-            view: view,
+            gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
         delegate = MockGestureHandlerDelegate()
         panGestureHandler.delegate = delegate
-        gestureRecognizer = MockPanGestureRecognizer()
-        gestureRecognizer.getViewStub.defaultReturnValue = view
+        delegate.decelerationRate = .random(in: 0.99...0.999)
+        delegate.panScrollingMode = PanScrollingMode.allCases.randomElement()!
     }
 
     override func tearDown() {
-        gestureRecognizer = nil
         delegate = nil
         panGestureHandler = nil
         cameraAnimationsManager = nil
         mapboxMap = nil
+        gestureRecognizer = nil
         view = nil
-        panScrollingMode = nil
-        decelerationRate = nil
         super.tearDown()
     }
 
     func testInitialization() {
-        XCTAssertEqual(panGestureHandler.decelerationRate, decelerationRate)
-        XCTAssertEqual(panGestureHandler.panScrollingMode, panScrollingMode)
-        XCTAssertTrue(view.gestureRecognizers?.last === panGestureHandler.gestureRecognizer)
-        XCTAssertEqual(panGestureHandler.gestureRecognizer.maximumNumberOfTouches, 1)
+        XCTAssertEqual(gestureRecognizer.maximumNumberOfTouches, 1)
+        XCTAssertTrue(gestureRecognizer === panGestureHandler.gestureRecognizer)
     }
 
     func testHandlePanBegan() {
         gestureRecognizer.getStateStub.defaultReturnValue = .began
 
-        panGestureHandler.handlePan(gestureRecognizer)
+        gestureRecognizer.sendActions()
 
         XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1)
         XCTAssertEqual(delegate.gestureBeganStub.parameters, [.pan])
@@ -69,12 +62,12 @@ final class PanGestureHandlerTests: XCTestCase {
         gestureRecognizer.getStateStub.defaultReturnValue = .began
         gestureRecognizer.locationStub.returnValueQueue = [
             initialTouchLocation, changedTouchLocation]
-        panGestureHandler.panScrollingMode = panScrollingMode
-        panGestureHandler.handlePan(gestureRecognizer)
+        delegate.panScrollingMode = panScrollingMode
+        gestureRecognizer.sendActions()
         cameraAnimationsManager.cancelAnimationsStub.reset()
         gestureRecognizer.getStateStub.defaultReturnValue = .changed
 
-        panGestureHandler.handlePan(gestureRecognizer)
+        gestureRecognizer.sendActions()
 
         XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1, line: line)
         XCTAssertEqual(mapboxMap.dragStartStub.parameters, [initialTouchLocation], line: line)

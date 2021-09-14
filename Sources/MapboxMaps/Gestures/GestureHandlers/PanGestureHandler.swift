@@ -1,47 +1,33 @@
 import UIKit
 
 /// `PanGestureHandler` updates the map camera in response to a single-touch pan gesture
-internal final class PanGestureHandler: GestureHandler<UIPanGestureRecognizer> {
-
-    // The deceleration rate in points/ms^2
-    internal var decelerationRate: CGFloat
-
-    // Determines whether the horizontal translation, vertical
-    // translation, or both are considered when panning
-    internal var panScrollingMode: PanScrollingMode
-
+internal final class PanGestureHandler: GestureHandler {
     // The touch location in the gesture's view when the gesture began
     private var initialTouchLocation: CGPoint?
 
     // The camera state when the gesture began
     private var initialCameraState: CameraState?
 
-    internal init(decelerationRate: CGFloat,
-                  panScrollingMode: PanScrollingMode,
-                  view: UIView,
+    internal init(gestureRecognizer: UIPanGestureRecognizer,
                   mapboxMap: MapboxMapProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol) {
-        self.decelerationRate = decelerationRate
-        self.panScrollingMode = panScrollingMode
-        let panGestureRecognizer = UIPanGestureRecognizer()
-        panGestureRecognizer.maximumNumberOfTouches = 1
-        view.addGestureRecognizer(panGestureRecognizer)
+        gestureRecognizer.maximumNumberOfTouches = 1
         super.init(
-            gestureRecognizer: panGestureRecognizer,
+            gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
-        panGestureRecognizer.addTarget(self, action: #selector(handlePan(_:)))
+        gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
 
     // Handles the pan operation and calls the associated view
-    @objc internal func handlePan(_ panGestureRecognizer: UIPanGestureRecognizer) {
-        guard let view = panGestureRecognizer.view else {
+    @objc private func handleGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
+        guard let view = gestureRecognizer.view else {
             return
         }
 
-        let touchLocation = panGestureRecognizer.location(in: view)
+        let touchLocation = gestureRecognizer.location(in: view)
 
-        switch panGestureRecognizer.state {
+        switch gestureRecognizer.state {
         case .began:
             initialTouchLocation = touchLocation
             initialCameraState = mapboxMap.cameraState
@@ -49,7 +35,8 @@ internal final class PanGestureHandler: GestureHandler<UIPanGestureRecognizer> {
             delegate?.gestureBegan(for: .pan)
         case .changed:
             guard let initialTouchLocation = initialTouchLocation,
-                  let initialCameraState = initialCameraState else {
+                  let initialCameraState = initialCameraState,
+                  let panScrollingMode = delegate?.panScrollingMode else {
                 return
             }
             cameraAnimationsManager.cancelAnimations()

@@ -1,5 +1,4 @@
 import UIKit
-import CoreLocation
 
 public protocol GestureManagerDelegate: AnyObject {
 
@@ -9,7 +8,7 @@ public protocol GestureManagerDelegate: AnyObject {
 
 public final class GestureManager: GestureHandlerDelegate {
 
-    /// The `GestureOptions` that are used to set up the required gestures on the map
+    /// Configuration options for the built-in gestures
     public var options: GestureOptions {
         set {
             panGestureRecognizer.isEnabled = newValue.scrollEnabled
@@ -38,53 +37,35 @@ public final class GestureManager: GestureHandlerDelegate {
         }
     }
 
-    internal private(set) var decelerationRate: CGFloat
-
-    internal private(set) var panScrollingMode: PanScrollingMode
-
-    private let panGestureHandler: GestureHandler
-
     /// The gesture recognizer for the pan gesture
     public var panGestureRecognizer: UIGestureRecognizer {
         return panGestureHandler.gestureRecognizer
     }
-
-    private let pinchGestureHandler: GestureHandler
 
     /// The gesture recognizer for the "pinch to zoom" gesture
     public var pinchGestureRecognizer: UIGestureRecognizer {
         return pinchGestureHandler.gestureRecognizer
     }
 
-    private let rotationGestureHandler: GestureHandler
-
     /// The gesture recognizer for the rotate gesture
     public var rotationGestureRecognizer: UIGestureRecognizer {
         return rotationGestureHandler.gestureRecognizer
     }
-
-    private let pitchGestureHandler: GestureHandler
 
     /// The gesture recognizer for the pitch gesture
     public var pitchGestureRecognizer: UIGestureRecognizer {
         return pitchGestureHandler.gestureRecognizer
     }
 
-    private let doubleTapToZoomInGestureHandler: GestureHandler
-
     /// The gesture recognizer for the "double tap to zoom in" gesture
     public var doubleTapToZoomInGestureRecognizer: UIGestureRecognizer {
         return doubleTapToZoomInGestureHandler.gestureRecognizer
     }
 
-    private let doubleTapToZoomOutGestureHandler: GestureHandler
-
     /// The gesture recognizer for the "double tap to zoom out" gesture
     public var doubleTapToZoomOutGestureRecognizer: UIGestureRecognizer {
         return doubleTapToZoomOutGestureHandler.gestureRecognizer
     }
-
-    private let quickZoomGestureHandler: GestureHandler
 
     /// The gesture recognizer for the quickZoom gesture
     public var quickZoomGestureRecognizer: UIGestureRecognizer {
@@ -93,6 +74,16 @@ public final class GestureManager: GestureHandlerDelegate {
 
     /// Set this delegate to be called back if a gesture begins
     public weak var delegate: GestureManagerDelegate?
+
+    internal private(set) var decelerationRate: CGFloat
+    internal private(set) var panScrollingMode: PanScrollingMode
+    private let panGestureHandler: GestureHandler
+    private let pinchGestureHandler: GestureHandler
+    private let rotationGestureHandler: GestureHandler
+    private let pitchGestureHandler: GestureHandler
+    private let doubleTapToZoomInGestureHandler: GestureHandler
+    private let doubleTapToZoomOutGestureHandler: GestureHandler
+    private let quickZoomGestureHandler: GestureHandler
 
     internal init(decelerationRate: CGFloat,
                   panScrollingMode: PanScrollingMode,
@@ -126,7 +117,7 @@ public final class GestureManager: GestureHandlerDelegate {
         quickZoomGestureHandler.gestureRecognizer.require(toFail: doubleTapToZoomInGestureHandler.gestureRecognizer)
     }
 
-    func gestureBegan(for gestureType: GestureType) {
+    internal func gestureBegan(for gestureType: GestureType) {
         delegate?.gestureBegan(for: gestureType)
     }
 }

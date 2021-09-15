@@ -1,16 +1,23 @@
 import UIKit
 
-/// `DoubleTapGestureHandler` updates the map camera in response
+/// `DoubleTapToZoomGestureHandler` updates the map camera in response
 /// to double tap gestures with 1 or 2 touches
-internal class DoubleTapGestureHandler: GestureHandler {
+internal class DoubleTapToZoomGestureHandler: GestureHandler {
+
+    private let zoomDelta: CGFloat
+    private let gestureType: GestureType
 
     internal init(numberOfTouchesRequired: Int,
+                  zoomDelta: CGFloat,
                   gestureRecognizer: UITapGestureRecognizer,
                   mapboxMap: MapboxMapProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol) {
-        precondition((1...2).contains(numberOfTouchesRequired))
+        precondition(zoomDelta.isFinite)
+        precondition(!zoomDelta.isZero)
         gestureRecognizer.numberOfTapsRequired = 2
         gestureRecognizer.numberOfTouchesRequired = numberOfTouchesRequired
+        self.zoomDelta = zoomDelta
+        self.gestureType = zoomDelta > 0 ? .doubleTapToZoomIn : .doubleTapToZoomOut
         super.init(
             gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap,
@@ -18,30 +25,9 @@ internal class DoubleTapGestureHandler: GestureHandler {
         gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
 
-    // Calls view to process the tap gesture
     @objc private func handleGesture(_ gestureRecognizer: UITapGestureRecognizer) {
         switch gestureRecognizer.state {
         case .ended:
-            guard gestureRecognizer.numberOfTapsRequired == 2 else {
-                return
-            }
-            let gestureType: GestureType?
-            let zoomDelta: CGFloat?
-            switch gestureRecognizer.numberOfTouchesRequired {
-            case 1:
-                gestureType = .doubleTapToZoomIn
-                zoomDelta = 1
-            case 2:
-                gestureType = .doubleTapToZoomOut
-                zoomDelta = -1
-            default:
-                gestureType = nil
-                zoomDelta = nil
-            }
-            guard let gestureType = gestureType,
-                  let zoomDelta = zoomDelta else {
-                return
-            }
             cameraAnimationsManager.cancelAnimations()
             delegate?.gestureBegan(for: gestureType)
             _ = cameraAnimationsManager.ease(to: CameraOptions(zoom: mapboxMap.cameraState.zoom + zoomDelta),

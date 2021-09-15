@@ -1,7 +1,7 @@
 import UIKit
 
 /// `RotateGestureHandler` updates the map camera in response to 2-touch rotate gestures
-internal class RotateGestureHandler: GestureHandler, UIGestureRecognizerDelegate {
+internal final class RotateGestureHandler: GestureHandler, UIGestureRecognizerDelegate {
 
     private var initialBearing: Double?
 

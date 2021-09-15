@@ -3,8 +3,6 @@ import UIKit
 /// `PitchGestureHandler` updates the map camera in response to a vertical,
 /// 2-touch pan gesture in which the angle between the touch points is less than 45°.
 internal class PitchGestureHandler: GestureHandler, UIGestureRecognizerDelegate {
-    private let maximumAngleBetweenTouchPoints: CGFloat = 45
-
     private var initialPitch: CGFloat?
 
     internal init(gestureRecognizer: UIPanGestureRecognizer,
@@ -29,7 +27,7 @@ internal class PitchGestureHandler: GestureHandler, UIGestureRecognizerDelegate 
         let touchLocation0 = self.gestureRecognizer.location(ofTouch: 0, in: view)
         let touchLocation1 = self.gestureRecognizer.location(ofTouch: 1, in: view)
         let angleBetweenTouchLocations = angleOfLine(from: touchLocation0, to: touchLocation1)
-        return abs(angleBetweenTouchLocations) < maximumAngleBetweenTouchPoints
+        return abs(angleBetweenTouchLocations) < 45
     }
 
     internal func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {

@@ -42,6 +42,36 @@ final class PitchGestureHandlerTests: XCTestCase {
         XCTAssertEqual(gestureRecognizer.maximumNumberOfTouches, 2)
     }
 
+    func testGestureShouldBegin() {
+        // Touch angle < 45 degrees
+        gestureRecognizer.locationOfTouchStub.returnValueQueue = [
+            CGPoint(x: 0, y: 0),
+            CGPoint(x: 100, y: .random(in: 0..<100))]
+
+        XCTAssertTrue(pitchGestureHandler.gestureRecognizerShouldBegin(gestureRecognizer))
+
+        // Touch angle < 45 degrees with the opposite slope
+        gestureRecognizer.locationOfTouchStub.returnValueQueue = [
+            CGPoint(x: 0, y: .random(in: 0..<100)),
+            CGPoint(x: 100, y: 0)]
+
+        XCTAssertTrue(pitchGestureHandler.gestureRecognizerShouldBegin(gestureRecognizer))
+
+        // Touch angle >= 45 degrees
+        gestureRecognizer.locationOfTouchStub.returnValueQueue = [
+            CGPoint(x: 0, y: 0),
+            CGPoint(x: 100, y: .random(in: 100...200))]
+
+        XCTAssertFalse(pitchGestureHandler.gestureRecognizerShouldBegin(gestureRecognizer))
+
+        // Touch angle >= 45 degrees with the opposite slope
+        gestureRecognizer.locationOfTouchStub.returnValueQueue = [
+            CGPoint(x: 0, y: .random(in: 100...200)),
+            CGPoint(x: 100, y: 0)]
+
+        XCTAssertFalse(pitchGestureHandler.gestureRecognizerShouldBegin(gestureRecognizer))
+    }
+
     func testPitchBegan() {
         gestureRecognizer.getStateStub.defaultReturnValue = .began
 
@@ -58,7 +88,6 @@ final class PitchGestureHandlerTests: XCTestCase {
         gestureRecognizer.sendActions() // Start gesture to set it to .began
         gestureRecognizer.locationOfTouchStub.returnValueQueue = [CGPoint(x: 0, y: 0), CGPoint(x: 100, y: 0)]
         gestureRecognizer.getStateStub.defaultReturnValue = .changed
-        gestureRecognizer.minimumNumberOfTouches = 2
         gestureRecognizer.translationStub.defaultReturnValue = CGPoint(x: 0, y: 25)
 
         gestureRecognizer.sendActions()

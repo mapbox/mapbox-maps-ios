@@ -1,7 +1,7 @@
 import XCTest
 @testable import MapboxMaps
 
-final class TapGestureHandlerTests: XCTestCase {
+final class DoubleTapGestureHandlerTests: XCTestCase {
 
     var gestureRecognizer: MockTapGestureRecognizer!
     var cameraAnimationsManager: MockCameraAnimationsManager!
@@ -28,24 +28,24 @@ final class TapGestureHandlerTests: XCTestCase {
     func testSetupOfDoubleTapSingleTouchGestureHandler() {
         let numberOfTouchesRequired = Int.random(in: 1...2)
 
-        let tapGestureHandler = TapGestureHandler(
+        let doubleTapGestureHandler = DoubleTapGestureHandler(
             numberOfTouchesRequired: numberOfTouchesRequired,
             gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
 
-        XCTAssertTrue(gestureRecognizer === tapGestureHandler.gestureRecognizer)
+        XCTAssertTrue(gestureRecognizer === doubleTapGestureHandler.gestureRecognizer)
         XCTAssertEqual(gestureRecognizer.numberOfTapsRequired, 2)
         XCTAssertEqual(gestureRecognizer.numberOfTouchesRequired, numberOfTouchesRequired)
     }
 
     func testHandlerDoubleTapToZoomIn() {
-        let tapGestureHandler = TapGestureHandler(
+        let doubleTapGestureHandler = DoubleTapGestureHandler(
             numberOfTouchesRequired: 1,
             gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
-        tapGestureHandler.delegate = delegate
+        doubleTapGestureHandler.delegate = delegate
         gestureRecognizer.getStateStub.defaultReturnValue = .ended
 
         gestureRecognizer.sendActions()
@@ -59,12 +59,12 @@ final class TapGestureHandlerTests: XCTestCase {
     }
 
     func testHandlerDoubleTapToZoomOut() {
-        let tapGestureHandler = TapGestureHandler(
+        let doubleTapGestureHandler = DoubleTapGestureHandler(
             numberOfTouchesRequired: 2,
             gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
-        tapGestureHandler.delegate = delegate
+        doubleTapGestureHandler.delegate = delegate
         gestureRecognizer.getStateStub.defaultReturnValue = .ended
 
         gestureRecognizer.sendActions()

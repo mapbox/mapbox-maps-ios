@@ -66,6 +66,10 @@ internal class PitchGestureHandler: GestureHandler, UIGestureRecognizerDelegate 
         }
     }
 
+    /**
+     Calculates the angle in degrees between two points.
+     For example, the angle between (0,0) and (1, 1) would be 45°
+     */
     private func angleOfLine(from start: CGPoint, to end: CGPoint) -> CGFloat {
         var origin = start
         var end = end

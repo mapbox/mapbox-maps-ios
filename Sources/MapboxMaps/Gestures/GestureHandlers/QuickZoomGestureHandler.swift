@@ -37,13 +37,8 @@ internal class QuickZoomGestureHandler: GestureHandler {
             let distance = location.y - initialLocation.y
             let bounds = view.bounds
             let anchor = CGPoint(x: bounds.midX, y: bounds.midY)
-            var newZoom = initialZoom + distance / 75
-            if newZoom.isNaN {
-                newZoom = 0
-            }
-            let minZoom = CGFloat(mapboxMap.cameraBounds.minZoom)
-            let maxZoom = CGFloat(mapboxMap.cameraBounds.maxZoom)
-            newZoom = newZoom.clamped(to: minZoom...maxZoom)
+            // change by 1 zoom level per 75 points of translation
+            let newZoom = initialZoom + distance / 75
             mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: newZoom))
         case .ended, .cancelled:
             initialLocation = nil

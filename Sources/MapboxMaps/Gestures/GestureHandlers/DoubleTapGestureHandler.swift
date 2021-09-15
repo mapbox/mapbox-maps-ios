@@ -1,8 +1,8 @@
 import UIKit
 
-/// `TapGestureHandler` updates the map camera in response
+/// `DoubleTapGestureHandler` updates the map camera in response
 /// to double tap gestures with 1 or 2 touches
-internal class TapGestureHandler: GestureHandler {
+internal class DoubleTapGestureHandler: GestureHandler {
 
     internal init(numberOfTouchesRequired: Int,
                   gestureRecognizer: UITapGestureRecognizer,

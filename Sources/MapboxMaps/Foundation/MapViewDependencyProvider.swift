@@ -61,13 +61,13 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             cameraAnimationsManager: cameraAnimationsManager)
     }
 
-    func makeTapGestureHandler(numberOfTouchesRequired: Int,
-                               view: UIView,
-                               mapboxMap: MapboxMapProtocol,
-                               cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
+    func makeDoubleTapGestureHandler(numberOfTouchesRequired: Int,
+                                     view: UIView,
+                                     mapboxMap: MapboxMapProtocol,
+                                     cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
         let gestureRecognizer = UITapGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
-        return TapGestureHandler(
+        return DoubleTapGestureHandler(
             numberOfTouchesRequired: numberOfTouchesRequired,
             gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap,
@@ -107,12 +107,12 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                 view: view,
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: cameraAnimationsManager),
-            doubleTapToZoomInGestureHandler: makeTapGestureHandler(
+            doubleTapToZoomInGestureHandler: makeDoubleTapGestureHandler(
                 numberOfTouchesRequired: 1,
                 view: view,
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: cameraAnimationsManager),
-            doubleTapToZoomOutGestureHandler: makeTapGestureHandler(
+            doubleTapToZoomOutGestureHandler: makeDoubleTapGestureHandler(
                 numberOfTouchesRequired: 2,
                 view: view,
                 mapboxMap: mapboxMap,

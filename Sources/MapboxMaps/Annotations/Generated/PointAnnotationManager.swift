@@ -109,7 +109,7 @@ public class PointAnnotationManager: AnnotationManager {
         layer.iconIgnorePlacement = .constant(true)
         layer.textIgnorePlacement = .constant(true)
         if shouldPersist {
-            try style._addPersistentLayer(layer, layerPosition: layerPosition)
+            try style.addPersistentLayer(layer, layerPosition: layerPosition)
         } else {
             try style.addLayer(layer, layerPosition: layerPosition)
         }
@@ -153,7 +153,7 @@ public class PointAnnotationManager: AnnotationManager {
                             category: "Annotations")
                 return (key, ["format", ""])
             } else {
-                return (key, Style._layerPropertyDefaultValue(for: .symbol, property: key).value)
+                return (key, Style.layerPropertyDefaultValue(for: .symbol, property: key).value)
             }
         })
 

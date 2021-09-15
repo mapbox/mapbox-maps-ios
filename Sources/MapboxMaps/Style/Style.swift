@@ -37,10 +37,10 @@ public class Style {
     ///   - layerPosition: Position at which to add the map.
     ///
     /// - Throws: StyleError or type conversion errors
-    internal func _addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
+    internal func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
         // Attempt to encode the provided layer into JSON and apply it to the map
         let layerJSON = try layer.jsonObject()
-        try _addPersistentLayer(with: layerJSON, layerPosition: layerPosition)
+        try addPersistentLayer(with: layerJSON, layerPosition: layerPosition)
     }
 
     /**
@@ -50,15 +50,16 @@ public class Style {
      - Parameter position: The new position to move the layer to
 
      - Throws: `StyleError` on failure, or `NSError` with a _domain of "com.mapbox.bindgen"
+     - Note: This method is marked as experimental. Annotate the import statement
+     for `MapboxMaps` with `@_spi(Experimental)` in order to use experimental methods.
      */
-    @_spi(experimental)
-    public func _moveLayer(withId id: String, to position: LayerPosition) throws {
+    @_spi(Experimental) public func moveLayer(withId id: String, to position: LayerPosition) throws {
         let properties = try layerProperties(for: id)
-        let isPersistent = try _isPersistentLayer(id: id)
+        let isPersistent = try isPersistentLayer(id: id)
         try removeLayer(withId: id)
 
         if isPersistent {
-            try _addPersistentLayer(with: properties, layerPosition: position)
+            try addPersistentLayer(with: properties, layerPosition: position)
         } else {
             try addLayer(with: properties, layerPosition: position)
         }
@@ -74,7 +75,7 @@ public class Style {
      */
     public func layer<T: Layer>(withId id: String) throws -> T {
         // swiftlint:disable force_cast
-        return try _layer(withId: id, type: T.self) as! T
+        return try layer(withId: id, type: T.self) as! T
         // swiftlint:enable force_cast
     }
 
@@ -89,9 +90,10 @@ public class Style {
 
      - Returns: The fully formed `layer` object of type equal to `type`
      - Throws: StyleError or type conversion errors
+     - Note: This method is marked as experimental. Annotate the import statement
+     for `MapboxMaps` with `@_spi(Experimental)` in order to use experimental methods.
      */
-    @_spi(experimental)
-    public func _layer(withId id: String, type: Layer.Type) throws -> Layer {
+    @_spi(Experimental) public func layer(withId id: String, type: Layer.Type) throws -> Layer {
         // Get the layer properties from the map
         let properties = try layerProperties(for: id)
         return try type.init(jsonObject: properties)
@@ -128,7 +130,7 @@ public class Style {
     /// - Returns:
     ///     The value of the property in the layer with layerId.
     public func layerProperty(for layerId: String, property: String) -> Any {
-        return _layerProperty(for: layerId, property: property).value
+        return layerProperty(for: layerId, property: property).value
     }
 
     // MARK: - Sources
@@ -154,7 +156,7 @@ public class Style {
      */
     public func source<T: Source>(withId id: String) throws -> T {
         // swiftlint:disable force_cast
-        return try _source(withId: id, type: T.self) as! T
+        return try source(withId: id, type: T.self) as! T
         // swiftlint:enable force_cast
     }
 
@@ -168,24 +170,14 @@ public class Style {
      - Parameter type: The type of the source
      - Returns: The fully formed `source` object of type equal to `type`.
      - Throws: StyleError or type conversion errors
+     - Note: This method is marked as experimental. Annotate the import statement
+     for `MapboxMaps` with `@_spi(Experimental)` in order to use experimental methods.
      */
-    @_spi(experimental)
-    public func _source(withId id: String, type: Source.Type) throws  -> Source {
+    @_spi(Experimental) public func source(withId id: String, type: Source.Type) throws  -> Source {
         // Get the source properties for a given identifier
         let sourceProps = try sourceProperties(for: id)
         let source = try type.init(jsonObject: sourceProps)
         return source
-    }
-
-    /// Gets the value of style source property.
-    ///
-    /// - Parameters:
-    ///   - sourceId: Style source identifier.
-    ///   - property: Style source property name.
-    ///
-    /// - Returns: The value of the property in the source with sourceId.
-    public func sourceProperty(for sourceId: String, property: String) -> Any {
-        return _sourceProperty(for: sourceId, property: property).value
     }
 
     /// Updates the `data` property of a given `GeoJSONSource` with a new value
@@ -218,7 +210,7 @@ public class Style {
     ///
     /// - Returns: Style light property value.
     public func lightProperty(_ property: String) -> Any {
-        return _lightProperty(property).value
+        return lightProperty(property).value
     }
 
     // MARK: - Terrain
@@ -244,7 +236,7 @@ public class Style {
     ///
     /// - Returns: Style terrain property value.
     public func terrainProperty(_ property: String) -> Any {
-        return _terrainProperty(property).value
+        return terrainProperty(property).value
     }
 
     // MARK: - Conversion helpers
@@ -336,22 +328,20 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    @_spi(experimental)
-    public func _addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
+    @_spi(Experimental)
+    public func addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
         return try handleExpected {
             return styleManager.addPersistentStyleLayer(forProperties: properties, layerPosition: layerPosition?.corePosition)
         }
     }
 
-    @_spi(experimental)
-    public func _isPersistentLayer(id: String) throws -> Bool {
+    @_spi(Experimental) public func isPersistentLayer(id: String) throws -> Bool {
         return try handleExpected {
             return styleManager.isStyleLayerPersistent(forLayerId: id)
         }
     }
 
-    @_spi(experimental)
-    public func _addPersistentCustomLayer(withId id: String, layerHost: CustomLayerHost, layerPosition: LayerPosition?) throws {
+    @_spi(Experimental) public func addPersistentCustomLayer(withId id: String, layerHost: CustomLayerHost, layerPosition: LayerPosition?) throws {
         return try handleExpected {
             return styleManager.addPersistentStyleCustomLayer(forLayerId: id, layerHost: layerHost, layerPosition: layerPosition?.corePosition)
         }
@@ -385,8 +375,7 @@ extension Style: StyleManagerProtocol {
 
     // MARK: - Layer Properties
 
-    @_spi(experimental)
-    public func _layerProperty(for layerId: String, property: String) -> StylePropertyValue {
+    @_spi(Experimental) public func layerProperty(for layerId: String, property: String) -> StylePropertyValue {
         return styleManager.getStyleLayerProperty(forLayerId: layerId, property: property)
     }
 
@@ -396,8 +385,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    @_spi(experimental)
-    public static func _layerPropertyDefaultValue(for layerType: LayerType, property: String) -> StylePropertyValue {
+    @_spi(Experimental) public static func layerPropertyDefaultValue(for layerType: LayerType, property: String) -> StylePropertyValue {
         return StyleManager.getStyleLayerPropertyDefaultValue(forLayerType: layerType.rawValue, property: property)
     }
 
@@ -443,8 +431,7 @@ extension Style: StyleManagerProtocol {
 
     // MARK: - Source properties
 
-    @_spi(experimental)
-    public func _sourceProperty(for sourceId: String, property: String) -> StylePropertyValue {
+    @_spi(Experimental) public func sourceProperty(for sourceId: String, property: String) -> StylePropertyValue {
         return styleManager.getStyleSourceProperty(forSourceId: sourceId, property: property)
     }
 
@@ -466,8 +453,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    @_spi(experimental)
-    public static func _sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue {
+    @_spi(Experimental) public static func sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue {
         return StyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
     }
 
@@ -523,8 +509,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    @_spi(experimental)
-    public func _lightProperty(_ property: String) -> StylePropertyValue {
+    @_spi(Experimental) public func lightProperty(_ property: String) -> StylePropertyValue {
         return styleManager.getStyleLightProperty(forProperty: property)
     }
 
@@ -542,8 +527,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    @_spi(experimental)
-    public func _terrainProperty(_ property: String) -> StylePropertyValue {
+    @_spi(Experimental) public func terrainProperty(_ property: String) -> StylePropertyValue {
         return styleManager.getStyleTerrainProperty(forProperty: property)
     }
 
@@ -561,8 +545,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    @_spi(experimental)
-    public func _setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Turf.Feature]) throws {
+    @_spi(Experimental) public func setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Turf.Feature]) throws {
         let mbxFeatures = features.compactMap { MapboxCommon.Feature($0) }
         return try handleExpected {
             return styleManager.setStyleCustomGeometrySourceTileDataForSourceId(sourceId, tileId: tileId, featureCollection: mbxFeatures)
@@ -587,7 +570,7 @@ extension Style: StyleManagerProtocol {
 extension Style {
     internal func sourceAttributions() -> [String] {
         return allSourceIdentifiers.compactMap {
-            sourceProperty(for: $0.id, property: "attribution") as? String
+            sourceProperty(for: $0.id, property: "attribution").value as? String
         }
     }
 }

@@ -2,7 +2,7 @@ import Foundation
 @testable import MapboxMaps
 
 final class MockLocationStyle: LocationStyleProtocol {
-    func _addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition?) throws {}
+    func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition?) throws {}
     func removeLayer(withId id: String) throws {}
     func layerExists(withId id: String) -> Bool { return false }
     func setLayerProperties(for layerId: String, properties: [String: Any]) throws {}

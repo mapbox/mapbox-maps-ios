@@ -235,7 +235,9 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
             self.completions.removeAll()
         }
 
-        cameraView.syncLayer(to: transition.fromCameraOptions) // Set up the "from" values for the interpoloation
+        UIView.performWithoutAnimation {
+            cameraView.syncLayer(to: transition.fromCameraOptions) // Set up the "from" values for the interpoloation
+        }
         internalState = .inProgress(transition) // Store the mutated camera transition
     }
 

@@ -10,42 +10,42 @@ extension MapboxCommon.Geometry {
 
     /// Initialize a `Geometry` point from a coordinate.
     /// - Parameter coordinate: The coordinate to represent the `Geometry` point.
-    public convenience init(coordinate: CLLocationCoordinate2D) {
+    internal convenience init(coordinate: CLLocationCoordinate2D) {
         let pointValue = coordinate.toValue()
         self.init(point: pointValue)
     }
 
     /// Initialize a `Geometry` line from an array of coordinates.
     /// - Parameter coordinates: The coordinates to represent the `Geometry` line.
-    public convenience init(line coordinates: [CLLocationCoordinate2D]) {
+    internal convenience init(line coordinates: [CLLocationCoordinate2D]) {
         let lineValues = CLLocationCoordinate2D.convertToValues(from: coordinates)
         self.init(line: lineValues)
     }
 
     /// Initialize a `Geometry` polygon from a two-dimensional array of coordinates.
     /// - Parameter coordinates: The coordinates to represent the `Geometry` polygon.
-    public convenience init(polygon coordinates: [[CLLocationCoordinate2D]]) {
+    internal convenience init(polygon coordinates: [[CLLocationCoordinate2D]]) {
         let polygons = coordinates.map({ CLLocationCoordinate2D.convertToValues(from: $0) })
         self.init(polygon: polygons)
     }
 
     /// Initialize a `Geometry` multipoint from an array of `CLLocationCoordinate`s.
     /// - Parameter coordinates: The coordinates to represent the `Geometry` multipoint.
-    public convenience init(multiPoint coordinates: [CLLocationCoordinate2D]) {
+    internal convenience init(multiPoint coordinates: [CLLocationCoordinate2D]) {
         let multiPointValue = coordinates.map({ $0.toValue() })
         self.init(multiPoint: multiPointValue)
     }
 
     /// Initialize a `Geometry` multiline from a two-dimensional array of `CLLocationCoordinate`s.
     /// - Parameter coordinates: The coordinates to represent the `Geometry` multiline.
-    public convenience init(multiLine coordinates: [[CLLocationCoordinate2D]]) {
+    internal convenience init(multiLine coordinates: [[CLLocationCoordinate2D]]) {
         let multiLineValues = coordinates.map({ CLLocationCoordinate2D.convertToValues(from: $0) })
         self.init(multiLine: multiLineValues)
     }
 
     /// Initialize a `Geometry` multipolygon from a three-dimensional array of `CLLocationCoordinate`s.
     /// - Parameter coordinates: The coordinates to represent the `Geometry` multipolygon.
-    public convenience init(multiPolygon coordinates: [[[CLLocationCoordinate2D]]]) {
+    internal convenience init(multiPolygon coordinates: [[[CLLocationCoordinate2D]]]) {
         let multiPolygonValues = coordinates.map({
             $0.map({ CLLocationCoordinate2D.convertToValues(from: $0) })
         })
@@ -54,7 +54,7 @@ extension MapboxCommon.Geometry {
 
     /// Allows a `Geometry` object to be initialized with a `Turf.Geometry` object.
     /// - Parameter geometry: The `Turf.Geometry` object to transform into the `Geometry` type.
-    public convenience init(geometry: Turf.Geometry) {
+    internal convenience init(geometry: Turf.Geometry) {
         switch geometry {
         case .point(let point):
             let coordinate = point.coordinates

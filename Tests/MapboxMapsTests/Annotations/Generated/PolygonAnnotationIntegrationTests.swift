@@ -30,7 +30,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
     internal func testSourceAndLayerSetup() throws {
         let style = try XCTUnwrap(self.style)
         XCTAssertTrue(style.layerExists(withId: manager.layerId))
-        XCTAssertTrue(try style._isPersistentLayer(id: manager.layerId),
+        XCTAssertTrue(try style.isPersistentLayer(id: manager.layerId),
                       "The layer with id \(manager.layerId) should be persistent.")
         XCTAssertTrue(style.sourceExists(withId: manager.sourceId))
     }
@@ -86,7 +86,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.fillAntialias, .constant((Style._layerPropertyDefaultValue(for: .fill, property: "fill-antialias").value as! NSNumber).boolValue))
+        XCTAssertEqual(layer.fillAntialias, .constant((Style.layerPropertyDefaultValue(for: .fill, property: "fill-antialias").value as! NSNumber).boolValue))
     }
 
     func testFillTranslate() throws {
@@ -108,7 +108,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.fillTranslate, .constant(Style._layerPropertyDefaultValue(for: .fill, property: "fill-translate").value as! [Double]))
+        XCTAssertEqual(layer.fillTranslate, .constant(Style.layerPropertyDefaultValue(for: .fill, property: "fill-translate").value as! [Double]))
     }
 
     func testFillTranslateAnchor() throws {
@@ -130,7 +130,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.fillTranslateAnchor, .constant(FillTranslateAnchor(rawValue: Style._layerPropertyDefaultValue(for: .fill, property: "fill-translate-anchor").value as! String)!))
+        XCTAssertEqual(layer.fillTranslateAnchor, .constant(FillTranslateAnchor(rawValue: Style.layerPropertyDefaultValue(for: .fill, property: "fill-translate-anchor").value as! String)!))
     }
 
     func testFillSortKey() throws {
@@ -173,7 +173,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.fillSortKey, .constant((Style._layerPropertyDefaultValue(for: .fill, property: "fill-sort-key").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.fillSortKey, .constant((Style.layerPropertyDefaultValue(for: .fill, property: "fill-sort-key").value as! NSNumber).doubleValue))
     }
 
     func testFillColor() throws {
@@ -216,7 +216,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.fillColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style._layerPropertyDefaultValue(for: .fill, property: "fill-color").value as! [Any], options: []))))
+        XCTAssertEqual(layer.fillColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style.layerPropertyDefaultValue(for: .fill, property: "fill-color").value as! [Any], options: []))))
     }
 
     func testFillOpacity() throws {
@@ -259,7 +259,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.fillOpacity, .constant((Style._layerPropertyDefaultValue(for: .fill, property: "fill-opacity").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.fillOpacity, .constant((Style.layerPropertyDefaultValue(for: .fill, property: "fill-opacity").value as! NSNumber).doubleValue))
     }
 
     func testFillOutlineColor() throws {
@@ -302,7 +302,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.fillOutlineColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style._layerPropertyDefaultValue(for: .fill, property: "fill-outline-color").value as! [Any], options: []))))
+        XCTAssertEqual(layer.fillOutlineColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style.layerPropertyDefaultValue(for: .fill, property: "fill-outline-color").value as! [Any], options: []))))
     }
 
     func testFillPattern() throws {
@@ -345,7 +345,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.fillPattern, .constant(.name(Style._layerPropertyDefaultValue(for: .fill, property: "fill-pattern").value as! String)))
+        XCTAssertEqual(layer.fillPattern, .constant(.name(Style.layerPropertyDefaultValue(for: .fill, property: "fill-pattern").value as! String)))
     }
 }
 

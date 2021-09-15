@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@testable @_spi(Experimental) import MapboxMaps
 
 internal class StyleIntegrationTests: MapViewIntegrationTestCase {
 
@@ -77,7 +77,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             do {
                 for step in stride(from: 0, to: layers.count, by: 3) {
 
-                    try style._moveLayer(withId: "test-id", to: .at(step))
+                    try style.moveLayer(withId: "test-id", to: .at(step))
 
                     // Get layer position
                     let layers = style.styleManager.getStyleLayers()
@@ -115,7 +115,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             let newBackgroundLayer = BackgroundLayer(id: layerId)
 
             do {
-                try style._addPersistentLayer(newBackgroundLayer)
+                try style.addPersistentLayer(newBackgroundLayer)
                 addLayerExpectation.fulfill()
             } catch {
                 XCTFail("Could not add background layer due to error: \(error)")
@@ -125,7 +125,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             do {
                 for step in stride(from: 0, to: layers.count, by: 3) {
 
-                    try style._moveLayer(withId: layerId, to: .at(step))
+                    try style.moveLayer(withId: layerId, to: .at(step))
 
                     // Get layer position
                     let layers = style.styleManager.getStyleLayers()
@@ -134,7 +134,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
                     let position = layerIds.firstIndex(of: layerId)
                     XCTAssertEqual(position, step)
 
-                    let isPersistent = try style._isPersistentLayer(id: layerId)
+                    let isPersistent = try style.isPersistentLayer(id: layerId)
                     XCTAssertTrue(isPersistent)
                 }
 
@@ -163,7 +163,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
 
             for layer in layers {
                 do {
-                    _ = try style._layer(withId: layer.id, type: layer.type.layerType)
+                    _ = try style.layer(withId: layer.id, type: layer.type.layerType)
                     expectation.fulfill()
                 } catch {
                     XCTFail("Failed to get line layer with id \(layer.id), error \(error)")

@@ -30,7 +30,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
     internal func testSourceAndLayerSetup() throws {
         let style = try XCTUnwrap(self.style)
         XCTAssertTrue(style.layerExists(withId: manager.layerId))
-        XCTAssertTrue(try style._isPersistentLayer(id: manager.layerId),
+        XCTAssertTrue(try style.isPersistentLayer(id: manager.layerId),
                       "The layer with id \(manager.layerId) should be persistent.")
         XCTAssertTrue(style.sourceExists(withId: manager.sourceId))
     }
@@ -80,7 +80,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.lineCap, .constant(LineCap(rawValue: Style._layerPropertyDefaultValue(for: .line, property: "line-cap").value as! String)!))
+        XCTAssertEqual(layer.lineCap, .constant(LineCap(rawValue: Style.layerPropertyDefaultValue(for: .line, property: "line-cap").value as! String)!))
     }
 
     func testLineMiterLimit() throws {
@@ -102,7 +102,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.lineMiterLimit, .constant((Style._layerPropertyDefaultValue(for: .line, property: "line-miter-limit").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.lineMiterLimit, .constant((Style.layerPropertyDefaultValue(for: .line, property: "line-miter-limit").value as! NSNumber).doubleValue))
     }
 
     func testLineRoundLimit() throws {
@@ -124,7 +124,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.lineRoundLimit, .constant((Style._layerPropertyDefaultValue(for: .line, property: "line-round-limit").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.lineRoundLimit, .constant((Style.layerPropertyDefaultValue(for: .line, property: "line-round-limit").value as! NSNumber).doubleValue))
     }
 
     func testLineDasharray() throws {
@@ -146,7 +146,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.lineDasharray, .constant(Style._layerPropertyDefaultValue(for: .line, property: "line-dasharray").value as! [Double]))
+        XCTAssertEqual(layer.lineDasharray, .constant(Style.layerPropertyDefaultValue(for: .line, property: "line-dasharray").value as! [Double]))
     }
 
     func testLineTranslate() throws {
@@ -168,7 +168,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.lineTranslate, .constant(Style._layerPropertyDefaultValue(for: .line, property: "line-translate").value as! [Double]))
+        XCTAssertEqual(layer.lineTranslate, .constant(Style.layerPropertyDefaultValue(for: .line, property: "line-translate").value as! [Double]))
     }
 
     func testLineTranslateAnchor() throws {
@@ -190,7 +190,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.lineTranslateAnchor, .constant(LineTranslateAnchor(rawValue: Style._layerPropertyDefaultValue(for: .line, property: "line-translate-anchor").value as! String)!))
+        XCTAssertEqual(layer.lineTranslateAnchor, .constant(LineTranslateAnchor(rawValue: Style.layerPropertyDefaultValue(for: .line, property: "line-translate-anchor").value as! String)!))
     }
 
     func testLineJoin() throws {
@@ -227,7 +227,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.lineJoin, .constant(LineJoin(rawValue: Style._layerPropertyDefaultValue(for: .line, property: "line-join").value as! String)!))
+        XCTAssertEqual(layer.lineJoin, .constant(LineJoin(rawValue: Style.layerPropertyDefaultValue(for: .line, property: "line-join").value as! String)!))
     }
 
     func testLineSortKey() throws {
@@ -264,7 +264,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.lineSortKey, .constant((Style._layerPropertyDefaultValue(for: .line, property: "line-sort-key").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.lineSortKey, .constant((Style.layerPropertyDefaultValue(for: .line, property: "line-sort-key").value as! NSNumber).doubleValue))
     }
 
     func testLineBlur() throws {
@@ -301,7 +301,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.lineBlur, .constant((Style._layerPropertyDefaultValue(for: .line, property: "line-blur").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.lineBlur, .constant((Style.layerPropertyDefaultValue(for: .line, property: "line-blur").value as! NSNumber).doubleValue))
     }
 
     func testLineColor() throws {
@@ -338,7 +338,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.lineColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style._layerPropertyDefaultValue(for: .line, property: "line-color").value as! [Any], options: []))))
+        XCTAssertEqual(layer.lineColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style.layerPropertyDefaultValue(for: .line, property: "line-color").value as! [Any], options: []))))
     }
 
     func testLineGapWidth() throws {
@@ -375,7 +375,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.lineGapWidth, .constant((Style._layerPropertyDefaultValue(for: .line, property: "line-gap-width").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.lineGapWidth, .constant((Style.layerPropertyDefaultValue(for: .line, property: "line-gap-width").value as! NSNumber).doubleValue))
     }
 
     func testLineOffset() throws {
@@ -412,7 +412,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.lineOffset, .constant((Style._layerPropertyDefaultValue(for: .line, property: "line-offset").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.lineOffset, .constant((Style.layerPropertyDefaultValue(for: .line, property: "line-offset").value as! NSNumber).doubleValue))
     }
 
     func testLineOpacity() throws {
@@ -449,7 +449,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.lineOpacity, .constant((Style._layerPropertyDefaultValue(for: .line, property: "line-opacity").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.lineOpacity, .constant((Style.layerPropertyDefaultValue(for: .line, property: "line-opacity").value as! NSNumber).doubleValue))
     }
 
     func testLinePattern() throws {
@@ -486,7 +486,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.linePattern, .constant(.name(Style._layerPropertyDefaultValue(for: .line, property: "line-pattern").value as! String)))
+        XCTAssertEqual(layer.linePattern, .constant(.name(Style.layerPropertyDefaultValue(for: .line, property: "line-pattern").value as! String)))
     }
 
     func testLineWidth() throws {
@@ -523,7 +523,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.lineWidth, .constant((Style._layerPropertyDefaultValue(for: .line, property: "line-width").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.lineWidth, .constant((Style.layerPropertyDefaultValue(for: .line, property: "line-width").value as! NSNumber).doubleValue))
     }
 }
 

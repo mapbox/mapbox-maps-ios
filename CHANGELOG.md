@@ -7,6 +7,7 @@ Mapbox welcomes participation and contributions from everyone.
 ### Breaking changes ⚠️
 
 * `BasicCameraAnimator` now keeps animators alive without the user storing the animator. ([#646](https://github.com/mapbox/mapbox-maps-ios/pull/646/))
+* Experimental style APIs are now marked with `@_spi(Experimental)` and the previously used underscore prefixes have been removed. In order to access these methods, use `@_spi(Experimental)` to annotate the import statement for MapboxMaps. ([#680](https://github.com/mapbox/mapbox-maps-ios/pull/680)) 
 
 ### Features ✨ and improvements 🏁
 

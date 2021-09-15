@@ -30,7 +30,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
     internal func testSourceAndLayerSetup() throws {
         let style = try XCTUnwrap(self.style)
         XCTAssertTrue(style.layerExists(withId: manager.layerId))
-        XCTAssertTrue(try style._isPersistentLayer(id: manager.layerId),
+        XCTAssertTrue(try style.isPersistentLayer(id: manager.layerId),
                       "The layer with id \(manager.layerId) should be persistent.")
         XCTAssertTrue(style.sourceExists(withId: manager.sourceId))
     }
@@ -79,7 +79,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.iconAllowOverlap, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "icon-allow-overlap").value as! NSNumber).boolValue))
+        XCTAssertEqual(layer.iconAllowOverlap, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "icon-allow-overlap").value as! NSNumber).boolValue))
     }
 
     func testIconIgnorePlacement() throws {
@@ -101,7 +101,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.iconIgnorePlacement, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "icon-ignore-placement").value as! NSNumber).boolValue))
+        XCTAssertEqual(layer.iconIgnorePlacement, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "icon-ignore-placement").value as! NSNumber).boolValue))
     }
 
     func testIconKeepUpright() throws {
@@ -123,7 +123,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.iconKeepUpright, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "icon-keep-upright").value as! NSNumber).boolValue))
+        XCTAssertEqual(layer.iconKeepUpright, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "icon-keep-upright").value as! NSNumber).boolValue))
     }
 
     func testIconOptional() throws {
@@ -145,7 +145,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.iconOptional, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "icon-optional").value as! NSNumber).boolValue))
+        XCTAssertEqual(layer.iconOptional, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "icon-optional").value as! NSNumber).boolValue))
     }
 
     func testIconPadding() throws {
@@ -167,7 +167,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.iconPadding, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "icon-padding").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.iconPadding, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "icon-padding").value as! NSNumber).doubleValue))
     }
 
     func testIconPitchAlignment() throws {
@@ -189,7 +189,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.iconPitchAlignment, .constant(IconPitchAlignment(rawValue: Style._layerPropertyDefaultValue(for: .symbol, property: "icon-pitch-alignment").value as! String)!))
+        XCTAssertEqual(layer.iconPitchAlignment, .constant(IconPitchAlignment(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "icon-pitch-alignment").value as! String)!))
     }
 
     func testIconRotationAlignment() throws {
@@ -211,7 +211,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.iconRotationAlignment, .constant(IconRotationAlignment(rawValue: Style._layerPropertyDefaultValue(for: .symbol, property: "icon-rotation-alignment").value as! String)!))
+        XCTAssertEqual(layer.iconRotationAlignment, .constant(IconRotationAlignment(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "icon-rotation-alignment").value as! String)!))
     }
 
     func testIconTextFit() throws {
@@ -233,7 +233,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.iconTextFit, .constant(IconTextFit(rawValue: Style._layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit").value as! String)!))
+        XCTAssertEqual(layer.iconTextFit, .constant(IconTextFit(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit").value as! String)!))
     }
 
     func testIconTextFitPadding() throws {
@@ -255,7 +255,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.iconTextFitPadding, .constant(Style._layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit-padding").value as! [Double]))
+        XCTAssertEqual(layer.iconTextFitPadding, .constant(Style.layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit-padding").value as! [Double]))
     }
 
     func testSymbolAvoidEdges() throws {
@@ -277,7 +277,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.symbolAvoidEdges, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "symbol-avoid-edges").value as! NSNumber).boolValue))
+        XCTAssertEqual(layer.symbolAvoidEdges, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "symbol-avoid-edges").value as! NSNumber).boolValue))
     }
 
     func testSymbolPlacement() throws {
@@ -299,7 +299,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.symbolPlacement, .constant(SymbolPlacement(rawValue: Style._layerPropertyDefaultValue(for: .symbol, property: "symbol-placement").value as! String)!))
+        XCTAssertEqual(layer.symbolPlacement, .constant(SymbolPlacement(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "symbol-placement").value as! String)!))
     }
 
     func testSymbolSpacing() throws {
@@ -321,7 +321,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.symbolSpacing, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "symbol-spacing").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.symbolSpacing, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "symbol-spacing").value as! NSNumber).doubleValue))
     }
 
     func testSymbolZOrder() throws {
@@ -343,7 +343,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.symbolZOrder, .constant(SymbolZOrder(rawValue: Style._layerPropertyDefaultValue(for: .symbol, property: "symbol-z-order").value as! String)!))
+        XCTAssertEqual(layer.symbolZOrder, .constant(SymbolZOrder(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "symbol-z-order").value as! String)!))
     }
 
     func testTextAllowOverlap() throws {
@@ -365,7 +365,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textAllowOverlap, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "text-allow-overlap").value as! NSNumber).boolValue))
+        XCTAssertEqual(layer.textAllowOverlap, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-allow-overlap").value as! NSNumber).boolValue))
     }
 
     func testTextFont() throws {
@@ -387,7 +387,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textFont, .constant(Style._layerPropertyDefaultValue(for: .symbol, property: "text-font").value as! [String]))
+        XCTAssertEqual(layer.textFont, .constant(Style.layerPropertyDefaultValue(for: .symbol, property: "text-font").value as! [String]))
     }
 
     func testTextIgnorePlacement() throws {
@@ -409,7 +409,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textIgnorePlacement, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "text-ignore-placement").value as! NSNumber).boolValue))
+        XCTAssertEqual(layer.textIgnorePlacement, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-ignore-placement").value as! NSNumber).boolValue))
     }
 
     func testTextKeepUpright() throws {
@@ -431,7 +431,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textKeepUpright, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "text-keep-upright").value as! NSNumber).boolValue))
+        XCTAssertEqual(layer.textKeepUpright, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-keep-upright").value as! NSNumber).boolValue))
     }
 
     func testTextLineHeight() throws {
@@ -453,7 +453,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textLineHeight, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "text-line-height").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.textLineHeight, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-line-height").value as! NSNumber).doubleValue))
     }
 
     func testTextMaxAngle() throws {
@@ -475,7 +475,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textMaxAngle, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "text-max-angle").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.textMaxAngle, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-max-angle").value as! NSNumber).doubleValue))
     }
 
     func testTextOptional() throws {
@@ -497,7 +497,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textOptional, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "text-optional").value as! NSNumber).boolValue))
+        XCTAssertEqual(layer.textOptional, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-optional").value as! NSNumber).boolValue))
     }
 
     func testTextPadding() throws {
@@ -519,7 +519,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textPadding, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "text-padding").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.textPadding, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-padding").value as! NSNumber).doubleValue))
     }
 
     func testTextPitchAlignment() throws {
@@ -541,7 +541,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textPitchAlignment, .constant(TextPitchAlignment(rawValue: Style._layerPropertyDefaultValue(for: .symbol, property: "text-pitch-alignment").value as! String)!))
+        XCTAssertEqual(layer.textPitchAlignment, .constant(TextPitchAlignment(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "text-pitch-alignment").value as! String)!))
     }
 
     func testTextRotationAlignment() throws {
@@ -563,7 +563,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textRotationAlignment, .constant(TextRotationAlignment(rawValue: Style._layerPropertyDefaultValue(for: .symbol, property: "text-rotation-alignment").value as! String)!))
+        XCTAssertEqual(layer.textRotationAlignment, .constant(TextRotationAlignment(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "text-rotation-alignment").value as! String)!))
     }
 
     func testTextVariableAnchor() throws {
@@ -585,7 +585,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textVariableAnchor, .constant(Style._layerPropertyDefaultValue(for: .symbol, property: "text-variable-anchor").value as! [TextAnchor]))
+        XCTAssertEqual(layer.textVariableAnchor, .constant(Style.layerPropertyDefaultValue(for: .symbol, property: "text-variable-anchor").value as! [TextAnchor]))
     }
 
     func testTextWritingMode() throws {
@@ -607,7 +607,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textWritingMode, .constant(Style._layerPropertyDefaultValue(for: .symbol, property: "text-writing-mode").value as! [TextWritingMode]))
+        XCTAssertEqual(layer.textWritingMode, .constant(Style.layerPropertyDefaultValue(for: .symbol, property: "text-writing-mode").value as! [TextWritingMode]))
     }
 
     func testIconTranslate() throws {
@@ -629,7 +629,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.iconTranslate, .constant(Style._layerPropertyDefaultValue(for: .symbol, property: "icon-translate").value as! [Double]))
+        XCTAssertEqual(layer.iconTranslate, .constant(Style.layerPropertyDefaultValue(for: .symbol, property: "icon-translate").value as! [Double]))
     }
 
     func testIconTranslateAnchor() throws {
@@ -651,7 +651,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.iconTranslateAnchor, .constant(IconTranslateAnchor(rawValue: Style._layerPropertyDefaultValue(for: .symbol, property: "icon-translate-anchor").value as! String)!))
+        XCTAssertEqual(layer.iconTranslateAnchor, .constant(IconTranslateAnchor(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "icon-translate-anchor").value as! String)!))
     }
 
     func testTextTranslate() throws {
@@ -673,7 +673,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textTranslate, .constant(Style._layerPropertyDefaultValue(for: .symbol, property: "text-translate").value as! [Double]))
+        XCTAssertEqual(layer.textTranslate, .constant(Style.layerPropertyDefaultValue(for: .symbol, property: "text-translate").value as! [Double]))
     }
 
     func testTextTranslateAnchor() throws {
@@ -695,7 +695,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textTranslateAnchor, .constant(TextTranslateAnchor(rawValue: Style._layerPropertyDefaultValue(for: .symbol, property: "text-translate-anchor").value as! String)!))
+        XCTAssertEqual(layer.textTranslateAnchor, .constant(TextTranslateAnchor(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "text-translate-anchor").value as! String)!))
     }
 
     func testIconAnchor() throws {
@@ -731,7 +731,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.iconAnchor, .constant(IconAnchor(rawValue: Style._layerPropertyDefaultValue(for: .symbol, property: "icon-anchor").value as! String)!))
+        XCTAssertEqual(layer.iconAnchor, .constant(IconAnchor(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "icon-anchor").value as! String)!))
     }
 
     func testIconImage() throws {
@@ -767,7 +767,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.iconImage, .constant(.name(Style._layerPropertyDefaultValue(for: .symbol, property: "icon-image").value as! String)))
+        XCTAssertEqual(layer.iconImage, .constant(.name(Style.layerPropertyDefaultValue(for: .symbol, property: "icon-image").value as! String)))
     }
 
     func testIconOffset() throws {
@@ -805,7 +805,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.iconOffset, .constant(Style._layerPropertyDefaultValue(for: .symbol, property: "icon-offset").value as! [Double]))
+        XCTAssertEqual(layer.iconOffset, .constant(Style.layerPropertyDefaultValue(for: .symbol, property: "icon-offset").value as! [Double]))
     }
 
     func testIconRotate() throws {
@@ -841,7 +841,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.iconRotate, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "icon-rotate").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.iconRotate, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "icon-rotate").value as! NSNumber).doubleValue))
     }
 
     func testIconSize() throws {
@@ -877,7 +877,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.iconSize, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "icon-size").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.iconSize, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "icon-size").value as! NSNumber).doubleValue))
     }
 
     func testSymbolSortKey() throws {
@@ -913,7 +913,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.symbolSortKey, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "symbol-sort-key").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.symbolSortKey, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "symbol-sort-key").value as! NSNumber).doubleValue))
     }
 
     func testTextAnchor() throws {
@@ -949,7 +949,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textAnchor, .constant(TextAnchor(rawValue: Style._layerPropertyDefaultValue(for: .symbol, property: "text-anchor").value as! String)!))
+        XCTAssertEqual(layer.textAnchor, .constant(TextAnchor(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "text-anchor").value as! String)!))
     }
 
     func testTextField() throws {
@@ -1025,7 +1025,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textJustify, .constant(TextJustify(rawValue: Style._layerPropertyDefaultValue(for: .symbol, property: "text-justify").value as! String)!))
+        XCTAssertEqual(layer.textJustify, .constant(TextJustify(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "text-justify").value as! String)!))
     }
 
     func testTextLetterSpacing() throws {
@@ -1061,7 +1061,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textLetterSpacing, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "text-letter-spacing").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.textLetterSpacing, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-letter-spacing").value as! NSNumber).doubleValue))
     }
 
     func testTextMaxWidth() throws {
@@ -1097,7 +1097,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textMaxWidth, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "text-max-width").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.textMaxWidth, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-max-width").value as! NSNumber).doubleValue))
     }
 
     func testTextOffset() throws {
@@ -1135,7 +1135,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textOffset, .constant(Style._layerPropertyDefaultValue(for: .symbol, property: "text-offset").value as! [Double]))
+        XCTAssertEqual(layer.textOffset, .constant(Style.layerPropertyDefaultValue(for: .symbol, property: "text-offset").value as! [Double]))
     }
 
     func testTextRadialOffset() throws {
@@ -1171,7 +1171,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textRadialOffset, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "text-radial-offset").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.textRadialOffset, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-radial-offset").value as! NSNumber).doubleValue))
     }
 
     func testTextRotate() throws {
@@ -1207,7 +1207,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textRotate, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "text-rotate").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.textRotate, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-rotate").value as! NSNumber).doubleValue))
     }
 
     func testTextSize() throws {
@@ -1243,7 +1243,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textSize, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "text-size").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.textSize, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-size").value as! NSNumber).doubleValue))
     }
 
     func testTextTransform() throws {
@@ -1279,7 +1279,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textTransform, .constant(TextTransform(rawValue: Style._layerPropertyDefaultValue(for: .symbol, property: "text-transform").value as! String)!))
+        XCTAssertEqual(layer.textTransform, .constant(TextTransform(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "text-transform").value as! String)!))
     }
 
     func testIconColor() throws {
@@ -1315,7 +1315,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.iconColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style._layerPropertyDefaultValue(for: .symbol, property: "icon-color").value as! [Any], options: []))))
+        XCTAssertEqual(layer.iconColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style.layerPropertyDefaultValue(for: .symbol, property: "icon-color").value as! [Any], options: []))))
     }
 
     func testIconHaloBlur() throws {
@@ -1351,7 +1351,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.iconHaloBlur, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "icon-halo-blur").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.iconHaloBlur, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "icon-halo-blur").value as! NSNumber).doubleValue))
     }
 
     func testIconHaloColor() throws {
@@ -1387,7 +1387,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.iconHaloColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style._layerPropertyDefaultValue(for: .symbol, property: "icon-halo-color").value as! [Any], options: []))))
+        XCTAssertEqual(layer.iconHaloColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style.layerPropertyDefaultValue(for: .symbol, property: "icon-halo-color").value as! [Any], options: []))))
     }
 
     func testIconHaloWidth() throws {
@@ -1423,7 +1423,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.iconHaloWidth, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "icon-halo-width").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.iconHaloWidth, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "icon-halo-width").value as! NSNumber).doubleValue))
     }
 
     func testIconOpacity() throws {
@@ -1459,7 +1459,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.iconOpacity, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "icon-opacity").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.iconOpacity, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "icon-opacity").value as! NSNumber).doubleValue))
     }
 
     func testTextColor() throws {
@@ -1495,7 +1495,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style._layerPropertyDefaultValue(for: .symbol, property: "text-color").value as! [Any], options: []))))
+        XCTAssertEqual(layer.textColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style.layerPropertyDefaultValue(for: .symbol, property: "text-color").value as! [Any], options: []))))
     }
 
     func testTextHaloBlur() throws {
@@ -1531,7 +1531,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textHaloBlur, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "text-halo-blur").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.textHaloBlur, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-halo-blur").value as! NSNumber).doubleValue))
     }
 
     func testTextHaloColor() throws {
@@ -1567,7 +1567,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textHaloColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style._layerPropertyDefaultValue(for: .symbol, property: "text-halo-color").value as! [Any], options: []))))
+        XCTAssertEqual(layer.textHaloColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style.layerPropertyDefaultValue(for: .symbol, property: "text-halo-color").value as! [Any], options: []))))
     }
 
     func testTextHaloWidth() throws {
@@ -1603,7 +1603,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textHaloWidth, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "text-halo-width").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.textHaloWidth, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-halo-width").value as! NSNumber).doubleValue))
     }
 
     func testTextOpacity() throws {
@@ -1639,7 +1639,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
         layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
-        XCTAssertEqual(layer.textOpacity, .constant((Style._layerPropertyDefaultValue(for: .symbol, property: "text-opacity").value as! NSNumber).doubleValue))
+        XCTAssertEqual(layer.textOpacity, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-opacity").value as! NSNumber).doubleValue))
     }
 }
 

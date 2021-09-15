@@ -192,7 +192,7 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
             } catch {
                 XCTFail("Failed to create an precise location indicator layer.")
             }
-            let isPersistent = try! style._isPersistentLayer(id: "puck")
+            let isPersistent = try! style.isPersistentLayer(id: "puck")
             XCTAssertTrue(isPersistent, "The puck layer should be a persistent layer.")
         })
     }

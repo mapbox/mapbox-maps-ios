@@ -103,7 +103,7 @@ public class CircleAnnotationManager: AnnotationManager {
         var layer = CircleLayer(id: layerId)
         layer.source = sourceId
         if shouldPersist {
-            try style._addPersistentLayer(layer, layerPosition: layerPosition)
+            try style.addPersistentLayer(layer, layerPosition: layerPosition)
         } else {
             try style.addLayer(layer, layerPosition: layerPosition)
         }
@@ -145,7 +145,7 @@ public class CircleAnnotationManager: AnnotationManager {
                             category: "Annotations")
                 return (key, ["format", ""])
             } else {
-                return (key, Style._layerPropertyDefaultValue(for: .circle, property: key).value)
+                return (key, Style.layerPropertyDefaultValue(for: .circle, property: key).value)
             }
         })
 

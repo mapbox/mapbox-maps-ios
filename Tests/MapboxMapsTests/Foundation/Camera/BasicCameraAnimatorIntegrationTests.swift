@@ -5,7 +5,7 @@ final class BasicCameraAnimatorIntegrationTests: XCTestCase {
 
     var window: UIWindow!
     var cameraView: CameraView!
-    var mapboxMap: MockCameraAnimatorMapboxMap!
+    var mapboxMap: MockMapboxMap!
     var animator: BasicCameraAnimator!
 
     override func setUp() {
@@ -14,7 +14,7 @@ final class BasicCameraAnimatorIntegrationTests: XCTestCase {
         cameraView = CameraView()
         window.addSubview(cameraView)
         window.makeKeyAndVisible()
-        mapboxMap = MockCameraAnimatorMapboxMap()
+        mapboxMap = MockMapboxMap()
         animator = BasicCameraAnimator(
             propertyAnimator: UIViewPropertyAnimator(),
             owner: .unspecified,

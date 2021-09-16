@@ -27,14 +27,14 @@ final class BasicCameraAnimatorTests: XCTestCase {
 
     var propertyAnimator: MockPropertyAnimator!
     var cameraView: CameraViewMock!
-    var mapboxMap: MockCameraAnimatorMapboxMap!
+    var mapboxMap: MockMapboxMap!
     var animator: BasicCameraAnimator!
 
     override func setUp() {
         super.setUp()
         propertyAnimator = MockPropertyAnimator()
         cameraView = CameraViewMock()
-        mapboxMap = MockCameraAnimatorMapboxMap()
+        mapboxMap = MockMapboxMap()
         animator = BasicCameraAnimator(
             propertyAnimator: propertyAnimator,
             owner: .unspecified,

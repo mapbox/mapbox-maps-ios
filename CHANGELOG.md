@@ -13,6 +13,10 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Allow users to set the map's `MapDebugOptions`. ([#648](https://github.com/mapbox/mapbox-maps-ios/pull/648))
 
+### Bug fixes 🐞
+
+* Fixes animations that are started within an UIKit animation context. ([#684](https://github.com/mapbox/mapbox-maps-ios/pull/684))
+
 ## 10.0.0-rc.8 - Sept 8, 2021
 
 ### Breaking changes ⚠️

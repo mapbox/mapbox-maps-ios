@@ -1,5 +1,4 @@
 import UIKit
-import CoreLocation
 
 public protocol GestureManagerDelegate: AnyObject {
 
@@ -7,319 +6,118 @@ public protocol GestureManagerDelegate: AnyObject {
     func gestureBegan(for gestureType: GestureType)
 }
 
-public final class GestureManager {
+public final class GestureManager: GestureHandlerDelegate {
 
-    /// The `GestureOptions` that are used to set up the required gestures on the map
-    public var options = GestureOptions() {
-        didSet {
-            configureGestureHandlers(for: options)
+    /// Configuration options for the built-in gestures
+    public var options: GestureOptions {
+        set {
+            panGestureRecognizer.isEnabled = newValue.scrollEnabled
+            doubleTapToZoomOutGestureRecognizer.isEnabled = newValue.zoomEnabled
+            doubleTapToZoomInGestureRecognizer.isEnabled = newValue.zoomEnabled
+            pinchGestureRecognizer.isEnabled = newValue.scrollEnabled && newValue.zoomEnabled
+            rotationGestureRecognizer.isEnabled = newValue.rotateEnabled
+            quickZoomGestureRecognizer.isEnabled = newValue.zoomEnabled
+            pitchGestureRecognizer.isEnabled = newValue.pitchEnabled
+            panScrollingMode = newValue.scrollingMode
+            decelerationRate = newValue.decelerationRate
+        }
+        get {
+            var gestureOptions = GestureOptions()
+            gestureOptions.scrollEnabled = panGestureRecognizer.isEnabled
+                || pinchGestureRecognizer.isEnabled
+            gestureOptions.rotateEnabled = rotationGestureRecognizer.isEnabled
+            gestureOptions.zoomEnabled = quickZoomGestureRecognizer.isEnabled
+                || pinchGestureRecognizer.isEnabled
+                || doubleTapToZoomInGestureRecognizer.isEnabled
+                || doubleTapToZoomOutGestureRecognizer.isEnabled
+            gestureOptions.pitchEnabled = pitchGestureRecognizer.isEnabled
+            gestureOptions.scrollingMode = panScrollingMode
+            gestureOptions.decelerationRate = decelerationRate
+            return gestureOptions
         }
     }
 
-    /// Map of GestureType --> GestureHandler. We mantain a map to allow us to remove gestures arbitrarily.
-    private(set) var gestureHandlers: [GestureType: GestureHandler] = [:]
-
-    /// The underlying gesture recognizer for the pan gesture
-    public var panGestureRecognizer: UIGestureRecognizer? {
-        return gestureHandlers[.pan]?.gestureRecognizer
+    /// The gesture recognizer for the pan gesture
+    public var panGestureRecognizer: UIGestureRecognizer {
+        return panGestureHandler.gestureRecognizer
     }
 
-    /// The underlying gesture recognizer for the "double tap to zoom in" gesture
-    public var doubleTapToZoomInGestureRecognizer: UIGestureRecognizer? {
-        return gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 1)]?.gestureRecognizer
+    /// The gesture recognizer for the "pinch to zoom" gesture
+    public var pinchGestureRecognizer: UIGestureRecognizer {
+        return pinchGestureHandler.gestureRecognizer
     }
 
-    /// The underlying gesture recognizer for the "double tap to zoom out" gesture
-    public var doubleTapToZoomOutGestureRecognizer: UIGestureRecognizer? {
-        return gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 2)]?.gestureRecognizer
+    /// The gesture recognizer for the rotate gesture
+    public var rotationGestureRecognizer: UIGestureRecognizer {
+        return rotationGestureHandler.gestureRecognizer
     }
 
-    /// The underlying gesture recognizer for the quickZoom gesture
-    public var quickZoomGestureRecognizer: UIGestureRecognizer? {
-        return gestureHandlers[.quickZoom]?.gestureRecognizer
+    /// The gesture recognizer for the pitch gesture
+    public var pitchGestureRecognizer: UIGestureRecognizer {
+        return pitchGestureHandler.gestureRecognizer
     }
 
-    /// The underlying gesture recognizer for the pitch gesture
-    public var pitchGestureRecognizer: UIGestureRecognizer? {
-        return gestureHandlers[.pitch]?.gestureRecognizer
+    /// The gesture recognizer for the "double tap to zoom in" gesture
+    public var doubleTapToZoomInGestureRecognizer: UIGestureRecognizer {
+        return doubleTapToZoomInGestureHandler.gestureRecognizer
     }
 
-    /// The underlying gesture recognizer for the rotate gesture
-    public var rotationGestureRecognizer: UIGestureRecognizer? {
-        return gestureHandlers[.rotate]?.gestureRecognizer
+    /// The gesture recognizer for the "double tap to zoom out" gesture
+    public var doubleTapToZoomOutGestureRecognizer: UIGestureRecognizer {
+        return doubleTapToZoomOutGestureHandler.gestureRecognizer
     }
 
-    /// The underlying gesture recognizer for the "pinch to zoom" gesture
-    public var pinchGestureRecognizer: UIGestureRecognizer? {
-        return gestureHandlers[.pinch]?.gestureRecognizer
+    /// The gesture recognizer for the quickZoom gesture
+    public var quickZoomGestureRecognizer: UIGestureRecognizer {
+        return quickZoomGestureHandler.gestureRecognizer
     }
-
-    /// The view that all gestures operate on
-    private weak var view: UIView?
-
-    /// The camera manager that responds to gestures.
-    private let cameraAnimationsManager: CameraAnimationsManagerProtocol
-
-    private let mapboxMap: MapboxMap
 
     /// Set this delegate to be called back if a gesture begins
     public weak var delegate: GestureManagerDelegate?
 
-    /// Internal delegate for gesture recognizers
-    // swiftlint:disable:next weak_delegate
-    internal let gestureRecognizerDelegate: GestureRecognizerDelegate
+    internal private(set) var decelerationRate: CGFloat
+    internal private(set) var panScrollingMode: PanScrollingMode
+    private let panGestureHandler: GestureHandler
+    private let pinchGestureHandler: GestureHandler
+    private let rotationGestureHandler: GestureHandler
+    private let pitchGestureHandler: GestureHandler
+    private let doubleTapToZoomInGestureHandler: GestureHandler
+    private let doubleTapToZoomOutGestureHandler: GestureHandler
+    private let quickZoomGestureHandler: GestureHandler
 
-    internal init(view: UIView, cameraAnimationsManager: CameraAnimationsManagerProtocol, mapboxMap: MapboxMap) {
-        self.view = view
-        self.cameraAnimationsManager = cameraAnimationsManager
-        self.mapboxMap = mapboxMap
-        self.gestureRecognizerDelegate = GestureRecognizerDelegate()
-        configureGestureHandlers(for: options)
-    }
+    internal init(decelerationRate: CGFloat,
+                  panScrollingMode: PanScrollingMode,
+                  panGestureHandler: GestureHandler,
+                  pinchGestureHandler: GestureHandler,
+                  rotationGestureHandler: GestureHandler,
+                  pitchGestureHandler: GestureHandler,
+                  doubleTapToZoomInGestureHandler: GestureHandler,
+                  doubleTapToZoomOutGestureHandler: GestureHandler,
+                  quickZoomGestureHandler: GestureHandler) {
+        self.decelerationRate = decelerationRate
+        self.panScrollingMode = panScrollingMode
+        self.panGestureHandler = panGestureHandler
+        self.pinchGestureHandler = pinchGestureHandler
+        self.rotationGestureHandler = rotationGestureHandler
+        self.pitchGestureHandler = pitchGestureHandler
+        self.doubleTapToZoomInGestureHandler = doubleTapToZoomInGestureHandler
+        self.doubleTapToZoomOutGestureHandler = doubleTapToZoomOutGestureHandler
+        self.quickZoomGestureHandler = quickZoomGestureHandler
 
-    // Loops through supported gestures and generate associated handlers that are to be kept alive
-    internal func configureGestureHandlers(for options: GestureOptions) {
-        guard let view = view else {
-            assertionFailure("GestureManager view is nil.")
-            return
-        }
-        var newGestureHandlerMap: [GestureType: GestureHandler] = [:]
-        for gestureType in options.supportedGestureTypes() {
-            if gestureHandlers[gestureType] == nil {
-                newGestureHandlerMap[gestureType] = gestureType.makeHandler(for: view,
-                                                                            delegate: self,
-                                                                            contextProvider: self,
-                                                                            gestureOptions: options)
-            } else {
-                newGestureHandlerMap[gestureType] = gestureHandlers[gestureType]
-            }
-        }
+        panGestureHandler.delegate = self
+        pinchGestureHandler.delegate = self
+        rotationGestureHandler.delegate = self
+        pitchGestureHandler.delegate = self
+        doubleTapToZoomInGestureHandler.delegate = self
+        doubleTapToZoomOutGestureHandler.delegate = self
+        quickZoomGestureHandler.delegate = self
 
-        gestureHandlers = newGestureHandlerMap
-
-        if let pitchHandler = gestureHandlers[.pitch], let panHandler = gestureHandlers[.pan] {
-            requireGestureToFail(allowedGesture: pitchHandler, failableGesture: panHandler)
-        }
-
-        if let pinchHandler = gestureHandlers[.pinch], let panHandler = gestureHandlers[.pan] {
-            requireGestureToFail(allowedGesture: pinchHandler, failableGesture: panHandler)
-        }
-
-        if let doubleTapHandler = gestureHandlers[.tap(numberOfTaps: 2, numberOfTouches: 1)],
-           let quickZoomHandler = gestureHandlers[.quickZoom] {
-            requireGestureToFail(allowedGesture: quickZoomHandler, failableGesture: doubleTapHandler)
-        }
-
-        registerAsDelegate()
-    }
-
-    internal func registerAsDelegate() {
-
-        guard let view = view,
-              let validGestureRecognizers = view.gestureRecognizers else {
-            return
-        }
-
-        for gestureRecognizer in validGestureRecognizers {
-            gestureRecognizer.delegate = gestureRecognizerDelegate
-        }
-    }
-}
-
-/**
- Declare protocol with AnyObject so that it can
- be specified as weak.
- */
-internal protocol GestureContextProvider: AnyObject {
-    func fetchPinchState() -> UIGestureRecognizer.State?
-    func fetchPinchScale() -> CGFloat?
-    func requireGestureToFail(allowedGesture: GestureHandler, failableGesture: GestureHandler)
-}
-
-extension GestureManager: GestureContextProvider {
-
-    internal func fetchPinchState() -> UIGestureRecognizer.State? {
-
-        guard let validPinchHandler = gestureHandlers[.pinch],
-            let validPinchRecognizer = validPinchHandler.gestureRecognizer as? UIPinchGestureRecognizer else {
-                return nil
-        }
-
-        return validPinchRecognizer.state
-    }
-
-    internal func fetchPinchScale() -> CGFloat? {
-
-        guard let validPinchHandler = gestureHandlers[.pinch],
-            let validPinchRecognizer = validPinchHandler.gestureRecognizer as? UIPinchGestureRecognizer else {
-                return nil
-        }
-
-        return validPinchRecognizer.scale
-    }
-
-    internal func requireGestureToFail(allowedGesture: GestureHandler, failableGesture: GestureHandler) {
-        guard let failableGesture = failableGesture.gestureRecognizer else { return }
-        allowedGesture.gestureRecognizer?.require(toFail: failableGesture)
-    }
-}
-
-extension GestureManager: GestureHandlerDelegate {
-    // MapView has been tapped a certain number of times
-    internal func tapped(numberOfTaps: Int, numberOfTouches: Int) {
-        // Single tapping twice with one finger will cause the map to zoom in
-        if numberOfTaps == 2 && numberOfTouches == 1 {
-            _ = cameraAnimationsManager.ease(to: CameraOptions(zoom: mapboxMap.cameraState.zoom + 1.0),
-                                   duration: 0.3,
-                                   curve: .easeOut,
-                                   completion: nil)
-        }
-
-        // Double tapping twice with two fingers will cause the map to zoom out
-        if numberOfTaps == 2 && numberOfTouches == 2 {
-            _ = cameraAnimationsManager.ease(to: CameraOptions(zoom: mapboxMap.cameraState.zoom - 1.0),
-                                   duration: 0.3,
-                                   curve: .easeOut,
-                                   completion: nil)
-        }
-    }
-
-    internal func panBegan(at point: CGPoint) {
-        mapboxMap.dragStart(for: point)
-    }
-
-    // MapView has been panned
-    internal func panned(from startPoint: CGPoint, to endPoint: CGPoint) {
-        let cameraOptions = mapboxMap.dragCameraOptions(from: startPoint, to: endPoint)
-        mapboxMap.setCamera(to: cameraOptions)
-    }
-
-    // Pan has ended on the MapView with a residual `offset`
-    func panEnded(at endPoint: CGPoint, shouldDriftTo driftEndPoint: CGPoint) {
-        if endPoint != driftEndPoint {
-            let driftCameraOptions = mapboxMap.dragCameraOptions(from: endPoint, to: driftEndPoint)
-            _ = cameraAnimationsManager.ease(
-                    to: driftCameraOptions,
-                    duration: Double(options.decelerationRate),
-                    curve: .easeOut,
-                    completion: nil)
-        }
-        mapboxMap.dragEnd()
-    }
-
-    internal func cancelGestureTransitions() {
-        cameraAnimationsManager.cancelAnimations()
+        pinchGestureHandler.gestureRecognizer.require(toFail: panGestureHandler.gestureRecognizer)
+        pitchGestureHandler.gestureRecognizer.require(toFail: panGestureHandler.gestureRecognizer)
+        quickZoomGestureHandler.gestureRecognizer.require(toFail: doubleTapToZoomInGestureHandler.gestureRecognizer)
     }
 
     internal func gestureBegan(for gestureType: GestureType) {
-        cameraAnimationsManager.cancelAnimations()
         delegate?.gestureBegan(for: gestureType)
-    }
-
-    internal func scaleForZoom() -> CGFloat {
-        return mapboxMap.cameraState.zoom
-    }
-
-    internal func cameraState() -> CameraState {
-        return self.mapboxMap.cameraState
-    }
-
-    func pinchChanged(withZoomIncrement zoomIncrement: CGFloat,
-                      targetAnchor: CGPoint,
-                      initialAnchor: CGPoint,
-                      initialCameraState: CameraState) {
-
-        var cameraOptions = CameraOptions()
-        cameraOptions.center     = initialCameraState.center
-        cameraOptions.padding    = initialCameraState.padding
-        cameraOptions.zoom       = initialCameraState.zoom
-
-        mapboxMap.setCamera(to: cameraOptions)
-
-        mapboxMap.dragStart(for: initialAnchor)
-        let dragOptions = mapboxMap.dragCameraOptions(from: initialAnchor, to: targetAnchor)
-        mapboxMap.setCamera(to: dragOptions)
-        mapboxMap.dragEnd()
-
-        mapboxMap.setCamera(to: CameraOptions(anchor: targetAnchor,
-                                              zoom: mapboxMap.cameraState.zoom + zoomIncrement))
-    }
-
-    internal func pinchEnded() {
-        unrotateIfNeededForGesture(with: .ended)
-    }
-
-    internal func quickZoomChanged(with newScale: CGFloat, and anchor: CGPoint) {
-        let minZoom = CGFloat(mapboxMap.cameraBounds.minZoom)
-        let maxZoom = CGFloat(mapboxMap.cameraBounds.maxZoom)
-        let zoom = newScale.clamped(to: minZoom...maxZoom)
-        mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: zoom))
-    }
-
-    internal func quickZoomEnded() {
-        unrotateIfNeededForGesture(with: .ended)
-    }
-    internal func isRotationAllowed() -> Bool {
-        let minZoom = CGFloat(mapboxMap.cameraBounds.minZoom)
-        return mapboxMap.cameraState.zoom >= minZoom
-    }
-
-    internal func rotationStartAngle() -> CGFloat {
-        return CGFloat((mapboxMap.cameraState.bearing * .pi) / 180.0 * -1)
-    }
-
-    internal func rotationChanged(with changedAngle: CGFloat, and anchor: CGPoint, and pinchScale: CGFloat) {
-        var changedAngleInDegrees = changedAngle * 180.0 / .pi * -1
-        changedAngleInDegrees = changedAngleInDegrees.truncatingRemainder(dividingBy: 360.0)
-
-        // Constraining `changedAngleInDegrees` to -30.0 to +30.0 degrees
-        if isRotationAllowed() == false && abs(pinchScale) < 10 {
-            changedAngleInDegrees = changedAngleInDegrees < -30.0 ? -30.0 : changedAngleInDegrees
-            changedAngleInDegrees = changedAngleInDegrees > 30.0 ? 30.0 : changedAngleInDegrees
-        }
-
-        mapboxMap.setCamera(
-            to: CameraOptions(bearing: CLLocationDirection(changedAngleInDegrees)))
-    }
-
-    internal func rotationEnded(with finalAngle: CGFloat, and anchor: CGPoint, with pinchState: UIGestureRecognizer.State) {
-        var finalAngleInDegrees = finalAngle * 180.0 / .pi * -1
-        finalAngleInDegrees = finalAngleInDegrees.truncatingRemainder(dividingBy: 360.0)
-        mapboxMap.setCamera(to: CameraOptions(bearing: CLLocationDirection(finalAngleInDegrees)))
-    }
-
-    internal func unrotateIfNeededForGesture(with pinchState: UIGestureRecognizer.State) {
-        let currentBearing = mapboxMap.cameraState.bearing
-
-        // Avoid contention with in-progress gestures
-        // let toleranceForSnappingToNorth: CGFloat = 7.0
-        if currentBearing != 0.0
-            && pinchState != .began
-            && pinchState != .changed {
-            if currentBearing != 0.0 && isRotationAllowed() == false {
-                mapboxMap.setCamera(to: CameraOptions(bearing: 0))
-            }
-
-            // TODO: Add snapping behavior to "north" if bearing is less than some tolerance
-            // else if abs(self.mapView.cameraView.bearing) < toleranceForSnappingToNorth
-            //            || abs(self.mapView.cameraView.bearing) > 360.0 - toleranceForSnappingToNorth {
-            //    self.transitionBearing(to: 0.0, animated: true)
-            //}
-        }
-    }
-
-    internal func initialPitch() -> CGFloat {
-        return mapboxMap.cameraState.pitch
-    }
-
-    internal func horizontalPitchTiltTolerance() -> Double {
-        return 45.0
-    }
-
-    internal func pitchChanged(newPitch: CGFloat) {
-        mapboxMap.setCamera(to: CameraOptions(pitch: newPitch))
-    }
-
-    internal func pitchEnded() {
     }
 }

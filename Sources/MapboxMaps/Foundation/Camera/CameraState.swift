@@ -3,18 +3,30 @@ import CoreLocation
 import UIKit
 
 public struct CameraState: Hashable {
-    public let center: CLLocationCoordinate2D
-    public let padding: UIEdgeInsets
-    public let zoom: CGFloat
-    public let bearing: CLLocationDirection
-    public let pitch: CGFloat
+    public var center: CLLocationCoordinate2D
+    public var padding: UIEdgeInsets
+    public var zoom: CGFloat
+    public var bearing: CLLocationDirection
+    public var pitch: CGFloat
+
+    public init(center: CLLocationCoordinate2D,
+                padding: UIEdgeInsets,
+                zoom: CGFloat,
+                bearing: CLLocationDirection,
+                pitch: CGFloat) {
+        self.center = center
+        self.padding = padding
+        self.zoom = zoom
+        self.bearing = bearing
+        self.pitch = pitch
+    }
 
     internal init(_ objcValue: MapboxCoreMaps.CameraState) {
-        self.center     = objcValue.center
-        self.padding    = objcValue.padding.toUIEdgeInsetsValue()
-        self.zoom       = CGFloat(objcValue.zoom)
-        self.bearing    = CLLocationDirection(objcValue.bearing)
-        self.pitch      = CGFloat(objcValue.pitch)
+        self.center = objcValue.center
+        self.padding = objcValue.padding.toUIEdgeInsetsValue()
+        self.zoom = CGFloat(objcValue.zoom)
+        self.bearing = CLLocationDirection(objcValue.bearing)
+        self.pitch = CGFloat(objcValue.pitch)
     }
 
     public static func == (lhs: CameraState, rhs: CameraState) -> Bool {

@@ -3,7 +3,7 @@ import XCTest
 
 final class CameraStateTests: XCTestCase {
     var center: CLLocationCoordinate2D!
-    var padding: EdgeInsets!
+    var padding: UIEdgeInsets!
     var anchor: CGPoint!
     var zoom: CGFloat!
     var bearing: CLLocationDirection!
@@ -11,17 +11,11 @@ final class CameraStateTests: XCTestCase {
 
     override func setUp() {
         super.tearDown()
-        center = CLLocationCoordinate2D(
-            latitude: .random(in: -80...80),
-            longitude: .random(in: -180...180))
-        padding = EdgeInsets(
-            top: .random(in: 0...100),
-            left: .random(in: 0...100),
-            bottom: .random(in: 0...100),
-            right: .random(in: 0...100))
+        center = .random()
+        padding = .random()
         anchor = CGPoint(
-            x: CGFloat.random(in: 0...100),
-            y: CGFloat.random(in: 0...100))
+            x: .random(in: 0...100),
+            y: .random(in: 0...100))
         zoom = .random(in: 0...20)
         bearing = .random(in: 0...360)
         pitch = .random(in: 0...45)
@@ -37,18 +31,34 @@ final class CameraStateTests: XCTestCase {
         super.tearDown()
     }
 
+    func testMemberwiseInit() {
+        let cameraState = CameraState(
+            center: center,
+            padding: padding,
+            zoom: zoom,
+            bearing: bearing,
+            pitch: pitch)
+
+        XCTAssertEqual(cameraState.center.latitude, center.latitude)
+        XCTAssertEqual(cameraState.center.longitude, center.longitude)
+        XCTAssertEqual(cameraState.padding, padding)
+        XCTAssertEqual(cameraState.zoom, zoom)
+        XCTAssertEqual(cameraState.bearing, bearing)
+        XCTAssertEqual(cameraState.pitch, pitch)
+    }
+
     func testInitWithObjCValue() {
         let cameraState = CameraState(
             MapboxCoreMaps.CameraState(
                 center: center,
-                padding: padding,
+                padding: padding.toMBXEdgeInsetsValue(),
                 zoom: Double(zoom),
                 bearing: bearing,
                 pitch: Double(pitch)))
 
         XCTAssertEqual(cameraState.center.latitude, center.latitude)
         XCTAssertEqual(cameraState.center.longitude, center.longitude)
-        XCTAssertEqual(cameraState.padding, padding.toUIEdgeInsetsValue())
+        XCTAssertEqual(cameraState.padding, padding)
         XCTAssertEqual(cameraState.zoom, zoom)
         XCTAssertEqual(cameraState.bearing, bearing)
         XCTAssertEqual(cameraState.pitch, pitch)
@@ -56,94 +66,48 @@ final class CameraStateTests: XCTestCase {
 
     func testEquatable() {
         let cameraState = CameraState(
-            MapboxCoreMaps.CameraState(
-                center: center,
-                padding: padding,
-                zoom: Double(zoom),
-                bearing: bearing,
-                pitch: Double(pitch)))
+            center: center,
+            padding: padding,
+            zoom: zoom,
+            bearing: bearing,
+            pitch: pitch)
 
         XCTAssertEqual(cameraState, cameraState)
 
-        var other = CameraState(
-            MapboxCoreMaps.CameraState(
-                center: CLLocationCoordinate2D(latitude: center.latitude + 1, longitude: center.longitude),
-                padding: padding,
-                zoom: Double(zoom),
-                bearing: bearing,
-                pitch: Double(pitch)))
+        var other = cameraState
+        other.center.latitude += 1
         XCTAssertNotEqual(cameraState, other)
 
-        other = CameraState(
-            MapboxCoreMaps.CameraState(
-                center: CLLocationCoordinate2D(latitude: center.latitude, longitude: center.longitude + 1),
-                padding: padding,
-                zoom: Double(zoom),
-                bearing: bearing,
-                pitch: Double(pitch)))
+        other = cameraState
+        other.center.longitude += 1
         XCTAssertNotEqual(cameraState, other)
 
-        other = CameraState(
-            MapboxCoreMaps.CameraState(
-                center: CLLocationCoordinate2D(latitude: center.latitude, longitude: center.longitude),
-                padding: .init(top: padding.top + 1, left: padding.left, bottom: padding.bottom, right: padding.right),
-                zoom: Double(zoom),
-                bearing: bearing,
-                pitch: Double(pitch)))
+        other = cameraState
+        other.padding.top += 1
         XCTAssertNotEqual(cameraState, other)
 
-        other = CameraState(
-            MapboxCoreMaps.CameraState(
-                center: CLLocationCoordinate2D(latitude: center.latitude, longitude: center.longitude),
-                padding: .init(top: padding.top, left: padding.left + 1, bottom: padding.bottom, right: padding.right),
-                zoom: Double(zoom),
-                bearing: bearing,
-                pitch: Double(pitch)))
+        other = cameraState
+        other.padding.left += 1
         XCTAssertNotEqual(cameraState, other)
 
-        other = CameraState(
-            MapboxCoreMaps.CameraState(
-                center: CLLocationCoordinate2D(latitude: center.latitude, longitude: center.longitude),
-                padding: .init(top: padding.top, left: padding.left, bottom: padding.bottom + 1, right: padding.right),
-                zoom: Double(zoom),
-                bearing: bearing,
-                pitch: Double(pitch)))
+        other = cameraState
+        other.padding.bottom += 1
         XCTAssertNotEqual(cameraState, other)
 
-        other = CameraState(
-            MapboxCoreMaps.CameraState(
-                center: CLLocationCoordinate2D(latitude: center.latitude, longitude: center.longitude),
-                padding: .init(top: padding.top, left: padding.left, bottom: padding.bottom, right: padding.right + 1),
-                zoom: Double(zoom),
-                bearing: bearing,
-                pitch: Double(pitch)))
+        other = cameraState
+        other.padding.right += 1
         XCTAssertNotEqual(cameraState, other)
 
-        other = CameraState(
-            MapboxCoreMaps.CameraState(
-                center: CLLocationCoordinate2D(latitude: center.latitude, longitude: center.longitude),
-                padding: .init(top: padding.top, left: padding.left, bottom: padding.bottom, right: padding.right),
-                zoom: Double(zoom + 1),
-                bearing: bearing,
-                pitch: Double(pitch)))
+        other = cameraState
+        other.zoom += 1
         XCTAssertNotEqual(cameraState, other)
 
-        other = CameraState(
-            MapboxCoreMaps.CameraState(
-                center: CLLocationCoordinate2D(latitude: center.latitude, longitude: center.longitude),
-                padding: .init(top: padding.top, left: padding.left, bottom: padding.bottom, right: padding.right),
-                zoom: Double(zoom),
-                bearing: bearing + 1,
-                pitch: Double(pitch)))
+        other = cameraState
+        other.bearing += 1
         XCTAssertNotEqual(cameraState, other)
 
-        other = CameraState(
-            MapboxCoreMaps.CameraState(
-                center: CLLocationCoordinate2D(latitude: center.latitude, longitude: center.longitude),
-                padding: .init(top: padding.top, left: padding.left, bottom: padding.bottom, right: padding.right),
-                zoom: Double(zoom),
-                bearing: bearing,
-                pitch: Double(pitch + 1)))
+        other = cameraState
+        other.pitch += 1
         XCTAssertNotEqual(cameraState, other)
     }
 }

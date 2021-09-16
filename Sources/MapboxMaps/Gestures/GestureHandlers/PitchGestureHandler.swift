@@ -1,88 +1,83 @@
-//
-//  PitchGestureHandler.swift
-//  MapboxMapsGestures
-//
-
-import Foundation
 import UIKit
-import CoreLocation
 
-/*
- The `PitchGestureHandler` is responsible for handling the response
- triggered by a gesture comprised of a two-ginger pan in a vertical direction.
- 
- The pitch gesture is only triggered if the angle between the two
- touch points is greater than 45°.
- */
+/// `PitchGestureHandler` updates the map camera in response to a vertical,
+/// 2-touch pan gesture in which the angle between the touch points is less than 45°.
+internal final class PitchGestureHandler: GestureHandler, UIGestureRecognizerDelegate {
+    private var initialPitch: CGFloat?
 
-internal class PitchGestureHandler: GestureHandler {
-    internal var initialPitch = CGFloat.zero
-    internal var dragGestureTranslation: CGPoint!
-
-    internal override init(for view: UIView, withDelegate delegate: GestureHandlerDelegate) {
-        super.init(for: view, withDelegate: delegate)
-
-        let pitchGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePitchGesture(_:)))
-        pitchGesture.minimumNumberOfTouches = 2
-        pitchGesture.maximumNumberOfTouches = 2
-        gestureRecognizer = pitchGesture
-        view.addGestureRecognizer(pitchGesture)
+    internal init(gestureRecognizer: UIPanGestureRecognizer,
+                  mapboxMap: MapboxMapProtocol,
+                  cameraAnimationsManager: CameraAnimationsManagerProtocol) {
+        gestureRecognizer.minimumNumberOfTouches = 2
+        gestureRecognizer.maximumNumberOfTouches = 2
+        super.init(
+            gestureRecognizer: gestureRecognizer,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
+        gestureRecognizer.delegate = self
+        gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
 
-    @objc internal func handlePitchGesture(_ gesture: UIPanGestureRecognizer) {
-
-        let horizontalTiltTolerance = delegate.horizontalPitchTiltTolerance()
-
-        if gesture.numberOfTouches != 2 {
-            gesture.state = .ended
-            return
+    private func touchAngleIsLessThanMaximum(for gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard let view = gestureRecognizer.view,
+              gestureRecognizer === self.gestureRecognizer,
+              self.gestureRecognizer.numberOfTouches == 2 else {
+            return false
         }
+        let touchLocation0 = self.gestureRecognizer.location(ofTouch: 0, in: view)
+        let touchLocation1 = self.gestureRecognizer.location(ofTouch: 1, in: view)
+        let angleBetweenTouchLocations = angleOfLine(from: touchLocation0, to: touchLocation1)
+        return abs(angleBetweenTouchLocations) < 45
+    }
 
-        if gesture.state == .began {
+    internal func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return touchAngleIsLessThanMaximum(for: gestureRecognizer)
+    }
 
-            let gestureTranslation = gesture.translation(in: gesture.view)
-            /*
-             In the following if and for the first execution gestureTranslation
-             will be equal to dragGestureTranslation and the resulting
-             gestureSlopeAngle will be 0º causing a small delay,
-             initializing dragGestureTranslation with the current gestureTranslation
-             but substracting one point from the 'y' translation forces an initial 90º angle
-             making the gesture avoid the delay.
-            */
-            dragGestureTranslation = CGPoint(x: gestureTranslation.x, y: gestureTranslation.y-1)
-            initialPitch = delegate.initialPitch()
-            delegate.gestureBegan(for: .pitch)
-
-        } else if gesture.state == .changed {
-            let leftTouchPoint = gesture.location(ofTouch: 0, in: gesture.view)
-            let rightTouchPoint = gesture.location(ofTouch: 1, in: gesture.view)
-
-            // Calculate the angle between the first and second finger touches
-            guard let touchPointAngle = GestureUtilities.angleBetweenPoints(leftTouchPoint, rightTouchPoint) else {
-                gesture.state = .ended
+    @objc private func handleGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
+        switch gestureRecognizer.state {
+        case .began:
+            initialPitch = mapboxMap.cameraState.pitch
+            cameraAnimationsManager.cancelAnimations()
+            delegate?.gestureBegan(for: .pitch)
+        case .changed:
+            guard let view = gestureRecognizer.view,
+                  let initialPitch = initialPitch else {
                 return
             }
 
-            // The total direction the gesture has moved
-            let gestureTranslation = gesture.translation(in: gesture.view)
+            let translation = gestureRecognizer.translation(in: view)
+            let translationAngle = angleOfLine(from: .zero, to: translation)
 
-            // The angle between the translation at the start of the gesture
-            // and the current changed translation
-            guard let gestureSlopeAngle = GestureUtilities.angleBetweenPoints(dragGestureTranslation,
-                                                                              gestureTranslation) else { return }
-            dragGestureTranslation = gestureTranslation
-
-            // If the angle between the pan touchpoints is less than
-            // the tolerance specified AND the slope angle of the gesture's
-            // movement is more then 60, notify the delegate of a change in pitch.
-            if fabs(touchPointAngle) < horizontalTiltTolerance && fabs(gestureSlopeAngle) > 60 {
-                let verticalGestureTranslation = gestureTranslation.y
+            // If the angle between the touch locations is less than the maximum
+            // AND the translation angle is more than 60 degrees, update the pitch.
+            if touchAngleIsLessThanMaximum(for: gestureRecognizer), abs(translationAngle) > 60 {
+                let verticalGestureTranslation = translation.y
                 let slowDown = CGFloat(2.0)
-                let newPitch = initialPitch - ( verticalGestureTranslation / slowDown )
-                delegate.pitchChanged(newPitch: newPitch)
+                let newPitch = initialPitch - (verticalGestureTranslation / slowDown)
+                mapboxMap.setCamera(to: CameraOptions(pitch: newPitch))
             }
-        } else if gesture.state == .ended || gesture.state == .cancelled {
-            delegate.pitchEnded()
+        case .ended, .cancelled:
+            initialPitch = nil
+        default:
+            break
         }
+    }
+
+    /**
+     Calculates the angle in degrees between two points.
+     For example, the angle between (0,0) and (1, 1) would be 45°
+     */
+    private func angleOfLine(from start: CGPoint, to end: CGPoint) -> CGFloat {
+        var origin = start
+        var end = end
+        if start.x > end.x {
+            origin = end
+            end = start
+        }
+        let deltaX = end.x - origin.x
+        let deltaY = end.y - origin.y
+        let angleInRadians = atan2(deltaY, deltaX)
+        return angleInRadians * 180 / .pi
     }
 }

@@ -1,24 +1,31 @@
-import Foundation
+import UIKit
 
-internal class GestureHandler {
+internal protocol GestureHandlerDelegate: AnyObject {
+    var decelerationRate: CGFloat { get }
 
-    /// The view that the gesture handler is operating on
-    weak var view: UIView?
+    var panScrollingMode: PanScrollingMode { get }
 
-    /// The underlying gestureRecognizer that this handler is managing
-    var gestureRecognizer: UIGestureRecognizer?
+    func gestureBegan(for gestureType: GestureType)
+}
 
-    /// The delegate that the gesture handler calls to manipulate the view
-    weak var delegate: GestureHandlerDelegate!
+internal class GestureHandler: NSObject {
+    internal let gestureRecognizer: UIGestureRecognizer
 
-    init(for view: UIView, withDelegate delegate: GestureHandlerDelegate) {
-        self.view = view
-        self.delegate = delegate
+    internal let mapboxMap: MapboxMapProtocol
+
+    internal let cameraAnimationsManager: CameraAnimationsManagerProtocol
+
+    internal weak var delegate: GestureHandlerDelegate?
+
+    init(gestureRecognizer: UIGestureRecognizer,
+         mapboxMap: MapboxMapProtocol,
+         cameraAnimationsManager: CameraAnimationsManagerProtocol) {
+        self.gestureRecognizer = gestureRecognizer
+        self.mapboxMap = mapboxMap
+        self.cameraAnimationsManager = cameraAnimationsManager
     }
 
     deinit {
-        if let validGestureRecognizer = self.gestureRecognizer {
-            self.view?.removeGestureRecognizer(validGestureRecognizer)
-        }
+        gestureRecognizer.view?.removeGestureRecognizer(gestureRecognizer)
     }
 }

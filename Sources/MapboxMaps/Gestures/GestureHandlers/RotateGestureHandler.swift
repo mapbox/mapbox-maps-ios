@@ -1,53 +1,44 @@
 import UIKit
 
-/// The RotateGestureHandler is responsible for all `rotate` related infrastructure
-/// Tells the view to update itself when required
-internal class RotateGestureHandler: GestureHandler {
+/// `RotateGestureHandler` updates the map camera in response to 2-touch rotate gestures
+internal final class RotateGestureHandler: GestureHandler, UIGestureRecognizerDelegate {
 
-    internal var initialAngle: CGFloat = 0.0
-    internal weak var contextProvider: GestureContextProvider!
+    private var initialBearing: Double?
 
-    // TODO: Inject the deceleration rate as part of a configuration structure
-    internal let decelerationRate = UIScrollView.DecelerationRate.normal.rawValue
-
-    internal init(for view: UIView,
-                  withDelegate delegate: GestureHandlerDelegate,
-                  andContextProvider contextProvider: GestureContextProvider) {
-        super.init(for: view, withDelegate: delegate)
-
-        let rotate = UIRotationGestureRecognizer(target: self, action: #selector(handleRotate(_:)))
-        view.addGestureRecognizer(rotate)
-        gestureRecognizer = rotate
-        self.contextProvider = contextProvider
+    internal init(gestureRecognizer: UIRotationGestureRecognizer,
+                  mapboxMap: MapboxMapProtocol,
+                  cameraAnimationsManager: CameraAnimationsManagerProtocol) {
+        super.init(
+            gestureRecognizer: gestureRecognizer,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
+        gestureRecognizer.delegate = self
+        gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
 
-    @objc internal func handleRotate(_ rotate: UIRotationGestureRecognizer) {
+    internal func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                                    shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return self.gestureRecognizer === gestureRecognizer && otherGestureRecognizer is UIPinchGestureRecognizer
+    }
 
-        delegate.cancelGestureTransitions()
-        let anchor = rotate.location(in: view)
-
-        // TODO: Handle simultaneous zoom & rotate gestures
-        if rotate.state == .began {
-
-            delegate.gestureBegan(for: .rotate)
-            initialAngle = delegate.rotationStartAngle()
-
-        } else if rotate.state == .changed {
-
-            let changedAngle = initialAngle + rotate.rotation
-            delegate.rotationChanged(with: changedAngle,
-                                     and: anchor,
-                                     and: contextProvider?.fetchPinchScale() ?? 0.0)
-
-        } else if rotate.state == .ended || rotate.state == .cancelled {
-
-            // TODO: Handle "immediate" deceleration rates
-            let finalAngle = (initialAngle + rotate.rotation) + (rotate.velocity * decelerationRate * 0.1)
-            delegate.rotationEnded(with: finalAngle,
-                                   and: anchor,
-                                   with: contextProvider?.fetchPinchState() ??
-                                              UIGestureRecognizer.State.possible)
-
+    @objc private func handleGesture(_ gestureRecognizer: UIRotationGestureRecognizer) {
+        switch gestureRecognizer.state {
+        case .began:
+            cameraAnimationsManager.cancelAnimations()
+            delegate?.gestureBegan(for: .rotate)
+            initialBearing = mapboxMap.cameraState.bearing
+        case .changed:
+            guard let initialBearing = initialBearing else {
+                return
+            }
+            cameraAnimationsManager.cancelAnimations()
+            let rotationInDegrees = Double(gestureRecognizer.rotation * 180.0 / .pi * -1)
+            mapboxMap.setCamera(
+                to: CameraOptions(bearing: (initialBearing + rotationInDegrees).truncatingRemainder(dividingBy: 360.0)))
+        case .ended, .cancelled:
+            initialBearing = nil
+        default:
+            break
         }
     }
 }

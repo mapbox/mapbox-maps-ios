@@ -40,6 +40,7 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
         guard state == .active, let previousDate = previousDate else {
             return
         }
+
         let currentDate = dateProvider.now
         self.previousDate = currentDate
 

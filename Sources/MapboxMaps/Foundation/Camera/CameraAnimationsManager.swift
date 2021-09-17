@@ -302,16 +302,6 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
 
         cameraAnimatorsSet.add(animator)
 
-//        animator.addCompletion { [weak self, weak animator] (position) in
-//            if let internalAnimator = self?.internalAnimator,
-//               let animator = flyToAnimator,
-//               internalAnimator === animator {
-//                self?.internalAnimator = nil
-//            }
-//            // Call the developer-provided completion (if present)
-//            completion?(position)
-//        }
-
         animator.startAnimation()
         internalAnimator = animator
     }

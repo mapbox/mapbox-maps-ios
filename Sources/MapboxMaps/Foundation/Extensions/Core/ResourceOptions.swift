@@ -166,7 +166,7 @@ extension ResourceOptions {
 
 extension MapboxCoreMaps.ResourceOptions {
     internal convenience init(_ swiftValue: ResourceOptions) {
-        self.init(__accessToken: swiftValue.accessToken,
+        self.init(accessToken: swiftValue.accessToken,
                   baseURL: swiftValue.baseURL?.path,
                   dataPath: swiftValue.dataPathURL?.path,
                   assetPath: swiftValue.assetPathURL?.path,

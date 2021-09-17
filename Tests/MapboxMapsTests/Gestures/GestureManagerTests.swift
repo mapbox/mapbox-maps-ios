@@ -23,7 +23,7 @@ final class GestureManagerTests: XCTestCase {
         mapboxMap = MockMapboxMap()
         cameraAnimationsManager = MockCameraAnimationsManager()
         decelerationRate = .random(in: 0.99...0.999)
-        panScrollingMode = .allCases.randomElement()
+        panScrollingMode = PanScrollingMode.allCases.randomElement()!
         panGestureHandler = makeGestureHandler()
         pinchGestureHandler = makeGestureHandler()
         rotationGestureHandler = makeGestureHandler()
@@ -82,7 +82,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertEqual(gestureManager.panScrollingMode, panScrollingMode)
         XCTAssertEqual(gestureManager.options.scrollingMode, panScrollingMode)
 
-        gestureManager.options.scrollingMode = .allCases.randomElement()!
+        gestureManager.options.scrollingMode = PanScrollingMode.allCases.randomElement()!
 
         XCTAssertEqual(gestureManager.panScrollingMode, gestureManager.options.scrollingMode)
     }

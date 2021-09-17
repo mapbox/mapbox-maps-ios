@@ -21,8 +21,8 @@ Pod::Spec.new do |m|
   m.source_files = 'Sources/MapboxMaps/**/*.{swift,h}'
   m.resources = 'Sources/**/*.{xcassets,strings}'
 
-  m.dependency 'MapboxCoreMaps', '10.0.0-rc.8'
-  m.dependency 'MapboxCommon', '18.0.0'
+  m.dependency 'MapboxCoreMaps', '10.0.0-rc.9.1'
+  m.dependency 'MapboxCommon', '19.0.0'
   m.dependency 'MapboxMobileEvents', '1.0.4'
   m.dependency 'Turf', '2.0.0-rc.1'
 

@@ -8,14 +8,26 @@ Mapbox welcomes participation and contributions from everyone.
 
 * `BasicCameraAnimator` now keeps animators alive without the user storing the animator. ([#646](https://github.com/mapbox/mapbox-maps-ios/pull/646/))
 * Experimental style APIs are now marked with `@_spi(Experimental)` and the previously used underscore prefixes have been removed. In order to access these methods, use `@_spi(Experimental)` to annotate the import statement for MapboxMaps. ([#680](https://github.com/mapbox/mapbox-maps-ios/pull/680)) 
+* Refine RenderedQueryOptions.filter for Swift ([#2150](https://github.com/mapbox/mapbox-gl-native-internal/pull/2150))
+* Updated Objective-C APIs to use NS_REFINED_FOR_SWIFT more consistently. ([#2157](https://github.com/mapbox/mapbox-gl-native-internal/pull/2157))
+* Refine `OfflineRegionGeometryDefinition.geometry` for Swift ([#2175](https://github.com/mapbox/mapbox-gl-native-internal/pull/2175))
+* Bump common to v19.0.0 ([#2193](https://github.com/mapbox/mapbox-gl-native-internal/pull/2193))
+
 
 ### Features ✨ and improvements 🏁
 
 * Allow users to set the map's `MapDebugOptions`. ([#648](https://github.com/mapbox/mapbox-maps-ios/pull/648))
+* Tiled 3D model layer and source ([#2138](https://github.com/mapbox/mapbox-gl-native-internal/pull/2138))
+* Enable instant transitions for data driven symbol layer properties ([#2163](https://github.com/mapbox/mapbox-gl-native-internal/pull/2163))
+* Implement face culling for Metal ([#2172](https://github.com/mapbox/mapbox-gl-native-internal/pull/2172))
 
 ### Bug fixes 🐞
 
 * Fixes animations that are started within an UIKit animation context. ([#684](https://github.com/mapbox/mapbox-maps-ios/pull/684))
+* Fix transition between layers with all constant properties ([#2173](https://github.com/mapbox/mapbox-gl-native-internal/pull/2173))
+* Fix rendering artifact for a line layer, when its line-gradient property is set at runtime. ([#2180](https://github.com/mapbox/mapbox-gl-native-internal/pull/2180))
+* Don't draw SDF images in text-field and issue warning for it ([#2184](https://github.com/mapbox/mapbox-gl-native-internal/pull/2184))
+* Fix incorrect return from StyleManager#getStyleLayerPropertyDefaultValue for 'text-field', now the default value is set to ["format", "" , {}] ([#2202](https://github.com/mapbox/mapbox-gl-native-internal/pull/2202))
 
 ## 10.0.0-rc.8 - Sept 8, 2021
 

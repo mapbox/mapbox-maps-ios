@@ -11,7 +11,7 @@ final class RenderedQueryOptionsTests: XCTestCase {
     }
 
     func testInitWithNonNils() throws {
-        let layerIds = Array<String>.random(withLength: .random(in: 0...10)) {
+        let layerIds = [String].random(withLength: .random(in: 0...10)) {
             .randomASCII(withLength: .random(in: 0...10))
         }
         let filter = Exp(.abs) {

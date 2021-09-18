@@ -73,14 +73,7 @@ internal class FeatureQueryingTest: MapViewIntegrationTestCase {
                     "Point"
                 }
 
-                guard let data = try? JSONEncoder().encode(filter),
-                      let filterArray = try? JSONSerialization.jsonObject(with: data) as? [Any] else {
-                    XCTFail("Invalid data or filter object")
-                    return
-                }
-
-                // TODO: Convert
-                let options = RenderedQueryOptions(layerIds: nil, filter: filterArray)
+                let options = RenderedQueryOptions(layerIds: nil, filter: filter)
                 mapView.mapboxMap.queryRenderedFeatures(in: queryRect, options: options) { filteredFeatures in
                     if case .success(let unfilteredFeatures) = unfilteredFeatures,
                        case .success(let filteredFeatures) = filteredFeatures {

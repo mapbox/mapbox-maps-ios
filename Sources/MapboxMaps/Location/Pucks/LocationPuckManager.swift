@@ -42,13 +42,13 @@ internal class LocationPuckManager: LocationConsumer {
     /// Style protocol that supports limited style APIs
     internal private(set) weak var style: LocationStyleProtocol?
 
-    /// The current  puck style
+    /// The current  puck style. The default value is ``PuckStyle.precise``
     internal private(set) var puckStyle: PuckStyle
 
     /// The current puck type
     internal private(set) var puckType: PuckType
 
-    /// The type of value that should be passed for bearing
+    /// The type of value that should be passed for bearing. The default value is ``PuckBearingSource.heading``.
     internal var puckBearingSource: PuckBearingSource = .heading {
         didSet {
             puck?.puckBearingSource = puckBearingSource
@@ -64,7 +64,7 @@ internal class LocationPuckManager: LocationConsumer {
         self.style = style
     }
 
-    /// LocationConsumer protocol method that will handle location updates
+    /// ``LocationConsumer`` protocol method that will handle location updates
     internal func locationUpdate(newLocation: Location) {
         if let puck = self.puck {
             puck.updateLocation(location: newLocation)

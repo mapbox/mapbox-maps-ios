@@ -17,9 +17,16 @@ public struct Puck2DConfiguration: Equatable {
     /// The size of the images, as a scale factor applied to the size of the specified image.
     public var scale: Value<Double>?
 
-    /// Flag determining if the horizontal accuracy ring should be shown arround the Puck. default value is false
+    /// Flag determining if the horizontal accuracy ring should be shown arround the ``Puck``. default value is false
     public var showsAccuracyRing: Bool
 
+    /// Initialize a ``Puck2D`` object.
+    /// - Parameters:
+    ///   - topImage: Has a default value of `nil`.
+    ///   - bearingImage: Has a default value of `nil`.
+    ///   - shadowImage: Has a default value of `nil`.
+    ///   - scale: Has a default value of `nil`.
+    ///   - showsAccuracyRing: Has a default value of `false`.
     public init(topImage: UIImage? = nil,
                 bearingImage: UIImage? = nil,
                 shadowImage: UIImage? = nil,

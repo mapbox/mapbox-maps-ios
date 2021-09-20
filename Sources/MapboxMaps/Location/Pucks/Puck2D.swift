@@ -20,7 +20,7 @@ public struct Puck2DConfiguration: Equatable {
     /// Flag determining if the horizontal accuracy ring should be shown arround the ``Puck``. default value is false
     public var showsAccuracyRing: Bool
 
-    /// Initialize a ``Puck2D`` object.
+    /// Initialize a ``Puck2D`` object with a top image, bearing image, shadow image, scale, and accuracy ring visibility.
     /// - Parameters:
     ///   - topImage: Has a default value of `nil`.
     ///   - bearingImage: Has a default value of `nil`.

@@ -25,7 +25,6 @@ internal final class PanGestureHandler: GestureHandler {
         gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
 
-    //swiftlint:disable cyclomatic_complexity
     @objc private func handleGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
         guard let view = gestureRecognizer.view else {
             return

@@ -70,7 +70,7 @@ final class DownloadStatusTests: XCTestCase {
         let status = DownloadStatus(downloadId: 1,
                                     state: .finished,
                                     error: .none,
-                                    totalBytes: UInt64(2), // This tells the compiler which initializer to use
+                                    totalBytes: 2,
                                     receivedBytes: 3,
                                     transferredBytes: 4,
                                     downloadOptions: downloadOptions,
@@ -119,7 +119,7 @@ final class DownloadStatusTests: XCTestCase {
 
     func testNilShortInitializer() {
         let status = DownloadStatus(error: nil,
-                                    totalBytes: UInt64(1234),
+                                    totalBytes: 1234,
                                     downloadOptions: downloadOptions,
                                     httpResult: nil)
 
@@ -130,10 +130,10 @@ final class DownloadStatusTests: XCTestCase {
     }
 
     func testNilHttpResult() {
-        let status = DownloadStatus(downloadId: 1,
+        let status = DownloadStatus(__downloadId: 1,
                                     state: .finished,
                                     error: .none,
-                                    totalBytes: NSNumber(value: 2), // forces using the unrefined initializer
+                                    totalBytes: 2,
                                     receivedBytes: 3,
                                     transferredBytes: 4,
                                     downloadOptions: downloadOptions,
@@ -142,7 +142,7 @@ final class DownloadStatusTests: XCTestCase {
     }
 
     func testValueHttpResult() throws {
-        let status = DownloadStatus(error: nil,
+        let status = DownloadStatus(__error: nil,
                                     totalBytes: nil,
                                     downloadOptions: downloadOptions,
                                     httpResult: Expected(value: httpResponseData))
@@ -152,7 +152,7 @@ final class DownloadStatusTests: XCTestCase {
     }
 
     func testErrorHttpResult() throws {
-        let status = DownloadStatus(error: nil,
+        let status = DownloadStatus(__error: nil,
                                     totalBytes: nil,
                                     downloadOptions: downloadOptions,
                                     httpResult: Expected(error: httpRequestError))
@@ -166,7 +166,7 @@ final class DownloadStatusTests: XCTestCase {
     }
 
     func testNilTotalBytes() {
-        let status = DownloadStatus(error: .none,
+        let status = DownloadStatus(__error: .none,
                                     totalBytes: nil,
                                     downloadOptions: downloadOptions,
                                     httpResult: Expected(value: httpResponseData))
@@ -175,7 +175,7 @@ final class DownloadStatusTests: XCTestCase {
     }
 
     func testNotNilTotalBytes() {
-        let status = DownloadStatus(error: .none,
+        let status = DownloadStatus(__error: .none,
                                     totalBytes: 1234,
                                     downloadOptions: downloadOptions,
                                     httpResult: Expected(value: httpResponseData))

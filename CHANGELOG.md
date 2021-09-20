@@ -8,14 +8,26 @@ Mapbox welcomes participation and contributions from everyone.
 
 * `BasicCameraAnimator` now keeps animators alive without the user storing the animator. ([#646](https://github.com/mapbox/mapbox-maps-ios/pull/646/))
 * Experimental style APIs are now marked with `@_spi(Experimental)` and the previously used underscore prefixes have been removed. In order to access these methods, use `@_spi(Experimental)` to annotate the import statement for MapboxMaps. ([#680](https://github.com/mapbox/mapbox-maps-ios/pull/680)) 
+* `RenderedQueryOptions.filter` is now of type `Expression` instead of `Any` ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
+* `OfflineRegionGeometryDefinition.geometry` is now of type `Turf.Geometry` instead of `MapboxCommon.Geometry` ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
+* The `HTTPResponse` init methods that take `MapboxCommon.Expected` instead of `Result` are now correctly marked as refined for Swift. ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
+* The `DownloadStatus` init methods that take `MapboxCommon.Expected` instead of `Result` and `NSNumber?` instead of `UInt64?` are not correctly marked as refined for Swift. ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
 
 ### Features ✨ and improvements 🏁
 
 * Allow users to set the map's `MapDebugOptions`. ([#648](https://github.com/mapbox/mapbox-maps-ios/pull/648))
+* Tiled 3D model layer and source ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
+* Enable instant transitions for data driven symbol layer properties ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
+* Implement face culling for Metal ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
+* `HTTPServiceInterface.getInstance()` is now publicly available. ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
 
 ### Bug fixes 🐞
 
 * Fixes animations that are started within an UIKit animation context. ([#684](https://github.com/mapbox/mapbox-maps-ios/pull/684))
+* Fix transition between layers with all-constant properties ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
+* Fix rendering artifact for a line layer, when its line-gradient property is set at runtime. ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
+* Don't draw SDF images in text-field and issue warning for it ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
+* Fix incorrect return from `StyleManager#getStyleLayerPropertyDefaultValue` for 'text-field'. Now the default value is set to `["format", "" , {}]` ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
 
 ## 10.0.0-rc.8 - Sept 8, 2021
 

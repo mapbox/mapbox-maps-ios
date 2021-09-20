@@ -135,18 +135,7 @@ public class PolygonAnnotationManager: AnnotationManager {
         // Construct the properties dictionary to reset any properties that are no longer used
         let unusedPropertyKeys = previouslySetLayerPropertyKeys.subtracting(newLayerProperties.keys)
         let unusedProperties = Dictionary(uniqueKeysWithValues: unusedPropertyKeys.map { (key) -> (String, Any) in
-            if key == "text-field" {
-                // default value for text-field is currently `{ kind: constant, value: ["format"] }`.
-                // Attempting to set `text-field` to `["format"]` yields:
-                //
-                //     "Cannot set layer property: text-field error: Expected at least one argument."
-                //
-                Log.warning(forMessage: "There is a known issue with resetting text-field to its default value.",
-                            category: "Annotations")
-                return (key, ["format", ""])
-            } else {
-                return (key, Style.layerPropertyDefaultValue(for: .fill, property: key).value)
-            }
+            (key, Style.layerPropertyDefaultValue(for: .fill, property: key).value)
         })
 
         // Store the new set of property keys

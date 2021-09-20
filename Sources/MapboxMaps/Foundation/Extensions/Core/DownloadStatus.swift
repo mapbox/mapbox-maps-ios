@@ -50,7 +50,7 @@ extension DownloadStatus {
             expected = nil
         }
 
-        self.init(downloadId: downloadId,
+        self.init(__downloadId: downloadId,
                   state: state,
                   error: error,
                   totalBytes: totalBytes?.NSNumber,
@@ -89,7 +89,7 @@ extension DownloadStatus {
             expected = nil
         }
 
-        self.init(error: error,
+        self.init(__error: error,
                   totalBytes: totalBytes?.NSNumber,
                   downloadOptions: downloadOptions,
                   httpResult: expected)

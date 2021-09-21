@@ -67,34 +67,13 @@ public class Style {
 
     /**
      Gets a `layer` from the map
-     - Parameter layerID: The id of the layer to be fetched
+     - Parameter id: The id of the layer to be fetched
      - Parameter type: The type of the layer that will be fetched
 
      - Returns: The fully formed `layer` object of type equal to `type`
      - Throws: StyleError or type conversion errors
      */
-    public func layer<T: Layer>(withId id: String) throws -> T {
-        // swiftlint:disable force_cast
-        return try layer(withId: id, type: T.self) as! T
-        // swiftlint:enable force_cast
-    }
-
-    /**
-     Gets a `layer` from the map.
-
-     This function is useful if you do not know the concrete type of the layer
-     you are fetching, or don't need to know for your situation.
-
-     - Parameter layerID: The id of the layer to be fetched
-     - Parameter type: The type of the layer that will be fetched
-
-     - Returns: The fully formed `layer` object of type equal to `type`
-     - Throws: StyleError or type conversion errors
-     - Note: This method is marked as experimental. Annotate the import statement
-     for `MapboxMaps` with `@_spi(Experimental)` in order to use experimental methods.
-     */
-    @_spi(Experimental) public func layer(withId id: String, type: Layer.Type) throws -> Layer {
-        // Get the layer properties from the map
+    public func layer<T>(withId id: String, type: T.Type) throws -> T where T: Layer {
         let properties = try layerProperties(for: id)
         return try type.init(jsonObject: properties)
     }
@@ -107,8 +86,10 @@ public class Style {
     ///   - update: Closure that mutates a layer passed to it
     ///
     /// - Throws: StyleError or type conversion errors
-    public func updateLayer<T: Layer>(withId id: String, update: (inout T) throws -> Void) throws {
-        var layer: T = try self.layer(withId: id)
+    public func updateLayer<T>(withId id: String,
+                               type: T.Type,
+                               update: (inout T) throws -> Void) throws where T: Layer {
+        var layer: T = try self.layer(withId: id, type: T.self)
 
         // Call closure to update the retrieved layer
         try update(&layer)
@@ -149,32 +130,12 @@ public class Style {
 
     /**
      Retrieves a source from the map
-     - Parameter identifier: The id of the source to retrieve
+     - Parameter id: The id of the source to retrieve
      - Parameter type: The type of the source
      - Returns: The fully formed `source` object of type equal to `type`.
      - Throws: StyleError or type conversion errors
      */
-    public func source<T: Source>(withId id: String) throws -> T {
-        // swiftlint:disable force_cast
-        return try source(withId: id, type: T.self) as! T
-        // swiftlint:enable force_cast
-    }
-
-    /**
-     Retrieves a source from the map
-
-     This function is useful if you do not know the concrete type of the source
-     you are fetching, or don't need to know for your situation.
-
-     - Parameter identifier: The id of the source to retrieve
-     - Parameter type: The type of the source
-     - Returns: The fully formed `source` object of type equal to `type`.
-     - Throws: StyleError or type conversion errors
-     - Note: This method is marked as experimental. Annotate the import statement
-     for `MapboxMaps` with `@_spi(Experimental)` in order to use experimental methods.
-     */
-    @_spi(Experimental) public func source(withId id: String, type: Source.Type) throws  -> Source {
-        // Get the source properties for a given identifier
+    public func source<T>(withId id: String, type: T.Type) throws -> T where T: Source {
         let sourceProps = try sourceProperties(for: id)
         let source = try type.init(jsonObject: sourceProps)
         return source

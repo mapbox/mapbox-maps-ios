@@ -7,6 +7,9 @@ Mapbox welcomes participation and contributions from everyone.
 ### Breaking changes ⚠️
 
 * Removes default parameter values in the `addImage` function. ([#695](https://github.com/mapbox/mapbox-maps-ios/pull/695))
+* `public func layer<T: Layer>(withId id: String) throws -> T` has been updated to `public func layer<T>(withId id: String, type: T.Type) throws -> T where T: Layer`
+* `public func updateLayer<T: Layer>(withId id: String, update: (inout T) throws -> Void) throws` has been updated to `public func updateLayer<T>(withId id: String, type: T.Type, update: (inout T) throws -> Void) throws where T: Layer`
+* `public func source<T: Source>(withId id: String) throws -> T` has been updated to `public func source<T>(withId id: String, type: T.Type) throws -> T where T: Source`
 
 ## 10.0.0-rc.9 - Sept 22, 2021
 

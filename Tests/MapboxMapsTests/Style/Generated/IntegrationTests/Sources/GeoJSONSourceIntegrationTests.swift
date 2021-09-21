@@ -40,7 +40,7 @@ final class GeoJSONSourceIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the source
             do {
-                _ = try style.source(withId: "test-source") as GeoJSONSource
+                _ = try style.source(withId: "test-source", type: GeoJSONSource.self) as GeoJSONSource
                 successfullyRetrievedSourceExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve GeoJSONSource because of error: \(error)")

@@ -28,7 +28,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             }
 
             do {
-                try style.updateLayer(withId: newBackgroundLayer.id) { (layer: inout BackgroundLayer) throws in
+                try style.updateLayer(withId: newBackgroundLayer.id, type: BackgroundLayer.self) { layer in
                     XCTAssert(layer.backgroundColor == newBackgroundLayer.backgroundColor)
                     layer.backgroundColor = .constant(StyleColor(.blue))
                 }
@@ -38,7 +38,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             }
 
             do {
-                let retrievedLayer: BackgroundLayer = try style.layer(withId: newBackgroundLayer.id)
+                let retrievedLayer: BackgroundLayer = try style.layer(withId: newBackgroundLayer.id, type: BackgroundLayer.self)
                 XCTAssert(retrievedLayer.backgroundColor == .constant(StyleColor(.blue)))
                 expectation.fulfill()
             } catch {

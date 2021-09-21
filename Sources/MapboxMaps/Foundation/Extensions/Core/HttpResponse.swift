@@ -24,8 +24,7 @@ extension HttpResponse {
             expected = Expected(error: error)
         }
 
-        self.init(__request: request,
-                  result: expected)
+        self.init(__request: request, result: expected)
     }
 
     /// Result of HTTP request call.

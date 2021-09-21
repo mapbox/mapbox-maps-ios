@@ -82,7 +82,7 @@ public class SkyLayerExample: UIViewController, ExampleProtocol {
 
         // Update the sky layer based on the updated segmented control value.
         do {
-            try mapView.mapboxMap.style.updateLayer(withId: skyLayer.id) { (layer: inout SkyLayer) throws in
+            try mapView.mapboxMap.style.updateLayer(withId: skyLayer.id, type: SkyLayer.self) { layer in
                 layer.skyType = skyType
             }
         } catch {

@@ -43,6 +43,7 @@ Mapbox welcomes participation and contributions from everyone.
 * `PanScrollingMode` now conforms to `CaseIterable`. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
 * `GestureType` now conforms to `CaseIterable`. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
 * Pan deceleration has been reimplemented to produce a more natural deceleration effect. ([#692](https://github.com/mapbox/mapbox-maps-ios/pull/692))
+* Expose new API to allow users to create a `UIImage` out of the last rendered MapView state. ([#693](https://github.com/mapbox/mapbox-maps-ios/pull/693))
 
 ### Bug fixes 🐞
 

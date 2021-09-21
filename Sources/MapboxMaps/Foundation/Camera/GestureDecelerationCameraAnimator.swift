@@ -4,7 +4,7 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
 
     private var location: CGPoint
     private var velocity: CGPoint
-    private let decelerationRate: CGFloat
+    private let decelerationFactor: CGFloat
     private let locationChangeHandler: (CGPoint) -> Void
     private var previousDate: Date?
     private let dateProvider: DateProvider
@@ -12,12 +12,12 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
 
     internal init(location: CGPoint,
                   velocity: CGPoint,
-                  decelerationRate: CGFloat,
+                  decelerationFactor: CGFloat,
                   locationChangeHandler: @escaping (CGPoint) -> Void,
                   dateProvider: DateProvider) {
         self.location = location
         self.velocity = velocity
-        self.decelerationRate = decelerationRate
+        self.decelerationFactor = decelerationFactor
         self.locationChangeHandler = locationChangeHandler
         self.dateProvider = dateProvider
     }
@@ -55,10 +55,9 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
 
         locationChangeHandler(location)
 
-        // deceleration rate is a factor that should
-        // be applied to the velocity once per millisecond
-        velocity.x *= pow(decelerationRate, (elapsedTime * 1000))
-        velocity.y *= pow(decelerationRate, (elapsedTime * 1000))
+        // deceleration factor should be applied to the velocity once per millisecond
+        velocity.x *= pow(decelerationFactor, (elapsedTime * 1000))
+        velocity.y *= pow(decelerationFactor, (elapsedTime * 1000))
 
         guard abs(velocity.x) >= 1 || abs(velocity.y) >= 1 else {
             stopAnimation()

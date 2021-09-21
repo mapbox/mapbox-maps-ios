@@ -23,7 +23,7 @@ internal protocol CameraAnimationsManagerProtocol: AnyObject {
 
     func decelerate(location: CGPoint,
                     velocity: CGPoint,
-                    decelerationRate: CGFloat,
+                    decelerationFactor: CGFloat,
                     locationChangeHandler: @escaping (CGPoint) -> Void,
                     completion: @escaping () -> Void)
 
@@ -288,12 +288,12 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
     /// - Parameters:
     ///   - location: Current location of center coordinate
     ///   - velocity: The speed at which the map should move over time
-    ///   - decelerationRate: A multiplication factor that determines the speed at which the velocity should slow down
+    ///   - decelerationFactor: A multiplication factor that determines the speed at which the velocity should slow down.
     ///   - locationChangeHandler: Change handler to be passed through to the animator
     ///   - completion: Completion to be called after animation has finished
     internal func decelerate(location: CGPoint,
                              velocity: CGPoint,
-                             decelerationRate: CGFloat,
+                             decelerationFactor: CGFloat,
                              locationChangeHandler: @escaping (CGPoint) -> Void,
                              completion: @escaping () -> Void) {
 
@@ -303,7 +303,7 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
         let decelerateAnimator = GestureDecelerationCameraAnimator(
             location: location,
             velocity: velocity,
-            decelerationRate: decelerationRate,
+            decelerationFactor: decelerationFactor,
             locationChangeHandler: locationChangeHandler,
             dateProvider: DefaultDateProvider())
 

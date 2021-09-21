@@ -31,21 +31,21 @@ final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
     struct DecelerateParameters {
         var location: CGPoint
         var velocity: CGPoint
-        var decelerationRate: CGFloat
+        var decelerationFactor: CGFloat
         var locationChangeHandler: (CGPoint) -> Void
         var completion: () -> Void
     }
     let decelerateStub = Stub<DecelerateParameters, Void>()
     func decelerate(location: CGPoint,
                     velocity: CGPoint,
-                    decelerationRate: CGFloat,
+                    decelerationFactor: CGFloat,
                     locationChangeHandler: @escaping (CGPoint) -> Void,
                     completion: @escaping () -> Void) {
         return decelerateStub.call(
             with: DecelerateParameters(
                 location: location,
                 velocity: velocity,
-                decelerationRate: decelerationRate,
+                decelerationFactor: decelerationFactor,
                 locationChangeHandler: locationChangeHandler,
                 completion: completion))
     }

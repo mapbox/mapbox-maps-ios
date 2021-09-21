@@ -19,7 +19,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
 
     func makePanGestureHandler(view: UIView,
                                mapboxMap: MapboxMapProtocol,
-                               cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
+                               cameraAnimationsManager: CameraAnimationsManagerProtocol) -> PanGestureHandlerProtocol {
         let gestureRecognizer = UIPanGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         return PanGestureHandler(
@@ -35,17 +35,6 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
         let gestureRecognizer = UIPinchGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         return PinchGestureHandler(
-            gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap,
-            cameraAnimationsManager: cameraAnimationsManager)
-    }
-
-    func makeRotationGestureHandler(view: UIView,
-                                    mapboxMap: MapboxMapProtocol,
-                                    cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
-        let gestureRecognizer = UIRotationGestureRecognizer()
-        view.addGestureRecognizer(gestureRecognizer)
-        return RotateGestureHandler(
             gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
@@ -92,17 +81,11 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                             mapboxMap: MapboxMapProtocol,
                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager {
         return GestureManager(
-            decelerationRate: UIScrollView.DecelerationRate.normal.rawValue,
-            panScrollingMode: .horizontalAndVertical,
             panGestureHandler: makePanGestureHandler(
                 view: view,
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: cameraAnimationsManager),
             pinchGestureHandler: makePinchGestureHandler(
-                view: view,
-                mapboxMap: mapboxMap,
-                cameraAnimationsManager: cameraAnimationsManager),
-            rotationGestureHandler: makeRotationGestureHandler(
                 view: view,
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: cameraAnimationsManager),

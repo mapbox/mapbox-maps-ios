@@ -26,8 +26,8 @@ final class PanGestureHandlerTests: XCTestCase {
             dateProvider: dateProvider)
         delegate = MockGestureHandlerDelegate()
         panGestureHandler.delegate = delegate
-        delegate.decelerationRate = .random(in: 0.99...0.999)
-        delegate.panScrollingMode = PanScrollingMode.allCases.randomElement()!
+        panGestureHandler.decelerationFactor = .random(in: 0.99...0.999)
+        panGestureHandler.panMode = PanMode.allCases.randomElement()!
     }
 
     override func tearDown() {
@@ -55,7 +55,7 @@ final class PanGestureHandlerTests: XCTestCase {
         XCTAssertEqual(delegate.gestureBeganStub.parameters, [.pan])
     }
 
-    func verifyHandlePanChanged(panScrollingMode: PanScrollingMode,
+    func verifyHandlePanChanged(panMode: PanMode,
                                 initialTouchLocation: CGPoint,
                                 changedTouchLocation: CGPoint,
                                 clampedTouchLocation: CGPoint,
@@ -66,7 +66,7 @@ final class PanGestureHandlerTests: XCTestCase {
         gestureRecognizer.getStateStub.defaultReturnValue = .began
         gestureRecognizer.locationStub.returnValueQueue = [
             initialTouchLocation, changedTouchLocation]
-        delegate.panScrollingMode = panScrollingMode
+        panGestureHandler.panMode = panMode
         gestureRecognizer.sendActions()
         cameraAnimationsManager.cancelAnimationsStub.reset()
         gestureRecognizer.getStateStub.defaultReturnValue = .changed
@@ -90,7 +90,7 @@ final class PanGestureHandlerTests: XCTestCase {
         let clampedTouchLocation = changedTouchLocation
 
         try verifyHandlePanChanged(
-            panScrollingMode: .horizontalAndVertical,
+            panMode: .horizontalAndVertical,
             initialTouchLocation: initialTouchLocation,
             changedTouchLocation: changedTouchLocation,
             clampedTouchLocation: clampedTouchLocation)
@@ -104,7 +104,7 @@ final class PanGestureHandlerTests: XCTestCase {
             y: initialTouchLocation.y)
 
         try verifyHandlePanChanged(
-            panScrollingMode: .horizontal,
+            panMode: .horizontal,
             initialTouchLocation: initialTouchLocation,
             changedTouchLocation: changedTouchLocation,
             clampedTouchLocation: clampedTouchLocation)
@@ -118,7 +118,7 @@ final class PanGestureHandlerTests: XCTestCase {
             y: changedTouchLocation.y)
 
         try verifyHandlePanChanged(
-            panScrollingMode: .vertical,
+            panMode: .vertical,
             initialTouchLocation: initialTouchLocation,
             changedTouchLocation: changedTouchLocation,
             clampedTouchLocation: clampedTouchLocation)
@@ -135,13 +135,13 @@ final class PanGestureHandlerTests: XCTestCase {
         XCTAssertEqual(cameraAnimationsManager.decelerateStub.invocations.count, 0)
     }
 
-    func verifyHandlePanEnded(panScrollingMode: PanScrollingMode,
+    func verifyHandlePanEnded(panMode: PanMode,
                               initialTouchLocation: CGPoint,
                               interpolatedTouchLocation: CGPoint,
                               clampedTouchLocation: CGPoint,
                               line: UInt = #line) throws {
-        delegate.panScrollingMode = panScrollingMode
-        delegate.decelerationRate = .random(in: 0.1...0.99)
+        panGestureHandler.panMode = panMode
+        panGestureHandler.decelerationFactor = .random(in: 0.1...0.99)
         let initialCameraState = CameraState.random()
         mapboxMap.cameraState = initialCameraState
         let endedTouchLocation = CGPoint.random()
@@ -167,7 +167,7 @@ final class PanGestureHandlerTests: XCTestCase {
         let decelerateParams = cameraAnimationsManager.decelerateStub.parameters.first
         XCTAssertEqual(decelerateParams?.location, endedTouchLocation, line: line)
         XCTAssertEqual(decelerateParams?.velocity, velocity, line: line)
-        XCTAssertEqual(decelerateParams?.decelerationRate, delegate.decelerationRate, line: line)
+        XCTAssertEqual(decelerateParams?.decelerationFactor, panGestureHandler.decelerationFactor, line: line)
         let locationChangeHandler = try XCTUnwrap(decelerateParams?.locationChangeHandler)
         locationChangeHandler(interpolatedTouchLocation)
         XCTAssertEqual(mapboxMap.dragStartStub.parameters, [initialTouchLocation], line: line)
@@ -186,7 +186,7 @@ final class PanGestureHandlerTests: XCTestCase {
         let clampedTouchLocation = interpolatedTouchLocation
 
         try verifyHandlePanEnded(
-            panScrollingMode: .horizontalAndVertical,
+            panMode: .horizontalAndVertical,
             initialTouchLocation: initialTouchLocation,
             interpolatedTouchLocation: interpolatedTouchLocation,
             clampedTouchLocation: clampedTouchLocation)
@@ -200,7 +200,7 @@ final class PanGestureHandlerTests: XCTestCase {
             y: initialTouchLocation.y)
 
         try verifyHandlePanEnded(
-            panScrollingMode: .horizontal,
+            panMode: .horizontal,
             initialTouchLocation: initialTouchLocation,
             interpolatedTouchLocation: interpolatedTouchLocation,
             clampedTouchLocation: clampedTouchLocation)
@@ -214,7 +214,7 @@ final class PanGestureHandlerTests: XCTestCase {
             y: interpolatedTouchLocation.y)
 
         try verifyHandlePanEnded(
-            panScrollingMode: .vertical,
+            panMode: .vertical,
             initialTouchLocation: initialTouchLocation,
             interpolatedTouchLocation: interpolatedTouchLocation,
             clampedTouchLocation: clampedTouchLocation)
@@ -226,5 +226,27 @@ final class PanGestureHandlerTests: XCTestCase {
         gestureRecognizer.sendActions()
 
         XCTAssertEqual(cameraAnimationsManager.decelerateStub.invocations.count, 0)
+    }
+
+    func testSecondPanGesturePerformsCorrectlyWhenInterruptingDecelerationFromFirstPanGesture() throws {
+        gestureRecognizer.getStateStub.returnValueQueue = [.began, .changed, .ended, .began, .changed]
+        gestureRecognizer.sendActions() // began 1
+        gestureRecognizer.sendActions() // changed 1
+        gestureRecognizer.sendActions() // ended 1
+
+        // began 2 - triggers decelerate animation completion as a side effect of cancelling animations
+        let decelerateAnimationCompletion = try XCTUnwrap(cameraAnimationsManager.decelerateStub.parameters.first?.completion)
+        cameraAnimationsManager.cancelAnimationsStub.sideEffectQueue.append { _ in
+            decelerateAnimationCompletion()
+        }
+        gestureRecognizer.sendActions()
+        mapboxMap.setCameraStub.reset()
+
+        // changed 2 should still result in camera updates. a previous
+        // implementation had a bug here where the cancellation of the animation
+        // cleared the initial state for the subsequent gesture
+        gestureRecognizer.sendActions()
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 2)
     }
 }

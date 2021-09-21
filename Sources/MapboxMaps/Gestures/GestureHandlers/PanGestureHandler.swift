@@ -1,18 +1,32 @@
 import UIKit
 
+internal protocol PanGestureHandlerProtocol: GestureHandler {
+    var decelerationFactor: CGFloat { get set }
+
+    var panMode: PanMode { get set }
+}
+
 /// `PanGestureHandler` updates the map camera in response to a single-touch pan gesture
-internal final class PanGestureHandler: GestureHandler {
-    // The touch location in the gesture's view when the gesture began
+internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtocol {
+
+    /// A constant factor that influences how long a pan gesture takes to decelerate
+    internal var decelerationFactor: CGFloat = UIScrollView.DecelerationRate.normal.rawValue
+
+    /// A setting configures the direction in which the map is allowed to move
+    /// during a pan gesture
+    internal var panMode: PanMode = .horizontalAndVertical
+
+    /// The touch location in the gesture's view when the gesture began
     private var initialTouchLocation: CGPoint?
 
-    // The camera state when the gesture began
+    /// The camera state when the gesture began
     private var initialCameraState: CameraState?
 
-    // The date when the most recent gesture changed event was handled
+    /// The date when the most recent gesture changed event was handled
     private var lastChangedDate: Date?
 
-    // Provides access to the current date in a way that can be mocked
-    // for unit testing
+    /// Provides access to the current date in a way that can be mocked
+    /// for unit testing
     private let dateProvider: DateProvider
 
     internal init(gestureRecognizer: UIPanGestureRecognizer,
@@ -42,9 +56,16 @@ internal final class PanGestureHandler: GestureHandler {
             cameraAnimationsManager.cancelAnimations()
             delegate?.gestureBegan(for: .pan)
         case .changed:
+            guard let initialTouchLocation = initialTouchLocation,
+                  let initialCameraState = initialCameraState else {
+                return
+            }
             lastChangedDate = dateProvider.now
             cameraAnimationsManager.cancelAnimations()
-            handleChange(withTouchLocation: touchLocation)
+            handleChange(
+                withTouchLocation: touchLocation,
+                initialTouchLocation: initialTouchLocation,
+                initialCameraState: initialCameraState)
         case .ended:
             // Only decelerate if the gesture ended quickly. Otherwise,
             // you get a deceleration in situations where you drag, then
@@ -52,21 +73,29 @@ internal final class PanGestureHandler: GestureHandler {
             // it without further dragging. This specific time interval
             // is just the result of manual tuning.
             let decelerationTimeout: TimeInterval = 1.0 / 30.0
-            guard let lastChangedDate = lastChangedDate,
-                  dateProvider.now.timeIntervalSince(lastChangedDate) < decelerationTimeout,
-                  let decelerationRate = delegate?.decelerationRate else {
+            guard let initialTouchLocation = initialTouchLocation,
+                  let initialCameraState = initialCameraState,
+                  let lastChangedDate = lastChangedDate,
+                  dateProvider.now.timeIntervalSince(lastChangedDate) < decelerationTimeout else {
                 return
             }
             cameraAnimationsManager.decelerate(
                 location: touchLocation,
                 velocity: gestureRecognizer.velocity(in: view),
-                decelerationRate: decelerationRate,
-                locationChangeHandler: handleChange(withTouchLocation:),
+                decelerationFactor: decelerationFactor,
+                locationChangeHandler: { (touchLocation) in
+                    // here we capture the initial state so that we can clear
+                    // it immediately after starting the animation
+                    self.handleChange(
+                        withTouchLocation: touchLocation,
+                        initialTouchLocation: initialTouchLocation,
+                        initialCameraState: initialCameraState)
+                },
                 completion: {
-                    self.initialTouchLocation = nil
-                    self.initialCameraState = nil
-                    self.lastChangedDate = nil
                 })
+            self.initialTouchLocation = nil
+            self.initialCameraState = nil
+            self.lastChangedDate = nil
         case .cancelled:
             // no deceleration
             initialTouchLocation = nil
@@ -77,18 +106,12 @@ internal final class PanGestureHandler: GestureHandler {
         }
     }
 
-    private func handleChange(withTouchLocation touchLocation: CGPoint) {
-        guard let initialTouchLocation = initialTouchLocation,
-              let initialCameraState = initialCameraState,
-              let panScrollingMode = delegate?.panScrollingMode else {
-            return
-        }
-
+    private func handleChange(withTouchLocation touchLocation: CGPoint, initialTouchLocation: CGPoint, initialCameraState: CameraState) {
         // Reset the camera to its state when the gesture began
         mapboxMap.setCamera(to: CameraOptions(cameraState: initialCameraState))
 
         let clampedTouchLocation: CGPoint
-        switch panScrollingMode {
+        switch panMode {
         case .horizontal:
             clampedTouchLocation = CGPoint(x: touchLocation.x, y: initialTouchLocation.y)
         case .vertical:

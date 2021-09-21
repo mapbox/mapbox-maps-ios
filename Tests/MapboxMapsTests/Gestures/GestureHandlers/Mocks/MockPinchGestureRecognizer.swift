@@ -12,7 +12,7 @@ final class MockPinchGestureRecognizer: UIPinchGestureRecognizer {
         }
     }
 
-    let getScaleStub = Stub<Void, CGFloat>(defaultReturnValue: 2)
+    let getScaleStub = Stub<Void, CGFloat>(defaultReturnValue: 1)
     override var scale: CGFloat {
         get {
             getScaleStub.call()
@@ -23,7 +23,7 @@ final class MockPinchGestureRecognizer: UIPinchGestureRecognizer {
         }
     }
 
-    let getNumberOfTouchesStub = Stub<Void, Int>(defaultReturnValue: 1)
+    let getNumberOfTouchesStub = Stub<Void, Int>(defaultReturnValue: 2)
     override var numberOfTouches: Int {
         getNumberOfTouchesStub.call()
     }
@@ -31,6 +31,18 @@ final class MockPinchGestureRecognizer: UIPinchGestureRecognizer {
     let locationStub = Stub<UIView?, CGPoint>(defaultReturnValue: .zero)
     override func location(in view: UIView?) -> CGPoint {
         locationStub.call(with: view)
+    }
+
+    struct LocationOfTouchParams {
+        var touchIndex: Int
+        var view: UIView?
+    }
+    let locationOfTouchStub = Stub<LocationOfTouchParams, CGPoint>(defaultReturnValue: .zero)
+    override func location(ofTouch touchIndex: Int, in view: UIView?) -> CGPoint {
+        locationOfTouchStub.call(
+            with: LocationOfTouchParams(
+                touchIndex: touchIndex,
+                view: view))
     }
 
     struct AddTargetParams {

@@ -109,13 +109,16 @@ public class DebugViewController: UIViewController {
         }
 
         mapView.mapboxMap.onEvery(.cameraChanged) { [weak self] _ in
-            guard let mapView = self?.mapView else {
-                return
-            }
             
-            imageView.image = try! mapView.snapshot().get()
-
-            
+                guard let mapView = self?.mapView else {
+                    return
+                }
+                
+                let image =  try! mapView.snapshot().get()
+                
+                DispatchQueue.main.async {
+                    imageView.image = image
+                }
         }
     }
 }

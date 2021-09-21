@@ -3,8 +3,6 @@
 @available(iOSApplicationExtension, unavailable)
 extension MapView {
     
-    /// :nodoc:
-    ///
     /// Errors related to rendered snapshots
     @_spi(Experimental) public enum RenderedSnapshotError: Error {
         /// No metal view available. Catastrophic error.
@@ -23,15 +21,13 @@ extension MapView {
         case convertedImageIsEmpty
     }
     
-    /// :nodoc:
-    ///
-    /// Synchronously captures the last rendered map view (if available) and constructs a `UIImage` if successful
-    /// - Returns: Result type of
+    /// Synchronously captures the last rendered map view (if available) and constructs a `UIImage` if successful.
+    /// - NOTE: This API must be called on main thread
     @_spi(Experimental) public func snapshot() -> Result<UIImage, RenderedSnapshotError> {
         
         guard let metalView = subviews.first(where: { $0 is MTKView }) as? MTKView else {
             Log.error(forMessage: "No metal view present.", category: "MapView.snapshot")
-           return .failure(.noMetalView)
+            return .failure(.noMetalView)
         }
         
         // If Metal API validation is enabled, the call to CIContext().createCGImage
@@ -43,25 +39,20 @@ extension MapView {
             Log.error(forMessage: "Metal API validation is enabled - MapView snapshot is being skipped.", category: "MapView.snapshot")
             return .failure(.metalValidationEnabled)
         }
-    
+        
         guard let texture = metalView.currentDrawable?.texture else {
             Log.error(forMessage: "Metal texture could not be retrieved from current drawable.", category: "MapView.snapshot")
             return .failure(.invalidTexture)
         }
         
         let colorSpace = CGColorSpaceCreateDeviceRGB();
-    
+        
         guard let ciImage = CIImage(mtlTexture: texture, options: [CIImageOption.colorSpace: colorSpace]),
               let cgImage = CIContext().createCGImage(ciImage, from: ciImage.extent) else {
             Log.error(forMessage: "Metal texture could not be converted to CGImage.", category: "MapView.snapshot")
             return .failure(.textureConversionFailed)
         }
         
-        guard !cgImage.isEmpty() else {
-            Log.error(forMessage: "Converted image is empty in snapshot.", category: "MapView.snapshot")
-            return .failure(.convertedImageIsEmpty)
-        }
-
         return .success(
             UIImage(
                 cgImage: cgImage,

@@ -63,23 +63,3 @@ extension CGRect {
         return rect
     }
 }
-
-extension CGImage {
-    internal func isEmpty() -> Bool {
-        let size = width * height
-
-        guard let dataProvider = dataProvider, size > 0 else {
-            return true
-        }
-
-        let pixelData = dataProvider.data
-        let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
-        let uint32Pointer = UnsafeRawPointer(data).bindMemory(to: UInt32.self, capacity: size)
-
-        for x in 0..<size where uint32Pointer[x] != 0 {
-            return false
-        }
-
-        return true
-    }
-}

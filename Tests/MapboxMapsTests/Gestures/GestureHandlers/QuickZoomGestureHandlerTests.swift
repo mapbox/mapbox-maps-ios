@@ -70,4 +70,17 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
                 anchor: CGPoint(x: view.bounds.midX, y: view.bounds.midY),
                 zoom: initialZoom + 1)])
     }
+
+    func testQuickZoomEnded() throws {
+        gestureRecognizer.getStateStub.defaultReturnValue = .ended
+
+        gestureRecognizer.sendActions()
+
+        XCTAssertEqual(delegate.gestureEndedStub.invocations.count, 1)
+        XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.gestureType, .quickZoom)
+
+        let willDecelerate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willDecelerate)
+        XCTAssertFalse(willDecelerate)
+    }
+
 }

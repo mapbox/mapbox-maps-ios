@@ -139,7 +139,31 @@ final class GestureManagerTests: XCTestCase {
 
         gestureManager.gestureBegan(for: gestureType)
 
-        XCTAssertEqual(delegate.gestureBeganStub.parameters, [gestureType])
+        XCTAssertEqual(delegate.gestureBeganStub.invocations.count, 1, "GestureBegan should have been invoked once. It was called \(delegate.gestureBeganStub.invocations.count) times.")
+        XCTAssertTrue(delegate.gestureBeganStub.parameters.first?.gestureManager === gestureManager)
+        XCTAssertEqual(delegate.gestureBeganStub.parameters.first?.gestureType, gestureType)
+    }
+
+    func testGestureEnded() throws {
+        let gestureType = GestureType.allCases.randomElement()!
+
+        gestureManager.gestureEnded(for: gestureType, willDecelerate: true)
+
+        XCTAssertEqual(delegate.gestureEndedStub.invocations.count, 1, "GestureEnded should have been invoked once. It was called \(delegate.gestureEndedStub.invocations.count) times.")
+        XCTAssertTrue(delegate.gestureEndedStub.parameters.first?.gestureManager === gestureManager)
+        XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.gestureType, gestureType)
+        let willDecelerate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willDecelerate)
+        XCTAssertTrue(willDecelerate)
+    }
+
+    func testDriftEnded() {
+        let gestureType = GestureType.allCases.randomElement()!
+
+        gestureManager.driftEnded(for: gestureType)
+
+        XCTAssertEqual(delegate.driftEndedStub.invocations.count, 1, "DriftEnded should have been invoked once. It was called \(delegate.driftEndedStub.invocations.count) times.")
+        XCTAssertTrue(delegate.driftEndedStub.parameters.first?.gestureManager === gestureManager)
+        XCTAssertEqual(delegate.driftEndedStub.parameters.first?.gestureType, gestureType)
     }
 
     func testOptionsPanEnabled() {

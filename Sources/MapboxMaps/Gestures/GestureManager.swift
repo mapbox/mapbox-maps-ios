@@ -2,8 +2,15 @@ import UIKit
 
 public protocol GestureManagerDelegate: AnyObject {
 
-    /// Informs the delegate that a gesture haas begun. Could be used to cancel camera tracking.
-    func gestureBegan(for gestureType: GestureType)
+    /// Informs the delegate that a gesture has begun. Could be used to cancel camera tracking.
+    func gestureManager(_ gestureManager: GestureManager, didBegin gestureType: GestureType)
+
+    /// Informs the delegate that a gesture has ended and whether there will be additional animations after the gesture
+    /// has completed. Does not indicate whether gesture-triggered animations have completed.
+    func gestureManager(_ gestureManager: GestureManager, didEnd gestureType: GestureType, willDecelerate: Bool)
+
+    /// Informs the delegate that animations triggered due to a gesture have ended.
+    func gestureManager(_ gestureManager: GestureManager, didEndDeceleratingFor gestureType: GestureType)
 }
 
 public final class GestureManager: GestureHandlerDelegate {
@@ -103,6 +110,14 @@ public final class GestureManager: GestureHandlerDelegate {
     }
 
     internal func gestureBegan(for gestureType: GestureType) {
-        delegate?.gestureBegan(for: gestureType)
+        delegate?.gestureManager(self, didBegin: gestureType)
+    }
+
+    func gestureEnded(for gestureType: GestureType, willDecelerate: Bool) {
+        delegate?.gestureManager(self, didEnd: gestureType, willDecelerate: willDecelerate)
+    }
+
+    func driftEnded(for gestureType: GestureType) {
+        delegate?.gestureManager(self, didEndDeceleratingFor: gestureType)
     }
 }

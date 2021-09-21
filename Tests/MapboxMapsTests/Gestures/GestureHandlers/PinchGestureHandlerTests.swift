@@ -145,4 +145,16 @@ final class PinchGestureHandlerTests: XCTestCase {
                 zoom: initialCameraState.zoom,
                 bearing: resumedCameraState.bearing))
     }
+
+    func testPinchEnded() throws {
+        gestureRecognizer.getStateStub.defaultReturnValue = .ended
+
+        gestureRecognizer.sendActions()
+
+        XCTAssertEqual(delegate.gestureEndedStub.invocations.count, 1)
+        XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.gestureType, .pinch)
+
+        let willDecelerate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willDecelerate)
+        XCTAssertFalse(willDecelerate)
+    }
 }

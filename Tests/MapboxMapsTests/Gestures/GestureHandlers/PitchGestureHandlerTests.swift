@@ -113,4 +113,16 @@ final class PitchGestureHandlerTests: XCTestCase {
         XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 0,
                        "pitch gesture isn't triggered if touch points equals or exceeds 45°")
     }
+
+    func testPitchEnded() throws {
+        gestureRecognizer.getStateStub.defaultReturnValue = .ended
+
+        gestureRecognizer.sendActions()
+
+        XCTAssertEqual(delegate.gestureEndedStub.invocations.count, 1)
+        XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.gestureType, .pitch)
+
+        let willDecelerate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willDecelerate)
+        XCTAssertFalse(willDecelerate)
+    }
 }

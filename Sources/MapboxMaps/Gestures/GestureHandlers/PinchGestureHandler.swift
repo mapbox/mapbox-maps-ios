@@ -116,6 +116,7 @@ internal final class PinchGestureHandler: GestureHandler {
             initialCenter = nil
             initialZoom = nil
             initialBearing = nil
+            delegate?.gestureEnded(for: .pinch, willDecelerate: false)
         default:
             break
         }

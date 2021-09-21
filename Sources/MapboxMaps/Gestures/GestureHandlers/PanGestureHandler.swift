@@ -8,8 +8,11 @@ internal final class PanGestureHandler: GestureHandler {
     // The camera state when the gesture began
     private var initialCameraState: CameraState?
 
+    // The date when the most recent gesture changed event was handled
     private var lastChangedDate: Date?
 
+    // Provides access to the current date in a way that can be mocked
+    // for unit testing
     private let dateProvider: DateProvider
 
     internal init(gestureRecognizer: UIPanGestureRecognizer,
@@ -43,10 +46,14 @@ internal final class PanGestureHandler: GestureHandler {
             cameraAnimationsManager.cancelAnimations()
             handleChange(withTouchLocation: touchLocation)
         case .ended:
-            // decelerate
+            // Only decelerate if the gesture ended quickly. Otherwise,
+            // you get a deceleration in situations where you drag, then
+            // hold the touch in place for several seconds, then release
+            // it without further dragging. This specific time interval
+            // is just the result of manual tuning.
+            let decelerationTimeout: TimeInterval = 1.0 / 30.0
             guard let lastChangedDate = lastChangedDate,
-                  // if it's been more than 2 frames at 60 Hz since the last change, don't drift
-                  dateProvider.now.timeIntervalSince(lastChangedDate) < 2.0 / 60.0,
+                  dateProvider.now.timeIntervalSince(lastChangedDate) < decelerationTimeout,
                   let decelerationRate = delegate?.decelerationRate else {
                 return
             }

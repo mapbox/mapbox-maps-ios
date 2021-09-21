@@ -2,66 +2,71 @@
 
 @available(iOSApplicationExtension, unavailable)
 extension MapView {
+    
     /// :nodoc:
     ///
-    /// Schedules the capturing of the "last rendered map view" (if available),
-    /// generation of a UIImage and passes the result to the completion handler.
+    /// Errors related to rendered snapshots
+    @_spi(Experimental) public enum RenderedSnapshotError: Error {
+        /// No metal view available. Catastrophic error.
+        case noMetalView
+        
+        /// Metal texture not present in mapView.
+        case invalidTexture
+        
+        /// Texture failed to convert to CGImage
+        case textureConversionFailed
+        
+        /// Metal validation is enabled, unsupported configuration
+        case metalValidationEnabled
+        
+        /// Converted image is empty in snapshot
+        case convertedImageIsEmpty
+    }
+    
+    /// :nodoc:
     ///
-    /// Currently the image passed to the closure has a slightly washed out
-    /// appearance compared with the main map view.
-    /// 
-    /// - Parameter completion: Closure that is passed a snapshot image if available
-    ///
-    /// - Note: This is an experimental API and subject to change.
-    @_spi(Experimental) public func snapshot(completion: @escaping (UIImage?) -> Void ) {
-
-        // Calling mapView.layer.render(in:) isn't sufficient for
-        // capturing the Metal rendering. This is modified from
-        // https://stackoverflow.com/a/47632198 and might not be
-        // sufficient.
-        guard let metalView = subviews.first as? MTKView else {
-            completion(nil)
-            return
+    /// Synchronously captures the last rendered map view (if available) and constructs a `UIImage` if successful
+    /// - Returns: Result type of
+    @_spi(Experimental) public func snapshot() -> Result<UIImage, RenderedSnapshotError> {
+        
+        guard let metalView = subviews.first(where: { $0 is MTKView }) as? MTKView else {
+            Log.error(forMessage: "No metal view present.", category: "MapView.snapshot")
+           return .failure(.noMetalView)
         }
-
+        
         // If Metal API validation is enabled, the call to CIContext().createCGImage
         // below will crash with the following message:
         //
         //  -[MTLDebugComputeCommandEncoder setTexture:atIndex:]:373: failed
         //  assertion `frameBufferOnly texture not supported for compute.'
         guard getenv("METAL_DEVICE_WRAPPER_TYPE") == nil else {
-            Log.warning(forMessage: "Metal API validation is enabled - MapView snapshot is being skipped.", category: "MapView")
-            completion(nil)
-            return
+            Log.error(forMessage: "Metal API validation is enabled - MapView snapshot is being skipped.", category: "MapView.snapshot")
+            return .failure(.metalValidationEnabled)
+        }
+    
+        guard let texture = metalView.currentDrawable?.texture else {
+            Log.error(forMessage: "Metal texture could not be retrieved from current drawable.", category: "MapView.snapshot")
+            return .failure(.invalidTexture)
+        }
+        
+        let colorSpace = CGColorSpaceCreateDeviceRGB();
+    
+        guard let ciImage = CIImage(mtlTexture: texture, options: [CIImageOption.colorSpace: colorSpace]),
+              let cgImage = CIContext().createCGImage(ciImage, from: ciImage.extent) else {
+            Log.error(forMessage: "Metal texture could not be converted to CGImage.", category: "MapView.snapshot")
+            return .failure(.textureConversionFailed)
+        }
+        
+        guard !cgImage.isEmpty() else {
+            Log.error(forMessage: "Converted image is empty in snapshot.", category: "MapView.snapshot")
+            return .failure(.convertedImageIsEmpty)
         }
 
-        // This needs to be captured on the main thread
-        let scale = metalView.contentScaleFactor
-
-        DispatchQueue.global().async {
-            var snapshot: UIImage?
-
-            defer {
-                DispatchQueue.main.async {
-                    completion(snapshot)
-                }
-            }
-
-            // May need to schedule this for after rendering has occurred
-            guard let texture = metalView.currentDrawable?.texture else {
-                return
-            }
-
-            // This results in an image where the colors appear slightly washed out
-            guard let ciImage = CIImage(mtlTexture: texture, options: nil),
-                  let cgImage = CIContext().createCGImage(ciImage, from: ciImage.extent) else {
-                return
-            }
-
-            // Sometimes (observed on simulator) the image returned is blank
-            if !cgImage.isEmpty() {
-                snapshot = UIImage(cgImage: cgImage, scale: scale, orientation: .downMirrored)
-            }
-        }
+        return .success(
+            UIImage(
+                cgImage: cgImage,
+                scale: metalView.contentScaleFactor,
+                orientation: .downMirrored)
+        )
     }
 }

@@ -108,16 +108,14 @@ public class DebugViewController: UIViewController {
             print("The map failed to load.. \(type) = \(message)")
         }
 
-        mapView.mapboxMap.onEvery(.mapIdle) { [weak self] _ in
+        mapView.mapboxMap.onEvery(.cameraChanged) { [weak self] _ in
             guard let mapView = self?.mapView else {
                 return
             }
+            
+            imageView.image = try! mapView.snapshot().get()
 
-            mapView.snapshot { image in
-                if image != nil {
-                    imageView.image = image
-                }
-            }
+            
         }
     }
 }

@@ -21,10 +21,6 @@ extension MapView {
         case convertedImageIsEmpty
     }
 
-    fileprivate func extractedFunc() -> CGColorSpace {
-        return CGColorSpaceCreateDeviceRGB()
-    }
-    
     /// Synchronously captures the last rendered map view (if available) and constructs a `UIImage` if successful.
     /// - NOTE: This API must be called on main thread
     @_spi(Experimental) public func snapshot() -> Result<UIImage, RenderedSnapshotError> {
@@ -49,7 +45,7 @@ extension MapView {
             return .failure(.invalidTexture)
         }
 
-        let colorSpace = extractedFunc()
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
 
         guard let ciImage = CIImage(mtlTexture: texture, options: [CIImageOption.colorSpace: colorSpace]),
               let cgImage = CIContext().createCGImage(ciImage, from: ciImage.extent) else {

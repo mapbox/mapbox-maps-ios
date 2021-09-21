@@ -1,6 +1,5 @@
 import UIKit
-@_spi(Experimental) import MapboxMaps
-import Turf
+import MapboxMaps
 
 /**
  NOTE: This view controller should be used as a scratchpad
@@ -22,10 +21,6 @@ public class DebugViewController: UIViewController {
         mapView.location.options.puckType = .puck2D()
 
         view.addSubview(mapView)
-
-        let imageView = UIImageView(frame: CGRect(x: 20, y: 20, width: 100, height: 200))
-        imageView.backgroundColor = .red
-        view.addSubview(imageView)
 
         // Convenience that takes a closure that's called when the style
         // is loaded or fails to load.
@@ -106,19 +101,6 @@ public class DebugViewController: UIViewController {
             }
 
             print("The map failed to load.. \(type) = \(message)")
-        }
-
-        mapView.mapboxMap.onEvery(.cameraChanged) { [weak self] _ in
-            
-                guard let mapView = self?.mapView else {
-                    return
-                }
-                
-                let image =  try! mapView.snapshot().get()
-                
-                DispatchQueue.main.async {
-                    imageView.image = image
-                }
         }
     }
 }

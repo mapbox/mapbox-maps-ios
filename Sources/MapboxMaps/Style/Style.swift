@@ -476,7 +476,7 @@ extension Style: StyleManagerProtocol {
                          sdf: Bool = false,
                          stretchX: [ImageStretches],
                          stretchY: [ImageStretches],
-                         content: ImageContent?) throws {
+                         content: ImageContent? = nil) throws {
         guard let mbmImage = Image(uiImage: image) else {
             throw TypeConversionError.unexpectedType
         }

@@ -33,18 +33,15 @@ public class DataDrivenSymbolsExample: UIViewController, ExampleProtocol {
         try! mapView.mapboxMap.style.addImage(UIImage(named: "nps-restrooms")!,
                                               id: "restrooms",
                                               stretchX: [],
-                                              stretchY: [],
-                                              content: nil)
+                                              stretchY: [])
         try! mapView.mapboxMap.style.addImage(UIImage(named: "nps-trailhead")!,
                                               id: "trailhead",
                                               stretchX: [],
-                                              stretchY: [],
-                                              content: nil)
+                                              stretchY: [])
         try! mapView.mapboxMap.style.addImage(UIImage(named: "nps-picnic-area")!,
                                               id: "picnic-area",
                                               stretchX: [],
-                                              stretchY: [],
-                                              content: nil)
+                                              stretchY: [])
 
         // Access a vector tileset that contains places of interest at Yosemite National Park.
         // This tileset was created by uploading NPS shapefiles to Mapbox Studio.

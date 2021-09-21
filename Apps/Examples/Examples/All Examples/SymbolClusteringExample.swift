@@ -41,8 +41,7 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
                             id: "fire-station-icon",
                             sdf: true,
                             stretchX: [],
-                            stretchY: [],
-                            content: nil)
+                            stretchY: [])
 
         // Fire_Hydrants.geojson contains information about fire hydrants in the District of Columbia.
         // It was downloaded on 6/10/21 from https://opendata.dc.gov/datasets/DCGIS::fire-hydrants/about

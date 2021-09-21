@@ -26,7 +26,7 @@ extension LocationStyleProtocol {
                            sdf: Bool,
                            stretchX: [ImageStretches],
                            stretchY: [ImageStretches],
-                           content: ImageContent?) throws {
+                           content: ImageContent? = nil) throws {
         try addImage(image,
                      id: id,
                      sdf: sdf,

@@ -8,7 +8,12 @@ internal protocol LocationStyleProtocol: AnyObject {
     func setSourceProperty(for sourceId: String, property: String, value: Any) throws
 
     //swiftlint:disable function_parameter_count
-    func addImage(_ image: UIImage, id: String, sdf: Bool, stretchX: [ImageStretches], stretchY: [ImageStretches], content: ImageContent?) throws
+    func addImage(_ image: UIImage,
+                  id: String,
+                  sdf: Bool,
+                  stretchX: [ImageStretches],
+                  stretchY: [ImageStretches],
+                  content: ImageContent?) throws
 }
 
 extension LocationStyleProtocol {
@@ -16,7 +21,17 @@ extension LocationStyleProtocol {
         try addPersistentLayer(layer, layerPosition: layerPosition)
     }
 
-    internal func addImage(_ image: UIImage, id: String, sdf: Bool = false, stretchX: [ImageStretches] = [], stretchY: [ImageStretches] = [], content: ImageContent? = nil) throws {
-        try addImage(image, id: id, sdf: sdf, stretchX: stretchX, stretchY: stretchY, content: content)
+    internal func addImage(_ image: UIImage,
+                           id: String,
+                           sdf: Bool = false,
+                           stretchX: [ImageStretches],
+                           stretchY: [ImageStretches],
+                           content: ImageContent?) throws {
+        try addImage(image,
+                     id: id,
+                     sdf: sdf,
+                     stretchX: stretchX,
+                     stretchY: stretchY,
+                     content: content)
     }
 }

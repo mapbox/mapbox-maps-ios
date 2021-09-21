@@ -11,5 +11,10 @@ final class MockLocationStyle: LocationStyleProtocol {
     func setSourceProperty(for sourceId: String, property: String, value: Any) throws {}
 
     //swiftlint:disable function_parameter_count
-    func addImage(_ image: UIImage, id: String, sdf: Bool, stretchX: [ImageStretches], stretchY: [ImageStretches], content: ImageContent?) throws {}
+    func addImage(_ image: UIImage,
+                  id: String,
+                  sdf: Bool,
+                  stretchX: [ImageStretches],
+                  stretchY: [ImageStretches],
+                  content: ImageContent?) throws {}
 }

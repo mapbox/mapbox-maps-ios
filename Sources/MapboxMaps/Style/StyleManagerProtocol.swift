@@ -362,7 +362,12 @@ internal protocol StyleManagerProtocol {
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
-    func addImage(_ image: UIImage, id: String, sdf: Bool, stretchX: [ImageStretches], stretchY: [ImageStretches], content: ImageContent?) throws
+    func addImage(_ image: UIImage,
+                  id: String,
+                  sdf: Bool,
+                  stretchX: [ImageStretches],
+                  stretchY: [ImageStretches],
+                  content: ImageContent?) throws
 
     /// Removes an image from the style.
     ///

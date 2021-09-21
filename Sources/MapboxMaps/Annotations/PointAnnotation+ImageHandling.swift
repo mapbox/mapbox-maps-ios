@@ -29,12 +29,18 @@ extension PointAnnotationManager {
                     switch pointAnnotationImage {
 
                     case .default: // Add the default image if not added already
-                        try style.addImage(
-                            Self.defaultMarker,
-                            id: pointAnnotationImage.name)
+                        try style.addImage(Self.defaultMarker,
+                                           id: pointAnnotationImage.name,
+                                           stretchX: [],
+                                           stretchY: [],
+                                           content: nil)
 
                     case .custom(image: let image, name: let name): // Add this custom image
-                        try style.addImage(image, id: name)
+                        try style.addImage(image,
+                                           id: name,
+                                           stretchX: [],
+                                           stretchY: [],
+                                           content: nil)
                     }
                 }
             } catch {

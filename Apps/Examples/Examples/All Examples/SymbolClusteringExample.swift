@@ -37,7 +37,12 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         // Add the image tp the map's style. Set `sdf` to `true`. This allows the icon images to be recolored.
         // For more information about `SDF`, or Signed Distance Fields, see
         // https://docs.mapbox.com/help/troubleshooting/using-recolorable-images-in-mapbox-maps/#what-are-signed-distance-fields-sdf
-        try! style.addImage(image, id: "fire-station-icon", sdf: true)
+        try! style.addImage(image,
+                            id: "fire-station-icon",
+                            sdf: true,
+                            stretchX: [],
+                            stretchY: [],
+                            content: nil)
 
         // Fire_Hydrants.geojson contains information about fire hydrants in the District of Columbia.
         // It was downloaded on 6/10/21 from https://opendata.dc.gov/datasets/DCGIS::fire-hydrants/about

@@ -168,11 +168,13 @@ internal extension Puck2D {
 
         try style.addImage(topImage,
                            id: "locationIndicatorLayerTopImage",
+                           sdf: false,
                            stretchX: [],
                            stretchY: [],
                            content: nil)
         try style.addImage(bearingImage,
                            id: "locationIndicatorLayerBearingImage",
+                           sdf: false,
                            stretchX: [],
                            stretchY: [],
                            content: nil)
@@ -180,6 +182,7 @@ internal extension Puck2D {
         if let validShadowImage = configuration.shadowImage {
             try style.addImage(validShadowImage,
                                id: "locationIndicatorLayerShadowImage",
+                               sdf: false,
                                stretchX: [],
                                stretchY: [],
                                content: nil)

@@ -23,7 +23,7 @@ extension LocationStyleProtocol {
 
     internal func addImage(_ image: UIImage,
                            id: String,
-                           sdf: Bool = false,
+                           sdf: Bool,
                            stretchX: [ImageStretches],
                            stretchY: [ImageStretches],
                            content: ImageContent?) throws {

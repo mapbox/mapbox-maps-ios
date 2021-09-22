@@ -120,7 +120,7 @@ internal class Puck3D: Puck {
         }
     }
 
-    /// This function will take in a new `PuckStyle` and change it accordingly
+    /// This function will take in a new ``PuckStyle`` and change it accordingly
     func updateStyle(puckStyle: PuckStyle, location: Location) {
         // TODO: Remove this requirement, unnecessary for 3D model layer based pucks
     }

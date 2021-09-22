@@ -1,6 +1,6 @@
 import CoreLocation
 
-/// The `LocationProvider` protocol defines a set of methods that a class must
+/// The ``LocationProvider`` protocol defines a set of methods that a class must
 /// implement in order to serve as the location events provider.
 public protocol LocationProvider {
 
@@ -10,10 +10,11 @@ public protocol LocationProvider {
     /// Returns the current localization authorization status.
     var authorizationStatus: CLAuthorizationStatus { get }
 
-    /// Returns the current accuracy authorization that the user has granted
+    /// Returns the current accuracy authorization that the user has granted.
+    /// The default value is `CLAccuracyAuthorization.fullAccuracy` on iOS versions prior to iOS 14.
     var accuracyAuthorization: CLAccuracyAuthorization { get }
 
-    /// Returns the latest heading update received, or nil if none is available.
+    /// Returns the latest heading update received, or `nil` if none is available.
     var heading: CLHeading? { get }
 
     /**

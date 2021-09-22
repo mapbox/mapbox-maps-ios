@@ -15,13 +15,13 @@ public struct LocationOptions: Equatable {
     public var desiredAccuracy: CLLocationAccuracy = kCLLocationAccuracyBest
 
     /// Sets the type of user activity associated with the location updates.
-    /// The default value is `other`.
+    /// The default value is `CLActivityType.other`.
     public var activityType: CLActivityType = .other
 
     /// Sets the type of puck that should be used
     public var puckType: PuckType?
 
-    /// Specifies if a `Puck` should use `Heading` or `Course` for the bearing
+    /// Specifies if a ``Puck`` should use ``Heading`` or ``Course`` for the bearing
     /// This is an experimental option. The default value is ``PuckBearingSource.heading``.
     public var puckBearingSource: PuckBearingSource = .heading
 

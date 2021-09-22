@@ -11,14 +11,11 @@ final class MapViewRenderedSnapshotIntegrationTests: MapViewIntegrationTestCase 
             return
         }
 
-        let expectation1 = self.expectation(description: "Wait for style to load")
-        expectation1.expectedFulfillmentCount = 1
-
-        let expectation2 = self.expectation(description: "Wait for snapshot to be taken")
-        expectation2.expectedFulfillmentCount = 1
+        let waitForStyleExpectation = self.expectation(description: "Wait for style to load")
+        let waitForSnapshotExpectation = self.expectation(description: "Wait for snapshot to be taken")
 
         didFinishLoadingStyle = { _ in
-            expectation1.fulfill()
+            waitForStyleExpectation.fulfill()
         }
 
         didBecomeIdle = { [weak self] _ in
@@ -28,16 +25,16 @@ final class MapViewRenderedSnapshotIntegrationTests: MapViewIntegrationTestCase 
             }
 
             do {
-                let image = try mapView.snapshot().get()
+                let image = try mapView.snapshot()
                 XCTAssertNotNil(image)
-                expectation2.fulfill()
+                waitForSnapshotExpectation.fulfill()
             } catch {
                 XCTFail("Snapshot failed with error: \(error)")
             }
         }
 
         style.uri = .dark
-        wait(for: [expectation1, expectation2], timeout: 10)
+        wait(for: [waitForStyleExpectation, waitForSnapshotExpectation], timeout: 10)
     }
 
     func testSnapshotFailsDueToNoMetalView() {
@@ -47,14 +44,11 @@ final class MapViewRenderedSnapshotIntegrationTests: MapViewIntegrationTestCase 
             return
         }
 
-        let expectation1 = self.expectation(description: "Wait for style to load")
-        expectation1.expectedFulfillmentCount = 1
-
-        let expectation2 = self.expectation(description: "Wait for snapshot to fail")
-        expectation2.expectedFulfillmentCount = 1
+        let waitForStyleExpectation = self.expectation(description: "Wait for style to load")
+        let waitForSnapshotExpectation = self.expectation(description: "Wait for snapshot to be taken")
 
         didFinishLoadingStyle = { _ in
-            expectation1.fulfill()
+            waitForStyleExpectation.fulfill()
         }
 
         didBecomeIdle = { [weak self] _ in
@@ -71,15 +65,15 @@ final class MapViewRenderedSnapshotIntegrationTests: MapViewIntegrationTestCase 
             }
 
             do {
-                _ = try mapView.snapshot().get()
+                _ = try mapView.snapshot()
             } catch {
-                XCTAssertEqual(error as? MapView.RenderedSnapshotError,
-                               MapView.RenderedSnapshotError.noMetalView)
-                expectation2.fulfill()
+                XCTAssertEqual(error as? MapView.SnapshotError,
+                               MapView.SnapshotError.noMetalView)
+                waitForSnapshotExpectation.fulfill()
             }
         }
 
         style.uri = .dark
-        wait(for: [expectation1, expectation2], timeout: 10)
+        wait(for: [waitForStyleExpectation, waitForSnapshotExpectation], timeout: 10)
     }
 }

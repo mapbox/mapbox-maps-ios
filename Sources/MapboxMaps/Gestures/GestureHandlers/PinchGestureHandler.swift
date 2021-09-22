@@ -64,15 +64,16 @@ internal final class PinchGestureHandler: GestureHandler {
             guard let initialZoom = initialZoom else {
                 return
             }
-            let pinchAngle = pinchAngle(with: gestureRecognizer)
+            // Using explicit self to help out older versions of Xcode (pre-12.5) to figure out the scope of these variables here. Bug: https://bugs.swift.org/browse/SR-8669
+            let pinchAngle = self.pinchAngle(with: gestureRecognizer)
             guard let initialPinchMidpoint = initialPinchMidpoint,
                   let initialPinchAngle = initialPinchAngle,
                   let initialCenter = initialCenter,
                   let initialBearing = initialBearing else {
-                initialPinchMidpoint = pinchMidpoint
-                initialPinchAngle = pinchAngle
-                initialCenter = mapboxMap.cameraState.center
-                initialBearing = mapboxMap.cameraState.bearing
+                self.initialPinchMidpoint = pinchMidpoint
+                self.initialPinchAngle = pinchAngle
+                self.initialCenter = mapboxMap.cameraState.center
+                self.initialBearing = mapboxMap.cameraState.bearing
                 return
             }
 

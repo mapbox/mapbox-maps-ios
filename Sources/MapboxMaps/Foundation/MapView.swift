@@ -222,7 +222,7 @@ open class MapView: UIView {
             mapboxMap: mapboxMap)
 
         // Initialize/Configure gesture manager
-        gestures = GestureManager(view: self, cameraAnimationsManager: camera, mapboxMap: mapboxMap)
+        gestures = dependencyProvider.makeGestureManager(view: self, mapboxMap: mapboxMap, cameraAnimationsManager: camera)
 
         // Initialize the attribution manager
         attributionDialogManager = AttributionDialogManager(dataSource: mapboxMap, delegate: self)

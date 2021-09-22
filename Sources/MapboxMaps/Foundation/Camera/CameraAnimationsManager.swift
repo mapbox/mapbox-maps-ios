@@ -15,8 +15,24 @@ internal protocol CameraAnimatorInterface: CameraAnimator {
     func update()
 }
 
+internal protocol CameraAnimationsManagerProtocol: AnyObject {
+    @discardableResult
+    func ease(to camera: CameraOptions,
+              duration: TimeInterval,
+              curve: UIView.AnimationCurve,
+              completion: AnimationCompletion?) -> Cancelable?
+
+    func decelerate(location: CGPoint,
+                    velocity: CGPoint,
+                    decelerationFactor: CGFloat,
+                    locationChangeHandler: @escaping (CGPoint) -> Void,
+                    completion: @escaping () -> Void)
+
+    func cancelAnimations()
+}
+
 /// An object that manages a camera's view lifecycle.
-public class CameraAnimationsManager {
+public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
 
     /// Used to set up camera specific configuration
     public var options: CameraBoundsOptions {
@@ -100,9 +116,7 @@ public class CameraAnimationsManager {
         cameraAnimatorsSet.add(flyToAnimator)
 
         flyToAnimator.addCompletion { [weak self, weak flyToAnimator] (position) in
-            if let internalAnimator = self?.internalAnimator,
-               let animator = flyToAnimator,
-               internalAnimator === animator {
+            if self?.internalAnimator === flyToAnimator {
                 self?.internalAnimator = nil
             }
             // Call the developer-provided completion (if present)
@@ -139,9 +153,7 @@ public class CameraAnimationsManager {
 
         // Nil out the `internalAnimator` once the "ease to" finishes
         animator.addCompletion { [weak self, weak animator] (position) in
-            if let internalAnimator = self?.internalAnimator,
-               let animator = animator,
-               internalAnimator === animator {
+            if self?.internalAnimator === animator {
                 self?.internalAnimator = nil
             }
             completion?(position)
@@ -271,5 +283,40 @@ public class CameraAnimationsManager {
         let cameraView = CameraView()
         cameraViewContainerView.addSubview(cameraView)
         return cameraView
+    }
+
+    /// This function will handle the natural decelration of a gesture when there is a velocity provided. A use case for this is the pan gesture.
+    /// - Parameters:
+    ///   - location: Current location of center coordinate
+    ///   - velocity: The speed at which the map should move over time
+    ///   - decelerationFactor: A multiplication factor that determines the speed at which the velocity should slow down.
+    ///   - locationChangeHandler: Change handler to be passed through to the animator
+    ///   - completion: Completion to be called after animation has finished
+    internal func decelerate(location: CGPoint,
+                             velocity: CGPoint,
+                             decelerationFactor: CGFloat,
+                             locationChangeHandler: @escaping (CGPoint) -> Void,
+                             completion: @escaping () -> Void) {
+
+        // Stop the `internalAnimator` before beginning a deceleration
+        internalAnimator?.stopAnimation()
+
+        let decelerateAnimator = GestureDecelerationCameraAnimator(
+            location: location,
+            velocity: velocity,
+            decelerationFactor: decelerationFactor,
+            locationChangeHandler: locationChangeHandler,
+            dateProvider: DefaultDateProvider())
+
+        decelerateAnimator.completion = { [weak self, weak decelerateAnimator] in
+           if self?.internalAnimator === decelerateAnimator {
+               self?.internalAnimator = nil
+           }
+           completion()
+        }
+
+        cameraAnimatorsSet.add(decelerateAnimator)
+        decelerateAnimator.startAnimation()
+        internalAnimator = decelerateAnimator
     }
 }

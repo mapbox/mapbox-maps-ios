@@ -50,4 +50,19 @@ class CompassMapViewIntegrationTests: MapViewIntegrationTestCase {
 
         wait(for: [mapExpectation, compassExpectation], timeout: 5)
     }
+
+    func testCompassTappedCancelsAnimations() throws {
+        let mapView = try XCTUnwrap(self.mapView, "Map view could not be found")
+
+        let animator = try XCTUnwrap(
+            mapView.camera.ease(
+                to: CameraOptions(center: CLLocationCoordinate2D(latitude: 1, longitude: 1)),
+                duration: 5) as? BasicCameraAnimator)
+
+        XCTAssertEqual(animator.state, .active)
+
+        mapView.compassTapped()
+
+        XCTAssertEqual(animator.state, .inactive)
+    }
 }

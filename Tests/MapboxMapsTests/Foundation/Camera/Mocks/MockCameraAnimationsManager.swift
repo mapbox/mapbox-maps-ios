@@ -27,4 +27,26 @@ final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
     func cancelAnimations() {
         cancelAnimationsStub.call()
     }
+
+    struct DecelerateParameters {
+        var location: CGPoint
+        var velocity: CGPoint
+        var decelerationFactor: CGFloat
+        var locationChangeHandler: (CGPoint) -> Void
+        var completion: () -> Void
+    }
+    let decelerateStub = Stub<DecelerateParameters, Void>()
+    func decelerate(location: CGPoint,
+                    velocity: CGPoint,
+                    decelerationFactor: CGFloat,
+                    locationChangeHandler: @escaping (CGPoint) -> Void,
+                    completion: @escaping () -> Void) {
+        return decelerateStub.call(
+            with: DecelerateParameters(
+                location: location,
+                velocity: velocity,
+                decelerationFactor: decelerationFactor,
+                locationChangeHandler: locationChangeHandler,
+                completion: completion))
+    }
 }

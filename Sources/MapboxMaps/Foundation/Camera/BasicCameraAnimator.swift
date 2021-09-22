@@ -18,7 +18,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     /// The `CameraView` owned by this animator
     private let cameraView: CameraView
 
-    private let mapboxMap: CameraAnimatorMapboxMap
+    private let mapboxMap: MapboxMapProtocol
 
     /// Represents the animation that this animator is attempting to execute
     private var animation: ((inout CameraTransition) -> Void)?
@@ -67,7 +67,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     // MARK: Initializer
     internal init(propertyAnimator: UIViewPropertyAnimator,
                   owner: AnimationOwner,
-                  mapboxMap: CameraAnimatorMapboxMap,
+                  mapboxMap: MapboxMapProtocol,
                   cameraView: CameraView) {
         self.propertyAnimator = propertyAnimator
         self.owner = owner

@@ -16,6 +16,7 @@ Mapbox welcomes participation and contributions from everyone.
 ### Features ✨ and improvements 🏁
 
 * Allow users to set the map's `MapDebugOptions`. ([#648](https://github.com/mapbox/mapbox-maps-ios/pull/648))
+* Implement 'promoteId' feature for geojson and vector sources. The feature allows to promote feature's property to a feature id, so that promoted id can be used with FeatureState API. ([#660](https://github.com/mapbox/mapbox-maps-ios/pull/660))
 * Tiled 3D model layer and source ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
 * Enable instant transitions for data driven symbol layer properties ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
 * Implement face culling for Metal ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))

@@ -16,8 +16,8 @@ public struct Puck3DConfiguration: Equatable {
     /// Initialize a ``Puck3DConfiguration`` with a model, scale and rotation.
     /// - Parameters:
     ///   - model: The `gltf` model to use for the puck.
-    ///   - modelScale: The amount to scale the model by. Has a default value of `nil`.
-    ///   - modelRotation: The rotation of the model in euler angles `[lon, lat, z]`. The default value is `nil`.
+    ///   - modelScale: The amount to scale the model by.
+    ///   - modelRotation: The rotation of the model in euler angles `[lon, lat, z]`.
     public init(model: Model, modelScale: Value<[Double]>? = nil, modelRotation: Value<[Double]>? = nil) {
         self.model = model
         self.modelScale = modelScale

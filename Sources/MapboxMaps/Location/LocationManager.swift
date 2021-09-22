@@ -5,10 +5,10 @@ import UIKit
 /// such as a change in the device’s location.
 public class LocationManager: NSObject {
 
-    /// Represents the latest location received from the location provider
+    /// Represents the latest location received from the location providerm
     public private(set) var latestLocation: Location?
 
-    /// Represents the style of the user location puck
+    /// Represents the style of the user location puck.
     private var currentPuckStyle: PuckStyle = .precise {
         didSet {
             locationPuckManager?.changePuckStyle(to: currentPuckStyle)
@@ -18,23 +18,24 @@ public class LocationManager: NSObject {
     /// The object that acts as the delegate of the location manager.
     public weak var delegate: LocationPermissionsDelegate?
 
-    /// Making variable `public private(set)` to have direct access to auth functions
+    /// Can be used to access location authorization settings.
     public private(set) var locationProvider: LocationProvider!
 
-    /// Property that has a list of items that will consume location events
-    /// The location manager holds weak references to these consumers, client code should retain these references
+    /// Property that has a list of items that will consume location events.
+    /// The location manager holds weak references to these consumers, client code should retain these references.
     public private(set) lazy var consumers: NSHashTable<LocationConsumer> = {
         let hashTable = NSHashTable<LocationConsumer>.weakObjects()
         return hashTable
     }()
 
-    /// Style that has limited functionality to support location
+    /// Style that has limited functionality to support location.
     internal weak var style: LocationStyleProtocol?
 
     /// Manager that handles the visual puck element.
-    /// Only created if `showsUserLocation` is `true`
+    /// Only created if `showsUserLocation` is `true`.
     internal var locationPuckManager: LocationPuckManager?
 
+    /// The ``LocationOptions`` that configure the location manager.
     public var options = LocationOptions() {
         didSet {
             guard options != oldValue else { return }
@@ -80,11 +81,12 @@ public class LocationManager: NSObject {
         locationProvider.setDelegate(self)
     }
 
-    /// The location manager holds weak references to consumers, client code should retain these references
+    /// The location manager holds weak references to consumers, client code should retain these references.
     public func addLocationConsumer(newConsumer consumer: LocationConsumer) {
         consumers.add(consumer)
     }
 
+    /// Removes a location consumer from the location manager.
     public func removeLocationConsumer(consumer: LocationConsumer) {
         consumers.remove(consumer)
     }

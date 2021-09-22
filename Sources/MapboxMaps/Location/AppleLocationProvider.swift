@@ -39,7 +39,6 @@ extension AppleLocationProvider: LocationProvider {
         }
     }
 
-    /// The default value is
     public var accuracyAuthorization: CLAccuracyAuthorization {
         if #available(iOS 14.0, *) {
             return locationProvider.accuracyAuthorization

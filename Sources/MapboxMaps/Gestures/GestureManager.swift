@@ -2,7 +2,7 @@ import UIKit
 
 public protocol GestureManagerDelegate: AnyObject {
 
-    /// Informs the delegate that a gesture has begun. Could be used to cancel camera tracking.
+    /// Informs the delegate that a gesture has begun.
     func gestureManager(_ gestureManager: GestureManager, didBegin gestureType: GestureType)
 
     /// Informs the delegate that a gesture has ended and whether there will be additional animations after the gesture

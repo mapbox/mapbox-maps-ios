@@ -19,6 +19,17 @@ Mapbox welcomes participation and contributions from everyone.
 * The behavior of `GestureManager.options` has been updated to better reflect the `isEnabled` state of the associated gesture recognizers. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
 * The gesture recognizer properties of `GestureManager` are no longer `Optional`. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
 * `GestureType` has been redesigned so that its cases have a 1-1 relationship with the built-in gestures. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
+* `GestureManager.rotationGestureRecognizer` has been removed. Rotation is now handled by `.pinchGestureRecognizer` in addition to its preexisting handling of panning and zooming. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
+* `GestureManager.doubleTapToZoomOutGestureRecognizer` has been replaced with `.doubleTouchToZoomOutGestureRecognizer`. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
+* `PanScrollingMode` has been renamed to `PanMode`. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
+* `GestureOptions.zoomEnabled` has been replaced by `.doubleTapToZoomInEnabled`, `.doubleTouchToZoomOutEnabled`, and `.quickZoomEnabled`. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
+* `GestureOptions.rotateEnabled` has been removed. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
+* `GestureOptions.scrollEnabled` has been renamed to `.panEnabled`. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
+* `GestureOptions.scrollingMode` has been renamed to `.panMode`. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
+* `GestureOptions.decelerationRate` has been renamed to `.panDecelerationFactor`. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
+* `GestureType.doubleTapToZoomOut` has been replaced with `.doubleTouchToZoomOut`. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
+* `GestureType.rotate` has been removed. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
+* `GestureType` cases have been reordered for consistency with `GestureOptions` and `GestureManager`. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
 
 ### Features ✨ and improvements 🏁
 
@@ -41,6 +52,9 @@ Mapbox welcomes participation and contributions from everyone.
 * Don't draw SDF images in text-field and issue warning for it ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
 * Fix incorrect return from `StyleManager#getStyleLayerPropertyDefaultValue` for 'text-field'. Now the default value is set to `["format", "" , {}]` ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
 * GestureManager no longer sets itself as the delegate of all gestures in MapView when its options change. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
+* Fixes an issue where tapping the compass could fail to set the bearing to 0 if there was already an animation running. Tapping the compass now cancels any existing animations. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
+* Fixes issues with the pinch gesture when removing and re-adding one of the two required touches. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
+* Fixes an issue where a pan gesture would fail if it interrupted the deceleration from a previous pan gesture. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
 
 ## 10.0.0-rc.8 - Sept 8, 2021
 

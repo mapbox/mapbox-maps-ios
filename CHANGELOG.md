@@ -12,6 +12,13 @@ Mapbox welcomes participation and contributions from everyone.
 * `OfflineRegionGeometryDefinition.geometry` is now of type `Turf.Geometry` instead of `MapboxCommon.Geometry` ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
 * The `HTTPResponse` init methods that take `MapboxCommon.Expected` instead of `Result` are now correctly marked as refined for Swift. ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
 * The `DownloadStatus` init methods that take `MapboxCommon.Expected` instead of `Result` and `NSNumber?` instead of `UInt64?` are not correctly marked as refined for Swift. ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
+* `GestureOptions.hapticFeedbackEnabled` has been removed. ([#663](https://github.com/mapbox/mapbox-maps-ios/pull/663))
+* `GestureManager.decelarationRate` has been removed and `GestureOptions.decelerationRate` is the single source of truth. ([#662](https://github.com/mapbox/mapbox-maps-ios/pull/662))
+* `GestureManager` no longer conforms to `NSObject` and is not a `UIGestureRecognizerDelegate`. ([#669](https://github.com/mapbox/mapbox-maps-ios/pull/669))
+* `TapGestureHandler.init` was previously public by mistake and is now internal. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
+* The behavior of `GestureManager.options` has been updated to better reflect the `isEnabled` state of the associated gesture recognizers. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
+* The gesture recognizer properties of `GestureManager` are no longer `Optional`. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
+* `GestureType` has been redesigned so that its cases have a 1-1 relationship with the built-in gestures. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
 
 ### Features ✨ and improvements 🏁
 
@@ -21,6 +28,10 @@ Mapbox welcomes participation and contributions from everyone.
 * Enable instant transitions for data driven symbol layer properties ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
 * Implement face culling for Metal ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
 * `HTTPServiceInterface.getInstance()` is now publicly available. ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
+* `CameraState`'s fields are now `var`s instead of `let`s for testing purposes, and a public, memberwise initializer has been added. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
+* `PanScrollingMode` now conforms to `CaseIterable`. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
+* `GestureType` now conforms to `CaseIterable`. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
+* Pan deceleration has been reimplemented to produce a more natural deceleration effect. ([#692](https://github.com/mapbox/mapbox-maps-ios/pull/692))
 
 ### Bug fixes 🐞
 
@@ -29,6 +40,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix rendering artifact for a line layer, when its line-gradient property is set at runtime. ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
 * Don't draw SDF images in text-field and issue warning for it ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
 * Fix incorrect return from `StyleManager#getStyleLayerPropertyDefaultValue` for 'text-field'. Now the default value is set to `["format", "" , {}]` ([#689](https://github.com/mapbox/mapbox-maps-ios/pull/689))
+* GestureManager no longer sets itself as the delegate of all gestures in MapView when its options change. ([#677](https://github.com/mapbox/mapbox-maps-ios/pull/677))
 
 ## 10.0.0-rc.8 - Sept 8, 2021
 

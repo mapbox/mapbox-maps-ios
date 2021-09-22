@@ -32,7 +32,7 @@ class CameraAnimatorsExample: UIViewController, ExampleProtocol {
     // Start a chain of camera animations
     func startCameraAnimations() {
         // Declare an animator that changes the map's
-        var bearingAnimator = mapView.camera.makeAnimator(duration: 4, curve: .easeInOut) { (transition) in
+        let bearingAnimator = mapView.camera.makeAnimator(duration: 4, curve: .easeInOut) { (transition) in
             transition.bearing.toValue = -45
         }
 

@@ -77,6 +77,11 @@ For more advanced use cases, in place of `operator`, you can use a custom reduce
     public var generateId: Bool?
       
     /** 
+     * A property to use as a feature id (for feature state). Either a property name, or an object of the form `{<sourceLayer>: <propertyName>}`. 
+    */
+    public var promoteId: PromoteId?
+      
+    /** 
      * When loading a map, if PrefetchZoomDelta is set to any number greater than 0, the map will first request a tile at zoom level lower than zoom - delta, but so that the zoom level is multiple of delta, in an attempt to display a full map at lower resolution as quick as possible. It will get clamped at the tile source minimum zoom. The default delta is 4. 
     */
     public var prefetchZoomDelta: Double?

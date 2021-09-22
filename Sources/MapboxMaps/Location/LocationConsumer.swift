@@ -22,7 +22,7 @@ import CoreLocation
         return internalLocation.horizontalAccuracy
     }
 
-    /// The optional heading direction. Returns `nil` if ``Location.heading`` is `nil`.
+    /// The optional heading direction. Returns `nil` if `Location.heading` is `nil`.
     /// If the heading relative to true north can be determined, that value will be used. Otherwise, magnetic north will be used.
     public var headingDirection: CLLocationDirection? {
         guard let heading = self.heading else { return nil }
@@ -34,14 +34,14 @@ import CoreLocation
         return heading.magneticHeading
     }
 
-    /// Initialize a ``Location`` object.
+    /// Initialize a `Location` object.
     public init(with location: CLLocation, heading: CLHeading? = nil) {
         internalLocation = location
         self.heading = heading
     }
 }
 
-/// The ``LocationConsumer`` protocol defines a method that a class must implement to consume location updates from LocationManager
+/// The `LocationConsumer` protocol defines a method that a class must implement to consume location updates from LocationManager
 @objc public protocol LocationConsumer {
 
     /// New location update received

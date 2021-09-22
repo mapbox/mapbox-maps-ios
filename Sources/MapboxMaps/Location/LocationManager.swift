@@ -35,7 +35,7 @@ public class LocationManager: NSObject {
     /// Only created if `showsUserLocation` is `true`.
     internal var locationPuckManager: LocationPuckManager?
 
-    /// The ``LocationOptions`` that configure the location manager.
+    /// The `LocationOptions` that configure the location manager.
     public var options = LocationOptions() {
         didSet {
             guard options != oldValue else { return }

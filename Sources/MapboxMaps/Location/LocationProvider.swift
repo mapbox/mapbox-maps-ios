@@ -1,6 +1,6 @@
 import CoreLocation
 
-/// The ``LocationProvider`` protocol defines a set of methods that a class must
+/// The `LocationProvider` protocol defines a set of methods that a class must
 /// implement in order to serve as the location events provider.
 public protocol LocationProvider {
 

@@ -21,8 +21,8 @@ public struct LocationOptions: Equatable {
     /// Sets the type of puck that should be used
     public var puckType: PuckType?
 
-    /// Specifies if a ``Puck`` should use ``Heading`` or ``Course`` for the bearing
-    /// This is an experimental option. The default value is ``PuckBearingSource.heading``.
+    /// Specifies if a `Puck` should use `Heading` or `Course` for the bearing
+    /// This is an experimental option. The default value is `PuckBearingSource.heading`.
     public var puckBearingSource: PuckBearingSource = .heading
 
     public init() {}

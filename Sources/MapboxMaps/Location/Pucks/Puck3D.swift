@@ -13,7 +13,7 @@ public struct Puck3DConfiguration: Equatable {
     /// The rotation of the model in euler angles [lon, lat, z].
     public var modelRotation: Value<[Double]>?
 
-    /// Initialize a ``Puck3DConfiguration`` with a model, scale and rotation.
+    /// Initialize a `Puck3DConfiguration` with a model, scale and rotation.
     /// - Parameters:
     ///   - model: The `gltf` model to use for the puck.
     ///   - modelScale: The amount to scale the model by.
@@ -120,7 +120,7 @@ internal class Puck3D: Puck {
         }
     }
 
-    /// This function will take in a new ``PuckStyle`` and change it accordingly
+    /// This function will take in a new `PuckStyle` and change it accordingly
     func updateStyle(puckStyle: PuckStyle, location: Location) {
         // TODO: Remove this requirement, unnecessary for 3D model layer based pucks
     }

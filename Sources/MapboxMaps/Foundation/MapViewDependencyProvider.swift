@@ -19,7 +19,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
 
     func makePanGestureHandler(view: UIView,
                                mapboxMap: MapboxMapProtocol,
-                               cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
+                               cameraAnimationsManager: CameraAnimationsManagerProtocol) -> PanGestureHandlerProtocol {
         let gestureRecognizer = UIPanGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         return PanGestureHandler(
@@ -40,17 +40,6 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             cameraAnimationsManager: cameraAnimationsManager)
     }
 
-    func makeRotationGestureHandler(view: UIView,
-                                    mapboxMap: MapboxMapProtocol,
-                                    cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
-        let gestureRecognizer = UIRotationGestureRecognizer()
-        view.addGestureRecognizer(gestureRecognizer)
-        return RotateGestureHandler(
-            gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap,
-            cameraAnimationsManager: cameraAnimationsManager)
-    }
-
     func makePitchGestureHandler(view: UIView,
                                  mapboxMap: MapboxMapProtocol,
                                  cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
@@ -62,16 +51,23 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             cameraAnimationsManager: cameraAnimationsManager)
     }
 
-    func makeDoubleTapToZoomGestureHandler(numberOfTouchesRequired: Int,
-                                           zoomDelta: CGFloat,
-                                           view: UIView,
-                                           mapboxMap: MapboxMapProtocol,
-                                           cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
+    func makeDoubleTapToZoomInGestureHandler(view: UIView,
+                                             mapboxMap: MapboxMapProtocol,
+                                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
         let gestureRecognizer = UITapGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
-        return DoubleTapToZoomGestureHandler(
-            numberOfTouchesRequired: numberOfTouchesRequired,
-            zoomDelta: zoomDelta,
+        return DoubleTapToZoomInGestureHandler(
+            gestureRecognizer: gestureRecognizer,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
+    }
+
+    func makeDoubleTouchToZoomOutGestureHandler(view: UIView,
+                                                mapboxMap: MapboxMapProtocol,
+                                                cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
+        let gestureRecognizer = UITapGestureRecognizer()
+        view.addGestureRecognizer(gestureRecognizer)
+        return DoubleTouchToZoomOutGestureHandler(
             gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
@@ -92,8 +88,6 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                             mapboxMap: MapboxMapProtocol,
                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager {
         return GestureManager(
-            decelerationRate: UIScrollView.DecelerationRate.normal.rawValue,
-            panScrollingMode: .horizontalAndVertical,
             panGestureHandler: makePanGestureHandler(
                 view: view,
                 mapboxMap: mapboxMap,
@@ -102,23 +96,15 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                 view: view,
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: cameraAnimationsManager),
-            rotationGestureHandler: makeRotationGestureHandler(
-                view: view,
-                mapboxMap: mapboxMap,
-                cameraAnimationsManager: cameraAnimationsManager),
             pitchGestureHandler: makePitchGestureHandler(
                 view: view,
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: cameraAnimationsManager),
-            doubleTapToZoomInGestureHandler: makeDoubleTapToZoomGestureHandler(
-                numberOfTouchesRequired: 1,
-                zoomDelta: 1,
+            doubleTapToZoomInGestureHandler: makeDoubleTapToZoomInGestureHandler(
                 view: view,
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: cameraAnimationsManager),
-            doubleTapToZoomOutGestureHandler: makeDoubleTapToZoomGestureHandler(
-                numberOfTouchesRequired: 2,
-                zoomDelta: -1,
+            doubleTouchToZoomOutGestureHandler: makeDoubleTouchToZoomOutGestureHandler(
                 view: view,
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: cameraAnimationsManager),

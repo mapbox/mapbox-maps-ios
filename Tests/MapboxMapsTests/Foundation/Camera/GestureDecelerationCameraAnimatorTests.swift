@@ -5,7 +5,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
 
     var location: CGPoint!
     var velocity: CGPoint!
-    var decelerationRate: CGFloat!
+    var decelerationFactor: CGFloat!
     var locationChangeHandler: Stub<CGPoint, Void>!
     var dateProvider: MockDateProvider!
     var completion: Stub<Void, Void>!
@@ -15,14 +15,14 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         super.setUp()
         location = .zero
         velocity = CGPoint(x: 1000, y: -1000)
-        decelerationRate = 0.7
+        decelerationFactor = 0.7
         locationChangeHandler = Stub()
         dateProvider = MockDateProvider()
         completion = Stub()
         animator = GestureDecelerationCameraAnimator(
             location: location,
             velocity: velocity,
-            decelerationRate: decelerationRate,
+            decelerationFactor: decelerationFactor,
             locationChangeHandler: locationChangeHandler.call(with:),
             dateProvider: dateProvider)
         animator.completion = completion.call
@@ -33,7 +33,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         completion = nil
         dateProvider = nil
         locationChangeHandler = nil
-        decelerationRate = nil
+        decelerationFactor = nil
         velocity = nil
         location = nil
         super.tearDown()
@@ -68,9 +68,9 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         // Expected value is duration * velocity;
         XCTAssertEqual(locationChangeHandler.parameters, [CGPoint(x: 10, y: -10)])
         // The previous update() should also have reduced the velocity
-        // by multiplying it by the decelerationRate once for each elapsed
+        // by multiplying it by the decelerationFactor once for each elapsed
         // millisecond. In this simulateion, 10 ms have elapsed.
-        let expectedVelocityAdjustmentFactor = pow(decelerationRate, 10)
+        let expectedVelocityAdjustmentFactor = pow(decelerationFactor, 10)
         locationChangeHandler.reset()
         // Make sure the animation didn't end yet
         XCTAssertEqual(animator.state, .active)

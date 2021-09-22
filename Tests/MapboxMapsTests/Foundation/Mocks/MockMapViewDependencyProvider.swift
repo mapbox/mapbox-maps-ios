@@ -34,14 +34,14 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
         mapboxMap: MapboxMapProtocol,
         cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager {
         return GestureManager(
-            decelerationRate: 0.99,
-            panScrollingMode: .horizontalAndVertical,
-            panGestureHandler: makeGestureHandler(),
+            panGestureHandler: MockPanGestureHandler(
+                gestureRecognizer: UIGestureRecognizer(),
+                mapboxMap: MockMapboxMap(),
+                cameraAnimationsManager: MockCameraAnimationsManager()),
             pinchGestureHandler: makeGestureHandler(),
-            rotationGestureHandler: makeGestureHandler(),
             pitchGestureHandler: makeGestureHandler(),
             doubleTapToZoomInGestureHandler: makeGestureHandler(),
-            doubleTapToZoomOutGestureHandler: makeGestureHandler(),
+            doubleTouchToZoomOutGestureHandler: makeGestureHandler(),
             quickZoomGestureHandler: makeGestureHandler())
     }
 

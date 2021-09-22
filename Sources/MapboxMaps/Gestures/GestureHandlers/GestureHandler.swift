@@ -1,10 +1,6 @@
 import UIKit
 
 internal protocol GestureHandlerDelegate: AnyObject {
-    var decelerationRate: CGFloat { get }
-
-    var panScrollingMode: PanScrollingMode { get }
-
     func gestureBegan(for gestureType: GestureType)
 }
 

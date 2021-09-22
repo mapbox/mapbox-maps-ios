@@ -9,7 +9,7 @@ final class GestureManagerTests: XCTestCase {
     var pinchGestureHandler: GestureHandler!
     var pitchGestureHandler: GestureHandler!
     var doubleTapToZoomInGestureHandler: GestureHandler!
-    var doubleTapToZoomOutGestureHandler: GestureHandler!
+    var doubleTouchToZoomOutGestureHandler: GestureHandler!
     var quickZoomGestureHandler: GestureHandler!
     var gestureManager: GestureManager!
     // swiftlint:disable:next weak_delegate
@@ -26,14 +26,14 @@ final class GestureManagerTests: XCTestCase {
         pinchGestureHandler = makeGestureHandler()
         pitchGestureHandler = makeGestureHandler()
         doubleTapToZoomInGestureHandler = makeGestureHandler()
-        doubleTapToZoomOutGestureHandler = makeGestureHandler()
+        doubleTouchToZoomOutGestureHandler = makeGestureHandler()
         quickZoomGestureHandler = makeGestureHandler()
         gestureManager = GestureManager(
             panGestureHandler: panGestureHandler,
             pinchGestureHandler: pinchGestureHandler,
             pitchGestureHandler: pitchGestureHandler,
             doubleTapToZoomInGestureHandler: doubleTapToZoomInGestureHandler,
-            doubleTapToZoomOutGestureHandler: doubleTapToZoomOutGestureHandler,
+            doubleTouchToZoomOutGestureHandler: doubleTouchToZoomOutGestureHandler,
             quickZoomGestureHandler: quickZoomGestureHandler)
         delegate =  MockGestureManagerDelegate()
         gestureManager.delegate = delegate
@@ -43,7 +43,7 @@ final class GestureManagerTests: XCTestCase {
         delegate = nil
         gestureManager = nil
         quickZoomGestureHandler = nil
-        doubleTapToZoomOutGestureHandler = nil
+        doubleTouchToZoomOutGestureHandler = nil
         doubleTapToZoomInGestureHandler = nil
         pitchGestureHandler = nil
         pinchGestureHandler = nil
@@ -77,9 +77,9 @@ final class GestureManagerTests: XCTestCase {
                         === doubleTapToZoomInGestureHandler.gestureRecognizer)
     }
 
-    func testDoubleTapToZoomOutGestureRecognizer() {
-        XCTAssertTrue(gestureManager.doubleTapToZoomOutGestureRecognizer
-                        === doubleTapToZoomOutGestureHandler.gestureRecognizer)
+    func testDoubleTouchToZoomOutGestureRecognizer() {
+        XCTAssertTrue(gestureManager.doubleTouchToZoomOutGestureRecognizer
+                        === doubleTouchToZoomOutGestureHandler.gestureRecognizer)
     }
 
     func testQuickZoomGestureRecognizer() {
@@ -102,8 +102,8 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertTrue(doubleTapToZoomInGestureHandler.delegate === gestureManager)
     }
 
-    func testDoubleTapToZoomOutGestureHandlerDelegate() {
-        XCTAssertTrue(doubleTapToZoomOutGestureHandler.delegate === gestureManager)
+    func testDoubleTouchToZoomOutGestureHandlerDelegate() {
+        XCTAssertTrue(doubleTouchToZoomOutGestureHandler.delegate === gestureManager)
     }
 
     func testQuickZoomGestureHandlerDelegate() {
@@ -242,29 +242,29 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertTrue(gestureManager.doubleTapToZoomInGestureRecognizer.isEnabled)
     }
 
-    func testOptionsDoubleTapToZoomOutEnabled() {
-        XCTAssertTrue(gestureManager.options.doubleTapToZoomOutEnabled)
-        XCTAssertTrue(gestureManager.doubleTapToZoomOutGestureRecognizer.isEnabled)
+    func testOptionsDoubleTouchToZoomOutEnabled() {
+        XCTAssertTrue(gestureManager.options.doubleTouchToZoomOutEnabled)
+        XCTAssertTrue(gestureManager.doubleTouchToZoomOutGestureRecognizer.isEnabled)
 
-        gestureManager.options.doubleTapToZoomOutEnabled = false
+        gestureManager.options.doubleTouchToZoomOutEnabled = false
 
-        XCTAssertFalse(gestureManager.options.doubleTapToZoomOutEnabled)
-        XCTAssertFalse(gestureManager.doubleTapToZoomOutGestureRecognizer.isEnabled)
+        XCTAssertFalse(gestureManager.options.doubleTouchToZoomOutEnabled)
+        XCTAssertFalse(gestureManager.doubleTouchToZoomOutGestureRecognizer.isEnabled)
 
-        gestureManager.options.doubleTapToZoomOutEnabled = true
+        gestureManager.options.doubleTouchToZoomOutEnabled = true
 
-        XCTAssertTrue(gestureManager.options.doubleTapToZoomOutEnabled)
-        XCTAssertTrue(gestureManager.doubleTapToZoomOutGestureRecognizer.isEnabled)
+        XCTAssertTrue(gestureManager.options.doubleTouchToZoomOutEnabled)
+        XCTAssertTrue(gestureManager.doubleTouchToZoomOutGestureRecognizer.isEnabled)
 
-        gestureManager.doubleTapToZoomOutGestureRecognizer.isEnabled = false
+        gestureManager.doubleTouchToZoomOutGestureRecognizer.isEnabled = false
 
-        XCTAssertFalse(gestureManager.options.doubleTapToZoomOutEnabled)
-        XCTAssertFalse(gestureManager.doubleTapToZoomOutGestureRecognizer.isEnabled)
+        XCTAssertFalse(gestureManager.options.doubleTouchToZoomOutEnabled)
+        XCTAssertFalse(gestureManager.doubleTouchToZoomOutGestureRecognizer.isEnabled)
 
-        gestureManager.doubleTapToZoomOutGestureRecognizer.isEnabled = true
+        gestureManager.doubleTouchToZoomOutGestureRecognizer.isEnabled = true
 
-        XCTAssertTrue(gestureManager.options.doubleTapToZoomOutEnabled)
-        XCTAssertTrue(gestureManager.doubleTapToZoomOutGestureRecognizer.isEnabled)
+        XCTAssertTrue(gestureManager.options.doubleTouchToZoomOutEnabled)
+        XCTAssertTrue(gestureManager.doubleTouchToZoomOutGestureRecognizer.isEnabled)
     }
 
     func testOptionsQuickZoomEnabled() {

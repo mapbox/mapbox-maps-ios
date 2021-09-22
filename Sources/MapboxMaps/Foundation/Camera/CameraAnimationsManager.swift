@@ -16,6 +16,7 @@ internal protocol CameraAnimatorInterface: CameraAnimator {
 }
 
 internal protocol CameraAnimationsManagerProtocol: AnyObject {
+    @discardableResult
     func ease(to camera: CameraOptions,
               duration: TimeInterval,
               curve: UIView.AnimationCurve,

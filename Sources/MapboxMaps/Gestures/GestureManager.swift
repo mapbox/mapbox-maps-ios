@@ -15,7 +15,7 @@ public final class GestureManager: GestureHandlerDelegate {
             pinchGestureRecognizer.isEnabled = newValue.pinchEnabled
             pitchGestureRecognizer.isEnabled = newValue.pitchEnabled
             doubleTapToZoomInGestureRecognizer.isEnabled = newValue.doubleTapToZoomInEnabled
-            doubleTapToZoomOutGestureRecognizer.isEnabled = newValue.doubleTapToZoomOutEnabled
+            doubleTouchToZoomOutGestureRecognizer.isEnabled = newValue.doubleTouchToZoomOutEnabled
             quickZoomGestureRecognizer.isEnabled = newValue.quickZoomEnabled
             panGestureHandler.panMode = newValue.panMode
             panGestureHandler.decelerationFactor = newValue.panDecelerationFactor
@@ -26,7 +26,7 @@ public final class GestureManager: GestureHandlerDelegate {
             gestureOptions.pinchEnabled = pinchGestureRecognizer.isEnabled
             gestureOptions.pitchEnabled = pitchGestureRecognizer.isEnabled
             gestureOptions.doubleTapToZoomInEnabled = doubleTapToZoomInGestureRecognizer.isEnabled
-            gestureOptions.doubleTapToZoomOutEnabled = doubleTapToZoomOutGestureRecognizer.isEnabled
+            gestureOptions.doubleTouchToZoomOutEnabled = doubleTouchToZoomOutGestureRecognizer.isEnabled
             gestureOptions.quickZoomEnabled = quickZoomGestureRecognizer.isEnabled
             gestureOptions.panMode = panGestureHandler.panMode
             gestureOptions.panDecelerationFactor = panGestureHandler.decelerationFactor
@@ -55,8 +55,8 @@ public final class GestureManager: GestureHandlerDelegate {
     }
 
     /// The gesture recognizer for the "double tap to zoom out" gesture
-    public var doubleTapToZoomOutGestureRecognizer: UIGestureRecognizer {
-        return doubleTapToZoomOutGestureHandler.gestureRecognizer
+    public var doubleTouchToZoomOutGestureRecognizer: UIGestureRecognizer {
+        return doubleTouchToZoomOutGestureHandler.gestureRecognizer
     }
 
     /// The gesture recognizer for the quickZoom gesture
@@ -71,27 +71,27 @@ public final class GestureManager: GestureHandlerDelegate {
     private let pinchGestureHandler: GestureHandler
     private let pitchGestureHandler: GestureHandler
     private let doubleTapToZoomInGestureHandler: GestureHandler
-    private let doubleTapToZoomOutGestureHandler: GestureHandler
+    private let doubleTouchToZoomOutGestureHandler: GestureHandler
     private let quickZoomGestureHandler: GestureHandler
 
     internal init(panGestureHandler: PanGestureHandlerProtocol,
                   pinchGestureHandler: GestureHandler,
                   pitchGestureHandler: GestureHandler,
                   doubleTapToZoomInGestureHandler: GestureHandler,
-                  doubleTapToZoomOutGestureHandler: GestureHandler,
+                  doubleTouchToZoomOutGestureHandler: GestureHandler,
                   quickZoomGestureHandler: GestureHandler) {
         self.panGestureHandler = panGestureHandler
         self.pinchGestureHandler = pinchGestureHandler
         self.pitchGestureHandler = pitchGestureHandler
         self.doubleTapToZoomInGestureHandler = doubleTapToZoomInGestureHandler
-        self.doubleTapToZoomOutGestureHandler = doubleTapToZoomOutGestureHandler
+        self.doubleTouchToZoomOutGestureHandler = doubleTouchToZoomOutGestureHandler
         self.quickZoomGestureHandler = quickZoomGestureHandler
 
         panGestureHandler.delegate = self
         pinchGestureHandler.delegate = self
         pitchGestureHandler.delegate = self
         doubleTapToZoomInGestureHandler.delegate = self
-        doubleTapToZoomOutGestureHandler.delegate = self
+        doubleTouchToZoomOutGestureHandler.delegate = self
         quickZoomGestureHandler.delegate = self
 
         pinchGestureHandler.gestureRecognizer.require(toFail: panGestureHandler.gestureRecognizer)

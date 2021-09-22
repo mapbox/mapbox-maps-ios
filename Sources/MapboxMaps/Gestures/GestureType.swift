@@ -11,8 +11,8 @@ public enum GestureType: Hashable, CaseIterable {
     /// The double tap to zoom in gesture
     case doubleTapToZoomIn
 
-    /// The double tap to zoom out gesture
-    case doubleTapToZoomOut
+    /// The double touch to zoom out gesture
+    case doubleTouchToZoomOut
 
     /// The quick zoom gesture
     case quickZoom

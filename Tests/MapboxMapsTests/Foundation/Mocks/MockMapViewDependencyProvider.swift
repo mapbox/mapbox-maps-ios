@@ -41,7 +41,7 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
             pinchGestureHandler: makeGestureHandler(),
             pitchGestureHandler: makeGestureHandler(),
             doubleTapToZoomInGestureHandler: makeGestureHandler(),
-            doubleTapToZoomOutGestureHandler: makeGestureHandler(),
+            doubleTouchToZoomOutGestureHandler: makeGestureHandler(),
             quickZoomGestureHandler: makeGestureHandler())
     }
 

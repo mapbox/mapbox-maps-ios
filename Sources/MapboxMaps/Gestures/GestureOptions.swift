@@ -31,9 +31,9 @@ public struct GestureOptions: Equatable {
     /// Defaults to `true`.
     public var doubleTapToZoomInEnabled: Bool = true
 
-    /// Whether double tapping the map with two touches results in a zoom-out animation.
+    /// Whether single tapping the map with two touches results in a zoom-out animation.
     /// Defaults to `true`.
-    public var doubleTapToZoomOutEnabled: Bool = true
+    public var doubleTouchToZoomOutEnabled: Bool = true
 
     /// Whether the quick zoom gesture is enabled. Defaults to `true`.
     public var quickZoomEnabled: Bool = true

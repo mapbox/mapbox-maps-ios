@@ -51,16 +51,23 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             cameraAnimationsManager: cameraAnimationsManager)
     }
 
-    func makeDoubleTapToZoomGestureHandler(numberOfTouchesRequired: Int,
-                                           zoomDelta: CGFloat,
-                                           view: UIView,
-                                           mapboxMap: MapboxMapProtocol,
-                                           cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
+    func makeDoubleTapToZoomInGestureHandler(view: UIView,
+                                             mapboxMap: MapboxMapProtocol,
+                                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
         let gestureRecognizer = UITapGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
-        return DoubleTapToZoomGestureHandler(
-            numberOfTouchesRequired: numberOfTouchesRequired,
-            zoomDelta: zoomDelta,
+        return DoubleTapToZoomInGestureHandler(
+            gestureRecognizer: gestureRecognizer,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
+    }
+
+    func makeDoubleTouchToZoomOutGestureHandler(view: UIView,
+                                                mapboxMap: MapboxMapProtocol,
+                                                cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
+        let gestureRecognizer = UITapGestureRecognizer()
+        view.addGestureRecognizer(gestureRecognizer)
+        return DoubleTouchToZoomOutGestureHandler(
             gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
@@ -93,15 +100,11 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                 view: view,
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: cameraAnimationsManager),
-            doubleTapToZoomInGestureHandler: makeDoubleTapToZoomGestureHandler(
-                numberOfTouchesRequired: 1,
-                zoomDelta: 1,
+            doubleTapToZoomInGestureHandler: makeDoubleTapToZoomInGestureHandler(
                 view: view,
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: cameraAnimationsManager),
-            doubleTapToZoomOutGestureHandler: makeDoubleTapToZoomGestureHandler(
-                numberOfTouchesRequired: 2,
-                zoomDelta: -1,
+            doubleTouchToZoomOutGestureHandler: makeDoubleTouchToZoomOutGestureHandler(
                 view: view,
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: cameraAnimationsManager),

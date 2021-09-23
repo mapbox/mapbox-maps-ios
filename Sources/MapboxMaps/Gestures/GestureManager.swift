@@ -6,7 +6,7 @@ public protocol GestureManagerDelegate: AnyObject {
     func gestureManager(_ gestureManager: GestureManager, didBegin gestureType: GestureType)
 
     /// Informs the delegate that a gesture has ended and whether there will be additional animations after the gesture
-    /// has completed. Does not indicate whether gesture-triggered animations have completed.
+    /// has completed. Does not indicate whether gesture-based animations have completed.
     func gestureManager(_ gestureManager: GestureManager, didEnd gestureType: GestureType, willAnimate: Bool)
 
     /// Informs the delegate that animations triggered due to a gesture have ended.

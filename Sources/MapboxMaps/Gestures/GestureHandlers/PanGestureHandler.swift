@@ -67,7 +67,6 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
                 initialTouchLocation: initialTouchLocation,
                 initialCameraState: initialCameraState)
         case .ended:
-            delegate?.gestureEnded(for: .pan, willAnimate: true)
             // Only decelerate if the gesture ended quickly. Otherwise,
             // you get a deceleration in situations where you drag, then
             // hold the touch in place for several seconds, then release
@@ -78,6 +77,7 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
                   let initialCameraState = initialCameraState,
                   let lastChangedDate = lastChangedDate,
                   dateProvider.now.timeIntervalSince(lastChangedDate) < decelerationTimeout else {
+                delegate?.gestureEnded(for: .pan, willAnimate: false)
                 return
             }
             cameraAnimationsManager.decelerate(
@@ -91,6 +91,7 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
                         withTouchLocation: touchLocation,
                         initialTouchLocation: initialTouchLocation,
                         initialCameraState: initialCameraState)
+                    self.delegate?.gestureEnded(for: .pan, willAnimate: true)
                 },
                 completion: {
                     self.delegate?.driftEnded(for: .pan)

@@ -22,7 +22,7 @@ public struct Model: Equatable, Codable {
 /// A model data source used to power a `ModelLayer`
 internal struct ModelSource: Source {
 
-    internal let type: SourceType
+    internal var type: SourceType
 
     /// Dictionary of model identifiers to models
     internal var models: [String: Model]?

@@ -9,7 +9,7 @@ import Foundation
  */
 public struct VectorSource: Source {
 
-    public let type: SourceType
+    public var type: SourceType
  
   
     /** 

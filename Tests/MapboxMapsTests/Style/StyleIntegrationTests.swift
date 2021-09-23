@@ -158,15 +158,15 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         expectation.expectedFulfillmentCount = expectedLayerCount
 
         didFinishLoadingStyle = { _ in
-            let layers = style.allLayerIdentifiers
-            XCTAssertEqual(layers.count, expectedLayerCount)
+            let layerIds = style.allLayerIdentifiers
+            XCTAssertEqual(layerIds.count, expectedLayerCount)
 
-            for layer in layers {
+            for layerId in layerIds {
                 do {
-                    _ = try style.layer(withId: layer.id, type: layer.type.layerType)
+                    _ = try style.layer(withId: layerId.id)
                     expectation.fulfill()
                 } catch {
-                    XCTFail("Failed to get line layer with id \(layer.id), error \(error)")
+                    XCTFail("Failed to get line layer with id \(layerId.id), error \(error)")
                 }
             }
         }

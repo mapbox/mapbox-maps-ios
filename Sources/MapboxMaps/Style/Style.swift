@@ -78,6 +78,29 @@ public class Style {
         return try type.init(jsonObject: properties)
     }
 
+    /**
+     Gets a `layer` from the map.
+
+     This function is useful if you do not know the concrete type of the layer
+     you are fetching, or don't need to know for your situation.
+
+     - Parameter layerID: The id of the layer to be fetched
+
+     - Returns: The fully formed `layer` object.
+     - Throws: Type conversion errors
+     */
+    public func layer(withId id: String) throws -> Layer {
+        // Get the layer properties from the map
+        let properties = try layerProperties(for: id)
+
+        guard let typeString = properties["type"] as? String,
+              let type = LayerType(rawValue: typeString) else {
+            throw TypeConversionError.invalidObject
+        }
+
+        return try type.layerType.init(jsonObject: properties)
+    }
+
     /// Updates a layer that exists in the style already
     ///
     /// - Parameters:
@@ -132,13 +155,34 @@ public class Style {
      Retrieves a source from the map
      - Parameter id: The id of the source to retrieve
      - Parameter type: The type of the source
+
      - Returns: The fully formed `source` object of type equal to `type`.
      - Throws: StyleError or type conversion errors
      */
     public func source<T>(withId id: String, type: T.Type) throws -> T where T: Source {
         let sourceProps = try sourceProperties(for: id)
-        let source = try type.init(jsonObject: sourceProps)
-        return source
+        return try type.init(jsonObject: sourceProps)
+    }
+
+    /**
+     Retrieves a source from the map
+
+     This function is useful if you do not know the concrete type of the source
+     you are fetching, or don't need to know for your situation.
+
+     - Parameter id: The id of the source to retrieve.
+     - Returns: The fully formed `source` object.
+     - Throws: Type conversion errors.
+     */
+    public func source(withId id: String) throws  -> Source {
+        // Get the source properties for a given identifier
+        let sourceProps = try sourceProperties(for: id)
+
+        guard let typeString = sourceProps["type"] as? String,
+              let type = SourceType(rawValue: typeString) else {
+            throw TypeConversionError.invalidObject
+        }
+        return try type.sourceType.init(jsonObject: sourceProps)
     }
 
     /// Updates the `data` property of a given `GeoJSONSource` with a new value

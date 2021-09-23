@@ -166,8 +166,8 @@ final class PanGestureHandlerTests: XCTestCase {
         XCTAssertEqual(delegate.gestureEndedStub.invocations.count, 1)
         let gestureType = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.gestureType)
         XCTAssertEqual(gestureType, .pan)
-        let willDecelerate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willDecelerate)
-        XCTAssertTrue(willDecelerate)
+        let willAnimate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willAnimate)
+        XCTAssertTrue(willAnimate)
 
         XCTAssertEqual(cameraAnimationsManager.decelerateStub.invocations.count, 1, line: line)
         let decelerateParams = cameraAnimationsManager.decelerateStub.parameters.first
@@ -235,8 +235,8 @@ final class PanGestureHandlerTests: XCTestCase {
         XCTAssertEqual(delegate.gestureEndedStub.invocations.count, 1)
         let gestureType = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.gestureType)
         XCTAssertEqual(gestureType, GestureType.pan)
-        let willDecelerate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willDecelerate)
-        XCTAssertFalse(willDecelerate)
+        let willAnimate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willAnimate)
+        XCTAssertFalse(willAnimate)
     }
 
     func testSecondPanGesturePerformsCorrectlyWhenInterruptingDecelerationFromFirstPanGesture() throws {

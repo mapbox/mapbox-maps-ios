@@ -52,8 +52,8 @@ final class DoubleTouchToZoomOutGestureHandlerTests: XCTestCase {
         XCTAssertNotNil(cameraAnimationsManager.easeToStub.parameters.first?.completion)
         XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.gestureType, .doubleTouchToZoomOut)
         do {
-            let willDecelerate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willDecelerate)
-            XCTAssertTrue(willDecelerate)
+            let willAnimate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willAnimate)
+            XCTAssertTrue(willAnimate)
         } catch {
             XCTFail(error.localizedDescription)
         }

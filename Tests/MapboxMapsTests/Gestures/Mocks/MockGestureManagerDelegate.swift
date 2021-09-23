@@ -21,13 +21,13 @@ final class MockGestureManagerDelegate: GestureManagerDelegate {
     struct GestureEndedParams {
         var gestureManager: GestureManager
         var gestureType: GestureType
-        var willDecelerate: Bool
+        var willAnimate: Bool
     }
     let gestureEndedStub = Stub<GestureEndedParams, Void>()
-    func gestureManager(_ gestureManager: GestureManager, didEnd gestureType: GestureType, willDecelerate: Bool) {
+    func gestureManager(_ gestureManager: GestureManager, didEnd gestureType: GestureType, willAnimate: Bool) {
         let parameters = GestureEndedParams(gestureManager: gestureManager,
                                             gestureType: gestureType,
-                                            willDecelerate: willDecelerate)
+                                            willAnimate: willAnimate)
         gestureEndedStub.call(with: parameters)
     }
 }

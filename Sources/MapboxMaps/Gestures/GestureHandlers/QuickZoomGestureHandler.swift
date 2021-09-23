@@ -42,7 +42,7 @@ internal final class QuickZoomGestureHandler: GestureHandler {
         case .ended, .cancelled:
             initialLocation = nil
             initialZoom = nil
-            delegate?.gestureEnded(for: .quickZoom, willDecelerate: false)
+            delegate?.gestureEnded(for: .quickZoom, willAnimate: false)
         default:
             break
         }

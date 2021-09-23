@@ -21,7 +21,7 @@ internal final class DoubleTouchToZoomOutGestureHandler: GestureHandler {
         case .recognized:
             cameraAnimationsManager.cancelAnimations()
             delegate?.gestureBegan(for: .doubleTouchToZoomOut)
-            delegate?.gestureEnded(for: .doubleTouchToZoomOut, willDecelerate: true)
+            delegate?.gestureEnded(for: .doubleTouchToZoomOut, willAnimate: true)
             cameraAnimationsManager.ease(
                 to: CameraOptions(zoom: mapboxMap.cameraState.zoom - 1),
                 duration: 0.3,

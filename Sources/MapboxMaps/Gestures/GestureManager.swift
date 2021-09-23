@@ -7,7 +7,7 @@ public protocol GestureManagerDelegate: AnyObject {
 
     /// Informs the delegate that a gesture has ended and whether there will be additional animations after the gesture
     /// has completed. Does not indicate whether gesture-triggered animations have completed.
-    func gestureManager(_ gestureManager: GestureManager, didEnd gestureType: GestureType, willDecelerate: Bool)
+    func gestureManager(_ gestureManager: GestureManager, didEnd gestureType: GestureType, willAnimate: Bool)
 
     /// Informs the delegate that animations triggered due to a gesture have ended.
     func gestureManager(_ gestureManager: GestureManager, didEndDeceleratingFor gestureType: GestureType)
@@ -113,8 +113,8 @@ public final class GestureManager: GestureHandlerDelegate {
         delegate?.gestureManager(self, didBegin: gestureType)
     }
 
-    func gestureEnded(for gestureType: GestureType, willDecelerate: Bool) {
-        delegate?.gestureManager(self, didEnd: gestureType, willDecelerate: willDecelerate)
+    func gestureEnded(for gestureType: GestureType, willAnimate: Bool) {
+        delegate?.gestureManager(self, didEnd: gestureType, willAnimate: willAnimate)
     }
 
     func driftEnded(for gestureType: GestureType) {

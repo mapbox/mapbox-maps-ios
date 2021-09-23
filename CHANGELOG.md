@@ -42,7 +42,7 @@ Mapbox welcomes participation and contributions from everyone.
 * `GestureType.rotate` has been removed. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
 * `GestureType` cases have been reordered for consistency with `GestureOptions` and `GestureManager`. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
 * `GestureManagerDelegate.gestureBegan(for:)` has been renamed to `GestureManagerDelegate.gestureManager(_:didBegin:)`. ([#697](https://github.com/mapbox/mapbox-maps-ios/pull/697))
-* Added the public delegate methods ``GestureManagerDelegate.gestureManager(_:didEnd:willDecelerate:)` and `GestureManagerDelegate.gestureManager(_:didEndDeceleratingFor:)`. ([#697](https://github.com/mapbox/mapbox-maps-ios/pull/697))
+* Added the public delegate methods ``GestureManagerDelegate.gestureManager(_:didEnd:willAnimate:)` and `GestureManagerDelegate.gestureManager(_:didEndDeceleratingFor:)`. ([#697](https://github.com/mapbox/mapbox-maps-ios/pull/697))
 
 
 ### Features ✨ and improvements 🏁

@@ -67,7 +67,7 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
                 initialTouchLocation: initialTouchLocation,
                 initialCameraState: initialCameraState)
         case .ended:
-            delegate?.gestureEnded(for: .pan, willDecelerate: true)
+            delegate?.gestureEnded(for: .pan, willAnimate: true)
             // Only decelerate if the gesture ended quickly. Otherwise,
             // you get a deceleration in situations where you drag, then
             // hold the touch in place for several seconds, then release
@@ -103,7 +103,7 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
             initialTouchLocation = nil
             initialCameraState = nil
             lastChangedDate = nil
-            delegate?.gestureEnded(for: .pan, willDecelerate: false)
+            delegate?.gestureEnded(for: .pan, willAnimate: false)
         default:
             break
         }

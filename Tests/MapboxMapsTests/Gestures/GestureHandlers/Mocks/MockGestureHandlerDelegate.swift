@@ -8,11 +8,11 @@ final class MockGestureHandlerDelegate: GestureHandlerDelegate {
 
     struct GestureEndedParams {
         var gestureType: GestureType
-        var willDecelerate: Bool
+        var willAnimate: Bool
     }
     let gestureEndedStub = Stub<GestureEndedParams, Void>()
-    func gestureEnded(for gestureType: GestureType, willDecelerate: Bool) {
-        gestureEndedStub.call(with: GestureEndedParams(gestureType: gestureType, willDecelerate: willDecelerate))
+    func gestureEnded(for gestureType: GestureType, willAnimate: Bool) {
+        gestureEndedStub.call(with: GestureEndedParams(gestureType: gestureType, willAnimate: willAnimate))
     }
 
     let driftEndedStub = Stub<GestureType, Void>()

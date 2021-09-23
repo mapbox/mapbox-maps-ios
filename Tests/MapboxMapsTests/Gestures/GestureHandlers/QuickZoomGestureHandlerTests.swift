@@ -79,8 +79,8 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
         XCTAssertEqual(delegate.gestureEndedStub.invocations.count, 1)
         XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.gestureType, .quickZoom)
 
-        let willDecelerate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willDecelerate)
-        XCTAssertFalse(willDecelerate)
+        let willAnimate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willAnimate)
+        XCTAssertFalse(willAnimate)
     }
 
 }

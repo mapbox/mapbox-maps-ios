@@ -147,13 +147,13 @@ final class GestureManagerTests: XCTestCase {
     func testGestureEnded() throws {
         let gestureType = GestureType.allCases.randomElement()!
 
-        gestureManager.gestureEnded(for: gestureType, willDecelerate: true)
+        gestureManager.gestureEnded(for: gestureType, willAnimate: true)
 
         XCTAssertEqual(delegate.gestureEndedStub.invocations.count, 1, "GestureEnded should have been invoked once. It was called \(delegate.gestureEndedStub.invocations.count) times.")
         XCTAssertTrue(delegate.gestureEndedStub.parameters.first?.gestureManager === gestureManager)
         XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.gestureType, gestureType)
-        let willDecelerate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willDecelerate)
-        XCTAssertTrue(willDecelerate)
+        let willAnimate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willAnimate)
+        XCTAssertTrue(willAnimate)
     }
 
     func testDriftEnded() {

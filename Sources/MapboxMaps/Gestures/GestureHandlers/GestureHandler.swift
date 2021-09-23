@@ -3,7 +3,7 @@ import UIKit
 internal protocol GestureHandlerDelegate: AnyObject {
     func gestureBegan(for gestureType: GestureType)
 
-    func gestureEnded(for gestureType: GestureType, willDecelerate: Bool)
+    func gestureEnded(for gestureType: GestureType, willAnimate: Bool)
 
     func driftEnded(for gestureType: GestureType)
 }

@@ -51,11 +51,7 @@ final class DoubleTapToZoomInGestureHandlerTests: XCTestCase {
         XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.curve, .easeOut)
         XCTAssertNotNil(cameraAnimationsManager.easeToStub.parameters.first?.completion)
         XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.gestureType, .doubleTapToZoomIn)
-        do {
             let willAnimate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willAnimate)
             XCTAssertTrue(willAnimate)
-        } catch {
-            XCTFail(error.localizedDescription)
-        }
     }
 }

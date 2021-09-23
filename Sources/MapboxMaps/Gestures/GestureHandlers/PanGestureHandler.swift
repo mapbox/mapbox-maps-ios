@@ -91,7 +91,6 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
                         withTouchLocation: touchLocation,
                         initialTouchLocation: initialTouchLocation,
                         initialCameraState: initialCameraState)
-                    self.delegate?.gestureEnded(for: .pan, willAnimate: true)
                 },
                 completion: {
                     self.delegate?.driftEnded(for: .pan)
@@ -99,6 +98,7 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
             self.initialTouchLocation = nil
             self.initialCameraState = nil
             self.lastChangedDate = nil
+            delegate?.gestureEnded(for: .pan, willAnimate: true)
         case .cancelled:
             // no deceleration
             initialTouchLocation = nil

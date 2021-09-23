@@ -78,7 +78,7 @@ internal class Puck3D: Puck {
 
             // TODO: On first setup "puck-model does not have a uri"
             try? style.addSource(self.modelSource, id: "puck-model-source")
-            try! style.addPersistentLayer(self.modelLayer)
+            try! style.addPersistentLayer(self.modelLayer, layerPosition: nil)
         }
 
         // Do initial setup

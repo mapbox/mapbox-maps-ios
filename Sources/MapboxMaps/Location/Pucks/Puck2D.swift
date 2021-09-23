@@ -212,7 +212,7 @@ internal extension Puck2D {
         }
 
         // Add layer to style
-        try style.addPersistentLayer(layer)
+        try style.addPersistentLayer(layer, layerPosition: nil)
 
         locationIndicatorLayer = layer
     }
@@ -252,7 +252,7 @@ internal extension Puck2D {
         layer.accuracyRadiusBorderColor = .constant(StyleColor(.lightGray))
 
         // Add layer to style
-        try style.addPersistentLayer(layer)
+        try style.addPersistentLayer(layer, layerPosition: nil)
 
         locationIndicatorLayer = layer
     }

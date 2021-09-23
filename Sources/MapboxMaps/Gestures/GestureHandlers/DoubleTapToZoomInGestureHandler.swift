@@ -26,7 +26,7 @@ internal final class DoubleTapToZoomInGestureHandler: GestureHandler {
                 to: CameraOptions(zoom: mapboxMap.cameraState.zoom + 1),
                 duration: 0.3,
                 curve: .easeOut) { _ in
-                    self.delegate?.driftEnded(for: .doubleTapToZoomIn)
+                    self.delegate?.animationEnded(for: .doubleTapToZoomIn)
                 }
         default:
             break

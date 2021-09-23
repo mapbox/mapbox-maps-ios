@@ -5,7 +5,7 @@ internal protocol GestureHandlerDelegate: AnyObject {
 
     func gestureEnded(for gestureType: GestureType, willAnimate: Bool)
 
-    func driftEnded(for gestureType: GestureType)
+    func animationEnded(for gestureType: GestureType)
 }
 
 internal class GestureHandler: NSObject {

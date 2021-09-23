@@ -10,7 +10,7 @@ public protocol GestureManagerDelegate: AnyObject {
     func gestureManager(_ gestureManager: GestureManager, didEnd gestureType: GestureType, willAnimate: Bool)
 
     /// Informs the delegate that animations triggered due to a gesture have ended.
-    func gestureManager(_ gestureManager: GestureManager, didEndDeceleratingFor gestureType: GestureType)
+    func gestureManager(_ gestureManager: GestureManager, didEndAnimatingFor gestureType: GestureType)
 }
 
 public final class GestureManager: GestureHandlerDelegate {
@@ -117,7 +117,7 @@ public final class GestureManager: GestureHandlerDelegate {
         delegate?.gestureManager(self, didEnd: gestureType, willAnimate: willAnimate)
     }
 
-    func driftEnded(for gestureType: GestureType) {
-        delegate?.gestureManager(self, didEndDeceleratingFor: gestureType)
+    func animationEnded(for gestureType: GestureType) {
+        delegate?.gestureManager(self, didEndAnimatingFor: gestureType)
     }
 }

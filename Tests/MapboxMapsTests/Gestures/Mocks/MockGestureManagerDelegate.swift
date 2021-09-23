@@ -12,10 +12,10 @@ final class MockGestureManagerDelegate: GestureManagerDelegate {
         gestureBeganStub.call(with: parameters)
     }
 
-    let driftEndedStub = Stub<GestureParams, Void>()
-    func gestureManager(_ gestureManager: GestureManager, didEndDeceleratingFor gestureType: GestureType) {
+    let animationEndedStub = Stub<GestureParams, Void>()
+    func gestureManager(_ gestureManager: GestureManager, didEndAnimatingFor gestureType: GestureType) {
         let parameters = GestureParams(gestureManager: gestureManager, gestureType: gestureType)
-        driftEndedStub.call(with: parameters)
+        animationEndedStub.call(with: parameters)
     }
 
     struct GestureEndedParams {

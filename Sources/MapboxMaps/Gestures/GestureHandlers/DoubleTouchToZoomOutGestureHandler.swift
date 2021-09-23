@@ -26,7 +26,7 @@ internal final class DoubleTouchToZoomOutGestureHandler: GestureHandler {
                 to: CameraOptions(zoom: mapboxMap.cameraState.zoom - 1),
                 duration: 0.3,
                 curve: .easeOut) { _ in
-                    self.delegate?.driftEnded(for: .doubleTouchToZoomOut)
+                    self.delegate?.animationEnded(for: .doubleTouchToZoomOut)
                 }
         default:
             break

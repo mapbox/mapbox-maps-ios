@@ -15,8 +15,8 @@ final class MockGestureHandlerDelegate: GestureHandlerDelegate {
         gestureEndedStub.call(with: GestureEndedParams(gestureType: gestureType, willAnimate: willAnimate))
     }
 
-    let driftEndedStub = Stub<GestureType, Void>()
-    func driftEnded(for gestureType: GestureType) {
-        driftEndedStub.call(with: gestureType)
+    let animationEndedStub = Stub<GestureType, Void>()
+    func animationEnded(for gestureType: GestureType) {
+        animationEndedStub.call(with: gestureType)
     }
 }

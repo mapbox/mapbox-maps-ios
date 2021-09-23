@@ -93,7 +93,7 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
                         initialCameraState: initialCameraState)
                 },
                 completion: {
-                    self.delegate?.driftEnded(for: .pan)
+                    self.delegate?.animationEnded(for: .pan)
                 })
             self.initialTouchLocation = nil
             self.initialCameraState = nil

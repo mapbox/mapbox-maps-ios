@@ -471,7 +471,12 @@ extension Style: StyleManagerProtocol {
 
     // MARK: - Style images
 
-    public func addImage(_ image: UIImage, id: String, sdf: Bool = false, stretchX: [ImageStretches] = [], stretchY: [ImageStretches] = [], content: ImageContent? = nil) throws {
+    public func addImage(_ image: UIImage,
+                         id: String,
+                         sdf: Bool = false,
+                         stretchX: [ImageStretches],
+                         stretchY: [ImageStretches],
+                         content: ImageContent? = nil) throws {
         guard let mbmImage = Image(uiImage: image) else {
             throw TypeConversionError.unexpectedType
         }

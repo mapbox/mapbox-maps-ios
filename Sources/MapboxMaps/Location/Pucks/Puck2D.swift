@@ -166,11 +166,26 @@ internal extension Puck2D {
             return
         }
 
-        try style.addImage(topImage, id: "locationIndicatorLayerTopImage")
-        try style.addImage(bearingImage, id: "locationIndicatorLayerBearingImage")
+        try style.addImage(topImage,
+                           id: "locationIndicatorLayerTopImage",
+                           sdf: false,
+                           stretchX: [],
+                           stretchY: [],
+                           content: nil)
+        try style.addImage(bearingImage,
+                           id: "locationIndicatorLayerBearingImage",
+                           sdf: false,
+                           stretchX: [],
+                           stretchY: [],
+                           content: nil)
 
         if let validShadowImage = configuration.shadowImage {
-            try style.addImage(validShadowImage, id: "locationIndicatorLayerShadowImage")
+            try style.addImage(validShadowImage,
+                               id: "locationIndicatorLayerShadowImage",
+                               sdf: false,
+                               stretchX: [],
+                               stretchY: [],
+                               content: nil)
         }
 
         // Create Layer
@@ -197,7 +212,7 @@ internal extension Puck2D {
         }
 
         // Add layer to style
-        try style.addPersistentLayer(layer)
+        try style.addPersistentLayer(layer, layerPosition: nil)
 
         locationIndicatorLayer = layer
     }
@@ -237,7 +252,7 @@ internal extension Puck2D {
         layer.accuracyRadiusBorderColor = .constant(StyleColor(.lightGray))
 
         // Add layer to style
-        try style.addPersistentLayer(layer)
+        try style.addPersistentLayer(layer, layerPosition: nil)
 
         locationIndicatorLayer = layer
     }

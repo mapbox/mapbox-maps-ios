@@ -9,7 +9,7 @@ import Foundation
  */
 public struct GeoJSONSource: Source {
 
-    public var type: SourceType
+    public let type: SourceType
  
   
     /** 

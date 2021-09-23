@@ -9,7 +9,7 @@ import Foundation
  */
 public struct RasterDemSource: Source {
 
-    public var type: SourceType
+    public let type: SourceType
  
   
     /** 

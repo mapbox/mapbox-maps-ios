@@ -51,7 +51,7 @@ public enum SourceType: String, Codable {
 
 public protocol Source: Codable, StyleEncodable, StyleDecodable {
     /// Rendering type of this source.
-    var type: SourceType { get set }
+    var type: SourceType { get }
 }
 
 public extension Source {

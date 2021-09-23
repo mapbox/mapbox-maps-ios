@@ -151,7 +151,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: FillLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: FillLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: FillLayer.self))
         XCTAssertEqual(layer.fillSortKey, .expression(Exp(.number) {
                 Exp(.get) {
                     "fill-sort-key"
@@ -194,7 +194,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: FillLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: FillLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: FillLayer.self))
         XCTAssertEqual(layer.fillColor, .expression(Exp(.toColor) {
                 Exp(.get) {
                     "fill-color"
@@ -237,7 +237,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: FillLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: FillLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: FillLayer.self))
         XCTAssertEqual(layer.fillOpacity, .expression(Exp(.number) {
                 Exp(.get) {
                     "fill-opacity"
@@ -280,7 +280,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: FillLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: FillLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: FillLayer.self))
         XCTAssertEqual(layer.fillOutlineColor, .expression(Exp(.toColor) {
                 Exp(.get) {
                     "fill-outline-color"
@@ -323,7 +323,7 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: FillLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: FillLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: FillLayer.self))
         XCTAssertEqual(layer.fillPattern, .expression(Exp(.image) {
                 Exp(.get) {
                     "fill-pattern"

@@ -112,11 +112,10 @@ public class Style {
     public func updateLayer<T>(withId id: String,
                                type: T.Type,
                                update: (inout T) throws -> Void) throws where T: Layer {
-        var layer: T = try self.layer(withId: id, type: T.self)
+        var layer = try self.layer(withId: id, type: T.self)
 
         // Call closure to update the retrieved layer
         try update(&layer)
-
         let value = try layer.jsonObject()
 
         // Apply the changes to the layer properties to the style

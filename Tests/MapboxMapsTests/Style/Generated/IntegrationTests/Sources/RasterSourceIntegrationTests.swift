@@ -40,7 +40,7 @@ final class RasterSourceIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the source
             do {
-                _ = try style.source(withId: "test-source", type: RasterSource.self) as RasterSource
+                _ = try style.source(withId: "test-source", type: RasterSource.self)
                 successfullyRetrievedSourceExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve RasterSource because of error: \(error)")

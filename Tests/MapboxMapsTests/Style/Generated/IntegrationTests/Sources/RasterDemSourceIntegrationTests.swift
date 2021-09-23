@@ -40,7 +40,7 @@ final class RasterDemSourceIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the source
             do {
-                _ = try style.source(withId: "test-source", type: RasterDemSource.self) as RasterDemSource
+                _ = try style.source(withId: "test-source", type: RasterDemSource.self)
                 successfullyRetrievedSourceExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve RasterDemSource because of error: \(error)")

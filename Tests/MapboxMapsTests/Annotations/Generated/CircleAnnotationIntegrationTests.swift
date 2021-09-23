@@ -159,7 +159,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: CircleLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: CircleLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: CircleLayer.self))
         XCTAssertEqual(layer.circleSortKey, .expression(Exp(.number) {
                 Exp(.get) {
                     "circle-sort-key"
@@ -195,7 +195,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: CircleLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: CircleLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: CircleLayer.self))
         XCTAssertEqual(layer.circleBlur, .expression(Exp(.number) {
                 Exp(.get) {
                     "circle-blur"
@@ -231,7 +231,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: CircleLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: CircleLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: CircleLayer.self))
         XCTAssertEqual(layer.circleColor, .expression(Exp(.toColor) {
                 Exp(.get) {
                     "circle-color"
@@ -267,7 +267,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: CircleLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: CircleLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: CircleLayer.self))
         XCTAssertEqual(layer.circleOpacity, .expression(Exp(.number) {
                 Exp(.get) {
                     "circle-opacity"
@@ -303,7 +303,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: CircleLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: CircleLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: CircleLayer.self))
         XCTAssertEqual(layer.circleRadius, .expression(Exp(.number) {
                 Exp(.get) {
                     "circle-radius"
@@ -339,7 +339,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: CircleLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: CircleLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: CircleLayer.self))
         XCTAssertEqual(layer.circleStrokeColor, .expression(Exp(.toColor) {
                 Exp(.get) {
                     "circle-stroke-color"
@@ -375,7 +375,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: CircleLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: CircleLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: CircleLayer.self))
         XCTAssertEqual(layer.circleStrokeOpacity, .expression(Exp(.number) {
                 Exp(.get) {
                     "circle-stroke-opacity"
@@ -411,7 +411,7 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: CircleLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: CircleLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: CircleLayer.self))
         XCTAssertEqual(layer.circleStrokeWidth, .expression(Exp(.number) {
                 Exp(.get) {
                     "circle-stroke-width"

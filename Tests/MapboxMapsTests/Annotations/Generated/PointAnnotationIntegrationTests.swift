@@ -709,7 +709,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconAnchor, .expression(Exp(.toString) {
                 Exp(.get) {
                     "icon-anchor"
@@ -745,7 +745,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconImage, .expression(Exp(.image) {
                 Exp(.get) {
                     "icon-image"
@@ -781,7 +781,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconOffset, .expression(Exp(.array) {
                 "number"
                 2
@@ -819,7 +819,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconRotate, .expression(Exp(.number) {
                 Exp(.get) {
                     "icon-rotate"
@@ -855,7 +855,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconSize, .expression(Exp(.number) {
                 Exp(.get) {
                     "icon-size"
@@ -891,7 +891,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.symbolSortKey, .expression(Exp(.number) {
                 Exp(.get) {
                     "symbol-sort-key"
@@ -927,7 +927,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textAnchor, .expression(Exp(.toString) {
                 Exp(.get) {
                     "text-anchor"
@@ -963,7 +963,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textField, .expression(Exp(.format) {
                 Exp(.get) {
                     "text-field"
@@ -1003,7 +1003,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textJustify, .expression(Exp(.toString) {
                 Exp(.get) {
                     "text-justify"
@@ -1039,7 +1039,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textLetterSpacing, .expression(Exp(.number) {
                 Exp(.get) {
                     "text-letter-spacing"
@@ -1075,7 +1075,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textMaxWidth, .expression(Exp(.number) {
                 Exp(.get) {
                     "text-max-width"
@@ -1111,7 +1111,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textOffset, .expression(Exp(.array) {
                 "number"
                 2
@@ -1149,7 +1149,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textRadialOffset, .expression(Exp(.number) {
                 Exp(.get) {
                     "text-radial-offset"
@@ -1185,7 +1185,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textRotate, .expression(Exp(.number) {
                 Exp(.get) {
                     "text-rotate"
@@ -1221,7 +1221,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textSize, .expression(Exp(.number) {
                 Exp(.get) {
                     "text-size"
@@ -1257,7 +1257,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textTransform, .expression(Exp(.toString) {
                 Exp(.get) {
                     "text-transform"
@@ -1293,7 +1293,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconColor, .expression(Exp(.toColor) {
                 Exp(.get) {
                     "icon-color"
@@ -1329,7 +1329,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconHaloBlur, .expression(Exp(.number) {
                 Exp(.get) {
                     "icon-halo-blur"
@@ -1365,7 +1365,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconHaloColor, .expression(Exp(.toColor) {
                 Exp(.get) {
                     "icon-halo-color"
@@ -1401,7 +1401,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconHaloWidth, .expression(Exp(.number) {
                 Exp(.get) {
                     "icon-halo-width"
@@ -1437,7 +1437,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconOpacity, .expression(Exp(.number) {
                 Exp(.get) {
                     "icon-opacity"
@@ -1473,7 +1473,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textColor, .expression(Exp(.toColor) {
                 Exp(.get) {
                     "text-color"
@@ -1509,7 +1509,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textHaloBlur, .expression(Exp(.number) {
                 Exp(.get) {
                     "text-halo-blur"
@@ -1545,7 +1545,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textHaloColor, .expression(Exp(.toColor) {
                 Exp(.get) {
                     "text-halo-color"
@@ -1581,7 +1581,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textHaloWidth, .expression(Exp(.number) {
                 Exp(.get) {
                     "text-halo-width"
@@ -1617,7 +1617,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textOpacity, .expression(Exp(.number) {
                 Exp(.get) {
                     "text-opacity"

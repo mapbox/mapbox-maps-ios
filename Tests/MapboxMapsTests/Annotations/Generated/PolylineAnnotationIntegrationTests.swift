@@ -205,7 +205,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: LineLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: LineLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: LineLayer.self))
         XCTAssertEqual(layer.lineJoin, .expression(Exp(.toString) {
                 Exp(.get) {
                     "line-join"
@@ -242,7 +242,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: LineLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: LineLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: LineLayer.self))
         XCTAssertEqual(layer.lineSortKey, .expression(Exp(.number) {
                 Exp(.get) {
                     "line-sort-key"
@@ -279,7 +279,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: LineLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: LineLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: LineLayer.self))
         XCTAssertEqual(layer.lineBlur, .expression(Exp(.number) {
                 Exp(.get) {
                     "line-blur"
@@ -316,7 +316,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: LineLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: LineLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: LineLayer.self))
         XCTAssertEqual(layer.lineColor, .expression(Exp(.toColor) {
                 Exp(.get) {
                     "line-color"
@@ -353,7 +353,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: LineLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: LineLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: LineLayer.self))
         XCTAssertEqual(layer.lineGapWidth, .expression(Exp(.number) {
                 Exp(.get) {
                     "line-gap-width"
@@ -390,7 +390,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: LineLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: LineLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: LineLayer.self))
         XCTAssertEqual(layer.lineOffset, .expression(Exp(.number) {
                 Exp(.get) {
                     "line-offset"
@@ -427,7 +427,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: LineLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: LineLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: LineLayer.self))
         XCTAssertEqual(layer.lineOpacity, .expression(Exp(.number) {
                 Exp(.get) {
                     "line-opacity"
@@ -464,7 +464,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: LineLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: LineLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: LineLayer.self))
         XCTAssertEqual(layer.linePattern, .expression(Exp(.image) {
                 Exp(.get) {
                     "line-pattern"
@@ -501,7 +501,7 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: LineLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: LineLayer.self))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: LineLayer.self))
         XCTAssertEqual(layer.lineWidth, .expression(Exp(.number) {
                 Exp(.get) {
                     "line-width"

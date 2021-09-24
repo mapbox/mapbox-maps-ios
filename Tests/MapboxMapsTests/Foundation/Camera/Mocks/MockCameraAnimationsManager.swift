@@ -3,7 +3,7 @@ import Foundation
 
 final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
 
-    var delegate: MockGestureHandlerDelegate?
+    weak var delegate: MockGestureHandlerDelegate?
     var gestureType: GestureType?
 
     struct EaseToCameraParameters {

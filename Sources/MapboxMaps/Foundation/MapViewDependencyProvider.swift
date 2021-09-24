@@ -61,6 +61,17 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
     }
+    
+    func makeSingleTapGestureHandler(view: UIView,
+                                     mapboxMap: MapboxMapProtocol,
+                                     cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
+        let gestureRecognizer = UITapGestureRecognizer()
+        view.addGestureRecognizer(gestureRecognizer)
+        return SingleTapGestureHandler(
+            gestureRecognizer: gestureRecognizer,
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager)
+    }
 
     func makeDoubleTouchToZoomOutGestureHandler(view: UIView,
                                                 mapboxMap: MapboxMapProtocol,
@@ -109,6 +120,10 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: cameraAnimationsManager),
             quickZoomGestureHandler: makeQuickZoomGestureHandler(
+                view: view,
+                mapboxMap: mapboxMap,
+                cameraAnimationsManager: cameraAnimationsManager),
+            singleTapGestureHandler: makeSingleTapGestureHandler(
                 view: view,
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: cameraAnimationsManager))

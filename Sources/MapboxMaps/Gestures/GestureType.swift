@@ -16,4 +16,7 @@ public enum GestureType: Hashable, CaseIterable {
 
     /// The quick zoom gesture
     case quickZoom
+    
+    /// The single tap gesture
+    case singleTap
 }

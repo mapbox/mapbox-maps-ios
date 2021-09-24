@@ -1,6 +1,5 @@
 import Foundation
 
-// swiftlint:disable function_parameter_count
 internal protocol StyleManagerProtocol {
 
     var isLoaded: Bool { get }
@@ -67,6 +66,7 @@ internal protocol StyleManagerProtocol {
 
     // MARK: Style images
 
+    // swiftlint:disable:next function_parameter_count
     func addImage(_ image: UIImage,
                   id: String,
                   sdf: Bool,

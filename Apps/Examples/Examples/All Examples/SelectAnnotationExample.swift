@@ -88,7 +88,7 @@ final class SelectAnnotationExample: UIViewController, ExampleProtocol {
 // Change the label's text and style when it is selected or deselected.
 extension SelectAnnotationExample: AnnotationInteractionDelegate {
     func annotationManager(_ manager: AnnotationManager,
-                                  didDetectTappedAnnotations annotations: [Annotation]) {
+                           didDetectTappedAnnotations annotations: [Annotation]) {
         if annotationSelected || !annotations.isEmpty {
             annotationSelected.toggle()
         }

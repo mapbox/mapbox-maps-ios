@@ -242,7 +242,7 @@ public class CircleAnnotationManager: AnnotationManager {
 
                 // If `tappedAnnotations` is not empty, call delegate
                 if !tappedAnnotations.isEmpty {
-                    delegate.annotationManager(
+                    self.delegate?.annotationManager(
                         self,
                         didDetectTappedAnnotations: tappedAnnotations)
                 }

@@ -44,7 +44,6 @@ public class Style {
     }
 
     /**
-     :nodoc:
      Moves a `layer` to a new layer position in the style.
      - Parameter layerId: The layer to move
      - Parameter position: The new position to move the layer to
@@ -53,7 +52,7 @@ public class Style {
      - Note: This method is marked as experimental. Annotate the import statement
      for `MapboxMaps` with `@_spi(Experimental)` in order to use experimental methods.
      */
-    @_spi(Experimental) public func moveLayer(withId id: String, to position: LayerPosition) throws {
+    public func moveLayer(withId id: String, to position: LayerPosition) throws {
         let properties = try layerProperties(for: id)
         let isPersistent = try isPersistentLayer(id: id)
         try removeLayer(withId: id)
@@ -379,7 +378,7 @@ extension Style: StyleManagerProtocol {
 
     // MARK: - Layer Properties
 
-    @_spi(Experimental) public func layerProperty(for layerId: String, property: String) -> StylePropertyValue {
+    public func layerProperty(for layerId: String, property: String) -> StylePropertyValue {
         return styleManager.getStyleLayerProperty(forLayerId: layerId, property: property)
     }
 
@@ -389,7 +388,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    @_spi(Experimental) public static func layerPropertyDefaultValue(for layerType: LayerType, property: String) -> StylePropertyValue {
+    public static func layerPropertyDefaultValue(for layerType: LayerType, property: String) -> StylePropertyValue {
         return StyleManager.getStyleLayerPropertyDefaultValue(forLayerType: layerType.rawValue, property: property)
     }
 
@@ -435,7 +434,7 @@ extension Style: StyleManagerProtocol {
 
     // MARK: - Source properties
 
-    @_spi(Experimental) public func sourceProperty(for sourceId: String, property: String) -> StylePropertyValue {
+    public func sourceProperty(for sourceId: String, property: String) -> StylePropertyValue {
         return styleManager.getStyleSourceProperty(forSourceId: sourceId, property: property)
     }
 
@@ -457,7 +456,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    @_spi(Experimental) public static func sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue {
+    public static func sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue {
         return StyleManager.getStyleSourcePropertyDefaultValue(forSourceType: sourceType, property: property)
     }
 
@@ -518,7 +517,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    @_spi(Experimental) public func lightProperty(_ property: String) -> StylePropertyValue {
+    public func lightProperty(_ property: String) -> StylePropertyValue {
         return styleManager.getStyleLightProperty(forProperty: property)
     }
 
@@ -536,7 +535,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    @_spi(Experimental) public func terrainProperty(_ property: String) -> StylePropertyValue {
+    public func terrainProperty(_ property: String) -> StylePropertyValue {
         return styleManager.getStyleTerrainProperty(forProperty: property)
     }
 
@@ -554,7 +553,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    @_spi(Experimental) public func setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Turf.Feature]) throws {
+    public func setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Turf.Feature]) throws {
         let mbxFeatures = features.compactMap { MapboxCommon.Feature($0) }
         return try handleExpected {
             return styleManager.setStyleCustomGeometrySourceTileDataForSourceId(sourceId, tileId: tileId, featureCollection: mbxFeatures)

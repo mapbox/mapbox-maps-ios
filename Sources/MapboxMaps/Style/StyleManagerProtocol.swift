@@ -1,6 +1,5 @@
 import Foundation
 
-// swiftlint:disable file_length function_parameter_count
 internal protocol StyleManagerProtocol {
 
     var isLoaded: Bool { get }
@@ -104,4 +103,3 @@ internal protocol StyleManagerProtocol {
 
     func invalidateCustomGeometrySourceRegion(forSourceId sourceId: String, bounds: CoordinateBounds) throws
 }
-// swiftlint:enable file_length function_parameter_count

@@ -49,8 +49,6 @@ public class Style {
      - Parameter position: The new position to move the layer to
 
      - Throws: `StyleError` on failure, or `NSError` with a _domain of "com.mapbox.bindgen"
-     - Note: This method is marked as experimental. Annotate the import statement
-     for `MapboxMaps` with `@_spi(Experimental)` in order to use experimental methods.
      */
     public func moveLayer(withId id: String, to position: LayerPosition) throws {
         let properties = try layerProperties(for: id)
@@ -331,8 +329,7 @@ extension Style: StyleManagerProtocol {
         }
     }
 
-    @_spi(Experimental)
-    public func addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
+    @_spi(Experimental) public func addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
         return try handleExpected {
             return styleManager.addPersistentStyleLayer(forProperties: properties, layerPosition: layerPosition?.corePosition)
         }

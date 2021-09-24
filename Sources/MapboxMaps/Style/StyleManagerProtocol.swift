@@ -73,16 +73,9 @@ internal protocol StyleManagerProtocol {
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful
-    ///
-    /// - Note: This API is experimental and can change at any time. Annotate the import statement
-    /// for `MapboxMaps` with `@_spi(Experimental)` in order to use experimental methods.
     func addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws
 
     /// Returns `true` if the id passed in is associated to a persistent layer
-    ///
-    /// - Note: This API is experimental and can change at any time. Annotate the import statement
-    /// for `MapboxMaps` with `@_spi(Experimental)` in order to use experimental methods.
-    ///
     /// - Parameter id: The layer identifier to test
     func isPersistentLayer(id: String) throws -> Bool
 
@@ -100,9 +93,6 @@ internal protocol StyleManagerProtocol {
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
-    ///
-    /// - Note: This API is experimental and can change at any time. Annotate the import statement
-    /// for `MapboxMaps` with `@_spi(Experimental)` in order to use experimental methods.
     func addPersistentCustomLayer(withId id: String, layerHost: CustomLayerHost, layerPosition: LayerPosition?) throws
 
     /// Adds a new style custom layer.
@@ -156,8 +146,6 @@ internal protocol StyleManagerProtocol {
     ///
     /// - Returns:
     ///     The value of the property in the layer with layerId.
-    /// - Note: This method is marked as experimental. Annotate the import statement
-    /// for `MapboxMaps` with `@_spi(Experimental)` in order to use experimental methods.
     func layerProperty(for layerId: String, property: String) -> StylePropertyValue
 
     /// Sets a JSON value to a style layer property.
@@ -181,9 +169,6 @@ internal protocol StyleManagerProtocol {
     ///
     /// - Returns:
     ///     The default value of the property for the layers with type layerType.
-    ///
-    /// - Note: This method is marked as experimental. Annotate the import statement
-    /// for `MapboxMaps` with `@_spi(Experimental)` in order to use experimental methods.
     static func layerPropertyDefaultValue(for layerType: LayerType, property: String) -> StylePropertyValue
 
     /// Gets the properties for a style layer.
@@ -258,9 +243,6 @@ internal protocol StyleManagerProtocol {
     ///   - property: Style source property name.
     ///
     /// - Returns: The value of the property in the source with sourceId.
-    ///
-    /// - Note: This method is marked as experimental. Annotate the import statement
-    /// for `MapboxMaps` with `@_spi(Experimental)` in order to use experimental methods.
     func sourceProperty(for sourceId: String, property: String) -> StylePropertyValue
 
     /// Sets a value to a style source property.
@@ -311,9 +293,6 @@ internal protocol StyleManagerProtocol {
     ///
     /// - Returns:
     ///     The default value for the named property for the sources with type sourceType.
-    ///
-    /// - Note: This method is marked as experimental. Annotate the import statement
-    /// for `MapboxMaps` with `@_spi(Experimental)` in order to use experimental methods.
     static func sourcePropertyDefaultValue(for sourceType: String, property: String) -> StylePropertyValue
 
     // MARK: Image source
@@ -405,9 +384,6 @@ internal protocol StyleManagerProtocol {
     /// - Parameter property: Style light property name.
     ///
     /// - Returns: Style light property value.
-    ///
-    /// - Note: This method is marked as experimental. Annotate the import statement
-    /// for `MapboxMaps` with `@_spi(Experimental)` in order to use experimental methods.
     func lightProperty(_ property: String) -> StylePropertyValue
 
     /// Sets a value to the style light property.
@@ -438,9 +414,6 @@ internal protocol StyleManagerProtocol {
     /// - Parameter property: Style terrain property name.
     ///
     /// - Returns: Style terrain property value.
-    ///
-    /// - Note: This method is marked as experimental. Annotate the import statement
-    /// for `MapboxMaps` with `@_spi(Experimental)` in order to use experimental methods.
     func terrainProperty(_ property: String) -> StylePropertyValue
 
     /// Sets a value to the named style terrain property.
@@ -479,9 +452,6 @@ internal protocol StyleManagerProtocol {
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
-    ///
-    /// - Note: This method is marked as experimental. Annotate the import statement
-    /// for `MapboxMaps` with `@_spi(Experimental)` in order to use experimental methods.
     func setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Turf.Feature]) throws
 
     /// Invalidate tile for provided custom geometry source.

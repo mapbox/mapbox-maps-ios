@@ -212,17 +212,17 @@ internal struct ContentView: View {
     @State private var camera = Camera(center: CLLocationCoordinate2D(latitude: 40, longitude: -75), zoom: 14)
     @State private var styleURI = StyleURI.streets
 
-    /// Each time you create an annotation, it is assigned a UUID. For this reason, it's not a great
-    /// idea to actually create annotations inside of `body` which may be called repeatedly
-    @State private var annotations: [PointAnnotation] = {
-        var p1 = PointAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -75))
-        p1.image = .default
+    /// When you create an annotation, you can assign it an ID or allow it to generate its own UUID. Here
+    /// we assign IDs explicitly to achieve a consistent result whenever this view is reevaluated.
+    private var annotations: [PointAnnotation] = {
+        var p1 = PointAnnotation(id: "0", coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -75))
+        p1.image = .init(image: UIImage(named: "custom_marker")!, name: "custom_marker")
 
-        var p2 = PointAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -75.001))
-        p2.image = .default
+        var p2 = PointAnnotation(id: "1", coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -75.001))
+        p2.image = .init(image: UIImage(named: "custom_marker")!, name: "custom_marker")
 
-        var p3 = PointAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -74.999))
-        p3.image = .default
+        var p3 = PointAnnotation(id: "2", coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -74.999))
+        p3.image = .init(image: UIImage(named: "custom_marker")!, name: "custom_marker")
 
         return [p1, p2, p3]
     }()

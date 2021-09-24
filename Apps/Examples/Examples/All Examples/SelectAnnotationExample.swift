@@ -2,17 +2,14 @@ import UIKit
 import MapboxMaps
 
 @objc(SelectAnnotationExample)
+final class SelectAnnotationExample: UIViewController, ExampleProtocol {
 
-public class SelectAnnotationExample: UIViewController, ExampleProtocol {
-
-    internal var mapView: MapView!
+    private var mapView: MapView!
 
     /// Keep a reference to the `PointAnnotationManager` since the annotations will only show if their corresponding manager is alive
-    internal lazy var pointAnnotationManager: PointAnnotationManager = {
-        return mapView.annotations.makePointAnnotationManager()
-    }()
+    private lazy var pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
 
-    internal var annotationSelected: Bool = false {
+    private var annotationSelected: Bool = false {
         didSet {
             if annotationSelected {
                 label.backgroundColor = .systemGreen
@@ -25,7 +22,7 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
     }
 
     // Configure a label
-    public lazy var label: UILabel = {
+    private var label: UILabel = {
         let label = UILabel(frame: CGRect.zero)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .systemBlue
@@ -36,7 +33,7 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
         return label
     }()
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         // Set the center coordinate and zoom level over southern Iceland.
@@ -57,7 +54,7 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
         addLabel()
     }
 
-    public func addLabel() {
+    private func addLabel() {
         label.text = "Select the annotation"
         view.addSubview(label)
 
@@ -70,12 +67,12 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
     }
 
     // Wait for the style to load before adding an annotation.
-    public func setupExample() {
+    private func setupExample() {
 
-        // Create the point annotation, which will be rendered with the default red pin.
+        // Create the point annotation, which will be rendered with a custom image
         let coordinate = mapView.cameraState.center
         var pointAnnotation = PointAnnotation(coordinate: coordinate)
-        pointAnnotation.image = .default
+        pointAnnotation.image = .init(image: UIImage(named: "custom_marker")!, name: "custom_marker")
 
         // Allow the view controller to accept annotation selection events.
         pointAnnotationManager.delegate = self
@@ -90,8 +87,8 @@ public class SelectAnnotationExample: UIViewController, ExampleProtocol {
 
 // Change the label's text and style when it is selected or deselected.
 extension SelectAnnotationExample: AnnotationInteractionDelegate {
-    public func annotationManager(_ manager: AnnotationManager,
-                                  didDetectTappedAnnotations annotations: [Annotation]) {
+    func annotationManager(_ manager: AnnotationManager,
+                           didDetectTappedAnnotations annotations: [Annotation]) {
         if annotationSelected || !annotations.isEmpty {
             annotationSelected.toggle()
         }

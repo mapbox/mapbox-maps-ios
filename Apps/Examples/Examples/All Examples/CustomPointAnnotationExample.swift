@@ -2,16 +2,13 @@ import UIKit
 import MapboxMaps
 
 @objc(CustomPointAnnotationExample)
+final class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
 
-public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
+    private var mapView: MapView!
+    private var pointAnnotationManager: PointAnnotationManager?
+    private let customImage = UIImage(named: "star")!
 
-    internal var mapView: MapView!
-    internal var pointAnnotationManager: PointAnnotationManager?
-    private lazy var customImage: UIImage = {
-        UIImage(named: "star")!
-    }()
-
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         // Center the map camera over New York City
@@ -25,11 +22,10 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
 
         // Allows the delegate to receive information about map events.
         mapView.mapboxMap.onNext(.mapLoaded) { [weak self] _ in
-
             guard let self = self else { return }
             self.setupExample()
 
-            // The below line is used for internal testing purposes only.
+            // The following line is just for testing purposes.
             self.finish()
         }
     }
@@ -45,7 +41,7 @@ public class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
         // Initialize a point annotation with a geometry ("coordinate" in this case)
         // and configure it with a custom image (sourced from the asset catalogue)
         var customPointAnnotation = PointAnnotation(coordinate: centerCoordinate)
-        customPointAnnotation.image = .custom(image: customImage, name: "my-custom-image-name")
+        customPointAnnotation.image = .init(image: customImage, name: "my-custom-image-name")
 
         // Add the annotation to the manager in order to render it on the mao.
         pointAnnotationManager.annotations = [customPointAnnotation]

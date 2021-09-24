@@ -32,9 +32,6 @@ public class CircleAnnotationManager: AnnotationManager {
     /// Dependency Required to query for rendered features on tap
     private let mapFeatureQueryable: MapFeatureQueryable
 
-    /// Dependency required to add gesture recognizer to the MapView
-    private weak var singleTapGestureRecognizer: UIGestureRecognizer?
-
     /// Storage for common layer properties
     private var layerProperties: [String: Any] = [:] {
         didSet {
@@ -63,9 +60,11 @@ public class CircleAnnotationManager: AnnotationManager {
         self.style = style
         self.sourceId = id + "-source"
         self.layerId = id + "-layer"
-        self.singleTapGestureRecognizer = singleTapGestureRecognizer
         self.mapFeatureQueryable = mapFeatureQueryable
         self.shouldPersist = shouldPersist
+
+        // Add target-action for tap handling
+        singleTapGestureRecognizer.addTarget(self, action: #selector(handleTap(_:)))
 
         do {
             try makeSourceAndLayer(layerPosition: layerPosition)
@@ -209,17 +208,12 @@ public class CircleAnnotationManager: AnnotationManager {
     // MARK: - Tap Handling -
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
-    public weak var delegate: AnnotationInteractionDelegate? {
-        didSet {
-            if delegate != nil && oldValue == nil {
-                singleTapGestureRecognizer?.addTarget(self, action: #selector(handleTap(_:)))
-            } else if delegate == nil && oldValue != nil {
-                singleTapGestureRecognizer?.removeTarget(self, action: #selector(handleTap(_:)))
-            }
-        }
-    }
+    public weak var delegate: AnnotationInteractionDelegate?
 
     @objc internal func handleTap(_ tap: UITapGestureRecognizer) {
+
+        guard let delegate = delegate else { return }
+
         let options = RenderedQueryOptions(layerIds: [layerId], filter: nil)
         mapFeatureQueryable.queryRenderedFeatures(
             at: tap.location(in: tap.view),
@@ -248,7 +242,7 @@ public class CircleAnnotationManager: AnnotationManager {
 
                 // If `tappedAnnotations` is not empty, call delegate
                 if !tappedAnnotations.isEmpty {
-                    self.delegate?.annotationManager(
+                    delegate.annotationManager(
                         self,
                         didDetectTappedAnnotations: tappedAnnotations)
                 }

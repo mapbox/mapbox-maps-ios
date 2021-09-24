@@ -113,7 +113,7 @@ final class GestureManagerTests: XCTestCase {
     func testDoubleTouchToZoomOutGestureHandlerDelegate() {
         XCTAssertTrue(doubleTouchToZoomOutGestureHandler.delegate === gestureManager)
     }
-    
+
     func testSingleTapGestureHandlerDelegate() {
         XCTAssertTrue(singleTapGestureHandler.delegate === gestureManager)
     }

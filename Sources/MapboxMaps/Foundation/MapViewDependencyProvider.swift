@@ -61,7 +61,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
     }
-    
+
     func makeSingleTapGestureHandler(view: UIView,
                                      mapboxMap: MapboxMapProtocol,
                                      cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {

@@ -234,7 +234,11 @@ open class MapView: UIView {
         location = LocationManager(style: mapboxMap.style)
 
         // Initialize/Configure annotations orchestrator
-        annotations = AnnotationOrchestrator(view: self, mapFeatureQueryable: mapboxMap, style: mapboxMap.style, displayLinkCoordinator: self)
+        annotations = AnnotationOrchestrator(
+            singleTapGestureRecognizer: gestures.singleTapGestureRecognizer,
+            mapFeatureQueryable: mapboxMap,
+            style: mapboxMap.style,
+            displayLinkCoordinator: self)
     }
 
     private func checkForMetalSupport() {

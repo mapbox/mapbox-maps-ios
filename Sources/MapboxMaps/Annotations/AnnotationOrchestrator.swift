@@ -39,7 +39,7 @@ public protocol AnnotationInteractionDelegate: AnyObject {
 
 public class AnnotationOrchestrator {
 
-    private weak var view: UIView?
+    private weak var singleTapGestureRecognizer: UIGestureRecognizer?
 
     private let style: Style
 
@@ -47,8 +47,11 @@ public class AnnotationOrchestrator {
 
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
-    internal init(view: UIView, mapFeatureQueryable: MapFeatureQueryable, style: Style, displayLinkCoordinator: DisplayLinkCoordinator) {
-        self.view = view
+    internal init(singleTapGestureRecognizer: UIGestureRecognizer,
+                  mapFeatureQueryable: MapFeatureQueryable,
+                  style: Style,
+                  displayLinkCoordinator: DisplayLinkCoordinator) {
+        self.singleTapGestureRecognizer = singleTapGestureRecognizer
         self.mapFeatureQueryable = mapFeatureQueryable
         self.style = style
         self.displayLinkCoordinator = displayLinkCoordinator
@@ -62,14 +65,14 @@ public class AnnotationOrchestrator {
     public func makePointAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
                                            layerPosition: LayerPosition? = nil) -> PointAnnotationManager {
 
-        guard let view = view,
+        guard let singleTapGestureRecognizer = singleTapGestureRecognizer,
               let displayLinkCoordinator = displayLinkCoordinator else {
-            fatalError("View and displayLinkCoordinator must be present when creating an annotation manager")
+            fatalError("SingleTapGestureRecognizer and displayLinkCoordinator must be present when creating an annotation manager")
         }
 
         return PointAnnotationManager(id: id,
                                       style: style,
-                                      view: view,
+                                      singleTapGestureRecognizer: singleTapGestureRecognizer,
                                       mapFeatureQueryable: mapFeatureQueryable,
                                       shouldPersist: true,
                                       layerPosition: layerPosition,
@@ -84,14 +87,14 @@ public class AnnotationOrchestrator {
     public func makePolygonAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
                                              layerPosition: LayerPosition? = nil) -> PolygonAnnotationManager {
 
-        guard let view = view,
+        guard let singleTapGestureRecognizer = singleTapGestureRecognizer,
               let displayLinkCoordinator = displayLinkCoordinator else {
-            fatalError("View and displayLinkCoordinator must be present when creating an annotation manager")
+            fatalError("SingleTapGestureRecognizer and displayLinkCoordinator must be present when creating an annotation manager")
         }
 
         return PolygonAnnotationManager(id: id,
                                         style: style,
-                                        view: view,
+                                        singleTapGestureRecognizer: singleTapGestureRecognizer,
                                         mapFeatureQueryable: mapFeatureQueryable,
                                         shouldPersist: true,
                                         layerPosition: layerPosition,
@@ -106,14 +109,14 @@ public class AnnotationOrchestrator {
     public func makePolylineAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
                                               layerPosition: LayerPosition? = nil) -> PolylineAnnotationManager {
 
-        guard let view = view,
+        guard let singleTapGestureRecognizer = singleTapGestureRecognizer,
               let displayLinkCoordinator = displayLinkCoordinator else {
-            fatalError("View and displayLinkCoordinator must be present when creating an annotation manager")
+            fatalError("SingleTapGestureRecognizer and displayLinkCoordinator must be present when creating an annotation manager")
         }
 
         return PolylineAnnotationManager(id: id,
                                          style: style,
-                                         view: view,
+                                         singleTapGestureRecognizer: singleTapGestureRecognizer,
                                          mapFeatureQueryable: mapFeatureQueryable,
                                          shouldPersist: true,
                                          layerPosition: layerPosition,
@@ -128,14 +131,14 @@ public class AnnotationOrchestrator {
     public func makeCircleAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
                                             layerPosition: LayerPosition? = nil) -> CircleAnnotationManager {
 
-        guard let view = view,
+        guard let singleTapGestureRecognizer = singleTapGestureRecognizer,
               let displayLinkCoordinator = displayLinkCoordinator else {
-            fatalError("View and displayLinkCoordinator must be present when creating an annotation manager")
+            fatalError("SingleTapGestureRecognizer and displayLinkCoordinator must be present when creating an annotation manager")
         }
 
         return CircleAnnotationManager(id: id,
                                        style: style,
-                                       view: view,
+                                       singleTapGestureRecognizer: singleTapGestureRecognizer,
                                        mapFeatureQueryable: mapFeatureQueryable,
                                        shouldPersist: true,
                                        layerPosition: layerPosition,

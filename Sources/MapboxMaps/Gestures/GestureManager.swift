@@ -70,7 +70,7 @@ public final class GestureManager: GestureHandlerDelegate {
     public var quickZoomGestureRecognizer: UIGestureRecognizer {
         return quickZoomGestureHandler.gestureRecognizer
     }
-    
+
     /// The gesture recognizer for the single tap gesture
     public var singleTapGestureRecognizer: UIGestureRecognizer {
         return singleTapGestureHandler.gestureRecognizer

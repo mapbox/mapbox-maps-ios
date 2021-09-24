@@ -2,7 +2,7 @@ import UIKit
 
 /// `SingleTapGestureHandler` manages a gesture recognizer looking for single tap touch events
 internal final class SingleTapGestureHandler: GestureHandler {
-    
+
     internal init(gestureRecognizer: UITapGestureRecognizer,
                   mapboxMap: MapboxMapProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol) {
@@ -14,7 +14,7 @@ internal final class SingleTapGestureHandler: GestureHandler {
             cameraAnimationsManager: cameraAnimationsManager)
         gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
-    
+
     @objc private func handleGesture(_ gestureRecognizer: UITapGestureRecognizer) {
         switch gestureRecognizer.state {
         case .recognized:

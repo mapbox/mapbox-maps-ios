@@ -33,7 +33,7 @@ public class PointAnnotationManager: AnnotationManager {
     private let mapFeatureQueryable: MapFeatureQueryable
 
     /// Dependency required to add gesture recognizer to the MapView
-    private weak var view: UIView?
+    private weak var singleTapGestureRecognizer: UIGestureRecognizer?
 
     /// Storage for common layer properties
     private var layerProperties: [String: Any] = [:] {
@@ -54,7 +54,7 @@ public class PointAnnotationManager: AnnotationManager {
 
     internal init(id: String,
                   style: Style,
-                  view: UIView,
+                  singleTapGestureRecognizer: UIGestureRecognizer,
                   mapFeatureQueryable: MapFeatureQueryable,
                   shouldPersist: Bool,
                   layerPosition: LayerPosition?,
@@ -63,7 +63,7 @@ public class PointAnnotationManager: AnnotationManager {
         self.style = style
         self.sourceId = id + "-source"
         self.layerId = id + "-layer"
-        self.view = view
+        self.singleTapGestureRecognizer = singleTapGestureRecognizer
         self.mapFeatureQueryable = mapFeatureQueryable
         self.shouldPersist = shouldPersist
 
@@ -464,36 +464,23 @@ public class PointAnnotationManager: AnnotationManager {
         }
     }
 
-    // MARK: - Selection Handling -
+    // MARK: - Tap Handling -
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
     public weak var delegate: AnnotationInteractionDelegate? {
         didSet {
-            if delegate != nil {
-                setupTapRecognizer()
-            } else {
-                guard let view = view, let recognizer = tapGestureRecognizer else { return }
-                view.removeGestureRecognizer(recognizer)
-                tapGestureRecognizer = nil
+            if delegate != nil && oldValue == nil {
+                singleTapGestureRecognizer?.addTarget(self, action: #selector(handleTap(_:)))
+            } else if delegate == nil && oldValue != nil {
+                singleTapGestureRecognizer?.removeTarget(self, action: #selector(handleTap(_:)))
             }
         }
-    }
-
-    /// The `UITapGestureRecognizer` that's listening to touch events on the map for the annotations present in this manager
-    public var tapGestureRecognizer: UITapGestureRecognizer?
-
-    internal func setupTapRecognizer() {
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
-        tapRecognizer.numberOfTapsRequired = 1
-        tapRecognizer.numberOfTouchesRequired = 1
-        view?.addGestureRecognizer(tapRecognizer)
-        tapGestureRecognizer = tapRecognizer
     }
 
     @objc internal func handleTap(_ tap: UITapGestureRecognizer) {
         let options = RenderedQueryOptions(layerIds: [layerId], filter: nil)
         mapFeatureQueryable.queryRenderedFeatures(
-            at: tap.location(in: view),
+            at: tap.location(in: tap.view),
             options: options) { [weak self] (result) in
 
             guard let self = self else { return }

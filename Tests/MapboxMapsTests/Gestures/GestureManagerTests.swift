@@ -11,6 +11,7 @@ final class GestureManagerTests: XCTestCase {
     var doubleTapToZoomInGestureHandler: GestureHandler!
     var doubleTouchToZoomOutGestureHandler: GestureHandler!
     var quickZoomGestureHandler: GestureHandler!
+    var singleTapGestureHandler: GestureHandler!
     var gestureManager: GestureManager!
     // swiftlint:disable:next weak_delegate
     var delegate: MockGestureManagerDelegate!
@@ -28,13 +29,15 @@ final class GestureManagerTests: XCTestCase {
         doubleTapToZoomInGestureHandler = makeGestureHandler()
         doubleTouchToZoomOutGestureHandler = makeGestureHandler()
         quickZoomGestureHandler = makeGestureHandler()
+        singleTapGestureHandler = makeGestureHandler()
         gestureManager = GestureManager(
             panGestureHandler: panGestureHandler,
             pinchGestureHandler: pinchGestureHandler,
             pitchGestureHandler: pitchGestureHandler,
             doubleTapToZoomInGestureHandler: doubleTapToZoomInGestureHandler,
             doubleTouchToZoomOutGestureHandler: doubleTouchToZoomOutGestureHandler,
-            quickZoomGestureHandler: quickZoomGestureHandler)
+            quickZoomGestureHandler: quickZoomGestureHandler,
+            singleTapGestureHandler: singleTapGestureHandler)
         delegate =  MockGestureManagerDelegate()
         gestureManager.delegate = delegate
     }
@@ -47,6 +50,7 @@ final class GestureManagerTests: XCTestCase {
         doubleTapToZoomInGestureHandler = nil
         pitchGestureHandler = nil
         pinchGestureHandler = nil
+        singleTapGestureHandler = nil
         panGestureHandler = nil
         cameraAnimationsManager = nil
         mapboxMap = nil
@@ -70,6 +74,10 @@ final class GestureManagerTests: XCTestCase {
 
     func testPitchGestureRecognizer() {
         XCTAssertTrue(gestureManager.pitchGestureRecognizer === pitchGestureHandler.gestureRecognizer)
+    }
+
+    func testSingleTapGestureRecognizer() {
+        XCTAssertTrue(gestureManager.singleTapGestureRecognizer === singleTapGestureHandler.gestureRecognizer)
     }
 
     func testDoubleTapToZoomInGestureRecognizer() {

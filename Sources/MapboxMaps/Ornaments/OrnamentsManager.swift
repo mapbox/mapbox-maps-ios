@@ -119,10 +119,10 @@ public class OrnamentsManager: NSObject {
         // Activate new constraints
         NSLayoutConstraint.activate(constraints)
 
-        logoView.isHidden = options.logo._visibility == .hidden
+        logoView.isHidden = options.logo.visibility == .hidden
         scalebarView.isHidden = options.scaleBar.visibility == .hidden
         compassView.isHidden = options.compass.visibility == .hidden
-        attributionButton.isHidden = options.attributionButton._visibility == .hidden
+        attributionButton.isHidden = options.attributionButton.visibility == .hidden
     }
 
     private func constraints(with view: UIView, position: OrnamentPosition, margins: CGPoint) -> [NSLayoutConstraint] {

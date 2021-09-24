@@ -71,6 +71,14 @@ public final class GestureManager: GestureHandlerDelegate {
         return quickZoomGestureHandler.gestureRecognizer
     }
 
+    /// The gesture recognizer for the single tap gesture
+    /// - NOTE: The single tap gesture recognizer is primarily used to route tap events to the
+    ///         `*AnnotationManager`s. You can add a target-action pair to this gesture recognizer
+    ///         to be notified when a single tap occurs on the map.
+    public var singleTapGestureRecognizer: UIGestureRecognizer {
+        return singleTapGestureHandler.gestureRecognizer
+    }
+
     /// Set this delegate to be called back if a gesture begins
     public weak var delegate: GestureManagerDelegate?
 
@@ -80,19 +88,22 @@ public final class GestureManager: GestureHandlerDelegate {
     private let doubleTapToZoomInGestureHandler: GestureHandler
     private let doubleTouchToZoomOutGestureHandler: GestureHandler
     private let quickZoomGestureHandler: GestureHandler
+    private let singleTapGestureHandler: GestureHandler
 
     internal init(panGestureHandler: PanGestureHandlerProtocol,
                   pinchGestureHandler: GestureHandler,
                   pitchGestureHandler: GestureHandler,
                   doubleTapToZoomInGestureHandler: GestureHandler,
                   doubleTouchToZoomOutGestureHandler: GestureHandler,
-                  quickZoomGestureHandler: GestureHandler) {
+                  quickZoomGestureHandler: GestureHandler,
+                  singleTapGestureHandler: GestureHandler) {
         self.panGestureHandler = panGestureHandler
         self.pinchGestureHandler = pinchGestureHandler
         self.pitchGestureHandler = pitchGestureHandler
         self.doubleTapToZoomInGestureHandler = doubleTapToZoomInGestureHandler
         self.doubleTouchToZoomOutGestureHandler = doubleTouchToZoomOutGestureHandler
         self.quickZoomGestureHandler = quickZoomGestureHandler
+        self.singleTapGestureHandler = singleTapGestureHandler
 
         panGestureHandler.delegate = self
         pinchGestureHandler.delegate = self
@@ -100,6 +111,7 @@ public final class GestureManager: GestureHandlerDelegate {
         doubleTapToZoomInGestureHandler.delegate = self
         doubleTouchToZoomOutGestureHandler.delegate = self
         quickZoomGestureHandler.delegate = self
+        singleTapGestureHandler.delegate = self
 
         pinchGestureHandler.gestureRecognizer.require(toFail: panGestureHandler.gestureRecognizer)
         pitchGestureHandler.gestureRecognizer.require(toFail: panGestureHandler.gestureRecognizer)

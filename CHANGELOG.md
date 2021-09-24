@@ -7,6 +7,9 @@ Mapbox welcomes participation and contributions from everyone.
 ### Breaking changes ⚠️
 
 * Removes default parameter values in the `addImage` function. ([#695](https://github.com/mapbox/mapbox-maps-ios/pull/695))
+* Converts `PointAnnotation.Image` from an `enum` to a `struct`. ([#707](https://github.com/mapbox/mapbox-maps-ios/pull/707))
+* Removes `PointAnnotation.Image.default`. ([#707](https://github.com/mapbox/mapbox-maps-ios/pull/707))
+* Replaces `PointAnnotation.Image.custom` with `PointAnnotation.Image.init(image:name:)`. ([#707](https://github.com/mapbox/mapbox-maps-ios/pull/707))
 
 ## 10.0.0-rc.9 - Sept 22, 2021
 

@@ -228,6 +228,7 @@ public class PolylineAnnotationManager: AnnotationManager {
     // MARK: - Tap Handling -
 
     /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
+    /// - NOTE: This annotation manager listens to tap events via the `GestureManager.singleTapGestureRecognizer`.
     public weak var delegate: AnnotationInteractionDelegate?
 
     @objc internal func handleTap(_ tap: UITapGestureRecognizer) {

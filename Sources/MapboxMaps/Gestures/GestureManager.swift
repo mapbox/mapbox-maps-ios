@@ -72,6 +72,9 @@ public final class GestureManager: GestureHandlerDelegate {
     }
 
     /// The gesture recognizer for the single tap gesture
+    /// - NOTE: The single tap gesture recognizer is primarily used to route tap events to the
+    ///         `*AnnotationManager`s. You can add a target-action pair to this gesture recognizer
+    ///         to be notified when a single tap occurs on the map.
     public var singleTapGestureRecognizer: UIGestureRecognizer {
         return singleTapGestureHandler.gestureRecognizer
     }

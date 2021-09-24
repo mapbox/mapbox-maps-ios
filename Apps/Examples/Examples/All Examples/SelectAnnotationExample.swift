@@ -72,7 +72,7 @@ final class SelectAnnotationExample: UIViewController, ExampleProtocol {
         // Create the point annotation, which will be rendered with a custom image
         let coordinate = mapView.cameraState.center
         var pointAnnotation = PointAnnotation(coordinate: coordinate)
-        pointAnnotation.image = PointAnnotation.Image(image: UIImage(named: "custom_marker")!, name: "custom_marker")
+        pointAnnotation.image = .init(image: UIImage(named: "custom_marker")!, name: "custom_marker")
 
         // Allow the view controller to accept annotation selection events.
         pointAnnotationManager.delegate = self

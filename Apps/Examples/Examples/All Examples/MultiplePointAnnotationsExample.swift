@@ -34,7 +34,7 @@ final class MultiplePointAnnotationsExample: UIViewController, ExampleProtocol {
         let coordinate = CLLocationCoordinate2D(latitude: 28.549545, longitude: 77.220154)
         var pointAnnotation1 = PointAnnotation(id: "first-annotation", coordinate: coordinate)
         if let image = UIImage(named: "star") {
-            pointAnnotation1.image = PointAnnotation.Image(image: image, name: "star")
+            pointAnnotation1.image = .init(image: image, name: "star")
         }
 
         // Create the second annotation. It will use a custom image from the app's assets.
@@ -42,7 +42,7 @@ final class MultiplePointAnnotationsExample: UIViewController, ExampleProtocol {
         var pointAnnotation2 = PointAnnotation(id: "second-annotation", coordinate: coordinate2)
 
         if let image = UIImage(named: "custom_marker") {
-            pointAnnotation2.image = PointAnnotation.Image(image: image, name: "custom-marker")
+            pointAnnotation2.image = .init(image: image, name: "custom-marker")
         }
 
         // Initialize the map's point annotation manager.

@@ -231,7 +231,7 @@ class ViewController: UIViewController {
         for lat in stride(from: coord.latitude-0.25, to: coord.latitude+0.25, by: 0.05) {
             for lng in stride(from: coord.longitude-0.25, to: coord.longitude+0.25, by: 0.05) {
                 var pointAnnotation = PointAnnotation(coordinate: CLLocationCoordinate2D(lat, lng))
-                pointAnnotation.image = PointAnnotation.Image(image: UIImage(named: "custom_marker")!, name: "custom_marker")
+                pointAnnotation.image = .init(image: UIImage(named: "custom_marker")!, name: "custom_marker")
                 annotations.append(pointAnnotation)
             }
         }

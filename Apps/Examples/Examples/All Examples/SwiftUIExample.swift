@@ -216,13 +216,13 @@ internal struct ContentView: View {
     /// we assign IDs explicitly to achieve a consistent result whenever this view is reevaluated.
     private var annotations: [PointAnnotation] = {
         var p1 = PointAnnotation(id: "0", coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -75))
-        p1.image = PointAnnotation.Image(image: UIImage(named: "custom_marker")!, name: "custom_marker")
+        p1.image = .init(image: UIImage(named: "custom_marker")!, name: "custom_marker")
 
         var p2 = PointAnnotation(id: "1", coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -75.001))
-        p2.image = PointAnnotation.Image(image: UIImage(named: "custom_marker")!, name: "custom_marker")
+        p2.image = .init(image: UIImage(named: "custom_marker")!, name: "custom_marker")
 
         var p3 = PointAnnotation(id: "2", coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -74.999))
-        p3.image = PointAnnotation.Image(image: UIImage(named: "custom_marker")!, name: "custom_marker")
+        p3.image = .init(image: UIImage(named: "custom_marker")!, name: "custom_marker")
 
         return [p1, p2, p3]
     }()

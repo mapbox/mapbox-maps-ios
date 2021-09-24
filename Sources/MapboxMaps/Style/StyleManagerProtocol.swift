@@ -1,5 +1,6 @@
 import Foundation
 
+// swiftlint:disable function_parameter_count
 internal protocol StyleManagerProtocol {
 
     var isLoaded: Bool { get }

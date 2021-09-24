@@ -76,7 +76,7 @@ public protocol Layer: Codable, StyleEncodable, StyleDecodable {
     var id: String { get set }
 
     /// Rendering type of this layer.
-    var type: LayerType { get set }
+    var type: LayerType { get }
 
     /// A expression specifying conditions on source features.
     /// Only features that match the filter are displayed.

@@ -38,7 +38,7 @@ final class DoubleTapToZoomInGestureHandlerTests: XCTestCase {
         XCTAssertEqual(gestureRecognizer.numberOfTouchesRequired, 1)
     }
 
-    func testHandler() {
+    func testHandler() throws {
         gestureRecognizer.getStateStub.defaultReturnValue = .recognized
         mapboxMap.cameraState = .random()
 
@@ -51,7 +51,11 @@ final class DoubleTapToZoomInGestureHandlerTests: XCTestCase {
         XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.curve, .easeOut)
         XCTAssertNotNil(cameraAnimationsManager.easeToStub.parameters.first?.completion)
         XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.gestureType, .doubleTapToZoomIn)
-            let willAnimate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willAnimate)
-            XCTAssertTrue(willAnimate)
+        let willAnimate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willAnimate)
+        XCTAssertTrue(willAnimate)
+
+        let didAnimateCompletion = try XCTUnwrap(cameraAnimationsManager.easeToStub.parameters.first?.completion)
+        didAnimateCompletion()
+        XCTAssertTrue(delegate.animationEndedStub.parameters, [.doubleTap])
     }
 }

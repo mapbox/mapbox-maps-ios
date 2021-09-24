@@ -3,6 +3,8 @@ import Foundation
 
 final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
 
+    var delegate: MockGestureHandlerDelegate?
+
     struct EaseToCameraParameters {
         var camera: CameraOptions
         var duration: TimeInterval
@@ -14,6 +16,10 @@ final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
               duration: TimeInterval,
               curve: UIView.AnimationCurve,
               completion: AnimationCompletion?) -> Cancelable? {
+
+        let completion: () -> Void = {
+            self.delegate?.animationEnded(for: .pan)
+        }
 
         return easeToStub.call(
             with: EaseToCameraParameters(
@@ -41,6 +47,10 @@ final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
                     decelerationFactor: CGFloat,
                     locationChangeHandler: @escaping (CGPoint) -> Void,
                     completion: @escaping () -> Void) {
+        let completion: () -> Void = {
+            self.delegate?.animationEnded(for: .pan)
+        }
+
         return decelerateStub.call(
             with: DecelerateParameters(
                 location: location,

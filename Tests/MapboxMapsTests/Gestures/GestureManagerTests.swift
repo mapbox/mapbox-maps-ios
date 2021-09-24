@@ -149,14 +149,14 @@ final class GestureManagerTests: XCTestCase {
         let willAnimate = Bool.random()
         gestureManager.gestureEnded(for: gestureType, willAnimate: willAnimate)
 
-        XCTAssertEqual(delegate.gestureEndedStub.invocations.count, 1, "GestureEnded should have been invoked once. It was called \(delegate.gestureEndedStub.invocations.count) times.")
-        XCTAssertTrue(delegate.gestureEndedStub.parameters.first?.gestureManager === gestureManager)
-        XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.gestureType, gestureType)
-        let willAnimateValue = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willAnimate)
+        XCTAssertEqual(delegate.gestureDidEndStub.invocations.count, 1, "GestureEnded should have been invoked once. It was called \(delegate.gestureDidEndStub.invocations.count) times.")
+        XCTAssertTrue(delegate.gestureDidEndStub.parameters.first?.gestureManager === gestureManager)
+        XCTAssertEqual(delegate.gestureDidEndStub.parameters.first?.gestureType, gestureType)
+        let willAnimateValue = try XCTUnwrap(delegate.gestureDidEndStub.parameters.first?.willAnimate)
         XCTAssertEqual(willAnimateValue, willAnimate)
     }
 
-    func testanimationEnded() {
+    func testAnimationEnded() {
         let gestureType = GestureType.allCases.randomElement()!
 
         gestureManager.animationEnded(for: gestureType)

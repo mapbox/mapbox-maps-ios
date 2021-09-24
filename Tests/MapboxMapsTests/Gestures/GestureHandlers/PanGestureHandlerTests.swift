@@ -19,7 +19,6 @@ final class PanGestureHandlerTests: XCTestCase {
         mapboxMap = MockMapboxMap()
         delegate = MockGestureHandlerDelegate()
         cameraAnimationsManager = MockCameraAnimationsManager()
-        cameraAnimationsManager.delegate = delegate
         dateProvider = MockDateProvider()
         panGestureHandler = PanGestureHandler(
             gestureRecognizer: gestureRecognizer,
@@ -85,6 +84,7 @@ final class PanGestureHandlerTests: XCTestCase {
         XCTAssertEqual(mapboxMap.dragEndStub.invocations.count, 1, line: line)
         if delegate.gestureEndedStub.parameters.first?.willAnimate == true {
             XCTAssertEqual(delegate.animationEndedStub.invocations.count, 1)
+            XCTAssertEqual(delegate.animationEndedStub.parameters, [.pan])
         }
     }
 

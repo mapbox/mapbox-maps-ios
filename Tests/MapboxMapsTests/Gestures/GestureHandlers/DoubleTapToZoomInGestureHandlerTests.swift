@@ -20,8 +20,6 @@ final class DoubleTapToZoomInGestureHandlerTests: XCTestCase {
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
         delegate = MockGestureHandlerDelegate()
-        cameraAnimationsManager.delegate = delegate
-        cameraAnimationsManager.gestureType = .doubleTapToZoomIn
         gestureHandler.delegate = delegate
     }
 
@@ -51,13 +49,12 @@ final class DoubleTapToZoomInGestureHandlerTests: XCTestCase {
         XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.camera, CameraOptions(zoom: mapboxMap.cameraState.zoom + 1))
         XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.duration, 0.3)
         XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.curve, .easeOut)
-        XCTAssertNotNil(cameraAnimationsManager.easeToStub.parameters.first?.completion)
         XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.gestureType, .doubleTapToZoomIn)
         let willAnimate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willAnimate)
         XCTAssertTrue(willAnimate)
 
-        let didAnimateCompletion = try XCTUnwrap(cameraAnimationsManager.easeToStub.parameters.first?.completion)
-        didAnimateCompletion(.end)
+        let easeToCompletion = try XCTUnwrap(cameraAnimationsManager.easeToStub.parameters.first?.completion)
+        easeToCompletion(.end)
         XCTAssertEqual(delegate.animationEndedStub.parameters, [.doubleTapToZoomIn])
     }
 }

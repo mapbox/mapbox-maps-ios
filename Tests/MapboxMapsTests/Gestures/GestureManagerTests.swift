@@ -139,9 +139,9 @@ final class GestureManagerTests: XCTestCase {
 
         gestureManager.gestureBegan(for: gestureType)
 
-        XCTAssertEqual(delegate.gestureBeganStub.invocations.count, 1, "GestureBegan should have been invoked once. It was called \(delegate.gestureBeganStub.invocations.count) times.")
-        XCTAssertTrue(delegate.gestureBeganStub.parameters.first?.gestureManager === gestureManager)
-        XCTAssertEqual(delegate.gestureBeganStub.parameters.first?.gestureType, gestureType)
+        XCTAssertEqual(delegate.gestureDidBeginStub.invocations.count, 1, "GestureBegan should have been invoked once. It was called \(delegate.gestureDidBeginStub.invocations.count) times.")
+        XCTAssertTrue(delegate.gestureDidBeginStub.parameters.first?.gestureManager === gestureManager)
+        XCTAssertEqual(delegate.gestureDidBeginStub.parameters.first?.gestureType, gestureType)
     }
 
     func testGestureEnded() throws {
@@ -161,9 +161,9 @@ final class GestureManagerTests: XCTestCase {
 
         gestureManager.animationEnded(for: gestureType)
 
-        XCTAssertEqual(delegate.animationEndedStub.invocations.count, 1, "animationEnded should have been invoked once. It was called \(delegate.animationEndedStub.invocations.count) times.")
-        XCTAssertTrue(delegate.animationEndedStub.parameters.first?.gestureManager === gestureManager)
-        XCTAssertEqual(delegate.animationEndedStub.parameters.first?.gestureType, gestureType)
+        XCTAssertEqual(delegate.gestureDidEndAnimatingStub.invocations.count, 1, "animationEnded should have been invoked once. It was called \(delegate.gestureDidEndAnimatingStub.invocations.count) times.")
+        XCTAssertTrue(delegate.gestureDidEndAnimatingStub.parameters.first?.gestureManager === gestureManager)
+        XCTAssertEqual(delegate.gestureDidEndAnimatingStub.parameters.first?.gestureType, gestureType)
     }
 
     func testOptionsPanEnabled() {

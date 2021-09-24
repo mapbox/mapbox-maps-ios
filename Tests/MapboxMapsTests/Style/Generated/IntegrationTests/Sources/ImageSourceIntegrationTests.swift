@@ -31,7 +31,7 @@ final class ImageSourceIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the source
             do {
-                _ = try style.source(withId: "test-source") as ImageSource
+                _ = try style.source(withId: "test-source", type: ImageSource.self)
                 successfullyRetrievedSourceExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve ImageSource because of error: \(error)")

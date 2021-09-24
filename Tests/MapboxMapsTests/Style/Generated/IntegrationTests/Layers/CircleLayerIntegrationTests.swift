@@ -58,7 +58,7 @@ final class CircleLayerIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the layer
             do {
-                _ = try style.layer(withId: "test-id") as CircleLayer
+                _ = try style.layer(withId: "test-id", type: CircleLayer.self)
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve CircleLayer because of error: \(error)")

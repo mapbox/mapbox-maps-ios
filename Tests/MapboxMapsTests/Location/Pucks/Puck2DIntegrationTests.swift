@@ -143,7 +143,7 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
                               configuration: Puck2DConfiguration())
             do {
                 try puck.createPreciseLocationIndicatorLayer(location: location)
-                let layer = try style.layer(withId: "puck") as LocationIndicatorLayer
+                let layer = try style.layer(withId: "puck", type: LocationIndicatorLayer.self)
                 XCTAssertNil(layer.accuracyRadius)
             } catch {
                 XCTFail("Failed to create a precise location indicator layer.")
@@ -168,7 +168,7 @@ class Puck2DIntegrationTests: MapViewIntegrationTestCase {
                               configuration: Puck2DConfiguration(showsAccuracyRing: true))
             do {
                 try puck.createPreciseLocationIndicatorLayer(location: location)
-                let layer = try style.layer(withId: "puck") as LocationIndicatorLayer
+                let layer = try style.layer(withId: "puck", type: LocationIndicatorLayer.self)
                 XCTAssertNotNil(layer.accuracyRadius)
             } catch {
                 XCTFail("Failed to create a precise location indicator layer.")

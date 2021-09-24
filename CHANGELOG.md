@@ -16,6 +16,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Removes `PointAnnotation.Image.default`. ([#707](https://github.com/mapbox/mapbox-maps-ios/pull/707))
 * Replaces `PointAnnotation.Image.custom` with `PointAnnotation.Image.init(image:name:)`. ([#707](https://github.com/mapbox/mapbox-maps-ios/pull/707))
 * The `tapGestureRecognizer` var on each `*AnnotationManager` has been removed in favor of a unified tap gesture recognizer available at `GestureManager.singleTapGestureRecognizer`([#709](https://github.com/mapbox/mapbox-maps-ios/pull/709)).
+* `public func layerProperty(for layerId: String, property: String) -> Any` has been renamed to `public func layerPropertyValue(for layerId: String, property: String) -> Any` to avoid ambiguity. ([#708](https://github.com/mapbox/mapbox-maps-ios/pull/708))
 
 ## 10.0.0-rc.9 - Sept 22, 2021
 

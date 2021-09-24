@@ -119,20 +119,6 @@ public class Style {
         try setLayerProperties(for: id, properties: value)
     }
 
-    // MARK: - Layer properties
-
-    /// Gets the value of style layer property.
-    ///
-    /// - Parameters:
-    ///   - layerId: Style layer identifier.
-    ///   - property: Style layer property name.
-    ///
-    /// - Returns:
-    ///     The value of the property in the layer with layerId.
-    public func layerProperty(for layerId: String, property: String) -> Any {
-        return layerProperty(for: layerId, property: property).value
-    }
-
     // MARK: - Sources
 
     /**
@@ -448,6 +434,18 @@ extension Style: StyleManagerProtocol {
     }
 
     // MARK: - Layer Properties
+
+    /// Gets the value of style layer property.
+    ///
+    /// - Parameters:
+    ///   - layerId: Style layer identifier.
+    ///   - property: Style layer property name.
+    ///
+    /// - Returns:
+    ///     The value of the property in the layer with layerId.
+    public func layerPropertyValue(for layerId: String, property: String) -> Any {
+        return layerProperty(for: layerId, property: property).value
+    }
 
     /// Gets the value of style layer property.
     ///

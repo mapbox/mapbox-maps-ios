@@ -10,7 +10,7 @@ import MapboxMaps
 /// use without incurring additional charges. This limit is subject
 /// to change during the beta.
 @objc(OfflineManagerExample)
-public class OfflineManagerExample: UIViewController, ExampleProtocol {
+final class OfflineManagerExample: UIViewController, ExampleProtocol {
     // This example uses a Storyboard to setup the following views
     @IBOutlet var mapViewContainer: UIView!
     @IBOutlet var logView: UITextView!
@@ -57,7 +57,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         tileStore = nil
     }
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         // Initialize a logger that writes into the text view
@@ -67,7 +67,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
 
     // MARK: - Actions
 
-    internal func downloadTileRegions() {
+    func downloadTileRegions() {
         guard let tileStore = tileStore else {
             preconditionFailure()
         }
@@ -175,7 +175,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
         state = .downloading
     }
 
-    internal func cancelDownloads() {
+    func cancelDownloads() {
         // Canceling will trigger `.canceled` errors that will then change state
         downloads.forEach { $0.cancel() }
     }
@@ -334,7 +334,7 @@ public class OfflineManagerExample: UIViewController, ExampleProtocol {
             }
 
             var pointAnnotation = PointAnnotation(coordinate: self.tokyoCoord)
-            pointAnnotation.image = .default
+            pointAnnotation.image = PointAnnotation.Image(image: UIImage(named: "custom_marker")!, name: "custom-marker")
 
             self.pointAnnotationsManager = mapView.annotations.makePointAnnotationManager()
             self.pointAnnotationsManager?.annotations = [pointAnnotation]
@@ -371,21 +371,21 @@ extension StylePack {
 }
 
 /// Convenience logger to write logs to the text view
-public final class OfflineManagerLogWriter {
+final class OfflineManagerLogWriter {
     weak var textView: UITextView?
     var log: NSMutableAttributedString
 
-    internal init(textView: UITextView) {
+    init(textView: UITextView) {
         self.log = NSMutableAttributedString()
         self.textView = textView
     }
 
-    public func reset() {
+    func reset() {
         log = NSMutableAttributedString()
         textView?.attributedText = log
     }
 
-    public func log(message: String, category: String?, color: UIColor = .black) {
+    func log(message: String, category: String?, color: UIColor = .black) {
         print("[\(category ?? "")] \(message)")
 
         DispatchQueue.main.async { [weak self] in

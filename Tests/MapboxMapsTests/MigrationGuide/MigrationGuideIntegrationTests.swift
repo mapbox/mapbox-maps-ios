@@ -481,7 +481,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
                     self.pointAnnotationManager.delegate = self
                     let coordinate = CLLocationCoordinate2DMake(24, -89)
                     var pointAnnotation = PointAnnotation(coordinate: coordinate)
-                    pointAnnotation.image = .default
+                    pointAnnotation.image = PointAnnotation.Image(image: UIImage(named: "green-star")!, name: "star")
                     self.pointAnnotationManager.annotations = [pointAnnotation]
                 }
             }

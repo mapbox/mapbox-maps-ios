@@ -69,7 +69,6 @@
 		CADCF7292584990E0065C51B /* FeaturesAtPointExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B0715F254789D6007F2865 /* FeaturesAtPointExample.swift */; };
 		CADCF72A2584990E0065C51B /* CustomStyleURLExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4AC5DEB2542CB2200995E4C /* CustomStyleURLExample.swift */; };
 		CADCF72B2584990E0065C51B /* FlyToExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE3D3C225818786000585A2 /* FlyToExample.swift */; };
-		CADCF72C2584990E0065C51B /* PointAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64ED3882540BA0700ADADFB /* PointAnnotationExample.swift */; };
 		CADCF72D2584990E0065C51B /* MultipleGeometriesExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B071CD2547CF2B007F2865 /* MultipleGeometriesExample.swift */; };
 		CADCF72F2584990E0065C51B /* SnapshotterCoreGraphicsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07C1A60C257EF7CF00531205 /* SnapshotterCoreGraphicsExample.swift */; };
 		CADCF7302584990E0065C51B /* LayerPositionExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666E0D4925664EE7000B8AF5 /* LayerPositionExample.swift */; };
@@ -180,7 +179,6 @@
 		B5327EC2260277AC0095B6BD /* ExampleProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleProtocol.swift; sourceTree = "<group>"; };
 		C608C106267BC5B1003C86C3 /* LocalizationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationExample.swift; sourceTree = "<group>"; };
 		C64ED3842540A2BE00ADADFB /* CameraAnimationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAnimationExample.swift; sourceTree = "<group>"; };
-		C64ED3882540BA0700ADADFB /* PointAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointAnnotationExample.swift; sourceTree = "<group>"; };
 		C64ED3C42540DD6E00ADADFB /* CustomPointAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPointAnnotationExample.swift; sourceTree = "<group>"; };
 		C64ED3C82541CA3A00ADADFB /* LineAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineAnnotationExample.swift; sourceTree = "<group>"; };
 		C69F01EC2543646A001AB49B /* DataDrivenSymbolsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataDrivenSymbolsExample.swift; sourceTree = "<group>"; };
@@ -276,7 +274,6 @@
 				CA03F10E26268DF700673961 /* OfflineManagerExample.swift */,
 				CA628413262DFD5C00651488 /* OfflineManagerExample.storyboard */,
 				A41E590C265C263700D8B946 /* OfflineRegionManagerExample.swift */,
-				C64ED3882540BA0700ADADFB /* PointAnnotationExample.swift */,
 				A41E584B26555A3400D8B946 /* PointClusteringExample.swift */,
 				07A8D86825422C190068D50D /* PolygonAnnotationExample.swift */,
 				17B4806A268BD91000CF0D5E /* RasterTileSourceExample.swift */,
@@ -585,7 +582,6 @@
 				CADCF733258499130065C51B /* Examples.swift in Sources */,
 				CADCF743258499570065C51B /* BasicMapExample.swift in Sources */,
 				CADCF7232584990E0065C51B /* UpdatePointAnnotationPositionExample.swift in Sources */,
-				CADCF72C2584990E0065C51B /* PointAnnotationExample.swift in Sources */,
 				17B40D2426A85500000887EF /* LiveDataExample.swift in Sources */,
 				CADCF7242584990E0065C51B /* AnimateLayerExample.swift in Sources */,
 				073475D725AFAE520049B0B8 /* CustomLayerExample.swift in Sources */,

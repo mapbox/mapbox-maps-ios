@@ -35,7 +35,7 @@ public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProt
     public func addPointAnnotation() {
         // Create the point annotation with the default marker image
         var pointAnnotation = PointAnnotation(coordinate: mapView.cameraState.center)
-        pointAnnotation.image = .default
+        pointAnnotation.image = PointAnnotation.Image(image: UIImage(named: "custom_marker")!, name: "custom_marker")
 
         // Add the annotation to the map
         pointAnnotationManager.annotations = [pointAnnotation]
@@ -51,7 +51,7 @@ public class UpdatePointAnnotationPositionExample: UIViewController, ExampleProt
 
         // Create a new point annotation with the new coordinate
         var pointAnnotation = PointAnnotation(coordinate: newCoordinate)
-        pointAnnotation.image = .default
+        pointAnnotation.image = PointAnnotation.Image(image: UIImage(named: "custom_marker")!, name: "custom_marker")
 
         // Update the annotations being managed by the manager
         pointAnnotationManager.annotations = [pointAnnotation]

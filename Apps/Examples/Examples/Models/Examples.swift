@@ -80,15 +80,12 @@ public struct Examples {
 
     // Examples that focus on annotations.
     public static let annotationExamples = [
-        Example(title: "Add a point annotation",
-                description: "Add the default point annotation to a map.",
-                type: PointAnnotationExample.self),
-        Example(title: "Update the position of a point annotation",
-                description: "Update the position of a point annotation tapping the map.",
-                type: UpdatePointAnnotationPositionExample.self),
         Example(title: "Add a point annotation using an image",
                 description: "Add a point annotation using a custom image on a map.",
                 type: CustomPointAnnotationExample.self),
+        Example(title: "Update the position of a point annotation",
+                description: "Update the position of a point annotation tapping the map.",
+                type: UpdatePointAnnotationPositionExample.self),
         Example(title: "Add a line annotation",
                 description: "Add a line annotation on a map.",
                 type: LineAnnotationExample.self),

@@ -59,6 +59,7 @@ internal final class PitchGestureHandler: GestureHandler, UIGestureRecognizerDel
             }
         case .ended, .cancelled:
             initialPitch = nil
+            delegate?.gestureEnded(for: .pitch, willAnimate: false)
         default:
             break
         }

@@ -21,11 +21,13 @@ internal final class DoubleTapToZoomInGestureHandler: GestureHandler {
         case .recognized:
             cameraAnimationsManager.cancelAnimations()
             delegate?.gestureBegan(for: .doubleTapToZoomIn)
+            delegate?.gestureEnded(for: .doubleTapToZoomIn, willAnimate: true)
             cameraAnimationsManager.ease(
                 to: CameraOptions(zoom: mapboxMap.cameraState.zoom + 1),
                 duration: 0.3,
-                curve: .easeOut,
-                completion: nil)
+                curve: .easeOut) { _ in
+                    self.delegate?.animationEnded(for: .doubleTapToZoomIn)
+                }
         default:
             break
         }

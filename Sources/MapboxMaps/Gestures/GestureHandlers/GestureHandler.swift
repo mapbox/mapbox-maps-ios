@@ -2,6 +2,10 @@ import UIKit
 
 internal protocol GestureHandlerDelegate: AnyObject {
     func gestureBegan(for gestureType: GestureType)
+
+    func gestureEnded(for gestureType: GestureType, willAnimate: Bool)
+
+    func animationEnded(for gestureType: GestureType)
 }
 
 internal class GestureHandler: NSObject {

@@ -14,7 +14,6 @@ final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
               duration: TimeInterval,
               curve: UIView.AnimationCurve,
               completion: AnimationCompletion?) -> Cancelable? {
-
         return easeToStub.call(
             with: EaseToCameraParameters(
                 camera: camera,
@@ -41,6 +40,7 @@ final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
                     decelerationFactor: CGFloat,
                     locationChangeHandler: @escaping (CGPoint) -> Void,
                     completion: @escaping () -> Void) {
+
         return decelerateStub.call(
             with: DecelerateParameters(
                 location: location,

@@ -77,6 +77,7 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
                   let initialCameraState = initialCameraState,
                   let lastChangedDate = lastChangedDate,
                   dateProvider.now.timeIntervalSince(lastChangedDate) < decelerationTimeout else {
+                delegate?.gestureEnded(for: .pan, willAnimate: false)
                 return
             }
             cameraAnimationsManager.decelerate(
@@ -92,15 +93,18 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
                         initialCameraState: initialCameraState)
                 },
                 completion: {
+                    self.delegate?.animationEnded(for: .pan)
                 })
             self.initialTouchLocation = nil
             self.initialCameraState = nil
             self.lastChangedDate = nil
+            delegate?.gestureEnded(for: .pan, willAnimate: true)
         case .cancelled:
             // no deceleration
             initialTouchLocation = nil
             initialCameraState = nil
             lastChangedDate = nil
+            delegate?.gestureEnded(for: .pan, willAnimate: false)
         default:
             break
         }

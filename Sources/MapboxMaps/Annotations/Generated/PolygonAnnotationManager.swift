@@ -202,7 +202,7 @@ public class PolygonAnnotationManager: AnnotationManager {
 
     @objc internal func handleTap(_ tap: UITapGestureRecognizer) {
 
-        guard let delegate = delegate else { return }
+        guard delegate != nil else { return }
 
         let options = RenderedQueryOptions(layerIds: [layerId], filter: nil)
         mapFeatureQueryable.queryRenderedFeatures(

@@ -260,10 +260,21 @@ public class Style {
 
 // See `StyleManagerProtocol` for documentation for the following APIs
 extension Style: StyleManagerProtocol {
+
+    /// `true` if and only if the style JSON contents, the style specified sprite
+    /// and sources are all loaded, otherwise returns `false`.
     public var isLoaded: Bool {
         return styleManager.isStyleLoaded()
     }
 
+    /// Get or set the style URI
+    ///
+    /// Setting a new style is asynchronous. In order to get the result of this
+    /// operation, listen to `MapEvents.styleDataLoaded`, `MapEvents.styleLoaded`.
+    ///
+    /// - Attention:
+    ///     This method should be called on the same thread where the MapboxMap
+    ///     object is initialized.
     public var uri: StyleURI? {
         get {
             let uriString = styleManager.getStyleURI()
@@ -285,6 +296,11 @@ extension Style: StyleManagerProtocol {
         }
     }
 
+    /// Get or set the style via a JSON serialization string
+    ///
+    /// - Attention:
+    ///     This method should be called on the same thread where the MapboxMap
+    ///     object is initialized.
     public var JSON: String {
         get {
             styleManager.getStyleJSON()
@@ -294,10 +310,29 @@ extension Style: StyleManagerProtocol {
         }
     }
 
+    /// The map style's default camera, if any, or a default camera otherwise.
+    /// The map style default camera is defined as follows:
+    ///
+    /// - [center](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-center)
+    /// - [zoom](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-zoom)
+    /// - [bearing](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-bearing)
+    /// - [pitch](https://docs.mapbox.com/mapbox-gl-js/style-spec/#root-pitch)
+    ///
+    /// The style default camera is re-evaluated when a new style is loaded.
     public var defaultCamera: CameraOptions {
         return CameraOptions(styleManager.getStyleDefaultCamera())
     }
 
+    /// Get or set the map style's transition options.
+    ///
+    /// By default, the style parser will attempt to read the style default
+    /// transition options, if any, falling back to an immediate transition
+    /// otherwise.
+    ///
+    /// The style transition is re-evaluated when a new style is loaded.
+    ///
+    /// - Attention:
+    ///     Overridden transition options are reset once a new style has been loaded.
     public var transition: TransitionOptions {
         get {
             styleManager.getStyleTransition()
@@ -530,7 +565,7 @@ extension Style: StyleManagerProtocol {
     /// - See Also: https://docs.mapbox.com/mapbox-gl-js/style-spec/#sources
     ///
     /// - Parameters:
-    ///   - sourceId: An identifier for the style source.
+    ///   - id: An identifier for the style source.
     ///   - properties: A JSON dictionary of style source properties.
     ///
     /// - Throws:
@@ -543,7 +578,7 @@ extension Style: StyleManagerProtocol {
 
     /// Removes an existing style source.
     ///
-    /// - Parameter sourceId: Identifier of the style source to remove.
+    /// - Parameter id: Identifier of the style source to remove.
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
@@ -555,7 +590,7 @@ extension Style: StyleManagerProtocol {
 
     /// Checks whether a given style source exists.
     ///
-    /// - Parameter sourceId: Style source identifier.
+    /// - Parameter id: Style source identifier.
     ///
     /// - Returns: `true` if the given source exists, `false` otherwise.
     public func sourceExists(withId id: String) -> Bool {
@@ -655,7 +690,7 @@ extension Style: StyleManagerProtocol {
     /// - See Also: https://docs.mapbox.com/mapbox-gl-js/style-spec/#sources-image
     ///
     /// - Parameters:
-    ///   - sourceId: Style source identifier.
+    ///   - id: Style source identifier.
     ///   - image: UIImage
     ///
     /// - Throws:
@@ -669,8 +704,6 @@ extension Style: StyleManagerProtocol {
             return styleManager.updateStyleImageSourceImage(forSourceId: id, image: mbmImage)
         }
     }
-
-    // MARK: - Style images
 
     // MARK: Style images
 
@@ -751,7 +784,7 @@ extension Style: StyleManagerProtocol {
         return UIImage(mbxImage: mbmImage)
     }
 
-    // MARK: - Style
+    // MARK: Light
 
     /// Sets the style global light source properties.
     ///
@@ -839,7 +872,7 @@ extension Style: StyleManagerProtocol {
     /// and call `setCustomGeometrySourceTileData`.
     ///
     /// - Parameters:
-    ///   - sourceId: Style source identifier
+    ///   - id: Style source identifier
     ///   - options: Settings for the custom geometry
     ///
     /// - Throws:

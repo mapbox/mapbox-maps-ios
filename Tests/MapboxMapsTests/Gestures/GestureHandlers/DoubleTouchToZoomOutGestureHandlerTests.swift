@@ -20,6 +20,8 @@ final class DoubleTouchToZoomOutGestureHandlerTests: XCTestCase {
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
         delegate = MockGestureHandlerDelegate()
+        cameraAnimationsManager.delegate = delegate
+        cameraAnimationsManager.gestureType = .doubleTouchToZoomOut
         gestureHandler.delegate = delegate
     }
 
@@ -53,5 +55,9 @@ final class DoubleTouchToZoomOutGestureHandlerTests: XCTestCase {
         XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.gestureType, .doubleTouchToZoomOut)
         let willAnimate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willAnimate)
         XCTAssertTrue(willAnimate)
+
+        let animationEndedCompletion = try XCTUnwrap(cameraAnimationsManager.easeToStub.parameters.first?.completion)
+        animationEndedCompletion(.end)
+        XCTAssertEqual(delegate.animationEndedStub.parameters, [.doubleTouchToZoomOut])
     }
 }

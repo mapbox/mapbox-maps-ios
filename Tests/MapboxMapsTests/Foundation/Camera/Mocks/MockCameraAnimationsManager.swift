@@ -4,6 +4,7 @@ import Foundation
 final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
 
     var delegate: MockGestureHandlerDelegate?
+    var gestureType: GestureType?
 
     struct EaseToCameraParameters {
         var camera: CameraOptions
@@ -17,8 +18,8 @@ final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
               curve: UIView.AnimationCurve,
               completion: AnimationCompletion?) -> Cancelable? {
 
-        let completion: () -> Void = {
-            self.delegate?.animationEnded(for: .pan)
+        let completion: AnimationCompletion = { _ in
+            self.delegate?.animationEnded(for: self.gestureType!)
         }
 
         return easeToStub.call(

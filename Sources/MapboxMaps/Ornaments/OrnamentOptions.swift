@@ -70,7 +70,7 @@ public struct AttributionButtonOptions: OrnamentOptionsProtocol, Equatable {
     /// The default value for this property is `visible`. Setting this property to `.adaptive`
     /// will lead to the same behavior as `.visible`. The attribution button will be visible
     /// as long as the map view is visible.
-    public var _visibility: OrnamentVisibility = .visible
+    @_spi(Restricted) public var _visibility: OrnamentVisibility = .visible
 }
 
 /// Used to configure position, margin, and visibility for the map's logo view.
@@ -82,5 +82,5 @@ public struct LogoViewOptions: OrnamentOptionsProtocol, Equatable {
     /// The default value for this property is `visible`. Setting this property to `.adaptive`
     /// willl lead to the same behavior as `.visible`. The logo view will be visible as long
     /// as the map view is visible.
-    public var _visibility: OrnamentVisibility = .visible
+    @_spi(Restricted) public var _visibility: OrnamentVisibility = .visible
 }

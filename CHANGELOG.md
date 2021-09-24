@@ -7,6 +7,11 @@ Mapbox welcomes participation and contributions from everyone.
 ### Breaking changes ⚠️
 
 * Removes default parameter values in the `addImage` function. ([#695](https://github.com/mapbox/mapbox-maps-ios/pull/695))
+* `public func layer<T: Layer>(withId id: String) throws -> T` has been updated to `public func layer<T>(withId id: String, type: T.Type) throws -> T where T: Layer`. ([#694](https://github.com/mapbox/mapbox-maps-ios/pull/694))
+* `public func updateLayer<T: Layer>(withId id: String, update: (inout T) throws -> Void) throws` has been updated to `public func updateLayer<T>(withId id: String, type: T.Type, update: (inout T) throws -> Void) throws where T: Layer`. ([#694](https://github.com/mapbox/mapbox-maps-ios/pull/694))
+* `public func source<T: Source>(withId id: String) throws -> T` has been updated to `public func source<T>(withId id: String, type: T.Type) throws -> T where T: Source`. ([#694](https://github.com/mapbox/mapbox-maps-ios/pull/694))
+* `@_spi(Experimental) public func layer(withId id: String, type: Layer.Type) throws -> Layer` is no longer experimental and has been updated to `public func layer(withId id: String) throws -> Layer`. ([#694](https://github.com/mapbox/mapbox-maps-ios/pull/694))
+* `@_spi(Experimental) public func source(withId id: String, type: Source.Type) throws  -> Source` is no longer experimental and has been updated to `public func source(withId id: String) throws  -> Source`. ([#694](https://github.com/mapbox/mapbox-maps-ios/pull/694))
 * Converts `PointAnnotation.Image` from an `enum` to a `struct`. ([#707](https://github.com/mapbox/mapbox-maps-ios/pull/707))
 * Removes `PointAnnotation.Image.default`. ([#707](https://github.com/mapbox/mapbox-maps-ios/pull/707))
 * Replaces `PointAnnotation.Image.custom` with `PointAnnotation.Image.init(image:name:)`. ([#707](https://github.com/mapbox/mapbox-maps-ios/pull/707))
@@ -39,6 +44,9 @@ Mapbox welcomes participation and contributions from everyone.
 * `GestureType.doubleTapToZoomOut` has been replaced with `.doubleTouchToZoomOut`. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
 * `GestureType.rotate` has been removed. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
 * `GestureType` cases have been reordered for consistency with `GestureOptions` and `GestureManager`. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
+* `GestureManagerDelegate.gestureBegan(for:)` has been renamed to `GestureManagerDelegate.gestureManager(_:didBegin:)`. ([#697](https://github.com/mapbox/mapbox-maps-ios/pull/697))
+* Added the public delegate methods `GestureManagerDelegate.gestureManager(_:didEnd:willAnimate:)` and `GestureManagerDelegate.gestureManager(_:didEndAnimatingFor:)`. ([#697](https://github.com/mapbox/mapbox-maps-ios/pull/697))
+
 
 ### Features ✨ and improvements 🏁
 

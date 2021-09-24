@@ -40,7 +40,7 @@ final class VectorSourceIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the source
             do {
-                _ = try style.source(withId: "test-source") as VectorSource
+                _ = try style.source(withId: "test-source", type: VectorSource.self)
                 successfullyRetrievedSourceExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve VectorSource because of error: \(error)")

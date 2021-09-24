@@ -95,7 +95,7 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         // Update the museum layer's visibility based on whether the switch
         // is on. `visibility` is `nil` by default.
         do {
-            try style.updateLayer(withId: museumLayerId) { (layer: inout CircleLayer) in
+            try style.updateLayer(withId: museumLayerId, type: CircleLayer.self) { layer in
                 layer.visibility = .constant(sender.isOn ? .visible : .none)
             }
         } catch {
@@ -108,7 +108,7 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         // Update the contour layer's visibility based on whether the switch
         // is on.
         do {
-            try style.updateLayer(withId: contourLayerId) { (layer: inout CircleLayer) in
+            try style.updateLayer(withId: contourLayerId, type: CircleLayer.self) { layer in
                 layer.visibility = .constant(sender.isOn ? .visible : .none)
             }
         } catch {

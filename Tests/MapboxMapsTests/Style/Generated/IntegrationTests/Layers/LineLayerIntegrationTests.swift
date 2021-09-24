@@ -62,7 +62,7 @@ final class LineLayerIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the layer
             do {
-                _ = try style.layer(withId: "test-id") as LineLayer
+                _ = try style.layer(withId: "test-id", type: LineLayer.self)
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve LineLayer because of error: \(error)")

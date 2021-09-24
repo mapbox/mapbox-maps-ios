@@ -11,7 +11,7 @@ public struct LocationIndicatorLayer: Layer {
 
     // MARK: - Conformance to `Layer` protocol
     public var id: String
-    public var type: LayerType
+    public let type: LayerType
     public var filter: Expression?
     public var source: String?
     public var sourceLayer: String?

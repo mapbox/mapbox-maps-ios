@@ -45,7 +45,7 @@ final class BackgroundLayerIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the layer
             do {
-                _ = try style.layer(withId: "test-id") as BackgroundLayer
+                _ = try style.layer(withId: "test-id", type: BackgroundLayer.self)
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve BackgroundLayer because of error: \(error)")

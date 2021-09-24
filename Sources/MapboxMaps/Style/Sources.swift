@@ -18,9 +18,6 @@ public enum SourceType: String, Codable {
     /// An image source.
     case image = "image"
 
-    /// A video source.
-    case video = "video"
-
     /// A model source
     case model = "model"
 
@@ -30,12 +27,32 @@ public enum SourceType: String, Codable {
         case rasterDem = "raster-dem"
         case geojson = "geojson"
         case image = "image"
-        case video = "video"
         case model = "model"
+    }
+
+    /// The associated Swift struct type
+    public var sourceType: Source.Type {
+        switch self {
+        case .vector:
+            return VectorSource.self
+        case .raster:
+            return RasterSource.self
+        case .rasterDem:
+            return RasterDemSource.self
+        case .geoJson:
+            return GeoJSONSource.self
+        case .image:
+            return ImageSource.self
+        case .model:
+            return ModelSource.self
+        }
     }
 }
 
-public protocol Source: Codable, StyleEncodable, StyleDecodable { }
+public protocol Source: Codable, StyleEncodable, StyleDecodable {
+    /// Rendering type of this source.
+    var type: SourceType { get }
+}
 
 public extension Source {
     /// Initializes a Source given a JSON dictionary

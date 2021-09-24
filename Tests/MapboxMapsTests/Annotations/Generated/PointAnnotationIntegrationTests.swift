@@ -42,7 +42,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         manager.annotations.append(annotation)
 
         expectation(for: NSPredicate(block: { (_, _) in
-            guard let layer: SymbolLayer = try? self.style?.layer(withId: self.manager.layerId) else {
+            guard let layer = try? self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self) else {
                 return false
             }
             return layer.textSize == .expression(Exp(.number) {
@@ -68,7 +68,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconAllowOverlap, .constant(value))
 
         // Test that the property can be reset to nil
@@ -78,7 +78,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconAllowOverlap, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "icon-allow-overlap").value as! NSNumber).boolValue))
     }
 
@@ -90,7 +90,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconIgnorePlacement, .constant(value))
 
         // Test that the property can be reset to nil
@@ -100,7 +100,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconIgnorePlacement, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "icon-ignore-placement").value as! NSNumber).boolValue))
     }
 
@@ -112,7 +112,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconKeepUpright, .constant(value))
 
         // Test that the property can be reset to nil
@@ -122,7 +122,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconKeepUpright, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "icon-keep-upright").value as! NSNumber).boolValue))
     }
 
@@ -134,7 +134,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconOptional, .constant(value))
 
         // Test that the property can be reset to nil
@@ -144,7 +144,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconOptional, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "icon-optional").value as! NSNumber).boolValue))
     }
 
@@ -156,7 +156,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconPadding, .constant(Double(Float(value))))
 
         // Test that the property can be reset to nil
@@ -166,7 +166,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconPadding, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "icon-padding").value as! NSNumber).doubleValue))
     }
 
@@ -178,7 +178,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconPitchAlignment, .constant(value))
 
         // Test that the property can be reset to nil
@@ -188,7 +188,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconPitchAlignment, .constant(IconPitchAlignment(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "icon-pitch-alignment").value as! String)!))
     }
 
@@ -200,7 +200,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconRotationAlignment, .constant(value))
 
         // Test that the property can be reset to nil
@@ -210,7 +210,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconRotationAlignment, .constant(IconRotationAlignment(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "icon-rotation-alignment").value as! String)!))
     }
 
@@ -222,7 +222,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconTextFit, .constant(value))
 
         // Test that the property can be reset to nil
@@ -232,7 +232,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconTextFit, .constant(IconTextFit(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit").value as! String)!))
     }
 
@@ -244,7 +244,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconTextFitPadding, .constant(value.map { Double(Float($0)) }))
 
         // Test that the property can be reset to nil
@@ -254,7 +254,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconTextFitPadding, .constant(Style.layerPropertyDefaultValue(for: .symbol, property: "icon-text-fit-padding").value as! [Double]))
     }
 
@@ -266,7 +266,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.symbolAvoidEdges, .constant(value))
 
         // Test that the property can be reset to nil
@@ -276,7 +276,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.symbolAvoidEdges, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "symbol-avoid-edges").value as! NSNumber).boolValue))
     }
 
@@ -288,7 +288,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.symbolPlacement, .constant(value))
 
         // Test that the property can be reset to nil
@@ -298,7 +298,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.symbolPlacement, .constant(SymbolPlacement(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "symbol-placement").value as! String)!))
     }
 
@@ -310,7 +310,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.symbolSpacing, .constant(Double(Float(value))))
 
         // Test that the property can be reset to nil
@@ -320,7 +320,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.symbolSpacing, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "symbol-spacing").value as! NSNumber).doubleValue))
     }
 
@@ -332,7 +332,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.symbolZOrder, .constant(value))
 
         // Test that the property can be reset to nil
@@ -342,7 +342,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.symbolZOrder, .constant(SymbolZOrder(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "symbol-z-order").value as! String)!))
     }
 
@@ -354,7 +354,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textAllowOverlap, .constant(value))
 
         // Test that the property can be reset to nil
@@ -364,7 +364,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textAllowOverlap, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-allow-overlap").value as! NSNumber).boolValue))
     }
 
@@ -376,7 +376,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textFont, .constant(value))
 
         // Test that the property can be reset to nil
@@ -386,7 +386,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textFont, .constant(Style.layerPropertyDefaultValue(for: .symbol, property: "text-font").value as! [String]))
     }
 
@@ -398,7 +398,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textIgnorePlacement, .constant(value))
 
         // Test that the property can be reset to nil
@@ -408,7 +408,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textIgnorePlacement, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-ignore-placement").value as! NSNumber).boolValue))
     }
 
@@ -420,7 +420,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textKeepUpright, .constant(value))
 
         // Test that the property can be reset to nil
@@ -430,7 +430,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textKeepUpright, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-keep-upright").value as! NSNumber).boolValue))
     }
 
@@ -442,7 +442,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textLineHeight, .constant(Double(Float(value))))
 
         // Test that the property can be reset to nil
@@ -452,7 +452,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textLineHeight, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-line-height").value as! NSNumber).doubleValue))
     }
 
@@ -464,7 +464,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textMaxAngle, .constant(Double(Float(value))))
 
         // Test that the property can be reset to nil
@@ -474,7 +474,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textMaxAngle, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-max-angle").value as! NSNumber).doubleValue))
     }
 
@@ -486,7 +486,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textOptional, .constant(value))
 
         // Test that the property can be reset to nil
@@ -496,7 +496,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textOptional, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-optional").value as! NSNumber).boolValue))
     }
 
@@ -508,7 +508,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textPadding, .constant(Double(Float(value))))
 
         // Test that the property can be reset to nil
@@ -518,7 +518,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textPadding, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-padding").value as! NSNumber).doubleValue))
     }
 
@@ -530,7 +530,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textPitchAlignment, .constant(value))
 
         // Test that the property can be reset to nil
@@ -540,7 +540,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textPitchAlignment, .constant(TextPitchAlignment(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "text-pitch-alignment").value as! String)!))
     }
 
@@ -552,7 +552,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textRotationAlignment, .constant(value))
 
         // Test that the property can be reset to nil
@@ -562,7 +562,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textRotationAlignment, .constant(TextRotationAlignment(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "text-rotation-alignment").value as! String)!))
     }
 
@@ -574,7 +574,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textVariableAnchor, .constant(value))
 
         // Test that the property can be reset to nil
@@ -584,7 +584,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textVariableAnchor, .constant(Style.layerPropertyDefaultValue(for: .symbol, property: "text-variable-anchor").value as! [TextAnchor]))
     }
 
@@ -596,7 +596,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textWritingMode, .constant(value))
 
         // Test that the property can be reset to nil
@@ -606,7 +606,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textWritingMode, .constant(Style.layerPropertyDefaultValue(for: .symbol, property: "text-writing-mode").value as! [TextWritingMode]))
     }
 
@@ -618,7 +618,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconTranslate, .constant(value.map { Double(Float($0)) }))
 
         // Test that the property can be reset to nil
@@ -628,7 +628,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconTranslate, .constant(Style.layerPropertyDefaultValue(for: .symbol, property: "icon-translate").value as! [Double]))
     }
 
@@ -640,7 +640,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconTranslateAnchor, .constant(value))
 
         // Test that the property can be reset to nil
@@ -650,7 +650,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconTranslateAnchor, .constant(IconTranslateAnchor(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "icon-translate-anchor").value as! String)!))
     }
 
@@ -662,7 +662,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textTranslate, .constant(value.map { Double(Float($0)) }))
 
         // Test that the property can be reset to nil
@@ -672,7 +672,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textTranslate, .constant(Style.layerPropertyDefaultValue(for: .symbol, property: "text-translate").value as! [Double]))
     }
 
@@ -684,7 +684,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textTranslateAnchor, .constant(value))
 
         // Test that the property can be reset to nil
@@ -694,7 +694,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textTranslateAnchor, .constant(TextTranslateAnchor(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "text-translate-anchor").value as! String)!))
     }
 
@@ -709,7 +709,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconAnchor, .expression(Exp(.toString) {
                 Exp(.get) {
                     "icon-anchor"
@@ -730,7 +730,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconAnchor, .constant(IconAnchor(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "icon-anchor").value as! String)!))
     }
 
@@ -745,7 +745,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconImage, .expression(Exp(.image) {
                 Exp(.get) {
                     "icon-image"
@@ -766,7 +766,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconImage, .constant(.name(Style.layerPropertyDefaultValue(for: .symbol, property: "icon-image").value as! String)))
     }
 
@@ -781,7 +781,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconOffset, .expression(Exp(.array) {
                 "number"
                 2
@@ -804,7 +804,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconOffset, .constant(Style.layerPropertyDefaultValue(for: .symbol, property: "icon-offset").value as! [Double]))
     }
 
@@ -819,7 +819,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconRotate, .expression(Exp(.number) {
                 Exp(.get) {
                     "icon-rotate"
@@ -840,7 +840,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconRotate, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "icon-rotate").value as! NSNumber).doubleValue))
     }
 
@@ -855,7 +855,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconSize, .expression(Exp(.number) {
                 Exp(.get) {
                     "icon-size"
@@ -876,7 +876,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconSize, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "icon-size").value as! NSNumber).doubleValue))
     }
 
@@ -891,7 +891,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.symbolSortKey, .expression(Exp(.number) {
                 Exp(.get) {
                     "symbol-sort-key"
@@ -912,7 +912,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.symbolSortKey, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "symbol-sort-key").value as! NSNumber).doubleValue))
     }
 
@@ -927,7 +927,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textAnchor, .expression(Exp(.toString) {
                 Exp(.get) {
                     "text-anchor"
@@ -948,7 +948,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textAnchor, .constant(TextAnchor(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "text-anchor").value as! String)!))
     }
 
@@ -963,7 +963,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textField, .expression(Exp(.format) {
                 Exp(.get) {
                     "text-field"
@@ -985,7 +985,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textField, .expression(Exp(.format) {
             ""
             FormatOptions()
@@ -1003,7 +1003,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textJustify, .expression(Exp(.toString) {
                 Exp(.get) {
                     "text-justify"
@@ -1024,7 +1024,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textJustify, .constant(TextJustify(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "text-justify").value as! String)!))
     }
 
@@ -1039,7 +1039,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textLetterSpacing, .expression(Exp(.number) {
                 Exp(.get) {
                     "text-letter-spacing"
@@ -1060,7 +1060,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textLetterSpacing, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-letter-spacing").value as! NSNumber).doubleValue))
     }
 
@@ -1075,7 +1075,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textMaxWidth, .expression(Exp(.number) {
                 Exp(.get) {
                     "text-max-width"
@@ -1096,7 +1096,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textMaxWidth, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-max-width").value as! NSNumber).doubleValue))
     }
 
@@ -1111,7 +1111,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textOffset, .expression(Exp(.array) {
                 "number"
                 2
@@ -1134,7 +1134,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textOffset, .constant(Style.layerPropertyDefaultValue(for: .symbol, property: "text-offset").value as! [Double]))
     }
 
@@ -1149,7 +1149,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textRadialOffset, .expression(Exp(.number) {
                 Exp(.get) {
                     "text-radial-offset"
@@ -1170,7 +1170,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textRadialOffset, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-radial-offset").value as! NSNumber).doubleValue))
     }
 
@@ -1185,7 +1185,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textRotate, .expression(Exp(.number) {
                 Exp(.get) {
                     "text-rotate"
@@ -1206,7 +1206,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textRotate, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-rotate").value as! NSNumber).doubleValue))
     }
 
@@ -1221,7 +1221,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textSize, .expression(Exp(.number) {
                 Exp(.get) {
                     "text-size"
@@ -1242,7 +1242,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textSize, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-size").value as! NSNumber).doubleValue))
     }
 
@@ -1257,7 +1257,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textTransform, .expression(Exp(.toString) {
                 Exp(.get) {
                     "text-transform"
@@ -1278,7 +1278,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textTransform, .constant(TextTransform(rawValue: Style.layerPropertyDefaultValue(for: .symbol, property: "text-transform").value as! String)!))
     }
 
@@ -1293,7 +1293,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconColor, .expression(Exp(.toColor) {
                 Exp(.get) {
                     "icon-color"
@@ -1314,7 +1314,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style.layerPropertyDefaultValue(for: .symbol, property: "icon-color").value as! [Any], options: []))))
     }
 
@@ -1329,7 +1329,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconHaloBlur, .expression(Exp(.number) {
                 Exp(.get) {
                     "icon-halo-blur"
@@ -1350,7 +1350,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconHaloBlur, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "icon-halo-blur").value as! NSNumber).doubleValue))
     }
 
@@ -1365,7 +1365,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconHaloColor, .expression(Exp(.toColor) {
                 Exp(.get) {
                     "icon-halo-color"
@@ -1386,7 +1386,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconHaloColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style.layerPropertyDefaultValue(for: .symbol, property: "icon-halo-color").value as! [Any], options: []))))
     }
 
@@ -1401,7 +1401,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconHaloWidth, .expression(Exp(.number) {
                 Exp(.get) {
                     "icon-halo-width"
@@ -1422,7 +1422,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconHaloWidth, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "icon-halo-width").value as! NSNumber).doubleValue))
     }
 
@@ -1437,7 +1437,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconOpacity, .expression(Exp(.number) {
                 Exp(.get) {
                     "icon-opacity"
@@ -1458,7 +1458,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.iconOpacity, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "icon-opacity").value as! NSNumber).doubleValue))
     }
 
@@ -1473,7 +1473,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textColor, .expression(Exp(.toColor) {
                 Exp(.get) {
                     "text-color"
@@ -1494,7 +1494,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style.layerPropertyDefaultValue(for: .symbol, property: "text-color").value as! [Any], options: []))))
     }
 
@@ -1509,7 +1509,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textHaloBlur, .expression(Exp(.number) {
                 Exp(.get) {
                     "text-halo-blur"
@@ -1530,7 +1530,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textHaloBlur, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-halo-blur").value as! NSNumber).doubleValue))
     }
 
@@ -1545,7 +1545,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textHaloColor, .expression(Exp(.toColor) {
                 Exp(.get) {
                     "text-halo-color"
@@ -1566,7 +1566,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textHaloColor, .constant(try! JSONDecoder().decode(StyleColor.self, from: JSONSerialization.data(withJSONObject: Style.layerPropertyDefaultValue(for: .symbol, property: "text-halo-color").value as! [Any], options: []))))
     }
 
@@ -1581,7 +1581,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textHaloWidth, .expression(Exp(.number) {
                 Exp(.get) {
                     "text-halo-width"
@@ -1602,7 +1602,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textHaloWidth, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-halo-width").value as! NSNumber).doubleValue))
     }
 
@@ -1617,7 +1617,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
 
         // Test that the value is synced to the layer
         manager.syncSourceAndLayerIfNeeded()
-        var layer: SymbolLayer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        var layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textOpacity, .expression(Exp(.number) {
                 Exp(.get) {
                     "text-opacity"
@@ -1638,7 +1638,7 @@ final class PointAnnotationIntegrationTests: MapViewIntegrationTestCase {
         // Verify that when the property is reset to nil,
         // the layer is returned to the default value
         manager.syncSourceAndLayerIfNeeded()
-        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId))
+        layer = try XCTUnwrap(self.style?.layer(withId: self.manager.layerId, type: SymbolLayer.self))
         XCTAssertEqual(layer.textOpacity, .constant((Style.layerPropertyDefaultValue(for: .symbol, property: "text-opacity").value as! NSNumber).doubleValue))
     }
 }

@@ -47,7 +47,7 @@ final class HeatmapLayerIntegrationTests: MapViewIntegrationTestCase {
 
             // Retrieve the layer
             do {
-                _ = try style.layer(withId: "test-id") as HeatmapLayer
+                _ = try style.layer(withId: "test-id", type: HeatmapLayer.self)
                 successfullyRetrievedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to retrieve HeatmapLayer because of error: \(error)")

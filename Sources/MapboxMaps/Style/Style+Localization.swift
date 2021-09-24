@@ -24,7 +24,7 @@ extension Style {
         }
 
         for layerInfo in symbolLayers {
-            let symbolLayer = try layer(withId: layerInfo.id) as SymbolLayer
+            let symbolLayer = try layer(withId: layerInfo.id, type: SymbolLayer.self)
             if let convertedExpression = try! convertExpressionForLocalization(symbolLayer: symbolLayer, localeValue: localeValue) {
                 try setLayerProperty(for: symbolLayer.id, property: "text-field", value: convertedExpression)
             }
@@ -49,7 +49,7 @@ extension Style {
         for sourceInfo in vectorSources {
             if locale.identifier.starts(with: "zh") {
                 // Force unwrapping since `allSourceIdentifiers` is getting a fresh list of valid sources
-                let vectorSource = try! source(withId: sourceInfo.id) as VectorSource
+                let vectorSource = try! source(withId: sourceInfo.id, type: VectorSource.self)
 
                 if vectorSource.url?.contains("mapbox.mapbox-streets-v7") == true {
                     // v7 styles does not support value of "name_zh-Hant"

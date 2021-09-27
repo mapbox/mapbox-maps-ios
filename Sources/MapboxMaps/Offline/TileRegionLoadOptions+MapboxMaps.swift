@@ -32,11 +32,12 @@ extension TileRegionLoadOptions {
             }
         }
 
-        guard let geometry = geometry else {
-            return nil
+        var commonGeometry: MapboxCommon.Geometry?
+        if let geometry = geometry {
+            commonGeometry = MapboxCommon.Geometry(geometry: geometry)
         }
 
-        self.init(__geometry: MapboxCommon.Geometry(geometry: geometry),
+        self.init(__geometry: commonGeometry,
                   descriptors: descriptors.isEmpty ? nil : descriptors,
                   metadata: metadata,
                   acceptExpired: acceptExpired,

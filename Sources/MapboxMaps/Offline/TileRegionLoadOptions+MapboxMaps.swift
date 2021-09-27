@@ -54,6 +54,7 @@ extension TileRegionLoadOptions {
         __averageBytesPerSecond?.intValue
     }
 
+    /// The geometry supported by these options.
     public var geometry: Geometry? {
         guard let commonGeometry = __geometry else {
             return nil

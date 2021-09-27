@@ -20,7 +20,7 @@ extension TileRegionLoadOptions {
     ///
     /// If `metadata` is not a valid JSON object, then this initializer returns
     /// `nil`.
-    public convenience init?(geometry: Geometry,
+    public convenience init?(geometry: Geometry?,
                              descriptors: [TilesetDescriptor],
                              metadata: Any? = nil,
                              acceptExpired: Bool = false ,
@@ -30,6 +30,10 @@ extension TileRegionLoadOptions {
             guard JSONSerialization.isValidJSONObject(metadata) else {
                 return nil
             }
+        }
+
+        guard let geometry = geometry else {
+            return nil
         }
 
         self.init(__geometry: MapboxCommon.Geometry(geometry: geometry),

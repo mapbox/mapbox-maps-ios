@@ -19,6 +19,9 @@ Mapbox welcomes participation and contributions from everyone.
 * `public func layerProperty(for layerId: String, property: String) -> Any` has been renamed to `public func layerPropertyValue(for layerId: String, property: String) -> Any` to avoid ambiguity. ([#708](https://github.com/mapbox/mapbox-maps-ios/pull/708))
 * `MapboxCommon.Geometry` extension methods are now marked as internal. ([#683](https://github.com/mapbox/mapbox-maps-ios/pull/683))
 * `TileRegionLoadOptions` init now takes a `Geometry` instead of a `MapboxCommon.Geometry`. ([#711](https://github.com/mapbox/mapbox-maps-ios/pull/711))
+
+### Features ✨ and improvements 🏁
+
 * `TileRegionLoadOptions` exposes its geometry as a `Geometry`. ([#711](https://github.com/mapbox/mapbox-maps-ios/pull/711))
 
 ## 10.0.0-rc.9 - Sept 22, 2021

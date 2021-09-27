@@ -226,41 +226,6 @@ public class Style {
         return terrainProperty(property).value
     }
 
-    // MARK: - Conversion helpers
-
-    private func handleExpected(closure: () -> (Expected<AnyObject, AnyObject>)) throws {
-        let expected = closure()
-
-        if expected.isError() {
-            // swiftlint:disable force_cast
-            throw StyleError(message: expected.error as! String)
-            // swiftlint:enable force_cast
-        }
-    }
-
-    private func handleExpected<T>(closure: () -> (Expected<AnyObject, AnyObject>)) throws -> T {
-        let expected = closure()
-
-        if expected.isError() {
-            // swiftlint:disable force_cast
-            throw StyleError(message: expected.error as! String)
-            // swiftlint:enable force_cast
-        }
-
-        guard let result = expected.value as? T else {
-            assertionFailure("Unexpected type mismatch. Type: \(String(describing: expected.value)) expect \(T.self)")
-            throw TypeConversionError.unexpectedType
-        }
-
-        return result
-    }
-}
-
-// MARK: - StyleManagerProtocol -
-
-// See `StyleManagerProtocol` for documentation for the following APIs
-extension Style: StyleManagerProtocol {
-
     /// `true` if and only if the style JSON contents, the style specified sprite
     /// and sources are all loaded, otherwise returns `false`.
     public var isLoaded: Bool {
@@ -925,6 +890,35 @@ extension Style: StyleManagerProtocol {
         return try handleExpected {
             return styleManager.invalidateStyleCustomGeometrySourceRegion(forSourceId: sourceId, bounds: bounds)
         }
+    }
+
+    // MARK: - Conversion helpers
+
+    private func handleExpected(closure: () -> (Expected<AnyObject, AnyObject>)) throws {
+        let expected = closure()
+
+        if expected.isError() {
+            // swiftlint:disable force_cast
+            throw StyleError(message: expected.error as! String)
+            // swiftlint:enable force_cast
+        }
+    }
+
+    private func handleExpected<T>(closure: () -> (Expected<AnyObject, AnyObject>)) throws -> T {
+        let expected = closure()
+
+        if expected.isError() {
+            // swiftlint:disable force_cast
+            throw StyleError(message: expected.error as! String)
+            // swiftlint:enable force_cast
+        }
+
+        guard let result = expected.value as? T else {
+            assertionFailure("Unexpected type mismatch. Type: \(String(describing: expected.value)) expect \(T.self)")
+            throw TypeConversionError.unexpectedType
+        }
+
+        return result
     }
 }
 

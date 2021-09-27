@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 class Puck2DIntegrationTests: MapViewIntegrationTestCase {
     var resourceOptions: ResourceOptions!

@@ -28,6 +28,10 @@ Mapbox welcomes participation and contributions from everyone.
 * APIs that accept Turf `Feature` now allow `Feature.identifier` and `.properties` to be `nil`. ([#717](https://github.com/mapbox/mapbox-maps-ios/pull/717))
 * APIs that accept Turf `Feature` now ignore `Feature.properties` instead of crashing if it cannot be converted to `[String: NSObject]`. ([#717](https://github.com/mapbox/mapbox-maps-ios/pull/717))
 
+### Features ✨ and improvements 🏁
+
+* Any touch event in the map now immedately disables camera animation. Temporarily disable user interaction on the MapView to disable this behavior as needed. ([#712](https://github.com/mapbox/mapbox-maps-ios/pull/712))
+
 ## 10.0.0-rc.9 - Sept 22, 2021
 
 ### Breaking changes ⚠️
@@ -58,7 +62,6 @@ Mapbox welcomes participation and contributions from everyone.
 * `GestureType` cases have been reordered for consistency with `GestureOptions` and `GestureManager`. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
 * `GestureManagerDelegate.gestureBegan(for:)` has been renamed to `GestureManagerDelegate.gestureManager(_:didBegin:)`. ([#697](https://github.com/mapbox/mapbox-maps-ios/pull/697))
 * Added the public delegate methods `GestureManagerDelegate.gestureManager(_:didEnd:willAnimate:)` and `GestureManagerDelegate.gestureManager(_:didEndAnimatingFor:)`. ([#697](https://github.com/mapbox/mapbox-maps-ios/pull/697))
-
 
 ### Features ✨ and improvements 🏁
 

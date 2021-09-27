@@ -1,6 +1,6 @@
 import UIKit.UIGestureRecognizerSubclass
 
-final class AnyTouchGestureRecognizer: UIGestureRecognizer {
+internal final class AnyTouchGestureRecognizer: UIGestureRecognizer {
 
     private var touches: Set<UITouch> = [] {
         didSet {

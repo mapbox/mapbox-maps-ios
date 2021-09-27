@@ -6,6 +6,7 @@ final class OrnamentManagerTests: XCTestCase {
     var view: UIView!
     var mapboxMap: MockMapboxMap!
     var cameraAnimationsManager: MockCameraAnimationsManager!
+    // swiftlint:disable:next weak_delegate
     var infoButtonOrnamentDelegate: MockInfoButtonOrnamentDelegate!
     var ornamentsManager: OrnamentsManager!
 

@@ -1,5 +1,5 @@
 import Foundation
-import MapboxMaps
+@testable import MapboxMaps
 import XCTest
 
 // These tests are used for documentation purposes
@@ -64,7 +64,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
 
         // 2. Create the TileRegionLoadOptions
         let tileRegionLoadOptions = TileRegionLoadOptions(
-            geometry: MapboxCommon.Geometry(coordinate: tokyoCoord),
+            geometry: MapboxCommon.Geometry(geometry: .point(Point(self.tokyoCoord))),
             descriptors: [tilesetDescriptor],
             acceptExpired: true)
 
@@ -95,7 +95,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
             "name": "my-region",
             "my-other-key": "my-other-tile-region-value"]
         let tileRegionLoadOptions = TileRegionLoadOptions(
-            geometry: MapboxCommon.Geometry(coordinate: tokyoCoord),
+            geometry: MapboxCommon.Geometry(geometry: .point(Point(self.tokyoCoord))),
             descriptors: [],
             metadata: metadata,
             acceptExpired: true)
@@ -179,7 +179,7 @@ class OfflineGuideIntegrationTests: XCTestCase {
 
         // Load the tile region
         let tileRegionLoadOptions = TileRegionLoadOptions(
-            geometry: MapboxCommon.Geometry(coordinate: tokyoCoord),
+            geometry: MapboxCommon.Geometry(geometry: .point(Point(self.tokyoCoord))),
             descriptors: [tilesetDescriptor],
             acceptExpired: true)!
 

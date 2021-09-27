@@ -4,8 +4,6 @@ import XCTest
 final class SingleTapGestureHandlerTests: XCTestCase {
 
     var gestureRecognizer: MockTapGestureRecognizer!
-    var cameraAnimationsManager: MockCameraAnimationsManager!
-    var mapboxMap: MockMapboxMap!
     var gestureHandler: SingleTapGestureHandler!
     // swiftlint:disable:next weak_delegate
     var delegate: MockGestureHandlerDelegate!
@@ -13,12 +11,7 @@ final class SingleTapGestureHandlerTests: XCTestCase {
     override func setUp() {
         super.setUp()
         gestureRecognizer = MockTapGestureRecognizer()
-        cameraAnimationsManager = MockCameraAnimationsManager()
-        mapboxMap = MockMapboxMap()
-        gestureHandler = SingleTapGestureHandler(
-            gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap,
-            cameraAnimationsManager: cameraAnimationsManager)
+        gestureHandler = SingleTapGestureHandler(gestureRecognizer: gestureRecognizer)
         delegate = MockGestureHandlerDelegate()
         gestureHandler.delegate = delegate
     }
@@ -26,8 +19,6 @@ final class SingleTapGestureHandlerTests: XCTestCase {
     override func tearDown() {
         delegate = nil
         gestureHandler = nil
-        mapboxMap = nil
-        cameraAnimationsManager = nil
         gestureRecognizer = nil
         super.tearDown()
     }
@@ -43,6 +34,5 @@ final class SingleTapGestureHandlerTests: XCTestCase {
         gestureRecognizer.sendActions()
 
         XCTAssertEqual(delegate.gestureBeganStub.parameters, [.singleTap])
-        XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1)
     }
 }

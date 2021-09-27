@@ -12,6 +12,7 @@ final class GestureManagerTests: XCTestCase {
     var doubleTouchToZoomOutGestureHandler: GestureHandler!
     var quickZoomGestureHandler: GestureHandler!
     var singleTapGestureHandler: GestureHandler!
+    var animationLockoutGestureHandler: GestureHandler!
     var gestureManager: GestureManager!
     // swiftlint:disable:next weak_delegate
     var delegate: MockGestureManagerDelegate!
@@ -21,15 +22,14 @@ final class GestureManagerTests: XCTestCase {
         mapboxMap = MockMapboxMap()
         cameraAnimationsManager = MockCameraAnimationsManager()
         panGestureHandler = MockPanGestureHandler(
-            gestureRecognizer: MockGestureRecognizer(),
-            mapboxMap: mapboxMap,
-            cameraAnimationsManager: cameraAnimationsManager)
+            gestureRecognizer: MockGestureRecognizer())
         pinchGestureHandler = makeGestureHandler()
         pitchGestureHandler = makeGestureHandler()
         doubleTapToZoomInGestureHandler = makeGestureHandler()
         doubleTouchToZoomOutGestureHandler = makeGestureHandler()
         quickZoomGestureHandler = makeGestureHandler()
         singleTapGestureHandler = makeGestureHandler()
+        animationLockoutGestureHandler = makeGestureHandler()
         gestureManager = GestureManager(
             panGestureHandler: panGestureHandler,
             pinchGestureHandler: pinchGestureHandler,
@@ -37,20 +37,22 @@ final class GestureManagerTests: XCTestCase {
             doubleTapToZoomInGestureHandler: doubleTapToZoomInGestureHandler,
             doubleTouchToZoomOutGestureHandler: doubleTouchToZoomOutGestureHandler,
             quickZoomGestureHandler: quickZoomGestureHandler,
-            singleTapGestureHandler: singleTapGestureHandler)
-        delegate =  MockGestureManagerDelegate()
+            singleTapGestureHandler: singleTapGestureHandler,
+            animationLockoutGestureHandler: animationLockoutGestureHandler)
+        delegate = MockGestureManagerDelegate()
         gestureManager.delegate = delegate
     }
 
     override func tearDown() {
         delegate = nil
         gestureManager = nil
+        animationLockoutGestureHandler = nil
+        singleTapGestureHandler = nil
         quickZoomGestureHandler = nil
         doubleTouchToZoomOutGestureHandler = nil
         doubleTapToZoomInGestureHandler = nil
         pitchGestureHandler = nil
         pinchGestureHandler = nil
-        singleTapGestureHandler = nil
         panGestureHandler = nil
         cameraAnimationsManager = nil
         mapboxMap = nil
@@ -58,10 +60,7 @@ final class GestureManagerTests: XCTestCase {
     }
 
     func makeGestureHandler() -> GestureHandler {
-        return GestureHandler(
-            gestureRecognizer: MockGestureRecognizer(),
-            mapboxMap: mapboxMap,
-            cameraAnimationsManager: cameraAnimationsManager)
+        return GestureHandler(gestureRecognizer: MockGestureRecognizer())
     }
 
     func testPanGestureRecognizer() {

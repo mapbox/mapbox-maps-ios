@@ -30,25 +30,21 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     }
 
     func makePinchGestureHandler(view: UIView,
-                                 mapboxMap: MapboxMapProtocol,
-                                 cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
+                                 mapboxMap: MapboxMapProtocol) -> GestureHandler {
         let gestureRecognizer = UIPinchGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         return PinchGestureHandler(
             gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap,
-            cameraAnimationsManager: cameraAnimationsManager)
+            mapboxMap: mapboxMap)
     }
 
     func makePitchGestureHandler(view: UIView,
-                                 mapboxMap: MapboxMapProtocol,
-                                 cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
+                                 mapboxMap: MapboxMapProtocol) -> GestureHandler {
         let gestureRecognizer = UIPanGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         return PitchGestureHandler(
             gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap,
-            cameraAnimationsManager: cameraAnimationsManager)
+            mapboxMap: mapboxMap)
     }
 
     func makeDoubleTapToZoomInGestureHandler(view: UIView,
@@ -57,17 +53,6 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
         let gestureRecognizer = UITapGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         return DoubleTapToZoomInGestureHandler(
-            gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap,
-            cameraAnimationsManager: cameraAnimationsManager)
-    }
-
-    func makeSingleTapGestureHandler(view: UIView,
-                                     mapboxMap: MapboxMapProtocol,
-                                     cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
-        let gestureRecognizer = UITapGestureRecognizer()
-        view.addGestureRecognizer(gestureRecognizer)
-        return SingleTapGestureHandler(
             gestureRecognizer: gestureRecognizer,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager)
@@ -85,13 +70,28 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     }
 
     func makeQuickZoomGestureHandler(view: UIView,
-                                     mapboxMap: MapboxMapProtocol,
-                                     cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
+                                     mapboxMap: MapboxMapProtocol) -> GestureHandler {
         let gestureRecognizer = UILongPressGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         return QuickZoomGestureHandler(
             gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap,
+            mapboxMap: mapboxMap)
+    }
+
+    func makeSingleTapGestureHandler(view: UIView,
+                                     mapboxMap: MapboxMapProtocol) -> GestureHandler {
+        let gestureRecognizer = UITapGestureRecognizer()
+        view.addGestureRecognizer(gestureRecognizer)
+        return SingleTapGestureHandler(gestureRecognizer: gestureRecognizer)
+    }
+
+    func makeAnimationLockoutGestureHandler(view: UIView,
+                                            mapboxMap: MapboxMapProtocol,
+                                            cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
+        let gestureRecognizer = AnyTouchGestureRecognizer()
+        view.addGestureRecognizer(gestureRecognizer)
+        return AnimationLockoutGestureHandler(
+            gestureRecognizer: gestureRecognizer,
             cameraAnimationsManager: cameraAnimationsManager)
     }
 
@@ -105,12 +105,10 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                 cameraAnimationsManager: cameraAnimationsManager),
             pinchGestureHandler: makePinchGestureHandler(
                 view: view,
-                mapboxMap: mapboxMap,
-                cameraAnimationsManager: cameraAnimationsManager),
+                mapboxMap: mapboxMap),
             pitchGestureHandler: makePitchGestureHandler(
                 view: view,
-                mapboxMap: mapboxMap,
-                cameraAnimationsManager: cameraAnimationsManager),
+                mapboxMap: mapboxMap),
             doubleTapToZoomInGestureHandler: makeDoubleTapToZoomInGestureHandler(
                 view: view,
                 mapboxMap: mapboxMap,
@@ -121,9 +119,11 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                 cameraAnimationsManager: cameraAnimationsManager),
             quickZoomGestureHandler: makeQuickZoomGestureHandler(
                 view: view,
-                mapboxMap: mapboxMap,
-                cameraAnimationsManager: cameraAnimationsManager),
+                mapboxMap: mapboxMap),
             singleTapGestureHandler: makeSingleTapGestureHandler(
+                view: view,
+                mapboxMap: mapboxMap),
+            animationLockoutGestureHandler: makeAnimationLockoutGestureHandler(
                 view: view,
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: cameraAnimationsManager))

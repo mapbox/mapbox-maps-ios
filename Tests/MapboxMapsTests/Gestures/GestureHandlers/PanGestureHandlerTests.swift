@@ -51,7 +51,6 @@ final class PanGestureHandlerTests: XCTestCase {
 
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1)
         XCTAssertEqual(delegate.gestureBeganStub.parameters, [.pan])
     }
 
@@ -68,12 +67,10 @@ final class PanGestureHandlerTests: XCTestCase {
             initialTouchLocation, changedTouchLocation]
         panGestureHandler.panMode = panMode
         gestureRecognizer.sendActions()
-        cameraAnimationsManager.cancelAnimationsStub.reset()
         gestureRecognizer.getStateStub.defaultReturnValue = .changed
 
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1, line: line)
         XCTAssertEqual(mapboxMap.dragStartStub.parameters, [initialTouchLocation], line: line)
         XCTAssertEqual(mapboxMap.dragCameraOptionsStub.parameters, [
                         .init(from: initialTouchLocation, to: clampedTouchLocation)], line: line)
@@ -157,7 +154,6 @@ final class PanGestureHandlerTests: XCTestCase {
         gestureRecognizer.sendActions()
         gestureRecognizer.getStateStub.defaultReturnValue = .changed
         gestureRecognizer.sendActions()
-        cameraAnimationsManager.cancelAnimationsStub.reset()
         mapboxMap.dragStartStub.reset()
         mapboxMap.dragCameraOptionsStub.reset()
         mapboxMap.dragEndStub.reset()
@@ -253,13 +249,13 @@ final class PanGestureHandlerTests: XCTestCase {
         gestureRecognizer.sendActions() // changed 1
         gestureRecognizer.sendActions() // ended 1
 
-        // began 2 - triggers decelerate animation completion as a side effect of cancelling animations
-        let decelerateAnimationCompletion = try XCTUnwrap(cameraAnimationsManager.decelerateStub.parameters.first?.completion)
-        cameraAnimationsManager.cancelAnimationsStub.sideEffectQueue.append { _ in
-            decelerateAnimationCompletion()
-        }
+        // began 2
         gestureRecognizer.sendActions()
         mapboxMap.setCameraStub.reset()
+
+        // cancel deceleration *after* the second gesture begins
+        let decelerateAnimationCompletion = try XCTUnwrap(cameraAnimationsManager.decelerateStub.parameters.first?.completion)
+        decelerateAnimationCompletion()
 
         // changed 2 should still result in camera updates. a previous
         // implementation had a bug here where the cancellation of the animation

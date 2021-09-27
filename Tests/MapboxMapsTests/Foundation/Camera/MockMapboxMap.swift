@@ -53,4 +53,14 @@ final class MockMapboxMap: MapboxMapProtocol {
     func dragEnd() {
         dragEndStub.call()
     }
+
+    struct OnEveryParams {
+        var eventType: MapEvents.EventKind
+        var handler: (Event) -> Void
+    }
+    let onEveryStub = Stub<OnEveryParams, Cancelable>(defaultReturnValue: MockCancelable())
+    @discardableResult
+    func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
+        onEveryStub.call(with: OnEveryParams(eventType: eventType, handler: handler))
+    }
 }

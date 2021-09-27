@@ -5,15 +5,14 @@ import UIKit
 internal final class PitchGestureHandler: GestureHandler, UIGestureRecognizerDelegate {
     private var initialPitch: CGFloat?
 
+    private let mapboxMap: MapboxMapProtocol
+
     internal init(gestureRecognizer: UIPanGestureRecognizer,
-                  mapboxMap: MapboxMapProtocol,
-                  cameraAnimationsManager: CameraAnimationsManagerProtocol) {
+                  mapboxMap: MapboxMapProtocol) {
         gestureRecognizer.minimumNumberOfTouches = 2
         gestureRecognizer.maximumNumberOfTouches = 2
-        super.init(
-            gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap,
-            cameraAnimationsManager: cameraAnimationsManager)
+        self.mapboxMap = mapboxMap
+        super.init(gestureRecognizer: gestureRecognizer)
         gestureRecognizer.delegate = self
         gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
@@ -38,7 +37,6 @@ internal final class PitchGestureHandler: GestureHandler, UIGestureRecognizerDel
         switch gestureRecognizer.state {
         case .began:
             initialPitch = mapboxMap.cameraState.pitch
-            cameraAnimationsManager.cancelAnimations()
             delegate?.gestureBegan(for: .pitch)
         case .changed:
             guard let view = gestureRecognizer.view,

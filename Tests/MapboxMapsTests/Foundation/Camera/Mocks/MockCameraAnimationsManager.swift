@@ -27,6 +27,8 @@ final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
         cancelAnimationsStub.call()
     }
 
+    var animationsEnabled: Bool = true
+
     struct DecelerateParameters {
         var location: CGPoint
         var velocity: CGPoint

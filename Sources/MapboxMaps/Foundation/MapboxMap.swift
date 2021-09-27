@@ -12,6 +12,9 @@ internal protocol MapboxMapProtocol: AnyObject {
     func dragStart(for point: CGPoint)
     func dragCameraOptions(from: CGPoint, to: CGPoint) -> CameraOptions
     func dragEnd()
+
+    @discardableResult
+    func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable
 }
 
 public final class MapboxMap: MapboxMapProtocol {

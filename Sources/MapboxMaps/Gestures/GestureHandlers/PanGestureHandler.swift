@@ -25,6 +25,10 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
     /// The date when the most recent gesture changed event was handled
     private var lastChangedDate: Date?
 
+    private let mapboxMap: MapboxMapProtocol
+
+    private let cameraAnimationsManager: CameraAnimationsManagerProtocol
+
     /// Provides access to the current date in a way that can be mocked
     /// for unit testing
     private let dateProvider: DateProvider
@@ -34,11 +38,10 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
                   cameraAnimationsManager: CameraAnimationsManagerProtocol,
                   dateProvider: DateProvider) {
         gestureRecognizer.maximumNumberOfTouches = 1
+        self.mapboxMap = mapboxMap
+        self.cameraAnimationsManager = cameraAnimationsManager
         self.dateProvider = dateProvider
-        super.init(
-            gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap,
-            cameraAnimationsManager: cameraAnimationsManager)
+        super.init(gestureRecognizer: gestureRecognizer)
         gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
 
@@ -53,7 +56,6 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
         case .began:
             initialTouchLocation = touchLocation
             initialCameraState = mapboxMap.cameraState
-            cameraAnimationsManager.cancelAnimations()
             delegate?.gestureBegan(for: .pan)
         case .changed:
             guard let initialTouchLocation = initialTouchLocation,
@@ -61,7 +63,6 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
                 return
             }
             lastChangedDate = dateProvider.now
-            cameraAnimationsManager.cancelAnimations()
             handleChange(
                 withTouchLocation: touchLocation,
                 initialTouchLocation: initialTouchLocation,

@@ -1,7 +1,8 @@
 @_implementationOnly import MapboxCommon_Private
 @_implementationOnly import MapboxCoreMaps_Private
 
-//swiftlint:disable file_length
+// swiftlint:disable file_length
+// swiftlint:disable:next type_body_length
 public class Style {
 
     public private(set) weak var styleManager: StyleManager!

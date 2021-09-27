@@ -1,6 +1,6 @@
 // This file is generated
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
 final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
 

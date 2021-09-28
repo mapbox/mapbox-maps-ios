@@ -21,6 +21,7 @@ Mapbox welcomes participation and contributions from everyone.
 * `TileRegionLoadOptions` init now takes a `Geometry` instead of a `MapboxCommon.Geometry`. ([#711](https://github.com/mapbox/mapbox-maps-ios/pull/711))
 * `CameraAnimationsManager.options` has been removed. Use `MapboxMap.cameraBounds` and `MapboxMap.setCameraBounds(with:)` instead. ([#712](https://github.com/mapbox/mapbox-maps-ios/pull/712))
 * `MapboxMap.setCameraBounds(for:)` has been renamed to `.setCameraBounds(with:)` ([#712](https://github.com/mapbox/mapbox-maps-ios/pull/712))
+* Requires [Turf v2.0.0-rc.2](https://github.com/mapbox/turf-swift/releases/tag/v2.0.0-rc.2). ([#715](https://github.com/mapbox/mapbox-maps-ios/pull/715))
 
 ### Features ✨ and improvements 🏁
 

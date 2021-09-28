@@ -1,7 +1,19 @@
 import Turf
+
 extension FeatureExtensionValue {
-    var featureCollection: FeatureCollection {
-        let newFeatureCollection: FeatureCollection = __featureCollection.map { Turf.Feature($0) }
-        return newFeatureCollection
+    var featureCollection: FeatureCollection? {
+        guard let featureCollection = __featureCollection else {
+            return nil
+        }
+
+        var features: [Feature] = []
+
+        for feature in featureCollection {
+            if let unwrappedFeature = Feature(feature) {
+                features.append(unwrappedFeature)
+            }
+        }
+
+        return FeatureCollection(features: features)
     }
 }

@@ -543,10 +543,26 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
     func testGeometryFromWrappedTileRegionLoadOptions() {
         let wrappedTileRegionLoadOptions = TileRegionLoadOptions(geometry: .point(Point(self.tokyoCoord)),
                                                                  descriptors: [])
-        XCTAssertNotNil(wrappedTileRegionLoadOptions?.geometry)
-        XCTAssertEqual(wrappedTileRegionLoadOptions?.geometry!.type, .Point)
+        XCTAssertNotNil(wrappedTileRegionLoadOptions?.__geometry)
+        XCTAssertTrue(((wrappedTileRegionLoadOptions?.__geometry?.isKind(of: MapboxCommon.Geometry.self)) == true))
+    }
 
-        let geo = wrappedTileRegionLoadOptions?.geometry!.value as! Point
-        XCTAssertEqual(geo, Point(self.tokyoCoord))
+    func testNilGeometryFromNonWrappedTileRegionLoadOptions() {
+        let nonWrappedTileRegionLoadOptions = TileRegionLoadOptions.init(__geometry: nil,
+                                                                         descriptors: nil,
+                                                                         metadata: nil,
+                                                                         acceptExpired: false,
+                                                                         networkRestriction: .none,
+                                                                         start: nil,
+                                                                         averageBytesPerSecond: nil,
+                                                                         extraOptions: nil)
+
+        XCTAssertNil(nonWrappedTileRegionLoadOptions.geometry)
+    }
+
+    func testNilGeometryFromWrappedTileRegionLoadOptions() {
+        let wrappedTileRegionLoadOptions = TileRegionLoadOptions(geometry: nil,
+                                                                 descriptors: [])
+        XCTAssertNil(wrappedTileRegionLoadOptions?.__geometry)
     }
 }

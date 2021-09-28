@@ -180,7 +180,7 @@ public class Style {
     ///
     /// - Attention: This method is only effective with sources of `GeoJSONSource`
     /// type, and cannot be used to update other source types.
-    public func updateGeoJSONSource<T: GeoJSONObject>(withId id: String, geoJSON: T) throws {
+    public func updateGeoJSONSource(withId id: String, geoJSON: GeoJSONObject) throws {
         guard let sourceInfo = allSourceIdentifiers.first(where: { $0.id == id }),
               sourceInfo.type == .geoJson else {
             fatalError("updateGeoJSONSource: Source with id '\(id)' is not a GeoJSONSource.")

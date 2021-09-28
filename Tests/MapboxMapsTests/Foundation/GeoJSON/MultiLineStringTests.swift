@@ -11,9 +11,8 @@ class MultiLineStringTests: XCTestCase {
         let firstCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
         let lastCoordinate = CLLocationCoordinate2D(latitude: 6, longitude: 6)
 
-        let geojson = try! GeoJSON.parse(Feature.self, from: data)
+        let geojson = try! JSONDecoder().decode(Feature.self, from: data)
 
-        XCTAssert(geojson.geometry.type == .MultiLineString)
         guard case let .multiLineString(multiLineStringCoordinates) = geojson.geometry else {
             XCTFail("Failed to create MultiLineString.")
             return
@@ -22,7 +21,7 @@ class MultiLineStringTests: XCTestCase {
         XCTAssert(multiLineStringCoordinates.coordinates.last?.last == lastCoordinate)
 
         let encodedData = try! JSONEncoder().encode(geojson)
-        let decoded = try! GeoJSON.parse(Feature.self, from: encodedData)
+        let decoded = try! JSONDecoder().decode(Feature.self, from: encodedData)
         guard case let .multiLineString(decodedMultiLineStringCoordinates) = decoded.geometry else {
             XCTFail("Failed to create decoded MultiLineString.")
             return

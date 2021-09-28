@@ -43,7 +43,7 @@ final class LiveDataExample: UIViewController, ExampleProtocol {
                 self.parseGeoJSON { result in
                     switch result {
                     case .success(let feature):
-                        try! self.mapView.mapboxMap.style.updateGeoJSONSource(withId: self.sourceId, geoJSON: feature)
+                        try! self.mapView.mapboxMap.style.updateGeoJSONSource(withId: self.sourceId, geoJSON: .feature(feature))
                     case .failure(let error):
                         print("Error: \(error.localizedDescription)")
                     }

@@ -12,7 +12,11 @@ final class PolylineAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["line-join"] as? String, annotation.lineJoin?.rawValue)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(lineJoin) = layerProperties["line-join"] else {
+            return XCTFail("Layer property line-join should be set to a string.")
+        }
+        XCTAssertEqual(lineJoin, annotation.lineJoin?.rawValue)
     }
 
     func testLineSortKey() {
@@ -23,7 +27,11 @@ final class PolylineAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["line-sort-key"] as? Double, annotation.lineSortKey)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(lineSortKey) = layerProperties["line-sort-key"] else {
+            return XCTFail("Layer property line-sort-key should be set to a number.")
+        }
+        XCTAssertEqual(lineSortKey, annotation.lineSortKey)
     }
 
     func testLineBlur() {
@@ -34,7 +42,11 @@ final class PolylineAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["line-blur"] as? Double, annotation.lineBlur)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(lineBlur) = layerProperties["line-blur"] else {
+            return XCTFail("Layer property line-blur should be set to a number.")
+        }
+        XCTAssertEqual(lineBlur, annotation.lineBlur)
     }
 
     func testLineColor() {
@@ -45,7 +57,11 @@ final class PolylineAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["line-color"] as? String, annotation.lineColor.flatMap { $0.rgbaString })
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(lineColor) = layerProperties["line-color"] else {
+            return XCTFail("Layer property line-color should be set to a string.")
+        }
+        XCTAssertEqual(lineColor, annotation.lineColor.flatMap { $0.rgbaString })
     }
 
     func testLineGapWidth() {
@@ -56,7 +72,11 @@ final class PolylineAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["line-gap-width"] as? Double, annotation.lineGapWidth)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(lineGapWidth) = layerProperties["line-gap-width"] else {
+            return XCTFail("Layer property line-gap-width should be set to a number.")
+        }
+        XCTAssertEqual(lineGapWidth, annotation.lineGapWidth)
     }
 
     func testLineOffset() {
@@ -67,7 +87,11 @@ final class PolylineAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["line-offset"] as? Double, annotation.lineOffset)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(lineOffset) = layerProperties["line-offset"] else {
+            return XCTFail("Layer property line-offset should be set to a number.")
+        }
+        XCTAssertEqual(lineOffset, annotation.lineOffset)
     }
 
     func testLineOpacity() {
@@ -78,7 +102,11 @@ final class PolylineAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["line-opacity"] as? Double, annotation.lineOpacity)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(lineOpacity) = layerProperties["line-opacity"] else {
+            return XCTFail("Layer property line-opacity should be set to a number.")
+        }
+        XCTAssertEqual(lineOpacity, annotation.lineOpacity)
     }
 
     func testLinePattern() {
@@ -89,7 +117,11 @@ final class PolylineAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["line-pattern"] as? String, annotation.linePattern)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(linePattern) = layerProperties["line-pattern"] else {
+            return XCTFail("Layer property line-pattern should be set to a string.")
+        }
+        XCTAssertEqual(linePattern, annotation.linePattern)
     }
 
     func testLineWidth() {
@@ -100,7 +132,11 @@ final class PolylineAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["line-width"] as? Double, annotation.lineWidth)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(lineWidth) = layerProperties["line-width"] else {
+            return XCTFail("Layer property line-width should be set to a number.")
+        }
+        XCTAssertEqual(lineWidth, annotation.lineWidth)
     }
 }
 

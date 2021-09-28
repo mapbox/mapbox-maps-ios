@@ -192,11 +192,11 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
 
                 // Extract the earthquake feature from the queried features
                 if let earthquakeFeature = queriedfeatures.first?.feature,
-                   case .number(.double(let earthquakeIdDouble)) = earthquakeFeature.identifier,
+                   case .number(let earthquakeIdDouble) = earthquakeFeature.identifier,
                    case .point(let point) = earthquakeFeature.geometry,
-                   let magnitude = earthquakeFeature.properties?["mag"] as? Double,
-                   let place = earthquakeFeature.properties?["place"] as? String,
-                   let timestamp = earthquakeFeature.properties?["time"] as? Double {
+                   case let .number(magnitude) = earthquakeFeature.properties?["mag"],
+                   case let .string(place) = earthquakeFeature.properties?["place"],
+                   case let .number(timestamp) = earthquakeFeature.properties?["time"] {
 
                     let earthquakeId = Int(earthquakeIdDouble).description
 

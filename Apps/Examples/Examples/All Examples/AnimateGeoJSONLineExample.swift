@@ -85,7 +85,7 @@ public class AnimateGeoJSONLineExample: UIViewController, ExampleProtocol {
             let updatedLine = Feature(geometry: .lineString(LineString(currentCoordinates)))
             self.routeLineSource.data = .feature(updatedLine)
             try! self.mapView.mapboxMap.style.updateGeoJSONSource(withId: self.sourceIdentifier,
-                                                        geoJSON: updatedLine)
+                                                                  geoJSON: .feature(updatedLine))
         }
     }
 

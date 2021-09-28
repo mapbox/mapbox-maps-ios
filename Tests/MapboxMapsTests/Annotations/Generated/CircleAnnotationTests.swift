@@ -11,7 +11,11 @@ final class CircleAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["circle-sort-key"] as? Double, annotation.circleSortKey)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(circleSortKey) = layerProperties["circle-sort-key"] else {
+            return XCTFail("Layer property circle-sort-key should be set to a number.")
+        }
+        XCTAssertEqual(circleSortKey, annotation.circleSortKey)
     }
 
     func testCircleBlur() {
@@ -21,7 +25,11 @@ final class CircleAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["circle-blur"] as? Double, annotation.circleBlur)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(circleBlur) = layerProperties["circle-blur"] else {
+            return XCTFail("Layer property circle-blur should be set to a number.")
+        }
+        XCTAssertEqual(circleBlur, annotation.circleBlur)
     }
 
     func testCircleColor() {
@@ -31,7 +39,11 @@ final class CircleAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["circle-color"] as? String, annotation.circleColor.flatMap { $0.rgbaString })
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(circleColor) = layerProperties["circle-color"] else {
+            return XCTFail("Layer property circle-color should be set to a string.")
+        }
+        XCTAssertEqual(circleColor, annotation.circleColor.flatMap { $0.rgbaString })
     }
 
     func testCircleOpacity() {
@@ -41,7 +53,11 @@ final class CircleAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["circle-opacity"] as? Double, annotation.circleOpacity)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(circleOpacity) = layerProperties["circle-opacity"] else {
+            return XCTFail("Layer property circle-opacity should be set to a number.")
+        }
+        XCTAssertEqual(circleOpacity, annotation.circleOpacity)
     }
 
     func testCircleRadius() {
@@ -51,7 +67,11 @@ final class CircleAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["circle-radius"] as? Double, annotation.circleRadius)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(circleRadius) = layerProperties["circle-radius"] else {
+            return XCTFail("Layer property circle-radius should be set to a number.")
+        }
+        XCTAssertEqual(circleRadius, annotation.circleRadius)
     }
 
     func testCircleStrokeColor() {
@@ -61,7 +81,11 @@ final class CircleAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["circle-stroke-color"] as? String, annotation.circleStrokeColor.flatMap { $0.rgbaString })
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(circleStrokeColor) = layerProperties["circle-stroke-color"] else {
+            return XCTFail("Layer property circle-stroke-color should be set to a string.")
+        }
+        XCTAssertEqual(circleStrokeColor, annotation.circleStrokeColor.flatMap { $0.rgbaString })
     }
 
     func testCircleStrokeOpacity() {
@@ -71,7 +95,11 @@ final class CircleAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["circle-stroke-opacity"] as? Double, annotation.circleStrokeOpacity)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(circleStrokeOpacity) = layerProperties["circle-stroke-opacity"] else {
+            return XCTFail("Layer property circle-stroke-opacity should be set to a number.")
+        }
+        XCTAssertEqual(circleStrokeOpacity, annotation.circleStrokeOpacity)
     }
 
     func testCircleStrokeWidth() {
@@ -81,7 +109,11 @@ final class CircleAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["circle-stroke-width"] as? Double, annotation.circleStrokeWidth)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(circleStrokeWidth) = layerProperties["circle-stroke-width"] else {
+            return XCTFail("Layer property circle-stroke-width should be set to a number.")
+        }
+        XCTAssertEqual(circleStrokeWidth, annotation.circleStrokeWidth)
     }
 }
 

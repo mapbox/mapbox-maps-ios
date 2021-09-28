@@ -18,7 +18,11 @@ final class PolygonAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["fill-sort-key"] as? Double, annotation.fillSortKey)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(fillSortKey) = layerProperties["fill-sort-key"] else {
+            return XCTFail("Layer property fill-sort-key should be set to a number.")
+        }
+        XCTAssertEqual(fillSortKey, annotation.fillSortKey)
     }
 
     func testFillColor() {
@@ -35,7 +39,11 @@ final class PolygonAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["fill-color"] as? String, annotation.fillColor.flatMap { $0.rgbaString })
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(fillColor) = layerProperties["fill-color"] else {
+            return XCTFail("Layer property fill-color should be set to a string.")
+        }
+        XCTAssertEqual(fillColor, annotation.fillColor.flatMap { $0.rgbaString })
     }
 
     func testFillOpacity() {
@@ -52,7 +60,11 @@ final class PolygonAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["fill-opacity"] as? Double, annotation.fillOpacity)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(fillOpacity) = layerProperties["fill-opacity"] else {
+            return XCTFail("Layer property fill-opacity should be set to a number.")
+        }
+        XCTAssertEqual(fillOpacity, annotation.fillOpacity)
     }
 
     func testFillOutlineColor() {
@@ -69,7 +81,11 @@ final class PolygonAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["fill-outline-color"] as? String, annotation.fillOutlineColor.flatMap { $0.rgbaString })
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(fillOutlineColor) = layerProperties["fill-outline-color"] else {
+            return XCTFail("Layer property fill-outline-color should be set to a string.")
+        }
+        XCTAssertEqual(fillOutlineColor, annotation.fillOutlineColor.flatMap { $0.rgbaString })
     }
 
     func testFillPattern() {
@@ -86,7 +102,11 @@ final class PolygonAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["fill-pattern"] as? String, annotation.fillPattern)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(fillPattern) = layerProperties["fill-pattern"] else {
+            return XCTFail("Layer property fill-pattern should be set to a string.")
+        }
+        XCTAssertEqual(fillPattern, annotation.fillPattern)
     }
 }
 

@@ -108,12 +108,12 @@ public class AnimateLayerExample: UIViewController, ExampleProtocol {
 
             // Identify the new coordinate to animate to, and calculate
             // the bearing between the new coordinate and the following coordinate.
-            var geoJSON = Feature.init(geometry: Geometry.point(Point(coordinate)))
-            geoJSON.properties = ["bearing": coordinate.direction(to: nextCoordinate)]
+            var geoJSON = Feature(geometry: .point(Point(coordinate)))
+            geoJSON.properties = ["bearing": .number(coordinate.direction(to: nextCoordinate))]
 
             // Update the airplane source layer with the new coordinate and bearing.
             try! self.mapView.mapboxMap.style.updateGeoJSONSource(withId: self.airplaneSymbol.identifier,
-                                                        geoJSON: geoJSON)
+                                                                  geoJSON: .feature(geoJSON))
 
             runCount += 1
 

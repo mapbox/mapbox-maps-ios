@@ -18,18 +18,14 @@ extension Turf.Feature {
          */
         switch feature.identifier {
         case let identifier as NSNumber:
-            if String(cString: identifier.objCType) == "q" {
-                self.identifier = .number(.int(identifier.intValue))
-            } else {
-                self.identifier = .number(.double(identifier.doubleValue))
-            }
+            self.identifier = .number(identifier.doubleValue)
         case let identifier as String:
-            self.identifier = FeatureIdentifier.string(identifier)
+            self.identifier = .string(identifier)
         default:
             break
         }
 
-        properties = feature.properties
+        properties = JSONObject(rawValue: feature.properties)
     }
 
     /// Initialize a `Turf.Feature` with a `Point`.
@@ -84,9 +80,7 @@ extension MapboxCommon.Feature {
         // Features may or may not have an identifier. If they have one,
         // it is either a number or string value.
         switch feature.identifier {
-        case let .number(.int(intId)):
-            identifier = NSNumber(value: intId)
-        case let .number(.double(doubleId)):
+        case let .number(doubleId):
             identifier = NSNumber(value: doubleId)
         case let .string(stringId):
             identifier = NSString(string: stringId)
@@ -98,10 +92,13 @@ extension MapboxCommon.Feature {
         #endif
         }
 
-        let geometry = MapboxCommon.Geometry(geometry: feature.geometry)
+        // A null geometry is valid GeoJSON but not supported by MapboxCommon.
+        // The closest thing would be an empty GeometryCollection.
+        let nonNullGeometry = feature.geometry ?? .geometryCollection(.init(geometries: []))
+        let geometry = MapboxCommon.Geometry(geometry: nonNullGeometry)
 
         self.init(identifier: identifier,
                   geometry: geometry,
-                  properties: (feature.properties as? [String: NSObject]) ?? [:])
+                  properties: (feature.properties?.rawValue as? [String: NSObject]) ?? [:])
     }
 }

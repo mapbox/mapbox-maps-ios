@@ -22,6 +22,7 @@ Mapbox welcomes participation and contributions from everyone.
 * `CameraAnimationsManager.options` has been removed. Use `MapboxMap.cameraBounds` and `MapboxMap.setCameraBounds(with:)` instead. ([#712](https://github.com/mapbox/mapbox-maps-ios/pull/712))
 * `MapboxMap.setCameraBounds(for:)` has been renamed to `.setCameraBounds(with:)` ([#712](https://github.com/mapbox/mapbox-maps-ios/pull/712))
 * Requires [Turf v2.0.0-rc.2](https://github.com/mapbox/turf-swift/releases/tag/v2.0.0-rc.2). ([#715](https://github.com/mapbox/mapbox-maps-ios/pull/715))
+* Renames `Style.updateGeoJSONSource<T: GeoJSONObject>(withId:geoJSON:)` to `Style.updateGeoJSONSource(withId:geoJSON:)`. Instead of passing in the expected GeoJSON object type, you perform pattern matching on the return value using `case let`. ([#715](https://github.com/mapbox/mapbox-maps-ios/pull/715))
 
 ### Features ✨ and improvements 🏁
 

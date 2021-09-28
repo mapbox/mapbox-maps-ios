@@ -20,8 +20,7 @@ extension GeoJSONSourceData: Equatable {
         case (let .url(lhsURL), let .url(rhsURL)):
             return lhsURL == rhsURL
         case (let .feature(lhsFeature), let .feature(rhsFeature)):
-            // TODO: Fix temporary conformance to equatable for Turf features in tests
-            return lhsFeature.geometry.type == rhsFeature.geometry.type
+            return lhsFeature == rhsFeature
         default:
             return false
         }

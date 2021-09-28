@@ -74,7 +74,7 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
             switch result {
             case .success(let queriedfeatures):
                 if let firstFeature = queriedfeatures.first?.feature?.properties,
-                   let stateName = firstFeature["STATE_NAME"] as? String {
+                   case let .string(stateName) = firstFeature["STATE_NAME"] {
                     self?.showAlert(with: "You selected \(stateName)")
                 }
             case .failure(let error):

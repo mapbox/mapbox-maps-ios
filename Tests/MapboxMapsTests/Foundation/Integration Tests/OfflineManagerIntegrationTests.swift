@@ -522,47 +522,4 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         closure = nil
         XCTAssertNil(weakTileStore)
     }
-
-    func testGeometryFromNonWrappedTileRegionLoadOptions() {
-        let nonWrappedTileRegionLoadOptions = TileRegionLoadOptions.init(__geometry: MapboxCommon.Geometry(geometry: .point(Point(self.tokyoCoord))),
-                                                                         descriptors: nil,
-                                                                         metadata: nil,
-                                                                         acceptExpired: false,
-                                                                         networkRestriction: .none,
-                                                                         start: nil,
-                                                                         averageBytesPerSecond: nil,
-                                                                         extraOptions: nil)
-
-        XCTAssertNotNil(nonWrappedTileRegionLoadOptions.geometry)
-        XCTAssertEqual(nonWrappedTileRegionLoadOptions.geometry!.type, .Point)
-
-        let geo = nonWrappedTileRegionLoadOptions.geometry!.value as! Point
-        XCTAssertEqual(geo, Point(self.tokyoCoord))
-    }
-
-    func testGeometryFromWrappedTileRegionLoadOptions() {
-        let wrappedTileRegionLoadOptions = TileRegionLoadOptions(geometry: .point(Point(self.tokyoCoord)),
-                                                                 descriptors: [])
-        XCTAssertNotNil(wrappedTileRegionLoadOptions?.__geometry)
-        XCTAssertTrue(((wrappedTileRegionLoadOptions?.__geometry?.isKind(of: MapboxCommon.Geometry.self)) == true))
-    }
-
-    func testNilGeometryFromNonWrappedTileRegionLoadOptions() {
-        let nonWrappedTileRegionLoadOptions = TileRegionLoadOptions.init(__geometry: nil,
-                                                                         descriptors: nil,
-                                                                         metadata: nil,
-                                                                         acceptExpired: false,
-                                                                         networkRestriction: .none,
-                                                                         start: nil,
-                                                                         averageBytesPerSecond: nil,
-                                                                         extraOptions: nil)
-
-        XCTAssertNil(nonWrappedTileRegionLoadOptions.geometry)
-    }
-
-    func testNilGeometryFromWrappedTileRegionLoadOptions() {
-        let wrappedTileRegionLoadOptions = TileRegionLoadOptions(geometry: nil,
-                                                                 descriptors: [])
-        XCTAssertNil(wrappedTileRegionLoadOptions?.__geometry)
-    }
 }

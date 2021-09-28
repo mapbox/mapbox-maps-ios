@@ -226,8 +226,12 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         propertyAnimator.addCompletion { [weak self] (animatingPosition) in
             guard let self = self else { return }
             self.internalState = .final
-            let finalCamera = self.cameraOptions(with: transition, cameraViewCameraOptions: self.cameraView.cameraOptions)
-            self.mapboxMap.setCamera(to: finalCamera)
+            // if the animation was stopped/canceled before finishing,
+            // do not update the camera again.
+            if animatingPosition == .end {
+                let finalCamera = self.cameraOptions(with: transition, cameraViewCameraOptions: self.cameraView.cameraOptions)
+                self.mapboxMap.setCamera(to: finalCamera)
+            }
             for completion in self.completions {
                 completion(animatingPosition)
             }

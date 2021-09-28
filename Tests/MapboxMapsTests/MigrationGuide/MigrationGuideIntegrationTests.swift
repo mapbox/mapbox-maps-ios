@@ -186,7 +186,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
         // Configure map to show a scale bar
         mapView.ornaments.options.scaleBar.visibility = .visible
-        try mapView.mapboxMap.setCameraBounds(for: cameraBoundsOptions)
+        try mapView.mapboxMap.setCameraBounds(with: cameraBoundsOptions)
         //<--
     }
 
@@ -353,22 +353,17 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         }
     }
 
-    func testMapCameraOptions() {
+    func testMapCameraOptions() throws {
         let mapView = MapView(frame: .zero)
 
         //-->
         let sw = CLLocationCoordinate2DMake(-12, -46)
         let ne = CLLocationCoordinate2DMake(2, 43)
         let restrictedBounds = CoordinateBounds(southwest: sw, northeast: ne)
-        mapView.camera.options = CameraBoundsOptions(bounds: restrictedBounds,
-                                                     maxZoom: 15.0,
-                                                     minZoom: 8.0)
+        try mapView.mapboxMap.setCameraBounds(with: CameraBoundsOptions(bounds: restrictedBounds,
+                                                                        maxZoom: 15.0,
+                                                                        minZoom: 8.0))
         //<--
-
-        // Can also set directly, though this will trigger 3 didSets
-        mapView.camera.options.bounds = restrictedBounds
-        mapView.camera.options.minZoom = 8.0
-        mapView.camera.options.maxZoom = 15.0
     }
 
     func testGeoJSONSource() {

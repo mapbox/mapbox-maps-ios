@@ -27,9 +27,9 @@ final class MockPropertyAnimator: UIViewPropertyAnimator {
         addAnimationsStub.call(with: animation)
     }
 
-    let addCompletionStub = Stub<Void, Void>()
+    let addCompletionStub = Stub<(UIViewAnimatingPosition) -> Void, Void>()
     override func addCompletion(_ completion: @escaping (UIViewAnimatingPosition) -> Void) {
-        addCompletionStub.call()
+        addCompletionStub.call(with: completion)
     }
 
     struct ContinueAnimationParameters {

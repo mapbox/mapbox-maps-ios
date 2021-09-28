@@ -66,6 +66,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
 
         XCTAssertEqual(propertyAnimator.startAnimationStub.invocations.count, 1)
         XCTAssertEqual(propertyAnimator.addAnimationsStub.invocations.count, 1)
+        XCTAssertEqual(propertyAnimator.addCompletionStub.invocations.count, 1)
         XCTAssertNotNil(animator?.transition)
         XCTAssertEqual(animator?.transition?.toCameraOptions.zoom, 10)
 
@@ -73,5 +74,29 @@ final class BasicCameraAnimatorTests: XCTestCase {
         XCTAssertEqual(propertyAnimator.stopAnimationStub.invocations.count, 1)
         XCTAssertEqual(propertyAnimator.finishAnimationStub.invocations.count, 1)
         XCTAssertEqual(propertyAnimator.finishAnimationStub.invocations.first?.parameters, .current)
+    }
+
+    func testAnimatorCompletionUpdatesCameraIfAnimationEnded() throws {
+        animator.addAnimations { (transition) in
+            transition.zoom.toValue = cameraOptionsTestValue.zoom!
+        }
+        animator.startAnimation()
+        let completion = try XCTUnwrap(propertyAnimator.addCompletionStub.parameters.first)
+
+        completion(.end)
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 1)
+    }
+
+    func testAnimatorCompletionDoesNotUpdateCameraIfAnimationWasStopped() throws {
+        animator.addAnimations { (transition) in
+            transition.zoom.toValue = cameraOptionsTestValue.zoom!
+        }
+        animator.startAnimation()
+        let completion = try XCTUnwrap(propertyAnimator.addCompletionStub.parameters.first)
+
+        completion(.current)
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 0)
     }
 }

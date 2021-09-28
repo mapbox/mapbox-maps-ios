@@ -36,13 +36,6 @@ internal protocol CameraAnimationsManagerProtocol: AnyObject {
 /// An object that manages a camera's view lifecycle.
 public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
 
-    /// Used to set up camera specific configuration
-    public var options: CameraBoundsOptions {
-        didSet {
-            try? mapboxMap.setCameraBounds(for: options)
-        }
-    }
-
     /// List of animators currently alive
     public var cameraAnimators: [CameraAnimator] {
         return cameraAnimatorsSet.allObjects
@@ -61,12 +54,11 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
 
     private let cameraViewContainerView: UIView
 
-    private let mapboxMap: MapboxMap
+    private let mapboxMap: MapboxMapProtocol
 
-    internal init(cameraViewContainerView: UIView, mapboxMap: MapboxMap) {
+    internal init(cameraViewContainerView: UIView, mapboxMap: MapboxMapProtocol) {
         self.cameraViewContainerView = cameraViewContainerView
         self.mapboxMap = mapboxMap
-        self.options = CameraBoundsOptions(cameraBounds: mapboxMap.cameraBounds)
     }
 
     internal func update() {

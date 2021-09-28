@@ -1,18 +1,11 @@
 import XCTest
 @testable import MapboxMaps
 
-class ProjectionTests: XCTestCase {
-
-    var projectorType: MapProjectionDelegate.Type!
-
-    override func setUpWithError() throws {
-        try super.setUpWithError()
-        projectorType = Projection.self
-    }
+final class ProjectionTests: XCTestCase {
 
     func testMetersPerPoint() {
-        let metersPerPointN = projectorType.metersPerPoint(for: 40.0, zoom: 16)
-        let metersPerPointS = projectorType.metersPerPoint(for: -40.0, zoom: 16)
+        let metersPerPointN = Projection.metersPerPoint(for: 40.0, zoom: 16)
+        let metersPerPointS = Projection.metersPerPoint(for: -40.0, zoom: 16)
 
         XCTAssertEqual(metersPerPointN, metersPerPointS)
         XCTAssertEqual(metersPerPointN, 0.91388626079034951, accuracy: 0.000001)
@@ -28,10 +21,10 @@ class ProjectionTests: XCTestCase {
         ]
 
         let projectedMeters: [ProjectedMeters] = coords.map {
-            let meters = projectorType.projectedMeters(for: $0)
+            let meters = Projection.projectedMeters(for: $0)
 
             // Test round trip
-            let coordinate = projectorType.coordinate(for: meters)
+            let coordinate = Projection.coordinate(for: meters)
             XCTAssertEqual(coordinate.latitude, $0.latitude, accuracy: 0.000001)
             XCTAssertEqual(coordinate.longitude, $0.longitude, accuracy: 0.000001)
             return meters
@@ -60,12 +53,12 @@ class ProjectionTests: XCTestCase {
         let zoomScale = pow(2, zoom)
 
         for coord in coords {
-            let mercator = projectorType.project(coord.0, zoomScale: zoomScale)
+            let mercator = Projection.project(coord.0, zoomScale: zoomScale)
             XCTAssertEqual(mercator.x, coord.1.x, accuracy: 0.0000001)
             XCTAssertEqual(mercator.y, coord.1.y, accuracy: 0.0000001)
 
             // Test round trip
-            let coordinate = projectorType.unproject(mercator, zoomScale: zoomScale)
+            let coordinate = Projection.unproject(mercator, zoomScale: zoomScale)
             XCTAssertEqual(coordinate.latitude, coord.0.latitude, accuracy: 0.0000001)
             XCTAssertEqual(coordinate.longitude, coord.0.longitude, accuracy: 0.0000001)
         }
@@ -78,23 +71,23 @@ class ProjectionTests: XCTestCase {
         let zoom: CGFloat = 0
         let zoomScale = pow(2, zoom)
 
-        let northMercator = projectorType.project(northPole, zoomScale: zoomScale)
-        let northPole2 = projectorType.unproject(northMercator, zoomScale: zoomScale)
+        let northMercator = Projection.project(northPole, zoomScale: zoomScale)
+        let northPole2 = Projection.unproject(northMercator, zoomScale: zoomScale)
         XCTAssertNotEqual(northPole2.latitude, northPole.latitude)
         XCTAssertEqual(northPole2.latitude, 85.051, accuracy: 0.001)
 
-        let southMercator = projectorType.project(southPole, zoomScale: zoomScale)
-        let southPole2 = projectorType.unproject(southMercator, zoomScale: zoomScale)
+        let southMercator = Projection.project(southPole, zoomScale: zoomScale)
+        let southPole2 = Projection.unproject(southMercator, zoomScale: zoomScale)
         XCTAssertNotEqual(southPole2.latitude, southPole.latitude)
         XCTAssertEqual(southPole2.latitude, -85.051, accuracy: 0.001)
 
         // Check clamping
         let northMax = CLLocationCoordinate2D(latitude: Projection.latitudeMax, longitude: 0)
-        let northMaxMercator = projectorType.project(northMax, zoomScale: zoomScale)
+        let northMaxMercator = Projection.project(northMax, zoomScale: zoomScale)
         XCTAssertEqual(northMercator.y, northMaxMercator.y, accuracy: 0.000001)
 
         let southMin = CLLocationCoordinate2D(latitude: Projection.latitudeMin, longitude: 0)
-        let southMinMercator = projectorType.project(southMin, zoomScale: zoomScale)
+        let southMinMercator = Projection.project(southMin, zoomScale: zoomScale)
         XCTAssertEqual(southMercator.y, southMinMercator.y, accuracy: 0.000001)
     }
 }

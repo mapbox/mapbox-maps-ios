@@ -2,6 +2,8 @@
 
 final class MockMapboxMap: MapboxMapProtocol {
 
+    var size: CGSize = .zero
+
     var cameraBounds = CameraBounds(
         bounds: CoordinateBounds(
             southwest: CLLocationCoordinate2D(

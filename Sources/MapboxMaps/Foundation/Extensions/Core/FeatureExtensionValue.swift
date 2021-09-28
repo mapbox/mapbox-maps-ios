@@ -1,19 +1,12 @@
-import Turf
-
 extension FeatureExtensionValue {
-    var featureCollection: FeatureCollection? {
-        guard let featureCollection = __featureCollection else {
-            return nil
-        }
 
-        var features: [Feature] = []
+    public convenience init(value: Any?, features: [Feature]?) {
+        self.init(
+            __value: value,
+            featureCollection: features?.map(MapboxCommon.Feature.init(_:)))
+    }
 
-        for feature in featureCollection {
-            if let unwrappedFeature = Feature(feature) {
-                features.append(unwrappedFeature)
-            }
-        }
-
-        return FeatureCollection(features: features)
+    public var features: [Feature]? {
+        return __featureCollection?.compactMap(Feature.init(_:))
     }
 }

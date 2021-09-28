@@ -80,7 +80,7 @@ extension Turf.Feature {
 
 extension MapboxCommon.Feature {
     /// Initialize an `Feature` with a `Turf.Feature`
-    internal convenience init?(_ feature: Turf.Feature) {
+    internal convenience init(_ feature: Turf.Feature) {
 
         let identifier: Any?
 
@@ -102,15 +102,15 @@ extension MapboxCommon.Feature {
         }
 
         let geometry = MapboxCommon.Geometry(geometry: feature.geometry)
-        let properties = feature.properties
 
-        guard let nsIdentifier = identifier as? NSObject,
-              let nsProperties = properties as? [String: NSObject] else {
+        guard let nsIdentifier = identifier as? NSObject else {
             fatalError("Unexpected conversion")
         }
 
+        let nsProperties = feature.properties as? [String: NSObject]
+
         self.init(identifier: nsIdentifier,
                   geometry: geometry,
-                  properties: nsProperties)
+                  properties: nsProperties ?? [:])
     }
 }

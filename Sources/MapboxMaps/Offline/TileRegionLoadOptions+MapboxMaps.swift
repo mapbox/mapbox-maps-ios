@@ -20,7 +20,7 @@ extension TileRegionLoadOptions {
     ///
     /// If `metadata` is not a valid JSON object, then this initializer returns
     /// `nil`.
-    public convenience init?(geometry: MapboxCommon.Geometry?,
+    public convenience init?(geometry: Geometry?,
                              descriptors: [TilesetDescriptor],
                              metadata: Any? = nil,
                              acceptExpired: Bool = false ,
@@ -32,7 +32,12 @@ extension TileRegionLoadOptions {
             }
         }
 
-        self.init(__geometry: geometry,
+        var commonGeometry: MapboxCommon.Geometry?
+        if let geometry = geometry {
+            commonGeometry = MapboxCommon.Geometry(geometry: geometry)
+        }
+
+        self.init(__geometry: commonGeometry,
                   descriptors: descriptors.isEmpty ? nil : descriptors,
                   metadata: metadata,
                   acceptExpired: acceptExpired,
@@ -52,5 +57,14 @@ extension TileRegionLoadOptions {
     /// If unspecified, the download speed will not be restricted.
     public var averageBytesPerSecond: Int? {
         __averageBytesPerSecond?.intValue
+    }
+
+    /// The geometry supported by these options.
+    public var geometry: Geometry? {
+        guard let commonGeometry = __geometry else {
+            return nil
+        }
+
+        return Geometry(commonGeometry)
     }
 }

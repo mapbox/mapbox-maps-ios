@@ -1,9 +1,7 @@
-import UIKit
 import MapboxMaps
 
 @objc(PolygonAnnotationExample)
-
-public class PolygonAnnotationExample: UIViewController, ExampleProtocol {
+final class PolygonAnnotationExample: UIViewController, ExampleProtocol {
     internal var mapView: MapView!
     internal var polygonAnnotationManager: PolygonAnnotationManager?
 
@@ -47,7 +45,7 @@ public class PolygonAnnotationExample: UIViewController, ExampleProtocol {
         self.polygonAnnotationManager = polygonAnnotationManager
     }
 
-    func makePolygon() -> Turf.Polygon {
+    func makePolygon() -> Polygon {
 
         // Describe the polygon's geometry
         let outerRingCoords = [
@@ -68,9 +66,9 @@ public class PolygonAnnotationExample: UIViewController, ExampleProtocol {
         ]
 
         /// Create the Polygon with the outer ring and inner ring
-        let outerRing = Turf.Ring(coordinates: outerRingCoords)
-        let innerRing = Turf.Ring(coordinates: innerRingCoords)
+        let outerRing = Ring(coordinates: outerRingCoords)
+        let innerRing = Ring(coordinates: innerRingCoords)
 
-        return Turf.Polygon(outerRing: outerRing, innerRings: [innerRing])
+        return Polygon(outerRing: outerRing, innerRings: [innerRing])
     }
 }

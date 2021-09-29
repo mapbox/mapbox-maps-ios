@@ -439,19 +439,14 @@ extension MapboxMap: MapFeatureQueryable {
     }
 
     public func queryFeatureExtension(for sourceId: String,
-                                      feature: Turf.Feature,
+                                      feature: Feature,
                                       extension: String,
                                       extensionField: String,
                                       args: [String: Any]? = nil,
                                       completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) {
 
-        guard let feature = MapboxCommon.Feature(feature) else {
-            completion(.failure(TypeConversionError.unexpectedType))
-            return
-        }
-
         __map.queryFeatureExtensions(forSourceIdentifier: sourceId,
-                                     feature: feature,
+                                     feature: MapboxCommon.Feature(feature),
                                      extension: `extension`,
                                      extensionField: extensionField,
                                      args: args,

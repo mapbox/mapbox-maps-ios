@@ -17,17 +17,14 @@ extension Turf.Feature {
          it is either a number or string value.
          */
         switch feature.identifier {
-        case let identifier where identifier is NSNumber:
-            guard let value = identifier as? NSNumber else { break }
-            let objCTypeString = String(cString: value.objCType)
-            if objCTypeString == "q" {
-                self.identifier = FeatureIdentifier.number(Number.int(value.intValue))
+        case let identifier as NSNumber:
+            if String(cString: identifier.objCType) == "q" {
+                self.identifier = .number(.int(identifier.intValue))
             } else {
-                self.identifier = FeatureIdentifier.number(Number.double(value.doubleValue))
+                self.identifier = .number(.double(identifier.doubleValue))
             }
-        case let identifier where identifier is NSString:
-            guard let value = identifier as? NSString else { break }
-            self.identifier = FeatureIdentifier.string(value as String)
+        case let identifier as String:
+            self.identifier = FeatureIdentifier.string(identifier)
         default:
             break
         }
@@ -80,9 +77,9 @@ extension Turf.Feature {
 
 extension MapboxCommon.Feature {
     /// Initialize an `Feature` with a `Turf.Feature`
-    internal convenience init?(_ feature: Turf.Feature) {
+    internal convenience init(_ feature: Turf.Feature) {
 
-        let identifier: Any?
+        let identifier: NSObject
 
         // Features may or may not have an identifier. If they have one,
         // it is either a number or string value.
@@ -92,25 +89,19 @@ extension MapboxCommon.Feature {
         case let .number(.double(doubleId)):
             identifier = NSNumber(value: doubleId)
         case let .string(stringId):
-            identifier = stringId
+            identifier = NSString(string: stringId)
         case .none:
-            identifier = nil
+            identifier = NSObject()
         #if USING_TURF_WITH_LIBRARY_EVOLUTION
         @unknown default:
-            identifier = nil
+            identifier = NSObject()
         #endif
         }
 
         let geometry = MapboxCommon.Geometry(geometry: feature.geometry)
-        let properties = feature.properties
 
-        guard let nsIdentifier = identifier as? NSObject,
-              let nsProperties = properties as? [String: NSObject] else {
-            fatalError("Unexpected conversion")
-        }
-
-        self.init(identifier: nsIdentifier,
+        self.init(identifier: identifier,
                   geometry: geometry,
-                  properties: nsProperties)
+                  properties: (feature.properties as? [String: NSObject]) ?? [:])
     }
 }

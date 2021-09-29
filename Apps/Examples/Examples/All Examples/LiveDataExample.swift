@@ -1,7 +1,7 @@
 import MapboxMaps
 
 @objc(LiveDataExample)
-class LiveDataExample: UIViewController, ExampleProtocol {
+final class LiveDataExample: UIViewController, ExampleProtocol {
     let url = URL(string: "https://wanderdrone.appspot.com/")!
     let sourceId = "drone-source"
     var mapView: MapView!
@@ -54,12 +54,12 @@ class LiveDataExample: UIViewController, ExampleProtocol {
         }
     }
 
-    func parseGeoJSON(completion: @escaping (Result<Turf.Feature, Error>) -> Void) {
+    func parseGeoJSON(completion: @escaping (Result<Feature, Error>) -> Void) {
         DispatchQueue.global().async { [url] in
-            let result: Result<Turf.Feature, Error>
+            let result: Result<Feature, Error>
             do {
                 let data = try Data(contentsOf: url)
-                let feature = try JSONDecoder().decode(Turf.Feature.self, from: data)
+                let feature = try JSONDecoder().decode(Feature.self, from: data)
                 result = .success(feature)
             } catch {
                 result = .failure(error)

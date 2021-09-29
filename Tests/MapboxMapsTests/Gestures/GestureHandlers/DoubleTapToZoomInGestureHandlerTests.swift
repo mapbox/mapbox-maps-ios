@@ -9,10 +9,13 @@ final class DoubleTapToZoomInGestureHandlerTests: XCTestCase {
     var gestureHandler: DoubleTapToZoomInGestureHandler!
     // swiftlint:disable:next weak_delegate
     var delegate: MockGestureHandlerDelegate!
+    var view: UIView!
 
     override func setUp() {
         super.setUp()
+        view = UIView()
         gestureRecognizer = MockTapGestureRecognizer()
+        view.addGestureRecognizer(gestureRecognizer)
         cameraAnimationsManager = MockCameraAnimationsManager()
         mapboxMap = MockMapboxMap()
         gestureHandler = DoubleTapToZoomInGestureHandler(
@@ -29,6 +32,7 @@ final class DoubleTapToZoomInGestureHandlerTests: XCTestCase {
         mapboxMap = nil
         cameraAnimationsManager = nil
         gestureRecognizer = nil
+        view = nil
         super.tearDown()
     }
 

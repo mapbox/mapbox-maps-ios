@@ -250,8 +250,10 @@ open class MapView: UIView {
         cameraViewContainerView.isHidden = true
         addSubview(cameraViewContainerView)
 
-        // Setup Telemetry logging
-        setUpTelemetryLogging()
+        // Setup Telemetry logging. Delay initialization by 10 seconds.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+            self.setUpTelemetryLogging()
+        }
 
         // Set up managers
         setupManagers()

@@ -1,25 +1,27 @@
 import UIKit
 import MapboxMobileEvents
+@_implementationOnly import MapboxCommon_Private
 
 internal class EventsManager: EventsListener {
     private enum Constants {
         static let MGLAPIClientUserAgentBase = "mapbox-maps-ios"
+        static let SDKVersion = "10.0.0"
+        static let UserAgent = String(format: "%/%", MGLAPIClientUserAgentBase, SDKVersion)
     }
 
     var telemetry: TelemetryProtocol!
+    var coreTelemetry: EventsService
 
     init(accessToken: String) {
-        let sdkVersion = "10.0.0"
         let mmeEventsManager = MMEEventsManager.shared()
         telemetry = mmeEventsManager
         mmeEventsManager.initialize(withAccessToken: accessToken,
                                     userAgentBase: Constants.MGLAPIClientUserAgentBase,
-                                    hostSDKVersion: sdkVersion)
+                                    hostSDKVersion: Constants.SDKVersion)
         mmeEventsManager.skuId = "00"
-    }
 
-    init(with telemetry: TelemetryProtocol?) {
-        self.telemetry = telemetry
+        let eventsServiceOptions = EventsServiceOptions(token: accessToken, userAgentFragment: Constants.UserAgent, baseURL: nil)
+        coreTelemetry = EventsService(options: eventsServiceOptions)
     }
 
     func push(event: EventType) {
@@ -44,6 +46,8 @@ internal class EventsManager: EventsListener {
         case .loaded:
             telemetry?.turnstile()
             telemetry?.send(event: mapEvent.typeString)
+            let turnstileEvent = TurnstileEvent(skuId: SKUIdentifier.mapsMAUS, sdkIdentifier: Constants.MGLAPIClientUserAgentBase, sdkVersion: Constants.SDKVersion)
+            coreTelemetry.sendTurnstileEvent(for: turnstileEvent, callback: nil)
         }
     }
 

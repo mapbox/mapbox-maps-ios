@@ -1,6 +1,9 @@
 import UIKit
 
 final class MockTapGestureRecognizer: UITapGestureRecognizer {
+    override var view: UIView? {
+        return UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+    }
     let getStateStub = Stub<Void, UIGestureRecognizer.State>(defaultReturnValue: .possible)
     override var state: UIGestureRecognizer.State {
         get {

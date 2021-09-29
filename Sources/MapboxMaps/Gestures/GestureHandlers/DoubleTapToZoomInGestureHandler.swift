@@ -22,10 +22,12 @@ internal final class DoubleTapToZoomInGestureHandler: GestureHandler {
     @objc private func handleGesture(_ gestureRecognizer: UITapGestureRecognizer) {
         switch gestureRecognizer.state {
         case .recognized:
+            guard let view = gestureRecognizer.view else { return }
             delegate?.gestureBegan(for: .doubleTapToZoomIn)
             delegate?.gestureEnded(for: .doubleTapToZoomIn, willAnimate: true)
+            let tapLocation = gestureRecognizer.location(in: view)
             cameraAnimationsManager.ease(
-                to: CameraOptions(zoom: mapboxMap.cameraState.zoom + 1),
+                to: CameraOptions(anchor: tapLocation, zoom: mapboxMap.cameraState.zoom + 1),
                 duration: 0.3,
                 curve: .easeOut) { _ in
                     self.delegate?.animationEnded(for: .doubleTapToZoomIn)

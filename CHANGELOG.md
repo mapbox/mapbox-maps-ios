@@ -29,8 +29,9 @@ Mapbox welcomes participation and contributions from everyone.
 * Adds `FeatureExtensionValue.features: [Feature]?` that works with Turf. ([#717](https://github.com/mapbox/mapbox-maps-ios/pull/717))
 * APIs that accept Turf `Feature` now allow `Feature.identifier` and `.properties` to be `nil`. ([#717](https://github.com/mapbox/mapbox-maps-ios/pull/717))
 * APIs that accept Turf `Feature` now ignore `Feature.properties` instead of crashing if it cannot be converted to `[String: NSObject]`. ([#717](https://github.com/mapbox/mapbox-maps-ios/pull/717))
-* Any touch event in the map now immedately disables camera animation. Temporarily disable user interaction on the MapView to disable this behavior as needed. ([#712](https://github.com/mapbox/mapbox-maps-ios/pull/712))
-* BasicCameraAnimator no longer updates the camera a final time after being stopped or canceled prior to running to completion. ([#712](https://github.com/mapbox/mapbox-maps-ios/pull/712))
+* Any touch event in the map now immedately disables camera animation. Temporarily disable user interaction on the `MapView` to disable this behavior as needed. ([#712](https://github.com/mapbox/mapbox-maps-ios/pull/712))
+* `BasicCameraAnimator` no longer updates the camera a final time after being stopped or canceled prior to running to completion. ([#712](https://github.com/mapbox/mapbox-maps-ios/pull/712))
+* `BasicCameraAnimator.isReversed` is now settable. ([#712](https://github.com/mapbox/mapbox-maps-ios/pull/712))
 
 ## 10.0.0-rc.9 - Sept 22, 2021
 

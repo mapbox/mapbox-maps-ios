@@ -50,7 +50,10 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     public var isRunning: Bool { propertyAnimator.isRunning }
 
     /// Boolean that represents if the animation is running normally or in reverse.
-    public var isReversed: Bool { propertyAnimator.isReversed }
+    public var isReversed: Bool {
+        get { propertyAnimator.isReversed }
+        set { propertyAnimator.isReversed = newValue }
+    }
 
     /// A Boolean value that indicates whether a completed animation remains in the active state.
     public var pausesOnCompletion: Bool {
@@ -228,7 +231,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
             self.internalState = .final
             // if the animation was stopped/canceled before finishing,
             // do not update the camera again.
-            if animatingPosition == .end {
+            if animatingPosition != .current {
                 let finalCamera = self.cameraOptions(with: transition, cameraViewCameraOptions: self.cameraView.cameraOptions)
                 self.mapboxMap.setCamera(to: finalCamera)
             }

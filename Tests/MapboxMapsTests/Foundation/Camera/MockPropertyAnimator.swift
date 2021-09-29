@@ -2,6 +2,16 @@ import UIKit
 
 final class MockPropertyAnimator: UIViewPropertyAnimator {
 
+    let setIsReversedStub = Stub<Bool, Void>()
+    override var isReversed: Bool {
+        get {
+            fatalError("unimplemented")
+        }
+        set {
+            setIsReversedStub.call(with: newValue)
+        }
+    }
+
     let stateStub = Stub<Void, UIViewAnimatingState>(defaultReturnValue: .inactive)
     override var state: UIViewAnimatingState {
         stateStub.call()

@@ -89,6 +89,7 @@ public final class GestureManager: GestureHandlerDelegate {
     private let doubleTouchToZoomOutGestureHandler: GestureHandler
     private let quickZoomGestureHandler: GestureHandler
     private let singleTapGestureHandler: GestureHandler
+    private let animationLockoutGestureHandler: GestureHandler
 
     internal init(panGestureHandler: PanGestureHandlerProtocol,
                   pinchGestureHandler: GestureHandler,
@@ -96,7 +97,8 @@ public final class GestureManager: GestureHandlerDelegate {
                   doubleTapToZoomInGestureHandler: GestureHandler,
                   doubleTouchToZoomOutGestureHandler: GestureHandler,
                   quickZoomGestureHandler: GestureHandler,
-                  singleTapGestureHandler: GestureHandler) {
+                  singleTapGestureHandler: GestureHandler,
+                  animationLockoutGestureHandler: GestureHandler) {
         self.panGestureHandler = panGestureHandler
         self.pinchGestureHandler = pinchGestureHandler
         self.pitchGestureHandler = pitchGestureHandler
@@ -104,6 +106,7 @@ public final class GestureManager: GestureHandlerDelegate {
         self.doubleTouchToZoomOutGestureHandler = doubleTouchToZoomOutGestureHandler
         self.quickZoomGestureHandler = quickZoomGestureHandler
         self.singleTapGestureHandler = singleTapGestureHandler
+        self.animationLockoutGestureHandler = animationLockoutGestureHandler
 
         panGestureHandler.delegate = self
         pinchGestureHandler.delegate = self

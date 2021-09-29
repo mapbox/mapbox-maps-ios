@@ -5,6 +5,7 @@ import UIKit
 @_implementationOnly import MapboxCoreMaps_Private
 
 internal protocol MapboxMapProtocol: AnyObject {
+    var size: CGSize { get }
     var cameraBounds: CameraBounds { get }
     var cameraState: CameraState { get }
     var anchor: CGPoint { get }
@@ -12,6 +13,9 @@ internal protocol MapboxMapProtocol: AnyObject {
     func dragStart(for point: CGPoint)
     func dragCameraOptions(from: CGPoint, to: CGPoint) -> CameraOptions
     func dragEnd()
+
+    @discardableResult
+    func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable
 }
 
 public final class MapboxMap: MapboxMapProtocol {
@@ -208,9 +212,8 @@ public final class MapboxMap: MapboxMapProtocol {
             __map.setDebugForDebugOptions(options, value: true)
         }
     }
-}
 
-extension MapboxMap: MapTransformDelegate {
+    /// Gets the size of the map in points
     internal var size: CGSize {
         get {
             CGSize(__map.getSize())
@@ -220,6 +223,7 @@ extension MapboxMap: MapTransformDelegate {
         }
     }
 
+    /// Notify map about gesture being in progress.
     internal var isGestureInProgress: Bool {
         get {
             return __map.isGestureInProgress()
@@ -229,6 +233,10 @@ extension MapboxMap: MapTransformDelegate {
         }
     }
 
+    /// Tells the map rendering engine that the animation is currently performed
+    /// by the user (e.g. with a `setCamera()` calls series). It adjusts the
+    /// engine for the animation use case.
+    /// In particular, it brings more stability to symbol placement and rendering.
     internal var isUserAnimationInProgress: Bool {
         get {
             return __map.isUserAnimationInProgress()
@@ -238,27 +246,40 @@ extension MapboxMap: MapTransformDelegate {
         }
     }
 
+    /// Returns the map's options
     public var options: MapOptions {
         return __map.getOptions()
     }
 
+    /// Set the map north orientation
+    ///
+    /// - Parameter northOrientation: The map north orientation to set
     internal func setNorthOrientation(northOrientation: NorthOrientation) {
         __map.setNorthOrientationFor(northOrientation)
     }
 
+    /// Set the map constrain mode
+    ///
+    /// - Parameter constrainMode: The map constraint mode to set
     internal func setConstrainMode(_ constrainMode: ConstrainMode) {
         __map.setConstrainModeFor(constrainMode)
     }
 
+    /// Set the map viewport mode
+    ///
+    /// - Parameter viewportMode: The map viewport mode to set
     internal func setViewportMode(_ viewportMode: ViewportMode) {
         __map.setViewportModeFor(viewportMode)
     }
-}
 
-// MARK: - CameraManagerProtocol -
-
-extension MapboxMap: CameraManagerProtocol {
-
+    /// Calculates a `CameraOptions` to fit a `CoordinateBounds`
+    ///
+    /// - Parameters:
+    ///   - coordinateBounds: The coordinate bounds that will be displayed within the viewport.
+    ///   - padding: The new padding to be used by the camera.
+    ///   - bearing: The new bearing to be used by the camera.
+    ///   - pitch: The new pitch to be used by the camera.
+    /// - Returns: A `CameraOptions` that fits the provided constraints
     public func camera(for coordinateBounds: CoordinateBounds,
                        padding: UIEdgeInsets,
                        bearing: Double?,
@@ -271,6 +292,14 @@ extension MapboxMap: CameraManagerProtocol {
                 pitch: pitch?.NSNumber))
     }
 
+    /// Calculates a `CameraOptions` to fit a list of coordinates.
+    ///
+    /// - Parameters:
+    ///   - coordinates: Array of coordinates that should fit within the new viewport.
+    ///   - padding: The new padding to be used by the camera.
+    ///   - bearing: The new bearing to be used by the camera.
+    ///   - pitch: The new pitch to be used by the camera.
+    /// - Returns: A `CameraOptions` that fits the provided constraints
     public func camera(for coordinates: [CLLocationCoordinate2D],
                        padding: UIEdgeInsets,
                        bearing: Double?,
@@ -283,6 +312,25 @@ extension MapboxMap: CameraManagerProtocol {
                 pitch: pitch?.NSNumber))
     }
 
+    /// Calculates a `CameraOptions` to fit a list of coordinates into a sub-rect of the map.
+    ///
+    /// Adjusts the zoom of `camera` to fit `coordinates` into `rect`.
+    ///
+    /// Returns the provided camera with zoom adjusted to fit coordinates into
+    /// `rect`, so that the coordinates on the left, top and right of the effective
+    /// camera center at the principal point of the projection (defined by padding)
+    /// fit into the rect.
+    ///
+    /// - Note:
+    ///     This method may fail if the principal point of the projection is not
+    ///     inside `rect` or if there is insufficient screen space, defined by
+    ///     principal point and rect, to fit the geometry.
+    ///
+    /// - Parameters:
+    ///   - coordinates: The coordinates to frame within `rect`.
+    ///   - camera: The camera for which the zoom should be adjusted to fit `coordinates`. `camera.center` must be non-nil.
+    ///   - rect: The rectangle inside of the map that should be used to frame `coordinates`.
+    /// - Returns: A `CameraOptions` that fits the provided constraints, or `cameraOptions` if an error occurs.
     public func camera(for coordinates: [CLLocationCoordinate2D],
                        camera: CameraOptions,
                        rect: CGRect) -> CameraOptions {
@@ -293,6 +341,14 @@ extension MapboxMap: CameraManagerProtocol {
                 box: ScreenBox(rect)))
     }
 
+    /// Calculates a `CameraOptions` to fit a geometry
+    ///
+    /// - Parameters:
+    ///   - geometry: The geoemtry that will be displayed within the viewport.
+    ///   - padding: The new padding to be used by the camera.
+    ///   - bearing: The new bearing to be used by the camera.
+    ///   - pitch: The new pitch to be used by the camera.
+    /// - Returns: A `CameraOptions` that fits the provided constraints
     public func camera(for geometry: Turf.Geometry,
                        padding: UIEdgeInsets,
                        bearing: CGFloat?,
@@ -307,33 +363,71 @@ extension MapboxMap: CameraManagerProtocol {
 
     // MARK: - CameraOptions to CoordinateBounds
 
+    /// Returns the coordinate bounds corresponding to a given `CameraOptions`
+    ///
+    /// - Parameter camera: The camera for which the coordinate bounds will be returned.
+    /// - Returns: `CoordinateBounds` for the given `CameraOptions`
     public func coordinateBounds(for camera: CameraOptions) -> CoordinateBounds {
         return __map.coordinateBoundsForCamera(
             forCamera: MapboxCoreMaps.CameraOptions(camera))
     }
 
+    /// Returns the coordinate bounds and zoom for a given `CameraOptions`.
+    ///
+    /// - Parameter camera: The camera for which the `CoordinateBoundsZoom` will be returned.
+    /// - Returns: `CoordinateBoundsZoom` for the given `CameraOptions`
     public func coordinateBoundsZoom(for camera: CameraOptions) -> CoordinateBoundsZoom {
         return __map.coordinateBoundsZoomForCamera(forCamera: MapboxCoreMaps.CameraOptions(camera))
     }
 
+    /// Returns the unwrapped coordinate bounds and zoom for a given `CameraOptions`.
+    ///
+    /// This function is particularly useful, if the camera shows the antimeridian.
+    ///
+    /// - Parameter camera: The camera for which the `CoordinateBoundsZoom` will
+    ///     be returned.
+    /// - Returns: `CoordinateBoundsZoom` for the given `CameraOptions`
     public func coordinateBoundsZoomUnwrapped(for camera: CameraOptions) -> CoordinateBoundsZoom {
         return __map.coordinateBoundsZoomForCameraUnwrapped(forCamera: MapboxCoreMaps.CameraOptions(camera))
     }
 
+    // MARK: - Screen coordinate conversion
+
+    /// Converts a point in the mapView's coordinate system to a geographic coordinate.
+    /// The point must exist in the coordinate space of the `MapView`
+    ///
+    /// - Parameter point: The point to convert. Must exist in the coordinate space
+    ///     of the `MapView`
+    /// - Returns: A `CLLocationCoordinate` that represents the geographic location
+    ///     of the point.
     public func coordinate(for point: CGPoint) -> CLLocationCoordinate2D {
         return __map.coordinateForPixel(forPixel: point.screenCoordinate)
     }
 
+    /// Converts a map coordinate to a `CGPoint`, relative to the `MapView`.
+    /// - Parameter coordinate: The coordinate to convert.
+    /// - Returns: A `CGPoint` relative to the `UIView`.
     public func point(for coordinate: CLLocationCoordinate2D) -> CGPoint {
         return __map.pixelForCoordinate(for: coordinate).point
     }
 
+    /// Converts map coordinates to an array of `CGPoint`, relative to the `MapView`.
+    ///
+    /// - Parameter coordinates: The coordinate to convert.
+    /// - Returns: An array of `CGPoint` relative to the `UIView`.
     public func points(for coordinates: [CLLocationCoordinate2D]) -> [CGPoint] {
         let locations = coordinates.map { CLLocation(latitude: $0.latitude, longitude: $0.longitude) }
         let screenCoords = __map.pixelsForCoordinates(forCoordinates: locations)
         return screenCoords.map { $0.point }
     }
 
+    /// Converts points in the mapView's coordinate system to geographic coordinates.
+    /// The points must exist in the coordinate space of the `MapView`.
+    ///
+    /// - Parameter point: The point to convert. Must exist in the coordinate space
+    ///     of the `MapView`
+    /// - Returns: A `CLLocationCoordinate` that represents the geographic location
+    ///     of the point.
     public func coordinates(for points: [CGPoint]) -> [CLLocationCoordinate2D] {
         let screenCoords = points.map { $0.screenCoordinate }
         let locations = __map.coordinatesForPixels(forPixels: screenCoords)
@@ -342,10 +436,22 @@ extension MapboxMap: CameraManagerProtocol {
 
     // MARK: - Camera options setters/getters
 
+    /// Changes the map view by any combination of center, zoom, bearing, and pitch,
+    /// without an animated transition. The map will retain its current values
+    /// for any details not passed via the camera options argument. It is not
+    /// guaranteed that the provided `CameraOptions` will be set, the map may apply
+    /// constraints resulting in a different `CameraState`.
+    ///
+    /// - Important:
+    ///     This method does not cancel existing animations. Call
+    ///     `CameraAnimationsManager.cancelAnimations()`to cancel existing animations.
+    ///
+    /// - Parameter cameraOptions: New camera options
     public func setCamera(to cameraOptions: CameraOptions) {
         __map.setCameraFor(MapboxCoreMaps.CameraOptions(cameraOptions))
     }
 
+    /// Returns the current camera state
     public var cameraState: CameraState {
         return CameraState(__map.getCameraState())
     }
@@ -356,6 +462,16 @@ extension MapboxMap: CameraManagerProtocol {
         return CGPoint(x: rect.midX, y: rect.midY)
     }
 
+    /// Sets/get the map view with the free camera options.
+    ///
+    /// FreeCameraOptions provides more direct access to the underlying camera entity.
+    /// For backwards compatibility the state set using this API must be representable
+    /// with `CameraOptions` as well. Parameters are clamped to a valid range or
+    /// discarded as invalid if the conversion to the pitch and bearing presentation
+    /// is ambiguous. For example orientation can be invalid if it leads to the
+    /// camera being upside down or the quaternion has zero length.
+    ///
+    /// - Parameter freeCameraOptions: The free camera options to set.
     public var freeCameraOptions: FreeCameraOptions {
         get {
             return __map.getFreeCameraOptions()
@@ -374,7 +490,7 @@ extension MapboxMap: CameraManagerProtocol {
     ///
     /// - Parameter options: New camera bounds. Nil values will not take effect.
     /// - Throws: `MapError`
-    public func setCameraBounds(for options: CameraBoundsOptions) throws {
+    public func setCameraBounds(with options: CameraBoundsOptions) throws {
         let expected = __map.setBoundsFor(MapboxCoreMaps.CameraBoundsOptions(options))
 
         if expected.isError() {
@@ -386,16 +502,33 @@ extension MapboxMap: CameraManagerProtocol {
 
     // MARK: - Drag API
 
+    /// Prepares the drag gesture to use the provided screen coordinate as a pivot
+    /// point. This function should be called each time when user starts a
+    /// dragging action (e.g. by clicking on the map). The following dragging
+    /// will be relative to the pivot.
+    ///
+    /// - Parameter point: Screen point
     public func dragStart(for point: CGPoint) {
         __map.dragStart(forPoint: point.screenCoordinate)
     }
 
+    /// Calculates target point where camera should move after drag. The method
+    /// should be called after `dragStart` and before `dragEnd`.
+    ///
+    /// - Parameters:
+    ///   - fromPoint: The point from which the map is dragged.
+    ///   - toPoint: The point to which the map is dragged.
+    ///
+    /// - Returns:
+    ///     The camera options object showing end point.
     public func dragCameraOptions(from: CGPoint, to: CGPoint) -> CameraOptions {
         let options = __map.getDragCameraOptionsFor(fromPoint: from.screenCoordinate,
                                                     toPoint: to.screenCoordinate)
         return CameraOptions(options)
     }
 
+    /// Ends the ongoing drag gesture. This function should be called always after
+    /// the user has ended a drag gesture initiated by `dragStart`.
     public func dragEnd() {
         __map.dragEnd()
     }
@@ -404,6 +537,13 @@ extension MapboxMap: CameraManagerProtocol {
 // MARK: - MapFeatureQueryable -
 
 extension MapboxMap: MapFeatureQueryable {
+    /// Queries the map for rendered features.
+    ///
+    /// - Parameters:
+    ///   - shape: Screen point coordinates (point, line string or box) to query
+    ///         for rendered features.
+    ///   - options: Options for querying rendered features.
+    ///   - completion: Callback called when the query completes
     public func queryRenderedFeatures(for shape: [CGPoint], options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
         __map.queryRenderedFeatures(forShape: shape.map { $0.screenCoordinate },
                                     options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
@@ -412,6 +552,12 @@ extension MapboxMap: MapFeatureQueryable {
                                                                     concreteErrorType: MapError.self))
     }
 
+    /// Queries the map for rendered features.
+    ///
+    /// - Parameters:
+    ///   - rect: Screen rect to query for rendered features.
+    ///   - options: Options for querying rendered features.
+    ///   - completion: Callback called when the query completes
     public func queryRenderedFeatures(in rect: CGRect, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
         __map.queryRenderedFeatures(for: ScreenBox(rect),
                                     options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
@@ -420,6 +566,12 @@ extension MapboxMap: MapFeatureQueryable {
                                                                     concreteErrorType: MapError.self))
     }
 
+    /// Queries the map for rendered features.
+    ///
+    /// - Parameters:
+    ///   - point: Screen point at which to query for rendered features.
+    ///   - options: Options for querying rendered features.
+    ///   - completion: Callback called when the query completes
     public func queryRenderedFeatures(at point: CGPoint, options: RenderedQueryOptions? = nil, completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
         __map.queryRenderedFeatures(forPixel: point.screenCoordinate,
                                     options: options ?? RenderedQueryOptions(layerIds: nil, filter: nil),
@@ -428,6 +580,12 @@ extension MapboxMap: MapFeatureQueryable {
                                                                     concreteErrorType: MapError.self))
     }
 
+    /// Queries the map for source features.
+    ///
+    /// - Parameters:
+    ///   - sourceId: Style source identifier used to query for source features.
+    ///   - options: Options for querying source features.
+    ///   - completion: Callback called when the query completes
     public func querySourceFeatures(for sourceId: String,
                                     options: SourceQueryOptions,
                                     completion: @escaping (Result<[QueriedFeature], Error>) -> Void) {
@@ -438,6 +596,31 @@ extension MapboxMap: MapFeatureQueryable {
                                                                   concreteErrorType: MapError.self))
     }
 
+    /// Queries for feature extension values in a GeoJSON source.
+    ///
+    /// - Parameters:
+    ///   - sourceId: The identifier of the source to query.
+    ///   - feature: Feature to look for in the query.
+    ///   - extension: Currently supports keyword `supercluster`.
+    ///   - extensionField: Currently supports following three extensions:
+    ///
+    ///       1. `children`: returns the children of a cluster (on the next zoom
+    ///         level).
+    ///       2. `leaves`: returns all the leaves of a cluster (given its cluster_id)
+    ///       3. `expansion-zoom`: returns the zoom on which the cluster expands
+    ///         into several children (useful for "click to zoom" feature).
+    ///
+    ///   - args: Used for further query specification when using 'leaves'
+    ///         extensionField. Now only support following two args:
+    ///
+    ///       1. `limit`: the number of points to return from the query (must
+    ///             use type 'UInt64', set to maximum for all points)
+    ///       2. `offset`: the amount of points to skip (for pagination, must
+    ///             use type 'UInt64')
+    ///
+    ///   - completion: The result could be a feature extension value containing
+    ///         either a value (expansion-zoom) or a feature collection (children
+    ///         or leaves). An error is passed if the operation was not successful.
     public func queryFeatureExtension(for sourceId: String,
                                       feature: Feature,
                                       extension: String,
@@ -582,7 +765,6 @@ extension MapboxMap {
                                  featureId: featureId,
                                  stateKey: stateKey)
     }
-
 }
 
 // MARK: - Testing only! -

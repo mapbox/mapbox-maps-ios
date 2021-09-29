@@ -18,14 +18,13 @@ internal final class PinchGestureHandler: GestureHandler {
     /// The camera bearing when the gesture began or unpaused
     private var initialBearing: CLLocationDirection?
 
+    private let mapboxMap: MapboxMapProtocol
+
     /// Initialize the handler which creates the panGestureRecognizer and adds to the view
     internal init(gestureRecognizer: UIPinchGestureRecognizer,
-                  mapboxMap: MapboxMapProtocol,
-                  cameraAnimationsManager: CameraAnimationsManagerProtocol) {
-        super.init(
-            gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap,
-            cameraAnimationsManager: cameraAnimationsManager)
+                  mapboxMap: MapboxMapProtocol) {
+        self.mapboxMap = mapboxMap
+        super.init(gestureRecognizer: gestureRecognizer)
         gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
 
@@ -42,11 +41,8 @@ internal final class PinchGestureHandler: GestureHandler {
             initialCenter = mapboxMap.cameraState.center
             initialZoom = mapboxMap.cameraState.zoom
             initialBearing = mapboxMap.cameraState.bearing
-            cameraAnimationsManager.cancelAnimations()
             delegate?.gestureBegan(for: .pinch)
         case .changed:
-            cameraAnimationsManager.cancelAnimations()
-
             // UIPinchGestureRecognizer sends a .changed event when the number
             // of touches decreases from 2 to 1. If this happens, we pause our
             // gesture handling.

@@ -23,8 +23,7 @@ class AnimateImageLayerExample: UIViewController, ExampleProtocol {
         mapView.tintColor = .lightGray
 
         // Set the map's `CameraBoundsOptions` to limit the map's zoom level.
-        mapView.camera.options.maxZoom = 5.99
-        mapView.camera.options.minZoom = 4
+        try? mapView.mapboxMap.setCameraBounds(with: CameraBoundsOptions(maxZoom: 5.99, minZoom: 4))
 
         view.addSubview(mapView)
 

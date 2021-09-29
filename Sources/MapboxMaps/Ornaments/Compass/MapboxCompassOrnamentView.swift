@@ -69,7 +69,7 @@ internal class MapboxCompassOrnamentView: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
 
-    @objc internal func didTap() {
+    @objc private func didTap() {
         tapAction?()
     }
 

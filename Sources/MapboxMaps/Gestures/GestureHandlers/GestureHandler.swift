@@ -11,18 +11,10 @@ internal protocol GestureHandlerDelegate: AnyObject {
 internal class GestureHandler: NSObject {
     internal let gestureRecognizer: UIGestureRecognizer
 
-    internal let mapboxMap: MapboxMapProtocol
-
-    internal let cameraAnimationsManager: CameraAnimationsManagerProtocol
-
     internal weak var delegate: GestureHandlerDelegate?
 
-    init(gestureRecognizer: UIGestureRecognizer,
-         mapboxMap: MapboxMapProtocol,
-         cameraAnimationsManager: CameraAnimationsManagerProtocol) {
+    init(gestureRecognizer: UIGestureRecognizer) {
         self.gestureRecognizer = gestureRecognizer
-        self.mapboxMap = mapboxMap
-        self.cameraAnimationsManager = cameraAnimationsManager
     }
 
     deinit {

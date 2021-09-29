@@ -2,6 +2,8 @@
 
 final class MockMapboxMap: MapboxMapProtocol {
 
+    var size: CGSize = .zero
+
     var cameraBounds = CameraBounds(
         bounds: CoordinateBounds(
             southwest: CLLocationCoordinate2D(
@@ -52,5 +54,15 @@ final class MockMapboxMap: MapboxMapProtocol {
     let dragEndStub = Stub<Void, Void>()
     func dragEnd() {
         dragEndStub.call()
+    }
+
+    struct OnEveryParams {
+        var eventType: MapEvents.EventKind
+        var handler: (Event) -> Void
+    }
+    let onEveryStub = Stub<OnEveryParams, Cancelable>(defaultReturnValue: MockCancelable())
+    @discardableResult
+    func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
+        onEveryStub.call(with: OnEveryParams(eventType: eventType, handler: handler))
     }
 }

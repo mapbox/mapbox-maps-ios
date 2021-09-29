@@ -37,8 +37,10 @@ public class OrnamentsManager: NSObject {
 
     private var constraints = [NSLayoutConstraint]()
 
-    internal init(view: OrnamentSupportableView,
-                  options: OrnamentOptions,
+    internal init(options: OrnamentOptions,
+                  view: UIView,
+                  mapboxMap: MapboxMapProtocol,
+                  cameraAnimationsManager: CameraAnimationsManagerProtocol,
                   infoButtonOrnamentDelegate: InfoButtonOrnamentDelegate) {
         self.options = options
 
@@ -48,20 +50,27 @@ public class OrnamentsManager: NSObject {
         view.addSubview(logoView)
 
         // Scalebar View
-        scalebarView = MapboxScaleBarOrnamentView()
+        let scalebarView = MapboxScaleBarOrnamentView()
         // Check whether the scale bar is position on the right side of the map view.
         let scaleBarPosition = options.scaleBar.position
         scalebarView.isOnRight = scaleBarPosition == .bottomRight || scaleBarPosition == .topRight
         scalebarView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scalebarView)
+        self.scalebarView = scalebarView
 
         // Compass View
-        compassView = MapboxCompassOrnamentView(visibility: options.compass.visibility)
+        let compassView = MapboxCompassOrnamentView(visibility: options.compass.visibility)
         compassView.translatesAutoresizingMaskIntoConstraints = false
-        compassView.tapAction = { [weak view] in
-            view?.compassTapped()
+        compassView.tapAction = {
+            cameraAnimationsManager.cancelAnimations()
+            cameraAnimationsManager.ease(
+                to: CameraOptions(bearing: 0),
+                duration: 0.3,
+                curve: .easeOut,
+                completion: nil)
         }
         view.addSubview(compassView)
+        self.compassView = compassView
 
         // Info Button
         attributionButton = InfoButtonOrnament()
@@ -75,7 +84,16 @@ public class OrnamentsManager: NSObject {
         updateOrnaments()
 
         // Subscribe to updates for scalebar and compass
-        view.subscribeCameraChangeHandler { [scalebarView, compassView] (cameraState) in
+        // MapboxMap should not be allowed to own a strong ref to compassView
+        // since compassView owns a tapAction that captures a strong ref to
+        // cameraAnimationsManager which has a strong ref to mapboxMap.
+        mapboxMap.onEvery(.cameraChanged) { [weak mapboxMap, weak scalebarView, weak compassView] _ in
+            guard let mapboxMap = mapboxMap,
+                  let scalebarView = scalebarView,
+                  let compassView = compassView else {
+                return
+            }
+            let cameraState = mapboxMap.cameraState
 
             // Update the scale bar
             scalebarView.metersPerPoint = Projection.metersPerPoint(
@@ -84,7 +102,6 @@ public class OrnamentsManager: NSObject {
 
             // Update the compass
             compassView.currentBearing = Double(cameraState.bearing)
-
         }
     }
 

@@ -5,7 +5,6 @@ final class PinchGestureHandlerTests: XCTestCase {
     var view: UIView!
     var gestureRecognizer: MockPinchGestureRecognizer!
     var mapboxMap: MockMapboxMap!
-    var cameraAnimationsManager: MockCameraAnimationsManager!
     var pinchGestureHandler: PinchGestureHandler!
     // swiftlint:disable:next weak_delegate
     var delegate: MockGestureHandlerDelegate!
@@ -16,11 +15,9 @@ final class PinchGestureHandlerTests: XCTestCase {
         gestureRecognizer = MockPinchGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         mapboxMap = MockMapboxMap()
-        cameraAnimationsManager = MockCameraAnimationsManager()
         pinchGestureHandler = PinchGestureHandler(
             gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap,
-            cameraAnimationsManager: cameraAnimationsManager)
+            mapboxMap: mapboxMap)
         delegate = MockGestureHandlerDelegate()
         pinchGestureHandler.delegate = delegate
     }
@@ -28,7 +25,6 @@ final class PinchGestureHandlerTests: XCTestCase {
     override func tearDown() {
         pinchGestureHandler = nil
         delegate = nil
-        cameraAnimationsManager = nil
         mapboxMap = nil
         gestureRecognizer = nil
         view = nil
@@ -44,7 +40,6 @@ final class PinchGestureHandlerTests: XCTestCase {
 
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1)
         XCTAssertEqual(delegate.gestureBeganStub.parameters, [.pinch])
     }
 
@@ -67,9 +62,6 @@ final class PinchGestureHandlerTests: XCTestCase {
             CGPoint(x: 1, y: 1)]
         gestureRecognizer.getNumberOfTouchesStub.defaultReturnValue = 2
         gestureRecognizer.sendActions()
-        // reset cancelAnimationsStub so we can verify
-        // that it's called when state is .changed
-        cameraAnimationsManager.cancelAnimationsStub.reset()
         gestureRecognizer.getStateStub.defaultReturnValue = .changed
         gestureRecognizer.locationStub.defaultReturnValue = changedPinchMidpoint
         // the new touch angle is 90° - that's 45° increase from the initial.
@@ -82,8 +74,6 @@ final class PinchGestureHandlerTests: XCTestCase {
 
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1,
-                      "Cancel animations was not called before commencing gesture processing")
         XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 3)
         guard mapboxMap.setCameraStub.invocations.count == 3 else {
             return

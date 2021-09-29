@@ -15,3 +15,5 @@ internal protocol LocationStyleProtocol: AnyObject {
                   stretchY: [ImageStretches],
                   content: ImageContent?) throws
 }
+
+extension Style: LocationStyleProtocol { }

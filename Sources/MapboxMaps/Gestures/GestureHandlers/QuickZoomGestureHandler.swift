@@ -4,16 +4,14 @@ import UIKit
 internal final class QuickZoomGestureHandler: GestureHandler {
     private var initialLocation: CGPoint?
     private var initialZoom: CGFloat?
+    private let mapboxMap: MapboxMapProtocol
 
     internal init(gestureRecognizer: UILongPressGestureRecognizer,
-                  mapboxMap: MapboxMapProtocol,
-                  cameraAnimationsManager: CameraAnimationsManagerProtocol) {
+                  mapboxMap: MapboxMapProtocol) {
         gestureRecognizer.numberOfTapsRequired = 1
         gestureRecognizer.minimumPressDuration = 0
-        super.init(
-            gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap,
-            cameraAnimationsManager: cameraAnimationsManager)
+        self.mapboxMap = mapboxMap
+        super.init(gestureRecognizer: gestureRecognizer)
         gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
 
@@ -24,7 +22,6 @@ internal final class QuickZoomGestureHandler: GestureHandler {
         let location = gestureRecognizer.location(in: view)
         switch gestureRecognizer.state {
         case .began:
-            cameraAnimationsManager.cancelAnimations()
             delegate?.gestureBegan(for: .quickZoom)
             initialLocation = location
             initialZoom = mapboxMap.cameraState.zoom

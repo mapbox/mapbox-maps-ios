@@ -5,7 +5,6 @@ final class PitchGestureHandlerTests: XCTestCase {
     var view: UIView!
     var gestureRecognizer: MockPanGestureRecognizer!
     var mapboxMap: MockMapboxMap!
-    var cameraAnimationsManager: MockCameraAnimationsManager!
     var pitchGestureHandler: PitchGestureHandler!
     // swiftlint:disable:next weak_delegate
     var delegate: MockGestureHandlerDelegate!
@@ -16,11 +15,9 @@ final class PitchGestureHandlerTests: XCTestCase {
         gestureRecognizer = MockPanGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         mapboxMap = MockMapboxMap()
-        cameraAnimationsManager = MockCameraAnimationsManager()
         pitchGestureHandler = PitchGestureHandler(
             gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap,
-            cameraAnimationsManager: cameraAnimationsManager)
+            mapboxMap: mapboxMap)
         delegate = MockGestureHandlerDelegate()
         pitchGestureHandler.delegate = delegate
         gestureRecognizer.getNumberOfTouchesStub.defaultReturnValue = 2
@@ -29,7 +26,6 @@ final class PitchGestureHandlerTests: XCTestCase {
     override func tearDown() {
         delegate = nil
         pitchGestureHandler = nil
-        cameraAnimationsManager = nil
         mapboxMap = nil
         gestureRecognizer = nil
         view = nil
@@ -78,7 +74,6 @@ final class PitchGestureHandlerTests: XCTestCase {
         gestureRecognizer.sendActions()
 
         XCTAssertEqual(delegate.gestureBeganStub.parameters, [.pitch])
-        XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1)
         XCTAssertEqual(gestureRecognizer.locationOfTouchStub.invocations.count, 0)
     }
 

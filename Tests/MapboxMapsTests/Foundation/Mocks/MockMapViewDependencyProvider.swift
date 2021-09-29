@@ -35,21 +35,17 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
         cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager {
         return GestureManager(
             panGestureHandler: MockPanGestureHandler(
-                gestureRecognizer: UIGestureRecognizer(),
-                mapboxMap: MockMapboxMap(),
-                cameraAnimationsManager: MockCameraAnimationsManager()),
+                gestureRecognizer: UIGestureRecognizer()),
             pinchGestureHandler: makeGestureHandler(),
             pitchGestureHandler: makeGestureHandler(),
             doubleTapToZoomInGestureHandler: makeGestureHandler(),
             doubleTouchToZoomOutGestureHandler: makeGestureHandler(),
             quickZoomGestureHandler: makeGestureHandler(),
-            singleTapGestureHandler: makeGestureHandler())
+            singleTapGestureHandler: makeGestureHandler(),
+            animationLockoutGestureHandler: makeGestureHandler())
     }
 
     func makeGestureHandler() -> GestureHandler {
-        return GestureHandler(
-            gestureRecognizer: UIGestureRecognizer(),
-            mapboxMap: MockMapboxMap(),
-            cameraAnimationsManager: MockCameraAnimationsManager())
+        return GestureHandler(gestureRecognizer: UIGestureRecognizer())
     }
 }

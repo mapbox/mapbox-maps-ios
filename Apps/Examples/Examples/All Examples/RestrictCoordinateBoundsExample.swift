@@ -3,10 +3,9 @@ import MapboxMaps
 import MapboxCoreMaps
 
 @objc(RestrictCoordinateBoundsExample)
+final class RestrictCoordinateBoundsExample: UIViewController, ExampleProtocol {
 
-public class RestrictCoordinateBoundsExample: UIViewController, ExampleProtocol {
-
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         let mapView = MapView(frame: view.bounds)
@@ -17,7 +16,7 @@ public class RestrictCoordinateBoundsExample: UIViewController, ExampleProtocol 
                                       northeast: CLLocationCoordinate2D(latitude: 66.61, longitude: -13.47))
 
         // Restrict the camera to `bounds`.
-        mapView.camera.options = CameraBoundsOptions(bounds: bounds)
+        try? mapView.mapboxMap.setCameraBounds(with: CameraBoundsOptions(bounds: bounds))
 
         // Center the camera on the bounds
         let camera = mapView.mapboxMap.camera(for: bounds, padding: .zero, bearing: 0, pitch: 0)
@@ -26,7 +25,7 @@ public class RestrictCoordinateBoundsExample: UIViewController, ExampleProtocol 
         mapView.mapboxMap.setCamera(to: camera)
     }
 
-    override public func viewDidAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
          // The below line is used for internal testing purposes only.
         finish()

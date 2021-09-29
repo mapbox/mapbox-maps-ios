@@ -2,6 +2,16 @@ import UIKit
 
 final class MockPropertyAnimator: UIViewPropertyAnimator {
 
+    let setIsReversedStub = Stub<Bool, Void>()
+    override var isReversed: Bool {
+        get {
+            fatalError("unimplemented")
+        }
+        set {
+            setIsReversedStub.call(with: newValue)
+        }
+    }
+
     let stateStub = Stub<Void, UIViewAnimatingState>(defaultReturnValue: .inactive)
     override var state: UIViewAnimatingState {
         stateStub.call()
@@ -27,9 +37,9 @@ final class MockPropertyAnimator: UIViewPropertyAnimator {
         addAnimationsStub.call(with: animation)
     }
 
-    let addCompletionStub = Stub<Void, Void>()
+    let addCompletionStub = Stub<(UIViewAnimatingPosition) -> Void, Void>()
     override func addCompletion(_ completion: @escaping (UIViewAnimatingPosition) -> Void) {
-        addCompletionStub.call()
+        addCompletionStub.call(with: completion)
     }
 
     struct ContinueAnimationParameters {

@@ -29,17 +29,12 @@ internal protocol CameraAnimationsManagerProtocol: AnyObject {
                     completion: @escaping () -> Void)
 
     func cancelAnimations()
+
+    var animationsEnabled: Bool { get set }
 }
 
 /// An object that manages a camera's view lifecycle.
 public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
-
-    /// Used to set up camera specific configuration
-    public var options: CameraBoundsOptions {
-        didSet {
-            try? mapboxMap.setCameraBounds(for: options)
-        }
-    }
 
     /// List of animators currently alive
     public var cameraAnimators: [CameraAnimator] {
@@ -55,17 +50,22 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
     /// May want to convert to an enum.
     fileprivate let northBearing: CGFloat = 0
 
+    internal var animationsEnabled: Bool = true
+
     private let cameraViewContainerView: UIView
 
-    private let mapboxMap: MapboxMap
+    private let mapboxMap: MapboxMapProtocol
 
-    internal init(cameraViewContainerView: UIView, mapboxMap: MapboxMap) {
+    internal init(cameraViewContainerView: UIView, mapboxMap: MapboxMapProtocol) {
         self.cameraViewContainerView = cameraViewContainerView
         self.mapboxMap = mapboxMap
-        self.options = CameraBoundsOptions(cameraBounds: mapboxMap.cameraBounds)
     }
 
     internal func update() {
+        guard animationsEnabled else {
+            cancelAnimations()
+            return
+        }
         for animator in cameraAnimatorsSet.allObjects {
             animator.update()
         }

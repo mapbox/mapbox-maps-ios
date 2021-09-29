@@ -14,7 +14,7 @@ internal class GeometryMBXGeometryTests: XCTestCase {
         let turfGeometry = Geometry(mbxGeometry)
 
         // Then
-        guard let expectedTurfPoint = turfGeometry?.value as? Point else {
+        guard case let .point(expectedTurfPoint) = turfGeometry else {
             XCTFail("Could not convert Geometry to Turf Point geometry")
             return
         }
@@ -36,7 +36,7 @@ internal class GeometryMBXGeometryTests: XCTestCase {
         let turfGeometry = Geometry(mbxGeometry)
 
         // Then
-        guard let expectedTurfLineString = turfGeometry?.value as? LineString else {
+        guard case let .lineString(expectedTurfLineString) = turfGeometry else {
             XCTFail("Could not convert Geometry to Turf LineString geometry")
             return
         }
@@ -59,7 +59,7 @@ internal class GeometryMBXGeometryTests: XCTestCase {
         let turfGeometry = Geometry(mbxGeometry)
 
         // Then
-        guard let expectedTurfPolygon = turfGeometry?.value as? Polygon else {
+        guard case let .polygon(expectedTurfPolygon) = turfGeometry else {
             XCTFail("Could not convert Geometry to Turf Polygon geometry.")
             return
         }
@@ -78,7 +78,7 @@ internal class GeometryMBXGeometryTests: XCTestCase {
         let turfGeometry = Geometry(mbxGeometry)
 
         // Then
-        guard let expectedTurfMultiPoint = turfGeometry?.value as? MultiPoint else {
+        guard case let .multiPoint(expectedTurfMultiPoint) = turfGeometry else {
             XCTFail("Could not convert Geometry to Turf Multipoint geometry")
             return
         }
@@ -104,7 +104,7 @@ internal class GeometryMBXGeometryTests: XCTestCase {
         let turfGeometry = Geometry(mbxGeometry)
 
         // Then
-        guard let expectedTurfMultiLineString = turfGeometry?.value as? MultiLineString else {
+        guard case let .multiLineString(expectedTurfMultiLineString) = turfGeometry else {
             XCTFail("Could not convert Geometry to Turf MultiLineString geometry")
             return
         }
@@ -136,7 +136,7 @@ internal class GeometryMBXGeometryTests: XCTestCase {
         let turfGeometry = Geometry(mbxGeometry)
 
         // Then
-        guard let expectedTurfMultiPolygon = turfGeometry?.value as? MultiPolygon else {
+        guard case let .multiPolygon(expectedTurfMultiPolygon) = turfGeometry else {
             XCTFail("Could not convert Geometry to Turf MultiPolygon")
             return
         }

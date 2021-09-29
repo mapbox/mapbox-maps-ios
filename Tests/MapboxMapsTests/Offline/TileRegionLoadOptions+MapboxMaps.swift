@@ -116,8 +116,7 @@ final class TileRegionLoadOptions_MapboxMapsTests: XCTestCase {
                                                           averageBytesPerSecond: nil,
                                                           extraOptions: nil)
 
-        XCTAssertEqual(tileRegionLoadOptions.geometry?.type, .Point)
-        XCTAssertEqual(tileRegionLoadOptions.geometry?.value as? Point, Point(coordinate))
+        XCTAssertEqual(tileRegionLoadOptions.geometry, .point(.init(coordinate)))
     }
 
     func testNilGeometry() {

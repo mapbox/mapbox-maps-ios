@@ -16,7 +16,7 @@ final class FeatureExtensionValueTests: XCTestCase {
         let value = Int.random(in: 0..<100)
         let features = Array.random(withLength: .random(in: 0..<10)) { () -> Feature in
             var feature = Feature(geometry: .point(Point(.random())))
-            feature.identifier = .number(.int(.random(in: (.min)...(.max))))
+            feature.identifier = .number(Double(Int.random(in: (.min)...(.max))))
             return feature
         }
 
@@ -39,7 +39,7 @@ final class FeatureExtensionValueTests: XCTestCase {
     func testNonNilFeatures() {
         let features = Array.random(withLength: .random(in: 0..<10)) { () -> Feature in
             var feature = Feature(geometry: .point(Point(.random())))
-            feature.identifier = .number(.int(.random(in: (.min)...(.max))))
+            feature.identifier = .number(Double(Int.random(in: (.min)...(.max))))
             return feature
         }.map(MapboxCommon.Feature.init(_:))
 

@@ -23,9 +23,9 @@ public struct PointAnnotation: Annotation {
     internal var feature: Turf.Feature {
         var feature = Turf.Feature(geometry: geometry)
         feature.identifier = .string(id)
-        var properties = [String: Any?]()
-        properties["layerProperties"] = layerProperties
-        properties["userInfo"] = userInfo
+        var properties = JSONObject()
+        properties["layerProperties"] = JSONValue(rawValue: layerProperties)
+        properties["userInfo"] = userInfo.flatMap(JSONValue.init(rawValue:))
         feature.properties = properties
         return feature
     }

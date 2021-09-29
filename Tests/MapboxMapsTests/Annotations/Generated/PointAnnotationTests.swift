@@ -11,7 +11,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["icon-anchor"] as? String, annotation.iconAnchor?.rawValue)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(iconAnchor) = layerProperties["icon-anchor"] else {
+            return XCTFail("Layer property icon-anchor should be set to a string.")
+        }
+        XCTAssertEqual(iconAnchor, annotation.iconAnchor?.rawValue)
     }
 
     func testIconImage() {
@@ -21,7 +25,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["icon-image"] as? String, annotation.iconImage)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(iconImage) = layerProperties["icon-image"] else {
+            return XCTFail("Layer property icon-image should be set to a string.")
+        }
+        XCTAssertEqual(iconImage, annotation.iconImage)
     }
 
     func testIconOffset() {
@@ -31,7 +39,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["icon-offset"] as? [Double], annotation.iconOffset)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .array(iconOffset) = layerProperties["icon-offset"] else {
+            return XCTFail("Layer property icon-offset should be set to a array of Doubles.")
+        }
+        XCTAssertEqual(iconOffset.compactMap { $0?.rawValue } as? [Double], annotation.iconOffset)
     }
 
     func testIconRotate() {
@@ -41,7 +53,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["icon-rotate"] as? Double, annotation.iconRotate)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(iconRotate) = layerProperties["icon-rotate"] else {
+            return XCTFail("Layer property icon-rotate should be set to a number.")
+        }
+        XCTAssertEqual(iconRotate, annotation.iconRotate)
     }
 
     func testIconSize() {
@@ -51,7 +67,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["icon-size"] as? Double, annotation.iconSize)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(iconSize) = layerProperties["icon-size"] else {
+            return XCTFail("Layer property icon-size should be set to a number.")
+        }
+        XCTAssertEqual(iconSize, annotation.iconSize)
     }
 
     func testSymbolSortKey() {
@@ -61,7 +81,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["symbol-sort-key"] as? Double, annotation.symbolSortKey)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(symbolSortKey) = layerProperties["symbol-sort-key"] else {
+            return XCTFail("Layer property symbol-sort-key should be set to a number.")
+        }
+        XCTAssertEqual(symbolSortKey, annotation.symbolSortKey)
     }
 
     func testTextAnchor() {
@@ -71,7 +95,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["text-anchor"] as? String, annotation.textAnchor?.rawValue)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(textAnchor) = layerProperties["text-anchor"] else {
+            return XCTFail("Layer property text-anchor should be set to a string.")
+        }
+        XCTAssertEqual(textAnchor, annotation.textAnchor?.rawValue)
     }
 
     func testTextField() {
@@ -81,7 +109,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["text-field"] as? String, annotation.textField)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(textField) = layerProperties["text-field"] else {
+            return XCTFail("Layer property text-field should be set to a string.")
+        }
+        XCTAssertEqual(textField, annotation.textField)
     }
 
     func testTextJustify() {
@@ -91,7 +123,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["text-justify"] as? String, annotation.textJustify?.rawValue)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(textJustify) = layerProperties["text-justify"] else {
+            return XCTFail("Layer property text-justify should be set to a string.")
+        }
+        XCTAssertEqual(textJustify, annotation.textJustify?.rawValue)
     }
 
     func testTextLetterSpacing() {
@@ -101,7 +137,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["text-letter-spacing"] as? Double, annotation.textLetterSpacing)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(textLetterSpacing) = layerProperties["text-letter-spacing"] else {
+            return XCTFail("Layer property text-letter-spacing should be set to a number.")
+        }
+        XCTAssertEqual(textLetterSpacing, annotation.textLetterSpacing)
     }
 
     func testTextMaxWidth() {
@@ -111,7 +151,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["text-max-width"] as? Double, annotation.textMaxWidth)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(textMaxWidth) = layerProperties["text-max-width"] else {
+            return XCTFail("Layer property text-max-width should be set to a number.")
+        }
+        XCTAssertEqual(textMaxWidth, annotation.textMaxWidth)
     }
 
     func testTextOffset() {
@@ -121,7 +165,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["text-offset"] as? [Double], annotation.textOffset)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .array(textOffset) = layerProperties["text-offset"] else {
+            return XCTFail("Layer property text-offset should be set to a array of Doubles.")
+        }
+        XCTAssertEqual(textOffset.compactMap { $0?.rawValue } as? [Double], annotation.textOffset)
     }
 
     func testTextRadialOffset() {
@@ -131,7 +179,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["text-radial-offset"] as? Double, annotation.textRadialOffset)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(textRadialOffset) = layerProperties["text-radial-offset"] else {
+            return XCTFail("Layer property text-radial-offset should be set to a number.")
+        }
+        XCTAssertEqual(textRadialOffset, annotation.textRadialOffset)
     }
 
     func testTextRotate() {
@@ -141,7 +193,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["text-rotate"] as? Double, annotation.textRotate)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(textRotate) = layerProperties["text-rotate"] else {
+            return XCTFail("Layer property text-rotate should be set to a number.")
+        }
+        XCTAssertEqual(textRotate, annotation.textRotate)
     }
 
     func testTextSize() {
@@ -151,7 +207,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["text-size"] as? Double, annotation.textSize)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(textSize) = layerProperties["text-size"] else {
+            return XCTFail("Layer property text-size should be set to a number.")
+        }
+        XCTAssertEqual(textSize, annotation.textSize)
     }
 
     func testTextTransform() {
@@ -161,7 +221,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["text-transform"] as? String, annotation.textTransform?.rawValue)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(textTransform) = layerProperties["text-transform"] else {
+            return XCTFail("Layer property text-transform should be set to a string.")
+        }
+        XCTAssertEqual(textTransform, annotation.textTransform?.rawValue)
     }
 
     func testIconColor() {
@@ -171,7 +235,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["icon-color"] as? String, annotation.iconColor.flatMap { $0.rgbaString })
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(iconColor) = layerProperties["icon-color"] else {
+            return XCTFail("Layer property icon-color should be set to a string.")
+        }
+        XCTAssertEqual(iconColor, annotation.iconColor.flatMap { $0.rgbaString })
     }
 
     func testIconHaloBlur() {
@@ -181,7 +249,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["icon-halo-blur"] as? Double, annotation.iconHaloBlur)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(iconHaloBlur) = layerProperties["icon-halo-blur"] else {
+            return XCTFail("Layer property icon-halo-blur should be set to a number.")
+        }
+        XCTAssertEqual(iconHaloBlur, annotation.iconHaloBlur)
     }
 
     func testIconHaloColor() {
@@ -191,7 +263,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["icon-halo-color"] as? String, annotation.iconHaloColor.flatMap { $0.rgbaString })
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(iconHaloColor) = layerProperties["icon-halo-color"] else {
+            return XCTFail("Layer property icon-halo-color should be set to a string.")
+        }
+        XCTAssertEqual(iconHaloColor, annotation.iconHaloColor.flatMap { $0.rgbaString })
     }
 
     func testIconHaloWidth() {
@@ -201,7 +277,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["icon-halo-width"] as? Double, annotation.iconHaloWidth)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(iconHaloWidth) = layerProperties["icon-halo-width"] else {
+            return XCTFail("Layer property icon-halo-width should be set to a number.")
+        }
+        XCTAssertEqual(iconHaloWidth, annotation.iconHaloWidth)
     }
 
     func testIconOpacity() {
@@ -211,7 +291,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["icon-opacity"] as? Double, annotation.iconOpacity)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(iconOpacity) = layerProperties["icon-opacity"] else {
+            return XCTFail("Layer property icon-opacity should be set to a number.")
+        }
+        XCTAssertEqual(iconOpacity, annotation.iconOpacity)
     }
 
     func testTextColor() {
@@ -221,7 +305,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["text-color"] as? String, annotation.textColor.flatMap { $0.rgbaString })
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(textColor) = layerProperties["text-color"] else {
+            return XCTFail("Layer property text-color should be set to a string.")
+        }
+        XCTAssertEqual(textColor, annotation.textColor.flatMap { $0.rgbaString })
     }
 
     func testTextHaloBlur() {
@@ -231,7 +319,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["text-halo-blur"] as? Double, annotation.textHaloBlur)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(textHaloBlur) = layerProperties["text-halo-blur"] else {
+            return XCTFail("Layer property text-halo-blur should be set to a number.")
+        }
+        XCTAssertEqual(textHaloBlur, annotation.textHaloBlur)
     }
 
     func testTextHaloColor() {
@@ -241,7 +333,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["text-halo-color"] as? String, annotation.textHaloColor.flatMap { $0.rgbaString })
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .string(textHaloColor) = layerProperties["text-halo-color"] else {
+            return XCTFail("Layer property text-halo-color should be set to a string.")
+        }
+        XCTAssertEqual(textHaloColor, annotation.textHaloColor.flatMap { $0.rgbaString })
     }
 
     func testTextHaloWidth() {
@@ -251,7 +347,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["text-halo-width"] as? Double, annotation.textHaloWidth)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(textHaloWidth) = layerProperties["text-halo-width"] else {
+            return XCTFail("Layer property text-halo-width should be set to a number.")
+        }
+        XCTAssertEqual(textHaloWidth, annotation.textHaloWidth)
     }
 
     func testTextOpacity() {
@@ -261,7 +361,11 @@ final class PointAnnotationTests: XCTestCase {
         guard let featureProperties = try? XCTUnwrap(annotation.feature.properties) else {
             return
         }
-        XCTAssertEqual((featureProperties["layerProperties"] as! [String: Any])["text-opacity"] as? Double, annotation.textOpacity)
+        guard case let .object(layerProperties) = featureProperties["layerProperties"],
+              case let .number(textOpacity) = layerProperties["text-opacity"] else {
+            return XCTFail("Layer property text-opacity should be set to a number.")
+        }
+        XCTAssertEqual(textOpacity, annotation.textOpacity)
     }
 }
 

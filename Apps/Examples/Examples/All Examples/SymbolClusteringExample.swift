@@ -152,16 +152,16 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
                 // Check whether the feature has values for `ASSETNUM` and `LOCATIONDETAIL`. These properties
                 // come from the fire hydrant dataset and indicate that the selected feature is not clustered.
                 if let selectedFeatureProperties = queriedFeatures.first?.feature?.properties,
-                   let featureInformation = selectedFeatureProperties["ASSETNUM"] as? String,
-                    let location = selectedFeatureProperties["LOCATIONDETAIL"] as? String {
+                   case let .string(featureInformation) = selectedFeatureProperties["ASSETNUM"],
+                   case let .string(location) = selectedFeatureProperties["LOCATIONDETAIL"] {
                     self?.showAlert(withTitle: "Hydrant \(featureInformation)", and: "\(location)")
                 // If the feature is a cluster, it will have `point_count` and `cluster_id` properties. These are assigned
                 // when the cluster is created.
                 } else if let selectedFeatureProperties = queriedFeatures.first?.feature?.properties,
-                          let pointCount = selectedFeatureProperties["point_count"] as? Int,
-                          let clusterId = selectedFeatureProperties["cluster_id"] as? Int {
+                          case let .number(pointCount) = selectedFeatureProperties["point_count"],
+                          case let .number(clusterId) = selectedFeatureProperties["cluster_id"] {
                     // If the tap landed on a cluster, pass the cluster ID and point count to the alert.
-                    self?.showAlert(withTitle: "Cluster ID \(clusterId)", and: "There are \(pointCount) points in this cluster")
+                    self?.showAlert(withTitle: "Cluster ID \(Int(clusterId))", and: "There are \(Int(pointCount)) points in this cluster")
                 }
             case .failure(let error):
                 self?.showAlert(withTitle: "An error occurred: \(error.localizedDescription)", and: "Please try another hydrant")

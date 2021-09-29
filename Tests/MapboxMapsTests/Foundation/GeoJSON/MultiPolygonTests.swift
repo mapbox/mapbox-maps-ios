@@ -11,9 +11,8 @@ class MultiPolygonTests: XCTestCase {
         let firstCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
         let lastCoordinate = CLLocationCoordinate2D(latitude: 11, longitude: 11)
 
-        let geojson = try! GeoJSON.parse(Feature.self, from: data)
+        let geojson = try! JSONDecoder().decode(Feature.self, from: data)
 
-        XCTAssert(geojson.geometry.type == .MultiPolygon)
         guard case let .multiPolygon(multipolygonCoordinates) = geojson.geometry else {
             XCTFail("Failed to create MultiPolygon.")
             return
@@ -23,7 +22,7 @@ class MultiPolygonTests: XCTestCase {
         XCTAssert(multipolygonCoordinates.coordinates.last?.last?.last == lastCoordinate)
 
         let encodedData = try! JSONEncoder().encode(geojson)
-        let decoded = try! GeoJSON.parse(Feature.self, from: encodedData)
+        let decoded = try! JSONDecoder().decode(Feature.self, from: encodedData)
         guard case let .multiPolygon(decodedMultipolygonCoordinates) = decoded.geometry else {
             XCTFail("Failed to decode MultiPolygon.")
             return
@@ -72,16 +71,15 @@ class MultiPolygonTests: XCTestCase {
         multiPolygonFeature.properties = ["some": "var"]
 
         let encodedData = try! JSONEncoder().encode(multiPolygonFeature)
-        let decodedCustomMultiPolygon = try! GeoJSON.parse(Feature.self, from: encodedData)
+        let decodedCustomMultiPolygon = try! JSONDecoder().decode(Feature.self, from: encodedData)
 
         let data = try! Fixture.geojsonData(from: "multipolygon")!
-        let bundledMultiPolygon = try! GeoJSON.parse(Feature.self, from: data)
+        let bundledMultiPolygon = try! JSONDecoder().decode(Feature.self, from: data)
         guard case let .multiPolygon(bundledMultipolygonCoordinates) = bundledMultiPolygon.geometry else {
             XCTFail("Failed to create MultiPolygon from bundled MultiPolygon.")
             return
         }
 
-        XCTAssert(decodedCustomMultiPolygon.geometry.type == .MultiPolygon)
         guard case let .multiPolygon(decodedMultipolygonCoordinates) = decodedCustomMultiPolygon.geometry else {
             XCTFail("Failed to create decoded MultiPolygon.")
             return

@@ -24,7 +24,7 @@ final class FeatureTests: XCTestCase {
 
         let feature = try XCTUnwrap(Feature(commonFeature))
 
-        guard case .number(.double(2.0)) = feature.identifier else {
+        guard feature.identifier == 2.0 else {
             XCTFail("feature.identifier did not match the expected value")
             return
         }
@@ -55,7 +55,7 @@ final class FeatureTests: XCTestCase {
 
     func testInitializingCommonFeatureFromTurfFeatureNumberIdentifier() throws {
         var feature = Feature(geometry: geometry)
-        feature.identifier = .number(.double(2.0))
+        feature.identifier = 2.0
 
         let commonFeature = MapboxCommon.Feature(feature)
 

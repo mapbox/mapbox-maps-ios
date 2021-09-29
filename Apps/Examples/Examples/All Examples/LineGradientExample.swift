@@ -34,7 +34,7 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
         var featureCollection: FeatureCollection?
         do {
             let data = try Data(contentsOf: filePath)
-            featureCollection = try GeoJSON.parse(FeatureCollection.self, from: data)
+            featureCollection = try JSONDecoder().decode(FeatureCollection.self, from: data)
         } catch {
             print("Error parsing data: \(error)")
         }

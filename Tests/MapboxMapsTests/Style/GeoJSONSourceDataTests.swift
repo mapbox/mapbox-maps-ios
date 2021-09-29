@@ -44,7 +44,9 @@ class GeoJSONSourceDataTests: XCTestCase {
         if let validData = decodedSource?.data,
            case let GeoJSONSourceData.feature(feature) = validData {
             XCTAssert(feature.identifier != nil)
-            XCTAssert(feature.geometry.type == .Point)
+            if case .point = feature.geometry {} else {
+                XCTFail("Geometry of the decoded feature should be a point.")
+            }
         } else {
             XCTFail("Failed to read decoded geojson fixture.")
         }

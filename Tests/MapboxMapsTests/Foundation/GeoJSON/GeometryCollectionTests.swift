@@ -12,25 +12,19 @@ class GeometryCollectionTests: XCTestCase {
         let multiPolygonCoordinate = CLLocationCoordinate2D(latitude: 8.5, longitude: 1)
 
         // Act
-        let geoJSON = try! GeoJSON.parse(data)
+        let geoJSON = try! JSONDecoder().decode(GeoJSONObject.self, from: data)
 
         // Assert
-        XCTAssert(geoJSON.decoded is Turf.Feature)
-
-        guard let geometryCollectionFeature = geoJSON.decoded as? Turf.Feature else {
+        guard case let .feature(geometryCollectionFeature) = geoJSON else {
             XCTFail("Failed to create Feature.")
             return
         }
-
-        XCTAssert(geometryCollectionFeature.geometry.type == .GeometryCollection)
-        XCTAssert(geometryCollectionFeature.geometry.value is GeometryCollection)
 
         guard case let .geometryCollection(geometries) = geometryCollectionFeature.geometry else {
             XCTFail("Failed to create GeometryCollection.")
             return
         }
 
-        XCTAssert(geometries.geometries[2].type == .MultiPolygon)
         guard case let .multiPolygon(decodedMultiPolygonCoordinate) = geometries.geometries[2] else {
             XCTFail("Failed to create MultiPolygon.")
             return
@@ -42,29 +36,23 @@ class GeometryCollectionTests: XCTestCase {
         // Arrange
         let multiPolygonCoordinate = CLLocationCoordinate2D(latitude: 8.5, longitude: 1)
         let data = try! Fixture.geojsonData(from: "geometry-collection")!
-        let geoJSON = try! GeoJSON.parse(data)
+        let geoJSON = try! JSONDecoder().decode(GeoJSONObject.self, from: data)
 
         // Act
         let encodedData = try! JSONEncoder().encode(geoJSON)
-        let encodedJSON = try! GeoJSON.parse(encodedData)
+        let encodedJSON = try! JSONDecoder().decode(GeoJSONObject.self, from: encodedData)
 
         // Assert
-        XCTAssert(encodedJSON.decoded is Turf.Feature)
-
-        guard let geometryCollectionFeature = encodedJSON.decoded as? Turf.Feature else {
+        guard case let .feature(geometryCollectionFeature) = encodedJSON else {
             XCTFail("Failed to create Feature.")
             return
         }
-
-        XCTAssert(geometryCollectionFeature.geometry.type == .GeometryCollection)
-        XCTAssert(geometryCollectionFeature.geometry.value is GeometryCollection)
 
         guard case let .geometryCollection(geometries) = geometryCollectionFeature.geometry else {
             XCTFail("Failed to create GeometryCollection.")
             return
         }
 
-        XCTAssert(geometries.geometries[2].type == .MultiPolygon)
         guard case let .multiPolygon(decodedMultiPolygonCoordinate) = geometries.geometries[2] else {
             XCTFail("Failed to create MultiPolygon.")
             return

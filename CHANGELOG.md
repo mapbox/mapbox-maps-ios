@@ -24,6 +24,13 @@ Mapbox welcomes participation and contributions from everyone.
 
 * `TileRegionLoadOptions` exposes its geometry as a `Geometry`. ([#711](https://github.com/mapbox/mapbox-maps-ios/pull/711))
 
+### Features ✨ and improvements 🏁
+
+* Adds `FeatureExtensionValue.init(value: Any?, features: [Feature]?)` that works with Turf. ([#717](https://github.com/mapbox/mapbox-maps-ios/pull/717))
+* Adds `FeatureExtensionValue.features: [Feature]?` that works with Turf. ([#717](https://github.com/mapbox/mapbox-maps-ios/pull/717))
+* APIs that accept Turf `Feature` now allow `Feature.identifier` and `.properties` to be `nil`. ([#717](https://github.com/mapbox/mapbox-maps-ios/pull/717))
+* APIs that accept Turf `Feature` now ignore `Feature.properties` instead of crashing if it cannot be converted to `[String: NSObject]`. ([#717](https://github.com/mapbox/mapbox-maps-ios/pull/717))
+
 ## 10.0.0-rc.9 - Sept 22, 2021
 
 ### Breaking changes ⚠️

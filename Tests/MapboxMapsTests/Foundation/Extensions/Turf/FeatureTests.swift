@@ -25,7 +25,7 @@ final class FeatureTests: XCTestCase {
         let feature = try XCTUnwrap(Feature(commonFeature))
 
         guard case .number(.double(2.0)) = feature.identifier else {
-            XCTFail()
+            XCTFail("feature.identifier did not match the expected value")
             return
         }
     }
@@ -39,7 +39,7 @@ final class FeatureTests: XCTestCase {
         let feature = try XCTUnwrap(Feature(commonFeature))
 
         guard case .string("abc") = feature.identifier else {
-            XCTFail()
+            XCTFail("feature.identifier did not match the expected value")
             return
         }
     }

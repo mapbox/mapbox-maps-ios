@@ -451,8 +451,8 @@ extension MapboxMap: MapFeatureQueryable {
                                      extensionField: extensionField,
                                      args: args,
                                      callback: coreAPIClosureAdapter(for: completion,
-                                                                        type: FeatureExtensionValue.self,
-                                                                        concreteErrorType: MapError.self))
+                                                                     type: FeatureExtensionValue.self,
+                                                                     concreteErrorType: MapError.self))
     }
 }
 

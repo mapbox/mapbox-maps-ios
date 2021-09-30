@@ -58,8 +58,7 @@ public class AnnotationOrchestrator {
     }
 
     /// Dictionary of annotation managers keyed by their identifiers.
-    /// - NOTE: Removing an annotation manager from this collection can result in the corresponding annotations to be removed from the map view.
-    public var annotationManagersMap: [String: AnnotationManager] = [:]
+    public private(set) var annotationManagersById = [String: AnnotationManager]()
 
     /// Creates a `PointAnnotationManager` which is used to manage a collection of `PointAnnotation`s. The collection of `PointAnnotation` collection will persist across style changes.
     /// - Parameters:
@@ -81,7 +80,7 @@ public class AnnotationOrchestrator {
                                       layerPosition: layerPosition,
                                       displayLinkCoordinator: displayLinkCoordinator)
 
-        annotationManagersMap[id] = annotationManager
+        annotationManagersById[id] = annotationManager
 
         return annotationManager
     }
@@ -106,7 +105,7 @@ public class AnnotationOrchestrator {
                                         layerPosition: layerPosition,
                                         displayLinkCoordinator: displayLinkCoordinator)
 
-        annotationManagersMap[id] = annotationManager
+        annotationManagersById[id] = annotationManager
 
         return annotationManager
     }
@@ -131,7 +130,7 @@ public class AnnotationOrchestrator {
                                          layerPosition: layerPosition,
                                          displayLinkCoordinator: displayLinkCoordinator)
 
-        annotationManagersMap[id] = annotationManager
+        annotationManagersById[id] = annotationManager
 
         return annotationManager
     }
@@ -156,8 +155,15 @@ public class AnnotationOrchestrator {
                                        layerPosition: layerPosition,
                                        displayLinkCoordinator: displayLinkCoordinator)
 
-        annotationManagersMap[id] = annotationManager
+        annotationManagersById[id] = annotationManager
 
         return annotationManager
+    }
+
+    /// Removes an annotation manager, this will remove the underlying layer and source from the style.
+    /// A removed annotation manager will not be able to reuse anymore, you will need to create new annotation manger to add annotations.
+    /// - Parameter id: Identifer of annotation manager to remove
+    public func removeAnnotationManager(withId id: String) {
+        annotationManagersById[id] = nil
     }
 }

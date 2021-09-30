@@ -54,6 +54,7 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
         mapboxMap.cameraState.zoom = initialZoom
         gestureRecognizer.sendActions()
 
+        let initialLocation = gestureRecognizer.locationStub.defaultReturnValue
         // Send a changed event that should correspond to zooming in by 1 level
         gestureRecognizer.getStateStub.defaultReturnValue = .changed
         gestureRecognizer.locationStub.defaultReturnValue.y = 175
@@ -62,7 +63,7 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
         XCTAssertEqual(
             mapboxMap.setCameraStub.parameters,
             [CameraOptions(
-                anchor: CGPoint(x: view.bounds.midX, y: view.bounds.midY),
+                anchor: initialLocation,
                 zoom: initialZoom + 1)])
     }
 

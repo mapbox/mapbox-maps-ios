@@ -9,10 +9,13 @@ final class DoubleTouchToZoomOutGestureHandlerTests: XCTestCase {
     var gestureHandler: DoubleTouchToZoomOutGestureHandler!
     // swiftlint:disable:next weak_delegate
     var delegate: MockGestureHandlerDelegate!
+    var view: UIView!
 
     override func setUp() {
         super.setUp()
+        view = UIView()
         gestureRecognizer = MockTapGestureRecognizer()
+        view.addGestureRecognizer(gestureRecognizer)
         cameraAnimationsManager = MockCameraAnimationsManager()
         mapboxMap = MockMapboxMap()
         gestureHandler = DoubleTouchToZoomOutGestureHandler(
@@ -29,6 +32,7 @@ final class DoubleTouchToZoomOutGestureHandlerTests: XCTestCase {
         mapboxMap = nil
         cameraAnimationsManager = nil
         gestureRecognizer = nil
+        view = nil
         super.tearDown()
     }
 
@@ -44,9 +48,12 @@ final class DoubleTouchToZoomOutGestureHandlerTests: XCTestCase {
 
         gestureRecognizer.sendActions()
 
+        let view = try XCTUnwrap(gestureRecognizer.view)
+        let tapLocation = gestureRecognizer.location(in: view)
+
         XCTAssertEqual(delegate.gestureBeganStub.parameters, [.doubleTouchToZoomOut])
         XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 1)
-        XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.camera, CameraOptions(zoom: mapboxMap.cameraState.zoom - 1))
+        XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.camera, CameraOptions(anchor: tapLocation, zoom: mapboxMap.cameraState.zoom - 1))
         XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.duration, 0.3)
         XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.curve, .easeOut)
         XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.gestureType, .doubleTouchToZoomOut)

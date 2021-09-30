@@ -57,6 +57,10 @@ public class AnnotationOrchestrator {
         self.displayLinkCoordinator = displayLinkCoordinator
     }
 
+    /// Dictionary of annotation managers keyed by their identifiers.
+    /// - NOTE: Removing an annotation manager from this collection can result in the corresponding annotations to be removed from the map view.
+    public var annotationManagersMap: [String: AnnotationManager] = [:]
+
     /// Creates a `PointAnnotationManager` which is used to manage a collection of `PointAnnotation`s. The collection of `PointAnnotation` collection will persist across style changes.
     /// - Parameters:
     ///   - id: Optional string identifier for this manager.
@@ -69,13 +73,17 @@ public class AnnotationOrchestrator {
             fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
         }
 
-        return PointAnnotationManager(id: id,
+        let annotationManager = PointAnnotationManager(id: id,
                                       style: style,
                                       singleTapGestureRecognizer: singleTapGestureRecognizer,
                                       mapFeatureQueryable: mapFeatureQueryable,
                                       shouldPersist: true,
                                       layerPosition: layerPosition,
                                       displayLinkCoordinator: displayLinkCoordinator)
+
+        annotationManagersMap[id] = annotationManager
+
+        return annotationManager
     }
 
     /// Creates a `PolygonAnnotationManager` which is used to manage a collection of `PolygonAnnotation`s. The collection of `PolygonAnnotation`s will persist across style changes.
@@ -90,13 +98,17 @@ public class AnnotationOrchestrator {
             fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
         }
 
-        return PolygonAnnotationManager(id: id,
+        let annotationManager = PolygonAnnotationManager(id: id,
                                         style: style,
                                         singleTapGestureRecognizer: singleTapGestureRecognizer,
                                         mapFeatureQueryable: mapFeatureQueryable,
                                         shouldPersist: true,
                                         layerPosition: layerPosition,
                                         displayLinkCoordinator: displayLinkCoordinator)
+
+        annotationManagersMap[id] = annotationManager
+
+        return annotationManager
     }
 
     /// Creates a `PolylineAnnotationManager` which is used to manage a collection of `PolylineAnnotation`s. The collection of `PolylineAnnotation`s will persist across style changes.
@@ -111,13 +123,17 @@ public class AnnotationOrchestrator {
             fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
         }
 
-        return PolylineAnnotationManager(id: id,
+        let annotationManager = PolylineAnnotationManager(id: id,
                                          style: style,
                                          singleTapGestureRecognizer: singleTapGestureRecognizer,
                                          mapFeatureQueryable: mapFeatureQueryable,
                                          shouldPersist: true,
                                          layerPosition: layerPosition,
                                          displayLinkCoordinator: displayLinkCoordinator)
+
+        annotationManagersMap[id] = annotationManager
+
+        return annotationManager
     }
 
     /// Creates a `CircleAnnotationManager` which is used to manage a collection of `CircleAnnotation`s.  The collection of `CircleAnnotation`s will persist across style changes.
@@ -132,12 +148,16 @@ public class AnnotationOrchestrator {
             fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
         }
 
-        return CircleAnnotationManager(id: id,
+        let annotationManager = CircleAnnotationManager(id: id,
                                        style: style,
                                        singleTapGestureRecognizer: singleTapGestureRecognizer,
                                        mapFeatureQueryable: mapFeatureQueryable,
                                        shouldPersist: true,
                                        layerPosition: layerPosition,
                                        displayLinkCoordinator: displayLinkCoordinator)
+
+        annotationManagersMap[id] = annotationManager
+
+        return annotationManager
     }
 }

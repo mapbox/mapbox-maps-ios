@@ -32,7 +32,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Any touch event in the map now immediately disables camera animation. Temporarily disable user interaction on the `MapView` to disable this behavior as needed. ([#712](https://github.com/mapbox/mapbox-maps-ios/pull/712))
 * `BasicCameraAnimator` no longer updates the camera a final time after being stopped or canceled prior to running to completion. ([#712](https://github.com/mapbox/mapbox-maps-ios/pull/712))
 * `BasicCameraAnimator.isReversed` is now settable. ([#712](https://github.com/mapbox/mapbox-maps-ios/pull/712))
-* The double tap, quick zoom, and double touch gestures now use the gesture's location in the view to anchor camera changes. ([#722](https://github.com/mapbox/mapbox-maps-ios/pull/722))
+* The double tap, quick zoom, and double touch gestures now use the gesture's location in the view to anchor camera changes. Previously, they used the camera's center coordinate ([#722](https://github.com/mapbox/mapbox-maps-ios/pull/722))
 
 ## 10.0.0-rc.9 - Sept 22, 2021
 

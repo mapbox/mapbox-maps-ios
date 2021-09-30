@@ -25,6 +25,7 @@ internal final class DoubleTapToZoomInGestureHandler: GestureHandler {
             guard let view = gestureRecognizer.view else { return }
             delegate?.gestureBegan(for: .doubleTapToZoomIn)
             delegate?.gestureEnded(for: .doubleTapToZoomIn, willAnimate: true)
+
             let tapLocation = gestureRecognizer.location(in: view)
             cameraAnimationsManager.ease(
                 to: CameraOptions(anchor: tapLocation, zoom: mapboxMap.cameraState.zoom + 1),

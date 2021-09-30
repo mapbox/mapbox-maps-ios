@@ -5,7 +5,7 @@ import UIKit
 /// such as a change in the device’s location.
 public class LocationManager: NSObject {
 
-    /// Represents the latest location received from the location providerm
+    /// Represents the latest location received from the location provider.
     public private(set) var latestLocation: Location?
 
     /// Represents the style of the user location puck.
@@ -18,7 +18,7 @@ public class LocationManager: NSObject {
     /// The object that acts as the delegate of the location manager.
     public weak var delegate: LocationPermissionsDelegate?
 
-    /// Can be used to access location authorization settings.
+    /// Property that provide location and authorization updates.
     public private(set) var locationProvider: LocationProvider!
 
     /// Property that has a list of items that will consume location events.

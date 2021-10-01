@@ -90,3 +90,9 @@ extension UIColor: ExpressionArgumentConvertible {
         return [.string(StyleColor(self).rgbaString)]
     }
 }
+
+extension GeoJSONObject: ExpressionArgumentConvertible {
+    public var expressionArguments: [Expression.Argument] {
+        return [.geoJSONObject(self)]
+    }
+}

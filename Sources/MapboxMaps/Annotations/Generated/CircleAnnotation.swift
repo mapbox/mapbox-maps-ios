@@ -25,7 +25,9 @@ public struct CircleAnnotation: Annotation {
         feature.identifier = .string(id)
         var properties = JSONObject()
         properties["layerProperties"] = JSONValue(rawValue: layerProperties)
-        properties["userInfo"] = userInfo.flatMap(JSONValue.init(rawValue:))
+        if let userInfoValue = userInfo.flatMap(JSONValue.init(rawValue:)) {
+            properties["userInfo"] = userInfoValue
+        }
         feature.properties = properties
         return feature
     }

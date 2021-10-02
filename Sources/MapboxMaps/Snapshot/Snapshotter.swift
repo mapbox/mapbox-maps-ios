@@ -16,7 +16,7 @@ public class Snapshotter {
 
     private let options: MapSnapshotOptions
 
-    private var eventHandlers = WeakSet<MapEventHandler>()
+    private let eventHandlers = WeakSet<MapEventHandler>()
 
     deinit {
         eventHandlers.allObjects.forEach {
@@ -253,10 +253,35 @@ public class Snapshotter {
 }
 
 extension Snapshotter: ObservableProtocol {
+    /// Subscribes an Observer to a provided list of event types.
+    ///
+    /// A type conforming to `ObservableProtocol` will hold a strong reference
+    /// to an Observer instance, therefore, in order to stop receiving notifications,
+    /// the caller must call `unsubscribe` with the instance used for an initial
+    /// subscription.
+    ///
+    /// - Parameters:
+    ///   - observer: An `Observer`
+    ///   - events: Array of event types to be subscribed to
+    ///
+    /// - Note:
+    ///     Prefer `MapboxMap.on()` and `Snapshotter.on()` to using these
+    ///     lower-level APIs
     public func subscribe(_ observer: Observer, events: [String]) {
         mapSnapshotter.subscribe(for: observer, events: events)
     }
 
+    /// Unsubscribes an Observer from a provided list of event types.
+    ///
+    /// A type conforming to `ObservableProtocol` will hold a strong reference
+    /// to an Observer instance, therefore, in order to stop receiving notifications,
+    /// the caller must call `unsubscribe` with the instance used for an initial
+    /// subscription.
+    ///
+    /// - Parameters:
+    ///   - observer: An `Observer`
+    ///   - events: Array of event types to be unsubscribed from. If you pass an
+    ///     empty array (the default) the all events will be unsubscribed from.
     public func unsubscribe(_ observer: Observer, events: [String] = []) {
         if events.isEmpty {
             mapSnapshotter.unsubscribe(for: observer)

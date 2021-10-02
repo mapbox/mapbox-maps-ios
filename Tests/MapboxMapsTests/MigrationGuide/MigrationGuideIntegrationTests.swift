@@ -202,7 +202,11 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
             let customHTTPService = CustomHttpService()
 
             func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-                HttpServiceFactory.setUserDefinedForCustom(customHTTPService)
+                // commenting this out for testing purposes to avoid
+                // interfering with global state that may impact other
+                // tests
+                //
+                // HttpServiceFactory.setUserDefinedForCustom(customHTTPService)
                 return true
             }
         }

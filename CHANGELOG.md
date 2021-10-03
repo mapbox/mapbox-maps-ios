@@ -25,7 +25,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Renames `Style.updateGeoJSONSource<T: GeoJSONObject>(withId:geoJSON:)` to `Style.updateGeoJSONSource(withId:geoJSON:)`. Instead of passing in the expected GeoJSON object type, you perform pattern matching on the return value using `case let`. ([#715](https://github.com/mapbox/mapbox-maps-ios/pull/715))
 * `MapboxCoreMaps.Settings` is now deprecated. ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
 * Setting `data` property on a GeoJSON source via `Style.setSourceProperty(for:property:value:)` or `Style.updateGeoJSONSource(withId:geoJSON:)` is now asynchronous and never returns an error. Errors will be reported asynchronously via a `MapEvents.EventKind.mapLoadingError` event instead. ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
-* Core and Common APIs that accept user-defined implementations of protocols now hold strong references to the provided objects. Please audit your usage of the following protocols and make any required changes to avoid memory leaks: `CustomLayerHost`, `ElevationData`, `MapClient`, `MBMMetalViewProvider`, `Observer`, `OfflineRegionObserver`, `HttpServiceInterceptorInterface`, `HttpServiceInterface`, `LogWriterBackend`, `OfflineSwitchObserver`, `ReachabilityInterface`, `TileStoreObserver` ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
+* Core and Common APIs that accept user-defined implementations of protocols now hold strong references to the provided objects. Please audit your usage of the following protocols and make any required changes to avoid memory leaks: `CustomLayerHost`, `ElevationData`, `MapClient`, `MBMMetalViewProvider`, `Observer`, `OfflineRegionObserver`, `HttpServiceInterceptorInterface`, `HttpServiceInterface`, `LogWriterBackend`, `OfflineSwitchObserver`, `ReachabilityInterface`, `TileStoreObserver`. ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
 
 ### Features ✨ and improvements 🏁
 
@@ -37,8 +37,8 @@ Mapbox welcomes participation and contributions from everyone.
 * Any touch event in the map now immediately disables camera animation. Temporarily disable user interaction on the `MapView` to disable this behavior as needed. ([#712](https://github.com/mapbox/mapbox-maps-ios/pull/712))
 * `BasicCameraAnimator` no longer updates the camera a final time after being stopped or canceled prior to running to completion. ([#712](https://github.com/mapbox/mapbox-maps-ios/pull/712))
 * `BasicCameraAnimator.isReversed` is now settable. ([#712](https://github.com/mapbox/mapbox-maps-ios/pull/712))
-* The double tap, quick zoom, and double touch gestures now use the gesture's location in the view to anchor camera changes. Previously, they used the camera's center coordinate ([#722](https://github.com/mapbox/mapbox-maps-ios/pull/722))
-* `MapboxCommon.HTTPServiceFactor.reset()` has been added to release the HTTP service implementation ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
+* The double tap, quick zoom, and double touch gestures now use the gesture's location in the view to anchor camera changes. Previously, they used the camera's center coordinate. ([#722](https://github.com/mapbox/mapbox-maps-ios/pull/722))
+* `MapboxCommon.HTTPServiceFactor.reset()` has been added to release the HTTP service implementation. ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
 
 ## 10.0.0-rc.9 - Sept 22, 2021
 

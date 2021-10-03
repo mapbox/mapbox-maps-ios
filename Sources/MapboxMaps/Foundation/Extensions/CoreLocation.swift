@@ -52,13 +52,6 @@ extension CLLocationCoordinate2D {
     internal func toValue() -> NSValue {
         return NSValue(cgPoint: CGPoint(x: latitude, y: longitude))
     }
-
-    /// Convert an array of `CLLocationCoordinate`s to an array of `NSValue`s that wrap a `CGPoint`.
-    internal static func convertToValues(from coordinates: [CLLocationCoordinate2D]) -> [NSValue] {
-        return coordinates.map { (coordinate) -> NSValue in
-            return NSValue(cgPoint: CGPoint(x: coordinate.latitude, y: coordinate.longitude))
-        }
-    }
 }
 
 // MARK: - CLLocationDirection

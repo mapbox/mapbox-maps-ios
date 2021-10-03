@@ -7,13 +7,13 @@ public enum GeoJSONSourceData: Codable {
     case url(URL)
 
     /// The `data` property can be a feature
-    case feature(Turf.Feature)
+    case feature(Feature)
 
     /// The `data` property can be a feature collection
-    case featureCollection(Turf.FeatureCollection)
+    case featureCollection(FeatureCollection)
 
     /// The `data` property can be a geometry with no associated properties.
-    case geometry(Turf.Geometry)
+    case geometry(Geometry)
 
     /// Empty data to be used for initialization
     case empty
@@ -26,12 +26,12 @@ public enum GeoJSONSourceData: Codable {
             return
         }
 
-        if let decodedFeature = try? container.decode(Turf.Feature.self) {
+        if let decodedFeature = try? container.decode(Feature.self) {
             self = .feature(decodedFeature)
             return
         }
 
-        if let decodedFeatureCollection = try? container.decode(Turf.FeatureCollection.self) {
+        if let decodedFeatureCollection = try? container.decode(FeatureCollection.self) {
             self = .featureCollection(decodedFeatureCollection)
             return
         }

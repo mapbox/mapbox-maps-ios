@@ -152,7 +152,7 @@ public class PolygonAnnotationManager: AnnotationManager {
         }
 
         // build and update the source data
-        let featureCollection = Turf.FeatureCollection(features: annotations.map(\.feature))
+        let featureCollection = FeatureCollection(features: annotations.map(\.feature))
         do {
             let data = try JSONEncoder().encode(featureCollection)
             let jsonObject = try JSONSerialization.jsonObject(with: data) as! [String: Any]

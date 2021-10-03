@@ -7,12 +7,12 @@ public struct PolylineAnnotation: Annotation {
     public let id: String
 
     /// The geometry backing this annotation
-    public var geometry: Turf.Geometry {
+    public var geometry: Geometry {
         return .lineString(lineString)
     }
 
     /// The line string backing this annotation
-    public var lineString: Turf.LineString
+    public var lineString: LineString
 
     /// Properties associated with the annotation
     public var userInfo: [String: Any]?
@@ -20,8 +20,8 @@ public struct PolylineAnnotation: Annotation {
     /// Storage for layer properties
     internal var layerProperties: [String: Any] = [:]
 
-    internal var feature: Turf.Feature {
-        var feature = Turf.Feature(geometry: geometry)
+    internal var feature: Feature {
+        var feature = Feature(geometry: geometry)
         feature.identifier = .string(id)
         var properties = JSONObject()
         properties["layerProperties"] = JSONValue(rawValue: layerProperties)
@@ -32,15 +32,15 @@ public struct PolylineAnnotation: Annotation {
         return feature
     }
 
-    /// Create a polyline annotation with a `Turf.LineString` and an optional identifier.
-    public init(id: String = UUID().uuidString, lineString: Turf.LineString) {
+    /// Create a polyline annotation with a `LineString` and an optional identifier.
+    public init(id: String = UUID().uuidString, lineString: LineString) {
         self.id = id
         self.lineString = lineString
     }
 
     /// Create a polyline annotation with an array of coordinates and an optional identifier.
     public init(id: String = UUID().uuidString, lineCoordinates: [CLLocationCoordinate2D]) {
-        let lineString = Turf.LineString(lineCoordinates)
+        let lineString = LineString(lineCoordinates)
         self.init(id: id, lineString: lineString)
     }
 

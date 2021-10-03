@@ -858,7 +858,7 @@ public class Style {
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
-    public func setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Turf.Feature]) throws {
+    public func setCustomGeometrySourceTileData(forSourceId sourceId: String, tileId: CanonicalTileID, features: [Feature]) throws {
         let mbxFeatures = features.compactMap { MapboxCommon.Feature($0) }
         return try handleExpected {
             return styleManager.setStyleCustomGeometrySourceTileDataForSourceId(sourceId, tileId: tileId, featureCollection: mbxFeatures)

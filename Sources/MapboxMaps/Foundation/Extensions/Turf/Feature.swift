@@ -8,7 +8,7 @@ extension Turf.Feature {
     /// Initialize a `Turf.Feature` with an `Feature` object.
     /// - Parameter feature: The `Feature` to use to create the `Feature`.
     internal init?(_ feature: MapboxCommon.Feature) {
-        guard let geometry = Turf.Geometry(feature.geometry) else { return nil }
+        guard let geometry = Geometry(feature.geometry) else { return nil }
 
         self.init(geometry: geometry)
 
@@ -31,43 +31,43 @@ extension Turf.Feature {
     /// Initialize a `Turf.Feature` with a `Point`.
     /// - Parameter point: The `Point` to use to create the `Turf.Feature`.
     internal init(_ point: Point) {
-        self.init(geometry: Turf.Geometry.point(point))
+        self.init(geometry: Geometry.point(point))
     }
 
     /// Initialize a `Turf.Feature` with a `LineString`.
     /// - Parameter line: The `LineString` to use to create the `Turf.Feature`.
     internal init(_ line: LineString) {
-        self.init(geometry: Turf.Geometry.lineString(line))
+        self.init(geometry: Geometry.lineString(line))
     }
 
     /// Initialize a `Turf.Feature` with a `Polygon`.
     /// - Parameter polygon: The `Polygon` to use to create the `Turf.Feature`.
     internal init(_ polygon: Turf.Polygon) {
-        self.init(geometry: Turf.Geometry.polygon(polygon))
+        self.init(geometry: Geometry.polygon(polygon))
     }
 
     /// Initialize a `Turf.Feature` with a `MultiPoint`.
     /// - Parameter multiPoint: The `MultiPoint` to use to create the `Turf.Feature`.
     internal init(_ multiPoint: MultiPoint) {
-        self.init(geometry: Turf.Geometry.multiPoint(multiPoint))
+        self.init(geometry: Geometry.multiPoint(multiPoint))
     }
 
     /// Initialize a `Turf.Feature` with a `MultiLineString`.
     /// - Parameter multiLine: The `MultiLineString` to use to create the `Turf.Feature`.
     internal init(_ multiLine: MultiLineString) {
-        self.init(geometry: Turf.Geometry.multiLineString(multiLine))
+        self.init(geometry: Geometry.multiLineString(multiLine))
     }
 
     /// Initialize a `Turf.Feature` with a `MultiPolygon`.
     /// - Parameter multiPolygon: The `MultiPolygon` to use to create the `Turf.Feature`.
     internal init(_ multiPolygon: MultiPolygon) {
-        self.init(geometry: Turf.Geometry.multiPolygon(multiPolygon))
+        self.init(geometry: Geometry.multiPolygon(multiPolygon))
     }
 
     /// Initialize a `Turf.Feature` with a `GeometryCollection`.
     /// - Parameter geometryCollection: The `GeometryCollection` to use to create the `Turf.Feature`.
     internal init(_ geometryCollection: GeometryCollection) {
-        self.init(geometry: Turf.Geometry.geometryCollection(geometryCollection))
+        self.init(geometry: Geometry.geometryCollection(geometryCollection))
     }
 }
 

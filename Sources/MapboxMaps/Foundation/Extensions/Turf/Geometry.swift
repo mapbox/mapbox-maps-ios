@@ -4,7 +4,7 @@ import MapboxCommon
 
 // MARK: - Geometry
 
-extension Turf.Geometry {
+extension Geometry {
 
     /// Allows a Turf object to be initialized with an internal `Geometry` object.
     /// - Parameter geometry: The `Geometry` object to transform.
@@ -15,49 +15,49 @@ extension Turf.Geometry {
                 return nil
             }
 
-            self = Turf.Geometry.point(Point(coordinate))
+            self = Geometry.point(Point(coordinate))
 
         case GeometryType_Line:
             guard let coordinates = geometry.extractLocationsArray()?.map({ $0.coordinateValue() }) else {
                 return nil
             }
 
-            self = Turf.Geometry.lineString(LineString(coordinates))
+            self = Geometry.lineString(LineString(coordinates))
 
         case GeometryType_Polygon:
             guard let coordinates = geometry.extractLocations2DArray()?.map(NSValue.toCoordinates(array:)) else {
                 return nil
             }
 
-            self = Turf.Geometry.polygon(Polygon(coordinates))
+            self = Geometry.polygon(Polygon(coordinates))
 
         case GeometryType_MultiPoint:
             guard let coordinates = geometry.extractLocationsArray()?.map({ $0.coordinateValue() }) else {
                 return nil
             }
 
-            self = Turf.Geometry.multiPoint(MultiPoint(coordinates))
+            self = Geometry.multiPoint(MultiPoint(coordinates))
 
         case GeometryType_MultiLine:
             guard let coordinates = geometry.extractLocations2DArray()?.map(NSValue.toCoordinates(array:)) else {
                 return nil
             }
 
-            self = Turf.Geometry.multiLineString(MultiLineString(coordinates))
+            self = Geometry.multiLineString(MultiLineString(coordinates))
 
         case GeometryType_MultiPolygon:
             guard let coordinates = geometry.extractLocations3DArray()?.map(NSValue.toCoordinates2D(array:)) else {
                 return nil
             }
 
-            self = Turf.Geometry.multiPolygon(MultiPolygon(coordinates))
+            self = Geometry.multiPolygon(MultiPolygon(coordinates))
 
         case GeometryType_GeometryCollection:
-            guard let geometries = geometry.extractGeometriesArray()?.compactMap({ Turf.Geometry($0) }) else {
+            guard let geometries = geometry.extractGeometriesArray()?.compactMap({ Geometry($0) }) else {
                 return nil
             }
 
-            self = Turf.Geometry.geometryCollection(GeometryCollection(geometries: geometries))
+            self = Geometry.geometryCollection(GeometryCollection(geometries: geometries))
 
         default:
             return nil

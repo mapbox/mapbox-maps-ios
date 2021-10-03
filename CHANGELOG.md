@@ -26,6 +26,7 @@ Mapbox welcomes participation and contributions from everyone.
 * `MapboxCoreMaps.Settings` is now deprecated. ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
 * Setting `data` property on a GeoJSON source via `Style.setSourceProperty(for:property:value:)` or `Style.updateGeoJSONSource(withId:geoJSON:)` is now asynchronous and never returns an error. Errors will be reported asynchronously via a `MapEvents.EventKind.mapLoadingError` event instead. ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
 * Core and Common APIs that accept user-defined implementations of protocols now hold strong references to the provided objects. Please audit your usage of the following protocols and make any required changes to avoid memory leaks: `CustomLayerHost`, `ElevationData`, `MapClient`, `MBMMetalViewProvider`, `Observer`, `OfflineRegionObserver`, `HttpServiceInterceptorInterface`, `HttpServiceInterface`, `LogWriterBackend`, `OfflineSwitchObserver`, `ReachabilityInterface`, `TileStoreObserver`. ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
+* Extends `OfflineRegionGeometryDefinition.geometry` to use `Geometry` rather than `MapboxCommon.Geometry`. It also adds a convenience initializer that takes a `Geometry`. ([#706](https://github.com/mapbox/mapbox-maps-ios/pull/706))
 
 ### Features ✨ and improvements 🏁
 

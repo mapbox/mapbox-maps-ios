@@ -13,7 +13,7 @@ public enum GeoJSONSourceData: Codable {
     case featureCollection(Turf.FeatureCollection)
 
     /// The `data` property can be a geometry with no associated properties.
-    case geometry(Turf.Geometry)
+    case geometry(Geometry)
 
     /// Empty data to be used for initialization
     case empty

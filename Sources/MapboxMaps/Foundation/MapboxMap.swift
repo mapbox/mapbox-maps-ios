@@ -350,7 +350,7 @@ public final class MapboxMap: MapboxMapProtocol {
     ///   - bearing: The new bearing to be used by the camera.
     ///   - pitch: The new pitch to be used by the camera.
     /// - Returns: A `CameraOptions` that fits the provided constraints
-    public func camera(for geometry: Turf.Geometry,
+    public func camera(for geometry: Geometry,
                        padding: UIEdgeInsets,
                        bearing: CGFloat?,
                        pitch: CGFloat?) -> CameraOptions {

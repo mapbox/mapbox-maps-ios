@@ -643,35 +643,32 @@ extension MapboxMap: MapFeatureQueryable {
 // MARK: - ObservableProtocol
 
 extension MapboxMap: ObservableProtocol {
-    /// Subscribes an Observer to a provided list of event types.
+    /// Subscribes an observer to a list of events.
     ///
-    /// A type conforming to `ObservableProtocol` will hold a strong reference
-    /// to an Observer instance, therefore, in order to stop receiving notifications,
-    /// the caller must call `unsubscribe` with the instance used for an initial
-    /// subscription.
+    /// `MapboxMap` holds a strong reference to `observer` while it is subscribed. To stop receiving
+    /// notifications, pass the same `observer` to `unsubscribe(_:events:)`.
     ///
     /// - Parameters:
-    ///   - observer: An `Observer`
-    ///   - events: Array of event types to be subscribed to
+    ///   - observer: An object that will receive events of the types specified by `events`
+    ///   - events: Array of event types to deliver to `observer`
     ///
     /// - Note:
-    ///     Prefer `MapboxMap.on()` and `Snapshotter.on()` to using these
-    ///     lower-level APIs
+    ///     Prefer `onNext(eventTypes:handler:)`, `onNext(_:handler:)`, and
+    ///     `onEvery(_:handler:)` to using this lower-level APIs
     public func subscribe(_ observer: Observer, events: [String]) {
         __map.subscribe(for: observer, events: events)
     }
 
-    /// Unsubscribes an Observer from a provided list of event types.
+    /// Unsubscribes an observer from a provided list of event types.
     ///
-    /// A type conforming to `ObservableProtocol` will hold a strong reference
-    /// to an Observer instance, therefore, in order to stop receiving notifications,
-    /// the caller must call `unsubscribe` with the instance used for an initial
-    /// subscription.
+    /// `MapboxMap` holds a strong reference to `observer` while it is subscribed. To stop receiving
+    /// notifications, pass the same `observer` to this method as was passed to
+    /// `subscribe(_:events:)`.
     ///
     /// - Parameters:
-    ///   - observer: An `Observer`
-    ///   - events: Array of event types to be unsubscribed from. If you pass an
-    ///     empty array (the default) the all events will be unsubscribed from.
+    ///   - observer: The object to unsubscribe
+    ///   - events: Array of event types to unsubscribe from. Pass an
+    ///     empty array (the default) to unsubscribe from all events.
     public func unsubscribe(_ observer: Observer, events: [String] = []) {
         if events.isEmpty {
             __map.unsubscribe(for: observer)

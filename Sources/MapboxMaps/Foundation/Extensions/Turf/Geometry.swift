@@ -1,66 +1,45 @@
-import MapboxCommon
-
-// swiftlint:disable cyclomatic_complexity
-
-// MARK: - Geometry
-
 extension Geometry {
 
     /// Allows a Turf object to be initialized with an internal `Geometry` object.
     /// - Parameter geometry: The `Geometry` object to transform.
     internal init?(_ geometry: MapboxCommon.Geometry) {
+        let result: Geometry?
         switch geometry.geometryType {
         case GeometryType_Point:
-            guard let coordinate = geometry.extractLocations()?.coordinateValue() else {
-                return nil
+            result = geometry.extractLocations().map {
+                .point(Point($0.coordinateValue()))
             }
-
-            self = Geometry.point(Point(coordinate))
-
         case GeometryType_Line:
-            guard let coordinates = geometry.extractLocationsArray()?.map({ $0.coordinateValue() }) else {
-                return nil
+            result = geometry.extractLocationsArray().map {
+                .lineString(LineString($0.map { $0.coordinateValue() }))
             }
-
-            self = Geometry.lineString(LineString(coordinates))
-
         case GeometryType_Polygon:
-            guard let coordinates = geometry.extractLocations2DArray()?.map(NSValue.toCoordinates(array:)) else {
-                return nil
+            result = geometry.extractLocations2DArray().map {
+                .polygon(Polygon($0.map(NSValue.toCoordinates(array:))))
             }
-
-            self = Geometry.polygon(Polygon(coordinates))
-
         case GeometryType_MultiPoint:
-            guard let coordinates = geometry.extractLocationsArray()?.map({ $0.coordinateValue() }) else {
-                return nil
+            result = geometry.extractLocationsArray().map {
+                .multiPoint(MultiPoint($0.map({ $0.coordinateValue() })))
             }
-
-            self = Geometry.multiPoint(MultiPoint(coordinates))
-
         case GeometryType_MultiLine:
-            guard let coordinates = geometry.extractLocations2DArray()?.map(NSValue.toCoordinates(array:)) else {
-                return nil
+            result = geometry.extractLocations2DArray().map {
+                .multiLineString(MultiLineString($0.map(NSValue.toCoordinates(array:))))
             }
-
-            self = Geometry.multiLineString(MultiLineString(coordinates))
-
         case GeometryType_MultiPolygon:
-            guard let coordinates = geometry.extractLocations3DArray()?.map(NSValue.toCoordinates2D(array:)) else {
-                return nil
+            result = geometry.extractLocations3DArray().map {
+                .multiPolygon(MultiPolygon($0.map(NSValue.toCoordinates2D(array:))))
             }
-
-            self = Geometry.multiPolygon(MultiPolygon(coordinates))
-
         case GeometryType_GeometryCollection:
-            guard let geometries = geometry.extractGeometriesArray()?.compactMap({ Geometry($0) }) else {
-                return nil
+            result = geometry.extractGeometriesArray().map {
+                .geometryCollection(GeometryCollection(geometries: $0.compactMap(Geometry.init(_:))))
             }
-
-            self = Geometry.geometryCollection(GeometryCollection(geometries: geometries))
-
         default:
+            result = nil
+        }
+
+        guard let result = result else {
             return nil
         }
+        self = result
     }
 }

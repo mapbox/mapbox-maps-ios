@@ -356,7 +356,7 @@ public final class MapboxMap: MapboxMapProtocol {
                        pitch: CGFloat?) -> CameraOptions {
         return CameraOptions(
             __map.cameraForGeometry(
-                for: MapboxCommon.Geometry(geometry: geometry),
+                for: MapboxCommon.Geometry(geometry),
                 padding: padding.toMBXEdgeInsetsValue(),
                 bearing: bearing?.NSNumber,
                 pitch: pitch?.NSNumber))

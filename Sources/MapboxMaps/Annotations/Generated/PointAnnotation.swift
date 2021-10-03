@@ -7,12 +7,12 @@ public struct PointAnnotation: Annotation {
     public let id: String
 
     /// The geometry backing this annotation
-    public var geometry: Turf.Geometry {
+    public var geometry: Geometry {
         return .point(point)
     }
 
     /// The point backing this annotation
-    public var point: Turf.Point
+    public var point: Point
 
     /// Properties associated with the annotation
     public var userInfo: [String: Any]?
@@ -20,8 +20,8 @@ public struct PointAnnotation: Annotation {
     /// Storage for layer properties
     internal var layerProperties: [String: Any] = [:]
 
-    internal var feature: Turf.Feature {
-        var feature = Turf.Feature(geometry: geometry)
+    internal var feature: Feature {
+        var feature = Feature(geometry: geometry)
         feature.identifier = .string(id)
         var properties = JSONObject()
         properties["layerProperties"] = JSONValue(rawValue: layerProperties)
@@ -32,8 +32,8 @@ public struct PointAnnotation: Annotation {
         return feature
     }
 
-    /// Create a point annotation with a `Turf.Point` and an optional identifier.
-    public init(id: String = UUID().uuidString, point: Turf.Point) {
+    /// Create a point annotation with a `Point` and an optional identifier.
+    public init(id: String = UUID().uuidString, point: Point) {
         self.id = id
         self.point = point
     }
@@ -43,7 +43,7 @@ public struct PointAnnotation: Annotation {
     ///   - id: Optional identifier for this annotation
     ///   - coordinate: Coordinate where this annotation should be rendered
     public init(id: String = UUID().uuidString, coordinate: CLLocationCoordinate2D) {
-        let point = Turf.Point(coordinate)
+        let point = Point(coordinate)
         self.init(id: id, point: point)
     }
 

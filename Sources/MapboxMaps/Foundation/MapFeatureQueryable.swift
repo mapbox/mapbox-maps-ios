@@ -19,7 +19,7 @@ internal protocol MapFeatureQueryable: AnyObject {
 
     //swiftlint:disable:next function_parameter_count
     func queryFeatureExtension(for sourceId: String,
-                               feature: Turf.Feature,
+                               feature: Feature,
                                extension: String,
                                extensionField: String,
                                args: [String: Any]?,

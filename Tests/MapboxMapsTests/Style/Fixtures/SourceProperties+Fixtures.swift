@@ -28,6 +28,6 @@ extension GeoJSONSourceData: Equatable {
 
     static func testSourceValue() -> GeoJSONSourceData {
         let point = Point(CLLocationCoordinate2D(latitude: 0, longitude: 0))
-        return .feature(.init(point))
+        return .feature(.init(geometry: .point(point)))
     }
 }

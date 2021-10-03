@@ -8,7 +8,7 @@ final class FeatureTests: XCTestCase {
     func testInitializingTurfFeatureFromCommonFeatureNilIdentifier() throws {
         let commonFeature = MapboxCommon.Feature(
             identifier: NSObject(),
-            geometry: MapboxCommon.Geometry(geometry: geometry),
+            geometry: MapboxCommon.Geometry(geometry),
             properties: [:])
 
         let feature = try XCTUnwrap(Feature(commonFeature))
@@ -19,7 +19,7 @@ final class FeatureTests: XCTestCase {
     func testInitializingTurfFeatureFromCommonFeatureNumberIdentifier() throws {
         let commonFeature = MapboxCommon.Feature(
             identifier: NSNumber(value: 2.0),
-            geometry: MapboxCommon.Geometry(geometry: geometry),
+            geometry: MapboxCommon.Geometry(geometry),
             properties: [:])
 
         let feature = try XCTUnwrap(Feature(commonFeature))
@@ -33,7 +33,7 @@ final class FeatureTests: XCTestCase {
     func testInitializingTurfFeatureFromCommonFeatureStringIdentifier() throws {
         let commonFeature = MapboxCommon.Feature(
             identifier: NSString(string: "abc"),
-            geometry: MapboxCommon.Geometry(geometry: geometry),
+            geometry: MapboxCommon.Geometry(geometry),
             properties: [:])
 
         let feature = try XCTUnwrap(Feature(commonFeature))

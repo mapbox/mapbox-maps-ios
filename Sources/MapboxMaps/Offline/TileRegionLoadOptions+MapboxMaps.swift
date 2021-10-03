@@ -34,7 +34,7 @@ extension TileRegionLoadOptions {
 
         var commonGeometry: MapboxCommon.Geometry?
         if let geometry = geometry {
-            commonGeometry = MapboxCommon.Geometry(geometry: geometry)
+            commonGeometry = MapboxCommon.Geometry(geometry)
         }
 
         self.init(__geometry: commonGeometry,

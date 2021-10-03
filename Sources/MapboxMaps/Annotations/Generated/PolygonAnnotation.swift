@@ -7,12 +7,12 @@ public struct PolygonAnnotation: Annotation {
     public let id: String
 
     /// The geometry backing this annotation
-    public var geometry: Turf.Geometry {
+    public var geometry: Geometry {
         return .polygon(polygon)
     }
 
     /// The polygon backing this annotation
-    public var polygon: Turf.Polygon
+    public var polygon: Polygon
 
     /// Properties associated with the annotation
     public var userInfo: [String: Any]?
@@ -20,8 +20,8 @@ public struct PolygonAnnotation: Annotation {
     /// Storage for layer properties
     internal var layerProperties: [String: Any] = [:]
 
-    internal var feature: Turf.Feature {
-        var feature = Turf.Feature(geometry: geometry)
+    internal var feature: Feature {
+        var feature = Feature(geometry: geometry)
         feature.identifier = .string(id)
         var properties = JSONObject()
         properties["layerProperties"] = JSONValue(rawValue: layerProperties)
@@ -32,8 +32,8 @@ public struct PolygonAnnotation: Annotation {
         return feature
     }
 
-    /// Create a polygon annotation with a `Turf.Polygon` and an optional identifier.
-    public init(id: String = UUID().uuidString, polygon: Turf.Polygon) {
+    /// Create a polygon annotation with a `Polygon` and an optional identifier.
+    public init(id: String = UUID().uuidString, polygon: Polygon) {
         self.id = id
         self.polygon = polygon
     }

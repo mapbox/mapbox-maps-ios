@@ -66,7 +66,7 @@ class MultiPolygonTests: XCTestCase {
             ]
         ]
 
-        var multiPolygonFeature = Feature(MultiPolygon(coordinates))
+        var multiPolygonFeature = Feature(geometry: .multiPolygon(MultiPolygon(coordinates)))
         multiPolygonFeature.identifier = FeatureIdentifier.string("uniqueIdentifier")
         multiPolygonFeature.properties = ["some": "var"]
 

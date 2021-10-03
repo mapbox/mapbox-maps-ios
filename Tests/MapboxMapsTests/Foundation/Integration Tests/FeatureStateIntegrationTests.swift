@@ -83,8 +83,8 @@ internal class FeatureStateIntegrationTests: MapViewIntegrationTestCase {
 
         let coord = CLLocationCoordinate2D(latitude: 14.765625,
                                            longitude: 26.194876675795218)
-        let point = Turf.Point(coord)
-        let feature = Turf.Feature(point)
+        let point = Point(coord)
+        let feature = Feature(geometry: .point(point))
 
         var geojsonSource = GeoJSONSource()
         geojsonSource.generateId = true

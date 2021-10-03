@@ -45,12 +45,13 @@ public class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
 
     internal func setupExample() {
         let uriString = mapView.mapboxMap.style.uri!.rawValue
-        let offlineRegionDef = OfflineRegionGeometryDefinition(styleURL: uriString,
-                                                               geometry: MapboxCommon.Geometry(point: CGPoint(x: coord.latitude, y: coord.longitude) as NSValue),
-                                                               minZoom: zoom - 2,
-                                                               maxZoom: zoom + 2,
-                                                               pixelRatio: Float(UIScreen.main.scale),
-                                                               glyphsRasterizationMode: .noGlyphsRasterizedLocally)
+        let offlineRegionDef = OfflineRegionGeometryDefinition(
+            __styleURL: uriString,
+            geometry: MapboxCommon.Geometry(point: CGPoint(x: coord.latitude, y: coord.longitude) as NSValue),
+            minZoom: zoom - 2,
+            maxZoom: zoom + 2,
+            pixelRatio: Float(UIScreen.main.scale),
+            glyphsRasterizationMode: .noGlyphsRasterizedLocally)
 
         // Please note - this is using a deprecated API, and will be removed in a future release.
         offlineManager = OfflineRegionManager(resourceOptions: resourceOptions())
@@ -86,6 +87,7 @@ public class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
 }
 
 /// Delegate for OfflineRegion
+@available(*, deprecated)
 public class OfflineRegionExampleObserver: OfflineRegionObserver {
 
     weak var offlineRegion: OfflineRegion?

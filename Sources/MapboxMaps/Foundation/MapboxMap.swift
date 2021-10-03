@@ -25,7 +25,7 @@ public final class MapboxMap: MapboxMapProtocol {
     /// The `style` object supports run time styling.
     public internal(set) var style: Style
 
-    private var eventHandlers = WeakSet<MapEventHandler>()
+    private let eventHandlers = WeakSet<MapEventHandler>()
 
     deinit {
         eventHandlers.allObjects.forEach {
@@ -47,6 +47,7 @@ public final class MapboxMap: MapboxMapProtocol {
     }
 
     // MARK: - Style loading
+
     private func observeStyleLoad(_ completion: @escaping (Result<Style, Error>) -> Void) {
         onNext(eventTypes: [.styleLoaded, .mapLoadingError]) { event in
             switch event.type {
@@ -534,7 +535,7 @@ public final class MapboxMap: MapboxMapProtocol {
     }
 }
 
-// MARK: - MapFeatureQueryable -
+// MARK: - MapFeatureQueryable
 
 extension MapboxMap: MapFeatureQueryable {
     /// Queries the map for rendered features.
@@ -639,13 +640,35 @@ extension MapboxMap: MapFeatureQueryable {
     }
 }
 
-// MARK: - ObservableProtocol -
+// MARK: - ObservableProtocol
 
 extension MapboxMap: ObservableProtocol {
+    /// Subscribes an observer to a list of events.
+    ///
+    /// `MapboxMap` holds a strong reference to `observer` while it is subscribed. To stop receiving
+    /// notifications, pass the same `observer` to `unsubscribe(_:events:)`.
+    ///
+    /// - Parameters:
+    ///   - observer: An object that will receive events of the types specified by `events`
+    ///   - events: Array of event types to deliver to `observer`
+    ///
+    /// - Note:
+    ///     Prefer `onNext(eventTypes:handler:)`, `onNext(_:handler:)`, and
+    ///     `onEvery(_:handler:)` to using this lower-level APIs
     public func subscribe(_ observer: Observer, events: [String]) {
         __map.subscribe(for: observer, events: events)
     }
 
+    /// Unsubscribes an observer from a provided list of event types.
+    ///
+    /// `MapboxMap` holds a strong reference to `observer` while it is subscribed. To stop receiving
+    /// notifications, pass the same `observer` to this method as was passed to
+    /// `subscribe(_:events:)`.
+    ///
+    /// - Parameters:
+    ///   - observer: The object to unsubscribe
+    ///   - events: Array of event types to unsubscribe from. Pass an
+    ///     empty array (the default) to unsubscribe from all events.
     public func unsubscribe(_ observer: Observer, events: [String] = []) {
         if events.isEmpty {
             __map.unsubscribe(for: observer)
@@ -655,7 +678,7 @@ extension MapboxMap: ObservableProtocol {
     }
 }
 
-// MARK: - Map Event handling -
+// MARK: - Map Event handling
 
 extension MapboxMap: MapEventsObservable {
 
@@ -688,7 +711,7 @@ extension MapboxMap: MapEventsObservable {
     }
 }
 
-// MARK: - Map data clearing -
+// MARK: - Map data clearing
 
 extension MapboxMap {
     /// Clears temporary map data.
@@ -706,7 +729,7 @@ extension MapboxMap {
     }
 }
 
-// MARK: - Attribution -
+// MARK: - Attribution
 
 extension MapboxMap: AttributionDataSource {
     internal func attributions() -> [Attribution] {
@@ -715,7 +738,7 @@ extension MapboxMap: AttributionDataSource {
     }
 }
 
-// MARK: - Feature State -
+// MARK: - Feature State
 
 extension MapboxMap {
 
@@ -767,7 +790,7 @@ extension MapboxMap {
     }
 }
 
-// MARK: - Testing only! -
+// MARK: - Testing only!
 
 extension MapboxMap {
     internal var __testingMap: Map {

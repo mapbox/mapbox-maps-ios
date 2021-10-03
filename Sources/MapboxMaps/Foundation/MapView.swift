@@ -40,8 +40,6 @@ open class MapView: UIView {
     /// A reference to the `EventsManager` used for dispatching telemetry.
     internal var eventsListener: EventsListener!
 
-    private let mapClient = DelegatingMapClient()
-
     /// A Boolean value that indicates whether the underlying `CAMetalLayer` of the `MapView`
     /// presents its content using a CoreAnimation transaction
     ///
@@ -180,6 +178,7 @@ open class MapView: UIView {
 
         self.pixelRatio = CGFloat(resolvedMapInitOptions.mapOptions.pixelRatio)
 
+        let mapClient = DelegatingMapClient()
         mapClient.delegate = self
         mapboxMap = MapboxMap(mapClient: mapClient, mapInitOptions: resolvedMapInitOptions)
 

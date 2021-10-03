@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import UIKit
 import CoreLocation
 import CoreImage.CIFilterBuiltins
@@ -16,7 +17,7 @@ public class Snapshotter {
 
     private let options: MapSnapshotOptions
 
-    private var eventHandlers = WeakSet<MapEventHandler>()
+    private let eventHandlers = WeakSet<MapEventHandler>()
 
     deinit {
         eventHandlers.allObjects.forEach {
@@ -253,10 +254,31 @@ public class Snapshotter {
 }
 
 extension Snapshotter: ObservableProtocol {
+    /// Subscribes an observer to a list of events.
+    ///
+    /// `Snapshotter` holds a strong reference to `observer` while it is subscribed. To stop receiving
+    /// notifications, pass the same `observer` to `unsubscribe(_:events:)`.
+    ///
+    /// - Parameters:
+    ///   - observer: An object that will receive events of the types specified by `events`
+    ///   - events: Array of event types to deliver to `observer`
+    ///
+    /// - Note:
+    ///     Prefer `onNext(_:handler:)` and `onEvery(_:handler:)` to using this lower-level APIs
     public func subscribe(_ observer: Observer, events: [String]) {
         mapSnapshotter.subscribe(for: observer, events: events)
     }
 
+    /// Unsubscribes an observer from a list of events.
+    ///
+    /// `Snapshotter` holds a strong reference to `observer` while it is subscribed. To stop receiving
+    /// notifications, pass the same `observer` to this method as was passed to
+    /// `subscribe(_:events:)`.
+    ///
+    /// - Parameters:
+    ///   - observer: The object to unsubscribe
+    ///   - events: Array of event types to unsubscribe from. Pass an
+    ///     empty array (the default) to unsubscribe from all events.
     public func unsubscribe(_ observer: Observer, events: [String] = []) {
         if events.isEmpty {
             mapSnapshotter.unsubscribe(for: observer)

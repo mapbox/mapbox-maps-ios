@@ -3,23 +3,15 @@ import SceneKit
 import MapboxMaps
 
 @objc(SceneKitExample)
+final class SceneKitExample: UIViewController, ExampleProtocol {
 
-public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost {
-
-    internal var mapView: MapView!
-
+    var mapView: MapView!
     let modelOrigin = CLLocationCoordinate2D(latitude: -35.39847, longitude: 148.9819)
-    var renderer: SCNRenderer!
-    var scene: SCNScene!
-    var modelNode: SCNNode!
-    var cameraNode: SCNNode!
-    var textNode: SCNNode!
-    var useCPUOcclusion = false
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
-        let camera = CameraOptions(center: self.modelOrigin,
+        let camera = CameraOptions(center: modelOrigin,
                                    zoom: 18,
                                    bearing: 180,
                                    pitch: 60)
@@ -34,14 +26,12 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
         }
     }
 
-    override public func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-
     func addModelAndTerrain() {
         try! mapView.mapboxMap.style.addCustomLayer(
             withId: "Custom",
-            layerHost: self,
+            layerHost: SceneKitExampleCustomLayerHost(
+                modelOrigin: modelOrigin,
+                renderingWillEndHandler: { [weak self] in self?.finish() }),
             layerPosition: .below("waterway-label"))
 
         var demSource = RasterDemSource()
@@ -71,8 +61,25 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
 
         try! mapView.mapboxMap.style.addLayer(with: properties, layerPosition: .below("water"))
     }
+}
 
-    public func renderingWillStart(_ metalDevice: MTLDevice, colorPixelFormat: UInt, depthStencilPixelFormat: UInt) {
+final class SceneKitExampleCustomLayerHost: NSObject, CustomLayerHost {
+    let modelOrigin: CLLocationCoordinate2D
+    var renderer: SCNRenderer!
+    var scene: SCNScene!
+    var modelNode: SCNNode!
+    var cameraNode: SCNNode!
+    var textNode: SCNNode!
+    var useCPUOcclusion = false
+    let renderingWillEndHandler: () -> Void
+
+    init(modelOrigin: CLLocationCoordinate2D, renderingWillEndHandler: @escaping () -> Void) {
+        self.modelOrigin = modelOrigin
+        self.renderingWillEndHandler = renderingWillEndHandler
+        super.init()
+    }
+
+    func renderingWillStart(_ metalDevice: MTLDevice, colorPixelFormat: UInt, depthStencilPixelFormat: UInt) {
         renderer = SCNRenderer(device: metalDevice)
         scene = SCNScene()
         renderer.scene = scene
@@ -123,7 +130,7 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
         modelNode.addChildNode(pointNode)
     }
 
-    internal func makeTranslationMatrix(tx: Double, ty: Double, tz: Double) -> simd_double4x4 {
+    func makeTranslationMatrix(tx: Double, ty: Double, tz: Double) -> simd_double4x4 {
         var matrix = matrix_identity_double4x4
 
         matrix[3, 0] = tx
@@ -133,7 +140,7 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
         return matrix
     }
 
-    internal func makeScaleMatrix(xScale: Double, yScale: Double, zScale: Double) -> simd_double4x4 {
+    func makeScaleMatrix(xScale: Double, yScale: Double, zScale: Double) -> simd_double4x4 {
         var matrix = matrix_identity_double4x4
 
         matrix[0, 0] = xScale
@@ -143,7 +150,7 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
         return matrix
     }
 
-    public func render(_ parameters: CustomLayerRenderParameters, mtlCommandBuffer: MTLCommandBuffer, mtlRenderPassDescriptor: MTLRenderPassDescriptor) {
+    func render(_ parameters: CustomLayerRenderParameters, mtlCommandBuffer: MTLCommandBuffer, mtlRenderPassDescriptor: MTLRenderPassDescriptor) {
         guard let colorTexture = mtlRenderPassDescriptor.colorAttachments[0].texture else {
             return
         }
@@ -220,8 +227,8 @@ public class SceneKitExample: UIViewController, ExampleProtocol, CustomLayerHost
 
     }
 
-    public func renderingWillEnd() {
+    func renderingWillEnd() {
         // The below line is used for internal testing purposes only.
-        self.finish()
+        renderingWillEndHandler()
     }
 }

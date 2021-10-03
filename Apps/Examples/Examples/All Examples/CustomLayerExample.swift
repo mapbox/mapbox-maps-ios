@@ -2,15 +2,11 @@ import UIKit
 import MapboxMaps
 
 @objc(CustomLayerExample)
+final class CustomLayerExample: UIViewController, ExampleProtocol {
 
-public class CustomLayerExample: UIViewController, ExampleProtocol {
+    var mapView: MapView!
 
-    internal var mapView: MapView!
-
-    var depthStencilState: MTLDepthStencilState!
-    var pipelineState: MTLRenderPipelineState!
-
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         mapView = MapView(frame: view.bounds)
@@ -22,23 +18,26 @@ public class CustomLayerExample: UIViewController, ExampleProtocol {
         }
     }
 
-    override public func viewDidAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
          // The below line is used for internal testing purposes only.
         finish()
     }
 
-    internal func addCustomLayer() {
+    func addCustomLayer() {
         // Position the custom layer above the water layer and below all other layers.
         try! mapView.mapboxMap.style.addCustomLayer(
             withId: "Custom",
-            layerHost: self,
+            layerHost: CustomLayerExampleCustomLayerHost(),
             layerPosition: .above("water"))
     }
 }
 
-extension CustomLayerExample: CustomLayerHost {
-    public func renderingWillStart(_ metalDevice: MTLDevice, colorPixelFormat: UInt, depthStencilPixelFormat: UInt) {
+final class CustomLayerExampleCustomLayerHost: NSObject, CustomLayerHost {
+    var depthStencilState: MTLDepthStencilState!
+    var pipelineState: MTLRenderPipelineState!
+
+    func renderingWillStart(_ metalDevice: MTLDevice, colorPixelFormat: UInt, depthStencilPixelFormat: UInt) {
 
         let compileOptions = MTLCompileOptions()
 
@@ -101,7 +100,7 @@ extension CustomLayerExample: CustomLayerHost {
         }
     }
 
-    public func render(_ parameters: CustomLayerRenderParameters, mtlCommandBuffer: MTLCommandBuffer, mtlRenderPassDescriptor: MTLRenderPassDescriptor) {
+    func render(_ parameters: CustomLayerRenderParameters, mtlCommandBuffer: MTLCommandBuffer, mtlRenderPassDescriptor: MTLRenderPassDescriptor) {
 
         let vertices = [
             simd_float2(0, 0.5),
@@ -123,12 +122,10 @@ extension CustomLayerExample: CustomLayerHost {
         renderCommandEncoder.endEncoding()
     }
 
-    public func renderingWillEnd() {
+    func renderingWillEnd() {
         // Unimplemented
     }
-}
 
-extension CustomLayerExample {
     // The Metal shader program, written in the
     // [Metal Shader Language](https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf) format.
     var metalShaderProgram: String {

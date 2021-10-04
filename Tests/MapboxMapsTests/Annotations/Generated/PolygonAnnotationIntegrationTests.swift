@@ -35,6 +35,15 @@ final class PolygonAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertTrue(style.sourceExists(withId: manager.sourceId))
     }
 
+    func testSourceAndLayerRemovedUponDestroy() throws {
+        let style = try XCTUnwrap(style)
+
+        manager.destroy()
+
+        XCTAssertFalse(style.allLayerIdentifiers.map { $0.id }.contains(manager.layerId))
+        XCTAssertFalse(style.allSourceIdentifiers.map { $0.id }.contains(manager.sourceId))
+    }
+
     func testSynchronizesAnnotationsEventually() throws {
         let polygonCoords = [
             CLLocationCoordinate2DMake(24.51713945052515, -89.857177734375),

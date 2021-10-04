@@ -35,6 +35,15 @@ final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertTrue(style.sourceExists(withId: manager.sourceId))
     }
 
+    func testSourceAndLayerRemovedUponDestroy() throws {
+        let style = try XCTUnwrap(style)
+
+        manager.destroy()
+
+        XCTAssertFalse(style.allLayerIdentifiers.map { $0.id }.contains(manager.layerId))
+        XCTAssertFalse(style.allSourceIdentifiers.map { $0.id }.contains(manager.sourceId))
+    }
+
     func testSynchronizesAnnotationsEventually() throws {
         let lineCoordinates = [ CLLocationCoordinate2DMake(0, 0), CLLocationCoordinate2DMake(10, 10) ]
         var annotation = PolylineAnnotation(lineString: .init(lineCoordinates))

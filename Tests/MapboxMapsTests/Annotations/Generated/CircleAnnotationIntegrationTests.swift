@@ -35,6 +35,15 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertTrue(style.sourceExists(withId: manager.sourceId))
     }
 
+    func testSourceAndLayerRemovedUponDestroy() throws {
+        let style = try XCTUnwrap(style)
+
+        manager.destroy()
+
+        XCTAssertFalse(style.allLayerIdentifiers.map { $0.id }.contains(manager.layerId))
+        XCTAssertFalse(style.allSourceIdentifiers.map { $0.id }.contains(manager.sourceId))
+    }
+
     func testSynchronizesAnnotationsEventually() throws {
         var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
         annotation.circleRadius = 10

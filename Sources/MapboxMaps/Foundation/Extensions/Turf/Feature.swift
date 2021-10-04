@@ -4,10 +4,8 @@ extension Feature {
 
     /// Initialize a `Feature` with a `MapboxCommon.Feature` object.
     /// - Parameter feature: The `MapboxCommon.Feature` to use to create the `Feature`.
-    internal init?(_ feature: MapboxCommon.Feature) {
-        guard let geometry = Geometry(feature.geometry) else { return nil }
-
-        self.init(geometry: geometry)
+    internal init(_ feature: MapboxCommon.Feature) {
+        self.init(geometry: Geometry(feature.geometry))
 
         /**
          Features may or may not have an identifier. If they have one,

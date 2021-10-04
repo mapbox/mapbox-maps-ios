@@ -28,6 +28,7 @@ public struct StyleError: RawRepresentable, LocalizedError {
 public enum TypeConversionError: Error {
     case invalidObject
     case unexpectedType
+    case unsuccessfulConversion
 }
 
 /// Error type that represents the data returned with the `.mapLoadingError`

@@ -17,12 +17,10 @@
 		07B071D32547CFC3007F2865 /* GeoJSONSourceExample.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 07B071D22547CFC3007F2865 /* GeoJSONSourceExample.geojson */; };
 		07DC84422538B1F100F4AF14 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07DC84412538B1F100F4AF14 /* Assets.xcassets */; };
 		0C52BA9825AF8C880054ECA8 /* Custom3DPuckExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C52BA9725AF8C880054ECA8 /* Custom3DPuckExample.swift */; };
-		0C52BA9C25AFB5940054ECA8 /* arrow.gltf in Resources */ = {isa = PBXBuildFile; fileRef = 0C52BA9B25AFB5940054ECA8 /* arrow.gltf */; };
 		0C784D1126D002DC004AE7D0 /* FeatureStateExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C784D1026D002DC004AE7D0 /* FeatureStateExample.swift */; };
 		0C78AC2925BF70E40057F570 /* LineGradientExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78AC2825BF70E40057F570 /* LineGradientExample.swift */; };
 		0C78AC2F25BF72C70057F570 /* GradientLine.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 0C78AC2C25BF71E40057F570 /* GradientLine.geojson */; };
 		0CC4ECEA25B8AD3000F998B8 /* Custom2DPuckExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC4ECE925B8AD3000F998B8 /* Custom2DPuckExample.swift */; };
-		0CE8ED88258928200066E56C /* race_car_model.gltf in Resources */ = {isa = PBXBuildFile; fileRef = 0CE8ED87258928200066E56C /* race_car_model.gltf */; };
 		17483DFD2670113300396F8D /* MultiplePointAnnotationsExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17483DFC2670113300396F8D /* MultiplePointAnnotationsExample.swift */; };
 		177C9D47269CA61100D13A2D /* ShowHideLayerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177C9D46269CA61100D13A2D /* ShowHideLayerExample.swift */; };
 		17AF784026837E91006EA30D /* Fire_Hydrants.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 17AF783F26837E91006EA30D /* Fire_Hydrants.geojson */; };
@@ -36,6 +34,7 @@
 		17B4806B268BD91000CF0D5E /* RasterTileSourceExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B4806A268BD91000CF0D5E /* RasterTileSourceExample.swift */; };
 		17E28C5C2672A1160033DF0F /* SymbolClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E28C5B2672A1160033DF0F /* SymbolClusteringExample.swift */; };
 		58248C2F2695FF24009AC598 /* StoryboardMapViewExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58248C2E2695FF24009AC598 /* StoryboardMapViewExample.swift */; };
+		5830FDB7270B5AF7005549EE /* sportcar.glb in Resources */ = {isa = PBXBuildFile; fileRef = 5830FDB6270B5AF7005549EE /* sportcar.glb */; };
 		58882E5D26962A7200E5C1C6 /* StoryboardMapViewExample.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 58882E5C26962A7200E5C1C6 /* StoryboardMapViewExample.storyboard */; };
 		58A3C0C925C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */; };
 		73694BD325D4B2CE0064F636 /* TrackingModeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73694BD225D4B2CE0064F636 /* TrackingModeExample.swift */; };
@@ -143,14 +142,12 @@
 		07DBDC91254C94C500F89304 /* AnimateLayerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateLayerExample.swift; sourceTree = "<group>"; };
 		07DC84412538B1F100F4AF14 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0C52BA9725AF8C880054ECA8 /* Custom3DPuckExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Custom3DPuckExample.swift; sourceTree = "<group>"; };
-		0C52BA9B25AFB5940054ECA8 /* arrow.gltf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = arrow.gltf; sourceTree = "<group>"; };
 		0C784D1026D002DC004AE7D0 /* FeatureStateExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureStateExample.swift; sourceTree = "<group>"; };
 		0C78AC2825BF70E40057F570 /* LineGradientExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineGradientExample.swift; sourceTree = "<group>"; };
 		0C78AC2C25BF71E40057F570 /* GradientLine.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = GradientLine.geojson; sourceTree = "<group>"; };
 		0CC4ECE925B8AD3000F998B8 /* Custom2DPuckExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Custom2DPuckExample.swift; sourceTree = "<group>"; };
 		0CE3D3BE25818626000585A2 /* ColorExpressionExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExpressionExample.swift; sourceTree = "<group>"; };
 		0CE3D3C225818786000585A2 /* FlyToExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyToExample.swift; sourceTree = "<group>"; };
-		0CE8ED87258928200066E56C /* race_car_model.gltf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = race_car_model.gltf; sourceTree = "<group>"; };
 		17483DFC2670113300396F8D /* MultiplePointAnnotationsExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplePointAnnotationsExample.swift; sourceTree = "<group>"; };
 		177C9D46269CA61100D13A2D /* ShowHideLayerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowHideLayerExample.swift; sourceTree = "<group>"; };
 		17AF783F26837E91006EA30D /* Fire_Hydrants.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Fire_Hydrants.geojson; sourceTree = "<group>"; };
@@ -164,6 +161,7 @@
 		17B4806A268BD91000CF0D5E /* RasterTileSourceExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RasterTileSourceExample.swift; sourceTree = "<group>"; };
 		17E28C5B2672A1160033DF0F /* SymbolClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolClusteringExample.swift; sourceTree = "<group>"; };
 		58248C2E2695FF24009AC598 /* StoryboardMapViewExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardMapViewExample.swift; sourceTree = "<group>"; };
+		5830FDB6270B5AF7005549EE /* sportcar.glb */ = {isa = PBXFileReference; lastKnownFileType = file; path = sportcar.glb; sourceTree = "<group>"; };
 		58882E5C26962A7200E5C1C6 /* StoryboardMapViewExample.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = StoryboardMapViewExample.storyboard; sourceTree = "<group>"; };
 		58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateGeoJSONLineExample.swift; sourceTree = "<group>"; };
 		666E0D4925664EE7000B8AF5 /* LayerPositionExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerPositionExample.swift; sourceTree = "<group>"; };
@@ -369,9 +367,8 @@
 				A41E58F3265C005300D8B946 /* blueprint_style.json */,
 				03BB33F825EDA19200109B28 /* 34M_17.dae */,
 				07B071D22547CFC3007F2865 /* GeoJSONSourceExample.geojson */,
-				0CE8ED87258928200066E56C /* race_car_model.gltf */,
-				0C52BA9B25AFB5940054ECA8 /* arrow.gltf */,
 				0C78AC2C25BF71E40057F570 /* GradientLine.geojson */,
+				5830FDB6270B5AF7005549EE /* sportcar.glb */,
 			);
 			path = "Sample Data";
 			sourceTree = "<group>";
@@ -501,15 +498,14 @@
 				03BB33F925EDA19200109B28 /* 34M_17.dae in Resources */,
 				CA628414262DFD5C00651488 /* OfflineManagerExample.storyboard in Resources */,
 				0C78AC2F25BF72C70057F570 /* GradientLine.geojson in Resources */,
-				0C52BA9C25AFB5940054ECA8 /* arrow.gltf in Resources */,
 				07DC84422538B1F100F4AF14 /* Assets.xcassets in Resources */,
 				A41E58F4265C005300D8B946 /* blueprint_style.json in Resources */,
-				0CE8ED88258928200066E56C /* race_car_model.gltf in Resources */,
 				17AF784026837E91006EA30D /* Fire_Hydrants.geojson in Resources */,
 				17B4806426851C6E00CF0D5E /* radar1.gif in Resources */,
 				58882E5D26962A7200E5C1C6 /* StoryboardMapViewExample.storyboard in Resources */,
 				17B4806126851C6E00CF0D5E /* radar4.gif in Resources */,
 				17B4806326851C6E00CF0D5E /* radar3.gif in Resources */,
+				5830FDB7270B5AF7005549EE /* sportcar.glb in Resources */,
 				17B4806226851C6E00CF0D5E /* radar2.gif in Resources */,
 				077C4EFA252F7E89007636F1 /* LaunchScreen.storyboard in Resources */,
 			);

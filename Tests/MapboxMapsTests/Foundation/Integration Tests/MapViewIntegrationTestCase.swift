@@ -3,8 +3,8 @@ import MapboxMaps
 import MetalKit
 
 internal class MapViewIntegrationTestCase: IntegrationTestCase {
-    internal var mapView: MapView?
-    internal var style: Style?
+    internal var mapView: MapView!
+    internal var style: Style!
     internal var dataPathURL: URL!
 
     /// Closures for map view delegate 
@@ -70,7 +70,7 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
     internal override func tearDownWithError() throws {
         let resourceOptions = mapView?.mapboxMap.resourceOptions
 
-        mapView?.removeFromSuperview()
+        mapView.removeFromSuperview()
         mapView = nil
         style = nil
 

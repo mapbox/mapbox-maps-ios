@@ -2,13 +2,11 @@ import UIKit
 import MapboxMaps
 
 @objc(LineAnnotationExample)
+final class LineAnnotationExample: UIViewController, ExampleProtocol {
 
-public class LineAnnotationExample: UIViewController, ExampleProtocol {
+    private var mapView: MapView!
 
-    internal var mapView: MapView!
-    private var lineAnnotationManager: PolylineAnnotationManager?
-
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         let centerCoordinate = CLLocationCoordinate2D(latitude: 39.7128, longitude: -75.0060)
@@ -29,7 +27,7 @@ public class LineAnnotationExample: UIViewController, ExampleProtocol {
         }
     }
 
-    func setupExample() {
+    private func setupExample() {
 
         // Line from New York City, NY to Washington, D.C.
         let lineCoordinates = [
@@ -46,14 +44,13 @@ public class LineAnnotationExample: UIViewController, ExampleProtocol {
         lineAnnotation.lineWidth = 10.0
 
         // Create the PolylineAnnotationManager responsible for managing
-        // this line annotations (and others if you so choose)
+        // this line annotations (and others if you so choose).
+        // Annotation managers are kept alive by `AnnotationOrchestrator`
+        // (`mapView.annotations`) until you explicitly destroy them
+        // by calling `mapView.annotations.removeAnnotationManager(withId:)`
         let lineAnnnotationManager = mapView.annotations.makePolylineAnnotationManager()
 
         // Sync the annotation to the manager.
         lineAnnnotationManager.annotations = [lineAnnotation]
-
-        // The annotations added above will show as long as the lineAnnotationManager is alive,
-        // so keep a reference to it.
-        self.lineAnnotationManager = lineAnnnotationManager
     }
 }

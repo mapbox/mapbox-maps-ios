@@ -6,9 +6,6 @@ final class SelectAnnotationExample: UIViewController, ExampleProtocol {
 
     private var mapView: MapView!
 
-    /// Keep a reference to the `PointAnnotationManager` since the annotations will only show if their corresponding manager is alive
-    private lazy var pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
-
     private var annotationSelected: Bool = false {
         didSet {
             if annotationSelected {
@@ -73,6 +70,12 @@ final class SelectAnnotationExample: UIViewController, ExampleProtocol {
         let coordinate = mapView.cameraState.center
         var pointAnnotation = PointAnnotation(coordinate: coordinate)
         pointAnnotation.image = .init(image: UIImage(named: "custom_marker")!, name: "custom_marker")
+
+        // Create a point annotation manager
+        // Annotation managers are kept alive by `AnnotationOrchestrator`
+        // (`mapView.annotations`) until you explicitly destroy them
+        // by calling `mapView.annotations.removeAnnotationManager(withId:)`
+        let pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
 
         // Allow the view controller to accept annotation selection events.
         pointAnnotationManager.delegate = self

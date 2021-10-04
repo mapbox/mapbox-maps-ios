@@ -12,17 +12,16 @@ import MapboxMaps
 @objc(OfflineManagerExample)
 final class OfflineManagerExample: UIViewController, ExampleProtocol {
     // This example uses a Storyboard to setup the following views
-    @IBOutlet var mapViewContainer: UIView!
-    @IBOutlet var logView: UITextView!
-    @IBOutlet var button: UIButton!
-    @IBOutlet var stylePackProgressView: UIProgressView!
-    @IBOutlet var tileRegionProgressView: UIProgressView!
-    @IBOutlet var progressContainer: UIView!
+    @IBOutlet private var mapViewContainer: UIView!
+    @IBOutlet private var logView: UITextView!
+    @IBOutlet private var button: UIButton!
+    @IBOutlet private var stylePackProgressView: UIProgressView!
+    @IBOutlet private var tileRegionProgressView: UIProgressView!
+    @IBOutlet private var progressContainer: UIView!
 
     private var mapView: MapView?
     private var tileStore: TileStore?
     private var logger: OfflineManagerLogWriter!
-    private var pointAnnotationsManager: PointAnnotationManager?
 
     // Default MapInitOptions. If you use a custom path for a TileStore, you would
     // need to create a custom MapInitOptions to reference that TileStore.
@@ -67,7 +66,7 @@ final class OfflineManagerExample: UIViewController, ExampleProtocol {
 
     // MARK: - Actions
 
-    func downloadTileRegions() {
+    private func downloadTileRegions() {
         guard let tileStore = tileStore else {
             preconditionFailure()
         }
@@ -175,7 +174,7 @@ final class OfflineManagerExample: UIViewController, ExampleProtocol {
         state = .downloading
     }
 
-    func cancelDownloads() {
+    private func cancelDownloads() {
         // Canceling will trigger `.canceled` errors that will then change state
         downloads.forEach { $0.cancel() }
     }
@@ -234,7 +233,7 @@ final class OfflineManagerExample: UIViewController, ExampleProtocol {
 
     // MARK: - State changes
 
-    @IBAction func didTapButton(_ button: UIButton) {
+    @IBAction private func didTapButton(_ button: UIButton) {
         switch state {
         case .unknown:
             state = .initial
@@ -336,8 +335,8 @@ final class OfflineManagerExample: UIViewController, ExampleProtocol {
             var pointAnnotation = PointAnnotation(coordinate: self.tokyoCoord)
             pointAnnotation.image = .init(image: UIImage(named: "custom_marker")!, name: "custom-marker")
 
-            self.pointAnnotationsManager = mapView.annotations.makePointAnnotationManager()
-            self.pointAnnotationsManager?.annotations = [pointAnnotation]
+            let pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
+            pointAnnotationManager.annotations = [pointAnnotation]
         }
 
         self.mapView = mapView

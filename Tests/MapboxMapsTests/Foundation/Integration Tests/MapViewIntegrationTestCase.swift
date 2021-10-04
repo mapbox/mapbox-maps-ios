@@ -70,7 +70,7 @@ internal class MapViewIntegrationTestCase: IntegrationTestCase {
     internal override func tearDownWithError() throws {
         let resourceOptions = mapView?.mapboxMap.resourceOptions
 
-        mapView.removeFromSuperview()
+        mapView?.removeFromSuperview()
         mapView = nil
         style = nil
 

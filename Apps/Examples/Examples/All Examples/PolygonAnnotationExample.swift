@@ -2,10 +2,9 @@ import MapboxMaps
 
 @objc(PolygonAnnotationExample)
 final class PolygonAnnotationExample: UIViewController, ExampleProtocol {
-    internal var mapView: MapView!
-    internal var polygonAnnotationManager: PolygonAnnotationManager?
+    private var mapView: MapView!
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         let centerCoordinate = CLLocationCoordinate2D(latitude: 25.04579, longitude: -88.90136)
@@ -25,9 +24,12 @@ final class PolygonAnnotationExample: UIViewController, ExampleProtocol {
     }
 
     // Wait for the map to load before adding an annotation.
-    public func setupExample() {
+    private func setupExample() {
 
         // Create the PolygonAnnotationManager
+        // Annotation managers are kept alive by `AnnotationOrchestrator`
+        // (`mapView.annotations`) until you explicitly destroy them
+        // by calling `mapView.annotations.removeAnnotationManager(withId:)`
         let polygonAnnotationManager = mapView.annotations.makePolygonAnnotationManager()
 
         // Create the polygon annotation
@@ -39,13 +41,9 @@ final class PolygonAnnotationExample: UIViewController, ExampleProtocol {
 
         // Add the polygon annotation to the manager
         polygonAnnotationManager.annotations = [polygonAnnotation]
-
-        // The annotations added above will show as long as the `PolygonAnnotationManager` is alive,
-        // so keep a reference to it.
-        self.polygonAnnotationManager = polygonAnnotationManager
     }
 
-    func makePolygon() -> Polygon {
+    private func makePolygon() -> Polygon {
 
         // Describe the polygon's geometry
         let outerRingCoords = [

@@ -6,12 +6,6 @@ import CoreLocation
 final class MultiplePointAnnotationsExample: UIViewController, ExampleProtocol {
     private var mapView: MapView!
 
-    // Keep a reference to the point annotation manager as a property.
-    // If the annotation manager is destroyed, the annotations will be removed from the map.
-    private lazy var pointAnnotationManager: PointAnnotationManager = {
-        return mapView.annotations.makePointAnnotationManager()
-    }()
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -29,7 +23,7 @@ final class MultiplePointAnnotationsExample: UIViewController, ExampleProtocol {
         }
     }
 
-    func addAnnotations() {
+    private func addAnnotations() {
         // Create the first annotation. It will use an image of a red star from the app's assets.
         let coordinate = CLLocationCoordinate2D(latitude: 28.549545, longitude: 77.220154)
         var pointAnnotation1 = PointAnnotation(id: "first-annotation", coordinate: coordinate)
@@ -46,7 +40,10 @@ final class MultiplePointAnnotationsExample: UIViewController, ExampleProtocol {
         }
 
         // Initialize the map's point annotation manager.
-        pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
+        // Annotation managers are kept alive by `AnnotationOrchestrator`
+        // (`mapView.annotations`) until you explicitly destroy them
+        // by calling `mapView.annotations.removeAnnotationManager(withId:)`
+        let pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
 
         // Pass the point annotations into the annotation manager.
         // This will add them to the map.

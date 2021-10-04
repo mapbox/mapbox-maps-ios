@@ -2,7 +2,7 @@ import UIKit
 import MapboxMaps
 import SwiftUI
 
-internal struct Camera {
+struct Camera {
     var center: CLLocationCoordinate2D
     var zoom: CGFloat
 }
@@ -13,7 +13,7 @@ internal struct Camera {
 /// single instance of `MapView` behind the scenes so that if your map
 /// configuration changes, the underlying map view doesn't need to be recreated.
 @available(iOS 13.0, *)
-internal struct SwiftUIMapView: UIViewRepresentable {
+struct SwiftUIMapView: UIViewRepresentable {
 
     /// Bindings should be used for map values that can
     /// change as a result of user interaction. They allow
@@ -75,12 +75,13 @@ internal struct SwiftUIMapView: UIViewRepresentable {
     /// with the current settings of `SwiftUIMapView` (in this example, just the `camera` and `styleURI`).
     func makeUIView(context: UIViewRepresentableContext<SwiftUIMapView>) -> MapView {
         let mapView = MapView(frame: .zero, mapInitOptions: mapInitOptions)
-        updateUIView(mapView, context: context)
 
         /// Additionally, this is your opportunity to connect the coordinator to the map view. In this example
         /// the coordinator is given a reference to the map view. It uses the reference to set up the necessary
-        /// observations so that it can respond to map events.
+        /// observations so that it can respond to map events. It also creates an annotation manager.
         context.coordinator.mapView = mapView
+
+        updateUIView(mapView, context: context)
 
         return mapView
     }
@@ -94,66 +95,54 @@ internal struct SwiftUIMapView: UIViewRepresentable {
         context.coordinator.performWithoutObservation {
             mapView.mapboxMap.setCamera(to: CameraOptions(center: camera.center, zoom: camera.zoom))
         }
-        /// Since changing the style causes annotations to be removed from the map
+        /// Since setting the style causes some reloading to happen,
         /// we only call the setter if the value has changed.
         if mapView.mapboxMap.style.uri != styleURI {
             mapView.mapboxMap.style.uri = styleURI
         }
 
-        /// The coordinator needs to manage annotations because
-        /// they need to be applied *after* `.mapLoaded`
-        context.coordinator.annotations = annotations
+        /// The coordinator exposes the annotation manager so that we can sync the annotations
+        context.coordinator.pointAnnotationManager.annotations = annotations
     }
 }
 
 /// Here's our custom `Coordinator` implementation.
 @available(iOS 13.0, *)
-internal class SwiftUIMapViewCoordinator {
+final class SwiftUIMapViewCoordinator {
     /// It holds a binding to the camera
     @Binding private var camera: Camera
 
-    /// It also has a setter for annotations. When the annotations
-    /// are set, it synchronizes them to the map
-    var annotations = [PointAnnotation]() {
-        didSet {
-            pointAnnotationManager?.annotations = annotations
-        }
-    }
-
-    private var pointAnnotationManager: PointAnnotationManager?
+    /// It exposes the annotation manager
+    private(set) var pointAnnotationManager: PointAnnotationManager!
 
     var mapView: MapView! {
         didSet {
-            cancelables.forEach { $0.cancel() }
-            cancelables.removeAll()
+            cancelable?.cancel()
+            cancelable = nil
 
             /// In the following observations, `self` is captured as an unowned reference to avoid a strong
             /// reference cycle from mapView --> mapboxMap --> handler block --> self --> mapView.
             /// In this situation, weak is unnecessary because the subscription will be canceled via the returned
-            /// Cancelables as soon as `self` is deinitialized.
+            /// `Cancelable` as soon as `self` is deinitialized.
 
             /// The coordinator observes the `.cameraChanged` event, and
             /// whenever the camera changes, it updates the camera binding.
-            cancelables.append(mapView.mapboxMap.onEvery(.cameraChanged) { [unowned self] (event) in
+            cancelable = mapView.mapboxMap.onEvery(.cameraChanged) { [unowned self] (event) in
                 notify(for: event)
-            })
+            }
 
-            /// The coordinator also observes the `.mapLoaded` event
-            /// so that it can sync annotations whenever the map reloads
-            cancelables.append(mapView.mapboxMap.onEvery(.mapLoaded) { [unowned self] (event) in
-                notify(for: event)
-            })
+            pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
         }
     }
 
-    private var cancelables = [Cancelable]()
+    private var cancelable: Cancelable?
 
     init(camera: Binding<Camera>) {
         _camera = camera
     }
 
     deinit {
-        cancelables.forEach { $0.cancel() }
+        cancelable?.cancel()
     }
 
     private var ignoreNotifications = false
@@ -168,34 +157,13 @@ internal class SwiftUIMapViewCoordinator {
         guard !ignoreNotifications else {
             return
         }
-        guard let typedEvent = MapEvents.EventKind(rawValue: event.type) else {
-            return
-        }
-        switch typedEvent {
+        switch MapEvents.EventKind(rawValue: event.type) {
         /// As the camera changes, we update the binding. SwiftUI
         /// will propagate this change to any other UI elements connected
         /// to the same binding.
         case .cameraChanged:
             camera.center = mapView.cameraState.center
             camera.zoom = mapView.cameraState.zoom
-
-        /// When the map reloads, we need to re-sync the annotations
-        case .mapLoaded:
-            /// The old annotation manager should be discarded and a new one created so that the
-            /// underlying layer and source are re-added. This requirement is expected to change in
-            /// an upcoming release.
-            ///
-            /// Known issue: when the old annotation manager is deinitialized, a warning will be emitted:
-            ///
-            ///     `Warning: <Annotations> Failed to remove source / layer from map for annotations due to error: StyleError(rawValue: "Layer 501B8-layer does not exist")`
-            ///
-            /// This occurs because the annotation manager is trying to clean up after itself, but its
-            /// source and layer have already been removed as a side-effect of the map reload. In this
-            /// situation, the warning is expected, and should not cause any runtime problems. We
-            /// expect to clean this up as well in an upcoming release.
-            pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
-            pointAnnotationManager?.annotations = annotations
-
         default:
             break
         }
@@ -204,7 +172,7 @@ internal class SwiftUIMapViewCoordinator {
 
 /// Here's an example usage of `SwiftUIMapView`
 @available(iOS 13.0, *)
-internal struct ContentView: View {
+struct ContentView: View {
 
     /// For demonstration purposes, this view has its own state for the camera and style URL.
     /// In your app, these values could be constants defined directly in `body` or could come
@@ -214,20 +182,18 @@ internal struct ContentView: View {
 
     /// When you create an annotation, you can assign it an ID or allow it to generate its own UUID. Here
     /// we assign IDs explicitly to achieve a consistent result whenever this view is reevaluated.
-    private var annotations: [PointAnnotation] = {
-        var p1 = PointAnnotation(id: "0", coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -75))
-        p1.image = .init(image: UIImage(named: "custom_marker")!, name: "custom_marker")
+    private let annotations: [PointAnnotation] = [
+        CLLocationCoordinate2D(latitude: 40, longitude: -75),
+        CLLocationCoordinate2D(latitude: 40, longitude: -75.001),
+        CLLocationCoordinate2D(latitude: 40, longitude: -74.999)]
+        .enumerated()
+        .map { (idx, coordinate) in
+            var annotation = PointAnnotation(id: idx.description, coordinate: coordinate)
+            annotation.image = .init(image: UIImage(named: "custom_marker")!, name: "custom_marker")
+            return annotation
+        }
 
-        var p2 = PointAnnotation(id: "1", coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -75.001))
-        p2.image = .init(image: UIImage(named: "custom_marker")!, name: "custom_marker")
-
-        var p3 = PointAnnotation(id: "2", coordinate: CLLocationCoordinate2D(latitude: 40, longitude: -74.999))
-        p3.image = .init(image: UIImage(named: "custom_marker")!, name: "custom_marker")
-
-        return [p1, p2, p3]
-    }()
-
-    public var body: some View {
+    var body: some View {
         VStack {
             SwiftUIMapView(
                 mapInitOptions: MapInitOptions(),
@@ -271,9 +237,9 @@ internal struct ContentView: View {
 
 /// The rest of this example is just some boilerplate to present the ContentView and show the example
 @objc(SwiftUIExample)
-internal class SwiftUIExample: UIViewController, ExampleProtocol {
+final class SwiftUIExample: UIViewController, ExampleProtocol {
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         if #available(iOS 13.0, *) {

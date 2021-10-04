@@ -5,7 +5,6 @@ import MapboxMaps
 final class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
 
     private var mapView: MapView!
-    private var pointAnnotationManager: PointAnnotationManager?
     private let customImage = UIImage(named: "star")!
 
     override func viewDidLoad() {
@@ -30,12 +29,16 @@ final class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
         }
     }
 
-    func setupExample() {
+    private func setupExample() {
 
         // We want to display the annotation at the center of the map's current viewport
         let centerCoordinate = mapView.cameraState.center
 
-        // Make a `PointAnnotationManager` which will be responsible for managing a collection of `PointAnnotion`s.
+        // Make a `PointAnnotationManager` which will be responsible for managing
+        // a collection of `PointAnnotion`s.
+        // Annotation managers are kept alive by `AnnotationOrchestrator`
+        // (`mapView.annotations`) until you explicitly destroy them
+        // by calling `mapView.annotations.removeAnnotationManager(withId:)`
         let pointAnnotationManager = mapView.annotations.makePointAnnotationManager()
 
         // Initialize a point annotation with a geometry ("coordinate" in this case)
@@ -43,11 +46,7 @@ final class CustomPointAnnotationExample: UIViewController, ExampleProtocol {
         var customPointAnnotation = PointAnnotation(coordinate: centerCoordinate)
         customPointAnnotation.image = .init(image: customImage, name: "my-custom-image-name")
 
-        // Add the annotation to the manager in order to render it on the mao.
+        // Add the annotation to the manager in order to render it on the map.
         pointAnnotationManager.annotations = [customPointAnnotation]
-
-        // The annotations added above will show as long as the `PointAnnotationManager` is alive,
-        // so keep a reference to it.
-        self.pointAnnotationManager = pointAnnotationManager
     }
 }

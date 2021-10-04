@@ -27,6 +27,8 @@ Mapbox welcomes participation and contributions from everyone.
 * Setting `data` property on a GeoJSON source via `Style.setSourceProperty(for:property:value:)` or `Style.updateGeoJSONSource(withId:geoJSON:)` is now asynchronous and never returns an error. Errors will be reported asynchronously via a `MapEvents.EventKind.mapLoadingError` event instead. ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
 * Core and Common APIs that accept user-defined implementations of protocols now hold strong references to the provided objects. Please audit your usage of the following protocols and make any required changes to avoid memory leaks: `CustomLayerHost`, `ElevationData`, `MapClient`, `MBMMetalViewProvider`, `Observer`, `OfflineRegionObserver`, `HttpServiceInterceptorInterface`, `HttpServiceInterface`, `LogWriterBackend`, `OfflineSwitchObserver`, `ReachabilityInterface`, `TileStoreObserver`. ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
 * Extends `OfflineRegionGeometryDefinition.geometry` to use `Geometry` rather than `MapboxCommon.Geometry`. It also adds a convenience initializer that takes a `Geometry`. ([#706](https://github.com/mapbox/mapbox-maps-ios/pull/706))
+* Annotation managers are now kept alive by the `AnnotationOrchestrator` (`MapView.annotations`) until they are explicitly destroyed by calling `mapView.annotations.removeAnnotationManager(withId:)` or are implicitly destroyed by creating a second annotation manager with the same ID. ([#725](https://github.com/mapbox/mapbox-maps-ios/pull/725))
+* The `AnnotationManager` protocol now conforms to `AnyObject`. ([#725](https://github.com/mapbox/mapbox-maps-ios/pull/725))
 
 ### Features ✨ and improvements 🏁
 
@@ -40,6 +42,7 @@ Mapbox welcomes participation and contributions from everyone.
 * `BasicCameraAnimator.isReversed` is now settable. ([#712](https://github.com/mapbox/mapbox-maps-ios/pull/712))
 * The double tap, quick zoom, and double touch gestures now use the gesture's location in the view to anchor camera changes. Previously, they used the camera's center coordinate. ([#722](https://github.com/mapbox/mapbox-maps-ios/pull/722))
 * `MapboxCommon.HTTPServiceFactor.reset()` has been added to release the HTTP service implementation. ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
+* `AnnotationOrchestrator.annotationManagersById` has been added. This dictionary contains all annotation managers that have not been removed. ([#725](https://github.com/mapbox/mapbox-maps-ios/pull/725))
 
 ## 10.0.0-rc.9 - Sept 22, 2021
 

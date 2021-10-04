@@ -3,8 +3,8 @@ import MapboxMaps
 import MetalKit
 
 internal class MapViewIntegrationTestCase: IntegrationTestCase {
-    internal var mapView: MapView?
-    internal var style: Style?
+    internal var mapView: MapView!
+    internal var style: Style!
     internal var dataPathURL: URL!
 
     /// Closures for map view delegate 

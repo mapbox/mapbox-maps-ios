@@ -3,9 +3,9 @@ import Foundation
 @_implementationOnly import MapboxCommon_Private
 
 /// An instance of `PointAnnotationManager` is responsible for a collection of `PointAnnotation`s.
-public class PointAnnotationManager: AnnotationManager {
+public class PointAnnotationManager: AnnotationManagerInternal {
 
-    // MARK: - Annotations -
+    // MARK: - Annotations
 
     /// The collection of PointAnnotations being managed
     public var annotations = [PointAnnotation]() {
@@ -16,7 +16,13 @@ public class PointAnnotationManager: AnnotationManager {
 
     private var needsSyncSourceAndLayer = false
 
-    // MARK: - AnnotationManager protocol conformance -
+    // MARK: - Interaction
+
+    /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
+    /// - NOTE: This annotation manager listens to tap events via the `GestureManager.singleTapGestureRecognizer`.
+    public weak var delegate: AnnotationInteractionDelegate?
+
+    // MARK: - AnnotationManager protocol conformance
 
     public let sourceId: String
 
@@ -24,7 +30,7 @@ public class PointAnnotationManager: AnnotationManager {
 
     public let id: String
 
-    // MARK: - Setup / Lifecycle -
+    // MARK: - Setup / Lifecycle
 
     /// Dependency required to add sources/layers to the map
     private let style: Style
@@ -44,32 +50,51 @@ public class PointAnnotationManager: AnnotationManager {
     /// the subsequent sync.
     private var previouslySetLayerPropertyKeys: Set<String> = []
 
-    /// Indicates whether the style layer exists after style changes. Default value is `true`.
-    internal let shouldPersist: Bool
-
     private let displayLinkParticipant = DelegatingDisplayLinkParticipant()
+
+    private weak var displayLinkCoordinator: DisplayLinkCoordinator?
+
+    private let gestureRecognizer: UIGestureRecognizer
+
+    private var isDestroyed = false
 
     internal init(id: String,
                   style: Style,
-                  singleTapGestureRecognizer: UIGestureRecognizer,
+                  gestureRecognizer: UIGestureRecognizer,
                   mapFeatureQueryable: MapFeatureQueryable,
-                  shouldPersist: Bool,
                   layerPosition: LayerPosition?,
                   displayLinkCoordinator: DisplayLinkCoordinator) {
         self.id = id
-        self.style = style
         self.sourceId = id + "-source"
         self.layerId = id + "-layer"
+        self.style = style
+        self.gestureRecognizer = gestureRecognizer
         self.mapFeatureQueryable = mapFeatureQueryable
-        self.shouldPersist = shouldPersist
+        self.displayLinkCoordinator = displayLinkCoordinator
 
         // Add target-action for tap handling
-        singleTapGestureRecognizer.addTarget(self, action: #selector(handleTap(_:)))
+        gestureRecognizer.addTarget(self, action: #selector(handleTap(_:)))
 
         do {
-            try makeSourceAndLayer(layerPosition: layerPosition)
+            // Add the source with empty `data` property
+            var source = GeoJSONSource()
+            source.data = .empty
+            try style.addSource(source, id: sourceId)
+
+            // Add the correct backing layer for this annotation type
+            var layer = SymbolLayer(id: layerId)
+            layer.source = sourceId
+
+            // Show all icons and texts by default in point annotations.
+            layer.iconAllowOverlap = .constant(true)
+            layer.textAllowOverlap = .constant(true)
+            layer.iconIgnorePlacement = .constant(true)
+            layer.textIgnorePlacement = .constant(true)
+            try style.addPersistentLayer(layer, layerPosition: layerPosition)
         } catch {
-            Log.error(forMessage: "Failed to create source / layer in PointAnnotationManager", category: "Annotations")
+            Log.error(
+                forMessage: "Failed to create source / layer in PointAnnotationManager",
+                category: "Annotations")
         }
 
         self.displayLinkParticipant.delegate = self
@@ -77,51 +102,37 @@ public class PointAnnotationManager: AnnotationManager {
         displayLinkCoordinator.add(displayLinkParticipant)
     }
 
-    deinit {
-        removeBackingSourceAndLayer()
-    }
-
-    func removeBackingSourceAndLayer() {
+    internal func destroy() {
+        guard !isDestroyed else {
+            return
+        }
+        isDestroyed = true
+        gestureRecognizer.removeTarget(self, action: nil)
         do {
             try style.removeLayer(withId: layerId)
+        } catch {
+            Log.warning(
+                forMessage: "Failed to remove layer for PointAnnotationManager with id \(id) due to error: \(error)",
+                category: "Annotations")
+        }
+        do {
             try style.removeSource(withId: sourceId)
         } catch {
-            Log.warning(forMessage: "Failed to remove source / layer from map for annotations due to error: \(error)",
-                        category: "Annotations")
+            Log.warning(
+                forMessage: "Failed to remove source for PointAnnotationManager with id \(id) due to error: \(error)",
+                category: "Annotations")
         }
+        displayLinkCoordinator?.remove(displayLinkParticipant)
     }
 
-    internal func makeSourceAndLayer(layerPosition: LayerPosition?) throws {
-
-        // Add the source with empty `data` property
-        var source = GeoJSONSource()
-        source.data = .empty
-        try style.addSource(source, id: sourceId)
-
-        // Add the correct backing layer for this annotation type
-        var layer = SymbolLayer(id: layerId)
-        layer.source = sourceId
-
-        // Show all icons and texts by default in point annotations.
-        layer.iconAllowOverlap = .constant(true)
-        layer.textAllowOverlap = .constant(true)
-        layer.iconIgnorePlacement = .constant(true)
-        layer.textIgnorePlacement = .constant(true)
-        if shouldPersist {
-            try style.addPersistentLayer(layer, layerPosition: layerPosition)
-        } else {
-            try style.addLayer(layer, layerPosition: layerPosition)
-        }
-    }
-
-    // MARK: - Sync annotations to map -
+    // MARK: - Sync annotations to map
 
     /// Synchronizes the backing source and layer with the current `annotations`
     /// and common layer properties. This method is called automatically with
     /// each display link, but it may also be called manually in situations
     /// where the backing source and layer need to be updated earlier.
     public func syncSourceAndLayerIfNeeded() {
-        guard needsSyncSourceAndLayer else {
+        guard needsSyncSourceAndLayer, !isDestroyed else {
             return
         }
         needsSyncSourceAndLayer = false
@@ -155,8 +166,9 @@ public class PointAnnotationManager: AnnotationManager {
         do {
             try style.setLayerProperties(for: layerId, properties: allLayerProperties)
         } catch {
-            Log.error(forMessage: "Could not set layer properties in PointAnnotationManager due to error \(error)",
-                      category: "Annotations")
+            Log.error(
+                forMessage: "Could not set layer properties in PointAnnotationManager due to error \(error)",
+                category: "Annotations")
         }
 
         // build and update the source data
@@ -166,12 +178,13 @@ public class PointAnnotationManager: AnnotationManager {
             let jsonObject = try JSONSerialization.jsonObject(with: data) as! [String: Any]
             try style.setSourceProperty(for: sourceId, property: "data", value: jsonObject)
         } catch {
-            Log.error(forMessage: "Could not update annotations in PointAnnotationManager due to error: \(error)",
-                        category: "Annotations")
+            Log.error(
+                forMessage: "Could not update annotations in PointAnnotationManager due to error: \(error)",
+                category: "Annotations")
         }
     }
 
-    // MARK: - Common layer properties -
+    // MARK: - Common layer properties
 
     /// If true, the icon will be visible even if it collides with other previously drawn symbols.
     public var iconAllowOverlap: Bool? {
@@ -463,13 +476,7 @@ public class PointAnnotationManager: AnnotationManager {
         }
     }
 
-    // MARK: - Tap Handling -
-
-    /// Set this delegate in order to be called back if a tap occurs on an annotation being managed by this manager.
-    /// - NOTE: This annotation manager listens to tap events via the `GestureManager.singleTapGestureRecognizer`.
-    public weak var delegate: AnnotationInteractionDelegate?
-
-    @objc internal func handleTap(_ tap: UITapGestureRecognizer) {
+    @objc private func handleTap(_ tap: UITapGestureRecognizer) {
 
         guard delegate != nil else { return }
 

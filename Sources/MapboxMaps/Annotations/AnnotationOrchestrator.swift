@@ -13,7 +13,7 @@ public protocol Annotation {
     var userInfo: [String: Any]? { get set }
 }
 
-public protocol AnnotationManager {
+public protocol AnnotationManager: AnyObject {
 
     /// The id of this annotation manager.
     var id: String { get }
@@ -23,6 +23,10 @@ public protocol AnnotationManager {
 
     /// The id of the layer that this manager is responsible for.
     var layerId: String { get }
+}
+
+internal protocol AnnotationManagerInternal: AnnotationManager {
+    func destroy()
 }
 
 /// A delegate that is called when a tap is detected on an annotation (or on several of them).
@@ -39,7 +43,7 @@ public protocol AnnotationInteractionDelegate: AnyObject {
 
 public class AnnotationOrchestrator {
 
-    private let singleTapGestureRecognizer: UIGestureRecognizer
+    private let gestureRecognizer: UIGestureRecognizer
 
     private let style: Style
 
@@ -47,97 +51,139 @@ public class AnnotationOrchestrator {
 
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
-    internal init(singleTapGestureRecognizer: UIGestureRecognizer,
+    internal init(gestureRecognizer: UIGestureRecognizer,
                   mapFeatureQueryable: MapFeatureQueryable,
                   style: Style,
                   displayLinkCoordinator: DisplayLinkCoordinator) {
-        self.singleTapGestureRecognizer = singleTapGestureRecognizer
+        self.gestureRecognizer = gestureRecognizer
         self.mapFeatureQueryable = mapFeatureQueryable
         self.style = style
         self.displayLinkCoordinator = displayLinkCoordinator
     }
 
-    /// Creates a `PointAnnotationManager` which is used to manage a collection of `PointAnnotation`s. The collection of `PointAnnotation` collection will persist across style changes.
+    /// Dictionary of annotation managers keyed by their identifiers.
+    public var annotationManagersById: [String: AnnotationManager] {
+        annotationManagersByIdInternal
+    }
+
+    private var annotationManagersByIdInternal = [String: AnnotationManagerInternal]()
+
+    /// Creates a `PointAnnotationManager` which is used to manage a collection of
+    /// `PointAnnotation`s. Annotations persist across style changes. If an annotation manager with
+    /// the same `id` has already been created, the old one will be removed as if
+    /// `removeAnnotationManager(withId:)` had been called.
     /// - Parameters:
     ///   - id: Optional string identifier for this manager.
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `PointAnnotationManager`
     public func makePointAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
                                            layerPosition: LayerPosition? = nil) -> PointAnnotationManager {
-
         guard let displayLinkCoordinator = displayLinkCoordinator else {
             fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
         }
-
-        return PointAnnotationManager(id: id,
-                                      style: style,
-                                      singleTapGestureRecognizer: singleTapGestureRecognizer,
-                                      mapFeatureQueryable: mapFeatureQueryable,
-                                      shouldPersist: true,
-                                      layerPosition: layerPosition,
-                                      displayLinkCoordinator: displayLinkCoordinator)
+        removeAnnotationManager(withId: id, warnIfRemoved: true, function: #function)
+        let annotationManager = PointAnnotationManager(
+            id: id,
+            style: style,
+            gestureRecognizer: gestureRecognizer,
+            mapFeatureQueryable: mapFeatureQueryable,
+            layerPosition: layerPosition,
+            displayLinkCoordinator: displayLinkCoordinator)
+        annotationManagersByIdInternal[id] = annotationManager
+        return annotationManager
     }
 
-    /// Creates a `PolygonAnnotationManager` which is used to manage a collection of `PolygonAnnotation`s. The collection of `PolygonAnnotation`s will persist across style changes.
+    /// Creates a `PolygonAnnotationManager` which is used to manage a collection of
+    /// `PolygonAnnotation`s. Annotations persist across style changes. If an annotation manager with
+    /// the same `id` has already been created, the old one will be removed as if
+    /// `removeAnnotationManager(withId:)` had been called.
     /// - Parameters:
     ///   - id: Optional string identifier for this manager..
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `PolygonAnnotationManager`
     public func makePolygonAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
                                              layerPosition: LayerPosition? = nil) -> PolygonAnnotationManager {
-
         guard let displayLinkCoordinator = displayLinkCoordinator else {
             fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
         }
-
-        return PolygonAnnotationManager(id: id,
-                                        style: style,
-                                        singleTapGestureRecognizer: singleTapGestureRecognizer,
-                                        mapFeatureQueryable: mapFeatureQueryable,
-                                        shouldPersist: true,
-                                        layerPosition: layerPosition,
-                                        displayLinkCoordinator: displayLinkCoordinator)
+        removeAnnotationManager(withId: id, warnIfRemoved: true, function: #function)
+        let annotationManager = PolygonAnnotationManager(
+            id: id,
+            style: style,
+            gestureRecognizer: gestureRecognizer,
+            mapFeatureQueryable: mapFeatureQueryable,
+            layerPosition: layerPosition,
+            displayLinkCoordinator: displayLinkCoordinator)
+        annotationManagersByIdInternal[id] = annotationManager
+        return annotationManager
     }
 
-    /// Creates a `PolylineAnnotationManager` which is used to manage a collection of `PolylineAnnotation`s. The collection of `PolylineAnnotation`s will persist across style changes.
+    /// Creates a `PolylineAnnotationManager` which is used to manage a collection of
+    /// `PolylineAnnotation`s. Annotations persist across style changes. If an annotation manager with
+    /// the same `id` has already been created, the old one will be removed as if
+    /// `removeAnnotationManager(withId:)` had been called.
     /// - Parameters:
     ///   - id: Optional string identifier for this manager.
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `PolylineAnnotationManager`
     public func makePolylineAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
                                               layerPosition: LayerPosition? = nil) -> PolylineAnnotationManager {
-
         guard let displayLinkCoordinator = displayLinkCoordinator else {
             fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
         }
-
-        return PolylineAnnotationManager(id: id,
-                                         style: style,
-                                         singleTapGestureRecognizer: singleTapGestureRecognizer,
-                                         mapFeatureQueryable: mapFeatureQueryable,
-                                         shouldPersist: true,
-                                         layerPosition: layerPosition,
-                                         displayLinkCoordinator: displayLinkCoordinator)
+        removeAnnotationManager(withId: id, warnIfRemoved: true, function: #function)
+        let annotationManager = PolylineAnnotationManager(
+            id: id,
+            style: style,
+            gestureRecognizer: gestureRecognizer,
+            mapFeatureQueryable: mapFeatureQueryable,
+            layerPosition: layerPosition,
+            displayLinkCoordinator: displayLinkCoordinator)
+        annotationManagersByIdInternal[id] = annotationManager
+        return annotationManager
     }
 
-    /// Creates a `CircleAnnotationManager` which is used to manage a collection of `CircleAnnotation`s.  The collection of `CircleAnnotation`s will persist across style changes.
+    /// Creates a `CircleAnnotationManager` which is used to manage a collection of
+    /// `CircleAnnotation`s. Annotations persist across style changes. If an annotation manager with
+    /// the same `id` has already been created, the old one will be removed as if
+    /// `removeAnnotationManager(withId:)` had been called.
     /// - Parameters:
     ///   - id: Optional string identifier for this manager.
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
     /// - Returns: An instance of `CircleAnnotationManager`
     public func makeCircleAnnotationManager(id: String = String(UUID().uuidString.prefix(5)),
                                             layerPosition: LayerPosition? = nil) -> CircleAnnotationManager {
-
         guard let displayLinkCoordinator = displayLinkCoordinator else {
             fatalError("DisplayLinkCoordinator must be present when creating an annotation manager")
         }
+        removeAnnotationManager(withId: id, warnIfRemoved: true, function: #function)
+        let annotationManager = CircleAnnotationManager(
+            id: id,
+            style: style,
+            gestureRecognizer: gestureRecognizer,
+            mapFeatureQueryable: mapFeatureQueryable,
+            layerPosition: layerPosition,
+            displayLinkCoordinator: displayLinkCoordinator)
+        annotationManagersByIdInternal[id] = annotationManager
+        return annotationManager
+    }
 
-        return CircleAnnotationManager(id: id,
-                                       style: style,
-                                       singleTapGestureRecognizer: singleTapGestureRecognizer,
-                                       mapFeatureQueryable: mapFeatureQueryable,
-                                       shouldPersist: true,
-                                       layerPosition: layerPosition,
-                                       displayLinkCoordinator: displayLinkCoordinator)
+    /// Removes an annotation manager, this will remove the underlying layer and source from the style.
+    /// A removed annotation manager will not be able to reuse anymore, you will need to create new annotation manger to add annotations.
+    /// - Parameter id: Identifer of annotation manager to remove
+    public func removeAnnotationManager(withId id: String) {
+        removeAnnotationManager(withId: id, warnIfRemoved: false, function: #function)
+    }
+
+    private func removeAnnotationManager(withId id: String, warnIfRemoved: Bool, function: StaticString) {
+        guard let annotationManager = annotationManagersByIdInternal.removeValue(forKey: id) else {
+            return
+        }
+        annotationManager.destroy()
+        if warnIfRemoved {
+            Log.warning(
+                forMessage: "\(type(of: annotationManager)) with id \(id) was removed implicitly when invoking \(function) with the same id.",
+                category: "Annotations")
+        }
     }
 }

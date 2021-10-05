@@ -88,7 +88,7 @@ open class MapView: UIView {
     private var displayLinkParticipants = WeakSet<DisplayLinkParticipant>()
 
     /*** The preferred frames per second used for map rendering.
-        NOTE: Use `MapView.preferredFrameRateRange` instead for iOS 15.0 and above.
+        NOTE: `MapView.preferredFrameRateRange` is available for iOS 15.0 and above.
      */
     @available(iOS, deprecated: 1000000)
     public var preferredFramesPerSecond: Int = 0 {

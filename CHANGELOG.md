@@ -29,7 +29,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Extends `OfflineRegionGeometryDefinition.geometry` to use `Geometry` rather than `MapboxCommon.Geometry`. It also adds a convenience initializer that takes a `Geometry`. ([#706](https://github.com/mapbox/mapbox-maps-ios/pull/706))
 * Annotation managers are now kept alive by the `AnnotationOrchestrator` (`MapView.annotations`) until they are explicitly destroyed by calling `mapView.annotations.removeAnnotationManager(withId:)` or are implicitly destroyed by creating a second annotation manager with the same ID. ([#725](https://github.com/mapbox/mapbox-maps-ios/pull/725))
 * The `AnnotationManager` protocol now conforms to `AnyObject`. ([#725](https://github.com/mapbox/mapbox-maps-ios/pull/725))
-
+* `PreferredFPS` has been removed. `MapView.preferredFramesPerSecond` now of type `Int`, rather than `PreferredFPS`. ([#735](https://github.com/mapbox/mapbox-maps-ios/pull/735))
 ### Features ✨ and improvements 🏁
 
 * `TileRegionLoadOptions` exposes its geometry as a `Geometry`. ([#711](https://github.com/mapbox/mapbox-maps-ios/pull/711))

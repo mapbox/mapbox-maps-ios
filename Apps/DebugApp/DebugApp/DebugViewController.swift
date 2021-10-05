@@ -10,11 +10,9 @@ import MapboxMaps
 final class DebugViewController: UIViewController {
 
     var mapView: MapView!
-    var runningAnimator: CameraAnimator?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         mapView = MapView(frame: view.bounds)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)

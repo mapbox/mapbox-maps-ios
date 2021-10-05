@@ -1,6 +1,6 @@
 import XCTest
 @testable import MapboxMaps
-@_implementationOnly import MapboxCommon_Private
+import MapboxCommon_Private
 
 final class DownloadStatusTests: XCTestCase {
     var httpRequest: HttpRequest!

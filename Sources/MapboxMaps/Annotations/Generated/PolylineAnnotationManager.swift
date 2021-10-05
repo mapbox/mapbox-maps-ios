@@ -255,13 +255,9 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
                 // Get the identifiers of all the queried features
                 let queriedFeatureIds: [String] = queriedFeatures.compactMap {
-                    guard let feature = $0.feature,
-                          let identifier = feature.identifier,
-                          case let FeatureIdentifier.string(featureId) = identifier else {
-
+                    guard case let .string(featureId) = $0.feature.identifier else {
                         return nil
                     }
-
                     return featureId
                 }
 

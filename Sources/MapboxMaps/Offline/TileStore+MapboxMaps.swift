@@ -174,6 +174,15 @@ extension TileStore {
         __getTileRegionMetadata(forId: id,
                                 callback: tileStoreClosureAdapter(for: completion, type: AnyObject.self))
     }
+
+    /// Allows observing a tile store's activity
+    /// - Parameter observer: The object to be notified when events occur. TileStore holds a strong reference to this object until the subscription is canceled.
+    /// - Returns: An object that can be used to cancel the subscription.
+    public func subscribe(_ observer: TileStoreObserver) -> Cancelable {
+        let wrapper = TileStoreObserverWrapper(observer)
+        __addObserver(for: wrapper)
+        return TileStoreObserverCancelable(observer: wrapper, tileStore: self)
+    }
 }
 
 private func tileStoreClosureAdapter<T, ObjCType>(

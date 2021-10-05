@@ -77,7 +77,7 @@ targets:
           - "Helpers/Bundle+MapboxMapsTests.swift"
           - "Helpers/TestConveniences.swift"
           - "Helpers/XCTestCase+MapboxMaps.swift"
-          - "Offline/TileStore+Tests.swift"
+          - "Helpers/XCTestCase+TemporaryCacheDirectory.swift"
     dependencies:
       - target: MapboxTestHost
   MapboxTestHost:

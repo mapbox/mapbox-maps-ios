@@ -1,5 +1,6 @@
 import XCTest
 @testable import MapboxMaps
+import CoreLocation
 
 final class ExpressionTests: XCTestCase {
 
@@ -96,5 +97,40 @@ final class ExpressionTests: XCTestCase {
         print(validArg)
 
         XCTAssertEqual(validArg, argument)
+    }
+
+    func testGeoJSONObjectExpression() throws {
+        let coloradoCorners: [CLLocationCoordinate2D] = [
+            .init(latitude: 37, longitude: -109-2/60-48/60/60),
+            .init(latitude: 37, longitude: -102-2/60-48/60/60),
+            .init(latitude: 41, longitude: -102-2/60-48/60/60),
+            .init(latitude: 41, longitude: -109-2/60-48/60/60),
+            .init(latitude: 37, longitude: -109-2/60-48/60/60),
+        ]
+        var colorado = Feature(geometry: .polygon(Polygon([coloradoCorners])))
+        colorado.identifier = "CO"
+        colorado.properties = [
+            "population": 5_773_714,
+        ]
+
+        let withinExpression = Exp(.within) {
+            GeoJSONObject.feature(colorado)
+        }
+        let firstArgument = try XCTUnwrap(withinExpression.arguments.first)
+        XCTAssertEqual(firstArgument, .geoJSONObject(.feature(colorado)))
+
+        let withinData = try JSONEncoder().encode(withinExpression)
+        let withinJSON = try XCTUnwrap(try JSONSerialization.jsonObject(with: withinData, options: []) as? [Any?])
+        XCTAssertEqual(withinJSON.first as? String, "within")
+        XCTAssertEqual(withinJSON.count, 2)
+
+        XCTAssertNotNil(withinJSON.last as? [String: Any?])
+        guard let coloradoJSON = withinJSON.last as? [String: Any?] else { return }
+
+        XCTAssertEqual(coloradoJSON.count, 4)
+        XCTAssertEqual(coloradoJSON["type"] as? String, "Feature")
+        XCTAssertEqual(coloradoJSON["id"] as? String, "CO")
+        XCTAssertEqual(coloradoJSON["properties"] as? [String: Int],
+                       ["population": 5_773_714])
     }
 }

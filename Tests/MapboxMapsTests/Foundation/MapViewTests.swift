@@ -70,14 +70,14 @@ final class MapViewTests: XCTestCase {
 
     func testPreferredFramesPerSecondIsInitiallyZero() {
         XCTAssertEqual(mapView.preferredFramesPerSecond, 0)
+        XCTAssertEqual(displayLink.preferredFramesPerSecond, mapView.preferredFramesPerSecond)
     }
 
-    func testPreferredFramesPerSecondIsPropagatedToDisplayLink() {
-        XCTAssertEqual(displayLink.preferredFramesPerSecond, mapView.preferredFramesPerSecond)
-
+    func testPreferredFramesPerSecondUpdate() {
         mapView.preferredFramesPerSecond = 23
 
         XCTAssertEqual(displayLink.preferredFramesPerSecond, 23)
+        XCTAssertEqual(mapView.preferredFramesPerSecond, 23)
     }
 
     // Checking Swift version as a proxy for iOS SDK version to enable
@@ -96,6 +96,7 @@ final class MapViewTests: XCTestCase {
         let frameRateRange = CAFrameRateRange(minimum: 0, maximum: 120, __preferred: 80)
         mapView.preferredFrameRateRange = frameRateRange
         XCTAssertEqual(displayLink.preferredFrameRateRange, frameRateRange)
+        XCTAssertEqual(mapView.preferredFrameRateRange, frameRateRange)
     }
     #endif
 

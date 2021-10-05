@@ -29,6 +29,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Extends `OfflineRegionGeometryDefinition.geometry` to use `Geometry` rather than `MapboxCommon.Geometry`. It also adds a convenience initializer that takes a `Geometry`. ([#706](https://github.com/mapbox/mapbox-maps-ios/pull/706))
 * Annotation managers are now kept alive by the `AnnotationOrchestrator` (`MapView.annotations`) until they are explicitly destroyed by calling `mapView.annotations.removeAnnotationManager(withId:)` or are implicitly destroyed by creating a second annotation manager with the same ID. ([#725](https://github.com/mapbox/mapbox-maps-ios/pull/725))
 * The `AnnotationManager` protocol now conforms to `AnyObject`. ([#725](https://github.com/mapbox/mapbox-maps-ios/pull/725))
+* `PreferredFPS` has been removed. `MapView.preferredFramesPerSecond` now of type `Int`, rather than `PreferredFPS`. ([#735](https://github.com/mapbox/mapbox-maps-ios/pull/735))
 
 ### Features ✨ and improvements 🏁
 
@@ -44,6 +45,7 @@ Mapbox welcomes participation and contributions from everyone.
 * `MapboxCommon.HTTPServiceFactor.reset()` has been added to release the HTTP service implementation. ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
 * `AnnotationOrchestrator.annotationManagersById` has been added. This dictionary contains all annotation managers that have not been removed. ([#725](https://github.com/mapbox/mapbox-maps-ios/pull/725))
 * Adds the `ExpressionArgument.geoJSONObject(_:)` case, which allows you to include a `Turf.GeoJSONObject` instance in an expression with the `Expression.Operator.distance` or `Expression.Operator.within` operator. ([#730](https://github.com/mapbox/mapbox-maps-ios/pull/730))
+* Added `MapView.preferredFrameRateRange` for devices using iOS 15.0 and up. ([#735](https://github.com/mapbox/mapbox-maps-ios/pull/735))
 
 ## 10.0.0-rc.9 - Sept 22, 2021
 

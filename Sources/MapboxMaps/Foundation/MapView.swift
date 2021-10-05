@@ -6,10 +6,11 @@
 @_implementationOnly import MapboxCommon_Private
 import UIKit
 
+// swiftlint:disable type_body_length
 @available(iOSApplicationExtension, unavailable)
 open class MapView: UIView {
 
-    // mapbox map depends on MapInitOptions, which is not available until
+    // `mapboxMap` depends on `MapInitOptions`, which is not available until
     // awakeFromNib() when instantiating MapView from a xib or storyboard.
     // This is the only reason that it is an implicitly-unwrapped optional var
     // instead of a non-optional let.
@@ -86,12 +87,55 @@ open class MapView: UIView {
 
     private var displayLinkParticipants = WeakSet<DisplayLinkParticipant>()
 
-    /// The preferred frames per second used for map rendering
-    public var preferredFramesPerSecond: PreferredFPS = .maximum {
+    /*** The preferred frames per second used for map rendering.
+        NOTE: `MapView.preferredFrameRateRange` is available for iOS 15.0 and above.
+     */
+    @available(iOS, deprecated: 1000000)
+    public var preferredFramesPerSecond: Int {
+        get {
+            return _preferredFramesPerSecond ?? 0
+        }
+        set {
+            _preferredFramesPerSecond = newValue
+        }
+    }
+
+    private var _preferredFramesPerSecond: Int? {
         didSet {
             updateDisplayLinkPreferredFramesPerSecond()
         }
     }
+
+    // Checking Swift version as a proxy for iOS SDK version to enable
+    // building with iOS SDKs < 15
+    #if swift(>=5.5)
+    /// The preferred range of frame refresh rates.
+    @available(iOS 15.0, *)
+    public var preferredFrameRateRange: CAFrameRateRange {
+        get {
+            return _preferredFrameRateRange ?? .default
+        }
+        set {
+            _preferredFrameRateRange = newValue
+        }
+    }
+
+    // Stored properties cannot be annotated with @available, so we
+    // store the value as an `Any` in `_untypedPreferredFrameRateRange` below
+    // and make this a computed property.
+    @available(iOS 15.0, *)
+    private var _preferredFrameRateRange: CAFrameRateRange? {
+        get {
+            return _untypedPreferredFrameRateRange as? CAFrameRateRange
+        }
+        set {
+            _untypedPreferredFrameRateRange = newValue
+            updateDisplayLinkPreferredFramesPerSecond()
+        }
+    }
+
+    private var _untypedPreferredFrameRateRange: Any?
+    #endif
 
     /// The `timestamp` from the underlying `CADisplayLink` if it exists, otherwise `nil`
     @_spi(Metrics) public var displayLinkTimestamp: CFTimeInterval? {
@@ -320,7 +364,18 @@ open class MapView: UIView {
 
     func updateDisplayLinkPreferredFramesPerSecond() {
         if let displayLink = displayLink {
-            displayLink.preferredFramesPerSecond = preferredFramesPerSecond.rawValue
+            if let _preferredFramesPerSecond = _preferredFramesPerSecond {
+                displayLink.preferredFramesPerSecond = _preferredFramesPerSecond
+            }
+            // Checking Swift version as a proxy for iOS SDK version to enable
+            // building with iOS SDKs < 15
+            #if swift(>=5.5)
+            if #available(iOS 15.0, *) {
+                if let _preferredFrameRateRange = _preferredFrameRateRange {
+                    displayLink.preferredFrameRateRange = _preferredFrameRateRange
+                }
+            }
+            #endif
         }
     }
 

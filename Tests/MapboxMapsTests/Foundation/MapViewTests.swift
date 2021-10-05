@@ -68,17 +68,37 @@ final class MapViewTests: XCTestCase {
         }
     }
 
-    func testPreferredFramesPerSecondIsInitiallyMaximum() {
-        XCTAssertEqual(mapView.preferredFramesPerSecond, .maximum)
+    func testPreferredFramesPerSecondIsInitiallyZero() {
+        XCTAssertEqual(mapView.preferredFramesPerSecond, 0)
+        XCTAssertEqual(displayLink.preferredFramesPerSecond, mapView.preferredFramesPerSecond)
     }
 
-    func testPreferredFramesPerSecondIsPropagatedToDisplayLink() {
-        XCTAssertEqual(displayLink.preferredFramesPerSecond, mapView.preferredFramesPerSecond.rawValue)
-
-        mapView.preferredFramesPerSecond = PreferredFPS(rawValue: 23)
+    func testPreferredFramesPerSecondUpdate() {
+        mapView.preferredFramesPerSecond = 23
 
         XCTAssertEqual(displayLink.preferredFramesPerSecond, 23)
+        XCTAssertEqual(mapView.preferredFramesPerSecond, 23)
     }
+
+    // Checking Swift version as a proxy for iOS SDK version to enable
+    // building with iOS SDKs < 15
+    #if swift(>=5.5)
+    @available(iOS 15.0, *)
+    func testPreferredFrameRateRangeIsDefault() {
+        let preferredFramesRateRange = mapView.preferredFrameRateRange
+        let defaultRange = CAFrameRateRange.default
+        XCTAssertEqual(preferredFramesRateRange, defaultRange)
+        XCTAssertEqual(displayLink.preferredFrameRateRange, defaultRange)
+    }
+
+    @available(iOS 15.0, *)
+    func testPreferredFrameRateRangeUpdate() {
+        let frameRateRange = CAFrameRateRange(minimum: 0, maximum: 120, __preferred: 80)
+        mapView.preferredFrameRateRange = frameRateRange
+        XCTAssertEqual(displayLink.preferredFrameRateRange, frameRateRange)
+        XCTAssertEqual(mapView.preferredFrameRateRange, frameRateRange)
+    }
+    #endif
 
     func testDisplayLinkTimestampIsNilWhenDisplayLinkIsNil() {
         mapView.removeFromSuperview()

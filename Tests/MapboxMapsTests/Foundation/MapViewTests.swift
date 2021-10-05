@@ -80,6 +80,8 @@ final class MapViewTests: XCTestCase {
         XCTAssertEqual(displayLink.preferredFramesPerSecond, 23)
     }
 
+    // Checking Swift version as a proxy for iOS SDK version to enable
+    // building with iOS SDKs < 15
     #if swift(>=5.5)
     @available(iOS 15.0, *)
     func testPreferredFrameRateRangeIsDefault() {
@@ -90,13 +92,10 @@ final class MapViewTests: XCTestCase {
     }
 
     @available(iOS 15.0, *)
-    func testPreferredFrameRateRangeUpdate() throws {
+    func testPreferredFrameRateRangeUpdate() {
         let frameRateRange = CAFrameRateRange(minimum: 0, maximum: 120, __preferred: 80)
         mapView.preferredFrameRateRange = frameRateRange
-        XCTAssertEqual(displayLink.preferredFrameRateRange.maximum, 120)
-        XCTAssertEqual(displayLink.preferredFrameRateRange.minimum, 0)
-        let preferredRate = try XCTUnwrap(displayLink.preferredFrameRateRange.preferred)
-        XCTAssertEqual(preferredRate, 80)
+        XCTAssertEqual(displayLink.preferredFrameRateRange, frameRateRange)
     }
     #endif
 

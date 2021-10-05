@@ -9,21 +9,19 @@ final class MockDisplayLink: DisplayLinkProtocol {
 
     var preferredFramesPerSecond: Int = 0
 
+    // Checking Swift version as a proxy for iOS SDK version to enable
+    // building with iOS SDKs < 15
     #if swift(>=5.5)
     @available(iOS 15.0, *)
     var preferredFrameRateRange: CAFrameRateRange {
         get {
-            if let range = _preferredFrameRateRange as? CAFrameRateRange {
-                return range
-            } else {
-                return CAFrameRateRange.default
-            }
+            return (_untypedPreferredFrameRateRange as? CAFrameRateRange) ?? .default
         } set {
-            _preferredFrameRateRange = newValue as AnyObject
+            _untypedPreferredFrameRateRange = newValue
         }
     }
 
-    var _preferredFrameRateRange: AnyObject?
+    private var _untypedPreferredFrameRateRange: Any?
     #endif
 
     struct AddParams {

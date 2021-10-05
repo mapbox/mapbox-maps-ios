@@ -91,34 +91,50 @@ open class MapView: UIView {
         NOTE: `MapView.preferredFrameRateRange` is available for iOS 15.0 and above.
      */
     @available(iOS, deprecated: 1000000)
-    public var preferredFramesPerSecond: Int = 0 {
+    public var preferredFramesPerSecond: Int {
+        get {
+            return _preferredFramesPerSecond ?? 0
+        }
+        set {
+            _preferredFramesPerSecond = newValue
+        }
+    }
+
+    private var _preferredFramesPerSecond: Int? {
         didSet {
             updateDisplayLinkPreferredFramesPerSecond()
         }
     }
 
+    // Checking Swift version as a proxy for iOS SDK version to enable
+    // building with iOS SDKs < 15
     #if swift(>=5.5)
-    @available(iOS 15.0, *)
     /// The preferred range of frame refresh rates.
+    @available(iOS 15.0, *)
     public var preferredFrameRateRange: CAFrameRateRange {
         get {
-            if let range = _preferredFrameRateRange as? CAFrameRateRange {
-                return range
-            } else {
-                return CAFrameRateRange.default
-            }
-        } set {
-            _preferredFrameRateRange = newValue as AnyObject
+            return _preferredFrameRateRange ?? .default
+        }
+        set {
+            _preferredFrameRateRange = newValue
         }
     }
 
-    internal var _preferredFrameRateRange: AnyObject? {
-        didSet {
-            if #available(iOS 15.0, *) {
-                updateDisplayLinkFrameRateRange()
-            }
+    // Stored properties cannot be annotated with @available, so we
+    // store the value as an `Any` in `_untypedPreferredFrameRateRange` below
+    // and make this a computed property.
+    @available(iOS 15.0, *)
+    private var _preferredFrameRateRange: CAFrameRateRange? {
+        get {
+            return _untypedPreferredFrameRateRange as? CAFrameRateRange
+        }
+        set {
+            _untypedPreferredFrameRateRange = newValue
+            updateDisplayLinkPreferredFramesPerSecond()
         }
     }
+
+    private var _untypedPreferredFrameRateRange: Any?
     #endif
 
     /// The `timestamp` from the underlying `CADisplayLink` if it exists, otherwise `nil`
@@ -324,16 +340,7 @@ open class MapView: UIView {
                     self?.updateFromDisplayLink(displayLink: $0)
                 },
                 selector: #selector(ForwardingDisplayLinkTarget.update(with:)))
-            #if swift(>=5.5)
-            if #available(iOS 15.0, *) {
-                updateDisplayLinkFrameRateRange()
-            } else {
-                updateDisplayLinkPreferredFramesPerSecond()
-            }
-            #else
             updateDisplayLinkPreferredFramesPerSecond()
-            #endif
-
             displayLink?.add(to: .current, forMode: .common)
         }
     }
@@ -357,18 +364,20 @@ open class MapView: UIView {
 
     func updateDisplayLinkPreferredFramesPerSecond() {
         if let displayLink = displayLink {
-            displayLink.preferredFramesPerSecond = preferredFramesPerSecond
+            if let _preferredFramesPerSecond = _preferredFramesPerSecond {
+                displayLink.preferredFramesPerSecond = _preferredFramesPerSecond
+            }
+            // Checking Swift version as a proxy for iOS SDK version to enable
+            // building with iOS SDKs < 15
+            #if swift(>=5.5)
+            if #available(iOS 15.0, *) {
+                if let _preferredFrameRateRange = _preferredFrameRateRange {
+                    displayLink.preferredFrameRateRange = _preferredFrameRateRange
+                }
+            }
+            #endif
         }
     }
-
-    #if swift(>=5.5)
-    @available(iOS 15.0, *)
-    func updateDisplayLinkFrameRateRange() {
-        if let displayLink = displayLink {
-            displayLink.preferredFrameRateRange = preferredFrameRateRange
-        }
-    }
-    #endif
 
     open override func willMove(toWindow newWindow: UIWindow?) {
         super.willMove(toWindow: newWindow)

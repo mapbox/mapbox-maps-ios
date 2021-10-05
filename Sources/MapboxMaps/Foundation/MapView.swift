@@ -9,7 +9,7 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 open class MapView: UIView {
 
-    // mapbox map depends on MapInitOptions, which is not available until
+    // `mapboxMap` depends on `MapInitOptions`, which is not available until
     // awakeFromNib() when instantiating MapView from a xib or storyboard.
     // This is the only reason that it is an implicitly-unwrapped optional var
     // instead of a non-optional let.
@@ -86,13 +86,37 @@ open class MapView: UIView {
 
     private var displayLinkParticipants = WeakSet<DisplayLinkParticipant>()
 
-    /// The preferred frames per second used for map rendering
-    public var preferredFramesPerSecond: PreferredFPS = .maximum {
+    /*** The preferred frames per second used for map rendering.
+        NOTE: Use `MapView.preferredFrameRateRange` instead for iOS 15.0 and above.
+     */
+    @available(iOS, deprecated: 1000000)
+    public var preferredFramesPerSecond: Int = 0 {
         didSet {
             updateDisplayLinkPreferredFramesPerSecond()
         }
     }
 
+    @available(iOS 15.0, *)
+    /// The preferred range of frame refresh rates.
+    public var preferredFrameRateRange: CAFrameRateRange {
+        get {
+            if let range = _preferredFrameRateRange as? CAFrameRateRange {
+                return range
+            } else {
+                return CAFrameRateRange.default
+            }
+        } set {
+            _preferredFrameRateRange = newValue as AnyObject
+        }
+    }
+
+    internal var _preferredFrameRateRange: AnyObject? {
+        didSet {
+            if #available(iOS 15.0, *) {
+                updateDisplayLinkFrameRateRange()
+            }
+        }
+    }
     /// The `timestamp` from the underlying `CADisplayLink` if it exists, otherwise `nil`
     @_spi(Metrics) public var displayLinkTimestamp: CFTimeInterval? {
         return displayLink?.timestamp
@@ -296,7 +320,12 @@ open class MapView: UIView {
                     self?.updateFromDisplayLink(displayLink: $0)
                 },
                 selector: #selector(ForwardingDisplayLinkTarget.update(with:)))
-            updateDisplayLinkPreferredFramesPerSecond()
+            if #available(iOS 15.0, *) {
+                updateDisplayLinkFrameRateRange()
+            } else {
+                updateDisplayLinkPreferredFramesPerSecond()
+            }
+
             displayLink?.add(to: .current, forMode: .common)
         }
     }
@@ -320,7 +349,14 @@ open class MapView: UIView {
 
     func updateDisplayLinkPreferredFramesPerSecond() {
         if let displayLink = displayLink {
-            displayLink.preferredFramesPerSecond = preferredFramesPerSecond.rawValue
+            displayLink.preferredFramesPerSecond = preferredFramesPerSecond
+        }
+    }
+
+    @available(iOS 15.0, *)
+    func updateDisplayLinkFrameRateRange() {
+        if let displayLink = displayLink {
+            displayLink.preferredFrameRateRange = preferredFrameRateRange
         }
     }
 

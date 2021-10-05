@@ -32,25 +32,21 @@ internal extension Result where Failure == Error {
                                                                                                  Error: CoreErrorRepresentable,
                                                                                                  Error.CoreErrorType: AnyObject {
         guard let expected = expected else {
-            assertionFailure("Expected was nil.")
             self = .failure(TypeConversionError.unexpectedType)
             return
         }
         if expected.isValue(), let value = expected.value {
             guard let typedValue = value as? Value else {
-                assertionFailure("Expected type \(Value.self), but found \(value)")
                 self = .failure(TypeConversionError.unexpectedType)
                 return
             }
             guard let convertedValue = valueConverter(typedValue) else {
-                assertionFailure("Failed to convert from \(Value.self) to \(Success.self)")
                 self = .failure(TypeConversionError.unsuccessfulConversion)
                 return
             }
             self = .success(convertedValue)
         } else if expected.isError(), let error = expected.error {
             guard let typedError = error as? Error.CoreErrorType else {
-                assertionFailure("Expected type \(Error.CoreErrorType.self), but found \(error)")
                 self = .failure(TypeConversionError.unexpectedType)
                 return
             }
@@ -74,14 +70,12 @@ internal func coreAPIClosureAdapter<SwiftError>(
         }
 
         guard let expected = expected else {
-            assertionFailure("Expected was nil.")
             error = TypeConversionError.unexpectedType
             return
         }
 
         if expected.isError(), let expectedError = expected.error {
             guard let typedError = expectedError as? SwiftError.CoreErrorType else {
-                assertionFailure("Expected type \(SwiftError.CoreErrorType.self), but found \(expectedError)")
                 error = TypeConversionError.unexpectedType
                 return
             }

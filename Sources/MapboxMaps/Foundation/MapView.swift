@@ -6,6 +6,7 @@
 @_implementationOnly import MapboxCommon_Private
 import UIKit
 
+// swiftlint:disable type_body_length
 @available(iOSApplicationExtension, unavailable)
 open class MapView: UIView {
 

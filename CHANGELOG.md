@@ -23,7 +23,6 @@ Mapbox welcomes participation and contributions from everyone.
 * `TileRegionLoadOptions` init now takes a `Geometry` instead of a `MapboxCommon.Geometry`. ([#711](https://github.com/mapbox/mapbox-maps-ios/pull/711))
 * `CameraAnimationsManager.options` has been removed. Use `MapboxMap.cameraBounds` and `MapboxMap.setCameraBounds(with:)` instead. ([#712](https://github.com/mapbox/mapbox-maps-ios/pull/712))
 * `MapboxMap.setCameraBounds(for:)` has been renamed to `.setCameraBounds(with:)` ([#712](https://github.com/mapbox/mapbox-maps-ios/pull/712))
-* Requires [Turf v2._x_](https://github.com/mapbox/turf-swift/releases/tag/v2.0.0). ([#741](https://github.com/mapbox/mapbox-maps-ios/pull/741))
 * Renames `Style.updateGeoJSONSource<T: GeoJSONObject>(withId:geoJSON:)` to `Style.updateGeoJSONSource(withId:geoJSON:)`. Instead of passing in the expected GeoJSON object type, you perform pattern matching on the return value using `case let`. ([#715](https://github.com/mapbox/mapbox-maps-ios/pull/715))
 * Setting `data` property on a GeoJSON source via `Style.setSourceProperty(for:property:value:)` or `Style.updateGeoJSONSource(withId:geoJSON:)` is now asynchronous and never returns an error. Errors will be reported asynchronously via a `MapEvents.EventKind.mapLoadingError` event instead. ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
 * Core and Common APIs that accept user-defined implementations of protocols now hold strong references to the provided objects. Please audit your usage of the following protocols and make any required changes to avoid memory leaks: `CustomLayerHost`, `ElevationData`, `MapClient`, `MBMMetalViewProvider`, `Observer`, `OfflineRegionObserver`, `HttpServiceInterceptorInterface`, `HttpServiceInterface`, `LogWriterBackend`, `OfflineSwitchObserver`, `ReachabilityInterface`, `TileStoreObserver`. ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
@@ -51,13 +50,18 @@ Mapbox welcomes participation and contributions from everyone.
 * Adds `MapView.preferredFrameRateRange` for devices using iOS 15.0 and up. ([#735](https://github.com/mapbox/mapbox-maps-ios/pull/735))
 * Adds `TileStore.subscribe(_:)` which can be used to observe a `TileStore`'s activity. The API design deviates from Android's add/remove observer API so that the developer-provided `TileStoreObserver` can be wrapped into a `MapboxCommon_Private.TileStoreObserver` without needing to use global state or something like Objective-C associated objects to look up which wrapper goes with with developer-provided observer when calling `__removeObserver`. ([#737](https://github.com/mapbox/mapbox-maps-ios/pull/737))
 * Adds `TileStoreObserver` protocol. ([#737](https://github.com/mapbox/mapbox-maps-ios/pull/737))
-* Updated MapboxMobileEvents dependency to v1.0.5. ([#724](https://github.com/mapbox/mapbox-maps-ios/pull/724))
 
 ### Bug fixes 🐞
 
 * Fix rendering artifacts for a model layer when `model-opacity` property is used. ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
 * Improve rendering performance by avoiding unnecessary re-layout for cached tiles. ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
 * Fix telemetry opt-out through attribution dialog. ([#743](https://github.com/mapbox/mapbox-maps-ios/pull/743))
+
+### Dependencies
+
+* Updates MapboxCoreMaps to v10.0.0, MapboxCommon to v20.0.0. ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
+* Updates [Turf to v2._x_](https://github.com/mapbox/turf-swift/releases/tag/v2.0.0). ([#741](https://github.com/mapbox/mapbox-maps-ios/pull/741))
+* Updates MapboxMobileEvents to v1.0.5. ([#724](https://github.com/mapbox/mapbox-maps-ios/pull/724))
 
 ## 10.0.0-rc.9 - September 22, 2021
 

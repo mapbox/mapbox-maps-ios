@@ -18,7 +18,7 @@ internal class InfoButtonOrnament: UIView {
     }
 
     internal var isMetricsEnabled: Bool {
-        return UserDefaults.standard.bool(forKey: Ornaments.metricsEnabledKey)
+        return UserDefaults.mme_configuration().mme_isCollectionEnabled
     }
 
     internal weak var delegate: InfoButtonOrnamentDelegate?

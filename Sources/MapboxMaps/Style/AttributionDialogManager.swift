@@ -23,10 +23,9 @@ internal class AttributionDialogManager {
 
     internal var isMetricsEnabled: Bool {
         get {
-            UserDefaults.standard.bool(forKey: Ornaments.metricsEnabledKey)
+            UserDefaults.mme_configuration().mme_isCollectionEnabled
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: Ornaments.metricsEnabledKey)
             UserDefaults.mme_configuration().mme_isCollectionEnabled = newValue
             MMEEventsManager.shared().pauseOrResumeMetricsCollectionIfRequired()
         }

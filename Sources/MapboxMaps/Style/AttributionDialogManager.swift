@@ -1,3 +1,5 @@
+import MapboxMobileEvents
+
 internal protocol AttributionDataSource: AnyObject {
     func attributions() -> [Attribution]
 }
@@ -25,6 +27,8 @@ internal class AttributionDialogManager {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Ornaments.metricsEnabledKey)
+            UserDefaults.mme_configuration().mme_isCollectionEnabled = newValue
+            MMEEventsManager.shared().pauseOrResumeMetricsCollectionIfRequired()
         }
     }
 

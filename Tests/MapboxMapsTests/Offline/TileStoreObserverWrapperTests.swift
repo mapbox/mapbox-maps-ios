@@ -52,11 +52,11 @@ final class TileStoreObserverWrapperTests: XCTestCase {
         XCTAssertEqual(observer.onRegionLoadFinishedStub.invocations.count, 1)
         let parameters = try XCTUnwrap(observer.onRegionLoadFinishedStub.parameters.first)
         XCTAssertEqual(parameters.id, id)
-        guard case .success(let tileRegion) = parameters.region else {
+        guard case .success(let regionParameter) = parameters.region else {
             XCTFail("Expected region parameter to be Result.success, but found \(parameters.region)")
             return
         }
-        XCTAssertTrue(tileRegion === tileRegion)
+        XCTAssertTrue(tileRegion === regionParameter)
     }
 
     func testOnRegionLoadFinishedWithInalidValue() throws {

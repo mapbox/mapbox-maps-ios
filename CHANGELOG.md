@@ -51,6 +51,9 @@ Mapbox welcomes participation and contributions from everyone.
 * Adds `TileStore.subscribe(_:)` which can be used to observe a `TileStore`'s activity. The API design deviates from Android's add/remove observer API so that the developer-provided `TileStoreObserver` can be wrapped into a `MapboxCommon_Private.TileStoreObserver` without needing to use global state or something like Objective-C associated objects to look up which wrapper goes with with developer-provided observer when calling `__removeObserver`. ([#737](https://github.com/mapbox/mapbox-maps-ios/pull/737))
 * Adds `TileStoreObserver` protocol. ([#737](https://github.com/mapbox/mapbox-maps-ios/pull/737))
 
+### Bug fixes 🐞
+* Fix telemetry opt-out through attribution dialog. (https://github.com/mapbox/mapbox-maps-ios/pull/743)
+
 ## 10.0.0-rc.9 - Sept 22, 2021
 
 ### Breaking changes ⚠️

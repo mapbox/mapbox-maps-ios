@@ -15,7 +15,7 @@ let package = Package(
     dependencies: [
         .package(name: "MapboxCoreMaps", url: "https://github.com/mapbox/mapbox-core-maps-ios.git", .exact("10.0.0-rc.9.1")),
         .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", .exact("1.0.4")),
-        .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .revision("d6928480bd1a416ed5fe6be6f777fba427e0a56b")),
+        .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .revision("7bef360e53b03c2e0ab702e5d1e1f5df0b21ee65")),
         //.package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .branch("v19.0.0-snapshot")),
         .package(name: "Turf", url: "https://github.com/mapbox/turf-swift.git", .exact("2.0.0-rc.2")),
         .package(name: "CocoaImageHashing", url: "https://github.com/ameingast/cocoaimagehashing", .exact("1.9.0"))

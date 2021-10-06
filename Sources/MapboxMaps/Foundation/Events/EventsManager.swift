@@ -38,6 +38,8 @@ internal class EventsManager: EventsListener {
             telemetry?.flush()
         case .custom(let customEvent):
             telemetry?.send(event: customEvent)
+            let telemtryEvent = MapboxCommon_Private.Event(priority: EventPriority.immediate, attributes: customEvent)
+            coreTelemetry.sendEvent(for: telemtryEvent, callback: nil)
         }
     }
 
@@ -55,6 +57,8 @@ internal class EventsManager: EventsListener {
         switch metricEvent {
         case .performance(let metrics):
             telemetry?.send(event: metricEvent.typeString, withAttributes: metrics)
+            let telemtryEvent = MapboxCommon_Private.Event(priority: EventPriority.immediate, attributes: metrics)
+            coreTelemetry.sendEvent(for: telemtryEvent, callback: nil)
         }
     }
 
@@ -62,6 +66,8 @@ internal class EventsManager: EventsListener {
         switch snapshotEvent {
         case .initialized:
             telemetry?.turnstile()
+            let turnstileEvent = TurnstileEvent(skuId: SKUIdentifier.mapsMAUS, sdkIdentifier: Constants.MGLAPIClientUserAgentBase, sdkVersion: Constants.SDKVersion)
+            coreTelemetry.sendTurnstileEvent(for: turnstileEvent, callback: nil)
         }
     }
 
@@ -69,6 +75,8 @@ internal class EventsManager: EventsListener {
         switch offlineStorage {
         case .downloadStarted(let attributes):
             telemetry?.send(event: offlineStorage.typeString, withAttributes: attributes)
+            let telemtryEvent = MapboxCommon_Private.Event(priority: EventPriority.immediate, attributes: attributes)
+            coreTelemetry.sendEvent(for: telemtryEvent, callback: nil)
         }
     }
 }

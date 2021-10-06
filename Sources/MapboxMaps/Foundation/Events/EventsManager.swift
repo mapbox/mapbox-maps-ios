@@ -28,18 +28,8 @@ internal class EventsManager: EventsListener {
         switch event {
         case .map(let mapEvent):
             process(mapEvent: mapEvent)
-        case .metrics(let metricsEvent):
-            process(metricEvent: metricsEvent)
-        case .snapshot(let snapshotEvent):
-            process(snapshotEvent: snapshotEvent)
-        case .offlineStorage(let offlineStorageEvent):
-            process(offlineStorage: offlineStorageEvent)
         case .memoryWarning:
             telemetry?.flush()
-        case .custom(let customEvent):
-            telemetry?.send(event: customEvent)
-            let telemtryEvent = MapboxCommon_Private.Event(priority: EventPriority.immediate, attributes: customEvent)
-            coreTelemetry.sendEvent(for: telemtryEvent, callback: nil)
         }
     }
 
@@ -50,33 +40,6 @@ internal class EventsManager: EventsListener {
             telemetry?.send(event: mapEvent.typeString)
             let turnstileEvent = TurnstileEvent(skuId: SKUIdentifier.mapsMAUS, sdkIdentifier: Constants.MGLAPIClientUserAgentBase, sdkVersion: Constants.SDKVersion)
             coreTelemetry.sendTurnstileEvent(for: turnstileEvent, callback: nil)
-        }
-    }
-
-    private func process(metricEvent: EventType.Metrics) {
-        switch metricEvent {
-        case .performance(let metrics):
-            telemetry?.send(event: metricEvent.typeString, withAttributes: metrics)
-            let telemtryEvent = MapboxCommon_Private.Event(priority: EventPriority.immediate, attributes: metrics)
-            coreTelemetry.sendEvent(for: telemtryEvent, callback: nil)
-        }
-    }
-
-    private func process(snapshotEvent: EventType.Snapshot) {
-        switch snapshotEvent {
-        case .initialized:
-            telemetry?.turnstile()
-            let turnstileEvent = TurnstileEvent(skuId: SKUIdentifier.mapsMAUS, sdkIdentifier: Constants.MGLAPIClientUserAgentBase, sdkVersion: Constants.SDKVersion)
-            coreTelemetry.sendTurnstileEvent(for: turnstileEvent, callback: nil)
-        }
-    }
-
-    private func process(offlineStorage: EventType.OfflineStorage) {
-        switch offlineStorage {
-        case .downloadStarted(let attributes):
-            telemetry?.send(event: offlineStorage.typeString, withAttributes: attributes)
-            let telemtryEvent = MapboxCommon_Private.Event(priority: EventPriority.immediate, attributes: attributes)
-            coreTelemetry.sendEvent(for: telemtryEvent, callback: nil)
         }
     }
 }

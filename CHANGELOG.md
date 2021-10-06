@@ -2,7 +2,7 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## main
+## 10.0.0 - October 6, 2021
 
 ### Breaking changes ⚠️
 
@@ -59,7 +59,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Improve rendering performance by avoiding unnecessary re-layout for cached tiles. ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
 * Fix telemetry opt-out through attribution dialog. ([#743](https://github.com/mapbox/mapbox-maps-ios/pull/743))
 
-## 10.0.0-rc.9 - Sept 22, 2021
+## 10.0.0-rc.9 - September 22, 2021
 
 ### Breaking changes ⚠️
 
@@ -114,7 +114,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Fixes issues with the pinch gesture when removing and re-adding one of the two required touches. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
 * Fixes an issue where a pan gesture would fail if it interrupted the deceleration from a previous pan gesture. ([#696](https://github.com/mapbox/mapbox-maps-ios/pull/696))
 
-## 10.0.0-rc.8 - Sept 8, 2021
+## 10.0.0-rc.8 - September 8, 2021
 
 ### Breaking changes ⚠️
 

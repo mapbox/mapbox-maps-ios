@@ -235,7 +235,7 @@ public struct Examples {
         Example(title: "Add an interactive clustered layer",
                 description: "Display an alert controller after selecting a feature.",
                 type: SymbolClusteringExample.self),
-        Example(title: "Draw a polygon using user gesture",
+        Example(title: "Draw a polygon with user gesture",
                 description: "Draw a line and fill the enclosed polygon using user's interaction",
                 type: GestureDrawExample.self),
     ]

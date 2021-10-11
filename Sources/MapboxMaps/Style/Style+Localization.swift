@@ -8,7 +8,7 @@ extension Style {
     /// - Parameter layerIds: An optional list of ids that need to be localized. If `nil` is provided, all layers will be updated
     public func localizeLabels(into locale: Locale, forLayerIds layerIds: [String]? = nil) throws {
         guard let localeValue = getLocaleValue(locale: locale) else {
-            fatalError("This locale is not supported")
+            throw MapError(coreError: "Locale is currently not supported")
         }
 
         // Get all symbol layers that are currently on the map

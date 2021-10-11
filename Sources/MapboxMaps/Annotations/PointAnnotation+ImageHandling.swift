@@ -3,8 +3,8 @@ import UIKit
 
 extension PointAnnotation {
     public struct Image: Hashable {
-        var image: UIImage
-        var name: String
+        public var image: UIImage
+        public var name: String
 
         public init(image: UIImage, name: String) {
             self.image = image

@@ -25,11 +25,11 @@ MESSAGE="### Dependency requirements:\n\
 * Compatible version of MapboxCoreMaps:\n\
 * Compatible version of MapboxCommon:\n\
 * Compatible version of Xcode:\n\
-* Compatible version of MacOS:\n\
+* Compatible version of macOS:\n\
 \n\
 ### Changes\n\
 \n\
-<Copy and paste CHANGELOG.MD>\n\
+<Compose changelog here>\n\
 \n\
 ### Direct download\n\
 \n\
@@ -40,7 +40,7 @@ https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/${TAG/#v}/Mapbo
 \`\`\`"
 
 # Body that is passed to the POST request
-BODY="{\"tag_name\":\"$TAG\",\"target_commitish\":\"main\",\"name\":\"Mapbox Maps: $TAG\",\"body\":\"$MESSAGE\",\"draft\":true,\"prerelease\":true}"
+BODY="{\"tag_name\":\"$TAG\",\"target_commitish\":\"main\",\"name\":\"$TAG\",\"body\":\"$MESSAGE\",\"draft\":true,\"prerelease\":true}"
 
 # Performing the request using github API
 CURL_RESULT=0

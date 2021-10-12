@@ -87,12 +87,14 @@ final class FlyToCameraAnimatorTests: XCTestCase {
         XCTAssertNotNil(animator?.duration)
     }
 
-    func testStartAnimationChangesStateToActive() {
+    func testStartAnimationChangesStateToActiveAndSetsMapboxMapFlags() {
         flyToCameraAnimator.startAnimation()
+
         XCTAssertEqual(flyToCameraAnimator.state, .active)
+        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 1)
     }
 
-    func testAnimationBlocksAreInvokedWhenAnimationIsComplete() {
+    func testAnimationCompletion() {
         var animatingPositions = [UIViewAnimatingPosition]()
         flyToCameraAnimator.addCompletion { (position) in
             animatingPositions.append(position)
@@ -104,9 +106,10 @@ final class FlyToCameraAnimatorTests: XCTestCase {
 
         XCTAssertEqual(flyToCameraAnimator.state, .inactive)
         XCTAssertEqual(animatingPositions, [.end])
+        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 1)
     }
 
-    func testAnimationBlocksAreScheduledWhenStopAnimationIsInvoked() {
+    func testStopAnimation() {
         var animatingPositions = [UIViewAnimatingPosition]()
         flyToCameraAnimator.addCompletion { (position) in
             animatingPositions.append(position)
@@ -116,13 +119,8 @@ final class FlyToCameraAnimatorTests: XCTestCase {
         flyToCameraAnimator.stopAnimation()
 
         XCTAssertEqual(animatingPositions, [.current])
-    }
-
-    func testStopAnimationChangesStateToStopped() {
-        flyToCameraAnimator.startAnimation()
-        flyToCameraAnimator.stopAnimation()
-
         XCTAssertEqual(flyToCameraAnimator.state, .inactive)
+        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 1)
     }
 
     func testUpdateDoesNotSetCameraIfAnimationIsNotRunning() {

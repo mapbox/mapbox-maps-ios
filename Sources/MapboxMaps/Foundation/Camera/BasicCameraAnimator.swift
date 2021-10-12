@@ -5,7 +5,8 @@ import CoreLocation
 public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterface {
     private enum InternalState: Equatable {
         case initial
-        case inProgress(CameraTransition)
+        case running(CameraTransition)
+        case paused(CameraTransition)
         case final
     }
 
@@ -31,7 +32,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     /// Defines the transition that will occur to the `CameraOptions` of the renderer due to this animator
     public var transition: CameraTransition? {
         switch internalState {
-        case let .inProgress(transition):
+        case let .running(transition), let .paused(transition):
             return transition
         case .initial, .final:
             return nil
@@ -44,7 +45,20 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     /// The state from of the animator.
     public var state: UIViewAnimatingState { propertyAnimator.state }
 
-    private var internalState = InternalState.initial
+    private var internalState = InternalState.initial {
+        didSet {
+            switch (oldValue, internalState) {
+            case (.initial, .running), (.paused, .running):
+                storedAnimator = self
+                mapboxMap.beginAnimation()
+            case (.running, .paused), (.running, .final):
+                storedAnimator = nil
+                mapboxMap.endAnimation()
+            default:
+                break
+            }
+        }
+    }
 
     /// Boolean that represents if the animation is running or not.
     public var isRunning: Bool { propertyAnimator.isRunning }
@@ -86,12 +100,15 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
     /// Starts the animation if this animator is in `inactive` state. Also used to resume a "paused" animation.
     public func startAnimation() {
-        storedAnimator = self
         switch internalState {
         case .initial:
-            createTransition()
+            internalState = .running(makeTransition())
             propertyAnimator.startAnimation()
-        case .inProgress:
+        case .running:
+            // already running; do nothing
+            break
+        case let .paused(transition):
+            internalState = .running(transition)
             propertyAnimator.startAnimation()
         case .final:
             fatalError("Attempt to restart an animation that has already completed.")
@@ -111,11 +128,14 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     public func pauseAnimation() {
         switch internalState {
         case .initial:
-            createTransition()
+            internalState = .paused(makeTransition())
             propertyAnimator.pauseAnimation()
-        case .inProgress:
-            storedAnimator = nil
+        case let .running(transition):
+            internalState = .paused(transition)
             propertyAnimator.pauseAnimation()
+        case .paused:
+            // already paused; do nothing
+            break
         case .final:
             fatalError("Attempt to pause an animation that has already completed.")
         }
@@ -126,9 +146,10 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         switch internalState {
         case .initial:
             fatalError("Attempt to stop an animation that has not started.")
-        case .inProgress:
-            storedAnimator = nil
+        case .running, .paused:
             propertyAnimator.stopAnimation(false)
+            // this invokes the completion block which clears
+            // storedAnimator and calls mapboxMap.endAnimation() if needed
             propertyAnimator.finishAnimation(at: .current)
         case .final:
             // Already stopped, so do nothing
@@ -153,20 +174,22 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         switch internalState {
         case .initial:
             fatalError("Attempt to continue an animation that has not started.")
-        case .inProgress:
-            storedAnimator = self
+        case .running:
+            fatalError("Attempt to continue an animation that is already running.")
+        case let .paused(transition):
+            internalState = .running(transition)
             propertyAnimator.continueAnimation(withTimingParameters: parameters, durationFactor: CGFloat(durationFactor))
         case .final:
-            precondition(internalState != .final, "Attempt to continue an animation that has already completed.")
+            fatalError("Attempt to continue an animation that has already completed.")
         }
     }
 
     func update() {
         switch internalState {
-        case .initial, .final:
+        case .initial, .paused, .final:
             return
-        case let .inProgress(transition):
-            // The animator has been started or paused, so get the interpolated value. This may be nil if
+        case let .running(transition):
+            // The animator has been started, so get the interpolated value. This may be nil if
             // the animations haven't yet propagated into the CameraView's presentation tree.
             if let presentationCameraOptions = cameraView.presentationCameraOptions {
                 mapboxMap.setCamera(
@@ -211,7 +234,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         return cameraOptions
     }
 
-    private func createTransition() {
+    private func makeTransition() -> CameraTransition {
         precondition(internalState == .initial, "createTransition must only be called when BasicCameraAnimator is in its initial state.")
 
         guard let animation = animation else {
@@ -238,14 +261,13 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
             for completion in self.completions {
                 completion(animatingPosition)
             }
-            self.storedAnimator = nil
             self.completions.removeAll()
         }
 
         UIView.performWithoutAnimation {
             cameraView.syncLayer(to: transition.fromCameraOptions) // Set up the "from" values for the interpoloation
         }
-        internalState = .inProgress(transition) // Store the mutated camera transition
+        return transition
     }
 
     // MARK: Cancelable

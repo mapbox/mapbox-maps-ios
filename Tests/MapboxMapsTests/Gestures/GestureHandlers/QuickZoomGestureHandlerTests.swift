@@ -45,7 +45,7 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
         XCTAssertEqual(delegate.gestureBeganStub.parameters, [.quickZoom])
     }
 
-    func testGestureChanged() {
+    func testGestureChanged() throws {
         let initialZoom = CGFloat.random(in: 0...15)
 
         // Send the began event
@@ -54,11 +54,12 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
         mapboxMap.cameraState.zoom = initialZoom
         gestureRecognizer.sendActions()
 
-        let initialLocation = gestureRecognizer.locationStub.defaultReturnValue
         // Send a changed event that should correspond to zooming in by 1 level
         gestureRecognizer.getStateStub.defaultReturnValue = .changed
         gestureRecognizer.locationStub.defaultReturnValue.y = 175
         gestureRecognizer.sendActions()
+
+        let initialLocation = try XCTUnwrap(gestureRecognizer.locationStub.returnedValues.first)
 
         XCTAssertEqual(
             mapboxMap.setCameraStub.parameters,

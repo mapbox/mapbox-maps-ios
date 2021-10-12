@@ -8,18 +8,21 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
     private let locationChangeHandler: (CGPoint) -> Void
     private var previousDate: Date?
     private let dateProvider: DateProvider
+    private let mapboxMap: MapboxMapProtocol
     internal var completion: (() -> Void)?
 
     internal init(location: CGPoint,
                   velocity: CGPoint,
                   decelerationFactor: CGFloat,
                   locationChangeHandler: @escaping (CGPoint) -> Void,
-                  dateProvider: DateProvider) {
+                  dateProvider: DateProvider,
+                  mapboxMap: MapboxMapProtocol) {
         self.location = location
         self.velocity = velocity
         self.decelerationFactor = decelerationFactor
         self.locationChangeHandler = locationChangeHandler
         self.dateProvider = dateProvider
+        self.mapboxMap = mapboxMap
     }
 
     internal private(set) var state: UIViewAnimatingState = .inactive
@@ -31,10 +34,12 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
     internal func startAnimation() {
         previousDate = dateProvider.now
         state = .active
+        mapboxMap.beginAnimation()
     }
 
     internal func stopAnimation() {
         state = .inactive
+        mapboxMap.endAnimation()
         completion?()
         completion = nil
     }

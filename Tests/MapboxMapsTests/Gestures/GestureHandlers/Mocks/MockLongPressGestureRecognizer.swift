@@ -12,7 +12,7 @@ final class MockLongPressGestureRecognizer: UILongPressGestureRecognizer {
         }
     }
 
-    let locationStub = Stub<UIView?, CGPoint>(defaultReturnValue: .zero)
+    let locationStub = Stub<UIView?, CGPoint>(defaultReturnValue: .random())
     override func location(in view: UIView?) -> CGPoint {
         locationStub.call(with: view)
     }

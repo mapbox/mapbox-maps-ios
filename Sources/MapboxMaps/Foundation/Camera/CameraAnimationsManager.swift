@@ -306,7 +306,8 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
             velocity: velocity,
             decelerationFactor: decelerationFactor,
             locationChangeHandler: locationChangeHandler,
-            dateProvider: DefaultDateProvider())
+            dateProvider: DefaultDateProvider(),
+            mapboxMap: mapboxMap)
 
         decelerateAnimator.completion = { [weak self, weak decelerateAnimator] in
            if self?.internalAnimator === decelerateAnimator {

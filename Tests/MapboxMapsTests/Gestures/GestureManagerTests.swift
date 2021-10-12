@@ -38,7 +38,8 @@ final class GestureManagerTests: XCTestCase {
             doubleTouchToZoomOutGestureHandler: doubleTouchToZoomOutGestureHandler,
             quickZoomGestureHandler: quickZoomGestureHandler,
             singleTapGestureHandler: singleTapGestureHandler,
-            animationLockoutGestureHandler: animationLockoutGestureHandler)
+            animationLockoutGestureHandler: animationLockoutGestureHandler,
+            mapboxMap: mapboxMap)
         delegate = MockGestureManagerDelegate()
         gestureManager.delegate = delegate
     }
@@ -153,6 +154,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertEqual(delegate.gestureDidBeginStub.invocations.count, 1, "GestureBegan should have been invoked once. It was called \(delegate.gestureDidBeginStub.invocations.count) times.")
         XCTAssertTrue(delegate.gestureDidBeginStub.parameters.first?.gestureManager === gestureManager)
         XCTAssertEqual(delegate.gestureDidBeginStub.parameters.first?.gestureType, gestureType)
+        XCTAssertEqual(mapboxMap.beginGestureStub.invocations.count, 1)
     }
 
     func testGestureEnded() throws {
@@ -165,6 +167,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertEqual(delegate.gestureDidEndStub.parameters.first?.gestureType, gestureType)
         let willAnimateValue = try XCTUnwrap(delegate.gestureDidEndStub.parameters.first?.willAnimate)
         XCTAssertEqual(willAnimateValue, willAnimate)
+        XCTAssertEqual(mapboxMap.endGestureStub.invocations.count, 1)
     }
 
     func testAnimationEnded() {

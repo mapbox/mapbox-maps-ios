@@ -2,14 +2,13 @@ import XCTest
 @testable import MapboxMaps
 
 final class DoubleTapToZoomInGestureHandlerTests: XCTestCase {
-
+    var view: UIView!
     var gestureRecognizer: MockTapGestureRecognizer!
     var cameraAnimationsManager: MockCameraAnimationsManager!
     var mapboxMap: MockMapboxMap!
     var gestureHandler: DoubleTapToZoomInGestureHandler!
     // swiftlint:disable:next weak_delegate
     var delegate: MockGestureHandlerDelegate!
-    var view: UIView!
 
     override func setUp() {
         super.setUp()
@@ -48,8 +47,7 @@ final class DoubleTapToZoomInGestureHandlerTests: XCTestCase {
 
         gestureRecognizer.sendActions()
 
-        let view = try XCTUnwrap(gestureRecognizer.view)
-        let tapLocation = gestureRecognizer.location(in: view)
+        let tapLocation = try XCTUnwrap(gestureRecognizer.locationStub.returnedValues.first)
         XCTAssertEqual(delegate.gestureBeganStub.parameters, [.doubleTapToZoomIn])
         XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 1)
         XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.camera, CameraOptions(anchor: tapLocation, zoom: mapboxMap.cameraState.zoom + 1))

@@ -90,6 +90,7 @@ public final class GestureManager: GestureHandlerDelegate {
     private let quickZoomGestureHandler: GestureHandler
     private let singleTapGestureHandler: GestureHandler
     private let animationLockoutGestureHandler: GestureHandler
+    private let mapboxMap: MapboxMapProtocol
 
     internal init(panGestureHandler: PanGestureHandlerProtocol,
                   pinchGestureHandler: GestureHandler,
@@ -98,7 +99,8 @@ public final class GestureManager: GestureHandlerDelegate {
                   doubleTouchToZoomOutGestureHandler: GestureHandler,
                   quickZoomGestureHandler: GestureHandler,
                   singleTapGestureHandler: GestureHandler,
-                  animationLockoutGestureHandler: GestureHandler) {
+                  animationLockoutGestureHandler: GestureHandler,
+                  mapboxMap: MapboxMapProtocol) {
         self.panGestureHandler = panGestureHandler
         self.pinchGestureHandler = pinchGestureHandler
         self.pitchGestureHandler = pitchGestureHandler
@@ -107,6 +109,7 @@ public final class GestureManager: GestureHandlerDelegate {
         self.quickZoomGestureHandler = quickZoomGestureHandler
         self.singleTapGestureHandler = singleTapGestureHandler
         self.animationLockoutGestureHandler = animationLockoutGestureHandler
+        self.mapboxMap = mapboxMap
 
         panGestureHandler.delegate = self
         pinchGestureHandler.delegate = self
@@ -125,10 +128,12 @@ public final class GestureManager: GestureHandlerDelegate {
     }
 
     internal func gestureBegan(for gestureType: GestureType) {
+        mapboxMap.beginGesture()
         delegate?.gestureManager(self, didBegin: gestureType)
     }
 
     func gestureEnded(for gestureType: GestureType, willAnimate: Bool) {
+        mapboxMap.endGesture()
         delegate?.gestureManager(self, didEnd: gestureType, willAnimate: willAnimate)
     }
 

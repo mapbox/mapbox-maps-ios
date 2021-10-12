@@ -46,12 +46,14 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
     public func stopAnimation() {
         state = .inactive
+        mapboxMap.endAnimation()
         invokeCompletionBlocks(with: .current) // `current` represents an interrupted animation.
     }
 
     internal func startAnimation() {
         state = .active
         start = dateProvider.now
+        mapboxMap.beginAnimation()
     }
 
     internal func addCompletion(_ completion: @escaping AnimationCompletion) {
@@ -73,6 +75,7 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         let fractionComplete = min(dateProvider.now.timeIntervalSince(start) / duration, 1)
         guard fractionComplete < 1 else {
             state = .inactive
+            mapboxMap.endAnimation()
             mapboxMap.setCamera(to: finalCameraOptions)
             invokeCompletionBlocks(with: .end)
             return

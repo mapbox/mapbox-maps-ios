@@ -34,5 +34,8 @@ final class SingleTapGestureHandlerTests: XCTestCase {
         gestureRecognizer.sendActions()
 
         XCTAssertEqual(delegate.gestureBeganStub.parameters, [.singleTap])
+        XCTAssertEqual(delegate.gestureEndedStub.invocations.count, 1)
+        XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.gestureType, .singleTap)
+        XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.willAnimate, false)
     }
 }

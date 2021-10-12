@@ -65,4 +65,24 @@ final class MockMapboxMap: MapboxMapProtocol {
     func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
         onEveryStub.call(with: OnEveryParams(eventType: eventType, handler: handler))
     }
+
+    let beginAnimationStub = Stub<Void, Void>()
+    func beginAnimation() {
+        beginAnimationStub.call()
+    }
+
+    let endAnimationStub = Stub<Void, Void>()
+    func endAnimation() {
+        endAnimationStub.call()
+    }
+
+    let beginGestureStub = Stub<Void, Void>()
+    func beginGesture() {
+        beginGestureStub.call()
+    }
+
+    let endGestureStub = Stub<Void, Void>()
+    func endGesture() {
+        endGestureStub.call()
+    }
 }

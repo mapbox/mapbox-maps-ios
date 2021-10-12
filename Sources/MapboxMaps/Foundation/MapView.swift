@@ -251,7 +251,8 @@ open class MapView: UIView {
         addSubview(cameraViewContainerView)
 
         // Setup Telemetry logging. Delay initialization by 10 seconds.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [weak self] in
+            guard let self = self else { return }
             self.setUpTelemetryLogging()
         }
 

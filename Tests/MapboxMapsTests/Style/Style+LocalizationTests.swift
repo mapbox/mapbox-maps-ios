@@ -30,7 +30,7 @@ final class StyleLocalizationTests: MapViewIntegrationTestCase {
 
     func testLocalizeLabelsThrowsCase() {
         let style = mapView.mapboxMap.style
-        
+
         XCTAssertThrowsError(try style.localizeLabels(into: Locale(identifier: "tlh")))
     }
 }

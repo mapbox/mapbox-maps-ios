@@ -541,6 +541,8 @@ public final class MapboxMap: MapboxMapProtocol {
 
     private var animationCount = 0
 
+    /// If implementing a custom animation mechanism, call this method when the animation begins.
+    /// Must always be paired with a corresponding call to `endAnimation()`
     public func beginAnimation() {
         animationCount += 1
         if animationCount == 1 {
@@ -548,6 +550,8 @@ public final class MapboxMap: MapboxMapProtocol {
         }
     }
 
+    /// If implementing a custom animation mechanism, call this method when the animation ends.
+    /// Must always be paired with a corresponding call to `beginAnimation()`
     public func endAnimation() {
         assert(animationCount > 0)
         animationCount -= 1
@@ -558,6 +562,8 @@ public final class MapboxMap: MapboxMapProtocol {
 
     private var gestureCount = 0
 
+    /// If implementing a custom gesture, call this method when the gesture begins.
+    /// Must always be paired with a corresponding call to `endGesture()`
     public func beginGesture() {
         gestureCount += 1
         if gestureCount == 1 {
@@ -565,6 +571,8 @@ public final class MapboxMap: MapboxMapProtocol {
         }
     }
 
+    /// If implementing a custom gesture, call this method when the gesture ends.
+    /// Must always be paired with a corresponding call to `beginGesture()`
     public func endGesture() {
         assert(gestureCount > 0)
         gestureCount -= 1

@@ -20,6 +20,8 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
     private let dateProvider: DateProvider
 
+    private weak var delegate: CameraAnimatorDelegate?
+
     internal init?(initial: CameraState,
                    final: CameraOptions,
                    cameraBounds: CameraBounds,
@@ -27,7 +29,8 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
                    duration: TimeInterval? = nil,
                    mapSize: CGSize,
                    mapboxMap: MapboxMapProtocol,
-                   dateProvider: DateProvider = DefaultDateProvider()) {
+                   dateProvider: DateProvider,
+                   delegate: CameraAnimatorDelegate) {
         guard let flyToInterpolator = FlyToInterpolator(from: initial, to: final, cameraBounds: cameraBounds, size: mapSize) else {
             return nil
         }
@@ -42,16 +45,19 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         self.finalCameraOptions = final
         self.duration = duration ?? flyToInterpolator.duration()
         self.dateProvider = dateProvider
+        self.delegate = delegate
     }
 
     public func stopAnimation() {
         state = .inactive
+        delegate?.cameraAnimatorDidStopRunning(self)
         invokeCompletionBlocks(with: .current) // `current` represents an interrupted animation.
     }
 
     internal func startAnimation() {
         state = .active
         start = dateProvider.now
+        delegate?.cameraAnimatorDidStartRunning(self)
     }
 
     internal func addCompletion(_ completion: @escaping AnimationCompletion) {
@@ -73,6 +79,7 @@ public class FlyToCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         let fractionComplete = min(dateProvider.now.timeIntervalSince(start) / duration, 1)
         guard fractionComplete < 1 else {
             state = .inactive
+            delegate?.cameraAnimatorDidStopRunning(self)
             mapboxMap.setCamera(to: finalCameraOptions)
             invokeCompletionBlocks(with: .end)
             return

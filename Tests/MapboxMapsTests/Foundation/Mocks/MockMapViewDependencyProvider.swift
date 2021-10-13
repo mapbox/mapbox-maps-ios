@@ -42,7 +42,8 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
             doubleTouchToZoomOutGestureHandler: makeGestureHandler(),
             quickZoomGestureHandler: makeGestureHandler(),
             singleTapGestureHandler: makeGestureHandler(),
-            animationLockoutGestureHandler: makeGestureHandler())
+            animationLockoutGestureHandler: makeGestureHandler(),
+            mapboxMap: mapboxMap)
     }
 
     func makeGestureHandler() -> GestureHandler {

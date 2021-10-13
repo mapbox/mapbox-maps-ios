@@ -14,6 +14,7 @@ internal final class SingleTapGestureHandler: GestureHandler {
         switch gestureRecognizer.state {
         case .recognized:
             delegate?.gestureBegan(for: .singleTap)
+            delegate?.gestureEnded(for: .singleTap, willAnimate: false)
         default:
             break
         }

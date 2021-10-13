@@ -126,6 +126,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             animationLockoutGestureHandler: makeAnimationLockoutGestureHandler(
                 view: view,
                 mapboxMap: mapboxMap,
-                cameraAnimationsManager: cameraAnimationsManager))
+                cameraAnimationsManager: cameraAnimationsManager),
+            mapboxMap: mapboxMap)
     }
 }

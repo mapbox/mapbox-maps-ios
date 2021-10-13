@@ -56,4 +56,44 @@ final class CameraAnimationsManagerTests: XCTestCase {
         XCTAssertEqual(animator.state, .inactive)
         XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 0)
     }
+
+    func testCameraAnimatorDelegate() {
+        let animator1 = MockCameraAnimator()
+        let animator2 = MockCameraAnimator()
+
+        // stopping before starting should have no effect
+        cameraAnimationsManager.cameraAnimatorDidStopRunning(animator1)
+        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 0)
+        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 0)
+
+        // start once
+        cameraAnimationsManager.cameraAnimatorDidStartRunning(animator1)
+        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 1)
+        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 0)
+
+        // start twice
+        cameraAnimationsManager.cameraAnimatorDidStartRunning(animator1)
+        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 1)
+        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 0)
+
+        // start a second
+        cameraAnimationsManager.cameraAnimatorDidStartRunning(animator2)
+        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 2)
+        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 0)
+
+        // end the first
+        cameraAnimationsManager.cameraAnimatorDidStopRunning(animator1)
+        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 2)
+        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 1)
+
+        // end the first again
+        cameraAnimationsManager.cameraAnimatorDidStopRunning(animator1)
+        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 2)
+        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 1)
+
+        // end the second
+        cameraAnimationsManager.cameraAnimatorDidStopRunning(animator2)
+        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 2)
+        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 2)
+    }
 }

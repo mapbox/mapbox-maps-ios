@@ -13,7 +13,10 @@ internal protocol MapboxMapProtocol: AnyObject {
     func dragStart(for point: CGPoint)
     func dragCameraOptions(from: CGPoint, to: CGPoint) -> CameraOptions
     func dragEnd()
-
+    func beginAnimation()
+    func endAnimation()
+    func beginGesture()
+    func endGesture()
     @discardableResult
     func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable
 }
@@ -532,6 +535,50 @@ public final class MapboxMap: MapboxMapProtocol {
     /// the user has ended a drag gesture initiated by `dragStart`.
     public func dragEnd() {
         __map.dragEnd()
+    }
+
+    // MARK: - Gesture and Animation Flags
+
+    private var animationCount = 0
+
+    /// If implementing a custom animation mechanism, call this method when the animation begins.
+    /// Must always be paired with a corresponding call to `endAnimation()`
+    public func beginAnimation() {
+        animationCount += 1
+        if animationCount == 1 {
+            __map.setUserAnimationInProgressForInProgress(true)
+        }
+    }
+
+    /// If implementing a custom animation mechanism, call this method when the animation ends.
+    /// Must always be paired with a corresponding call to `beginAnimation()`
+    public func endAnimation() {
+        assert(animationCount > 0)
+        animationCount -= 1
+        if animationCount == 0 {
+            __map.setUserAnimationInProgressForInProgress(false)
+        }
+    }
+
+    private var gestureCount = 0
+
+    /// If implementing a custom gesture, call this method when the gesture begins.
+    /// Must always be paired with a corresponding call to `endGesture()`
+    public func beginGesture() {
+        gestureCount += 1
+        if gestureCount == 1 {
+            __map.setGestureInProgressForInProgress(true)
+        }
+    }
+
+    /// If implementing a custom gesture, call this method when the gesture ends.
+    /// Must always be paired with a corresponding call to `beginGesture()`
+    public func endGesture() {
+        assert(gestureCount > 0)
+        gestureCount -= 1
+        if gestureCount == 0 {
+            __map.setGestureInProgressForInProgress(false)
+        }
     }
 }
 

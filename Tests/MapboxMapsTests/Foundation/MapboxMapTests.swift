@@ -141,11 +141,65 @@ final class MapboxMapTests: XCTestCase {
     }
 
     func testProtocolConformance() {
-        let map = MapboxMap(mapClient: MockMapClient(), mapInitOptions: MapInitOptions())
-
         // Compilation check only
-        _ = map as MapFeatureQueryable
-        _ = map as ObservableProtocol
-        _ = map as MapEventsObservable
+        _ = mapboxMap as MapFeatureQueryable
+        _ = mapboxMap as ObservableProtocol
+        _ = mapboxMap as MapEventsObservable
+    }
+
+    func testBeginAndEndAnimation() {
+        XCTAssertFalse(mapboxMap.__testingMap.isUserAnimationInProgress())
+
+        mapboxMap.beginAnimation()
+
+        XCTAssertTrue(mapboxMap.__testingMap.isUserAnimationInProgress())
+
+        mapboxMap.beginAnimation()
+
+        XCTAssertTrue(mapboxMap.__testingMap.isUserAnimationInProgress())
+
+        mapboxMap.endAnimation()
+
+        XCTAssertTrue(mapboxMap.__testingMap.isUserAnimationInProgress())
+
+        mapboxMap.beginAnimation()
+
+        XCTAssertTrue(mapboxMap.__testingMap.isUserAnimationInProgress())
+
+        mapboxMap.endAnimation()
+
+        XCTAssertTrue(mapboxMap.__testingMap.isUserAnimationInProgress())
+
+        mapboxMap.endAnimation()
+
+        XCTAssertFalse(mapboxMap.__testingMap.isUserAnimationInProgress())
+    }
+
+    func testBeginAndEndGesture() {
+        XCTAssertFalse(mapboxMap.__testingMap.isGestureInProgress())
+
+        mapboxMap.beginGesture()
+
+        XCTAssertTrue(mapboxMap.__testingMap.isGestureInProgress())
+
+        mapboxMap.beginGesture()
+
+        XCTAssertTrue(mapboxMap.__testingMap.isGestureInProgress())
+
+        mapboxMap.endGesture()
+
+        XCTAssertTrue(mapboxMap.__testingMap.isGestureInProgress())
+
+        mapboxMap.beginGesture()
+
+        XCTAssertTrue(mapboxMap.__testingMap.isGestureInProgress())
+
+        mapboxMap.endGesture()
+
+        XCTAssertTrue(mapboxMap.__testingMap.isGestureInProgress())
+
+        mapboxMap.endGesture()
+
+        XCTAssertFalse(mapboxMap.__testingMap.isGestureInProgress())
     }
 }

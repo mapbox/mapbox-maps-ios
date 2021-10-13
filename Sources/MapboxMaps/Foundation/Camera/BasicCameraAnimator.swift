@@ -154,8 +154,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
             fatalError("Attempt to stop an animation that has not started.")
         case .running, .paused:
             propertyAnimator.stopAnimation(false)
-            // this invokes the completion block which clears
-            // storedAnimator and calls mapboxMap.endAnimation() if needed
+            // this invokes the completion block which updates internalState
             propertyAnimator.finishAnimation(at: .current)
         case .final:
             // Already stopped, so do nothing
@@ -195,7 +194,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         case .initial, .paused, .final:
             return
         case let .running(transition):
-            // The animator has been started, so get the interpolated value. This may be nil if
+            // The animator is running, so get the interpolated value. This may be nil if
             // the animations haven't yet propagated into the CameraView's presentation tree.
             if let presentationCameraOptions = cameraView.presentationCameraOptions {
                 mapboxMap.setCamera(

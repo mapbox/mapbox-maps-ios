@@ -80,11 +80,7 @@ internal class MapboxCompassOrnamentView: UIButton {
         case .hidden:
             animate(toHidden: true)
         case .adaptive:
-            if abs(currentBearing) == 0 && isHidden {
-                animate(toHidden: true)
-            } else if abs(currentBearing) > 0 {
-                animate(toHidden: false)
-            }
+            animate(toHidden: abs(currentBearing) < 0.001)
         }
     }
 

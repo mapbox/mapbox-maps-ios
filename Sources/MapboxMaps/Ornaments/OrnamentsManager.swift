@@ -137,6 +137,7 @@ public class OrnamentsManager: NSObject {
 
         logoView.isHidden = options.logo.visibility == .hidden
         scalebarView.isHidden = options.scaleBar.visibility == .hidden
+        compassView.visibility = options.compass.visibility
         compassView.isHidden = options.compass.visibility == .hidden
         attributionButton.isHidden = options.attributionButton.visibility == .hidden
     }

@@ -7,6 +7,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Make `PointAnnotation.Image`'s fields public. ([#753](https://github.com/mapbox/mapbox-maps-ios/pull/753))
 * Passing an unsupported locale into `Style.localizeLabels(into:forLayerIds:)` throws an error instead of crashing. ([#752](https://github.com/mapbox/mapbox-maps-ios/pull/752))
 * Set `MapboxMap` flags during gestures and animations. ([#754](https://github.com/mapbox/mapbox-maps-ios/pull/754))
+* Fix telemetry opt-out through attribution dialog. ([#758](https://github.com/mapbox/mapbox-maps-ios/pull/758))
 
 ## 10.0.0 - October 6, 2021
 

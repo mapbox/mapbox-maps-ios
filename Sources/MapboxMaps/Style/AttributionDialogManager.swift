@@ -21,10 +21,10 @@ internal class AttributionDialogManager {
 
     internal var isMetricsEnabled: Bool {
         get {
-            UserDefaults.standard.bool(forKey: Ornaments.metricsEnabledKey)
+            UserDefaults.standard.MGLMapboxMetricsEnabled
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: Ornaments.metricsEnabledKey)
+            UserDefaults.standard.MGLMapboxMetricsEnabled = newValue
         }
     }
 

@@ -36,7 +36,7 @@ class InfoButtonOrnamentTests: XCTestCase {
         infoButton.delegate = attributionDialogManager
 
         parentViewController.view.addSubview(infoButton)
-        UserDefaults.standard.set(true, forKey: Ornaments.metricsEnabledKey)
+        UserDefaults.standard.MGLMapboxMetricsEnabled = true
         infoButton.infoTapped()
 
         var infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
@@ -70,7 +70,7 @@ class InfoButtonOrnamentTests: XCTestCase {
     }
 
     func testTelemetryOptIn() throws {
-        UserDefaults.standard.set(false, forKey: Ornaments.metricsEnabledKey)
+        UserDefaults.standard.MGLMapboxMetricsEnabled = false
         let infoButton = InfoButtonOrnament()
         infoButton.delegate = attributionDialogManager
 

@@ -110,7 +110,7 @@ final class OrnamentManagerTests: XCTestCase {
         mapboxMap.cameraState.bearing = 0
         onEveryCameraChangeHandler(Event(type: "", data: ""))
 
-        XCTAssertTrue(compass.containerView.isHidden)
+        XCTAssertTrue(!compass.containerView.isHidden)
         XCTAssertEqual(mapboxMap.cameraState.bearing, compass.currentBearing)
     }
 }

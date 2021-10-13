@@ -1,3 +1,4 @@
+import MapboxCoreMaps
 @testable import MapboxMaps
 
 final class MockDelegatingMapClientDelegate: DelegatingMapClientDelegate {
@@ -6,8 +7,8 @@ final class MockDelegatingMapClientDelegate: DelegatingMapClientDelegate {
         scheduleRepaintStub.call()
     }
 
-    let scheduleTaskStub = Stub<Task, Void>()
-    func scheduleTask(forTask task: @escaping Task) {
+    let scheduleTaskStub = Stub<MapboxCoreMaps.Task, Void>()
+    func scheduleTask(forTask task: @escaping MapboxCoreMaps.Task) {
         scheduleTaskStub.call(with: task)
     }
 

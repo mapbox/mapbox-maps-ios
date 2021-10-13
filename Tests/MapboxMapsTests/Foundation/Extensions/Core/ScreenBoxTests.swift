@@ -1,4 +1,5 @@
 import XCTest
+import MapboxCoreMaps
 @testable import MapboxMaps
 
 final class ScreenBoxTests: XCTestCase {

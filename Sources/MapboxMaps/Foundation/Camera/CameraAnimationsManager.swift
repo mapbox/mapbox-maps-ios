@@ -316,7 +316,7 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
     }
 }
 
-internal extension CameraAnimationsManager: CameraAnimatorDelegate {
+extension CameraAnimationsManager: CameraAnimatorDelegate {
     /// When an animator starts running, `CameraAnimationsManager` takes a strong reference to it
     /// so that it stays alive while it is running. It also calls `beginAnimation` on `MapboxMap`.
     ///

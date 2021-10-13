@@ -47,5 +47,3 @@
 @_exported import protocol MapboxCoreMaps.OfflineRegionObserver
 
 @_exported import typealias MapboxCoreMaps.StylePackLoadProgressCallback
-
-@_exported import UIKit

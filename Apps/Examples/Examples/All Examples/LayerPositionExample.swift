@@ -1,5 +1,6 @@
 import UIKit
 import MapboxMaps
+import CoreLocation
 
 @objc(LayerPositionExample)
 

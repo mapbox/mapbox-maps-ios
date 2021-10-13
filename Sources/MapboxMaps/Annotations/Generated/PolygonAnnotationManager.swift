@@ -1,5 +1,5 @@
 // This file is generated.
-import Foundation
+import UIKit
 @_implementationOnly import MapboxCommon_Private
 
 /// An instance of `PolygonAnnotationManager` is responsible for a collection of `PolygonAnnotation`s.

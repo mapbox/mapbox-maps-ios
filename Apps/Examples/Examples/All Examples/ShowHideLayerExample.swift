@@ -1,3 +1,4 @@
+import UIKit
 import MapboxMaps
 
 @objc(ShowHideLayerExample)

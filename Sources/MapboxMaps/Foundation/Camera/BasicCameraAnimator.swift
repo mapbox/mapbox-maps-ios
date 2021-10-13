@@ -21,13 +21,12 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
     private let mapboxMap: MapboxMapProtocol
 
+    private weak var delegate: CameraAnimatorDelegate?
+
     /// Represents the animation that this animator is attempting to execute
     private var animation: ((inout CameraTransition) -> Void)?
 
     private var completions = [AnimationCompletion]()
-
-    // Keep the animator alive.
-    private var storedAnimator: BasicCameraAnimator?
 
     /// Defines the transition that will occur to the `CameraOptions` of the renderer due to this animator
     public var transition: CameraTransition? {
@@ -49,12 +48,18 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         didSet {
             switch (oldValue, internalState) {
             case (.initial, .running), (.paused, .running):
-                storedAnimator = self
-                mapboxMap.beginAnimation()
+                delegate?.cameraAnimatorDidStartRunning(self)
             case (.running, .paused), (.running, .final):
-                storedAnimator = nil
-                mapboxMap.endAnimation()
+                delegate?.cameraAnimatorDidStopRunning(self)
             default:
+                // this matches cases where…
+                // * oldValue and internalState are the same
+                // * initial transitions to paused
+                // * paused transitions to final
+                // * the transition is invalid…
+                //     * initial --> final
+                //     * running/paused/final --> initial
+                //     * final --> running/paused
                 break
             }
         }
@@ -85,11 +90,13 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     internal init(propertyAnimator: UIViewPropertyAnimator,
                   owner: AnimationOwner,
                   mapboxMap: MapboxMapProtocol,
-                  cameraView: CameraView) {
+                  cameraView: CameraView,
+                  delegate: CameraAnimatorDelegate) {
         self.propertyAnimator = propertyAnimator
         self.owner = owner
         self.mapboxMap = mapboxMap
         self.cameraView = cameraView
+        self.delegate = delegate
     }
 
     deinit {
@@ -115,12 +122,11 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         }
     }
 
-    /// Starts the animation after a delay
+    /// Starts the animation after a delay. Once this method is called, there's no way to cancel the animation until it starts.
     /// - Parameter delay: Delay (in seconds) after which the animation should start
     public func startAnimation(afterDelay delay: TimeInterval) {
-        storedAnimator = self
-        delayedAnimationTimer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [unowned self] (_) in
-            startAnimation()
+        delayedAnimationTimer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { _ in
+            self.startAnimation()
         }
     }
 

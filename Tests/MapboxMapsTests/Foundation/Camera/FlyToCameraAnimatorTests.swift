@@ -30,12 +30,15 @@ final class FlyToCameraAnimatorTests: XCTestCase {
     let duration: TimeInterval = 10
     var mapboxMap: MockMapboxMap!
     var dateProvider: MockDateProvider!
+    // swiftlint:disable:next weak_delegate
+    var delegate: MockCameraAnimatorDelegate!
     var flyToCameraAnimator: FlyToCameraAnimator!
 
     override func setUp() {
         super.setUp()
         mapboxMap = MockMapboxMap()
         dateProvider = MockDateProvider()
+        delegate = MockCameraAnimatorDelegate()
         flyToCameraAnimator = FlyToCameraAnimator(
             initial: initialCameraState,
             final: finalCameraOptions,
@@ -44,11 +47,13 @@ final class FlyToCameraAnimatorTests: XCTestCase {
             duration: duration,
             mapSize: CGSize(width: 500, height: 500),
             mapboxMap: mapboxMap,
-            dateProvider: dateProvider)
+            dateProvider: dateProvider,
+            delegate: delegate)
     }
 
     override func tearDown() {
         flyToCameraAnimator = nil
+        delegate = nil
         dateProvider = nil
         mapboxMap = nil
         super.tearDown()
@@ -70,7 +75,8 @@ final class FlyToCameraAnimatorTests: XCTestCase {
                 duration: -1,
                 mapSize: CGSize(width: 500, height: 500),
                 mapboxMap: mapboxMap,
-                dateProvider: dateProvider)
+                dateProvider: dateProvider,
+                delegate: delegate)
         )
     }
 
@@ -83,15 +89,17 @@ final class FlyToCameraAnimatorTests: XCTestCase {
             duration: nil,
             mapSize: CGSize(width: 500, height: 500),
             mapboxMap: mapboxMap,
-            dateProvider: dateProvider)
+            dateProvider: dateProvider,
+            delegate: delegate)
         XCTAssertNotNil(animator?.duration)
     }
 
-    func testStartAnimationChangesStateToActiveAndSetsMapboxMapFlags() {
+    func testStartAnimationChangesStateToActiveAndInformsDelegate() {
         flyToCameraAnimator.startAnimation()
 
         XCTAssertEqual(flyToCameraAnimator.state, .active)
-        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 1)
+        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 1)
+        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.parameters.first === flyToCameraAnimator)
     }
 
     func testAnimationCompletion() {
@@ -106,7 +114,8 @@ final class FlyToCameraAnimatorTests: XCTestCase {
 
         XCTAssertEqual(flyToCameraAnimator.state, .inactive)
         XCTAssertEqual(animatingPositions, [.end])
-        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 1)
+        XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
+        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === flyToCameraAnimator)
     }
 
     func testStopAnimation() {
@@ -120,7 +129,8 @@ final class FlyToCameraAnimatorTests: XCTestCase {
 
         XCTAssertEqual(animatingPositions, [.current])
         XCTAssertEqual(flyToCameraAnimator.state, .inactive)
-        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 1)
+        XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
+        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === flyToCameraAnimator)
     }
 
     func testUpdateDoesNotSetCameraIfAnimationIsNotRunning() {

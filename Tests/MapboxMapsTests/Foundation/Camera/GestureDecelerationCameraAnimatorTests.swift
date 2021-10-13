@@ -8,9 +8,10 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
     var decelerationFactor: CGFloat!
     var locationChangeHandler: Stub<CGPoint, Void>!
     var dateProvider: MockDateProvider!
-    var mapboxMap: MockMapboxMap!
-    var completion: Stub<Void, Void>!
+    // swiftlint:disable:next weak_delegate
+    var delegate: MockCameraAnimatorDelegate!
     var animator: GestureDecelerationCameraAnimator!
+    var completion: Stub<Void, Void>!
 
     override func setUp() {
         super.setUp()
@@ -19,22 +20,22 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         decelerationFactor = 0.7
         locationChangeHandler = Stub()
         dateProvider = MockDateProvider()
-        mapboxMap = MockMapboxMap()
-        completion = Stub()
+        delegate = MockCameraAnimatorDelegate()
         animator = GestureDecelerationCameraAnimator(
             location: location,
             velocity: velocity,
             decelerationFactor: decelerationFactor,
             locationChangeHandler: locationChangeHandler.call(with:),
             dateProvider: dateProvider,
-            mapboxMap: mapboxMap)
+            delegate: delegate)
+        completion = Stub()
         animator.completion = completion.call
     }
 
     override func tearDown() {
-        animator = nil
         completion = nil
-        mapboxMap = nil
+        animator = nil
+        delegate = nil
         dateProvider = nil
         locationChangeHandler = nil
         decelerationFactor = nil
@@ -51,7 +52,8 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         animator.startAnimation()
 
         XCTAssertEqual(animator.state, .active)
-        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 1)
+        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 1)
+        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.parameters.first === animator)
     }
 
     func testStopAnimation() {
@@ -61,7 +63,8 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
 
         XCTAssertEqual(animator.state, .inactive)
         XCTAssertEqual(completion.invocations.count, 1)
-        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 1)
+        XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
+        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === animator)
     }
 
     func testUpdate() {
@@ -99,6 +102,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         // to be sufficiently low (< 1 in both x and y) to end the animation.
         XCTAssertEqual(animator.state, .inactive)
         XCTAssertEqual(completion.invocations.count, 1)
-        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 1)
+        XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
+        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === animator)
     }
 }

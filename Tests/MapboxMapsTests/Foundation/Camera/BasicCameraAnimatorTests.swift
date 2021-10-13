@@ -28,6 +28,8 @@ final class BasicCameraAnimatorTests: XCTestCase {
     var propertyAnimator: MockPropertyAnimator!
     var cameraView: CameraViewMock!
     var mapboxMap: MockMapboxMap!
+    // swiftlint:disable:next weak_delegate
+    var delegate: MockCameraAnimatorDelegate!
     var animator: BasicCameraAnimator!
 
     override func setUp() {
@@ -35,15 +37,18 @@ final class BasicCameraAnimatorTests: XCTestCase {
         propertyAnimator = MockPropertyAnimator()
         cameraView = CameraViewMock()
         mapboxMap = MockMapboxMap()
+        delegate = MockCameraAnimatorDelegate()
         animator = BasicCameraAnimator(
             propertyAnimator: propertyAnimator,
             owner: .unspecified,
             mapboxMap: mapboxMap,
-            cameraView: cameraView)
+            cameraView: cameraView,
+            delegate: delegate)
     }
 
     override func tearDown() {
         animator = nil
+        delegate = nil
         mapboxMap = nil
         cameraView = nil
         propertyAnimator = nil
@@ -79,74 +84,86 @@ final class BasicCameraAnimatorTests: XCTestCase {
         XCTAssertEqual(propertyAnimator.addCompletionStub.invocations.count, 1)
         XCTAssertNotNil(animator?.transition)
         XCTAssertEqual(animator?.transition?.toCameraOptions.zoom, 10)
-        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 1)
+        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 1)
+        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.parameters.first === animator)
 
         animator.stopAnimation()
         XCTAssertEqual(propertyAnimator.stopAnimationStub.invocations.count, 1)
         XCTAssertEqual(propertyAnimator.finishAnimationStub.invocations.count, 1)
         XCTAssertEqual(propertyAnimator.finishAnimationStub.invocations.first?.parameters, .current)
-        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 1)
+        XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
+        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === animator)
     }
 
-    func testMapboxMapFlagsWhenPausingAndStarting() {
+    func testInformsDelegateWhenPausingAndStarting() {
         animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.pauseAnimation()
-        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 0)
+        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 0)
 
         animator.startAnimation()
-        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 1)
+        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 1)
+        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.parameters.first === animator)
     }
 
-    func testMapboxMapFlagsWhenStartingPausingAndStarting() {
+    func testInformsDelegateWhenStartingPausingAndStarting() {
         animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.startAnimation()
-        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 1)
+        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 1)
+        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.parameters.first === animator)
 
         animator.pauseAnimation()
-        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 1)
+        XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
+        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === animator)
 
         animator.startAnimation()
-        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 2)
+        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 2)
+        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.parameters.last === animator)
     }
 
-    func testMapboxMapFlagsWhenPausingAndContinuing() {
+    func testInformsDelegateWhenPausingAndContinuing() {
         animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.pauseAnimation()
-        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 0)
+        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 0)
 
         animator.continueAnimation(withTimingParameters: nil, durationFactor: 1)
-        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 1)
+        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 1)
+        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.parameters.first === animator)
     }
 
-    func testMapboxMapFlagsWhenStartingPausingAndContinuing() {
+    func testInformsDelegateWhenStartingPausingAndContinuing() {
         animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.startAnimation()
-        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 1)
+        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 1)
+        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.parameters.first === animator)
 
         animator.pauseAnimation()
-        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 1)
+        XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
+        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === animator)
 
         animator.continueAnimation(withTimingParameters: nil, durationFactor: 1)
-        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 2)
+        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 2)
+        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.parameters.last === animator)
     }
 
-    func testMapboxMapFlagsWhenPausingAndStopping() {
+    func testInformsDelegateWhenPausingAndStopping() {
         animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.pauseAnimation()
-        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 0)
+        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 0)
+        XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 0)
 
         animator.stopAnimation()
-        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 0)
+        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 0)
+        XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 0)
     }
 
     func testAnimatorCompletionUpdatesCameraIfAnimationCompletedAtEnd() throws {
@@ -185,7 +202,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
         XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 0)
     }
 
-    func testAnimatorCompletionSetsMapboxMapFlags() throws {
+    func testAnimatorCompletionInformsDelegate() throws {
         animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
@@ -194,6 +211,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
 
         completion(.current)
 
-        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 1)
+        XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
+        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === animator)
     }
 }

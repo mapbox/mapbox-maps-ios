@@ -1,4 +1,6 @@
 @_implementationOnly import MapboxCommon_Private
+import UIKit
+import MetalKit
 
 @available(iOSApplicationExtension, unavailable)
 extension MapView {

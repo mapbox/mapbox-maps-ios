@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 internal extension EdgeInsets {
     func toUIEdgeInsetsValue() -> UIEdgeInsets {

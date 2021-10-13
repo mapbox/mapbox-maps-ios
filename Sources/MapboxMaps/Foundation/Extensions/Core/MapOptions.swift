@@ -1,3 +1,6 @@
+import UIKit
+import CoreGraphics
+
 extension MapboxCoreMaps.MapOptions {
     /// Initialize a `MapOptions` object that is used when initializing a Map.
     ///

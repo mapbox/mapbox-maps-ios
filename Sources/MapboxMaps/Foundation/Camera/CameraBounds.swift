@@ -1,5 +1,6 @@
 import Foundation
 import CoreLocation
+import CoreGraphics
 
 /// Holds information about camera bounds.
 public struct CameraBounds: Hashable {

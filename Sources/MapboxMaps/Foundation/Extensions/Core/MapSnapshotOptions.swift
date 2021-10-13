@@ -1,3 +1,5 @@
+import CoreGraphics
+
 /// Set of options for taking map snapshot with Snapshotter.
 public struct MapSnapshotOptions {
     /// Dimensions of the snapshot in points.

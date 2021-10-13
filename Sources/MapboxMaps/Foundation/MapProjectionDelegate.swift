@@ -1,3 +1,4 @@
+import CoreGraphics
 import CoreLocation
 
 public final class Projection {

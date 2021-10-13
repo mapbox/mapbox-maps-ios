@@ -1,3 +1,5 @@
+import CoreGraphics
+
 internal struct AttributionMeasure {
 
     private init() {}

@@ -48,6 +48,4 @@
 
 @_exported import typealias MapboxCoreMaps.StylePackLoadProgressCallback
 
-@_exported import MetalKit
-@_exported import CoreGraphics
 @_exported import UIKit

@@ -1,3 +1,5 @@
+import UIKit
+
 internal protocol LocationStyleProtocol: AnyObject {
     func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition?) throws
     func removeLayer(withId id: String) throws

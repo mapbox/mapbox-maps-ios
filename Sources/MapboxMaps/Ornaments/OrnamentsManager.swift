@@ -16,6 +16,7 @@ public enum OrnamentVisibility: String, Equatable {
 
 internal struct Ornaments {
     static let localizableTableName = "OrnamentsLocalizable"
+    static let metricsEnabledKey = "MGLMapboxMetricsEnabled"
     static let telemetryURL = "https://www.mapbox.com/telemetry/"
 }
 

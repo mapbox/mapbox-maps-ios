@@ -1,4 +1,3 @@
-@_exported import MapboxCommon
 @_implementationOnly import MapboxCommon_Private
 
 extension HttpRequestError: LocalizedError {

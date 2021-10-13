@@ -1,4 +1,5 @@
 import UIKit
+import CoreLocation
 
 /// `PinchGestureHandler` updates the map camera in response to a 2-touch
 /// gesture that may consist of translation, scaling, and rotation

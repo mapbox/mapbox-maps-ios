@@ -1,3 +1,4 @@
+// MARK: - MapboxCoreMaps exports
 @_exported import class MapboxCoreMaps.CameraBounds
 @_exported import class MapboxCoreMaps.CameraBoundsOptions
 @_exported import class MapboxCoreMaps.CameraOptions
@@ -47,3 +48,7 @@
 @_exported import protocol MapboxCoreMaps.OfflineRegionObserver
 
 @_exported import typealias MapboxCoreMaps.StylePackLoadProgressCallback
+
+// MARK: - Whole library exports
+@_exported import MapboxCommon
+@_exported import Turf

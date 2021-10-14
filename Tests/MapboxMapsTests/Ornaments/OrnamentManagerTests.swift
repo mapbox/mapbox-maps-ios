@@ -113,4 +113,11 @@ final class OrnamentManagerTests: XCTestCase {
         XCTAssertTrue(compass.containerView.isHidden)
         XCTAssertEqual(mapboxMap.cameraState.bearing, compass.currentBearing)
     }
+
+    func testCompassVisibility() throws {
+        let compass = try XCTUnwrap(view.subviews.compactMap { $0 as? MapboxCompassOrnamentView }.first)
+        options.compass.visibility = .visible
+        ornamentsManager.options = options
+        XCTAssertEqual(options.compass.visibility, compass.visibility)
+    }
 }

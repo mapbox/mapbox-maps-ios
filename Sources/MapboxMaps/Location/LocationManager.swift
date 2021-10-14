@@ -28,6 +28,12 @@ public class LocationManager: NSObject {
         return hashTable
     }()
 
+    internal var locationUserCount: Int = 1 {
+        didSet {
+            syncUserLocationUpdating()
+        }
+    }
+
     /// Style that has limited functionality to support location.
     internal weak var style: LocationStyleProtocol?
 
@@ -84,11 +90,13 @@ public class LocationManager: NSObject {
     /// The location manager holds weak references to consumers, client code should retain these references.
     public func addLocationConsumer(newConsumer consumer: LocationConsumer) {
         consumers.add(consumer)
+        locationUserCount += 1
     }
 
     /// Removes a location consumer from the location manager.
     public func removeLocationConsumer(consumer: LocationConsumer) {
         consumers.remove(consumer)
+        locationUserCount += 1
     }
 
     /// Allows a custom case to request full accuracy
@@ -183,7 +191,15 @@ extension LocationManager: LocationProviderDelegate {
 // MARK: Private helper functions that only the Location Manager needs access to
 private extension LocationManager {
     func syncUserLocationUpdating() {
-        if let puckType = options.puckType {
+        if locationUserCount > 0 {
+            // Remove puck from view
+            if options.puckType == nil {
+                if let locationPuckManager = locationPuckManager {
+                    consumers.remove(locationPuckManager)
+                    self.locationPuckManager = nil
+                }
+            }
+
             /// Get permissions if needed
             if locationProvider.authorizationStatus == .notDetermined {
                 requestLocationPermissions()
@@ -196,20 +212,17 @@ private extension LocationManager {
                 // This serves as a reset and handles the case if permissions were changed for accuracy 
                 locationPuckManager.changePuckStyle(to: currentPuckStyle)
             } else {
-                let locationPuckManager = LocationPuckManager(style: style,
-                                                              puckType: puckType,
-                                                              puckBearingSource: options.puckBearingSource)
-                consumers.add(locationPuckManager)
-                self.locationPuckManager = locationPuckManager
+                if let puckType = options.puckType {
+                    let locationPuckManager = LocationPuckManager(style: style,
+                                                                  puckType: puckType,
+                                                                  puckBearingSource: options.puckBearingSource)
+                    consumers.add(locationPuckManager)
+                    self.locationPuckManager = locationPuckManager
+                }
             }
         } else {
             locationProvider.stopUpdatingLocation()
             locationProvider.stopUpdatingHeading()
-
-            if let locationPuckManager = locationPuckManager {
-                consumers.remove(locationPuckManager)
-                self.locationPuckManager = nil
-            }
         }
     }
 

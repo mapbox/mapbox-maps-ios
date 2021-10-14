@@ -11,7 +11,6 @@ class InfoButtonOrnamentTests: XCTestCase {
         super.setUp()
         parentViewController = MockParentViewController()
         attributionDialogManager = AttributionDialogManager(dataSource: self, delegate: self)
-        UserDefaults.mme_configuration().set(true, forKey: "MMECollectionEnabledInSimulator")
     }
 
     func testInfoButtonTapped() throws {
@@ -37,7 +36,7 @@ class InfoButtonOrnamentTests: XCTestCase {
         infoButton.delegate = attributionDialogManager
 
         parentViewController.view.addSubview(infoButton)
-        UserDefaults.mme_configuration().mme_isCollectionEnabled = true
+        UserDefaults.standard.MGLMapboxMetricsEnabled = true
         infoButton.infoTapped()
 
         var infoAlert = try XCTUnwrap(parentViewController.currentAlert, "The info alert controller could not be found.")
@@ -71,7 +70,7 @@ class InfoButtonOrnamentTests: XCTestCase {
     }
 
     func testTelemetryOptIn() throws {
-        UserDefaults.mme_configuration().mme_isCollectionEnabled = false
+        UserDefaults.standard.MGLMapboxMetricsEnabled = false
         let infoButton = InfoButtonOrnament()
         infoButton.delegate = attributionDialogManager
 

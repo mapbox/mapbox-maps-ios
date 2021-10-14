@@ -6,6 +6,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Passing an unsupported locale into `Style.localizeLabels(into:forLayerIds:)` throws an error instead of crashing. ([#752](https://github.com/mapbox/mapbox-maps-ios/pull/752))
 * Fix telemetry opt-out through attribution dialog. ([#758](https://github.com/mapbox/mapbox-maps-ios/pull/758))
+* Allow compass visibility to accurately reflect set value. ([#757](https://github.com/mapbox/mapbox-maps-ios/pull/757))
 
 ## 10.0.0 - October 6, 2021
 
@@ -57,7 +58,6 @@ Mapbox welcomes participation and contributions from everyone.
 * Adds `TileStoreObserver` protocol. ([#737](https://github.com/mapbox/mapbox-maps-ios/pull/737))
 
 ### Bug fixes 🐞
-
 * Fix rendering artifacts for a model layer when `model-opacity` property is used. ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
 * Improve rendering performance by avoiding unnecessary re-layout for cached tiles. ([#732](https://github.com/mapbox/mapbox-maps-ios/pull/732))
 * Fix telemetry opt-out through attribution dialog. ([#743](https://github.com/mapbox/mapbox-maps-ios/pull/743))

@@ -1,4 +1,5 @@
 import XCTest
+import CoreLocation
 @testable import MapboxMaps
 
 // swiftlint:disable force_cast type_body_length file_length

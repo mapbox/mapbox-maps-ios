@@ -1,4 +1,5 @@
 import XCTest
+import CoreLocation
 @testable import MapboxMaps
 
 final class CameraViewTests: XCTestCase {

@@ -1,5 +1,6 @@
 import Foundation
 import XCTest
+import MetalKit
 @testable @_spi(Experimental) import MapboxMaps
 
 final class MapViewRenderedSnapshotIntegrationTests: MapViewIntegrationTestCase {

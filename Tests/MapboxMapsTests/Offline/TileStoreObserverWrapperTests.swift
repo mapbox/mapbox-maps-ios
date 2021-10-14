@@ -1,4 +1,5 @@
 import XCTest
+import CoreLocation
 import MapboxCommon_Private
 @testable import MapboxMaps
 

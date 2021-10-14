@@ -1,4 +1,6 @@
 import Foundation
+import CoreGraphics
+import MetalKit
 @testable import MapboxMaps
 
 final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {

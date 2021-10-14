@@ -1,4 +1,5 @@
 import XCTest
+import CoreLocation
 @testable import MapboxMaps
 
 class CameraTransitionTests: XCTestCase {

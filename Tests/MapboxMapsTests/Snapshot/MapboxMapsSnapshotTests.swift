@@ -2,6 +2,7 @@ import XCTest
 import MapboxMaps
 import Foundation
 import UIKit
+import CoreLocation
 
 //swiftlint:disable explicit_top_level_acl explicit_acl
 

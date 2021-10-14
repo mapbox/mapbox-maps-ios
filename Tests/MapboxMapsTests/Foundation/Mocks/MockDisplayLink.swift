@@ -1,4 +1,5 @@
 import Foundation
+import QuartzCore
 @testable import MapboxMaps
 
 final class MockDisplayLink: DisplayLinkProtocol {

@@ -1,3 +1,4 @@
+import Foundation
 @testable import MapboxMaps
 
 final class MockDateProvider: DateProvider {

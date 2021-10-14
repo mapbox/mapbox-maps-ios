@@ -1,4 +1,5 @@
 import XCTest
+import CoreGraphics
 @testable import MapboxMaps
 
 final class PanGestureHandlerTests: XCTestCase {

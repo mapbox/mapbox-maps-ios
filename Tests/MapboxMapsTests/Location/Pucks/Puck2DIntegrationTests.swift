@@ -1,4 +1,5 @@
 import XCTest
+import CoreLocation
 @_spi(Experimental) @testable import MapboxMaps
 
 class Puck2DIntegrationTests: MapViewIntegrationTestCase {

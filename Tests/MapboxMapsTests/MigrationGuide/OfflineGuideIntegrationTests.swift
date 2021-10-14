@@ -1,4 +1,5 @@
 import Foundation
+import CoreLocation
 @testable import MapboxMaps
 import XCTest
 

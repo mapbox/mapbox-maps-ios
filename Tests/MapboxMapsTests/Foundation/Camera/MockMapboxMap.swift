@@ -1,3 +1,5 @@
+import CoreGraphics
+import CoreLocation
 @testable import MapboxMaps
 
 final class MockMapboxMap: MapboxMapProtocol {

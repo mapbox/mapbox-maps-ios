@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 @testable import MapboxMaps
 
 final class MockCameraAnimator: NSObject, CameraAnimatorInterface {

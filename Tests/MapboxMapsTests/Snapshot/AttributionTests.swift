@@ -2,6 +2,7 @@ import XCTest
 @testable import MapboxMaps
 import Foundation
 import UIKit
+import CoreLocation
 
 class AttributionTests: XCTestCase {
 

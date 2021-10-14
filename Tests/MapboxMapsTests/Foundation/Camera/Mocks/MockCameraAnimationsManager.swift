@@ -1,4 +1,6 @@
 import Foundation
+import CoreGraphics
+import UIKit
 @testable import MapboxMaps
 
 final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {

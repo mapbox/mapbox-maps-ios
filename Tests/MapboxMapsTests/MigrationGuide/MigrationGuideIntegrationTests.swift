@@ -1,4 +1,5 @@
 import XCTest
+import CoreLocation
 @testable import MapboxMaps
 
 // swiftlint:disable file_length orphaned_doc_comment type_body_length

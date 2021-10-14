@@ -1,5 +1,7 @@
 import XCTest
+import CoreLocation
 @testable import MapboxMaps
+@testable import MapboxCommon
 
 final class TileRegionLoadOptions_MapboxMapsTests: XCTestCase {
 

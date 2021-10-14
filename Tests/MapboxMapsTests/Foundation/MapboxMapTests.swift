@@ -1,4 +1,6 @@
 import XCTest
+import CoreLocation
+import MetalKit
 @testable import MapboxMaps
 
 final class MapboxMapTests: XCTestCase {

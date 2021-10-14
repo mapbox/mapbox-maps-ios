@@ -1,5 +1,7 @@
 import XCTest
+import CoreLocation
 @testable import MapboxMaps
+@testable import MapboxCommon
 
 @available(*, deprecated)
 final class OfflineRegionGeometryDefinitionTests: XCTestCase {

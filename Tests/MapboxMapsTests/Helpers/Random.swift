@@ -1,4 +1,7 @@
 import Foundation
+import CoreGraphics
+import CoreLocation
+import UIKit
 @testable import MapboxMaps
 
 extension Character {

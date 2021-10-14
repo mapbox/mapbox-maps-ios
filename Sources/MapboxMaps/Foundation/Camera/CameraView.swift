@@ -1,4 +1,5 @@
 import UIKit
+import CoreLocation
 
 /// A view that represents a camera view port.
 internal class CameraView: UIView {

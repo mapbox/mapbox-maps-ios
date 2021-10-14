@@ -1,3 +1,5 @@
+import Foundation
+
 public protocol StyleEncodable {
     func jsonObject() throws -> [String: Any]
 }

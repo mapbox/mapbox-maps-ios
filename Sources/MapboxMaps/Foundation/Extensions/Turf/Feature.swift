@@ -1,3 +1,5 @@
+import Foundation
+
 public typealias Feature = Turf.Feature
 
 extension Feature {

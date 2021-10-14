@@ -1,3 +1,5 @@
+import MapboxCommon
+
 public typealias Geometry = Turf.Geometry
 
 extension Geometry {

@@ -1,6 +1,7 @@
 // swiftlint:disable identifier_name
 import CoreGraphics
 import UIKit
+import CoreLocation
 
 /// "fly-to" interpolator object that implements an “optimal path” animation
 internal struct FlyToInterpolator {

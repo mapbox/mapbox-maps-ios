@@ -49,6 +49,35 @@
 
 @_exported import typealias MapboxCoreMaps.StylePackLoadProgressCallback
 
+// MARK: - MapboxCommon exports
+@_exported import class MapboxCommon.Cancelable
+@_exported import class MapboxCommon.DownloadOptions
+@_exported import class MapboxCommon.Feature
+@_exported import class MapboxCommon.Geometry
+@_exported import class MapboxCommon.HttpRequest
+@_exported import class MapboxCommon.HttpRequestError
+@_exported import class MapboxCommon.HttpResponse
+@_exported import class MapboxCommon.HttpResponseData
+@_exported import class MapboxCommon.HttpServiceFactory
+@_exported import class MapboxCommon.OfflineSwitch
+@_exported import class MapboxCommon.TileRegion
+@_exported import class MapboxCommon.TileRegionError
+@_exported import class MapboxCommon.TileRegionLoadOptions
+@_exported import class MapboxCommon.TileRegionLoadProgress
+@_exported import class MapboxCommon.TilesetDescriptor
+@_exported import class MapboxCommon.TileStore
+@_exported import class MapboxCommon.TileStoreOptions
+@_exported import class MapboxCommon.ValueConverter
+
+@_exported import enum MapboxCommon.HttpMethod
+@_exported import enum MapboxCommon.NetworkRestriction
+
+@_exported import protocol MapboxCommon.HttpServiceInterceptorInterface
+@_exported import protocol MapboxCommon.HttpServiceInterface
+
+@_exported import typealias MapboxCommon.DownloadStatusCallback
+@_exported import typealias MapboxCommon.HttpResponseCallback
+@_exported import typealias MapboxCommon.ResultCallback
+
 // MARK: - Whole library exports
-@_exported import MapboxCommon
 @_exported import Turf

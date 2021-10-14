@@ -1,5 +1,6 @@
 // This file is generated.
 import Foundation
+import CoreLocation
 
 public struct PolylineAnnotation: Annotation {
 

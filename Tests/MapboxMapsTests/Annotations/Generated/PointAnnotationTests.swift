@@ -1,5 +1,6 @@
 // This file is generated
 import XCTest
+import CoreLocation
 @testable import MapboxMaps
 
 final class PointAnnotationTests: XCTestCase {

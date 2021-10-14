@@ -1,5 +1,6 @@
 // This file is generated
 import XCTest
+import CoreLocation
 @_spi(Experimental) @testable import MapboxMaps
 
 final class PolylineAnnotationIntegrationTests: MapViewIntegrationTestCase {

@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+* Fixes a bug where unsupported locale's were crashing. ([#752](https://github.com/mapbox/mapbox-maps-ios/pull/752))
+
 ## 10.0.0 - October 6, 2021
 
 ### Breaking changes ⚠️

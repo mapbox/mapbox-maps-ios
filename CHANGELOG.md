@@ -2,7 +2,7 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## main
+## 10.0.1 - October 15, 2021
 
 * Passing an unsupported locale into `Style.localizeLabels(into:forLayerIds:)` throws an error instead of crashing. ([#752](https://github.com/mapbox/mapbox-maps-ios/pull/752))
 * Fix telemetry opt-out through attribution dialog. ([#758](https://github.com/mapbox/mapbox-maps-ios/pull/758))

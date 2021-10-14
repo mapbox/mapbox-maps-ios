@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import CoreLocation
 import MapboxMaps
 
 @available(*, deprecated)

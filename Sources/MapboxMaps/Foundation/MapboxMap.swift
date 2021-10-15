@@ -837,6 +837,54 @@ extension MapboxMap {
     }
 }
 
+// MARK: - MapProjection
+
+extension MapboxMap {
+    /// Errors related to MapProjection API
+    @_spi(Experimental) public enum MapProjectionError: Error {
+        case unsupportedProjection
+        case unknownProjection
+    }
+
+    /// Set map projection for Mapbox map.
+    /// - Parameter mode: The `MapProjection` to be used by the map.
+    /// - Throws: Errors during encoding or `MapProjectionError.unsupportedProjection` if the supplied projection is not compatible with the SDK.
+    @_spi(Experimental) public func setProjection(mode: MapProjectionOption) throws {
+        switch mode {
+        case let mercator as MercatorMapProjection:
+            let data = try JSONEncoder().encode(mercator)
+            let object = try JSONSerialization.jsonObject(with: data, options: [])
+            __map.setMapProjectionForProjection(object)
+        case let globe as GlobeMapProjection:
+            let data = try JSONEncoder().encode(globe)
+            let object = try JSONSerialization.jsonObject(with: data, options: [])
+            __map.setMapProjectionForProjection(object)
+        default:
+            throw MapProjectionError.unsupportedProjection
+        }
+    }
+
+    /// Get current map projection for Mapbox map.
+    ///
+    /// Please note that even if MapboxMap is configured to use `GlobeMapProjection`
+    /// starting from `GlobeMapProjection.transitionZoomLevel` and above
+    /// this method will return `MercatorMapProjection`.
+    ///
+    /// - Returns:
+    ///     `MapProjection` map is using.
+    /// - Throws: Errors during decoding or `MapProjectionError.unknownProjection` if projection is not recognized by the SDK.
+    @_spi(Experimental) public func getMapProjection() throws -> MapProjectionOption {
+        let data = try JSONSerialization.data(withJSONObject: __map.getMapProjection(), options: [])
+        if let globe = try? JSONDecoder().decode(GlobeMapProjection.self, from: data) {
+            return globe
+        }
+        if let mercator = try? JSONDecoder().decode(MercatorMapProjection.self, from: data) {
+            return mercator
+        }
+        throw MapProjectionError.unknownProjection
+    }
+}
+
 // MARK: - Testing only!
 
 extension MapboxMap {

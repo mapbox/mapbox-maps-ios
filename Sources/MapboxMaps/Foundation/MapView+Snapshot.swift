@@ -1,3 +1,4 @@
+import MetalKit
 @_implementationOnly import MapboxCommon_Private
 
 @available(iOSApplicationExtension, unavailable)

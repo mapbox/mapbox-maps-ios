@@ -44,6 +44,10 @@ public struct Examples {
         [
             "title": "User Interaction",
             "examples": userInteractionExamples
+        ],
+        [
+            "title": "Experimental",
+            "examples": experimentalExamples
         ]
     ]
 
@@ -235,6 +239,13 @@ public struct Examples {
         Example(title: "Add an interactive clustered layer",
                 description: "Display an alert controller after selecting a feature.",
                 type: SymbolClusteringExample.self),
+    ]
+
+    // Examples that uses experimental APIs
+    public static let experimentalExamples = [
+        Example(title: "Globe View",
+                description: "Display map on a globe.",
+                type: GlobeViewExample.self),
     ]
 }
 

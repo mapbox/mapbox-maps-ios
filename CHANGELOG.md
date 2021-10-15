@@ -10,6 +10,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix telemetry opt-out through attribution dialog. ([#758](https://github.com/mapbox/mapbox-maps-ios/pull/758))
 * Allow compass visibility to accurately reflect set value. ([#757](https://github.com/mapbox/mapbox-maps-ios/pull/757))
 * Update MapboxMobileEvents to v1.0.6, fixing a null pointer crash. ([#762](https://github.com/mapbox/mapbox-maps-ios/pull/762))
+* Fixed a bug affecting the persistence of user settings when upgrading to v10. ([#762](https://github.com/mapbox/mapbox-maps-ios/pull/762))
 
 ## 10.0.0 - October 6, 2021
 

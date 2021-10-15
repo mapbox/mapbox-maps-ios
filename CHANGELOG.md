@@ -4,9 +4,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## 10.0.1 - October 15, 2021
 
-* Make `PointAnnotation.Image`'s fields public. ([#753](https://github.com/mapbox/mapbox-maps-ios/pull/753))
 * Passing an unsupported locale into `Style.localizeLabels(into:forLayerIds:)` throws an error instead of crashing. ([#752](https://github.com/mapbox/mapbox-maps-ios/pull/752))
-* Set `MapboxMap` flags during gestures and animations. ([#754](https://github.com/mapbox/mapbox-maps-ios/pull/754))
 * Fixed a bug affecting the persistence of user settings when upgrading to v10. ([#758](https://github.com/mapbox/mapbox-maps-ios/pull/758))
 * Allow compass visibility to accurately reflect set value. ([#757](https://github.com/mapbox/mapbox-maps-ios/pull/757))
 * Update MapboxMobileEvents to v1.0.6, fixing a null pointer crash. ([#762](https://github.com/mapbox/mapbox-maps-ios/pull/762))

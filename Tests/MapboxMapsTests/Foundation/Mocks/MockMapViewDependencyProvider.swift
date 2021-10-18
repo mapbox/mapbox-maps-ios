@@ -1,4 +1,5 @@
 import Foundation
+import MetalKit
 @testable import MapboxMaps
 
 final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {

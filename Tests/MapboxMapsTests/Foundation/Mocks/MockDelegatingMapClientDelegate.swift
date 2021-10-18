@@ -1,4 +1,5 @@
 @testable import MapboxMaps
+import MetalKit
 
 final class MockDelegatingMapClientDelegate: DelegatingMapClientDelegate {
     let scheduleRepaintStub = Stub<Void, Void>()

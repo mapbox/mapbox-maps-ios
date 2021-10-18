@@ -86,4 +86,15 @@ final class LocationManagerTests: XCTestCase {
         XCTAssertEqual(locationManager.options, locationOptions)
         XCTAssertEqual(locationManager.locationPuckManager?.puckBearingSource, .course)
     }
+
+    func testLocationIsUpdatingWhenPuckTypeIsNil() {
+        let locationManager = LocationManager(style: style)
+
+        XCTAssertNil(locationManager.options.puckType)
+
+        let locationConsumer = LocationConsumerMock()
+        locationManager.addLocationConsumer(newConsumer: locationConsumer)
+
+        // add condition that checks that location updates are still being sent
+    }
 }

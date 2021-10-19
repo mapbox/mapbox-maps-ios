@@ -849,7 +849,7 @@ extension MapboxMap {
     /// Set map projection for Mapbox map.
     /// - Parameter mode: The `MapProjection` to be used by the map.
     /// - Throws: Errors during encoding or `MapProjectionError.unsupportedProjection` if the supplied projection is not compatible with the SDK.
-    @_spi(Experimental) public func setProjection(mode: MapProjectionOption) throws {
+    @_spi(Experimental) public func setMapProjection(mode: MapProjectionOption) throws {
         switch mode {
         case let mercator as MercatorMapProjection:
             let data = try JSONEncoder().encode(mercator)

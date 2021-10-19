@@ -1,5 +1,3 @@
-import MetalKit
-
 internal protocol MapViewDependencyProviderProtocol: AnyObject {
     func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView
     func makeDisplayLink(window: UIWindow, target: Any, selector: Selector) -> DisplayLinkProtocol?

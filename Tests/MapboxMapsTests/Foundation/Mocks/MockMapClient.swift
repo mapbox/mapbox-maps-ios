@@ -1,4 +1,5 @@
 import MapboxCoreMaps
+@_implementationOnly import MapboxCoreMaps_Private
 
 final class MockMapClient: MapClient, MBMMetalViewProvider {
     func scheduleRepaint() {

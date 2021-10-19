@@ -24,7 +24,6 @@ extension MapView {
     /// Synchronously captures the last rendered map view (if available) and constructs a `UIImage` if successful.
     /// - NOTE: This API must be called on main thread
     @_spi(Experimental) public func snapshot() throws -> UIImage {
-
         guard let metalView = subviews.first(where: { $0 is MTKView }) as? MTKView else {
             Log.error(forMessage: "No metal view present.", category: "MapView.snapshot")
             throw SnapshotError.noMetalView

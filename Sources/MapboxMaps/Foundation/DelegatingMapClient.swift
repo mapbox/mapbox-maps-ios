@@ -1,4 +1,5 @@
 import MapboxCoreMaps
+@_implementationOnly import MapboxCoreMaps_Private
 
 internal protocol DelegatingMapClientDelegate: AnyObject {
     func scheduleRepaint()

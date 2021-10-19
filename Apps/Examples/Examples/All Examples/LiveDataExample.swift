@@ -12,15 +12,15 @@ final class LiveDataExample: UIViewController, ExampleProtocol {
         let longitude: Double
         let latitude: Double
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         // Set up map and camera
         let centerCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
         let camera = CameraOptions(center: centerCoordinate, zoom: 1)
         let mapInitOptions = MapInitOptions(cameraOptions: camera, styleURI: .streets)
-        
+
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
 
@@ -40,7 +40,7 @@ final class LiveDataExample: UIViewController, ExampleProtocol {
 
         var issLayer = SymbolLayer(id: "iss-layer")
         issLayer.source = sourceId
-        
+
         // Mapbox Streets contains an image named `rocket-15`. Use that image
         // to represent the location of the ISS.
         issLayer.iconImage = .constant(.name("rocket-15"))
@@ -52,20 +52,20 @@ final class LiveDataExample: UIViewController, ExampleProtocol {
             // Create a `Timer` that updates the `GeoJSONSource`.
             issTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
                 self.parseJSON { result in
-                    
+
                     switch result {
                     case .success(let coordinates):
                         let locationCoordinates = LocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
-                        
+
                         // Update geoJSON source to display new location of ISS
                         let point = Point(locationCoordinates)
                         let pointFeature = Feature(geometry: point)
                         try! self.mapView.mapboxMap.style.updateGeoJSONSource(withId: self.sourceId, geoJSON: .feature(pointFeature))
-                        
+
                         // Update camera to follow ISS
                         let issCamera = CameraOptions(center: locationCoordinates, zoom: 3)
                         self.mapView.camera.ease(to: issCamera, duration: 1)
-                        
+
                     case .failure(let error):
                         print("Error: \(error.localizedDescription)")
                     }
@@ -75,7 +75,7 @@ final class LiveDataExample: UIViewController, ExampleProtocol {
             print("Failed to update the style layer. Error: \(error.localizedDescription)")
         }
     }
-    
+
     // Make a request to the ISS URL, decode the JSON, and return the new coordinates
     func parseJSON(completion: @escaping (Result<Coordinates, Error>) -> Void) {
         DispatchQueue.global().async { [url] in

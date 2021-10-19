@@ -30,7 +30,7 @@ public class LocationManager: NSObject {
 
     private var locationUserCount: Int = 0 {
         didSet {
-            adjustUserLocationCount(oldValue: oldValue, newValue: locationUserCount)
+            toggleLocationProviderUpdates(oldValue: oldValue, newValue: locationUserCount)
         }
     }
 
@@ -58,7 +58,7 @@ public class LocationManager: NSObject {
             locationProvider.locationProviderOptions = options
 
             if options.puckType != oldValue.puckType {
-                syncUserLocationUpdating()
+                syncLocationPuckManager()
             }
 
             if let puckType = options.puckType, puckType != oldValue.puckType {
@@ -81,7 +81,7 @@ public class LocationManager: NSObject {
         locationProvider.setDelegate(self)
         locationProvider.locationProviderOptions = options
 
-        syncUserLocationUpdating()
+        syncLocationPuckManager()
     }
 
     public func overrideLocationProvider(with customLocationProvider: LocationProvider) {
@@ -188,7 +188,7 @@ extension LocationManager: LocationProviderDelegate {
             }
         }
 
-        syncUserLocationUpdating()
+        syncLocationPuckManager()
 
         if let delegate = self.delegate {
             delegate.locationManager?(self, didChangeAccuracyAuthorization: provider.accuracyAuthorization)
@@ -198,7 +198,7 @@ extension LocationManager: LocationProviderDelegate {
 
 // MARK: Private helper functions that only the Location Manager needs access to
 private extension LocationManager {
-    func syncUserLocationUpdating() {
+    func syncLocationPuckManager() {
         // Remove puck from view
         guard let puckType = options.puckType else {
             locationPuckManager = nil
@@ -215,7 +215,7 @@ private extension LocationManager {
         locationPuckManager?.changePuckStyle(to: currentPuckStyle)
     }
 
-    func adjustUserLocationCount(oldValue: Int, newValue: Int) {
+    func toggleLocationProviderUpdates(oldValue: Int, newValue: Int) {
         if oldValue == 0 && newValue > 0 {
             /// Get permissions if needed
             if locationProvider.authorizationStatus == .notDetermined {

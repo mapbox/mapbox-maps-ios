@@ -120,7 +120,10 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
 
     /// Ease the camera to a destination
     /// - Parameters:
-    ///   - camera: the target camera after animation
+    ///   - camera: the target camera after animation; if `camera.anchor` is non-nil, it is use for both
+    ///             the `fromValue` and the `toValue` of the underlying animation such that the
+    ///             value specified will not be interpolated, but will be passed as-is to each camera update
+    ///             during the animation. To animate `anchor` itself, use the `makeAnimator` APIs.
     ///   - duration: duration of the animation
     ///   - completion: completion to be called after animation
     /// - Returns: An instance of `Cancelable` which can be canceled if necessary
@@ -135,7 +138,11 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
         let animator = makeAnimator(duration: duration, curve: curve) { (transition) in
             transition.center.toValue = camera.center
             transition.padding.toValue = camera.padding
-            transition.anchor.toValue = camera.anchor
+            // don't animate the anchor since that's unlikely to be the caller's intent
+            if let anchor = camera.anchor {
+                transition.anchor.fromValue = anchor
+                transition.anchor.toValue = anchor
+            }
             transition.zoom.toValue = camera.zoom
             transition.bearing.toValue = camera.bearing
             transition.pitch.toValue = camera.pitch

@@ -22,8 +22,6 @@ public class CameraAnimationExample: UIViewController, ExampleProtocol {
                 latitude: 40.7128, longitude: -74.0060)
 
             let newCamera = CameraOptions(center: centerCoordinate,
-                                          padding: .zero,
-                                          anchor: .zero,
                                           zoom: 7.0,
                                           bearing: 180.0,
                                           pitch: 15.0)

@@ -1,6 +1,5 @@
 import UIKit
 import MapboxMaps
-import MetalKit
 
 @objc(CustomLayerExample)
 final class CustomLayerExample: UIViewController, ExampleProtocol {

@@ -1,6 +1,5 @@
 import XCTest
 import MapboxMaps
-import MetalKit
 
 internal class MapViewIntegrationTestCase: IntegrationTestCase {
     internal var mapView: MapView!

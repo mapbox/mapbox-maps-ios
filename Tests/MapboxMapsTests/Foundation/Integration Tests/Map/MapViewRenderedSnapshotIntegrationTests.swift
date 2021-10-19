@@ -1,5 +1,4 @@
 import Foundation
-import MetalKit
 import XCTest
 @testable @_spi(Experimental) import MapboxMaps
 

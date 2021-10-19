@@ -1,5 +1,4 @@
 import XCTest
-import MetalKit
 @testable import DebugApp
 
 class ApplicationTestCase: XCTestCase {

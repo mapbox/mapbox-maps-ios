@@ -1,4 +1,3 @@
-import Foundation
 import MetalKit
 
 final class MockMetalView: MTKView {

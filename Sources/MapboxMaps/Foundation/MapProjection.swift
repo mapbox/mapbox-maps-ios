@@ -1,14 +1,14 @@
 /// Describes the projection used to render the map.
 ///
 /// Mapbox map supports Mercator and Globe projections.
-@_spi(Experimental) public protocol MapProjectionOption: Codable {
+@_spi(Experimental) public protocol MapProjection: Codable {
     var name: String { get }
 }
 
 /// Mercator projection.
 ///
 /// Mercator projection description: https://en.wikipedia.org/wiki/Mercator_projection
-@_spi(Experimental) public struct MercatorMapProjection: MapProjectionOption {
+@_spi(Experimental) public struct MercatorMapProjection: MapProjection {
     public let name = "mercator"
 
     enum CodingKeys: String, CodingKey {
@@ -44,7 +44,7 @@
 /// when passing `GlobeMapProjection.transitionZoomLevel` during zooming in.
 ///
 /// See `GlobeMapProjection.transitionZoomLevel` for more details what projection will be used depending on current zoom level.
-@_spi(Experimental) public struct GlobeMapProjection: MapProjectionOption {
+@_spi(Experimental) public struct GlobeMapProjection: MapProjection {
     public let name = "globe"
 
     enum CodingKeys: String, CodingKey {

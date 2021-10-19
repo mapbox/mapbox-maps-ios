@@ -14,7 +14,7 @@ public class GlobeViewExample: UIViewController, ExampleProtocol {
     }
 
     internal var mapView: MapView!
-    internal var currentProjection: MapProjectionOption = GlobeMapProjection()
+    internal var currentProjection: MapProjection = GlobeMapProjection()
 
     private lazy var infoLabel: UILabel = {
         let label = UILabel(frame: .zero)

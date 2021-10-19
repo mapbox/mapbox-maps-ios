@@ -2,7 +2,6 @@ import UIKit
 @_spi(Experimental) import MapboxMaps
 
 @objc(GlobeViewExample)
-
 public class GlobeViewExample: UIViewController, ExampleProtocol {
 
     private enum Constants {
@@ -45,7 +44,7 @@ public class GlobeViewExample: UIViewController, ExampleProtocol {
 
         mapView = MapView(frame: view.bounds)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        try! mapView.mapboxMap.setMapProjection(mode: currentProjection)
+        try! mapView.mapboxMap.setMapProjection(currentProjection)
         mapView.mapboxMap.setCamera(to: .init(zoom: 1.0))
 
         mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
@@ -133,7 +132,7 @@ public class GlobeViewExample: UIViewController, ExampleProtocol {
 
     @objc private func projectionSwitched(sender: UIButton) {
         currentProjection = currentProjection is GlobeMapProjection ? MercatorMapProjection() : GlobeMapProjection()
-        try! mapView.mapboxMap.setMapProjection(mode: currentProjection)
+        try! mapView.mapboxMap.setMapProjection(currentProjection)
         updateInfoText()
     }
 

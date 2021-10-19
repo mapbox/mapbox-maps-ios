@@ -1,5 +1,6 @@
 import XCTest
 @_spi(Experimental) @testable import MapboxMaps
+@_implementationOnly import MapboxCoreMaps_Private
 
 final class MapboxMapTests: XCTestCase {
 
@@ -205,16 +206,16 @@ final class MapboxMapTests: XCTestCase {
 
     func testSetMapProjection() {
         XCTAssertEqual(mapboxMap.__testingMap.getMapProjection() as? [String: String], ["name": "mercator"])
-        try? mapboxMap.setMapProjection(mode: GlobeMapProjection())
+        try? mapboxMap.setMapProjection(GlobeMapProjection())
         XCTAssertEqual(mapboxMap.__testingMap.getMapProjection() as? [String: String], ["name": "globe"])
     }
 
     func testGetMapProjection() {
-        try? mapboxMap.setMapProjection(mode: MercatorMapProjection())
+        mapboxMap.__testingMap.setMapProjectionForProjection(["name": "mercator"])
         var projection = try? mapboxMap.getMapProjection()
         XCTAssert(projection is MercatorMapProjection)
 
-        try? mapboxMap.setMapProjection(mode: GlobeMapProjection())
+        mapboxMap.__testingMap.setMapProjectionForProjection(["name": "globe"])
         projection = try? mapboxMap.getMapProjection()
         XCTAssert(projection is GlobeMapProjection)
     }

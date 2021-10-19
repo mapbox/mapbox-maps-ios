@@ -22,7 +22,7 @@
         let name = try container.decode(String.self, forKey: .name)
         guard name == self.name else {
             throw DecodingError.dataCorrupted(DecodingError.Context(
-                codingPath: decoder.codingPath,
+                codingPath: [CodingKeys.name],
                 debugDescription: "Decoded projection name doesn't match expected value"
             ))
         }
@@ -58,23 +58,23 @@
         let name = try container.decode(String.self, forKey: .name)
         guard name == self.name else {
             throw DecodingError.dataCorrupted(DecodingError.Context(
-                codingPath: decoder.codingPath,
+                codingPath: [CodingKeys.name],
                 debugDescription: "Decoded projection name doesn't match expected value"
             ))
         }
     }
 
-    /// Zoom level threshold where MapboxMap will automatically switch projection
-    /// from `MercatorMapProjection` to `MapProjection.globe` or vice-versa
-    /// if MapboxMap.setMapProjection was configured to use `MapProjection.globe`.
+    /// Zoom level threshold where `MapboxMap` will automatically switch projection
+    /// from `MercatorMapProjection` to `GlobeMapProjection` or vice-versa
+    /// if `MapboxMap.setMapProjection` was configured to use `GlobeMapProjection`.
     ///
-    /// If MapboxMap is using `GlobeMapProjection` and current map zoom level is >= `GlobeMapProjection.transitionZoomLevel` -
-    /// map will use `MercatorMapProjection` and MapboxMap.getMapProjection will return `MercatorMapProjection`.
+    /// If `MapboxMap` is using `GlobeMapProjection` and current map zoom level is >= `GlobeMapProjection.transitionZoomLevel` -
+    /// map will use `MercatorMapProjection` and `MapboxMap.getMapProjection` will return `MercatorMapProjection`.
     ///
-    /// If MapboxMap is using `GlobeMapProjection` and current map zoom level is < `GlobeMapProjection.transitionZoomLevel` -
-    /// map will use `MapProjection.globe` and MapboxMap.getMapProjection will return `MapProjection.globe`.
+    /// If `MapboxMap` is using `GlobeMapProjection` and current map zoom level is < `GlobeMapProjection.transitionZoomLevel` -
+    /// map will use `GlobeMapProjection` and `MapboxMap.getMapProjection` will return `GlobeMapProjection`.
     ///
-    /// If MapboxMap is using `MercatorMapProjection` - map will use `MercatorMapProjection` for any zoom level and
-    /// MapboxMap.getMapProjection will return `MercatorMapProjection`.
+    /// If `MapboxMap` is using `MercatorMapProjection` - map will use `MercatorMapProjection` for any zoom level and
+    /// `MapboxMap.getMapProjection` will return `MercatorMapProjection`.
     public static let transitionZoomLevel: CGFloat = 5.0
 }

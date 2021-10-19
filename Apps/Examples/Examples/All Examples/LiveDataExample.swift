@@ -2,15 +2,25 @@ import MapboxMaps
 
 @objc(LiveDataExample)
 final class LiveDataExample: UIViewController, ExampleProtocol {
-    let url = URL(string: "https://wanderdrone.appspot.com/")!
-    let sourceId = "drone-source"
+    // Display the current location of the International Space Station (ISS)
+    let url = URL(string: "https://api.wheretheiss.at/v1/satellites/25544")!
+    let sourceId = "ISS-source"
     var mapView: MapView!
-    var droneTimer: Timer?
+    var issTimer: Timer?
 
+    struct Coordinates: Codable {
+        let longitude: Double
+        let latitude: Double
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        let mapInitOptions = MapInitOptions(cameraOptions: CameraOptions(zoom: 0))
+        
+        // Set up map and camera
+        let centerCoordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+        let camera = CameraOptions(center: centerCoordinate, zoom: 1)
+        let mapInitOptions = MapInitOptions(cameraOptions: camera, styleURI: .streets)
+        
         mapView = MapView(frame: view.bounds, mapInitOptions: mapInitOptions)
         mapView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
 
@@ -23,44 +33,57 @@ final class LiveDataExample: UIViewController, ExampleProtocol {
     }
 
     func addStyleLayer() {
-        // Set the data for the `GeoJSONSource`. This URL simulates paths
-        // for drones.
+        // Create an empty geoJSON source to hold location data once
+        // this information is received from the URL
         var source = GeoJSONSource()
-        source.data = .url(url)
+        source.data = .empty
 
-        var rocketLayer = SymbolLayer(id: "rocket-layer")
-        rocketLayer.source = sourceId
+        var issLayer = SymbolLayer(id: "iss-layer")
+        issLayer.source = sourceId
+        
         // Mapbox Streets contains an image named `rocket-15`. Use that image
-        // to represent the drone location.
-        rocketLayer.iconImage = .constant(.name("rocket-15"))
+        // to represent the location of the ISS.
+        issLayer.iconImage = .constant(.name("rocket-15"))
 
         do {
             try mapView.mapboxMap.style.addSource(source, id: sourceId)
-            try mapView.mapboxMap.style.addLayer(rocketLayer)
+            try mapView.mapboxMap.style.addLayer(issLayer)
 
             // Create a `Timer` that updates the `GeoJSONSource`.
-            droneTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-                self.parseGeoJSON { result in
+            issTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+                self.parseJSON { result in
+                    
                     switch result {
-                    case .success(let feature):
-                        try! self.mapView.mapboxMap.style.updateGeoJSONSource(withId: self.sourceId, geoJSON: .feature(feature))
+                    case .success(let coordinates):
+                        let locationCoordinates = LocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
+                        
+                        // Update geoJSON source to display new location of ISS
+                        let point = Point(locationCoordinates)
+                        let pointFeature = Feature(geometry: point)
+                        try! self.mapView.mapboxMap.style.updateGeoJSONSource(withId: self.sourceId, geoJSON: .feature(pointFeature))
+                        
+                        // Update camera to follow ISS
+                        let issCamera = CameraOptions(center: locationCoordinates, zoom: 3)
+                        self.mapView.camera.ease(to: issCamera, duration: 1)
+                        
                     case .failure(let error):
                         print("Error: \(error.localizedDescription)")
                     }
                 }
             }
         } catch {
-            print("Failed to update the style. Error: \(error.localizedDescription)")
+            print("Failed to update the style layer. Error: \(error.localizedDescription)")
         }
     }
-
-    func parseGeoJSON(completion: @escaping (Result<Feature, Error>) -> Void) {
+    
+    // Make a request to the ISS URL, decode the JSON, and return the new coordinates
+    func parseJSON(completion: @escaping (Result<Coordinates, Error>) -> Void) {
         DispatchQueue.global().async { [url] in
-            let result: Result<Feature, Error>
+            let result: Result<Coordinates, Error>
             do {
                 let data = try Data(contentsOf: url)
-                let feature = try JSONDecoder().decode(Feature.self, from: data)
-                result = .success(feature)
+                let coordinates = try JSONDecoder().decode(Coordinates.self, from: data)
+                result = .success(coordinates)
             } catch {
                 result = .failure(error)
             }
@@ -72,7 +95,7 @@ final class LiveDataExample: UIViewController, ExampleProtocol {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        droneTimer?.invalidate()
-        droneTimer = nil
+        issTimer?.invalidate()
+        issTimer = nil
     }
 }

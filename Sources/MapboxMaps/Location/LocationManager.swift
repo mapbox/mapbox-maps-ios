@@ -28,9 +28,9 @@ public class LocationManager: NSObject {
         return hashTable
     }()
 
-    internal var locationUserCount: Int = 1 {
+    private var locationUserCount: Int = 0 {
         didSet {
-            syncUserLocationUpdating()
+            adjustUserLocationCount(oldValue: oldValue, newValue: locationUserCount)
         }
     }
 
@@ -39,7 +39,17 @@ public class LocationManager: NSObject {
 
     /// Manager that handles the visual puck element.
     /// Only created if `showsUserLocation` is `true`.
-    internal var locationPuckManager: LocationPuckManager?
+    internal var locationPuckManager: LocationPuckManager? {
+        didSet {
+            if let oldValue = oldValue {
+                removeLocationConsumer(consumer: oldValue)
+            }
+
+            if let locationPuckManager = locationPuckManager {
+                addLocationConsumer(newConsumer: locationPuckManager)
+            }
+        }
+    }
 
     /// The `LocationOptions` that configure the location manager.
     public var options = LocationOptions() {
@@ -62,7 +72,6 @@ public class LocationManager: NSObject {
     }
 
     internal init(style: LocationStyleProtocol) {
-
         self.style = style
 
         super.init()
@@ -76,7 +85,6 @@ public class LocationManager: NSObject {
     }
 
     public func overrideLocationProvider(with customLocationProvider: LocationProvider) {
-
         /// Deinit original location provider
         locationProvider.stopUpdatingHeading()
         locationProvider.stopUpdatingLocation()
@@ -96,7 +104,7 @@ public class LocationManager: NSObject {
     /// Removes a location consumer from the location manager.
     public func removeLocationConsumer(consumer: LocationConsumer) {
         consumers.remove(consumer)
-        locationUserCount += 1
+        locationUserCount -= 1
     }
 
     /// Allows a custom case to request full accuracy
@@ -191,15 +199,24 @@ extension LocationManager: LocationProviderDelegate {
 // MARK: Private helper functions that only the Location Manager needs access to
 private extension LocationManager {
     func syncUserLocationUpdating() {
-        if locationUserCount > 0 {
-            // Remove puck from view
-            if options.puckType == nil {
-                if let locationPuckManager = locationPuckManager {
-                    consumers.remove(locationPuckManager)
-                    self.locationPuckManager = nil
-                }
-            }
+        // Remove puck from view
+        guard let puckType = options.puckType else {
+            locationPuckManager = nil
+            return
+        }
 
+        if locationPuckManager == nil {
+            locationPuckManager = LocationPuckManager(style: style,
+                                                      puckType: puckType,
+                                                      puckBearingSource: options.puckBearingSource)
+        }
+
+        // This serves as a reset and handles the case if permissions were changed for accuracy
+        locationPuckManager?.changePuckStyle(to: currentPuckStyle)
+    }
+
+    func adjustUserLocationCount(oldValue: Int, newValue: Int) {
+        if oldValue == 0 && newValue > 0 {
             /// Get permissions if needed
             if locationProvider.authorizationStatus == .notDetermined {
                 requestLocationPermissions()
@@ -207,20 +224,7 @@ private extension LocationManager {
 
             locationProvider.startUpdatingLocation()
             locationProvider.startUpdatingHeading()
-
-            if let locationPuckManager = locationPuckManager {
-                // This serves as a reset and handles the case if permissions were changed for accuracy 
-                locationPuckManager.changePuckStyle(to: currentPuckStyle)
-            } else {
-                if let puckType = options.puckType {
-                    let locationPuckManager = LocationPuckManager(style: style,
-                                                                  puckType: puckType,
-                                                                  puckBearingSource: options.puckBearingSource)
-                    consumers.add(locationPuckManager)
-                    self.locationPuckManager = locationPuckManager
-                }
-            }
-        } else {
+        } else if oldValue > 0 && newValue == 0 {
             locationProvider.stopUpdatingLocation()
             locationProvider.stopUpdatingHeading()
         }

@@ -393,5 +393,13 @@ final class GestureManagerTests: XCTestCase {
 
         XCTAssertEqual(gestureManager.options.pinchRotationEnabled, true)
         XCTAssertEqual(pinchGestureHandler.rotationEnabled, true)
+        
+        pinchGestureHandler.rotationEnabled = false
+
+        XCTAssertEqual(gestureManager.options.pinchRotationEnabled, pinchGestureHandler.rotationEnabled)
+        
+        pinchGestureHandler.rotationEnabled = true
+
+        XCTAssertEqual(gestureManager.options.pinchRotationEnabled, pinchGestureHandler.rotationEnabled)
     }
 }

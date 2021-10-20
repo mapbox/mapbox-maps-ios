@@ -74,17 +74,21 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
             // it without further dragging. This specific time interval
             // is just the result of manual tuning.
             let decelerationTimeout: TimeInterval = 1.0 / 30.0
+            let maxPitchForDeceleration: CGFloat = 60
             guard let initialTouchLocation = initialTouchLocation,
                   let initialCameraState = initialCameraState,
                   let lastChangedDate = lastChangedDate,
-                  dateProvider.now.timeIntervalSince(lastChangedDate) < decelerationTimeout else {
+                  dateProvider.now.timeIntervalSince(lastChangedDate) < decelerationTimeout,
+                  mapboxMap.cameraState.pitch <= maxPitchForDeceleration else {
                 delegate?.gestureEnded(for: .pan, willAnimate: false)
                 return
             }
             cameraAnimationsManager.decelerate(
                 location: touchLocation,
                 velocity: gestureRecognizer.velocity(in: view),
-                decelerationFactor: decelerationFactor,
+                // Decelerate more quickly when pitched. This is a workaround for an issue
+                // in the drag API that we hope to fix in MapboxCoreMaps in a future release.
+                decelerationFactor: decelerationFactor * (1 - mapboxMap.cameraState.pitch / 5000),
                 locationChangeHandler: { (touchLocation) in
                     // here we capture the initial state so that we can clear
                     // it immediately after starting the animation

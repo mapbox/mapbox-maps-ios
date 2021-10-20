@@ -111,7 +111,7 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
                 to: CameraOptions(
                     anchor: pinchMidpoint,
                     zoom: initialZoom + zoomIncrement,
-                    bearing: initialBearing + (rotationEnabled ? rotationInDegrees : 0)))
+                    bearing: rotationEnabled ? (initialBearing + rotationInDegrees) : nil))
         case .ended, .cancelled:
             initialPinchMidpoint = nil
             initialPinchAngle = nil

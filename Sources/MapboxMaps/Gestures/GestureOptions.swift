@@ -23,6 +23,10 @@ public struct GestureOptions: Equatable {
     /// Whether the pinch gesture is enabled. Allows panning, rotating, and zooming.
     /// Defaults to `true`.
     public var pinchEnabled: Bool = true
+    
+    /// Whether the pinch gesture rotation is enabled.
+    /// Defaults to `true`.
+    public var pinchRotationEnabled: Bool = true
 
     /// Whether the pitch gesture is enabled. Defaults to `true`.
     public var pitchEnabled: Bool = true

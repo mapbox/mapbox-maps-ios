@@ -1,4 +1,5 @@
 @_implementationOnly import MapboxCommon_Private
+import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 extension MapView {
@@ -8,53 +9,26 @@ extension MapView {
         /// No metal view available. Catastrophic error.
         case noMetalView
 
-        /// Metal texture not present in mapView.
-        case invalidTexture
-
-        /// Texture failed to convert to CGImage
-        case textureConversionFailed
-
-        /// Metal validation is enabled, unsupported configuration
-        case metalValidationEnabled
-
-        /// Converted image is empty in snapshot
-        case convertedImageIsEmpty
+        /// Metal view or one of its subviews is missing image data.
+        case missingImageData
     }
 
-    /// Synchronously captures the last rendered map view (if available) and constructs a `UIImage` if successful.
-    /// - NOTE: This API must be called on main thread
+    /// Synchronously captures the rendered map as a `UIImage`. The image does not include the
+    /// ornaments (scale bar, compass, attribution, etc.) or any other custom subviews. Use
+    /// `drawHierarchy(in:afterScreenUpdates:)` directly to include the full hierarchy.
+    /// - Returns: A `UIImage` of the rendered map
     @_spi(Experimental) public func snapshot() throws -> UIImage {
-        guard let metalView = subviews.first(where: { $0 is MTKView }) as? MTKView else {
+        guard let metalView = metalView else {
             Log.error(forMessage: "No metal view present.", category: "MapView.snapshot")
             throw SnapshotError.noMetalView
         }
-
-        // If Metal API validation is enabled, the call to CIContext().createCGImage
-        // below will crash with the following message:
-        //
-        //  -[MTLDebugComputeCommandEncoder setTexture:atIndex:]:373: failed
-        //  assertion `frameBufferOnly texture not supported for compute.'
-        guard getenv("METAL_DEVICE_WRAPPER_TYPE") == nil else {
-            Log.error(forMessage: "Metal API validation is enabled - MapView snapshot is being skipped.", category: "MapView.snapshot")
-            throw SnapshotError.metalValidationEnabled
+        var success = false
+        let image = UIGraphicsImageRenderer(bounds: metalView.bounds).image { _ in
+            success = metalView.drawHierarchy(in: metalView.bounds, afterScreenUpdates: true)
         }
-
-        guard let texture = metalView.currentDrawable?.texture else {
-            Log.error(forMessage: "Metal texture could not be retrieved from current drawable.", category: "MapView.snapshot")
-            throw SnapshotError.invalidTexture
+        if !success {
+            throw SnapshotError.missingImageData
         }
-
-        let colorSpace = CGColorSpaceCreateDeviceRGB()
-        guard let ciImage = CIImage(mtlTexture: texture, options: [CIImageOption.colorSpace: colorSpace]),
-              let cgImage = CIContext().createCGImage(ciImage, from: ciImage.extent) else {
-            Log.error(forMessage: "Metal texture could not be converted to CGImage.", category: "MapView.snapshot")
-            throw SnapshotError.textureConversionFailed
-        }
-
-        return UIImage(
-            cgImage: cgImage,
-            scale: metalView.contentScaleFactor,
-            orientation: .downMirrored)
-
+        return image
     }
 }

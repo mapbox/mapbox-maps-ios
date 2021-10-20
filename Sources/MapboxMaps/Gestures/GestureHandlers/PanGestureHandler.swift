@@ -74,12 +74,12 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
             // it without further dragging. This specific time interval
             // is just the result of manual tuning.
             let decelerationTimeout: TimeInterval = 1.0 / 30.0
-            let maxPitchForDrift: CGFloat = 60
+            let maxPitchForDeceleration: CGFloat = 60
             guard let initialTouchLocation = initialTouchLocation,
                   let initialCameraState = initialCameraState,
                   let lastChangedDate = lastChangedDate,
                   dateProvider.now.timeIntervalSince(lastChangedDate) < decelerationTimeout,
-                  mapboxMap.cameraState.pitch <= maxPitchForDrift else {
+                  mapboxMap.cameraState.pitch <= maxPitchForDeceleration else {
                 delegate?.gestureEnded(for: .pan, willAnimate: false)
                 return
             }

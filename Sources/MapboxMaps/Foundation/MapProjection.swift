@@ -22,7 +22,7 @@
         let name = try container.decode(String.self, forKey: .name)
         guard name == self.name else {
             throw DecodingError.dataCorrupted(DecodingError.Context(
-                codingPath: [CodingKeys.name],
+                codingPath: container.codingPath + [CodingKeys.name],
                 debugDescription: "Decoded projection name doesn't match expected value"
             ))
         }
@@ -58,7 +58,7 @@
         let name = try container.decode(String.self, forKey: .name)
         guard name == self.name else {
             throw DecodingError.dataCorrupted(DecodingError.Context(
-                codingPath: [CodingKeys.name],
+                codingPath: container.codingPath + [CodingKeys.name],
                 debugDescription: "Decoded projection name doesn't match expected value"
             ))
         }

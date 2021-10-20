@@ -13,7 +13,7 @@ public class GlobeViewExample: UIViewController, ExampleProtocol {
     }
 
     internal var mapView: MapView!
-    internal var currentProjection: MapProjection = GlobeMapProjection()
+    internal var currentProjection: MapProjection = .globe(GlobeMapProjection())
 
     private lazy var infoLabel: UILabel = {
         let label = UILabel(frame: .zero)
@@ -131,7 +131,7 @@ public class GlobeViewExample: UIViewController, ExampleProtocol {
     }
 
     @objc private func projectionSwitched(sender: UIButton) {
-        currentProjection = currentProjection is GlobeMapProjection ? MercatorMapProjection() : GlobeMapProjection()
+        currentProjection = currentProjection == .globe(GlobeMapProjection()) ? .mercator(MercatorMapProjection()) : .globe(GlobeMapProjection())
         try! mapView.mapboxMap.setMapProjection(currentProjection)
         updateInfoText()
     }
@@ -139,9 +139,9 @@ public class GlobeViewExample: UIViewController, ExampleProtocol {
     private func updateInfoText() {
         // The actual projection value of the map might be different from the selected one
         // due to the automatic transition that happens under the hood
-        let actualProjection = try? mapView.mapboxMap.getMapProjection()
-        let actualProjectionValue = actualProjection?.name ?? ""
-        let selectedProjectionValue = currentProjection.name
+        let actualProjection = try? mapView.mapboxMap.mapProjection()
+        let actualProjectionValue = actualProjection?.name() ?? ""
+        let selectedProjectionValue = currentProjection.name()
         let zoom = mapView.mapboxMap.cameraState.zoom
         infoLabel.text = """
         Current zoom:

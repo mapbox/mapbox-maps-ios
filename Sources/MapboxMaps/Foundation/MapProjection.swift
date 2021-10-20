@@ -1,14 +1,55 @@
+/// Errors related to MapProjection API
+@_spi(Experimental) public enum MapProjectionError: Error {
+    case unsupportedProjection
+}
+
 /// Describes the projection used to render the map.
 ///
 /// Mapbox map supports Mercator and Globe projections.
-@_spi(Experimental) public protocol MapProjection: Codable {
-    var name: String { get }
+@_spi(Experimental) public enum MapProjection: Codable, Hashable {
+    // Wraps `MercatorMapProjection`
+    case mercator(_ projection: MercatorMapProjection)
+
+    // Wraps `GlobeMapProjection`
+    case globe(_ projection: GlobeMapProjection)
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .mercator(let projection):
+            try container.encode(projection)
+        case .globe(let projection):
+            try container.encode(projection)
+        }
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let projection = try? container.decode(GlobeMapProjection.self) {
+            self = .globe(projection)
+        } else if let projection = try? container.decode(MercatorMapProjection.self) {
+            self = .mercator(projection)
+        } else {
+            throw MapProjectionError.unsupportedProjection
+        }
+    }
+
+    /// Get the name of the wrapped projection
+    /// - Returns: Name of the projection
+    public func name() -> String {
+        switch self {
+        case .mercator(let projection):
+            return projection.name
+        case .globe(let projection):
+            return projection.name
+        }
+    }
 }
 
 /// Mercator projection.
 ///
 /// Mercator projection description: https://en.wikipedia.org/wiki/Mercator_projection
-@_spi(Experimental) public struct MercatorMapProjection: MapProjection {
+@_spi(Experimental) public struct MercatorMapProjection: Codable, Hashable {
     public let name = "mercator"
 
     enum CodingKeys: String, CodingKey {
@@ -44,7 +85,7 @@
 /// when passing `GlobeMapProjection.transitionZoomLevel` during zooming in.
 ///
 /// See `GlobeMapProjection.transitionZoomLevel` for more details what projection will be used depending on current zoom level.
-@_spi(Experimental) public struct GlobeMapProjection: MapProjection {
+@_spi(Experimental) public struct GlobeMapProjection: Codable, Hashable {
     public let name = "globe"
 
     enum CodingKeys: String, CodingKey {
@@ -65,16 +106,16 @@
     }
 
     /// Zoom level threshold where `MapboxMap` will automatically switch projection
-    /// from `MercatorMapProjection` to `GlobeMapProjection` or vice-versa
-    /// if `MapboxMap.setMapProjection` was configured to use `GlobeMapProjection`.
+    /// from `MapProjection.mercator` to `MapProjection.globe` or vice-versa
+    /// if `MapboxMap.setMapProjection` was configured to use `MapProjection.globe`.
     ///
-    /// If `MapboxMap` is using `GlobeMapProjection` and current map zoom level is >= `GlobeMapProjection.transitionZoomLevel` -
-    /// map will use `MercatorMapProjection` and `MapboxMap.getMapProjection` will return `MercatorMapProjection`.
+    /// If `MapboxMap` is using `MapProjection.globe` and current map zoom level is >= `GlobeMapProjection.transitionZoomLevel` -
+    /// map will use `MapProjection.mercator` and `MapboxMap.getMapProjection` will return `MapProjection.mercator`.
     ///
-    /// If `MapboxMap` is using `GlobeMapProjection` and current map zoom level is < `GlobeMapProjection.transitionZoomLevel` -
-    /// map will use `GlobeMapProjection` and `MapboxMap.getMapProjection` will return `GlobeMapProjection`.
+    /// If `MapboxMap` is using `MapProjection.globe` and current map zoom level is < `GlobeMapProjection.transitionZoomLevel` -
+    /// map will use `MapProjection.globe` and `MapboxMap.getMapProjection` will return `MapProjection.globe`.
     ///
-    /// If `MapboxMap` is using `MercatorMapProjection` - map will use `MercatorMapProjection` for any zoom level and
-    /// `MapboxMap.getMapProjection` will return `MercatorMapProjection`.
+    /// If `MapboxMap` is using `MapProjection.mercator` - map will use `MapProjection.mercator` for any zoom level and
+    /// `MapboxMap.getMapProjection` will return `MapProjection.mercator`.
     public static let transitionZoomLevel: CGFloat = 5.0
 }

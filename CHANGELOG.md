@@ -7,7 +7,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Make `PointAnnotation.Image`'s fields public. ([#753](https://github.com/mapbox/mapbox-maps-ios/pull/753))
 * Set `MapboxMap` flags during gestures and animations. ([#754](https://github.com/mapbox/mapbox-maps-ios/pull/754))
 * Treat anchor as constant for `ease(to:)` animations. ([#772](https://github.com/mapbox/mapbox-maps-ios/pull/772))
-* Add `GestureOptions.pinchRotationEnabled` flag to be able to disable map rotation by the pinch gesture. ([#774](https://github.com/mapbox/mapbox-maps-ios/pull/774))
+* Add `GestureOptions.pinchRotationEnabled` flag to disable rotation during pinch gestures. ([#774](https://github.com/mapbox/mapbox-maps-ios/pull/774))
 
 ## 10.0.1 - October 15, 2021
 

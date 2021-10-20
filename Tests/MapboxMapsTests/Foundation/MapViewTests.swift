@@ -177,4 +177,10 @@ final class MapViewTests: XCTestCase {
         XCTAssertEqual(participant1.participateStub.invocations.count, 3)
         XCTAssertEqual(participant2.participateStub.invocations.count, 1)
     }
+
+    func testMemoryWarning() {
+        // Verifies that a memory warning call is not causing side effects
+        mapView.didReceiveMemoryWarning()
+    }
+
 }

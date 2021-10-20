@@ -1,79 +1,27 @@
 import Foundation
 import XCTest
-@testable @_spi(Experimental) import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 
 final class MapViewRenderedSnapshotIntegrationTests: MapViewIntegrationTestCase {
 
-    func testLoadStyleAndTakeSnapshotSucceeds() {
-
-        guard let style = style else {
-            XCTFail("Should have a valid Style object")
-            return
+    func testLoadStyleAndTakeSnapshotSucceeds() throws {
+        guard !UIApplication.shared.windows.isEmpty else {
+            throw XCTSkip("Requires a host application")
         }
 
-        let waitForStyleExpectation = self.expectation(description: "Wait for style to load")
-        let waitForSnapshotExpectation = self.expectation(description: "Wait for snapshot to be taken")
+        style.uri = .dark
 
-        didFinishLoadingStyle = { _ in
-            waitForStyleExpectation.fulfill()
-        }
+        let snapshotExpectation = expectation(description: "Take snapshot")
 
-        didBecomeIdle = { [weak self] _ in
-            guard let mapView = self?.mapView else {
-                XCTFail("Mapview must exist.")
-                return
-            }
-
+        didBecomeIdle = { [mapView = mapView!] _ in
+            defer { snapshotExpectation.fulfill() }
             do {
-                let image = try mapView.snapshot()
-                XCTAssertNotNil(image)
-                waitForSnapshotExpectation.fulfill()
+                _ = try mapView.snapshot()
             } catch {
                 XCTFail("Snapshot failed with error: \(error)")
             }
         }
 
-        style.uri = .dark
-        wait(for: [waitForStyleExpectation, waitForSnapshotExpectation], timeout: 10)
-    }
-
-    func testSnapshotFailsDueToNoMetalView() {
-
-        guard let style = style else {
-            XCTFail("Should have a valid Style object")
-            return
-        }
-
-        let waitForStyleExpectation = self.expectation(description: "Wait for style to load")
-        let waitForSnapshotExpectation = self.expectation(description: "Wait for snapshot to be taken")
-
-        didFinishLoadingStyle = { _ in
-            waitForStyleExpectation.fulfill()
-        }
-
-        didBecomeIdle = { [weak self] _ in
-            guard let mapView = self?.mapView else {
-                XCTFail("Mapview must exist.")
-                return
-            }
-
-            // Remove the metal view before attempting snapshot
-            mapView.subviews.forEach {
-                if $0 is MTKView {
-                    $0.removeFromSuperview()
-                }
-            }
-
-            do {
-                _ = try mapView.snapshot()
-            } catch {
-                XCTAssertEqual(error as? MapView.SnapshotError,
-                               MapView.SnapshotError.noMetalView)
-                waitForSnapshotExpectation.fulfill()
-            }
-        }
-
-        style.uri = .dark
-        wait(for: [waitForStyleExpectation, waitForSnapshotExpectation], timeout: 10)
+        wait(for: [snapshotExpectation], timeout: 10)
     }
 }

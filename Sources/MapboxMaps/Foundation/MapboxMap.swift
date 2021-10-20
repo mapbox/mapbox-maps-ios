@@ -837,6 +837,38 @@ extension MapboxMap {
     }
 }
 
+// MARK: - MapProjection
+
+extension MapboxMap {
+    /// Errors related to MapProjection API
+    @_spi(Experimental) public enum MapProjectionError: Error {
+        case unsupportedProjection
+    }
+
+    /// Set map projection for Mapbox map.
+    /// - Parameter mode: The `MapProjection` to be used by the map.
+    /// - Throws: Errors during encoding or `MapProjectionError.unsupportedProjection` if the supplied projection is not compatible with the SDK.
+    @_spi(Experimental) public func setMapProjection(_ mapProjection: MapProjection) throws {
+        let data = try JSONEncoder().encode(mapProjection)
+        let object = try JSONSerialization.jsonObject(with: data, options: [])
+        __map.setMapProjectionForProjection(object)
+    }
+
+    /// Get current map projection for Mapbox map.
+    ///
+    /// Please note that even if MapboxMap is configured to use `MapProjection.globe`
+    /// starting from `GlobeMapProjection.transitionZoomLevel` and above
+    /// this method will return `MapProjection.mercator`.
+    ///
+    /// - Returns:
+    ///     `MapProjection` map is using.
+    /// - Throws: Errors during decoding
+    @_spi(Experimental) public func mapProjection() throws -> MapProjection {
+        let data = try JSONSerialization.data(withJSONObject: __map.getMapProjection(), options: [])
+        return try JSONDecoder().decode(MapProjection.self, from: data)
+    }
+}
+
 // MARK: - Testing only!
 
 extension MapboxMap {

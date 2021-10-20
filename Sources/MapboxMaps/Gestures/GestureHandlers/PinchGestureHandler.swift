@@ -1,8 +1,15 @@
 import UIKit
 
+internal protocol PinchGestureHandlerProtocol: GestureHandler {
+    var rotationEnabled: Bool { get set }
+}
+
 /// `PinchGestureHandler` updates the map camera in response to a 2-touch
 /// gesture that may consist of translation, scaling, and rotation
-internal final class PinchGestureHandler: GestureHandler {
+internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerProtocol {
+    /// Weather pinch gesture can rotate map or not
+    internal var rotationEnabled: Bool = true
+    
     /// The midpoint of the touches in the gesture's view when the gesture began
     private var initialPinchMidpoint: CGPoint?
 
@@ -88,6 +95,9 @@ internal final class PinchGestureHandler: GestureHandler {
             mapboxMap.setCamera(to: dragOptions)
             mapboxMap.dragEnd()
 
+            guard rotationEnabled else {
+                return
+            }
             // the two angles will always be in the range [0, 2pi)
             // so the resulting rotation will be in the range (-2pi, 2pi)
             var rotation = pinchAngle - initialPinchAngle

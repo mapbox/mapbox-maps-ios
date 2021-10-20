@@ -94,7 +94,6 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
                 to: pinchMidpoint)
             mapboxMap.setCamera(to: dragOptions)
             mapboxMap.dragEnd()
-            
             // the two angles will always be in the range [0, 2pi)
             // so the resulting rotation will be in the range (-2pi, 2pi)
             var rotation = pinchAngle - initialPinchAngle

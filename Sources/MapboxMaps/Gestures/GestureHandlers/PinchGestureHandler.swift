@@ -94,10 +94,7 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
                 to: pinchMidpoint)
             mapboxMap.setCamera(to: dragOptions)
             mapboxMap.dragEnd()
-
-            guard rotationEnabled else {
-                return
-            }
+            
             // the two angles will always be in the range [0, 2pi)
             // so the resulting rotation will be in the range (-2pi, 2pi)
             var rotation = pinchAngle - initialPinchAngle
@@ -115,7 +112,7 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
                 to: CameraOptions(
                     anchor: pinchMidpoint,
                     zoom: initialZoom + zoomIncrement,
-                    bearing: initialBearing + rotationInDegrees))
+                    bearing: initialBearing + (rotationEnabled ? rotationInDegrees : 0)))
         case .ended, .cancelled:
             initialPinchMidpoint = nil
             initialPinchAngle = nil

@@ -7,7 +7,7 @@ internal protocol PinchGestureHandlerProtocol: GestureHandler {
 /// `PinchGestureHandler` updates the map camera in response to a 2-touch
 /// gesture that may consist of translation, scaling, and rotation
 internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerProtocol {
-    /// Weather pinch gesture can rotate map or not
+    /// Whether pinch gesture can rotate map or not
     internal var rotationEnabled: Bool = true
     
     /// The midpoint of the touches in the gesture's view when the gesture began

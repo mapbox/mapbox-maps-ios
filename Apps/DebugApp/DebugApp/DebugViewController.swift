@@ -36,18 +36,17 @@ public class DebugViewController: UIViewController {
             }
 
             self.setupAnnotations()
-            
-            
+
             var source = GeoJSONSource()
             source.data = .feature(.init(geometry: .point(.init(self.nullIsland))))
-            
+
             try! self.mapView.mapboxMap.style.addSource(source, id: "my-source")
-            
+
             var layer = CircleLayer(id: "circle-layer")
             layer.source = "my-source"
             layer.circleRadius = .constant(10.0)
             try! self.mapView.mapboxMap.style.addLayer(layer)
-            
+
         }
 
         /**
@@ -98,7 +97,6 @@ public class DebugViewController: UIViewController {
         mapView.mapboxMap.onNext(.mapLoaded) { [weak self] (event) in
             print("The map has finished loading... Event = \(event)")
 
-
         }
 
         /**
@@ -119,9 +117,7 @@ public class DebugViewController: UIViewController {
             print("The map failed to load.. \(type) = \(message)")
         }
 
-
     }
-
 
     let sanfrancisco = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
     let boston = CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589)
@@ -147,17 +143,18 @@ final class CalloutView: UIView, ViewAnnotation {
     init(frame: CGRect, coordinate: CLLocationCoordinate2D, id: String = UUID().uuidString) {
 
         self.id = id
-        
-        
-        let options = ViewAnnotationOptions(__geometry: MapboxCommon.Geometry(coordinate: coordinate),
-                                            width: UInt32(frame.size.width),
-                                            height: UInt32(frame.size.height),
-                                            allowViewAnnotationsCollision: true,
+
+        let options = ViewAnnotationOptions(__geometry: MapboxCommon.Geometry(point: coordinate as NSValue),
+                                            associatedFeatureId: nil,
+                                            width: UInt32(frame.size.width) as NSNumber,
+                                            height: UInt32(frame.size.height) as NSNumber,
+                                            allowOverlap: true,
+                                            visible: true,
                                             anchor: NSNumber.init(value: 8),
                                             offsetX: 0,
                                             offsetY: 0,
-                                            selected: false, iconIdentifier: "")
-        
+                                            selected: false)
+
         self.options = options
 
         super.init(frame: frame)
@@ -182,5 +179,3 @@ final class CalloutView: UIView, ViewAnnotation {
     }
 
 }
-
-

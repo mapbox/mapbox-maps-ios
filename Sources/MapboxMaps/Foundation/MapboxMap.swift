@@ -847,25 +847,22 @@ extension MapboxMap: MapViewAnnotationInterface {
         coordinate: CLLocationCoordinate2D,
         width: UInt32,
         height: UInt32) -> ViewAnnotationOptions {
-        
-        let options = ViewAnnotationOptions(__geometry: MapboxCommon.Geometry(coordinate: coordinate),
-                                            width: width,
-                                            height: height,
-                                            allowViewAnnotationsCollision: true,
+            let geometry = MapboxCommon.Geometry(point: coordinate as NSValue)
+            let options = ViewAnnotationOptions(__geometry: geometry, associatedFeatureId: "test",
+                                            width: width as NSNumber,
+                                            height: height as NSNumber,
+                                                allowOverlap: true,
+                                            visible: true,
                                             anchor: nil,
                                             offsetX: 0,
                                             offsetY: 0,
-                                            selected: false,
-                                            iconIdentifier: "")
-        
-        
-        
+                                            selected: false)
+
         return options
     }
     public func calculateViewAnnotationsPosition(callback: @escaping ([ViewAnnotationPositionDescriptor]) -> Void) {
-        __map.calculateViewAnnotationsPosition(forCallback: callback)
+        __map.calculateViewAnnotationPositions(forCallback: callback)
     }
-
 
     /**
      * Add view annotation.
@@ -876,7 +873,6 @@ extension MapboxMap: MapViewAnnotationInterface {
         __map.addViewAnnotation(forIdentifier: identifier, options: options)
     }
 
-
     /**
      * Update view annotation if it exists.
      *
@@ -885,7 +881,6 @@ extension MapboxMap: MapViewAnnotationInterface {
     public func updateViewAnnotation(forIdentifier identifier: String, options: ViewAnnotationOptions) {
         __map.updateViewAnnotation(forIdentifier: identifier, options: options)
     }
-
 
     /**
      * Remove view annotation if it exists.

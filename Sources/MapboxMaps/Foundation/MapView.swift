@@ -39,7 +39,7 @@ open class MapView: UIView {
     private var attributionDialogManager: AttributionDialogManager!
 
     /// A reference to the `EventsManager` used for dispatching telemetry.
-    internal var eventsListener: EventsListener!
+    private var eventsListener: EventsListener?
 
     /// A Boolean value that indicates whether the underlying `CAMetalLayer` of the `MapView`
     /// presents its content using a CoreAnimation transaction
@@ -415,20 +415,14 @@ open class MapView: UIView {
 
     @objc func didReceiveMemoryWarning() {
         mapboxMap.reduceMemoryUse()
-        eventsListener.push(event: .memoryWarning)
     }
 
     // MARK: Telemetry
 
     private func setUpTelemetryLogging() {
         guard let validResourceOptions = resourceOptions else { return }
-        let eventsListener = EventsManager(accessToken: validResourceOptions.accessToken)
-
-        DispatchQueue.main.async {
-            eventsListener.push(event: .map(event: .loaded))
-        }
-
-        self.eventsListener = eventsListener
+        eventsListener = EventsManager(accessToken: validResourceOptions.accessToken)
+        eventsListener?.push(event: .map(event: .loaded))
     }
 }
 

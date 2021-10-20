@@ -10,7 +10,6 @@ internal enum EventType {
     case metrics(event: Metrics)
     case snapshot(event: Snapshot)
     case offlineStorage(event: OfflineStorage)
-    case memoryWarning
 
     internal enum Maps {
         case loaded

@@ -38,6 +38,15 @@ internal class EventsManager: EventsListener {
                 MMEEventsManager.shared().pauseOrResumeMetricsCollectionIfRequired()
             }
         }
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(didReceiveMemoryWarning),
+                                               name: UIApplication.didReceiveMemoryWarningNotification,
+                                               object: nil)
+    }
+
+    @objc func didReceiveMemoryWarning() {
+        telemetry?.flush()
     }
 
     func push(event: EventType) {
@@ -50,8 +59,6 @@ internal class EventsManager: EventsListener {
             process(snapshotEvent: snapshotEvent)
         case .offlineStorage(let offlineStorageEvent):
             process(offlineStorage: offlineStorageEvent)
-        case .memoryWarning:
-            telemetry?.flush()
         case .custom(let customEvent):
             telemetry?.send(event: customEvent)
         }

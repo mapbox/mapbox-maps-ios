@@ -6,7 +6,7 @@ final class GestureManagerTests: XCTestCase {
     var mapboxMap: MockMapboxMap!
     var cameraAnimationsManager: MockCameraAnimationsManager!
     var panGestureHandler: MockPanGestureHandler!
-    var pinchGestureHandler: GestureHandler!
+    var pinchGestureHandler: MockPinchGestureHandler!
     var pitchGestureHandler: GestureHandler!
     var doubleTapToZoomInGestureHandler: GestureHandler!
     var doubleTouchToZoomOutGestureHandler: GestureHandler!
@@ -23,7 +23,8 @@ final class GestureManagerTests: XCTestCase {
         cameraAnimationsManager = MockCameraAnimationsManager()
         panGestureHandler = MockPanGestureHandler(
             gestureRecognizer: MockGestureRecognizer())
-        pinchGestureHandler = makeGestureHandler()
+        pinchGestureHandler = MockPinchGestureHandler(
+            gestureRecognizer: MockGestureRecognizer())
         pitchGestureHandler = makeGestureHandler()
         doubleTapToZoomInGestureHandler = makeGestureHandler()
         doubleTouchToZoomOutGestureHandler = makeGestureHandler()
@@ -377,5 +378,20 @@ final class GestureManagerTests: XCTestCase {
         panGestureHandler.panMode = [.horizontal, .vertical].randomElement()!
 
         XCTAssertEqual(gestureManager.options.panMode, panGestureHandler.panMode)
+    }
+    
+    func testPinchRotationEnabled() {
+        XCTAssertEqual(gestureManager.options.pinchRotationEnabled, true)
+        XCTAssertEqual(pinchGestureHandler.rotationEnabled, true)
+
+        gestureManager.options.pinchRotationEnabled = false
+
+        XCTAssertEqual(gestureManager.options.pinchRotationEnabled, false)
+        XCTAssertEqual(pinchGestureHandler.rotationEnabled, false)
+
+        gestureManager.options.pinchRotationEnabled = true
+
+        XCTAssertEqual(gestureManager.options.pinchRotationEnabled, true)
+        XCTAssertEqual(pinchGestureHandler.rotationEnabled, true)
     }
 }

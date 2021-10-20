@@ -13,6 +13,16 @@
     // Wraps `GlobeMapProjection`
     case globe(_ projection: GlobeMapProjection)
 
+    /// Name of the wrapped projection
+    public var name: String {
+        switch self {
+        case .mercator(let projection):
+            return projection.name
+        case .globe(let projection):
+            return projection.name
+        }
+    }
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         switch self {
@@ -31,17 +41,6 @@
             self = .mercator(projection)
         } else {
             throw MapProjectionError.unsupportedProjection
-        }
-    }
-
-    /// Get the name of the wrapped projection
-    /// - Returns: Name of the projection
-    public func name() -> String {
-        switch self {
-        case .mercator(let projection):
-            return projection.name
-        case .globe(let projection):
-            return projection.name
         }
     }
 }

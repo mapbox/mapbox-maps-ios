@@ -140,8 +140,8 @@ public class GlobeViewExample: UIViewController, ExampleProtocol {
         // The actual projection value of the map might be different from the selected one
         // due to the automatic transition that happens under the hood
         let actualProjection = try? mapView.mapboxMap.mapProjection()
-        let actualProjectionValue = actualProjection?.name() ?? ""
-        let selectedProjectionValue = currentProjection.name()
+        let actualProjectionValue = actualProjection?.name ?? ""
+        let selectedProjectionValue = currentProjection.name
         let zoom = mapView.mapboxMap.cameraState.zoom
         infoLabel.text = """
         Current zoom:

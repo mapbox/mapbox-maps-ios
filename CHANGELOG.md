@@ -2,7 +2,7 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## main
+## 10.1.0-beta.1 - October 21, 2021
 
 * Make `PointAnnotation.Image`'s fields public. ([#753](https://github.com/mapbox/mapbox-maps-ios/pull/753))
 * Set `MapboxMap` flags during gestures and animations. ([#754](https://github.com/mapbox/mapbox-maps-ios/pull/754))
@@ -10,6 +10,9 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix experimental snapshot API for iOS 15. ([#760](https://github.com/mapbox/mapbox-maps-ios/pull/760))
 * Decelerate more quickly (or not at all) on pitched maps. ([#773](https://github.com/mapbox/mapbox-maps-ios/pull/773))
 * Add `GestureOptions.pinchRotateEnabled` to configure whether the pinch gesture rotates the map. ([#779](https://github.com/mapbox/mapbox-maps-ios/pull/779))
+* Fixed a name collision between Swift symbols and `MapboxCoreMaps.Task`. ([#769](https://github.com/mapbox/mapbox-maps-ios/pull/769))
+* Fixed an issue that caused `queryFeatureExtension` to fail. ([#769](https://github.com/mapbox/mapbox-maps-ios/pull/769))
+* Updated `MapboxCoreMaps` to v10.1.0-beta and `MapboxCommon` to 20.1.0-rc.1. ([#769](https://github.com/mapbox/mapbox-maps-ios/pull/769))
 
 ## 10.0.1 - October 15, 2021
 

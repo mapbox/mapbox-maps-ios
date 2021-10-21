@@ -380,26 +380,26 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertEqual(gestureManager.options.panMode, panGestureHandler.panMode)
     }
     
-    func testPinchRotationEnabled() {
-        XCTAssertEqual(gestureManager.options.pinchRotationEnabled, true)
-        XCTAssertEqual(pinchGestureHandler.rotationEnabled, true)
+    func testPinchRotateEnabled() {
+        XCTAssertEqual(gestureManager.options.pinchRotateEnabled, true)
+        XCTAssertEqual(pinchGestureHandler.rotateEnabled, true)
 
-        gestureManager.options.pinchRotationEnabled = false
+        gestureManager.options.pinchRotateEnabled = false
 
-        XCTAssertEqual(gestureManager.options.pinchRotationEnabled, false)
-        XCTAssertEqual(pinchGestureHandler.rotationEnabled, false)
+        XCTAssertEqual(gestureManager.options.pinchRotateEnabled, false)
+        XCTAssertEqual(pinchGestureHandler.rotateEnabled, false)
 
-        gestureManager.options.pinchRotationEnabled = true
+        gestureManager.options.pinchRotateEnabled = true
 
-        XCTAssertEqual(gestureManager.options.pinchRotationEnabled, true)
-        XCTAssertEqual(pinchGestureHandler.rotationEnabled, true)
+        XCTAssertEqual(gestureManager.options.pinchRotateEnabled, true)
+        XCTAssertEqual(pinchGestureHandler.rotateEnabled, true)
         
-        pinchGestureHandler.rotationEnabled = false
+        pinchGestureHandler.rotateEnabled = false
 
-        XCTAssertEqual(gestureManager.options.pinchRotationEnabled, pinchGestureHandler.rotationEnabled)
+        XCTAssertEqual(gestureManager.options.pinchRotateEnabled, pinchGestureHandler.rotateEnabled)
         
-        pinchGestureHandler.rotationEnabled = true
+        pinchGestureHandler.rotateEnabled = true
 
-        XCTAssertEqual(gestureManager.options.pinchRotationEnabled, pinchGestureHandler.rotationEnabled)
+        XCTAssertEqual(gestureManager.options.pinchRotateEnabled, pinchGestureHandler.rotateEnabled)
     }
 }

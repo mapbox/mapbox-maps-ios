@@ -9,7 +9,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Treat anchor as constant for `ease(to:)` animations. ([#772](https://github.com/mapbox/mapbox-maps-ios/pull/772))
 * Fix experimental snapshot API for iOS 15. ([#760](https://github.com/mapbox/mapbox-maps-ios/pull/760))
 * Decelerate more quickly (or not at all) on pitched maps. ([#773](https://github.com/mapbox/mapbox-maps-ios/pull/773))
-* Add `GestureOptions.pinchRotationEnabled` flag to disable rotation during pinch gestures. ([#774](https://github.com/mapbox/mapbox-maps-ios/pull/774))
+* Add `GestureOptions.pinchRotateEnabled` to configure whether the pinch gesture rotates the map. ([#774](https://github.com/mapbox/mapbox-maps-ios/pull/774))
 
 ## 10.0.1 - October 15, 2021
 

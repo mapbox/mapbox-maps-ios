@@ -44,6 +44,8 @@ final class PinchGestureHandlerTests: XCTestCase {
     }
 
     func testPinchChanged() throws {
+        pinchGestureHandler.rotateEnabled = true
+
         let initialCameraState = CameraState.random()
         let initialPinchMidpoint = CGPoint(x: 0.0, y: 0.0)
         let changedPinchMidpoint = CGPoint(x: 1.0, y: 1.0)
@@ -108,6 +110,98 @@ final class PinchGestureHandlerTests: XCTestCase {
                 anchor: changedPinchMidpoint,
                 zoom: initialCameraState.zoom + log2(returnedScale),
                 bearing: initialCameraState.bearing - 45))
+    }
+
+    func testPinchChangedWithRotateEnabledFalse() {
+        pinchGestureHandler.rotateEnabled = false
+
+        mapboxMap.cameraState = .random()
+
+        // these touches are consistent with the initial pinch midpoint
+        // and yield an angle of 45° for the initial state
+        gestureRecognizer.getNumberOfTouchesStub.defaultReturnValue = 2
+        gestureRecognizer.locationOfTouchStub.returnValueQueue = [
+            CGPoint(x: -1, y: -1),
+            CGPoint(x: 1, y: 1)]
+        gestureRecognizer.getStateStub.defaultReturnValue = .began
+        gestureRecognizer.sendActions()
+
+        // the new touch angle is 90° - that's 45° increase from the initial.
+        // this should come through as -45° change in bearing since the
+        // coordinate systems are flipped.
+        gestureRecognizer.locationOfTouchStub.returnValueQueue = [
+            CGPoint(x: 1, y: 0),
+            CGPoint(x: 1, y: 2)]
+        gestureRecognizer.getStateStub.defaultReturnValue = .changed
+        gestureRecognizer.sendActions()
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 3)
+        guard mapboxMap.setCameraStub.invocations.count == 3 else {
+            return
+        }
+        XCTAssertNil(mapboxMap.setCameraStub.parameters[0].bearing)
+        XCTAssertNil(mapboxMap.setCameraStub.parameters[2].bearing)
+    }
+
+    func testSettingRotateEnabledToTrueDuringGestureHasNoImpactOnCurrentGesture() {
+        pinchGestureHandler.rotateEnabled = false
+
+        mapboxMap.cameraState = .random()
+
+        // set up internal state by calling handlePinch in the .began state
+        gestureRecognizer.getNumberOfTouchesStub.defaultReturnValue = 2
+        gestureRecognizer.getStateStub.defaultReturnValue = .began
+        gestureRecognizer.sendActions()
+
+        // set rotateEnabled to true after the gesture has started.
+        // the gesture should continue based on rotateEnabled = false
+        // since that was the value when the gesture started
+        pinchGestureHandler.rotateEnabled = true
+        gestureRecognizer.getStateStub.defaultReturnValue = .changed
+        gestureRecognizer.sendActions()
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 3)
+        guard mapboxMap.setCameraStub.invocations.count == 3 else {
+            return
+        }
+        XCTAssertNil(mapboxMap.setCameraStub.parameters[0].bearing)
+        XCTAssertNil(mapboxMap.setCameraStub.parameters[2].bearing)
+    }
+
+    func testSettingRotateEnabledToFalseDuringGestureHasNoImpactOnCurrentGesture() throws {
+        pinchGestureHandler.rotateEnabled = true
+
+        let initialCameraState = CameraState.random()
+        mapboxMap.cameraState = initialCameraState
+
+        // these touches are consistent with the initial pinch midpoint
+        // and yield an angle of 45° for the initial state
+        gestureRecognizer.getNumberOfTouchesStub.defaultReturnValue = 2
+        gestureRecognizer.locationOfTouchStub.returnValueQueue = [
+            CGPoint(x: -1, y: -1),
+            CGPoint(x: 1, y: 1)]
+        gestureRecognizer.getStateStub.defaultReturnValue = .began
+        gestureRecognizer.sendActions()
+
+        // set rotateEnabled to false after the gesture has started.
+        // the gesture should continue based on rotateEnabled = true
+        // since that was the value when the gesture started
+        pinchGestureHandler.rotateEnabled = false
+        // the new touch angle is 90° - that's 45° increase from the initial.
+        // this should come through as -45° change in bearing since the
+        // coordinate systems are flipped.
+        gestureRecognizer.locationOfTouchStub.returnValueQueue = [
+            CGPoint(x: 1, y: 0),
+            CGPoint(x: 1, y: 2)]
+        gestureRecognizer.getStateStub.defaultReturnValue = .changed
+        gestureRecognizer.sendActions()
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 3)
+        guard mapboxMap.setCameraStub.invocations.count == 3 else {
+            return
+        }
+        XCTAssertEqual(mapboxMap.setCameraStub.parameters[0].bearing, initialCameraState.bearing)
+        XCTAssertEqual(mapboxMap.setCameraStub.parameters[2].bearing, initialCameraState.bearing - 45)
     }
 
     func testPinchChangedWhenNumberOfTouchesDecreasesToOneThenGoesBackToTwo() {

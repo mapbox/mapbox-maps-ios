@@ -54,35 +54,38 @@ public struct Puck2DConfiguration: Equatable {
 
 internal class Puck2D: Puck {
 
-    // MARK: Properties
-    internal var locationIndicatorLayer: LocationIndicatorLayer?
-    internal var configuration: Puck2DConfiguration
+    internal var puckPrecision: PuckPrecision = .precise {
+        didSet {
 
-    // MARK: Protocol Properties
-    internal var puckStyle: PuckStyle
-    internal var puckBearingSource: PuckBearingSource
+        }
+    }
 
-    internal weak var style: LocationStyleProtocol?
+    internal var puckBearingSource: PuckBearingSource = .heading {
+        didSet {
 
-    // MARK: Initializers
-    internal init(puckStyle: PuckStyle,
-                  puckBearingSource: PuckBearingSource,
+        }
+    }
+
+    private let configuration: Puck2DConfiguration
+    private let style: LocationStyleProtocol
+    private let locationSource: LocationSource
+
+    private var locationIndicatorLayer: LocationIndicatorLayer?
+
+    internal init(configuration: Puck2DConfiguration,
                   style: LocationStyleProtocol,
-                  configuration: Puck2DConfiguration) {
-        self.puckStyle = puckStyle
-        self.puckBearingSource = puckBearingSource
-        self.style = style
+                  locationSource: LocationSource) {
         self.configuration = configuration
+        self.style = style
+        self.locationSource = locationSource
     }
 
     deinit {
         removePuck()
     }
 
-    // MARK: Protocol Implementation
     internal func updateLocation(location: Location) {
-        if let locationIndicatorLayer = locationIndicatorLayer,
-           let style = style {
+        if let locationIndicatorLayer = locationIndicatorLayer {
 
             let newLocation: [Double] = [
                 location.coordinate.latitude,
@@ -110,18 +113,18 @@ internal class Puck2D: Puck {
                 Log.error(forMessage: "Error when updating location/bearing in location indicator layer: \(error)", category: "Location")
             }
         } else {
-            updateStyle(puckStyle: puckStyle, location: location)
+            updateStyle(puckPrecision: puckPrecision, location: location)
         }
     }
 
-    internal func updateStyle(puckStyle: PuckStyle, location: Location) {
-        self.puckStyle = puckStyle
+    internal func updateStyle(puckPrecision: PuckPrecision, location: Location) {
+        self.puckPrecision = puckPrecision
 
         let setupLocationIndicatorLayer = { [weak self] in
             guard let self = self else { return }
             self.removePuck()
             do {
-                switch self.puckStyle {
+                switch self.puckPrecision {
                 case .precise:
                     try self.createPreciseLocationIndicatorLayer(location: location)
                 case .approximate:
@@ -139,8 +142,7 @@ internal class Puck2D: Puck {
     }
 
     internal func removePuck() {
-        guard let locationIndicatorLayer = self.locationIndicatorLayer,
-              let style = style else {
+        guard let locationIndicatorLayer = self.locationIndicatorLayer else {
             return
         }
 
@@ -158,11 +160,6 @@ internal class Puck2D: Puck {
 
 internal extension Puck2D {
     func createPreciseLocationIndicatorLayer(location: Location) throws {
-        guard let style = style else {
-            Log.warning(forMessage: "Puck2D.createPreciseLocationIndicatorLayer - Style does not exit.", category: "Location")
-            return
-        }
-
         if style.layerExists(withId: "approximate-puck") {
             try style.removeLayer(withId: "approximate-puck")
         }
@@ -225,11 +222,6 @@ internal extension Puck2D {
     }
 
     func createApproximateLocationIndicatorLayer(location: Location) throws {
-        guard let style = style else {
-            Log.warning(forMessage: "Puck2D.createApproximateLocationIndicatorLayer - Style does not exit.", category: "Location")
-            return
-        }
-
         if style.layerExists(withId: "puck") {
             try style.removeLayer(withId: "puck")
         }

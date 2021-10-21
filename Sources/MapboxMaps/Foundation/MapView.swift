@@ -283,7 +283,26 @@ open class MapView: UIView {
             infoButtonOrnamentDelegate: attributionDialogManager)
 
         // Initialize/Configure location manager
-        location = LocationManager(style: mapboxMap.style)
+        let locationProvider = AppleLocationProvider()
+        let locationSource = LocationSource(
+            locationProvider: locationProvider)
+        let locationPuckManager = LocationPuckManager(
+            puck2DProvider: { [style=mapboxMap.style] configuration in
+                Puck2D(
+                    configuration: configuration,
+                    style: style,
+                    locationSource: locationSource)
+            },
+            puck3DProvider: { [style=mapboxMap.style] configuration in
+                Puck3D(
+                    configuration: configuration,
+                    style: style,
+                    locationSource: locationSource)
+            })
+
+        location = LocationManager(
+            locationSource: locationSource,
+            locationPuckManager: locationPuckManager)
 
         // Initialize/Configure annotations orchestrator
         annotations = AnnotationOrchestrator(

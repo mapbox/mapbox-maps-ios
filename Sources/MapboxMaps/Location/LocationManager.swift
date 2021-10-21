@@ -3,108 +3,62 @@ import UIKit
 
 /// An object responsible for notifying the map view about location-related events,
 /// such as a change in the device’s location.
-public class LocationManager: NSObject {
+public final class LocationManager: NSObject {
 
     /// Represents the latest location received from the location provider.
-    public private(set) var latestLocation: Location?
-
-    /// Represents the style of the user location puck.
-    private var currentPuckStyle: PuckStyle = .precise {
-        didSet {
-            locationPuckManager?.changePuckStyle(to: currentPuckStyle)
-        }
+    public var latestLocation: Location? {
+        return locationSource.latestLocation
     }
 
     /// The object that acts as the delegate of the location manager.
     public weak var delegate: LocationPermissionsDelegate?
 
     /// Property that provide location and authorization updates.
-    public private(set) var locationProvider: LocationProvider!
+    public var locationProvider: LocationProvider! {
+        return locationSource.locationProvider
+    }
 
     /// Property that has a list of items that will consume location events.
     /// The location manager holds weak references to these consumers, client code should retain these references.
-    public private(set) lazy var consumers: NSHashTable<LocationConsumer> = {
-        let hashTable = NSHashTable<LocationConsumer>.weakObjects()
-        return hashTable
-    }()
-
-    private var locationUserCount: Int = 0 {
-        didSet {
-            toggleLocationProviderUpdates(oldValue: oldValue, newValue: locationUserCount)
-        }
+    /// This property returns a copy of the underlying table, so mutating the returned hash table will have no effect.
+    public var consumers: NSHashTable<LocationConsumer> {
+        return locationSource.consumers
     }
 
-    /// Style that has limited functionality to support location.
-    internal weak var style: LocationStyleProtocol?
+    private let locationSource: LocationSource
 
     /// Manager that handles the visual puck element.
     /// Only created if `showsUserLocation` is `true`.
-    internal var locationPuckManager: LocationPuckManager? {
-        didSet {
-            if let oldValue = oldValue {
-                removeLocationConsumer(consumer: oldValue)
-            }
-
-            if let locationPuckManager = locationPuckManager {
-                addLocationConsumer(newConsumer: locationPuckManager)
-            }
-        }
-    }
+    private let locationPuckManager: LocationPuckManager
 
     /// The `LocationOptions` that configure the location manager.
     public var options = LocationOptions() {
         didSet {
-            guard options != oldValue else { return }
-            locationProvider.locationProviderOptions = options
-
-            if options.puckType != oldValue.puckType {
-                syncLocationPuckManager()
-            }
-
-            if let puckType = options.puckType, puckType != oldValue.puckType {
-                locationPuckManager?.changePuckType(to: puckType)
-            }
-
-            if options.puckBearingSource != oldValue.puckBearingSource {
-                locationPuckManager?.puckBearingSource = options.puckBearingSource
-            }
+            syncOptions()
         }
     }
 
-    internal init(style: LocationStyleProtocol) {
-        self.style = style
-
+    internal init(locationSource: LocationSource,
+                  locationPuckManager: LocationPuckManager) {
+        self.locationSource = locationSource
+        self.locationPuckManager = locationPuckManager
         super.init()
-
-        /// Sets our default `locationProvider`
-        locationProvider = AppleLocationProvider()
-        locationProvider.setDelegate(self)
-        locationProvider.locationProviderOptions = options
-
-        syncLocationPuckManager()
+        locationSource.locationProviderDelegate = self
+        syncOptions()
     }
 
     public func overrideLocationProvider(with customLocationProvider: LocationProvider) {
-        /// Deinit original location provider
-        locationProvider.stopUpdatingHeading()
-        locationProvider.stopUpdatingLocation()
-        locationProvider = nil
-
-        /// Use custom location provider
-        locationProvider = customLocationProvider
-        locationProvider.setDelegate(self)
+        locationSource.locationProvider = customLocationProvider
     }
 
     /// The location manager holds weak references to consumers, client code should retain these references.
     public func addLocationConsumer(newConsumer consumer: LocationConsumer) {
-        consumers.add(consumer)
-        locationUserCount += 1
+        locationSource.add(consumer)
     }
 
     /// Removes a location consumer from the location manager.
     public func removeLocationConsumer(consumer: LocationConsumer) {
-        consumers.remove(consumer)
-        locationUserCount -= 1
+        locationSource.remove(consumer)
     }
 
     /// Allows a custom case to request full accuracy
@@ -112,127 +66,34 @@ public class LocationManager: NSObject {
     public func requestTemporaryFullAccuracyPermissions(withPurposeKey purposeKey: String) {
         locationProvider.requestTemporaryFullAccuracyAuthorization(withPurposeKey: purposeKey)
     }
-}
-
-// MARK: LocationProviderDelegate functions
-@available(iOSApplicationExtension, unavailable)
-extension LocationManager: LocationProviderDelegate {
-
-    public func locationProvider(_ provider: LocationProvider, didUpdateLocations locations: [CLLocation]) {
-        guard let newLocation = locations.last else { return }
-
-        for consumer in consumers.allObjects {
-            let location = Location(with: newLocation, heading: latestLocation?.heading)
-            consumer.locationUpdate(newLocation: location)
-            latestLocation = location
-        }
-    }
-
-    public func locationProvider(_ provider: LocationProvider, didUpdateHeading newHeading: CLHeading) {
-
-        // Ignore any heading updates that come in before a location update
-        guard let validLatestLocation = latestLocation else { return }
-
-        // Check if device orientation has changed and inform the location provider accordingly.
-        updateHeadingForCurrentDeviceOrientation()
-
-        for consumer in consumers.allObjects {
-            let location = Location(with: validLatestLocation.internalLocation,
-                                    heading: newHeading)
-            consumer.locationUpdate(newLocation: location)
-            latestLocation = location
-        }
-    }
 
     public func updateHeadingForCurrentDeviceOrientation() {
-        if locationProvider != nil {
-
-            // note that right/left device and interface orientations
-            // are opposites (see UIApplication.h)
-            var orientation: CLDeviceOrientation
-
-            switch UIApplication.shared.statusBarOrientation {
-            case .landscapeLeft:
-                orientation = .landscapeRight
-            case .landscapeRight:
-                orientation = .landscapeLeft
-            case .portraitUpsideDown:
-                orientation = .portraitUpsideDown
-            default:
-                orientation = .portrait
-            }
-
-            // Setting the location manager's heading orientation causes it to send
-            // a heading event, which in turn makes us redraw, which kicks off a
-            // loop... so don't do that. rdar://34059173
-            if locationProvider.headingOrientation != orientation {
-                locationProvider.headingOrientation = orientation
-            }
-        }
+        locationSource.updateHeadingForCurrentDeviceOrientation()
     }
 
-    public func locationProvider(_ provider: LocationProvider, didFailWithError error: Error) {
-        print("Failed with error: \(error)")
-    }
-
-    public func locationProviderDidChangeAuthorization(_ provider: LocationProvider) {
-        if provider.authorizationStatus == .authorizedAlways || provider.authorizationStatus == .authorizedWhenInUse {
-            if #available(iOS 14.0, *) {
-                if provider.accuracyAuthorization == .reducedAccuracy {
-                    let purposeKey = "LocationAccuracyAuthorizationDescription"
-                    provider.requestTemporaryFullAccuracyAuthorization(withPurposeKey: purposeKey)
-                    self.currentPuckStyle = .approximate
-                } else {
-                    self.currentPuckStyle = .precise
-                }
-            }
-        }
-
-        syncLocationPuckManager()
-
-        if let delegate = self.delegate {
-            delegate.locationManager?(self, didChangeAccuracyAuthorization: provider.accuracyAuthorization)
-        }
+    private func syncOptions() {
+        locationSource.locationProvider.locationProviderOptions = options
+        locationPuckManager.puckType = options.puckType
+        locationPuckManager.puckBearingSource = options.puckBearingSource
     }
 }
 
-// MARK: Private helper functions that only the Location Manager needs access to
-private extension LocationManager {
-    func syncLocationPuckManager() {
-        // Remove puck from view
-        guard let puckType = options.puckType else {
-            locationPuckManager = nil
-            return
-        }
+// These methods must remain to avoid breaking the API, but most of their implementation has been moved
+// to `LocationSource`. They should be fully removed in the next major version.
+@available(iOSApplicationExtension, unavailable)
+extension LocationManager: LocationProviderDelegate {
+    public func locationProvider(_ provider: LocationProvider, didUpdateLocations locations: [CLLocation]) {}
 
-        if locationPuckManager == nil {
-            locationPuckManager = LocationPuckManager(style: style,
-                                                      puckType: puckType,
-                                                      puckBearingSource: options.puckBearingSource)
-        }
+    public func locationProvider(_ provider: LocationProvider, didUpdateHeading newHeading: CLHeading) {}
 
-        // This serves as a reset and handles the case if permissions were changed for accuracy
-        locationPuckManager?.changePuckStyle(to: currentPuckStyle)
-    }
+    public func locationProvider(_ provider: LocationProvider, didFailWithError error: Error) {}
 
-    func toggleLocationProviderUpdates(oldValue: Int, newValue: Int) {
-        if oldValue == 0 && newValue > 0 {
-            /// Get permissions if needed
-            if locationProvider.authorizationStatus == .notDetermined {
-                requestLocationPermissions()
+    public func locationProviderDidChangeAuthorization(_ provider: LocationProvider) {
+        if #available(iOS 14.0, *) {
+            if [.authorizedAlways, .authorizedWhenInUse].contains(provider.authorizationStatus) {
+                locationPuckManager.puckPrecision = provider.accuracyAuthorization == .reducedAccuracy ? .approximate : .precise
             }
-
-            locationProvider.startUpdatingLocation()
-            locationProvider.startUpdatingHeading()
-        } else if oldValue > 0 && newValue == 0 {
-            locationProvider.stopUpdatingLocation()
-            locationProvider.stopUpdatingHeading()
         }
-    }
-
-    func requestLocationPermissions() {
-        if Bundle.main.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil {
-            locationProvider.requestWhenInUseAuthorization()
-        }
+        delegate?.locationManager?(self, didChangeAccuracyAuthorization: provider.accuracyAuthorization)
     }
 }

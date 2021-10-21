@@ -3,8 +3,10 @@ internal protocol LocationStyleProtocol: AnyObject {
     func removeLayer(withId id: String) throws
     func layerExists(withId id: String) -> Bool
     func setLayerProperties(for layerId: String, properties: [String: Any]) throws
+
     func addSource(_ source: Source, id: String) throws
     func removeSource(withId id: String) throws
+    func sourceExists(withId id: String) -> Bool
     func setSourceProperty(for sourceId: String, property: String, value: Any) throws
 
     //swiftlint:disable function_parameter_count

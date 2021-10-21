@@ -9,7 +9,7 @@ internal protocol PinchGestureHandlerProtocol: GestureHandler {
 internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerProtocol {
     /// Whether pinch gesture can rotate map or not
     internal var rotateEnabled: Bool = true
-    
+
     /// The midpoint of the touches in the gesture's view when the gesture began
     private var initialPinchMidpoint: CGPoint?
 

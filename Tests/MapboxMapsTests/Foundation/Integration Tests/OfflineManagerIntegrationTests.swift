@@ -1,7 +1,7 @@
 import XCTest
 @testable import MapboxMaps
 
-// swiftlint:disable force_cast type_body_length file_length
+// swiftlint:disable force_cast
 internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
     var label: UILabel!

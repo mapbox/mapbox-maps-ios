@@ -36,11 +36,6 @@ public class FlyToExample: UIViewController, ExampleProtocol {
             // The below line is used for internal testing purposes only.
             self?.finish()
         }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            cancelable?.cancel()
-        }
-
     }
 }
 

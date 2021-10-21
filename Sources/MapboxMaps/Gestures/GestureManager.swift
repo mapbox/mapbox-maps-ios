@@ -20,6 +20,7 @@ public final class GestureManager: GestureHandlerDelegate {
         set {
             panGestureRecognizer.isEnabled = newValue.panEnabled
             pinchGestureRecognizer.isEnabled = newValue.pinchEnabled
+            pinchGestureHandler.rotateEnabled = newValue.pinchRotateEnabled
             pitchGestureRecognizer.isEnabled = newValue.pitchEnabled
             doubleTapToZoomInGestureRecognizer.isEnabled = newValue.doubleTapToZoomInEnabled
             doubleTouchToZoomOutGestureRecognizer.isEnabled = newValue.doubleTouchToZoomOutEnabled
@@ -31,6 +32,7 @@ public final class GestureManager: GestureHandlerDelegate {
             var gestureOptions = GestureOptions()
             gestureOptions.panEnabled = panGestureRecognizer.isEnabled
             gestureOptions.pinchEnabled = pinchGestureRecognizer.isEnabled
+            gestureOptions.pinchRotateEnabled = pinchGestureHandler.rotateEnabled
             gestureOptions.pitchEnabled = pitchGestureRecognizer.isEnabled
             gestureOptions.doubleTapToZoomInEnabled = doubleTapToZoomInGestureRecognizer.isEnabled
             gestureOptions.doubleTouchToZoomOutEnabled = doubleTouchToZoomOutGestureRecognizer.isEnabled
@@ -83,7 +85,7 @@ public final class GestureManager: GestureHandlerDelegate {
     public weak var delegate: GestureManagerDelegate?
 
     private let panGestureHandler: PanGestureHandlerProtocol
-    private let pinchGestureHandler: GestureHandler
+    private let pinchGestureHandler: PinchGestureHandlerProtocol
     private let pitchGestureHandler: GestureHandler
     private let doubleTapToZoomInGestureHandler: GestureHandler
     private let doubleTouchToZoomOutGestureHandler: GestureHandler
@@ -93,7 +95,7 @@ public final class GestureManager: GestureHandlerDelegate {
     private let mapboxMap: MapboxMapProtocol
 
     internal init(panGestureHandler: PanGestureHandlerProtocol,
-                  pinchGestureHandler: GestureHandler,
+                  pinchGestureHandler: PinchGestureHandlerProtocol,
                   pitchGestureHandler: GestureHandler,
                   doubleTapToZoomInGestureHandler: GestureHandler,
                   doubleTouchToZoomOutGestureHandler: GestureHandler,

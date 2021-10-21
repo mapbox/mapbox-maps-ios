@@ -1,8 +1,15 @@
 import UIKit
 
+internal protocol PinchGestureHandlerProtocol: GestureHandler {
+    var rotateEnabled: Bool { get set }
+}
+
 /// `PinchGestureHandler` updates the map camera in response to a 2-touch
 /// gesture that may consist of translation, scaling, and rotation
-internal final class PinchGestureHandler: GestureHandler {
+internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerProtocol {
+    /// Whether pinch gesture can rotate map or not
+    internal var rotateEnabled: Bool = true
+
     /// The midpoint of the touches in the gesture's view when the gesture began
     private var initialPinchMidpoint: CGPoint?
 
@@ -17,6 +24,9 @@ internal final class PinchGestureHandler: GestureHandler {
 
     /// The camera bearing when the gesture began or unpaused
     private var initialBearing: CLLocationDirection?
+
+    /// The rotateEnabled setting when the gesture began
+    private var initialRotateEnabled: Bool?
 
     private let mapboxMap: MapboxMapProtocol
 
@@ -41,6 +51,7 @@ internal final class PinchGestureHandler: GestureHandler {
             initialCenter = mapboxMap.cameraState.center
             initialZoom = mapboxMap.cameraState.zoom
             initialBearing = mapboxMap.cameraState.bearing
+            initialRotateEnabled = rotateEnabled
             delegate?.gestureBegan(for: .pinch)
         case .changed:
             // UIPinchGestureRecognizer sends a .changed event when the number
@@ -57,10 +68,12 @@ internal final class PinchGestureHandler: GestureHandler {
                 initialBearing = nil
                 return
             }
-            guard let initialZoom = initialZoom else {
+            guard let initialZoom = initialZoom,
+                  let initialRotateEnabled = initialRotateEnabled else {
                 return
             }
-            // Using explicit self to help out older versions of Xcode (pre-12.5) to figure out the scope of these variables here. Bug: https://bugs.swift.org/browse/SR-8669
+            // Using explicit self to help older versions of Xcode (pre-12.5) figure
+            // out the scope of these variables. https://bugs.swift.org/browse/SR-8669
             let pinchAngle = self.pinchAngle(with: gestureRecognizer)
             guard let initialPinchMidpoint = initialPinchMidpoint,
                   let initialPinchAngle = initialPinchAngle,
@@ -77,7 +90,7 @@ internal final class PinchGestureHandler: GestureHandler {
             var cameraOptions = CameraOptions()
             cameraOptions.center = initialCenter
             cameraOptions.zoom = initialZoom
-            cameraOptions.bearing = initialBearing
+            cameraOptions.bearing = initialRotateEnabled ? initialBearing : nil
 
             mapboxMap.setCamera(to: cameraOptions)
 
@@ -87,7 +100,6 @@ internal final class PinchGestureHandler: GestureHandler {
                 to: pinchMidpoint)
             mapboxMap.setCamera(to: dragOptions)
             mapboxMap.dragEnd()
-
             // the two angles will always be in the range [0, 2pi)
             // so the resulting rotation will be in the range (-2pi, 2pi)
             var rotation = pinchAngle - initialPinchAngle
@@ -105,13 +117,14 @@ internal final class PinchGestureHandler: GestureHandler {
                 to: CameraOptions(
                     anchor: pinchMidpoint,
                     zoom: initialZoom + zoomIncrement,
-                    bearing: initialBearing + rotationInDegrees))
+                    bearing: initialRotateEnabled ? (initialBearing + rotationInDegrees) : nil))
         case .ended, .cancelled:
             initialPinchMidpoint = nil
             initialPinchAngle = nil
             initialCenter = nil
             initialZoom = nil
             initialBearing = nil
+            initialRotateEnabled = nil
             delegate?.gestureEnded(for: .pinch, willAnimate: false)
         default:
             break

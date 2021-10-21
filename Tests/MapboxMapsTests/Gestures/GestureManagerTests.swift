@@ -6,7 +6,7 @@ final class GestureManagerTests: XCTestCase {
     var mapboxMap: MockMapboxMap!
     var cameraAnimationsManager: MockCameraAnimationsManager!
     var panGestureHandler: MockPanGestureHandler!
-    var pinchGestureHandler: GestureHandler!
+    var pinchGestureHandler: MockPinchGestureHandler!
     var pitchGestureHandler: GestureHandler!
     var doubleTapToZoomInGestureHandler: GestureHandler!
     var doubleTouchToZoomOutGestureHandler: GestureHandler!
@@ -23,7 +23,8 @@ final class GestureManagerTests: XCTestCase {
         cameraAnimationsManager = MockCameraAnimationsManager()
         panGestureHandler = MockPanGestureHandler(
             gestureRecognizer: MockGestureRecognizer())
-        pinchGestureHandler = makeGestureHandler()
+        pinchGestureHandler = MockPinchGestureHandler(
+            gestureRecognizer: MockGestureRecognizer())
         pitchGestureHandler = makeGestureHandler()
         doubleTapToZoomInGestureHandler = makeGestureHandler()
         doubleTouchToZoomOutGestureHandler = makeGestureHandler()
@@ -377,5 +378,28 @@ final class GestureManagerTests: XCTestCase {
         panGestureHandler.panMode = [.horizontal, .vertical].randomElement()!
 
         XCTAssertEqual(gestureManager.options.panMode, panGestureHandler.panMode)
+    }
+
+    func testPinchRotateEnabled() {
+        XCTAssertEqual(gestureManager.options.pinchRotateEnabled, true)
+        XCTAssertEqual(pinchGestureHandler.rotateEnabled, true)
+
+        gestureManager.options.pinchRotateEnabled = false
+
+        XCTAssertEqual(gestureManager.options.pinchRotateEnabled, false)
+        XCTAssertEqual(pinchGestureHandler.rotateEnabled, false)
+
+        gestureManager.options.pinchRotateEnabled = true
+
+        XCTAssertEqual(gestureManager.options.pinchRotateEnabled, true)
+        XCTAssertEqual(pinchGestureHandler.rotateEnabled, true)
+
+        pinchGestureHandler.rotateEnabled = false
+
+        XCTAssertEqual(gestureManager.options.pinchRotateEnabled, pinchGestureHandler.rotateEnabled)
+
+        pinchGestureHandler.rotateEnabled = true
+
+        XCTAssertEqual(gestureManager.options.pinchRotateEnabled, pinchGestureHandler.rotateEnabled)
     }
 }

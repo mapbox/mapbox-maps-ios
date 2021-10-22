@@ -3,7 +3,7 @@
 
 // swiftlint:disable file_length
 // swiftlint:disable:next type_body_length
-public class Style {
+public final class Style {
 
     public private(set) weak var styleManager: StyleManager!
 
@@ -38,7 +38,7 @@ public class Style {
     ///   - layerPosition: Position at which to add the map.
     ///
     /// - Throws: StyleError or type conversion errors
-    internal func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
+    @_spi(Experimental) public func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
         // Attempt to encode the provided layer into JSON and apply it to the map
         let layerJSON = try layer.jsonObject()
         try addPersistentLayer(with: layerJSON, layerPosition: layerPosition)

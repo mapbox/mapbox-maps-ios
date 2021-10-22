@@ -1,6 +1,4 @@
 import UIKit
-import MapboxCoreMaps
-@_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
 
 public struct Puck2DConfiguration: Equatable {
@@ -39,12 +37,12 @@ public struct Puck2DConfiguration: Equatable {
         self.showsAccuracyRing = showsAccuracyRing
     }
 
-    internal var resolvedTopImage: UIImage? {
-        topImage ?? UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)
+    internal var resolvedTopImage: UIImage {
+        topImage ?? UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!
     }
 
-    internal var resolvedBearingImage: UIImage? {
-        bearingImage ?? UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)
+    internal var resolvedBearingImage: UIImage {
+        bearingImage ?? UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!
     }
 
     internal var resolvedScale: Value<Double> {
@@ -52,17 +50,37 @@ public struct Puck2DConfiguration: Equatable {
     }
 }
 
-internal class Puck2D: Puck {
+internal final class Puck2D: NSObject, Puck {
 
-    internal var puckPrecision: PuckPrecision = .precise {
+    internal var isActive = false {
         didSet {
+            guard isActive != oldValue else {
+                return
+            }
+            if isActive {
+                locationSource.add(self)
+                addImages()
+                updateLayer()
+            } else {
+                locationSource.remove(self)
+                try? style.removeLayer(withId: Self.layerID)
+                try? style.removeImage(withId: Self.topImageId)
+                try? style.removeImage(withId: Self.bearingImageId)
+                try? style.removeImage(withId: Self.shadowImageId)
+                previouslySetLayerPropertyKeys.removeAll()
+            }
+        }
+    }
 
+    internal var puckAccuracy: PuckAccuracy = .full {
+        didSet {
+            updateLayer()
         }
     }
 
     internal var puckBearingSource: PuckBearingSource = .heading {
         didSet {
-
+            updateLayer()
         }
     }
 
@@ -70,7 +88,12 @@ internal class Puck2D: Puck {
     private let style: LocationStyleProtocol
     private let locationSource: LocationSource
 
-    private var locationIndicatorLayer: LocationIndicatorLayer?
+    private var previouslySetLayerPropertyKeys: Set<String> = []
+
+    private static let layerID = "puck"
+    private static let topImageId = "locationIndicatorLayerTopImage"
+    private static let bearingImageId = "locationIndicatorLayerBearingImage"
+    private static let shadowImageId = "locationIndicatorLayerShadowImage"
 
     internal init(configuration: Puck2DConfiguration,
                   style: LocationStyleProtocol,
@@ -80,179 +103,102 @@ internal class Puck2D: Puck {
         self.locationSource = locationSource
     }
 
-    deinit {
-        removePuck()
+    private func addImages() {
+        try! style.addImage(
+            configuration.resolvedTopImage,
+            id: Self.topImageId,
+            sdf: false,
+            stretchX: [],
+            stretchY: [],
+            content: nil)
+        try! style.addImage(
+            configuration.resolvedBearingImage,
+            id: Self.bearingImageId,
+            sdf: false,
+            stretchX: [],
+            stretchY: [],
+            content: nil)
+        if let shadowImage = configuration.shadowImage {
+            try! style.addImage(
+                shadowImage,
+                id: Self.shadowImageId,
+                sdf: false,
+                stretchX: [],
+                stretchY: [],
+                content: nil)
+        }
     }
 
-    internal func updateLocation(location: Location) {
-        if let locationIndicatorLayer = locationIndicatorLayer {
-
-            let newLocation: [Double] = [
+    private func updateLayer() {
+        guard isActive, let location = locationSource.latestLocation else {
+            return
+        }
+        var layer = LocationIndicatorLayer(id: Self.layerID)
+        switch puckAccuracy {
+        case .full:
+            layer.topImage = .constant(.name(Self.topImageId))
+            layer.bearingImage = .constant(.name(Self.bearingImageId))
+            if configuration.shadowImage != nil {
+                layer.shadowImage = .constant(.name(Self.shadowImageId))
+            }
+            layer.location = .constant([
                 location.coordinate.latitude,
                 location.coordinate.longitude,
                 location.internalLocation.altitude
-            ]
-
-            var bearing: Double = 0.0
+            ])
+            layer.locationTransition = StyleTransition(duration: 0.5, delay: 0)
+            layer.topImageSize = configuration.resolvedScale
+            layer.bearingImageSize = configuration.resolvedScale
+            layer.shadowImageSize = configuration.resolvedScale
+            layer.emphasisCircleRadiusTransition = StyleTransition(duration: 0, delay: 0)
+            layer.bearingTransition = StyleTransition(duration: 0, delay: 0)
+            if configuration.showsAccuracyRing {
+                layer.accuracyRadius = .constant(location.horizontalAccuracy)
+                layer.accuracyRadiusColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
+                layer.accuracyRadiusBorderColor = .constant(StyleColor(.lightGray))
+            }
             switch puckBearingSource {
             case .heading:
-                if let latestBearing = location.heading {
-                    bearing = latestBearing.trueHeading
-                }
+                layer.bearing = .constant(location.heading?.trueHeading ?? 0)
             case .course:
-                bearing = location.course
+                layer.bearing = .constant(location.course)
             }
-
-            do {
-                try style.setLayerProperties(for: locationIndicatorLayer.id,
-                                             properties: [
-                                                "location": newLocation,
-                                                "bearing": bearing
-                                             ])
-            } catch {
-                Log.error(forMessage: "Error when updating location/bearing in location indicator layer: \(error)", category: "Location")
-            }
-        } else {
-            updateStyle(puckPrecision: puckPrecision, location: location)
-        }
-    }
-
-    internal func updateStyle(puckPrecision: PuckPrecision, location: Location) {
-        self.puckPrecision = puckPrecision
-
-        let setupLocationIndicatorLayer = { [weak self] in
-            guard let self = self else { return }
-            self.removePuck()
-            do {
-                switch self.puckPrecision {
-                case .precise:
-                    try self.createPreciseLocationIndicatorLayer(location: location)
-                case .approximate:
-                    try self.createApproximateLocationIndicatorLayer(location: location)
-                }
-            } catch {
-                Log.error(forMessage: "Error when creating location indicator layer: \(error)", category: "Location")
-            }
-        }
-
-        // Setup the location  indicator layer initially
-        setupLocationIndicatorLayer()
-
-        // Ensure that location indicator layer gets reloaded whenever the style is changed
-    }
-
-    internal func removePuck() {
-        guard let locationIndicatorLayer = self.locationIndicatorLayer else {
-            return
-        }
-
-        do {
-            try style.removeLayer(withId: locationIndicatorLayer.id)
-        } catch {
-            Log.error(forMessage: "Error when removing location indicator layer: \(error)", category: "Location")
-        }
-
-        self.locationIndicatorLayer = nil
-    }
-}
-
-// MARK: Layer Creation Functions
-
-internal extension Puck2D {
-    func createPreciseLocationIndicatorLayer(location: Location) throws {
-        if style.layerExists(withId: "approximate-puck") {
-            try style.removeLayer(withId: "approximate-puck")
-        }
-        // Call customizationHandler to allow developers to granularly modify the layer
-
-        // Add images to sprite sheet
-        guard let topImage = configuration.resolvedTopImage, let bearingImage = configuration.resolvedBearingImage else {
-            return
-        }
-
-        try style.addImage(topImage,
-                           id: "locationIndicatorLayerTopImage",
-                           sdf: false,
-                           stretchX: [],
-                           stretchY: [],
-                           content: nil)
-        try style.addImage(bearingImage,
-                           id: "locationIndicatorLayerBearingImage",
-                           sdf: false,
-                           stretchX: [],
-                           stretchY: [],
-                           content: nil)
-
-        if let validShadowImage = configuration.shadowImage {
-            try style.addImage(validShadowImage,
-                               id: "locationIndicatorLayerShadowImage",
-                               sdf: false,
-                               stretchX: [],
-                               stretchY: [],
-                               content: nil)
-        }
-
-        // Create Layer
-        var layer = LocationIndicatorLayer(id: "puck")
-        layer.topImage = .constant(ResolvedImage.name("locationIndicatorLayerTopImage"))
-        layer.bearingImage = .constant(ResolvedImage.name("locationIndicatorLayerBearingImage"))
-        layer.location = .constant([
-            location.coordinate.latitude,
-            location.coordinate.longitude,
-            location.internalLocation.altitude
-        ])
-        layer.locationTransition = StyleTransition(duration: 0.5, delay: 0)
-        layer.topImageSize = configuration.resolvedScale
-        layer.bearingImageSize = configuration.resolvedScale
-        layer.shadowImageSize = configuration.resolvedScale
-        layer.emphasisCircleRadiusTransition = StyleTransition(duration: 0, delay: 0)
-        layer.bearingTransition = StyleTransition(duration: 0, delay: 0)
-
-        // Horizontal accuracy ring is an optional visual for the 2D Puck
-        if configuration.showsAccuracyRing {
-            layer.accuracyRadius = .constant(location.horizontalAccuracy)
+        case .reduced:
+            layer.accuracyRadius = .expression(Exp(.interpolate) {
+                Exp(.linear)
+                Exp(.zoom)
+                0
+                400000
+                4
+                200000
+                8
+                5000
+            })
             layer.accuracyRadiusColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
             layer.accuracyRadiusBorderColor = .constant(StyleColor(.lightGray))
         }
 
-        // Add layer to style
-        try style.addPersistentLayer(layer, layerPosition: nil)
+        let newLayerProperties = try! layer.jsonObject()
+        // Construct the properties dictionary to reset any properties that are no longer used
+        let unusedPropertyKeys = previouslySetLayerPropertyKeys.subtracting(newLayerProperties.keys)
+        let unusedProperties = Dictionary(uniqueKeysWithValues: unusedPropertyKeys.map { (key) -> (String, Any) in
+            (key, Style.layerPropertyDefaultValue(for: .locationIndicator, property: key).value)
+        })
+        // Merge the new and unused properties
+        let allLayerProperties = newLayerProperties.merging(unusedProperties, uniquingKeysWith: { $1 })
+        // Store the new set of property keys
+        previouslySetLayerPropertyKeys = Set(newLayerProperties.keys)
 
-        locationIndicatorLayer = layer
+        if style.layerExists(withId: Self.layerID) {
+            try! style.setLayerProperties(for: Self.layerID, properties: allLayerProperties)
+        } else {
+            try! style.addPersistentLayer(with: allLayerProperties, layerPosition: nil)
+        }
     }
+}
 
-    func createApproximateLocationIndicatorLayer(location: Location) throws {
-        if style.layerExists(withId: "puck") {
-            try style.removeLayer(withId: "puck")
-        }
-
-        // Create Layer
-        var layer = LocationIndicatorLayer(id: "approximate-puck")
-
-        // Create and set Paint property
-        layer.location = .constant([
-            location.coordinate.latitude,
-            location.coordinate.longitude,
-            location.internalLocation.altitude
-        ])
-        let exp = Exp(.interpolate) {
-            Exp(.linear)
-            Exp(.zoom)
-            0
-            400000
-            4
-            200000
-            8
-            5000
-        }
-        layer.accuracyRadius = .expression(exp)
-
-        layer.accuracyRadiusColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
-        layer.accuracyRadiusBorderColor = .constant(StyleColor(.lightGray))
-
-        // Add layer to style
-        try style.addPersistentLayer(layer, layerPosition: nil)
-
-        locationIndicatorLayer = layer
+extension Puck2D: LocationConsumer {
+    internal func locationUpdate(newLocation: Location) {
+        updateLayer()
     }
 }

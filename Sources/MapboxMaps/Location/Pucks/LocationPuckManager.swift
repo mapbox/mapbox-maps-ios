@@ -3,9 +3,9 @@ import MapboxCoreMaps
 import UIKit
 
 /// This enum represents the different styles of pucks that can be generated
-internal enum PuckPrecision {
-    case approximate
-    case precise
+internal enum PuckAccuracy {
+    case reduced
+    case full
 }
 
 /// An object that is responsible for managing the location indicator which can be view based, or layer based
@@ -23,20 +23,22 @@ internal final class LocationPuckManager {
                 return
             }
             // otherwise, recreate the puck
+            let puck: Puck
             switch puckType {
             case .puck2D(let configuration):
                 puck = puck2DProvider(configuration)
             case .puck3D(let configuration):
                 puck = puck3DProvider(configuration)
             }
-            puck?.puckPrecision = puckPrecision
-            puck?.puckBearingSource = puckBearingSource
+            puck.puckAccuracy = puckAccuracy
+            puck.puckBearingSource = puckBearingSource
+            self.puck = puck
         }
     }
 
-    var puckPrecision: PuckPrecision = .precise {
+    var puckAccuracy: PuckAccuracy = .full {
         didSet {
-            puck?.puckPrecision = puckPrecision
+            puck?.puckAccuracy = puckAccuracy
         }
     }
 

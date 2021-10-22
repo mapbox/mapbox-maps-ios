@@ -1,6 +1,4 @@
-import UIKit
-import MapboxCoreMaps
-import MapboxCommon
+import Foundation
 
 public struct Puck3DConfiguration: Equatable {
 
@@ -25,21 +23,7 @@ public struct Puck3DConfiguration: Equatable {
     }
 }
 
-internal class Puck3D: NSObject, Puck {
-
-    // precision is not implemented for Puck3D, so
-    // this is just here for protocol conformance
-    internal var puckPrecision: PuckPrecision = .precise
-
-    internal var puckBearingSource: PuckBearingSource = .heading {
-        didSet {
-            update()
-        }
-    }
-
-    private let configuration: Puck3DConfiguration
-    private let style: LocationStyleProtocol
-    private let locationSource: LocationSource
+internal final class Puck3D: NSObject, Puck {
 
     internal var isActive = false {
         didSet {
@@ -48,7 +32,7 @@ internal class Puck3D: NSObject, Puck {
             }
             if isActive {
                 locationSource.add(self)
-                update()
+                updateSourceAndLayer()
             } else {
                 locationSource.remove(self)
                 if style.layerExists(withId: Self.layerID) {
@@ -60,6 +44,20 @@ internal class Puck3D: NSObject, Puck {
             }
         }
     }
+
+    // accuracy is not implemented for Puck3D, so
+    // this is just here for protocol conformance
+    internal var puckAccuracy: PuckAccuracy = .full
+
+    internal var puckBearingSource: PuckBearingSource = .heading {
+        didSet {
+            updateSourceAndLayer()
+        }
+    }
+
+    private let configuration: Puck3DConfiguration
+    private let style: LocationStyleProtocol
+    private let locationSource: LocationSource
 
     private static let sourceID = "puck-model-source"
     private static let layerID = "puck-model-layer"
@@ -73,7 +71,7 @@ internal class Puck3D: NSObject, Puck {
         super.init()
     }
 
-    private func update() {
+    private func updateSourceAndLayer() {
         guard isActive, let location = locationSource.latestLocation else {
             return
         }
@@ -91,23 +89,18 @@ internal class Puck3D: NSObject, Puck {
             validDirection = location.course
         }
 
-        let initialPuckOrientation = configuration.model.orientation
-        if var orientation = model.orientation {
-            let initalOrientation = initialPuckOrientation != nil ? initialPuckOrientation![2] : 0
-            orientation[2] = initalOrientation + validDirection
-            model.orientation = orientation
+        if model.orientation == nil || model.orientation?.count != 3 {
+            model.orientation = [0, 0, 0]
         }
+        model.orientation?[2] += validDirection
 
         var source = ModelSource()
-        source.models = ["puck-model": configuration.model]
+        source.models = ["puck-model": model]
 
         if style.sourceExists(withId: Self.sourceID) {
-            if let data = try? JSONEncoder().encode(source.models),
-               let jsonDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                try? style.setSourceProperty(for: Self.sourceID, property: "models", value: jsonDictionary)
-            }
+            try! style.setSourceProperties(for: Self.sourceID, properties: source.jsonObject())
         } else {
-            try? style.addSource(source, id: Self.sourceID)
+            try! style.addSource(source, id: Self.sourceID)
         }
 
         if !style.layerExists(withId: Self.layerID) {
@@ -127,7 +120,7 @@ internal class Puck3D: NSObject, Puck {
 }
 
 extension Puck3D: LocationConsumer {
-    func locationUpdate(newLocation: Location) {
-        update()
+    internal func locationUpdate(newLocation: Location) {
+        updateSourceAndLayer()
     }
 }

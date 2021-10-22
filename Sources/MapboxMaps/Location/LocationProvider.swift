@@ -32,7 +32,7 @@ public protocol LocationProvider {
     /// the foreground.
     func requestWhenInUseAuthorization()
 
-    /// Requests temporary permission for precise accuracy
+    /// Requests temporary permission for full accuracy
     @available(iOS 14.0, *)
     func requestTemporaryFullAccuracyAuthorization(withPurposeKey purposeKey: String)
 

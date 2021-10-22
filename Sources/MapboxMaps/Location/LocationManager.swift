@@ -91,7 +91,7 @@ extension LocationManager: LocationProviderDelegate {
     public func locationProviderDidChangeAuthorization(_ provider: LocationProvider) {
         if #available(iOS 14.0, *) {
             if [.authorizedAlways, .authorizedWhenInUse].contains(provider.authorizationStatus) {
-                locationPuckManager.puckPrecision = provider.accuracyAuthorization == .reducedAccuracy ? .approximate : .precise
+                locationPuckManager.puckAccuracy = provider.accuracyAuthorization == .reducedAccuracy ? .reduced : .full
             }
         }
         delegate?.locationManager?(self, didChangeAccuracyAuthorization: provider.accuracyAuthorization)

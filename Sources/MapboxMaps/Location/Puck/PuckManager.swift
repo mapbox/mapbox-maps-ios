@@ -8,10 +8,15 @@ internal enum PuckAccuracy {
     case full
 }
 
-/// An object that is responsible for managing the location indicator which can be view based, or layer based
-internal final class LocationPuckManager {
+internal protocol PuckManagerProtocol: AnyObject {
+    var puckType: PuckType? { get set }
+    var puckAccuracy: PuckAccuracy { get set }
+    var puckBearingSource: PuckBearingSource { get set }
+}
 
-    var puckType: PuckType? {
+internal final class PuckManager: PuckManagerProtocol {
+
+    internal var puckType: PuckType? {
         didSet {
             // if puckType is nil, set puck to nil and return early
             guard let puckType = puckType else {
@@ -36,13 +41,13 @@ internal final class LocationPuckManager {
         }
     }
 
-    var puckAccuracy: PuckAccuracy = .full {
+    internal var puckAccuracy: PuckAccuracy = .full {
         didSet {
             puck?.puckAccuracy = puckAccuracy
         }
     }
 
-    var puckBearingSource: PuckBearingSource = .heading {
+    internal var puckBearingSource: PuckBearingSource = .heading {
         didSet {
             puck?.puckBearingSource = puckBearingSource
         }

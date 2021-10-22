@@ -1,24 +1,6 @@
 import Foundation
 import CoreLocation
 
-/// Represents the different types of pucks
-public enum PuckType: Equatable {
-    /// A 2-dimensional puck. Optionally provide `Puck2DConfiguration` to configure the puck's appearance.
-    case puck2D(Puck2DConfiguration = Puck2DConfiguration())
-
-    /// A 3-dimensional puck. Provide a `Puck3DConfiguration` to configure the puck's appearance.
-    case puck3D(Puck3DConfiguration)
-}
-
-/// Controls how the puck is oriented
-public enum PuckBearingSource: Equatable {
-    /// The puck should set its bearing using `heading: CLHeading`
-    case heading
-
-    /// The puck should set its bearing using `course: CLLocationDirection`
-    case course
-}
-
 /// A struct to configure a `LocationManager`
 public struct LocationOptions: Equatable {
 
@@ -45,4 +27,13 @@ public struct LocationOptions: Equatable {
 
     public init() {}
 
+}
+
+/// Controls how the puck is oriented
+public enum PuckBearingSource: Equatable {
+    /// The puck should set its bearing using `heading: CLHeading`
+    case heading
+
+    /// The puck should set its bearing using `course: CLLocationDirection`
+    case course
 }

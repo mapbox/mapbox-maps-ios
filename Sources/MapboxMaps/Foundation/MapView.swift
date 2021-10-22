@@ -286,7 +286,7 @@ open class MapView: UIView {
         let locationProvider = AppleLocationProvider()
         let locationSource = LocationSource(
             locationProvider: locationProvider)
-        let locationPuckManager = LocationPuckManager(
+        let puckManager = PuckManager(
             puck2DProvider: { [style=mapboxMap.style] configuration in
                 Puck2D(
                     configuration: configuration,
@@ -302,7 +302,7 @@ open class MapView: UIView {
 
         location = LocationManager(
             locationSource: locationSource,
-            locationPuckManager: locationPuckManager)
+            puckManager: puckManager)
 
         // Initialize/Configure annotations orchestrator
         annotations = AnnotationOrchestrator(

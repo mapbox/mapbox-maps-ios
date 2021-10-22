@@ -25,11 +25,11 @@ public final class LocationManager: NSObject {
         return locationSource.consumers
     }
 
-    private let locationSource: LocationSource
+    private let locationSource: LocationSourceProtocol
 
     /// Manager that handles the visual puck element.
     /// Only created if `showsUserLocation` is `true`.
-    private let locationPuckManager: LocationPuckManager
+    private let puckManager: PuckManagerProtocol
 
     /// The `LocationOptions` that configure the location manager.
     public var options = LocationOptions() {
@@ -38,10 +38,10 @@ public final class LocationManager: NSObject {
         }
     }
 
-    internal init(locationSource: LocationSource,
-                  locationPuckManager: LocationPuckManager) {
+    internal init(locationSource: LocationSourceProtocol,
+                  puckManager: PuckManagerProtocol) {
         self.locationSource = locationSource
-        self.locationPuckManager = locationPuckManager
+        self.puckManager = puckManager
         super.init()
         locationSource.locationProviderDelegate = self
         syncOptions()
@@ -73,8 +73,8 @@ public final class LocationManager: NSObject {
 
     private func syncOptions() {
         locationSource.locationProvider.locationProviderOptions = options
-        locationPuckManager.puckType = options.puckType
-        locationPuckManager.puckBearingSource = options.puckBearingSource
+        puckManager.puckType = options.puckType
+        puckManager.puckBearingSource = options.puckBearingSource
     }
 }
 
@@ -91,7 +91,7 @@ extension LocationManager: LocationProviderDelegate {
     public func locationProviderDidChangeAuthorization(_ provider: LocationProvider) {
         if #available(iOS 14.0, *) {
             if [.authorizedAlways, .authorizedWhenInUse].contains(provider.authorizationStatus) {
-                locationPuckManager.puckAccuracy = provider.accuracyAuthorization == .reducedAccuracy ? .reduced : .full
+                puckManager.puckAccuracy = provider.accuracyAuthorization == .reducedAccuracy ? .reduced : .full
             }
         }
         delegate?.locationManager?(self, didChangeAccuracyAuthorization: provider.accuracyAuthorization)

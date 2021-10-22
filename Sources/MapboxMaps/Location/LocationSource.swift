@@ -1,7 +1,17 @@
 import Foundation
 @_implementationOnly import MapboxCommon_Private
 
-internal class LocationSource {
+internal protocol LocationSourceProtocol: AnyObject {
+    var locationProviderDelegate: LocationProviderDelegate? { get set }
+    var latestLocation: Location? { get }
+    var consumers: NSHashTable<LocationConsumer> { get }
+    var locationProvider: LocationProvider { get set }
+    func add(_ consumer: LocationConsumer)
+    func remove(_ consumer: LocationConsumer)
+    func updateHeadingForCurrentDeviceOrientation()
+}
+
+internal final class LocationSource: LocationSourceProtocol {
 
     internal weak var locationProviderDelegate: LocationProviderDelegate?
 
@@ -121,7 +131,8 @@ extension LocationSource: LocationProviderDelegate {
         locationProviderDelegate?.locationProvider(provider, didUpdateLocations: locations)
     }
 
-    internal func locationProvider(_ provider: LocationProvider, didUpdateHeading newHeading: CLHeading) {        isUpdating = (_consumers.count > 0)
+    internal func locationProvider(_ provider: LocationProvider, didUpdateHeading newHeading: CLHeading) {
+        isUpdating = (_consumers.count > 0)
         guard isUpdating else {
             return
         }

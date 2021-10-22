@@ -1,54 +1,4 @@
-import UIKit
 @_implementationOnly import MapboxCommon_Private
-
-public struct Puck2DConfiguration: Equatable {
-
-    /// Image to use as the top of the location indicator.
-    public var topImage: UIImage?
-
-    /// Image to use as the middle of the location indicator.
-    public var bearingImage: UIImage?
-
-    /// Image to use as the background of the location indicator.
-    public var shadowImage: UIImage?
-
-    /// The size of the images, as a scale factor applied to the size of the specified image.
-    public var scale: Value<Double>?
-
-    /// Flag determining if the horizontal accuracy ring should be shown arround the `Puck`. default value is false
-    public var showsAccuracyRing: Bool
-
-    /// Initialize a `Puck2D` object with a top image, bearing image, shadow image, scale, and accuracy ring visibility.
-    /// - Parameters:
-    ///   - topImage: The image to use as the top layer for the location indicator.
-    ///   - bearingImage: The image used as the middle of the location indicator.
-    ///   - shadowImage: The image that acts as a background of the location indicator.
-    ///   - scale: The size of the images, as a scale factor applied to the size of the specified image..
-    ///   - showsAccuracyRing: Indicates whether the location accurary ring should be shown.
-    public init(topImage: UIImage? = nil,
-                bearingImage: UIImage? = nil,
-                shadowImage: UIImage? = nil,
-                scale: Value<Double>? = nil,
-                showsAccuracyRing: Bool = false) {
-        self.topImage = topImage
-        self.bearingImage = bearingImage
-        self.shadowImage = shadowImage
-        self.scale = scale
-        self.showsAccuracyRing = showsAccuracyRing
-    }
-
-    internal var resolvedTopImage: UIImage {
-        topImage ?? UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!
-    }
-
-    internal var resolvedBearingImage: UIImage {
-        bearingImage ?? UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!
-    }
-
-    internal var resolvedScale: Value<Double> {
-        scale ?? .constant(1.0)
-    }
-}
 
 internal final class Puck2D: NSObject, Puck {
 
@@ -85,8 +35,8 @@ internal final class Puck2D: NSObject, Puck {
     }
 
     private let configuration: Puck2DConfiguration
-    private let style: LocationStyleProtocol
-    private let locationSource: LocationSource
+    private let style: StyleProtocol
+    private let locationSource: LocationSourceProtocol
 
     private var previouslySetLayerPropertyKeys: Set<String> = []
 
@@ -96,8 +46,8 @@ internal final class Puck2D: NSObject, Puck {
     private static let shadowImageId = "locationIndicatorLayerShadowImage"
 
     internal init(configuration: Puck2DConfiguration,
-                  style: LocationStyleProtocol,
-                  locationSource: LocationSource) {
+                  style: StyleProtocol,
+                  locationSource: LocationSourceProtocol) {
         self.configuration = configuration
         self.style = style
         self.locationSource = locationSource
@@ -159,7 +109,7 @@ internal final class Puck2D: NSObject, Puck {
             }
             switch puckBearingSource {
             case .heading:
-                layer.bearing = .constant(location.heading?.trueHeading ?? 0)
+                layer.bearing = .constant(location.headingDirection ?? 0)
             case .course:
                 layer.bearing = .constant(location.course)
             }
@@ -200,5 +150,19 @@ internal final class Puck2D: NSObject, Puck {
 extension Puck2D: LocationConsumer {
     internal func locationUpdate(newLocation: Location) {
         updateLayer()
+    }
+}
+
+private extension Puck2DConfiguration {
+    var resolvedTopImage: UIImage {
+        topImage ?? UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!
+    }
+
+    var resolvedBearingImage: UIImage {
+        bearingImage ?? UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!
+    }
+
+    var resolvedScale: Value<Double> {
+        scale ?? .constant(1.0)
     }
 }

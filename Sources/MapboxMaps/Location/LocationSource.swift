@@ -142,9 +142,15 @@ internal final class LocationSource: LocationSourceProtocol {
 // they may be deinited without ever being explicitly removed.
 extension LocationSource: LocationProviderDelegate {
 
+    private func shouldHandleDelegateMethod() -> Bool {
+        // check _consumers.anyObject != nil instead of simply _consumers.count
+        // which may still include objects that have been deinited
+        isUpdating = (_consumers.anyObject != nil)
+        return isUpdating
+    }
+
     internal func locationProvider(_ provider: LocationProvider, didUpdateLocations locations: [CLLocation]) {
-        isUpdating = (_consumers.count > 0)
-        guard isUpdating else {
+        guard shouldHandleDelegateMethod() else {
             return
         }
         latestCLLocation = locations.last
@@ -152,8 +158,7 @@ extension LocationSource: LocationProviderDelegate {
     }
 
     internal func locationProvider(_ provider: LocationProvider, didUpdateHeading newHeading: CLHeading) {
-        isUpdating = (_consumers.count > 0)
-        guard isUpdating else {
+        guard shouldHandleDelegateMethod() else {
             return
         }
         latestHeading = newHeading
@@ -161,8 +166,7 @@ extension LocationSource: LocationProviderDelegate {
     }
 
     internal func locationProvider(_ provider: LocationProvider, didFailWithError error: Error) {
-        isUpdating = (_consumers.count > 0)
-        guard isUpdating else {
+        guard shouldHandleDelegateMethod() else {
             return
         }
         Log.error(forMessage: "\(provider) did fail with error: \(error)", category: "Location")
@@ -170,8 +174,7 @@ extension LocationSource: LocationProviderDelegate {
     }
 
     internal func locationProviderDidChangeAuthorization(_ provider: LocationProvider) {
-        isUpdating = (_consumers.count > 0)
-        guard isUpdating else {
+        guard shouldHandleDelegateMethod() else {
             return
         }
         if provider.authorizationStatus == .authorizedAlways || provider.authorizationStatus == .authorizedWhenInUse {

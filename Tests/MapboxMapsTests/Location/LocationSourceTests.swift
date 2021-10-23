@@ -161,14 +161,15 @@ final class LocationSourceTests: XCTestCase {
         XCTAssertTrue(locationSource.consumers.contains(consumer))
     }
 
-    func testSetLocationProviderWithNoConsumers() {
+    func testSetLocationProviderWithNoConsumers() throws {
         let otherProvider = MockLocationProvider()
         locationProvider.setDelegateStub.reset()
 
         locationSource.locationProvider = otherProvider
 
         XCTAssertEqual(locationProvider.setDelegateStub.invocations.count, 1)
-        XCTAssertTrue(locationProvider.setDelegateStub.parameters.first is EmptyLocationProviderDelegate?)
+        let delegate = try XCTUnwrap(locationProvider.setDelegateStub.parameters.first)
+        XCTAssertTrue(delegate is EmptyLocationProviderDelegate)
 
         XCTAssertEqual(otherProvider.setDelegateStub.invocations.count, 1)
         XCTAssertTrue(otherProvider.setDelegateStub.parameters.first === locationSource)
@@ -197,7 +198,7 @@ final class LocationSourceTests: XCTestCase {
         XCTAssertEqual(otherProvider.startUpdatingHeadingStub.invocations.count, 1)
     }
 
-    func testDeinit() {
+    func testDeinit() throws {
         autoreleasepool {
             let locationSource = LocationSource(
                 locationProvider: locationProvider,
@@ -211,7 +212,8 @@ final class LocationSourceTests: XCTestCase {
         XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(locationProvider.stopUpdatingHeadingStub.invocations.count, 1)
         XCTAssertEqual(locationProvider.setDelegateStub.invocations.count, 1)
-        XCTAssertTrue(locationProvider.setDelegateStub.parameters.first is EmptyLocationProviderDelegate?)
+        let delegate = try XCTUnwrap(locationProvider.setDelegateStub.parameters.first)
+        XCTAssertTrue(delegate is EmptyLocationProviderDelegate)
     }
 
     func testHeadingOrientationManagement() {
@@ -219,10 +221,33 @@ final class LocationSourceTests: XCTestCase {
         // shouldn't it be in response to device orientation changes???)
     }
 
-    func testStopUpdatingDuringDidUpdateLocationsDueToConsumerDeinit() {
+    func testStopUpdatingDuringDidUpdateLocationsDueToConsumerDeinit() throws {
+        locationProvider.setDelegateStub.reset()
+
+        autoreleasepool {
+            let consumer = MockLocationConsumer()
+            locationSource.add(consumer)
+        }
+        locationSource.locationProvider(locationProvider, didUpdateLocations: [CLLocation()])
+
+        XCTAssertNil(locationSource.latestLocation)
+        XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
+        XCTAssertEqual(locationProvider.stopUpdatingHeadingStub.invocations.count, 1)
     }
 
     func testStopUpdatingDuringDidUpdateHeadingDueToConsumerDeinit() {
+        locationProvider.setDelegateStub.reset()
+
+        autoreleasepool {
+            let consumer = MockLocationConsumer()
+            locationSource.add(consumer)
+            locationSource.locationProvider(locationProvider, didUpdateLocations: [CLLocation()])
+        }
+        locationSource.locationProvider(locationProvider, didUpdateHeading: CLHeading())
+
+        XCTAssertNil(locationSource.latestLocation?.heading)
+        XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
+        XCTAssertEqual(locationProvider.stopUpdatingHeadingStub.invocations.count, 1)
     }
 
     func testStopUpdatingDuringDidFailWithErrorDueToConsumerDeinit() {

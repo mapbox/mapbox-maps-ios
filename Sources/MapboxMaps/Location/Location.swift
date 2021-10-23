@@ -3,41 +3,46 @@ import CoreLocation
 
 @objc public class Location: NSObject {
 
-    /// The orientation of the user's device. The default value is `nil` if the device heading cannot be accessed.
     public let heading: CLHeading?
 
-    internal let internalLocation: CLLocation
+    public let location: CLLocation
 
-    /// A `CLLocationCoordinate2D` that represents a physical location.
+    /// A conveninece accessor for `location.coordinate`
     public var coordinate: CLLocationCoordinate2D {
-        return internalLocation.coordinate
+        return location.coordinate
     }
 
-    /// The direction that the device is moving in degrees true North.
+    /// A convenience accessor for `location.course`
     public var course: CLLocationDirection {
-        return internalLocation.course
+        return location.course
     }
 
-    /// The horizontal accuracy of a location.
+    /// A conveninece accessor for `location.horizontalAccuracy`
     public var horizontalAccuracy: CLLocationAccuracy {
-        return internalLocation.horizontalAccuracy
+        return location.horizontalAccuracy
     }
 
-    /// The optional heading direction. Returns `nil` if `Location.heading` is `nil`.
-    /// If the heading relative to true north can be determined, that value will be used. Otherwise, magnetic north will be used.
+    /// Returns `nil` if `heading` is `nil`, `heading.trueHeading` if it's non-negative,
+    /// and `heading.magneticHeading` otherwise.
     public var headingDirection: CLLocationDirection? {
-        guard let heading = self.heading else { return nil }
-
-        if heading.trueHeading >= 0 {
-            return heading.trueHeading
+        guard let heading = heading else {
+            return nil
         }
-
-        return heading.magneticHeading
+        guard heading.trueHeading >= 0 else {
+            return heading.magneticHeading
+        }
+        return heading.trueHeading
     }
 
-    /// Initialize a `Location` object.
+    /// Initialize a `Location`. Deprecated. Use `init(location:heading:)` instead.
     public init(with location: CLLocation, heading: CLHeading? = nil) {
-        internalLocation = location
+        self.location = location
+        self.heading = heading
+    }
+
+    /// Initialize a `Location`
+    public init(location: CLLocation, heading: CLHeading?) {
+        self.location = location
         self.heading = heading
     }
 }

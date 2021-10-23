@@ -31,7 +31,6 @@ final class PuckManagerTests: XCTestCase {
 
     func testSetPuckTypeToPuck2D() throws {
         let configuration = Puck2DConfiguration()
-        puck2DProvider.defaultReturnValue.isActive = false
         puckManager.puckAccuracy = [.full, .reduced].randomElement()!
         puckManager.puckBearingSource = [.heading, .course].randomElement()!
 
@@ -41,17 +40,22 @@ final class PuckManagerTests: XCTestCase {
         let puck = try XCTUnwrap(puck2DProvider.returnedValues.first)
         XCTAssertEqual(puck.setPuckAccuracyStub.parameters, [puckManager.puckAccuracy])
         XCTAssertEqual(puck.setPuckBearingSourceStub.parameters, [puckManager.puckBearingSource])
-        XCTAssertTrue(puck.isActive)
+        XCTAssertEqual(puck.setIsActiveStub.parameters, [true])
 
         // setting the same puck again should have no further effect
         puck2DProvider.reset()
+        puck.setPuckAccuracyStub.reset()
+        puck.setPuckBearingSourceStub.reset()
+        puck.setIsActiveStub.reset()
         puckManager.puckType = .puck2D(configuration)
         XCTAssertTrue(puck2DProvider.invocations.isEmpty)
+        XCTAssertTrue(puck.setPuckAccuracyStub.invocations.isEmpty)
+        XCTAssertTrue(puck.setPuckBearingSourceStub.invocations.isEmpty)
+        XCTAssertTrue(puck.setIsActiveStub.invocations.isEmpty)
     }
 
     func testSetPuckTypeToPuck3D() throws {
         let configuration = Puck3DConfiguration(model: Model())
-        puck3DProvider.defaultReturnValue.isActive = false
         puckManager.puckAccuracy = [.full, .reduced].randomElement()!
         puckManager.puckBearingSource = [.heading, .course].randomElement()!
 
@@ -61,27 +65,81 @@ final class PuckManagerTests: XCTestCase {
         let puck = try XCTUnwrap(puck3DProvider.returnedValues.first)
         XCTAssertEqual(puck.setPuckAccuracyStub.parameters, [puckManager.puckAccuracy])
         XCTAssertEqual(puck.setPuckBearingSourceStub.parameters, [puckManager.puckBearingSource])
-        XCTAssertTrue(puck.isActive)
+        XCTAssertEqual(puck.setIsActiveStub.parameters, [true])
 
         // setting the same puck again should have no further effect
         puck3DProvider.reset()
+        puck.setPuckAccuracyStub.reset()
+        puck.setPuckBearingSourceStub.reset()
+        puck.setIsActiveStub.reset()
         puckManager.puckType = .puck3D(configuration)
         XCTAssertTrue(puck3DProvider.invocations.isEmpty)
+        XCTAssertTrue(puck.setPuckAccuracyStub.invocations.isEmpty)
+        XCTAssertTrue(puck.setPuckBearingSourceStub.invocations.isEmpty)
+        XCTAssertTrue(puck.setIsActiveStub.invocations.isEmpty)
     }
 
+    // this is important so that if they're the same type of puck,
+    // the one getting deactivated doesn't remove the layer/source
+    // that the one getting activated added
     func testOldPuckIsDeactivatedBeforeNewPuckIsActivated() throws {
+        var oldPuckDeactivated = false
+        puck2DProvider.defaultReturnValue.setIsActiveStub.defaultSideEffect = { invocation in
+            if !invocation.parameters {
+                oldPuckDeactivated = true
+            }
+        }
+        var oldPuckDeactivatedBeforeNewPuckActivated = false
+        puck3DProvider.defaultReturnValue.setIsActiveStub.defaultSideEffect = { invocation in
+            if invocation.parameters {
+                oldPuckDeactivatedBeforeNewPuckActivated = oldPuckDeactivated
+            }
+        }
 
+        puckManager.puckType = .puck2D()
+
+        puckManager.puckType = .puck3D(Puck3DConfiguration(model: Model()))
+
+        XCTAssertTrue(oldPuckDeactivatedBeforeNewPuckActivated)
     }
 
     func testResettingPuckTypeToNil() {
+        let puck = MockPuck()
+        puck2DProvider.defaultReturnValue = puck
+        puckManager.puckType = .puck2D()
+        puck2DProvider.reset()
+        puck.setIsActiveStub.reset()
 
+        puckManager.puckType = nil
+
+        XCTAssertTrue(puck2DProvider.invocations.isEmpty)
+        XCTAssertTrue(puck3DProvider.invocations.isEmpty)
+        XCTAssertEqual(puck.setIsActiveStub.parameters, [false])
     }
 
     func testSettingPuckAccuracyWhenPuckTypeIsNonNil() {
+        let puck = MockPuck()
+        puck2DProvider.defaultReturnValue = puck
+        puck3DProvider.defaultReturnValue = puck
+        puckManager.puckType = [.puck2D(), .puck3D(.init(model: Model()))].randomElement()!
+        puck.setPuckAccuracyStub.reset()
+        let accuracy: PuckAccuracy = [.full, .reduced].randomElement()!
 
+        puckManager.puckAccuracy = accuracy
+
+        XCTAssertEqual(puck.setPuckAccuracyStub.parameters, [accuracy])
     }
 
     func testSettingPuckBearingSourceWhenPuckTypeIsNonNil() {
+        let puck = MockPuck()
+        puck2DProvider.defaultReturnValue = puck
+        puck3DProvider.defaultReturnValue = puck
+        puckManager.puckType = [.puck2D(), .puck3D(.init(model: Model()))].randomElement()!
+        puck.setPuckBearingSourceStub.reset()
+        let bearingSource: PuckBearingSource = [.heading, .course].randomElement()!
 
+        puckManager.puckBearingSource = bearingSource
+
+        XCTAssertEqual(puck.setPuckBearingSourceStub.parameters, [bearingSource])
     }
 }

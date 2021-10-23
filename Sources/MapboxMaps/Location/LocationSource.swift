@@ -16,13 +16,20 @@ internal final class LocationSource: LocationSourceProtocol {
     internal weak var locationProviderDelegate: LocationProviderDelegate?
 
     /// Represents the latest location received from the location provider.
-    internal private(set) var latestLocation: Location? {
+    internal var latestLocation: Location? {
+        latestCLLocation.map { Location(location: $0, heading: latestHeading) }
+    }
+
+    private var latestCLLocation: CLLocation? {
         didSet {
-            if let latestLocation = latestLocation {
-                for consumer in _consumers.allObjects {
-                    consumer.locationUpdate(newLocation: latestLocation)
-                }
-            }
+            notifyConsumers()
+        }
+    }
+
+    private var latestHeading: CLHeading? {
+        didSet {
+            updateHeadingForCurrentDeviceOrientation()
+            notifyConsumers()
         }
     }
 
@@ -38,10 +45,9 @@ internal final class LocationSource: LocationSourceProtocol {
             }
             if isUpdating {
                 /// Get permissions if needed
-                if locationProvider.authorizationStatus == .notDetermined {
-                    if Bundle.main.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil {
-                        locationProvider.requestWhenInUseAuthorization()
-                    }
+                if mayRequestWhenInUseAuthorization,
+                   locationProvider.authorizationStatus == .notDetermined {
+                    locationProvider.requestWhenInUseAuthorization()
                 }
                 locationProvider.startUpdatingLocation()
                 locationProvider.startUpdatingHeading()
@@ -65,13 +71,21 @@ internal final class LocationSource: LocationSourceProtocol {
         }
     }
 
-    internal init(locationProvider: LocationProvider) {
+    private var mayRequestWhenInUseAuthorization: Bool
+
+    internal init(locationProvider: LocationProvider,
+                  mayRequestWhenInUseAuthorization: Bool) {
         self.locationProvider = locationProvider
+        self.mayRequestWhenInUseAuthorization = mayRequestWhenInUseAuthorization
         self.locationProvider.setDelegate(self)
     }
 
     deinit {
-        isUpdating = false
+        // note that property observers (didSet) don't run during deinit
+        if isUpdating {
+            locationProvider.stopUpdatingLocation()
+            locationProvider.stopUpdatingHeading()
+        }
         // replace the delegate since we can't guarantee that
         // locationProvider has a zeroing weak ref to self
         locationProvider.setDelegate(EmptyLocationProviderDelegate())
@@ -87,6 +101,14 @@ internal final class LocationSource: LocationSourceProtocol {
     internal func remove(_ consumer: LocationConsumer) {
         _consumers.remove(consumer)
         isUpdating = (_consumers.count > 0)
+    }
+
+    private func notifyConsumers() {
+        if let latestLocation = latestLocation {
+            for consumer in _consumers.allObjects {
+                consumer.locationUpdate(newLocation: latestLocation)
+            }
+        }
     }
 
     internal func updateHeadingForCurrentDeviceOrientation() {
@@ -125,9 +147,7 @@ extension LocationSource: LocationProviderDelegate {
         guard isUpdating else {
             return
         }
-        if let newLocation = locations.last {
-            latestLocation = Location(with: newLocation, heading: latestLocation?.heading)
-        }
+        latestCLLocation = locations.last
         locationProviderDelegate?.locationProvider(provider, didUpdateLocations: locations)
     }
 
@@ -136,12 +156,7 @@ extension LocationSource: LocationProviderDelegate {
         guard isUpdating else {
             return
         }
-        // Ignore any heading updates that come in before a location update
-        if let validLatestLocation = latestLocation {
-            // Check if device orientation has changed and inform the location provider accordingly.
-            updateHeadingForCurrentDeviceOrientation()
-            latestLocation = Location(with: validLatestLocation.internalLocation, heading: newHeading)
-        }
+        latestHeading = newHeading
         locationProviderDelegate?.locationProvider(provider, didUpdateHeading: newHeading)
     }
 
@@ -150,7 +165,7 @@ extension LocationSource: LocationProviderDelegate {
         guard isUpdating else {
             return
         }
-        Log.error(forMessage: "LocationProvider did fail with error: \(error)", category: "Location")
+        Log.error(forMessage: "\(provider) did fail with error: \(error)", category: "Location")
         locationProviderDelegate?.locationProvider(provider, didFailWithError: error)
     }
 

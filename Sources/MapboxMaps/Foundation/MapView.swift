@@ -285,7 +285,8 @@ open class MapView: UIView {
         // Initialize/Configure location manager
         let locationProvider = AppleLocationProvider()
         let locationSource = LocationSource(
-            locationProvider: locationProvider)
+            locationProvider: locationProvider,
+        mayRequestWhenInUseAuthorization: Bundle.main.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil)
         let puckManager = PuckManager(
             puck2DProvider: { [style=mapboxMap.style] configuration in
                 Puck2D(

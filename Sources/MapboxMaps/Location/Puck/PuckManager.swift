@@ -55,6 +55,8 @@ internal final class PuckManager: PuckManagerProtocol {
 
     private var puck: Puck? {
         didSet {
+            // this order is important so that if they're the same type of puck,
+            // the old one doesn't remove the layer/source added by the new one.
             oldValue?.isActive = false
             puck?.isActive = true
         }

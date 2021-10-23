@@ -1,7 +1,16 @@
 @testable import MapboxMaps
 
 final class MockPuck: Puck {
-    var isActive: Bool = false
+
+    let setIsActiveStub = Stub<Bool, Void>()
+    var isActive: Bool {
+        get {
+            fatalError("unimplemented")
+        }
+        set {
+            setIsActiveStub.call(with: newValue)
+        }
+    }
 
     let setPuckAccuracyStub = Stub<PuckAccuracy, Void>()
     var puckAccuracy: PuckAccuracy {

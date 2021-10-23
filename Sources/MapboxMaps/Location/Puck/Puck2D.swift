@@ -94,7 +94,7 @@ internal final class Puck2D: NSObject, Puck {
             layer.location = .constant([
                 location.coordinate.latitude,
                 location.coordinate.longitude,
-                location.internalLocation.altitude
+                location.location.altitude
             ])
             layer.locationTransition = StyleTransition(duration: 0.5, delay: 0)
             layer.topImageSize = configuration.resolvedScale

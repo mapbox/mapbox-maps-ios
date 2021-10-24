@@ -57,6 +57,7 @@ internal final class LocationSource: LocationSourceProtocol {
 
     private let _consumers = NSHashTable<LocationConsumer>.weakObjects()
     internal var consumers: NSHashTable<LocationConsumer> {
+        // swiftlint:disable:next force_cast
         return _consumers.copy() as! NSHashTable<LocationConsumer>
     }
 

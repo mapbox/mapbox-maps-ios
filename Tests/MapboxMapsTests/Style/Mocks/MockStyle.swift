@@ -11,11 +11,11 @@ final class MockStyle: StyleProtocol {
     }
 
     struct AddPersistentLayerWithPropertiesParams {
-        var properties: [String : Any]
+        var properties: [String: Any]
         var layerPosition: LayerPosition?
     }
     let addPersistentLayerWithPropertiesStub = Stub<AddPersistentLayerWithPropertiesParams, Void>()
-    func addPersistentLayer(with properties: [String : Any], layerPosition: LayerPosition?) throws {
+    func addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
         addPersistentLayerWithPropertiesStub.call(with: .init(properties: properties, layerPosition: layerPosition))
     }
 
@@ -59,10 +59,10 @@ final class MockStyle: StyleProtocol {
 
     struct SetSourcePropertiesParams {
         var sourceId: String
-        var properties: [String : Any]
+        var properties: [String: Any]
     }
     let setSourcePropertiesStub = Stub<SetSourcePropertiesParams, Void>()
-    func setSourceProperties(for sourceId: String, properties: [String : Any]) throws {
+    func setSourceProperties(for sourceId: String, properties: [String: Any]) throws {
         setSourcePropertiesStub.call(with: .init(sourceId: sourceId, properties: properties))
     }
 

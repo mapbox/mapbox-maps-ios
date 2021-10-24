@@ -7,6 +7,7 @@ final class MockHeading: CLHeading {
         get {
             trueHeadingStub.call()
         }
+        // swiftlint:disable:next unused_setter_value
         set {
             fatalError("unimplemented")
         }
@@ -17,6 +18,7 @@ final class MockHeading: CLHeading {
         get {
             magneticHeadingStub.call()
         }
+        // swiftlint:disable:next unused_setter_value
         set {
             fatalError("unimplemented")
         }

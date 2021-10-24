@@ -89,12 +89,12 @@ extension LocationManager: LocationProviderDelegate {
 
 extension LocationManager: LocationSourceDelegate {
     internal func locationSource(_ locationSource: LocationSourceProtocol,
-                        didFailWithError error: Error) {
+                                 didFailWithError error: Error) {
         delegate?.locationManager?(self, didFailToLocateUserWithError: error)
     }
 
     internal func locationSource(_ locationSource: LocationSourceProtocol,
-                        didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization) {
+                                 didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization) {
         delegate?.locationManager?(self, didChangeAccuracyAuthorization: accuracyAuthorization)
     }
 }

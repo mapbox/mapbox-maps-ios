@@ -5,6 +5,7 @@ final class LocationSourceTests: XCTestCase {
 
     var locationProvider: MockLocationProvider!
     var locationSource: LocationSource!
+    // swiftlint:disable:next weak_delegate
     var delegate: MockLocationSourceDelegate!
     var consumer: MockLocationConsumer!
 
@@ -107,7 +108,7 @@ final class LocationSourceTests: XCTestCase {
         let consumers = [consumer!, otherConsumer]
 
         for c in consumers {
-            c.locationUpdateStub.defaultSideEffect = { invocation in
+            c.locationUpdateStub.defaultSideEffect = { _ in
                 XCTAssertTrue(self.locationSource.latestLocation?.location === locations[1])
             }
             locationSource.add(c)
@@ -132,7 +133,7 @@ final class LocationSourceTests: XCTestCase {
         let consumers = [consumer!, otherConsumer]
 
         for c in consumers {
-            c.locationUpdateStub.defaultSideEffect = { invocation in
+            c.locationUpdateStub.defaultSideEffect = { _ in
                 XCTAssertTrue(self.locationSource.latestLocation?.heading === heading)
             }
             locationSource.add(c)
@@ -155,7 +156,7 @@ final class LocationSourceTests: XCTestCase {
         locationProvider.accuracyAuthorization = accuracyAuthorization
 
         for c in consumers {
-            c.locationUpdateStub.defaultSideEffect = { invocation in
+            c.locationUpdateStub.defaultSideEffect = { _ in
                 XCTAssertTrue(self.locationSource.latestLocation?.accuracyAuthorization == accuracyAuthorization)
             }
             locationSource.add(c)

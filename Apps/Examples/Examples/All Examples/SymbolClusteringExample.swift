@@ -145,8 +145,8 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
         // unclustered layers.
         mapView.mapboxMap.queryRenderedFeatures(at: point,
                                                 options: RenderedQueryOptions(layerIds: ["unclustered-point-layer", "clustered-fire-hydrant-layer"],
-                                                filter: nil)) { [weak self] result in
-            switch result {
+                                                filter: nil)) { [weak self] renderedFeaturesResult in
+            switch renderedFeaturesResult {
             case .success(let queriedFeatures):
                 // Return the first feature at that location, then pass attributes to the alert controller.
                 // Check whether the feature has values for `ASSETNUM` and `LOCATIONDETAIL`. These properties
@@ -155,13 +155,38 @@ class SymbolClusteringExample: UIViewController, ExampleProtocol {
                    case let .string(featureInformation) = selectedFeatureProperties["ASSETNUM"],
                    case let .string(location) = selectedFeatureProperties["LOCATIONDETAIL"] {
                     self?.showAlert(withTitle: "Hydrant \(featureInformation)", and: "\(location)")
-                // If the feature is a cluster, it will have `point_count` and `cluster_id` properties. These are assigned
-                // when the cluster is created.
-                } else if let selectedFeatureProperties = queriedFeatures.first?.feature.properties,
+                // If the feature is a cluster, its geometry should be a point, and it will have `point_count` and
+                // `cluster_id` properties. These are assigned when the cluster is created.
+                } else if let selectedFeature = queriedFeatures.first?.feature,
+                          case let .point(pointGeometry) = selectedFeature.geometry,
+                          let selectedFeatureProperties = selectedFeature.properties,
                           case let .number(pointCount) = selectedFeatureProperties["point_count"],
                           case let .number(clusterId) = selectedFeatureProperties["cluster_id"] {
-                    // If the tap landed on a cluster, pass the cluster ID and point count to the alert.
-                    self?.showAlert(withTitle: "Cluster ID \(Int(clusterId))", and: "There are \(Int(pointCount)) points in this cluster")
+                    // Query the feature extension for the expansion zoom level
+                    self?.mapView.mapboxMap.queryFeatureExtension(for: "fire-hydrant-source",
+                                                                  feature: selectedFeature,
+                                                                  extension: "supercluster",
+                                                                  extensionField: "expansion-zoom") { [ weak self ] featureExtensionResult in
+                        switch featureExtensionResult {
+                        case .success(let featureExtension):
+                            if let zoom = featureExtension.value as? Int64 {
+                                // If the tap landed on a cluster, pass the cluster ID and point count to the alert.
+                                self?.showAlert(withTitle: "Cluster ID \(Int(clusterId))", and: "There are \(Int(pointCount)) points in this cluster")
+                                // Zoom in with the point and expansion zoom
+                                let camera = CameraOptions(
+                                    center: pointGeometry.coordinates,
+                                    zoom: .init(zoom),
+                                    bearing: self?.mapView.cameraState.bearing,
+                                    pitch: self?.mapView.cameraState.pitch
+                                )
+                                self?.mapView.camera.ease(to: camera, duration: 0.5)
+                            } else {
+                                self?.showAlert(withTitle: "Unable to convert zoom level", and: "Please try another hydrant")
+                            }
+                        case .failure(let error):
+                            self?.showAlert(withTitle: "An error occurred: \(error.localizedDescription)", and: "Please try another hydrant")
+                        }
+                    }
                 }
             case .failure(let error):
                 self?.showAlert(withTitle: "An error occurred: \(error.localizedDescription)", and: "Please try another hydrant")

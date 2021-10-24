@@ -33,7 +33,6 @@ final class Puck3DTests: XCTestCase {
 
     func testDefaultPropertyValues() {
         XCTAssertFalse(puck3D.isActive)
-        XCTAssertEqual(puck3D.puckAccuracy, .full)
         XCTAssertEqual(puck3D.puckBearingSource, .heading)
     }
 
@@ -93,10 +92,11 @@ final class Puck3DTests: XCTestCase {
     func testActivatingPuckAddsSourceAndLayerIfLatestLocationIsNonNil() throws {
         let coordinate = CLLocationCoordinate2D.random()
         locationSource.latestLocation = Location(
-            with: CLLocation(
+            location: CLLocation(
                 latitude: coordinate.latitude,
                 longitude: coordinate.longitude),
-            heading: nil)
+            heading: nil,
+            accuracyAuthorization: .fullAccuracy)
         style.sourceExistsStub.defaultReturnValue = false
         style.layerExistsStub.defaultReturnValue = false
 
@@ -137,8 +137,9 @@ final class Puck3DTests: XCTestCase {
         let heading = MockHeading()
         heading.trueHeadingStub.defaultReturnValue = .random(in: 0..<360)
         locationSource.latestLocation = Location(
-            with: location,
-            heading: heading)
+            location: location,
+            heading: heading,
+            accuracyAuthorization: .fullAccuracy)
         style.sourceExistsStub.defaultReturnValue = false
         puck3D.puckBearingSource = .heading
 
@@ -167,8 +168,9 @@ final class Puck3DTests: XCTestCase {
         let heading = MockHeading()
         heading.trueHeadingStub.defaultReturnValue = .random(in: 0..<360)
         locationSource.latestLocation = Location(
-            with: location,
-            heading: heading)
+            location: location,
+            heading: heading,
+            accuracyAuthorization: .fullAccuracy)
         style.sourceExistsStub.defaultReturnValue = false
         puck3D.puckBearingSource = .course
 
@@ -185,8 +187,9 @@ final class Puck3DTests: XCTestCase {
         configuration.modelRotation = .constant(.random(withLength: 3, generator: { .random(in: 0..<360) }))
         recreatePuck()
         locationSource.latestLocation = Location(
-            with: CLLocation(),
-            heading: nil)
+            location: CLLocation(),
+            heading: nil,
+            accuracyAuthorization: .fullAccuracy)
         style.layerExistsStub.defaultReturnValue = false
 
         puck3D.isActive = true
@@ -199,10 +202,11 @@ final class Puck3DTests: XCTestCase {
     func testUpdateExistingSource() throws {
         let coordinate = CLLocationCoordinate2D.random()
         locationSource.latestLocation = Location(
-            with: CLLocation(
+            location: CLLocation(
                 latitude: coordinate.latitude,
                 longitude: coordinate.longitude),
-            heading: nil)
+            heading: nil,
+            accuracyAuthorization: .fullAccuracy)
         style.sourceExistsStub.defaultReturnValue = true
         style.layerExistsStub.defaultReturnValue = true
 
@@ -227,8 +231,9 @@ final class Puck3DTests: XCTestCase {
 
     func testSettingPuckBearingSourceWhenInactive() {
         locationSource.latestLocation = Location(
-            with: CLLocation(),
-            heading: nil)
+            location: CLLocation(),
+            heading: nil,
+            accuracyAuthorization: .fullAccuracy)
         style.sourceExistsStub.defaultReturnValue = false
         style.layerExistsStub.defaultReturnValue = false
         puck3D.isActive = false
@@ -242,8 +247,9 @@ final class Puck3DTests: XCTestCase {
 
     func testSettingPuckBearingSourceWhenActive() {
         locationSource.latestLocation = Location(
-            with: CLLocation(),
-            heading: nil)
+            location: CLLocation(),
+            heading: nil,
+            accuracyAuthorization: .fullAccuracy)
         puck3D.isActive = true
         style.sourceExistsStub.defaultReturnValue = true
         style.layerExistsStub.defaultReturnValue = true
@@ -259,44 +265,11 @@ final class Puck3DTests: XCTestCase {
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
     }
 
-    func testSettingPuckAccuracySourceWhenInactive() {
-        locationSource.latestLocation = Location(
-            with: CLLocation(),
-            heading: nil)
-        style.sourceExistsStub.defaultReturnValue = false
-        style.layerExistsStub.defaultReturnValue = false
-        puck3D.isActive = false
-
-        puck3D.puckAccuracy = [.full, .reduced].randomElement()!
-
-        XCTAssertEqual(style.addSourceStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
-    }
-
-    func testSettingPuckAccuracySourceWhenActive() {
-        locationSource.latestLocation = Location(
-            with: CLLocation(),
-            heading: nil)
-        puck3D.isActive = true
-        style.sourceExistsStub.defaultReturnValue = true
-        style.layerExistsStub.defaultReturnValue = true
-        style.addSourceStub.reset()
-        style.setSourcePropertiesStub.reset()
-        style.addPersistentLayerStub.reset()
-
-        puck3D.puckAccuracy = [.full, .reduced].randomElement()!
-
-        XCTAssertEqual(style.addSourceStub.invocations.count, 0)
-        XCTAssertEqual(style.setSourcePropertiesStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
-    }
-
     func testLocationUpdateWhenInactive() {
         locationSource.latestLocation = Location(
-            with: CLLocation(),
-            heading: nil)
+            location: CLLocation(),
+            heading: nil,
+            accuracyAuthorization: .fullAccuracy)
         style.sourceExistsStub.defaultReturnValue = false
         style.layerExistsStub.defaultReturnValue = false
         puck3D.isActive = false
@@ -310,8 +283,9 @@ final class Puck3DTests: XCTestCase {
 
     func testLocationUpdateWhenActive() {
         locationSource.latestLocation = Location(
-            with: CLLocation(),
-            heading: nil)
+            location: CLLocation(),
+            heading: nil,
+            accuracyAuthorization: .fullAccuracy)
         puck3D.isActive = true
         style.sourceExistsStub.defaultReturnValue = true
         style.layerExistsStub.defaultReturnValue = true

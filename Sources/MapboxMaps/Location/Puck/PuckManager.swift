@@ -2,15 +2,8 @@ import CoreLocation
 import MapboxCoreMaps
 import UIKit
 
-/// This enum represents the different styles of pucks that can be generated
-internal enum PuckAccuracy {
-    case reduced
-    case full
-}
-
 internal protocol PuckManagerProtocol: AnyObject {
     var puckType: PuckType? { get set }
-    var puckAccuracy: PuckAccuracy { get set }
     var puckBearingSource: PuckBearingSource { get set }
 }
 
@@ -35,15 +28,8 @@ internal final class PuckManager: PuckManagerProtocol {
             case .puck3D(let configuration):
                 puck = puck3DProvider(configuration)
             }
-            puck.puckAccuracy = puckAccuracy
             puck.puckBearingSource = puckBearingSource
             self.puck = puck
-        }
-    }
-
-    internal var puckAccuracy: PuckAccuracy = .full {
-        didSet {
-            puck?.puckAccuracy = puckAccuracy
         }
     }
 

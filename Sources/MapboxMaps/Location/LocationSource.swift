@@ -2,7 +2,7 @@ import Foundation
 @_implementationOnly import MapboxCommon_Private
 
 internal protocol LocationSourceProtocol: AnyObject {
-    var locationProviderDelegate: LocationProviderDelegate? { get set }
+    var delegate: LocationSourceDelegate? { get set }
     var latestLocation: Location? { get }
     var consumers: NSHashTable<LocationConsumer> { get }
     var locationProvider: LocationProvider { get set }
@@ -11,13 +11,26 @@ internal protocol LocationSourceProtocol: AnyObject {
     func updateHeadingForCurrentDeviceOrientation()
 }
 
+internal protocol LocationSourceDelegate: AnyObject {
+    func locationSource(_ locationSource: LocationSourceProtocol,
+                        didFailWithError error: Error)
+
+    func locationSource(_ locationSource: LocationSourceProtocol,
+                        didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization)
+}
+
 internal final class LocationSource: LocationSourceProtocol {
 
-    internal weak var locationProviderDelegate: LocationProviderDelegate?
+    internal weak var delegate: LocationSourceDelegate?
 
     /// Represents the latest location received from the location provider.
     internal var latestLocation: Location? {
-        latestCLLocation.map { Location(location: $0, heading: latestHeading) }
+        latestCLLocation.map {
+            Location(
+                location: $0,
+                heading: latestHeading,
+                accuracyAuthorization: latestAccuracyAuthorization)
+        }
     }
 
     private var latestCLLocation: CLLocation? {
@@ -29,6 +42,15 @@ internal final class LocationSource: LocationSourceProtocol {
     private var latestHeading: CLHeading? {
         didSet {
             updateHeadingForCurrentDeviceOrientation()
+            notifyConsumers()
+        }
+    }
+
+    private var latestAccuracyAuthorization: CLAccuracyAuthorization {
+        didSet {
+            if latestAccuracyAuthorization != oldValue {
+                delegate?.locationSource(self, didChangeAccuracyAuthorization: latestAccuracyAuthorization)
+            }
             notifyConsumers()
         }
     }
@@ -77,6 +99,7 @@ internal final class LocationSource: LocationSourceProtocol {
                   mayRequestWhenInUseAuthorization: Bool) {
         self.locationProvider = locationProvider
         self.mayRequestWhenInUseAuthorization = mayRequestWhenInUseAuthorization
+        self.latestAccuracyAuthorization = locationProvider.accuracyAuthorization
         self.locationProvider.setDelegate(self)
     }
 
@@ -154,7 +177,6 @@ extension LocationSource: LocationProviderDelegate {
             return
         }
         latestCLLocation = locations.last
-        locationProviderDelegate?.locationProvider(provider, didUpdateLocations: locations)
     }
 
     internal func locationProvider(_ provider: LocationProvider, didUpdateHeading newHeading: CLHeading) {
@@ -162,7 +184,6 @@ extension LocationSource: LocationProviderDelegate {
             return
         }
         latestHeading = newHeading
-        locationProviderDelegate?.locationProvider(provider, didUpdateHeading: newHeading)
     }
 
     internal func locationProvider(_ provider: LocationProvider, didFailWithError error: Error) {
@@ -170,21 +191,20 @@ extension LocationSource: LocationProviderDelegate {
             return
         }
         Log.error(forMessage: "\(provider) did fail with error: \(error)", category: "Location")
-        locationProviderDelegate?.locationProvider(provider, didFailWithError: error)
+        delegate?.locationSource(self, didFailWithError: error)
     }
 
     internal func locationProviderDidChangeAuthorization(_ provider: LocationProvider) {
         guard shouldHandleDelegateMethod() else {
             return
         }
-        if provider.authorizationStatus == .authorizedAlways || provider.authorizationStatus == .authorizedWhenInUse {
-            if #available(iOS 14.0, *) {
-                if provider.accuracyAuthorization == .reducedAccuracy {
-                    let purposeKey = "LocationAccuracyAuthorizationDescription"
-                    provider.requestTemporaryFullAccuracyAuthorization(withPurposeKey: purposeKey)
-                }
-            }
+        let accuracyAuthorization = provider.accuracyAuthorization
+        if #available(iOS 14.0, *),
+           [.authorizedAlways, .authorizedWhenInUse].contains(provider.authorizationStatus),
+           accuracyAuthorization == .reducedAccuracy {
+            provider.requestTemporaryFullAccuracyAuthorization(
+                withPurposeKey: "LocationAccuracyAuthorizationDescription")
         }
-        locationProviderDelegate?.locationProviderDidChangeAuthorization(provider)
+        latestAccuracyAuthorization = accuracyAuthorization
     }
 }

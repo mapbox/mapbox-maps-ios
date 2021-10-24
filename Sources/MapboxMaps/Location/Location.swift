@@ -34,15 +34,21 @@ import CoreLocation
         return heading.trueHeading
     }
 
-    /// Initialize a `Location`. Deprecated. Use `init(location:heading:)` instead.
-    public init(with location: CLLocation, heading: CLHeading? = nil) {
-        self.location = location
-        self.heading = heading
-    }
+    public let accuracyAuthorization: CLAccuracyAuthorization
+
+    /// Initialize a `Location`. Deprecated. Use `init(location:heading:accuracyAuthorization:)` instead.
+//    public init(with location: CLLocation, heading: CLHeading? = nil) {
+//        self.location = location
+//        self.heading = heading
+//        self.accuracyAuthorization = .fullAccuracy
+//    }
 
     /// Initialize a `Location`
-    public init(location: CLLocation, heading: CLHeading?) {
+    public init(location: CLLocation,
+                heading: CLHeading?,
+                accuracyAuthorization: CLAccuracyAuthorization) {
         self.location = location
         self.heading = heading
+        self.accuracyAuthorization = accuracyAuthorization
     }
 }

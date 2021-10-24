@@ -12,16 +12,6 @@ final class MockPuck: Puck {
         }
     }
 
-    let setPuckAccuracyStub = Stub<PuckAccuracy, Void>()
-    var puckAccuracy: PuckAccuracy {
-        get {
-            fatalError("unimplemented")
-        }
-        set {
-            setPuckAccuracyStub.call(with: newValue)
-        }
-    }
-
     let setPuckBearingSourceStub = Stub<PuckBearingSource, Void>()
     var puckBearingSource: PuckBearingSource {
         get {

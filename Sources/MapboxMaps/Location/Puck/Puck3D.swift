@@ -22,10 +22,6 @@ internal final class Puck3D: NSObject, Puck {
         }
     }
 
-    // accuracy is not implemented for Puck3D, so
-    // this is just here for protocol conformance
-    internal var puckAccuracy: PuckAccuracy = .full
-
     internal var puckBearingSource: PuckBearingSource = .heading {
         didSet {
             updateSourceAndLayer()

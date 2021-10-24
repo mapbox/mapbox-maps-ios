@@ -43,7 +43,7 @@ public final class LocationManager: NSObject {
         self.locationSource = locationSource
         self.puckManager = puckManager
         super.init()
-        locationSource.locationProviderDelegate = self
+        locationSource.delegate = self
         syncOptions()
     }
 
@@ -78,22 +78,23 @@ public final class LocationManager: NSObject {
     }
 }
 
-// These methods must remain to avoid breaking the API, but most of their implementation has been moved
+// These methods must remain to avoid breaking the API, but their implementation has been moved
 // to `LocationSource`. They should be fully removed in the next major version.
-@available(iOSApplicationExtension, unavailable)
 extension LocationManager: LocationProviderDelegate {
     public func locationProvider(_ provider: LocationProvider, didUpdateLocations locations: [CLLocation]) {}
-
     public func locationProvider(_ provider: LocationProvider, didUpdateHeading newHeading: CLHeading) {}
-
     public func locationProvider(_ provider: LocationProvider, didFailWithError error: Error) {}
+    public func locationProviderDidChangeAuthorization(_ provider: LocationProvider) {}
+}
 
-    public func locationProviderDidChangeAuthorization(_ provider: LocationProvider) {
-        if #available(iOS 14.0, *) {
-            if [.authorizedAlways, .authorizedWhenInUse].contains(provider.authorizationStatus) {
-                puckManager.puckAccuracy = provider.accuracyAuthorization == .reducedAccuracy ? .reduced : .full
-            }
-        }
-        delegate?.locationManager?(self, didChangeAccuracyAuthorization: provider.accuracyAuthorization)
+extension LocationManager: LocationSourceDelegate {
+    internal func locationSource(_ locationSource: LocationSourceProtocol,
+                        didFailWithError error: Error) {
+        delegate?.locationManager?(self, didFailToLocateUserWithError: error)
+    }
+
+    internal func locationSource(_ locationSource: LocationSourceProtocol,
+                        didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization) {
+        delegate?.locationManager?(self, didChangeAccuracyAuthorization: accuracyAuthorization)
     }
 }

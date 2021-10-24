@@ -22,12 +22,6 @@ internal final class Puck2D: NSObject, Puck {
         }
     }
 
-    internal var puckAccuracy: PuckAccuracy = .full {
-        didSet {
-            updateLayer()
-        }
-    }
-
     internal var puckBearingSource: PuckBearingSource = .heading {
         didSet {
             updateLayer()
@@ -84,8 +78,21 @@ internal final class Puck2D: NSObject, Puck {
             return
         }
         var layer = LocationIndicatorLayer(id: Self.layerID)
-        switch puckAccuracy {
-        case .full:
+        switch location.accuracyAuthorization {
+        case .reducedAccuracy:
+            layer.accuracyRadius = .expression(Exp(.interpolate) {
+                Exp(.linear)
+                Exp(.zoom)
+                0
+                400000
+                4
+                200000
+                8
+                5000
+            })
+            layer.accuracyRadiusColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
+            layer.accuracyRadiusBorderColor = .constant(StyleColor(.lightGray))
+        default:
             layer.topImage = .constant(.name(Self.topImageId))
             layer.bearingImage = .constant(.name(Self.bearingImageId))
             if configuration.shadowImage != nil {
@@ -113,19 +120,6 @@ internal final class Puck2D: NSObject, Puck {
             case .course:
                 layer.bearing = .constant(location.course)
             }
-        case .reduced:
-            layer.accuracyRadius = .expression(Exp(.interpolate) {
-                Exp(.linear)
-                Exp(.zoom)
-                0
-                400000
-                4
-                200000
-                8
-                5000
-            })
-            layer.accuracyRadiusColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
-            layer.accuracyRadiusBorderColor = .constant(StyleColor(.lightGray))
         }
 
         let newLayerProperties = try! layer.jsonObject()

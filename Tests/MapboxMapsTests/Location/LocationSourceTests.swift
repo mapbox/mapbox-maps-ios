@@ -5,6 +5,7 @@ final class LocationSourceTests: XCTestCase {
 
     var locationProvider: MockLocationProvider!
     var locationSource: LocationSource!
+    var delegate: MockLocationSourceDelegate!
     var consumer: MockLocationConsumer!
 
     override func setUp() {
@@ -13,11 +14,14 @@ final class LocationSourceTests: XCTestCase {
         locationSource = LocationSource(
             locationProvider: locationProvider,
             mayRequestWhenInUseAuthorization: true)
+        delegate = MockLocationSourceDelegate()
+        locationSource.delegate = delegate
         consumer = MockLocationConsumer()
     }
 
     override func tearDown() {
         consumer = nil
+        delegate = nil
         locationSource = nil
         locationProvider = nil
         super.tearDown()
@@ -114,6 +118,10 @@ final class LocationSourceTests: XCTestCase {
         for c in consumers {
             XCTAssertEqual(c.locationUpdateStub.invocations.count, 1)
             XCTAssertTrue(c.locationUpdateStub.parameters.first?.location === locations[1])
+            // accuracyAuthorization is populated with the value from the locationProvider
+            // at the time of initialization. This value is only updated when the provider
+            // notifies its delegate that the authorization has changed.
+            XCTAssertTrue(c.locationUpdateStub.parameters.first?.accuracyAuthorization == locationProvider.accuracyAuthorization)
         }
     }
 
@@ -136,6 +144,29 @@ final class LocationSourceTests: XCTestCase {
         for c in consumers {
             XCTAssertEqual(c.locationUpdateStub.invocations.count, 1)
             XCTAssertTrue(c.locationUpdateStub.parameters.first?.heading === heading)
+        }
+    }
+
+    func testConsumersAreNotifiedOfNewAccuracyAuthorizationsAfterLatestLocationIsUpdated() {
+        let location = CLLocation()
+        let accuracyAuthorization = CLAccuracyAuthorization.reducedAccuracy
+        let otherConsumer = MockLocationConsumer()
+        let consumers = [consumer!, otherConsumer]
+        locationProvider.accuracyAuthorization = accuracyAuthorization
+
+        for c in consumers {
+            c.locationUpdateStub.defaultSideEffect = { invocation in
+                XCTAssertTrue(self.locationSource.latestLocation?.accuracyAuthorization == accuracyAuthorization)
+            }
+            locationSource.add(c)
+        }
+
+        locationSource.locationProviderDidChangeAuthorization(locationProvider)
+        locationSource.locationProvider(locationProvider, didUpdateLocations: [location])
+
+        for c in consumers {
+            XCTAssertEqual(c.locationUpdateStub.invocations.count, 1)
+            XCTAssertTrue(c.locationUpdateStub.parameters.first?.accuracyAuthorization == accuracyAuthorization)
         }
     }
 
@@ -223,11 +254,11 @@ final class LocationSourceTests: XCTestCase {
 
     func testStopUpdatingDuringDidUpdateLocationsDueToConsumerDeinit() throws {
         locationProvider.setDelegateStub.reset()
-
         autoreleasepool {
             let consumer = MockLocationConsumer()
             locationSource.add(consumer)
         }
+
         locationSource.locationProvider(locationProvider, didUpdateLocations: [CLLocation()])
 
         XCTAssertNil(locationSource.latestLocation)
@@ -237,12 +268,12 @@ final class LocationSourceTests: XCTestCase {
 
     func testStopUpdatingDuringDidUpdateHeadingDueToConsumerDeinit() {
         locationProvider.setDelegateStub.reset()
-
         autoreleasepool {
             let consumer = MockLocationConsumer()
             locationSource.add(consumer)
             locationSource.locationProvider(locationProvider, didUpdateLocations: [CLLocation()])
         }
+
         locationSource.locationProvider(locationProvider, didUpdateHeading: CLHeading())
 
         XCTAssertNil(locationSource.latestLocation?.heading)
@@ -251,17 +282,110 @@ final class LocationSourceTests: XCTestCase {
     }
 
     func testStopUpdatingDuringDidFailWithErrorDueToConsumerDeinit() {
+        locationProvider.setDelegateStub.reset()
+        autoreleasepool {
+            let consumer = MockLocationConsumer()
+            locationSource.add(consumer)
+        }
+
+        locationSource.locationProvider(locationProvider, didFailWithError: MockError())
+
+        XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
+        XCTAssertEqual(locationProvider.stopUpdatingHeadingStub.invocations.count, 1)
     }
 
     func testStopUpdatingDuringDidChangeAuthorizationDueToConsumerDeinit() {
+        locationProvider.setDelegateStub.reset()
+        autoreleasepool {
+            let consumer = MockLocationConsumer()
+            locationSource.add(consumer)
+        }
+
+        locationSource.locationProviderDidChangeAuthorization(locationProvider)
+
+        XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
+        XCTAssertEqual(locationProvider.stopUpdatingHeadingStub.invocations.count, 1)
     }
 
-    func testLocationSourceDelegateDidChangeAuthorization() {
-        // TODO: finish removing old implementation in LocationManager
-        // and only expose the minimum necessary delegate API for
-        // LocationSource
+    func testDidFailWithErrorNotifiesDelegate() throws {
+        locationSource.add(consumer)
+        let error = MockError()
+
+        locationSource.locationProvider(locationProvider, didFailWithError: error)
+
+        XCTAssertEqual(delegate.didFailWithErrorStub.invocations.count, 1)
+        XCTAssertTrue(delegate.didFailWithErrorStub.parameters.first?.locationSource === locationSource)
+        let actualError = try XCTUnwrap(delegate.didFailWithErrorStub.parameters.first?.error)
+        XCTAssertTrue((actualError as? MockError) === error)
     }
 
-    func testRequestsTemporaryFullAccuracyAuthorization() {
+    func testDidChangeAuthorizationNotifiesDelegateIfAccuracyAuthorizationChanged() {
+        let accuracyAuthorizationValues: [CLAccuracyAuthorization] = [.fullAccuracy, .reducedAccuracy]
+        let initialIndex = Int.random(in: 0...1)
+        let changedIndex = (initialIndex + 1) % 2 // the other one
+        locationProvider.accuracyAuthorization = accuracyAuthorizationValues[initialIndex]
+        locationSource = LocationSource(
+            locationProvider: locationProvider,
+            mayRequestWhenInUseAuthorization: true)
+        delegate = MockLocationSourceDelegate()
+        locationSource.delegate = delegate
+        locationSource.add(consumer)
+        locationProvider.accuracyAuthorization = accuracyAuthorizationValues[changedIndex]
+
+        locationSource.locationProviderDidChangeAuthorization(locationProvider)
+
+        XCTAssertEqual(delegate.didChangeAccuracyAuthorizationStub.invocations.count, 1)
+        XCTAssertTrue(delegate.didChangeAccuracyAuthorizationStub.parameters.first?.locationSource === locationSource)
+        XCTAssertEqual(delegate.didChangeAccuracyAuthorizationStub.parameters.first?.accuracyAuthorization, locationProvider.accuracyAuthorization)
+    }
+
+    func testDidChangeAuthorizationDoesNotNotifyDelegateIfAccuracyAuthorizationDidNotChange() {
+        locationProvider.accuracyAuthorization = [.fullAccuracy, .reducedAccuracy].randomElement()!
+        locationSource = LocationSource(
+            locationProvider: locationProvider,
+            mayRequestWhenInUseAuthorization: true)
+        delegate = MockLocationSourceDelegate()
+        locationSource.delegate = delegate
+        locationSource.add(consumer)
+
+        locationSource.locationProviderDidChangeAuthorization(locationProvider)
+
+        XCTAssertEqual(delegate.didChangeAccuracyAuthorizationStub.invocations.count, 0)
+    }
+
+    func testRequestsTemporaryFullAccuracyAuthorizationWhenAccuracyIsReduced() {
+        locationSource.add(consumer)
+        locationProvider.authorizationStatus = [.authorizedAlways, .authorizedWhenInUse].randomElement()!
+        locationProvider.accuracyAuthorization = .reducedAccuracy
+
+        locationSource.locationProviderDidChangeAuthorization(locationProvider)
+
+        if #available(iOS 14.0, *) {
+            XCTAssertEqual(
+                locationProvider.requestTemporaryFullAccuracyAuthorizationStub.parameters,
+                ["LocationAccuracyAuthorizationDescription"])
+        } else {
+            XCTAssertTrue(locationProvider.requestTemporaryFullAccuracyAuthorizationStub.invocations.isEmpty)
+        }
+    }
+
+    func testDoesNotRequestTemporaryFullAccuracyAuthorizationIfPermissionsNotGranted() {
+        locationSource.add(consumer)
+        locationProvider.authorizationStatus = [.notDetermined, .restricted, .denied].randomElement()!
+        locationProvider.accuracyAuthorization = .reducedAccuracy
+
+        locationSource.locationProviderDidChangeAuthorization(locationProvider)
+
+        XCTAssertTrue(locationProvider.requestTemporaryFullAccuracyAuthorizationStub.invocations.isEmpty)
+    }
+
+    func testDoesNotRequestTemporaryFullAccuracyAuthorizationWhenAccuracyIsFull() {
+        locationSource.add(consumer)
+        locationProvider.authorizationStatus = [.authorizedAlways, .authorizedWhenInUse].randomElement()!
+        locationProvider.accuracyAuthorization = .fullAccuracy
+
+        locationSource.locationProviderDidChangeAuthorization(locationProvider)
+
+        XCTAssertTrue(locationProvider.requestTemporaryFullAccuracyAuthorizationStub.invocations.isEmpty)
     }
 }

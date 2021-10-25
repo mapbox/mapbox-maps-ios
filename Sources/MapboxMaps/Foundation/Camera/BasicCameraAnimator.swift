@@ -125,7 +125,8 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     /// Starts the animation after a delay. Once this method is called, there's no way to cancel the animation until it starts.
     /// - Parameter delay: Delay (in seconds) after which the animation should start
     public func startAnimation(afterDelay delay: TimeInterval) {
-        delayedAnimationTimer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { _ in
+        delayedAnimationTimer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] (_) in
+            guard let self = self else { return }
             self.startAnimation()
         }
     }

@@ -356,12 +356,6 @@ open class MapView: UIView {
             return
         }
 
-        // TODO: Make AnnotationsOrchestrator a displaylink participant
-        // NOTE: This might not be needed after all, we've discussed about a "push" alternative for listening the layout update events directly from GL-Native
-        if !viewAnnotations.viewAnnotationsById.isEmpty {
-            viewAnnotations.placeAnnotations()
-        }
-
         for participant in displayLinkParticipants.allObjects {
             participant.participate()
         }

@@ -860,8 +860,9 @@ extension MapboxMap: MapViewAnnotationInterface {
 
         return options
     }
-    public func calculateViewAnnotationsPosition(callback: @escaping ([ViewAnnotationPositionDescriptor]) -> Void) {
-        __map.calculateViewAnnotationPositions(forCallback: callback)
+    
+    public func setViewAnnotationPositionsUpdateListenerFor(listener: ViewAnnotationPositionsListener) {
+        __map.setViewAnnotationPositionsUpdateListenerFor(listener)
     }
 
     /**

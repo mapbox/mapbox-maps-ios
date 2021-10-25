@@ -44,7 +44,8 @@ public protocol AnnotationInteractionDelegate: AnyObject {
 
 public protocol MapViewAnnotationInterface: AnyObject {
 
-    func calculateViewAnnotationsPosition(callback: @escaping ([ViewAnnotationPositionDescriptor]) -> Void)
+    // TODO: Add documentation
+    func setViewAnnotationPositionsUpdateListenerFor(listener: ViewAnnotationPositionsListener)
 
     /**
      * Add view annotation.
@@ -229,6 +230,7 @@ public class ViewAnnotationManager {
                   mapViewAnnotationHandler: MapViewAnnotationInterface) {
         self.view = view
         self.mapViewAnnotationHandler = mapViewAnnotationHandler
+        mapViewAnnotationHandler.setViewAnnotationPositionsUpdateListenerFor(listener: self)
     }
 
     // TODO: Maybe convert to a weak dictionary?
@@ -244,8 +246,6 @@ public class ViewAnnotationManager {
         viewAnnotationsById[viewAnnotation.id] = viewAnnotation
         viewAnnotation.isHidden = false
         view.addSubview(viewAnnotation)
-
-        placeAnnotations()
     }
 
     public func removeViewAnnotation(_ viewAnnotation: ViewAnnotation) {
@@ -253,64 +253,62 @@ public class ViewAnnotationManager {
             forIdentifier: viewAnnotation.id)
         viewAnnotation.removeFromSuperview()
         viewAnnotationsById.removeValue(forKey: viewAnnotation.id)
-        placeAnnotations()
     }
 
     public func updateViewAnnotation(_ viewAnnotation: ViewAnnotation) {
         mapViewAnnotationHandler.updateViewAnnotation(forIdentifier: viewAnnotation.id, options: viewAnnotation.options)
-
         viewAnnotationsById[viewAnnotation.id] = viewAnnotation
-        placeAnnotations()
     }
 
-    internal func placeAnnotations() {
+    internal func placeAnnotations(positions: [ViewAnnotationPositionDescriptor]) {
+        var visibleAnnotationIds: Set<String> = []
 
-        mapViewAnnotationHandler.calculateViewAnnotationsPosition { [weak self] positions in
+        for position in positions {
 
-            DispatchQueue.main.async { [weak self] in
+            // Approach:
+            // 1. Get the view for this position's identifier
+            // 2. Adjust the origin of the view. If the view's center is off screen, then hide the view
 
-                guard let self = self else { return }
-
-                var visibleAnnotationIds: Set<String> = []
-
-                for position in positions {
-
-                    // Approach:
-                    // 1. Get the view for this position's identifier
-                    // 2. Adjust the origin of the view. If the view's center is off screen, then hide the view
-
-                    guard let viewAnnotation = self.viewAnnotationsById[position.identifier] else {
-                        fatalError()
-                    }
-
-                    // TODO: Check if position depends on the device's pixel ratio. (In a previous commit this was divided by two for some reason.)
-                    viewAnnotation.frame = CGRect(
-                        origin: CGPoint(
-                            x: position.leftTopCoordinate.point.x,
-                            y: position.leftTopCoordinate.point.y),
-                        size: viewAnnotation.frame.size)
-
-                    viewAnnotation.isHidden = false
-
-                    visibleAnnotationIds.insert(position.identifier)
-                }
-
-                // Hide annotations that are off screen
-                for id in Set(self.viewAnnotationsById.keys) {
-                    guard let viewAnnotation = self.viewAnnotationsById[id] else {
-                        fatalError()
-                    }
-
-                    if !visibleAnnotationIds.contains(id) {
-                        viewAnnotation.isHidden = true
-                    }
-
-                }
+            guard let viewAnnotation = self.viewAnnotationsById[position.identifier] else {
+                fatalError()
             }
+
+            // TODO: Check if position depends on the device's pixel ratio. (In a previous commit this was divided by two for some reason.)
+            viewAnnotation.frame = CGRect(
+                origin: CGPoint(
+                    x: position.leftTopCoordinate.point.x,
+                    y: position.leftTopCoordinate.point.y),
+                size: viewAnnotation.frame.size)
+
+            viewAnnotation.isHidden = false
+
+            visibleAnnotationIds.insert(position.identifier)
+        }
+
+        // Hide annotations that are off screen
+        for id in Set(self.viewAnnotationsById.keys) {
+            guard let viewAnnotation = self.viewAnnotationsById[id] else {
+                fatalError()
+            }
+
+            if !visibleAnnotationIds.contains(id) {
+                viewAnnotation.isHidden = true
+            }
+
         }
     }
 
 }
+
+extension ViewAnnotationManager: ViewAnnotationPositionsListener {
+    
+    public func onViewAnnotationPositionsUpdate(forPositions positions: [ViewAnnotationPositionDescriptor]) {
+        placeAnnotations(positions: positions)
+    }
+    
+    
+}
+
 
 // TODO: Move to a standalone file
 // TODO: Add documentation

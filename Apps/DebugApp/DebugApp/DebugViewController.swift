@@ -122,13 +122,13 @@ public class DebugViewController: UIViewController {
     let sanfrancisco = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
     let boston = CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589)
     let nullIsland = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-    let calloutViewHeight = 50
-    let calloutViewWidth = 80
+    let calloutViewHeight = 40
+    let calloutViewWidth = 60
 
     func setupAnnotations() {
 
         let frame = CGRect(origin: .zero, size: .init(width: calloutViewWidth, height: calloutViewHeight))
-        mapView.annotations.addViewAnnotation(
+        mapView.viewAnnotations.addViewAnnotation(
             CalloutView(
                 frame: frame,
                 coordinate: nullIsland))
@@ -152,7 +152,9 @@ final class CalloutView: UIView, ViewAnnotation {
 
         // Draw things
         self.backgroundColor = UIColor.blue
-
+        self.layer.borderColor = UIColor.white.cgColor
+        self.layer.borderWidth = 1
+        
         let labelOrigin = CGPoint(x: 20, y: 20)
         let label = UILabel(
             frame: CGRect(

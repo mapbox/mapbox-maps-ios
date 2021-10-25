@@ -36,6 +36,9 @@ open class MapView: UIView {
     /// Controls the addition/removal of annotations to the map.
     public internal(set) var annotations: AnnotationOrchestrator!
 
+    // TODO: the naming might be slightly confusing, as the annotations object already covers most cases. Need to check if they should be merged or not. Currently their implementation is pretty different.
+    public internal(set) var viewAnnotations: ViewAnnotationManager!
+
     /// Controls the display of attribution dialogs
     private var attributionDialogManager: AttributionDialogManager!
 
@@ -286,7 +289,10 @@ open class MapView: UIView {
         location = LocationManager(style: mapboxMap.style)
 
         // Initialize/Configure annotations orchestrator
-        annotations = AnnotationOrchestrator(view: self, gestureRecognizer: gestures.singleTapGestureRecognizer, mapFeatureQueryable: mapboxMap, style: mapboxMap.style, displayLinkCoordinator: self, mapViewAnnotationHandler: mapboxMap)
+        annotations = AnnotationOrchestrator(gestureRecognizer: gestures.singleTapGestureRecognizer, mapFeatureQueryable: mapboxMap, style: mapboxMap.style, displayLinkCoordinator: self, mapViewAnnotationHandler: mapboxMap)
+        
+        // Initialize/Configure view annotations manager
+        viewAnnotations = ViewAnnotationManager(view: self, mapViewAnnotationHandler: mapboxMap)
     }
 
     private func checkForMetalSupport() {
@@ -352,8 +358,8 @@ open class MapView: UIView {
 
         // TODO: Make AnnotationsOrchestrator a displaylink participant
         // NOTE: This might not be needed after all, we've discussed about a "push" alternative for listening the layout update events directly from GL-Native
-        if !annotations.viewAnnotationsById.isEmpty {
-            annotations.placeAnnotations()
+        if !viewAnnotations.viewAnnotationsById.isEmpty {
+            viewAnnotations.placeAnnotations()
         }
 
         for participant in displayLinkParticipants.allObjects {

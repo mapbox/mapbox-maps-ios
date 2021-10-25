@@ -70,8 +70,6 @@ public protocol MapViewAnnotationInterface: AnyObject {
 
 public class AnnotationOrchestrator {
 
-    private weak var view: UIView?
-
     private let gestureRecognizer: UIGestureRecognizer
 
     private let style: Style
@@ -82,13 +80,11 @@ public class AnnotationOrchestrator {
 
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
-    internal init(view: UIView,
-                  gestureRecognizer: UIGestureRecognizer,
+    internal init(gestureRecognizer: UIGestureRecognizer,
                   mapFeatureQueryable: MapFeatureQueryable,
                   style: Style,
                   displayLinkCoordinator: DisplayLinkCoordinator,
                   mapViewAnnotationHandler: MapViewAnnotationInterface) {
-        self.view = view
         self.gestureRecognizer = gestureRecognizer
         self.mapFeatureQueryable = mapFeatureQueryable
         self.style = style
@@ -221,10 +217,19 @@ public class AnnotationOrchestrator {
                 category: "Annotations")
         }
     }
+}
 
-    // MARK: - View backed annotations -
+public class ViewAnnotationManager {
 
-    // NOTE: View Annotations are managed pretty differently from other annotation managers, maybe it deserves a separate class
+    private weak var view: UIView?
+
+    private let mapViewAnnotationHandler: MapViewAnnotationInterface
+
+    internal init(view: UIView,
+                  mapViewAnnotationHandler: MapViewAnnotationInterface) {
+        self.view = view
+        self.mapViewAnnotationHandler = mapViewAnnotationHandler
+    }
 
     // TODO: Maybe convert to a weak dictionary?
     internal var viewAnnotationsById: [String: ViewAnnotation] = [:]
@@ -304,6 +309,7 @@ public class AnnotationOrchestrator {
             }
         }
     }
+
 }
 
 // TODO: Move to a standalone file

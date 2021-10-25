@@ -136,26 +136,17 @@ public class DebugViewController: UIViewController {
     }
 }
 
+// NOTE: the Android implementation passes views directly instead of ViewAnnotation (it's used internally though)
 final class CalloutView: UIView, ViewAnnotation {
     public var id: String
     public var options: ViewAnnotationOptions
 
+    // NOTE: id on Android is private and automatically incremented (probably that's a better approach)
     init(frame: CGRect, coordinate: CLLocationCoordinate2D, id: String = UUID().uuidString) {
 
         self.id = id
 
-        let options = ViewAnnotationOptions(__geometry: MapboxCommon.Geometry(point: coordinate as NSValue),
-                                            associatedFeatureId: nil,
-                                            width: UInt32(frame.size.width) as NSNumber,
-                                            height: UInt32(frame.size.height) as NSNumber,
-                                            allowOverlap: true,
-                                            visible: true,
-                                            anchor: NSNumber.init(value: 8),
-                                            offsetX: 0,
-                                            offsetY: 0,
-                                            selected: false)
-
-        self.options = options
+        self.options = ViewAnnotationOptions(coordinate: coordinate, size: frame.size)
 
         super.init(frame: frame)
 

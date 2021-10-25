@@ -206,17 +206,17 @@ final class MapboxMapTests: XCTestCase {
 
     func testSetMapProjection() {
         XCTAssertEqual(mapboxMap.__testingMap.getMapProjection() as? [String: String], ["name": "mercator"])
-        try? mapboxMap.setMapProjection(.globe(GlobeMapProjection()))
+        try? mapboxMap.setMapProjection(.globe())
         XCTAssertEqual(mapboxMap.__testingMap.getMapProjection() as? [String: String], ["name": "globe"])
     }
 
     func testGetMapProjection() {
         mapboxMap.__testingMap.setMapProjectionForProjection(["name": "mercator"])
         var projection = try? mapboxMap.mapProjection()
-        XCTAssertEqual(projection, .mercator(MercatorMapProjection()))
+        XCTAssertEqual(projection, .mercator())
 
         mapboxMap.__testingMap.setMapProjectionForProjection(["name": "globe"])
         projection = try? mapboxMap.mapProjection()
-        XCTAssertEqual(projection, .globe(GlobeMapProjection()))
+        XCTAssertEqual(projection, .globe())
     }
 }

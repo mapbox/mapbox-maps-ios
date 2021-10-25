@@ -224,6 +224,8 @@ public class AnnotationOrchestrator {
 
     // MARK: - View backed annotations -
 
+    // NOTE: View Annotations are managed pretty differently from other annotation managers, maybe it deserves a separate class
+
     // TODO: Maybe convert to a weak dictionary?
     internal var viewAnnotationsById: [String: ViewAnnotation] = [:]
 

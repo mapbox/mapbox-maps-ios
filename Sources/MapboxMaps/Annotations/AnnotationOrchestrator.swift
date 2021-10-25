@@ -276,10 +276,11 @@ public class AnnotationOrchestrator {
                         fatalError()
                     }
 
+                    // TODO: Check if position depends on the device's pixel ratio. (In a previous commit this was divided by two for some reason.)
                     viewAnnotation.frame = CGRect(
                         origin: CGPoint(
-                            x: position.leftTopCoordinate.point.x / 2,
-                            y: position.leftTopCoordinate.point.y / 2),
+                            x: position.leftTopCoordinate.point.x,
+                            y: position.leftTopCoordinate.point.y),
                         size: viewAnnotation.frame.size)
 
                     viewAnnotation.isHidden = false

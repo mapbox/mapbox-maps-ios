@@ -183,7 +183,7 @@ public class FeatureStateExample: UIViewController, ExampleProtocol {
 
         mapView.mapboxMap.queryRenderedFeatures(
             at: tapPoint,
-            options: RenderedQueryOptions(__layerIds: ["earthquake-viz"], filter: nil)) { [weak self] result in
+            options: RenderedQueryOptions(layerIds: ["earthquake-viz"], filter: nil)) { [weak self] result in
 
             guard let self = self else { return }
 

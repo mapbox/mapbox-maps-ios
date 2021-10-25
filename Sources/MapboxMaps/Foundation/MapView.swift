@@ -458,7 +458,7 @@ extension MapView: DelegatingMapClientDelegate {
         metalView.layer.isOpaque = isOpaque
         metalView.isPaused = true
         metalView.enableSetNeedsDisplay = true
-        metalView.presentsWithTransaction = true
+        metalView.presentsWithTransaction = false
 
         insertSubview(metalView, at: 0)
         self.metalView = metalView

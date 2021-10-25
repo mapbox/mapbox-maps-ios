@@ -78,7 +78,7 @@ public class LineGradientExample: UIViewController, ExampleProtocol {
                 UIColor.purple
                 0.3
                 UIColor.cyan
-                0.3
+                0.5
                 UIColor.green
                 0.7
                 UIColor.yellow

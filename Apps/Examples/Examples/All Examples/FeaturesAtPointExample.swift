@@ -70,7 +70,7 @@ public class FeaturesAtPointExample: UIViewController, ExampleProtocol {
 
         mapView.mapboxMap.queryRenderedFeatures(
             at: tapPoint,
-            options: RenderedQueryOptions(__layerIds: ["US-states"], filter: nil)) { [weak self] result in
+            options: RenderedQueryOptions(layerIds: ["US-states"], filter: nil)) { [weak self] result in
             switch result {
             case .success(let queriedfeatures):
                 if let firstFeature = queriedfeatures.first?.feature.properties,

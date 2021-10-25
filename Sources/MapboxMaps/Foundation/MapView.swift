@@ -32,6 +32,7 @@ open class MapView: UIView {
 
     /// The `location`object handles location events of the map.
     public internal(set) var location: LocationManager!
+    private var locationSource: LocationSourceProtocol!
 
     /// Controls the addition/removal of annotations to the map.
     public internal(set) var annotations: AnnotationOrchestrator!
@@ -284,17 +285,17 @@ open class MapView: UIView {
 
         // Initialize/Configure location manager
         let locationProvider = AppleLocationProvider()
-        let locationSource = LocationSource(
+        locationSource = LocationSource(
             locationProvider: locationProvider,
-        mayRequestWhenInUseAuthorization: Bundle.main.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil)
+            mayRequestWhenInUseAuthorization: Bundle.main.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil)
         let puckManager = PuckManager(
-            puck2DProvider: { [style=mapboxMap.style] configuration in
+            puck2DProvider: { [style=mapboxMap.style, locationSource=locationSource!] configuration in
                 Puck2D(
                     configuration: configuration,
                     style: style,
                     locationSource: locationSource)
             },
-            puck3DProvider: { [style=mapboxMap.style] configuration in
+            puck3DProvider: { [style=mapboxMap.style, locationSource=locationSource!] configuration in
                 Puck3D(
                     configuration: configuration,
                     style: style,
@@ -374,6 +375,8 @@ open class MapView: UIView {
             return
         }
 
+        updateHeadingOrientationIfNeeded()
+
         for participant in displayLinkParticipants.allObjects {
             participant.participate()
         }
@@ -444,6 +447,54 @@ open class MapView: UIView {
         guard let validResourceOptions = resourceOptions else { return }
         eventsListener = EventsManager(accessToken: validResourceOptions.accessToken)
         eventsListener?.push(event: .map(event: .loaded))
+    }
+
+    // MARK: Location
+
+    private func updateHeadingOrientationIfNeeded() {
+        // locationProvider.headingOrientation should be adjusted based on the
+        // current UIInterfaceOrientation of the containing window, not the
+        // device orientation
+        let optionalInterfaceOrientation: UIInterfaceOrientation?
+        if #available(iOS 13.0, *) {
+            optionalInterfaceOrientation = window?.windowScene?.interfaceOrientation
+        } else {
+            optionalInterfaceOrientation =  UIApplication.shared.statusBarOrientation
+        }
+
+        guard let interfaceOrientation = optionalInterfaceOrientation else {
+            return
+        }
+
+        // UIInterfaceOrientation.landscape{Right,Left} correspond to
+        // CLDeviceOrientation.landscape{Left,Right}, respectively. The reason
+        // for this, according to the UIInterfaceOrientation docs is that
+        //
+        //    > …rotating the device requires rotating the content in the
+        //    > opposite direction.
+        var headingOrientation: CLDeviceOrientation
+        switch interfaceOrientation {
+        case .landscapeLeft:
+            headingOrientation = .landscapeRight
+        case .landscapeRight:
+            headingOrientation = .landscapeLeft
+        case .portraitUpsideDown:
+            headingOrientation = .portraitUpsideDown
+        default:
+            headingOrientation = .portrait
+        }
+
+        // We check for heading changes during the display link, but setting it
+        // causes a heading update, so we only set it when it changes to avoid
+        // unnecessary work.
+        //
+        // It would be more efficient to update this value by observing
+        // interface orientation changes, but you need a view controller to do
+        // that (via `willTransition(to:with:)`), which is something we don't
+        // have, so we poll instead.
+        if locationSource.headingOrientation != headingOrientation {
+            locationSource.headingOrientation = headingOrientation
+        }
     }
 }
 

@@ -1,14 +1,14 @@
-import Foundation
+import UIKit
 @_implementationOnly import MapboxCommon_Private
 
 internal protocol LocationSourceProtocol: AnyObject {
     var delegate: LocationSourceDelegate? { get set }
     var latestLocation: Location? { get }
+    var headingOrientation: CLDeviceOrientation { get set }
     var consumers: NSHashTable<LocationConsumer> { get }
     var locationProvider: LocationProvider { get set }
     func add(_ consumer: LocationConsumer)
     func remove(_ consumer: LocationConsumer)
-    func updateHeadingForCurrentDeviceOrientation()
 }
 
 internal protocol LocationSourceDelegate: AnyObject {
@@ -33,6 +33,15 @@ internal final class LocationSource: LocationSourceProtocol {
         }
     }
 
+    internal var headingOrientation: CLDeviceOrientation {
+        get {
+            return locationProvider.headingOrientation
+        }
+        set {
+            locationProvider.headingOrientation = newValue
+        }
+    }
+
     private var latestCLLocation: CLLocation? {
         didSet {
             notifyConsumers()
@@ -41,7 +50,6 @@ internal final class LocationSource: LocationSourceProtocol {
 
     private var latestHeading: CLHeading? {
         didSet {
-            updateHeadingForCurrentDeviceOrientation()
             notifyConsumers()
         }
     }
@@ -134,30 +142,6 @@ internal final class LocationSource: LocationSourceProtocol {
             }
         }
     }
-
-    internal func updateHeadingForCurrentDeviceOrientation() {
-        // note that right/left device and interface orientations
-        // are opposites (see UIApplication.h)
-        var orientation: CLDeviceOrientation
-
-        switch UIApplication.shared.statusBarOrientation {
-        case .landscapeLeft:
-            orientation = .landscapeRight
-        case .landscapeRight:
-            orientation = .landscapeLeft
-        case .portraitUpsideDown:
-            orientation = .portraitUpsideDown
-        default:
-            orientation = .portrait
-        }
-
-        // Setting the location manager's heading orientation causes it to send
-        // a heading event, which in turn makes us redraw, which kicks off a
-        // loop... so don't do that. rdar://34059173
-        if locationProvider.headingOrientation != orientation {
-            locationProvider.headingOrientation = orientation
-        }
-    }
 }
 
 // At the beginning of each required method, check whether there are still any consumers and if not,
@@ -166,41 +150,33 @@ internal final class LocationSource: LocationSourceProtocol {
 // they may be deinited without ever being explicitly removed.
 extension LocationSource: LocationProviderDelegate {
 
-    private func shouldHandleDelegateMethod() -> Bool {
+    private func stopUpdatingIfNeeded() {
         // check _consumers.anyObject != nil instead of simply _consumers.count
         // which may still include objects that have been deinited
         isUpdating = (_consumers.anyObject != nil)
-        return isUpdating
     }
 
     internal func locationProvider(_ provider: LocationProvider, didUpdateLocations locations: [CLLocation]) {
-        guard shouldHandleDelegateMethod() else {
-            return
-        }
+        stopUpdatingIfNeeded()
         latestCLLocation = locations.last
     }
 
     internal func locationProvider(_ provider: LocationProvider, didUpdateHeading newHeading: CLHeading) {
-        guard shouldHandleDelegateMethod() else {
-            return
-        }
+        stopUpdatingIfNeeded()
         latestHeading = newHeading
     }
 
     internal func locationProvider(_ provider: LocationProvider, didFailWithError error: Error) {
-        guard shouldHandleDelegateMethod() else {
-            return
-        }
+        stopUpdatingIfNeeded()
         Log.error(forMessage: "\(provider) did fail with error: \(error)", category: "Location")
         delegate?.locationSource(self, didFailWithError: error)
     }
 
     internal func locationProviderDidChangeAuthorization(_ provider: LocationProvider) {
-        guard shouldHandleDelegateMethod() else {
-            return
-        }
+        stopUpdatingIfNeeded()
         let accuracyAuthorization = provider.accuracyAuthorization
         if #available(iOS 14.0, *),
+           isUpdating,
            [.authorizedAlways, .authorizedWhenInUse].contains(provider.authorizationStatus),
            accuracyAuthorization == .reducedAccuracy {
             provider.requestTemporaryFullAccuracyAuthorization(

@@ -5,6 +5,8 @@ final class MockLocationSource: LocationSourceProtocol {
 
     var latestLocation: Location?
 
+    var headingOrientation: CLDeviceOrientation = .portrait
+
     var consumers = NSHashTable<LocationConsumer>.weakObjects()
 
     var locationProvider: LocationProvider = MockLocationProvider()
@@ -17,10 +19,5 @@ final class MockLocationSource: LocationSourceProtocol {
     let removeStub = Stub<LocationConsumer, Void>()
     func remove(_ consumer: LocationConsumer) {
         removeStub.call(with: consumer)
-    }
-
-    let updateHeadingForCurrentDeviceOrientationStub = Stub<Void, Void>()
-    func updateHeadingForCurrentDeviceOrientation() {
-        updateHeadingForCurrentDeviceOrientationStub.call()
     }
 }

@@ -248,21 +248,17 @@ final class LocationSourceTests: XCTestCase {
         XCTAssertTrue(delegate is EmptyLocationProviderDelegate)
     }
 
-    func testHeadingOrientationManagement() {
-        // test that it's updated when the heading changes (is this even right?
-        // shouldn't it be in response to device orientation changes???)
-    }
-
     func testStopUpdatingDuringDidUpdateLocationsDueToConsumerDeinit() throws {
         locationProvider.setDelegateStub.reset()
         autoreleasepool {
             let consumer = MockLocationConsumer()
             locationSource.add(consumer)
         }
+        let location = CLLocation()
 
-        locationSource.locationProvider(locationProvider, didUpdateLocations: [CLLocation()])
+        locationSource.locationProvider(locationProvider, didUpdateLocations: [location])
 
-        XCTAssertNil(locationSource.latestLocation)
+        XCTAssertTrue(locationSource.latestLocation?.location === location)
         XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(locationProvider.stopUpdatingHeadingStub.invocations.count, 1)
     }
@@ -274,10 +270,11 @@ final class LocationSourceTests: XCTestCase {
             locationSource.add(consumer)
             locationSource.locationProvider(locationProvider, didUpdateLocations: [CLLocation()])
         }
+        let heading = CLHeading()
 
-        locationSource.locationProvider(locationProvider, didUpdateHeading: CLHeading())
+        locationSource.locationProvider(locationProvider, didUpdateHeading: heading)
 
-        XCTAssertNil(locationSource.latestLocation?.heading)
+        XCTAssertTrue(locationSource.latestLocation?.heading === heading)
         XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(locationProvider.stopUpdatingHeadingStub.invocations.count, 1)
     }
@@ -293,6 +290,7 @@ final class LocationSourceTests: XCTestCase {
 
         XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(locationProvider.stopUpdatingHeadingStub.invocations.count, 1)
+        XCTAssertEqual(delegate?.didFailWithErrorStub.invocations.count, 1)
     }
 
     func testStopUpdatingDuringDidChangeAuthorizationDueToConsumerDeinit() {
@@ -302,10 +300,12 @@ final class LocationSourceTests: XCTestCase {
             locationSource.add(consumer)
         }
 
+        locationProvider.accuracyAuthorization = .reducedAccuracy
         locationSource.locationProviderDidChangeAuthorization(locationProvider)
 
         XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(locationProvider.stopUpdatingHeadingStub.invocations.count, 1)
+        XCTAssertEqual(delegate?.didChangeAccuracyAuthorizationStub.invocations.count, 1)
     }
 
     func testDidFailWithErrorNotifiesDelegate() throws {
@@ -388,5 +388,38 @@ final class LocationSourceTests: XCTestCase {
         locationSource.locationProviderDidChangeAuthorization(locationProvider)
 
         XCTAssertTrue(locationProvider.requestTemporaryFullAccuracyAuthorizationStub.invocations.isEmpty)
+    }
+
+    func testDoesNotRequestTemporaryFullAccuracyAuthorizationWhenNotUpdating() {
+        locationProvider.authorizationStatus = [.authorizedAlways, .authorizedWhenInUse].randomElement()!
+        locationProvider.accuracyAuthorization = .reducedAccuracy
+
+        locationSource.locationProviderDidChangeAuthorization(locationProvider)
+
+        XCTAssertTrue(locationProvider.requestTemporaryFullAccuracyAuthorizationStub.invocations.isEmpty)
+    }
+
+    func testHeadingOrientation() {
+        locationProvider.headingOrientation = [
+            .portrait,
+            .portraitUpsideDown,
+            .faceUp,
+            .faceDown,
+            .landscapeLeft,
+            .landscapeRight,
+            .unknown].randomElement()!
+
+        XCTAssertEqual(locationSource.headingOrientation, locationProvider.headingOrientation)
+
+        locationSource.headingOrientation = [
+            .portrait,
+            .portraitUpsideDown,
+            .faceUp,
+            .faceDown,
+            .landscapeLeft,
+            .landscapeRight,
+            .unknown].randomElement()!
+
+        XCTAssertEqual(locationProvider.headingOrientation, locationSource.headingOrientation)
     }
 }

@@ -37,11 +37,11 @@ import CoreLocation
     public let accuracyAuthorization: CLAccuracyAuthorization
 
     /// Initialize a `Location`. Deprecated. Use `init(location:heading:accuracyAuthorization:)` instead.
-//    public init(with location: CLLocation, heading: CLHeading? = nil) {
-//        self.location = location
-//        self.heading = heading
-//        self.accuracyAuthorization = .fullAccuracy
-//    }
+    public init(with location: CLLocation, heading: CLHeading? = nil) {
+        self.location = location
+        self.heading = heading
+        self.accuracyAuthorization = .fullAccuracy
+    }
 
     /// Initialize a `Location`
     public init(location: CLLocation,

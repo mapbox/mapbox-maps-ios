@@ -4,6 +4,7 @@ import CoreLocation
 // MARK: CameraAnimator Class
 public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterface {
     private enum InternalState: Equatable {
+        case delayed
         case initial
         case running(CameraTransition)
         case paused(CameraTransition)
@@ -33,7 +34,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         switch internalState {
         case let .running(transition), let .paused(transition):
             return transition
-        case .initial, .final:
+        case .delayed, .initial, .final:
             return nil
         }
     }
@@ -42,12 +43,19 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     private var delayedAnimationTimer: Timer?
 
     /// The state from of the animator.
-    public var state: UIViewAnimatingState { propertyAnimator.state }
+    public var state: UIViewAnimatingState {
+        switch internalState {
+        case .delayed, .running():
+            return .active
+        default:
+            return .inactive
+        }
+    }
 
     private var internalState = InternalState.initial {
         didSet {
             switch (oldValue, internalState) {
-            case (.initial, .running), (.paused, .running):
+            case (.initial, .running), (.paused, .running), (.delayed, .running):
                 delegate?.cameraAnimatorDidStartRunning(self)
             case (.running, .paused), (.running, .final):
                 delegate?.cameraAnimatorDidStopRunning(self)
@@ -108,7 +116,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     /// Starts the animation if this animator is in `inactive` state. Also used to resume a "paused" animation.
     public func startAnimation() {
         switch internalState {
-        case .initial:
+        case .initial, .delayed:
             internalState = .running(makeTransition())
             propertyAnimator.startAnimation()
         case .running:
@@ -122,9 +130,10 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         }
     }
 
-    /// Starts the animation after a delay. Once this method is called, there's no way to cancel the animation until it starts.
+    /// Starts the animation after a delay.
     /// - Parameter delay: Delay (in seconds) after which the animation should start
     public func startAnimation(afterDelay delay: TimeInterval) {
+        internalState = .delayed
         delayedAnimationTimer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] (_) in
             guard let self = self else { return }
             self.startAnimation()
@@ -134,7 +143,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     /// Pauses the animation.
     public func pauseAnimation() {
         switch internalState {
-        case .initial:
+        case .initial, .delayed:
             internalState = .paused(makeTransition())
             propertyAnimator.pauseAnimation()
         case let .running(transition):
@@ -153,7 +162,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         switch internalState {
         case .initial:
             fatalError("Attempt to stop an animation that has not started.")
-        case .running, .paused:
+        case .delayed, .running, .paused:
             propertyAnimator.stopAnimation(false)
             // this invokes the completion block which updates internalState
             propertyAnimator.finishAnimation(at: .current)

@@ -71,12 +71,11 @@ public class ViewAnnotationManager {
 }
 
 extension ViewAnnotationManager: ViewAnnotationPositionsListener {
-    
+
     public func onViewAnnotationPositionsUpdate(forPositions positions: [ViewAnnotationPositionDescriptor]) {
         placeAnnotations(positions: positions)
     }
-    
-    
+
 }
 
 // TODO: Add documentation

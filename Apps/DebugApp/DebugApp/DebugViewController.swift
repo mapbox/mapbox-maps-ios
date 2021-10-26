@@ -154,7 +154,7 @@ final class CalloutView: UIView, ViewAnnotation {
         self.backgroundColor = UIColor.blue
         self.layer.borderColor = UIColor.white.cgColor
         self.layer.borderWidth = 1
-        
+
         let labelOrigin = CGPoint(x: 20, y: 20)
         let label = UILabel(
             frame: CGRect(

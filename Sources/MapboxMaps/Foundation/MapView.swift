@@ -290,7 +290,7 @@ open class MapView: UIView {
 
         // Initialize/Configure annotations orchestrator
         annotations = AnnotationOrchestrator(gestureRecognizer: gestures.singleTapGestureRecognizer, mapFeatureQueryable: mapboxMap, style: mapboxMap.style, displayLinkCoordinator: self, mapViewAnnotationHandler: mapboxMap)
-        
+
         // Initialize/Configure view annotations manager
         viewAnnotations = ViewAnnotationManager(view: self, mapViewAnnotationHandler: mapboxMap)
     }

@@ -860,7 +860,7 @@ extension MapboxMap: MapViewAnnotationInterface {
 
         return options
     }
-    
+
     public func setViewAnnotationPositionsUpdateListenerFor(listener: ViewAnnotationPositionsListener) {
         __map.setViewAnnotationPositionsUpdateListenerFor(listener)
     }

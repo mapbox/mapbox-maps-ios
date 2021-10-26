@@ -6,7 +6,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Fixed an issue where camera animations triggered with `startAnimation(withDelay:)` could appear jerky after a pan gesture. ([#789](https://github.com/mapbox/mapbox-maps-ios/pull/789))
 * Fixed an issue with `UIImage` conversion that led to a "mismatched image size" error. ([#790](https://github.com/mapbox/mapbox-maps-ios/pull/790))
-* Update `MapboxCoreMaps` v10.1.0-rc and `MapboxCommon` v20.1.0-rc.2. ([#790](https://github.com/mapbox/mapbox-maps-ios/pull/790)) 
+* Update to `MapboxCoreMaps` v10.1.0-rc and `MapboxCommon` v20.1.0-rc.2. ([#790](https://github.com/mapbox/mapbox-maps-ios/pull/790)) 
 
 ## 10.1.0-beta.1 - October 21, 2021
 

@@ -26,7 +26,6 @@ public struct LocationOptions: Equatable {
     public var puckBearingSource: PuckBearingSource = .heading
 
     public init() {}
-
 }
 
 /// Controls how the puck is oriented

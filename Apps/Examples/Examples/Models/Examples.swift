@@ -100,7 +100,11 @@ public struct Examples {
                 type: SwiftUIExample.self),
         Example(title: "Add multiple annotations to a map",
                 description: "Add default and custom annotations to a map.",
-                type: MultiplePointAnnotationsExample.self)
+                type: MultiplePointAnnotationsExample.self),
+        // TODO: update title and description
+        Example(title: "Add view annotations",
+                description: "Add view annotations to a map.",
+                type: ViewAnnotationExample.self)
     ]
 
     // Examples that focus on setting, animating, or otherwise changing the map's camera.

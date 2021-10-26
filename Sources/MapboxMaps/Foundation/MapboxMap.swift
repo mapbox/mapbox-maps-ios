@@ -842,25 +842,7 @@ extension MapboxMap {
 
 extension MapboxMap: MapViewAnnotationInterface {
 
-    // Dummy
-    public func makeViewAnnotationOptions(
-        coordinate: CLLocationCoordinate2D,
-        width: UInt32,
-        height: UInt32) -> ViewAnnotationOptions {
-            let geometry = MapboxCommon.Geometry(point: coordinate as NSValue)
-            let options = ViewAnnotationOptions(__geometry: geometry, associatedFeatureId: "test",
-                                            width: width as NSNumber,
-                                            height: height as NSNumber,
-                                                allowOverlap: true,
-                                            visible: true,
-                                            anchor: nil,
-                                            offsetX: 0,
-                                            offsetY: 0,
-                                            selected: false)
-
-        return options
-    }
-
+    // TODO: Add documentation
     public func setViewAnnotationPositionsUpdateListenerFor(listener: ViewAnnotationPositionsListener) {
         __map.setViewAnnotationPositionsUpdateListenerFor(listener)
     }
@@ -892,6 +874,13 @@ extension MapboxMap: MapViewAnnotationInterface {
         __map.removeViewAnnotation(forIdentifier: identifier)
     }
 
+    // TODO: Add documentation
+    public func getViewAnnotationOptions(forIdentifier identifier: String) -> Result<ViewAnnotationOptions, Error> {
+        // TODO: error handling
+        let result = __map.getViewAnnotationOptions(forIdentifier: identifier)
+        return .success(result.value as! ViewAnnotationOptions)
+    }
+    
 }
 
 // MARK: - Testing only! -

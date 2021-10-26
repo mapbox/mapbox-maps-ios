@@ -42,33 +42,6 @@ public protocol AnnotationInteractionDelegate: AnyObject {
 
 }
 
-public protocol MapViewAnnotationInterface: AnyObject {
-
-    // TODO: Add documentation
-    func setViewAnnotationPositionsUpdateListenerFor(listener: ViewAnnotationPositionsListener)
-
-    /**
-     * Add view annotation.
-     *
-     * @return position for all views that need to be updated on the screen or null if views' placement remained the same.
-     */
-    func addViewAnnotation(forIdentifier identifier: String, options: ViewAnnotationOptions)
-
-    /**
-     * Update view annotation if it exists.
-     *
-     * @return position for all views that need to be updated on the screen or null if views' placement remained the same.
-     */
-    func updateViewAnnotation(forIdentifier identifier: String, options: ViewAnnotationOptions)
-
-    /**
-     * Remove view annotation if it exists.
-     *
-     * @return position for all views that need to be updated on the screen or null if views' placement remained the same.
-     */
-    func removeViewAnnotation(forIdentifier identifier: String)
-}
-
 public class AnnotationOrchestrator {
 
     private let gestureRecognizer: UIGestureRecognizer

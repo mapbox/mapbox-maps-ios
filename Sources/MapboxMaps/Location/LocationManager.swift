@@ -13,16 +13,24 @@ public final class LocationManager: NSObject {
     /// The object that acts as the delegate of the location manager.
     public weak var delegate: LocationPermissionsDelegate?
 
-    /// Property that provide location and authorization updates.
+    /// The current underlying location provider. Use `overrideLocationProvider(with:)` to substitute a different provider.
+    /// Avoid manipulating the location provider directly. LocationManager assumes full responsibility for starting and stopping location
+    /// and heading updates as needed.
     public var locationProvider: LocationProvider! {
         return locationSource.locationProvider
     }
 
-    /// Property that has a list of items that will consume location events.
-    /// The location manager holds weak references to these consumers, client code should retain these references.
-    /// This property returns a copy of the underlying table, so mutating the returned hash table will have no effect.
+    /// The set of objects that are currently consuming location updates.
+    /// The returned object is a copy of the underlying one, so mutating it will have no effect.
     public var consumers: NSHashTable<LocationConsumer> {
         return locationSource.consumers
+    }
+
+    /// Configuration options for the location manager.
+    public var options = LocationOptions() {
+        didSet {
+            syncOptions()
+        }
     }
 
     private let locationSource: LocationSourceProtocol
@@ -30,13 +38,6 @@ public final class LocationManager: NSObject {
     /// Manager that handles the visual puck element.
     /// Only created if `showsUserLocation` is `true`.
     private let puckManager: PuckManagerProtocol
-
-    /// The `LocationOptions` that configure the location manager.
-    public var options = LocationOptions() {
-        didSet {
-            syncOptions()
-        }
-    }
 
     internal init(locationSource: LocationSourceProtocol,
                   puckManager: PuckManagerProtocol) {
@@ -81,9 +82,17 @@ public final class LocationManager: NSObject {
 // These methods must remain to avoid breaking the API, but their implementation has been moved
 // to `LocationSource`. They should be fully removed in the next major version.
 extension LocationManager: LocationProviderDelegate {
+
+    /// Deprecated. This method no longer has any effect.
     public func locationProvider(_ provider: LocationProvider, didUpdateLocations locations: [CLLocation]) {}
+
+    /// Deprecated. This method no longer has any effect.
     public func locationProvider(_ provider: LocationProvider, didUpdateHeading newHeading: CLHeading) {}
+
+    /// Deprecated. This method no longer has any effect.
     public func locationProvider(_ provider: LocationProvider, didFailWithError error: Error) {}
+
+    /// Deprecated. This method no longer has any effect.
     public func locationProviderDidChangeAuthorization(_ provider: LocationProvider) {}
 }
 

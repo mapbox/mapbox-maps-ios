@@ -2,7 +2,7 @@ import UIKit
 import MapboxMaps
 
 @objc(ViewAnnotationExample)
-final class ViewAnnotationExample: UIViewController, ExampleProtocol {
+final class ViewAnnotationExample: UIViewController, ExampleProtocol, ViewAnnotationDelegate {
 
     private enum Constants {
         static let BLUE_ICON_ID = "blue"
@@ -59,7 +59,9 @@ final class ViewAnnotationExample: UIViewController, ExampleProtocol {
             styleChangeButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -16)
         ])
         
-        //addManyAnnotations()
+        mapView.viewAnnotations.register(SampleAnnotationView.self)
+        mapView.viewAnnotations.delegate = self
+        addManyAnnotations()
     }
 
     //MARK: - Action handlers
@@ -81,7 +83,7 @@ final class ViewAnnotationExample: UIViewController, ExampleProtocol {
                 let id = feature.identifier,
                 case let .string(idString) = id,
                 let viewAnnotation = self?.mapView.viewAnnotations.getViewAnnotation(forFeatureIdentifier: idString) {
-                viewAnnotation.view.isHidden = !viewAnnotation.view.isHidden
+                //viewAnnotation.view.isHidden = !viewAnnotation.view.isHidden
             }
         }
     }
@@ -175,6 +177,12 @@ final class ViewAnnotationExample: UIViewController, ExampleProtocol {
         mapView.viewAnnotations.updateViewAnnotation(annotation, ViewAnnotationOptions(offsetY: markerHeight))
     }
     
+    //MARK: - ViewAnnotationDelegate
+    
+    func prepareAnnotation(view: UIView, at coordinate: CLLocationCoordinate2D) {
+        guard let sampleView = view as? SampleAnnotationView else { return }
+        sampleView.centerLabel.text = String(format: "lat=%.2f\nlon=%.2f", coordinate.latitude, coordinate.longitude)
+    }
 }
 
 fileprivate class SampleAnnotationView: UIView {
@@ -209,9 +217,22 @@ fileprivate class SampleAnnotationView: UIView {
     
     init(point: CLLocationCoordinate2D) {
         super.init(frame: .zero)
-        self.backgroundColor = .green
-        
+        commonInit()
         centerLabel.text = String(format: "lat=%.2f\nlon=%.2f", point.latitude, point.longitude)
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func commonInit() {
+        self.backgroundColor = .green
+
         closeButton.addTarget(self, action: #selector(closePressed(sender:)), for: .touchUpInside)
         selectButton.addTarget(self, action: #selector(selectPressed(sender:)), for: .touchUpInside)
 
@@ -237,10 +258,6 @@ fileprivate class SampleAnnotationView: UIView {
             selectButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -4),
             selectButton.leftAnchor.constraint(equalTo: leftAnchor, constant: 4)
         ])
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     //MARK: - Action handlers

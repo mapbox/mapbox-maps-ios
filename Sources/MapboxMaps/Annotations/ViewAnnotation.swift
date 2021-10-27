@@ -32,8 +32,13 @@ public protocol MapViewAnnotationInterface: AnyObject {
     func getViewAnnotationOptions(forIdentifier identifier: String) -> Result<ViewAnnotationOptions, Error>
 }
 
+public protocol ViewAnnotationDelegate: class {
+    func prepareAnnotation(view: UIView, at coordinate: CLLocationCoordinate2D /*forReuseIdentifier identifier: String*/)
+}
+
 public class ViewAnnotationManager {
 
+    public weak var delegate: ViewAnnotationDelegate?
     private weak var view: UIView?
 
     private let mapViewAnnotationHandler: MapViewAnnotationInterface
@@ -47,24 +52,30 @@ public class ViewAnnotationManager {
 
     // TODO: Maybe convert to a weak dictionary?
     internal var viewAnnotationsById: [String: ViewAnnotation] = [:]
+    internal var reusableViews: [UIView] = []
+    internal var annotationClass: AnyClass?
+
+    public func register(_ annotationClass: AnyClass? /*forReuseIdentifier identifier: String*/) {
+        self.annotationClass = annotationClass
+    }
 
     public func addViewAnnotation(_ annotatonView: UIView, _ options: ViewAnnotationOptions) -> ViewAnnotation {
         guard let view = view else { fatalError() }
 
-        let viewAnnotation = ViewAnnotation(view: annotatonView, options: options)
+        let viewAnnotation = ViewAnnotation(view: nil, options: options)
         mapViewAnnotationHandler.addViewAnnotation(
             forIdentifier: viewAnnotation.id,
             options: options)
         viewAnnotationsById[viewAnnotation.id] = viewAnnotation
-        viewAnnotation.view.isHidden = false
-        view.addSubview(viewAnnotation.view)
+        //viewAnnotation.view.isHidden = false
+        //view.addSubview(viewAnnotation.view)
         return viewAnnotation
     }
 
     public func removeViewAnnotation(_ viewAnnotation: ViewAnnotation) {
         mapViewAnnotationHandler.removeViewAnnotation(
             forIdentifier: viewAnnotation.id)
-        viewAnnotation.view.removeFromSuperview()
+        //viewAnnotation.view.removeFromSuperview()
         viewAnnotationsById.removeValue(forKey: viewAnnotation.id)
     }
 
@@ -89,6 +100,24 @@ public class ViewAnnotationManager {
         var visibleAnnotationIds: Set<String> = []
 
         for position in positions {
+            if (self.viewAnnotationsById[position.identifier]?.view == nil) {
+                if (reusableViews.isEmpty) {
+                    let aClass = annotationClass as! UIView.Type
+                    let view = aClass.init(frame: .zero)
+                    self.viewAnnotationsById[position.identifier]?.view = view
+                    //let index = viewAnnotationsById.keys.distance(from: viewAnnotationsById.keys.startIndex, to: viewAnnotationsById.keys.firstIndex(of: position.identifier)!)
+                    self.view?.addSubview(view)
+                } else {
+                    self.viewAnnotationsById[position.identifier]?.view = reusableViews.removeFirst()
+                }
+                if let annotation = self.viewAnnotationsById[position.identifier],
+                    let view = annotation.view,
+                    let geometry = annotation.options.geometry,
+                    let locations = geometry.extractLocations() {
+                    delegate?.prepareAnnotation(view: view, at: locations.coordinateValue())
+                }
+            }
+            
             // Approach:
             // 1. Get the view for this position's identifier
             // 2. Adjust the origin of the view. If the view's center is off screen, then hide the view
@@ -96,18 +125,23 @@ public class ViewAnnotationManager {
                 fatalError()
             }
             // TODO: Check if position depends on the device's pixel ratio. (In a previous commit this was divided by two for some reason.)
-            viewAnnotation.view.frame = CGRect(
+            viewAnnotation.view?.frame = CGRect(
                 origin: position.leftTopCoordinate.point,
                 size: CGSize(width: viewAnnotation.options.width?.CGFloat ?? 0.0, height: viewAnnotation.options.height?.CGFloat ?? 0.0))
 
-            viewAnnotation.view.isHidden = false
+            viewAnnotation.view?.isHidden = false
             visibleAnnotationIds.insert(position.identifier)
         }
 
         // Hide annotations that are off screen
         let annotationsToHide = Set<String>(viewAnnotationsById.keys).subtracting(visibleAnnotationIds)
         for id in annotationsToHide {
-            self.viewAnnotationsById[id]?.view.isHidden = true
+            //self.viewAnnotationsById[id]?.view.isHidden = true
+            if let view = viewAnnotationsById[id]?.view {
+                view.isHidden = true
+                reusableViews.append(view)
+                viewAnnotationsById[id]?.view = nil
+            }
         }
     }
 
@@ -147,7 +181,7 @@ extension MapboxCoreMaps.ViewAnnotationOptions {
 }
 
 public struct ViewAnnotation {
-    public var view: UIView
+    fileprivate var view: UIView?
     public let id: String = UUID().uuidString
     public private(set) var options: ViewAnnotationOptions
     

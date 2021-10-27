@@ -283,28 +283,12 @@ open class MapView: UIView {
             cameraAnimationsManager: camera,
             infoButtonOrnamentDelegate: attributionDialogManager)
 
-        // Initialize/Configure location manager
-        let locationProvider = AppleLocationProvider()
-        locationSource = LocationSource(
-            locationProvider: locationProvider,
+        // Initialize/Configure location source and location manager
+        locationSource = dependencyProvider.makeLocationSource(
             mayRequestWhenInUseAuthorization: Bundle.main.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil)
-        let puckManager = PuckManager(
-            puck2DProvider: { [style=mapboxMap.style, locationSource=locationSource!] configuration in
-                Puck2D(
-                    configuration: configuration,
-                    style: style,
-                    locationSource: locationSource)
-            },
-            puck3DProvider: { [style=mapboxMap.style, locationSource=locationSource!] configuration in
-                Puck3D(
-                    configuration: configuration,
-                    style: style,
-                    locationSource: locationSource)
-            })
-
-        location = LocationManager(
+        location = dependencyProvider.makeLocationManager(
             locationSource: locationSource,
-            puckManager: puckManager)
+            style: mapboxMap.style)
 
         // Initialize/Configure annotations orchestrator
         annotations = AnnotationOrchestrator(

@@ -49,4 +49,12 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
     func makeGestureHandler() -> GestureHandler {
         return GestureHandler(gestureRecognizer: UIGestureRecognizer())
     }
+
+    func makeLocationSource(mayRequestWhenInUseAuthorization: Bool) -> LocationSourceProtocol {
+        return MockLocationSource()
+    }
+
+    func makeLocationManager(locationSource: LocationSourceProtocol, style: StyleProtocol) -> LocationManager {
+        return LocationManager(locationSource: locationSource, puckManager: MockPuckManager())
+    }
 }

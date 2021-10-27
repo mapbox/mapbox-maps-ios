@@ -65,8 +65,8 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
                   layerPosition: LayerPosition?,
                   displayLinkCoordinator: DisplayLinkCoordinator) {
         self.id = id
-        self.sourceId = id + "-source"
-        self.layerId = id + "-layer"
+        self.sourceId = id
+        self.layerId = id
         self.style = style
         self.gestureRecognizer = gestureRecognizer
         self.mapFeatureQueryable = mapFeatureQueryable

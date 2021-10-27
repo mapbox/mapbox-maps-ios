@@ -45,7 +45,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     /// The state from of the animator.
     public var state: UIViewAnimatingState {
         switch internalState {
-        case .delayed, .running():
+        case .delayed, .running:
             return .active
         default:
             return .inactive
@@ -191,6 +191,8 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
             fatalError("Attempt to continue an animation that has not started.")
         case .running:
             fatalError("Attempt to continue an animation that is already running.")
+        case .delayed:
+            fatalError("Attempt to continue an animation that is delayed.")
         case let .paused(transition):
             internalState = .running(transition)
             propertyAnimator.continueAnimation(withTimingParameters: parameters, durationFactor: CGFloat(durationFactor))
@@ -201,7 +203,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
     func update() {
         switch internalState {
-        case .initial, .paused, .final:
+        case .initial, .paused, .delayed, .final:
             return
         case let .running(transition):
             // The animator is running, so get the interpolated value. This may be nil if

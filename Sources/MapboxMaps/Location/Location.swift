@@ -1,10 +1,14 @@
 import Foundation
 import CoreLocation
 
+/// Instances of this class are delivered to `LocationConsumer`s by `LocationManager` whenever
+/// the heading, location, or accuracy authorization change.
 @objc public class Location: NSObject {
 
+    /// A heading value. May be used directly or via the higher-level `headingDirection` property.
     public let heading: CLHeading?
 
+    /// A location value. May be used directly or via the convenience accessors `coordinate`, `course`, and `horizontalAccuracy`.
     public let location: CLLocation
 
     /// A conveninece accessor for `location.coordinate`
@@ -34,6 +38,7 @@ import CoreLocation
         return heading.trueHeading
     }
 
+    /// An accuracy authorization value.
     public let accuracyAuthorization: CLAccuracyAuthorization
 
     /// Initialize a `Location`. Deprecated. Use `init(location:heading:accuracyAuthorization:)` instead.

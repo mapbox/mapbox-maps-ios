@@ -92,7 +92,9 @@ internal final class Puck2D: NSObject, Puck {
             })
             layer.accuracyRadiusColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
             layer.accuracyRadiusBorderColor = .constant(StyleColor(.lightGray))
-        default:
+        case .fullAccuracy:
+            fallthrough
+        @unknown default:
             layer.topImage = .constant(.name(Self.topImageId))
             layer.bearingImage = .constant(.name(Self.bearingImageId))
             if configuration.shadowImage != nil {

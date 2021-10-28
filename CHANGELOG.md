@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+* Send location update when puck is nil and other location-related improvements. ([#765](https://github.com/mapbox/mapbox-maps-ios/pull/765))
+
 ## 10.1.0 - November 4, 2021
 
 * Update to `MapboxCoreMaps` v10.1.0 and `MapboxCommon` v20.1.0. ([#807](https://github.com/mapbox/mapbox-maps-ios/pull/807))

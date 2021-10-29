@@ -126,8 +126,6 @@ final class BasicCameraAnimatorTests: XCTestCase {
                 print(error.localizedDescription)
             }
         }
-
-
     }
 
     func testInformsDelegateWhenPausingAndStarting() {

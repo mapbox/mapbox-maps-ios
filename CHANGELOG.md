@@ -4,7 +4,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
-* Fixed an issue where camera animations triggered with `startAnimation(withDelay:)` could appear jerky after a pan gesture. ([#789](https://github.com/mapbox/mapbox-maps-ios/pull/789))
+* Fixed an issue where camera animations triggered with `startAnimation(afterDelay:)` could appear jerky after a pan gesture. ([#789](https://github.com/mapbox/mapbox-maps-ios/pull/789))
 
 ## 10.1.0 - November 4, 2021
 

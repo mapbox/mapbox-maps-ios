@@ -40,7 +40,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     }
 
     /// A timer used to delay the start of an animation
-    private var delayedAnimationTimer: Timer?
+    internal var delayedAnimationTimer: Timer?
 
     /// The state from of the animator.
     public var state: UIViewAnimatingState {

@@ -95,6 +95,41 @@ final class BasicCameraAnimatorTests: XCTestCase {
         XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === animator)
     }
 
+    func testStartAndStopAnimationAfterDelay() {
+        animator.addAnimations { (transition) in
+            transition.zoom.toValue = cameraStateTestValue.zoom
+        }
+        XCTAssertNil(animator.delayedAnimationTimer)
+
+        animator.startAnimation(afterDelay: 1)
+
+        let expectation = XCTestExpectation(description: "Animations should start after a delay.")
+        _ = XCTWaiter.wait(for: [expectation], timeout: 5.0)
+
+        XCTAssertNotNil(animator.delayedAnimationTimer)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            XCTAssertEqual(self.propertyAnimator.startAnimationStub.invocations.count, 1)
+            XCTAssertEqual(self.propertyAnimator.addAnimationsStub.invocations.count, 1)
+            XCTAssertEqual(self.propertyAnimator.addCompletionStub.invocations.count, 1)
+            expectation.fulfill()
+
+            self.animator.stopAnimation()
+
+            XCTAssertEqual(self.propertyAnimator.stopAnimationStub.invocations.count, 1)
+            XCTAssertEqual(self.propertyAnimator.finishAnimationStub.invocations.count, 1)
+            XCTAssertEqual(self.propertyAnimator.finishAnimationStub.invocations.first?.parameters, .current)
+
+            do {
+                let isTimerValid = try XCTUnwrap(self.animator.delayedAnimationTimer?.isValid)
+                XCTAssertFalse(isTimerValid)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+
+
+    }
+
     func testInformsDelegateWhenPausingAndStarting() {
         animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!

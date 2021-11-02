@@ -111,7 +111,7 @@ public struct Examples {
     public static let cameraExamples = [
         Example(title: "Fly-to camera animation",
                 description: """
-                    Animate the map camera to a new position using camera animators. Individual camera properties such as zoom, bearing, and center coordinate can be animated independently.
+                    Smoothly interpolate between locations with the fly-to animation.
                 """,
                 type: FlyToExample.self),
             Example(title: "Use custom camera animations",

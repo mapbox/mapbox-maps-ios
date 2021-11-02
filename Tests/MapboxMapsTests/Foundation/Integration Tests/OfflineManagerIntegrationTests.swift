@@ -375,13 +375,13 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
         tileStore.loadTileRegion(forId: tileRegionId,
                                  loadOptions: tileRegionLoadOptions!) { _ in
-            DispatchQueue.main.async {
+//            DispatchQueue.main.async {
                 let observer = DeallocationObserver(closureDeallocation.fulfill)
                 dump(observer)
 
                 print("\(functionName): Completion block called")
                 expect.fulfill()
-            }
+//            }
         }
 
         tileRegionLoadOptions = nil

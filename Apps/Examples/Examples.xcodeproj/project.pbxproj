@@ -265,7 +265,6 @@
 				077E3B8F2581966300564A3E /* FitCameraToGeometryExample.swift */,
 				0CE3D3C225818786000585A2 /* FlyToExample.swift */,
 				30F095BE270B39AF00F368DC /* GlobeViewExample.swift */,
-				07B071CD2547CF2B007F2865 /* MultipleGeometriesExample.swift */,
 				666E0D4925664EE7000B8AF5 /* LayerPositionExample.swift */,
 				C64ED3C82541CA3A00ADADFB /* LineAnnotationExample.swift */,
 				0C78AC2825BF70E40057F570 /* LineGradientExample.swift */,
@@ -457,7 +456,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1200;
-				LastUpgradeCheck = 1300;
+				LastUpgradeCheck = 1310;
 				TargetAttributes = {
 					077C4EE9252F7E88007636F1 = {
 						CreatedOnToolsVersion = 12.0;

@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+* Update to `MapboxCoreMaps` v10.1.0 and `MapboxCommon` v20.1.0. ([#807](https://github.com/mapbox/mapbox-maps-ios/pull/807))
+
 ## 10.1.0-rc.1 - October 28, 2021
 
 * Fixed an issue with `UIImage` conversion that led to a "mismatched image size" error. ([#790](https://github.com/mapbox/mapbox-maps-ios/pull/790))

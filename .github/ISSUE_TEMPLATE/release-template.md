@@ -38,9 +38,9 @@ assignees: ''
 
 - [ ] Create a new branch from the latest commit on main named `release/v{MAJOR}.{MINOR}` where `MAJOR` and `MINOR` are the major and minor components of the semantic version.
 
-### Cherry-pick Patches into the Release Branch (Patch Releases Only)
+### Cherry-pick Commits into the Release Branch
 
-- [ ] For patch releases, cherry-pick the patches from main into the release branch.
+- [ ] If this is not the first release on this branch, cherry-pick the commits from main into the release branch. Which commits to include depends on the team's plan for what to include in the release.
 
 ### Update ZenHub
 

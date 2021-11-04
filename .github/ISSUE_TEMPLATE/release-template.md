@@ -74,18 +74,18 @@ assignees: ''
 
 - [ ] Create a SEMVER tag on the release branch, and push the tag to GitHub:
     - `git tag {VERSION} && git push origin {VERSION}`
-- [ ] Wait for the [release job](https://app.circleci.com/pipelines/github/mapbox/mapbox-maps-ios) to run. This job…
-    - Builds the direct download artifacts for SDK Registry and uploads them to S3
-    - Creates an [api-downloads PR](https://github.com/mapbox/api-downloads/pulls)
-    - Builds the API docs (stored as an artifact of the CI job named `api-docs.zip`)
-    - Creates a draft GitHub Release
-- [ ] Review and merge the api-downloads PR.
-- [ ] Push the release to CocoaPods via `$ pod trunk push`.
-- [ ] Update the [draft GitHub Release](https://github.com/mapbox/mapbox-maps-ios/releases).
+    - This triggers the [release job](https://app.circleci.com/pipelines/github/mapbox/mapbox-maps-ios) which
+        - Creates a draft GitHub Release
+        - Builds the direct download artifacts for SDK Registry and uploads them to S3
+        - Creates an [api-downloads PR](https://github.com/mapbox/api-downloads/pulls)
+        - Builds the API docs (stored as an artifact of the CI job named `api-docs.zip`)
+- [ ] Update the [draft GitHub Release](https://github.com/mapbox/mapbox-maps-ios/releases)
     - The release notes should be more descriptive than `CHANGELOG.md`.
     - You can include information that developers will need to update successfully, organize the changes by theme, etc.
-- [ ] If this is a beta or release candidate, check the prerelease box, otherwise uncheck it.
-- [ ] Save your changes, but do not publish them, and have your release buddy review the draft.
+    - If this is a beta or release candidate, check the prerelease box, otherwise uncheck it.
+    - Save your changes, but do not publish them, and have your release buddy review the draft.
+- [ ] Review and merge the api-downloads PR.
+- [ ] Push the release to CocoaPods via `$ pod trunk push`.
 
 ### Manual QA Part 2
 

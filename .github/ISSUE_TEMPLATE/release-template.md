@@ -79,7 +79,8 @@ assignees: ''
     - Creates an [api-downloads PR](https://github.com/mapbox/api-downloads/pulls)
     - Builds the API docs (stored as an artifact of the CI job named `api-docs.zip`)
     - Creates a draft GitHub Release
-- [ ] Push the release to CocoaPods via `$ pod trunk push`
+- [ ] Review and merge the api-downloads PR.
+- [ ] Push the release to CocoaPods via `$ pod trunk push`.
 - [ ] Update the [draft GitHub Release](https://github.com/mapbox/mapbox-maps-ios/releases).
     - The release notes should be more descriptive than `CHANGELOG.md`.
     - You can include information that developers will need to update successfully, organize the changes by theme, etc.

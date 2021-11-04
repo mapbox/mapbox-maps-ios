@@ -31,7 +31,7 @@ public class FlyToExample: UIViewController, ExampleProtocol {
                                 bearing: 180,
                                 pitch: 50)
 
-        let cancelable = mapView.camera.fly(to: end) { [weak self] _ in
+        _ = mapView.camera.fly(to: end) { [weak self] _ in
             print("Camera fly-to finished")
             // The below line is used for internal testing purposes only.
             self?.finish()

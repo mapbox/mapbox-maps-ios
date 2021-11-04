@@ -36,7 +36,7 @@ assignees: ''
 
 ### Create the Release Branch (Minor Releases Only)
 
-- [ ] Create a new branch from the latest commit on main named `release/v{MAJOR}{MINOR}` where `MAJOR` and `MINOR` are the major and minor components of the semantic version.
+- [ ] Create a new branch from the latest commit on main named `release/v{MAJOR}.{MINOR}` where `MAJOR` and `MINOR` are the major and minor components of the semantic version.
 
 ### Cherry-pick Patches into the Release Branch (Patch Releases Only)
 

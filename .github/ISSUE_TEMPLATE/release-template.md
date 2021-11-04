@@ -25,7 +25,8 @@ assignees: ''
 
 ### Pull requests:
 
-- [ ] mapbox-maps-ios version & changlog ->
+- [ ] mapbox-maps-ios version & changlog updates on main ->
+- [ ] mapbox-maps-ios release branch updates ->
 - [ ] api-downloads ->
 - [ ] mapbox-maps-ios staging docs ->
 - [ ] mapbox-maps-ios production docs ->
@@ -34,17 +35,10 @@ assignees: ''
 
 ## 📦 Release MapboxMaps
 
-### Create the Release Branch (Minor Releases Only)
+### Create the Release Branch
 
-- [ ] Create a new branch from the latest commit on main named `release/v{MAJOR}.{MINOR}` where `MAJOR` and `MINOR` are the major and minor components of the semantic version.
-
-### Cherry-pick Commits into the Release Branch
-
-- [ ] If this is not the first release on this branch, cherry-pick the commits from main into the release branch. Which commits to include depends on the team's plan for what to include in the release.
-
-### Update ZenHub
-
-- [ ] Review the [issues in the release on ZenHub](https://app.zenhub.com/workspaces/maps-sdk-for-ios-5e9f47ffdf1ce5046f9011f4/reports/release), adding or removing to the list as necessary.
+- [ ] If the release branch does not exist yet, create it from the latest commit on main. Name it `release/v{MAJOR}.{MINOR}` where `MAJOR` and `MINOR` are the major and minor components of the semantic version.
+- [ ] Push this branch without adding any new commits. We'll introduce changes via a PR so that our CI checks run and to give the release buddy an opporutnity to review.
 
 ### Update Version & Changelog
 
@@ -52,7 +46,20 @@ assignees: ''
 - [ ] Update CHANGELOG.md with a new section for this release, adding headlines & links for each included PR.
 - [ ] Update the version number by running `./scripts/release/update-version.sh {VERSION}`.
 - [ ] Open a pull request to main with these changes, have your release buddy review it, and merge it.
-- [ ] Copy these changes into the release branch. For minor releases, you'll likely be able to do this via a cherry-pick.
+
+### Update the Release Branch
+
+- [ ] Create a new branch off of the release branch.
+- [ ] Copy patches from main into that branch.
+    - This is usually accomplished via a git cherry-pick, but may need to be done manually if there are significant conflicts.
+    - Always include the commit containing the version number and changelog updates.
+    - Include other commits as needed based on the team's plan for what to include in the release.
+- [ ] Open a pull request to the release branch with these changes, have your release buddy review it, and merge it.
+    - This approach ensures that we run the exact code to be released through CI & a final peer review.
+
+### Update ZenHub
+
+- [ ] Review the [issues in the release on ZenHub](https://app.zenhub.com/workspaces/maps-sdk-for-ios-5e9f47ffdf1ce5046f9011f4/reports/release), adding or removing to the list as necessary.
 
 ### Manual QA Part 1
 

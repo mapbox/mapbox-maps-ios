@@ -513,8 +513,12 @@ jobs:
   release:
     <<: *base-job
     steps:
+      - run:
+          name: Parse SDK version from release tag
+          command: |
+            echo "export VERSION=${CIRCLE_TAG#v}" >> $BASH_ENV
       - slack/notify:
-          message: '<$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` started.>'
+          message: '<$CIRCLE_BUILD_URL|Release tag for \`v$VERSION\` started.>'
           include_visit_job_action: true
       - checkout
       - install-mbx-ci
@@ -531,8 +535,8 @@ jobs:
       - run:
           name: Uploading direct download bundles (static & dynamic) to SDK Registry
           command: |
-            ./scripts/release/upload-to-registry.sh MapboxMaps.zip mobile-maps-ios ${CIRCLE_TAG} MapboxMaps.zip
-            ./scripts/release/upload-to-registry.sh MapboxMaps-static.zip mobile-maps-ios-static ${CIRCLE_TAG} MapboxMaps-static.zip
+            ./scripts/release/upload-to-registry.sh MapboxMaps.zip mobile-maps-ios "$VERSION" MapboxMaps.zip
+            ./scripts/release/upload-to-registry.sh MapboxMaps-static.zip mobile-maps-ios-static "$VERSION" MapboxMaps-static.zip
       - run:
           name: Run `npm ci`
           command: |
@@ -541,18 +545,18 @@ jobs:
           when: on_success
       - run:
           name: Creating SDK Registry PR
-          command: ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios ${CIRCLE_TAG}
+          command: ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios "$VERSION"
           when: on_success
       - make-docs
       - run:
           name: Create draft release on Github
-          command: ./scripts/release/create-github-draft-release.sh ${CIRCLE_TAG}
+          command: ./scripts/release/create-github-draft-release.sh "$VERSION"
           when: always
       - slack/status:
           fail_only: false
           include_visit_job_action: true
-          failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` failed.>'
-          success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` succeeded!> :tada:'
+          failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release tag for \`v$VERSION\` failed.>'
+          success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release tag for \`v$VERSION\` succeeded!> :tada:'
 
 # ==============================================================================
 # Reusable commands

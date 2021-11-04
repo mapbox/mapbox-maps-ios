@@ -8,7 +8,7 @@ set -euo pipefail
 #
 
 PROJECT_ROOT=$1
-VERSION=${2#v}
+VERSION=$2
 
 # Variables needed for github actions
 BRANCH_NAME="${PROJECT_ROOT}/${VERSION}"

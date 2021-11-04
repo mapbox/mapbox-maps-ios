@@ -16,7 +16,7 @@ fi
 
 SOURCE_ZIP=$1
 PROJECT=$2
-VERSION=${3#v}
+VERSION=$3
 ZIP_FILENAME=$4
 
 S3_DESTINATION=s3://mapbox-api-downloads-production/v2/${PROJECT}/releases/ios/${VERSION}/${ZIP_FILENAME}

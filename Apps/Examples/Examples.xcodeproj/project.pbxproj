@@ -33,6 +33,7 @@
 		17B4806526851C6E00CF0D5E /* radar0.gif in Resources */ = {isa = PBXBuildFile; fileRef = 17B4806026851C6E00CF0D5E /* radar0.gif */; };
 		17B4806B268BD91000CF0D5E /* RasterTileSourceExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B4806A268BD91000CF0D5E /* RasterTileSourceExample.swift */; };
 		17E28C5C2672A1160033DF0F /* SymbolClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E28C5B2672A1160033DF0F /* SymbolClusteringExample.swift */; };
+		304AB3B527439287005B6D09 /* ViewAnnotationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 304AB3B427439287005B6D09 /* ViewAnnotationExample.swift */; };
 		30F095BF270B39AF00F368DC /* GlobeViewExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F095BE270B39AF00F368DC /* GlobeViewExample.swift */; };
 		58248C2F2695FF24009AC598 /* StoryboardMapViewExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58248C2E2695FF24009AC598 /* StoryboardMapViewExample.swift */; };
 		5830FDB7270B5AF7005549EE /* sportcar.glb in Resources */ = {isa = PBXBuildFile; fileRef = 5830FDB6270B5AF7005549EE /* sportcar.glb */; };
@@ -161,6 +162,7 @@
 		17B4806026851C6E00CF0D5E /* radar0.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = radar0.gif; sourceTree = "<group>"; };
 		17B4806A268BD91000CF0D5E /* RasterTileSourceExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RasterTileSourceExample.swift; sourceTree = "<group>"; };
 		17E28C5B2672A1160033DF0F /* SymbolClusteringExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolClusteringExample.swift; sourceTree = "<group>"; };
+		304AB3B427439287005B6D09 /* ViewAnnotationExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewAnnotationExample.swift; sourceTree = "<group>"; };
 		30F095BE270B39AF00F368DC /* GlobeViewExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobeViewExample.swift; sourceTree = "<group>"; };
 		58248C2E2695FF24009AC598 /* StoryboardMapViewExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardMapViewExample.swift; sourceTree = "<group>"; };
 		5830FDB6270B5AF7005549EE /* sportcar.glb */ = {isa = PBXFileReference; lastKnownFileType = file; path = sportcar.glb; sourceTree = "<group>"; };
@@ -293,6 +295,7 @@
 				0706C4A525B1181A008733C0 /* TerrainExample.swift */,
 				73694BD225D4B2CE0064F636 /* TrackingModeExample.swift */,
 				077E3B932581987B00564A3E /* UpdatePointAnnotationPositionExample.swift */,
+				304AB3B427439287005B6D09 /* ViewAnnotationExample.swift */,
 			);
 			path = "All Examples";
 			sourceTree = "<group>";
@@ -593,6 +596,7 @@
 				0706C4A625B1181A008733C0 /* TerrainExample.swift in Sources */,
 				CADCF7282584990E0065C51B /* LineAnnotationExample.swift in Sources */,
 				CADCF72F2584990E0065C51B /* SnapshotterCoreGraphicsExample.swift in Sources */,
+				304AB3B527439287005B6D09 /* ViewAnnotationExample.swift in Sources */,
 				CA4F1F7225E815CF00822D2A /* SwiftUIExample.swift in Sources */,
 				CAC195B725AC098A00F69FEA /* CameraAnimatorsExample.swift in Sources */,
 				0C78AC2925BF70E40057F570 /* LineGradientExample.swift in Sources */,

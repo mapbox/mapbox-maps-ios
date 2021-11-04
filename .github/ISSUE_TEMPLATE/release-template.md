@@ -148,8 +148,8 @@ assignees: ''
 ### ios-sdk
 
 - [ ] Create a `maps-{VERSION}` branch off of `publisher-production` in [ios-sdk](https://github.com/mapbox/ios-sdk).
-- [ ] Add the new version (without a v prefix) as the first element in the [src/data/ios-maps-sdk-version.json](https://github.com/mapbox/ios-sdk/blob/publisher-production/src/data/ios-maps-sdk-versions.json).
-- [ ] For non-prereleases, add the version without the v prefix to [src/constants.json](https://github.com/mapbox/ios-sdk/blob/publisher-production/src/constants.json) as the value for `MAPS_SDK_v10_VERSION_IOS`.
+- [ ] Add the new version (without a v prefix) to [src/data/ios-maps-sdk-version.json](https://github.com/mapbox/ios-sdk/blob/publisher-production/src/data/ios-maps-sdk-versions.json).
+- [ ] For non-prereleases, add the version without the v prefix to [src/constants.json](https://github.com/mapbox/ios-sdk/blob/publisher-production/src/constants.json) as the value for `VERSION_IOS_MAPS_SDK`.
 - [ ] Make sure the API Docs changes are live in production before continuing `https://docs.mapbox.com/ios/maps/api/{version_without_v_prefix}/index.html`
   - This is necessary because the CI checks triggered by the next step depend on them.
 - [ ] Commit and push these changes, then open a PR.

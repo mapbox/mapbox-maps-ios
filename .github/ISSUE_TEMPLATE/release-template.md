@@ -1,13 +1,13 @@
 ---
-name: Release template — iOS stable
-about: Checklist for a single release.
-title: Release Maps v10 SDK <version>
+name: Release Template
+about: Checklist for releasing mapbox-maps-ios
+title: Release Maps SDK <version>
 labels: release
 assignees: ''
 
 ---
 
-# Stable release: <version>
+# Release Maps SDK <version>
 
 - Releaser:
     - The releaser kicks off each step, tests the state of the SDK prior to and after the release, and updates the documentation. They should request their release and buddies the afternoon prior to the release.

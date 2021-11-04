@@ -151,8 +151,8 @@ assignees: ''
 
 ## 📊 ZenHub
 
-- [ ] Review the [issues in the release on ZenHub](https://app.zenhub.com/workspaces/maps-sdk-for-ios-5e9f47ffdf1ce5046f9011f4/reports/release), adding or removing to the list as necessary.
-- [ ] Close the [Zenhub Release](https://app.zenhub.com/workspaces/maps-sdk-for-ios-5e9f47ffdf1ce5046f9011f4/reports/release).
+- [ ] Review the [issues in the ZenHub Release](https://app.zenhub.com/workspaces/maps-sdk-5fac44a73ae0870015ac174b/reports/release), adding or removing to the list as necessary.
+- [ ] Close the Zenhub Release.
 
 ## 📣 Announce the Release
 

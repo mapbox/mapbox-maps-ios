@@ -312,6 +312,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - add-mapbox-submodules-key
       - install-mbx-ci
       - configure-environment
       # Building and testing are split into 2, with the aim that we'll be able to reuse
@@ -343,6 +344,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - add-mapbox-submodules-key
       - install-mbx-ci
       - configure-environment
       - ensure-text-exists-in-commit:
@@ -415,6 +417,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - add-mapbox-submodules-key
       - install-mbx-ci
       - ensure-text-exists-in-commit:
           commit-text: "[run app device tests]"
@@ -486,6 +489,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
+      - add-mapbox-submodules-key
       - install-mbx-ci
       - configure-environment
       - ensure-text-exists-in-commit:
@@ -521,6 +525,7 @@ jobs:
           message: '<$CIRCLE_BUILD_URL|Release tag for \`v$VERSION\` started.>'
           include_visit_job_action: true
       - checkout
+      - add-mapbox-submodules-key
       - install-mbx-ci
       - configure-environment
       - install-dependencies
@@ -586,11 +591,14 @@ commands:
             echo "${MAPBOX_ACCESS_TOKEN}" > ~/.mapbox
             echo "${MAPBOX_ACCESS_TOKEN}" > ./Tests/MapboxMapsTests/Helpers/MapboxAccessToken
 
-  install-mbx-ci:
+  add-mapbox-submodules-key:
     steps:
       - add_ssh_keys:
           fingerprints:
             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+
+  install-mbx-ci:
+    steps:
       - run:
           name: Install latest mbx-ci
           command: |

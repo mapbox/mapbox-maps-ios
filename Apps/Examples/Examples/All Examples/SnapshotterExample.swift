@@ -4,11 +4,11 @@ import MapboxMaps
 @objc(SnapshotterExample)
 
 public class SnapshotterExample: UIViewController, ExampleProtocol {
-
     internal var mapView: MapView!
     public var snapshotter: Snapshotter!
     public var snapshotView: UIImageView!
     private var snapshotting = false
+    static private let poiLabelId = "poi-label"
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -22,9 +22,14 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
 
         let mapViewRect = CGRect(x: 0, y: 0, width: view.bounds.width/2, height: view.bounds.height / 2)
 
-        let mapInitOptions = MapInitOptions(cameraOptions: CameraOptions(center: CLLocationCoordinate2D(latitude: 50, longitude: 138.482),
-                                                                         zoom: 3.5),
-                                            styleURI: .dark)
+        let mapInitOptions = MapInitOptions(
+            mapOptions: MapOptions(),
+            cameraOptions: CameraOptions(
+                center: CLLocationCoordinate2D(
+                    latitude: 59.3464707,
+                    longitude: 18.0600796),
+                zoom: 19),
+            styleURI: StyleURI.streets)
 
         mapView = MapView(frame: mapViewRect, mapInitOptions: mapInitOptions)
         // Add the `MapViewController`'s view to the stack view as a
@@ -56,10 +61,61 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
             resourceOptions: mapInitOptions.resourceOptions)
 
         snapshotter = Snapshotter(options: options)
-        snapshotter.style.uri = .light
+        snapshotter.style.uri = StyleURI.streets
+        mapView.mapboxMap.loadStyleURI(StyleURI.streets) { result in
+            guard case .success = result else {
+                print("Failed loading style")
+                return
+            }
 
-        // Set the camera of the snapshotter
+            // Updating style based on feature state
+            do {
+                try self.mapView.mapboxMap.style.updateLayer(
+                    withId: Self.poiLabelId,
+                    type: SymbolLayer.self) { (layer: inout SymbolLayer) in
+                    layer.iconOpacity = .expression(
+                        Exp(.switchCase) {
+                            Exp(.boolean) {
+                                Exp(.featureState) { "selected" }
+                                false
+                            }
+                            0
+                            1
+                        }
+                    )
+//                    layer.textOpacity = .expression(
+//                        Exp(.switchCase) {
+//                            Exp(.boolean) {
+//                                Exp(.featureState) { "selected" }
+//                                false
+//                            }
+//                            0
+//                            1
+//                        }
+//                    )
+                }
+            } catch {
+                print("Error updating layer: \(error)")
+            }
 
+            if let layer = try? self.mapView.mapboxMap.style.layer(withId: Self.poiLabelId) as? SymbolLayer,
+               let iconSourceName = layer.source,
+               let iconSourceLayerId = layer.sourceLayer
+            {
+                print("Updating feature state")
+
+                let featureIdentifier = 30705936810
+                // Setting the feature state without this short delay will make it stop working. It appears that the updating of the style of another layer in the same style voids this setting of featureState
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                   self.mapView.mapboxMap.setFeatureState(
+                    sourceId: iconSourceName,
+                    sourceLayerId: iconSourceLayerId,
+                    featureId: "\(Int(featureIdentifier))",
+                    state: ["selected": true])
+                }
+            }
+        }
+        
         mapView.mapboxMap.onEvery(.mapIdle) { [weak self] _ in
             // Allow the previous snapshot to complete before starting a new one.
             guard let self = self, !self.snapshotting else {

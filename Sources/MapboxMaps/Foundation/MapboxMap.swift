@@ -19,6 +19,12 @@ internal protocol MapboxMapProtocol: AnyObject {
     func endGesture()
     @discardableResult
     func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable
+    // View annotation management
+    func setViewAnnotationPositionsUpdateListener(_ listener: ViewAnnotationPositionsUpdateListener?)
+    func addViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws
+    func updateViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws
+    func removeViewAnnotation(withId id: String) throws
+    func options(forViewAnnotationWithId id: String) throws -> ViewAnnotationOptions
 }
 
 public final class MapboxMap: MapboxMapProtocol {
@@ -835,6 +841,49 @@ extension MapboxMap {
                                  featureId: featureId,
                                  stateKey: stateKey)
     }
+
+}
+
+// MARK: - View Annotations
+
+extension MapboxMap {
+
+    internal func setViewAnnotationPositionsUpdateListener(_ listener: ViewAnnotationPositionsUpdateListener?) {
+        __map.setViewAnnotationPositionsUpdateListenerFor(listener)
+    }
+
+    internal func addViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws {
+        let expected = __map.addViewAnnotation(forIdentifier: id, options: MapboxCoreMaps.ViewAnnotationOptions(options))
+        if expected.isError(), let reason = expected.error as? String {
+            throw ViewAnnotationManagerError.insertionFailure(reason: reason)
+        }
+    }
+
+    internal func updateViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws {
+        let expected = __map.updateViewAnnotation(forIdentifier: id, options: MapboxCoreMaps.ViewAnnotationOptions(options))
+        if expected.isError(), let reason = expected.error as? String {
+            throw ViewAnnotationManagerError.updateFailure(reason: reason)
+        }
+    }
+
+    internal func removeViewAnnotation(withId id: String) throws {
+        let expected = __map.removeViewAnnotation(forIdentifier: id)
+        if expected.isError(), let reason = expected.error as? String {
+            throw ViewAnnotationManagerError.removalFailure(reason: reason)
+        }
+    }
+
+    internal func options(forViewAnnotationWithId id: String) throws -> ViewAnnotationOptions {
+        let expected = __map.getViewAnnotationOptions(forIdentifier: id)
+        if expected.isError(), let reason = expected.error as? String {
+            throw ViewAnnotationManagerError.optionsQueryFailure(reason: reason)
+        }
+        guard let options = expected.value as? MapboxCoreMaps.ViewAnnotationOptions else {
+            throw ViewAnnotationManagerError.optionsQueryFailure(reason: "Failed to unwrap ViewAnnotationOptions")
+        }
+        return ViewAnnotationOptions(options)
+    }
+
 }
 
 // MARK: - MapProjection

@@ -144,7 +144,7 @@ workflows:
           name: "Release"
           filters:
             tags:
-              only: /.*/
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+/
             branches:
               ignore: /.*/
 
@@ -312,9 +312,6 @@ jobs:
     <<: *base-job
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
       - install-mbx-ci
       - configure-environment
       # Building and testing are split into 2, with the aim that we'll be able to reuse
@@ -346,9 +343,6 @@ jobs:
     <<: *base-job
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
       - install-mbx-ci
       - configure-environment
       - ensure-text-exists-in-commit:
@@ -421,9 +415,6 @@ jobs:
     <<: *base-job
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
       - install-mbx-ci
       - ensure-text-exists-in-commit:
           commit-text: "[run app device tests]"
@@ -495,9 +486,6 @@ jobs:
     <<: *base-job
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
       - install-mbx-ci
       - configure-environment
       - ensure-text-exists-in-commit:
@@ -525,20 +513,10 @@ jobs:
   release:
     <<: *base-job
     steps:
-      - run:
-          name: Verify that tag $CIRCLE_TAG adheres to the Semantic Versioning format
-          command: |
-            if [[ ! "$CIRCLE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
-              echo "Skipping job"
-              exit 1
-            fi
       - slack/notify:
           message: '<$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` started.>'
           include_visit_job_action: true
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
       - install-mbx-ci
       - configure-environment
       - install-dependencies
@@ -606,6 +584,9 @@ commands:
 
   install-mbx-ci:
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
       - run:
           name: Install latest mbx-ci
           command: |

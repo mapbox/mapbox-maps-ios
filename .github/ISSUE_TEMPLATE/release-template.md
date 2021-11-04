@@ -57,10 +57,6 @@ assignees: ''
 - [ ] Open a pull request to the release branch with these changes, have your release buddy review it, and merge it.
     - This approach ensures that we run the exact code to be released through CI & a final peer review.
 
-### Update ZenHub
-
-- [ ] Review the [issues in the release on ZenHub](https://app.zenhub.com/workspaces/maps-sdk-for-ios-5e9f47ffdf1ce5046f9011f4/reports/release), adding or removing to the list as necessary.
-
 ### Manual QA Part 1
 
 - [ ] Run the `mapbox-maps-ios` Examples app and make sure it's working
@@ -153,10 +149,14 @@ assignees: ''
 - [ ] Commit and push these changes, then open a PR.
 - [ ] Ask your docs buddy to review it. Merge once approved!
 
+## 📊 ZenHub
+
+- [ ] Review the [issues in the release on ZenHub](https://app.zenhub.com/workspaces/maps-sdk-for-ios-5e9f47ffdf1ce5046f9011f4/reports/release), adding or removing to the list as necessary.
+- [ ] Close the [Zenhub Release](https://app.zenhub.com/workspaces/maps-sdk-for-ios-5e9f47ffdf1ce5046f9011f4/reports/release).
+
 ## 📣 Announce the Release
 
 - [ ] Publish the [draft GitHub Release](https://github.com/mapbox/mapbox-maps-ios/releases).
-- [ ] Close the [Zenhub Release](https://app.zenhub.com/workspaces/maps-sdk-for-ios-5e9f47ffdf1ce5046f9011f4/reports/release).
 - [ ] Announce the release in #sdk-releases to notify the team about the completed release! 🎉
 
 ## 🚀 Update Studio Preview

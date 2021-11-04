@@ -529,6 +529,16 @@ jobs:
       - install-mbx-ci
       - configure-environment
       - install-dependencies
+      - run:
+          name: Run `npm ci`
+          command: |
+            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+            npm ci
+          when: on_success
+      - run:
+          name: Create draft release on Github
+          command: ./scripts/release/create-github-draft-release.sh "$VERSION"
+          when: always
       - make-xcframework-bundle:
           bundle_style: "dynamic"
       - store_artifacts:
@@ -543,20 +553,10 @@ jobs:
             ./scripts/release/upload-to-registry.sh MapboxMaps.zip mobile-maps-ios "$VERSION" MapboxMaps.zip
             ./scripts/release/upload-to-registry.sh MapboxMaps-static.zip mobile-maps-ios-static "$VERSION" MapboxMaps-static.zip
       - run:
-          name: Run `npm ci`
-          command: |
-            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-            npm ci
-          when: on_success
-      - run:
           name: Creating SDK Registry PR
           command: ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios "$VERSION"
           when: on_success
       - make-docs
-      - run:
-          name: Create draft release on Github
-          command: ./scripts/release/create-github-draft-release.sh "$VERSION"
-          when: always
       - slack/status:
           fail_only: false
           include_visit_job_action: true

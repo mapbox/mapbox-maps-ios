@@ -92,12 +92,12 @@ assignees: ''
 - [ ] Verify installation via direct download (dynamic).
     - Create a new single view app.
     - Download the dynamic artifact from SDK registry and follow the installation instructions in the enclosed `README.md`.
-        - `https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/<version-without-v-previx>/MapboxMaps.zip`
+        - `curl -n https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/<version-without-v-previx>/MapboxMaps.zip -o MapboxMaps.zip`
     - In the view controller, load a basic map view to ensure everything works as expected.
 - [ ] Verify installation via direct download (static).
     - Create a new single view app.
     - Download the static artifact from SDK registry and follow the installation instructions in the enclosed `README.md`.
-        - `https://api.mapbox.com/downloads/v2/mobile-maps-ios-static/releases/ios/<version-without-v-previx>/MapboxMaps-static.zip`
+        - `curl -n https://api.mapbox.com/downloads/v2/mobile-maps-ios-static/releases/ios/<version-without-v-previx>/MapboxMaps-static.zip -o MapboxMaps-static.zip`
     - Verify that you can display a basic map on device.
 - [ ] Verify installation via CocoaPods.
     - Create a new single view app

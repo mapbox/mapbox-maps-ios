@@ -101,7 +101,7 @@ assignees: ''
     - Verify that you can display a basic map on device.
 - [ ] Verify installation via CocoaPods.
     - Create a new single view app
-    - Close the Xcode project, run `pod init`, add `pod 'MapboxMaps', '{VERSION}'` to the Podfile, and run `pod install`
+    - Close the Xcode project, run `pod init`, add `pod 'MapboxMaps', '{version-without-v-previx}'` to the Podfile, and run `pod install --repo-update`
     - Verify that you can display a basic map on device.
 
 ## 📚 Update Documentation

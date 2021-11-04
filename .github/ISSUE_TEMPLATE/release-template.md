@@ -59,8 +59,12 @@ assignees: ''
 
 ### Manual QA Part 1
 
-- [ ] Run the `mapbox-maps-ios` Examples app and make sure it's working
-- [ ] Update [Studio Preview](https://github.com/mapbox/studio-preview-ios/)'s Podfile to point to the release branch. Check for any breaking changes in the code and any visible performance issues.
+- [ ] Examples App
+    - Run the `mapbox-maps-ios` Examples app and make sure it's working
+- [ ] [Studio Preview](https://github.com/mapbox/studio-preview-ios/)
+    - Update the Podfile to point to the release branch:
+        - `pod 'MapboxMaps', :git => 'https://github.com/mapbox/mapbox-maps-ios.git', :branch => 'release/v{MAJOR}.{MINOR}'`
+    - Check for any breaking changes in the code and any visible performance issues.
 - [ ] Verify installation via SPM.
     - Create a new single view app
     - Add `https://github.com/mapbox/mapbox-maps-ios.git` as a SPM dependency, specifying the release branch as the version requirement

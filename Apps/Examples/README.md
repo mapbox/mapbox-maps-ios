@@ -17,7 +17,7 @@ use Mapbox Maps SDK v10 for iOS, which now runs on
 
 The Examples project needs to be able to access Mapbox services to install
 dependencies and load maps. Follow the instructions in the docs to
-[Configure credentials](https://docs.mapbox.com/ios/beta/maps/guides/install/).
+[Configure credentials](https://docs.mapbox.com/ios/maps/guides/install/).
 
 When you get to the "Configure your public token" step, you can optionally place
 your public token in the file `~/.mapbox` instead of modifying the Example app's

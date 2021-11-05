@@ -36,11 +36,11 @@ MESSAGE="### Dependency requirements:\n\
 Link to download binaries (append your own Mapbox access token [scoped with \`DOWNLOADS:READ\`](https://account.mapbox.com/)):\n\
 \n\
 \`\`\`\n\
-https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/${TAG/#v}/MapboxMaps.zip?access_token=<access-token>\n\
+https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/$TAG/MapboxMaps.zip?access_token=<access-token>\n\
 \`\`\`"
 
 # Body that is passed to the POST request
-BODY="{\"tag_name\":\"$TAG\",\"target_commitish\":\"main\",\"name\":\"$TAG\",\"body\":\"$MESSAGE\",\"draft\":true,\"prerelease\":true}"
+BODY="{\"tag_name\":\"v$TAG\",\"target_commitish\":\"main\",\"name\":\"v$TAG\",\"body\":\"$MESSAGE\",\"draft\":true,\"prerelease\":true}"
 
 # Performing the request using github API
 CURL_RESULT=0

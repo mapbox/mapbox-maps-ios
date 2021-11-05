@@ -199,7 +199,7 @@ public struct Examples {
                 description: "Add a custom rendered Metal layer.",
                 type: CustomLayerExample.self),
         Example(title: "Add a line with a color gradient",
-                description: "Load a polyline to a style using GeoJsonSource, display it on a map using LineLayer, and style it with a rainbow color gradient.",
+                description: "Load a polyline to a style using GeoJSONSource, display it on a map using LineLayer, and style it with a rainbow color gradient.",
                 type: LineGradientExample.self),
         Example(title: "Change the map's style",
                 description: "Switch between local and default Mapbox styles for the same map view.",

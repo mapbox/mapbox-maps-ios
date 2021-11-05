@@ -40,7 +40,7 @@ extension MapboxCoreMaps.OfflineManager {
     /// - Important:
     ///     By default, users may download up to 250MB of data for offline
     ///     use without incurring additional charges. This limit is subject
-    ///     to change during the beta.
+    ///     to change.
     @discardableResult
     public func loadStylePack(for styleURI: StyleURI,
                               loadOptions: StylePackLoadOptions,

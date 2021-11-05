@@ -147,7 +147,7 @@ public struct Examples {
 
                     By default, users may download up to 250MB of data for offline
                     use without incurring additional charges. This limit is subject
-                    to change during the beta.
+                    to change.
                 """,
                 type: OfflineManagerExample.self),
         Example(title: "Use OfflineRegionManager to download a region",

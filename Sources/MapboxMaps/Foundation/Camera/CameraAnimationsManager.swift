@@ -184,7 +184,8 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
             owner: animationOwner,
             mapboxMap: mapboxMap,
             cameraView: makeCameraView(),
-            delegate: self)
+            delegate: self,
+            timerProvider: Timer.scheduledTimer(withTimeInterval:repeats:block:))
         cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
@@ -213,7 +214,8 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
             owner: animationOwner,
             mapboxMap: mapboxMap,
             cameraView: makeCameraView(),
-            delegate: self)
+            delegate: self,
+            timerProvider: Timer.scheduledTimer(withTimeInterval:repeats:block:))
         cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
@@ -244,7 +246,8 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
             owner: animationOwner,
             mapboxMap: mapboxMap,
             cameraView: makeCameraView(),
-            delegate: self)
+            delegate: self,
+            timerProvider: Timer.scheduledTimer(withTimeInterval:repeats:block:))
         cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator
@@ -274,7 +277,8 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
             owner: animationOwner,
             mapboxMap: mapboxMap,
             cameraView: makeCameraView(),
-            delegate: self)
+            delegate: self,
+            timerProvider: Timer.scheduledTimer(withTimeInterval:repeats:block:))
         cameraAnimator.addAnimations(animations)
         cameraAnimatorsSet.add(cameraAnimator)
         return cameraAnimator

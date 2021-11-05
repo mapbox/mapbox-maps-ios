@@ -40,7 +40,9 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     }
 
     /// A timer used to delay the start of an animation
-    internal var delayedAnimationTimer: Timer?
+    private var delayedAnimationTimer: TimerProtocol?
+
+    private let timerProvider: (_ interval: TimeInterval, _ repeats: Bool, _ block: @escaping (TimerProtocol) -> Void) -> TimerProtocol
 
     /// The state from of the animator.
     public var state: UIViewAnimatingState {
@@ -55,7 +57,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     private var internalState = InternalState.initial {
         didSet {
             switch (oldValue, internalState) {
-            case (.initial, .running), (.paused, .running), (.initial, .delayed), (.delayed, .running):
+            case (.initial, .running), (.paused, .running), (.initial, .delayed):
                 delegate?.cameraAnimatorDidStartRunning(self)
             case (.delayed, .paused), (.delayed, .final), (.running, .paused), (.running, .final):
                 delegate?.cameraAnimatorDidStopRunning(self)
@@ -99,12 +101,14 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
                   owner: AnimationOwner,
                   mapboxMap: MapboxMapProtocol,
                   cameraView: CameraView,
-                  delegate: CameraAnimatorDelegate) {
+                  delegate: CameraAnimatorDelegate,
+                  timerProvider: @escaping (_ interval: TimeInterval, _ repeats: Bool, _ block: @escaping (TimerProtocol) -> Void) -> TimerProtocol) {
         self.propertyAnimator = propertyAnimator
         self.owner = owner
         self.mapboxMap = mapboxMap
         self.cameraView = cameraView
         self.delegate = delegate
+        self.timerProvider = timerProvider
     }
 
     deinit {
@@ -116,10 +120,10 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     /// Starts the animation if this animator is in `inactive` state. Also used to resume a "paused" animation.
     public func startAnimation() {
         switch internalState {
-        case .initial, .delayed:
+        case .initial:
             internalState = .running(makeTransition())
             propertyAnimator.startAnimation()
-        case .running:
+        case .running, .delayed:
             // already running; do nothing
             break
         case let .paused(transition):
@@ -130,13 +134,18 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         }
     }
 
-    /// Starts the animation after a delay.
+    /// Starts the animation after a delay. This cannot be called on a paused animation.
     /// - Parameter delay: Delay (in seconds) after which the animation should start
     public func startAnimation(afterDelay delay: TimeInterval) {
+        if internalState != .initial {
+            fatalError("startAnimation(afterDelay:) cannot be called on paused, completed, or currently running animations.")
+        }
+
         internalState = .delayed
-        delayedAnimationTimer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] (_) in
+        delayedAnimationTimer = timerProvider(delay, false) { [weak self] (_) in
             if let self = self {
-                self.startAnimation()
+                self.internalState = .running(self.makeTransition())
+                self.propertyAnimator.startAnimation()
             }
         }
     }
@@ -147,6 +156,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         case .initial, .delayed:
             internalState = .paused(makeTransition())
             propertyAnimator.pauseAnimation()
+            delayedAnimationTimer?.invalidate()
         case let .running(transition):
             internalState = .paused(transition)
             propertyAnimator.pauseAnimation()
@@ -254,7 +264,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     }
 
     private func makeTransition() -> CameraTransition {
-        precondition(internalState == .initial || internalState == .delayed, "createTransition must only be called when BasicCameraAnimator is in its initial state.")
+        precondition(internalState == .initial || internalState == .delayed, "createTransition must only be called when BasicCameraAnimator is in its initial or delayed state.")
 
         guard let animation = animation else {
             fatalError("Animation cannot be nil when starting an animation")
@@ -294,4 +304,10 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     public func cancel() {
         stopAnimation()
     }
+}
+
+extension Timer: TimerProtocol {}
+
+protocol TimerProtocol: AnyObject {
+    func invalidate()
 }

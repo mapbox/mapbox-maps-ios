@@ -7,7 +7,7 @@ class CameraAnimatorsExample: UIViewController, ExampleProtocol {
     internal var mapView: MapView!
 
     // Coordinate in New York City
-    var newYork = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
+    let newYork = CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060)
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -31,42 +31,38 @@ class CameraAnimatorsExample: UIViewController, ExampleProtocol {
 
     // Start a chain of camera animations
     func startCameraAnimations() {
+        // Declare an animator that changes the map's
+        let bearingAnimator = mapView.camera.makeAnimator(duration: 4, curve: .easeInOut) { (transition) in
+            transition.bearing.toValue = -45
+        }
+
+        bearingAnimator.addCompletion { (_) in
+            print("All animations complete!")
+        }
+
+        // Declare an animator that changes the map's pitch.
+        let pitchAnimator = mapView.camera.makeAnimator(duration: 2, curve: .easeInOut) { (transition) in
+            transition.pitch.toValue = 55
+        }
+
+        // Begin the bearing animation once the pitch animation has finished.
+        pitchAnimator.addCompletion { _ in
+            print("Animating camera bearing from 0 degrees -> 45 degrees")
+            bearingAnimator.startAnimation()
+        }
+
         // Declare an animator that changes the map's zoom level.
         let zoomAnimator = self.mapView.camera.makeAnimator(duration: 4, curve: .easeInOut) { (transition) in
             transition.zoom.toValue = 14
-            transition.pitch.toValue = 55
-            transition.bearing.toValue = -45
-            transition.center.toValue = self.newYork
         }
 
         // Begin the pitch animation once the zoom animation has finished.
         zoomAnimator.addCompletion { _ in
             print("Animating camera pitch from 0 degrees -> 55 degrees")
-            self.newYork.longitude -= 0.1
-            self.zoomToBoston()
+            pitchAnimator.startAnimation()
         }
 
         // Begin the zoom animation.
         zoomAnimator.startAnimation(afterDelay: 1)
-    }
-
-    func zoomToBoston() {
-        let centerTimingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.4, y: 0.0),
-                                                                   controlPoint2: CGPoint(x: 0.6, y: 1.0))
-        let animator = mapView.camera.makeAnimator(duration: 4, timingParameters: centerTimingParameters) { (transition) in
-            transition.center.toValue = self.newYork
-            transition.zoom.toValue = 16
-            transition.bearing.toValue = 0
-            transition.pitch.toValue = 0
-        }
-
-        animator.addCompletion { _ in
-            self.newYork.longitude += 0.1
-            self.startCameraAnimations()
-        }
-        
-        animator.startAnimation(afterDelay: 1)
-        
-        
     }
 }

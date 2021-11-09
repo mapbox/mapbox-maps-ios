@@ -220,7 +220,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
 
     @objc private func handleTap(_ tap: UITapGestureRecognizer) {
 
-        guard delegate != nil else { return }
+        guard delegate != nil, tap.state == .began else { return }
 
         let options = RenderedQueryOptions(layerIds: [layerId], filter: nil)
         mapFeatureQueryable.queryRenderedFeatures(

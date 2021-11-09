@@ -123,7 +123,42 @@ final class BasicCameraAnimatorTests: XCTestCase {
         XCTAssertEqual(self.propertyAnimator.stopAnimationStub.invocations.count, 1)
         XCTAssertEqual(self.propertyAnimator.finishAnimationStub.invocations.count, 1)
         XCTAssertEqual(self.propertyAnimator.finishAnimationStub.invocations.first?.parameters, .current)
+    }
 
+    func testCompletionBlockCalledForStartAndStopAfterDelay() {
+        animator.addAnimations { (transition) in
+            transition.zoom.toValue = cameraStateTestValue.zoom
+        }
+        XCTAssertTrue(timerProvider.invocations.count == 0)
+
+        let expectation = XCTestExpectation(description: "The completion for the animator should be called when the animation is stopped.")
+
+        let completion : AnimationCompletion = { _ in
+            expectation.fulfill()
+        }
+        animator.addCompletion(completion)
+
+        let randomInterval: TimeInterval = .random(in: 1...10)
+        animator.startAnimation(afterDelay: randomInterval)
+
+        animator.stopAnimation()
+        wait(for: [expectation], timeout: 15)
+    }
+
+    func testStartAnimationAfterDelayAndPausing() throws {
+        animator.addAnimations { (transition) in
+            transition.zoom.toValue = cameraStateTestValue.zoom
+        }
+        XCTAssertTrue(timerProvider.invocations.count == 0)
+
+        animator.startAnimation(afterDelay: 1)
+
+        let timer = try XCTUnwrap(timerProvider.returnedValues.first as? MockTimer)
+
+        animator.pauseAnimation()
+
+        XCTAssertEqual(propertyAnimator.pauseAnimationStub.invocations.count, 1)
+        XCTAssertEqual(propertyAnimator.stopAnimationStub.invocations.count, 0)
         XCTAssertEqual(timer.invalidateStub.invocations.count, 1)
     }
 

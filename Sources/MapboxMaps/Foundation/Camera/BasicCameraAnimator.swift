@@ -174,11 +174,18 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         switch internalState {
         case .initial:
             fatalError("Attempt to stop an animation that has not started.")
-        case .delayed, .running, .paused:
+        case .running, .paused:
             propertyAnimator.stopAnimation(false)
             // this invokes the completion block which updates internalState
             propertyAnimator.finishAnimation(at: .current)
+        case .delayed:
             delayedAnimationTimer?.invalidate()
+
+            // Separately handle calling the completion for delayed animations.
+            for completion in self.completions {
+                completion(.current)
+            }
+            self.completions.removeAll()
         case .final:
             // Already stopped, so do nothing
             break

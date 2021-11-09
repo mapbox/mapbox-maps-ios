@@ -19,6 +19,12 @@ final class MockPropertyAnimator: UIViewPropertyAnimator {
         startAnimationStub.call()
     }
 
+    let pauseAnimationStub = Stub<Void, Void>()
+    override func pauseAnimation() {
+        super.pauseAnimation()
+        pauseAnimationStub.call()
+    }
+
     let stopAnimationStub = Stub<Bool, Void>()
     override func stopAnimation(_ withoutFinishing: Bool) {
         super.stopAnimation(withoutFinishing)

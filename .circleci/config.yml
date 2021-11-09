@@ -367,6 +367,7 @@ jobs:
               -showBuildSettings \
               -project MapboxMaps.xcodeproj \
               -scheme 'MapboxTestHost' \
+              -sdk iphoneos \
               | sed -n 's:^ *BUILD_DIR = \(.*\)/Build/Products$:export DERIVED_DATA_PATH="\1":p' \
               >> $BASH_ENV
       - run:

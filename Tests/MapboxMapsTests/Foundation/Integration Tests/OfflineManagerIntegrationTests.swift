@@ -90,141 +90,150 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
     // MARK: Test Cases
 
-    internal func testProgressAndCompletionBlocksBaseCase() throws {
+    func testProgressAndCompletionBlocksBaseCase() throws {
 
         /// Expectations to be fulfilled
-        let downloadInProgress = expectation(description: "Downloading offline tiles in progress")
-        downloadInProgress.assertForOverFulfill = false
-        let completionBlockReached = expectation(description: "Checks that completion block closure has been reached")
+        let progressBlockInvoked = expectation(description: "Downloading offline tiles in progress")
+        progressBlockInvoked.assertForOverFulfill = false
+        let completionBlockInvoked = expectation(description: "Checks that completion block closure has been reached")
 
-        let closureDeallocation = expectation(description: "Closure deallocated")
+        let completionBlockDeallocated = expectation(description: "Completion block deallocated")
 
-        /// Perform the download
-        tileStore.loadTileRegion(forId: tileRegionId,
-                                 loadOptions: tileRegionLoadOptions!) { _ in
-            DispatchQueue.main.async {
-                print(".", terminator: "")
-                downloadInProgress.fulfill()
-            }
-        } completion: { result in
+        autoreleasepool {
+            let completionBlockDeallocatedObserver = DeallocationObserver(completionBlockDeallocated.fulfill)
 
-            DispatchQueue.main.async {
-                let observer = DeallocationObserver(closureDeallocation.fulfill)
-                dump(observer)
-
-                switch result {
-                case let .success(region):
-                    if region.requiredResourceCount == region.completedResourceCount {
-                        print("✔︎")
-                        completionBlockReached.fulfill()
-                    } else {
-                        print("𐄂")
-                        XCTFail("Not all items were loaded")
+            /// Perform the download
+            tileStore.loadTileRegion(
+                forId: tileRegionId,
+                loadOptions: tileRegionLoadOptions!,
+                progress: { _ in
+                    DispatchQueue.main.async {
+                        print(".", terminator: "")
+                        progressBlockInvoked.fulfill()
                     }
-                case let .failure(error):
-                    print("𐄂")
-                    XCTFail("Download failed with error: \(error)")
-                }
-            }
+                },
+                completion: { result in
+                    dump(completionBlockDeallocatedObserver)
+                    DispatchQueue.main.async {
+                        switch result {
+                        case let .success(region):
+                            if region.requiredResourceCount == region.completedResourceCount {
+                                print("✔︎")
+                            } else {
+                                XCTFail("Not all items were loaded")
+                            }
+                        case let .failure(error):
+                            XCTFail("Download failed with error: \(error)")
+                        }
+                        completionBlockInvoked.fulfill()
+                    }
+                })
         }
 
-        let expectations = [downloadInProgress, completionBlockReached, closureDeallocation]
+        let expectations = [progressBlockInvoked, completionBlockInvoked, completionBlockDeallocated]
         wait(for: expectations, timeout: 120.0)
     }
 
-    internal func testProgressCanBeCancelled() throws {
+    func testProgressCanBeCancelled() throws {
         /// Expectations to be fulfilled
-        let downloadWasCancelled = expectation(description: "Checks a cancel function was reached and that the download was canceled")
-        let closureDeallocation = expectation(description: "Closure deallocated")
+        let completionBlockInvoked = expectation(description: "Checks a cancel function was reached and that the download was canceled")
+        let completionBlockDeallocated = expectation(description: "Completion block deallocated")
 
-        /// Perform the download
-        let download = tileStore.loadTileRegion(forId: tileRegionId,
-                                                loadOptions: tileRegionLoadOptions!) { _ in }
-            completion: { result in
-                DispatchQueue.main.async {
-                    let observer = DeallocationObserver(closureDeallocation.fulfill)
-                    dump(observer)
+        autoreleasepool {
+            let completionBlockDeallocatedObserver = DeallocationObserver(completionBlockDeallocated.fulfill)
 
-                    switch result {
-                    case .success:
-                        XCTFail("Result reached success block, therefore download was not canceled")
-                    case let .failure(error):
-                        if case TileRegionError.canceled = error {
-                            downloadWasCancelled.fulfill()
-                        } else {
-                            XCTFail("Download was not canceled")
+            /// Perform the download
+            let download = tileStore.loadTileRegion(
+                forId: tileRegionId,
+                loadOptions: tileRegionLoadOptions!,
+                progress: { _ in },
+                completion: { result in
+                    dump(completionBlockDeallocatedObserver)
+
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success:
+                            XCTFail("Result reached success block, therefore download was not canceled")
+                        case let .failure(error):
+                            if case TileRegionError.canceled = error {
+                            } else {
+                                XCTFail("Download was not canceled")
+                            }
                         }
+                        completionBlockInvoked.fulfill()
                     }
-                }
-            }
+                })
 
-        DispatchQueue.main.async {
-            download.cancel()
+            DispatchQueue.main.async {
+                download.cancel()
+            }
         }
 
-        let expectations = [downloadWasCancelled, closureDeallocation]
+        let expectations = [completionBlockInvoked, completionBlockDeallocated]
         wait(for: expectations, timeout: 10.0)
     }
 
-    internal func testOfflineRegionCanBeDeleted() throws {
+    func testOfflineRegionCanBeDeleted() throws {
         /// Expectations to be fulfilled
-        let tileRegionDownloaded = expectation(description: "Downloaded offline tiles")
+        let loadTileRegionCompletionBlockInovked = expectation(description: "Downloaded offline tiles")
 
-        let loadTileRegionClosureDeallocation = expectation(description: "Closure deallocated")
+        let loadTileRegionCompletionBlockDeallocated = expectation(description: "loadTileRegion completion block deallocated")
 
-        /// Perform the download
-        tileStore.loadTileRegion(forId: tileRegionId,
-                                 loadOptions: tileRegionLoadOptions!) { _ in }
-            completion: { result in
-                DispatchQueue.main.async {
-                    let observer = DeallocationObserver(loadTileRegionClosureDeallocation.fulfill)
-                    dump(observer)
+        autoreleasepool {
+            let loadTileRegionClosureDeallocatedObserver = DeallocationObserver(loadTileRegionCompletionBlockDeallocated.fulfill)
 
-                    switch result {
-                    case .success(let region):
-                        if region.requiredResourceCount == region.completedResourceCount {
-                            tileRegionDownloaded.fulfill()
-                        } else {
-                            XCTFail("Not all items were loaded")
+            /// Perform the download
+            tileStore.loadTileRegion(
+                forId: tileRegionId,
+                loadOptions: tileRegionLoadOptions!,
+                progress: { _ in },
+                completion: { result in
+                    dump(loadTileRegionClosureDeallocatedObserver)
+
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(let region):
+                            if region.requiredResourceCount != region.completedResourceCount {
+                                XCTFail("Not all items were loaded")
+                            }
+                        case .failure(let error):
+                            XCTFail("Download failed with error: \(error)")
                         }
-
-                    case .failure(let error):
-                        print("𐄂")
-                        XCTFail("Download failed with error: \(error)")
+                        loadTileRegionCompletionBlockInovked.fulfill()
                     }
-                }
-            }
+                })
+        }
 
-        wait(for: [tileRegionDownloaded, loadTileRegionClosureDeallocation], timeout: 120.0)
+        wait(for: [loadTileRegionCompletionBlockInovked, loadTileRegionCompletionBlockDeallocated], timeout: 120.0)
 
         // Now delete
-        let downloadWasDeleted = XCTestExpectation(description: "Downloaded offline tiles were deleted")
-        let allTileRegionsClosureDeallocation = expectation(description: "Closure deallocated")
+        let allTileRegionsCompletionBlockInvoked = expectation(description: "Downloaded offline tiles were deleted")
+        let allTileRegionsCompletionBlockDeallocated = expectation(description: "allTileRegions completion block deallocated")
 
         tileStore.removeTileRegion(forId: self.tileRegionId)
 
-        tileStore.allTileRegions { result in
-            DispatchQueue.main.async {
-                let observer = DeallocationObserver(allTileRegionsClosureDeallocation.fulfill)
-                dump(observer)
-
-                switch result {
-                case .success(let tileRegions):
-                    if tileRegions.count == 0 {
-                        downloadWasDeleted.fulfill()
-                    } else {
-                        XCTFail("Tile regions still remain.")
+        autoreleasepool {
+            let allTileRegionsCompletionBlockDeallocatedObserver = DeallocationObserver(allTileRegionsCompletionBlockDeallocated.fulfill)
+            tileStore.allTileRegions { result in
+                dump(allTileRegionsCompletionBlockDeallocatedObserver)
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let tileRegions):
+                        if tileRegions.count != 0 {
+                            XCTFail("Tile regions still remain.")
+                        }
+                    case .failure(let error):
+                        XCTFail("Error getting tile regions with error: \(error)")
                     }
-                case .failure(let error):
-                    XCTFail("Error getting tile regions with error: \(error)")
+                    allTileRegionsCompletionBlockInvoked.fulfill()
                 }
             }
         }
 
-        wait(for: [downloadWasDeleted, allTileRegionsClosureDeallocation], timeout: 120.0)
+        wait(for: [allTileRegionsCompletionBlockInvoked, allTileRegionsCompletionBlockDeallocated], timeout: 120.0)
     }
 
-    internal func testMapCanBeLoadedWithoutNetworkConnectivity() throws {
+    func testMapCanBeLoadedWithoutNetworkConnectivity() throws {
         weak var weakMapView: MapView?
 
         try autoreleasepool {
@@ -238,70 +247,77 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
             XCTContext.runActivity(named: "Load TileRegion & StylePack") { _ in
                 // 1. Load TileRegion from network
-                let tileRegionLoaded = XCTestExpectation(description: "Tile region has loaded")
-                let tileRegionLoadedClosureDeallocation = expectation(description: "tileRegionLoaded Closure deallocated")
+                let loadTileRegionCompletionBlockInvoked = expectation(description: "loadTileRegion completion block invoked")
+                let loadTileRegionCompletionBlockDeallocated = expectation(description: "loadTileRegion completion block deallocated")
+                autoreleasepool {
+                    let loadTileRegionCompletionBlockDeallocatedObserver = DeallocationObserver(loadTileRegionCompletionBlockDeallocated.fulfill)
 
-                /// Perform the download
-                tileStore.loadTileRegion(forId: tileRegionId,
-                                         loadOptions: tileRegionLoadOptions!) { _ in }
-                    completion: { result in
-                        DispatchQueue.main.async {
-                            let observer = DeallocationObserver(tileRegionLoadedClosureDeallocation.fulfill)
-                            dump(observer)
-
-                            switch result {
-                            case let .success(region):
-                                if region.requiredResourceCount == region.completedResourceCount {
-                                    print("✔︎")
-                                    tileRegionLoaded.fulfill()
-                                } else {
-                                    print("𐄂")
-                                    XCTFail("Not all items were loaded")
+                    /// Perform the download
+                    tileStore.loadTileRegion(
+                        forId: tileRegionId,
+                        loadOptions: tileRegionLoadOptions!,
+                        progress: { _ in },
+                        completion: { result in
+                            dump(loadTileRegionCompletionBlockDeallocatedObserver)
+                            DispatchQueue.main.async {
+                                switch result {
+                                case let .success(region):
+                                    if region.requiredResourceCount == region.completedResourceCount {
+                                        print("✔︎")
+                                    } else {
+                                        XCTFail("Not all items were loaded")
+                                    }
+                                case let .failure(error):
+                                    XCTFail("Download failed with error: \(error)")
                                 }
-                            case let .failure(error):
-                                print("𐄂")
-                                XCTFail("Download failed with error: \(error)")
+                                loadTileRegionCompletionBlockInvoked.fulfill()
                             }
-                        }
-                    }
+                        })
+                }
 
                 // - - - - - - - -
                 // 2. stylepack
 
-                let stylePackLoaded = expectation(description: "StylePack was loaded")
-                let stylePackLoadedClosureDeallocation = expectation(description: "stylePackLoaded Closure deallocated")
+                let loadStylePackCompletionBlockInvoked = expectation(description: "loadStylePack completion block invoked")
+                let loadStylePackCompletionBlockDeallocated = expectation(description: "loadStylePack completion block deallocated")
 
-                let stylePackOptions = StylePackLoadOptions(glyphsRasterizationMode: .ideographsRasterizedLocally,
-                                                            metadata: ["tag": "my-outdoors-style-pack"])!
+                let stylePackOptions = StylePackLoadOptions(
+                    glyphsRasterizationMode: .ideographsRasterizedLocally,
+                    metadata: ["tag": "my-outdoors-style-pack"])!
 
-                offlineManager.loadStylePack(for: .outdoors,
-                                             loadOptions: stylePackOptions) { result in
-                    DispatchQueue.main.async {
-                        let observer = DeallocationObserver(stylePackLoadedClosureDeallocation.fulfill)
-                        dump(observer)
+                autoreleasepool {
+                    let loadStylePackCompletionBlockDeallocatedObserver = DeallocationObserver(loadStylePackCompletionBlockDeallocated.fulfill)
 
-                        print("StylePack completed: \(result)")
-                        switch result {
-                        case let .failure(error):
-                            XCTFail("stylePackLoaded error: \(error)")
-                        case .success:
-                            stylePackLoaded.fulfill()
-                        }
-                    }
+                    offlineManager.loadStylePack(
+                        for: .outdoors,
+                        loadOptions: stylePackOptions,
+                        completion: { result in
+                            dump(loadStylePackCompletionBlockDeallocatedObserver)
+                            DispatchQueue.main.async {
+                                print("StylePack completed: \(result)")
+                                switch result {
+                                case let .failure(error):
+                                    XCTFail("stylePackLoaded error: \(error)")
+                                case .success:
+                                    break
+                                }
+                                loadStylePackCompletionBlockInvoked.fulfill()
+                            }
+                        })
                 }
 
-                let result = XCTWaiter().wait(for: [stylePackLoaded,
-                                                    stylePackLoadedClosureDeallocation,
-                                                    tileRegionLoaded,
-                                                    tileRegionLoadedClosureDeallocation],
-                                              timeout: 120.0)
+                let result = XCTWaiter().wait(
+                    for: [
+                        loadStylePackCompletionBlockInvoked,
+                        loadStylePackCompletionBlockDeallocated,
+                        loadTileRegionCompletionBlockInvoked,
+                        loadTileRegionCompletionBlockDeallocated
+                    ],
+                    timeout: 120.0)
+
                 switch result {
                 case .completed:
                     break
-                case .timedOut:
-                    // TODO: check if this is a failure
-                    print("Timed out.")
-                    fallthrough
                 default:
                     XCTFail("Expectation failed with \(result). Aborting test.")
                     abortTest = true
@@ -368,25 +384,26 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
     // Release tests
 
     func testTileStoreImmediateRelease() throws {
-        let functionName = name
+        let loadTileRegionCompletionBlockInvoked = expectation(description: "Completion called")
+        let loadTileRegionCompletionBlockDeallocated = expectation(description: "Closure deallocated")
 
-        let expect = expectation(description: "Completion called")
-        let closureDeallocation = expectation(description: "Closure deallocated")
+        autoreleasepool {
+            let loadTileRegionCompletionBlockDeallocatedObserver = DeallocationObserver(loadTileRegionCompletionBlockDeallocated.fulfill)
 
-        tileStore.loadTileRegion(forId: tileRegionId,
-                                 loadOptions: tileRegionLoadOptions!) { _ in
-                let observer = DeallocationObserver(closureDeallocation.fulfill)
-                dump(observer)
-
-                print("\(functionName): Completion block called")
-                expect.fulfill()
+            tileStore.loadTileRegion(forId: tileRegionId,
+                                     loadOptions: tileRegionLoadOptions!) { _ in
+                dump(loadTileRegionCompletionBlockDeallocatedObserver)
+                DispatchQueue.main.async {
+                    loadTileRegionCompletionBlockInvoked.fulfill()
+                }
+            }
         }
 
         tileRegionLoadOptions = nil
         tileStore = nil
         offlineManager = nil
 
-        wait(for: [expect, closureDeallocation], timeout: 30.0)
+        wait(for: [loadTileRegionCompletionBlockInvoked, loadTileRegionCompletionBlockDeallocated], timeout: 30.0)
 
         clearResourceOptions()
 
@@ -395,17 +412,19 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
     }
 
     func testTileStoreDelayedRelease() throws {
-        let functionName = name
+        let loadTileRegionCompletionBlockInvoked = expectation(description: "Completion called")
+        let loadTileRegionCompletionBlockDeallocated = expectation(description: "Closure deallocated")
 
-        let expect = expectation(description: "Completion called")
-        let closureDeallocation = expectation(description: "Closure deallocated")
+        autoreleasepool {
+            let loadTileRegionCompletionBlockDeallocatedObserver = DeallocationObserver(loadTileRegionCompletionBlockDeallocated.fulfill)
 
-        tileStore.loadTileRegion(forId: tileRegionId,
-                                 loadOptions: tileRegionLoadOptions!) { _ in
-                print("\(functionName): Completion block called")
-                let observer = DeallocationObserver(closureDeallocation.fulfill)
-                dump(observer)
-                expect.fulfill()
+            tileStore.loadTileRegion(forId: tileRegionId,
+                                     loadOptions: tileRegionLoadOptions!) { _ in
+                dump(loadTileRegionCompletionBlockDeallocatedObserver)
+                DispatchQueue.main.async {
+                    loadTileRegionCompletionBlockInvoked.fulfill()
+                }
+            }
         }
 
         tileRegionLoadOptions = nil
@@ -419,8 +438,8 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         tileStore = nil
         offlineManager = nil
 
-        wait(for: [expect], timeout: 60.0)
-        wait(for: [closureDeallocation], timeout: 5.0)
+        wait(for: [loadTileRegionCompletionBlockInvoked], timeout: 60.0)
+        wait(for: [loadTileRegionCompletionBlockDeallocated], timeout: 5.0)
 
         clearResourceOptions()
 
@@ -429,21 +448,21 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
     }
 
     func testTileStoreDelayedReleaseWithCapture() throws {
-        let functionName = name
-
-        let expect = expectation(description: "Completion called")
-        let closureDeallocation = expectation(description: "Closure deallocated")
+        let loadTileRegionCompletionBlockInvoked = expectation(description: "Completion called")
+        let loadTileRegionCompletionBlockDeallocated = expectation(description: "Closure deallocated")
 
         do {
             let tileStore2 = tileStore
-            tileStore.loadTileRegion(forId: tileRegionId,
-                                     loadOptions: tileRegionLoadOptions!) { _ in
-                    dump(tileStore2)
-
-                    print("\(functionName): Completion block called")
-                    let observer = DeallocationObserver(closureDeallocation.fulfill)
-                    dump(observer)
-                    expect.fulfill()
+            autoreleasepool {
+                let loadTileRegionCompletionBlockDeallocatedObserver = DeallocationObserver(loadTileRegionCompletionBlockDeallocated.fulfill)
+                tileStore.loadTileRegion(forId: tileRegionId,
+                                         loadOptions: tileRegionLoadOptions!) { _ in
+                    dump(loadTileRegionCompletionBlockDeallocatedObserver)
+                    DispatchQueue.main.async {
+                        dump(tileStore2)
+                        loadTileRegionCompletionBlockInvoked.fulfill()
+                    }
+                }
             }
 
             tileRegionLoadOptions = nil
@@ -457,7 +476,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
             tileStore = nil
             offlineManager = nil
 
-            wait(for: [expect, closureDeallocation], timeout: 120.0)
+            wait(for: [loadTileRegionCompletionBlockInvoked, loadTileRegionCompletionBlockDeallocated], timeout: 120.0)
 
             clearResourceOptions()
         }
@@ -467,23 +486,18 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
     }
 
     func testTileStoreDelayedReleaseWithCaptureButReleasingOfflineManager() throws {
-
-        let functionName = name
-        let expect = expectation(description: "Completion called")
-        let closureDeallocation = expectation(description: "Closure deallocated")
+        let loadTileRegionCompletionBlockInvoked = expectation(description: "Completion called")
+        let loadTileRegionCompletionBlockDeallocated = expectation(description: "Closure deallocated")
         var closure: ((Result<TileRegion, Error>) -> Void)?
 
-        do {
+        autoreleasepool {
             let tileStore2 = tileStore
             closure = { _ in
+                let loadTileRegionCompletionBlockDeallocated = DeallocationObserver(loadTileRegionCompletionBlockDeallocated.fulfill)
+                dump(loadTileRegionCompletionBlockDeallocated)
                 DispatchQueue.main.async {
                     dump(tileStore2)
-
-                    let observer = DeallocationObserver(closureDeallocation.fulfill)
-                    dump(observer)
-                    print("\(functionName): Completion block called")
-
-                    expect.fulfill()
+                    loadTileRegionCompletionBlockInvoked.fulfill()
                 }
             }
 
@@ -504,7 +518,7 @@ internal class OfflineManagerIntegrationTestCase: IntegrationTestCase {
         let expect2 = expectation(description: "Wait")
         _ = XCTWaiter.wait(for: [expect2], timeout: 0.25)
 
-        wait(for: [expect, closureDeallocation], timeout: 60.0)
+        wait(for: [loadTileRegionCompletionBlockInvoked, loadTileRegionCompletionBlockDeallocated], timeout: 60.0)
 
         clearResourceOptions()
 

@@ -21,7 +21,7 @@ import CoreLocation
         return location.course
     }
 
-    /// A conveninece accessor for `location.horizontalAccuracy`
+    /// A convenience accessor for `location.horizontalAccuracy`
     public var horizontalAccuracy: CLLocationAccuracy {
         return location.horizontalAccuracy
     }

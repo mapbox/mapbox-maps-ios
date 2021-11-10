@@ -96,9 +96,7 @@ internal final class LocationSource: LocationSourceProtocol {
         }
         didSet {
             locationProvider.setDelegate(self)
-            if _consumers.count > 0 {
-                isUpdating = true
-            }
+            syncIsUpdating()
         }
     }
 
@@ -118,9 +116,6 @@ internal final class LocationSource: LocationSourceProtocol {
             locationProvider.stopUpdatingLocation()
             locationProvider.stopUpdatingHeading()
         }
-        // replace the delegate since we can't guarantee that
-        // locationProvider has a zeroing weak ref to self
-        locationProvider.setDelegate(EmptyLocationProviderDelegate())
     }
 
     /// The location manager holds weak references to consumers, client code should retain these references.
@@ -132,7 +127,7 @@ internal final class LocationSource: LocationSourceProtocol {
     /// Removes a location consumer from the location manager.
     internal func remove(_ consumer: LocationConsumer) {
         _consumers.remove(consumer)
-        isUpdating = (_consumers.count > 0)
+        syncIsUpdating()
     }
 
     private func notifyConsumers() {
@@ -142,6 +137,12 @@ internal final class LocationSource: LocationSourceProtocol {
             }
         }
     }
+
+    private func syncIsUpdating() {
+        // check _consumers.anyObject != nil instead of simply _consumers.count
+        // which may still include objects that have been deinited
+        isUpdating = (_consumers.anyObject != nil)
+    }
 }
 
 // At the beginning of each required method, check whether there are still any consumers and if not,
@@ -149,31 +150,24 @@ internal final class LocationSource: LocationSourceProtocol {
 // services when there are no consumers due to the fact that we only keep weak references to them, and
 // they may be deinited without ever being explicitly removed.
 extension LocationSource: LocationProviderDelegate {
-
-    private func stopUpdatingIfNeeded() {
-        // check _consumers.anyObject != nil instead of simply _consumers.count
-        // which may still include objects that have been deinited
-        isUpdating = (_consumers.anyObject != nil)
-    }
-
     internal func locationProvider(_ provider: LocationProvider, didUpdateLocations locations: [CLLocation]) {
-        stopUpdatingIfNeeded()
+        syncIsUpdating()
         latestCLLocation = locations.last
     }
 
     internal func locationProvider(_ provider: LocationProvider, didUpdateHeading newHeading: CLHeading) {
-        stopUpdatingIfNeeded()
+        syncIsUpdating()
         latestHeading = newHeading
     }
 
     internal func locationProvider(_ provider: LocationProvider, didFailWithError error: Error) {
-        stopUpdatingIfNeeded()
+        syncIsUpdating()
         Log.error(forMessage: "\(provider) did fail with error: \(error)", category: "Location")
         delegate?.locationSource(self, didFailWithError: error)
     }
 
     internal func locationProviderDidChangeAuthorization(_ provider: LocationProvider) {
-        stopUpdatingIfNeeded()
+        syncIsUpdating()
         let accuracyAuthorization = provider.accuracyAuthorization
         if #available(iOS 14.0, *),
            isUpdating,

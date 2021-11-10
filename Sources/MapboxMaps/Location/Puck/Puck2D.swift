@@ -32,6 +32,9 @@ internal final class Puck2D: NSObject, Puck {
     private let style: StyleProtocol
     private let locationSource: LocationSourceProtocol
 
+    /// The keys of the style properties that were set during the previous sync.
+    /// Used to identify which styles need to be restored to their default values in
+    /// the subsequent sync.
     private var previouslySetLayerPropertyKeys: Set<String> = []
 
     private static let layerID = "puck"
@@ -79,22 +82,7 @@ internal final class Puck2D: NSObject, Puck {
         }
         var layer = LocationIndicatorLayer(id: Self.layerID)
         switch location.accuracyAuthorization {
-        case .reducedAccuracy:
-            layer.accuracyRadius = .expression(Exp(.interpolate) {
-                Exp(.linear)
-                Exp(.zoom)
-                0
-                400000
-                4
-                200000
-                8
-                5000
-            })
-            layer.accuracyRadiusColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
-            layer.accuracyRadiusBorderColor = .constant(StyleColor(.lightGray))
         case .fullAccuracy:
-            fallthrough
-        @unknown default:
             layer.topImage = .constant(.name(Self.topImageId))
             layer.bearingImage = .constant(.name(Self.bearingImageId))
             if configuration.shadowImage != nil {
@@ -122,8 +110,24 @@ internal final class Puck2D: NSObject, Puck {
             case .course:
                 layer.bearing = .constant(location.course)
             }
+        case .reducedAccuracy:
+            fallthrough
+        @unknown default:
+            layer.accuracyRadius = .expression(Exp(.interpolate) {
+                Exp(.linear)
+                Exp(.zoom)
+                0
+                400000
+                4
+                200000
+                8
+                5000
+            })
+            layer.accuracyRadiusColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
+            layer.accuracyRadiusBorderColor = .constant(StyleColor(.lightGray))
         }
 
+        // Create the properties dictionary for the updated layer
         let newLayerProperties = try! layer.jsonObject()
         // Construct the properties dictionary to reset any properties that are no longer used
         let unusedPropertyKeys = previouslySetLayerPropertyKeys.subtracting(newLayerProperties.keys)
@@ -135,6 +139,7 @@ internal final class Puck2D: NSObject, Puck {
         // Store the new set of property keys
         previouslySetLayerPropertyKeys = Set(newLayerProperties.keys)
 
+        // Update or add the layer
         if style.layerExists(withId: Self.layerID) {
             try! style.setLayerProperties(for: Self.layerID, properties: allLayerProperties)
         } else {

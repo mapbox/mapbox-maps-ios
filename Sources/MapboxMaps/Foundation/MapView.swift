@@ -27,7 +27,7 @@ open class MapView: UIView {
     /// The `ornaments`object will be responsible for all ornaments on the map.
     public internal(set) var ornaments: OrnamentsManager!
 
-    /// The `camera` object manages a camera's view lifecycle..
+    /// The `camera` object manages a camera's view lifecycle.
     public internal(set) var camera: CameraAnimationsManager!
 
     /// The `location`object handles location events of the map.

@@ -93,7 +93,7 @@ final class MapViewTests: XCTestCase {
         XCTAssertEqual(displayLink.preferredFrameRateRange, defaultRange)
     }
 
-    func testPreferredFrameRateRangeUpdate() {
+    func testPreferredFrameRateRangeUpdate() throws {
         guard #available(iOS 15.0, *) else {
             throw XCTSkip("Test requires iOS 15 or higher.")
         }

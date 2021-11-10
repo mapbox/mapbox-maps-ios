@@ -11,7 +11,7 @@ internal protocol CameraAnimationsManagerProtocol: AnyObject {
     func decelerate(location: CGPoint,
                     velocity: CGPoint,
                     decelerationFactor: CGFloat,
-                    locationChangeHandler: @escaping (CGPoint) -> Void,
+                    locationChangeHandler: @escaping (_ location: CGPoint) -> Void,
                     completion: @escaping () -> Void)
 
     func cancelAnimations()
@@ -296,7 +296,7 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
     internal func decelerate(location: CGPoint,
                              velocity: CGPoint,
                              decelerationFactor: CGFloat,
-                             locationChangeHandler: @escaping (CGPoint) -> Void,
+                             locationChangeHandler: @escaping (_ location: CGPoint) -> Void,
                              completion: @escaping () -> Void) {
 
         // Stop the `internalAnimator` before beginning a deceleration

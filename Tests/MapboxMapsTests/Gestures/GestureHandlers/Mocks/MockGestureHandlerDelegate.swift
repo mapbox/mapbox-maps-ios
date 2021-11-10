@@ -6,7 +6,7 @@ final class MockGestureHandlerDelegate: GestureHandlerDelegate {
         gestureBeganStub.call(with: gestureType)
     }
 
-    struct GestureEndedParams {
+    struct GestureEndedParams: Equatable {
         var gestureType: GestureType
         var willAnimate: Bool
     }

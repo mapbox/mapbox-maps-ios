@@ -316,6 +316,6 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
 
 extension Timer: TimerProtocol {}
 
-protocol TimerProtocol: AnyObject {
+internal protocol TimerProtocol: AnyObject {
     func invalidate()
 }

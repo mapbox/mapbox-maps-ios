@@ -53,7 +53,9 @@ final class LocationSourceTests: XCTestCase {
     }
 
     func testRemovingConsumerAfterOtherWasDeinitedStopsUpdating() {
-        locationSource.add(MockLocationConsumer())
+        autoreleasepool {
+            locationSource.add(MockLocationConsumer())
+        }
         locationSource.add(consumer)
         locationSource.remove(consumer)
 
@@ -244,7 +246,9 @@ final class LocationSourceTests: XCTestCase {
         // This causes location updates to be started on the
         // old location provider, but they should not be
         // started on the new one.
-        locationSource.add(MockLocationConsumer())
+        autoreleasepool {
+            locationSource.add(MockLocationConsumer())
+        }
 
         locationSource.locationProvider = otherProvider
 
@@ -311,7 +315,9 @@ final class LocationSourceTests: XCTestCase {
 
     func testStopUpdatingDuringDidUpdateLocationsDueToConsumerDeinit() throws {
         locationProvider.setDelegateStub.reset()
-        locationSource.add(MockLocationConsumer())
+        autoreleasepool {
+            locationSource.add(MockLocationConsumer())
+        }
 
         locationSource.locationProvider(locationProvider, didUpdateLocations: [CLLocation()])
 
@@ -321,7 +327,9 @@ final class LocationSourceTests: XCTestCase {
 
     func testStopUpdatingDuringDidUpdateHeadingDueToConsumerDeinit() {
         locationProvider.setDelegateStub.reset()
-        locationSource.add(MockLocationConsumer())
+        autoreleasepool {
+            locationSource.add(MockLocationConsumer())
+        }
 
         locationSource.locationProvider(locationProvider, didUpdateHeading: CLHeading())
 
@@ -331,7 +339,9 @@ final class LocationSourceTests: XCTestCase {
 
     func testStopUpdatingDuringDidFailWithErrorDueToConsumerDeinit() {
         locationProvider.setDelegateStub.reset()
-        locationSource.add(MockLocationConsumer())
+        autoreleasepool {
+            locationSource.add(MockLocationConsumer())
+        }
 
         locationSource.locationProvider(locationProvider, didFailWithError: MockError())
 
@@ -342,7 +352,9 @@ final class LocationSourceTests: XCTestCase {
 
     func testStopUpdatingDuringDidChangeAuthorizationDueToConsumerDeinit() {
         locationProvider.setDelegateStub.reset()
-        locationSource.add(MockLocationConsumer())
+        autoreleasepool {
+            locationSource.add(MockLocationConsumer())
+        }
 
         locationProvider.accuracyAuthorization = .reducedAccuracy
         locationSource.locationProviderDidChangeAuthorization(locationProvider)

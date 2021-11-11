@@ -127,6 +127,16 @@ internal final class Puck2D: NSObject, Puck {
             layer.accuracyRadiusBorderColor = .constant(StyleColor(.lightGray))
         }
 
+        // LocationIndicatorLayer is a struct, and by default, most of its properties are nil. When it gets
+        // converted to JSON, only the non-nil key-value pairs are included in the dictionary. When an existing
+        // layer is updated with setLayerProperties(for:properties:) as is done below, only the specified keys
+        // are modified, so if other properties were customized previously, they will keep their existing values.
+        // In this case, we actually want to reset any "unused" properties to their default values, so we keep
+        // track of which ones were used in the previous update and on subsequent updates identify which keys
+        // need to be reset to their default values. We look up the default values for those keys and create a
+        // combined update dictionary that contains the new property values that we're setting and the default
+        // values for the properties we were using before but no longer want to customize.
+
         // Create the properties dictionary for the updated layer
         let newLayerProperties = try! layer.jsonObject()
         // Construct the properties dictionary to reset any properties that are no longer used

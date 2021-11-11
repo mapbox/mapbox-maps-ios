@@ -61,6 +61,7 @@ SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Release] = RELEASE
 
 SWIFT_OPTIMIZATION_LEVEL[config=Debug] = -Onone
 SWIFT_OPTIMIZATION_LEVEL[config=Release] = -O
+SWIFT_EMIT_PRIVATE_MODULE_INTERFACE = YES
 
 // -----------------------------------------------------------------------------
 // Clang

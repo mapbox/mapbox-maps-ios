@@ -145,9 +145,8 @@ final class BasicCameraAnimatorTests: XCTestCase {
         XCTAssertEqual(animator.internalState, .delayed)
 
         animator.stopAnimation()
-        
+
         wait(for: [expectation], timeout: 15)
-        
     }
 
     func testStartandPauseAnimationAfterDelay() throws {
@@ -218,7 +217,6 @@ final class BasicCameraAnimatorTests: XCTestCase {
         animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
-
         animator.startAnimation(afterDelay: 1)
         animator.pauseAnimation()
         XCTAssertEqual(propertyAnimator.state, .active)
@@ -229,7 +227,6 @@ final class BasicCameraAnimatorTests: XCTestCase {
         animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
-
         animator.startAnimation(afterDelay: 1)
         animator.stopAnimation()
         XCTAssertEqual(propertyAnimator.state, .inactive)
@@ -240,7 +237,6 @@ final class BasicCameraAnimatorTests: XCTestCase {
         animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
-
         animator.startAnimation(afterDelay: 1)
         XCTAssertNil(animator.transition, "The transition should be nil while the animation is delayed. Got \(animator.transition.debugDescription)")
     }
@@ -249,7 +245,6 @@ final class BasicCameraAnimatorTests: XCTestCase {
         animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
-
         animator.pauseAnimation()
         XCTAssertThrowsError(animator.startAnimation(afterDelay: 0), file: "BasicCameraAnimator", line: 149)
     }
@@ -258,7 +253,6 @@ final class BasicCameraAnimatorTests: XCTestCase {
         animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
-
         animator.startAnimation(afterDelay: 1)
         animator.pauseAnimation()
 

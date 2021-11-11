@@ -1,7 +1,7 @@
 import Foundation
 import CoreLocation
 
-public class AppleLocationProvider: NSObject {
+public final class AppleLocationProvider: NSObject {
     private var locationProvider: CLLocationManager
     private var privateLocationProviderOptions: LocationOptions {
         didSet {

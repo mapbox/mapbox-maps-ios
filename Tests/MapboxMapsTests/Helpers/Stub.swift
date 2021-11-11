@@ -15,6 +15,8 @@ final class Stub<ParametersType, ReturnType> {
 
     var returnValueQueue = [ReturnType]()
 
+    var defaultSideEffect: SideEffect?
+
     var sideEffectQueue = [SideEffect]()
 
     init(defaultReturnValue: ReturnType) {
@@ -33,8 +35,7 @@ final class Stub<ParametersType, ReturnType> {
         let invocation = Invocation(parameters: parameters,
                                     returnValue: returnValueQueue.isEmpty ? defaultReturnValue : returnValueQueue.removeFirst())
         invocations.append(invocation)
-        if !sideEffectQueue.isEmpty {
-            let sideEffect = sideEffectQueue.removeFirst()
+        if let sideEffect = sideEffectQueue.isEmpty ? defaultSideEffect : sideEffectQueue.removeFirst() {
             sideEffect(invocation)
         }
         return invocation.returnValue

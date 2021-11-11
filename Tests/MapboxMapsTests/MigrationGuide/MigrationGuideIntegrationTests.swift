@@ -502,7 +502,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         mapView.location.options.puckType = .puck2D()
         //<--
 
-        let customLocationProvider = LocationProviderMock(options: LocationOptions())
+        let customLocationProvider = MockLocationProvider()
         //-->
         mapView.location.overrideLocationProvider(with: customLocationProvider)
         //<--

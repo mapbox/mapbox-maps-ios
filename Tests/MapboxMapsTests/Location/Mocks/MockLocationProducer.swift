@@ -1,7 +1,7 @@
 @testable import MapboxMaps
 
-final class MockLocationSource: LocationSourceProtocol {
-    weak var delegate: LocationSourceDelegate?
+final class MockLocationProducer: LocationProducerProtocol {
+    weak var delegate: LocationProducerDelegate?
 
     var latestLocation: Location?
 

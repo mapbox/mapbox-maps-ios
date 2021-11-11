@@ -1,29 +1,29 @@
 import XCTest
 @testable import MapboxMaps
 
-final class LocationSourceTests: XCTestCase {
+final class LocationProducerTests: XCTestCase {
 
     var locationProvider: MockLocationProvider!
-    var locationSource: LocationSource!
+    var locationProducer: LocationProducer!
     // swiftlint:disable:next weak_delegate
-    var delegate: MockLocationSourceDelegate!
+    var delegate: MockLocationProducerDelegate!
     var consumer: MockLocationConsumer!
 
     override func setUp() {
         super.setUp()
         locationProvider = MockLocationProvider()
-        locationSource = LocationSource(
+        locationProducer = LocationProducer(
             locationProvider: locationProvider,
             mayRequestWhenInUseAuthorization: true)
-        delegate = MockLocationSourceDelegate()
-        locationSource.delegate = delegate
+        delegate = MockLocationProducerDelegate()
+        locationProducer.delegate = delegate
         consumer = MockLocationConsumer()
     }
 
     override func tearDown() {
         consumer = nil
         delegate = nil
-        locationSource = nil
+        locationProducer = nil
         locationProvider = nil
         super.tearDown()
     }
@@ -36,7 +36,7 @@ final class LocationSourceTests: XCTestCase {
     }
 
     func testAddingConsumerStartsUpdating() {
-        locationSource.add(consumer)
+        locationProducer.add(consumer)
 
         XCTAssertEqual(locationProvider.startUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(locationProvider.startUpdatingHeadingStub.invocations.count, 1)
@@ -45,8 +45,8 @@ final class LocationSourceTests: XCTestCase {
     }
 
     func testRemovingAllConsumerStopsUpdating() {
-        locationSource.add(consumer)
-        locationSource.remove(consumer)
+        locationProducer.add(consumer)
+        locationProducer.remove(consumer)
 
         XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(locationProvider.stopUpdatingHeadingStub.invocations.count, 1)
@@ -54,31 +54,31 @@ final class LocationSourceTests: XCTestCase {
 
     func testRemovingConsumerAfterOtherWasDeinitedStopsUpdating() {
         autoreleasepool {
-            locationSource.add(MockLocationConsumer())
+            locationProducer.add(MockLocationConsumer())
         }
-        locationSource.add(consumer)
-        locationSource.remove(consumer)
+        locationProducer.add(consumer)
+        locationProducer.remove(consumer)
 
         XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(locationProvider.stopUpdatingHeadingStub.invocations.count, 1)
     }
 
     func testAddingAConsumerMoreThanOnceHasNoEffect() {
-        locationSource.add(consumer)
-        locationSource.add(consumer)
-        locationSource.remove(consumer)
+        locationProducer.add(consumer)
+        locationProducer.add(consumer)
+        locationProducer.remove(consumer)
 
         XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(locationProvider.stopUpdatingHeadingStub.invocations.count, 1)
     }
 
     func testRemovingAConsumerMoreThanOnceHasNoEffect() {
-        locationSource.add(consumer)
-        locationSource.remove(consumer)
+        locationProducer.add(consumer)
+        locationProducer.remove(consumer)
         locationProvider.stopUpdatingLocationStub.reset()
         locationProvider.stopUpdatingHeadingStub.reset()
 
-        locationSource.remove(consumer)
+        locationProducer.remove(consumer)
 
         XCTAssertTrue(locationProvider.stopUpdatingLocationStub.invocations.isEmpty)
         XCTAssertTrue(locationProvider.stopUpdatingHeadingStub.invocations.isEmpty)
@@ -87,7 +87,7 @@ final class LocationSourceTests: XCTestCase {
     func testAddingAConsumerRequestsWhenInUseAuthorizationIfStatusIsNotDetermined() {
         locationProvider.authorizationStatus = .notDetermined
 
-        locationSource.add(consumer)
+        locationProducer.add(consumer)
 
         XCTAssertEqual(locationProvider.requestWhenInUseAuthorizationStub.invocations.count, 1)
     }
@@ -95,18 +95,18 @@ final class LocationSourceTests: XCTestCase {
     func testAddingAConsumerDoesNotRequestWhenInUseAuthorizationForOtherStatuses() {
         locationProvider.authorizationStatus = [.restricted, .denied, .authorizedAlways, .authorizedWhenInUse].randomElement()!
 
-        locationSource.add(consumer)
+        locationProducer.add(consumer)
 
         XCTAssertTrue(locationProvider.requestWhenInUseAuthorizationStub.invocations.isEmpty)
     }
 
     func testAddingAConsumerDoesNotRequestWhenInUseAuthorizationIfDisallowed() {
-        locationSource = LocationSource(
+        locationProducer = LocationProducer(
             locationProvider: locationProvider,
             mayRequestWhenInUseAuthorization: false)
         locationProvider.authorizationStatus = .notDetermined
 
-        locationSource.add(consumer)
+        locationProducer.add(consumer)
 
         XCTAssertTrue(locationProvider.requestWhenInUseAuthorizationStub.invocations.isEmpty)
     }
@@ -120,12 +120,12 @@ final class LocationSourceTests: XCTestCase {
 
         for c in consumers {
             c.locationUpdateStub.defaultSideEffect = { _ in
-                XCTAssertTrue(self.locationSource.latestLocation?.location === locations[1])
+                XCTAssertTrue(self.locationProducer.latestLocation?.location === locations[1])
             }
-            locationSource.add(c)
+            locationProducer.add(c)
         }
 
-        locationSource.locationProvider(locationProvider, didUpdateLocations: locations)
+        locationProducer.locationProvider(locationProvider, didUpdateLocations: locations)
 
         for c in consumers {
             XCTAssertEqual(c.locationUpdateStub.invocations.count, 1)
@@ -145,13 +145,13 @@ final class LocationSourceTests: XCTestCase {
 
         for c in consumers {
             c.locationUpdateStub.defaultSideEffect = { _ in
-                XCTAssertTrue(self.locationSource.latestLocation?.heading === heading)
+                XCTAssertTrue(self.locationProducer.latestLocation?.heading === heading)
             }
-            locationSource.add(c)
+            locationProducer.add(c)
         }
 
-        locationSource.locationProvider(locationProvider, didUpdateHeading: heading)
-        locationSource.locationProvider(locationProvider, didUpdateLocations: [location])
+        locationProducer.locationProvider(locationProvider, didUpdateHeading: heading)
+        locationProducer.locationProvider(locationProvider, didUpdateLocations: [location])
 
         for c in consumers {
             XCTAssertEqual(c.locationUpdateStub.invocations.count, 1)
@@ -168,13 +168,13 @@ final class LocationSourceTests: XCTestCase {
 
         for c in consumers {
             c.locationUpdateStub.defaultSideEffect = { _ in
-                XCTAssertTrue(self.locationSource.latestLocation?.accuracyAuthorization == accuracyAuthorization)
+                XCTAssertTrue(self.locationProducer.latestLocation?.accuracyAuthorization == accuracyAuthorization)
             }
-            locationSource.add(c)
+            locationProducer.add(c)
         }
 
-        locationSource.locationProviderDidChangeAuthorization(locationProvider)
-        locationSource.locationProvider(locationProvider, didUpdateLocations: [location])
+        locationProducer.locationProviderDidChangeAuthorization(locationProvider)
+        locationProducer.locationProvider(locationProvider, didUpdateLocations: [location])
 
         for c in consumers {
             XCTAssertEqual(c.locationUpdateStub.invocations.count, 1)
@@ -183,39 +183,39 @@ final class LocationSourceTests: XCTestCase {
     }
 
     func testConsumersReturnsACopy() {
-        locationSource.add(consumer)
+        locationProducer.add(consumer)
 
-        let consumers = locationSource.consumers
+        let consumers = locationProducer.consumers
 
         XCTAssertTrue(consumers.contains(consumer))
 
-        locationSource.remove(consumer)
+        locationProducer.remove(consumer)
 
-        let consumers2 = locationSource.consumers
+        let consumers2 = locationProducer.consumers
 
         XCTAssertTrue(consumers.contains(consumer))
         XCTAssertFalse(consumers2.contains(consumer))
 
-        locationSource.add(consumer)
+        locationProducer.add(consumer)
 
         // this just removes from the returned copy
-        locationSource.consumers.remove(consumer)
+        locationProducer.consumers.remove(consumer)
 
-        XCTAssertTrue(locationSource.consumers.contains(consumer))
+        XCTAssertTrue(locationProducer.consumers.contains(consumer))
     }
 
     func testSetLocationProviderWithNoConsumers() throws {
         let otherProvider = MockLocationProvider()
         locationProvider.setDelegateStub.reset()
 
-        locationSource.locationProvider = otherProvider
+        locationProducer.locationProvider = otherProvider
 
         XCTAssertEqual(locationProvider.setDelegateStub.invocations.count, 1)
         let delegate = try XCTUnwrap(locationProvider.setDelegateStub.parameters.first)
         XCTAssertTrue(delegate is EmptyLocationProviderDelegate)
 
         XCTAssertEqual(otherProvider.setDelegateStub.invocations.count, 1)
-        XCTAssertTrue(otherProvider.setDelegateStub.parameters.first === locationSource)
+        XCTAssertTrue(otherProvider.setDelegateStub.parameters.first === locationProducer)
 
         XCTAssertTrue(locationProvider.startUpdatingLocationStub.invocations.isEmpty)
         XCTAssertTrue(locationProvider.startUpdatingHeadingStub.invocations.isEmpty)
@@ -226,9 +226,9 @@ final class LocationSourceTests: XCTestCase {
     func testSetLocationProviderWithConsumers() {
         let otherProvider = MockLocationProvider()
         otherProvider.authorizationStatus = .notDetermined
-        locationSource.add(consumer)
+        locationProducer.add(consumer)
 
-        locationSource.locationProvider = otherProvider
+        locationProducer.locationProvider = otherProvider
 
         XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(locationProvider.stopUpdatingHeadingStub.invocations.count, 1)
@@ -247,10 +247,10 @@ final class LocationSourceTests: XCTestCase {
         // old location provider, but they should not be
         // started on the new one.
         autoreleasepool {
-            locationSource.add(MockLocationConsumer())
+            locationProducer.add(MockLocationConsumer())
         }
 
-        locationSource.locationProvider = otherProvider
+        locationProducer.locationProvider = otherProvider
 
         XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(locationProvider.stopUpdatingHeadingStub.invocations.count, 1)
@@ -262,13 +262,13 @@ final class LocationSourceTests: XCTestCase {
 
     func testDeinit() throws {
         do {
-            let locationSource = LocationSource(
+            let locationProducer = LocationProducer(
                 locationProvider: locationProvider,
                 mayRequestWhenInUseAuthorization: true)
-            locationSource.add(consumer)
+            locationProducer.add(consumer)
             // reset to break a strong reference cycle from
-            // locationSource -> locationProvider -> setDelegateStub
-            // -> locationSource
+            // locationProducer -> locationProvider -> setDelegateStub
+            // -> locationProducer
             locationProvider.setDelegateStub.reset()
         }
         XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
@@ -278,48 +278,48 @@ final class LocationSourceTests: XCTestCase {
     func testDidUpdateLocationsUpdatesLatestLocation() {
         let location = CLLocation()
 
-        locationSource.locationProvider(locationProvider, didUpdateLocations: [CLLocation(), location])
+        locationProducer.locationProvider(locationProvider, didUpdateLocations: [CLLocation(), location])
 
-        XCTAssertTrue(locationSource.latestLocation?.location === location)
+        XCTAssertTrue(locationProducer.latestLocation?.location === location)
     }
 
     func testDidUpdateHeadingUpdatesLatestLocation() {
         let heading1 = CLHeading()
         let heading2 = CLHeading()
-        locationSource.locationProvider(locationProvider, didUpdateHeading: heading1)
+        locationProducer.locationProvider(locationProvider, didUpdateHeading: heading1)
 
-        XCTAssertNil(locationSource.latestLocation)
+        XCTAssertNil(locationProducer.latestLocation)
 
-        locationSource.locationProvider(locationProvider, didUpdateLocations: [CLLocation()])
+        locationProducer.locationProvider(locationProvider, didUpdateLocations: [CLLocation()])
 
-        XCTAssertTrue(locationSource.latestLocation?.heading === heading1)
+        XCTAssertTrue(locationProducer.latestLocation?.heading === heading1)
 
-        locationSource.locationProvider(locationProvider, didUpdateHeading: heading2)
+        locationProducer.locationProvider(locationProvider, didUpdateHeading: heading2)
 
-        XCTAssertTrue(locationSource.latestLocation?.heading === heading2)
+        XCTAssertTrue(locationProducer.latestLocation?.heading === heading2)
     }
 
     func testDidChangeAuthorizationUpdatesLatestLocation() {
-        XCTAssertNil(locationSource.latestLocation)
+        XCTAssertNil(locationProducer.latestLocation)
 
-        locationSource.locationProvider(locationProvider, didUpdateLocations: [CLLocation()])
+        locationProducer.locationProvider(locationProvider, didUpdateLocations: [CLLocation()])
 
-        XCTAssertEqual(locationSource.latestLocation?.accuracyAuthorization, .fullAccuracy)
+        XCTAssertEqual(locationProducer.latestLocation?.accuracyAuthorization, .fullAccuracy)
 
         locationProvider.accuracyAuthorization = .reducedAccuracy
 
-        locationSource.locationProviderDidChangeAuthorization(locationProvider)
+        locationProducer.locationProviderDidChangeAuthorization(locationProvider)
 
-        XCTAssertEqual(locationSource.latestLocation?.accuracyAuthorization, .reducedAccuracy)
+        XCTAssertEqual(locationProducer.latestLocation?.accuracyAuthorization, .reducedAccuracy)
     }
 
     func testStopUpdatingDuringDidUpdateLocationsDueToConsumerDeinit() throws {
         locationProvider.setDelegateStub.reset()
         autoreleasepool {
-            locationSource.add(MockLocationConsumer())
+            locationProducer.add(MockLocationConsumer())
         }
 
-        locationSource.locationProvider(locationProvider, didUpdateLocations: [CLLocation()])
+        locationProducer.locationProvider(locationProvider, didUpdateLocations: [CLLocation()])
 
         XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(locationProvider.stopUpdatingHeadingStub.invocations.count, 1)
@@ -328,10 +328,10 @@ final class LocationSourceTests: XCTestCase {
     func testStopUpdatingDuringDidUpdateHeadingDueToConsumerDeinit() {
         locationProvider.setDelegateStub.reset()
         autoreleasepool {
-            locationSource.add(MockLocationConsumer())
+            locationProducer.add(MockLocationConsumer())
         }
 
-        locationSource.locationProvider(locationProvider, didUpdateHeading: CLHeading())
+        locationProducer.locationProvider(locationProvider, didUpdateHeading: CLHeading())
 
         XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(locationProvider.stopUpdatingHeadingStub.invocations.count, 1)
@@ -340,10 +340,10 @@ final class LocationSourceTests: XCTestCase {
     func testStopUpdatingDuringDidFailWithErrorDueToConsumerDeinit() {
         locationProvider.setDelegateStub.reset()
         autoreleasepool {
-            locationSource.add(MockLocationConsumer())
+            locationProducer.add(MockLocationConsumer())
         }
 
-        locationSource.locationProvider(locationProvider, didFailWithError: MockError())
+        locationProducer.locationProvider(locationProvider, didFailWithError: MockError())
 
         XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(locationProvider.stopUpdatingHeadingStub.invocations.count, 1)
@@ -353,11 +353,11 @@ final class LocationSourceTests: XCTestCase {
     func testStopUpdatingDuringDidChangeAuthorizationDueToConsumerDeinit() {
         locationProvider.setDelegateStub.reset()
         autoreleasepool {
-            locationSource.add(MockLocationConsumer())
+            locationProducer.add(MockLocationConsumer())
         }
 
         locationProvider.accuracyAuthorization = .reducedAccuracy
-        locationSource.locationProviderDidChangeAuthorization(locationProvider)
+        locationProducer.locationProviderDidChangeAuthorization(locationProvider)
 
         XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(locationProvider.stopUpdatingHeadingStub.invocations.count, 1)
@@ -365,13 +365,13 @@ final class LocationSourceTests: XCTestCase {
     }
 
     func testDidFailWithErrorNotifiesDelegate() throws {
-        locationSource.add(consumer)
+        locationProducer.add(consumer)
         let error = MockError()
 
-        locationSource.locationProvider(locationProvider, didFailWithError: error)
+        locationProducer.locationProvider(locationProvider, didFailWithError: error)
 
         XCTAssertEqual(delegate.didFailWithErrorStub.invocations.count, 1)
-        XCTAssertTrue(delegate.didFailWithErrorStub.parameters.first?.locationSource === locationSource)
+        XCTAssertTrue(delegate.didFailWithErrorStub.parameters.first?.locationProducer === locationProducer)
         let actualError = try XCTUnwrap(delegate.didFailWithErrorStub.parameters.first?.error)
         XCTAssertTrue((actualError as? MockError) === error)
     }
@@ -381,41 +381,41 @@ final class LocationSourceTests: XCTestCase {
         let initialIndex = Int.random(in: 0...1)
         let changedIndex = (initialIndex + 1) % 2 // the other one
         locationProvider.accuracyAuthorization = accuracyAuthorizationValues[initialIndex]
-        locationSource = LocationSource(
+        locationProducer = LocationProducer(
             locationProvider: locationProvider,
             mayRequestWhenInUseAuthorization: true)
-        delegate = MockLocationSourceDelegate()
-        locationSource.delegate = delegate
-        locationSource.add(consumer)
+        delegate = MockLocationProducerDelegate()
+        locationProducer.delegate = delegate
+        locationProducer.add(consumer)
         locationProvider.accuracyAuthorization = accuracyAuthorizationValues[changedIndex]
 
-        locationSource.locationProviderDidChangeAuthorization(locationProvider)
+        locationProducer.locationProviderDidChangeAuthorization(locationProvider)
 
         XCTAssertEqual(delegate.didChangeAccuracyAuthorizationStub.invocations.count, 1)
-        XCTAssertTrue(delegate.didChangeAccuracyAuthorizationStub.parameters.first?.locationSource === locationSource)
+        XCTAssertTrue(delegate.didChangeAccuracyAuthorizationStub.parameters.first?.locationProducer === locationProducer)
         XCTAssertEqual(delegate.didChangeAccuracyAuthorizationStub.parameters.first?.accuracyAuthorization, locationProvider.accuracyAuthorization)
     }
 
     func testDidChangeAuthorizationDoesNotNotifyDelegateIfAccuracyAuthorizationDidNotChange() {
         locationProvider.accuracyAuthorization = [.fullAccuracy, .reducedAccuracy].randomElement()!
-        locationSource = LocationSource(
+        locationProducer = LocationProducer(
             locationProvider: locationProvider,
             mayRequestWhenInUseAuthorization: true)
-        delegate = MockLocationSourceDelegate()
-        locationSource.delegate = delegate
-        locationSource.add(consumer)
+        delegate = MockLocationProducerDelegate()
+        locationProducer.delegate = delegate
+        locationProducer.add(consumer)
 
-        locationSource.locationProviderDidChangeAuthorization(locationProvider)
+        locationProducer.locationProviderDidChangeAuthorization(locationProvider)
 
         XCTAssertEqual(delegate.didChangeAccuracyAuthorizationStub.invocations.count, 0)
     }
 
     func testRequestsTemporaryFullAccuracyAuthorizationWhenAccuracyIsReduced() {
-        locationSource.add(consumer)
+        locationProducer.add(consumer)
         locationProvider.authorizationStatus = [.authorizedAlways, .authorizedWhenInUse].randomElement()!
         locationProvider.accuracyAuthorization = .reducedAccuracy
 
-        locationSource.locationProviderDidChangeAuthorization(locationProvider)
+        locationProducer.locationProviderDidChangeAuthorization(locationProvider)
 
         if #available(iOS 14.0, *) {
             XCTAssertEqual(
@@ -427,21 +427,21 @@ final class LocationSourceTests: XCTestCase {
     }
 
     func testDoesNotRequestTemporaryFullAccuracyAuthorizationIfPermissionsNotGranted() {
-        locationSource.add(consumer)
+        locationProducer.add(consumer)
         locationProvider.authorizationStatus = [.notDetermined, .restricted, .denied].randomElement()!
         locationProvider.accuracyAuthorization = .reducedAccuracy
 
-        locationSource.locationProviderDidChangeAuthorization(locationProvider)
+        locationProducer.locationProviderDidChangeAuthorization(locationProvider)
 
         XCTAssertTrue(locationProvider.requestTemporaryFullAccuracyAuthorizationStub.invocations.isEmpty)
     }
 
     func testDoesNotRequestTemporaryFullAccuracyAuthorizationWhenAccuracyIsFull() {
-        locationSource.add(consumer)
+        locationProducer.add(consumer)
         locationProvider.authorizationStatus = [.authorizedAlways, .authorizedWhenInUse].randomElement()!
         locationProvider.accuracyAuthorization = .fullAccuracy
 
-        locationSource.locationProviderDidChangeAuthorization(locationProvider)
+        locationProducer.locationProviderDidChangeAuthorization(locationProvider)
 
         XCTAssertTrue(locationProvider.requestTemporaryFullAccuracyAuthorizationStub.invocations.isEmpty)
     }
@@ -450,7 +450,7 @@ final class LocationSourceTests: XCTestCase {
         locationProvider.authorizationStatus = [.authorizedAlways, .authorizedWhenInUse].randomElement()!
         locationProvider.accuracyAuthorization = .reducedAccuracy
 
-        locationSource.locationProviderDidChangeAuthorization(locationProvider)
+        locationProducer.locationProviderDidChangeAuthorization(locationProvider)
 
         XCTAssertTrue(locationProvider.requestTemporaryFullAccuracyAuthorizationStub.invocations.isEmpty)
     }
@@ -465,9 +465,9 @@ final class LocationSourceTests: XCTestCase {
             .landscapeRight,
             .unknown].randomElement()!
 
-        XCTAssertEqual(locationSource.headingOrientation, locationProvider.headingOrientation)
+        XCTAssertEqual(locationProducer.headingOrientation, locationProvider.headingOrientation)
 
-        locationSource.headingOrientation = [
+        locationProducer.headingOrientation = [
             .portrait,
             .portraitUpsideDown,
             .faceUp,
@@ -476,6 +476,6 @@ final class LocationSourceTests: XCTestCase {
             .landscapeRight,
             .unknown].randomElement()!
 
-        XCTAssertEqual(locationProvider.headingOrientation, locationSource.headingOrientation)
+        XCTAssertEqual(locationProvider.headingOrientation, locationProducer.headingOrientation)
     }
 }

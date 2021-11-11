@@ -4,8 +4,8 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
     func makeGestureManager(view: UIView,
                             mapboxMap: MapboxMapProtocol,
                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager
-    func makeLocationSource(mayRequestWhenInUseAuthorization: Bool) -> LocationSourceProtocol
-    func makeLocationManager(locationSource: LocationSourceProtocol, style: StyleProtocol) -> LocationManager
+    func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool) -> LocationProducerProtocol
+    func makeLocationManager(locationProducer: LocationProducerProtocol, style: StyleProtocol) -> LocationManager
 }
 
 internal final class MapViewDependencyProvider: MapViewDependencyProviderProtocol {
@@ -130,30 +130,30 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             mapboxMap: mapboxMap)
     }
 
-    func makeLocationSource(mayRequestWhenInUseAuthorization: Bool) -> LocationSourceProtocol {
+    func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool) -> LocationProducerProtocol {
         let locationProvider = AppleLocationProvider()
-        return LocationSource(
+        return LocationProducer(
             locationProvider: locationProvider,
             mayRequestWhenInUseAuthorization: mayRequestWhenInUseAuthorization)
     }
 
-    func makeLocationManager(locationSource: LocationSourceProtocol, style: StyleProtocol) -> LocationManager {
+    func makeLocationManager(locationProducer: LocationProducerProtocol, style: StyleProtocol) -> LocationManager {
         let puckManager = PuckManager(
             puck2DProvider: { configuration in
                 Puck2D(
                     configuration: configuration,
                     style: style,
-                    locationSource: locationSource)
+                    locationProducer: locationProducer)
             },
             puck3DProvider: { configuration in
                 Puck3D(
                     configuration: configuration,
                     style: style,
-                    locationSource: locationSource)
+                    locationProducer: locationProducer)
             })
 
         return LocationManager(
-            locationSource: locationSource,
+            locationProducer: locationProducer,
             puckManager: puckManager)
     }
 }

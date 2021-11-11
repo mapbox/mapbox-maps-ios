@@ -1,27 +1,27 @@
 @testable import MapboxMaps
 
-final class MockLocationSourceDelegate: LocationSourceDelegate {
+final class MockLocationProducerDelegate: LocationProducerDelegate {
     struct DidFailWithErrorParams {
-        var locationSource: LocationSourceProtocol
+        var locationProducer: LocationProducerProtocol
         var error: Error
     }
     let didFailWithErrorStub = Stub<DidFailWithErrorParams, Void>()
-    func locationSource(_ locationSource: LocationSourceProtocol,
+    func locationProducer(_ locationProducer: LocationProducerProtocol,
                         didFailWithError error: Error) {
         didFailWithErrorStub.call(with: .init(
-            locationSource: locationSource,
+            locationProducer: locationProducer,
             error: error))
     }
 
     struct DidChangeAccuracyAuthorizationParams {
-        var locationSource: LocationSourceProtocol
+        var locationProducer: LocationProducerProtocol
         var accuracyAuthorization: CLAccuracyAuthorization
     }
     let didChangeAccuracyAuthorizationStub = Stub<DidChangeAccuracyAuthorizationParams, Void>()
-    func locationSource(_ locationSource: LocationSourceProtocol,
+    func locationProducer(_ locationProducer: LocationProducerProtocol,
                         didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization) {
         didChangeAccuracyAuthorizationStub.call(with: .init(
-            locationSource: locationSource,
+            locationProducer: locationProducer,
             accuracyAuthorization: accuracyAuthorization))
     }
 }

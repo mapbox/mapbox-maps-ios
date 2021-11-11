@@ -5,20 +5,20 @@ final class Puck3DTests: XCTestCase {
 
     var configuration: Puck3DConfiguration!
     var style: MockStyle!
-    var locationSource: MockLocationSource!
+    var locationProducer: MockLocationProducer!
     var puck3D: Puck3D!
 
     override func setUp() {
         super.setUp()
         configuration = Puck3DConfiguration(model: Model())
         style = MockStyle()
-        locationSource = MockLocationSource()
+        locationProducer = MockLocationProducer()
         recreatePuck()
     }
 
     override func tearDown() {
         puck3D = nil
-        locationSource = nil
+        locationProducer = nil
         style = nil
         configuration = nil
         super.tearDown()
@@ -28,7 +28,7 @@ final class Puck3DTests: XCTestCase {
         puck3D = Puck3D(
             configuration: configuration,
             style: style,
-            locationSource: locationSource)
+            locationProducer: locationProducer)
     }
 
     func testDefaultPropertyValues() {
@@ -37,40 +37,40 @@ final class Puck3DTests: XCTestCase {
     }
 
     func testLocationConsumerIsNotAddedAtInitialization() {
-        XCTAssertEqual(locationSource.addStub.invocations.count, 0)
-        XCTAssertEqual(locationSource.removeStub.invocations.count, 0)
+        XCTAssertEqual(locationProducer.addStub.invocations.count, 0)
+        XCTAssertEqual(locationProducer.removeStub.invocations.count, 0)
     }
 
     func testActivatingPuckAddsLocationConsumer() {
         puck3D.isActive = true
 
-        XCTAssertEqual(locationSource.addStub.invocations.count, 1)
-        XCTAssertTrue(locationSource.addStub.parameters.first === puck3D)
-        XCTAssertEqual(locationSource.removeStub.invocations.count, 0)
+        XCTAssertEqual(locationProducer.addStub.invocations.count, 1)
+        XCTAssertTrue(locationProducer.addStub.parameters.first === puck3D)
+        XCTAssertEqual(locationProducer.removeStub.invocations.count, 0)
 
         // activating again should have no effect
         puck3D.isActive = true
 
-        XCTAssertEqual(locationSource.addStub.invocations.count, 1)
-        XCTAssertEqual(locationSource.removeStub.invocations.count, 0)
+        XCTAssertEqual(locationProducer.addStub.invocations.count, 1)
+        XCTAssertEqual(locationProducer.removeStub.invocations.count, 0)
     }
 
     func testDeactivatingPuckRemovesLocationConsumer() {
         puck3D.isActive = true
-        locationSource.addStub.reset()
-        locationSource.removeStub.reset()
+        locationProducer.addStub.reset()
+        locationProducer.removeStub.reset()
 
         puck3D.isActive = false
 
-        XCTAssertEqual(locationSource.addStub.invocations.count, 0)
-        XCTAssertEqual(locationSource.removeStub.invocations.count, 1)
-        XCTAssertTrue(locationSource.removeStub.parameters.first === puck3D)
+        XCTAssertEqual(locationProducer.addStub.invocations.count, 0)
+        XCTAssertEqual(locationProducer.removeStub.invocations.count, 1)
+        XCTAssertTrue(locationProducer.removeStub.parameters.first === puck3D)
 
         // deactivating again should have no effect
         puck3D.isActive = false
 
-        XCTAssertEqual(locationSource.addStub.invocations.count, 0)
-        XCTAssertEqual(locationSource.removeStub.invocations.count, 1)
+        XCTAssertEqual(locationProducer.addStub.invocations.count, 0)
+        XCTAssertEqual(locationProducer.removeStub.invocations.count, 1)
     }
 
     func testSourceAndLayerAreNotAddedAtInitialization() {
@@ -80,7 +80,7 @@ final class Puck3DTests: XCTestCase {
     }
 
     func testActivatingPuckDoesNotAddSourceAndLayerIfLatestLocationIsNil() {
-        locationSource.latestLocation = nil
+        locationProducer.latestLocation = nil
 
         puck3D.isActive = true
 
@@ -91,7 +91,7 @@ final class Puck3DTests: XCTestCase {
 
     func testActivatingPuckAddsSourceAndLayerIfLatestLocationIsNonNil() throws {
         let coordinate = CLLocationCoordinate2D.random()
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: CLLocation(
                 latitude: coordinate.latitude,
                 longitude: coordinate.longitude),
@@ -136,7 +136,7 @@ final class Puck3DTests: XCTestCase {
             timestamp: Date())
         let heading = MockHeading()
         heading.trueHeadingStub.defaultReturnValue = .random(in: 0..<360)
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: location,
             heading: heading,
             accuracyAuthorization: .fullAccuracy)
@@ -167,7 +167,7 @@ final class Puck3DTests: XCTestCase {
             timestamp: Date())
         let heading = MockHeading()
         heading.trueHeadingStub.defaultReturnValue = .random(in: 0..<360)
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: location,
             heading: heading,
             accuracyAuthorization: .fullAccuracy)
@@ -186,7 +186,7 @@ final class Puck3DTests: XCTestCase {
         configuration.modelScale = .constant(.random(withLength: 3, generator: { .random(in: 1..<10) }))
         configuration.modelRotation = .constant(.random(withLength: 3, generator: { .random(in: 0..<360) }))
         recreatePuck()
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: CLLocation(),
             heading: nil,
             accuracyAuthorization: .fullAccuracy)
@@ -201,7 +201,7 @@ final class Puck3DTests: XCTestCase {
 
     func testUpdateExistingSource() throws {
         let coordinate = CLLocationCoordinate2D.random()
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: CLLocation(
                 latitude: coordinate.latitude,
                 longitude: coordinate.longitude),
@@ -230,7 +230,7 @@ final class Puck3DTests: XCTestCase {
     }
 
     func testSettingPuckBearingSourceWhenInactive() {
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: CLLocation(),
             heading: nil,
             accuracyAuthorization: .fullAccuracy)
@@ -246,7 +246,7 @@ final class Puck3DTests: XCTestCase {
     }
 
     func testSettingPuckBearingSourceWhenActive() {
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: CLLocation(),
             heading: nil,
             accuracyAuthorization: .fullAccuracy)
@@ -266,7 +266,7 @@ final class Puck3DTests: XCTestCase {
     }
 
     func testLocationUpdateWhenInactive() {
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: CLLocation(),
             heading: nil,
             accuracyAuthorization: .fullAccuracy)
@@ -274,7 +274,7 @@ final class Puck3DTests: XCTestCase {
         style.layerExistsStub.defaultReturnValue = false
         puck3D.isActive = false
 
-        puck3D.locationUpdate(newLocation: locationSource.latestLocation!)
+        puck3D.locationUpdate(newLocation: locationProducer.latestLocation!)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
@@ -282,7 +282,7 @@ final class Puck3DTests: XCTestCase {
     }
 
     func testLocationUpdateWhenActive() {
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: CLLocation(),
             heading: nil,
             accuracyAuthorization: .fullAccuracy)
@@ -293,7 +293,7 @@ final class Puck3DTests: XCTestCase {
         style.setSourcePropertiesStub.reset()
         style.addPersistentLayerStub.reset()
 
-        puck3D.locationUpdate(newLocation: locationSource.latestLocation!)
+        puck3D.locationUpdate(newLocation: locationProducer.latestLocation!)
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 0)
         XCTAssertEqual(style.setSourcePropertiesStub.invocations.count, 1)

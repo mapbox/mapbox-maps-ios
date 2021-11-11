@@ -8,11 +8,11 @@ internal final class Puck2D: NSObject, Puck {
                 return
             }
             if isActive {
-                locationSource.add(self)
+                locationProducer.add(self)
                 addImages()
                 updateLayer()
             } else {
-                locationSource.remove(self)
+                locationProducer.remove(self)
                 try? style.removeLayer(withId: Self.layerID)
                 try? style.removeImage(withId: Self.topImageId)
                 try? style.removeImage(withId: Self.bearingImageId)
@@ -30,7 +30,7 @@ internal final class Puck2D: NSObject, Puck {
 
     private let configuration: Puck2DConfiguration
     private let style: StyleProtocol
-    private let locationSource: LocationSourceProtocol
+    private let locationProducer: LocationProducerProtocol
 
     /// The keys of the style properties that were set during the previous sync.
     /// Used to identify which styles need to be restored to their default values in
@@ -44,10 +44,10 @@ internal final class Puck2D: NSObject, Puck {
 
     internal init(configuration: Puck2DConfiguration,
                   style: StyleProtocol,
-                  locationSource: LocationSourceProtocol) {
+                  locationProducer: LocationProducerProtocol) {
         self.configuration = configuration
         self.style = style
-        self.locationSource = locationSource
+        self.locationProducer = locationProducer
     }
 
     private func addImages() {
@@ -77,7 +77,7 @@ internal final class Puck2D: NSObject, Puck {
     }
 
     private func updateLayer() {
-        guard isActive, let location = locationSource.latestLocation else {
+        guard isActive, let location = locationProducer.latestLocation else {
             return
         }
         var layer = LocationIndicatorLayer(id: Self.layerID)

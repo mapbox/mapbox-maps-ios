@@ -7,7 +7,7 @@ public final class LocationManager: NSObject {
 
     /// Represents the latest location received from the location provider.
     public var latestLocation: Location? {
-        return locationSource.latestLocation
+        return locationProducer.latestLocation
     }
 
     /// The object that acts as the delegate of the location manager.
@@ -17,13 +17,13 @@ public final class LocationManager: NSObject {
     /// Avoid manipulating the location provider directly. LocationManager assumes full responsibility for starting and stopping location
     /// and heading updates as needed.
     public var locationProvider: LocationProvider! {
-        return locationSource.locationProvider
+        return locationProducer.locationProvider
     }
 
     /// The set of objects that are currently consuming location updates.
     /// The returned object is a copy of the underlying one, so mutating it will have no effect.
     public var consumers: NSHashTable<LocationConsumer> {
-        return locationSource.consumers
+        return locationProducer.consumers
     }
 
     /// Configuration options for the location manager.
@@ -33,33 +33,33 @@ public final class LocationManager: NSObject {
         }
     }
 
-    private let locationSource: LocationSourceProtocol
+    private let locationProducer: LocationProducerProtocol
 
     /// Manager that handles the visual puck element.
     /// Only created if `showsUserLocation` is `true`.
     private let puckManager: PuckManagerProtocol
 
-    internal init(locationSource: LocationSourceProtocol,
+    internal init(locationProducer: LocationProducerProtocol,
                   puckManager: PuckManagerProtocol) {
-        self.locationSource = locationSource
+        self.locationProducer = locationProducer
         self.puckManager = puckManager
         super.init()
-        locationSource.delegate = self
+        locationProducer.delegate = self
         syncOptions()
     }
 
     public func overrideLocationProvider(with customLocationProvider: LocationProvider) {
-        locationSource.locationProvider = customLocationProvider
+        locationProducer.locationProvider = customLocationProvider
     }
 
     /// The location manager holds weak references to consumers, client code should retain these references.
     public func addLocationConsumer(newConsumer consumer: LocationConsumer) {
-        locationSource.add(consumer)
+        locationProducer.add(consumer)
     }
 
     /// Removes a location consumer from the location manager.
     public func removeLocationConsumer(consumer: LocationConsumer) {
-        locationSource.remove(consumer)
+        locationProducer.remove(consumer)
     }
 
     /// Allows a custom case to request full accuracy
@@ -73,14 +73,14 @@ public final class LocationManager: NSObject {
     }
 
     private func syncOptions() {
-        locationSource.locationProvider.locationProviderOptions = options
+        locationProducer.locationProvider.locationProviderOptions = options
         puckManager.puckType = options.puckType
         puckManager.puckBearingSource = options.puckBearingSource
     }
 }
 
 // These methods must remain to avoid breaking the API, but their implementation has been moved
-// to `LocationSource`. They should be fully removed in the next major version.
+// to `LocationProducer`. They should be fully removed in the next major version.
 extension LocationManager: LocationProviderDelegate {
 
     /// Deprecated. This method no longer has any effect.
@@ -96,14 +96,14 @@ extension LocationManager: LocationProviderDelegate {
     public func locationProviderDidChangeAuthorization(_ provider: LocationProvider) {}
 }
 
-extension LocationManager: LocationSourceDelegate {
-    internal func locationSource(_ locationSource: LocationSourceProtocol,
-                                 didFailWithError error: Error) {
+extension LocationManager: LocationProducerDelegate {
+    internal func locationProducer(_ locationProducer: LocationProducerProtocol,
+                                   didFailWithError error: Error) {
         delegate?.locationManager?(self, didFailToLocateUserWithError: error)
     }
 
-    internal func locationSource(_ locationSource: LocationSourceProtocol,
-                                 didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization) {
+    internal func locationProducer(_ locationProducer: LocationProducerProtocol,
+                                   didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization) {
         delegate?.locationManager?(self, didChangeAccuracyAuthorization: accuracyAuthorization)
     }
 }

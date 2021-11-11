@@ -8,10 +8,10 @@ internal final class Puck3D: NSObject, Puck {
                 return
             }
             if isActive {
-                locationSource.add(self)
+                locationProducer.add(self)
                 updateSourceAndLayer()
             } else {
-                locationSource.remove(self)
+                locationProducer.remove(self)
                 if style.layerExists(withId: Self.layerID) {
                     try! style.removeLayer(withId: Self.layerID)
                 }
@@ -30,22 +30,22 @@ internal final class Puck3D: NSObject, Puck {
 
     private let configuration: Puck3DConfiguration
     private let style: StyleProtocol
-    private let locationSource: LocationSourceProtocol
+    private let locationProducer: LocationProducerProtocol
 
     private static let sourceID = "puck-model-source"
     private static let layerID = "puck-model-layer"
 
     internal init(configuration: Puck3DConfiguration,
                   style: StyleProtocol,
-                  locationSource: LocationSourceProtocol) {
+                  locationProducer: LocationProducerProtocol) {
         self.configuration = configuration
         self.style = style
-        self.locationSource = locationSource
+        self.locationProducer = locationProducer
         super.init()
     }
 
     private func updateSourceAndLayer() {
-        guard isActive, let location = locationSource.latestLocation else {
+        guard isActive, let location = locationProducer.latestLocation else {
             return
         }
 

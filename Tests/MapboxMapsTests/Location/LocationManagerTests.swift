@@ -3,44 +3,44 @@ import XCTest
 
 final class LocationManagerTests: XCTestCase {
 
-    var locationSource: MockLocationSource!
+    var locationProducer: MockLocationProducer!
     var puckManager: MockPuckManager!
     var locationManager: LocationManager!
 
     override func setUp() {
         super.setUp()
-        locationSource = MockLocationSource()
+        locationProducer = MockLocationProducer()
         puckManager = MockPuckManager()
         locationManager = LocationManager(
-            locationSource: locationSource,
+            locationProducer: locationProducer,
             puckManager: puckManager)
     }
 
     override func tearDown() {
         locationManager = nil
         puckManager = nil
-        locationSource = nil
+        locationProducer = nil
         super.tearDown()
     }
 
     func testLocationManagerDefaultInitialization() {
         XCTAssertEqual(locationManager.options, LocationOptions())
         XCTAssertNil(locationManager.delegate)
-        XCTAssertEqual(locationSource.locationProvider.locationProviderOptions, locationManager.options)
+        XCTAssertEqual(locationProducer.locationProvider.locationProviderOptions, locationManager.options)
         XCTAssertEqual(puckManager.puckType, locationManager.options.puckType)
         XCTAssertEqual(puckManager.puckBearingSource, locationManager.options.puckBearingSource)
     }
 
-    func testLatestLocationWhenLocationSourceLatestLocationIsNil() {
-        locationSource.latestLocation = nil
+    func testLatestLocationWhenLocationProducerLatestLocationIsNil() {
+        locationProducer.latestLocation = nil
 
         XCTAssertNil(locationManager.latestLocation)
     }
 
-    func testLatestLocationWhenLocationSourceLatestLocationIsNonNil() {
-        locationSource.latestLocation = Location(location: CLLocation(), heading: nil, accuracyAuthorization: .fullAccuracy)
+    func testLatestLocationWhenLocationProducerLatestLocationIsNonNil() {
+        locationProducer.latestLocation = Location(location: CLLocation(), heading: nil, accuracyAuthorization: .fullAccuracy)
 
-        XCTAssertTrue(locationManager.latestLocation === locationSource.latestLocation)
+        XCTAssertTrue(locationManager.latestLocation === locationProducer.latestLocation)
     }
 
     func testLocationProvider() throws {
@@ -49,14 +49,14 @@ final class LocationManagerTests: XCTestCase {
         // value is a struct or enum, Swift automatically boxes it into an object (and this test will
         // fail since the two boxed objects wouldn't be identical), but in this situation we expect
         // it to always be a class.
-        XCTAssertTrue((locationManager.locationProvider as AnyObject) === (locationSource.locationProvider as AnyObject))
+        XCTAssertTrue((locationManager.locationProvider as AnyObject) === (locationProducer.locationProvider as AnyObject))
     }
 
     func testConsumers() {
-        XCTAssertTrue(locationManager.consumers === locationSource.consumers)
+        XCTAssertTrue(locationManager.consumers === locationProducer.consumers)
     }
 
-    func testOptionsArePropagatedToLocationSourceAndPuckManager() {
+    func testOptionsArePropagatedToLocationProducerAndPuckManager() {
         var options = LocationOptions()
         options.distanceFilter = .random(in: 0..<100)
         options.desiredAccuracy = .random(in: 0..<100)
@@ -66,7 +66,7 @@ final class LocationManagerTests: XCTestCase {
 
         locationManager.options = options
 
-        XCTAssertEqual(locationSource.locationProvider.locationProviderOptions, options)
+        XCTAssertEqual(locationProducer.locationProvider.locationProviderOptions, options)
         XCTAssertEqual(puckManager.puckType, options.puckType)
         XCTAssertEqual(puckManager.puckBearingSource, options.puckBearingSource)
     }
@@ -81,7 +81,7 @@ final class LocationManagerTests: XCTestCase {
         // value is a struct or enum, Swift automatically boxes it into an object (and this test will
         // fail since the boxed object wouldn't be identical to the one created above), but in this
         // situation we expect it to always be a class.
-        XCTAssertTrue((locationSource.locationProvider as AnyObject) === customLocationProvider)
+        XCTAssertTrue((locationProducer.locationProvider as AnyObject) === customLocationProvider)
     }
 
     func testAddLocationConsumer() {
@@ -89,8 +89,8 @@ final class LocationManagerTests: XCTestCase {
 
         locationManager.addLocationConsumer(newConsumer: consumer)
 
-        XCTAssertEqual(locationSource.addStub.invocations.count, 1)
-        XCTAssertTrue(locationSource.addStub.parameters.first === consumer)
+        XCTAssertEqual(locationProducer.addStub.invocations.count, 1)
+        XCTAssertTrue(locationProducer.addStub.parameters.first === consumer)
     }
 
     func testRemoveLocationConsumer() {
@@ -98,8 +98,8 @@ final class LocationManagerTests: XCTestCase {
 
         locationManager.removeLocationConsumer(consumer: consumer)
 
-        XCTAssertEqual(locationSource.removeStub.invocations.count, 1)
-        XCTAssertTrue(locationSource.removeStub.parameters.first === consumer)
+        XCTAssertEqual(locationProducer.removeStub.invocations.count, 1)
+        XCTAssertTrue(locationProducer.removeStub.parameters.first === consumer)
     }
 
     @available(iOS 14.0, *)
@@ -108,28 +108,28 @@ final class LocationManagerTests: XCTestCase {
 
         locationManager.requestTemporaryFullAccuracyPermissions(withPurposeKey: purposeKey)
 
-        let locationProvider = try XCTUnwrap(locationSource.locationProvider as? MockLocationProvider)
+        let locationProvider = try XCTUnwrap(locationProducer.locationProvider as? MockLocationProvider)
         XCTAssertEqual(locationProvider.requestTemporaryFullAccuracyAuthorizationStub.parameters, [purposeKey])
     }
 
-    func testLocationSourceDidFailWithError() {
+    func testLocationProducerDidFailWithError() {
         let error = MockError()
         let delegate = MockLocationPermissionsDelegate()
         locationManager.delegate = delegate
 
-        locationManager.locationSource(locationSource, didFailWithError: error)
+        locationManager.locationProducer(locationProducer, didFailWithError: error)
 
         XCTAssertEqual(delegate.didFailToLocateUserWithErrorStub.invocations.count, 1)
         XCTAssertTrue(delegate.didFailToLocateUserWithErrorStub.parameters.first?.locationManager === locationManager)
         XCTAssertTrue(delegate.didFailToLocateUserWithErrorStub.parameters.first?.error as? MockError === error)
     }
 
-    func testLocationSourceDidChangeAccuracyAuthorization() {
+    func testLocationProducerDidChangeAccuracyAuthorization() {
         let accuracyAuthorization: CLAccuracyAuthorization = [.fullAccuracy, .reducedAccuracy].randomElement()!
         let delegate = MockLocationPermissionsDelegate()
         locationManager.delegate = delegate
 
-        locationManager.locationSource(locationSource, didChangeAccuracyAuthorization: accuracyAuthorization)
+        locationManager.locationProducer(locationProducer, didChangeAccuracyAuthorization: accuracyAuthorization)
 
         XCTAssertEqual(delegate.didChangeAccuracyAuthorizationStub.invocations.count, 1)
         XCTAssertTrue(delegate.didChangeAccuracyAuthorizationStub.parameters.first?.locationManager === locationManager)

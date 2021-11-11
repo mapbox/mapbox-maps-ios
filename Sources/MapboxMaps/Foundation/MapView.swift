@@ -32,7 +32,7 @@ open class MapView: UIView {
 
     /// The `location`object handles location events of the map.
     public internal(set) var location: LocationManager!
-    private var locationSource: LocationSourceProtocol!
+    private var locationProducer: LocationProducerProtocol!
 
     /// Controls the addition/removal of annotations to the map.
     public internal(set) var annotations: AnnotationOrchestrator!
@@ -284,10 +284,10 @@ open class MapView: UIView {
             infoButtonOrnamentDelegate: attributionDialogManager)
 
         // Initialize/Configure location source and location manager
-        locationSource = dependencyProvider.makeLocationSource(
+        locationProducer = dependencyProvider.makeLocationProducer(
             mayRequestWhenInUseAuthorization: Bundle.main.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil)
         location = dependencyProvider.makeLocationManager(
-            locationSource: locationSource,
+            locationProducer: locationProducer,
             style: mapboxMap.style)
 
         // Initialize/Configure annotations orchestrator
@@ -476,8 +476,8 @@ open class MapView: UIView {
         // interface orientation changes, but you need a view controller to do
         // that (via `willTransition(to:with:)`), which is something we don't
         // have, so we poll instead.
-        if locationSource.headingOrientation != headingOrientation {
-            locationSource.headingOrientation = headingOrientation
+        if locationProducer.headingOrientation != headingOrientation {
+            locationProducer.headingOrientation = headingOrientation
         }
     }
 }

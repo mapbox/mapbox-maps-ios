@@ -1,8 +1,8 @@
 import UIKit
 @_implementationOnly import MapboxCommon_Private
 
-internal protocol LocationSourceProtocol: AnyObject {
-    var delegate: LocationSourceDelegate? { get set }
+internal protocol LocationProducerProtocol: AnyObject {
+    var delegate: LocationProducerDelegate? { get set }
     var latestLocation: Location? { get }
     var headingOrientation: CLDeviceOrientation { get set }
     var consumers: NSHashTable<LocationConsumer> { get }
@@ -11,17 +11,17 @@ internal protocol LocationSourceProtocol: AnyObject {
     func remove(_ consumer: LocationConsumer)
 }
 
-internal protocol LocationSourceDelegate: AnyObject {
-    func locationSource(_ locationSource: LocationSourceProtocol,
-                        didFailWithError error: Error)
+internal protocol LocationProducerDelegate: AnyObject {
+    func locationProducer(_ locationProducer: LocationProducerProtocol,
+                          didFailWithError error: Error)
 
-    func locationSource(_ locationSource: LocationSourceProtocol,
-                        didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization)
+    func locationProducer(_ locationProducer: LocationProducerProtocol,
+                          didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization)
 }
 
-internal final class LocationSource: LocationSourceProtocol {
+internal final class LocationProducer: LocationProducerProtocol {
 
-    internal weak var delegate: LocationSourceDelegate?
+    internal weak var delegate: LocationProducerDelegate?
 
     /// Represents the latest location received from the location provider.
     internal var latestLocation: Location? {
@@ -57,7 +57,7 @@ internal final class LocationSource: LocationSourceProtocol {
     private var latestAccuracyAuthorization: CLAccuracyAuthorization {
         didSet {
             if latestAccuracyAuthorization != oldValue {
-                delegate?.locationSource(self, didChangeAccuracyAuthorization: latestAccuracyAuthorization)
+                delegate?.locationProducer(self, didChangeAccuracyAuthorization: latestAccuracyAuthorization)
             }
             notifyConsumers()
         }
@@ -155,7 +155,7 @@ internal final class LocationSource: LocationSourceProtocol {
 // set `isUpdating` to false and return early. This is necessary to ensure we stop using location
 // services when there are no consumers due to the fact that we only keep weak references to them, and
 // they may be deinited without ever being explicitly removed.
-extension LocationSource: LocationProviderDelegate {
+extension LocationProducer: LocationProviderDelegate {
     internal func locationProvider(_ provider: LocationProvider, didUpdateLocations locations: [CLLocation]) {
         syncIsUpdating()
         latestCLLocation = locations.last
@@ -169,7 +169,7 @@ extension LocationSource: LocationProviderDelegate {
     internal func locationProvider(_ provider: LocationProvider, didFailWithError error: Error) {
         syncIsUpdating()
         Log.error(forMessage: "\(provider) did fail with error: \(error)", category: "Location")
-        delegate?.locationSource(self, didFailWithError: error)
+        delegate?.locationProducer(self, didFailWithError: error)
     }
 
     internal func locationProviderDidChangeAuthorization(_ provider: LocationProvider) {

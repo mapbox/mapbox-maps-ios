@@ -4,7 +4,7 @@ import XCTest
 final class Puck2DTests: XCTestCase {
     var configuration: Puck2DConfiguration!
     var style: MockStyle!
-    var locationSource: MockLocationSource!
+    var locationProducer: MockLocationProducer!
     var puck2D: Puck2D!
     var location: CLLocation!
 
@@ -16,7 +16,7 @@ final class Puck2DTests: XCTestCase {
             shadowImage: UIImage(),
             scale: .constant(.random(in: 1..<10)))
         style = MockStyle()
-        locationSource = MockLocationSource()
+        locationProducer = MockLocationProducer()
         recreatePuck()
         location = CLLocation(
             coordinate: .random(),
@@ -31,7 +31,7 @@ final class Puck2DTests: XCTestCase {
     override func tearDown() {
         location = nil
         puck2D = nil
-        locationSource = nil
+        locationProducer = nil
         style = nil
         configuration = nil
         super.tearDown()
@@ -41,7 +41,7 @@ final class Puck2DTests: XCTestCase {
         puck2D = Puck2D(
             configuration: configuration,
             style: style,
-            locationSource: locationSource)
+            locationProducer: locationProducer)
     }
 
     func testDefaultPropertyValues() {
@@ -50,40 +50,40 @@ final class Puck2DTests: XCTestCase {
     }
 
     func testLocationConsumerIsNotAddedAtInitialization() {
-        XCTAssertEqual(locationSource.addStub.invocations.count, 0)
-        XCTAssertEqual(locationSource.removeStub.invocations.count, 0)
+        XCTAssertEqual(locationProducer.addStub.invocations.count, 0)
+        XCTAssertEqual(locationProducer.removeStub.invocations.count, 0)
     }
 
     func testActivatingPuckAddsLocationConsumer() {
         puck2D.isActive = true
 
-        XCTAssertEqual(locationSource.addStub.invocations.count, 1)
-        XCTAssertTrue(locationSource.addStub.parameters.first === puck2D)
-        XCTAssertEqual(locationSource.removeStub.invocations.count, 0)
+        XCTAssertEqual(locationProducer.addStub.invocations.count, 1)
+        XCTAssertTrue(locationProducer.addStub.parameters.first === puck2D)
+        XCTAssertEqual(locationProducer.removeStub.invocations.count, 0)
 
         // activating again should have no effect
         puck2D.isActive = true
 
-        XCTAssertEqual(locationSource.addStub.invocations.count, 1)
-        XCTAssertEqual(locationSource.removeStub.invocations.count, 0)
+        XCTAssertEqual(locationProducer.addStub.invocations.count, 1)
+        XCTAssertEqual(locationProducer.removeStub.invocations.count, 0)
     }
 
     func testDeactivatingPuckRemovesLocationConsumer() {
         puck2D.isActive = true
-        locationSource.addStub.reset()
-        locationSource.removeStub.reset()
+        locationProducer.addStub.reset()
+        locationProducer.removeStub.reset()
 
         puck2D.isActive = false
 
-        XCTAssertEqual(locationSource.addStub.invocations.count, 0)
-        XCTAssertEqual(locationSource.removeStub.invocations.count, 1)
-        XCTAssertTrue(locationSource.removeStub.parameters.first === puck2D)
+        XCTAssertEqual(locationProducer.addStub.invocations.count, 0)
+        XCTAssertEqual(locationProducer.removeStub.invocations.count, 1)
+        XCTAssertTrue(locationProducer.removeStub.parameters.first === puck2D)
 
         // deactivating again should have no effect
         puck2D.isActive = false
 
-        XCTAssertEqual(locationSource.addStub.invocations.count, 0)
-        XCTAssertEqual(locationSource.removeStub.invocations.count, 1)
+        XCTAssertEqual(locationProducer.addStub.invocations.count, 0)
+        XCTAssertEqual(locationProducer.removeStub.invocations.count, 1)
     }
 
     func testLayerAndImagesAreNotAddedAtInitialization() {
@@ -93,7 +93,7 @@ final class Puck2DTests: XCTestCase {
     }
 
     func testActivatingPuckDoesNotAddLayerIfLatestLocationIsNil() {
-        locationSource.latestLocation = nil
+        locationProducer.latestLocation = nil
 
         puck2D.isActive = true
 
@@ -124,7 +124,7 @@ final class Puck2DTests: XCTestCase {
     }
 
     func testActivatingPuckAddsImagesIfLatestLocationIsNil() {
-        locationSource.latestLocation = nil
+        locationProducer.latestLocation = nil
 
         puck2D.isActive = true
 
@@ -132,7 +132,7 @@ final class Puck2DTests: XCTestCase {
     }
 
     func testActivatingPuckAddsImagesIfLatestLocationIsNonNil() {
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: CLLocation(),
             heading: nil,
             accuracyAuthorization: .fullAccuracy)
@@ -182,7 +182,7 @@ final class Puck2DTests: XCTestCase {
     }
 
     func testActivatingPuckAddsLayerIfLatestLocationIsNonNil() throws {
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: location,
             heading: nil,
             accuracyAuthorization: .fullAccuracy)
@@ -202,7 +202,7 @@ final class Puck2DTests: XCTestCase {
     func testActivatingPuckWithNilShadowImage() throws {
         configuration.shadowImage = nil
         recreatePuck()
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: location,
             heading: nil,
             accuracyAuthorization: .fullAccuracy)
@@ -220,7 +220,7 @@ final class Puck2DTests: XCTestCase {
     func testActivatingPuckWithNilScale() throws {
         configuration.scale = nil
         recreatePuck()
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: location,
             heading: nil,
             accuracyAuthorization: .fullAccuracy)
@@ -237,7 +237,7 @@ final class Puck2DTests: XCTestCase {
     func testActivatingPuckWithShowsAccuracyRingTrue() throws {
         configuration.showsAccuracyRing = true
         recreatePuck()
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: location,
             heading: nil,
             accuracyAuthorization: .fullAccuracy)
@@ -257,7 +257,7 @@ final class Puck2DTests: XCTestCase {
     func testActivatingPuckWithNonNilHeading() throws {
         let heading = MockHeading()
         heading.trueHeadingStub.defaultReturnValue = .random(in: 0..<360)
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: location,
             heading: heading,
             accuracyAuthorization: .fullAccuracy)
@@ -266,7 +266,7 @@ final class Puck2DTests: XCTestCase {
         puck2D.isActive = true
 
         var expectedLayer = makeExpectedLayer()
-        expectedLayer.bearing = .constant(locationSource.latestLocation!.headingDirection!)
+        expectedLayer.bearing = .constant(locationProducer.latestLocation!.headingDirection!)
         let expectedProperties = try expectedLayer.jsonObject()
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
@@ -275,7 +275,7 @@ final class Puck2DTests: XCTestCase {
     func testActivatingPuckWithPuckBearingSourceSetToCourse() throws {
         let heading = MockHeading()
         heading.trueHeadingStub.defaultReturnValue = .random(in: 0..<360)
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: location,
             heading: heading,
             accuracyAuthorization: .fullAccuracy)
@@ -285,14 +285,14 @@ final class Puck2DTests: XCTestCase {
         puck2D.isActive = true
 
         var expectedLayer = makeExpectedLayer()
-        expectedLayer.bearing = .constant(locationSource.latestLocation!.course)
+        expectedLayer.bearing = .constant(locationProducer.latestLocation!.course)
         let expectedProperties = try expectedLayer.jsonObject()
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
 
     func testActivatingPuckWithReducedAccuracy() throws {
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: location,
             heading: nil,
             accuracyAuthorization: .reducedAccuracy)
@@ -319,7 +319,7 @@ final class Puck2DTests: XCTestCase {
     }
 
     func testResetsPropertiesToDefaultValues() throws {
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: location,
             heading: nil,
             accuracyAuthorization: .fullAccuracy)
@@ -329,11 +329,11 @@ final class Puck2DTests: XCTestCase {
         // there are a bunch of properties that aren't used in "reduced" mode
         // and they should be reset to their default values if the layer already
         // existed
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: location,
             heading: nil,
             accuracyAuthorization: .reducedAccuracy)
-        puck2D.locationUpdate(newLocation: locationSource.latestLocation!)
+        puck2D.locationUpdate(newLocation: locationProducer.latestLocation!)
 
         let originalLayer = makeExpectedLayer()
         let originalKeys = try originalLayer.jsonObject().keys
@@ -361,7 +361,7 @@ final class Puck2DTests: XCTestCase {
     }
 
     func testSettingPuckBearingSourceWhenInactive() {
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: CLLocation(),
             heading: nil,
             accuracyAuthorization: .fullAccuracy)
@@ -374,7 +374,7 @@ final class Puck2DTests: XCTestCase {
     }
 
     func testSettingPuckBearingSourceWhenActive() {
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: CLLocation(),
             heading: nil,
             accuracyAuthorization: .fullAccuracy)
@@ -387,27 +387,27 @@ final class Puck2DTests: XCTestCase {
     }
 
     func testLocationUpdateWhenInactive() {
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: CLLocation(),
             heading: nil,
             accuracyAuthorization: .fullAccuracy)
         style.layerExistsStub.defaultReturnValue = false
         puck2D.isActive = false
 
-        puck2D.locationUpdate(newLocation: locationSource.latestLocation!)
+        puck2D.locationUpdate(newLocation: locationProducer.latestLocation!)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 0)
     }
 
     func testLocationUpdateWhenActive() {
-        locationSource.latestLocation = Location(
+        locationProducer.latestLocation = Location(
             location: CLLocation(),
             heading: nil,
             accuracyAuthorization: .fullAccuracy)
         puck2D.isActive = true
         style.layerExistsStub.defaultReturnValue = true
 
-        puck2D.locationUpdate(newLocation: locationSource.latestLocation!)
+        puck2D.locationUpdate(newLocation: locationProducer.latestLocation!)
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
     }

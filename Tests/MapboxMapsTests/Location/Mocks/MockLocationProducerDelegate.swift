@@ -7,7 +7,7 @@ final class MockLocationProducerDelegate: LocationProducerDelegate {
     }
     let didFailWithErrorStub = Stub<DidFailWithErrorParams, Void>()
     func locationProducer(_ locationProducer: LocationProducerProtocol,
-                        didFailWithError error: Error) {
+                          didFailWithError error: Error) {
         didFailWithErrorStub.call(with: .init(
             locationProducer: locationProducer,
             error: error))
@@ -19,7 +19,7 @@ final class MockLocationProducerDelegate: LocationProducerDelegate {
     }
     let didChangeAccuracyAuthorizationStub = Stub<DidChangeAccuracyAuthorizationParams, Void>()
     func locationProducer(_ locationProducer: LocationProducerProtocol,
-                        didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization) {
+                          didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization) {
         didChangeAccuracyAuthorizationStub.call(with: .init(
             locationProducer: locationProducer,
             accuracyAuthorization: accuracyAuthorization))

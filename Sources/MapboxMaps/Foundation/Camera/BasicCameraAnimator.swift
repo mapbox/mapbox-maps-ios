@@ -3,7 +3,7 @@ import CoreLocation
 
 // MARK: CameraAnimator Class
 public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterface {
-    private enum InternalState: Equatable {
+    internal enum InternalState: Equatable {
         case initial
         case delayed
         case running(CameraTransition)
@@ -54,7 +54,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         }
     }
 
-    private var internalState = InternalState.initial {
+    internal var internalState = InternalState.initial {
         didSet {
             switch (oldValue, internalState) {
             case (.initial, .running), (.paused, .running), (.initial, .delayed):
@@ -76,7 +76,14 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     }
 
     /// Boolean that represents if the animation is running or not.
-    public var isRunning: Bool { propertyAnimator.isRunning }
+    public var isRunning: Bool {
+        switch internalState {
+        case .delayed:
+            return true
+        default:
+            return propertyAnimator.isRunning
+        }
+    }
 
     /// Boolean that represents if the animation is running normally or in reverse.
     public var isReversed: Bool {
@@ -142,13 +149,13 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
             fatalError("startAnimation(afterDelay:) cannot be called on paused, completed, or currently running animations.")
         }
 
-        internalState = .delayed
         delayedAnimationTimer = timerProvider(delay, false) { [weak self] (_) in
             if let self = self {
                 self.internalState = .running(self.makeTransition())
                 self.propertyAnimator.startAnimation()
             }
         }
+        internalState = .delayed
     }
 
     /// Pauses the animation.
@@ -180,6 +187,8 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
             propertyAnimator.finishAnimation(at: .current)
         case .delayed:
             delayedAnimationTimer?.invalidate()
+            propertyAnimator.stopAnimation(false)
+            self.internalState = .final
 
             // Separately handle calling the completion for delayed animations.
             for completion in self.completions {
@@ -312,10 +321,4 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     public func cancel() {
         stopAnimation()
     }
-}
-
-extension Timer: TimerProtocol {}
-
-internal protocol TimerProtocol: AnyObject {
-    func invalidate()
 }

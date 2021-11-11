@@ -25,7 +25,7 @@ internal final class LocationSource: LocationSourceProtocol {
 
     /// Represents the latest location received from the location provider.
     internal var latestLocation: Location? {
-        latestCLLocation.map {
+        return latestCLLocation.map {
             Location(
                 location: $0,
                 heading: latestHeading,
@@ -92,6 +92,12 @@ internal final class LocationSource: LocationSourceProtocol {
     internal var locationProvider: LocationProvider {
         willSet {
             isUpdating = false
+            // setDelegate doesn't accept nil, so provide
+            // an empty delegate implementation to clear
+            // out the old locationProvider's reference to
+            // self. This helps to ensure that we don't
+            // receive any more callbacks from the old
+            // locationProvider.
             locationProvider.setDelegate(EmptyLocationProviderDelegate())
         }
         didSet {

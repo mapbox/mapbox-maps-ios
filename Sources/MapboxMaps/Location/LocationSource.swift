@@ -121,7 +121,7 @@ internal final class LocationSource: LocationSourceProtocol {
     /// The location manager holds weak references to consumers, client code should retain these references.
     internal func add(_ consumer: LocationConsumer) {
         _consumers.add(consumer)
-        isUpdating = true
+        syncIsUpdating()
     }
 
     /// Removes a location consumer from the location manager.

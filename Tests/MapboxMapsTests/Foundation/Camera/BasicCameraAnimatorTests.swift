@@ -108,7 +108,6 @@ final class BasicCameraAnimatorTests: XCTestCase {
         let randomInterval: TimeInterval = .random(in: 0...10)
         animator.startAnimation(afterDelay: randomInterval)
 
-        XCTAssertEqual(propertyAnimator.state, .active, "The animation should be marked as active (0). Got \(propertyAnimator.state.rawValue)")
         XCTAssertEqual(timerProvider.parameters.count, 1)
         XCTAssertEqual(timerProvider.parameters.first?.interval, randomInterval, "The interval for the first invocation should be \(randomInterval).")
         XCTAssertEqual(timerProvider.parameters.first?.repeats, false)
@@ -122,7 +121,6 @@ final class BasicCameraAnimatorTests: XCTestCase {
 
         self.animator.stopAnimation()
 
-        XCTAssertEqual(propertyAnimator.state, .inactive, "The animation should be marked as inactive (1). Got \(propertyAnimator.state.rawValue)")
         XCTAssertEqual(self.propertyAnimator.stopAnimationStub.invocations.count, 1)
         XCTAssertEqual(self.propertyAnimator.finishAnimationStub.invocations.count, 1)
         XCTAssertEqual(self.propertyAnimator.finishAnimationStub.invocations.first?.parameters, .current)
@@ -143,7 +141,6 @@ final class BasicCameraAnimatorTests: XCTestCase {
 
         let randomInterval: TimeInterval = .random(in: 1...10)
         animator.startAnimation(afterDelay: randomInterval)
-        XCTAssertEqual(propertyAnimator.state, .active, "The propertyAnimator.state should be active (0), got \(propertyAnimator.state.rawValue)")
 
         animator.stopAnimation()
 
@@ -231,7 +228,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
         animator.startAnimation(afterDelay: 1)
         animator.stopAnimation()
         XCTAssertEqual(propertyAnimator.state, .inactive)
-        XCTAssertEqual(animator.state, .inactive, "The animator's state should be inactive(0). Got \(animator.state.rawValue).")
+        XCTAssertEqual(animator.state, .inactive, "The animator's state should be inactive (0). Got \(animator.state.rawValue).")
     }
 
     func testStartAnimationAfterDelayTransitionNil() {
@@ -247,7 +244,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
         animator.pauseAnimation()
-        expectFatalError(expectedMessage: "startAnimation(afterDelay:) cannot be called on paused, completed, or currently running animations.") {
+        expectFatalError(expectedMessage: "startAnimation(afterDelay:) cannot be called on already-delayed, paused, running, or completed animations.") {
             self.animator.startAnimation(afterDelay: 0)
         }
     }

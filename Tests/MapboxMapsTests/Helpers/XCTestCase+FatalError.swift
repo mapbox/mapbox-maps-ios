@@ -14,8 +14,11 @@ extension XCTestCase {
 
         // Override fatalError. Store the fatal error message.
         FatalErrorUtil.replaceFatalError { message, _, _ in
-            assertionMessage = message
-            expectation.fulfill()
+            DispatchQueue.main.async {
+                assertionMessage = message
+                expectation.fulfill()
+            }
+
             // Terminate the current thread after the expectation is fulfilled.
             Thread.exit()
             // Since current thread was terminated this code should never be executed.

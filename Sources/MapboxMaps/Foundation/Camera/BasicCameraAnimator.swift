@@ -123,7 +123,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     /// - Parameter delay: Delay (in seconds) after which the animation should start
     public func startAnimation(afterDelay delay: TimeInterval) {
         if internalState != .initial {
-            fatalError("startAnimation(afterDelay:) cannot be called on already-delayed, paused, running, or completed animator.")
+            fatalError("startAnimation(afterDelay:) cannot be called on already-delayed, paused, running, or completed animators.")
         }
 
         internalState = .running(makeTransition())

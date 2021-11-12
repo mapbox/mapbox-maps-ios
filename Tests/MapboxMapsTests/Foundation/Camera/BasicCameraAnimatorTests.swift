@@ -226,7 +226,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
         animator.pauseAnimation()
-        expectFatalError(expectedMessage: "startAnimation(afterDelay:) cannot be called on already-delayed, paused, running, or completed animations.") {
+        expectFatalError(expectedMessage: "startAnimation(afterDelay:) cannot be called on already-delayed, paused, running, or completed animators.") {
             self.animator.startAnimation(afterDelay: 0)
         }
     }

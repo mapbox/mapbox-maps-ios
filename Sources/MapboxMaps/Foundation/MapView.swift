@@ -27,11 +27,12 @@ open class MapView: UIView {
     /// The `ornaments`object will be responsible for all ornaments on the map.
     public internal(set) var ornaments: OrnamentsManager!
 
-    /// The `camera` object manages a camera's view lifecycle..
+    /// The `camera` object manages a camera's view lifecycle.
     public internal(set) var camera: CameraAnimationsManager!
 
     /// The `location`object handles location events of the map.
     public internal(set) var location: LocationManager!
+    private var locationProducer: LocationProducerProtocol!
 
     /// Controls the addition/removal of annotations to the map.
     public internal(set) var annotations: AnnotationOrchestrator!
@@ -282,8 +283,12 @@ open class MapView: UIView {
             cameraAnimationsManager: camera,
             infoButtonOrnamentDelegate: attributionDialogManager)
 
-        // Initialize/Configure location manager
-        location = LocationManager(style: mapboxMap.style)
+        // Initialize/Configure location source and location manager
+        locationProducer = dependencyProvider.makeLocationProducer(
+            mayRequestWhenInUseAuthorization: Bundle.main.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil)
+        location = dependencyProvider.makeLocationManager(
+            locationProducer: locationProducer,
+            style: mapboxMap.style)
 
         // Initialize/Configure annotations orchestrator
         annotations = AnnotationOrchestrator(
@@ -353,6 +358,8 @@ open class MapView: UIView {
         if window == nil {
             return
         }
+
+        updateHeadingOrientationIfNeeded()
 
         for participant in displayLinkParticipants.allObjects {
             participant.participate()
@@ -424,6 +431,54 @@ open class MapView: UIView {
         guard let validResourceOptions = resourceOptions else { return }
         eventsListener = EventsManager(accessToken: validResourceOptions.accessToken)
         eventsListener?.push(event: .map(event: .loaded))
+    }
+
+    // MARK: Location
+
+    private func updateHeadingOrientationIfNeeded() {
+        // locationProvider.headingOrientation should be adjusted based on the
+        // current UIInterfaceOrientation of the containing window, not the
+        // device orientation
+        let optionalInterfaceOrientation: UIInterfaceOrientation?
+        if #available(iOS 13.0, *) {
+            optionalInterfaceOrientation = window?.windowScene?.interfaceOrientation
+        } else {
+            optionalInterfaceOrientation =  UIApplication.shared.statusBarOrientation
+        }
+
+        guard let interfaceOrientation = optionalInterfaceOrientation else {
+            return
+        }
+
+        // UIInterfaceOrientation.landscape{Right,Left} correspond to
+        // CLDeviceOrientation.landscape{Left,Right}, respectively. The reason
+        // for this, according to the UIInterfaceOrientation docs is that
+        //
+        //    > …rotating the device requires rotating the content in the
+        //    > opposite direction.
+        var headingOrientation: CLDeviceOrientation
+        switch interfaceOrientation {
+        case .landscapeLeft:
+            headingOrientation = .landscapeRight
+        case .landscapeRight:
+            headingOrientation = .landscapeLeft
+        case .portraitUpsideDown:
+            headingOrientation = .portraitUpsideDown
+        default:
+            headingOrientation = .portrait
+        }
+
+        // We check for heading changes during the display link, but setting it
+        // causes a heading update, so we only set it when it changes to avoid
+        // unnecessary work.
+        //
+        // It would be more efficient to update this value by observing
+        // interface orientation changes, but you need a view controller to do
+        // that (via `willTransition(to:with:)`), which is something we don't
+        // have, so we poll instead.
+        if locationProducer.headingOrientation != headingOrientation {
+            locationProducer.headingOrientation = headingOrientation
+        }
     }
 }
 

@@ -31,3 +31,12 @@ public protocol LocationProviderDelegate: AnyObject {
     ///   - manager: The location manager that is reporting the change
     func locationProviderDidChangeAuthorization(_ provider: LocationProvider)
 }
+
+/// This implementation of LocationProviderDelegate is used by `LocationManager` to work around
+/// the fact that the `LocationProvider` API does not allow the delegate to be set to `nil`.
+internal class EmptyLocationProviderDelegate: LocationProviderDelegate {
+    func locationProvider(_ provider: LocationProvider, didFailWithError error: Error) {}
+    func locationProvider(_ provider: LocationProvider, didUpdateHeading newHeading: CLHeading) {}
+    func locationProvider(_ provider: LocationProvider, didUpdateLocations locations: [CLLocation]) {}
+    func locationProviderDidChangeAuthorization(_ provider: LocationProvider) {}
+}

@@ -40,6 +40,7 @@ workflows:
               report_failure: [true]
       - run-tests-on-devices:
           name: "Run MapboxTestHost tests on devices"
+          xcode: "13.0.0"
           device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
           device-pool: $(DEVICE_FARM_5_DEVICE_POOL)
           scheme: "MapboxTestHost"
@@ -93,7 +94,7 @@ workflows:
       # Not on main
       - run-tests-on-devices:
           name: "Run MapboxTestHost tests on devices"
-          xcode: "12.5.0"
+          xcode: "13.0.0"
           device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
           device-pool: $(DEVICE_FARM_1_PHONE_POOL)
           scheme: "MapboxTestHost"
@@ -114,7 +115,7 @@ workflows:
       # On main
       - run-tests-on-devices:
           name: "Run MapboxTestHost tests on devices (main)"
-          xcode: "12.5.0"
+          xcode: "13.0.0"
           device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
           device-pool: $(DEVICE_FARM_5_DEVICE_POOL)
           scheme: "MapboxTestHost"

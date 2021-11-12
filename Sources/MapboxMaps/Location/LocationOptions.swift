@@ -26,5 +26,13 @@ public struct LocationOptions: Equatable {
     public var puckBearingSource: PuckBearingSource = .heading
 
     public init() {}
+}
 
+/// Controls how the puck is oriented
+public enum PuckBearingSource: Equatable {
+    /// The puck should set its bearing using `heading: CLHeading`
+    case heading
+
+    /// The puck should set its bearing using `course: CLLocationDirection`
+    case course
 }

@@ -4,6 +4,8 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
     func makeGestureManager(view: UIView,
                             mapboxMap: MapboxMapProtocol,
                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager
+    func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool) -> LocationProducerProtocol
+    func makeLocationManager(locationProducer: LocationProducerProtocol, style: StyleProtocol) -> LocationManager
 }
 
 internal final class MapViewDependencyProvider: MapViewDependencyProviderProtocol {
@@ -126,5 +128,32 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: cameraAnimationsManager),
             mapboxMap: mapboxMap)
+    }
+
+    func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool) -> LocationProducerProtocol {
+        let locationProvider = AppleLocationProvider()
+        return LocationProducer(
+            locationProvider: locationProvider,
+            mayRequestWhenInUseAuthorization: mayRequestWhenInUseAuthorization)
+    }
+
+    func makeLocationManager(locationProducer: LocationProducerProtocol, style: StyleProtocol) -> LocationManager {
+        let puckManager = PuckManager(
+            puck2DProvider: { configuration in
+                Puck2D(
+                    configuration: configuration,
+                    style: style,
+                    locationProducer: locationProducer)
+            },
+            puck3DProvider: { configuration in
+                Puck3D(
+                    configuration: configuration,
+                    style: style,
+                    locationProducer: locationProducer)
+            })
+
+        return LocationManager(
+            locationProducer: locationProducer,
+            puckManager: puckManager)
     }
 }

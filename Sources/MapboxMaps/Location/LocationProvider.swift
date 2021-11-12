@@ -18,10 +18,12 @@ public protocol LocationProvider {
     var heading: CLHeading? { get }
 
     /**
-     Sets the delegate for `LocationProvider`
+     Sets the delegate for `LocationProvider`. The implementation should hold a weak reference to the
+     provided delegate to avoid creating a strong reference cycle with `LocationManager`.
 
-     - Note: Calling this will override the delegate in `AppleLocationProvider` and is highly discouraged
-             Instead implement a LocationConsumer
+     - Note: This method should only be called by `LocationManager`. To allow other objects to
+             participate in location updates, add a `LocationConsumer` to the `LocationManager`
+             instead.
      */
     func setDelegate(_ delegate: LocationProviderDelegate)
 
@@ -32,7 +34,7 @@ public protocol LocationProvider {
     /// the foreground.
     func requestWhenInUseAuthorization()
 
-    /// Requests temporary permission for precise accuracy
+    /// Requests temporary permission for full accuracy
     @available(iOS 14.0, *)
     func requestTemporaryFullAccuracyAuthorization(withPurposeKey purposeKey: String)
 

@@ -2,11 +2,11 @@ import UIKit
 import MapboxMaps
 
 @objc(Custom3DPuckExample)
-public class Custom3DPuckExample: UIViewController, ExampleProtocol {
+final class Custom3DPuckExample: UIViewController, ExampleProtocol, LocationConsumer {
 
-    internal var mapView: MapView!
+    private var mapView: MapView!
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         mapView = MapView(frame: view.bounds)
@@ -18,22 +18,20 @@ public class Custom3DPuckExample: UIViewController, ExampleProtocol {
         }
     }
 
-    override public func viewDidAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
          // The below line is used for internal testing purposes only.
         finish()
     }
 
-    internal func setupExample() {
+    private func setupExample() {
 
         // Fetch the `gltf` asset
         let uri = Bundle.main.url(forResource: "sportcar",
                                   withExtension: "glb")
 
         // Instantiate the model
-        let myModel = Model(uri: uri,
-                            position: [-77.150925, 39.085006],
-                            orientation: [0, 0, 180])
+        let myModel = Model(uri: uri, orientation: [0, 0, 180])
 
         // Setting an expression to  scale the model based on camera zoom
         let scalingExpression = Exp(.interpolate) {
@@ -67,10 +65,20 @@ public class Custom3DPuckExample: UIViewController, ExampleProtocol {
 
         let configuration = Puck3DConfiguration(model: myModel, modelScale: .expression(scalingExpression))
         mapView.location.options.puckType = .puck3D(configuration)
+        mapView.location.options.puckBearingSource = .course
 
-        let coordinate = CLLocationCoordinate2D(latitude: 39.085006, longitude: -77.150925)
-        mapView.mapboxMap.setCamera(to: CameraOptions(center: coordinate,
-                                                          zoom: 14,
-                                                          pitch: 80))
+        mapView.location.addLocationConsumer(newConsumer: self)
+    }
+
+    internal func locationUpdate(newLocation: Location) {
+        mapView.camera.ease(
+            to: CameraOptions(
+                center: newLocation.coordinate,
+                zoom: 15,
+                bearing: 0,
+                pitch: 55),
+            duration: 1,
+            curve: .linear,
+            completion: nil)
     }
 }

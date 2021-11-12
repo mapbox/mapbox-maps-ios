@@ -1,9 +1,31 @@
+// swiftlint:disable file_length
 @_implementationOnly import MapboxCommon_Private
 @_implementationOnly import MapboxCoreMaps_Private
 
-// swiftlint:disable file_length
+internal protocol StyleProtocol: AnyObject {
+    func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition?) throws
+    func addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws
+    func removeLayer(withId id: String) throws
+    func layerExists(withId id: String) -> Bool
+    func setLayerProperties(for layerId: String, properties: [String: Any]) throws
+
+    func addSource(_ source: Source, id: String) throws
+    func removeSource(withId id: String) throws
+    func sourceExists(withId id: String) -> Bool
+    func setSourceProperties(for sourceId: String, properties: [String: Any]) throws
+
+    //swiftlint:disable function_parameter_count
+    func addImage(_ image: UIImage,
+                  id: String,
+                  sdf: Bool,
+                  stretchX: [ImageStretches],
+                  stretchY: [ImageStretches],
+                  content: ImageContent?) throws
+    func removeImage(withId id: String) throws
+}
+
 // swiftlint:disable:next type_body_length
-public class Style {
+public final class Style: StyleProtocol {
 
     public private(set) weak var styleManager: StyleManager!
 
@@ -38,7 +60,7 @@ public class Style {
     ///   - layerPosition: Position at which to add the map.
     ///
     /// - Throws: StyleError or type conversion errors
-    internal func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
+    @_spi(Experimental) public func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
         // Attempt to encode the provided layer into JSON and apply it to the map
         let layerJSON = try layer.jsonObject()
         try addPersistentLayer(with: layerJSON, layerPosition: layerPosition)

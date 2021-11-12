@@ -152,6 +152,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         }
 
         let transition = self.makeTransition()
+        
         delayedAnimationTimer = timerProvider(delay, false) { [weak self] (_) in
             if let self = self {
                 self.internalState = .running(transition)
@@ -167,12 +168,9 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         case .initial:
             internalState = .paused(makeTransition())
             propertyAnimator.pauseAnimation()
-        case let .delayed(transition):
+        case let .delayed(transition), let .running(transition):
             internalState = .paused(transition)
             delayedAnimationTimer?.invalidate()
-            propertyAnimator.pauseAnimation()
-        case let .running(transition):
-            internalState = .paused(transition)
             propertyAnimator.pauseAnimation()
         case .paused:
             // already paused; do nothing

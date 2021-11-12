@@ -66,6 +66,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
                 // * oldValue and internalState are the same
                 // * initial transitions to paused
                 // * paused transitions to final
+                // * delayed transitions to running
                 // * the transition is invalid…
                 //     * initial --> final
                 //     * delayed/running/paused/final --> initial

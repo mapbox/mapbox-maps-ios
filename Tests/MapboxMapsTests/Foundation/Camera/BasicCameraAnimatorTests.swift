@@ -434,7 +434,7 @@ extension XCTestCase {
         // Start the test case block on a separate thread. This allows us to
         // to terminate this thread after the expectation has been fulfilled.
         Thread(block: testcase).start()
-        
+
         waitForExpectations(timeout: 0.1) { _ in
             XCTAssertEqual(expectedMessage, assertionMessage, "The expected message was \(expectedMessage). Got \(assertionMessage).")
 

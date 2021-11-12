@@ -63,7 +63,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     }
 
     /// Boolean that represents if the animation is running or not.
-    public var isRunning: Bool { return propertyAnimator.isRunning }
+    public var isRunning: Bool { propertyAnimator.isRunning }
 
     /// Boolean that represents if the animation is running normally or in reverse.
     public var isReversed: Bool {

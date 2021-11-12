@@ -246,7 +246,9 @@ final class BasicCameraAnimatorTests: XCTestCase {
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
         animator.pauseAnimation()
-        XCTAssertThrowsError(animator.startAnimation(afterDelay: 0), file: "BasicCameraAnimator", line: 149)
+        expectFatalError(expectedMessage: "startAnimation(afterDelay:) cannot be called on paused, completed, or currently running animations.") {
+            self.animator.startAnimation(afterDelay: 0)
+        }
     }
 
     func testStartandPauseAnimationAfterDelayTransitionNotNil() {
@@ -405,5 +407,39 @@ final class MockTimer: TimerProtocol {
 extension Stub where ParametersType == TimerProviderParams, ReturnType == TimerProtocol {
     func stubTimerProvider(_ interval: TimeInterval, _ repeats: Bool, _ block: @escaping (TimerProtocol) -> Void) -> TimerProtocol {
         call(with: TimerProviderParams(interval: interval, repeats: repeats, block: block))
+    }
+}
+
+// From https://stackoverflow.com/a/68496755
+extension XCTestCase {
+    /// Pass in the code that is expected to result in a fatal error.
+    /// - Parameter expectedMessage: The error message from the original fatal error.
+    /// - Parameter testCase: The code that should result in a fatal error,
+    func expectFatalError(expectedMessage: String, testcase: @escaping () -> Void) {
+
+        // Setup an expectation and nil string to store the assertion message.
+        let expectation = self.expectation(description: "expectingFatalError")
+        var assertionMessage: String? = nil
+
+        // Override fatalError. Store the fatal error message.
+        FatalErrorUtil.replaceFatalError { message, _, _ in
+            assertionMessage = message
+            expectation.fulfill()
+            // Terminate the current thread after the expectation is fulfilled.
+            Thread.exit()
+            // Since current thread was terminated this code should never be executed.
+            fatalError("This should not be executed.")
+        }
+
+        // Start the test case block on a separate thread. This allows us to
+        // to terminate this thread after the expectation has been fulfilled.
+        Thread(block: testcase).start()
+        
+        waitForExpectations(timeout: 0.1) { _ in
+            XCTAssertEqual(expectedMessage, assertionMessage, "The expected message was \(expectedMessage). Got \(assertionMessage).")
+
+            // Switch back to using the Swift global `fatalError`
+            FatalErrorUtil.restoreFatalError()
+        }
     }
 }

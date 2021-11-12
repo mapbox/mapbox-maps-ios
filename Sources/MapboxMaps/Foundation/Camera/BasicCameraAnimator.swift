@@ -38,9 +38,6 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         }
     }
 
-    /// A timer used to delay the start of an animation
-    private var delayedAnimationTimer: Timer?
-
     /// The state from of the animator.
     public var state: UIViewAnimatingState { propertyAnimator.state }
 
@@ -102,7 +99,6 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     deinit {
         propertyAnimator.stopAnimation(true)
         cameraView.removeFromSuperview()
-        delayedAnimationTimer?.invalidate()
     }
 
     /// Starts the animation if this animator is in `inactive` state. Also used to resume a "paused" animation.
@@ -122,12 +118,16 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         }
     }
 
-    /// Starts the animation after a delay. Once this method is called, there's no way to cancel the animation until it starts.
+    /// Starts the animation after a delay. This cannot be called on a paused animation.
+    /// If animations are cancelled before the end of the delay, it will also be cancelled.
     /// - Parameter delay: Delay (in seconds) after which the animation should start
     public func startAnimation(afterDelay delay: TimeInterval) {
-        delayedAnimationTimer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { _ in
-            self.startAnimation()
+        if internalState != .initial {
+            fatalError("startAnimation(afterDelay:) cannot be called on already-delayed, paused, running, or completed animators.")
         }
+
+        internalState = .running(makeTransition())
+        propertyAnimator.startAnimation(afterDelay: delay)
     }
 
     /// Pauses the animation.

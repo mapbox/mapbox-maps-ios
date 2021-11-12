@@ -23,8 +23,7 @@ final class BasicCameraAnimatorIntegrationTests: XCTestCase {
             owner: .unspecified,
             mapboxMap: mapboxMap,
             cameraView: cameraView,
-            delegate: delegate,
-            timerProvider: Timer.scheduledTimer(withTimeInterval:repeats:block:))
+            delegate: delegate)
         animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
             transition.center.toValue = cameraOptionsTestValue.center!

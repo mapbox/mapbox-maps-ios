@@ -30,7 +30,6 @@ final class BasicCameraAnimatorTests: XCTestCase {
     var mapboxMap: MockMapboxMap!
     // swiftlint:disable:next weak_delegate
     var delegate: MockCameraAnimatorDelegate!
-    var timerProvider: MockTimerProvider!
     var animator: BasicCameraAnimator!
 
     override func setUp() {
@@ -39,19 +38,16 @@ final class BasicCameraAnimatorTests: XCTestCase {
         cameraView = CameraViewMock()
         mapboxMap = MockMapboxMap()
         delegate = MockCameraAnimatorDelegate()
-        timerProvider = MockTimerProvider(defaultReturnValue: MockTimer())
         animator = BasicCameraAnimator(
             propertyAnimator: propertyAnimator,
             owner: .unspecified,
             mapboxMap: mapboxMap,
             cameraView: cameraView,
-            delegate: delegate,
-            timerProvider: timerProvider.provide(_:_:_:))
+            delegate: delegate)
     }
 
     override func tearDown() {
         animator = nil
-        timerProvider = nil
         delegate = nil
         mapboxMap = nil
         cameraView = nil
@@ -103,17 +99,8 @@ final class BasicCameraAnimatorTests: XCTestCase {
         animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
-        XCTAssertTrue(timerProvider.invocations.count == 0)
-
         let randomInterval: TimeInterval = .random(in: 0...10)
         animator.startAnimation(afterDelay: randomInterval)
-
-        XCTAssertEqual(timerProvider.parameters.count, 1)
-        XCTAssertEqual(timerProvider.parameters.first?.interval, randomInterval, "The interval for the first invocation should be \(randomInterval).")
-        XCTAssertEqual(timerProvider.parameters.first?.repeats, false)
-
-        let timer = try XCTUnwrap(timerProvider.returnedValues.first as? MockTimer)
-        timerProvider.parameters.first?.block(timer)
 
         XCTAssertEqual(self.propertyAnimator.startAnimationStub.invocations.count, 1)
         XCTAssertEqual(self.propertyAnimator.addAnimationsStub.invocations.count, 1)
@@ -130,7 +117,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
         animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
-        XCTAssertTrue(timerProvider.invocations.count == 0)
+
 
         let expectation = XCTestExpectation(description: "The completion for the animator should be called when the animation is stopped.")
 
@@ -151,17 +138,13 @@ final class BasicCameraAnimatorTests: XCTestCase {
         animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
-        XCTAssertTrue(timerProvider.invocations.count == 0)
 
         animator.startAnimation(afterDelay: 1)
-
-        let timer = try XCTUnwrap(timerProvider.returnedValues.first as? MockTimer)
 
         animator.pauseAnimation()
 
         XCTAssertEqual(propertyAnimator.pauseAnimationStub.invocations.count, 1)
         XCTAssertEqual(propertyAnimator.stopAnimationStub.invocations.count, 0)
-        XCTAssertEqual(timer.invalidateStub.invocations.count, 1)
     }
 
     func testStartAnimationAfterDelayIsRunning() {
@@ -231,12 +214,12 @@ final class BasicCameraAnimatorTests: XCTestCase {
         XCTAssertEqual(animator.state, .inactive, "The animator's state should be inactive (0). Got \(animator.state.rawValue).")
     }
 
-    func testStartAnimationAfterDelayTransitionNil() {
+    func testStartAnimationAfterDelayTransitionNotNil() {
         animator.addAnimations { (transition) in
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
         animator.startAnimation(afterDelay: 1)
-        XCTAssertNil(animator.transition, "The transition should be nil while the animation is delayed. Got \(animator.transition.debugDescription)")
+        XCTAssertNotNil(animator.transition, "The transition should not be nil while the animation is delayed. Got \(animator.transition.debugDescription)")
     }
 
     func testPauseAndStartAnimationAfterDelayError() throws {

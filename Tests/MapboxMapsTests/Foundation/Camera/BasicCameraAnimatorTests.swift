@@ -118,7 +118,6 @@ final class BasicCameraAnimatorTests: XCTestCase {
             transition.zoom.toValue = cameraStateTestValue.zoom
         }
 
-
         let expectation = XCTestExpectation(description: "The completion for the animator should be called when the animation is stopped.")
 
         let completion: AnimationCompletion = { _ in

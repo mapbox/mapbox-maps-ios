@@ -10,7 +10,7 @@ extension XCTestCase {
 
         // Setup an expectation and nil string to store the assertion message.
         let expectation = self.expectation(description: "expectingFatalError")
-        var assertionMessage: String? = nil
+        var assertionMessage: String?
 
         // Override fatalError. Store the fatal error message.
         FatalErrorUtil.replaceFatalError { message, _, _ in

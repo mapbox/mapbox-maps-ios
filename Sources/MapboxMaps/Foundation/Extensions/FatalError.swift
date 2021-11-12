@@ -9,20 +9,20 @@ internal func fatalError(_ message: @autoclosure () -> String = String(), file: 
 
 /// Utility functions that can replace and restore the `fatalError` global function.
 internal enum FatalErrorUtil {
-    typealias FatalErrorClosureType = (String, StaticString, UInt) -> Never
+    internal typealias FatalErrorClosureType = (String, StaticString, UInt) -> Never
     /// Called by the custom implementation of `fatalError`.
-    static var fatalErrorClosure: FatalErrorClosureType = defaultFatalErrorClosure
+    fileprivate static var fatalErrorClosure: FatalErrorClosureType = defaultFatalErrorClosure
 
     /// Store the original Swift `fatalError`
     private static let defaultFatalErrorClosure: FatalErrorClosureType = { Swift.fatalError($0, file: $1, line: $2) }
 
     /// Replace the Swift `fatalError` global function with a closure.
-    static func replaceFatalError(closure: @escaping FatalErrorClosureType) {
+    internal static func replaceFatalError(closure: @escaping FatalErrorClosureType) {
         fatalErrorClosure = closure
     }
 
     /// Restore the `fatalError` global function back to the original Swift implementation
-    static func restoreFatalError() {
+    internal static func restoreFatalError() {
         fatalErrorClosure = defaultFatalErrorClosure
     }
 }

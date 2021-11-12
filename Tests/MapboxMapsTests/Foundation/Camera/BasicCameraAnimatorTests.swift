@@ -30,7 +30,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
     var mapboxMap: MockMapboxMap!
     // swiftlint:disable:next weak_delegate
     var delegate: MockCameraAnimatorDelegate!
-    var timerProvider: Stub<TimerProviderParams, TimerProtocol>!
+    var timerProvider: MockTimerProvider!
     var animator: BasicCameraAnimator!
 
     override func setUp() {
@@ -39,18 +39,19 @@ final class BasicCameraAnimatorTests: XCTestCase {
         cameraView = CameraViewMock()
         mapboxMap = MockMapboxMap()
         delegate = MockCameraAnimatorDelegate()
-        timerProvider = Stub(defaultReturnValue: MockTimer())
+        timerProvider = MockTimerProvider(defaultReturnValue: MockTimer())
         animator = BasicCameraAnimator(
             propertyAnimator: propertyAnimator,
             owner: .unspecified,
             mapboxMap: mapboxMap,
             cameraView: cameraView,
             delegate: delegate,
-            timerProvider: timerProvider.stubTimerProvider(_:_:_:))
+            timerProvider: timerProvider.provide(_:_:_:))
     }
 
     override func tearDown() {
         animator = nil
+        timerProvider = nil
         delegate = nil
         mapboxMap = nil
         cameraView = nil
@@ -107,7 +108,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
         let randomInterval: TimeInterval = .random(in: 0...10)
         animator.startAnimation(afterDelay: randomInterval)
 
-        XCTAssertEqual(animator.internalState, .delayed, "The animation should be marked as delayed. Got \(animator.internalState)")
+        XCTAssertEqual(propertyAnimator.state, .active, "The animation should be marked as active (0). Got \(propertyAnimator.state.rawValue)")
         XCTAssertEqual(timerProvider.parameters.count, 1)
         XCTAssertEqual(timerProvider.parameters.first?.interval, randomInterval, "The interval for the first invocation should be \(randomInterval).")
         XCTAssertEqual(timerProvider.parameters.first?.repeats, false)
@@ -121,7 +122,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
 
         self.animator.stopAnimation()
 
-        XCTAssertEqual(animator.internalState, .final, "The animation should be marked as final. Got \(animator.internalState)")
+        XCTAssertEqual(propertyAnimator.state, .inactive, "The animation should be marked as inactive (1). Got \(propertyAnimator.state.rawValue)")
         XCTAssertEqual(self.propertyAnimator.stopAnimationStub.invocations.count, 1)
         XCTAssertEqual(self.propertyAnimator.finishAnimationStub.invocations.count, 1)
         XCTAssertEqual(self.propertyAnimator.finishAnimationStub.invocations.first?.parameters, .current)
@@ -142,7 +143,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
 
         let randomInterval: TimeInterval = .random(in: 1...10)
         animator.startAnimation(afterDelay: randomInterval)
-        XCTAssertEqual(animator.internalState, .delayed)
+        XCTAssertEqual(propertyAnimator.state, .active, "The propertyAnimator.state should be active (0), got \(propertyAnimator.state.rawValue)")
 
         animator.stopAnimation()
 
@@ -220,7 +221,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
         animator.startAnimation(afterDelay: 1)
         animator.pauseAnimation()
         XCTAssertEqual(propertyAnimator.state, .active)
-        XCTAssertEqual(animator.state, .active, "The animator's state should be active (1). Got \(animator.state.NSNumber).")
+        XCTAssertEqual(animator.state, .active, "The animator's state should be active (1). Got \(animator.state.rawValue).")
     }
 
     func testStartAndStopAnimationAfterDelayStateInactive() {
@@ -230,7 +231,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
         animator.startAnimation(afterDelay: 1)
         animator.stopAnimation()
         XCTAssertEqual(propertyAnimator.state, .inactive)
-        XCTAssertEqual(animator.state, .inactive, "The animator's state should be inactive(0). Got \(animator.state.NSNumber).")
+        XCTAssertEqual(animator.state, .inactive, "The animator's state should be inactive(0). Got \(animator.state.rawValue).")
     }
 
     func testStartAnimationAfterDelayTransitionNil() {
@@ -388,58 +389,5 @@ final class BasicCameraAnimatorTests: XCTestCase {
 
         XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
         XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === animator)
-    }
-}
-
-struct TimerProviderParams {
-    var interval: TimeInterval
-    var repeats: Bool
-    var block: (TimerProtocol) -> Void
-}
-
-final class MockTimer: TimerProtocol {
-    let invalidateStub = Stub<Void, Void>()
-    func invalidate() {
-        invalidateStub.call()
-    }
-}
-
-extension Stub where ParametersType == TimerProviderParams, ReturnType == TimerProtocol {
-    func stubTimerProvider(_ interval: TimeInterval, _ repeats: Bool, _ block: @escaping (TimerProtocol) -> Void) -> TimerProtocol {
-        call(with: TimerProviderParams(interval: interval, repeats: repeats, block: block))
-    }
-}
-
-// From https://stackoverflow.com/a/68496755
-extension XCTestCase {
-    /// Pass in the code that is expected to result in a fatal error.
-    /// - Parameter expectedMessage: The error message from the original fatal error.
-    /// - Parameter testCase: The code that should result in a fatal error,
-    func expectFatalError(expectedMessage: String, testcase: @escaping () -> Void) {
-
-        // Setup an expectation and nil string to store the assertion message.
-        let expectation = self.expectation(description: "expectingFatalError")
-        var assertionMessage: String? = nil
-
-        // Override fatalError. Store the fatal error message.
-        FatalErrorUtil.replaceFatalError { message, _, _ in
-            assertionMessage = message
-            expectation.fulfill()
-            // Terminate the current thread after the expectation is fulfilled.
-            Thread.exit()
-            // Since current thread was terminated this code should never be executed.
-            fatalError("This should not be executed.")
-        }
-
-        // Start the test case block on a separate thread. This allows us to
-        // to terminate this thread after the expectation has been fulfilled.
-        Thread(block: testcase).start()
-
-        waitForExpectations(timeout: 0.1) { _ in
-            XCTAssertEqual(expectedMessage, assertionMessage, "The expected message was \(expectedMessage). Got \(assertionMessage).")
-
-            // Switch back to using the Swift global `fatalError`
-            FatalErrorUtil.restoreFatalError()
-        }
     }
 }

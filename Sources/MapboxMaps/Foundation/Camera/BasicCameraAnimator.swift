@@ -3,7 +3,7 @@ import CoreLocation
 
 // MARK: CameraAnimator Class
 public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterface {
-    internal enum InternalState: Equatable {
+    private enum InternalState: Equatable {
         case initial
         case delayed
         case running(CameraTransition)
@@ -54,7 +54,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         }
     }
 
-    internal var internalState = InternalState.initial {
+    private var internalState = InternalState.initial {
         didSet {
             switch (oldValue, internalState) {
             case (.initial, .running), (.paused, .running), (.initial, .delayed):

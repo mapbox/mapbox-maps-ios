@@ -68,7 +68,8 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
                 // * paused transitions to final
                 // * the transition is invalid…
                 //     * initial --> final
-                //     * running/paused/final --> initial/delayed
+                //     * delayed/running/paused/final --> initial
+                //     * running/paused/final --> delayed
                 //     * final --> running/paused
                 break
             }

@@ -5,7 +5,7 @@ import CoreLocation
 public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterface {
     private enum InternalState: Equatable {
         case initial
-        case delayed
+        case delayed(CameraTransition)
         case running(CameraTransition)
         case paused(CameraTransition)
         case final
@@ -32,9 +32,9 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     /// Defines the transition that will occur to the `CameraOptions` of the renderer due to this animator
     public var transition: CameraTransition? {
         switch internalState {
-        case let .running(transition), let .paused(transition):
+        case let .delayed(transition), let .running(transition), let .paused(transition):
             return transition
-        case .delayed, .initial, .final:
+        case .initial, .final:
             return nil
         }
     }
@@ -151,22 +151,26 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
             fatalError("startAnimation(afterDelay:) cannot be called on already-delayed, paused, running, or completed animations.")
         }
 
+        let transition = self.makeTransition()
         delayedAnimationTimer = timerProvider(delay, false) { [weak self] (_) in
             if let self = self {
-                self.internalState = .running(self.makeTransition())
+                self.internalState = .running(transition)
                 self.propertyAnimator.startAnimation()
             }
         }
-        internalState = .delayed
+        internalState = .delayed(transition)
     }
 
     /// Pauses the animation.
     public func pauseAnimation() {
         switch internalState {
-        case .initial, .delayed:
+        case .initial:
             internalState = .paused(makeTransition())
             propertyAnimator.pauseAnimation()
+        case let .delayed(transition):
+            internalState = .paused(transition)
             delayedAnimationTimer?.invalidate()
+            propertyAnimator.pauseAnimation()
         case let .running(transition):
             internalState = .paused(transition)
             propertyAnimator.pauseAnimation()
@@ -183,20 +187,11 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
         switch internalState {
         case .initial:
             fatalError("Attempt to stop an animation that has not started.")
-        case .running, .paused:
+        case .running, .paused, .delayed:
             propertyAnimator.stopAnimation(false)
             // this invokes the completion block which updates internalState
             propertyAnimator.finishAnimation(at: .current)
-        case .delayed:
             delayedAnimationTimer?.invalidate()
-            propertyAnimator.stopAnimation(false)
-            self.internalState = .final
-
-            // Separately handle calling the completion for delayed animations.
-            for completion in self.completions {
-                completion(.current)
-            }
-            self.completions.removeAll()
         case .final:
             // Already stopped, so do nothing
             break
@@ -283,7 +278,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     }
 
     private func makeTransition() -> CameraTransition {
-        precondition(internalState == .initial || internalState == .delayed, "createTransition must only be called when BasicCameraAnimator is in its initial or delayed state.")
+        precondition(internalState == .initial, "createTransition must only be called when BasicCameraAnimator is in its initial state.")
 
         guard let animation = animation else {
             fatalError("Animation cannot be nil when starting an animation")

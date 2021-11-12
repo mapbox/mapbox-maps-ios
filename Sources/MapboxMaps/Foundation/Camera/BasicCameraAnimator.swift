@@ -119,7 +119,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     }
 
     /// Starts the animation after a delay. This cannot be called on a paused animation.
-    /// If animations are cancelled before this animation has begun, it will also be cancelled.
+    /// If animations are cancelled before the end of the delay, it will also be cancelled.
     /// - Parameter delay: Delay (in seconds) after which the animation should start
     public func startAnimation(afterDelay delay: TimeInterval) {
         if internalState != .initial {

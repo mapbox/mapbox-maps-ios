@@ -39,7 +39,7 @@ public class BasicCameraAnimator: NSObject, CameraAnimator, CameraAnimatorInterf
     }
 
     /// The state from of the animator.
-    public var state: UIViewAnimatingState { return propertyAnimator.state }
+    public var state: UIViewAnimatingState { propertyAnimator.state }
 
     private var internalState = InternalState.initial {
         didSet {

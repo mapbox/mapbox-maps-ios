@@ -39,6 +39,7 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
         gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     @objc private func handleGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {
         guard let view = gestureRecognizer.view else {
             return

@@ -76,7 +76,7 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
             guard let lastChangedDate = lastChangedDate,
                   dateProvider.now.timeIntervalSince(lastChangedDate) < decelerationTimeout else {
                       previousTouchLocation = nil
-                      lastChangedDate = nil
+                      self.lastChangedDate = nil
                       mapboxMap.dragEnd()
                       delegate?.gestureEnded(for: .pan, willAnimate: false)
                       return

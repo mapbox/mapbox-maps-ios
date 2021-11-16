@@ -27,8 +27,10 @@ public protocol AnnotationManager: AnyObject {
 
 internal protocol AnnotationManagerInternal: AnnotationManager {
     var delegate: AnnotationInteractionDelegate? { get }
+
     func destroy()
-    ///
+
+    /// Passes an array of feature IDs to the `AnnotationInteractionDelegate.annotationManager(_:didDetectTappedAnnotations:)` delegate method.
     func handleQueriedFeatureIds(_ queriedFeatureIds: [String])
 }
 
@@ -53,8 +55,6 @@ public class AnnotationOrchestrator {
     private let mapFeatureQueryable: MapFeatureQueryable
 
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
-
-//    internal weak var delegate: AnnotationInteractionDelegate?
 
     internal init(gestureRecognizer: UIGestureRecognizer,
                   mapFeatureQueryable: MapFeatureQueryable,

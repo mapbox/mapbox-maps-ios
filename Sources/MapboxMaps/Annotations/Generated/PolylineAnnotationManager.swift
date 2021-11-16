@@ -54,13 +54,10 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
-    private let gestureRecognizer: UIGestureRecognizer
-
     private var isDestroyed = false
 
     internal init(id: String,
                   style: Style,
-                  gestureRecognizer: UIGestureRecognizer,
                   mapFeatureQueryable: MapFeatureQueryable,
                   layerPosition: LayerPosition?,
                   displayLinkCoordinator: DisplayLinkCoordinator) {
@@ -68,12 +65,8 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         self.sourceId = id
         self.layerId = id
         self.style = style
-        self.gestureRecognizer = gestureRecognizer
         self.mapFeatureQueryable = mapFeatureQueryable
         self.displayLinkCoordinator = displayLinkCoordinator
-
-        // Add target-action for tap handling
-        gestureRecognizer.addTarget(self, action: #selector(handleTap(_:)))
 
         do {
             // Add the source with empty `data` property
@@ -101,7 +94,7 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
             return
         }
         isDestroyed = true
-        gestureRecognizer.removeTarget(self, action: nil)
+
         do {
             try style.removeLayer(withId: layerId)
         } catch {
@@ -238,43 +231,15 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
         }
     }
 
-    @objc private func handleTap(_ tap: UITapGestureRecognizer) {
+    internal func handleQueriedFeatureIds(_ queriedFeatureIds: [String]) {
+        // Find if any `queriedFeatureIds` match an annotation's `id`
+        let tappedAnnotations = annotations.filter { queriedFeatureIds.contains($0.id) }
 
-        guard delegate != nil else { return }
-
-        let options = RenderedQueryOptions(layerIds: [layerId], filter: nil)
-        mapFeatureQueryable.queryRenderedFeatures(
-            at: tap.location(in: tap.view),
-            options: options) { [weak self] (result) in
-
-            guard let self = self else { return }
-
-            switch result {
-
-            case .success(let queriedFeatures):
-
-                // Get the identifiers of all the queried features
-                let queriedFeatureIds: [String] = queriedFeatures.compactMap {
-                    guard case let .string(featureId) = $0.feature.identifier else {
-                        return nil
-                    }
-                    return featureId
-                }
-
-                // Find if any `queriedFeatureIds` match an annotation's `id`
-                let tappedAnnotations = self.annotations.filter { queriedFeatureIds.contains($0.id) }
-
-                // If `tappedAnnotations` is not empty, call delegate
-                if !tappedAnnotations.isEmpty {
-                    self.delegate?.annotationManager(
-                        self,
-                        didDetectTappedAnnotations: tappedAnnotations)
-                }
-
-            case .failure(let error):
-                Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)",
-                            category: "Annotations")
-            }
+        // If `tappedAnnotations` is not empty, call delegate
+        if !tappedAnnotations.isEmpty {
+            delegate?.annotationManager(
+                self,
+                didDetectTappedAnnotations: tappedAnnotations)
         }
     }
 }

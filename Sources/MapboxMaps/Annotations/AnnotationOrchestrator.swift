@@ -26,7 +26,11 @@ public protocol AnnotationManager: AnyObject {
 }
 
 internal protocol AnnotationManagerInternal: AnnotationManager {
+    var delegate: AnnotationInteractionDelegate? { get }
+
     func destroy()
+
+    func handleQueriedFeatureIds(_ queriedFeatureIds: [String])
 }
 
 /// A delegate that is called when a tap is detected on an annotation (or on several of them).
@@ -59,6 +63,8 @@ public class AnnotationOrchestrator {
         self.mapFeatureQueryable = mapFeatureQueryable
         self.style = style
         self.displayLinkCoordinator = displayLinkCoordinator
+
+        gestureRecognizer.addTarget(self, action: #selector(handleTap(_:)))
     }
 
     /// Dictionary of annotation managers keyed by their identifiers.
@@ -85,7 +91,6 @@ public class AnnotationOrchestrator {
         let annotationManager = PointAnnotationManager(
             id: id,
             style: style,
-            gestureRecognizer: gestureRecognizer,
             mapFeatureQueryable: mapFeatureQueryable,
             layerPosition: layerPosition,
             displayLinkCoordinator: displayLinkCoordinator)
@@ -110,7 +115,6 @@ public class AnnotationOrchestrator {
         let annotationManager = PolygonAnnotationManager(
             id: id,
             style: style,
-            gestureRecognizer: gestureRecognizer,
             mapFeatureQueryable: mapFeatureQueryable,
             layerPosition: layerPosition,
             displayLinkCoordinator: displayLinkCoordinator)
@@ -135,7 +139,6 @@ public class AnnotationOrchestrator {
         let annotationManager = PolylineAnnotationManager(
             id: id,
             style: style,
-            gestureRecognizer: gestureRecognizer,
             mapFeatureQueryable: mapFeatureQueryable,
             layerPosition: layerPosition,
             displayLinkCoordinator: displayLinkCoordinator)
@@ -160,7 +163,6 @@ public class AnnotationOrchestrator {
         let annotationManager = CircleAnnotationManager(
             id: id,
             style: style,
-            gestureRecognizer: gestureRecognizer,
             mapFeatureQueryable: mapFeatureQueryable,
             layerPosition: layerPosition,
             displayLinkCoordinator: displayLinkCoordinator)
@@ -184,6 +186,38 @@ public class AnnotationOrchestrator {
             Log.warning(
                 forMessage: "\(type(of: annotationManager)) with id \(id) was removed implicitly when invoking \(function) with the same id.",
                 category: "Annotations")
+        }
+    }
+
+    @objc private func handleTap(_ tap: UITapGestureRecognizer) {
+        let managers = annotationManagersByIdInternal.values.filter { $0.delegate != nil }
+        guard !managers.isEmpty else { return }
+
+        let layerIds = managers.map { $0.layerId }
+        let options = RenderedQueryOptions(layerIds: layerIds, filter: nil)
+        mapFeatureQueryable.queryRenderedFeatures(
+            at: tap.location(in: tap.view),
+            options: options) { (result) in
+
+            switch result {
+
+            case .success(let queriedFeatures):
+
+                // Get the identifiers of all the queried features
+                let queriedFeatureIds: [String] = queriedFeatures.compactMap {
+                    guard case let .string(featureId) = $0.feature.identifier else {
+                        return nil
+                    }
+                    return featureId
+                }
+
+                for manager in managers {
+                    manager.handleQueriedFeatureIds(queriedFeatureIds)
+                }
+            case .failure(let error):
+                Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)",
+                            category: "Annotations")
+            }
         }
     }
 }

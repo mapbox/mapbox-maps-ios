@@ -2,10 +2,10 @@ import UIKit
 
 internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimatorInterface {
 
-    private var location: CGPoint
+    private let location: CGPoint
     private var velocity: CGPoint
     private let decelerationFactor: CGFloat
-    private let locationChangeHandler: (_ location: CGPoint) -> Void
+    private let locationChangeHandler: (_ fromLocation: CGPoint, _ toLocation: CGPoint) -> Void
     private var previousDate: Date?
     private let dateProvider: DateProvider
     private weak var delegate: CameraAnimatorDelegate?
@@ -14,7 +14,7 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
     internal init(location: CGPoint,
                   velocity: CGPoint,
                   decelerationFactor: CGFloat,
-                  locationChangeHandler: @escaping (_ location: CGPoint) -> Void,
+                  locationChangeHandler: @escaping (_ fromLocation: CGPoint, _ toLocation: CGPoint) -> Void,
                   dateProvider: DateProvider,
                   delegate: CameraAnimatorDelegate) {
         self.location = location
@@ -54,11 +54,17 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
 
         let elapsedTime = CGFloat(currentDate.timeIntervalSince(previousDate))
 
-        // calculate new location showing how far we have traveled
-        location.x += velocity.x * elapsedTime
-        location.y += velocity.y * elapsedTime
+        // This is part of a workaround for pan deceleration near the horizon.
+        // Instead of allowing the touch location to travel farther and farther
+        // away from the initial location, emit a series of increasingly smaller
+        // displacements always relative to the initial location.
+        var toLocation = location
 
-        locationChangeHandler(location)
+        // calculate new location showing how far we have traveled
+        toLocation.x += velocity.x * elapsedTime
+        toLocation.y += velocity.y * elapsedTime
+
+        locationChangeHandler(location, toLocation)
 
         // deceleration factor should be applied to the velocity once per millisecond
         velocity.x *= pow(decelerationFactor, (elapsedTime * 1000))

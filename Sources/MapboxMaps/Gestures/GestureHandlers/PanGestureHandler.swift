@@ -30,6 +30,8 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
     /// for unit testing
     private let dateProvider: DateProvider
 
+    private var isPanning = false
+
     internal init(gestureRecognizer: UIPanGestureRecognizer,
                   mapboxMap: MapboxMapProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol,
@@ -42,18 +44,41 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
         gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
 
+    // Handle gesture events, treating `state == .changed && !isPanning` like `state == .began`,
+    // and ignoring `state == .ended` and `state == .cancelled` when `!isPanning`
     @objc private func handleGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
         guard let view = gestureRecognizer.view else {
             return
         }
 
         let touchLocation = gestureRecognizer.location(in: view)
+        let velocity = gestureRecognizer.velocity(in: view)
+        let state = gestureRecognizer.state
 
-        switch gestureRecognizer.state {
+        switch state {
         case .began:
-            previousTouchLocation = touchLocation
-            mapboxMap.dragStart(for: touchLocation)
-            delegate?.gestureBegan(for: .pan)
+            handleGesture(withState: state, touchLocation: touchLocation, velocity: velocity)
+        case .changed:
+            if isPanning {
+                handleGesture(withState: state, touchLocation: touchLocation, velocity: velocity)
+            } else {
+                handleGesture(withState: .began, touchLocation: touchLocation, velocity: velocity)
+            }
+        case .ended, .cancelled:
+            if isPanning {
+                handleGesture(withState: state, touchLocation: touchLocation, velocity: velocity)
+            }
+        default:
+            break
+        }
+    }
+
+    private func handleGesture(withState state: UIGestureRecognizer.State, touchLocation: CGPoint, velocity: CGPoint) {
+        switch state {
+        case .began:
+            if !mapboxMap.pointIsAboveHorizon(touchLocation) {
+                beginInteraction(withTouchLocation: touchLocation)
+            }
         case .changed:
             guard let previousTouchLocation = previousTouchLocation else {
                 return
@@ -62,9 +87,7 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
             let clampedTouchLocation = clampTouchLocation(
                 touchLocation,
                 previousTouchLocation: previousTouchLocation)
-            handleChange(
-                withTouchLocation: clampedTouchLocation,
-                previousTouchLocation: previousTouchLocation)
+            pan(from: previousTouchLocation, to: clampedTouchLocation)
             self.previousTouchLocation = clampedTouchLocation
         case .ended:
             // Only decelerate if the gesture ended quickly. Otherwise,
@@ -73,44 +96,53 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
             // it without further dragging. This specific time interval
             // is just the result of manual tuning.
             let decelerationTimeout: TimeInterval = 1.0 / 30.0
-            guard let lastChangedDate = lastChangedDate,
+            guard !mapboxMap.pointIsAboveHorizon(touchLocation),
+                  let lastChangedDate = lastChangedDate,
                   dateProvider.now.timeIntervalSince(lastChangedDate) < decelerationTimeout else {
-                      previousTouchLocation = nil
-                      self.lastChangedDate = nil
-                      mapboxMap.dragEnd()
-                      delegate?.gestureEnded(for: .pan, willAnimate: false)
+                      endInteraction(willAnimate: false)
                       return
                   }
-            var previousDecelerationLocation = touchLocation
+            // If the gesture is potentially ending near the horizon, continually reset the
+            // touchLocation to 3/4 of the way to the bottom of the map while decelerating
+            // to avoid simulated interaction with the more sensitvie area near the horizon.
+            let height = mapboxMap.size.height
+            let initialDecelerationLocation = CGPoint(
+                x: touchLocation.x,
+                y: max(touchLocation.y, 3 * height / 4))
             cameraAnimationsManager.decelerate(
-                location: touchLocation,
-                velocity: gestureRecognizer.velocity(in: view),
+                location: initialDecelerationLocation,
+                velocity: clampTouchLocation(velocity, previousTouchLocation: .zero),
                 decelerationFactor: decelerationFactor,
-                locationChangeHandler: { (touchLocation) in
-                    let clampedTouchLocation = self.clampTouchLocation(
-                        touchLocation,
-                        previousTouchLocation: previousDecelerationLocation)
-                    self.handleChange(
-                        withTouchLocation: clampedTouchLocation,
-                        previousTouchLocation: previousDecelerationLocation)
-                    previousDecelerationLocation = clampedTouchLocation
-                },
-                completion: { [mapboxMap] in
-                    mapboxMap.dragEnd()
-                    self.delegate?.animationEnded(for: .pan)
-                })
-            self.previousTouchLocation = nil
-            self.lastChangedDate = nil
-            delegate?.gestureEnded(for: .pan, willAnimate: true)
+                locationChangeHandler: pan(from:to:),
+                completion: endAnimation)
+            endInteraction(willAnimate: true)
         case .cancelled:
-            // no deceleration
-            previousTouchLocation = nil
-            lastChangedDate = nil
-            mapboxMap.dragEnd()
-            delegate?.gestureEnded(for: .pan, willAnimate: false)
+            endInteraction(willAnimate: false)
         default:
             break
         }
+    }
+
+    private func beginInteraction(withTouchLocation touchLocation: CGPoint) {
+        isPanning = true
+        previousTouchLocation = touchLocation
+        mapboxMap.dragStart(for: touchLocation)
+        delegate?.gestureBegan(for: .pan)
+    }
+
+    private func endInteraction(willAnimate: Bool) {
+        isPanning = false
+        previousTouchLocation = nil
+        lastChangedDate = nil
+        if !willAnimate {
+            mapboxMap.dragEnd()
+        }
+        delegate?.gestureEnded(for: .pan, willAnimate: willAnimate)
+    }
+
+    private func endAnimation() {
+        mapboxMap.dragEnd()
+        delegate?.animationEnded(for: .pan)
     }
 
     private func clampTouchLocation(_ touchLocation: CGPoint, previousTouchLocation: CGPoint) -> CGPoint {
@@ -124,10 +156,10 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
         }
     }
 
-    private func handleChange(withTouchLocation touchLocation: CGPoint, previousTouchLocation: CGPoint) {
+    private func pan(from fromPoint: CGPoint, to toPoint: CGPoint) {
         mapboxMap.setCamera(
             to: mapboxMap.dragCameraOptions(
-                from: previousTouchLocation,
-                to: touchLocation))
+                from: fromPoint,
+                to: toPoint))
     }
 }

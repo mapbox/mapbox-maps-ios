@@ -1,5 +1,3 @@
-import Foundation
-
 final class Stub<ParametersType, ReturnType> {
 
     struct Invocation {

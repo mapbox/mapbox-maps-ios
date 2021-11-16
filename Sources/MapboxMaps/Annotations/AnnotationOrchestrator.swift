@@ -26,6 +26,7 @@ public protocol AnnotationManager: AnyObject {
 }
 
 internal protocol AnnotationManagerInternal: AnnotationManager {
+    var delegate: AnnotationInteractionDelegate? { get }
     func destroy()
     ///
     func handleQueriedFeatureIds(_ queriedFeatureIds: [String])
@@ -91,7 +92,6 @@ public class AnnotationOrchestrator {
         let annotationManager = PointAnnotationManager(
             id: id,
             style: style,
-            gestureRecognizer: gestureRecognizer,
             mapFeatureQueryable: mapFeatureQueryable,
             layerPosition: layerPosition,
             displayLinkCoordinator: displayLinkCoordinator)
@@ -116,7 +116,6 @@ public class AnnotationOrchestrator {
         let annotationManager = PolygonAnnotationManager(
             id: id,
             style: style,
-            gestureRecognizer: gestureRecognizer,
             mapFeatureQueryable: mapFeatureQueryable,
             layerPosition: layerPosition,
             displayLinkCoordinator: displayLinkCoordinator)
@@ -141,7 +140,6 @@ public class AnnotationOrchestrator {
         let annotationManager = PolylineAnnotationManager(
             id: id,
             style: style,
-            gestureRecognizer: gestureRecognizer,
             mapFeatureQueryable: mapFeatureQueryable,
             layerPosition: layerPosition,
             displayLinkCoordinator: displayLinkCoordinator)
@@ -166,7 +164,6 @@ public class AnnotationOrchestrator {
         let annotationManager = CircleAnnotationManager(
             id: id,
             style: style,
-            gestureRecognizer: gestureRecognizer,
             mapFeatureQueryable: mapFeatureQueryable,
             layerPosition: layerPosition,
             displayLinkCoordinator: displayLinkCoordinator)
@@ -194,14 +191,14 @@ public class AnnotationOrchestrator {
     }
 
     @objc func handleTap(_ tap: UITapGestureRecognizer) {
-        let managerIds: [String] = annotationManagersByIdInternal.map { $0.key }
-//        var managers = annotationManagersByIdInternal.map { $0.value.respond != nil }
-        let options = RenderedQueryOptions(layerIds: managerIds, filter: nil)
+        let managers = annotationManagersByIdInternal.values.filter { $0.delegate != nil }
+        guard !managers.isEmpty else { return }
+
+        let layerIds = managers.map { $0.layerId }
+        let options = RenderedQueryOptions(layerIds: layerIds, filter: nil)
         mapFeatureQueryable.queryRenderedFeatures(
             at: tap.location(in: tap.view),
-            options: options) { [weak self] (result) in
-
-            guard let self = self else { return }
+            options: options) { (result) in
 
             switch result {
 
@@ -215,10 +212,8 @@ public class AnnotationOrchestrator {
                     return featureId
                 }
 
-                for managerId in managerIds {
-                    if let manager = self.annotationManagersById[managerId] as? AnnotationManagerInternal {
-                        manager.handleQueriedFeatureIds(queriedFeatureIds)
-                    }
+                for manager in managers {
+                    manager.handleQueriedFeatureIds(queriedFeatureIds)
                 }
             case .failure(let error):
                 Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)",

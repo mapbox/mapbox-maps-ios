@@ -58,7 +58,6 @@ public class PolylineAnnotationManager: AnnotationManagerInternal {
 
     internal init(id: String,
                   style: Style,
-                  gestureRecognizer: UIGestureRecognizer,
                   mapFeatureQueryable: MapFeatureQueryable,
                   layerPosition: LayerPosition?,
                   displayLinkCoordinator: DisplayLinkCoordinator) {

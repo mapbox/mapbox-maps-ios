@@ -36,18 +36,6 @@ final class CircleAnnotationIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertTrue(mapView.annotations.annotationManagersById[manager.id] === secondAnnotationManager)
     }
 
-    func testHandlingTapStateEnded() {
-        let delegate = MockAnnotationInteractionDelegate()
-        manager.delegate = delegate
-        var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
-        annotation.circleRadius = 10
-
-        manager.annotations.append(annotation)
-
-        let tap = MockTapGestureRecognizer()
-        tap.locationStub.parameters.
-    }
-
     func testSynchronizesAnnotationsEventually() throws {
         var annotation = CircleAnnotation(point: .init(.init(latitude: 0, longitude: 0)))
         annotation.circleRadius = 10

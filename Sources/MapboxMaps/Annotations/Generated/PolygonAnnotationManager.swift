@@ -58,7 +58,6 @@ public class PolygonAnnotationManager: AnnotationManagerInternal {
 
     internal init(id: String,
                   style: Style,
-                  gestureRecognizer: UIGestureRecognizer,
                   mapFeatureQueryable: MapFeatureQueryable,
                   layerPosition: LayerPosition?,
                   displayLinkCoordinator: DisplayLinkCoordinator) {

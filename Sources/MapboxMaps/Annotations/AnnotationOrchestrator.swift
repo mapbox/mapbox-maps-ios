@@ -30,7 +30,6 @@ internal protocol AnnotationManagerInternal: AnnotationManager {
 
     func destroy()
 
-    /// Passes an array of feature IDs to the `AnnotationInteractionDelegate.annotationManager(_:didDetectTappedAnnotations:)` delegate method.
     func handleQueriedFeatureIds(_ queriedFeatureIds: [String])
 }
 

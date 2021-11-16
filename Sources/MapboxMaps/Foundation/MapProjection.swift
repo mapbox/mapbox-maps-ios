@@ -74,10 +74,8 @@
 /// that preserves true proportions between different areas of the map.
 ///
 /// Some layers are not supported when map is in Globe projection:
-///  - circle
 ///  - custom
 ///  - fill extrusion
-///  - heatmap
 ///  - location indicator
 ///
 /// If Globe projection is set it will be switched automatically to Mercator projection

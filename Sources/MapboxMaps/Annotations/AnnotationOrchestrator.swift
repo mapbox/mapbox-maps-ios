@@ -190,7 +190,7 @@ public class AnnotationOrchestrator {
         }
     }
 
-    @objc func handleTap(_ tap: UITapGestureRecognizer) {
+    @objc private func handleTap(_ tap: UITapGestureRecognizer) {
         let managers = annotationManagersByIdInternal.values.filter { $0.delegate != nil }
         guard !managers.isEmpty else { return }
 

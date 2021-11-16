@@ -27,6 +27,8 @@ public protocol AnnotationManager: AnyObject {
 
 internal protocol AnnotationManagerInternal: AnnotationManager {
     func destroy()
+    ///
+    func handleQueriedFeatureIds(_ queriedFeatureIds: [String])
 }
 
 /// A delegate that is called when a tap is detected on an annotation (or on several of them).
@@ -51,6 +53,8 @@ public class AnnotationOrchestrator {
 
     private weak var displayLinkCoordinator: DisplayLinkCoordinator?
 
+//    internal weak var delegate: AnnotationInteractionDelegate?
+
     internal init(gestureRecognizer: UIGestureRecognizer,
                   mapFeatureQueryable: MapFeatureQueryable,
                   style: Style,
@@ -59,6 +63,8 @@ public class AnnotationOrchestrator {
         self.mapFeatureQueryable = mapFeatureQueryable
         self.style = style
         self.displayLinkCoordinator = displayLinkCoordinator
+
+        gestureRecognizer.addTarget(self, action: #selector(handleTap(_:)))
     }
 
     /// Dictionary of annotation managers keyed by their identifiers.
@@ -184,6 +190,40 @@ public class AnnotationOrchestrator {
             Log.warning(
                 forMessage: "\(type(of: annotationManager)) with id \(id) was removed implicitly when invoking \(function) with the same id.",
                 category: "Annotations")
+        }
+    }
+
+    @objc func handleTap(_ tap: UITapGestureRecognizer) {
+        let managerIds: [String] = annotationManagersByIdInternal.map { $0.key }
+//        var managers = annotationManagersByIdInternal.map { $0.value.respond != nil }
+        let options = RenderedQueryOptions(layerIds: managerIds, filter: nil)
+        mapFeatureQueryable.queryRenderedFeatures(
+            at: tap.location(in: tap.view),
+            options: options) { [weak self] (result) in
+
+            guard let self = self else { return }
+
+            switch result {
+
+            case .success(let queriedFeatures):
+
+                // Get the identifiers of all the queried features
+                let queriedFeatureIds: [String] = queriedFeatures.compactMap {
+                    guard case let .string(featureId) = $0.feature.identifier else {
+                        return nil
+                    }
+                    return featureId
+                }
+
+                for managerId in managerIds {
+                    if let manager = self.annotationManagersById[managerId] as? AnnotationManagerInternal {
+                        manager.handleQueriedFeatureIds(queriedFeatureIds)
+                    }
+                }
+            case .failure(let error):
+                Log.warning(forMessage: "Failed to query map for annotations due to error: \(error)",
+                            category: "Annotations")
+            }
         }
     }
 }

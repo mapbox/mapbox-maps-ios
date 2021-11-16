@@ -11,13 +11,10 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
     internal var rotateEnabled: Bool = true
 
     /// The midpoint of the touches in the gesture's view when the gesture began
-    private var initialPinchMidpoint: CGPoint?
+    private var previousPinchMidpoint: CGPoint?
 
     /// The angle from touch location 0 to touch location 1 when the gesture began or unpaused
     private var initialPinchAngle: CGFloat?
-
-    /// The camera center when the gesture began or unpaused
-    private var initialCenter: CLLocationCoordinate2D?
 
     /// The camera zoom when the gesture began
     private var initialZoom: CGFloat?
@@ -30,6 +27,10 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
 
     private let mapboxMap: MapboxMapProtocol
 
+    private var isDragging = false
+
+    private var gestureBegan = false
+
     /// Initialize the handler which creates the panGestureRecognizer and adds to the view
     internal init(gestureRecognizer: UIPinchGestureRecognizer,
                   mapboxMap: MapboxMapProtocol) {
@@ -38,6 +39,7 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
         gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     @objc private func handleGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {
         guard let view = gestureRecognizer.view else {
             return
@@ -46,60 +48,54 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
 
         switch gestureRecognizer.state {
         case .began:
-            initialPinchMidpoint = pinchMidpoint
-            initialPinchAngle = pinchAngle(with: gestureRecognizer)
-            initialCenter = mapboxMap.cameraState.center
+            guard gestureRecognizer.numberOfTouches == 2 else {
+                return
+            }
+            startDragging(with: pinchMidpoint)
+            previousPinchMidpoint = pinchMidpoint
+            initialPinchAngle = pinchAngleForGestureBegan(with: gestureRecognizer)
             initialZoom = mapboxMap.cameraState.zoom
             initialBearing = mapboxMap.cameraState.bearing
             initialRotateEnabled = rotateEnabled
+            gestureBegan = true
             delegate?.gestureBegan(for: .pinch)
         case .changed:
             // UIPinchGestureRecognizer sends a .changed event when the number
             // of touches decreases from 2 to 1. If this happens, we pause our
             // gesture handling.
-            //
-            // if a second touch goes down again before the gesture ends, we
-            // resume and re-capture the initial state (except for zoom since
-            // UIPinchGestureRecognizer provides continuity of scale values)
             guard gestureRecognizer.numberOfTouches == 2 else {
-                initialPinchMidpoint = nil
+                previousPinchMidpoint = nil
                 initialPinchAngle = nil
-                initialCenter = nil
                 initialBearing = nil
+                stopDraggingIfNeeded()
                 return
             }
             guard let initialZoom = initialZoom,
                   let initialRotateEnabled = initialRotateEnabled else {
                 return
             }
-            // Using explicit self to help older versions of Xcode (pre-12.5) figure
-            // out the scope of these variables. https://bugs.swift.org/browse/SR-8669
-            let pinchAngle = self.pinchAngle(with: gestureRecognizer)
-            guard let initialPinchMidpoint = initialPinchMidpoint,
+
+            // if a second touch goes down again before the gesture ends, we
+            // resume and re-capture the initial state (except for zoom since
+            // UIPinchGestureRecognizer provides continuity of scale values)
+            let pinchAngle = pinchAngleForGestureChanged(with: gestureRecognizer)
+            guard let previousPinchMidpoint = previousPinchMidpoint,
                   let initialPinchAngle = initialPinchAngle,
-                  let initialCenter = initialCenter,
                   let initialBearing = initialBearing else {
-                self.initialPinchMidpoint = pinchMidpoint
-                self.initialPinchAngle = pinchAngle
-                self.initialCenter = mapboxMap.cameraState.center
-                self.initialBearing = mapboxMap.cameraState.bearing
+                      startDragging(with: pinchMidpoint)
+                      self.previousPinchMidpoint = pinchMidpoint
+                      self.initialPinchAngle = pinchAngle
+                      self.initialBearing = mapboxMap.cameraState.bearing
                 return
             }
 
             let zoomIncrement = log2(gestureRecognizer.scale)
-            var cameraOptions = CameraOptions()
-            cameraOptions.center = initialCenter
-            cameraOptions.zoom = initialZoom
-            cameraOptions.bearing = initialRotateEnabled ? initialBearing : nil
 
-            mapboxMap.setCamera(to: cameraOptions)
+            mapboxMap.setCamera(to: mapboxMap.dragCameraOptions(
+                from: previousPinchMidpoint,
+                to: pinchMidpoint))
+            self.previousPinchMidpoint = pinchMidpoint
 
-            mapboxMap.dragStart(for: initialPinchMidpoint)
-            let dragOptions = mapboxMap.dragCameraOptions(
-                from: initialPinchMidpoint,
-                to: pinchMidpoint)
-            mapboxMap.setCamera(to: dragOptions)
-            mapboxMap.dragEnd()
             // the two angles will always be in the range [0, 2pi)
             // so the resulting rotation will be in the range (-2pi, 2pi)
             var rotation = pinchAngle - initialPinchAngle
@@ -119,15 +115,31 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
                     zoom: initialZoom + zoomIncrement,
                     bearing: initialRotateEnabled ? (initialBearing + rotationInDegrees) : nil))
         case .ended, .cancelled:
-            initialPinchMidpoint = nil
+            previousPinchMidpoint = nil
             initialPinchAngle = nil
-            initialCenter = nil
             initialZoom = nil
             initialBearing = nil
             initialRotateEnabled = nil
-            delegate?.gestureEnded(for: .pinch, willAnimate: false)
+            stopDraggingIfNeeded()
+            if gestureBegan {
+                delegate?.gestureEnded(for: .pinch, willAnimate: false)
+            }
+            gestureBegan = false
         default:
             break
+        }
+    }
+
+    private func startDragging(with point: CGPoint) {
+        precondition(!isDragging)
+        isDragging = true
+        mapboxMap.dragStart(for: point)
+    }
+
+    private func stopDraggingIfNeeded() {
+        if isDragging {
+            isDragging = false
+            mapboxMap.dragEnd()
         }
     }
 
@@ -138,6 +150,18 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
             angle += 2 * .pi
         }
         return angle
+    }
+
+    // this method is added to help diagnose a crash in pinchAngle. if the crash continues to happen,
+    // we'll be able to tell which invocation of pinchAngle is responsible.
+    private func pinchAngleForGestureBegan(with gestureRecognizer: UIPinchGestureRecognizer) -> CGFloat {
+        return pinchAngle(with: gestureRecognizer)
+    }
+
+    // this method is added to help diagnose a crash in pinchAngle. if the crash continues to happen,
+    // we'll be able to tell which invocation of pinchAngle is responsible.
+    private func pinchAngleForGestureChanged(with gestureRecognizer: UIPinchGestureRecognizer) -> CGFloat {
+        return pinchAngle(with: gestureRecognizer)
     }
 
     private func pinchAngle(with gestureRecognizer: UIPinchGestureRecognizer) -> CGFloat {

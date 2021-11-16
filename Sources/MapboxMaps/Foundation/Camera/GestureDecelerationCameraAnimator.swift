@@ -5,7 +5,7 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
     private var location: CGPoint
     private var velocity: CGPoint
     private let decelerationFactor: CGFloat
-    private let locationChangeHandler: (CGPoint) -> Void
+    private let locationChangeHandler: (_ location: CGPoint) -> Void
     private var previousDate: Date?
     private let dateProvider: DateProvider
     private weak var delegate: CameraAnimatorDelegate?
@@ -14,7 +14,7 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
     internal init(location: CGPoint,
                   velocity: CGPoint,
                   decelerationFactor: CGFloat,
-                  locationChangeHandler: @escaping (CGPoint) -> Void,
+                  locationChangeHandler: @escaping (_ location: CGPoint) -> Void,
                   dateProvider: DateProvider,
                   delegate: CameraAnimatorDelegate) {
         self.location = location

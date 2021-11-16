@@ -94,6 +94,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
             return
         }
         isDestroyed = true
+
         do {
             try style.removeLayer(withId: layerId)
         } catch {
@@ -213,7 +214,7 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
     internal func handleQueriedFeatureIds(_ queriedFeatureIds: [String]) {
         // Find if any `queriedFeatureIds` match an annotation's `id`
         let tappedAnnotations = self.annotations.filter { queriedFeatureIds.contains($0.id) }
-        
+
         // If `tappedAnnotations` is not empty, call delegate
         if !tappedAnnotations.isEmpty {
             self.delegate?.annotationManager(

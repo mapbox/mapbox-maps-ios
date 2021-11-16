@@ -1,10 +1,11 @@
 @testable import MapboxMaps
+@_implementationOnly import MapboxCoreMaps_Private
 
 final class MockMapboxMap: MapboxMapProtocol {
 
     var size: CGSize = .zero
 
-    var cameraBounds = CameraBounds(
+    var cameraBounds = MapboxMaps.CameraBounds(
         bounds: CoordinateBounds(
             southwest: CLLocationCoordinate2D(
                 latitude: -90,
@@ -32,8 +33,8 @@ final class MockMapboxMap: MapboxMapProtocol {
 
     var anchor = CGPoint.zero
 
-    let setCameraStub = Stub<CameraOptions, Void>()
-    func setCamera(to cameraOptions: CameraOptions) {
+    let setCameraStub = Stub<MapboxMaps.CameraOptions, Void>()
+    func setCamera(to cameraOptions: MapboxMaps.CameraOptions) {
         setCameraStub.call(with: cameraOptions)
     }
 
@@ -46,8 +47,8 @@ final class MockMapboxMap: MapboxMapProtocol {
         var from: CGPoint
         var to: CGPoint
     }
-    let dragCameraOptionsStub = Stub<DragCameraOptionsParams, CameraOptions>(defaultReturnValue: CameraOptions())
-    func dragCameraOptions(from: CGPoint, to: CGPoint) -> CameraOptions {
+    let dragCameraOptionsStub = Stub<DragCameraOptionsParams, MapboxMaps.CameraOptions>(defaultReturnValue: CameraOptions())
+    func dragCameraOptions(from: CGPoint, to: CGPoint) -> MapboxMaps.CameraOptions {
         dragCameraOptionsStub.call(with: DragCameraOptionsParams(from: from, to: to))
     }
 
@@ -84,5 +85,37 @@ final class MockMapboxMap: MapboxMapProtocol {
     let endGestureStub = Stub<Void, Void>()
     func endGesture() {
         endGestureStub.call()
+    }
+
+    // MARK: - View annotation management
+
+    let setViewAnnotationPositionsUpdateListenerStub = Stub<ViewAnnotationPositionsUpdateListener?, Void>()
+    func setViewAnnotationPositionsUpdateListener(_ listener: ViewAnnotationPositionsUpdateListener?) {
+        setViewAnnotationPositionsUpdateListenerStub.call(with: listener)
+    }
+
+    struct ViewAnnotationModificationOptions: Equatable {
+        var id: String
+        var options: MapboxMaps.ViewAnnotationOptions
+    }
+
+    let addViewAnnotationStub = Stub<ViewAnnotationModificationOptions, Void>()
+    func addViewAnnotation(withId id: String, options: MapboxMaps.ViewAnnotationOptions) throws {
+        addViewAnnotationStub.call(with: ViewAnnotationModificationOptions(id: id, options: options))
+    }
+
+    let updateViewAnnotationStub = Stub<ViewAnnotationModificationOptions, Void>()
+    func updateViewAnnotation(withId id: String, options: MapboxMaps.ViewAnnotationOptions) throws {
+        updateViewAnnotationStub.call(with: ViewAnnotationModificationOptions(id: id, options: options))
+    }
+
+    let removeViewAnnotationStub = Stub<String, Void>()
+    func removeViewAnnotation(withId id: String) throws {
+        removeViewAnnotationStub.call(with: id)
+    }
+
+    let optionsForViewAnnotationWithIdStub = Stub<String, MapboxMaps.ViewAnnotationOptions>(defaultReturnValue: ViewAnnotationOptions())
+    func options(forViewAnnotationWithId id: String) throws -> MapboxMaps.ViewAnnotationOptions {
+        return optionsForViewAnnotationWithIdStub.call(with: id)
     }
 }

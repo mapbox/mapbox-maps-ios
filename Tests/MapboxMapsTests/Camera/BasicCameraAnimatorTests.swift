@@ -26,7 +26,7 @@ let cameraStateTestValue = CameraState(
 final class BasicCameraAnimatorTests: XCTestCase {
 
     var propertyAnimator: MockPropertyAnimator!
-    var cameraView: CameraViewMock!
+    var cameraView: MockCameraView!
     var mapboxMap: MockMapboxMap!
     // swiftlint:disable:next weak_delegate
     var delegate: MockCameraAnimatorDelegate!
@@ -35,7 +35,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
     override func setUp() {
         super.setUp()
         propertyAnimator = MockPropertyAnimator()
-        cameraView = CameraViewMock()
+        cameraView = MockCameraView()
         mapboxMap = MockMapboxMap()
         delegate = MockCameraAnimatorDelegate()
         animator = BasicCameraAnimator(

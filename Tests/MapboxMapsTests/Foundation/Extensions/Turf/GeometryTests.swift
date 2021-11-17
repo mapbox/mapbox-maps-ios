@@ -2,7 +2,7 @@ import XCTest
 import CoreLocation
 @testable import MapboxMaps
 
-internal class GeometryMBXGeometryTests: XCTestCase {
+final class GeometryTests: XCTestCase {
 
     // MARK: - Geometry → Turf Geometry
     func testMBXGeometryToTurfGeometry_Point() {

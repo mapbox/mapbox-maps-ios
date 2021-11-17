@@ -23,6 +23,14 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
         ResourceOptionsManager.destroyDefault()
     }
 
+    func geoJSONURL(from name: String) -> URL? {
+        guard let path = Bundle.mapboxMapsTests.path(forResource: name, ofType: "geojson") else {
+            XCTFail("Fixture \(name) not found.")
+            return nil
+        }
+        return URL(fileURLWithPath: path)
+    }
+
     func testBasicMapViewController() throws {
 
         let expectation = self.expectation(description: "load map view")
@@ -378,7 +386,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
 
         let someTurfFeature = Feature(geometry: .point(Point(CLLocationCoordinate2D(latitude: 0, longitude: 0))))
         let someTurfFeatureCollection = FeatureCollection(features: [someTurfFeature])
-        let someGeoJSONDocumentURL = Fixture.geoJSONURL(from: "polygon")!
+        let someGeoJSONDocumentURL = geoJSONURL(from: "polygon")!
 
         //-->
         // Setting the `data` property with a url pointing to a GeoJSON document
@@ -392,7 +400,7 @@ class MigrationGuideIntegrationTests: IntegrationTestCase {
     func testAddGeoJSONSource() {
         var myGeoJSONSource = GeoJSONSource()
         myGeoJSONSource.maxzoom = 14
-        myGeoJSONSource.data = .url(Fixture.geoJSONURL(from: "polygon")!)
+        myGeoJSONSource.data = .url(geoJSONURL(from: "polygon")!)
 
         let mapView = MapView(frame: testRect)
         let expectation = self.expectation(description: "Source was added")

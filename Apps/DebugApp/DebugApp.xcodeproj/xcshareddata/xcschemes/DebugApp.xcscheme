@@ -7,7 +7,7 @@
       buildImplicitDependencies = "YES">
       <BuildActionEntries>
          <BuildActionEntry
-            buildForTesting = "YES"
+            buildForTesting = "NO"
             buildForRunning = "YES"
             buildForProfiling = "YES"
             buildForArchiving = "YES"
@@ -17,34 +17,6 @@
                BlueprintIdentifier = "35F08DD72347987700768B9F"
                BuildableName = "DebugApp.app"
                BlueprintName = "DebugApp"
-               ReferencedContainer = "container:DebugApp.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "35F08DED2347987900768B9F"
-               BuildableName = "DebugAppTests.xctest"
-               BlueprintName = "DebugAppTests"
-               ReferencedContainer = "container:DebugApp.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "35F08DF82347987900768B9F"
-               BuildableName = "DebugAppUITests.xctest"
-               BlueprintName = "DebugAppUITests"
                ReferencedContainer = "container:DebugApp.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -70,17 +42,6 @@
          </AdditionalOption>
       </AdditionalOptions>
       <Testables>
-         <TestableReference
-            skipped = "NO"
-            testExecutionOrdering = "random">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "35F08DED2347987900768B9F"
-               BuildableName = "DebugAppTests.xctest"
-               BlueprintName = "DebugAppTests"
-               ReferencedContainer = "container:DebugApp.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

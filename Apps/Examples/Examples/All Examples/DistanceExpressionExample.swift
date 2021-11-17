@@ -23,12 +23,14 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
 
     func addCircle() {
         let style = mapView.mapboxMap.style
-
         let center = mapView.mapboxMap.cameraState.center
 
         // Create a `GeoJSONSource` from a Turf geometry.
         var source = GeoJSONSource()
         point = Feature(geometry: .point(Point(center)))
+
+        // Filter out POI labels that are more than 150 meters from the point.
+        self.filterPoiLabels()
 
         // Set the source's data property to the feature.
         source.data = .feature(point)
@@ -80,35 +82,39 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
             circleRadius(forZoom: 22)
         }
         circleLayer.circleRadius = .expression(circleRadiusExp)
-
         circleLayer.circleOpacity = .constant(0.3)
 
         // Add the source and layer to the map's style.
         try! style.addSource(source, id: "source-id")
         try! style.addLayer(circleLayer)
-
-        mapView.mapboxMap.onNext(.styleLoaded) { _ in
-            self.filterPoiLabels()
-        }
     }
     
     func filterPoiLabels() {
         let style = mapView.mapboxMap.style
-        // look at throws in
-        // Ticket out that we need to improve support for 
-        try! style.updateLayer(withId: "poi-label") { (layer: inout SymbolLayer) throws in
-            layer.filter = Exp(.lt) {
-                Exp(.distance) {
-                    
+
+        do {
+            // Update the `SymbolLayer` with id "poi-label". This layer is included in the Mapbox
+            // Streets v11 style. In order to see all layers included with your style, either inspect
+            // the style in Mapbox Studio or inspect the `style.allLayerIdentifiers` property once
+            // the style has finished loading.
+            try style.updateLayer(withId: "poi-label", type: SymbolLayer.self) { (layer: inout SymbolLayer) throws in
+                // Filter the "poi-label" layer to only show points less than 150 meters away from the
+                // the specified feature.
+                layer.filter = Exp(.lt) {
+                    Exp(.distance) {
+                        // Specify the feature that will be used as an anchor for the distance check.
+                        // This feature should be a `GeoJSONObject`.
+                        GeoJSONObject.feature(point)
+                    }
+                    // Specify the distance in meters that you would like to limit visible POIs to.
+                    // Note that this checks the distance of the feature itself.
+                    150
                 }
-                150 // this stays outside distance exp
             }
         }
-
-        // Get the `SymbolLayer` with the identifier `poi-label`. This layer is included
-        // with the Mapbox Streets v11 style. In order to see all layers included with your
-        // style, either inspect the style in Mapbox Studio or inspect the `style.allLayerIdentifiers`
-        // property once the style has finished loading.
+        catch {
+            print("Updating the layer failed: \(error.localizedDescription)")
+        }
 
     }
 
@@ -124,9 +130,3 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
         return radius
     }
 }
-
-//extension Turf.Point: ExpressionArgumentConvertible {
-//    public var expressionArguments: [Expression.Argument] {
-//
-//    }
-//}

@@ -17,11 +17,11 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
 
         mapView.mapboxMap.onNext(.mapLoaded) { _ in
-            self.addCircle()
+            self.addCircleLayer()
         }
     }
 
-    func addCircle() {
+    func addCircleLayer() {
         let style = mapView.mapboxMap.style
         let center = mapView.mapboxMap.cameraState.center
 
@@ -88,7 +88,7 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
         try! style.addSource(source, id: "source-id")
         try! style.addLayer(circleLayer)
     }
-    
+
     func filterPoiLabels() {
         let style = mapView.mapboxMap.style
 
@@ -111,8 +111,7 @@ class DistanceExpressionExample: UIViewController, ExampleProtocol {
                     150
                 }
             }
-        }
-        catch {
+        } catch {
             print("Updating the layer failed: \(error.localizedDescription)")
         }
 

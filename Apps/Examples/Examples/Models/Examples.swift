@@ -74,8 +74,8 @@ public struct Examples {
         Example(title: "SceneKit rendering on map",
                 description: "Use custom layer to render SceneKit model over terrain.",
                 type: SceneKitExample.self),
-        Example(title: "Display buildings in 3D",
-                description: "Use extrusions to display buildings' height in 3D.",
+        Example(title: "Display 3D buildings",
+                description: "Extrude the building layer in the Mapbox Light style using FillExtrusionLayer and set up the light position.",
                 type: BuildingExtrusionsExample.self),
         Example(title: "Add a sky layer",
                 description: "Add a customizable sky layer to simulate natural lighting with a Terrain layer.",
@@ -178,7 +178,7 @@ public struct Examples {
     public static let styleExamples = [
         Example(title: "Display multiple icon images in a symbol layer",
                 description: """
-            Use different images to represent features within a symbol layer based on properties.
+            Add point data and several images to a style and use the switchCase and get expressions to choose which image to display at each point in a SymbolLayer based on a data property.
             """,
                 type: DataDrivenSymbolsExample.self),
         Example(title: "Change the position of a layer",
@@ -208,7 +208,7 @@ public struct Examples {
                 description: "Add a custom rendered Metal layer.",
                 type: CustomLayerExample.self),
         Example(title: "Add a line with a color gradient",
-                description: "Add a line with a rainbow color gradient.",
+                description: "Load a polyline to a style using GeoJSONSource, display it on a map using LineLayer, and style it with a rainbow color gradient.",
                 type: LineGradientExample.self),
         Example(title: "Change the map's style",
                 description: "Switch between local and default Mapbox styles for the same map view.",
@@ -216,18 +216,19 @@ public struct Examples {
         Example(title: "Change the map's language",
                 description: "Switch between supported languages for Symbol Layers",
                 type: LocalizationExample.self),
-        Example(title: "Add an animated image",
-                description: "Add an image to a raster layer on the map and animate it.",
+        Example(title: "Add animated weather data",
+                description: "Load a raster image to a style using ImageSource and display it on a map as animated weather data using RasterLayer.",
                 type: AnimateImageLayerExample.self),
         Example(title: "Add a raster tile source",
                 description: "Add third-party raster tiles to a map.",
                 type: RasterTileSourceExample.self),
         Example(title: "Show and hide layers",
-                description: "Enable and disable two different map layers at runtime.",
+                description: "Allow the user to toggle the visibility of a CircleLayer and LineLayer on a map.",
                 type: ShowHideLayerExample.self),
         Example(title: "Add live data",
                 description: "Update feature coordinates from a geoJSON source in real time.",
-                type: LiveDataExample.self)
+                type: LiveDataExample.self),
+        Example(title: "Use a distance expression", description: "", type: DistanceExpressionExample.self)
     ]
 
     // Examples that show use cases related to user interaction with the map.

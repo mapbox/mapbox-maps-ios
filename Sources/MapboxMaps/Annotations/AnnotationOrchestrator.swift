@@ -91,7 +91,6 @@ public class AnnotationOrchestrator {
         let annotationManager = PointAnnotationManager(
             id: id,
             style: style,
-            mapFeatureQueryable: mapFeatureQueryable,
             layerPosition: layerPosition,
             displayLinkCoordinator: displayLinkCoordinator)
         annotationManagersByIdInternal[id] = annotationManager
@@ -115,7 +114,6 @@ public class AnnotationOrchestrator {
         let annotationManager = PolygonAnnotationManager(
             id: id,
             style: style,
-            mapFeatureQueryable: mapFeatureQueryable,
             layerPosition: layerPosition,
             displayLinkCoordinator: displayLinkCoordinator)
         annotationManagersByIdInternal[id] = annotationManager
@@ -139,7 +137,6 @@ public class AnnotationOrchestrator {
         let annotationManager = PolylineAnnotationManager(
             id: id,
             style: style,
-            mapFeatureQueryable: mapFeatureQueryable,
             layerPosition: layerPosition,
             displayLinkCoordinator: displayLinkCoordinator)
         annotationManagersByIdInternal[id] = annotationManager
@@ -163,7 +160,6 @@ public class AnnotationOrchestrator {
         let annotationManager = CircleAnnotationManager(
             id: id,
             style: style,
-            mapFeatureQueryable: mapFeatureQueryable,
             layerPosition: layerPosition,
             displayLinkCoordinator: displayLinkCoordinator)
         annotationManagersByIdInternal[id] = annotationManager

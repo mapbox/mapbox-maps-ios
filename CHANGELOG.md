@@ -8,6 +8,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Send location update when puck is nil and other location-related improvements. ([#765](https://github.com/mapbox/mapbox-maps-ios/pull/765))
 * Update to MapboxCoreMaps 10.2.0-beta.1 and MapboxCommon 21.0.0-rc.1. ([#836](https://github.com/mapbox/mapbox-maps-ios/pull/836))
 * Updates pan and pinch gesture handling to work iteratively rather than based on initial state. ([#837](https://github.com/mapbox/mapbox-maps-ios/pull/837))
+* `AnnotationOrchestrator`, rather than the annotation managers, now manages the single-tap gesture recognizer for annotations. ([#840](https://github.com/mapbox/mapbox-maps-ios/pull/840))
 
 ## 10.1.0 - November 4, 2021
 

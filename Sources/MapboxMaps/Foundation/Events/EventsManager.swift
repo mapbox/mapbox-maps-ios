@@ -53,14 +53,6 @@ internal class EventsManager: EventsListener {
         switch event {
         case .map(let mapEvent):
             process(mapEvent: mapEvent)
-        case .metrics(let metricsEvent):
-            process(metricEvent: metricsEvent)
-        case .snapshot(let snapshotEvent):
-            process(snapshotEvent: snapshotEvent)
-        case .offlineStorage(let offlineStorageEvent):
-            process(offlineStorage: offlineStorageEvent)
-        case .custom(let customEvent):
-            telemetry?.send(event: customEvent)
         }
     }
 
@@ -69,27 +61,6 @@ internal class EventsManager: EventsListener {
         case .loaded:
             telemetry?.turnstile()
             telemetry?.send(event: mapEvent.typeString)
-        }
-    }
-
-    private func process(metricEvent: EventType.Metrics) {
-        switch metricEvent {
-        case .performance(let metrics):
-            telemetry?.send(event: metricEvent.typeString, withAttributes: metrics)
-        }
-    }
-
-    private func process(snapshotEvent: EventType.Snapshot) {
-        switch snapshotEvent {
-        case .initialized:
-            telemetry?.turnstile()
-        }
-    }
-
-    private func process(offlineStorage: EventType.OfflineStorage) {
-        switch offlineStorage {
-        case .downloadStarted(let attributes):
-            telemetry?.send(event: offlineStorage.typeString, withAttributes: attributes)
         }
     }
 }

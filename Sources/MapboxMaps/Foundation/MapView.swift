@@ -255,7 +255,10 @@ open class MapView: UIView {
             mapboxMap.setCamera(to: cameraOptions)
         }
 
-        insertSubview(viewAnnotationContainerView, at: 1)
+        if let metalView = metalView {
+            insertSubview(viewAnnotationContainerView, aboveSubview: metalView)
+        }
+
         viewAnnotationContainerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             viewAnnotationContainerView.topAnchor.constraint(equalTo: topAnchor),

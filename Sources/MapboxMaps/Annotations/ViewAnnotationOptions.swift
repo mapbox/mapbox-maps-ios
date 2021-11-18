@@ -102,7 +102,7 @@ public struct ViewAnnotationOptions: Hashable {
 }
 
 extension MapboxCoreMaps.ViewAnnotationOptions {
-    public convenience init(_ swiftValue: ViewAnnotationOptions) {
+    internal convenience init(_ swiftValue: ViewAnnotationOptions) {
         self.init(__geometry: swiftValue.geometry.map(MapboxCommon.Geometry.init),
                   associatedFeatureId: swiftValue.associatedFeatureId,
                   width: swiftValue.width as NSNumber?,

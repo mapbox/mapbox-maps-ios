@@ -82,7 +82,7 @@ final class ViewAnnotationExample: UIViewController, ExampleProtocol {
                 let feature = queriedFeatures.first?.feature,
                 let id = feature.identifier,
                 case let .string(idString) = id,
-                let viewAnnotation = self?.mapView.viewAnnotations.viewAnnotation(byFeatureId: idString) {
+                let viewAnnotation = self?.mapView.viewAnnotations.viewAnnotation(forFeatureId: idString) {
                 viewAnnotation.isHidden = !viewAnnotation.isHidden
             }
         }
@@ -168,7 +168,7 @@ final class ViewAnnotationExample: UIViewController, ExampleProtocol {
         }
         sampleView.selectCallback = { [weak self] in
             guard let self = self else { return }
-            guard let options = self.mapView.viewAnnotations.options(byAnnotationView: annotationView) else { return }
+            guard let options = self.mapView.viewAnnotations.options(for: annotationView) else { return }
             let selected = !(options.selected ?? false)
             let pxDelta = selected ? Constants.SELECTED_ADD_COEF_PX : -Constants.SELECTED_ADD_COEF_PX
             sampleView.selectButton.setTitle(selected ? "DESELECT" : "SELECT", for: .normal)

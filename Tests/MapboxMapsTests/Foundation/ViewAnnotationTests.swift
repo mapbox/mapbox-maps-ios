@@ -45,9 +45,6 @@ final class ViewAnnotationTests: XCTestCase {
         XCTAssertNoThrow(try manager.remove(annotationView))
         XCTAssertEqual(mockMapboxMap.removeViewAnnotationStub.invocations.count, 1)
         XCTAssertEqual(container.subviews.count, 0)
-
-        // Trying to remove the same view the second time should throw
-        XCTAssertThrowsError(try manager.remove(annotationView))
     }
 
     func testUpdate() {
@@ -63,32 +60,32 @@ final class ViewAnnotationTests: XCTestCase {
         XCTAssertThrowsError(try manager.update(annotationView, options: options))
     }
 
-    func testViewAnnotationByFeatureId() {
+    func testViewAnnotationForFeatureId() {
         let testFeatureIdOne = "testFeatureIdOne"
         let annotationView = addTestAnnotationView(featureId: testFeatureIdOne)
-        XCTAssertEqual(annotationView, manager.viewAnnotation(byFeatureId: testFeatureIdOne))
-        XCTAssertNil(manager.viewAnnotation(byFeatureId: "testFeatureIdTwo"))
-        XCTAssertNil(manager.viewAnnotation(byFeatureId: ""))
+        XCTAssertEqual(annotationView, manager.viewAnnotation(forFeatureId: testFeatureIdOne))
+        XCTAssertNil(manager.viewAnnotation(forFeatureId: "testFeatureIdTwo"))
+        XCTAssertNil(manager.viewAnnotation(forFeatureId: ""))
     }
 
-    func testOptionsByFeatureId() {
+    func testOptionsforFeatureId() {
         let testFeatureIdOne = "testFeatureIdOne"
         let geometry = Geometry.point(Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)))
         let expectedOptions = ViewAnnotationOptions(geometry: geometry, associatedFeatureId: testFeatureIdOne)
         let annotationView = addTestAnnotationView(featureId: testFeatureIdOne)
-        XCTAssertEqual(expectedOptions, manager.options(byFeatureId: testFeatureIdOne))
+        XCTAssertEqual(expectedOptions, manager.options(forFeatureId: testFeatureIdOne))
         XCTAssertNoThrow(try manager.remove(annotationView))
-        XCTAssertNil(manager.options(byFeatureId: testFeatureIdOne))
+        XCTAssertNil(manager.options(forFeatureId: testFeatureIdOne))
     }
 
-    func testOptionsByAnnotationView() {
+    func testOptionsForAnnotationView() {
         let testFeatureIdOne = "testFeatureIdOne"
         let geometry = Geometry.point(Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)))
         let expectedOptions = ViewAnnotationOptions(geometry: geometry, associatedFeatureId: testFeatureIdOne)
         let annotationView = addTestAnnotationView(featureId: testFeatureIdOne)
-        XCTAssertEqual(expectedOptions, manager.options(byAnnotationView: annotationView))
+        XCTAssertEqual(expectedOptions, manager.options(for: annotationView))
         XCTAssertNoThrow(try manager.remove(annotationView))
-        XCTAssertNil(manager.options(byAnnotationView: annotationView))
+        XCTAssertNil(manager.options(for: annotationView))
     }
 
     func testValidateAnnotation() {

@@ -35,9 +35,6 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
     /// Dependency required to add sources/layers to the map
     private let style: Style
 
-    /// Dependency Required to query for rendered features on tap
-    private let mapFeatureQueryable: MapFeatureQueryable
-
     /// Storage for common layer properties
     private var layerProperties: [String: Any] = [:] {
         didSet {
@@ -58,14 +55,12 @@ public class CircleAnnotationManager: AnnotationManagerInternal {
 
     internal init(id: String,
                   style: Style,
-                  mapFeatureQueryable: MapFeatureQueryable,
                   layerPosition: LayerPosition?,
                   displayLinkCoordinator: DisplayLinkCoordinator) {
         self.id = id
         self.sourceId = id
         self.layerId = id
         self.style = style
-        self.mapFeatureQueryable = mapFeatureQueryable
         self.displayLinkCoordinator = displayLinkCoordinator
 
         do {

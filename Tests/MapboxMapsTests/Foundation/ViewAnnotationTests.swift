@@ -22,18 +22,17 @@ final class ViewAnnotationTests: XCTestCase {
         super.tearDown()
     }
 
-    func testAddAnnotationView() {
+    func testAddView() {
         let testView = UIView()
         let geometry = Geometry.point(Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)))
-        let annotationView = try? manager.addAnnotationView(withContent: testView, options: ViewAnnotationOptions(geometry: geometry))
+        try? manager.add(testView, options: ViewAnnotationOptions(geometry: geometry))
         XCTAssertEqual(mockMapboxMap.addViewAnnotationStub.invocations.count, 1)
-        XCTAssertEqual(annotationView?.superview, container)
-        XCTAssertEqual(annotationView?.subviews.first, testView)
+        XCTAssertEqual(testView.superview, container)
         XCTAssertEqual(container.subviews.count, 1)
     }
 
-    func testAddAnnotationViewMissingGeometry() {
-        XCTAssertThrowsError(try manager.addAnnotationView(withContent: UIView(), options: ViewAnnotationOptions()))
+    func testAddViewMissingGeometry() {
+        XCTAssertThrowsError(try manager.add(UIView(), options: ViewAnnotationOptions()))
         XCTAssertEqual(mockMapboxMap.addViewAnnotationStub.invocations.count, 0)
         XCTAssertEqual(container.subviews.count, 0)
     }
@@ -60,12 +59,12 @@ final class ViewAnnotationTests: XCTestCase {
         XCTAssertThrowsError(try manager.update(annotationView, options: options))
     }
 
-    func testViewAnnotationForFeatureId() {
+    func testViewForFeatureId() {
         let testFeatureIdOne = "testFeatureIdOne"
         let annotationView = addTestAnnotationView(featureId: testFeatureIdOne)
-        XCTAssertEqual(annotationView, manager.viewAnnotation(forFeatureId: testFeatureIdOne))
-        XCTAssertNil(manager.viewAnnotation(forFeatureId: "testFeatureIdTwo"))
-        XCTAssertNil(manager.viewAnnotation(forFeatureId: ""))
+        XCTAssertEqual(annotationView, manager.view(forFeatureId: testFeatureIdOne))
+        XCTAssertNil(manager.view(forFeatureId: "testFeatureIdTwo"))
+        XCTAssertNil(manager.view(forFeatureId: ""))
     }
 
     func testOptionsforFeatureId() {
@@ -78,7 +77,7 @@ final class ViewAnnotationTests: XCTestCase {
         XCTAssertNil(manager.options(forFeatureId: testFeatureIdOne))
     }
 
-    func testOptionsForAnnotationView() {
+    func testOptionsForView() {
         let testFeatureIdOne = "testFeatureIdOne"
         let geometry = Geometry.point(Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)))
         let expectedOptions = ViewAnnotationOptions(geometry: geometry, associatedFeatureId: testFeatureIdOne)
@@ -92,26 +91,30 @@ final class ViewAnnotationTests: XCTestCase {
         let annotationView = addTestAnnotationView()
 
         // First check: annotation is valid, leave it in place
-        manager.validateAnnotation(byAnnotationId: annotationView.id)
+        manager.validateAnnotation(byAnnotationId: manager.idsByView[annotationView]!)
         XCTAssertEqual(mockMapboxMap.removeViewAnnotationStub.invocations.count, 0)
 
         // Second check: annotation is manually removed from superview, remove is called
         annotationView.removeFromSuperview()
-        manager.validateAnnotation(byAnnotationId: annotationView.id)
+        manager.validateAnnotation(byAnnotationId: manager.idsByView[annotationView]!)
         XCTAssertEqual(mockMapboxMap.removeViewAnnotationStub.invocations.count, 1)
     }
 
-    func testAnnotationViewVisibilityUpdate() {
+    func testExpectedHiddenState() {
         let annotationView = addTestAnnotationView()
+        let id = manager.idsByView[annotationView]!
 
-        let stub = mockMapboxMap.updateViewAnnotationStub
-        XCTAssertEqual(stub.invocations.count, 0)
-        annotationView.isHidden = true
-        XCTAssertEqual(stub.invocations.count, 1)
-        XCTAssertFalse(stub.invocations.last!.parameters.options.visible!)
-        annotationView.isHidden = false
-        XCTAssertEqual(stub.invocations.count, 2)
-        XCTAssertTrue(stub.invocations.last!.parameters.options.visible!)
+        XCTAssertFalse(manager.expectedHiddenForId[id]!)
+        // Not including ID in position update signals that view is out of bounds
+        manager.onViewAnnotationPositionsUpdate(forPositions: [])
+        XCTAssertTrue(manager.expectedHiddenForId[id]!)
+        manager.onViewAnnotationPositionsUpdate(forPositions: [ViewAnnotationPositionDescriptor(
+            __identifier: id,
+            width: UInt32(100),
+            height: UInt32(50),
+            leftTopCoordinate: ScreenCoordinate(x: 100.0, y: 100.0)
+        )])
+        XCTAssertFalse(manager.expectedHiddenForId[id]!)
     }
 
     // MARK: Test placeAnnotations
@@ -131,7 +134,7 @@ final class ViewAnnotationTests: XCTestCase {
         XCTAssertEqual(annotationView.frame, CGRect.zero)
 
         manager.onViewAnnotationPositionsUpdate(forPositions: [ViewAnnotationPositionDescriptor(
-            __identifier: annotationView.id,
+            __identifier: manager.idsByView[annotationView]!,
             width: UInt32(100),
             height: UInt32(50),
             leftTopCoordinate: ScreenCoordinate(x: 150.0, y: 200.0)
@@ -150,7 +153,7 @@ final class ViewAnnotationTests: XCTestCase {
         XCTAssertFalse(annotationViewC.isHidden)
 
         manager.onViewAnnotationPositionsUpdate(forPositions: [ViewAnnotationPositionDescriptor(
-            __identifier: annotationViewA.id,
+            __identifier: manager.idsByView[annotationViewA]!,
             width: UInt32(100),
             height: UInt32(50),
             leftTopCoordinate: ScreenCoordinate(x: 150.0, y: 200.0)
@@ -163,12 +166,13 @@ final class ViewAnnotationTests: XCTestCase {
 
     // MARK: - Helper functions
 
-    func addTestAnnotationView(featureId: String? = nil) -> AnnotationView {
+    func addTestAnnotationView(featureId: String? = nil) -> UIView {
         let geometry = Geometry.point(Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)))
         let options = ViewAnnotationOptions(geometry: geometry, associatedFeatureId: featureId)
-        let annotationView = try! manager.addAnnotationView(withContent: UIView(), options: options)
+        let view = UIView()
+        try! manager.add(view, options: options)
         mockMapboxMap.optionsForViewAnnotationWithIdStub.defaultReturnValue = options
-        return annotationView
+        return view
     }
 
 }

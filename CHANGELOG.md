@@ -2,7 +2,7 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
-## main
+## 10.2.0-beta.1 - November 19, 2021
 
 * Fixed an issue where camera animations triggered with `startAnimation(afterDelay:)` could appear jerky after a pan gesture. ([#789](https://github.com/mapbox/mapbox-maps-ios/pull/789))
 * Send location update when puck is nil and other location-related improvements. ([#765](https://github.com/mapbox/mapbox-maps-ios/pull/765))

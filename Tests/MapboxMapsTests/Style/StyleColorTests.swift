@@ -166,20 +166,24 @@ final class StyleColorTests: XCTestCase {
     func testCodableRoundtrip() throws {
         let color = StyleColor(red: red, green: green, blue: blue, alpha: alpha)!
 
-        let data = try JSONEncoder().encode(color)
+        // wrapping in an array since iOS 12 and lower only support
+        // Array and Dictionary as the top level JSON values
+        let data = try JSONEncoder().encode([color])
 
-        let decodedColor = try JSONDecoder().decode(StyleColor.self, from: data)
+        let decodedColor = try JSONDecoder().decode([StyleColor].self, from: data)
 
-        XCTAssertEqual(decodedColor, color)
+        XCTAssertEqual(decodedColor, [color])
     }
 
     func testEncoding() throws {
         let color = StyleColor(red: red, green: green, blue: blue, alpha: alpha)!
 
-        let data = try JSONEncoder().encode(color)
+        // wrapping in an array since iOS 12 and lower only support
+        // Array and Dictionary as the top level JSON values
+        let data = try JSONEncoder().encode([color])
 
         // Double quotes are added to the expected value to make it a JSON string
-        XCTAssertEqual(data, #""\#(rgbaString)""#.data(using: .utf8))
+        XCTAssertEqual(data, #"["\#(rgbaString)"]"#.data(using: .utf8))
     }
 
     func testDecodingRGBAExpression() throws {
@@ -195,11 +199,13 @@ final class StyleColorTests: XCTestCase {
     }
 
     func testDecodingRGBAString() throws {
+        // wrapping in an array since iOS 12 and lower only support
+        // Array and Dictionary as the top level JSON values
         // Double quotes are added to make it a JSON string
-        let rgbaJSONString = #""\#(rgbaString)""#.data(using: .utf8)!
+        let rgbaJSONString = #"["\#(rgbaString)"]"#.data(using: .utf8)!
 
-        let color = try JSONDecoder().decode(StyleColor.self, from: rgbaJSONString)
+        let color = try JSONDecoder().decode([StyleColor].self, from: rgbaJSONString)
 
-        XCTAssertEqual(color, StyleColor(red: red, green: green, blue: blue, alpha: alpha)!)
+        XCTAssertEqual(color, [StyleColor(red: red, green: green, blue: blue, alpha: alpha)!])
     }
 }

@@ -62,9 +62,13 @@ final class ViewAnnotationTests: XCTestCase {
     func testViewForFeatureId() {
         let testFeatureIdOne = "testFeatureIdOne"
         let annotationView = addTestAnnotationView(featureId: testFeatureIdOne)
+        XCTAssertEqual(manager.viewsByFeatureIds[testFeatureIdOne], annotationView)
         XCTAssertEqual(annotationView, manager.view(forFeatureId: testFeatureIdOne))
         XCTAssertNil(manager.view(forFeatureId: "testFeatureIdTwo"))
         XCTAssertNil(manager.view(forFeatureId: ""))
+        
+        manager.remove(annotationView)
+        XCTAssertEqual(manager.viewsByFeatureIds.keys.count, 0)
     }
 
     func testOptionsforFeatureId() {

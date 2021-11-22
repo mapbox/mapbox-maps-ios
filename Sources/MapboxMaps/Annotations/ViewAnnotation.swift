@@ -26,6 +26,7 @@ public final class ViewAnnotationManager {
     internal private(set) var viewsById: [String: UIView] = [:]
     internal private(set) var idsByView: [UIView: String] = [:]
     internal private(set) var expectedHiddenByView: [UIView: Bool] = [:]
+    internal private(set) var viewsByFeatureIds: [String: UIView] = [:]
 
     /// If the superview or the `UIView.isHidden` property of a custom view annotation is changed manually by the users
     /// the SDK prints a warning and reverts the changes, as the view is still considered for layout calculation.
@@ -89,6 +90,7 @@ public final class ViewAnnotationManager {
         viewsById[id] = view
         idsByView[view] = id
         expectedHiddenByView[view] = !(creationOptions.visible ?? true)
+        creationOptions.associatedFeatureId.flatMap { viewsByFeatureIds[$0] = view }
         containerView.addSubview(view)
     }
 
@@ -105,6 +107,8 @@ public final class ViewAnnotationManager {
         annotatonView.removeFromSuperview()
         viewsById.removeValue(forKey: id)
         idsByView.removeValue(forKey: annotatonView)
+        expectedHiddenByView.removeValue(forKey: annotatonView)
+        _ = options?.associatedFeatureId.flatMap { viewsByFeatureIds.removeValue(forKey: $0) }
     }
 
     /// Update given `UIView` with `ViewAnnotationOptions`.
@@ -126,6 +130,7 @@ public final class ViewAnnotationManager {
         let isHidden = !(options.visible ?? true)
         expectedHiddenByView[view] = isHidden
         viewsById[id]?.isHidden = isHidden
+        options.associatedFeatureId.flatMap { viewsByFeatureIds[$0] = view }
     }
 
     /// Find `UIView` by feature id if it was specified as part of `ViewAnnotationOptions.associatedFeatureId`.
@@ -135,11 +140,7 @@ public final class ViewAnnotationManager {
     ///
     /// - Returns: `UIView` if view was found and `nil` otherwise.
     public func view(forFeatureId identifier: String) -> UIView? {
-        return viewsById.keys.first(where: { id in
-            (try? mapboxMap.options(forViewAnnotationWithId: id).associatedFeatureId == identifier) ?? false
-        }).flatMap({
-            viewsById[$0]
-        })
+        return viewsByFeatureIds[identifier]
     }
 
     /// Find `ViewAnnotationOptions` of view annotation by feature id if it was specified as part of `ViewAnnotationOptions.associatedFeatureId`.
@@ -149,13 +150,7 @@ public final class ViewAnnotationManager {
     ///
     /// - Returns: `ViewAnnotationOptions` if view was found and `nil` otherwise.
     public func options(forFeatureId identifier: String) -> ViewAnnotationOptions? {
-        for id in viewsById.keys {
-            if let options = try? mapboxMap.options(forViewAnnotationWithId: id),
-               options.associatedFeatureId == identifier {
-                return options
-            }
-        }
-        return nil
+        return viewsByFeatureIds[identifier].flatMap { idsByView[$0] }.flatMap { try? mapboxMap.options(forViewAnnotationWithId: $0) }
     }
 
     /// Get current `ViewAnnotationOptions` for given `UIView`.

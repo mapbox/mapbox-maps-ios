@@ -66,6 +66,9 @@ public final class ViewAnnotationManager {
     ///   -  `ViewAnnotationManagerError.geometryFieldMissing` if options did not include geometry
     ///   - `MapError`: errors during insertion
     public func add(_ view: UIView, options: ViewAnnotationOptions) throws {
+        guard idsByView[view] == nil else {
+            return
+        }
         guard options.geometry != nil else {
             throw ViewAnnotationManagerError.geometryFieldMissing
         }

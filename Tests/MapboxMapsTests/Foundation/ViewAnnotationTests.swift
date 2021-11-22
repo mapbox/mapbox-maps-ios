@@ -90,14 +90,24 @@ final class ViewAnnotationTests: XCTestCase {
     func testValidateAnnotation() {
         let annotationView = addTestAnnotationView()
 
-        // First check: annotation is valid, leave it in place
         manager.validateAnnotation(byAnnotationId: manager.idsByView[annotationView]!)
         XCTAssertEqual(mockMapboxMap.removeViewAnnotationStub.invocations.count, 0)
 
-        // Second check: annotation is manually removed from superview, remove is called
         annotationView.removeFromSuperview()
+        XCTAssertEqual(container.subviews.count, 0)
         manager.validateAnnotation(byAnnotationId: manager.idsByView[annotationView]!)
-        XCTAssertEqual(mockMapboxMap.removeViewAnnotationStub.invocations.count, 1)
+        XCTAssertEqual(container.subviews.count, 1)
+        
+        let view = UIView()
+        annotationView.removeFromSuperview()
+        view.addSubview(annotationView)
+        XCTAssertEqual(container.subviews.count, 0)
+        manager.validateAnnotation(byAnnotationId: manager.idsByView[annotationView]!)
+        XCTAssertEqual(container.subviews.count, 1)
+        
+        annotationView.isHidden = true
+        manager.validateAnnotation(byAnnotationId: manager.idsByView[annotationView]!)
+        XCTAssertFalse(annotationView.isHidden)
     }
 
     func testExpectedHiddenState() {

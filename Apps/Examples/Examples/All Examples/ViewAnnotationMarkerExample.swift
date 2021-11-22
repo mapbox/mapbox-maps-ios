@@ -162,7 +162,7 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
 
         // Handle the actions for the button clicks inside the `SampleView` instance
         sampleView.closeCallback = { [weak self] in
-            try? self?.mapView.viewAnnotations.remove(sampleView)
+            self?.mapView.viewAnnotations.remove(sampleView)
         }
         sampleView.selectCallback = { [weak self] in
             guard let self = self else { return }

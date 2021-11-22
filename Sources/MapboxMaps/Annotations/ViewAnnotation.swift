@@ -93,14 +93,12 @@ public final class ViewAnnotationManager {
     ///
     /// - Parameters:
     ///   - view: `UIView` to be removed
-    ///
-    /// - Throws:
-    ///   - `MapError`: errors during the removal of the view
-    public func remove(_ view: UIView) throws {
+    public func remove(_ view: UIView) {
         guard let id = idsByView[view], let annotatonView = viewsById[id] else {
             return
         }
-        try mapboxMap.removeViewAnnotation(withId: id)
+        let options = try? mapboxMap.options(forViewAnnotationWithId: id)
+        try? mapboxMap.removeViewAnnotation(withId: id)
         annotatonView.removeFromSuperview()
         viewsById.removeValue(forKey: id)
         idsByView.removeValue(forKey: annotatonView)

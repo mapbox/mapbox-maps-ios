@@ -34,7 +34,7 @@ final class ViewAnnotationBasicExample: UIViewController, ExampleProtocol {
 
     @objc private func onSampleViewClick(_ sender: UITapGestureRecognizer) {
         guard let view = sender.view else { return }
-        try? mapView.viewAnnotations.remove(view)
+        mapView.viewAnnotations.remove(view)
     }
 
     // MARK: - Annotation management

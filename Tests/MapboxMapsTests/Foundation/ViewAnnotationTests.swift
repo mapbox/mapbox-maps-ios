@@ -41,7 +41,7 @@ final class ViewAnnotationTests: XCTestCase {
         let annotationView = addTestAnnotationView()
         XCTAssertEqual(mockMapboxMap.removeViewAnnotationStub.invocations.count, 0)
         XCTAssertEqual(container.subviews.count, 1)
-        XCTAssertNoThrow(try manager.remove(annotationView))
+        manager.remove(annotationView)
         XCTAssertEqual(mockMapboxMap.removeViewAnnotationStub.invocations.count, 1)
         XCTAssertEqual(container.subviews.count, 0)
     }

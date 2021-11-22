@@ -25,7 +25,7 @@ public final class ViewAnnotationManager {
     private var currentViewId = 0
     internal private(set) var viewsById: [String: UIView] = [:]
     internal private(set) var idsByView: [UIView: String] = [:]
-    internal private(set) var expectedHiddenForId: [String: Bool] = [:]
+    internal private(set) var expectedHiddenByView: [UIView: Bool] = [:]
 
     /// If the superview or the `UIView.isHidden` property of a custom view annotation is changed manually by the users
     /// the SDK prints a warning and reverts the changes, as the view is still considered for layout calculation.
@@ -85,7 +85,7 @@ public final class ViewAnnotationManager {
         try mapboxMap.addViewAnnotation(withId: id, options: creationOptions)
         viewsById[id] = view
         idsByView[view] = id
-        expectedHiddenForId[id] = !(creationOptions.visible ?? true)
+        expectedHiddenByView[view] = !(creationOptions.visible ?? true)
         containerView.addSubview(view)
     }
 
@@ -123,7 +123,7 @@ public final class ViewAnnotationManager {
         }
         try mapboxMap.updateViewAnnotation(withId: id, options: options)
         let isHidden = !(options.visible ?? true)
-        expectedHiddenForId[id] = isHidden
+        expectedHiddenByView[view] = isHidden
         viewsById[id]?.isHidden = isHidden
     }
 
@@ -176,30 +176,32 @@ public final class ViewAnnotationManager {
         var visibleAnnotationIds: Set<String> = []
 
         for position in positions {
-            validateAnnotation(byAnnotationId: position.identifier)
             guard let view = viewsById[position.identifier] else {
                 continue
             }
+            validate(view)
+
             view.translatesAutoresizingMaskIntoConstraints = true
             view.frame = CGRect(
                 origin: position.leftTopCoordinate.point,
                 size: CGSize(width: CGFloat(position.width), height: CGFloat(position.height))
             )
             view.isHidden = false
-            expectedHiddenForId[position.identifier] = false
+            expectedHiddenByView[view] = false
             visibleAnnotationIds.insert(position.identifier)
         }
 
         let annotationsToHide = Set<String>(viewsById.keys).subtracting(visibleAnnotationIds)
         for id in annotationsToHide {
-            validateAnnotation(byAnnotationId: id)
-            viewsById[id]?.isHidden = true
-            expectedHiddenForId[id] = true
+            guard let view = viewsById[id] else { fatalError() }
+            validate(view)
+            view.isHidden = true
+            expectedHiddenByView[view] = true
         }
     }
 
-    internal func validateAnnotation(byAnnotationId id: String) {
-        guard !disableViewValidation, let view = viewsById[id] else { return }
+    internal func validate(_ view: UIView) {
+        guard !disableViewValidation else { return }
         // Re-add the view if the superview of the annotation view is different than the container
         if view.superview != containerView {
             Log.warning(forMessage: "Superview changed for annotation view. Use `ViewAnnotationManager.remove(_ view: UIView)` instead to remove it from the layout calculation.", category: "Annotations")
@@ -207,7 +209,7 @@ public final class ViewAnnotationManager {
             containerView.addSubview(view)
         }
         // View is still considered for layout calculation, users should not modify the visibility of view directly
-        if let expectedHidden = expectedHiddenForId[id], view.isHidden != expectedHidden {
+        if let expectedHidden = expectedHiddenByView[view], view.isHidden != expectedHidden {
             Log.warning(forMessage: "Visibility changed for annotation view. Use `ViewAnnotationManager.update(view: UIView, options: ViewAnnotationOptions)` instead to update visibility and remove the view from layout calculation.", category: "Annotations")
             view.isHidden = expectedHidden
         }

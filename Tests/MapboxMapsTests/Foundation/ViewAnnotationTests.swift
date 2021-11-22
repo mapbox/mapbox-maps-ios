@@ -90,23 +90,23 @@ final class ViewAnnotationTests: XCTestCase {
     func testValidateAnnotation() {
         let annotationView = addTestAnnotationView()
 
-        manager.validateAnnotation(byAnnotationId: manager.idsByView[annotationView]!)
+        manager.validate(annotationView)
         XCTAssertEqual(mockMapboxMap.removeViewAnnotationStub.invocations.count, 0)
 
         annotationView.removeFromSuperview()
         XCTAssertEqual(container.subviews.count, 0)
-        manager.validateAnnotation(byAnnotationId: manager.idsByView[annotationView]!)
+        manager.validate(annotationView)
         XCTAssertEqual(container.subviews.count, 1)
-        
+
         let view = UIView()
         annotationView.removeFromSuperview()
         view.addSubview(annotationView)
         XCTAssertEqual(container.subviews.count, 0)
-        manager.validateAnnotation(byAnnotationId: manager.idsByView[annotationView]!)
+        manager.validate(annotationView)
         XCTAssertEqual(container.subviews.count, 1)
-        
+
         annotationView.isHidden = true
-        manager.validateAnnotation(byAnnotationId: manager.idsByView[annotationView]!)
+        manager.validate(annotationView)
         XCTAssertFalse(annotationView.isHidden)
     }
 
@@ -114,17 +114,17 @@ final class ViewAnnotationTests: XCTestCase {
         let annotationView = addTestAnnotationView()
         let id = manager.idsByView[annotationView]!
 
-        XCTAssertFalse(manager.expectedHiddenForId[id]!)
+        XCTAssertFalse(manager.expectedHiddenByView[annotationView]!)
         // Not including ID in position update signals that view is out of bounds
         manager.onViewAnnotationPositionsUpdate(forPositions: [])
-        XCTAssertTrue(manager.expectedHiddenForId[id]!)
+        XCTAssertTrue(manager.expectedHiddenByView[annotationView]!)
         manager.onViewAnnotationPositionsUpdate(forPositions: [ViewAnnotationPositionDescriptor(
             __identifier: id,
             width: UInt32(100),
             height: UInt32(50),
             leftTopCoordinate: ScreenCoordinate(x: 100.0, y: 100.0)
         )])
-        XCTAssertFalse(manager.expectedHiddenForId[id]!)
+        XCTAssertFalse(manager.expectedHiddenByView[annotationView]!)
     }
 
     // MARK: Test placeAnnotations

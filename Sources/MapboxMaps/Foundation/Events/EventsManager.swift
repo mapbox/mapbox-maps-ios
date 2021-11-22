@@ -31,6 +31,10 @@ internal class EventsManager: EventsListener {
                                     hostSDKVersion: sdkVersion)
         mmeEventsManager.skuId = "00"
 
+        UserDefaults.standard.register(defaults: [
+            #keyPath(UserDefaults.MGLMapboxMetricsEnabled): true
+        ])
+
         metricsEnabledObservation = UserDefaults.standard.observe(\.MGLMapboxMetricsEnabled, options: [.initial, .new]) { _, change in
             DispatchQueue.main.async {
                 guard let newValue = change.newValue else { return }

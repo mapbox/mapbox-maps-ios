@@ -105,9 +105,12 @@ public struct Examples {
         Example(title: "Add multiple annotations to a map",
                 description: "Add default and custom annotations to a map.",
                 type: MultiplePointAnnotationsExample.self),
-        Example(title: "Add view annotations to a map",
-                description: "Use custom view in annotations on a map.",
-                type: ViewAnnotationExample.self)
+        Example(title: "Add view annotations",
+                description: "Add view annotation on a map click.",
+                type: ViewAnnotationBasicExample.self),
+        Example(title: "Add view annotations connected to features",
+                description: "Add view annotation anchored to a symbol layer feature.",
+                type: ViewAnnotationMarkerExample.self)
     ]
 
     // Examples that focus on setting, animating, or otherwise changing the map's camera.

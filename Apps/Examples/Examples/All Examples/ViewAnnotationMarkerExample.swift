@@ -2,8 +2,8 @@ import UIKit
 import MapboxMaps
 import CoreLocation
 
-@objc(ViewAnnotationExample)
-final class ViewAnnotationExample: UIViewController, ExampleProtocol {
+@objc(ViewAnnotationMarkerExample)
+final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
 
     private enum Constants {
         static let BLUE_ICON_ID = "blue"

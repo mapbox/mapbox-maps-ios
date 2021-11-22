@@ -29,6 +29,9 @@ final class ViewAnnotationTests: XCTestCase {
         XCTAssertEqual(mockMapboxMap.addViewAnnotationStub.invocations.count, 1)
         XCTAssertEqual(testView.superview, container)
         XCTAssertEqual(container.subviews.count, 1)
+
+        // Should fail if the view is already added
+        XCTAssertThrowsError(try manager.add(testView, options: ViewAnnotationOptions(geometry: geometry)))
     }
 
     func testAddViewMissingGeometry() {
@@ -55,7 +58,7 @@ final class ViewAnnotationTests: XCTestCase {
         XCTAssertEqual(mockMapboxMap.updateViewAnnotationStub.invocations.first?.parameters.options, options)
 
         // Trying to update the view after removal should throw
-        XCTAssertNoThrow(try manager.remove(annotationView))
+        manager.remove(annotationView)
         XCTAssertThrowsError(try manager.update(annotationView, options: options))
     }
 
@@ -66,7 +69,7 @@ final class ViewAnnotationTests: XCTestCase {
         XCTAssertEqual(annotationView, manager.view(forFeatureId: testFeatureIdOne))
         XCTAssertNil(manager.view(forFeatureId: "testFeatureIdTwo"))
         XCTAssertNil(manager.view(forFeatureId: ""))
-        
+
         manager.remove(annotationView)
         XCTAssertEqual(manager.viewsByFeatureIds.keys.count, 0)
     }
@@ -77,7 +80,7 @@ final class ViewAnnotationTests: XCTestCase {
         let expectedOptions = ViewAnnotationOptions(geometry: geometry, associatedFeatureId: testFeatureIdOne)
         let annotationView = addTestAnnotationView(featureId: testFeatureIdOne)
         XCTAssertEqual(expectedOptions, manager.options(forFeatureId: testFeatureIdOne))
-        XCTAssertNoThrow(try manager.remove(annotationView))
+        manager.remove(annotationView)
         XCTAssertNil(manager.options(forFeatureId: testFeatureIdOne))
     }
 
@@ -87,7 +90,7 @@ final class ViewAnnotationTests: XCTestCase {
         let expectedOptions = ViewAnnotationOptions(geometry: geometry, associatedFeatureId: testFeatureIdOne)
         let annotationView = addTestAnnotationView(featureId: testFeatureIdOne)
         XCTAssertEqual(expectedOptions, manager.options(for: annotationView))
-        XCTAssertNoThrow(try manager.remove(annotationView))
+        manager.remove(annotationView)
         XCTAssertNil(manager.options(for: annotationView))
     }
 
@@ -112,6 +115,28 @@ final class ViewAnnotationTests: XCTestCase {
         annotationView.isHidden = true
         manager.validate(annotationView)
         XCTAssertFalse(annotationView.isHidden)
+    }
+
+    func testDisableValidateAnnotation() {
+        let annotationView = addTestAnnotationView()
+
+        manager.validatesViews = false
+
+        annotationView.removeFromSuperview()
+        XCTAssertEqual(container.subviews.count, 0)
+        manager.validate(annotationView)
+        XCTAssertEqual(container.subviews.count, 0)
+
+        let view = UIView()
+        annotationView.removeFromSuperview()
+        view.addSubview(annotationView)
+        XCTAssertEqual(container.subviews.count, 0)
+        manager.validate(annotationView)
+        XCTAssertEqual(container.subviews.count, 0)
+
+        annotationView.isHidden = true
+        manager.validate(annotationView)
+        XCTAssertTrue(annotationView.isHidden)
     }
 
     func testExpectedHiddenState() {

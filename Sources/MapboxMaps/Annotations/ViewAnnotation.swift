@@ -3,6 +3,7 @@ import UIKit
 @_implementationOnly import MapboxCoreMaps_Private
 
 public enum ViewAnnotationManagerError: Error {
+    case viewIsAlreadyAdded
     case annotationNotFound
     case geometryFieldMissing
 }
@@ -30,8 +31,8 @@ public final class ViewAnnotationManager {
 
     /// If the superview or the `UIView.isHidden` property of a custom view annotation is changed manually by the users
     /// the SDK prints a warning and reverts the changes, as the view is still considered for layout calculation.
-    /// The default value is false, and setting this value to true will disable the validation.
-    public var disableViewValidation = false
+    /// The default value is true, and setting this value to false will disable the validation.
+    public var validatesViews = true
 
     internal init(containerView: SubviewInteractionOnlyView, mapboxMap: MapboxMapProtocol) {
         self.containerView = containerView
@@ -64,11 +65,12 @@ public final class ViewAnnotationManager {
     ///   - options: `ViewAnnotationOptions` to control the layout and visibility of the annotation
     ///
     /// - Throws:
+    ///   -  `ViewAnnotationManagerError.viewIsAlreadyAdded` if the supplied view is already added as an annotation
     ///   -  `ViewAnnotationManagerError.geometryFieldMissing` if options did not include geometry
     ///   - `MapError`: errors during insertion
     public func add(_ view: UIView, options: ViewAnnotationOptions) throws {
         guard idsByView[view] == nil else {
-            return
+            throw ViewAnnotationManagerError.viewIsAlreadyAdded
         }
         guard options.geometry != nil else {
             throw ViewAnnotationManagerError.geometryFieldMissing
@@ -90,7 +92,9 @@ public final class ViewAnnotationManager {
         viewsById[id] = view
         idsByView[view] = id
         expectedHiddenByView[view] = !(creationOptions.visible ?? true)
-        creationOptions.associatedFeatureId.flatMap { viewsByFeatureIds[$0] = view }
+        if let featureId = creationOptions.associatedFeatureId {
+            viewsByFeatureIds[featureId] = view
+        }
         containerView.addSubview(view)
     }
 
@@ -108,7 +112,9 @@ public final class ViewAnnotationManager {
         viewsById.removeValue(forKey: id)
         idsByView.removeValue(forKey: annotatonView)
         expectedHiddenByView.removeValue(forKey: annotatonView)
-        _ = options?.associatedFeatureId.flatMap { viewsByFeatureIds.removeValue(forKey: $0) }
+        if let featureId = options?.associatedFeatureId {
+            viewsByFeatureIds.removeValue(forKey: featureId)
+        }
     }
 
     /// Update given `UIView` with `ViewAnnotationOptions`.
@@ -130,7 +136,9 @@ public final class ViewAnnotationManager {
         let isHidden = !(options.visible ?? true)
         expectedHiddenByView[view] = isHidden
         viewsById[id]?.isHidden = isHidden
-        options.associatedFeatureId.flatMap { viewsByFeatureIds[$0] = view }
+        if let featureId = options.associatedFeatureId {
+            viewsByFeatureIds[featureId] = view
+        }
     }
 
     /// Find `UIView` by feature id if it was specified as part of `ViewAnnotationOptions.associatedFeatureId`.
@@ -197,7 +205,7 @@ public final class ViewAnnotationManager {
     }
 
     internal func validate(_ view: UIView) {
-        guard !disableViewValidation else { return }
+        guard validatesViews else { return }
         // Re-add the view if the superview of the annotation view is different than the container
         if view.superview != containerView {
             Log.warning(forMessage: "Superview changed for annotation view. Use `ViewAnnotationManager.remove(_ view: UIView)` instead to remove it from the layout calculation.", category: "Annotations")

@@ -158,7 +158,7 @@ assignees: ''
 ## 📊 ZenHub
 
 - [ ] Review the [issues in the ZenHub Release](https://app.zenhub.com/workspaces/maps-sdk-5fac44a73ae0870015ac174b/reports/release), adding or removing to the list as necessary.
-- [ ] Close the Zenhub Release.
+- [ ] For non-prereleases, close the Zenhub Release.
 
 ## 📣 Announce the Release
 

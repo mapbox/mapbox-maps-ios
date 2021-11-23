@@ -33,4 +33,52 @@ final class StyleLocalizationTests: MapViewIntegrationTestCase {
 
         XCTAssertThrowsError(try style.localizeLabels(into: Locale(identifier: "tlh")))
     }
+    
+    func testOnlyLocalizesFirstLocalization() throws {
+        var source = GeoJSONSource()
+        source.data = .feature(Feature(geometry: Point(CLLocationCoordinate2D(latitude: 0, longitude: 0))))
+        try style.addSource(source, id: "a")
+        
+        var symbolLayer = SymbolLayer(id: "a")
+        symbolLayer.source = "a"
+        symbolLayer.textField = .expression(
+            Exp(.format) {
+                Exp(.coalesce) {
+                    Exp(.get) {
+                        "name_en"
+                    }
+                    Exp(.get) {
+                        "name_fr"
+                    }
+                    Exp(.get) {
+                        "name"
+                    }
+                }
+                FormatOptions()
+            }
+        )
+        
+        try style.addLayer(symbolLayer)
+        
+        try style.localizeLabels(into: Locale(identifier: "de"))
+        
+        let updatedLayer = try style.layer(withId: "a", type: SymbolLayer.self)
+        
+        XCTAssertEqual(updatedLayer.textField, .expression(
+            Exp(.format) {
+                Exp(.coalesce) {
+                    Exp(.get) {
+                        "name_de"
+                    }
+                    Exp(.get) {
+                        "name_fr"
+                    }
+                    Exp(.get) {
+                        "name"
+                    }
+                }
+                FormatOptions()
+            }
+        ))
+    }
 }

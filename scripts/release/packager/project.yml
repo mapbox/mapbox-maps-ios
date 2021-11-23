@@ -35,6 +35,7 @@ targets:
         excludes:
           - "**/*.plist"
           - "**/*.h"
+          - "**/.swiftlint.yml"
       - path: "Sources/MapboxMaps/Info.plist"
       - path: "Sources/MapboxMaps/MapboxMaps.h"
     dependencies:

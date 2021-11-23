@@ -25,8 +25,11 @@ final class ViewAnnotationManagerTests: XCTestCase {
     func testAddView() {
         let testView = UIView()
         let geometry = Geometry.point(Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)))
-        try? manager.add(testView, options: ViewAnnotationOptions(geometry: geometry))
+        let options = ViewAnnotationOptions(geometry: geometry, width: 0.0, height: 0.0)
+        try? manager.add(testView, options: options)
         XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.count, 1)
+        XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.id, "0")
+        XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.options, options)
         XCTAssertEqual(testView.superview, container)
         XCTAssertEqual(container.subviews.count, 1)
 
@@ -69,7 +72,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertEqual(mapboxMap.removeViewAnnotationStub.invocations.first?.parameters, expectedId)
         XCTAssertEqual(container.subviews.count, 0)
     }
-    
+
     func testassociatedFeatureIdIsAlreadyInUse() {
         let testView = UIView()
         let geometry = Geometry.point(Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)))
@@ -79,12 +82,12 @@ final class ViewAnnotationManagerTests: XCTestCase {
 
         // Should prevent adding a view with a feature id which is already in use
         XCTAssertThrowsError(try manager.add(UIView(), options: optionWithFeatureId))
-        
+
         let otherView = UIView()
         XCTAssertNoThrow(try manager.add(otherView, options: ViewAnnotationOptions(geometry: geometry)))
         // Should prevent updating a view with a feature id which is already in use
         XCTAssertThrowsError(try manager.update(otherView, options: optionWithFeatureId))
-        
+
         // Removing the view should allow the usage of the feature ID again
         manager.remove(testView)
         XCTAssertThrowsError(try manager.add(UIView(), options: optionWithFeatureId))
@@ -137,7 +140,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
     func testValidateAnnotation() {
         let annotationView = addTestAnnotationView()
         let id = mapboxMap.addViewAnnotationStub.invocations.last!.parameters.id
-        
+
         // Position update should also call validation
         triggerPositionUpdate(forId: id)
         XCTAssertEqual(mapboxMap.removeViewAnnotationStub.invocations.count, 0)
@@ -235,7 +238,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         mapboxMap.optionsForViewAnnotationWithIdStub.defaultReturnValue = options
         return view
     }
-    
+
     private func triggerPositionUpdate(forId id: String) {
         manager.onViewAnnotationPositionsUpdate(forPositions: [ViewAnnotationPositionDescriptor(
             identifier: id,
@@ -256,4 +259,3 @@ fileprivate extension MapboxCoreMaps.ViewAnnotationPositionDescriptor {
         )
     }
 }
-

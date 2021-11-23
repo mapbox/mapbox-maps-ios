@@ -32,6 +32,23 @@ final class ViewAnnotationTests: XCTestCase {
 
         // Should fail if the view is already added
         XCTAssertThrowsError(try manager.add(testView, options: ViewAnnotationOptions(geometry: geometry)))
+
+        // Adding views should increment keys
+        XCTAssertEqual(Array(manager.viewsById.keys), ["0"])
+        XCTAssertEqual(Array(manager.idsByView.values), ["0"])
+        try? manager.add(UIView(), options: ViewAnnotationOptions(geometry: geometry))
+        XCTAssertEqual(Array(manager.viewsById.keys), ["0", "1"])
+        XCTAssertEqual(Array(manager.idsByView.values), ["0", "1"])
+    }
+
+    func testAddViewReadSize() {
+        let testView = UIView()
+        let geometry = Geometry.point(Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)))
+        let expectedSize = CGSize(width: 32.0, height: 64.0)
+        testView.bounds.size = expectedSize
+        try? manager.add(testView, options: ViewAnnotationOptions(geometry: geometry))
+
+        XCTAssertEqual(mockMapboxMap.addViewAnnotationStub.invocations.first?.parameters.options, ViewAnnotationOptions(geometry: geometry, width: expectedSize.width, height: expectedSize.height))
     }
 
     func testAddViewMissingGeometry() {
@@ -41,12 +58,26 @@ final class ViewAnnotationTests: XCTestCase {
     }
 
     func testRemove() {
-        let annotationView = addTestAnnotationView()
+        // Removing a view which wasn't added should not call internal remove method
+        let view = UIView()
+        manager.remove(view)
         XCTAssertEqual(mockMapboxMap.removeViewAnnotationStub.invocations.count, 0)
+
+        let annotationView = addTestAnnotationView()
+        let expectedId = manager.idsByView[annotationView]
         XCTAssertEqual(container.subviews.count, 1)
         manager.remove(annotationView)
         XCTAssertEqual(mockMapboxMap.removeViewAnnotationStub.invocations.count, 1)
+        XCTAssertEqual(mockMapboxMap.removeViewAnnotationStub.invocations.first?.parameters, expectedId)
         XCTAssertEqual(container.subviews.count, 0)
+    }
+
+    func testRemoveWithAssociatedFeatureId() {
+        let testId = "test"
+        let annotationView = addTestAnnotationView(featureId: testId)
+        XCTAssertEqual(manager.viewsByFeatureIds, [testId: annotationView])
+        manager.remove(annotationView)
+        XCTAssertEqual(manager.viewsByFeatureIds, [:])
     }
 
     func testUpdate() {

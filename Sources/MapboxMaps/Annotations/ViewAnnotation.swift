@@ -4,6 +4,7 @@ import UIKit
 
 public enum ViewAnnotationManagerError: Error {
     case viewIsAlreadyAdded
+    case associatedFeatureIdIsAlreadyInUse
     case annotationNotFound
     case geometryFieldMissing
 }
@@ -67,6 +68,8 @@ public final class ViewAnnotationManager {
     /// - Throws:
     ///   -  `ViewAnnotationManagerError.viewIsAlreadyAdded` if the supplied view is already added as an annotation
     ///   -  `ViewAnnotationManagerError.geometryFieldMissing` if options did not include geometry
+    ///   -  `ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse` if the
+    ///   supplied `associatedFeatureId` is already used by another annotation view
     ///   - `MapError`: errors during insertion
     public func add(_ view: UIView, options: ViewAnnotationOptions) throws {
         guard idsByView[view] == nil else {
@@ -74,6 +77,9 @@ public final class ViewAnnotationManager {
         }
         guard options.geometry != nil else {
             throw ViewAnnotationManagerError.geometryFieldMissing
+        }
+        if let associatedFeatureId = options.associatedFeatureId, viewsByFeatureIds[associatedFeatureId] != nil {
+            throw ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse
         }
         var creationOptions = options
         if creationOptions.width == nil {
@@ -127,10 +133,15 @@ public final class ViewAnnotationManager {
     ///
     /// - Throws:
     ///   - `ViewAnnotationManagerError.annotationNotFound`: the supplied view was not found
+    ///   -  `ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse` if the
+    ///   supplied `associatedFeatureId` is already used by another annotation view
     ///   - `MapError`: errors during the update of the view (eg. incorrect parameters)
     public func update(_ view: UIView, options: ViewAnnotationOptions) throws {
         guard let id = idsByView[view] else {
             throw ViewAnnotationManagerError.annotationNotFound
+        }
+        if let associatedFeatureId = options.associatedFeatureId, viewsByFeatureIds[associatedFeatureId] != nil {
+            throw ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse
         }
         try mapboxMap.updateViewAnnotation(withId: id, options: options)
         let isHidden = !(options.visible ?? true)

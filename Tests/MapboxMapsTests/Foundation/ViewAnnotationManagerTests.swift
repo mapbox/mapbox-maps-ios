@@ -79,6 +79,18 @@ final class ViewAnnotationManagerTests: XCTestCase {
         manager.remove(annotationView)
         XCTAssertEqual(manager.viewsByFeatureIds, [:])
     }
+    
+    func testassociatedFeatureIdIsAlreadyInUse() {
+        let geometry = Geometry.point(Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)))
+        let optionWithFeatureId = ViewAnnotationOptions(geometry: geometry, associatedFeatureId: "testId")
+
+        XCTAssertNoThrow(try manager.add(UIView(), options: optionWithFeatureId))
+        XCTAssertThrowsError(try manager.add(UIView(), options: optionWithFeatureId))
+        
+        let otherView = UIView()
+        XCTAssertNoThrow(try manager.add(otherView, options: ViewAnnotationOptions(geometry: geometry)))
+        XCTAssertThrowsError(try manager.update(otherView, options: optionWithFeatureId))
+    }
 
     func testUpdate() {
         let annotationView = addTestAnnotationView()

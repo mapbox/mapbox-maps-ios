@@ -34,11 +34,9 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertThrowsError(try manager.add(testView, options: ViewAnnotationOptions(geometry: geometry)))
 
         // Adding views should increment keys
-        XCTAssertEqual(manager.viewsById.keys.sorted(), ["0"])
-        XCTAssertEqual(manager.idsByView.values.sorted(), ["0"])
+        XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.id, "0")
         try? manager.add(UIView(), options: ViewAnnotationOptions(geometry: geometry))
-        XCTAssertEqual(manager.viewsById.keys.sorted(), ["0", "1"])
-        XCTAssertEqual(manager.idsByView.values.sorted(), ["0", "1"])
+        XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.id, "1")
     }
 
     func testAddViewReadSize() {
@@ -64,32 +62,32 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertEqual(mapboxMap.removeViewAnnotationStub.invocations.count, 0)
 
         let annotationView = addTestAnnotationView()
-        let expectedId = manager.idsByView[annotationView]
+        let expectedId = mapboxMap.addViewAnnotationStub.invocations.last!.parameters.id
         XCTAssertEqual(container.subviews.count, 1)
         manager.remove(annotationView)
         XCTAssertEqual(mapboxMap.removeViewAnnotationStub.invocations.count, 1)
         XCTAssertEqual(mapboxMap.removeViewAnnotationStub.invocations.first?.parameters, expectedId)
         XCTAssertEqual(container.subviews.count, 0)
     }
-
-    func testRemoveWithAssociatedFeatureId() {
-        let testId = "test"
-        let annotationView = addTestAnnotationView(featureId: testId)
-        XCTAssertEqual(manager.viewsByFeatureIds, [testId: annotationView])
-        manager.remove(annotationView)
-        XCTAssertEqual(manager.viewsByFeatureIds, [:])
-    }
     
     func testassociatedFeatureIdIsAlreadyInUse() {
+        let testView = UIView()
         let geometry = Geometry.point(Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)))
         let optionWithFeatureId = ViewAnnotationOptions(geometry: geometry, associatedFeatureId: "testId")
 
-        XCTAssertNoThrow(try manager.add(UIView(), options: optionWithFeatureId))
+        XCTAssertNoThrow(try manager.add(testView, options: optionWithFeatureId))
+
+        // Should prevent adding a view with a feature id which is already in use
         XCTAssertThrowsError(try manager.add(UIView(), options: optionWithFeatureId))
         
         let otherView = UIView()
         XCTAssertNoThrow(try manager.add(otherView, options: ViewAnnotationOptions(geometry: geometry)))
+        // Should prevent updating a view with a feature id which is already in use
         XCTAssertThrowsError(try manager.update(otherView, options: optionWithFeatureId))
+        
+        // Removing the view should allow the usage of the feature ID again
+        manager.remove(testView)
+        XCTAssertThrowsError(try manager.add(UIView(), options: optionWithFeatureId))
     }
 
     func testUpdate() {
@@ -108,13 +106,12 @@ final class ViewAnnotationManagerTests: XCTestCase {
     func testViewForFeatureId() {
         let testFeatureIdOne = "testFeatureIdOne"
         let annotationView = addTestAnnotationView(featureId: testFeatureIdOne)
-        XCTAssertEqual(manager.viewsByFeatureIds[testFeatureIdOne], annotationView)
         XCTAssertEqual(annotationView, manager.view(forFeatureId: testFeatureIdOne))
         XCTAssertNil(manager.view(forFeatureId: "testFeatureIdTwo"))
         XCTAssertNil(manager.view(forFeatureId: ""))
 
         manager.remove(annotationView)
-        XCTAssertEqual(manager.viewsByFeatureIds.keys.count, 0)
+        XCTAssertNil(manager.view(forFeatureId: testFeatureIdOne))
     }
 
     func testOptionsforFeatureId() {
@@ -139,64 +136,46 @@ final class ViewAnnotationManagerTests: XCTestCase {
 
     func testValidateAnnotation() {
         let annotationView = addTestAnnotationView()
-
-        manager.validate(annotationView)
+        let id = mapboxMap.addViewAnnotationStub.invocations.last!.parameters.id
+        
+        // Position update should also call validation
+        triggerPositionUpdate(forId: id)
         XCTAssertEqual(mapboxMap.removeViewAnnotationStub.invocations.count, 0)
 
         annotationView.removeFromSuperview()
         XCTAssertEqual(container.subviews.count, 0)
-        manager.validate(annotationView)
+        triggerPositionUpdate(forId: id)
         XCTAssertEqual(container.subviews.count, 1)
 
         let view = UIView()
         annotationView.removeFromSuperview()
         view.addSubview(annotationView)
         XCTAssertEqual(container.subviews.count, 0)
-        manager.validate(annotationView)
+        triggerPositionUpdate(forId: id)
         XCTAssertEqual(container.subviews.count, 1)
 
         annotationView.isHidden = true
-        manager.validate(annotationView)
+        triggerPositionUpdate(forId: id)
         XCTAssertFalse(annotationView.isHidden)
     }
 
     func testDisableValidateAnnotation() {
         let annotationView = addTestAnnotationView()
+        let id = mapboxMap.addViewAnnotationStub.invocations.last!.parameters.id
 
         manager.validatesViews = false
 
         annotationView.removeFromSuperview()
         XCTAssertEqual(container.subviews.count, 0)
-        manager.validate(annotationView)
+        triggerPositionUpdate(forId: id)
         XCTAssertEqual(container.subviews.count, 0)
 
         let view = UIView()
         annotationView.removeFromSuperview()
         view.addSubview(annotationView)
         XCTAssertEqual(container.subviews.count, 0)
-        manager.validate(annotationView)
+        triggerPositionUpdate(forId: id)
         XCTAssertEqual(container.subviews.count, 0)
-
-        annotationView.isHidden = true
-        manager.validate(annotationView)
-        XCTAssertTrue(annotationView.isHidden)
-    }
-
-    func testExpectedHiddenState() {
-        let annotationView = addTestAnnotationView()
-        let id = manager.idsByView[annotationView]!
-
-        XCTAssertFalse(manager.expectedHiddenByView[annotationView]!)
-        // Not including ID in position update signals that view is out of bounds
-        manager.onViewAnnotationPositionsUpdate(forPositions: [])
-        XCTAssertTrue(manager.expectedHiddenByView[annotationView]!)
-        manager.onViewAnnotationPositionsUpdate(forPositions: [ViewAnnotationPositionDescriptor(
-            identifier: id,
-            width: 100,
-            height: 50,
-            leftTopCoordinate: CGPoint(x: 100.0, y: 100.0)
-        )])
-        XCTAssertFalse(manager.expectedHiddenByView[annotationView]!)
     }
 
     // MARK: Test placeAnnotations
@@ -216,7 +195,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertEqual(annotationView.frame, CGRect.zero)
 
         manager.onViewAnnotationPositionsUpdate(forPositions: [ViewAnnotationPositionDescriptor(
-            identifier: manager.idsByView[annotationView]!,
+            identifier: "0",
             width: 100,
             height: 50,
             leftTopCoordinate: CGPoint(x: 150.0, y: 200.0)
@@ -235,7 +214,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertFalse(annotationViewC.isHidden)
 
         manager.onViewAnnotationPositionsUpdate(forPositions: [ViewAnnotationPositionDescriptor(
-            identifier: manager.idsByView[annotationViewA]!,
+            identifier: "0",
             width: 100,
             height: 50,
             leftTopCoordinate: CGPoint(x: 150.0, y: 200.0)
@@ -248,7 +227,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
 
     // MARK: - Helper functions
 
-    func addTestAnnotationView(featureId: String? = nil) -> UIView {
+    private func addTestAnnotationView(featureId: String? = nil) -> UIView {
         let geometry = Geometry.point(Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)))
         let options = ViewAnnotationOptions(geometry: geometry, associatedFeatureId: featureId)
         let view = UIView()
@@ -256,11 +235,20 @@ final class ViewAnnotationManagerTests: XCTestCase {
         mapboxMap.optionsForViewAnnotationWithIdStub.defaultReturnValue = options
         return view
     }
+    
+    private func triggerPositionUpdate(forId id: String) {
+        manager.onViewAnnotationPositionsUpdate(forPositions: [ViewAnnotationPositionDescriptor(
+            identifier: id,
+            width: 100,
+            height: 50,
+            leftTopCoordinate: CGPoint(x: 150.0, y: 200.0)
+        )])
+    }
 
 }
 
 fileprivate extension MapboxCoreMaps.ViewAnnotationPositionDescriptor {
-    fileprivate convenience init(identifier: String, width: Int, height: Int, leftTopCoordinate: CGPoint) {
+    convenience init(identifier: String, width: Int, height: Int, leftTopCoordinate: CGPoint) {
         self.init(__identifier: identifier,
                   width: UInt32(width),
                   height: UInt32(height),

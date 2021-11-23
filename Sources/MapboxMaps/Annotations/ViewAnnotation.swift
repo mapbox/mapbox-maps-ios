@@ -25,10 +25,10 @@ public final class ViewAnnotationManager {
     private let containerView: UIView
     private let mapboxMap: MapboxMapProtocol
     private var currentViewId = 0
-    internal private(set) var viewsById: [String: UIView] = [:]
-    internal private(set) var idsByView: [UIView: String] = [:]
-    internal private(set) var expectedHiddenByView: [UIView: Bool] = [:]
-    internal private(set) var viewsByFeatureIds: [String: UIView] = [:]
+    private var viewsById: [String: UIView] = [:]
+    private var idsByView: [UIView: String] = [:]
+    private var expectedHiddenByView: [UIView: Bool] = [:]
+    private var viewsByFeatureIds: [String: UIView] = [:]
 
     /// If the superview or the `UIView.isHidden` property of a custom view annotation is changed manually by the users
     /// the SDK prints a warning and reverts the changes, as the view is still considered for layout calculation.
@@ -182,9 +182,9 @@ public final class ViewAnnotationManager {
         return idsByView[view].flatMap { try? mapboxMap.options(forViewAnnotationWithId: $0) }
     }
 
-    // MARK: - Internal functions
+    // MARK: - Private functions
 
-    internal func placeAnnotations(positions: [ViewAnnotationPositionDescriptor]) {
+    private func placeAnnotations(positions: [ViewAnnotationPositionDescriptor]) {
         // Iterate through and update all view annotations
         // First update the position of the views based on the placement info from GL-Native
         // Then hide the views which are off screen
@@ -215,7 +215,7 @@ public final class ViewAnnotationManager {
         }
     }
 
-    internal func validate(_ view: UIView) {
+    private func validate(_ view: UIView) {
         guard validatesViews else { return }
         // Re-add the view if the superview of the annotation view is different than the container
         if view.superview != containerView {

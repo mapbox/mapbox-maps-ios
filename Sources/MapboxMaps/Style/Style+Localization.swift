@@ -119,7 +119,8 @@ extension String {
     ///   - replacement: New string to replace the matched pattern
     ///   - regex: The regex pattern that will be matched for replacement
     internal mutating func updateOnceExpression(replacement: String, regex: NSRegularExpression) {
-        var range = regex.rangeOfFirstMatch(in: self, options: [], range: range)
+        var range = NSRange(location: 0, length: NSString(string: self).length)
+        range = regex.rangeOfFirstMatch(in: self, options: [], range: range)
         if range.lowerBound == NSNotFound {
             return
         }

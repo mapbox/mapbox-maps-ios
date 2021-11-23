@@ -113,7 +113,7 @@ extension String {
                                               range: range,
                                               withTemplate: replacement)
     }
-    
+
     /// Updates string once using the first occurrence of a regex
     /// - Parameters:
     ///   - replacement: New string to replace the matched pattern
@@ -121,9 +121,8 @@ extension String {
     internal mutating func updateOnceExpression(replacement: String, regex: NSRegularExpression) {
         var range = NSRange(location: 0, length: self.count)
         range = regex.rangeOfFirstMatch(in: self, options: [], range: range)
-        if (range.lowerBound == NSNotFound) {
+        if (range.lowerBound == NSNotFound)
             return
-        }
         self = regex.stringByReplacingMatches(in: self,
                                               options: [],
                                               range: range,

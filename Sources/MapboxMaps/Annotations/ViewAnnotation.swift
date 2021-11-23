@@ -21,7 +21,7 @@ public enum ViewAnnotationManagerError: Error {
 /// by visibility of given feature.
 public final class ViewAnnotationManager {
 
-    private let containerView: SubviewInteractionOnlyView
+    private let containerView: UIView
     private let mapboxMap: MapboxMapProtocol
     private var currentViewId = 0
     internal private(set) var viewsById: [String: UIView] = [:]
@@ -34,7 +34,7 @@ public final class ViewAnnotationManager {
     /// The default value is true, and setting this value to false will disable the validation.
     public var validatesViews = true
 
-    internal init(containerView: SubviewInteractionOnlyView, mapboxMap: MapboxMapProtocol) {
+    internal init(containerView: UIView, mapboxMap: MapboxMapProtocol) {
         self.containerView = containerView
         self.mapboxMap = mapboxMap
         let delegatingPositionsListener = DelegatingViewAnnotationPositionsUpdateListener()

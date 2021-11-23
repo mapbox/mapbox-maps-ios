@@ -20,6 +20,7 @@ targets:
         CODE_SIGN_STYLE: Automatic
         BUILD_DIR: .build
         SWIFT_TREAT_WARNINGS_AS_ERRORS: "YES"
+        SWIFT_EMIT_PRIVATE_MODULE_INTERFACE: "YES"
       configs:
         Debug:
           SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) USING_TURF_WITH_LIBRARY_EVOLUTION

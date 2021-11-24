@@ -9,7 +9,6 @@ internal final class Puck2D: NSObject, Puck {
             }
             if isActive {
                 locationProducer.add(self)
-                addImages()
                 updateLayer()
             } else {
                 locationProducer.remove(self)
@@ -153,6 +152,12 @@ internal final class Puck2D: NSObject, Puck {
         if style.layerExists(withId: Self.layerID) {
             try! style.setLayerProperties(for: Self.layerID, properties: allLayerProperties)
         } else {
+            // add the images at the same time as adding the layer. doing it earlier results
+            // in the images getting removed if the style reloads in between when the images
+            // were added and when the persistent layer is added. The presence of a persistent
+            // layer causes MapboxCoreMaps to skip clearing images when the style reloads.
+            // https://github.com/mapbox/mapbox-maps-ios/issues/860
+            addImages()
             try! style.addPersistentLayer(with: allLayerProperties, layerPosition: nil)
         }
     }

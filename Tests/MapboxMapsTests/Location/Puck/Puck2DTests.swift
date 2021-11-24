@@ -123,10 +123,21 @@ final class Puck2DTests: XCTestCase {
         XCTAssertTrue(style.addImageStub.parameters[2].image === configuration.shadowImage, line: line)
     }
 
-    func testActivatingPuckAddsImagesIfLatestLocationIsNil() {
+    func testActivatingPuckDoesNotAddImagesIfLatestLocationIsNil() {
         locationProducer.latestLocation = nil
 
         puck2D.isActive = true
+
+        XCTAssertEqual(style.addImageStub.invocations.count, 0)
+
+        // When the location becomes non-nil, then the images get added
+        let location = Location(
+            location: CLLocation(),
+            heading: nil,
+            accuracyAuthorization: .fullAccuracy)
+        locationProducer.latestLocation = location
+
+        puck2D.locationUpdate(newLocation: location)
 
         verifyAddImages()
     }
@@ -148,6 +159,10 @@ final class Puck2DTests: XCTestCase {
             bearingImage: nil,
             shadowImage: nil)
         recreatePuck()
+        locationProducer.latestLocation = Location(
+            location: CLLocation(),
+            heading: nil,
+            accuracyAuthorization: .fullAccuracy)
 
         puck2D.isActive = true
 

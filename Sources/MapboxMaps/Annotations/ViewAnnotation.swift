@@ -3,6 +3,8 @@ import UIKit
 @_implementationOnly import MapboxCoreMaps_Private
 
 public enum ViewAnnotationManagerError: Error {
+    case viewIsAlreadyAdded
+    case associatedFeatureIdIsAlreadyInUse
     case annotationNotFound
     case geometryFieldMissing
 }
@@ -20,12 +22,20 @@ public enum ViewAnnotationManagerError: Error {
 /// by visibility of given feature.
 public final class ViewAnnotationManager {
 
-    private let containerView: SubviewInteractionOnlyView
+    private let containerView: UIView
     private let mapboxMap: MapboxMapProtocol
-    private var annotationViewsById: [String: AnnotationView] = [:]
-    private var annotationIdByView: [AnnotationView: String] = [:]
+    private var currentViewId = 0
+    private var viewsById: [String: UIView] = [:]
+    private var idsByView: [UIView: String] = [:]
+    private var expectedHiddenByView: [UIView: Bool] = [:]
+    private var viewsByFeatureIds: [String: UIView] = [:]
 
-    internal init(containerView: SubviewInteractionOnlyView, mapboxMap: MapboxMapProtocol) {
+    /// If the superview or the `UIView.isHidden` property of a custom view annotation is changed manually by the users
+    /// the SDK prints a warning and reverts the changes, as the view is still considered for layout calculation.
+    /// The default value is true, and setting this value to false will disable the validation.
+    public var validatesViews = true
+
+    internal init(containerView: UIView, mapboxMap: MapboxMapProtocol) {
         self.containerView = containerView
         self.mapboxMap = mapboxMap
         let delegatingPositionsListener = DelegatingViewAnnotationPositionsUpdateListener()
@@ -39,7 +49,7 @@ public final class ViewAnnotationManager {
 
     // MARK: - Public APIs
 
-    /// Add annotation to the map which wraps a supplied `UIView`
+    /// Add a `UIView` instance which will be displayed as an annotation.
     /// View dimensions will be taken as width / height from the bounds of the view
     /// unless they are not specified explicitly with `ViewAnnotationOptions.width` and `ViewAnnotationOptions.height`.
     ///
@@ -48,16 +58,28 @@ public final class ViewAnnotationManager {
     /// Width and height could be specified explicitly but better idea will be not specifying them
     /// as they will be calculated automatically based on view layout.
     ///
+    /// Note: Use `update(view: UIView, options: ViewAnnotationOptions)` for changing the visibilty of the view, instead
+    /// of `UIView.isHidden` so that it is removed from the layout calculation.
+    ///
     /// - Parameters:
-    ///   - view: `UIView` to be wrapped in an `AnnotationView` and placed on the map
-    ///   - options: view annotation options
+    ///   - view: `UIView` to be added to the map
+    ///   - options: `ViewAnnotationOptions` to control the layout and visibility of the annotation
     ///
     /// - Throws:
+    ///   -  `ViewAnnotationManagerError.viewIsAlreadyAdded` if the supplied view is already added as an annotation
     ///   -  `ViewAnnotationManagerError.geometryFieldMissing` if options did not include geometry
+    ///   -  `ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse` if the
+    ///   supplied `associatedFeatureId` is already used by another annotation view
     ///   - `MapError`: errors during insertion
-    public func addAnnotationView(withContent view: UIView, options: ViewAnnotationOptions) throws -> AnnotationView {
+    public func add(_ view: UIView, options: ViewAnnotationOptions) throws {
+        guard idsByView[view] == nil else {
+            throw ViewAnnotationManagerError.viewIsAlreadyAdded
+        }
         guard options.geometry != nil else {
             throw ViewAnnotationManagerError.geometryFieldMissing
+        }
+        if let associatedFeatureId = options.associatedFeatureId, viewsByFeatureIds[associatedFeatureId] != nil {
+            throw ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse
         }
         var creationOptions = options
         if creationOptions.width == nil {
@@ -66,61 +88,82 @@ public final class ViewAnnotationManager {
         if creationOptions.height == nil {
             creationOptions.height = view.bounds.size.height
         }
-        let annotatonView = AnnotationView(view: view, annotationManager: self)
-        try mapboxMap.addViewAnnotation(withId: annotatonView.id, options: options)
-        annotationViewsById[annotatonView.id] = annotatonView
-        annotationIdByView[annotatonView] = annotatonView.id
-        containerView.addSubview(annotatonView)
-        return annotatonView
+
+        let id = String(currentViewId)
+        currentViewId += 1
+
+        view.translatesAutoresizingMaskIntoConstraints = false
+
+        try mapboxMap.addViewAnnotation(withId: id, options: creationOptions)
+        viewsById[id] = view
+        idsByView[view] = id
+        expectedHiddenByView[view] = !(creationOptions.visible ?? true)
+        if let featureId = creationOptions.associatedFeatureId {
+            viewsByFeatureIds[featureId] = view
+        }
+        containerView.addSubview(view)
     }
 
-    /// Remove given `AnnotationView` from the map if it was present.
+    /// Remove given `UIView` from the map if it was present.
     ///
     /// - Parameters:
-    ///   - annotatonView: `AnnotationView` to be removed
-    ///
-    /// - Throws:
-    ///   - `MapError`: errors during the removal of the view
-    public func remove(_ annotatonView: AnnotationView) throws {
-        guard let id = annotationIdByView[annotatonView], let annotatonView = annotationViewsById[id] else {
+    ///   - view: `UIView` to be removed
+    public func remove(_ view: UIView) {
+        guard let id = idsByView[view], let annotatonView = viewsById[id] else {
             return
         }
-        try mapboxMap.removeViewAnnotation(withId: id)
+        let options = try? mapboxMap.options(forViewAnnotationWithId: id)
+        try? mapboxMap.removeViewAnnotation(withId: id)
         annotatonView.removeFromSuperview()
-        annotationViewsById.removeValue(forKey: id)
-        annotationIdByView.removeValue(forKey: annotatonView)
+        viewsById.removeValue(forKey: id)
+        idsByView.removeValue(forKey: annotatonView)
+        expectedHiddenByView.removeValue(forKey: annotatonView)
+        if let featureId = options?.associatedFeatureId {
+            viewsByFeatureIds.removeValue(forKey: featureId)
+        }
     }
 
-    /// Update given `AnnotationView` with `ViewAnnotationOptions`.
+    /// Update given `UIView` with `ViewAnnotationOptions`.
     /// Important thing to keep in mind that only properties present in `options` will be updated,
     /// all other will remain the same as specified before.
     ///
     /// - Parameters:
-    ///   - annotatonView: `AnnotationView` to be updated
+    ///   - view: `UIView` to be updated
     ///   - options: view annotation options with optional fields used for the update
     ///
     /// - Throws:
     ///   - `ViewAnnotationManagerError.annotationNotFound`: the supplied view was not found
+    ///   -  `ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse` if the
+    ///   supplied `associatedFeatureId` is already used by another annotation view
     ///   - `MapError`: errors during the update of the view (eg. incorrect parameters)
-    public func update(_ annotatonView: AnnotationView, options: ViewAnnotationOptions) throws {
-        guard let id = annotationIdByView[annotatonView] else {
+    public func update(_ view: UIView, options: ViewAnnotationOptions) throws {
+        guard let id = idsByView[view] else {
             throw ViewAnnotationManagerError.annotationNotFound
         }
+        if let associatedFeatureId = options.associatedFeatureId, viewsByFeatureIds[associatedFeatureId] != nil {
+            throw ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse
+        }
+        let currentFeatureId = try? mapboxMap.options(forViewAnnotationWithId: id).associatedFeatureId
         try mapboxMap.updateViewAnnotation(withId: id, options: options)
+        let isHidden = !(options.visible ?? true)
+        expectedHiddenByView[view] = isHidden
+        viewsById[id]?.isHidden = isHidden
+        if let id = currentFeatureId, id != options.associatedFeatureId {
+            viewsByFeatureIds[id] = nil
+        }
+        if let featureId = options.associatedFeatureId {
+            viewsByFeatureIds[featureId] = view
+        }
     }
 
-    /// Find `AnnotationView` by feature id if it was specified as part of `ViewAnnotationOptions.associatedFeatureId`.
+    /// Find `UIView` by feature id if it was specified as part of `ViewAnnotationOptions.associatedFeatureId`.
     ///
     /// - Parameters:
-    ///   - identifier: the identifier of the feature which will be used for finding the associated `AnnotationView`
+    ///   - identifier: the identifier of the feature which will be used for finding the associated `UIView`
     ///
-    /// - Returns: `AnnotationView` if view was found and `nil` otherwise.
-    public func viewAnnotation(forFeatureId identifier: String) -> AnnotationView? {
-        return annotationViewsById.keys.first(where: { id in
-            (try? mapboxMap.options(forViewAnnotationWithId: id).associatedFeatureId == identifier) ?? false
-        }).flatMap({
-            annotationViewsById[$0]
-        })
+    /// - Returns: `UIView` if view was found and `nil` otherwise.
+    public func view(forFeatureId identifier: String) -> UIView? {
+        return viewsByFeatureIds[identifier]
     }
 
     /// Find `ViewAnnotationOptions` of view annotation by feature id if it was specified as part of `ViewAnnotationOptions.associatedFeatureId`.
@@ -130,58 +173,64 @@ public final class ViewAnnotationManager {
     ///
     /// - Returns: `ViewAnnotationOptions` if view was found and `nil` otherwise.
     public func options(forFeatureId identifier: String) -> ViewAnnotationOptions? {
-        return viewAnnotation(forFeatureId: identifier).flatMap(options(for:))
+        return viewsByFeatureIds[identifier].flatMap { idsByView[$0] }.flatMap { try? mapboxMap.options(forViewAnnotationWithId: $0) }
     }
 
-    /// Get current `ViewAnnotationOptions` for given `AnnotationView`.
+    /// Get current `ViewAnnotationOptions` for given `UIView`.
     ///
     /// - Parameters:
-    ///   - view: an `AnnotationView` for which the associated `ViewAnnotationOptions` is looked up
+    ///   - view: an `UIView` for which the associated `ViewAnnotationOptions` is looked up
     ///
     /// - Returns: `ViewAnnotationOptions` if view was found and `nil` otherwise.
-    public func options(for view: AnnotationView) -> ViewAnnotationOptions? {
-        return annotationIdByView[view].flatMap { try? mapboxMap.options(forViewAnnotationWithId: $0) }
+    public func options(for view: UIView) -> ViewAnnotationOptions? {
+        return idsByView[view].flatMap { try? mapboxMap.options(forViewAnnotationWithId: $0) }
     }
 
-    // MARK: - Internal functions
+    // MARK: - Private functions
 
-    internal func placeAnnotations(positions: [ViewAnnotationPositionDescriptor]) {
+    private func placeAnnotations(positions: [ViewAnnotationPositionDescriptor]) {
         // Iterate through and update all view annotations
         // First update the position of the views based on the placement info from GL-Native
         // Then hide the views which are off screen
         var visibleAnnotationIds: Set<String> = []
 
         for position in positions {
-            validateAnnotation(byAnnotationId: position.identifier)
-            guard let annotationView = annotationViewsById[position.identifier] else {
+            guard let view = viewsById[position.identifier] else {
                 continue
             }
-            annotationView.translatesAutoresizingMaskIntoConstraints = true
-            annotationView.frame = CGRect(
+            validate(view)
+
+            view.translatesAutoresizingMaskIntoConstraints = true
+            view.frame = CGRect(
                 origin: position.leftTopCoordinate.point,
                 size: CGSize(width: CGFloat(position.width), height: CGFloat(position.height))
             )
-            annotationView.setInternalVisibility(isHidden: false)
+            view.isHidden = false
+            expectedHiddenByView[view] = false
             visibleAnnotationIds.insert(position.identifier)
         }
 
-        let annotationsToHide = Set<String>(annotationViewsById.keys).subtracting(visibleAnnotationIds)
+        let annotationsToHide = Set<String>(viewsById.keys).subtracting(visibleAnnotationIds)
         for id in annotationsToHide {
-            validateAnnotation(byAnnotationId: id)
-            annotationViewsById[id]?.setInternalVisibility(isHidden: true)
+            guard let view = viewsById[id] else { fatalError() }
+            validate(view)
+            view.isHidden = true
+            expectedHiddenByView[view] = true
         }
     }
 
-    internal func validateAnnotation(byAnnotationId id: String) {
-        guard let annotationView = annotationViewsById[id] else { return }
-        // If the user explicitly removed the ViewAnnotation or it's wrapped view
-        // we need to remove it from our layout calculation
-        if annotationView.subviews.isEmpty || annotationView.superview == nil {
-            try? remove(annotationView)
+    private func validate(_ view: UIView) {
+        guard validatesViews else { return }
+        // Re-add the view if the superview of the annotation view is different than the container
+        if view.superview != containerView {
+            Log.warning(forMessage: "Superview changed for annotation view. Use `ViewAnnotationManager.remove(_ view: UIView)` instead to remove it from the layout calculation.", category: "Annotations")
+            view.removeFromSuperview()
+            containerView.addSubview(view)
         }
-        // View is still considered for layout calculation, users should not modify the visibility of the wrapped view
-        if let wrappedView = annotationView.subviews.first, wrappedView.isHidden {
-            Log.warning(forMessage: "Visibility changed for wrapped view", category: "Annotations")
+        // View is still considered for layout calculation, users should not modify the visibility of view directly
+        if let expectedHidden = expectedHiddenByView[view], view.isHidden != expectedHidden {
+            Log.warning(forMessage: "Visibility changed for annotation view. Use `ViewAnnotationManager.update(view: UIView, options: ViewAnnotationOptions)` instead to update visibility and remove the view from layout calculation.", category: "Annotations")
+            view.isHidden = expectedHidden
         }
     }
 

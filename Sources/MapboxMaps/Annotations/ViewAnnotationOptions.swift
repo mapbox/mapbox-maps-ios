@@ -52,7 +52,7 @@ public struct ViewAnnotationOptions: Hashable {
     public var selected: Bool?
 
     /// Initializes a `ViewAnnotationOptions`
-    public init(geometry: Geometry? = nil,
+    public init(geometry: GeometryConvertible? = nil,
                 width: CGFloat? = nil,
                 height: CGFloat? = nil,
                 associatedFeatureId: String? = nil,
@@ -62,7 +62,7 @@ public struct ViewAnnotationOptions: Hashable {
                 offsetX: CGFloat? = nil,
                 offsetY: CGFloat? = nil,
                 selected: Bool? = nil) {
-        self.geometry = geometry
+        self.geometry = geometry?.geometry
         self.width = width
         self.height = height
         self.associatedFeatureId = associatedFeatureId

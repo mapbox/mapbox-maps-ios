@@ -4,7 +4,7 @@ import XCTest
 
 final class ViewAnnotationOptionsTests: XCTestCase {
 
-    let geometry: Geometry = .point(.init(.init(latitude: 10.0, longitude: 20.0)))
+    let geometry: Point = .init(.init(latitude: 10.0, longitude: 20.0))
     let width: CGFloat = 25.0
     let height: CGFloat = 50.0
     let associatedFeatureId: String = "test"
@@ -29,7 +29,7 @@ final class ViewAnnotationOptionsTests: XCTestCase {
             selected: selected
         )
 
-        XCTAssertEqual(options.geometry, geometry)
+        XCTAssertEqual(options.geometry, .point(geometry))
         XCTAssertEqual(options.width, width)
         XCTAssertEqual(options.height, height)
         XCTAssertEqual(options.associatedFeatureId, associatedFeatureId)
@@ -55,8 +55,8 @@ final class ViewAnnotationOptionsTests: XCTestCase {
             selected: selected
         )
 
-        let objcValue = MapboxCoreMaps.ViewAnnotationOptions.init(
-            __geometry: MapboxCommon.Geometry.init(geometry),
+        let objcValue = MapboxCoreMaps.ViewAnnotationOptions(
+            __geometry: MapboxCommon.Geometry(geometry),
             associatedFeatureId: associatedFeatureId,
             width: width as NSNumber?,
             height: height as NSNumber?,
@@ -86,9 +86,9 @@ final class ViewAnnotationOptionsTests: XCTestCase {
             selected: selected
         )
 
-        let convertedOptions = MapboxCoreMaps.ViewAnnotationOptions.init(swiftValue)
+        let convertedOptions = MapboxCoreMaps.ViewAnnotationOptions(swiftValue)
 
-        XCTAssertEqual(Geometry.init(convertedOptions.__geometry!), geometry)
+        XCTAssertEqual(Geometry(convertedOptions.__geometry!), .point(geometry))
         XCTAssertEqual(convertedOptions.__associatedFeatureId, associatedFeatureId)
         XCTAssertEqual(convertedOptions.__width, width as NSNumber?)
         XCTAssertEqual(convertedOptions.__height, height as NSNumber?)

@@ -123,7 +123,7 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
     // MARK: - Annotation management
 
     private func addMarkerAndAnnotation(at coordinate: CLLocationCoordinate2D) {
-        let point = Point.init(coordinate)
+        let point = Point(coordinate)
         let markerId = addMarker(at: point)
         addViewAnnotation(at: coordinate, withMarkerId: markerId)
     }
@@ -146,7 +146,7 @@ final class ViewAnnotationMarkerExample: UIViewController, ExampleProtocol {
     // Add a view annotation at a specified location and optionally bind it to an ID of a marker
     private func addViewAnnotation(at coordinate: CLLocationCoordinate2D, withMarkerId markerId: String? = nil) {
         let options = ViewAnnotationOptions(
-            geometry: .point(Point(coordinate)),
+            geometry: Point(coordinate),
             width: 128,
             height: 64,
             associatedFeatureId: markerId,

@@ -8,7 +8,7 @@ final class GeometryTests: XCTestCase {
     func testMBXGeometryToTurfGeometry_Point() {
         // Given
         let coordinate = CLLocationCoordinate2D(latitude: 40, longitude: 40)
-        let mbxGeometry = MapboxCommon.Geometry(.point(Point(coordinate)))
+        let mbxGeometry = MapboxCommon.Geometry(Point(coordinate))
 
         // When
         let turfGeometry = Geometry(mbxGeometry)
@@ -30,7 +30,7 @@ final class GeometryTests: XCTestCase {
             CLLocationCoordinate2D(latitude: 0, longitude: 2)
         ]
 
-        let mbxGeometry = MapboxCommon.Geometry(.lineString(LineString(lineCoordinates)))
+        let mbxGeometry = MapboxCommon.Geometry(LineString(lineCoordinates))
 
         // When
         let turfGeometry = Geometry(mbxGeometry)
@@ -53,7 +53,7 @@ final class GeometryTests: XCTestCase {
             CLLocationCoordinate2D(latitude: 0, longitude: 0)
         ]
 
-        let mbxGeometry = MapboxCommon.Geometry(.polygon(Polygon([polygonCoordinates])))
+        let mbxGeometry = MapboxCommon.Geometry(Polygon([polygonCoordinates]))
 
         // When
         let turfGeometry = Geometry(mbxGeometry)
@@ -72,7 +72,7 @@ final class GeometryTests: XCTestCase {
         let coordinate1 = CLLocationCoordinate2D(latitude: -44, longitude: 30)
         let coordinate2 = CLLocationCoordinate2D(latitude: -50, longitude: 40)
 
-        let mbxGeometry = MapboxCommon.Geometry(.multiPoint(MultiPoint([coordinate1, coordinate2])))
+        let mbxGeometry = MapboxCommon.Geometry(MultiPoint([coordinate1, coordinate2]))
 
         // When
         let turfGeometry = Geometry(mbxGeometry)
@@ -98,7 +98,7 @@ final class GeometryTests: XCTestCase {
             CLLocationCoordinate2D(latitude: 20, longitude: 31)
         ]
 
-        let mbxGeometry = MapboxCommon.Geometry(.multiLineString(MultiLineString([line1, line2])))
+        let mbxGeometry = MapboxCommon.Geometry(MultiLineString([line1, line2]))
 
         // When
         let turfGeometry = Geometry(mbxGeometry)
@@ -130,7 +130,7 @@ final class GeometryTests: XCTestCase {
             CLLocationCoordinate2D(latitude: 0, longitude: 0)
         ]
 
-        let mbxGeometry = MapboxCommon.Geometry(.multiPolygon(MultiPolygon([[polygon1], [polygon2]])))
+        let mbxGeometry = MapboxCommon.Geometry(MultiPolygon([[polygon1], [polygon2]]))
 
         // When
         let turfGeometry = Geometry(mbxGeometry)
@@ -151,10 +151,9 @@ final class GeometryTests: XCTestCase {
     func testGeometryToMBXGeometry_Point() {
         // Given
         let point = Point(CLLocationCoordinate2D(latitude: -10, longitude: 10))
-        let geometry = Geometry.point(point)
 
         // When
-        let mbxGeometry = MapboxCommon.Geometry(geometry)
+        let mbxGeometry = MapboxCommon.Geometry(point)
 
         // Then
         guard let mbxLocationValue = mbxGeometry.extractLocations()?.coordinateValue() else {
@@ -173,10 +172,9 @@ final class GeometryTests: XCTestCase {
         ]
 
         let line = LineString(coordinates)
-        let geometry = Geometry.lineString(line)
 
         // When
-        let mbxGeometry = MapboxCommon.Geometry(geometry)
+        let mbxGeometry = MapboxCommon.Geometry(line)
 
         // Then
         guard let mbxLocationValues = mbxGeometry.extractLocationsArray() else {
@@ -199,10 +197,9 @@ final class GeometryTests: XCTestCase {
         ]
 
         let polygon = Polygon([coordinates])
-        let geometry = Geometry.polygon(polygon)
 
         // When
-        let mbxGeometry = MapboxCommon.Geometry(geometry)
+        let mbxGeometry = MapboxCommon.Geometry(polygon)
 
         // Then
         guard let mbxLocationValues = mbxGeometry.extractLocations2DArray() else {
@@ -220,10 +217,9 @@ final class GeometryTests: XCTestCase {
         let coordinate1 = CLLocationCoordinate2D(latitude: -44, longitude: 30)
         let coordinate2 = CLLocationCoordinate2D(latitude: -50, longitude: 40)
         let multiPoint = MultiPoint([coordinate1, coordinate2])
-        let geometry = Geometry.multiPoint(multiPoint)
 
         // When
-        let mbxGeometry = MapboxCommon.Geometry(geometry)
+        let mbxGeometry = MapboxCommon.Geometry(multiPoint)
 
         // Then
         guard let mbxLocationValues = mbxGeometry.extractLocationsArray() else {
@@ -249,10 +245,9 @@ final class GeometryTests: XCTestCase {
         ]
 
         let multiLineString = MultiLineString([line1, line2])
-        let geometry = Geometry.multiLineString(multiLineString)
 
         // When
-        let mbxGeometry = MapboxCommon.Geometry(geometry)
+        let mbxGeometry = MapboxCommon.Geometry(multiLineString)
 
         // Then
         guard let mbxLocationValues = mbxGeometry.extractLocations2DArray() else {
@@ -282,10 +277,9 @@ final class GeometryTests: XCTestCase {
         ]
 
         let multiPolygon = MultiPolygon([[polygon1, polygon2]])
-        let geometry = Geometry.multiPolygon(multiPolygon)
 
         // When
-        let mbxGeometry = MapboxCommon.Geometry(geometry)
+        let mbxGeometry = MapboxCommon.Geometry(multiPolygon)
 
         // Then
         guard let mbxLocationValues = mbxGeometry.extractLocations3DArray() else {
@@ -311,8 +305,7 @@ final class GeometryTests: XCTestCase {
 
         let point = Geometry.point(Point(pointCoordinate))
         let polygon = Geometry.polygon(Polygon([polygonCoordinates]))
-        let geometries = GeometryCollection(geometries: [point, polygon])
-        let geometryCollection = Geometry.geometryCollection(geometries)
+        let geometryCollection = GeometryCollection(geometries: [point, polygon])
 
         // When
         let mbxGeometry = MapboxCommon.Geometry(geometryCollection)

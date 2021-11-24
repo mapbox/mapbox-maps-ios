@@ -23,6 +23,7 @@ public struct ViewAnnotationOptions: Hashable {
 
     /// If true, the annotation will be visible even if it collides with other previously drawn annotations.
     /// If allowOverlap is null, default value `false` will be applied.
+    /// Note: When the value is true, the ordering of the views are determined by the order of their addition.
     public var allowOverlap: Bool?
 
     /// Specifies if this view annotation is visible or not.

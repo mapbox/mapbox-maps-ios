@@ -5,6 +5,8 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * Removed experimental designation from persistent layer APIs. ([#849](https://github.com/mapbox/mapbox-maps-ios/pull/849))
+* Removed `AnnotationView` wrapper views from `ViewAnnotationManager` API. ([#846](https://github.com/mapbox/mapbox-maps-ios/pull/846))
+* 
 
 ## 10.2.0-beta.1 - November 19, 2021
 

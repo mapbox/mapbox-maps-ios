@@ -50,8 +50,8 @@ extension MapboxCommon.Geometry {
 
     /// Allows a `Geometry` object to be initialized with a `Geometry` object.
     /// - Parameter geometry: The `Geometry` object to transform into the `Geometry` type.
-    internal convenience init(_ geometry: Geometry) {
-        switch geometry {
+    internal convenience init(_ geometry: GeometryConvertible) {
+        switch geometry.geometry {
         case .point(let point):
             self.init(point: point.coordinates.toValue())
         case .lineString(let line):

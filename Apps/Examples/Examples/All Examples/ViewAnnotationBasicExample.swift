@@ -41,7 +41,7 @@ final class ViewAnnotationBasicExample: UIViewController, ExampleProtocol {
 
     private func addViewAnnotation(at coordinate: CLLocationCoordinate2D) {
         let options = ViewAnnotationOptions(
-            geometry: .point(Point(coordinate)),
+            geometry: Point(coordinate),
             allowOverlap: false,
             anchor: .center
         )

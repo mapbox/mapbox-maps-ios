@@ -23,7 +23,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
 
     func testAddView() {
         let testView = UIView()
-        let geometry = Geometry.point(Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)))
+        let geometry = Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0))
         let options = ViewAnnotationOptions(geometry: geometry, width: 0.0, height: 0.0)
         try? manager.add(testView, options: options)
         XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.count, 1)
@@ -42,7 +42,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
 
     func testAddViewReadSize() {
         let testView = UIView()
-        let geometry = Geometry.point(Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)))
+        let geometry = Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0))
         let expectedSize = CGSize(width: 32.0, height: 64.0)
         testView.bounds.size = expectedSize
         try? manager.add(testView, options: ViewAnnotationOptions(geometry: geometry))
@@ -73,7 +73,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
 
     func testAssociatedFeatureIdIsAlreadyInUse() {
         let testView = UIView()
-        let geometry = Geometry.point(Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)))
+        let geometry = Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0))
         let optionWithFeatureId = ViewAnnotationOptions(geometry: geometry, associatedFeatureId: "testId")
 
         XCTAssertNoThrow(try manager.add(testView, options: optionWithFeatureId))
@@ -94,7 +94,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
     func testAssociatedFeatureIdUpdateDissociate() {
         let testIdA = "testIdA"
         let testView = UIView()
-        let geometry = Geometry.point(Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)))
+        let geometry = Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0))
         let optionsA = ViewAnnotationOptions(geometry: geometry, width: 0.0, height: 0.0, associatedFeatureId: testIdA)
         try? manager.add(testView, options: optionsA)
         mapboxMap.optionsForViewAnnotationWithIdStub.defaultReturnValue = optionsA
@@ -139,7 +139,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
 
     func testOptionsforFeatureId() {
         let testFeatureIdOne = "testFeatureIdOne"
-        let geometry = Geometry.point(Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)))
+        let geometry = Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0))
         let expectedOptions = ViewAnnotationOptions(geometry: geometry, associatedFeatureId: testFeatureIdOne)
         let annotationView = addTestAnnotationView(featureId: testFeatureIdOne)
         XCTAssertEqual(expectedOptions, manager.options(forFeatureId: testFeatureIdOne))
@@ -149,7 +149,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
 
     func testOptionsForView() {
         let testFeatureIdOne = "testFeatureIdOne"
-        let geometry = Geometry.point(Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)))
+        let geometry = Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0))
         let expectedOptions = ViewAnnotationOptions(geometry: geometry, associatedFeatureId: testFeatureIdOne)
         let annotationView = addTestAnnotationView(featureId: testFeatureIdOne)
         XCTAssertEqual(expectedOptions, manager.options(for: annotationView))
@@ -251,7 +251,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
     // MARK: - Helper functions
 
     private func addTestAnnotationView(featureId: String? = nil) -> UIView {
-        let geometry = Geometry.point(Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)))
+        let geometry = Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0))
         let options = ViewAnnotationOptions(geometry: geometry, associatedFeatureId: featureId)
         let view = UIView()
         try! manager.add(view, options: options)

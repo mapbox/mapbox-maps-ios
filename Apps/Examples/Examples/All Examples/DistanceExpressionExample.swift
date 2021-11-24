@@ -1,5 +1,4 @@
 import MapboxMaps
-import Turf
 
 @objc(DistanceExpressionExample)
 class DistanceExpressionExample: UIViewController, ExampleProtocol {

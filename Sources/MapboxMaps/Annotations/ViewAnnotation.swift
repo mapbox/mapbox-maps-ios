@@ -143,10 +143,14 @@ public final class ViewAnnotationManager {
         if let associatedFeatureId = options.associatedFeatureId, viewsByFeatureIds[associatedFeatureId] != nil {
             throw ViewAnnotationManagerError.associatedFeatureIdIsAlreadyInUse
         }
+        let currentFeatureId = try? mapboxMap.options(forViewAnnotationWithId: id).associatedFeatureId
         try mapboxMap.updateViewAnnotation(withId: id, options: options)
         let isHidden = !(options.visible ?? true)
         expectedHiddenByView[view] = isHidden
         viewsById[id]?.isHidden = isHidden
+        if let id = currentFeatureId, id != options.associatedFeatureId {
+            viewsByFeatureIds[id] = nil
+        }
         if let featureId = options.associatedFeatureId {
             viewsByFeatureIds[featureId] = view
         }

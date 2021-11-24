@@ -1,6 +1,5 @@
 import XCTest
 @testable import MapboxMaps
-@_implementationOnly import MapboxCoreMaps_Private
 
 final class ViewAnnotationManagerTests: XCTestCase {
 
@@ -28,8 +27,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         let options = ViewAnnotationOptions(geometry: geometry, width: 0.0, height: 0.0)
         try? manager.add(testView, options: options)
         XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.count, 1)
-        XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.id, "0")
-        XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.options, options)
+        XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.last?.parameters, .init(id: "0", options: options))
         XCTAssertEqual(testView.superview, container)
         XCTAssertEqual(container.subviews.count, 1)
 
@@ -73,7 +71,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertEqual(container.subviews.count, 0)
     }
 
-    func testassociatedFeatureIdIsAlreadyInUse() {
+    func testAssociatedFeatureIdIsAlreadyInUse() {
         let testView = UIView()
         let geometry = Geometry.point(Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)))
         let optionWithFeatureId = ViewAnnotationOptions(geometry: geometry, associatedFeatureId: "testId")
@@ -91,6 +89,28 @@ final class ViewAnnotationManagerTests: XCTestCase {
         // Removing the view should allow the usage of the feature ID again
         manager.remove(testView)
         XCTAssertThrowsError(try manager.add(UIView(), options: optionWithFeatureId))
+    }
+
+    func testAssociatedFeatureIdUpdateDissociate() {
+        let testIdA = "testIdA"
+        let testView = UIView()
+        let geometry = Geometry.point(Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)))
+        let optionsA = ViewAnnotationOptions(geometry: geometry, width: 0.0, height: 0.0, associatedFeatureId: testIdA)
+        try? manager.add(testView, options: optionsA)
+        mapboxMap.optionsForViewAnnotationWithIdStub.defaultReturnValue = optionsA
+
+        XCTAssertEqual(testView, manager.view(forFeatureId: testIdA))
+        XCTAssertEqual(optionsA, manager.options(forFeatureId: testIdA))
+
+        let testIdB = "testIdB"
+        let optionsB = ViewAnnotationOptions(associatedFeatureId: testIdB)
+        try? manager.update(testView, options: optionsB)
+        mapboxMap.optionsForViewAnnotationWithIdStub.defaultReturnValue = optionsB
+        XCTAssertNil(manager.view(forFeatureId: testIdA))
+        XCTAssertNil(manager.options(forFeatureId: testIdA))
+
+        XCTAssertEqual(testView, manager.view(forFeatureId: testIdB))
+        XCTAssertEqual(optionsB, manager.options(forFeatureId: testIdB))
     }
 
     func testUpdate() {
@@ -248,14 +268,4 @@ final class ViewAnnotationManagerTests: XCTestCase {
         )])
     }
 
-}
-
-fileprivate extension MapboxCoreMaps.ViewAnnotationPositionDescriptor {
-    convenience init(identifier: String, width: Int, height: Int, leftTopCoordinate: CGPoint) {
-        self.init(__identifier: identifier,
-                  width: UInt32(width),
-                  height: UInt32(height),
-                  leftTopCoordinate: ScreenCoordinate(x: leftTopCoordinate.x, y: leftTopCoordinate.y)
-        )
-    }
 }

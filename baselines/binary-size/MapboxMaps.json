@@ -1,28 +1,32 @@
 {
   "binary_name": "MapboxMaps.xcframework",
-  "created": "2021-05-28T15:27:17.126067",
-  "binary_size": 7023701,
+  "created": "2021-11-24T15:38:07.153928",
+  "binary_size": 7764756,
   "platform": {
-    "MapboxMaps_arm64": 1723016,
-    "MapboxMaps_arm64_bitcodeSize": 0,
-    "MapboxMaps_arm64_debugSymbolsSize": 0,
-    "MapboxMaps_arm64_humanReadableSize": "1.6 MB",
-    "MapboxMaps_x86_64": 1804896,
-    "MapboxMaps_x86_64_bitcodeSize": 0,
-    "MapboxMaps_x86_64_debugSymbolsSize": 114512,
-    "MapboxMaps_x86_64_humanReadableSize": "1.7 MB"
+    "MapboxMaps_iphoneos_arm64": 1815096,
+    "MapboxMaps_iphoneos_arm64_bitcodeSize": 10829824,
+    "MapboxMaps_iphoneos_arm64_debugSymbolsSize": 139904,
+    "MapboxMaps_iphoneos_arm64_humanReadableSize": "1.7 MB",
+    "MapboxMaps_iphonesimulator_arm64": 1830512,
+    "MapboxMaps_iphonesimulator_arm64_bitcodeSize": 0,
+    "MapboxMaps_iphonesimulator_arm64_debugSymbolsSize": 136720,
+    "MapboxMaps_iphonesimulator_arm64_humanReadableSize": "1.7 MB",
+    "MapboxMaps_iphonesimulator_x86_64": 1881184,
+    "MapboxMaps_iphonesimulator_x86_64_bitcodeSize": 0,
+    "MapboxMaps_iphonesimulator_x86_64_debugSymbolsSize": 139888,
+    "MapboxMaps_iphonesimulator_x86_64_humanReadableSize": "1.8 MB"
   },
   "core": {},
   "build": {
-    "build": 25985,
+    "build": 36609,
     "project": "mapbox-maps-ios",
     "branch": "HEAD",
-    "sha": "dfec4ffce994f07f4a691c6dfd3535ac8133d00c",
-    "author": "Julian Rex",
-    "timestamp": 1622214891,
-    "message": "[run device tests] [run app device tests]\n",
+    "sha": "aee86870615bff0a46b553504a0b6978fe8fec57",
+    "author": "Daniel Eke",
+    "timestamp": 1637767598,
+    "message": "View Annotations follow-up (#846)\n\n* Remove AnnotationView class, print warning for manual isHidden modifications of annotation views\r\n\r\n* Add simplified view annotations example\r\n\r\n* Review fixes\r\n\r\n* Change expectedHiddenForId to expectedHiddenByView\r\n\r\n* Fail silently in remove(_ view: UIView)\r\n\r\n* Prevent adding same annotation view twice\r\n\r\n* Add caching for annotation view associatedFeatureId\r\n\r\n* Review fixes\r\n\r\n* Add DelegatingViewAnnotationPositionsUpdateListenerTests\r\n\r\n* Add ViewAnnotationOptionsTests\r\n\r\n* Extend test cases in ViewAnnotationTests\r\n\r\n* Review fixes\r\n\r\n* Add note about the z-ordering of allowOverlap\r\n\r\n* Prevent usage of the same associatedFeatureId twice\r\n\r\n* Make internal properties and functions private in ViewAnnotationManager\r\n\r\n* Review fixes\r\n\r\n* Add SubviewInteractionOnlyViewTests\r\n\r\n* Review fixes\r\n\r\n* Relocate tests",
     "xcode": "Xcode 12.0.1 Build version 12A7300",
-    "metrics-sha": "d84a166c4bc7db0a4921cab4f7598f53ed9ed127"
+    "metrics-sha": "5114d3d8f5aa6f1947c4912841ff43ac502b81c4"
   },
   "name": "ios-maps-v10",
   "version": "3"

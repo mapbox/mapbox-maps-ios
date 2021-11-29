@@ -48,7 +48,7 @@ workflows:
           report_failure: true
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
-          xcode: "12.5.0"
+          xcode: "13.0.0"
           device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
           device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
@@ -103,7 +103,7 @@ workflows:
               ignore: main
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
-          xcode: "12.5.0"
+          xcode: "13.0.0"
           device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
           device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
@@ -126,7 +126,7 @@ workflows:
               only: main
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices (main)"
-          xcode: "12.5.0"
+          xcode: "13.0.0"
           device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
           device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
@@ -138,18 +138,13 @@ workflows:
               only: main
       - create-xcframework
 
-  ios-release:
+  release:
     jobs:
-      - ios-build-release:
-          name: "iOS Release Build"
-          filters:
-            branches:
-              only: /Release\/.*/
-      - ios-release-tag:
-          name: "iOS Release Tag & Docs"
+      - release:
+          name: "Release"
           filters:
             tags:
-              only: /.*/
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
             branches:
               ignore: /.*/
 
@@ -292,7 +287,7 @@ jobs:
                   echo "Falling back to `master` branch:"
                   curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_METRICS_TOKEN}
                 fi
-              fi  
+              fi
             else
               echo "CIRCLECI_METRICS_TOKEN not provided"
             fi
@@ -317,9 +312,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
-      - add_ssh_keys:
-           fingerprints:
-             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+      - add-mapbox-submodules-key
       - install-mbx-ci
       - configure-environment
       # Building and testing are split into 2, with the aim that we'll be able to reuse
@@ -351,9 +344,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
-      - add_ssh_keys:
-           fingerprints:
-             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+      - add-mapbox-submodules-key
       - install-mbx-ci
       - configure-environment
       - ensure-text-exists-in-commit:
@@ -405,7 +396,7 @@ jobs:
               APP_NAME=<< parameters.app-name >> \
               CONFIGURATION=Release \
               BUILD_DIR="$DERIVED_DATA_PATH"
-          when: always          
+          when: always
       - run:
           name: Converting and uploading coverage
           command: |
@@ -426,9 +417,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
-      - add_ssh_keys:
-           fingerprints:
-             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+      - add-mapbox-submodules-key
       - install-mbx-ci
       - ensure-text-exists-in-commit:
           commit-text: "[run app device tests]"
@@ -500,9 +489,7 @@ jobs:
     <<: *base-job
     steps:
       - checkout
-      - add_ssh_keys:
-           fingerprints:
-             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+      - add-mapbox-submodules-key
       - install-mbx-ci
       - configure-environment
       - ensure-text-exists-in-commit:
@@ -521,30 +508,37 @@ jobs:
           report_failure: << parameters.report_failure >>
           message: "create-xcframework"
 
-  # This job is responsible for building and uploading the xcframework bundle to S3. 
-  # This job will also create a PR in api-downloads for SDK Registry access.
-  ios-build-release:
+  # This job:
+  # - builds XCFrameworks
+  # - uploads them to S3
+  # - creates SDK Registry PR
+  # - builds API docs
+  # - creates a draft release on GitHub
+  release:
     <<: *base-job
     steps:
+      - run:
+          name: Parse SDK version from release tag
+          command: |
+            echo "export VERSION=${CIRCLE_TAG#v}" >> $BASH_ENV
+      - slack/notify:
+          message: '<$CIRCLE_BUILD_URL|Release tag for \`v$VERSION\` started.>'
+          include_visit_job_action: true
       - checkout
-      - add_ssh_keys:
-           fingerprints:
-             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
+      - add-mapbox-submodules-key
       - install-mbx-ci
       - configure-environment
-      - ensure-text-exists-in-commit:
-          commit-text: "[release]"
-          always-run: << parameters.device-tests-always-run >>
-      - run:
-          name: Extract Version From Commit
-          command: |
-            GIT_COMMIT_MSG=`git log --format=oneline -n 1`
-            export VERSION=$(echo $GIT_COMMIT_MSG| cut -d' ' -f3)
-            echo "export VERSION=$VERSION" >> $BASH_ENV
-      - slack/notify:
-          message: '<$CIRCLE_BUILD_URL|Release build for \`$VERSION\` started.>'
-          include_visit_job_action: true
       - install-dependencies
+      - run:
+          name: Run `npm ci`
+          command: |
+            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+            npm ci
+          when: on_success
+      - run:
+          name: Create draft release on Github
+          command: ./scripts/release/create-github-draft-release.sh "$VERSION"
+          when: always
       - make-xcframework-bundle:
           bundle_style: "dynamic"
       - store_artifacts:
@@ -556,62 +550,18 @@ jobs:
       - run:
           name: Uploading direct download bundles (static & dynamic) to SDK Registry
           command: |
-            ./scripts/release/upload-to-registry.sh MapboxMaps.zip mobile-maps-ios ${VERSION} MapboxMaps.zip
-            ./scripts/release/upload-to-registry.sh MapboxMaps-static.zip mobile-maps-ios-static ${VERSION} MapboxMaps-static.zip
-      - run:
-          name: Run `npm ci`
-          command: |
-            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-            npm ci
-          when: on_success
+            ./scripts/release/upload-to-registry.sh MapboxMaps.zip mobile-maps-ios "$VERSION" MapboxMaps.zip
+            ./scripts/release/upload-to-registry.sh MapboxMaps-static.zip mobile-maps-ios-static "$VERSION" MapboxMaps-static.zip
       - run:
           name: Creating SDK Registry PR
-          command: ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios ${VERSION}
+          command: ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios "$VERSION"
           when: on_success
-      - slack/status:
-          fail_only: false
-          include_visit_job_action: true
-          failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` failed.>'
-          success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release build for \`$VERSION\` succeeded!> :tada:'
-
-  # This job is triggered when a tag is pushed so we can tag a release.
-  # It is responsible for making docs, and creating a draft release on Github
-  ios-release-tag:
-    <<: *base-job
-    steps:
-      - run:
-          name: Verify that tag $CIRCLE_TAG adheres to the Semantic Versioning format
-          command: |
-            if [[ ! "$CIRCLE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
-              echo "Skipping job"
-              exit 1
-            fi
-      - slack/notify:
-          message: '<$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` started.>'
-          include_visit_job_action: true
-      - checkout
-      - add_ssh_keys:
-           fingerprints:
-             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
-      - install-mbx-ci
-      - configure-environment
-      - install-dependencies
       - make-docs
-      - run:
-          name: Run `npm ci`
-          command: |
-            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-            npm ci
-          when: always
-      - run:
-          name: Create draft release on Github
-          command: ./scripts/release/create-github-draft-release.sh ${CIRCLE_TAG}
-          when: always
       - slack/status:
           fail_only: false
           include_visit_job_action: true
-          failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` failed.>'
-          success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release tag for \`$CIRCLE_TAG\` succeeded!> :tada:'
+          failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release tag for \`v$VERSION\` failed.>'
+          success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release tag for \`v$VERSION\` succeeded!> :tada:'
 
 # ==============================================================================
 # Reusable commands
@@ -640,6 +590,12 @@ commands:
             echo "MAPBOX_ACCESS_TOKEN = ${MAPBOX_ACCESS_TOKEN}" > ./developer.xcconfig
             echo "${MAPBOX_ACCESS_TOKEN}" > ~/.mapbox
             echo "${MAPBOX_ACCESS_TOKEN}" > ./Tests/MapboxMapsTests/Helpers/MapboxAccessToken
+
+  add-mapbox-submodules-key:
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
 
   install-mbx-ci:
     steps:

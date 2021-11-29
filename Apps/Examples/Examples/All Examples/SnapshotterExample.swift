@@ -1,5 +1,5 @@
 import UIKit
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 
 @objc(SnapshotterExample)
 
@@ -117,19 +117,27 @@ public class SnapshotterExample: UIViewController, ExampleProtocol {
         }
         
         mapView.mapboxMap.onEvery(.mapIdle) { [weak self] _ in
-            // Allow the previous snapshot to complete before starting a new one.
-            guard let self = self, !self.snapshotting else {
+            guard let image = try? self?.mapView.snapshot() else {
                 return
             }
-
-            let snapshotterCameraOptions = CameraOptions(cameraState: self.mapView.cameraState)
-            self.snapshotter.setCamera(to: snapshotterCameraOptions)
-            self.startSnapshot()
+            self?.snapshotView.image = image
         }
+        
+//        mapView.mapboxMap.onEvery(.mapIdle) { [weak self] _ in
+//            // Allow the previous snapshot to complete before starting a new one.
+//            guard let self = self, !self.snapshotting else {
+//                return
+//            }
+//
+//            let snapshotterCameraOptions = CameraOptions(cameraState: self.mapView.cameraState)
+//            self.snapshotter.setCamera(to: snapshotterCameraOptions)
+//            self.startSnapshot()
+//        }
     }
 
     public func startSnapshot() {
         snapshotting = true
+        
         snapshotter.start(overlayHandler: nil) { ( result ) in
             switch result {
             case .success(let image):

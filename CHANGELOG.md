@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## 10.0.2 - November 29, 2021
+
+* Fixed billing issue when upgrading Mapbox Maps SDK from v9 to v10. ([#876](https://github.com/mapbox/mapbox-maps-ios/pull/876))
+
 ## 10.0.1 - October 15, 2021
 
 * Passing an unsupported locale into `Style.localizeLabels(into:forLayerIds:)` throws an error instead of crashing. ([#752](https://github.com/mapbox/mapbox-maps-ios/pull/752))

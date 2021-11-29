@@ -48,7 +48,7 @@ workflows:
           report_failure: true
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
-          xcode: "12.5.0"
+          xcode: "13.0.0"
           device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
           device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
@@ -103,7 +103,7 @@ workflows:
               ignore: main
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
-          xcode: "12.5.0"
+          xcode: "13.0.0"
           device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
           device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
@@ -126,7 +126,7 @@ workflows:
               only: main
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices (main)"
-          xcode: "12.5.0"
+          xcode: "13.0.0"
           device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
           device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
@@ -144,7 +144,7 @@ workflows:
           name: "Release"
           filters:
             tags:
-              only: /^v[0-9]+\.[0-9]+\.[0-9]+/
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
             branches:
               ignore: /.*/
 
@@ -287,7 +287,7 @@ jobs:
                   echo "Falling back to `master` branch:"
                   curl --fail -X POST --header "Content-Type: application/json" --data "{\"build_parameters\":{\"CIRCLE_JOB\":\"ios-maps-v10-build\",\"SOURCE_HASH\":\"${CIRCLE_SHA1}\",\"SOURCE_NAME\":\"ios-maps-v10\"}}" https://circleci.com/api/v1.1/project/github/mapbox/mobile-metrics/tree/master?circle-token=${CIRCLECI_METRICS_TOKEN}
                 fi
-              fi  
+              fi
             else
               echo "CIRCLECI_METRICS_TOKEN not provided"
             fi
@@ -396,7 +396,7 @@ jobs:
               APP_NAME=<< parameters.app-name >> \
               CONFIGURATION=Release \
               BUILD_DIR="$DERIVED_DATA_PATH"
-          when: always          
+          when: always
       - run:
           name: Converting and uploading coverage
           command: |
@@ -529,6 +529,16 @@ jobs:
       - install-mbx-ci
       - configure-environment
       - install-dependencies
+      - run:
+          name: Run `npm ci`
+          command: |
+            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+            npm ci
+          when: on_success
+      - run:
+          name: Create draft release on Github
+          command: ./scripts/release/create-github-draft-release.sh "$VERSION"
+          when: always
       - make-xcframework-bundle:
           bundle_style: "dynamic"
       - store_artifacts:
@@ -543,20 +553,10 @@ jobs:
             ./scripts/release/upload-to-registry.sh MapboxMaps.zip mobile-maps-ios "$VERSION" MapboxMaps.zip
             ./scripts/release/upload-to-registry.sh MapboxMaps-static.zip mobile-maps-ios-static "$VERSION" MapboxMaps-static.zip
       - run:
-          name: Run `npm ci`
-          command: |
-            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-            npm ci
-          when: on_success
-      - run:
           name: Creating SDK Registry PR
           command: ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios "$VERSION"
           when: on_success
       - make-docs
-      - run:
-          name: Create draft release on Github
-          command: ./scripts/release/create-github-draft-release.sh "$VERSION"
-          when: always
       - slack/status:
           fail_only: false
           include_visit_job_action: true

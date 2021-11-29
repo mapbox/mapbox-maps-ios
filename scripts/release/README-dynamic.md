@@ -18,5 +18,5 @@
 
 4. Add `import MapboxMaps` to your Swift source file.
 
-5. Please see the [Migration Guide](https://docs.mapbox.com/ios/beta/maps/guides/migrate-to-v10/)
+5. Please see the [Migration Guide](https://docs.mapbox.com/ios/maps/guides/migrate-to-v10/)
    for further guidelines.

@@ -8,7 +8,7 @@ import MapboxMaps
 ///
 /// By default, users may download up to 250MB of data for offline
 /// use without incurring additional charges. This limit is subject
-/// to change during the beta.
+/// to change.
 @objc(OfflineManagerExample)
 final class OfflineManagerExample: UIViewController, ExampleProtocol {
     // This example uses a Storyboard to setup the following views

@@ -42,6 +42,7 @@
 		58882E5D26962A7200E5C1C6 /* StoryboardMapViewExample.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 58882E5C26962A7200E5C1C6 /* StoryboardMapViewExample.storyboard */; };
 		58A3C0C925C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A3C0C825C4B93600CAE5F0 /* AnimateGeoJSONLineExample.swift */; };
 		73694BD325D4B2CE0064F636 /* TrackingModeExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73694BD225D4B2CE0064F636 /* TrackingModeExample.swift */; };
+		8F70BE572754921A0068D50A /* MapboxDirections in Frameworks */ = {isa = PBXBuildFile; productRef = 8F70BE562754921A0068D50A /* MapboxDirections */; };
 		A41E58342654593500D8B946 /* SwitchStylesExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E58332654593500D8B946 /* SwitchStylesExample.swift */; };
 		A41E584C26555A3400D8B946 /* PointClusteringExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41E584B26555A3400D8B946 /* PointClusteringExample.swift */; };
 		A41E58F4265C005300D8B946 /* blueprint_style.json in Resources */ = {isa = PBXBuildFile; fileRef = A41E58F3265C005300D8B946 /* blueprint_style.json */; };
@@ -202,6 +203,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B5327E9D260124C00095B6BD /* MapboxMaps in Frameworks */,
+				8F70BE572754921A0068D50A /* MapboxDirections in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -417,6 +419,7 @@
 			name = Examples;
 			packageProductDependencies = (
 				B5327E9C260124C00095B6BD /* MapboxMaps */,
+				8F70BE562754921A0068D50A /* MapboxDirections */,
 			);
 			productName = Examples;
 			productReference = 077C4EEA252F7E88007636F1 /* Examples.app */;
@@ -489,6 +492,9 @@
 				Base,
 			);
 			mainGroup = 077C4EE1252F7E88007636F1;
+			packageReferences = (
+				8F70BE552754921A0068D50A /* XCRemoteSwiftPackageReference "mapbox-directions-swift" */,
+			);
 			productRefGroup = 077C4EEB252F7E88007636F1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -794,6 +800,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				INFOPLIST_FILE = Examples/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -814,6 +821,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				INFOPLIST_FILE = Examples/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -949,7 +957,23 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		8F70BE552754921A0068D50A /* XCRemoteSwiftPackageReference "mapbox-directions-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mapbox/mapbox-directions-swift.git";
+			requirement = {
+				kind = revision;
+				revision = 02767cb1c752f6e0c781037dc75792a16b11b1d0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
+		8F70BE562754921A0068D50A /* MapboxDirections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8F70BE552754921A0068D50A /* XCRemoteSwiftPackageReference "mapbox-directions-swift" */;
+			productName = MapboxDirections;
+		};
 		B5327E9C260124C00095B6BD /* MapboxMaps */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MapboxMaps;

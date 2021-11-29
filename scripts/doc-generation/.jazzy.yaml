@@ -1,0 +1,11 @@
+module: MapboxMaps
+title: Mapbox Maps SDK for iOS
+author: Mapbox
+theme: jazzy-theme
+sdk: iphonesimulator
+swift_build_tool: xcodebuild
+build_tool_arguments:
+  - -scheme
+  - MapboxMaps
+  - -destination
+  - generic/platform=iOS Simulator

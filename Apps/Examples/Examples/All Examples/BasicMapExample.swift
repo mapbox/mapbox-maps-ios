@@ -7,7 +7,7 @@ import MapboxNavigation
 @objc(BasicMapExample)
 
 public class BasicMapExample: UIViewController, ExampleProtocol {
-
+    internal var cameraLocationConsumer: MyLocationConsumer!
     internal var mapView: MapView!
     internal var label: UILabel!
     internal var card: UIView!
@@ -63,21 +63,15 @@ public class BasicMapExample: UIViewController, ExampleProtocol {
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
-        location = AppleLocationProvider()
-        location.setDelegate(self)
         view.addSubview(mapView)
+        cameraLocationConsumer = MyLocationConsumer(mapView: mapView, delegate: self)
 
         mapView.mapboxMap.onNext(.mapLoaded) { _ in
-           self.mapView.location.delegate = self
-           self.mapView.location.requestTemporaryFullAccuracyPermissions(withPurposeKey: "CustomKey")
-           self.mapView.location.overrideLocationProvider(with: self.location)
-           self.mapView.location.options.puckType = .puck2D()
-           self.mapView.location.options.puckBearingSource = .course
-           
-           self.location.requestWhenInUseAuthorization()
+            self.mapView.location.options.puckType = .puck2D()
+            self.mapView.location.addLocationConsumer(newConsumer: self.cameraLocationConsumer)
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.onMapClick(_:)))
             self.mapView.addGestureRecognizer(tapGesture)
-       }
+        }
 
         setupSlider()
 
@@ -261,9 +255,7 @@ public class BasicMapExample: UIViewController, ExampleProtocol {
             print("Geojson not found")
             return
         }
-        print("Updating Layer", geojson.geoJSONObject)
         try! mapView.mapboxMap.style.updateLayer(withId: "poi-label", type: SymbolLayer.self) { layer in
-            print("Setting within")
             layer.filter = Exp(.any) {
                 Exp(.within) {
                     geojson
@@ -290,46 +282,6 @@ public class BasicMapExample: UIViewController, ExampleProtocol {
         }
     }
 
-    func getDirection() {
-        guard let originCoordinate = currentLocation?.coordinate else {
-            print("No current lcoation")
-            return
-        }
-        guard case let .point(point) = self.selectedFeature?.geometry else {
-            print("No destination")
-            return
-        }
-        print("ready")
-        
-        let origin = Waypoint(coordinate: originCoordinate, name: "Current Location")
-        let destination = Waypoint(coordinate: point.coordinates, name: "White House")
-
-        // Set options
-        let routeOptions = NavigationRouteOptions(
-            waypoints: [origin, destination],
-            profileIdentifier: .walking)
-
-        // Request a route using MapboxDirections
-        Directions.shared.calculate(routeOptions) { [weak self] (session, result) in
-            switch result {
-            case .failure(let error):
-                print(error.localizedDescription)
-            case .success(let response):
-                guard let strongSelf = self else {
-                    return
-                }
-                guard let route = response.routes?.first else {
-                    return
-                }
-                let time = route.expectedTravelTime
-                // Pass the generated route response to the the NavigationViewController
-//                let viewController = NavigationViewController(for: response, routeIndex: 0, routeOptions: routeOptions)
-//                viewController.modalPresentationStyle = .fullScreen
-//                strongSelf.present(viewController, animated: true, completion: nil)
-            }
-        }
-    }
-
     // Request Isochrone contour to draw on a map
     func getIsochroneSet(location: CLLocationCoordinate2D) {
         
@@ -352,13 +304,10 @@ public class BasicMapExample: UIViewController, ExampleProtocol {
             opts.contoursFormat = .polygon
             isochrones.calculate(opts) { session, result in
                 if case .success(let response) = result {
-                    print("Key", key)
                     if let first = response.features.first {
-                        first.geometry
                         let encoder = JSONEncoder()
                         let data = try! encoder.encode(first)
                         let geoJSONString = String(data: data, encoding: .utf8)!
-                        print("geoJSONString", geoJSONString)
                         if let geoJSON = try? JSONDecoder().decode(GeoJSONObject.self, from: data) {
                             self.minutesToGeoJSON[self.valueToLayerName(key)] = geoJSON
                         }
@@ -366,7 +315,6 @@ public class BasicMapExample: UIViewController, ExampleProtocol {
                     results[key] = GeoJSONSourceData.featureCollection(response)
                     group.leave()
                 }
-                
             }
         }
         // Configure a completion callback
@@ -408,14 +356,12 @@ public class BasicMapExample: UIViewController, ExampleProtocol {
             lineLayer.lineWidth = .constant(4)
             try! mapView.mapboxMap.style.addSource(geoJSONSource, id: layerName)
             try! mapView.mapboxMap.style.addLayer(lineLayer)
-            print("addLayer(lineLayer)", lineLayer)
         } catch {
             print("Error when adding sources and layers: \(error.localizedDescription)")
         }
     }
     
     @objc private func onMapClick(_ sender: UITapGestureRecognizer) {
-        print("Tap")
         let screenPoint = sender.location(in: mapView)
         let queryOptions = RenderedQueryOptions(layerIds: ["poi-label"], filter: nil)
         mapView.mapboxMap.queryRenderedFeatures(at: screenPoint, options: queryOptions) { [weak self] result in
@@ -427,57 +373,52 @@ public class BasicMapExample: UIViewController, ExampleProtocol {
                 {
                     self?.cardTitle.text = namestr
                 }
-//                if let walkMin = feature.properties?["name"] as? String {
-//                    self?.cardWalkMin.text = "3 minute walk"
-//                }
             }
         }
     }
 }
 
+extension BasicMapExample: LocationConsumerDelegate {
+    public func didLocationUpdate(newLocation: Location) {
+        self.currentLocation = CLLocation(latitude: newLocation.coordinate.latitude,
+                                          longitude: newLocation.coordinate.longitude)
 
-extension BasicMapExample: LocationProviderDelegate {
-    public func locationProvider(_ provider: LocationProvider, didUpdateLocations locations: [CLLocation]) {
-        print("Location", locations)
-        guard let first = locations.first else {
-            return
-        }
-        self.currentLocation = first
-        
         var state = self.mapView.mapboxMap.cameraState
-        state.center = first.coordinate
+        state.center = newLocation.coordinate
         let camera = CameraOptions(cameraState: state)
         mapView.mapboxMap.setCamera(to: camera)
-        
+
         if calledOnce {
             return
         }
         calledOnce = true
-        self.getIsochroneSet(location: first.coordinate)
-    }
-
-    public func locationProvider(_ provider: LocationProvider, didUpdateHeading newHeading: CLHeading) {
-        print("locationProvider(_ provider: LocationProvider, didUpdateHeading newHeading: CLHeading)")
-    }
-    
-    public func locationProvider(_ provider: LocationProvider, didFailWithError error: Error) {
-        print("locationProvider(_ provider: LocationProvider, didFailWithError error: Error)")
-    }
-    
-    public func locationProviderDidChangeAuthorization(_ provider: LocationProvider) {
-        print("locationProviderDidChangeAuthorization(_ provider: LocationProvider)")
-        if provider.authorizationStatus == .authorizedWhenInUse {
-            location.startUpdatingLocation()
-        }
+        self.getIsochroneSet(location: newLocation.coordinate)
     }
 }
 
-extension BasicMapExample: LocationPermissionsDelegate {
-    public func locationManager(_ locationManager: LocationManager,
-                                didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization) {
-        print("locationManager(_ locationManager: LocationManager,didChangeAccuracyAuthorization accuracyAuthorization: CLAccuracyAuthorization)")
+
+/// A delegate that is called when a tap is detected on an annotation (or on several of them).
+public protocol LocationConsumerDelegate: AnyObject {
+    func didLocationUpdate(newLocation: Location)
+}
+
+
+// Create class which conforms to LocationConsumer, update the camera's centerCoordinate when a locationUpdate is received
+public class MyLocationConsumer: LocationConsumer {
+    weak var mapView: MapView?
+    weak var delegate: LocationConsumerDelegate?
+
+    init(mapView: MapView,
+         delegate: LocationConsumerDelegate) {
+        self.delegate = delegate
+        self.mapView = mapView
     }
-    public func locationManager(_ locationManager: LocationManager, didFailToLocateUserWithError error: Error) {
-        print("locationManager(_ locationManager: LocationManager, didFailToLocateUserWithError error: Error)", error)
+
+    public func locationUpdate(newLocation: Location) {
+        mapView?.camera.ease(
+            to: CameraOptions(center: newLocation.coordinate, zoom: 14),
+            duration: 1.3)
+
+        self.delegate?.didLocationUpdate(newLocation: newLocation)
     }
 }

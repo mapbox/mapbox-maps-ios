@@ -29,6 +29,15 @@
         }
       },
       {
+        "package": "MapboxDirections",
+        "repositoryURL": "https://github.com/mapbox/mapbox-directions-swift.git",
+        "state": {
+          "branch": null,
+          "revision": "02767cb1c752f6e0c781037dc75792a16b11b1d0",
+          "version": null
+        }
+      },
+      {
         "package": "MapboxMobileEvents",
         "repositoryURL": "https://github.com/mapbox/mapbox-events-ios.git",
         "state": {
@@ -38,12 +47,66 @@
         }
       },
       {
+        "package": "MapboxNavigation",
+        "repositoryURL": "https://github.com/mapbox/mapbox-navigation-ios.git",
+        "state": {
+          "branch": null,
+          "revision": "8636b5517a158a83c2533c9ecaf87097fa32c0e6",
+          "version": "2.0.1"
+        }
+      },
+      {
+        "package": "MapboxNavigationNative",
+        "repositoryURL": "https://github.com/mapbox/mapbox-navigation-native-ios.git",
+        "state": {
+          "branch": null,
+          "revision": "3ddee8efad42082032f872b476cb5b3b6e73bb42",
+          "version": "69.0.3"
+        }
+      },
+      {
+        "package": "MapboxSpeech",
+        "repositoryURL": "https://github.com/mapbox/mapbox-speech-swift.git",
+        "state": {
+          "branch": null,
+          "revision": "b0a6008c184c1010dac11e14bf20afe4261d8c36",
+          "version": "2.0.0"
+        }
+      },
+      {
+        "package": "Polyline",
+        "repositoryURL": "https://github.com/raphaelmor/Polyline.git",
+        "state": {
+          "branch": null,
+          "revision": "36f7b1222aaf8fa741d0d179c12e186998d97f42",
+          "version": "5.0.2"
+        }
+      },
+      {
+        "package": "Solar",
+        "repositoryURL": "https://github.com/ceeK/Solar.git",
+        "state": {
+          "branch": null,
+          "revision": "c2b96f2d5fb7f835b91cefac5e83101f54643901",
+          "version": "3.0.1"
+        }
+      },
+      {
+        "package": "swift-argument-parser",
+        "repositoryURL": "https://github.com/apple/swift-argument-parser",
+        "state": {
+          "branch": null,
+          "revision": "e1465042f195f374b94f915ba8ca49de24300a0d",
+          "version": "1.0.2"
+        }
+      },
+      {
         "package": "Turf",
         "repositoryURL": "https://github.com/mapbox/turf-swift.git",
         "state": {
           "branch": null,
-          "revision": "dccd79aee4c21298d1beb81cc0e86eccbe911ae0",
-          "version": "2.0.0"
+          "revision": "132aaf7f90fb3e334acd685ae7040a2b70b80d26",
+          "version": "2.1.0"
         }
       }
     ]

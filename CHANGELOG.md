@@ -40,6 +40,10 @@ Mapbox welcomes participation and contributions from everyone.
 * Fixed an issue that caused `queryFeatureExtension` to fail. ([#769](https://github.com/mapbox/mapbox-maps-ios/pull/769))
 * Updated `MapboxCoreMaps` to v10.1.0-beta and `MapboxCommon` to 20.1.0-rc.1. ([#769](https://github.com/mapbox/mapbox-maps-ios/pull/769))
 
+## 10.0.2 - November 29, 2021
+
+* Fixed billing issue when upgrading Mapbox Maps SDK from v6 to v10. ([#876](https://github.com/mapbox/mapbox-maps-ios/pull/876))
+
 ## 10.0.1 - October 15, 2021
 
 * Passing an unsupported locale into `Style.localizeLabels(into:forLayerIds:)` throws an error instead of crashing. ([#752](https://github.com/mapbox/mapbox-maps-ios/pull/752))

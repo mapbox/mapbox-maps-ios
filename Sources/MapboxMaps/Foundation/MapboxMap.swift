@@ -28,6 +28,7 @@ internal protocol MapboxMapProtocol: AnyObject {
     func pointIsAboveHorizon(_ point: CGPoint) -> Bool
 }
 
+// swiftlint:disable:next type_body_length
 public final class MapboxMap: MapboxMapProtocol {
     /// The underlying renderer object responsible for rendering the map
     private let __map: Map

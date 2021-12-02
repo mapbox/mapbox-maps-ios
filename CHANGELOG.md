@@ -10,6 +10,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Fixed an issue that could prevent the location puck from appearing. ([#862](https://github.com/mapbox/mapbox-maps-ios/pull/862))
 * Add support for exponentials to `StyleColor`. ([#873](https://github.com/mapbox/mapbox-maps-ios/pull/873))
 * Improve panning behavior on pitched maps. ([#888](https://github.com/mapbox/mapbox-maps-ios/pull/888))
+* Add pinch gesture tradeoff configuration option. ([#890](https://github.com/mapbox/mapbox-maps-ios/pull/890))
 
 ## 10.2.0-beta.1 - November 19, 2021
 

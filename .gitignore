@@ -9,6 +9,7 @@ DebugApp/
 Examples/
 Mapbox/
 MapboxMaps.xcworkspace/
+MapboxMaps.xcodeproj
 Sources/
 StressTest/
 Tests/
@@ -16,3 +17,4 @@ api-docs/
 build/
 node_modules/
 scripts/
+developer.xcconfig

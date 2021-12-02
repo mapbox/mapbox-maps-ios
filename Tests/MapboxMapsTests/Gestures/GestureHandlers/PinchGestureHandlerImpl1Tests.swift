@@ -1,7 +1,7 @@
 import XCTest
-@testable import MapboxMaps
+@_spi(Experimental) @testable import MapboxMaps
 
-final class PinchGestureHandlerTests: XCTestCase {
+final class PinchGestureHandlerImpl1Tests: XCTestCase {
     var view: UIView!
     var gestureRecognizer: MockPinchGestureRecognizer!
     var mapboxMap: MockMapboxMap!
@@ -20,6 +20,7 @@ final class PinchGestureHandlerTests: XCTestCase {
             mapboxMap: mapboxMap)
         delegate = MockGestureHandlerDelegate()
         pinchGestureHandler.delegate = delegate
+        pinchGestureHandler.behavior = .tracksTouchLocationsWhenPanningAfterZoomChange
     }
 
     override func tearDown() {
@@ -40,19 +41,15 @@ final class PinchGestureHandlerTests: XCTestCase {
 
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(mapboxMap.dragStartStub.invocations.count, 1)
         XCTAssertEqual(delegate.gestureBeganStub.parameters, [.pinch])
     }
 
     func testPinchChanged() throws {
         pinchGestureHandler.rotateEnabled = true
 
-        // Set up and send the gesture began event
         let initialCameraState = CameraState.random()
-        let pinchMidpoints = [
-            CGPoint(x: 0.0, y: 0.0),
-            CGPoint(x: 1.0, y: 1.0),
-            CGPoint(x: 10.0, y: 10.0)]
+        let initialPinchMidpoint = CGPoint(x: 0.0, y: 0.0)
+        let changedPinchMidpoint = CGPoint(x: 1.0, y: 1.0)
         mapboxMap.cameraState = initialCameraState
         mapboxMap.dragCameraOptionsStub.defaultReturnValue = CameraOptions(
             center: .random(),
@@ -60,7 +57,7 @@ final class PinchGestureHandlerTests: XCTestCase {
 
         // set up internal state by calling handlePinch in the .began state
         gestureRecognizer.getStateStub.defaultReturnValue = .began
-        gestureRecognizer.locationStub.defaultReturnValue = pinchMidpoints[0]
+        gestureRecognizer.locationStub.defaultReturnValue = initialPinchMidpoint
         // these touches are consistent with the initial pinch midpoint
         // and yield an angle of 45° for the initial state
         gestureRecognizer.locationOfTouchStub.returnValueQueue = [
@@ -68,10 +65,8 @@ final class PinchGestureHandlerTests: XCTestCase {
             CGPoint(x: 1, y: 1)]
         gestureRecognizer.getNumberOfTouchesStub.defaultReturnValue = 2
         gestureRecognizer.sendActions()
-
-        // Set up and send the gesture changed event
         gestureRecognizer.getStateStub.defaultReturnValue = .changed
-        gestureRecognizer.locationStub.defaultReturnValue = pinchMidpoints[1]
+        gestureRecognizer.locationStub.defaultReturnValue = changedPinchMidpoint
         // the new touch angle is 90° - that's 45° increase from the initial.
         // this should come through as -45° change in bearing since the
         // coordinate systems are flipped.
@@ -79,36 +74,43 @@ final class PinchGestureHandlerTests: XCTestCase {
             CGPoint(x: 1, y: 0),
             CGPoint(x: 1, y: 2)]
         gestureRecognizer.getScaleStub.defaultReturnValue = 2.0
+
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 2)
-        guard mapboxMap.setCameraStub.invocations.count == 2 else {
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 3)
+        guard mapboxMap.setCameraStub.invocations.count == 3 else {
             return
         }
+        XCTAssertEqual(mapboxMap.dragStartStub.invocations.count, 1)
         XCTAssertEqual(mapboxMap.dragCameraOptionsStub.invocations.count, 1)
-        XCTAssertEqual(
-            mapboxMap.dragCameraOptionsStub.parameters.first,
-            .init(from: pinchMidpoints[0], to: pinchMidpoints[1]))
+        XCTAssertEqual(mapboxMap.dragEndStub.invocations.count, 1)
+
         XCTAssertEqual(
             mapboxMap.setCameraStub.parameters[0],
-            mapboxMap.dragCameraOptionsStub.returnedValues.first)
-        let returnedScale = try XCTUnwrap(gestureRecognizer.getScaleStub.returnedValues.last)
-        XCTAssertEqual(
-            mapboxMap.setCameraStub.parameters[1],
             CameraOptions(
-                anchor: pinchMidpoints[1],
-                zoom: initialCameraState.zoom + log2(returnedScale),
-                bearing: initialCameraState.bearing - 45))
+                center: initialCameraState.center,
+                zoom: initialCameraState.zoom,
+                bearing: initialCameraState.bearing))
 
-        // Set up and send a second gesture changed event to make sure we use drag API incrementally
-        gestureRecognizer.locationStub.defaultReturnValue = pinchMidpoints[2]
-        mapboxMap.dragCameraOptionsStub.reset()
-        gestureRecognizer.sendActions()
+        XCTAssertEqual(
+            mapboxMap.dragStartStub.parameters.first,
+            initialPinchMidpoint)
 
-        XCTAssertEqual(mapboxMap.dragCameraOptionsStub.invocations.count, 1)
         XCTAssertEqual(
             mapboxMap.dragCameraOptionsStub.parameters.first,
-            .init(from: pinchMidpoints[1], to: pinchMidpoints[2]))
+            .init(from: initialPinchMidpoint, to: changedPinchMidpoint))
+
+        XCTAssertEqual(
+            mapboxMap.setCameraStub.parameters[1],
+            mapboxMap.dragCameraOptionsStub.returnedValues.first)
+
+        let returnedScale = try XCTUnwrap(gestureRecognizer.getScaleStub.returnedValues.last)
+        XCTAssertEqual(
+            mapboxMap.setCameraStub.parameters[2],
+            CameraOptions(
+                anchor: changedPinchMidpoint,
+                zoom: initialCameraState.zoom + log2(returnedScale),
+                bearing: initialCameraState.bearing - 45))
     }
 
     func testPinchChangedWithRotateEnabledFalse() {
@@ -134,11 +136,12 @@ final class PinchGestureHandlerTests: XCTestCase {
         gestureRecognizer.getStateStub.defaultReturnValue = .changed
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 2)
-        guard mapboxMap.setCameraStub.invocations.count == 2 else {
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 3)
+        guard mapboxMap.setCameraStub.invocations.count == 3 else {
             return
         }
-        XCTAssertNil(mapboxMap.setCameraStub.parameters[1].bearing)
+        XCTAssertNil(mapboxMap.setCameraStub.parameters[0].bearing)
+        XCTAssertNil(mapboxMap.setCameraStub.parameters[2].bearing)
     }
 
     func testSettingRotateEnabledToTrueDuringGestureHasNoImpactOnCurrentGesture() {
@@ -158,11 +161,12 @@ final class PinchGestureHandlerTests: XCTestCase {
         gestureRecognizer.getStateStub.defaultReturnValue = .changed
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 2)
-        guard mapboxMap.setCameraStub.invocations.count == 2 else {
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 3)
+        guard mapboxMap.setCameraStub.invocations.count == 3 else {
             return
         }
-        XCTAssertNil(mapboxMap.setCameraStub.parameters[1].bearing)
+        XCTAssertNil(mapboxMap.setCameraStub.parameters[0].bearing)
+        XCTAssertNil(mapboxMap.setCameraStub.parameters[2].bearing)
     }
 
     func testSettingRotateEnabledToFalseDuringGestureHasNoImpactOnCurrentGesture() throws {
@@ -193,11 +197,12 @@ final class PinchGestureHandlerTests: XCTestCase {
         gestureRecognizer.getStateStub.defaultReturnValue = .changed
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 2)
-        guard mapboxMap.setCameraStub.invocations.count == 2 else {
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 3)
+        guard mapboxMap.setCameraStub.invocations.count == 3 else {
             return
         }
-        XCTAssertEqual(mapboxMap.setCameraStub.parameters[1].bearing, initialCameraState.bearing - 45)
+        XCTAssertEqual(mapboxMap.setCameraStub.parameters[0].bearing, initialCameraState.bearing)
+        XCTAssertEqual(mapboxMap.setCameraStub.parameters[2].bearing, initialCameraState.bearing - 45)
     }
 
     func testPinchChangedWhenNumberOfTouchesDecreasesToOneThenGoesBackToTwo() {
@@ -209,62 +214,30 @@ final class PinchGestureHandlerTests: XCTestCase {
         mapboxMap.cameraState = initialCameraState
         gestureRecognizer.sendActions() // began (2 touches)
         gestureRecognizer.sendActions() // changed (2 touches)
-
-        // Gesture pauses when number of touches decreases to 1
-        mapboxMap.dragEndStub.reset()
-
         gestureRecognizer.sendActions() // changed (1 touch)
-
-        XCTAssertEqual(mapboxMap.dragEndStub.invocations.count, 1)
-
-        // Gesture re-captures initial state when number of touches increases back to 2
         let resumedCameraState = CameraState.random()
         mapboxMap.cameraState = resumedCameraState
-        // 45 degree touch angle
-        gestureRecognizer.locationOfTouchStub.returnValueQueue = [
-            CGPoint(x: -1, y: -1),
-            CGPoint(x: 1, y: 1)]
-        let resumedPinchMidpoint = CGPoint.random()
-        gestureRecognizer.locationStub.defaultReturnValue = resumedPinchMidpoint
-        mapboxMap.dragStartStub.reset()
-
         gestureRecognizer.sendActions() // changed (2 touches)
-
-        XCTAssertEqual(mapboxMap.dragStartStub.parameters, [resumedPinchMidpoint])
-
-        // On second changed event after resume, we can start updating the camera again
-        // 90 degree touch angle
-        gestureRecognizer.locationOfTouchStub.returnValueQueue = [
-            CGPoint(x: 0, y: 0),
-            CGPoint(x: 0, y: 1)]
-        let updatedPinchMidpoint = CGPoint.random()
-        gestureRecognizer.locationStub.defaultReturnValue = updatedPinchMidpoint
-        gestureRecognizer.getScaleStub.defaultReturnValue = 8
         mapboxMap.setCameraStub.reset()
-        mapboxMap.dragCameraOptionsStub.reset()
 
         gestureRecognizer.sendActions() // changed (2 touches)
 
-        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 2)
-        XCTAssertEqual(mapboxMap.dragCameraOptionsStub.parameters,
-                       [.init(from: resumedPinchMidpoint, to: updatedPinchMidpoint)])
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 3)
         XCTAssertEqual(
-            mapboxMap.setCameraStub.parameters.last,
+            mapboxMap.setCameraStub.parameters.first,
             CameraOptions(
-                anchor: updatedPinchMidpoint,
-                zoom: initialCameraState.zoom + 3,
-                bearing: resumedCameraState.bearing - 45))
+                center: resumedCameraState.center,
+                zoom: initialCameraState.zoom,
+                bearing: resumedCameraState.bearing))
     }
 
     func testPinchEnded() throws {
         gestureRecognizer.getStateStub.defaultReturnValue = .began
         gestureRecognizer.sendActions()
         gestureRecognizer.getStateStub.defaultReturnValue = .ended
-        mapboxMap.dragEndStub.reset()
 
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(mapboxMap.dragEndStub.invocations.count, 1)
         XCTAssertEqual(delegate.gestureEndedStub.invocations.count, 1)
         XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.gestureType, .pinch)
         XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.willAnimate, false)

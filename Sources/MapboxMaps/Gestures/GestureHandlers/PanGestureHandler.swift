@@ -84,9 +84,7 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
                 return
             }
             lastChangedDate = dateProvider.now
-            let clampedTouchLocation = clampTouchLocation(
-                touchLocation,
-                previousTouchLocation: previousTouchLocation)
+            let clampedTouchLocation = touchLocation.clamped(to: previousTouchLocation, panMode: panMode)
             pan(from: previousTouchLocation, to: clampedTouchLocation)
             self.previousTouchLocation = clampedTouchLocation
         case .ended:
@@ -111,7 +109,7 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
                 y: max(touchLocation.y, 3 * height / 4))
             cameraAnimationsManager.decelerate(
                 location: initialDecelerationLocation,
-                velocity: clampTouchLocation(velocity, previousTouchLocation: .zero),
+                velocity: velocity.clamped(to: .zero, panMode: panMode),
                 decelerationFactor: decelerationFactor,
                 locationChangeHandler: pan(from:to:),
                 completion: endAnimation)
@@ -145,21 +143,23 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
         delegate?.animationEnded(for: .pan)
     }
 
-    private func clampTouchLocation(_ touchLocation: CGPoint, previousTouchLocation: CGPoint) -> CGPoint {
-        switch panMode {
-        case .horizontal:
-            return CGPoint(x: touchLocation.x, y: previousTouchLocation.y)
-        case .vertical:
-            return CGPoint(x: previousTouchLocation.x, y: touchLocation.y)
-        case .horizontalAndVertical:
-            return touchLocation
-        }
-    }
-
     private func pan(from fromPoint: CGPoint, to toPoint: CGPoint) {
         mapboxMap.setCamera(
             to: mapboxMap.dragCameraOptions(
                 from: fromPoint,
                 to: toPoint))
+    }
+}
+
+private extension CGPoint {
+    func clamped(to point: CGPoint, panMode: PanMode) -> CGPoint {
+        switch panMode {
+        case .horizontal:
+            return CGPoint(x: x, y: point.y)
+        case .vertical:
+            return CGPoint(x: point.x, y: y)
+        case .horizontalAndVertical:
+            return self
+        }
     }
 }

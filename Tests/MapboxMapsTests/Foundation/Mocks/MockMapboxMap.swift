@@ -1,5 +1,6 @@
-@testable import MapboxMaps
+@testable @_spi(Experimental) import MapboxMaps
 @_implementationOnly import MapboxCoreMaps_Private
+import CoreLocation
 
 final class MockMapboxMap: MapboxMapProtocol {
 
@@ -117,5 +118,10 @@ final class MockMapboxMap: MapboxMapProtocol {
     let optionsForViewAnnotationWithIdStub = Stub<String, MapboxMaps.ViewAnnotationOptions>(defaultReturnValue: ViewAnnotationOptions())
     func options(forViewAnnotationWithId id: String) throws -> MapboxMaps.ViewAnnotationOptions {
         return optionsForViewAnnotationWithIdStub.call(with: id)
+    }
+
+    let pointIsAboveHorizonStub = Stub<CGPoint, Bool>(defaultReturnValue: .random())
+    func pointIsAboveHorizon(_ point: CGPoint) -> Bool {
+        pointIsAboveHorizonStub.call(with: point)
     }
 }

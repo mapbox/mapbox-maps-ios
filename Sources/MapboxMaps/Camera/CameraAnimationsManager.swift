@@ -11,7 +11,7 @@ internal protocol CameraAnimationsManagerProtocol: AnyObject {
     func decelerate(location: CGPoint,
                     velocity: CGPoint,
                     decelerationFactor: CGFloat,
-                    locationChangeHandler: @escaping (_ location: CGPoint) -> Void,
+                    locationChangeHandler: @escaping (_ fromLocation: CGPoint, _ toLocation: CGPoint) -> Void,
                     completion: @escaping () -> Void)
 
     func cancelAnimations()
@@ -288,15 +288,15 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
 
     /// This function will handle the natural decelration of a gesture when there is a velocity provided. A use case for this is the pan gesture.
     /// - Parameters:
-    ///   - location: Current location of center coordinate
-    ///   - velocity: The speed at which the map should move over time
-    ///   - decelerationFactor: A multiplication factor that determines the speed at which the velocity should slow down.
-    ///   - locationChangeHandler: Change handler to be passed through to the animator
-    ///   - completion: Completion to be called after animation has finished
+    ///   - location: The initial location. This location will be simulated based on velocity and decelerationFactor.
+    ///   - velocity: The initial velocity.
+    ///   - decelerationFactor: A factor by which the velocity is multiplied once per millisecond. Typically slightly less than 1 so that the velocity slowly decreases over time.
+    ///   - locationChangeHandler: A block that is called at each frame which provides the updated from and to location.
+    ///   - completion: A completion block that is called when the animation finishes.
     internal func decelerate(location: CGPoint,
                              velocity: CGPoint,
                              decelerationFactor: CGFloat,
-                             locationChangeHandler: @escaping (_ location: CGPoint) -> Void,
+                             locationChangeHandler: @escaping (_ fromLocation: CGPoint, _ toLocation: CGPoint) -> Void,
                              completion: @escaping () -> Void) {
 
         // Stop the `internalAnimator` before beginning a deceleration

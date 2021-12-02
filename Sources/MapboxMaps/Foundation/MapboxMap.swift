@@ -25,8 +25,10 @@ internal protocol MapboxMapProtocol: AnyObject {
     func updateViewAnnotation(withId id: String, options: ViewAnnotationOptions) throws
     func removeViewAnnotation(withId id: String) throws
     func options(forViewAnnotationWithId id: String) throws -> ViewAnnotationOptions
+    func pointIsAboveHorizon(_ point: CGPoint) -> Bool
 }
 
+// swiftlint:disable:next type_body_length
 public final class MapboxMap: MapboxMapProtocol {
     /// The underlying renderer object responsible for rendering the map
     private let __map: Map
@@ -541,6 +543,19 @@ public final class MapboxMap: MapboxMapProtocol {
     /// the user has ended a drag gesture initiated by `dragStart`.
     public func dragEnd() {
         __map.dragEnd()
+    }
+
+    internal func pointIsAboveHorizon(_ point: CGPoint) -> Bool {
+        guard case .mercator = try? mapProjection() else {
+            return false
+        }
+        let topMargin = 0.04 * size.height
+        let reprojectErrorMargin = min(10, topMargin / 2)
+        var p = point
+        p.y -= topMargin
+        let coordinate = self.coordinate(for: p)
+        let roundtripPoint = self.point(for: coordinate)
+        return roundtripPoint.y >= p.y + reprojectErrorMargin
     }
 
     // MARK: - Gesture and Animation Flags

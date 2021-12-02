@@ -553,7 +553,7 @@ public final class MapboxMap: MapboxMapProtocol {
         let reprojectErrorMargin = min(10, topMargin / 2)
         var p = point
         p.y -= topMargin
-        let coordinate = coordinate(for: p)
+        let coordinate = self.coordinate(for: p)
         let roundtripPoint = self.point(for: coordinate)
         return roundtripPoint.y >= p.y + reprojectErrorMargin
     }

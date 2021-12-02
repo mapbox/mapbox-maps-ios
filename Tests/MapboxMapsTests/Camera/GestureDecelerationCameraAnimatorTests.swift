@@ -6,7 +6,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
     var location: CGPoint!
     var velocity: CGPoint!
     var decelerationFactor: CGFloat!
-    var locationChangeHandler: Stub<CGPoint, Void>!
+    var locationChangeHandler: MockLocationChangeHandler!
     var dateProvider: MockDateProvider!
     // swiftlint:disable:next weak_delegate
     var delegate: MockCameraAnimatorDelegate!
@@ -18,14 +18,14 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         location = .zero
         velocity = CGPoint(x: 1000, y: -1000)
         decelerationFactor = 0.7
-        locationChangeHandler = Stub()
+        locationChangeHandler = MockLocationChangeHandler()
         dateProvider = MockDateProvider()
         delegate = MockCameraAnimatorDelegate()
         animator = GestureDecelerationCameraAnimator(
             location: location,
             velocity: velocity,
             decelerationFactor: decelerationFactor,
-            locationChangeHandler: locationChangeHandler.call(with:),
+            locationChangeHandler: locationChangeHandler.call(withFromLocation:toLocation:),
             dateProvider: dateProvider,
             delegate: delegate)
         completion = Stub()
@@ -75,7 +75,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         animator.update()
 
         // Expected value is duration * velocity;
-        XCTAssertEqual(locationChangeHandler.parameters, [CGPoint(x: 10, y: -10)])
+        XCTAssertEqual(locationChangeHandler.parameters, [.init(fromLocation: location, toLocation: CGPoint(x: 10, y: -10))])
         // The previous update() should also have reduced the velocity
         // by multiplying it by the decelerationFactor once for each elapsed
         // millisecond. In this simulateion, 10 ms have elapsed.
@@ -92,11 +92,14 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
 
         // The expected value this time is the previous location + the reduced
         // velocity (velocity * expectedVelocityAdjustmentFactor) times the elapsed duration
-        XCTAssertEqual(
-            locationChangeHandler.parameters, [
-                CGPoint(
-                    x: 10 + (velocity.x * expectedVelocityAdjustmentFactor) * 0.02,
-                    y: -10 + (velocity.y * expectedVelocityAdjustmentFactor) * 0.02)])
+        XCTAssertEqual(locationChangeHandler.invocations.count, 1)
+        XCTAssertEqual(locationChangeHandler.invocations[0].parameters.fromLocation, location)
+        XCTAssertEqual(locationChangeHandler.invocations[0].parameters.toLocation.x,
+                       (velocity.x * expectedVelocityAdjustmentFactor) * 0.02,
+                       accuracy: 0.0000000001)
+        XCTAssertEqual(locationChangeHandler.invocations[0].parameters.toLocation.y,
+                       (velocity.y * expectedVelocityAdjustmentFactor) * 0.02,
+                       accuracy: 0.0000000001)
         locationChangeHandler.reset()
         // After the previous update() call, the velocity should have also been reduced
         // to be sufficiently low (< 1 in both x and y) to end the animation.

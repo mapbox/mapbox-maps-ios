@@ -29,7 +29,7 @@ extension Value where T == LineCap {
 extension LineCap {
 
   static func testConstantValue() -> LineCap {
-     return LineCap.init(rawValue: "butt")!
+     return LineCap(rawValue: "butt")!
   }
 
 }
@@ -46,7 +46,7 @@ extension Value where T == LineJoin {
 extension LineJoin {
 
   static func testConstantValue() -> LineJoin {
-     return LineJoin.init(rawValue: "bevel")!
+     return LineJoin(rawValue: "bevel")!
   }
 
 }
@@ -63,7 +63,7 @@ extension Value where T == IconAnchor {
 extension IconAnchor {
 
   static func testConstantValue() -> IconAnchor {
-     return IconAnchor.init(rawValue: "center")!
+     return IconAnchor(rawValue: "center")!
   }
 
 }
@@ -80,7 +80,7 @@ extension Value where T == IconPitchAlignment {
 extension IconPitchAlignment {
 
   static func testConstantValue() -> IconPitchAlignment {
-     return IconPitchAlignment.init(rawValue: "map")!
+     return IconPitchAlignment(rawValue: "map")!
   }
 
 }
@@ -97,7 +97,7 @@ extension Value where T == IconRotationAlignment {
 extension IconRotationAlignment {
 
   static func testConstantValue() -> IconRotationAlignment {
-     return IconRotationAlignment.init(rawValue: "map")!
+     return IconRotationAlignment(rawValue: "map")!
   }
 
 }
@@ -114,7 +114,7 @@ extension Value where T == IconTextFit {
 extension IconTextFit {
 
   static func testConstantValue() -> IconTextFit {
-     return IconTextFit.init(rawValue: "none")!
+     return IconTextFit(rawValue: "none")!
   }
 
 }
@@ -131,7 +131,7 @@ extension Value where T == SymbolPlacement {
 extension SymbolPlacement {
 
   static func testConstantValue() -> SymbolPlacement {
-     return SymbolPlacement.init(rawValue: "point")!
+     return SymbolPlacement(rawValue: "point")!
   }
 
 }
@@ -148,7 +148,7 @@ extension Value where T == SymbolZOrder {
 extension SymbolZOrder {
 
   static func testConstantValue() -> SymbolZOrder {
-     return SymbolZOrder.init(rawValue: "auto")!
+     return SymbolZOrder(rawValue: "auto")!
   }
 
 }
@@ -165,7 +165,7 @@ extension Value where T == TextAnchor {
 extension TextAnchor {
 
   static func testConstantValue() -> TextAnchor {
-     return TextAnchor.init(rawValue: "center")!
+     return TextAnchor(rawValue: "center")!
   }
 
 }
@@ -182,7 +182,7 @@ extension Value where T == TextJustify {
 extension TextJustify {
 
   static func testConstantValue() -> TextJustify {
-     return TextJustify.init(rawValue: "auto")!
+     return TextJustify(rawValue: "auto")!
   }
 
 }
@@ -199,7 +199,7 @@ extension Value where T == TextPitchAlignment {
 extension TextPitchAlignment {
 
   static func testConstantValue() -> TextPitchAlignment {
-     return TextPitchAlignment.init(rawValue: "map")!
+     return TextPitchAlignment(rawValue: "map")!
   }
 
 }
@@ -216,7 +216,7 @@ extension Value where T == TextRotationAlignment {
 extension TextRotationAlignment {
 
   static func testConstantValue() -> TextRotationAlignment {
-     return TextRotationAlignment.init(rawValue: "map")!
+     return TextRotationAlignment(rawValue: "map")!
   }
 
 }
@@ -233,7 +233,7 @@ extension Value where T == TextTransform {
 extension TextTransform {
 
   static func testConstantValue() -> TextTransform {
-     return TextTransform.init(rawValue: "none")!
+     return TextTransform(rawValue: "none")!
   }
 
 }
@@ -250,7 +250,7 @@ extension Value where T == FillTranslateAnchor {
 extension FillTranslateAnchor {
 
   static func testConstantValue() -> FillTranslateAnchor {
-     return FillTranslateAnchor.init(rawValue: "map")!
+     return FillTranslateAnchor(rawValue: "map")!
   }
 
 }
@@ -267,7 +267,7 @@ extension Value where T == LineTranslateAnchor {
 extension LineTranslateAnchor {
 
   static func testConstantValue() -> LineTranslateAnchor {
-     return LineTranslateAnchor.init(rawValue: "map")!
+     return LineTranslateAnchor(rawValue: "map")!
   }
 
 }
@@ -284,7 +284,7 @@ extension Value where T == IconTranslateAnchor {
 extension IconTranslateAnchor {
 
   static func testConstantValue() -> IconTranslateAnchor {
-     return IconTranslateAnchor.init(rawValue: "map")!
+     return IconTranslateAnchor(rawValue: "map")!
   }
 
 }
@@ -301,7 +301,7 @@ extension Value where T == TextTranslateAnchor {
 extension TextTranslateAnchor {
 
   static func testConstantValue() -> TextTranslateAnchor {
-     return TextTranslateAnchor.init(rawValue: "map")!
+     return TextTranslateAnchor(rawValue: "map")!
   }
 
 }
@@ -318,7 +318,7 @@ extension Value where T == CirclePitchAlignment {
 extension CirclePitchAlignment {
 
   static func testConstantValue() -> CirclePitchAlignment {
-     return CirclePitchAlignment.init(rawValue: "map")!
+     return CirclePitchAlignment(rawValue: "map")!
   }
 
 }
@@ -335,7 +335,7 @@ extension Value where T == CirclePitchScale {
 extension CirclePitchScale {
 
   static func testConstantValue() -> CirclePitchScale {
-     return CirclePitchScale.init(rawValue: "map")!
+     return CirclePitchScale(rawValue: "map")!
   }
 
 }
@@ -352,7 +352,7 @@ extension Value where T == CircleTranslateAnchor {
 extension CircleTranslateAnchor {
 
   static func testConstantValue() -> CircleTranslateAnchor {
-     return CircleTranslateAnchor.init(rawValue: "map")!
+     return CircleTranslateAnchor(rawValue: "map")!
   }
 
 }
@@ -369,7 +369,7 @@ extension Value where T == FillExtrusionTranslateAnchor {
 extension FillExtrusionTranslateAnchor {
 
   static func testConstantValue() -> FillExtrusionTranslateAnchor {
-     return FillExtrusionTranslateAnchor.init(rawValue: "map")!
+     return FillExtrusionTranslateAnchor(rawValue: "map")!
   }
 
 }
@@ -386,7 +386,7 @@ extension Value where T == RasterResampling {
 extension RasterResampling {
 
   static func testConstantValue() -> RasterResampling {
-     return RasterResampling.init(rawValue: "linear")!
+     return RasterResampling(rawValue: "linear")!
   }
 
 }
@@ -403,7 +403,7 @@ extension Value where T == HillshadeIlluminationAnchor {
 extension HillshadeIlluminationAnchor {
 
   static func testConstantValue() -> HillshadeIlluminationAnchor {
-     return HillshadeIlluminationAnchor.init(rawValue: "map")!
+     return HillshadeIlluminationAnchor(rawValue: "map")!
   }
 
 }
@@ -420,7 +420,7 @@ extension Value where T == SkyType {
 extension SkyType {
 
   static func testConstantValue() -> SkyType {
-     return SkyType.init(rawValue: "gradient")!
+     return SkyType(rawValue: "gradient")!
   }
 
 }
@@ -437,7 +437,7 @@ extension Value where T == Anchor {
 extension Anchor {
 
   static func testConstantValue() -> Anchor {
-     return Anchor.init(rawValue: "map")!
+     return Anchor(rawValue: "map")!
   }
 
 }
@@ -454,7 +454,7 @@ extension Value where T == TextWritingMode {
 extension TextWritingMode {
 
   static func testConstantValue() -> TextWritingMode {
-     return TextWritingMode.init(rawValue: "horizontal")!
+     return TextWritingMode(rawValue: "horizontal")!
   }
 
 }

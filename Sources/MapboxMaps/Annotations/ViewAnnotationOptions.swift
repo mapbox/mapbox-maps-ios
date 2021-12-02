@@ -23,6 +23,7 @@ public struct ViewAnnotationOptions: Hashable {
 
     /// If true, the annotation will be visible even if it collides with other previously drawn annotations.
     /// If allowOverlap is null, default value `false` will be applied.
+    /// Note: When the value is true, the ordering of the views are determined by the order of their addition.
     public var allowOverlap: Bool?
 
     /// Specifies if this view annotation is visible or not.
@@ -51,7 +52,7 @@ public struct ViewAnnotationOptions: Hashable {
     public var selected: Bool?
 
     /// Initializes a `ViewAnnotationOptions`
-    public init(geometry: Geometry? = nil,
+    public init(geometry: GeometryConvertible? = nil,
                 width: CGFloat? = nil,
                 height: CGFloat? = nil,
                 associatedFeatureId: String? = nil,
@@ -61,7 +62,7 @@ public struct ViewAnnotationOptions: Hashable {
                 offsetX: CGFloat? = nil,
                 offsetY: CGFloat? = nil,
                 selected: Bool? = nil) {
-        self.geometry = geometry
+        self.geometry = geometry?.geometry
         self.width = width
         self.height = height
         self.associatedFeatureId = associatedFeatureId

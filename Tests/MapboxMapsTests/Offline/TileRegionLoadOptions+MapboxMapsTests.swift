@@ -107,7 +107,7 @@ final class TileRegionLoadOptions_MapboxMapsTests: XCTestCase {
     }
 
     func testNonNilGeometry() {
-        let tileRegionLoadOptions = TileRegionLoadOptions(__geometry: MapboxCommon.Geometry(.point(Point(coordinate))),
+        let tileRegionLoadOptions = TileRegionLoadOptions(__geometry: MapboxCommon.Geometry(Point(coordinate)),
                                                           descriptors: nil,
                                                           metadata: nil,
                                                           acceptExpired: false,

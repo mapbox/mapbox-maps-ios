@@ -60,7 +60,7 @@ public final class Style: StyleProtocol {
     ///   - layerPosition: Position at which to add the map.
     ///
     /// - Throws: StyleError or type conversion errors
-    @_spi(Experimental) public func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
+    public func addPersistentLayer(_ layer: Layer, layerPosition: LayerPosition? = nil) throws {
         // Attempt to encode the provided layer into JSON and apply it to the map
         let layerJSON = try layer.jsonObject()
         try addPersistentLayer(with: layerJSON, layerPosition: layerPosition)
@@ -363,7 +363,7 @@ public final class Style: StyleProtocol {
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful
-    @_spi(Experimental) public func addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
+    public func addPersistentLayer(with properties: [String: Any], layerPosition: LayerPosition?) throws {
         return try handleExpected {
             return styleManager.addPersistentStyleLayer(forProperties: properties, layerPosition: layerPosition?.corePosition)
         }
@@ -371,7 +371,7 @@ public final class Style: StyleProtocol {
 
     /// Returns `true` if the id passed in is associated to a persistent layer
     /// - Parameter id: The layer identifier to test
-    @_spi(Experimental) public func isPersistentLayer(id: String) throws -> Bool {
+    public func isPersistentLayer(id: String) throws -> Bool {
         return try handleExpected {
             return styleManager.isStyleLayerPersistent(forLayerId: id)
         }
@@ -391,7 +391,7 @@ public final class Style: StyleProtocol {
     ///
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
-    @_spi(Experimental) public func addPersistentCustomLayer(withId id: String, layerHost: CustomLayerHost, layerPosition: LayerPosition?) throws {
+    public func addPersistentCustomLayer(withId id: String, layerHost: CustomLayerHost, layerPosition: LayerPosition?) throws {
         return try handleExpected {
             return styleManager.addPersistentStyleCustomLayer(forLayerId: id, layerHost: layerHost, layerPosition: layerPosition?.corePosition)
         }

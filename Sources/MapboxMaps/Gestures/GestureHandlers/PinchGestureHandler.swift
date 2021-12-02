@@ -2,6 +2,7 @@ import UIKit
 
 internal protocol PinchGestureHandlerProtocol: GestureHandler {
     var rotateEnabled: Bool { get set }
+    var behavior: PinchGestureBehavior { get set }
 }
 
 internal protocol PinchGestureHandlerImpl: AnyObject {

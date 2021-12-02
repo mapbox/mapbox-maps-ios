@@ -11,6 +11,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Add support for exponentials to `StyleColor`. ([#873](https://github.com/mapbox/mapbox-maps-ios/pull/873))
 * Improve panning behavior on pitched maps. ([#888](https://github.com/mapbox/mapbox-maps-ios/pull/888))
 * Add pinch gesture tradeoff configuration option. ([#890](https://github.com/mapbox/mapbox-maps-ios/pull/890))
+* Update to MapboxCoreMaps 10.2.0-rc.1 and MapboxCommon 21.0.0-rc.2. ([#891](https://github.com/mapbox/mapbox-maps-ios/pull/891))
 
 ## 10.2.0-beta.1 - November 19, 2021
 

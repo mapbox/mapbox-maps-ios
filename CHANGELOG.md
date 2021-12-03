@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## 10.1.1 - December 1, 2021
 
+**NOTE:** As of December 3, 2021, this release is no longer available due to a new bug that was introduced while fixing the billing issue. A new patch will be issued shortly.
+
 * Fixed billing issue when upgrading Mapbox Maps SDK from v6 to v10. ([#885](https://github.com/mapbox/mapbox-maps-ios/pull/885))
 
 ## 10.1.0 - November 4, 2021
@@ -26,6 +28,12 @@ Mapbox welcomes participation and contributions from everyone.
 * Fixed a name collision between Swift symbols and `MapboxCoreMaps.Task`. ([#769](https://github.com/mapbox/mapbox-maps-ios/pull/769))
 * Fixed an issue that caused `queryFeatureExtension` to fail. ([#769](https://github.com/mapbox/mapbox-maps-ios/pull/769))
 * Updated `MapboxCoreMaps` to v10.1.0-beta and `MapboxCommon` to 20.1.0-rc.1. ([#769](https://github.com/mapbox/mapbox-maps-ios/pull/769))
+
+## 10.0.2 - November 29, 2021
+
+**NOTE:** As of December 3, 2021, this release is no longer available due to a new bug that was introduced while fixing the billing issue. A new patch will be issued shortly.
+
+* Fixed billing issue when upgrading Mapbox Maps SDK from v6 to v10. ([#876](https://github.com/mapbox/mapbox-maps-ios/pull/876))
 
 ## 10.0.1 - October 15, 2021
 

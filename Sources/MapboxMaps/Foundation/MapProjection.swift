@@ -8,10 +8,10 @@
 /// Mapbox map supports Mercator and Globe projections.
 @_spi(Experimental) public enum MapProjection: Codable, Hashable {
     // Wraps `MercatorMapProjection`
-    case mercator(_ projection: MercatorMapProjection)
+    case mercator(_ projection: MercatorMapProjection = MercatorMapProjection())
 
     // Wraps `GlobeMapProjection`
-    case globe(_ projection: GlobeMapProjection)
+    case globe(_ projection: GlobeMapProjection = GlobeMapProjection())
 
     /// Name of the wrapped projection
     public var name: String {

@@ -13,7 +13,7 @@ public class GlobeViewExample: UIViewController, ExampleProtocol {
     }
 
     internal var mapView: MapView!
-    internal var currentProjection: MapProjection = .globe(GlobeMapProjection())
+    internal var currentProjection: MapProjection = .globe()
 
     private lazy var infoLabel: UILabel = {
         let label = UILabel(frame: .zero)
@@ -131,7 +131,7 @@ public class GlobeViewExample: UIViewController, ExampleProtocol {
     }
 
     @objc private func projectionSwitched(sender: UIButton) {
-        currentProjection = currentProjection == .globe(GlobeMapProjection()) ? .mercator(MercatorMapProjection()) : .globe(GlobeMapProjection())
+        currentProjection = currentProjection == .globe() ? .mercator() : .globe()
         try! mapView.mapboxMap.setMapProjection(currentProjection)
         updateInfoText()
     }

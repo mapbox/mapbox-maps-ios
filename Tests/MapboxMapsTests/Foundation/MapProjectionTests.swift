@@ -4,9 +4,9 @@ import XCTest
 final class MapProjectionTests: XCTestCase {
 
     func testNameProperty() {
-        var projection = MapProjection.globe(GlobeMapProjection())
+        var projection = MapProjection.globe()
         XCTAssertEqual(projection.name, "globe")
-        projection = MapProjection.mercator(MercatorMapProjection())
+        projection = MapProjection.mercator()
         XCTAssertEqual(projection.name, "mercator")
     }
 

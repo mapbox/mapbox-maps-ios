@@ -519,7 +519,7 @@ extension MapView: DelegatingMapClientDelegate {
             metalView.setNeedsDisplay()
         }
 
-        metalView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        metalView.translatesAutoresizingMaskIntoConstraints = false
         metalView.autoResizeDrawable = true
         metalView.contentScaleFactor = pixelRatio
         metalView.contentMode = .center
@@ -530,6 +530,28 @@ extension MapView: DelegatingMapClientDelegate {
         metalView.presentsWithTransaction = false
 
         insertSubview(metalView, at: 0)
+
+        let sameHeightConstraint = metalView.heightAnchor.constraint(equalTo: heightAnchor)
+        sameHeightConstraint.priority = .defaultHigh
+
+        let minHeightConstraint = metalView.heightAnchor.constraint(greaterThanOrEqualToConstant: 1)
+        minHeightConstraint.priority = .required
+
+        let sameWidthConstraint = metalView.widthAnchor.constraint(equalTo: widthAnchor)
+        sameWidthConstraint.priority = .defaultHigh
+
+        let minWidthConstraint = metalView.widthAnchor.constraint(greaterThanOrEqualToConstant: 1)
+        minWidthConstraint.priority = .required
+
+        NSLayoutConstraint.activate([
+            metalView.topAnchor.constraint(equalTo: topAnchor),
+            sameHeightConstraint,
+            minHeightConstraint,
+            metalView.leftAnchor.constraint(equalTo: leftAnchor),
+            sameWidthConstraint,
+            minWidthConstraint
+        ])
+
         self.metalView = metalView
 
         return metalView

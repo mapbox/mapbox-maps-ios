@@ -26,9 +26,6 @@ main() {
     local gemfile_path="$worktree_script_dir/Gemfile"
     install_jazzy "$gemfile_path"
 
-    info "Prepare repository for jazzy"
-    prepare_jazzy_build "$worktree_path"
-
     info "Build and parse"
     local jazzy_config_path="$worktree_script_dir/.jazzy.yaml"
     run_jazzy "$gemfile_path" "$jazzy_config_path" "$worktree_path" "$DOCS_OUTPUT"
@@ -79,18 +76,7 @@ checkout_source_code() {
         git worktree add "$new_worktree_path" "$git_ref"
         # shellcheck disable=SC2064
         trap "git worktree remove $1 --force" INT TERM HUP EXIT
-        git -C "$1" submodule update --init
-    } &> "$VERBOSE_LOGGER"
-}
-
-prepare_jazzy_build() {
-    if [[ $# != 1 ]]; then
-        echo "Illegal number of parameters in ${FUNCNAME[0]}"
-        exit 1
-    fi
-    {
-        rm -rf "$1/*.xcodeproj"
-        rm -rf "$1/*.xcworkspace"
+        git -C "$new_worktree_path" submodule update --init
     } &> "$VERBOSE_LOGGER"
 }
 
@@ -100,15 +86,15 @@ run_jazzy() {
         exit 1
     fi
     {
-        local gemfile_path=$1
-        local jazzy_config_path=$2
-        local worktree_path=$3
-        local output_dir=$4
+        local gemfile_path="$1"
+        local jazzy_config_path="$2"
+        local worktree_path="$3"
+        local output_dir="$4"
 
         rm -rf "$output_dir"
         bundle exec --gemfile "$gemfile_path" \
             jazzy \
-                --source-directory "$3" \
+                --source-directory "$worktree_path" \
                 --config "$jazzy_config_path" \
                 --module-version "$VERSION" \
                 --output "$output_dir"

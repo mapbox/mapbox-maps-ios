@@ -1,3 +1,4 @@
+---
 module: MapboxMaps
 title: Mapbox Maps SDK for iOS
 author: Mapbox
@@ -9,3 +10,4 @@ build_tool_arguments:
   - MapboxMaps
   - -destination
   - generic/platform=iOS Simulator
+...

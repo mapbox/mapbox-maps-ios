@@ -137,6 +137,7 @@ workflows:
           filters:
             branches:
               only: main
+      - check-api-compatibility
       - create-xcframework
 
   release:
@@ -512,6 +513,18 @@ jobs:
       - report-failure:
           report_failure: << parameters.report_failure >>
           message: "create-xcframework"
+
+  check-api-compatibility:
+    <<: *base-job
+    macos:
+      xcode: 13.0.0
+    steps:
+      - checkout
+      - add-mapbox-submodules-key
+      - install-mbx-ci
+      - configure-environment
+      - install-dependencies
+      - check-breaking-api
 
   # This job:
   # - builds XCFrameworks

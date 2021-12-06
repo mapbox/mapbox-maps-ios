@@ -137,6 +137,7 @@ workflows:
           filters:
             branches:
               only: main
+      - check-api-compatibility
       - create-xcframework
 
   release:
@@ -499,15 +500,47 @@ jobs:
       - install-dependencies
       - make-xcframework-bundle:
           bundle_style: "dynamic"
+      - when:
+        # Do not run Check Compatibility API for Xcode 12
+            condition:
+              not:
+                matches:
+                  pattern: "^12.*$"
+                  value: << parameters.xcode >>
+            steps:
+              - check-breaking-api:
+                  bundle_path: MapboxMaps.zip
       - store_artifacts:
           path: MapboxMaps.zip
       - make-xcframework-bundle:
           bundle_style: "static"
+      - when:
+        # Do not run Check Compatibility API for Xcode 12
+            condition:
+              not:
+                matches:
+                  pattern: "^12.*$"
+                  value: << parameters.xcode >>
+            steps:
+              - check-breaking-api:
+                  bundle_path: MapboxMaps-static.zip
       - store_artifacts:
           path: MapboxMaps-static.zip
       - report-failure:
           report_failure: << parameters.report_failure >>
           message: "create-xcframework"
+
+  check-api-compatibility:
+    <<: *base-job
+    macos:
+      xcode: 13.0.0
+    steps:
+      - checkout
+      - add-mapbox-submodules-key
+      - install-mbx-ci
+      - configure-environment
+      - install-dependencies
+      - check-breaking-api
 
   # This job:
   # - builds XCFrameworks
@@ -702,8 +735,17 @@ commands:
             ./package-mapbox-maps.sh << parameters.bundle_style >>
             echo "Moving zip to project root"
             mv MapboxMaps*.zip /Users/distiller/project/
-            echo "Return to root of project"
-            cd /Users/distiller/project/
+
+  check-breaking-api:
+    parameters:
+      bundle_path:
+        type: string
+        default: scripts/release/packager/MapboxMaps.zip
+    description: Compare public interface with pinned baseline with swift-api-digester
+    steps:
+      - run:
+          name: Breaking API check
+          command: scripts/api-compatibility-check/breaking-api-check.sh -p << parameters.bundle_path >>
 
   report-failure:
     parameters:

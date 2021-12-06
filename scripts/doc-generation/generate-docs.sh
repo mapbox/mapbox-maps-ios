@@ -110,7 +110,7 @@ jazzy \
     --swift-build-tool xcodebuild \
     --build-tool-arguments '-scheme,MapboxMaps,-destination,generic/platform=iOS Simulator' \
     --sdk iphonesimulator \
-    --theme jazzy-theme \
+    --theme scripts/doc-generation/jazzy-theme \
     --output api-docs/$GIT_REV
 
 # Switch back to previous branch

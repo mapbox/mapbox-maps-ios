@@ -1,0 +1,4 @@
+# Configuration file for https://github.com/koalaman/shellcheck
+source-path=SCRIPTDIR
+
+external-sources=true

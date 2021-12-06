@@ -500,14 +500,30 @@ jobs:
       - install-dependencies
       - make-xcframework-bundle:
           bundle_style: "dynamic"
-      - check-breaking-api:
-          bundle_path: MapboxMaps.zip
+      - when:
+        # Do not run Check Compatibility API for Xcode 12
+            condition:
+              not:
+                matches:
+                  pattern: "^12.*$"
+                  value: << parameters.xcode >>
+            steps:
+              - check-breaking-api:
+                  bundle_path: MapboxMaps.zip
       - store_artifacts:
           path: MapboxMaps.zip
       - make-xcframework-bundle:
           bundle_style: "static"
-      - check-breaking-api:
-          bundle_path: MapboxMaps-static.zip
+      - when:
+        # Do not run Check Compatibility API for Xcode 12
+            condition:
+              not:
+                matches:
+                  pattern: "^12.*$"
+                  value: << parameters.xcode >>
+            steps:
+              - check-breaking-api:
+                  bundle_path: MapboxMaps-static.zip
       - store_artifacts:
           path: MapboxMaps-static.zip
       - report-failure:

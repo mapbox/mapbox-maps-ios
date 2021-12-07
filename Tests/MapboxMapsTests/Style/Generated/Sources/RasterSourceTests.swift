@@ -18,6 +18,8 @@ final class RasterSourceTests: XCTestCase {
         source.prefetchZoomDelta = Double.testSourceValue()
         source.minimumTileUpdateInterval = Double.testSourceValue()
         source.maxOverscaleFactorForParentTiles = Double.testSourceValue()
+        source.tileRequestsDelay = Double.testSourceValue()
+        source.tileNetworkRequestsDelay = Double.testSourceValue()
 
         var data: Data?
         do {
@@ -46,6 +48,8 @@ final class RasterSourceTests: XCTestCase {
             XCTAssert(decodedSource.prefetchZoomDelta == Double.testSourceValue())
             XCTAssert(decodedSource.minimumTileUpdateInterval == Double.testSourceValue())
             XCTAssert(decodedSource.maxOverscaleFactorForParentTiles == Double.testSourceValue())
+            XCTAssert(decodedSource.tileRequestsDelay == Double.testSourceValue())
+            XCTAssert(decodedSource.tileNetworkRequestsDelay == Double.testSourceValue())
         } catch {
             XCTFail("Failed to decode RasterSource.")
         }

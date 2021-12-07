@@ -11,7 +11,7 @@ extension MapboxCoreMaps.MapOptions {
     ///   - orientation: The view orientation; default is `.upwards`.
     ///   - crossSourceCollisions: Whether cross-source symbol collision detection should be enabled; default is `true`
     ///   - size: Size of the map, if nil (the default), a minimal default size will be used.
-    ///   - pixelRatio: Pixel scale of the map view; default is thee main screen's scale.
+    ///   - pixelRatio: Pixel scale of the map view; default is the main screen's native scale.
     ///   - glyphsRasterizationOptions: A `GlyphsRasterizationOptions` object.
     public convenience init(constrainMode: ConstrainMode = .heightOnly,
                             viewportMode: ViewportMode = .default,

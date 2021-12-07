@@ -1,4 +1,5 @@
 @_implementationOnly import MapboxCommon_Private
+import Foundation
 
 internal final class Puck2D: NSObject, Puck {
 
@@ -9,7 +10,7 @@ internal final class Puck2D: NSObject, Puck {
             }
             if isActive {
                 locationProducer.add(self)
-                updateLayer()
+                updateLayer(location: latestLocation)
             } else {
                 locationProducer.remove(self)
                 try? style.removeLayer(withId: Self.layerID)
@@ -23,7 +24,7 @@ internal final class Puck2D: NSObject, Puck {
 
     internal var puckBearingSource: PuckBearingSource = .heading {
         didSet {
-            updateLayer()
+            updateLayer(location: latestLocation)
         }
     }
 
@@ -47,6 +48,8 @@ internal final class Puck2D: NSObject, Puck {
         self.configuration = configuration
         self.style = style
         self.locationProducer = locationProducer
+        super.init()
+        self.internalLocationUpdaterEngine(herz: 30)
     }
 
     private func addImages() {
@@ -75,8 +78,9 @@ internal final class Puck2D: NSObject, Puck {
         }
     }
 
-    private func updateLayer() {
-        guard isActive, let location = locationProducer.latestLocation else {
+    
+    private func updateLayer(location: Location?) {
+        guard isActive, let location = location else {
             return
         }
         var layer = LocationIndicatorLayer(id: Self.layerID)
@@ -92,7 +96,8 @@ internal final class Puck2D: NSObject, Puck {
                 location.coordinate.longitude,
                 location.location.altitude
             ])
-            layer.locationTransition = StyleTransition(duration: 0.5, delay: 0)
+            
+            layer.locationTransition = StyleTransition(duration: 1.0, delay: 0)
             layer.topImageSize = configuration.resolvedScale
             layer.bearingImageSize = configuration.resolvedScale
             layer.shadowImageSize = configuration.resolvedScale
@@ -161,11 +166,79 @@ internal final class Puck2D: NSObject, Puck {
             try! style.addPersistentLayer(with: allLayerProperties, layerPosition: nil)
         }
     }
+    var latestLocation: Location?
+    var segmentationTimer: Timer?
+    
+    var lastLocationUpdateInterval: Double = 1.0 //TODO: time between location updates
+    var lastLocationUpdate: Date = Date()
+    
+    let frameUpdateFrequency = 20 //TODO: config parameter in option; if 0, default to default implemenation?
 }
 
 extension Puck2D: LocationConsumer {
+    
+    //TODO: move this out into a extension for Puck2D & 3D
     internal func locationUpdate(newLocation: Location) {
-        updateLayer()
+//        updateLayer(location: newLocation)
+        print("------------")
+        lastLocationUpdateInterval = Date().timeIntervalSince(lastLocationUpdate)
+        lastLocationUpdate = Date()
+        internalLocationUpdates(newLocation: newLocation, herz: (Double(frameUpdateFrequency) * lastLocationUpdateInterval))
+    }
+    
+    internal func internalLocationUpdates(newLocation: Location?, herz: Double) {
+        if latestLocation == nil {
+            latestLocation = newLocation
+            return
+        }
+        guard let newLocation = newLocation else {
+            return
+        }
+
+        let subLat = latestLocation!.coordinate.latitude - newLocation.coordinate.latitude
+        let subLong = latestLocation!.coordinate.longitude - newLocation.coordinate.longitude
+        
+        let distLat = subLat / herz
+        let distLong = subLong / herz
+        
+        
+        //TODO: how to apply segementation to heading?
+//        let distHeadAcc = (latestLocation!.heading!.headingAccuracy - newLocation.heading!.headingAccuracy) / Double(herz)
+//        let distHeadTrue = (latestLocation!.heading!.trueHeading - newLocation.heading!.trueHeading) / Double(herz)
+//        let distHeadMag = (latestLocation!.heading!.magneticHeading - newLocation.heading!.magneticHeading) / Double(herz)
+        
+        segmentationTimer?.invalidate()
+        //TODO: possibly just one temp timer triggered by update instead of the engine setup?
+        var runCount = 0
+        let interval = lastLocationUpdateInterval/herz
+        segmentationTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true, block: { [weak self] timer in
+            
+            let location = CLLocation(latitude: self!.latestLocation!.coordinate.latitude - distLat, longitude: self!.latestLocation!.coordinate.longitude - distLong)
+            self!.latestLocation = Location(location: location, heading: newLocation.heading , accuracyAuthorization: newLocation.accuracyAuthorization)
+            
+            runCount += 1
+            let df = DateFormatter()
+            df.dateFormat = "y-MM-dd H:mm:ss.SSSS"
+            print(df.string(from: Date()) + " - \(self!.latestLocation) - \(runCount)")
+            
+            if runCount >= Int(herz) {
+                timer.invalidate()
+            }
+        })
+    }
+    
+    internal func internalLocationUpdaterEngine(herz: Int) {
+//        return
+        var latestUpdatedLocation: Location?
+        _ = Timer.scheduledTimer(withTimeInterval: lastLocationUpdateInterval/Double(herz), repeats: true) { [weak self] timer in
+
+            guard let self = self else { return }
+            
+            if self.latestLocation == nil || latestUpdatedLocation == self.latestLocation { return }
+            
+            self.updateLayer(location: self.latestLocation)
+            latestUpdatedLocation = self.latestLocation
+        }
     }
 }
 

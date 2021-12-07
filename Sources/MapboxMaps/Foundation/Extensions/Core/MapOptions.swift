@@ -19,7 +19,7 @@ extension MapboxCoreMaps.MapOptions {
                             crossSourceCollisions: Bool = true,
                             optimizeForTerrain: Bool = true,
                             size: CGSize? = nil,
-                            pixelRatio: CGFloat = UIScreen.main.scale,
+                            pixelRatio: CGFloat = UIScreen.main.nativeScale,
                             glyphsRasterizationOptions: GlyphsRasterizationOptions = GlyphsRasterizationOptions(fontFamilies: [])) {
 
         let mbmSize: Size?

@@ -32,7 +32,11 @@ This project:
 
 3. uses [Swift Package Manager](https://github.com/apple/swift-package-manager) to manage dependencies for development. Cocapods is supported for *consuming* the SDK.
 
-4. uses [secret-shield](https://github.com/mapbox/secret-shield) to help block secrets such as access tokens from being exposed. Install `secret-shield` by entering `npm install -g @mapbox/secret-shield`. Install the pre-commit hook by running `scripts/install-pre-commit/install-pre-commit.sh`
+4. uses [secret-shield](https://github.com/mapbox/secret-shield) to help block secrets such as access tokens from being exposed. Setup `secret-shield` by running:
+```
+npm install -g @mapbox/secret-shield
+scripts/install-pre-commit/install-pre-commit.sh
+```
 
 5. uses CircleCI and AWS Device Farm for continuous integration.
 
@@ -50,13 +54,15 @@ Pre-requisite: Valid `.netrc` file located on your machine at `~/.netrc`. Please
 
 Open `Package.swift` and build the MapboxMaps target.
 
-### Updating dependency versioning
+### Update dependency versions
 
-You must remember to sure to update the Package.swift file in https://github.com/mapbox/mapbox-maps-ios/blob/main/Package.swift, not the App.xcworkspace, using the following commands:
+You must remember to update the Package.swift file in https://github.com/mapbox/mapbox-maps-ios/blob/main/Package.swift, not the App.xcworkspace, using the following commands:
 
-`xed Package.swift
+```
+xed Package.swift
 //update versions in there
-swift package update`
+swift package update
+```
 
 ### Running the Debug App
 
@@ -68,7 +74,7 @@ You must provide a Mapbox access token to display Mapbox-hosted maps in the `Deb
 
 CircleCI's [YAML](https://en.wikipedia.org/wiki/YAML) format can be picky. You can run `make validate` to ensure you've formatted the changes to the config file correctly. This make target will install the [CircleCI command line interface](https://circleci.com/docs/2.0/local-cli/) to validate `.circleci/config.yml`, and run `circleci config validate`
 
-## Testing
+# Testing
 
 ## Unit Testing on devices
 
@@ -146,7 +152,11 @@ This project:
 
 3. uses [Swift Package Manager](https://github.com/apple/swift-package-manager) to manage dependencies for development. Cocapods is supported for *consuming* the SDK.
 
-4. uses [secret-shield](https://github.com/mapbox/secret-shield) to help block secrets such as access tokens from being exposed. Install `secret-shield` by entering `npm install -g @mapbox/secret-shield`. Install the pre-commit hook by running `scripts/install-pre-commit/install-pre-commit.sh`
+4. uses [secret-shield](https://github.com/mapbox/secret-shield) to help block secrets such as access tokens from being exposed. Setup `secret-shield` by running:
+```
+npm install -g @mapbox/secret-shield
+scripts/install-pre-commit/install-pre-commit.sh
+```
 
 5. uses CircleCI and AWS Device Farm for continuous integration.
 

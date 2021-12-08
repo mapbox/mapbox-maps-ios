@@ -29,6 +29,8 @@ final class RasterDemSourceIntegrationTests: MapViewIntegrationTestCase {
             source.prefetchZoomDelta = Double.testSourceValue()
             source.minimumTileUpdateInterval = Double.testSourceValue()
             source.maxOverscaleFactorForParentTiles = Double.testSourceValue()
+            source.tileRequestsDelay = Double.testSourceValue()
+            source.tileNetworkRequestsDelay = Double.testSourceValue()
 
             // Add the source
             do {

@@ -72,6 +72,16 @@ public struct VectorSource: Source {
      * When a set of tiles for a current zoom level is being rendered and some of the ideal tiles that cover the screen are not yet loaded, parent tile could be used instead. This might introduce unwanted rendering side-effects, especially for raster tiles that are overscaled multiple times. This property sets the maximum limit for how much a parent tile can be overscaled. 
     */
     public var maxOverscaleFactorForParentTiles: Double?
+      
+    /** 
+     * For the tiled sources, this property sets the tile requests delay. The given delay comes in action only during an ongoing animation or gestures. It helps to avoid loading, parsing and rendering of the transient tiles and thus to improve the rendering performance, especially on low-end devices. 
+    */
+    public var tileRequestsDelay: Double?
+      
+    /** 
+     * For the tiled sources, this property sets the tile network requests delay. The given delay comes in action only during an ongoing animation or gestures. It helps to avoid loading the transient tiles from the network and thus to avoid redundant network requests. Note that tile-network-requests-delay value is superseded with tile-requests-delay property value, if both are provided. 
+    */
+    public var tileNetworkRequestsDelay: Double?
      
     public init() {
       self.type = .vector

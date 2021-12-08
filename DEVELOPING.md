@@ -2,16 +2,8 @@
 
 This guide contains the steps required to contribute to the development of this project.
 
-# Developing
-
-This guide contains the steps required to contribute to the development of this project.
-
-  * [Setting up the repository](#setting-up-the-repository)
-  * [Installing the dependencies](#installing-the-dependencies)
-    + [Android](#android)
-    + [iOS and macOS](#ios-and-macos)
-  * [Configuring and building](#configuring-and-building)
-  * [Accessing the Maps SDK's source](#accessing-the-maps-SDK's-source)
+  * [Setting up a development environment](#setting-up-a-development-environment)
+  * [Accessing the Maps SDK's source](#accessing-the-maps-sdks-source)
   * [Building the Maps SDK](#building-the-maps-sdk)
   * [Updating dependency versioning](#updating-dependency-versioning)
   * [Running the Debug app](#running-the-debug-app)
@@ -60,7 +52,7 @@ Open `Package.swift` and build the MapboxMaps target.
 
 ### Updating dependency versioning
 
-Make sure to update the Package.swift file in https://github.com/mapbox/mapbox-maps-ios/blob/main/Package.swift, not the App.xcworkspace, using the following commands:
+You must remember to sure to update the Package.swift file in https://github.com/mapbox/mapbox-maps-ios/blob/main/Package.swift, not the App.xcworkspace, using the following commands:
 
 `xed Package.swift
 //update versions in there

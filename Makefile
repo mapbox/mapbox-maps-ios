@@ -257,6 +257,22 @@ clean-for-device-build:
 .PHONY: clean-test-with-device-farm
 clean-test-with-device-farm: clean-for-device-build test-with-device-farm
 
+.PHONY: test-with-firebase
+test-with-firebase:
+	xcodebuild \
+		-workspace Apps/Apps.xcworkspace \
+		-scheme $(SCHEME) \
+		-enableCodeCoverage YES \
+		-configuration $(CONFIGURATION) \
+		-sdk iphoneos build-for-testing;
+	cd ${BUILD_DIR}/Build/Products; \
+	zip -r ${APP_NAME}.zip $(CONFIGURATION)-iphoneos $(SCHEME)_iphoneos*.xctestrun;
+	gcloud firebase test ios run --test ${BUILD_DIR}/Build/Products/${APP_NAME}.zip \
+		--timeout 20m \
+		--device model=iphone11,version=13.6 \
+		--results-dir $(SCHEME)-${CIRCLE_BUILD_NUM};
+	rm ${BUILD_DIR}/Build/Products/${APP_NAME}.zip
+
 .PHONY: test-with-device-farm
 test-with-device-farm: $(DEVICE_FARM_RESULTS)
 	python3 ./scripts/device-farm/check_results_for_failure.py $(DEVICE_FARM_RESULTS)
@@ -342,7 +358,8 @@ symbolicate:
 	@echo Symbolicating crash reports
 
 	@export DEVELOPER_DIR=$$(xcode-select -p); \
-	CRASHES=`find $(DEVICE_TEST_PATH) -name Application_Crash_Report.ips` ; \
+	CRASHES=`find $(BUILD_DIR) -name *.ips` ; \
+	echo "crashes: $${CRASHES}"; \
 	for CRASH in $${CRASHES[@]} ; \
 	do \
 		if [ ! -f $${CRASH}.symbolicated.txt ]; then \
@@ -432,7 +449,7 @@ update-codecov-with-profdata:
 device-update-codecov-with-profdata:
 	make update-codecov-with-profdata \
 		COVERAGE_ARCH=arm64 \
-		COVERAGE_ROOT_DIR=$(BUILD_DIR)/testruns \
+		COVERAGE_ROOT_DIR=$(BUILD_DIR)/ \
 		COVERAGE_MAPBOX_MAPS='$(BUILT_DEVICE_PRODUCTS_DIR)/MapboxMaps.o'
 
 # ----------------------------------------------------------------------------------------------------------------------

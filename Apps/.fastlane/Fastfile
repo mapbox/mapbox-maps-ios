@@ -1,0 +1,42 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Description of what the lane does"
+  lane :firebase do
+    setup_circle_ci
+    match
+    puts lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "Examples/Examples.xcodeproj",
+      team_id: ENV['MAPBOX_APPLE_TEAM_ID'], # Developer Portal Team ID",
+      profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.examples"],
+      targets: ["Examples"]
+    )
+    scan(
+      scheme: 'Examples',                  # XCTest scheme
+      clean: true,                        # Recommended: This would ensure the build would not include unnecessary files
+      skip_detect_devices: true,          # Required
+      build_for_testing: true,            # Required
+      sdk: 'iphoneos',                    # Required
+      should_zip_build_products: true,     # Must be true to set the correct format for Firebase Test Lab,
+      disable_xcpretty: true,
+      output_directory: "../output/"
+    )
+  end
+end

@@ -590,6 +590,11 @@ jobs:
           name: Creating SDK Registry PR
           command: ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios "$VERSION"
           when: on_success
+      - run:
+          name: Release Examples App to TestFlight
+          command: |
+            brew install fastlane
+            echo 'placeholder for running fastlane'
       - make-docs
       - slack/status:
           fail_only: false

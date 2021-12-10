@@ -20,6 +20,12 @@ public class BasicMapExample: UIViewController, ExampleProtocol {
     internal var cardWalkMin: UILabel!
     internal var currentLocation: CLLocation?
     internal var selectedFeature: Feature?
+    internal var isSelectedOnce: Bool = false
+    internal var routeLayerName = "route-layer"
+    internal var cardHiddenConstraints: [NSLayoutConstraint] = []
+    internal var cardShownConstraints: [NSLayoutConstraint] = []
+    internal var currentRouteOpts: RouteOptions?
+    internal var currentRouteResponse: RouteResponse?
     internal var minutes: [Int] = [
         1,
         2,
@@ -121,17 +127,24 @@ public class BasicMapExample: UIViewController, ExampleProtocol {
         card.addSubview(button)
         NSLayoutConstraint.activate([
             button.centerYAnchor.constraint(equalTo: card.centerYAnchor),
-            button.rightAnchor.constraint(equalTo: card.rightAnchor, constant: -44),
+            button.rightAnchor.constraint(equalTo: card.rightAnchor, constant: -16),
             button.heightAnchor.constraint(equalToConstant: 60),
             button.widthAnchor.constraint(equalToConstant: 150)
         ])
 
-        NSLayoutConstraint.activate([
+        cardHiddenConstraints = [
+            card.topAnchor.constraint(equalTo: view.bottomAnchor),
+            card.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
+            card.heightAnchor.constraint(equalToConstant: 150),
+            card.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ]
+        cardShownConstraints = [
             card.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             card.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
             card.heightAnchor.constraint(equalToConstant: 150),
             card.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ])
+        ]
+        NSLayoutConstraint.activate(cardHiddenConstraints)
     }
     
     internal func setupSlider() {
@@ -177,6 +190,28 @@ public class BasicMapExample: UIViewController, ExampleProtocol {
     }
 
     @objc func startNavigation(_ sender: UIButton!) {
+        guard let response = self.currentRouteResponse,
+              let routeOptions = self.currentRouteOpts
+        else {
+            return
+        }
+        let navigationService = MapboxNavigationService(
+            routeResponse: response,
+            routeIndex: 0,
+            routeOptions: routeOptions,
+            simulating: .always)
+        let navigationOptions = NavigationOptions(navigationService: navigationService)
+
+        let viewController = NavigationViewController(
+            for: response,
+               routeIndex: 0,
+               routeOptions: routeOptions,
+               navigationOptions: navigationOptions)
+        viewController.modalPresentationStyle = .fullScreen
+        self.present(viewController, animated: true, completion: nil)
+    }
+
+    func getRoute() {
         // Define two waypoints to travel between
         guard let originCoordinate = currentLocation?.coordinate else {
             print("No current lcoation")
@@ -192,9 +227,10 @@ public class BasicMapExample: UIViewController, ExampleProtocol {
 
         // Set options
         let routeOptions = NavigationRouteOptions(
-            waypoints: [origin, destination]
-        )
+            waypoints: [origin, destination],
+            profileIdentifier: .walking)
 
+        
         // Request a route using MapboxDirections
         Directions.shared.calculate(routeOptions) { [weak self] (session, result) in
             switch result {
@@ -204,22 +240,53 @@ public class BasicMapExample: UIViewController, ExampleProtocol {
                 guard let strongSelf = self else {
                     return
                 }
-                let navigationService = MapboxNavigationService(
-                    routeResponse: response,
-                    routeIndex: 0,
-                    routeOptions: routeOptions,
-                    simulating: .always)
-                let navigationOptions = NavigationOptions(navigationService: navigationService)
-                // Pass the generated route response to the the NavigationViewController
-                let viewController = NavigationViewController(
-                    for: response,
-                       routeIndex: 0,
-                       routeOptions: routeOptions,
-                       navigationOptions: navigationOptions)
-                viewController.modalPresentationStyle = .fullScreen
-                strongSelf.present(viewController, animated: true, completion: nil)
+                self?.currentRouteResponse = response
+                self?.currentRouteOpts = routeOptions
+                self?.drawRoutes()
+                self?.updateCard()
             }
         }
+    }
+
+    func updateCard() {
+        guard let firstRoute = self.currentRouteResponse?.routes?.first else {
+            cardWalkMin.text = ""
+            return
+        }
+        cardWalkMin.text = "\(Int(round(firstRoute.expectedTravelTime / 60))) min (\(Int(firstRoute.distance)) m)"
+    }
+
+    func drawRoutes() {
+        guard let line = self.currentRouteResponse?.routes?.first?.shape else {
+            return
+        }
+
+        do {
+            let layer = try? mapView.mapboxMap.style.layer(withId: routeLayerName)
+            if layer == nil {
+                createRouteLayer()
+            }
+            try! mapView.mapboxMap.style.updateGeoJSONSource(withId: routeLayerName,
+                                                             geoJSON: .geometry(line.geometry))
+        } catch {
+            print("Error when adding sources and layers: \(error.localizedDescription)")
+        }
+    }
+
+    func createRouteLayer() {
+        var geoJSONSource = GeoJSONSource()
+        geoJSONSource.data = GeoJSONSourceData.featureCollection(
+            FeatureCollection.init(features: []) // empty data
+        )
+        
+        var lineLayer = LineLayer(id: routeLayerName)
+        lineLayer.source = routeLayerName
+        lineLayer.lineColor = .constant(StyleColor.init(red: 0, green: 115, blue: 202, alpha: 1.0)!)
+        lineLayer.lineOpacity = .constant(1.0)
+        lineLayer.lineOpacityTransition = .init(duration: 0.2, delay: 0)
+        lineLayer.lineWidth = .constant(8)
+        try! mapView.mapboxMap.style.addSource(geoJSONSource, id: routeLayerName)
+        try! mapView.mapboxMap.style.addLayer(lineLayer)
     }
 
     @objc func sliderValueDidChange(_ sender:UISlider!) {
@@ -372,7 +439,19 @@ public class BasicMapExample: UIViewController, ExampleProtocol {
                    case let .string(namestr) = name
                 {
                     self?.cardTitle.text = namestr
+                    
+                    if let selected = self?.isSelectedOnce,
+                       !selected,
+                       let shown = self?.cardShownConstraints,
+                       let hidden = self?.cardHiddenConstraints
+                    {
+                        self?.isSelectedOnce = true
+                        NSLayoutConstraint.deactivate(hidden)
+                        NSLayoutConstraint.activate(shown)
+                    }
                 }
+                
+                self?.getRoute()
             }
         }
     }

@@ -2,6 +2,10 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+* Added `Style.removeTerrain()` to allow removing terrain. ([#918](https://github.com/mapbox/mapbox-maps-ios/pull/918))
+
 ## 10.2.0-rc.1 - December 2, 2021
 
 * Removed experimental designation from persistent layer APIs. ([#849](https://github.com/mapbox/mapbox-maps-ios/pull/849))

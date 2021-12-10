@@ -241,4 +241,39 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         let result = "[\"format\",[\"coalesce\",[\"get\",\"name_zh\"],[\"get\",\"name\"]]]"
         XCTAssertEqual(result, convertedString)
     }
+
+    func testTerrain() throws {
+        let sourceId = String.randomASCII(withLength: .random(in: 1...20))
+        let exaggeration = Double.random(in: 0...1000)
+
+        let sourcePropertyName = "source"
+        let exaggerationPropertyName = "exaggeration"
+
+        var sourceTerrainProperty: Any = style.terrainProperty(sourcePropertyName)
+        var exaggerationTerrainProperty: Any = style.terrainProperty(exaggerationPropertyName)
+
+        XCTAssertTrue(sourceTerrainProperty is NSNull)
+        XCTAssertTrue(exaggerationTerrainProperty is NSNull)
+
+        var terrain = Terrain(sourceId: sourceId)
+        terrain.exaggeration = .constant(exaggeration)
+
+        try style.setTerrain(terrain)
+
+        sourceTerrainProperty = style.terrainProperty(sourcePropertyName)
+        exaggerationTerrainProperty = style.terrainProperty(exaggerationPropertyName)
+
+        XCTAssertEqual(sourceTerrainProperty as? String, sourceId)
+        let exaggerationTerrainPropertyDouble = try XCTUnwrap(exaggerationTerrainProperty as? Double)
+        // convert to float and back to double to work around precision mismatch
+        XCTAssertEqual(exaggerationTerrainPropertyDouble, Double(Float(exaggeration)))
+
+        style.removeTerrain()
+
+        sourceTerrainProperty = style.terrainProperty(sourcePropertyName)
+        exaggerationTerrainProperty = style.terrainProperty(exaggerationPropertyName)
+
+        XCTAssertTrue(sourceTerrainProperty is NSNull)
+        XCTAssertTrue(exaggerationTerrainProperty is NSNull)
+    }
 }

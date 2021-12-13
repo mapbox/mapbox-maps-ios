@@ -24,6 +24,7 @@ assignees:
 | Customer reported urgency | <!-- low  / medium / high / critical -->     |
 | Is this issue blocking the customer's release or launch? | <!-- Y or N --> |
 | Estimated % of customer's users affected: |       |
+| Does the customer have a workaround for this issue? | <!-- Y or N --> |
 | Style used: |      |
 | Mapbox username: |     |
 

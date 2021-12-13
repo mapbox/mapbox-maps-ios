@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fastlane.lanes">
+    
+    
+    
+      
+      <testcase classname="fastlane.lanes" name="00: Verifying fastlane version" time="0.000738">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="01: default_platform" time="0.000314">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="02: opt_out_usage" time="0.000261">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="03: latest_testflight_build_number" time="4.992227">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="04: increment_build_number" time="1.082832">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="05: Switch to ios deploy_to_testflight lane" time="0.000492">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="06: Switch to ios build_and_submit lane" time="0.000275">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="07: spm" time="1.431148">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="08: match" time="1.593592">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="09: gym" time="125.413161">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="10: upload_to_testflight" time="730.309079">
+        
+      </testcase>
+    
+  </testsuite>
+</testsuites>

@@ -1,0 +1,102 @@
+# Customise this file, documentation can be found here:
+# https://github.com/fastlane/fastlane/tree/master/fastlane/docs
+# All available actions: https://docs.fastlane.tools/actions
+# can also be listed using the `fastlane actions` command
+# Change the syntax highlighting to Ruby
+# All lines starting with a # are ignored when running `fastlane`
+# If you want to automatically update fastlane if a new version is available:
+# update_fastlane
+# This is the minimum version number required.
+# Update this, if you use features of a newer version
+fastlane_version "2.120.0"
+default_platform :ios
+# Set default target for get_version_number()
+ENV["FL_VERSION_NUMBER_TARGET"] = "Examples"
+SPACESHIP_SKIP_2FA_UPGRADE=1
+platform :ios do
+  before_all do
+    # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
+  end
+  lane :beta do
+    increment_build_number(
+      build_number: latest_testflight_build_number + 1,
+      xcodeproj: Dir.glob("#{ENV['PWD']}/Apps/Examples/Examples.xcodeproj").first
+    )
+    deploy_to_testflight
+  end
+  desc "Submit a new Beta Build to Apple TestFlight"
+  desc "This will also make sure that the signing certificate and provisioning profiles are up to date."
+  lane :build_and_submit do
+    spm(
+      command: "update",
+      # build_path: "./build",
+      configuration: "release"
+    )
+    match(type: "appstore", readonly: true)
+    # gym(
+    #   workspace: "Apps/Apps.xcworkspace",
+    #   scheme: "Examples",
+    #   include_bitcode: true
+    # )
+    # gym(
+    #   scheme: "Examples",
+    #   workspace: "Apps/Apps.xcworkspace",
+    #   export_method: "app-store",
+    #   include_bitcode: true
+    #   export_options: {
+    #     provisioningProfiles: {
+    #       "com.mapbox.ExamplesAp" => "match AppStore com.mapbox.ExamplesAp"
+    #       }
+    # })
+    gym(
+      scheme: "Examples",
+      workspace: "Apps/Apps.xcworkspace",
+      # project: "Apps/Examples/Examples.xcodeproj",
+      output_name: "Examples.ipa",
+      export_method: "app-store",
+      export_options: {
+        signingStyle: "automatic",
+        provisioningProfiles: {
+          "com.mapbox.ExamplesAp" => "match AppStore com.mapbox.ExamplesAp"
+        }
+      }
+      # export_xcargs: "-allowProvisioningUpdates",
+      # skip_profile_detection: true
+    )
+    # gym(scheme: "Examples", workspace: "Apps/Apps.xcworkspace")
+    upload_to_testflight(
+      beta_app_feedback_email: "zizi.miles@mapbox.com",
+      beta_app_description: "Examples app test build.",
+      demo_account_required: false,
+      notify_external_testers: false,
+      distribute_external: false,
+      skip_submission: true
+    )
+  end
+  desc "Get current Mapbox Maps SDK for iOS version number from MapboxMaps.json file."
+  private_lane :mapbox_sdk_version do
+    mapbox_version_path = Dir.glob("#{ENV['PWD']}/Sources/MapboxMaps/MapboxMaps.json").first
+    `jq .version #{mapbox_version_path}`
+  end
+  desc "Build and submit a new beta build to Apple TestFlight."
+  lane :deploy_to_testflight do
+    build_and_submit
+  end
+  after_all do |lane|
+    # This block is called, only if the executed lane was successful
+    # slack(
+    #   message: "Successfully deployed new App Update."
+    # )
+  end
+  error do |lane, exception|
+    # slack(
+    #   message: exception.message,
+    #   success: false
+    # )
+  end
+end
+# More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md
+# All available actions: https://docs.fastlane.tools/actions
+# fastlane reports which actions are used
+# No personal data is recorded. Learn more at https://github.com/fastlane/enhancer
+opt_out_usage

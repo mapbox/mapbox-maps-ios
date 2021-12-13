@@ -10,7 +10,7 @@ function finish { >&2 echo -en "\033[0m"; }
 trap finish EXIT
 
 if [[ ! ${#} -eq 4 ]]; then
-    echo "Usage: ./upload-to-registry.sh </path/to/source/zip> <project> <version> <zipfile name>"
+    echo "Usage: $0 </path/to/source/zip> <project> <version> <zipfile name>"
     exit 1
 fi
 

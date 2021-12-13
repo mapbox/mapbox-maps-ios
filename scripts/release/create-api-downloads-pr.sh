@@ -14,18 +14,18 @@ VERSION=$2
 BRANCH_NAME="${PROJECT_ROOT}/${VERSION}"
 GITHUB_TOKEN=$(./scripts/release/get_token.js)
 
-TMPDIR=`mktemp -d`
+TMPDIR=$(mktemp -d)
 
-git clone https://x-access-token:$GITHUB_TOKEN@github.com/mapbox/api-downloads.git ${TMPDIR}
-cd ${TMPDIR}
+git clone https://x-access-token:$GITHUB_TOKEN@github.com/mapbox/api-downloads.git "${TMPDIR}"
+cd "${TMPDIR}" || exit 1
 echo "Checking out to ${TMPDIR}"
-git checkout -b ${BRANCH_NAME}
+git checkout -b "${BRANCH_NAME}"
 
 #
 # Add config file for dynamic
 #
 
-cat << EOF > config/${PROJECT_ROOT}/${VERSION}.yaml
+cat << EOF > "config/${PROJECT_ROOT}/${VERSION}.yaml"
 api-downloads: v2
 
 bundles:
@@ -36,7 +36,7 @@ EOF
 # Add config file for static
 #
 
-cat << EOF > config/${PROJECT_ROOT}-static/${VERSION}.yaml
+cat << EOF > config/"${PROJECT_ROOT}-static/${VERSION}.yaml"
 api-downloads: v2
 
 bundles:
@@ -48,7 +48,7 @@ EOF
 #
 git add -A
 git commit -m "[maps-ios] Add config for ${PROJECT_ROOT} @ ${VERSION}"
-git push --set-upstream origin ${BRANCH_NAME}
+git push --set-upstream origin "${BRANCH_NAME}"
 
 #
 # Create PR
@@ -73,7 +73,7 @@ HTTP_CODE=$(curl ${URL} \
     -d "${BODY}" -w "%{response_code}") || CURL_RESULT=$?
 
 cd -
-rm -rf ${TMPDIR}
+rm -rf "${TMPDIR}"
 
 if [[ ${CURL_RESULT} != 0 ]]; then
     echo "Failed to create PR (curl error: ${CURL_RESULT})"

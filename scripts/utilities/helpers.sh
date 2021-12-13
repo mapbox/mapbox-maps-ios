@@ -6,7 +6,7 @@ __HELPERS_UTILS_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/nul
 step() { >&2 echo -e "\033[1m\033[36m* $*\033[0m"; }
 
 # Log a step with gray text color
-info() { >&2 echo -e "\033[1m\033[30m- $*\033[0m"; }
+info() { >&2 echo -e "\033[2m\033[37m- $*\033[0m"; }
 
 # Log an informational warning with yellow text color
 warning() { >&2 echo -e "\033[1m\033[33m! $*\033[0m"; }

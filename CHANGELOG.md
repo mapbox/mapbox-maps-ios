@@ -4,7 +4,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## 10.0.3 - December 13, 2021
 
-* Fixed billing issue when upgrading Mapbox Maps SDK from v6 to v10. ([#](https://github.com/mapbox/mapbox-maps-ios/pull/))
+* Fixed billing issue when upgrading Mapbox Maps SDK from v6 to v10. ([#942](https://github.com/mapbox/mapbox-maps-ios/pull/942))
 
 ## 10.0.2 - November 29, 2021
 

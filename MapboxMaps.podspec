@@ -1,6 +1,6 @@
 Pod::Spec.new do |m|
 
-  maps_version = '10.0.2'
+  maps_version = '10.0.3'
 
   m.name = 'MapboxMaps'
   m.version = maps_version
@@ -22,7 +22,7 @@ Pod::Spec.new do |m|
   m.resources = ['Sources/**/*.{xcassets,strings}', 'Sources/MapboxMaps/MapboxMaps.json']
 
   m.dependency 'MapboxCoreMaps', '10.0.0'
-  m.dependency 'MapboxCommon', '20.0.2'
+  m.dependency 'MapboxCommon', '20.0.3'
   m.dependency 'MapboxMobileEvents', '1.0.6'
   m.dependency 'Turf', '~> 2.0'
 

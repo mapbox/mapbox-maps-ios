@@ -15,11 +15,23 @@ extension UserDefaults {
 }
 
 internal final class EventsManager {
+    // use a shared instance to avoid redundant calls to
+    // MMEEventsManager.shared().pauseOrResumeMetricsCollectionIfRequired()
+    // when the MGLMapboxMetricsEnabled UserDefaults key changes and duplicate
+    // calls to MMEEventsManager.shared().flush() when handling memory warnings.
+    private static var shared: EventsManager?
+
+    internal static func shared(withAccessToken accessToken: String) -> EventsManager {
+        let result = shared ?? EventsManager(accessToken: accessToken)
+        shared = result
+        return result
+    }
+
     private let mmeEventsManager: MMEEventsManager
 
     private let metricsEnabledObservation: NSKeyValueObservation
 
-    internal init(accessToken: String) {
+    private init(accessToken: String) {
         let sdkVersion = Bundle.mapboxMapsMetadata.version
         mmeEventsManager = .shared()
         mmeEventsManager.initialize(

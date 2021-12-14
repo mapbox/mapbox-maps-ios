@@ -32,7 +32,7 @@ public class Snapshotter {
         self.options = options
         mapSnapshotter = MapSnapshotter(options: MapboxCoreMaps.MapSnapshotOptions(options))
         style = Style(with: mapSnapshotter)
-        EventsManager(accessToken: options.resourceOptions.accessToken).sendTurnstile()
+        EventsManager.shared(withAccessToken: options.resourceOptions.accessToken).sendTurnstile()
     }
 
     /// The size of the snapshot

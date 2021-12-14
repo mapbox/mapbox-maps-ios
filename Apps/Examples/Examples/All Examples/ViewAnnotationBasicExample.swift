@@ -18,9 +18,10 @@ final class ViewAnnotationBasicExample: UIViewController, ExampleProtocol {
         mapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onMapClick)))
         view.addSubview(mapView)
 
+        addViewAnnotation(at: mapView.mapboxMap.coordinate(for: mapView.center))
+
         mapView.mapboxMap.onNext(.mapLoaded) { [weak self] _ in
             guard let self = self else { return }
-            self.addViewAnnotation(at: self.mapView.mapboxMap.coordinate(for: self.mapView.center))
             self.finish()
         }
     }

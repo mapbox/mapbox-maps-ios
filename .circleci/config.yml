@@ -744,7 +744,7 @@ commands:
   open-docs-pull-requests:
     steps:
       - run: 
-          name: Create documentation Pull requests
+          name: Create documentation pull requests
           command: scripts/release/create-docs-prs.sh -p api-docs
 
   make-xcframework-bundle:

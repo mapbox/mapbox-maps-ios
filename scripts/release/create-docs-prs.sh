@@ -63,6 +63,10 @@ maps_ios_upload_docs() {
     info "Push"
     git push --force --quiet
 
+    VERSION_BRANCH_NAME="docs/$VERSION"
+    git checkout -b "$VERSION_BRANCH_NAME"
+    git push --force --quiet
+
     popd > /dev/null
 }
 
@@ -72,13 +76,26 @@ maps_ios_production_docs_pr() {
 
     PRODUCTION_DOCS_PR_URL=$(GITHUB_TOKEN=$(mbx-ci github writer public token) \
         gh pr create --repo mapbox/mapbox-maps-ios \
-            --head "publisher-staging" --base "publisher-production" \
+            --head "publisher-staging" --base "$VERSION_BRANCH_NAME" \
             --draft \
             --title "Production docs for \`v$VERSION\`" \
             --body "$body" \
             --label "docs :scroll:")
 
     info "New PR: $PRODUCTION_DOCS_PR_URL"
+}
+
+should_update_version() {
+    local new=$1
+    local current=$2
+
+    if [[ "$new" =~ ^v?[0-9]*\.[0-9]*\.[0-9]*$ ]]; then
+        # Check if $VERSION is newer than $current_version
+        if [[ $(echo -e "$current\n$new" | sort -rV | head -n1) == "$new" ]]; then
+            return 0
+        fi
+    fi
+    return 1
 }
 
 ios_sdk_update_versions() {
@@ -97,7 +114,10 @@ ios_sdk_update_versions() {
     git checkout -b "${IOS_SDK_BRANCH_NAME}" --quiet
 
     # Apply only for release versions
-    if [[ "$VERSION" =~ ^v?[0-9]*\.[0-9]*\.[0-9]*$ ]]; then
+    local current_version
+    current_version=$(jq --raw-output ".VERSION_IOS_MAPS_SDK" src/constants.json)
+    
+    if should_update_version "$VERSION" "$current_version"; then
         info "Update release version"
         # shellcheck disable=SC2005 # This solution is intentional to modify json in one line with jq
         echo "$(jq ".VERSION_IOS_MAPS_SDK = \"$VERSION\"" src/constants.json)" > src/constants.json

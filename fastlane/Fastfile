@@ -57,11 +57,9 @@ platform :ios do
       export_options: {
         signingStyle: "automatic",
         provisioningProfiles: {
-          "com.mapbox.ExamplesAp" => "match AppStore com.mapbox.ExamplesAp"
+          "com.mapbox.examples" => "com.mapbox.examples"
         }
       }
-      # export_xcargs: "-allowProvisioningUpdates",
-      # skip_profile_detection: true
     )
     # gym(scheme: "Examples", workspace: "Apps/Apps.xcworkspace")
     upload_to_testflight(

@@ -26,6 +26,7 @@ internal protocol MapboxMapProtocol: AnyObject {
     func removeViewAnnotation(withId id: String) throws
     func options(forViewAnnotationWithId id: String) throws -> ViewAnnotationOptions
     func pointIsAboveHorizon(_ point: CGPoint) -> Bool
+    func camera(for geometry: Geometry, padding: UIEdgeInsets, bearing: CGFloat?, pitch: CGFloat?) -> CameraOptions
 }
 
 // swiftlint:disable:next type_body_length

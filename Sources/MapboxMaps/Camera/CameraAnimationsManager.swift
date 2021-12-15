@@ -3,6 +3,11 @@ import UIKit
 
 internal protocol CameraAnimationsManagerProtocol: AnyObject {
     @discardableResult
+    func fly(to camera: CameraOptions,
+             duration: TimeInterval?,
+             completion: AnimationCompletion?) -> Cancelable?
+
+    @discardableResult
     func ease(to camera: CameraOptions,
               duration: TimeInterval,
               curve: UIView.AnimationCurve,

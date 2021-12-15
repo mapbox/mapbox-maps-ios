@@ -65,80 +65,79 @@ workflows:
 
   steve:
     jobs:
-      - swiftlint:
-          xcode: "12.5.0"
-      - depsvalidator:
-          xcode: "12.5.0"
-      - build-sdk:
-          xcode: "12.5.0"
-          matrix:
-            parameters:
-              configuration: ["Debug", "Release"]
-      - build-debug-app:
-          xcode: "12.5.0"
-      - trigger-binary-size:
-          requires:
-            - build-sdk
-      - trigger-metrics-build:
-          requires:
-            - build-sdk
-      - trigger-metrics-collection:
-          requires:
-            - build-sdk
-          filters:
-            branches:
-              only: main
-      - unit-test-sdk:
-          name: "Run Unit tests"
-          xcode: "12.5.0"
-      # Not on main
-      - run-tests-on-devices:
-          name: "Run MapboxTestHost tests on devices"
-          xcode: "13.0.0"
-          device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
-          device-pool: $(DEVICE_FARM_1_PHONE_POOL)
-          scheme: "MapboxTestHost"
-          app-name: "MapboxTestHost"
-          filters:
-            branches:
-              ignore: main
+      # - swiftlint:
+      #     xcode: "12.5.0"
+      # - depsvalidator:
+      #     xcode: "12.5.0"
+      # - build-sdk:
+      #     xcode: "12.5.0"
+      #     matrix:
+      #       parameters:
+      #         configuration: ["Debug", "Release"]
+      # - build-debug-app:
+      #     xcode: "12.5.0"
+      # - trigger-binary-size:
+      #     requires:
+      #       - build-sdk
+      # - trigger-metrics-build:
+      #     requires:
+      #       - build-sdk
+      # - trigger-metrics-collection:
+      #     requires:
+      #       - build-sdk
+      #     filters:
+      #       branches:
+      #         only: main
+      # - unit-test-sdk:
+      #     name: "Run Unit tests"
+      #     xcode: "12.5.0"
+      # # Not on main
+      # - run-tests-on-devices:
+      #     name: "Run MapboxTestHost tests on devices"
+      #     xcode: "13.0.0"
+      #     device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
+      #     device-pool: $(DEVICE_FARM_1_PHONE_POOL)
+      #     scheme: "MapboxTestHost"
+      #     app-name: "MapboxTestHost"
+      #     filters:
+      #       branches:
+      #         ignore: main
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
           xcode: "13.0.0"
-          device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
-          device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
           app-name: "Examples"
+          device-tests-always-run: true
           filters:
             branches:
               ignore: main
-      # On main
-      - run-tests-on-devices:
-          name: "Run MapboxTestHost tests on devices (main)"
-          xcode: "13.0.0"
-          device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
-          device-pool: $(DEVICE_FARM_5_DEVICE_POOL)
-          scheme: "MapboxTestHost"
-          app-name: "MapboxTestHost"
-          device-tests-always-run: true
-          report_failure: true
-          filters:
-            branches:
-              only: main
-      - run-app-tests-on-devices:
-          name: "Run Examples tests on devices (main)"
-          xcode: "13.0.0"
-          device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
-          device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
-          scheme: "Examples"
-          app-name: "Examples"
-          device-tests-always-run: true
-          report_failure: true
-          filters:
-            branches:
-              only: main
-      - check-api-compatibility
-      - create-xcframework
+      # # On main
+      # - run-tests-on-devices:
+      #     name: "Run MapboxTestHost tests on devices (main)"
+      #     xcode: "13.0.0"
+      #     device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
+      #     device-pool: $(DEVICE_FARM_5_DEVICE_POOL)
+      #     scheme: "MapboxTestHost"
+      #     app-name: "MapboxTestHost"
+      #     device-tests-always-run: true
+      #     report_failure: true
+      #     filters:
+      #       branches:
+      #         only: main
+      # - run-app-tests-on-devices:
+      #     name: "Run Examples tests on devices (main)"
+      #     xcode: "13.0.0"
+      #     device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
+      #     device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
+      #     scheme: "Examples"
+      #     app-name: "Examples"
+      #     device-tests-always-run: true
+      #     report_failure: true
+      #     filters:
+      #       branches:
+      #         only: main
+      # - check-api-compatibility
+      # - create-xcframework
 
   release:
     jobs:
@@ -420,15 +419,14 @@ jobs:
     steps:
       - checkout
       - add-mapbox-submodules-key
-      - install-mbx-ci
       - ensure-text-exists-in-commit:
           commit-text: "[run app device tests]"
           always-run: << parameters.device-tests-always-run >>
       - configure-environment
-      - run:
-          name: Install Device Farm Dependencies
-          command: make install-devicefarm-dependencies
+      - run: cd Apps && bundle install && bundle exec fastlane firebase
       - install-dependencies
+      - install-gcloud
+      - login-google-cloud-platform
       # There's a command for this, but it only works if run *after* the build.
       # In this case, we need to determine the derived data path *before* building.
       - run:
@@ -440,45 +438,44 @@ jobs:
               -scheme '<< parameters.scheme >>' \
               | sed -n 's:^ *BUILD_DIR = \(.*\)/Build/Products$:export DERIVED_DATA_PATH="\1":p' \
               >> $BASH_ENV
-      - run:
-          name: Testing << parameters.scheme >> on AWS Device Farm
-          command: |
-            make test-with-device-farm \
-              SCHEME=<< parameters.scheme >> \
-              APP_NAME=<< parameters.app-name >> \
-              CONFIGURATION=Release \
-              BUILD_DIR="$DERIVED_DATA_PATH" \
-              XCODE_WORKSPACE=Apps/Apps.xcworkspace
-          when: always
+      # - run:
+      #     name: Testing << parameters.scheme >> on firebase
+      #     command: |
+      #       make test-with-firebase \
+      #         SCHEME=<< parameters.scheme >> \
+      #         APP_NAME=<< parameters.app-name >> \
+      #         CONFIGURATION=Release \
+      #         BUILD_DIR="$DERIVED_DATA_PATH" \
+      #         XCODE_WORKSPACE=Apps/Apps.xcworkspace
       # get xcresults here, may be zipped with more than one result
-      - run:
-          name: "Gathering results"
-          command: make gather-results BUILD_DIR="$DERIVED_DATA_PATH"
-          when: always
-      - run:
-          name: "Parsing xcresults for errors"
-          command: |
-            RESULTS=`find "$DERIVED_DATA_PATH/testruns" -name '*.xcresult'`
-            xargs swift run --package-path scripts/xcparty xcparty \<<< "$RESULTS" | tee "$DERIVED_DATA_PATH/testruns/failures.txt"
-          when: on_fail
-      - run:
-          name: Symbolicate crash logs
-          command: |
-            make symbolicate \
-              SCHEME=<< parameters.scheme >> \
-              APP_NAME=<< parameters.app-name >> \
-              CONFIGURATION=Release \
-              BUILD_DIR="$DERIVED_DATA_PATH"
-          when: always
-      - run:
-          name: Converting and uploading coverage
-          command: |
-            pip3 install awscli gitpython
-            make device-update-codecov-with-profdata \
-              SCHEME=<< parameters.scheme >> \
-              APP_NAME=<< parameters.app-name >> \
-              CONFIGURATION=Release \
-              BUILD_DIR="$DERIVED_DATA_PATH"
+      # - run:
+      #     name: "Gathering results"
+      #     command: make gather-results BUILD_DIR="$DERIVED_DATA_PATH"
+      #     when: always
+      # - run:
+      #     name: "Parsing xcresults for errors"
+      #     command: |
+      #       RESULTS=`find "$DERIVED_DATA_PATH/testruns" -name '*.xcresult'`
+      #       xargs swift run --package-path scripts/xcparty xcparty \<<< "$RESULTS" | tee "$DERIVED_DATA_PATH/testruns/failures.txt"
+      #     when: on_fail
+      # - run:
+      #     name: Symbolicate crash logs
+      #     command: |
+      #       make symbolicate \
+      #         SCHEME=<< parameters.scheme >> \
+      #         APP_NAME=<< parameters.app-name >> \
+      #         CONFIGURATION=Release \
+      #         BUILD_DIR="$DERIVED_DATA_PATH"
+      #     when: always
+      # - run:
+      #     name: Converting and uploading coverage
+      #     command: |
+      #       pip3 install awscli gitpython
+      #       make device-update-codecov-with-profdata \
+      #         SCHEME=<< parameters.scheme >> \
+      #         APP_NAME=<< parameters.app-name >> \
+      #         CONFIGURATION=Release \
+      #         BUILD_DIR="$DERIVED_DATA_PATH"
       - store-device-farm-artifacts:
           derived_data_path: $DERIVED_DATA_PATH
       - store-logs:
@@ -616,6 +613,15 @@ commands:
           command: echo "machine api.mapbox.com login mapbox password $SDK_REGISTRY_TOKEN" >> ~/.netrc
       - inject-mapbox-public-token
 
+  login-google-cloud-platform:
+    steps:
+      - run:
+          name: Log in to Google Cloud Platform
+          command: |
+            echo "${GOOGLE_CLOUD_KEY_FILE}" > secret.json
+            gcloud auth activate-service-account --key-file secret.json --project mapbox-maps-ios-dc24c
+            rm secret.json
+
   inject-mapbox-public-token:
     steps:
       - run:
@@ -705,10 +711,34 @@ commands:
       - store_artifacts:
           path: << parameters.artifact_name >>.zip
 
+  install-gcloud:
+    description: "Install gcloud"
+    steps:
+      - run:
+          name: Install gcloud
+          command: |
+            brew install ccache
+            mkdir /tmp/gcloud && cd /tmp/gcloud
+            curl -OL https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-366.0.0-darwin-x86_64.tar.gz
+            echo '7241cf19d0116f82d4600c2e60c7f63f084c384759b1febabaafe11501ae81fe *google-cloud-sdk-366.0.0-darwin-x86_64.tar.gz' >> checksumfile
+            shasum -a 256 -c checksumfile
+            tar zxvf google-cloud-sdk-366.0.0-darwin-x86_64.tar.gz
+            ./google-cloud-sdk/install.sh -q
+            echo "source /tmp/gcloud/google-cloud-sdk/path.bash.inc" >> $BASH_ENV
+            echo "source /tmp/gcloud/google-cloud-sdk/completion.bash.inc" >> $BASH_ENV
+            source $BASH_ENV
+
+  prepare-ios-codesign-keychain:
+    steps:
+      - run:
+          name: Prepare codesign keychain
+          command: |
+            gem install fastlane
+            fastlane match
+
   install-dependencies:
     description: "Install Dependencies"
     steps:
-      - run: pip3 install awscli gitpython requests python-dateutil
       - run: brew install jq xcodegen
 
   make-docs:

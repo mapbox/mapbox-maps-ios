@@ -68,7 +68,7 @@ platform :ios do
       demo_account_required: false,
       notify_external_testers: false,
       distribute_external: false,
-      skip_submission: true
+      skip_submission: false
     )
   end
   desc "Get current Mapbox Maps SDK for iOS version number from MapboxMaps.json file."

@@ -5,12 +5,14 @@ final class EventsManagerTests: XCTestCase {
 
     var eventsManager: EventsManager!
 
-    override func setUp() {
-        eventsManager = EventsManager(accessToken: "empty")
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+        eventsManager = try EventsManager.shared(withAccessToken: mapboxAccessToken())
     }
 
     override func tearDown() {
         eventsManager = nil
+        super.tearDown()
     }
 
     func testUserDefaultsDynamicProperty() {

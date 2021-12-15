@@ -43,9 +43,6 @@ open class MapView: UIView {
     /// Controls the display of attribution dialogs
     private var attributionDialogManager: AttributionDialogManager!
 
-    /// A reference to the `EventsManager` used for dispatching telemetry.
-    private var eventsListener: EventsListener?
-
     /// A Boolean value that indicates whether the underlying `CAMetalLayer` of the `MapView`
     /// presents its content using a CoreAnimation transaction
     ///
@@ -272,8 +269,10 @@ open class MapView: UIView {
 
         // Setup Telemetry logging. Delay initialization by 10 seconds.
         DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [weak self] in
-            guard let self = self else { return }
-            self.setUpTelemetryLogging()
+            guard let accessToken = self?.resourceOptions.accessToken else { return }
+            let eventsManager = EventsManager.shared(withAccessToken: accessToken)
+            eventsManager.sendTurnstile()
+            eventsManager.sendMapLoadEvent()
         }
 
         // Set up managers
@@ -444,14 +443,6 @@ open class MapView: UIView {
 
     @objc func didReceiveMemoryWarning() {
         mapboxMap.reduceMemoryUse()
-    }
-
-    // MARK: Telemetry
-
-    private func setUpTelemetryLogging() {
-        guard let validResourceOptions = resourceOptions else { return }
-        eventsListener = EventsManager(accessToken: validResourceOptions.accessToken)
-        eventsListener?.push(event: .map(event: .loaded))
     }
 
     // MARK: Location

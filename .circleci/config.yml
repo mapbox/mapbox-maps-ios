@@ -423,7 +423,17 @@ jobs:
           commit-text: "[run app device tests]"
           always-run: << parameters.device-tests-always-run >>
       - configure-environment
-      - run: cd Apps && bundle install && bundle exec fastlane firebase
+      - install-asc-key
+      - run: |
+          xcodebuild -workspace Apps/Apps.xcworkspace \
+           -scheme "Examples" \
+           -sdk iphoneos \
+           build-for-testing \
+           -derivedDataPath Build \
+           -authenticationKeyPath "$ASC_KEY_PATH" \
+           -authenticationKeyID "$ASC_KEY_ID" \
+           -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+           -allowProvisioningUpdates
       - install-dependencies
       - install-gcloud
       - login-google-cloud-platform
@@ -621,6 +631,14 @@ commands:
             echo "${GOOGLE_CLOUD_KEY_FILE}" > secret.json
             gcloud auth activate-service-account --key-file secret.json --project mapbox-maps-ios-dc24c
             rm secret.json
+
+  install-asc-key:
+    steps:
+      - run: 
+          name: Install Appstore Connect Key
+          command: |
+            mkdir -p $(dirname "$ASC_KEY_PATH")
+            echo "$ASC_ENCODED_KEY" | base64 --decode > "$ASC_KEY_PATH"
 
   inject-mapbox-public-token:
     steps:

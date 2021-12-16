@@ -596,6 +596,9 @@ jobs:
           when: on_success
       - make-docs
       - open-docs-pull-requests
+      - run:
+          name: Publish CocoaPods Podspec
+          command: pod trunk push
       - slack/status:
           fail_only: false
           include_visit_job_action: true

@@ -57,12 +57,16 @@ public final class MapboxMap: MapboxMapProtocol {
         style = Style(with: __map)
     }
 
-    // MARK: - Style loading
+    // MARK: - Render loop
 
-    /// Triggers a repaint of the map.
+    /// Triggers a repaint of the map. Calling this method is typically unnecessary but
+    /// may be needed if using a custom layer that needs to be redrawn independently
+    /// of other map changes.
     public func triggerRepaint() {
         __map.triggerRepaint()
     }
+
+    // MARK: - Style loading
 
     private func observeStyleLoad(_ completion: @escaping (Result<Style, Error>) -> Void) {
         onNext(eventTypes: [.styleLoaded, .mapLoadingError]) { event in

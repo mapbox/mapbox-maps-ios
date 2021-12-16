@@ -2,6 +2,15 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+## main
+
+* Added `Style.removeTerrain()` to allow removing terrain. ([#918](https://github.com/mapbox/mapbox-maps-ios/pull/918))
+* `Snapshotter` initialization now triggers a turnstyle event. ([#908](https://github.com/mapbox/mapbox-maps-ios/pull/908))
+
+## 10.2.0 - December 15, 2021
+* Update to MapboxCoreMaps 10.2.0 and MapboxCommon 21.0.1. ([#952](https://github.com/mapbox/mapbox-maps-ios/pull/952))
+* Fix the crash when MapView had zero width or height. ([#903](https://github.com/mapbox/mapbox-maps-ios/pull/903))
+
 ## 10.2.0-rc.1 - December 2, 2021
 
 * Removed experimental designation from persistent layer APIs. ([#849](https://github.com/mapbox/mapbox-maps-ios/pull/849))
@@ -25,6 +34,10 @@ Mapbox welcomes participation and contributions from everyone.
 * Updates pan and pinch gesture handling to work iteratively rather than based on initial state. ([#837](https://github.com/mapbox/mapbox-maps-ios/pull/837))
 * `AnnotationOrchestrator`, rather than the annotation managers, now manages the single-tap gesture recognizer for annotations. ([#840](https://github.com/mapbox/mapbox-maps-ios/pull/840))
 * Add view annotations feature, which enables the usage of custom UIView subclasses as annotations. ([#776](https://github.com/mapbox/mapbox-maps-ios/pull/776))
+
+## 10.1.2 - December 13, 2021
+
+* Fixed billing issue when upgrading Mapbox Maps SDK from v6 to v10. ([#943](https://github.com/mapbox/mapbox-maps-ios/pull/943))
 
 ## 10.1.1 - December 1, 2021
 
@@ -52,6 +65,10 @@ Mapbox welcomes participation and contributions from everyone.
 * Fixed a name collision between Swift symbols and `MapboxCoreMaps.Task`. ([#769](https://github.com/mapbox/mapbox-maps-ios/pull/769))
 * Fixed an issue that caused `queryFeatureExtension` to fail. ([#769](https://github.com/mapbox/mapbox-maps-ios/pull/769))
 * Updated `MapboxCoreMaps` to v10.1.0-beta and `MapboxCommon` to 20.1.0-rc.1. ([#769](https://github.com/mapbox/mapbox-maps-ios/pull/769))
+
+## 10.0.3 - December 13, 2021
+
+* Fixed billing issue when upgrading Mapbox Maps SDK from v6 to v10. ([#942](https://github.com/mapbox/mapbox-maps-ios/pull/942))
 
 ## 10.0.2 - November 29, 2021
 

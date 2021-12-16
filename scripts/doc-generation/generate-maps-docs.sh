@@ -4,11 +4,14 @@ set -euo pipefail
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 UTILS_PATH="$SCRIPT_DIR/../utils.sh"
+REPO_ROOT="$SCRIPT_DIR/../../"
+TMP_ROOT=$(mktemp -d)
 
 # shellcheck source=../utils.sh
 source "$UTILS_PATH"
 
-VERSION=${VERSION:-$(git_head_hash)}
+V_PREFIXED_VERSION_IF_EXISTS=${VERSION:+v$VERSION}
+VERSION=${V_PREFIXED_VERSION_IF_EXISTS:-$(git_head_hash)}
 DOCS_OUTPUT=${DOCS_OUTPUT:-"$SCRIPT_DIR/../../api-docs"}
 
 # Pass VERBOSE_LOGGER=/dev/stdout to print verbose logs on the screen
@@ -16,7 +19,7 @@ VERBOSE_LOGGER=${VERBOSE_LOGGER:-/dev/null}
 
 main() {
     step "Checkout source code at $VERSION"
-    local worktree_path="$SCRIPT_DIR/.docs-source-code"
+    local worktree_path="$TMP_ROOT/.docs-source-code"
     local worktree_script_dir="$worktree_path/scripts/doc-generation"
     checkout_source_code "$worktree_path" "$VERSION"
 
@@ -33,10 +36,10 @@ main() {
 
     step "Patch documentation to include external references"
     info "Download MapboxCoreMaps documentation"
-    download_coremaps_documentation "scripts/release/packager/versions.json" "$DOCS_OUTPUT/core"
+    download_coremaps_documentation "$REPO_ROOT/scripts/release/packager/versions.json" "$DOCS_OUTPUT/core"
 
     info "Download MapboxCommon documentation"
-    download_common_documentation "scripts/release/packager/versions.json" "$DOCS_OUTPUT/common"
+    download_common_documentation "$REPO_ROOT/scripts/release/packager/versions.json" "$DOCS_OUTPUT/common"
 
     info "Add dependency links to documentation"
     add_documentation_links "$DOCS_OUTPUT/index.html"
@@ -75,7 +78,7 @@ checkout_source_code() {
 
         git worktree add "$new_worktree_path" "$git_ref"
         # shellcheck disable=SC2064
-        trap "git worktree remove $1 --force" INT TERM HUP EXIT
+        trap "git worktree remove $new_worktree_path --force" INT TERM HUP EXIT
         git -C "$new_worktree_path" submodule update --init
     } &> "$VERBOSE_LOGGER"
 }
@@ -112,6 +115,9 @@ download_coremaps_documentation() {
         
         filename="MapboxCoreMaps-iOS-API-Reference.zip"
         rm "$filename" || true
+
+        # shellcheck disable=2155
+        gh auth status || export GITHUB_TOKEN="$(mbx-ci github reader token)"
         gh release download "maps-v$documentation_version" --pattern="$filename" --repo mapbox/mapbox-gl-native-internal
 
         unzip "$filename" -d "$2"
@@ -131,6 +137,9 @@ download_common_documentation() {
         
         filename="ios-api-reference.zip"
         rm "$filename" || true
+        
+        # shellcheck disable=2155
+        gh auth status || export GITHUB_TOKEN="$(mbx-ci github reader token)"
         gh release download "v$documentation_version" --pattern="$filename" --repo mapbox/mapbox-sdk-common
 
         unzip "$filename" -d "$2"

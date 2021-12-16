@@ -11,21 +11,21 @@ PROJECT_ROOT=$1
 VERSION=$2
 
 # Variables needed for github actions
-BRANCH_NAME="${PROJECT_ROOT}/${VERSION}"
+BRANCH_NAME="$PROJECT_ROOT/$VERSION"
 GITHUB_TOKEN=$(./scripts/release/get_token.js)
 
-TMPDIR=`mktemp -d`
+TMPDIR=$(mktemp -d)
 
-git clone https://x-access-token:$GITHUB_TOKEN@github.com/mapbox/api-downloads.git ${TMPDIR}
-cd ${TMPDIR}
-echo "Checking out to ${TMPDIR}"
-git checkout -b ${BRANCH_NAME}
+git clone "https://x-access-token:$GITHUB_TOKEN@github.com/mapbox/api-downloads.git" "$TMPDIR"
+cd "$TMPDIR" || exit 1
+echo "Checking out to $TMPDIR"
+git checkout -b "$BRANCH_NAME"
 
 #
 # Add config file for dynamic
 #
 
-cat << EOF > config/${PROJECT_ROOT}/${VERSION}.yaml
+cat << EOF > "config/$PROJECT_ROOT/$VERSION.yaml"
 api-downloads: v2
 
 bundles:
@@ -36,7 +36,7 @@ EOF
 # Add config file for static
 #
 
-cat << EOF > config/${PROJECT_ROOT}-static/${VERSION}.yaml
+cat << EOF > config/"$PROJECT_ROOT-static/$VERSION.yaml"
 api-downloads: v2
 
 bundles:
@@ -47,8 +47,8 @@ EOF
 # Commit to branch
 #
 git add -A
-git commit -m "[maps-ios] Add config for ${PROJECT_ROOT} @ ${VERSION}"
-git push --set-upstream origin ${BRANCH_NAME}
+git commit -m "[maps-ios] Add config for $PROJECT_ROOT @ $VERSION"
+git push --set-upstream origin "$BRANCH_NAME"
 
 #
 # Create PR
@@ -58,28 +58,28 @@ git push --set-upstream origin ${BRANCH_NAME}
 git config --global user.email "maps_sdk_ios@mapbox.com"
 git config --global user.name "Release SDK bot for Maps SDK team"
 
-TITLE="Update config for ${PROJECT_ROOT} @ ${VERSION}"
+TITLE="Update config for $PROJECT_ROOT @ $VERSION"
 BODY_TEXT="Bump maps version"
 URL="https://api.github.com/repos/mapbox/api-downloads/pulls"
-BODY="{\"head\":\"${BRANCH_NAME}\",\"base\":\"main\",\"title\":\"${TITLE}\",\"body\":\"${BODY_TEXT}\"}"
+BODY="{\"head\":\"$BRANCH_NAME\",\"base\":\"main\",\"title\":\"$TITLE\",\"body\":\"$BODY_TEXT\"}"
 
 CURL_RESULT=0
-HTTP_CODE=$(curl ${URL} \
+HTTP_CODE=$(curl $URL \
     --write-out %{http_code} \
     --silent \
     --output /dev/null \
-    -H "Authorization: token ${GITHUB_TOKEN}" \
+    -H "Authorization: token $GITHUB_TOKEN" \
     -H "Accept: application/vnd.github.v3+json" \
-    -d "${BODY}" -w "%{response_code}") || CURL_RESULT=$?
+    -d "$BODY" -w "%{response_code}") || CURL_RESULT=$?
 
 cd -
-rm -rf ${TMPDIR}
+rm -rf "$TMPDIR"
 
-if [[ ${CURL_RESULT} != 0 ]]; then
-    echo "Failed to create PR (curl error: ${CURL_RESULT})"
+if [[ $CURL_RESULT != 0 ]]; then
+    echo "Failed to create PR (curl error: $CURL_RESULT)"
     exit $CURL_RESULT
 fi
-if [[ ${HTTP_CODE} != "201" ]]; then
-    echo "Failed to create PR (http code: ${HTTP_CODE})"
+if [[ $HTTP_CODE != "201" ]]; then
+    echo "Failed to create PR (http code: $HTTP_CODE)"
     exit 1
 fi

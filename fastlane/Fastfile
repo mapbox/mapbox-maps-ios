@@ -29,25 +29,9 @@ platform :ios do
   lane :build_and_submit do
     spm(
       command: "update",
-      # build_path: "./build",
       configuration: "release"
     )
     match(type: "appstore", readonly: true)
-    # gym(
-    #   workspace: "Apps/Apps.xcworkspace",
-    #   scheme: "Examples",
-    #   include_bitcode: true
-    # )
-    # gym(
-    #   scheme: "Examples",
-    #   workspace: "Apps/Apps.xcworkspace",
-    #   export_method: "app-store",
-    #   include_bitcode: true
-    #   export_options: {
-    #     provisioningProfiles: {
-    #       "com.mapbox.ExamplesAp" => "match AppStore com.mapbox.ExamplesAp"
-    #       }
-    # })
     gym(
       scheme: "Examples",
       workspace: "Apps/Apps.xcworkspace",
@@ -61,7 +45,6 @@ platform :ios do
         }
       }
     )
-    # gym(scheme: "Examples", workspace: "Apps/Apps.xcworkspace")
     upload_to_testflight(
       beta_app_feedback_email: "zizi.miles@mapbox.com",
       beta_app_description: "Examples app test build.",

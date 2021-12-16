@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Exposed `triggerRepaint()` to allow manual map repainting.
+    ([#964])(https://github.com/mapbox/mapbox-maps-ios/pull/964)
 * Added `Style.removeTerrain()` to allow removing terrain. ([#918](https://github.com/mapbox/mapbox-maps-ios/pull/918))
 * `Snapshotter` initialization now triggers a turnstyle event. ([#908](https://github.com/mapbox/mapbox-maps-ios/pull/908))
 

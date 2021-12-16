@@ -137,7 +137,6 @@ workflows:
           filters:
             branches:
               only: main
-      - check-api-compatibility
       - create-xcframework
 
   release:
@@ -500,47 +499,15 @@ jobs:
       - install-dependencies
       - make-xcframework-bundle:
           bundle_style: "dynamic"
-      - when:
-        # Do not run Check Compatibility API for Xcode 12
-            condition:
-              not:
-                matches:
-                  pattern: "^12.*$"
-                  value: << parameters.xcode >>
-            steps:
-              - check-breaking-api:
-                  bundle_path: MapboxMaps.zip
       - store_artifacts:
           path: MapboxMaps.zip
       - make-xcframework-bundle:
           bundle_style: "static"
-      - when:
-        # Do not run Check Compatibility API for Xcode 12
-            condition:
-              not:
-                matches:
-                  pattern: "^12.*$"
-                  value: << parameters.xcode >>
-            steps:
-              - check-breaking-api:
-                  bundle_path: MapboxMaps-static.zip
       - store_artifacts:
           path: MapboxMaps-static.zip
       - report-failure:
           report_failure: << parameters.report_failure >>
           message: "create-xcframework"
-
-  check-api-compatibility:
-    <<: *base-job
-    macos:
-      xcode: 13.0.0
-    steps:
-      - checkout
-      - add-mapbox-submodules-key
-      - install-mbx-ci
-      - configure-environment
-      - install-dependencies
-      - check-breaking-api
 
   # This job:
   # - builds XCFrameworks
@@ -590,12 +557,12 @@ jobs:
           name: Creating SDK Registry PR
           command: ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios "$VERSION"
           when: on_success
+      - make-docs
       - run:
           name: Release Examples App to TestFlight
           command: |
-            brew install fastlane
-            echo 'placeholder for running fastlane'
-      - make-docs
+          brew install fastlane
+          fastlane beta
       - slack/status:
           fail_only: false
           include_visit_job_action: true
@@ -719,7 +686,7 @@ commands:
   make-docs:
     description: "Generate Documentation"
     steps:
-      - run: git submodule update --init -- scripts/doc-generation/jazzy-theme
+      - run: git submodule update --init -- jazzy-theme
       - run: cd scripts/doc-generation && ./generate-docs.sh
       - run: zip -r api-docs.zip api-docs
       - store_artifacts:
@@ -740,17 +707,8 @@ commands:
             ./package-mapbox-maps.sh << parameters.bundle_style >>
             echo "Moving zip to project root"
             mv MapboxMaps*.zip /Users/distiller/project/
-
-  check-breaking-api:
-    parameters:
-      bundle_path:
-        type: string
-        default: scripts/release/packager/MapboxMaps.zip
-    description: Compare public interface with pinned baseline with swift-api-digester
-    steps:
-      - run:
-          name: Breaking API check
-          command: scripts/api-compatibility-check/breaking-api-check.sh -p << parameters.bundle_path >>
+            echo "Return to root of project"
+            cd /Users/distiller/project/
 
   report-failure:
     parameters:

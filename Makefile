@@ -113,6 +113,7 @@ test-sdk-without-building-simulator:
 		-destination 'platform=iOS Simulator,OS=latest,name=iPhone 11' \
 		-enableCodeCoverage YES \
 		test-without-building \
+		-resultBundlePath MapboxMapsTests.xcresult \
 		ONLY_ACTIVE_ARCH=YES
 
 # ----------------------------------------------------------------------------------------------------------------------

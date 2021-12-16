@@ -325,8 +325,12 @@ jobs:
           no_output_timeout: 5m
       - run:
           name: Testing MapboxMaps with simulator
-          command: make test-sdk-without-building-simulator
+          command: |
+            make test-sdk-without-building-simulator
+            zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
           no_output_timeout: 5m
+      - store_artifacts:
+          path: MapboxMapsTests.xcresult.zip
       - locate-derived-data-directory:
           base_name: $(basename $(pwd))
       - run:

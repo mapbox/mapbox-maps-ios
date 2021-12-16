@@ -324,8 +324,12 @@ jobs:
           no_output_timeout: 5m
       - run:
           name: Testing MapboxMaps with simulator
-          command: make test-sdk-without-building-simulator
+          command: |
+            make test-sdk-without-building-simulator
+            zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
           no_output_timeout: 5m
+      - store_artifacts:
+          path: MapboxMapsTests.xcresult.zip
       - locate-derived-data-directory:
           base_name: $(basename $(pwd))
       - run:
@@ -533,7 +537,7 @@ jobs:
       - run:
           name: Run `npm ci`
           command: |
-            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+            mbx-ci npm token -w
             npm ci
           when: on_success
       - run:
@@ -558,11 +562,10 @@ jobs:
           command: ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios "$VERSION"
           when: on_success
       - make-docs
+      - open-docs-pull-requests
       - run:
-          name: Release Examples App to TestFlight
-          command: |
-          brew install fastlane
-          fastlane beta
+          name: Publish CocoaPods Podspec
+          command: pod trunk push
       - slack/status:
           fail_only: false
           include_visit_job_action: true
@@ -604,12 +607,32 @@ commands:
             - "3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e"
 
   install-mbx-ci:
+    parameters:
+      platform:
+        type: enum
+        enum:
+          - darwin
+          - linux
+        default: darwin
+      arch:
+        type: enum
+        enum:
+          - amd64
+          - arm64
+        default: amd64
+      version:
+        type: string
+        default: latest
+      install_path:
+        type: string
+        default: /usr/local/bin
     steps:
       - run:
           name: Install latest mbx-ci
           command: |
-            curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/latest/mbx-ci-darwin-amd64 > mbx-ci && chmod 755 ./mbx-ci
-            ./mbx-ci aws setup
+            curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/<<parameters.version>>/mbx-ci-<<parameters.platform>>-<<parameters.arch>> > <<parameters.install_path>>/mbx-ci
+            chmod 755 <<parameters.install_path>>/mbx-ci
+            mbx-ci aws setup
 
   ensure-text-exists-in-commit:
     parameters:
@@ -681,16 +704,22 @@ commands:
     description: "Install Dependencies"
     steps:
       - run: pip3 install awscli gitpython requests python-dateutil
-      - run: brew install jq xcodegen
+      - run: brew install jq xcodegen gh
 
   make-docs:
     description: "Generate Documentation"
     steps:
-      - run: git submodule update --init -- jazzy-theme
-      - run: cd scripts/doc-generation && ./generate-docs.sh
+      - run: git submodule update --init -- scripts/doc-generation/jazzy-theme
+      - run: scripts/doc-generation/generate-maps-docs.sh
       - run: zip -r api-docs.zip api-docs
       - store_artifacts:
           path: api-docs.zip
+
+  open-docs-pull-requests:
+    steps:
+      - run: 
+          name: Create documentation pull requests
+          command: scripts/release/create-docs-prs.sh -p api-docs
 
   make-xcframework-bundle:
     parameters:

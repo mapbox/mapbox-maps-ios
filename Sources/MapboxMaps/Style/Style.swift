@@ -212,43 +212,6 @@ public final class Style: StyleProtocol {
         try setSourceProperty(for: id, property: "data", value: value)
     }
 
-    // MARK: - Light
-
-    /// Gets the value of a style light property.
-    ///
-    /// - Parameter property: Style light property name.
-    ///
-    /// - Returns: Style light property value.
-    public func lightProperty(_ property: String) -> Any {
-        return lightProperty(property).value
-    }
-
-    // MARK: - Terrain
-
-    /// Sets a terrain on the style
-    ///
-    /// - Parameter terrain: The `Terrain` that should be rendered
-    ///
-    /// - Throws:
-    ///     An error describing why the operation was unsuccessful.
-    public func setTerrain(_ terrain: Terrain) throws {
-        let terrainData = try JSONEncoder().encode(terrain)
-        guard let terrainDictionary = try JSONSerialization.jsonObject(with: terrainData) as? [String: Any] else {
-            throw TypeConversionError.unexpectedType
-        }
-
-        try setTerrain(properties: terrainDictionary)
-    }
-
-    /// Gets the value of a style terrain property.
-    ///
-    /// - Parameter property: Style terrain property name.
-    ///
-    /// - Returns: Style terrain property value.
-    public func terrainProperty(_ property: String) -> Any {
-        return terrainProperty(property).value
-    }
-
     /// `true` if and only if the style JSON contents, the style specified sprite
     /// and sources are all loaded, otherwise returns `false`.
     public var isLoaded: Bool {
@@ -772,7 +735,7 @@ public final class Style: StyleProtocol {
         return UIImage(mbxImage: mbmImage)
     }
 
-    // MARK: Light
+    // MARK: - Light
 
     /// Sets the style global light source properties.
     ///
@@ -784,18 +747,9 @@ public final class Style: StyleProtocol {
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
     public func setLight(properties: [String: Any]) throws {
-        return try handleExpected {
-            return styleManager.setStyleLightForProperties(properties)
+        try handleExpected {
+            styleManager.setStyleLightForProperties(properties)
         }
-    }
-
-    /// Gets the value of a style light property.
-    ///
-    /// - Parameter property: Style light property name.
-    ///
-    /// - Returns: Style light property value.
-    public func lightProperty(_ property: String) -> StylePropertyValue {
-        return styleManager.getStyleLightProperty(forProperty: property)
     }
 
     /// Sets a value to the style light property.
@@ -807,12 +761,50 @@ public final class Style: StyleProtocol {
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
     public func setLightProperty(_ property: String, value: Any) throws {
-        return try handleExpected {
-            return styleManager.setStyleLightPropertyForProperty(property, value: value)
+        try handleExpected {
+            styleManager.setStyleLightPropertyForProperty(property, value: value)
         }
     }
 
+    /// Gets the value of a style light property.
+    ///
+    /// - Parameter property: Style light property name.
+    ///
+    /// - Returns: Style light property value.
+    public func lightProperty(_ property: String) -> Any {
+        return lightProperty(property).value
+    }
+
+    /// Gets the value of a style light property.
+    ///
+    /// - Parameter property: Style light property name.
+    ///
+    /// - Returns: Style light property value.
+    public func lightProperty(_ property: String) -> StylePropertyValue {
+        return styleManager.getStyleLightProperty(forProperty: property)
+    }
+
     // MARK: - Terrain
+
+    /// Sets a terrain on the style
+    ///
+    /// - Parameter terrain: The `Terrain` that should be rendered
+    ///
+    /// - Throws:
+    ///     An error describing why the operation was unsuccessful.
+    public func setTerrain(_ terrain: Terrain) throws {
+        let terrainData = try JSONEncoder().encode(terrain)
+        guard let terrainDictionary = try JSONSerialization.jsonObject(with: terrainData) as? [String: Any] else {
+            throw TypeConversionError.unexpectedType
+        }
+
+        try setTerrain(properties: terrainDictionary)
+    }
+
+    /// Removes terrain from style if it was set.
+    public func removeTerrain() {
+        styleManager.setStyleTerrainForProperties(NSNull())
+    }
 
     /// Sets the style global terrain source properties.
     ///
@@ -824,18 +816,9 @@ public final class Style: StyleProtocol {
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
     public func setTerrain(properties: [String: Any]) throws {
-        return try handleExpected {
-            return styleManager.setStyleTerrainForProperties(properties)
+        try handleExpected {
+            styleManager.setStyleTerrainForProperties(properties)
         }
-    }
-
-    /// Gets the value of a style terrain property.
-    ///
-    /// - Parameter property: Style terrain property name.
-    ///
-    /// - Returns: Style terrain property value.
-    public func terrainProperty(_ property: String) -> StylePropertyValue {
-        return styleManager.getStyleTerrainProperty(forProperty: property)
     }
 
     /// Sets a value to the named style terrain property.
@@ -847,9 +830,27 @@ public final class Style: StyleProtocol {
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
     public func setTerrainProperty(_ property: String, value: Any) throws {
-        return try handleExpected {
-            return styleManager.setStyleTerrainPropertyForProperty(property, value: value)
+        try handleExpected {
+            styleManager.setStyleTerrainPropertyForProperty(property, value: value)
         }
+    }
+
+    /// Gets the value of a style terrain property.
+    ///
+    /// - Parameter property: Style terrain property name.
+    ///
+    /// - Returns: Style terrain property value.
+    public func terrainProperty(_ property: String) -> Any {
+        return terrainProperty(property).value
+    }
+
+    /// Gets the value of a style terrain property.
+    ///
+    /// - Parameter property: Style terrain property name.
+    ///
+    /// - Returns: Style terrain property value.
+    public func terrainProperty(_ property: String) -> StylePropertyValue {
+        return styleManager.getStyleTerrainProperty(forProperty: property)
     }
 
     // MARK: - Custom geometry

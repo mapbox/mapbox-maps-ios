@@ -59,6 +59,11 @@ public final class MapboxMap: MapboxMapProtocol {
 
     // MARK: - Style loading
 
+    /// Triggers a repaint of the map.
+    public func triggerRepaint() {
+        __map.triggerRepaint()
+    }
+
     private func observeStyleLoad(_ completion: @escaping (Result<Style, Error>) -> Void) {
         onNext(eventTypes: [.styleLoaded, .mapLoadingError]) { event in
             switch event.type {

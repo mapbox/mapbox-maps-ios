@@ -6,6 +6,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Exposed `triggerRepaint()` to allow manual map repainting.
     ([#964])(https://github.com/mapbox/mapbox-maps-ios/pull/964)
+* Exposed `TransitionOptions` to allow control over symbol fade duration.
+    ([#902])(https://github.com/mapbox/mapbox-maps-ios/pull/902)
 * Added `Style.removeTerrain()` to allow removing terrain. ([#918](https://github.com/mapbox/mapbox-maps-ios/pull/918))
 * `Snapshotter` initialization now triggers a turnstyle event. ([#908](https://github.com/mapbox/mapbox-maps-ios/pull/908))
 

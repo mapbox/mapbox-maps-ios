@@ -24,11 +24,8 @@ platform :ios do
   desc "Submit a new Beta Build to Apple TestFlight"
   desc "This will also make sure that the signing certificate and provisioning profiles are up to date."
   lane :build_and_submit do
-    spm(
-      configuration: "release"
-    )
     setup_circle_ci
-    match(readonly: true)
+    match
     gym(
       scheme: "Examples",
       workspace: "Apps/Apps.xcworkspace",

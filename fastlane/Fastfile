@@ -12,11 +12,8 @@ fastlane_version "2.120.0"
 default_platform :ios
 # Set default target for get_version_number()
 ENV["FL_VERSION_NUMBER_TARGET"] = "Examples"
-SPACESHIP_SKIP_2FA_UPGRADE=1
+ENV["SPACESHIP_SKIP_2FA_UPGRADE"] = "1"
 platform :ios do
-  before_all do
-    # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
-  end
   lane :beta do
     increment_build_number(
       build_number: latest_testflight_build_number + 1,
@@ -28,14 +25,13 @@ platform :ios do
   desc "This will also make sure that the signing certificate and provisioning profiles are up to date."
   lane :build_and_submit do
     spm(
-      command: "update",
       configuration: "release"
     )
-    match(type: "appstore", readonly: true)
+    setup_circle_ci
+    match(readonly: true)
     gym(
       scheme: "Examples",
       workspace: "Apps/Apps.xcworkspace",
-      # project: "Apps/Examples/Examples.xcodeproj",
       output_name: "Examples.ipa",
       export_method: "app-store",
       export_options: {
@@ -62,12 +58,6 @@ platform :ios do
   desc "Build and submit a new beta build to Apple TestFlight."
   lane :deploy_to_testflight do
     build_and_submit
-  end
-  after_all do |lane|
-    # This block is called, only if the executed lane was successful
-    # slack(
-    #   message: "Successfully deployed new App Update."
-    # )
   end
   error do |lane, exception|
     # slack(

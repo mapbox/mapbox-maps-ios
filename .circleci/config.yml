@@ -139,6 +139,11 @@ workflows:
               only: main
       - check-api-compatibility
       - create-xcframework
+      - test-dependency-manager-integrations:
+          branch: $CIRCLE_BRANCH
+          filters:
+            branches:
+              only: /release\/.*/
 
   release:
     jobs:
@@ -541,6 +546,27 @@ jobs:
       - configure-environment
       - install-dependencies
       - check-breaking-api
+
+  test-dependency-manager-integrations:
+    macos: 
+      xcode: 13.2.0
+    parameters:
+      branch:
+        type: string
+        default: ""
+      version:
+        type: string
+        default: ""
+    steps:
+      - run: env
+      - run: 
+          name: Test depedency manager integrations
+          command: |
+            if [[ -n "<< parameters.branch >>" ]]; then
+              scripts/deps/run.sh -b "<< parameters.branch >>"
+            elsif [[ -n "<< parameters.version >>" ]]; then
+              scripts/deps/run.sh -v "<< parameters.version >>"
+            fi
 
   # This job:
   # - builds XCFrameworks

@@ -17,8 +17,7 @@ workflows:
               only:
                 - main
     jobs:
-      - swiftlint:
-          xcode: "12.5.0"
+      - swiftlint
       - depsvalidator:
           xcode: "12.5.0"
       - build-sdk:
@@ -65,8 +64,7 @@ workflows:
 
   steve:
     jobs:
-      - swiftlint:
-          xcode: "12.5.0"
+      - swiftlint
       - depsvalidator:
           xcode: "12.5.0"
       - build-sdk:
@@ -139,6 +137,7 @@ workflows:
               only: main
       - check-api-compatibility
       - create-xcframework
+      - validate-integrations-for-branch
 
   release:
     jobs:
@@ -149,6 +148,24 @@ workflows:
               only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
             branches:
               ignore: /.*/
+      - binaries-accessible?:
+          type: approval
+          filters: &release-tags-filter
+            tags:
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+            branches:
+              ignore: /.*/
+      - release-worktrail-validation:
+          filters: 
+            <<: *release-tags-filter
+          requires:
+            - binaries-accessible?
+      # - test-dependency-manager-integrations:
+      #     filters: 
+      #       <<: *release-tags-filter
+      #     version: $VERSION
+      #     requires:
+      #       - binaries-accessible?
 
 # ==============================================================================
 
@@ -199,11 +216,15 @@ jobs:
       - run: exit 1
 
   swiftlint:
-    <<: *base-job
+    docker:
+      - image: bytesguy/swiftlint:latest
     steps:
       - checkout
-      - run: brew install swiftlint
-      - run: swiftlint lint --strict
+      - run: swiftlint lint --strict --reporter junit | tee result.xml
+      - store_artifacts:
+          path: result.xml
+      - store_test_results:
+          path: result.xml
 
   depsvalidator:
     <<: *base-job
@@ -312,6 +333,7 @@ jobs:
 
   unit-test-sdk:
     <<: *base-job
+    resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - add-mapbox-submodules-key
@@ -493,6 +515,7 @@ jobs:
 
   create-xcframework:
     <<: *base-job
+    resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - add-mapbox-submodules-key
@@ -538,6 +561,7 @@ jobs:
     <<: *base-job
     macos:
       xcode: 13.0.0
+    resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - add-mapbox-submodules-key
@@ -545,6 +569,33 @@ jobs:
       - configure-environment
       - install-dependencies
       - check-breaking-api
+
+  validate-integrations-for-branch:
+    description: <
+      This job is designed to be called on daily bases. 
+      It is validating dependency managers integration per branch version rule.
+      However, this job would run exclusively for open PRs to the release branches (aka "release/v.*"")
+    macos: 
+      xcode: 13.2.1
+    steps:
+      - checkout
+      - install-mbx-ci
+      - run: brew install gh
+      - parse-pr-target-branch-if-available
+      - parse-release-version-if-available
+      - run: env | sort
+      - when:
+            condition:
+                matches:
+                  pattern: "^release/v.*$"
+                  value: $CIRCLE_PR_TARGET_BRANCH
+            steps:
+              - configure-environment
+              - run: brew install xcodegen
+              - run: 
+                  name: Validate SPM and CocoaPods integrations for current branch
+                  command: scripts/deps/run.sh -b $CIRCLE_BRANCH
+
 
   # This job:
   # - builds XCFrameworks
@@ -555,18 +606,23 @@ jobs:
   release:
     <<: *base-job
     steps:
-      - run:
-          name: Parse SDK version from release tag
-          command: |
-            echo "export VERSION=${CIRCLE_TAG#v}" >> $BASH_ENV
-      - slack/notify:
-          message: '<$CIRCLE_BUILD_URL|Release tag for \`v$VERSION\` started.>'
-          include_visit_job_action: true
+      - parse-release-version-if-available
+      # - slack/notify:
+      #     message: '<$CIRCLE_BUILD_URL|Release tag for \`v$VERSION\` started.>'
+      #     include_visit_job_action: true
       - checkout
       - add-mapbox-submodules-key
       - install-mbx-ci
       - configure-environment
       - install-dependencies
+      - run: 
+          name: Install dependencies
+          command: brew install gh xcodegen
+      - run:
+          name: Test SPM and CocoaPods integrations per version rule
+          command: scripts/deps/run.sh -d -v "$VERSION"
+      - run: exit 0
+      - run: circleci-agent step halt
       - run:
           name: Run `npm ci`
           command: |
@@ -610,6 +666,15 @@ jobs:
           failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release tag for \`v$VERSION\` failed.>'
           success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release tag for \`v$VERSION\` succeeded!> :tada:'
 
+  release-worktrail-validation:
+    docker:
+      - image: bytesguy/swiftlint:latest
+    steps:
+      - parse-release-version-if-available
+      - run: 
+          name: echo "Validate binaries are downloadable"
+          command: |
+            timeout 300 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/$VERSION/MapboxMaps.zip)" != "200" ]]; do sleep 5; done' || false
 # ==============================================================================
 # Reusable commands
 commands:
@@ -626,7 +691,9 @@ commands:
           command: git config --global --unset url."ssh://git@github.com".insteadOf
       - run:
           name: Configure .netrc
-          command: echo "machine api.mapbox.com login mapbox password $SDK_REGISTRY_TOKEN" >> ~/.netrc
+          command: |
+            echo "machine api.mapbox.com login mapbox password $SDK_REGISTRY_TOKEN" >> ~/.netrc
+            chmod 0600 ~/.netrc
       - inject-mapbox-public-token
 
   inject-mapbox-public-token:
@@ -819,3 +886,47 @@ commands:
           name: Locate derived data directory
           command: |
             echo "export DERIVED_DATA_PATH=\"$(find ~/Library/Developer/Xcode/DerivedData -name "<< parameters.base_name >>*" -depth 1)\"" >> $BASH_ENV
+
+  parse-release-version-if-available:
+    steps:
+      - run:
+          name: Parse SDK version from release tag
+          command: |
+            if [[ -n "$CIRCLE_TAG" ]]; then
+              echo "export VERSION=${CIRCLE_TAG#v}" >> $BASH_ENV
+            fi
+
+  parse-pr-target-branch-if-available:
+    description: <
+      Command fetches associated PR information and export target branch as CIRCLE_PR_TARGET_BRANCH environment variable.
+      Take attention that this command depends on `mbx-ci` and `gh` tool (can be install through Homebrew)
+    steps:
+      - run: 
+          name: Run validation exclusively for PR into release branch OR on release job
+          command: |
+            if [[ -n ${CIRCLE_PULL_REQUEST} ]]; then
+              CIRCLE_PR_TARGET_BRANCH=$(GITHUB_TOKEN=$(mbx-ci github reader token) gh pr view $CIRCLE_PULL_REQUEST --json baseRefName -q ".baseRefName")
+              echo "export CIRCLE_PR_TARGET_BRANCH=${CIRCLE_PR_TARGET_BRANCH}" >> $BASH_ENV
+              echo "PR Target branch: $CIRCLE_PR_TARGET_BRANCH"
+              cat $BASH_ENV
+            fi
+
+  test-dependency-manager-integrations:
+    parameters:
+      branch:
+        type: string
+        default: ""
+      version:
+        type: string
+        default: ""
+    steps:
+      - checkout
+      - parse-release-version-if-available
+      - install-mbx-ci
+      - configure-environment
+      - run: 
+          name: Install dependencies
+          command: brew install gh xcodegen
+      - run:
+          name: Test direct download integrations
+          command: scripts/deps/run.sh -o -v "$VERSION"

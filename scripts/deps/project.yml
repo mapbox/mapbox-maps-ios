@@ -1,0 +1,48 @@
+name: ValidateLatestMaps
+options:
+  bundleIdPrefix: com.mapbox
+settings:
+  DEVELOPMENT_TEAM: GJZR2MEM28
+packages:
+  MapboxMaps:
+    url: https://github.com/mapbox/mapbox-maps-ios.git
+    ${MAPS_VERSION_RULE}: ${MAPS_VERSION}
+targets:
+  SwiftPackageManagerIntegration:
+    templates:
+      - Application
+    dependencies:
+      - package: MapboxMaps
+  CocoaPodsIntegration:
+    templates:
+      - Application
+  DirectDynamicDownload:
+    templates:
+      - Application
+    dependencies:
+      - framework: ${DYNAMIC_ARTIFACTS_PATH}/MapboxMaps.xcframework
+      - framework: ${DYNAMIC_ARTIFACTS_PATH}/MapboxCoreMaps.xcframework
+      - framework: ${DYNAMIC_ARTIFACTS_PATH}/MapboxCommon.xcframework
+      - framework: ${DYNAMIC_ARTIFACTS_PATH}/MapboxMobileEvents.xcframework
+      - framework: ${DYNAMIC_ARTIFACTS_PATH}/Turf.xcframework
+  DirectStaticDownload:
+    templates:
+      - Application
+    dependencies:
+      - framework: ${STATIC_ARTIFACTS_PATH}/MapboxMaps.xcframework
+      - framework: ${STATIC_ARTIFACTS_PATH}/MapboxCoreMaps.xcframework
+      - framework: ${STATIC_ARTIFACTS_PATH}/MapboxCommon.xcframework
+      - framework: ${STATIC_ARTIFACTS_PATH}/MapboxMobileEvents.xcframework
+      - framework: ${STATIC_ARTIFACTS_PATH}/Turf.xcframework
+targetTemplates:
+  Application:
+    sources: [ViewController.swift]
+    platform: iOS
+    deploymentTarget:
+      iOS: 11.0
+    type: application
+    info:
+      path: Info.plist
+      properties:
+        MBXAccessToken: ${MBX_TOKEN}
+        UILaunchStoryboardName: LaunchScreen

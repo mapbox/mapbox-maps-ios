@@ -595,6 +595,11 @@ jobs:
           command: ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios "$VERSION"
           when: on_success
       - make-docs
+      - run:
+          name: Release Examples App to TestFlight
+          command: |
+            brew install fastlane
+            fastlane beta
       - open-docs-pull-requests
       - run:
           name: Publish CocoaPods Podspec
@@ -750,7 +755,7 @@ commands:
 
   open-docs-pull-requests:
     steps:
-      - run: 
+      - run:
           name: Create documentation pull requests
           command: scripts/release/create-docs-prs.sh -p api-docs
 

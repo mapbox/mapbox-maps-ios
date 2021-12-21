@@ -1,0 +1,7 @@
+git_url "git@github.com:mapbox/apple-certificates.git"
+type "appstore" # The default type, can be: appstore, adhoc, or development
+app_identifier "com.mapbox.examples"
+
+# For consistency, only one username should ever be used to update certs/profiles.
+# See 1Password for account credentials.
+username "applemachine@mapbox.com"

@@ -141,13 +141,13 @@ workflows:
 
   release:
     jobs:
-      - release:
-          name: "Release"
-          filters:
-            tags:
-              only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
-            branches:
-              ignore: /.*/
+      # - release:
+      #     name: "Release"
+      #     filters:
+      #       tags:
+      #         only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+      #       branches:
+      #         ignore: /.*/
       - binaries-accessible?:
           type: approval
           filters: &release-tags-filter
@@ -577,24 +577,14 @@ jobs:
       However, this job would run exclusively for open PRs to the release branches (aka "release/v.*"")
     macos: 
       xcode: 13.2.1
+    resource_class: macos.x86.medium.gen2
     steps:
       - checkout
-      - install-mbx-ci
-      - run: brew install gh
-      - parse-pr-target-branch-if-available
-      - parse-release-version-if-available
-      - run: env | sort
-      - when:
-            condition:
-                matches:
-                  pattern: "^release/v.*$"
-                  value: $CIRCLE_PR_TARGET_BRANCH
-            steps:
-              - configure-environment
-              - run: brew install xcodegen
-              - run: 
-                  name: Validate SPM and CocoaPods integrations for current branch
-                  command: scripts/deps/run.sh -b $CIRCLE_BRANCH
+      - configure-environment
+      - run: brew install xcodegen
+      - run: 
+          name: Validate SPM and CocoaPods integrations for current branch
+          command: scripts/deps/run.sh -b $CIRCLE_BRANCH
 
 
   # This job:
@@ -615,14 +605,6 @@ jobs:
       - install-mbx-ci
       - configure-environment
       - install-dependencies
-      - run: 
-          name: Install dependencies
-          command: brew install gh xcodegen
-      - run:
-          name: Test SPM and CocoaPods integrations per version rule
-          command: scripts/deps/run.sh -d -v "$VERSION"
-      - run: exit 0
-      - run: circleci-agent step halt
       - run:
           name: Run `npm ci`
           command: |
@@ -660,6 +642,14 @@ jobs:
       - run:
           name: Publish CocoaPods Podspec
           command: pod trunk push
+      - run:
+          name: Inject new Podspec version to CDN cache
+          command: | 
+            source scripts/utilities/cocoapods.sh
+            pod_inject_cdn_version MapboxMaps "$VERSION"
+      - run:
+          name: Test SPM and CocoaPods integrations per version rule
+          command: scripts/deps/run.sh -d -v "$VERSION"
       - slack/status:
           fail_only: false
           include_visit_job_action: true
@@ -674,6 +664,8 @@ jobs:
       - run: 
           name: echo "Validate binaries are downloadable"
           command: |
+            set -x
+            echo $VERSION
             timeout 300 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/$VERSION/MapboxMaps.zip)" != "200" ]]; do sleep 5; done' || false
 # ==============================================================================
 # Reusable commands
@@ -894,21 +886,6 @@ commands:
           command: |
             if [[ -n "$CIRCLE_TAG" ]]; then
               echo "export VERSION=${CIRCLE_TAG#v}" >> $BASH_ENV
-            fi
-
-  parse-pr-target-branch-if-available:
-    description: <
-      Command fetches associated PR information and export target branch as CIRCLE_PR_TARGET_BRANCH environment variable.
-      Take attention that this command depends on `mbx-ci` and `gh` tool (can be install through Homebrew)
-    steps:
-      - run: 
-          name: Run validation exclusively for PR into release branch OR on release job
-          command: |
-            if [[ -n ${CIRCLE_PULL_REQUEST} ]]; then
-              CIRCLE_PR_TARGET_BRANCH=$(GITHUB_TOKEN=$(mbx-ci github reader token) gh pr view $CIRCLE_PULL_REQUEST --json baseRefName -q ".baseRefName")
-              echo "export CIRCLE_PR_TARGET_BRANCH=${CIRCLE_PR_TARGET_BRANCH}" >> $BASH_ENV
-              echo "PR Target branch: $CIRCLE_PR_TARGET_BRANCH"
-              cat $BASH_ENV
             fi
 
   test-dependency-manager-integrations:

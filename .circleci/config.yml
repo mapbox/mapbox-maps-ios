@@ -768,17 +768,24 @@ commands:
             cd "<< parameters.derived_data_path >>"
             zip -r "$ZIP_FILE" xcodebuild_output.log || echo "Skipping xcodebuild_output.log"
             zip -r "$ZIP_FILE" video.mp4 || echo "Skipping video.mp4"
-            zip -r "$ZIP_FILE" test_result_0.xml || echo "test_result_0.xml"
+            zip -r "$ZIP_FILE" test_result_0.xml || echo "Skipping test_result_0.xml"
             zip -r "$ZIP_FILE" syslog.txt || echo "Skipping syslog.txt"
             zip -r "$ZIP_FILE" TestLogs || echo "Skipping TestLogs"
             zip -r "$ZIP_FILE" ProfileData || echo "Skipping ProfileData"
             zip -r "$ZIP_FILE" CrashLogs || echo "Skipping CrashLogs"
-
           when: always
       - store_artifacts:
           path: << parameters.artifact_name >>.zip
 
   install-gcloud:
+    # Link for gcloud versions: https://cloud.google.com/sdk/docs/downloads-versioned-archives#installation_instructions
+    parameters:
+      version:
+        type: string
+        default: "google-cloud-sdk-367.0.0-linux-x86_64.tar.gz"
+      checksum:
+        type: string
+        default: "94328b9c6559a1b7ec2eeaab9ef0e4702215e16e8327c5b99718750526ae1efe"
     description: "Install gcloud"
     steps:
       - run:
@@ -786,10 +793,10 @@ commands:
           command: |
             brew install ccache
             mkdir /tmp/gcloud && cd /tmp/gcloud
-            curl -OL https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-366.0.0-darwin-x86_64.tar.gz
-            echo '7241cf19d0116f82d4600c2e60c7f63f084c384759b1febabaafe11501ae81fe *google-cloud-sdk-366.0.0-darwin-x86_64.tar.gz' >> checksumfile
+            curl -OL https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/<< parameters.version >>
+            echo '<< parameters.checksum >> *<< parameters.version >>' >> checksumfile
             shasum -a 256 -c checksumfile
-            tar zxvf google-cloud-sdk-366.0.0-darwin-x86_64.tar.gz
+            tar zxvf << parameters.version >>
             ./google-cloud-sdk/install.sh -q
             echo "source /tmp/gcloud/google-cloud-sdk/path.bash.inc" >> $BASH_ENV
             echo "source /tmp/gcloud/google-cloud-sdk/completion.bash.inc" >> $BASH_ENV

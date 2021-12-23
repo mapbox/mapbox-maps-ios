@@ -257,14 +257,16 @@ clean-for-device-build:
 .PHONY: clean-test-with-device-farm
 clean-test-with-device-farm: clean-for-device-build test-with-device-farm
 
+
 .PHONY: test-with-firebase
 test-with-firebase:
-	xcodebuild \
-		-workspace Apps/Apps.xcworkspace \
-		-scheme $(SCHEME) \
-		-enableCodeCoverage YES \
-		-configuration $(CONFIGURATION) \
-		-sdk iphoneos build-for-testing;
+# Ignore the build part as we have build in fastlane, recomment out these part if test locally.
+# 	xcodebuild \
+# 		-workspace Apps/Apps.xcworkspace \
+# 		-scheme $(SCHEME) \
+# 		-enableCodeCoverage YES \
+# 		-configuration $(CONFIGURATION) \
+# 		-sdk iphoneos build-for-testing;
 	cd ${BUILD_DIR}/Build/Products; \
 	zip -r ${APP_NAME}.zip $(CONFIGURATION)-iphoneos $(SCHEME)_iphoneos*.xctestrun;
 	gcloud firebase test ios run --test ${BUILD_DIR}/Build/Products/${APP_NAME}.zip \

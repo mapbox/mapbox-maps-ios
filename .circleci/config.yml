@@ -461,7 +461,7 @@ jobs:
             make symbolicate \
               SCHEME=<< parameters.scheme >> \
               APP_NAME=<< parameters.app-name >> \
-              CONFIGURATION=Release \
+              CONFIGURATION=Debug \
               BUILD_DIR="$DERIVED_DATA_PATH"
           when: always
       - run:
@@ -638,7 +638,7 @@ commands:
       - run:
           name: Retrieve TestResult from gcloud for << parameters.scheme >>
           command: |
-            testResult=$(gsutil ls gs://test-lab-s350khs08d6wq-h1zw34xwm6w78/<< parameters.scheme >>-${CIRCLE_BUILD_NUM}/iphone11-13.6-en-portrait)
+            testResult=$(gsutil ls gs://${TEST_LAB_EXAMPLES}/<< parameters.scheme >>-${CIRCLE_BUILD_NUM}/iphone11-13.6-en-portrait)
             gsutil cp -r $testResult $DERIVED_DATA_PATH
           when: always
 
@@ -801,7 +801,6 @@ commands:
           name: Prepare codesign keychain
           command: |
             gem install fastlane
-            fastlane match
 
   install-dependencies:
     description: "Install Dependencies"

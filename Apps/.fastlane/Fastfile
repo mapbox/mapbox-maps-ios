@@ -20,7 +20,6 @@ platform :ios do
   lane :firebase do
     setup_circle_ci
     match
-    puts lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]
     update_code_signing_settings(
       use_automatic_signing: false,
       path: "Examples/Examples.xcodeproj",
@@ -36,6 +35,7 @@ platform :ios do
       sdk: 'iphoneos',                    # Required
       should_zip_build_products: true,     # Must be true to set the correct format for Firebase Test Lab,
       disable_xcpretty: true,
+      result_bundle: true,
       output_directory: "../output/"
     )
   end

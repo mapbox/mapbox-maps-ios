@@ -1,5 +1,6 @@
 # Configuration for probot-stale - https://github.com/probot/stale
 
+# Set to true to ignore issues in a project (defaults to false)
 exemptProjects: true
 exemptMilestones: true
 

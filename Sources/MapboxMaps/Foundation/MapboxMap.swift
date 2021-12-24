@@ -690,6 +690,7 @@ extension MapboxMap: MapFeatureQueryable {
     ///   - completion: The result could be a feature extension value containing
     ///         either a value (expansion-zoom) or a feature collection (children
     ///         or leaves). An error is passed if the operation was not successful.
+    /// Deprecated. Use getGeoJsonClusterLeaves/getGeoJsonClusterChildren/getGeoJsonClusterExpansionZoom to instead.
     public func queryFeatureExtension(for sourceId: String,
                                       feature: Feature,
                                       extension: String,
@@ -705,6 +706,76 @@ extension MapboxMap: MapFeatureQueryable {
                                      callback: coreAPIClosureAdapter(for: completion,
                                                                      type: FeatureExtensionValue.self,
                                                                      concreteErrorType: MapError.self))
+    }
+
+    /// Returns all the leaves (original points) of a cluster (given its cluster_id) from a GeoJSON source, with pagination support: limit is the number of leaves
+    /// to return (set to Infinity for all points), and offset is the amount of points to skip (for pagination).
+    ///
+    /// - Parameters:
+    ///   - sourceId: The identifier of the source to query.
+    ///   - feature: Feature to look for in the query.
+    ///   - limit: the number of points to return from the query, default to 10
+    ///   - offset: the amount of points to skip, default to 0
+    ///   - completion: The result could be a feature extension value containing
+    ///         either a value (expansion-zoom) or a feature collection (children
+    ///         or leaves). An error is passed if the operation was not successful.
+    public func getGeoJsonClusterLeaves(for sourceId: String,
+                                        feature: Feature,
+                                        limit: UInt64 = 10,
+                                        offset: UInt64 = 0,
+                                        completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) {
+        __map.queryFeatureExtensions(forSourceIdentifier: sourceId,
+                                     feature: MapboxCommon.Feature(feature),
+                                     extension: "supercluster",
+                                     extensionField: "leaves",
+                                     args: ["limit": limit, "offset": offset],
+                                     callback: coreAPIClosureAdapter(for: completion,
+                                                                        type: FeatureExtensionValue.self,
+                                                                        concreteErrorType: MapError.self))
+    }
+
+    /// Returns the children (original points or clusters) of a cluster (on the next zoom level)
+    /// given its id (cluster_id value from feature properties) from a GeoJSON source.
+    ///
+    /// - Parameters:
+    ///   - sourceId: The identifier of the source to query.
+    ///   - feature: Feature to look for in the query.
+    ///   - completion: The result could be a feature extension value containing
+    ///         either a value (expansion-zoom) or a feature collection (children
+    ///         or leaves). An error is passed if the operation was not successful.
+    public func getGeoJsonClusterChildren(for sourceId: String,
+                                          feature: Feature,
+                                          completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) {
+        __map.queryFeatureExtensions(forSourceIdentifier: sourceId,
+                                     feature: MapboxCommon.Feature(feature),
+                                     extension: "supercluster",
+                                     extensionField: "children",
+                                     args: nil,
+                                     callback: coreAPIClosureAdapter(for: completion,
+                                                                        type: FeatureExtensionValue.self,
+                                                                        concreteErrorType: MapError.self))
+    }
+
+    /// Returns the zoom on which the cluster expands into several children (useful for "click to zoom" feature)
+    /// given the cluster's cluster_id (cluster_id value from feature properties) from a GeoJSON source.
+    ///
+    /// - Parameters:
+    ///   - sourceId: The identifier of the source to query.
+    ///   - feature: Feature to look for in the query.
+    ///   - completion: The result could be a feature extension value containing
+    ///         either a value (expansion-zoom) or a feature collection (children
+    ///         or leaves). An error is passed if the operation was not successful.
+    public func getGeoJsonClusterExpansionZoom(for sourceId: String,
+                                               feature: Feature,
+                                               completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) {
+        __map.queryFeatureExtensions(forSourceIdentifier: sourceId,
+                                     feature: MapboxCommon.Feature(feature),
+                                     extension: "supercluster",
+                                     extensionField: "expansion-zoom",
+                                     args: nil,
+                                     callback: coreAPIClosureAdapter(for: completion,
+                                                                        type: FeatureExtensionValue.self,
+                                                                        concreteErrorType: MapError.self))
     }
 }
 

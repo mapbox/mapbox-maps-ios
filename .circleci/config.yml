@@ -139,16 +139,31 @@ workflows:
               only: main
       - check-api-compatibility
       - create-xcframework
+      - validate-integrations-for-branch
 
   release:
     jobs:
       - release:
           name: "Release"
-          filters:
+          filters: &release-tags-filter
             tags:
               only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
             branches:
               ignore: /.*/
+      - binaries-accessible?:
+          type: approval
+          filters:
+            <<: *release-tags-filter
+      - wait-for-binaries:
+          filters:
+            <<: *release-tags-filter
+          requires:
+            - binaries-accessible?
+      - validate-integrations:
+          filters:
+            <<: *release-tags-filter
+          requires:
+            - wait-for-binaries
 
 # ==============================================================================
 
@@ -203,10 +218,15 @@ jobs:
     steps:
       - checkout
       - run: brew install swiftlint
-      - run: swiftlint lint --strict
+      - run: swiftlint lint --strict --reporter junit | tee result.xml
+      - store_artifacts:
+          path: result.xml
+      - store_test_results:
+          path: result.xml
 
   depsvalidator:
     <<: *base-job
+    resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - run:
@@ -218,6 +238,7 @@ jobs:
 
   build-sdk:
     <<: *base-job
+    resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - configure-environment
@@ -312,6 +333,7 @@ jobs:
 
   unit-test-sdk:
     <<: *base-job
+    resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - add-mapbox-submodules-key
@@ -493,6 +515,7 @@ jobs:
 
   create-xcframework:
     <<: *base-job
+    resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - add-mapbox-submodules-key
@@ -538,6 +561,7 @@ jobs:
     <<: *base-job
     macos:
       xcode: 13.0.0
+    resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - add-mapbox-submodules-key
@@ -545,6 +569,42 @@ jobs:
       - configure-environment
       - install-dependencies
       - check-breaking-api
+
+  validate-integrations-for-branch:
+    description: <
+      This job is designed to be called on daily bases.
+      It is validating dependency managers integration per branch version rule.
+      However, this job would run exclusively for open PRs to the release branches (aka "release/v.*"")
+    macos:
+      xcode: 13.2.1
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - configure-environment
+      - run: brew install xcodegen
+      - run:
+          name: Validate SPM and CocoaPods integrations for current branch
+          command: scripts/validate-integrations/validate-integrations.sh -b $CIRCLE_BRANCH
+
+  validate-integrations:
+    description: <
+      This job is designed to be called after SDK Registry PR merge.
+      It requires binaries to be publicly available and downloadable.
+      SPM, Cocoapods and DirectDownload tests would be called.
+    macos:
+      xcode: 13.2.1
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - parse-release-version-if-available
+      - install-mbx-ci
+      - configure-environment
+      - run:
+          name: Install dependencies
+          command: brew install gh xcodegen
+      - run:
+          name: Test direct download integrations
+          command: scripts/validate-integrations/validate-integrations.sh -v "$VERSION"
 
   # This job:
   # - builds XCFrameworks
@@ -555,10 +615,7 @@ jobs:
   release:
     <<: *base-job
     steps:
-      - run:
-          name: Parse SDK version from release tag
-          command: |
-            echo "export VERSION=${CIRCLE_TAG#v}" >> $BASH_ENV
+      - parse-release-version-if-available
       - slack/notify:
           message: '<$CIRCLE_BUILD_URL|Release tag for \`v$VERSION\` started.>'
           include_visit_job_action: true
@@ -604,12 +661,41 @@ jobs:
       - run:
           name: Publish CocoaPods Podspec
           command: pod trunk push
+      - run:
+          name: Inject new Podspec version to CDN cache
+          description: |
+            Force adding new version to the cache to avoid long running clone operation
+            The following command would take the latest CocoaPods version from cache.
+
+            Alternative is to replace CDN with Specs repository and checkout it for the latest changes. It usually takes 3+ minutes on CircleCI
+          command: |
+            source scripts/utilities/cocoapods.sh
+            pod_inject_cdn_version MapboxMaps "$VERSION"
+      - run:
+          name: Test SPM and CocoaPods integrations per version rule
+          command: scripts/validate-integrations/validate-integrations.sh -d -v "$VERSION"
       - slack/status:
           fail_only: false
           include_visit_job_action: true
           failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release tag for \`v$VERSION\` failed.>'
           success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release tag for \`v$VERSION\` succeeded!> :tada:'
 
+  wait-for-binaries:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - parse-release-version-if-available
+      - run:
+          name: Configure .netrc
+          command: |
+            echo "machine api.mapbox.com login mapbox password $SDK_REGISTRY_TOKEN" >> ~/.netrc
+            chmod 0600 ~/.netrc
+      - run:
+          name: Wait binaries public access
+          command: |
+            echo $VERSION
+            timeout 1800 bash -c 'while [[ "$(curl -n -s -o /dev/null -w ''%{http_code}'' https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/$VERSION/MapboxMaps.zip)" != "200" ]]; do sleep 5; done' || false
+          no_output_timeout: 30m
 # ==============================================================================
 # Reusable commands
 commands:
@@ -626,7 +712,9 @@ commands:
           command: git config --global --unset url."ssh://git@github.com".insteadOf
       - run:
           name: Configure .netrc
-          command: echo "machine api.mapbox.com login mapbox password $SDK_REGISTRY_TOKEN" >> ~/.netrc
+          command: |
+            echo "machine api.mapbox.com login mapbox password $SDK_REGISTRY_TOKEN" >> ~/.netrc
+            chmod 0600 ~/.netrc
       - inject-mapbox-public-token
 
   inject-mapbox-public-token:
@@ -819,3 +907,12 @@ commands:
           name: Locate derived data directory
           command: |
             echo "export DERIVED_DATA_PATH=\"$(find ~/Library/Developer/Xcode/DerivedData -name "<< parameters.base_name >>*" -depth 1)\"" >> $BASH_ENV
+
+  parse-release-version-if-available:
+    steps:
+      - run:
+          name: Parse SDK version from release tag
+          command: |
+            if [[ -n "$CIRCLE_TAG" ]]; then
+              echo "export VERSION=${CIRCLE_TAG#v}" >> $BASH_ENV
+            fi

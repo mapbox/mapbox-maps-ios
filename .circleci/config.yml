@@ -156,16 +156,15 @@ workflows:
             branches:
               ignore: /.*/
       - release-worktrail-validation:
-          filters: 
+          filters:
             <<: *release-tags-filter
           requires:
             - binaries-accessible?
-      # - test-dependency-manager-integrations:
-      #     filters: 
-      #       <<: *release-tags-filter
-      #     version: $VERSION
-      #     requires:
-      #       - binaries-accessible?
+      - validate-integrations:
+          filters:
+            <<: *release-tags-filter
+          requires:
+            - release-worktrail-validation
 
 # ==============================================================================
 
@@ -572,20 +571,39 @@ jobs:
 
   validate-integrations-for-branch:
     description: <
-      This job is designed to be called on daily bases. 
+      This job is designed to be called on daily bases.
       It is validating dependency managers integration per branch version rule.
       However, this job would run exclusively for open PRs to the release branches (aka "release/v.*"")
-    macos: 
+    macos:
       xcode: 13.2.1
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - configure-environment
       - run: brew install xcodegen
-      - run: 
+      - run:
           name: Validate SPM and CocoaPods integrations for current branch
-          command: scripts/deps/run.sh -b $CIRCLE_BRANCH
+          command: scripts/validate-integrations/run.sh -b $CIRCLE_BRANCH
 
+  validate-integrations:
+    description: <
+      This job is designed to be called only on Release worktrail.
+      It requires binaries to be publicly available and downloadable.
+      SPM, Cocoapods and DirectDownload tests would be called
+    macos:
+      xcode: 13.2.1
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - parse-release-version-if-available
+      - install-mbx-ci
+      - configure-environment
+      - run:
+          name: Install dependencies
+          command: brew install gh xcodegen
+      - run:
+          name: Test direct download integrations
+          command: scripts/validate-integrations/run.sh -v "$VERSION"
 
   # This job:
   # - builds XCFrameworks
@@ -644,12 +662,12 @@ jobs:
           command: pod trunk push
       - run:
           name: Inject new Podspec version to CDN cache
-          command: | 
+          command: |
             source scripts/utilities/cocoapods.sh
             pod_inject_cdn_version MapboxMaps "$VERSION"
       - run:
           name: Test SPM and CocoaPods integrations per version rule
-          command: scripts/deps/run.sh -d -v "$VERSION"
+          command: scripts/validate-integrations/run.sh -d -v "$VERSION"
       - slack/status:
           fail_only: false
           include_visit_job_action: true
@@ -661,7 +679,7 @@ jobs:
       - image: bytesguy/swiftlint:latest
     steps:
       - parse-release-version-if-available
-      - run: 
+      - run:
           name: echo "Validate binaries are downloadable"
           command: |
             set -x
@@ -888,22 +906,3 @@ commands:
               echo "export VERSION=${CIRCLE_TAG#v}" >> $BASH_ENV
             fi
 
-  test-dependency-manager-integrations:
-    parameters:
-      branch:
-        type: string
-        default: ""
-      version:
-        type: string
-        default: ""
-    steps:
-      - checkout
-      - parse-release-version-if-available
-      - install-mbx-ci
-      - configure-environment
-      - run: 
-          name: Install dependencies
-          command: brew install gh xcodegen
-      - run:
-          name: Test direct download integrations
-          command: scripts/deps/run.sh -o -v "$VERSION"

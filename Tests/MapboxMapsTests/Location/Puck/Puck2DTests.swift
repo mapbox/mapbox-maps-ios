@@ -47,6 +47,7 @@ final class Puck2DTests: XCTestCase {
     func testDefaultPropertyValues() {
         XCTAssertFalse(puck2D.isActive)
         XCTAssertEqual(puck2D.puckBearingSource, .heading)
+        XCTAssertEqual(puck2D.showBearingImage, false)
     }
 
     func testLocationConsumerIsNotAddedAtInitialization() {
@@ -102,7 +103,7 @@ final class Puck2DTests: XCTestCase {
     }
 
     func verifyAddImages(line: UInt = #line) {
-        XCTAssertEqual(style.addImageStub.invocations.count, 3, line: line)
+        XCTAssertEqual(style.addImageStub.invocations.count, 2, line: line)
         let parameters = style.addImageStub.parameters
         for p in parameters {
             XCTAssertFalse(p.sdf, line: line)
@@ -110,17 +111,14 @@ final class Puck2DTests: XCTestCase {
             XCTAssertEqual(p.stretchY, [], line: line)
             XCTAssertNil(p.content, line: line)
         }
-        guard parameters.count == 3 else {
+        guard parameters.count == 2 else {
             return
         }
         XCTAssertEqual(style.addImageStub.parameters[0].id, "locationIndicatorLayerTopImage", line: line)
         XCTAssertTrue(style.addImageStub.parameters[0].image === configuration.topImage, line: line)
 
-        XCTAssertEqual(style.addImageStub.parameters[1].id, "locationIndicatorLayerBearingImage", line: line)
-        XCTAssertTrue(style.addImageStub.parameters[1].image === configuration.bearingImage, line: line)
-
-        XCTAssertEqual(style.addImageStub.parameters[2].id, "locationIndicatorLayerShadowImage", line: line)
-        XCTAssertTrue(style.addImageStub.parameters[2].image === configuration.shadowImage, line: line)
+        XCTAssertEqual(style.addImageStub.parameters[1].id, "locationIndicatorLayerShadowImage", line: line)
+        XCTAssertTrue(style.addImageStub.parameters[1].image === configuration.shadowImage, line: line)
     }
 
     func testActivatingPuckDoesNotAddImagesIfLatestLocationIsNil() {
@@ -153,6 +151,33 @@ final class Puck2DTests: XCTestCase {
         verifyAddImages()
     }
 
+    func testActivatingPuckShowBearingImage() {
+        puck2D = Puck2D(
+            configuration: configuration,
+            style: style,
+            locationProducer: locationProducer)
+        locationProducer.latestLocation = Location(
+            location: CLLocation(),
+            heading: nil,
+            accuracyAuthorization: .fullAccuracy)
+        puck2D.showBearingImage = true
+        puck2D.isActive = true
+
+        XCTAssertEqual(style.addImageStub.invocations.count, 3)
+        let parameters = style.addImageStub.parameters
+        guard parameters.count == 3 else {
+            return
+        }
+        XCTAssertEqual(style.addImageStub.parameters[0].id, "locationIndicatorLayerTopImage")
+        XCTAssertTrue(style.addImageStub.parameters[0].image === configuration.topImage)
+
+        XCTAssertEqual(style.addImageStub.parameters[1].id, "locationIndicatorLayerBearingImage")
+        XCTAssertTrue(style.addImageStub.parameters[1].image === configuration.bearingImage)
+
+        XCTAssertEqual(style.addImageStub.parameters[2].id, "locationIndicatorLayerShadowImage")
+        XCTAssertTrue(style.addImageStub.parameters[2].image === configuration.shadowImage)
+    }
+
     func testAddsDefaultImagesWhenConfigurationImagesAreNil() {
         configuration = Puck2DConfiguration(
             topImage: nil,
@@ -166,7 +191,7 @@ final class Puck2DTests: XCTestCase {
 
         puck2D.isActive = true
 
-        XCTAssertEqual(style.addImageStub.invocations.count, 2)
+        XCTAssertEqual(style.addImageStub.invocations.count, 1)
         let parameters = style.addImageStub.parameters
         guard parameters.count >= 2 else {
             return

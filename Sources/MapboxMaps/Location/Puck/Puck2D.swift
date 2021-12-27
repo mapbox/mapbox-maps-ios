@@ -1,6 +1,11 @@
 @_implementationOnly import MapboxCommon_Private
 
 internal final class Puck2D: NSObject, Puck {
+    internal var showBearingImage: Bool = false {
+        didSet {
+            updateLayer()
+        }
+    }
 
     internal var isActive = false {
         didSet {
@@ -57,13 +62,15 @@ internal final class Puck2D: NSObject, Puck {
             stretchX: [],
             stretchY: [],
             content: nil)
-        try! style.addImage(
-            configuration.resolvedBearingImage,
-            id: Self.bearingImageId,
-            sdf: false,
-            stretchX: [],
-            stretchY: [],
-            content: nil)
+        if showBearingImage {
+            try! style.addImage(
+                configuration.resolvedBearingImage,
+                id: Self.bearingImageId,
+                sdf: false,
+                stretchX: [],
+                stretchY: [],
+                content: nil)
+        }
         if let shadowImage = configuration.shadowImage {
             try! style.addImage(
                 shadowImage,

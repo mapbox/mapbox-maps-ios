@@ -29,6 +29,7 @@ final class LocationManagerTests: XCTestCase {
         XCTAssertEqual(locationProducer.locationProvider.locationProviderOptions, locationManager.options)
         XCTAssertEqual(puckManager.puckType, locationManager.options.puckType)
         XCTAssertEqual(puckManager.puckBearingSource, locationManager.options.puckBearingSource)
+        XCTAssertEqual(puckManager.showBearingImage, locationManager.options.showBearingImage)
     }
 
     func testLatestLocationWhenLocationProducerLatestLocationIsNil() {

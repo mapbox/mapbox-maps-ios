@@ -26,4 +26,9 @@ final class LocationOptionsTests: XCTestCase {
         let locationOptions = LocationOptions()
         XCTAssertEqual(locationOptions.puckBearingSource, .heading)
     }
+
+    func testLocationOptionsShowBearingImageDefault() {
+        let locationOptions = LocationOptions()
+        XCTAssertEqual(locationOptions.showBearingImage, false)
+    }
 }

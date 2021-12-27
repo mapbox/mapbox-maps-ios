@@ -1,6 +1,7 @@
 @_implementationOnly import MapboxCommon_Private
 
 internal final class Puck3D: NSObject, Puck {
+    var showBearingImage: Bool = false
 
     internal var isActive = false {
         didSet {

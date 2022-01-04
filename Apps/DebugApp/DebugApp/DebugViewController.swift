@@ -34,11 +34,11 @@ final class DebugViewController: UIViewController {
         let immediateTransition = mapView.viewport.makeImmediateViewportTransition()
         mapView.viewport.setTransition(immediateTransition, from: nil, to: followingState)
 
-        mapView.viewport.setCurrentState(followingState)
+        mapView.viewport.transition(to: followingState)
         DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-            self.mapView.viewport.setCurrentState(overviewState)
+            self.mapView.viewport.transition(to: overviewState)
             DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-                self.mapView.viewport.setCurrentState(followingState)
+                self.mapView.viewport.transition(to: followingState)
             }
         }
     }

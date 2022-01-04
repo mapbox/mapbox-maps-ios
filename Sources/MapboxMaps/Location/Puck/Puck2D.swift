@@ -80,6 +80,11 @@ internal final class Puck2D: NSObject, Puck {
             return
         }
         var layer = LocationIndicatorLayer(id: Self.layerID)
+        layer.location = .constant([
+            location.coordinate.latitude,
+            location.coordinate.longitude,
+            location.location.altitude
+        ])
         switch location.accuracyAuthorization {
         case .fullAccuracy:
             layer.topImage = .constant(.name(Self.topImageId))
@@ -87,11 +92,6 @@ internal final class Puck2D: NSObject, Puck {
             if configuration.shadowImage != nil {
                 layer.shadowImage = .constant(.name(Self.shadowImageId))
             }
-            layer.location = .constant([
-                location.coordinate.latitude,
-                location.coordinate.longitude,
-                location.location.altitude
-            ])
             layer.locationTransition = StyleTransition(duration: 0.5, delay: 0)
             layer.topImageSize = configuration.resolvedScale
             layer.bearingImageSize = configuration.resolvedScale

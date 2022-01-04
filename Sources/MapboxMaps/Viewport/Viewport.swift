@@ -58,8 +58,8 @@ public final class Viewport {
 
     // MARK: - Current State
 
-    // a nil currentState is known as "idle"; this is the default
-    public private(set) var currentState: ViewportState?
+    // a nil status is known as "idle"; this is the default
+    public private(set) var status: ViewportStatus?
 
     // a cancelable that can be used to stop the current state or transition
     private var currentCancelable: Cancelable?
@@ -67,7 +67,7 @@ public final class Viewport {
     // set
     // the Bool in the completion block indicates whether the transition ran to
     // completion (true) or was interrupted by another transition (false)
-    public func setCurrentState(_ toState: ViewportState?, completion: ((Bool) -> Void)? = nil) {
+    public func transition(to toState: ViewportState?, completion: ((Bool) -> Void)? = nil) {
         // exit early if attempting to transition into the current state
         guard toState !== currentState else {
             completion?(true)
@@ -176,4 +176,9 @@ private struct CompositeTransitionKey: Hashable {
     internal init(from: ViewportState?, to: ViewportState) {
         self.objectIdentifiers = [from, to].map { $0.map(ObjectIdentifier.init) }
     }
+}
+
+public enum ViewportStatus {
+    case state(ViewportState)
+    case transition(ViewportTransition)
 }

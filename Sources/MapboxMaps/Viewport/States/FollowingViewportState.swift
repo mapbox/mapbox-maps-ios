@@ -1,9 +1,23 @@
+public struct FollowingViewportStateOptions: Hashable {
+    public var zoom: CGFloat
+    public var pitch: CGFloat
+
+    public init(zoom: CGFloat = 15,
+                pitch: CGFloat = 40) {
+        self.zoom = zoom
+        self.pitch = pitch
+    }
+}
+
 public final class FollowingViewportState {
 
     // MARK: - Public Config
 
-    public let zoom: CGFloat
-    public let pitch: CGFloat
+    public var options: FollowingViewportStateOptions {
+        didSet {
+            processUpdatedCamera()
+        }
+    }
 
     // MARK: - Injected Dependencies
 
@@ -20,14 +34,7 @@ public final class FollowingViewportState {
 
     private var latestLocation: Location? {
         didSet {
-            if let cameraOptions = latestLocation.map(cameraOptions(for:)) {
-                if isUpdatingCamera {
-                    animate(to: cameraOptions)
-                }
-                observers.forEach { (observer) in
-                    observer.invokeHandler(with: cameraOptions)
-                }
-            }
+            processUpdatedCamera()
         }
     }
 
@@ -39,12 +46,10 @@ public final class FollowingViewportState {
 
     // MARK: - Initialization
 
-    internal init(zoom: CGFloat,
-                  pitch: CGFloat,
+    internal init(options: FollowingViewportStateOptions,
                   locationProducer: LocationProducerProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol) {
-        self.zoom = zoom
-        self.pitch = pitch
+        self.options = options
         self.cameraAnimationsManager = cameraAnimationsManager
         self.delegatingLocationConsumer = DelegatingLocationConsumer(locationProducer: locationProducer)
         self.delegatingLocationConsumer.delegate = self
@@ -55,9 +60,9 @@ public final class FollowingViewportState {
     private func cameraOptions(for location: Location) -> CameraOptions {
         return CameraOptions(
             center: location.location.coordinate,
-            zoom: zoom,
+            zoom: options.zoom,
             bearing: location.location.course,
-            pitch: pitch)
+            pitch: options.pitch)
     }
 
     private func animate(to cameraOptions: CameraOptions) {
@@ -67,6 +72,17 @@ public final class FollowingViewportState {
             duration: 1,
             curve: .linear,
             completion: nil)
+    }
+
+    private func processUpdatedCamera() {
+        if let cameraOptions = latestLocation.map(cameraOptions(for:)) {
+            if isUpdatingCamera {
+                animate(to: cameraOptions)
+            }
+            observers.forEach { (observer) in
+                observer.invokeHandler(with: cameraOptions)
+            }
+        }
     }
 }
 
@@ -109,7 +125,7 @@ extension FollowingViewportState: DelegatingLocationConsumerDelegate {
     }
 }
 
-private final class CameraObserver {
+internal final class CameraObserver {
     private let handler: (CameraObserver, CameraOptions) -> Void
 
     internal init(handler: @escaping (CameraObserver, CameraOptions) -> Void) {

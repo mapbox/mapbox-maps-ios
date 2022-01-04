@@ -1,27 +1,76 @@
+import Turf
+public struct OverviewViewportStateOptions: Equatable {
+    public var geometry: Geometry
+
+    public init(geometry: GeometryConvertible) {
+        self.geometry = geometry.geometry
+    }
+}
+
 public final class OverviewViewportState {
 
-    public let geometry: Geometry
+    public var options: OverviewViewportStateOptions {
+        didSet {
+            recalculateCameraOptions()
+        }
+    }
+
+    private var cameraOptions: CameraOptions = .init() {
+        didSet {
+            guard cameraOptions != oldValue else {
+                return
+            }
+            if isUpdatingCamera {
+                mapboxMap.setCamera(to: cameraOptions)
+            }
+            observers.forEach { (observer) in
+                observer.invokeHandler(with: cameraOptions)
+            }
+        }
+    }
 
     private let mapboxMap: MapboxMapProtocol
 
-    internal init(geometry: GeometryConvertible, mapboxMap: MapboxMapProtocol) {
-        self.geometry = geometry.geometry
+    private var observers = [CameraObserver]()
+
+    private var isUpdatingCamera = false
+
+    internal init(options: OverviewViewportStateOptions, mapboxMap: MapboxMapProtocol) {
+        self.options = options
         self.mapboxMap = mapboxMap
+        recalculateCameraOptions()
     }
 
-    private var cameraOptions: CameraOptions {
-        return mapboxMap.camera(for: geometry, padding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10), bearing: 0, pitch: 0)
+    private func recalculateCameraOptions() {
+        cameraOptions = mapboxMap.camera(
+            for: options.geometry,
+            padding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
+            bearing: 0,
+            pitch: 0)
     }
 }
 
 extension OverviewViewportState: ViewportState {
     public func observeDataSource(with handler: @escaping (CameraOptions) -> Bool) -> Cancelable {
-        _ = handler(cameraOptions)
-        return EmptyCancelable()
+        let observer = CameraObserver { [weak self] (observer, cameraOptions) in
+            // handler returns false if it wants to stop receiving updates
+            if !handler(cameraOptions) {
+                self?.observers.removeAll { $0 === observer }
+            }
+        }
+        observers.append(observer)
+        observer.invokeHandler(with: cameraOptions)
+        return BlockCancelable { [weak self] in
+            self?.observers.removeAll { $0 === observer }
+        }
     }
 
     public func startUpdatingCamera() -> Cancelable {
+        assert(!isUpdatingCamera)
+        isUpdatingCamera = true
         mapboxMap.setCamera(to: cameraOptions)
-        return EmptyCancelable()
+        return BlockCancelable { [weak self] in
+            self?.isUpdatingCamera = false
+        }
     }
 }

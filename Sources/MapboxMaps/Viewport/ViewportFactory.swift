@@ -1,8 +1,7 @@
 internal protocol ViewportFactoryProtocol: AnyObject {
-    func makeFollowingViewportState(zoom: CGFloat, pitch: CGFloat) -> FollowingViewportState
-    func makeOverviewViewportState(geometry: GeometryConvertible) -> OverviewViewportState
-    func makeEaseToViewportTransition(duration: TimeInterval, curve: UIView.AnimationCurve) -> EaseToViewportTransition
-    func makeFlyToViewportTransition(duration: TimeInterval?) -> FlyToViewportTransition
+    func makeFollowingViewportState(options: FollowingViewportStateOptions) -> FollowingViewportState
+    func makeOverviewViewportState(options: OverviewViewportStateOptions) -> OverviewViewportState
+    func makeDefaultViewportTransition(options: DefaultViewportTransitionOptions) -> DefaultViewportTransition
     func makeImmediateViewportTransition() -> ImmediateViewportTransition
 }
 
@@ -20,30 +19,22 @@ internal final class ViewportFactory: ViewportFactoryProtocol {
         self.mapboxMap = mapboxMap
     }
 
-    internal func makeFollowingViewportState(zoom: CGFloat, pitch: CGFloat) -> FollowingViewportState {
+    internal func makeFollowingViewportState(options: FollowingViewportStateOptions) -> FollowingViewportState {
         return FollowingViewportState(
-            zoom: zoom,
-            pitch: pitch,
+            options: options,
             locationProducer: locationProducer,
             cameraAnimationsManager: cameraAnimationsManager)
     }
 
-    internal func makeOverviewViewportState(geometry: GeometryConvertible) -> OverviewViewportState {
+    internal func makeOverviewViewportState(options: OverviewViewportStateOptions) -> OverviewViewportState {
         return OverviewViewportState(
-            geometry: geometry,
+            options: options,
             mapboxMap: mapboxMap)
     }
 
-    internal func makeEaseToViewportTransition(duration: TimeInterval, curve: UIView.AnimationCurve) -> EaseToViewportTransition {
-        return EaseToViewportTransition(
-            duration: duration,
-            curve: curve,
-            cameraAnimationsManager: cameraAnimationsManager)
-    }
-
-    internal func makeFlyToViewportTransition(duration: TimeInterval?) -> FlyToViewportTransition {
-        return FlyToViewportTransition(
-            duration: duration,
+    internal func makeDefaultViewportTransition(options: DefaultViewportTransitionOptions) -> DefaultViewportTransition {
+        return DefaultViewportTransition(
+            options: options,
             cameraAnimationsManager: cameraAnimationsManager)
     }
 

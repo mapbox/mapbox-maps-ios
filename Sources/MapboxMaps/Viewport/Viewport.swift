@@ -186,20 +186,18 @@ public final class Viewport {
 }
 
 extension Viewport {
-    public func makeFollowingViewportState(zoom: CGFloat, pitch: CGFloat) -> FollowingViewportState {
-        return factory.makeFollowingViewportState(zoom: zoom, pitch: pitch)
+    public func makeFollowingViewportState(options: FollowingViewportStateOptions = .init()) -> FollowingViewportState {
+        return factory.makeFollowingViewportState(options: options)
     }
 
-    public func makeOverviewViewportState(geometry: GeometryConvertible) -> OverviewViewportState {
-        return factory.makeOverviewViewportState(geometry: geometry)
+    // can't offer a meaningful default argument since options contains geometry;
+    // TODO: should geometry be part of options?
+    public func makeOverviewViewportState(options: OverviewViewportStateOptions) -> OverviewViewportState {
+        return factory.makeOverviewViewportState(options: options)
     }
 
-    public func makeEaseToViewportTransition(duration: TimeInterval, curve: UIView.AnimationCurve) -> EaseToViewportTransition {
-        return factory.makeEaseToViewportTransition(duration: duration, curve: curve)
-    }
-
-    public func makeFlyToViewportTransition(duration: TimeInterval) -> FlyToViewportTransition {
-        return factory.makeFlyToViewportTransition(duration: duration)
+    public func makeDefaultViewportTransition(options: DefaultViewportTransitionOptions = .init()) -> DefaultViewportTransition {
+        return factory.makeDefaultViewportTransition(options: options)
     }
 
     public func makeImmediateViewportTransition() -> ImmediateViewportTransition {

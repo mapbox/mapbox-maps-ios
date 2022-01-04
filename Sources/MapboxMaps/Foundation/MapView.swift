@@ -320,7 +320,9 @@ open class MapView: UIView {
         viewAnnotations = ViewAnnotationManager(containerView: viewAnnotationContainerView, mapboxMap: mapboxMap)
 
         viewport = Viewport(
-            defaultTransition: EmptyViewportTransition(),
+            defaultTransition: DefaultViewportTransition(
+                options: .init(),
+                cameraAnimationsManager: camera),
             factory: ViewportFactory(
                 locationProducer: locationProducer,
                 cameraAnimationsManager: camera,

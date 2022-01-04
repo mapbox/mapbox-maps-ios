@@ -19,17 +19,13 @@ final class DebugViewController: UIViewController {
         view.addSubview(mapView)
         mapView.location.options.puckType = .puck2D()
 
-        let followingState = mapView.viewport.makeFollowingViewportState(zoom: 15, pitch: 40)
+        let followingState = mapView.viewport.makeFollowingViewportState()
         mapView.viewport.addState(followingState)
 
         let helsinki = CLLocationCoordinate2D(latitude: 60.1699, longitude: 24.9384)
         let helsinkiPolygon = Polygon(center: helsinki, radius: 2000, vertices: 200)
-        let overviewState = mapView.viewport.makeOverviewViewportState(geometry: helsinkiPolygon)
+        let overviewState = mapView.viewport.makeOverviewViewportState(options: .init(geometry: helsinkiPolygon))
         mapView.viewport.addState(overviewState)
-
-        let flyToTransition = mapView.viewport.makeFlyToViewportTransition(duration: 2)
-        mapView.viewport.setTransition(flyToTransition, from: followingState, to: overviewState)
-        mapView.viewport.setTransition(flyToTransition, from: overviewState, to: followingState)
 
         let immediateTransition = mapView.viewport.makeImmediateViewportTransition()
         mapView.viewport.setTransition(immediateTransition, from: nil, to: followingState)

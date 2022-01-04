@@ -36,7 +36,6 @@ public final class Viewport {
         let key = ObjectIdentifier(state)
         if statesByIdentity[key] == nil {
             statesByIdentity[key] = state
-            state.didMove(to: self)
         }
     }
 
@@ -51,15 +50,13 @@ public final class Viewport {
                 currentCancelable?.cancel()
                 currentCancelable = nil
             }
-
-            state.didMove(to: nil)
         }
     }
 
     // MARK: - Current State
 
     // a nil status is known as "idle"; this is the default
-    public private(set) var status: ViewportStatus?
+    public private(set) var currentState: ViewportState?
 
     // a cancelable that can be used to stop the current state or transition
     private var currentCancelable: Cancelable?

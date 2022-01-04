@@ -71,16 +71,6 @@ public final class FollowingViewportState {
 }
 
 extension FollowingViewportState: ViewportState {
-    // when the state moves into a viewport, it starts observing the device's current location.
-    // if it leaves the viewport, it stops observing the device's location. if it was the only
-    // observer, the location producer will be able to shut down location services on the device.
-    public func didMove(to viewport: Viewport?) {
-        self.delegatingLocationConsumer.isConsuming = (viewport != nil)
-        if viewport == nil {
-            self.latestLocation = nil
-        }
-    }
-
     // delivers the latest location synchronously, if available
     public func observeCamera(with handler: @escaping (CameraOptions) -> Bool) -> Cancelable {
         let observer = CameraObserver { [weak self] (observer, cameraOptions) in

@@ -15,9 +15,6 @@ public final class OverviewViewportState {
 }
 
 extension OverviewViewportState: ViewportState {
-    public func didMove(to viewport: Viewport?) {
-    }
-
     public func observeCamera(with handler: @escaping (CameraOptions) -> Bool) -> Cancelable {
         _ = handler(cameraOptions)
         return EmptyCancelable()

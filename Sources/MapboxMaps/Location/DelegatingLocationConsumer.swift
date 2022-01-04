@@ -6,21 +6,9 @@ internal final class DelegatingLocationConsumer: NSObject, LocationConsumer {
 
     internal weak var delegate: DelegatingLocationConsumerDelegate?
 
-    internal var isConsuming = false {
-        didSet {
-            if isConsuming {
-                locationProducer.add(self)
-            } else {
-                locationProducer.remove(self)
-            }
-        }
-    }
-
-    private let locationProducer: LocationProducerProtocol
-
     internal init(locationProducer: LocationProducerProtocol) {
-        self.locationProducer = locationProducer
         super.init()
+        locationProducer.add(self)
     }
 
     internal func locationUpdate(newLocation: Location) {

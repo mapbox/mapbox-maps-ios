@@ -316,6 +316,11 @@ final class Puck2DTests: XCTestCase {
         puck2D.isActive = true
 
         var expectedLayer = LocationIndicatorLayer(id: "puck")
+        expectedLayer.location = .constant([
+            location.coordinate.latitude,
+            location.coordinate.longitude,
+            location.altitude
+        ])
         expectedLayer.accuracyRadius = .expression(Exp(.interpolate) {
             Exp(.linear)
             Exp(.zoom)
@@ -354,6 +359,11 @@ final class Puck2DTests: XCTestCase {
         let originalKeys = try originalLayer.jsonObject().keys
 
         var expectedLayer = LocationIndicatorLayer(id: "puck")
+        expectedLayer.location = .constant([
+            location.coordinate.latitude,
+            location.coordinate.longitude,
+            location.altitude
+        ])
         expectedLayer.accuracyRadius = .expression(Exp(.interpolate) {
             Exp(.linear)
             Exp(.zoom)

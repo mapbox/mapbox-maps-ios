@@ -45,10 +45,23 @@ public final class Viewport {
     // any active transition to that state will also be canceled
     public func removeState(_ state: ViewportState) {
         if let _ = statesByIdentity.removeValue(forKey: ObjectIdentifier(state)) {
-            if state === currentState {
-                currentState = nil
+            switch status {
+            case .state(let currentState) where state === currentState:
+                status = nil
+                transitionInfo = nil
                 currentCancelable?.cancel()
                 currentCancelable = nil
+
+                // TODO: notify of status change
+            case .transition where transitionInfo?.toState === state || transitionInfo?.fromState === state:
+                status = nil
+                transitionInfo = nil
+                currentCancelable?.cancel()
+                currentCancelable = nil
+
+                // TODO: notify of status change
+            default:
+                break
             }
         }
     }
@@ -56,7 +69,12 @@ public final class Viewport {
     // MARK: - Current State
 
     // a nil status is known as "idle"; this is the default
-    public private(set) var currentState: ViewportState?
+    public private(set) var status: ViewportStatus?
+
+    // store more detailed info about the current transition so that we can
+    // respond appropriately if any of the involved states or transitions
+    // are removed before the transition ends.
+    private var transitionInfo: ViewportTransitionInfo?
 
     // a cancelable that can be used to stop the current state or transition
     private var currentCancelable: Cancelable?
@@ -66,7 +84,7 @@ public final class Viewport {
     // completion (true) or was interrupted by another transition (false)
     public func transition(to toState: ViewportState?, completion: ((Bool) -> Void)? = nil) {
         // exit early if attempting to transition into the current state
-        guard toState !== currentState else {
+        guard case .state(let currentState) = status, toState !== currentState else {
             completion?(true)
             return
         }
@@ -77,8 +95,6 @@ public final class Viewport {
         currentCancelable?.cancel()
         currentCancelable = nil
 
-        currentState = toState
-
         if let toState = toState {
             // toState must be a state that has been added
             // TODO: does this really matter? should we just auto-add it?
@@ -87,18 +103,37 @@ public final class Viewport {
             // get the transition (or default) for the from and to state
             let transition = self.transition(from: fromState, to: toState) ?? defaultTransition
 
+            transitionInfo = ViewportTransitionInfo(
+                fromState: fromState,
+                toState: toState)
+            status = .transition(transition)
+
+            // TODO: notify of state change
+
             // run the transition
             var completionBlockInvoked = false
             let transitionCancelable = transition.run(from: fromState, to: toState) { [weak self] (finished) in
                 completionBlockInvoked = true
 
-                if finished {
+                if let self = self, finished {
                     // transfer camera upating responsibility to toState
-                    self?.currentCancelable = toState.startUpdatingCamera()
+                    self.currentCancelable = toState.startUpdatingCamera()
+
+                    // only clear transitionInfo if
+                    self.transitionInfo = nil
+
+                    // set the status before calling the completion block
+                    // since it could trigger some further mutation to status
+                    // which would then be clobbered by this line.
+                    self.status = .state(toState)
                 }
 
                 // and call the completion block
                 completion?(finished)
+
+                // TODO: notify of status change here if needed; decouple
+                // this from when status is actually set so that we can
+                // invoke the completion block first
             }
 
             // since it's possible that a transition might invoke its
@@ -109,8 +144,13 @@ public final class Viewport {
                 currentCancelable = transitionCancelable
             }
         } else {
+            status = nil
+            transitionInfo = nil
+
             // if transitioning to nil (idle), never run a transition
             completion?(true)
+
+            // TODO: notify of status change
         }
     }
 
@@ -175,7 +215,7 @@ private struct CompositeTransitionKey: Hashable {
     }
 }
 
-public enum ViewportStatus {
-    case state(ViewportState)
-    case transition(ViewportTransition)
+private struct ViewportTransitionInfo {
+    internal let fromState: ViewportState?
+    internal let toState: ViewportState
 }

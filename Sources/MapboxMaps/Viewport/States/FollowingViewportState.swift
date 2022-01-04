@@ -72,7 +72,7 @@ public final class FollowingViewportState {
 
 extension FollowingViewportState: ViewportState {
     // delivers the latest location synchronously, if available
-    public func observeCamera(with handler: @escaping (CameraOptions) -> Bool) -> Cancelable {
+    public func observeDataSource(with handler: @escaping (CameraOptions) -> Bool) -> Cancelable {
         let observer = CameraObserver { [weak self] (observer, cameraOptions) in
             // handler returns false if it wants to stop receiving updates
             if !handler(cameraOptions) {

@@ -15,7 +15,7 @@ public protocol ViewportState: AnyObject {
     // returned Cancelable *or* return false from the handler to indicate that it wishes
     // to stop receiving updates. Following either of these events, implemenations must
     // no longer invoke the handler.
-    func observeCamera(with handler: @escaping (CameraOptions) -> Bool) -> Cancelable
+    func observeDataSource(with handler: @escaping (CameraOptions) -> Bool) -> Cancelable
 
     // tells this state that it is now responsible for updating the camera
     // the viewport calls this method at the end of the transition into this state

@@ -8,7 +8,7 @@ public final class ImmediateViewportTransition: ViewportTransition {
     public func run(from: ViewportState?, to: ViewportState, completion: @escaping (Bool) -> Void) -> Cancelable {
         let resultCancelable = CompositeCancelable()
         var complete = false
-        resultCancelable.add(to.observeCamera { [mapboxMap] cameraOptions in
+        resultCancelable.add(to.observeDataSource { [mapboxMap] cameraOptions in
             mapboxMap.setCamera(to: cameraOptions)
             completion(true)
             complete = true

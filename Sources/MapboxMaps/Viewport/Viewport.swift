@@ -101,7 +101,7 @@ public final class Viewport {
             assert(statesByIdentity[ObjectIdentifier(toState)] != nil)
 
             // get the transition (or default) for the from and to state
-            let transition = self.transition(from: fromState, to: toState) ?? defaultTransition
+            let transition = getTransition(from: fromState, to: toState) ?? defaultTransition
 
             transitionInfo = ViewportTransitionInfo(
                 fromState: fromState,
@@ -173,7 +173,7 @@ public final class Viewport {
     }
 
     // get
-    public func transition(from fromState: ViewportState?, to toState: ViewportState) -> ViewportTransition? {
+    public func getTransition(from fromState: ViewportState?, to toState: ViewportState) -> ViewportTransition? {
         assert(fromState !== toState)
         return registeredTransitions[CompositeTransitionKey(from: fromState, to: toState)]
     }

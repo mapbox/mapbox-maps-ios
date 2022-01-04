@@ -83,13 +83,17 @@ public final class Viewport {
     // the Bool in the completion block indicates whether the transition ran to
     // completion (true) or was interrupted by another transition (false)
     public func transition(to toState: ViewportState?, completion: ((Bool) -> Void)? = nil) {
-        // exit early if attempting to transition into the current state
-        guard case .state(let currentState) = status, toState !== currentState else {
-            completion?(true)
-            return
-        }
 
-        let fromState = currentState
+        var fromState: ViewportState?
+
+        if case .state(let currentState) = status {
+            // exit early if attempting to transition into the current state
+            guard toState !== currentState else {
+                completion?(true)
+                return
+            }
+            fromState = currentState
+        }
 
         // cancel any previous state or transition
         currentCancelable?.cancel()

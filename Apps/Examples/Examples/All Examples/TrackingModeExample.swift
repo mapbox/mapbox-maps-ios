@@ -7,7 +7,12 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
 
     internal var mapView: MapView!
     internal var cameraLocationConsumer: CameraLocationConsumer!
-
+    internal let toggleBearingImageButton: UIButton = UIButton(frame: .zero)
+    internal var showsBearingImage: Bool = false {
+        didSet {
+            syncPuckAndButton()
+        }
+    }
     override public func viewDidLoad() {
         super.viewDidLoad()
 
@@ -17,7 +22,10 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
-
+        
+        // Setup and create button for toggling show bearing image
+        setupToggleShowBearingImageButton()
+        
         cameraLocationConsumer = CameraLocationConsumer(mapView: mapView)
 
         // Add user position icon to the map with location indicator layer
@@ -31,6 +39,31 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
 
             self.finish() // Needed for internal testing purposes.
         }
+    }
+    
+    @objc func showHideBearingImage() {
+        showsBearingImage.toggle()
+    }
+    func syncPuckAndButton() {
+        mapView.location.options.showBearingImage = showsBearingImage
+        // Update button title
+        let title: String = showsBearingImage ? "Hide bearing image" : "Show bearing image"
+        toggleBearingImageButton.setTitle(title, for: .normal)
+    }
+    private func setupToggleShowBearingImageButton() {
+        // Styling
+        toggleBearingImageButton.backgroundColor = .systemBlue
+        toggleBearingImageButton.addTarget(self, action: #selector(showHideBearingImage), for: .touchUpInside)
+        toggleBearingImageButton.setTitleColor(.white, for: .normal)
+        toggleBearingImageButton.isHidden = false
+        syncPuckAndButton()
+        toggleBearingImageButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(toggleBearingImageButton)
+
+        // Constraints
+        toggleBearingImageButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20.0).isActive = true
+        toggleBearingImageButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20.0).isActive = true
+        toggleBearingImageButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 650.0).isActive = true
     }
 }
 

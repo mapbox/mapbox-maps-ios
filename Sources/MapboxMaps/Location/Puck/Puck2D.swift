@@ -70,16 +70,16 @@ internal final class Puck2D: NSObject, Puck {
                 stretchX: [],
                 stretchY: [],
                 content: nil)
+        } else {
+            try? style.removeImage(withId: Self.bearingImageId)
         }
-        if let shadowImage = configuration.shadowImage {
-            try! style.addImage(
-                shadowImage,
-                id: Self.shadowImageId,
-                sdf: false,
-                stretchX: [],
-                stretchY: [],
-                content: nil)
-        }
+        try! style.addImage(
+            configuration.resolvedShadowImage,
+            id: Self.shadowImageId,
+            sdf: false,
+            stretchX: [],
+            stretchY: [],
+            content: nil)
     }
 
     private func updateLayer() {
@@ -95,7 +95,18 @@ internal final class Puck2D: NSObject, Puck {
         switch location.accuracyAuthorization {
         case .fullAccuracy:
             layer.topImage = .constant(.name(Self.topImageId))
-            layer.bearingImage = .constant(.name(Self.bearingImageId))
+            if showBearingImage {
+                try! style.addImage(
+                    configuration.resolvedBearingImage,
+                    id: Self.bearingImageId,
+                    sdf: false,
+                    stretchX: [],
+                    stretchY: [],
+                    content: nil)
+                layer.bearingImage = .constant(.name(Self.bearingImageId))
+            } else {
+                try? style.removeImage(withId: Self.bearingImageId)
+            }
             if configuration.shadowImage != nil {
                 layer.shadowImage = .constant(.name(Self.shadowImageId))
             }
@@ -182,7 +193,11 @@ private extension Puck2DConfiguration {
     }
 
     var resolvedBearingImage: UIImage {
-        bearingImage ?? UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!
+        bearingImage ?? UIImage(named: "triangle", in: .mapboxMaps, compatibleWith: nil)!
+    }
+
+    var resolvedShadowImage: UIImage {
+        shadowImage ?? UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!
     }
 
     var resolvedScale: Value<Double> {

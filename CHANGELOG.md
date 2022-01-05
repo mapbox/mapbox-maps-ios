@@ -11,6 +11,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Added `Style.removeTerrain()` to allow removing terrain. ([#918](https://github.com/mapbox/mapbox-maps-ios/pull/918))
 * `Snapshotter` initialization now triggers a turnstyle event. ([#908](https://github.com/mapbox/mapbox-maps-ios/pull/908))
 * Fixed a bug where 2D puck location was never set when location accuracy authorization was reduced. ([#989](https://github.com/mapbox/mapbox-maps-ios/pull/989))
+* Fixed a bug where setting LocationManager.options would cause the LocationProvider to be reconfigured. ([#992](https://github.com/mapbox/mapbox-maps-ios/pull/992))
 
 ## 10.2.0 - December 15, 2021
 * Update to MapboxCoreMaps 10.2.0 and MapboxCommon 21.0.1. ([#952](https://github.com/mapbox/mapbox-maps-ios/pull/952))

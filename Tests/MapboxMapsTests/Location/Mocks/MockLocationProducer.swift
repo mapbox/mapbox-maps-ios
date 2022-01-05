@@ -9,7 +9,12 @@ final class MockLocationProducer: LocationProducerProtocol {
 
     var consumers = NSHashTable<LocationConsumer>.weakObjects()
 
-    var locationProvider: LocationProvider = MockLocationProvider()
+    let didSetLocationProviderStub = Stub<LocationProvider, Void>()
+    var locationProvider: LocationProvider = MockLocationProvider() {
+        didSet {
+            didSetLocationProviderStub.call(with: locationProvider)
+        }
+    }
 
     let addStub = Stub<LocationConsumer, Void>()
     func add(_ consumer: LocationConsumer) {

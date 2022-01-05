@@ -428,7 +428,10 @@ jobs:
           commit-text: "[run app device tests]"
           always-run: << parameters.device-tests-always-run >>
       - configure-environment
-      - run: cd Apps && bundle install && bundle exec fastlane firebase
+      - run:
+          name: Start Firebase lane
+          working_directory: Apps
+          command: bundle install && bundle exec fastlane firebase
       - install-dependencies
       - install-gcloud
       - login-google-cloud-platform

@@ -71,6 +71,21 @@ final class LocationManagerTests: XCTestCase {
         XCTAssertEqual(puckManager.puckBearingSource, options.puckBearingSource)
     }
 
+    func testOptionsPropagationDoesNotInvokeLocationProviderSetterWhenItIsAClass() {
+        locationManager.options = LocationOptions()
+
+        XCTAssertTrue(locationProducer.didSetLocationProviderStub.invocations.isEmpty)
+    }
+
+    func testOptionsPropagationDoesInvokeLocationProviderSetterWhenItIsAValueType() {
+        locationManager.overrideLocationProvider(with: MockLocationProviderStruct())
+        locationProducer.didSetLocationProviderStub.reset()
+
+        locationManager.options = LocationOptions()
+
+        XCTAssertEqual(locationProducer.didSetLocationProviderStub.invocations.count, 1)
+    }
+
     func testOverrideLocationProvider() {
         let customLocationProvider = MockLocationProvider()
 

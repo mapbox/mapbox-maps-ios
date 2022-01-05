@@ -58,3 +58,43 @@ final class MockLocationProvider: LocationProvider {
         dismissHeadingCalibrationDisplayStub.call()
     }
 }
+
+struct MockLocationProviderStruct: LocationProvider {
+
+    var locationProviderOptions = LocationOptions()
+
+    var authorizationStatus: CLAuthorizationStatus = .notDetermined
+
+    var accuracyAuthorization: CLAccuracyAuthorization = .fullAccuracy
+
+    var heading: CLHeading?
+
+    var headingOrientation: CLDeviceOrientation = .unknown
+
+    func setDelegate(_ delegate: LocationProviderDelegate) {
+    }
+
+    func requestAlwaysAuthorization() {
+    }
+
+    func requestWhenInUseAuthorization() {
+    }
+
+    func requestTemporaryFullAccuracyAuthorization(withPurposeKey purposeKey: String) {
+    }
+
+    func startUpdatingLocation() {
+    }
+
+    func stopUpdatingLocation() {
+    }
+
+    func startUpdatingHeading() {
+    }
+
+    func stopUpdatingHeading() {
+    }
+
+    func dismissHeadingCalibrationDisplay() {
+    }
+}

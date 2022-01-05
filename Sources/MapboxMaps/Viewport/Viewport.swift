@@ -48,14 +48,12 @@ public final class Viewport {
             switch status {
             case .state(let currentState) where state === currentState:
                 status = nil
-                transitionInfo = nil
                 currentCancelable?.cancel()
                 currentCancelable = nil
 
                 // TODO: notify of status change
-            case .transition where transitionInfo?.toState === state || transitionInfo?.fromState === state:
+            case .transition(_, let fromState, let toState) where toState === state || fromState === state:
                 status = nil
-                transitionInfo = nil
                 currentCancelable?.cancel()
                 currentCancelable = nil
 
@@ -70,11 +68,6 @@ public final class Viewport {
 
     // a nil status is known as "idle"; this is the default
     public private(set) var status: ViewportStatus?
-
-    // store more detailed info about the current transition so that we can
-    // respond appropriately if any of the involved states or transitions
-    // are removed before the transition ends.
-    private var transitionInfo: ViewportTransitionInfo?
 
     // a cancelable that can be used to stop the current state or transition
     private var currentCancelable: Cancelable?
@@ -107,10 +100,7 @@ public final class Viewport {
             // get the transition (or default) for the from and to state
             let transition = getTransition(from: fromState, to: toState) ?? defaultTransition
 
-            transitionInfo = ViewportTransitionInfo(
-                fromState: fromState,
-                toState: toState)
-            status = .transition(transition)
+            status = .transition(transition, fromState: fromState, toState: toState)
 
             // TODO: notify of state change
 
@@ -122,9 +112,6 @@ public final class Viewport {
                 if let self = self, finished {
                     // transfer camera upating responsibility to toState
                     self.currentCancelable = toState.startUpdatingCamera()
-
-                    // only clear transitionInfo if
-                    self.transitionInfo = nil
 
                     // set the status before calling the completion block
                     // since it could trigger some further mutation to status
@@ -149,7 +136,6 @@ public final class Viewport {
             }
         } else {
             status = nil
-            transitionInfo = nil
 
             // if transitioning to nil (idle), never run a transition
             completion?(true)
@@ -215,9 +201,4 @@ private struct CompositeTransitionKey: Hashable {
     internal init(from: ViewportState?, to: ViewportState) {
         self.objectIdentifiers = [from, to].map { $0.map(ObjectIdentifier.init) }
     }
-}
-
-private struct ViewportTransitionInfo {
-    internal let fromState: ViewportState?
-    internal let toState: ViewportState
 }

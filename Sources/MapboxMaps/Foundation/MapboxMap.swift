@@ -719,7 +719,7 @@ extension MapboxMap: MapFeatureQueryable {
     ///   - completion: The result could be a feature extension value containing
     ///         either a value (expansion-zoom) or a feature collection (children
     ///         or leaves). An error is passed if the operation was not successful.
-    public func getGeoJsonClusterLeaves(for sourceId: String,
+    public func getGeoJsonClusterLeaves(forSourceId sourceId: String,
                                         feature: Feature,
                                         limit: UInt64 = 10,
                                         offset: UInt64 = 0,
@@ -743,7 +743,7 @@ extension MapboxMap: MapFeatureQueryable {
     ///   - completion: The result could be a feature extension value containing
     ///         either a value (expansion-zoom) or a feature collection (children
     ///         or leaves). An error is passed if the operation was not successful.
-    public func getGeoJsonClusterChildren(for sourceId: String,
+    public func getGeoJsonClusterChildren(forSourceId sourceId: String,
                                           feature: Feature,
                                           completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) {
         __map.queryFeatureExtensions(forSourceIdentifier: sourceId,
@@ -765,7 +765,7 @@ extension MapboxMap: MapFeatureQueryable {
     ///   - completion: The result could be a feature extension value containing
     ///         either a value (expansion-zoom) or a feature collection (children
     ///         or leaves). An error is passed if the operation was not successful.
-    public func getGeoJsonClusterExpansionZoom(for sourceId: String,
+    public func getGeoJsonClusterExpansionZoom(forSourceId sourceId: String,
                                                feature: Feature,
                                                completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void) {
         __map.queryFeatureExtensions(forSourceIdentifier: sourceId,

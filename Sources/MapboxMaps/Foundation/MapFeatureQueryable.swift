@@ -25,17 +25,17 @@ internal protocol MapFeatureQueryable: AnyObject {
                                args: [String: Any]?,
                                completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void)
 
-    func getGeoJsonClusterLeaves(for sourceId: String,
+    func getGeoJsonClusterLeaves(forSourceId sourceId: String,
                                  feature: Feature,
                                  limit: UInt64,
                                  offset: UInt64,
                                  completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void)
 
-    func getGeoJsonClusterChildren(for sourceId: String,
+    func getGeoJsonClusterChildren(forSourceId sourceId: String,
                                    feature: Feature,
                                    completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void)
 
-    func getGeoJsonClusterExpansionZoom(for sourceId: String,
+    func getGeoJsonClusterExpansionZoom(forSourceId sourceId: String,
                                         feature: Feature,
                                         completion: @escaping (Result<FeatureExtensionValue, Error>) -> Void)
 }

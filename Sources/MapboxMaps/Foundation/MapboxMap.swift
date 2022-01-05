@@ -730,8 +730,8 @@ extension MapboxMap: MapFeatureQueryable {
                                      extensionField: "leaves",
                                      args: ["limit": limit, "offset": offset],
                                      callback: coreAPIClosureAdapter(for: completion,
-                                                                        type: FeatureExtensionValue.self,
-                                                                        concreteErrorType: MapError.self))
+                                                                     type: FeatureExtensionValue.self,
+                                                                     concreteErrorType: MapError.self))
     }
 
     /// Returns the children (original points or clusters) of a cluster (on the next zoom level)
@@ -752,8 +752,8 @@ extension MapboxMap: MapFeatureQueryable {
                                      extensionField: "children",
                                      args: nil,
                                      callback: coreAPIClosureAdapter(for: completion,
-                                                                        type: FeatureExtensionValue.self,
-                                                                        concreteErrorType: MapError.self))
+                                                                     type: FeatureExtensionValue.self,
+                                                                     concreteErrorType: MapError.self))
     }
 
     /// Returns the zoom on which the cluster expands into several children (useful for "click to zoom" feature)
@@ -774,8 +774,8 @@ extension MapboxMap: MapFeatureQueryable {
                                      extensionField: "expansion-zoom",
                                      args: nil,
                                      callback: coreAPIClosureAdapter(for: completion,
-                                                                        type: FeatureExtensionValue.self,
-                                                                        concreteErrorType: MapError.self))
+                                                                     type: FeatureExtensionValue.self,
+                                                                     concreteErrorType: MapError.self))
     }
 }
 

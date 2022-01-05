@@ -51,4 +51,19 @@ final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
                 locationChangeHandler: locationChangeHandler,
                 completion: completion))
     }
+
+    struct FlyToParams {
+        var camera: CameraOptions
+        var duration: TimeInterval?
+        var completion: AnimationCompletion?
+    }
+    let flyToStub = Stub<FlyToParams, Cancelable?>(defaultReturnValue: MockCancelable())
+    func fly(to camera: CameraOptions,
+             duration: TimeInterval?,
+             completion: AnimationCompletion?) -> Cancelable? {
+        flyToStub.call(with: .init(
+            camera: camera,
+            duration: duration,
+            completion: completion))
+    }
 }

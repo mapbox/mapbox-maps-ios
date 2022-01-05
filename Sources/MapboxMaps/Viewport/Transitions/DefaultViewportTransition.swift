@@ -27,10 +27,12 @@ public final class DefaultViewportTransition {
 }
 
 extension DefaultViewportTransition: ViewportTransition {
-    public func run(from: ViewportState?, to: ViewportState, completion: @escaping (Bool) -> Void) -> Cancelable {
+    public func run(from fromState: ViewportState?,
+                    to toState: ViewportState,
+                    completion: @escaping (Bool) -> Void) -> Cancelable {
         let resultCancelable = CompositeCancelable()
         var observeDataSourceComplete = false
-        resultCancelable.add(to.observeDataSource { [cameraAnimationsManager, options] cameraOptions in
+        resultCancelable.add(toState.observeDataSource { [cameraAnimationsManager, options] cameraOptions in
             // the force-unwrap below is safe. ease(to:) always returns non-nil Cancelable.
             // we should update its signature accordingly in the next major version.
             resultCancelable.add(cameraAnimationsManager.ease(

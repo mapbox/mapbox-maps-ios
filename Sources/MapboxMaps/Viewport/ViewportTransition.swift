@@ -5,5 +5,7 @@ public protocol ViewportTransition: AnyObject {
     // on the main queue. Transitions must handle the possibility that the "to" state might fail to
     // provide a target camera in a timely manner or might update the target camera multiple times
     // during the transition (a "moving target").
-    func run(from: ViewportState?, to: ViewportState, completion: @escaping (Bool) -> Void) -> Cancelable
+    func run(from fromState: ViewportState?,
+             to toState: ViewportState,
+             completion: @escaping (Bool) -> Void) -> Cancelable
 }

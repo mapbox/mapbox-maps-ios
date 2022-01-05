@@ -88,8 +88,6 @@ final class MockMapboxMap: MapboxMapProtocol {
         endGestureStub.call()
     }
 
-    // MARK: - View annotation management
-
     let setViewAnnotationPositionsUpdateListenerStub = Stub<ViewAnnotationPositionsUpdateListener?, Void>()
     func setViewAnnotationPositionsUpdateListener(_ listener: ViewAnnotationPositionsUpdateListener?) {
         setViewAnnotationPositionsUpdateListenerStub.call(with: listener)
@@ -123,5 +121,23 @@ final class MockMapboxMap: MapboxMapProtocol {
     let pointIsAboveHorizonStub = Stub<CGPoint, Bool>(defaultReturnValue: .random())
     func pointIsAboveHorizon(_ point: CGPoint) -> Bool {
         pointIsAboveHorizonStub.call(with: point)
+    }
+
+    struct CameraForGeometryParams {
+        var geometry: Geometry
+        var padding: UIEdgeInsets
+        var bearing: CGFloat?
+        var pitch: CGFloat?
+    }
+    let cameraForGeometryStub = Stub<CameraForGeometryParams, MapboxMaps.CameraOptions>(defaultReturnValue: .random())
+    func camera(for geometry: Geometry,
+                padding: UIEdgeInsets,
+                bearing: CGFloat?,
+                pitch: CGFloat?) -> MapboxMaps.CameraOptions {
+        cameraForGeometryStub.call(with: .init(
+            geometry: geometry,
+            padding: padding,
+            bearing: bearing,
+            pitch: pitch))
     }
 }

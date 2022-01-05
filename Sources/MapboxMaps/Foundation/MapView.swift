@@ -320,13 +320,13 @@ open class MapView: UIView {
         viewAnnotations = ViewAnnotationManager(containerView: viewAnnotationContainerView, mapboxMap: mapboxMap)
 
         viewport = Viewport(
-            defaultTransition: DefaultViewportTransition(
-                options: .init(),
-                cameraAnimationsManager: camera),
-            factory: ViewportFactory(
-                locationProducer: locationProducer,
-                cameraAnimationsManager: camera,
-                mapboxMap: mapboxMap))
+            impl: ViewportImpl(
+                defaultTransition: DefaultViewportTransition(
+                    options: .init(),
+                    cameraAnimationsManager: camera)),
+            locationProducer: locationProducer,
+            cameraAnimationsManager: camera,
+            mapboxMap: mapboxMap)
     }
 
     private func checkForMetalSupport() {

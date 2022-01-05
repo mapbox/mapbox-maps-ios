@@ -685,11 +685,7 @@ jobs:
       - image: cimg/base:stable
     steps:
       - parse-release-version-if-available
-      - run:
-          name: Configure .netrc
-          command: |
-            echo "machine api.mapbox.com login mapbox password $SDK_REGISTRY_TOKEN" >> ~/.netrc
-            chmod 0600 ~/.netrc
+      - inject-netrc-credentials
       - run:
           name: Wait binaries public access
           command: |
@@ -710,12 +706,16 @@ commands:
       - run:
           name: Allow cloning from github.com via HTTPS
           command: git config --global --unset url."ssh://git@github.com".insteadOf
+      - inject-netrc-credentials
+      - inject-mapbox-public-token
+
+  inject-netrc-credentials:
+    steps:
       - run:
           name: Configure .netrc
           command: |
             echo "machine api.mapbox.com login mapbox password $SDK_REGISTRY_TOKEN" >> ~/.netrc
             chmod 0600 ~/.netrc
-      - inject-mapbox-public-token
 
   inject-mapbox-public-token:
     steps:

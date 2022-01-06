@@ -89,7 +89,7 @@ public final class Viewport {
 
     // factory methods
 
-    public func makeFollowingViewportState(options: FollowingViewportStateOptions) -> FollowingViewportState {
+    public func makeFollowingViewportState(options: FollowingViewportStateOptions = .init()) -> FollowingViewportState {
         return FollowingViewportState(
             options: options,
             locationProducer: locationProducer,
@@ -102,7 +102,7 @@ public final class Viewport {
             mapboxMap: mapboxMap)
     }
 
-    public func makeDefaultViewportTransition(options: DefaultViewportTransitionOptions) -> DefaultViewportTransition {
+    public func makeDefaultViewportTransition(options: DefaultViewportTransitionOptions = .init()) -> DefaultViewportTransition {
         return DefaultViewportTransition(
             options: options,
             cameraAnimationsManager: cameraAnimationsManager)

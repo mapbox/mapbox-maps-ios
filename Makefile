@@ -257,24 +257,6 @@ clean-for-device-build:
 .PHONY: clean-test-with-device-farm
 clean-test-with-device-farm: clean-for-device-build test-with-device-farm
 
-
-.PHONY: test-with-firebase
-test-with-firebase:
-# Ignore the build part as we have build in fastlane, recomment out these part if test locally.
-# 	xcodebuild \
-# 		-workspace Apps/Apps.xcworkspace \
-# 		-scheme $(SCHEME) \
-# 		-enableCodeCoverage YES \
-# 		-configuration $(CONFIGURATION) \
-# 		-sdk iphoneos build-for-testing;
-	cd ${BUILD_DIR}/Build/Products; \
-	zip -r ${APP_NAME}.zip $(CONFIGURATION)-iphoneos $(SCHEME)_iphoneos*.xctestrun;
-	gcloud firebase test ios run --test ${BUILD_DIR}/Build/Products/${APP_NAME}.zip \
-		--timeout 20m \
-		--device model=iphone11,version=13.6 \
-		--results-dir $(SCHEME)-${CIRCLE_BUILD_NUM};
-	rm ${BUILD_DIR}/Build/Products/${APP_NAME}.zip
-
 .PHONY: test-with-device-farm
 test-with-device-farm: $(DEVICE_FARM_RESULTS)
 	python3 ./scripts/device-farm/check_results_for_failure.py $(DEVICE_FARM_RESULTS)

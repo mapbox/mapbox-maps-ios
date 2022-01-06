@@ -1,3 +1,16 @@
+GIT
+  remote: https://github.com/fastlane/fastlane-plugin-firebase_test_lab.git
+  revision: eee528b056609d06ce36126012f9636028af6536
+  ref: eee528b
+  specs:
+    fastlane-plugin-firebase_test_lab (1.0.7)
+      faraday
+      google-cloud-storage (>= 1.25.1, < 2.0.0)
+      googleauth
+      plist (>= 3.0.0)
+      rubyzip (>= 1.0.0)
+      tty-spinner (>= 0.8.0, < 1.0.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -8,17 +21,17 @@ GEM
     artifactory (3.0.15)
     atomos (0.1.3)
     aws-eventstream (1.2.0)
-    aws-partitions (1.541.0)
-    aws-sdk-core (3.124.0)
+    aws-partitions (1.545.0)
+    aws-sdk-core (3.125.1)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
       aws-sigv4 (~> 1.1)
       jmespath (~> 1.0)
-    aws-sdk-kms (1.52.0)
-      aws-sdk-core (~> 3, >= 3.122.0)
+    aws-sdk-kms (1.53.0)
+      aws-sdk-core (~> 3, >= 3.125.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.109.0)
-      aws-sdk-core (~> 3, >= 3.122.0)
+    aws-sdk-s3 (1.111.0)
+      aws-sdk-core (~> 3, >= 3.125.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.4)
     aws-sigv4 (1.4.0)
@@ -61,7 +74,7 @@ GEM
     faraday-rack (1.0.0)
     faraday_middleware (1.2.0)
       faraday (~> 1.0)
-    fastimage (2.2.5)
+    fastimage (2.2.6)
     fastlane (2.199.0)
       CFPropertyList (>= 2.3, < 4.0.0)
       addressable (>= 2.8, < 3.0.0)
@@ -209,6 +222,7 @@ PLATFORMS
 
 DEPENDENCIES
   fastlane
+  fastlane-plugin-firebase_test_lab!
 
 BUNDLED WITH
    2.2.22

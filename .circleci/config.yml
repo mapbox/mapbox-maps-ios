@@ -459,6 +459,12 @@ jobs:
       - get-test-results-from-firebase:
             scheme: << parameters.scheme >>
       - run:
+          name: "Parsing xcresults for errors"
+          command: |
+            RESULTS=`find "$DERIVED_DATA_PATH" -name '*.xcresult'`
+            xargs swift run --package-path scripts/xcparty xcparty \<<< "$RESULTS" | tee "$DERIVED_DATA_PATH/failures.txt"
+          when: on_fail
+      - run:
           name: Symbolicate crash logs
           command: |
             make symbolicate \
@@ -804,13 +810,6 @@ commands:
             echo "source /tmp/gcloud/google-cloud-sdk/path.bash.inc" >> $BASH_ENV
             echo "source /tmp/gcloud/google-cloud-sdk/completion.bash.inc" >> $BASH_ENV
             source $BASH_ENV
-
-  prepare-ios-codesign-keychain:
-    steps:
-      - run:
-          name: Prepare codesign keychain
-          command: |
-            gem install fastlane
 
   install-dependencies:
     description: "Install Dependencies"

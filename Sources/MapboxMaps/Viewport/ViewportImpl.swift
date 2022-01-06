@@ -53,7 +53,7 @@ internal final class ViewportImpl: ViewportImplProtocol {
     // attempting to remove a state that was not added has no effect
     // any active transition to that state will also be canceled
     internal func removeState(_ state: ViewportState) {
-        if let _ = statesByIdentity.removeValue(forKey: ObjectIdentifier(state)) {
+        if statesByIdentity.removeValue(forKey: ObjectIdentifier(state)) != nil {
             switch status {
             case .state(let currentState) where state === currentState:
                 status = .state(nil)

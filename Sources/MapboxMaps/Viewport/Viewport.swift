@@ -9,12 +9,12 @@
 //
 public final class Viewport {
 
-    private let impl: ViewportImpl
+    private let impl: ViewportImplProtocol
     private let locationProducer: LocationProducerProtocol
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol
     private let mapboxMap: MapboxMapProtocol
 
-    internal init(impl: ViewportImpl,
+    internal init(impl: ViewportImplProtocol,
                   locationProducer: LocationProducerProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol,
                   mapboxMap: MapboxMapProtocol) {
@@ -62,7 +62,8 @@ public final class Viewport {
 
     // this transition is used unless overridden by one of the registered transitions
     public var defaultTransition: ViewportTransition {
-        impl.defaultTransition
+        get { impl.defaultTransition }
+        set { impl.defaultTransition = newValue }
     }
 
     // set

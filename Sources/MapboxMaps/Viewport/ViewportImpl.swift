@@ -1,3 +1,17 @@
+internal protocol ViewportImplProtocol: AnyObject {
+    var states: [ViewportState] { get }
+    func addState(_ state: ViewportState)
+    func removeState(_ state: ViewportState)
+
+    var status: ViewportStatus { get }
+    func transition(to toState: ViewportState?, completion: ((Bool) -> Void)?)
+
+    var defaultTransition: ViewportTransition { get set }
+    func setTransition(_ transition: ViewportTransition, from fromState: ViewportState?, to toState: ViewportState)
+    func getTransition(from fromState: ViewportState?, to toState: ViewportState) -> ViewportTransition?
+    func removeTransition(from fromState: ViewportState?, to toState: ViewportState)
+}
+
 // provides a structured approach to organizing
 // camera management logic into states and transitions between them
 //
@@ -7,7 +21,7 @@
 //  - in a state (camera is being managed by a ViewportState)
 //  - transitioning (camera is being managed by a ViewportTransition)
 //
-internal final class ViewportImpl {
+internal final class ViewportImpl: ViewportImplProtocol {
 
     // viewport requires a default transition at all times
     internal init(defaultTransition: ViewportTransition) {

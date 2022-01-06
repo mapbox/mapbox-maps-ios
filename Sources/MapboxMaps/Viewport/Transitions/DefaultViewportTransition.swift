@@ -29,9 +29,8 @@ public final class DefaultViewportTransition {
 extension DefaultViewportTransition: ViewportTransition {
     public func run(from fromState: ViewportState?,
                     to toState: ViewportState,
-                    completion: @escaping (Bool) -> Void) -> Cancelable {
+                    completion: @escaping () -> Void) -> Cancelable {
         let resultCancelable = CompositeCancelable()
-        var observeDataSourceComplete = false
         resultCancelable.add(toState.observeDataSource { [cameraAnimationsManager, options] cameraOptions in
             // the force-unwrap below is safe. ease(to:) always returns non-nil Cancelable.
             // we should update its signature accordingly in the next major version.
@@ -39,18 +38,14 @@ extension DefaultViewportTransition: ViewportTransition {
                 to: cameraOptions,
                 duration: options.duration,
                 curve: options.curve) { position in
-                    completion(position == .end)
+                    // only invoke the completion block if the animation was not canceled
+                    // (for this API, that means it ended at .start (if someone reversed it) or .end)
+                    if position != .current {
+                        completion()
+                    }
                 }!)
-            observeDataSourceComplete = true
             // stop receiving updates (ignore moving targets)
             return false
-        })
-        // we still have to call the completion block if the transition is canceled while waiting for the to camera.
-        // if it's canceled during the animation, the basic camera animator's completion block will be invoked.
-        resultCancelable.add(BlockCancelable {
-            if !observeDataSourceComplete {
-                completion(false)
-            }
         })
         return resultCancelable
     }

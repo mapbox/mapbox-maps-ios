@@ -12,6 +12,7 @@ internal final class ViewportImpl {
     // viewport requires a default transition at all times
     internal init(defaultTransition: ViewportTransition) {
         self.defaultTransition = defaultTransition
+        self.status = .state(nil)
     }
 
     // MARK: - States
@@ -41,13 +42,13 @@ internal final class ViewportImpl {
         if let _ = statesByIdentity.removeValue(forKey: ObjectIdentifier(state)) {
             switch status {
             case .state(let currentState) where state === currentState:
-                status = nil
+                status = .state(nil)
                 currentCancelable?.cancel()
                 currentCancelable = nil
 
                 // TODO: notify of status change
             case .transition(_, let fromState, let toState) where toState === state || fromState === state:
-                status = nil
+                status = .state(nil)
                 currentCancelable?.cancel()
                 currentCancelable = nil
 
@@ -60,8 +61,8 @@ internal final class ViewportImpl {
 
     // MARK: - Current State
 
-    // a nil status is known as "idle"; this is the default
-    internal private(set) var status: ViewportStatus?
+    // defaults to .state(nil), aka idle
+    internal private(set) var status: ViewportStatus
 
     // a cancelable that can be used to stop the current state or transition
     private var currentCancelable: Cancelable?
@@ -69,17 +70,27 @@ internal final class ViewportImpl {
     // set
     // the Bool in the completion block indicates whether the transition ran to
     // completion (true) or was interrupted by another transition (false)
+    //
+    // transitioning to state x when status equals .state(x) just
+    // invokes completion synchronously with `true` and does not modify status
+    //
+    // transitioning to state x when status equals .transition(_, _, x) just
+    // invokes completion synchronously with `false` and does not modify status
     internal func transition(to toState: ViewportState?, completion: ((Bool) -> Void)?) {
 
-        var fromState: ViewportState?
-
-        if case .state(let currentState) = status {
+        switch status {
+        case .state(let state):
             // exit early if attempting to transition into the current state
-            guard toState !== currentState else {
+            guard state !== toState else {
                 completion?(true)
                 return
             }
-            fromState = currentState
+        case .transition(_, _, let oldToState):
+            // exit early if attempting to transition to the same state as the current transition
+            guard oldToState !== toState else {
+                completion?(false)
+                return
+            }
         }
 
         // cancel any previous state or transition
@@ -91,6 +102,14 @@ internal final class ViewportImpl {
             // TODO: does this really matter? should we just auto-add it?
             assert(statesByIdentity[ObjectIdentifier(toState)] != nil)
 
+            let fromState: ViewportState?
+            switch status {
+            case .state(let state):
+                fromState = state
+            case .transition(_, _, let oldToState):
+                fromState = oldToState
+            }
+
             // get the transition (or default) for the from and to state
             let transition = getTransition(from: fromState, to: toState) ?? defaultTransition
 
@@ -100,10 +119,10 @@ internal final class ViewportImpl {
 
             // run the transition
             var completionBlockInvoked = false
-            let transitionCancelable = transition.run(from: fromState, to: toState) { [weak self] (finished) in
+            let transitionCancelable = transition.run(from: fromState, to: toState) { [weak self] in
                 completionBlockInvoked = true
 
-                if let self = self, finished {
+                if let self = self {
                     // transfer camera upating responsibility to toState
                     self.currentCancelable = toState.startUpdatingCamera()
 
@@ -114,7 +133,7 @@ internal final class ViewportImpl {
                 }
 
                 // and call the completion block
-                completion?(finished)
+                completion?(true)
 
                 // TODO: notify of status change here if needed; decouple
                 // this from when status is actually set so that we can
@@ -126,10 +145,13 @@ internal final class ViewportImpl {
             // transition cancelable if the transition is not complete
             // so that we don't clobber the toState cancelable.
             if !completionBlockInvoked {
-                currentCancelable = transitionCancelable
+                currentCancelable = BlockCancelable {
+                    transitionCancelable.cancel()
+                    completion?(false)
+                }
             }
         } else {
-            status = nil
+            status = .state(nil)
 
             // if transitioning to nil (idle), never run a transition
             completion?(true)

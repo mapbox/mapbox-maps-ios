@@ -85,7 +85,6 @@ public final class LocationManager: NSObject {
         }
         puckManager.puckType = options.puckType
         puckManager.puckBearingSource = options.puckBearingSource
-        puckManager.showBearingImage = options.showBearingImage
     }
 }
 

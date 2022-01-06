@@ -14,7 +14,8 @@ final class Puck2DTests: XCTestCase {
             topImage: UIImage(),
             bearingImage: UIImage(),
             shadowImage: UIImage(),
-            scale: .constant(.random(in: 1..<10)))
+            scale: .constant(.random(in: 1..<10)),
+            showBearingImage: false)
         style = MockStyle()
         locationProducer = MockLocationProducer()
         recreatePuck()
@@ -47,7 +48,6 @@ final class Puck2DTests: XCTestCase {
     func testDefaultPropertyValues() {
         XCTAssertFalse(puck2D.isActive)
         XCTAssertEqual(puck2D.puckBearingSource, .heading)
-        XCTAssertEqual(puck2D.showBearingImage, false)
     }
 
     func testLocationConsumerIsNotAddedAtInitialization() {
@@ -152,6 +152,7 @@ final class Puck2DTests: XCTestCase {
     }
 
     func testActivatingPuckShowBearingImage() {
+        configuration.showBearingImage = true
         puck2D = Puck2D(
             configuration: configuration,
             style: style,
@@ -160,7 +161,6 @@ final class Puck2DTests: XCTestCase {
             location: CLLocation(),
             heading: nil,
             accuracyAuthorization: .fullAccuracy)
-        puck2D.showBearingImage = true
         puck2D.isActive = true
 
         XCTAssertEqual(style.addImageStub.invocations.count, 3)
@@ -168,11 +168,11 @@ final class Puck2DTests: XCTestCase {
         guard parameters.count == 3 else {
             return
         }
-        XCTAssertEqual(style.addImageStub.parameters[0].id, "locationIndicatorLayerTopImage")
-        XCTAssertTrue(style.addImageStub.parameters[0].image === configuration.topImage)
+        XCTAssertEqual(style.addImageStub.parameters[0].id, "locationIndicatorLayerBearingImage")
+        XCTAssertTrue(style.addImageStub.parameters[0].image === configuration.bearingImage)
 
-        XCTAssertEqual(style.addImageStub.parameters[1].id, "locationIndicatorLayerBearingImage")
-        XCTAssertTrue(style.addImageStub.parameters[1].image === configuration.bearingImage)
+        XCTAssertEqual(style.addImageStub.parameters[1].id, "locationIndicatorLayerTopImage")
+        XCTAssertTrue(style.addImageStub.parameters[1].image === configuration.topImage)
 
         XCTAssertEqual(style.addImageStub.parameters[2].id, "locationIndicatorLayerShadowImage")
         XCTAssertTrue(style.addImageStub.parameters[2].image === configuration.shadowImage)
@@ -191,7 +191,7 @@ final class Puck2DTests: XCTestCase {
 
         puck2D.isActive = true
 
-        XCTAssertEqual(style.addImageStub.invocations.count, 1)
+        XCTAssertEqual(style.addImageStub.invocations.count, 2)
         let parameters = style.addImageStub.parameters
         guard parameters.count >= 2 else {
             return
@@ -200,7 +200,7 @@ final class Puck2DTests: XCTestCase {
         let expectedTopImage = UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!
         XCTAssertTrue(style.addImageStub.parameters[0].image.isEqual(expectedTopImage))
 
-        XCTAssertEqual(style.addImageStub.parameters[1].id, "locationIndicatorLayerBearingImage")
+        XCTAssertEqual(style.addImageStub.parameters[1].id, "locationIndicatorLayerShadowImage")
         let expectedBearingImage = UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!
         XCTAssertTrue(style.addImageStub.parameters[1].image.isEqual(expectedBearingImage))
     }
@@ -208,7 +208,6 @@ final class Puck2DTests: XCTestCase {
     func makeExpectedLayer() -> LocationIndicatorLayer {
         var expectedLayer = LocationIndicatorLayer(id: "puck")
         expectedLayer.topImage = .constant(.name("locationIndicatorLayerTopImage"))
-        expectedLayer.bearingImage = .constant(.name("locationIndicatorLayerBearingImage"))
         expectedLayer.shadowImage = .constant(.name("locationIndicatorLayerShadowImage"))
         expectedLayer.location = .constant([location.coordinate.latitude, location.coordinate.longitude, location.altitude])
         expectedLayer.locationTransition = StyleTransition(duration: 0.5, delay: 0)

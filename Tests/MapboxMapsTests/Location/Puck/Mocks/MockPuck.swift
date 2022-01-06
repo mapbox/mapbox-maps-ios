@@ -21,6 +21,4 @@ final class MockPuck: Puck {
             setPuckBearingSourceStub.call(with: newValue)
         }
     }
-
-    var showBearingImage: Bool = false
 }

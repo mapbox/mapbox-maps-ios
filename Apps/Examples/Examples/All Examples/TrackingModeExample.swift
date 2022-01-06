@@ -22,10 +22,10 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         mapView = MapView(frame: view.bounds, mapInitOptions: options)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
-        
+
         // Setup and create button for toggling show bearing image
         setupToggleShowBearingImageButton()
-        
+
         cameraLocationConsumer = CameraLocationConsumer(mapView: mapView)
 
         // Add user position icon to the map with location indicator layer
@@ -40,12 +40,16 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
             self.finish() // Needed for internal testing purposes.
         }
     }
-    
+
     @objc func showHideBearingImage() {
         showsBearingImage.toggle()
     }
     func syncPuckAndButton() {
-        mapView.location.options.showBearingImage = showsBearingImage
+        // Update puck config
+        var configuration = Puck2DConfiguration()
+        configuration.showBearingImage = showsBearingImage
+        mapView.location.options.puckType = .puck2D(configuration)
+
         // Update button title
         let title: String = showsBearingImage ? "Hide bearing image" : "Show bearing image"
         toggleBearingImageButton.setTitle(title, for: .normal)

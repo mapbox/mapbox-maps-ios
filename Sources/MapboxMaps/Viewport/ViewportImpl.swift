@@ -43,9 +43,7 @@ internal final class ViewportImpl: ViewportImplProtocol {
     // adding the same state more than once has no effect
     internal func addState(_ state: ViewportState) {
         let key = ObjectIdentifier(state)
-        if statesByIdentity[key] == nil {
-            statesByIdentity[key] = state
-        }
+        statesByIdentity[key] = state
     }
 
     // removes state from list of states
@@ -120,9 +118,8 @@ internal final class ViewportImpl: ViewportImplProtocol {
         currentCancelable?.cancel()
         currentCancelable = nil
 
-        // toState must be a state that has been added
-        // TODO: does this really matter? should we just auto-add it?
-        assert(statesByIdentity[ObjectIdentifier(toState)] != nil)
+        // add toState if needed (adding more than once does nothing)
+        addState(toState)
 
         let fromState: ViewportState?
         switch status {

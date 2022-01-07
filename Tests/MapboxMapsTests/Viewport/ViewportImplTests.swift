@@ -150,6 +150,13 @@ final class ViewportImplTests: XCTestCase {
         try verifyTransition(from: nil, to: state, expectedTransition: defaultTransition)
     }
 
+    func testTransitionToStateThatHasNotBeenAddedFromNilUsingDefaultTransition() throws {
+        let state = MockViewportState()
+
+        try verifyTransition(from: nil, to: state, expectedTransition: defaultTransition)
+        XCTAssertTrue(viewportImpl.states.contains { $0 === state })
+    }
+
     func testTransitionToStateFromNilUsingNonDefaultTransition() throws {
         let state = MockViewportState()
         viewportImpl.addState(state)
@@ -157,6 +164,15 @@ final class ViewportImplTests: XCTestCase {
         viewportImpl.setTransition(transition, from: nil, to: state)
 
         try verifyTransition(from: nil, to: state, expectedTransition: transition)
+    }
+
+    func testTransitionToStateThatHasNotBeenAddedFromNilUsingNonDefaultTransition() throws {
+        let state = MockViewportState()
+        let transition = MockViewportTransition()
+        viewportImpl.setTransition(transition, from: nil, to: state)
+
+        try verifyTransition(from: nil, to: state, expectedTransition: transition)
+        XCTAssertTrue(viewportImpl.states.contains { $0 === state })
     }
 
     func testTransitionToStateFromStateUsingDefaultTransition() throws {
@@ -168,6 +184,15 @@ final class ViewportImplTests: XCTestCase {
         try verifyTransition(from: fromState, to: toState, expectedTransition: defaultTransition)
     }
 
+    func testTransitionToStateThatHasNotBeenAddedFromStateUsingDefaultTransition() throws {
+        let fromState = MockViewportState()
+        try setUp(withCurrentState: fromState)
+        let toState = MockViewportState()
+
+        try verifyTransition(from: fromState, to: toState, expectedTransition: defaultTransition)
+        XCTAssertTrue(viewportImpl.states.contains { $0 === toState })
+    }
+
     func testTransitionToStateFromStateUsingNonDefaultTransition() throws {
         let fromState = MockViewportState()
         try setUp(withCurrentState: fromState)
@@ -177,6 +202,17 @@ final class ViewportImplTests: XCTestCase {
         viewportImpl.setTransition(transition, from: fromState, to: toState)
 
         try verifyTransition(from: fromState, to: toState, expectedTransition: transition)
+    }
+
+    func testTransitionToStateThatHasNotBeenAddedFromStateUsingNonDefaultTransition() throws {
+        let fromState = MockViewportState()
+        try setUp(withCurrentState: fromState)
+        let toState = MockViewportState()
+        let transition = MockViewportTransition()
+        viewportImpl.setTransition(transition, from: fromState, to: toState)
+
+        try verifyTransition(from: fromState, to: toState, expectedTransition: transition)
+        XCTAssertTrue(viewportImpl.states.contains { $0 === toState })
     }
 
     func testTransitionThatInvokesItsCompletionBlockSynchronouslyDoesNotClobberTheToStatesCancelable() throws {

@@ -69,8 +69,14 @@ final class ViewportTests: XCTestCase {
         XCTAssertEqual(viewport.status, impl.status)
     }
 
+    func testIdle() {
+        viewport.idle()
+
+        XCTAssertEqual(impl.idleStub.invocations.count, 1)
+    }
+
     func testTransition() throws {
-        let toState: ViewportState? = [nil, MockViewportState()].randomElement()!
+        let toState = MockViewportState()
         let completionStub = Stub<Bool, Void>()
 
         viewport.transition(to: toState, completion: completionStub.call(with:))
@@ -84,7 +90,7 @@ final class ViewportTests: XCTestCase {
     }
 
     func testTransitionWithNilCompletion() throws {
-        let toState: ViewportState? = [nil, MockViewportState()].randomElement()!
+        let toState = MockViewportState()
 
         viewport.transition(to: toState, completion: nil)
 
@@ -95,7 +101,7 @@ final class ViewportTests: XCTestCase {
     }
 
     func testTransitionWithDefaultCompletion() throws {
-        let toState: ViewportState? = [nil, MockViewportState()].randomElement()!
+        let toState = MockViewportState()
 
         viewport.transition(to: toState)
 

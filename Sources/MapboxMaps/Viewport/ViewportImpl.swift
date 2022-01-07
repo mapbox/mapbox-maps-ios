@@ -4,7 +4,8 @@ internal protocol ViewportImplProtocol: AnyObject {
     func removeState(_ state: ViewportState)
 
     var status: ViewportStatus { get }
-    func transition(to toState: ViewportState?, completion: ((Bool) -> Void)?)
+    func idle()
+    func transition(to toState: ViewportState, completion: ((Bool) -> Void)?)
 
     var defaultTransition: ViewportTransition { get set }
     func setTransition(_ transition: ViewportTransition, from fromState: ViewportState?, to toState: ViewportState)
@@ -33,8 +34,7 @@ internal final class ViewportImpl: ViewportImplProtocol {
 
     private var statesByIdentity = [ObjectIdentifier: ViewportState]()
 
-    // the list of states. order is not guaranteed
-    // TODO: should we guarantee order? Converting this to a Set would be inconvenient
+    // the list of states
     internal var states: [ViewportState] {
         Array(statesByIdentity.values)
     }
@@ -81,6 +81,15 @@ internal final class ViewportImpl: ViewportImplProtocol {
     // a cancelable that can be used to stop the current state or transition
     private var currentCancelable: Cancelable?
 
+    internal func idle() {
+        // cancel any previous state or transition
+        currentCancelable?.cancel()
+        currentCancelable = nil
+        status = .state(nil)
+
+        // TODO: notify of status change
+    }
+
     // set
     // the Bool in the completion block indicates whether the transition ran to
     // completion (true) or was interrupted by another transition (false)
@@ -90,7 +99,7 @@ internal final class ViewportImpl: ViewportImplProtocol {
     //
     // transitioning to state x when status equals .transition(_, _, x) just
     // invokes completion synchronously with `false` and does not modify status
-    internal func transition(to toState: ViewportState?, completion: ((Bool) -> Void)?) {
+    internal func transition(to toState: ViewportState, completion: ((Bool) -> Void)?) {
 
         switch status {
         case .state(let state):
@@ -111,66 +120,57 @@ internal final class ViewportImpl: ViewportImplProtocol {
         currentCancelable?.cancel()
         currentCancelable = nil
 
-        if let toState = toState {
-            // toState must be a state that has been added
-            // TODO: does this really matter? should we just auto-add it?
-            assert(statesByIdentity[ObjectIdentifier(toState)] != nil)
+        // toState must be a state that has been added
+        // TODO: does this really matter? should we just auto-add it?
+        assert(statesByIdentity[ObjectIdentifier(toState)] != nil)
 
-            let fromState: ViewportState?
-            switch status {
-            case .state(let state):
-                fromState = state
-            case .transition(_, _, let oldToState):
-                fromState = oldToState
+        let fromState: ViewportState?
+        switch status {
+        case .state(let state):
+            fromState = state
+        case .transition(_, _, let oldToState):
+            fromState = oldToState
+        }
+
+        // get the transition (or default) for the from and to state
+        let transition = getTransition(from: fromState, to: toState) ?? defaultTransition
+
+        status = .transition(transition, fromState: fromState, toState: toState)
+
+        // TODO: notify of state change
+
+        // run the transition
+        var completionBlockInvoked = false
+        let transitionCancelable = transition.run(from: fromState, to: toState) { [weak self] in
+            completionBlockInvoked = true
+
+            if let self = self {
+                // transfer camera upating responsibility to toState
+                self.currentCancelable = toState.startUpdatingCamera()
+
+                // set the status before calling the completion block
+                // since it could trigger some further mutation to status
+                // which would then be clobbered by this line.
+                self.status = .state(toState)
             }
 
-            // get the transition (or default) for the from and to state
-            let transition = getTransition(from: fromState, to: toState) ?? defaultTransition
-
-            status = .transition(transition, fromState: fromState, toState: toState)
-
-            // TODO: notify of state change
-
-            // run the transition
-            var completionBlockInvoked = false
-            let transitionCancelable = transition.run(from: fromState, to: toState) { [weak self] in
-                completionBlockInvoked = true
-
-                if let self = self {
-                    // transfer camera upating responsibility to toState
-                    self.currentCancelable = toState.startUpdatingCamera()
-
-                    // set the status before calling the completion block
-                    // since it could trigger some further mutation to status
-                    // which would then be clobbered by this line.
-                    self.status = .state(toState)
-                }
-
-                // and call the completion block
-                completion?(true)
-
-                // TODO: notify of status change here if needed; decouple
-                // this from when status is actually set so that we can
-                // invoke the completion block first
-            }
-
-            // since it's possible that a transition might invoke its
-            // completion block synchronously, we'll only store the
-            // transition cancelable if the transition is not complete
-            // so that we don't clobber the toState cancelable.
-            if !completionBlockInvoked {
-                currentCancelable = BlockCancelable {
-                    transitionCancelable.cancel()
-                    completion?(false)
-                }
-            }
-        } else {
-            status = .state(nil)
-
-            // if transitioning to nil (idle), never run a transition
+            // and call the completion block
             completion?(true)
 
-            // TODO: notify of status change
+            // TODO: notify of status change here if needed; decouple
+            // this from when status is actually set so that we can
+            // invoke the completion block first
+        }
+
+        // since it's possible that a transition might invoke its
+        // completion block synchronously, we'll only store the
+        // transition cancelable if the transition is not complete
+        // so that we don't clobber the toState cancelable.
+        if !completionBlockInvoked {
+            currentCancelable = BlockCancelable {
+                transitionCancelable.cancel()
+                completion?(false)
+            }
         }
     }
 

@@ -15,12 +15,17 @@ final class MockViewportImpl: ViewportImplProtocol {
 
     var status: ViewportStatus = .state(nil)
 
+    let idleStub = Stub<Void, Void>()
+    func idle() {
+        idleStub.call()
+    }
+
     struct TransitionParams {
-        var toState: ViewportState?
+        var toState: ViewportState
         var completion: ((Bool) -> Void)?
     }
     let transitionStub = Stub<TransitionParams, Void>()
-    func transition(to toState: ViewportState?, completion: ((Bool) -> Void)?) {
+    func transition(to toState: ViewportState, completion: ((Bool) -> Void)?) {
         transitionStub.call(with: .init(toState: toState, completion: completion))
     }
 

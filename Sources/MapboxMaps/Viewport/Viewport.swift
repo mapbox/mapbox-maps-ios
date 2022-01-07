@@ -24,8 +24,7 @@ public final class Viewport {
         self.mapboxMap = mapboxMap
     }
 
-    // the list of states. order is not guaranteed
-    // TODO: should we guarantee order? Converting this to a Set would be inconvenient
+    // the list of states
     public var states: [ViewportState] {
         impl.states
     }
@@ -51,10 +50,14 @@ public final class Viewport {
         impl.status
     }
 
+    public func idle() {
+        impl.idle()
+    }
+
     // set
     // the Bool in the completion block indicates whether the transition ran to
     // completion (true) or was interrupted by another transition (false)
-    public func transition(to toState: ViewportState?, completion: ((Bool) -> Void)? = nil) {
+    public func transition(to toState: ViewportState, completion: ((Bool) -> Void)? = nil) {
         impl.transition(to: toState, completion: completion)
     }
 

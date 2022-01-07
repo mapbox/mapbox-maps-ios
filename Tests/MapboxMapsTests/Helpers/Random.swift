@@ -1,4 +1,5 @@
 import Foundation
+import CoreLocation
 @testable import MapboxMaps
 
 extension Character {
@@ -75,5 +76,53 @@ extension UIEdgeInsets {
             left: .random(in: 0...100),
             bottom: .random(in: 0...100),
             right: .random(in: 0...100))
+    }
+}
+
+extension Location {
+    static func random() -> Location {
+        return Location(
+            location: .random(),
+            heading: .random(MockHeading()),
+            accuracyAuthorization: .random())
+    }
+}
+
+extension CLAccuracyAuthorization {
+    static func random() -> Self {
+        return .random() ? .fullAccuracy : .reducedAccuracy
+    }
+}
+
+extension CLLocation {
+    static func random() -> CLLocation {
+        return CLLocation(
+            latitude: .random(in: -89...89),
+            longitude: .random(in: -180..<180))
+    }
+}
+
+extension Optional {
+    static func random(_ generator: @autoclosure () -> Wrapped) -> Self {
+        return .random() ? .none : .some(generator())
+    }
+}
+
+extension FollowingViewportStateBearing {
+    static func random() -> Self {
+        return [
+            .constant(.random(in: 0..<360)),
+            .heading,
+            .course
+        ].randomElement()!
+    }
+}
+
+extension FollowingViewportStateOptions {
+    static func random() -> Self {
+        return FollowingViewportStateOptions(
+            zoom: .random(in: 0...20),
+            pitch: .random(in: 0...80),
+            bearing: .random())
     }
 }

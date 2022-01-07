@@ -33,10 +33,7 @@ final class ViewportTests: XCTestCase {
     func testStates() {
         impl.states = .random(withLength: .random(in: 0..<4), generator: MockViewportState.init)
 
-        XCTAssertEqual(viewport.states.count, impl.states.count)
-        zip(viewport.states, impl.states).forEach {
-            XCTAssertTrue($0 === $1)
-        }
+        XCTAssertTrue(viewport.states.elementsEqual(impl.states, by: ===))
     }
 
     func testAddState() {

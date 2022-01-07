@@ -9,7 +9,7 @@ final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
         var curve: UIView.AnimationCurve
         var completion: AnimationCompletion?
     }
-    let easeToStub = Stub<EaseToCameraParameters, CameraAnimator?>(defaultReturnValue: nil)
+    let easeToStub = Stub<EaseToCameraParameters, Cancelable?>(defaultReturnValue: MockCancelable())
     func ease(to camera: CameraOptions,
               duration: TimeInterval,
               curve: UIView.AnimationCurve,

@@ -1,14 +1,3 @@
-public struct FollowingViewportStateOptions: Hashable {
-    public var zoom: CGFloat
-    public var pitch: CGFloat
-
-    public init(zoom: CGFloat = 15,
-                pitch: CGFloat = 40) {
-        self.zoom = zoom
-        self.pitch = pitch
-    }
-}
-
 public final class FollowingViewportState {
 
     // MARK: - Public Config
@@ -61,7 +50,7 @@ public final class FollowingViewportState {
         return CameraOptions(
             center: location.location.coordinate,
             zoom: options.zoom,
-            bearing: location.location.course,
+            bearing: options.bearing.evaluate(with: location),
             pitch: options.pitch)
     }
 
@@ -134,7 +123,7 @@ internal final class CameraObserver {
         self.handler = handler
     }
 
-    func invokeHandler(with cameraOptions: CameraOptions) {
+    internal func invokeHandler(with cameraOptions: CameraOptions) {
         handler(self, cameraOptions)
     }
 }

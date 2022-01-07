@@ -17,9 +17,6 @@ public struct Puck2DConfiguration: Equatable {
     /// Image to use as the middle of the location indicator.
     public var bearingImage: UIImage?
 
-    /// Whether the bearing image of location puck is shown.
-    public var showBearingImage: Bool = false
-
     /// Image to use as the background of the location indicator.
     public var shadowImage: UIImage?
 
@@ -40,14 +37,12 @@ public struct Puck2DConfiguration: Equatable {
                 bearingImage: UIImage? = nil,
                 shadowImage: UIImage? = nil,
                 scale: Value<Double>? = nil,
-                showsAccuracyRing: Bool = false,
-                showBearingImage: Bool = false) {
+                showsAccuracyRing: Bool = false) {
         self.topImage = topImage
         self.bearingImage = bearingImage
         self.shadowImage = shadowImage
         self.scale = scale
         self.showsAccuracyRing = showsAccuracyRing
-        self.showBearingImage = showBearingImage
     }
 }
 

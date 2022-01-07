@@ -57,6 +57,15 @@ internal final class Puck2D: NSObject, Puck {
             stretchX: [],
             stretchY: [],
             content: nil)
+        if let bearingImage = configuration.bearingImage {
+            try! style.addImage(
+                bearingImage,
+                id: Self.bearingImageId,
+                sdf: false,
+                stretchX: [],
+                stretchY: [],
+                content: nil)
+        }
         try! style.addImage(
             configuration.resolvedShadowImage,
             id: Self.shadowImageId,
@@ -79,21 +88,10 @@ internal final class Puck2D: NSObject, Puck {
         switch location.accuracyAuthorization {
         case .fullAccuracy:
             layer.topImage = .constant(.name(Self.topImageId))
-            if configuration.showBearingImage {
-                try! style.addImage(
-                    configuration.resolvedBearingImage,
-                    id: Self.bearingImageId,
-                    sdf: false,
-                    stretchX: [],
-                    stretchY: [],
-                    content: nil)
+            if configuration.bearingImage != nil {
                 layer.bearingImage = .constant(.name(Self.bearingImageId))
-            } else {
-                try? style.removeImage(withId: Self.bearingImageId)
             }
-            if configuration.shadowImage != nil {
-                layer.shadowImage = .constant(.name(Self.shadowImageId))
-            }
+            layer.shadowImage = .constant(.name(Self.shadowImageId))
             layer.locationTransition = StyleTransition(duration: 0.5, delay: 0)
             layer.topImageSize = configuration.resolvedScale
             layer.bearingImageSize = configuration.resolvedScale
@@ -176,15 +174,80 @@ private extension Puck2DConfiguration {
         topImage ?? UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!
     }
 
-    var resolvedBearingImage: UIImage {
-        bearingImage ?? UIImage(named: "triangle", in: .mapboxMaps, compatibleWith: nil)!
-    }
-
     var resolvedShadowImage: UIImage {
         shadowImage ?? UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!
     }
 
     var resolvedScale: Value<Double> {
         scale ?? .constant(1.0)
+    }
+}
+
+public extension Puck2DConfiguration {
+    // Create a Puck2DConfiguration instance with or without an arrow bearing image. Default without the arrow bearing image.
+    static func makeDefault(withBearing: Bool = false) -> Puck2DConfiguration {
+        return Puck2DConfiguration(topImage: UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!,
+                                   bearingImage: withBearing ? makeBearingImage() : nil,
+                                shadowImage: UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!)
+    }
+}
+
+private func makeBearingImage(withGap gap: CGFloat = 30, arcLength: CGFloat = 0.5) -> UIImage {
+    assert(arcLength <= .pi / 2)
+
+    let lineWidth: CGFloat = 1
+    let size: CGFloat = 22
+    // The gap determines how much space we put between the circles and the arrow
+    // strokes are centered on the path, so half of the width of the line is drawn
+    // on either side.
+    let radius = size / 2 + lineWidth / 2 + gap
+
+    let rightArcPoint = CGPoint(
+        x: radius * cos(.pi / 2 - arcLength / 2),
+        y: -radius * sin(.pi / 2 - arcLength / 2))
+
+    // The top point is always centered at 0. Calculate its height
+    // to produce a right angle between the left and right sides of the arrow
+    let topPoint = CGPoint(x: 0, y: rightArcPoint.y - rightArcPoint.x * tan(.pi / 4))
+
+    // Create the path
+    let path = UIBezierPath()
+    path.move(to: topPoint)
+    path.addLine(to: rightArcPoint)
+    path.addArc(
+        withCenter: .zero,
+        radius: radius,
+        startAngle: -.pi / 2 + arcLength / 2,
+        endAngle: -.pi / 2 - arcLength / 2,
+        clockwise: false)
+    path.close()
+    path.lineWidth = lineWidth
+    path.lineJoinStyle = .round
+
+    // Create a rectangle to
+    // draw the circles, centering them at the origin
+    let outerImageBounds = CGRect(
+        origin: CGPoint(
+            x: -size / 2,
+            y: -size / 2),
+        size: CGSize(width: size, height: size))
+
+    // Union that rectangle with the bounds
+    // of the arrow, also union it with the arrow
+    // reflected over the horizontal axis to ensure
+    // that the resulting image is centered on the origin.
+    // finally, pad the image a little to ensure that
+    // the arrow's stroke is not cut off.
+    let imageBounds = outerImageBounds
+        .union(path.bounds)
+        .union(path.bounds.applying(.init(scaleX: 1, y: -1)))
+        .insetBy(dx: -2, dy: -2)
+
+    // render the image
+    return UIGraphicsImageRenderer(bounds: imageBounds).image { _ in
+        UIColor.systemBlue.setFill()
+        path.fill()
+        UIColor.white.setStroke()
+        path.stroke()
     }
 }

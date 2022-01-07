@@ -44,22 +44,23 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
     @objc func showHideBearingImage() {
         showsBearingImage.toggle()
     }
+
     func syncPuckAndButton() {
         // Update puck config
-        var configuration = Puck2DConfiguration()
-        configuration.showBearingImage = showsBearingImage
+        let configuration = Puck2DConfiguration.makeDefault(withBearing: showsBearingImage)
+
         mapView.location.options.puckType = .puck2D(configuration)
 
         // Update button title
         let title: String = showsBearingImage ? "Hide bearing image" : "Show bearing image"
         toggleBearingImageButton.setTitle(title, for: .normal)
     }
+
     private func setupToggleShowBearingImageButton() {
         // Styling
         toggleBearingImageButton.backgroundColor = .systemBlue
         toggleBearingImageButton.addTarget(self, action: #selector(showHideBearingImage), for: .touchUpInside)
         toggleBearingImageButton.setTitleColor(.white, for: .normal)
-        toggleBearingImageButton.isHidden = false
         syncPuckAndButton()
         toggleBearingImageButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(toggleBearingImageButton)
@@ -67,7 +68,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
         // Constraints
         toggleBearingImageButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20.0).isActive = true
         toggleBearingImageButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20.0).isActive = true
-        toggleBearingImageButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 650.0).isActive = true
+        toggleBearingImageButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100.0).isActive = true
     }
 }
 

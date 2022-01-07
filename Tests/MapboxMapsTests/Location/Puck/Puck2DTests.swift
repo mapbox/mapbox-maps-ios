@@ -14,8 +14,7 @@ final class Puck2DTests: XCTestCase {
             topImage: UIImage(),
             bearingImage: UIImage(),
             shadowImage: UIImage(),
-            scale: .constant(.random(in: 1..<10)),
-            showBearingImage: false)
+            scale: .constant(.random(in: 1..<10)))
         style = MockStyle()
         locationProducer = MockLocationProducer()
         recreatePuck()
@@ -53,6 +52,20 @@ final class Puck2DTests: XCTestCase {
     func testLocationConsumerIsNotAddedAtInitialization() {
         XCTAssertEqual(locationProducer.addStub.invocations.count, 0)
         XCTAssertEqual(locationProducer.removeStub.invocations.count, 0)
+    }
+
+    func testMakeDefault() {
+        let puck2D = Puck2DConfiguration.makeDefault()
+        XCTAssertEqual(puck2D.topImage, UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!)
+        XCTAssertNil(puck2D.bearingImage)
+        XCTAssertEqual(puck2D.shadowImage, UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!)
+    }
+
+    func testMakeDefaultWithBearing() {
+        let puck2D = Puck2DConfiguration.makeDefault(withBearing: true)
+        XCTAssertEqual(puck2D.topImage, UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!)
+        XCTAssertNotNil(puck2D.bearingImage)
+        XCTAssertEqual(puck2D.shadowImage, UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!)
     }
 
     func testActivatingPuckAddsLocationConsumer() {
@@ -103,7 +116,7 @@ final class Puck2DTests: XCTestCase {
     }
 
     func verifyAddImages(line: UInt = #line) {
-        XCTAssertEqual(style.addImageStub.invocations.count, 2, line: line)
+        XCTAssertEqual(style.addImageStub.invocations.count, 3, line: line)
         let parameters = style.addImageStub.parameters
         for p in parameters {
             XCTAssertFalse(p.sdf, line: line)
@@ -111,14 +124,17 @@ final class Puck2DTests: XCTestCase {
             XCTAssertEqual(p.stretchY, [], line: line)
             XCTAssertNil(p.content, line: line)
         }
-        guard parameters.count == 2 else {
+        guard parameters.count == 3 else {
             return
         }
         XCTAssertEqual(style.addImageStub.parameters[0].id, "locationIndicatorLayerTopImage", line: line)
         XCTAssertTrue(style.addImageStub.parameters[0].image === configuration.topImage, line: line)
 
-        XCTAssertEqual(style.addImageStub.parameters[1].id, "locationIndicatorLayerShadowImage", line: line)
-        XCTAssertTrue(style.addImageStub.parameters[1].image === configuration.shadowImage, line: line)
+        XCTAssertEqual(style.addImageStub.parameters[1].id, "locationIndicatorLayerBearingImage", line: line)
+        XCTAssertTrue(style.addImageStub.parameters[1].image === configuration.bearingImage, line: line)
+
+        XCTAssertEqual(style.addImageStub.parameters[2].id, "locationIndicatorLayerShadowImage", line: line)
+        XCTAssertTrue(style.addImageStub.parameters[2].image === configuration.shadowImage, line: line)
     }
 
     func testActivatingPuckDoesNotAddImagesIfLatestLocationIsNil() {
@@ -151,33 +167,6 @@ final class Puck2DTests: XCTestCase {
         verifyAddImages()
     }
 
-    func testActivatingPuckShowBearingImage() {
-        configuration.showBearingImage = true
-        puck2D = Puck2D(
-            configuration: configuration,
-            style: style,
-            locationProducer: locationProducer)
-        locationProducer.latestLocation = Location(
-            location: CLLocation(),
-            heading: nil,
-            accuracyAuthorization: .fullAccuracy)
-        puck2D.isActive = true
-
-        XCTAssertEqual(style.addImageStub.invocations.count, 3)
-        let parameters = style.addImageStub.parameters
-        guard parameters.count == 3 else {
-            return
-        }
-        XCTAssertEqual(style.addImageStub.parameters[0].id, "locationIndicatorLayerBearingImage")
-        XCTAssertTrue(style.addImageStub.parameters[0].image === configuration.bearingImage)
-
-        XCTAssertEqual(style.addImageStub.parameters[1].id, "locationIndicatorLayerTopImage")
-        XCTAssertTrue(style.addImageStub.parameters[1].image === configuration.topImage)
-
-        XCTAssertEqual(style.addImageStub.parameters[2].id, "locationIndicatorLayerShadowImage")
-        XCTAssertTrue(style.addImageStub.parameters[2].image === configuration.shadowImage)
-    }
-
     func testAddsDefaultImagesWhenConfigurationImagesAreNil() {
         configuration = Puck2DConfiguration(
             topImage: nil,
@@ -208,6 +197,7 @@ final class Puck2DTests: XCTestCase {
     func makeExpectedLayer() -> LocationIndicatorLayer {
         var expectedLayer = LocationIndicatorLayer(id: "puck")
         expectedLayer.topImage = .constant(.name("locationIndicatorLayerTopImage"))
+        expectedLayer.bearingImage = .constant(.name("locationIndicatorLayerBearingImage"))
         expectedLayer.shadowImage = .constant(.name("locationIndicatorLayerShadowImage"))
         expectedLayer.location = .constant([location.coordinate.latitude, location.coordinate.longitude, location.altitude])
         expectedLayer.locationTransition = StyleTransition(duration: 0.5, delay: 0)
@@ -238,8 +228,10 @@ final class Puck2DTests: XCTestCase {
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.parameters.first?.layerPosition, nil)
     }
 
-    func testActivatingPuckWithNilShadowImage() throws {
+    func testActivatingPuckWithNilImages() throws {
         configuration.shadowImage = nil
+        configuration.topImage = nil
+        configuration.bearingImage = nil
         recreatePuck()
         locationProducer.latestLocation = Location(
             location: location,
@@ -250,7 +242,7 @@ final class Puck2DTests: XCTestCase {
         puck2D.isActive = true
 
         var expectedLayer = makeExpectedLayer()
-        expectedLayer.shadowImage = nil
+        expectedLayer.bearingImage = nil
         let expectedProperties = try expectedLayer.jsonObject()
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)

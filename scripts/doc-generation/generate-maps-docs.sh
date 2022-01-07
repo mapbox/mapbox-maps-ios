@@ -49,9 +49,8 @@ main() {
 
 
 pre_check() {
-    command -v gh >/dev/null 2>&1 || { echo >&2 "gh is required. brew install gh"; exit 1; }
-
-    command -v jq >/dev/null 2>&1 || { echo >&2 "jq is required. brew install jq"; exit 1; }
+    brew_install_if_needed gh
+    brew_install_if_needed jq
 
     # Check gh has read auth – mbx-ci github writer token
     gh auth status
@@ -112,7 +111,7 @@ download_coremaps_documentation() {
     {
         set -x
         documentation_version=$(jq --raw-output ".MapboxCoreMaps" "$1")
-        
+
         filename="MapboxCoreMaps-iOS-API-Reference.zip"
         rm "$filename" || true
 
@@ -134,10 +133,10 @@ download_common_documentation() {
     {
         set -x
         documentation_version=$(jq --raw-output ".MapboxCommon" "$1")
-        
+
         filename="ios-api-reference.zip"
         rm "$filename" || true
-        
+
         # shellcheck disable=2155
         gh auth status || export GITHUB_TOKEN="$(mbx-ci github reader token)"
         gh release download "v$documentation_version" --pattern="$filename" --repo mapbox/mapbox-sdk-common

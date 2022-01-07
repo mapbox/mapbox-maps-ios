@@ -5,13 +5,13 @@
 #   ./scripts/release/update-version.sh <maps sem version number>
 #
 
-set -e
-set -o pipefail
-set -u
+set -eou pipefail
 
-function step { >&2 echo -e "\033[1m\033[36m* $@\033[0m"; }
-function finish { >&2 echo -en "\033[0m"; }
-trap finish EXIT
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+UTILS_PATH="$SCRIPT_DIR/../utils.sh"
+
+# shellcheck source=../utils.sh
+source "$UTILS_PATH"
 
 if [ $# -eq 0 ]; then
     echo "Usage: v<semantic version>"
@@ -21,6 +21,8 @@ fi
 SEM_VERSION=$1
 SEM_VERSION=${SEM_VERSION/#v}
 SHORT_VERSION=${SEM_VERSION%-*}
+
+brew_install_if_needed jq
 
 step "Version ${SEM_VERSION}"
 

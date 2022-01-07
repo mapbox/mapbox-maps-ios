@@ -23,6 +23,8 @@ source "$UTILS_PATH"
 main() {
     # Check that version env exists
     [ -n "$VERSION" ]
+    brew_install_if_needed jq
+    brew_install_if_needed gh
 
     step "Update mapbox/maps-ios@publisher-staging"
     maps_ios_upload_docs
@@ -116,7 +118,7 @@ ios_sdk_update_versions() {
     # Apply only for release versions
     local current_version
     current_version=$(jq --raw-output ".VERSION_IOS_MAPS_SDK" src/constants.json)
-    
+
     if should_update_version "$VERSION" "$current_version"; then
         info "Update release version"
         # shellcheck disable=SC2005 # This solution is intentional to modify json in one line with jq
@@ -149,7 +151,7 @@ ios_sdk_open_pr() {
             --label "maps" \
             --label "update" \
             --body "$body")
-    
+
     info "New PR: $iOS_DOCS_PR_URL"
 }
 

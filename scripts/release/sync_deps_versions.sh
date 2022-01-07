@@ -10,7 +10,7 @@ source "$UTILS_PATH"
 VERSIONS_JSON_PATH="$SCRIPT_DIR/packager/versions.json"
 
 pushd "$REPO_ROOT_DIR" > /dev/null
-
+brew_install_if_needed jq
 
 CORE_MAPS_VERSION=$(jq -r .MapboxCoreMaps "$VERSIONS_JSON_PATH")
 COMMON_VERSION=$(jq -r .MapboxCommon "$VERSIONS_JSON_PATH")

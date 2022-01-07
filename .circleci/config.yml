@@ -674,6 +674,9 @@ jobs:
       - run:
           name: Test SPM and CocoaPods integrations per version rule
           command: scripts/validate-integrations/validate-integrations.sh -d -v "$VERSION"
+      - run:
+          name: Build Studio Preview with new branch
+          command: scripts/validate-integrations/validate-studio-preview.sh "$CIRCLE_BRANCH"
       - slack/status:
           fail_only: false
           include_visit_job_action: true

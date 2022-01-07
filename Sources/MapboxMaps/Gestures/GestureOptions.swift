@@ -73,5 +73,8 @@ public struct GestureOptions: Equatable {
     /// Defaults to `UIScrollView.DecelerationRate.normal.rawValue`
     public var panDecelerationFactor: CGFloat = UIScrollView.DecelerationRate.normal.rawValue
 
+    /// Whether touching with the map cancels and prevents animations
+    public var animationLockoutEnabled: Bool = true
+
     public init() {}
 }

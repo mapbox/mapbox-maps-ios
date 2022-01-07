@@ -48,6 +48,10 @@ public struct Examples {
         [
             "title": "Experimental",
             "examples": experimentalExamples
+        ],
+        [
+            "title": "Viewport",
+            "examples": viewportExamples
         ]
     ]
 
@@ -256,7 +260,11 @@ public struct Examples {
                 description: "Display map on a globe.",
                 type: GlobeViewExample.self),
     ]
-}
 
-struct ExamplesCategories {
+    // Examples that show use cases related to the Viewport API
+    public static let viewportExamples = [
+        Example(title: "Advanced Viewport Gestures",
+                description: "Use gestures to adjust viewport settings",
+                type: AdvancedViewportGesturesExample.self),
+    ]
 }

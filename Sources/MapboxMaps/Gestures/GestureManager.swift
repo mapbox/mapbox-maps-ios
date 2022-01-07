@@ -28,6 +28,7 @@ public final class GestureManager: GestureHandlerDelegate {
             quickZoomGestureRecognizer.isEnabled = newValue.quickZoomEnabled
             panGestureHandler.panMode = newValue.panMode
             panGestureHandler.decelerationFactor = newValue.panDecelerationFactor
+            animationLockoutGestureHandler.gestureRecognizer.isEnabled = newValue.animationLockoutEnabled
         }
         get {
             var gestureOptions = GestureOptions()
@@ -41,6 +42,7 @@ public final class GestureManager: GestureHandlerDelegate {
             gestureOptions.quickZoomEnabled = quickZoomGestureRecognizer.isEnabled
             gestureOptions.panMode = panGestureHandler.panMode
             gestureOptions.panDecelerationFactor = panGestureHandler.decelerationFactor
+            gestureOptions.animationLockoutEnabled = animationLockoutGestureHandler.gestureRecognizer.isEnabled
             return gestureOptions
         }
     }

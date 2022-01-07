@@ -104,18 +104,20 @@ extension FollowingViewportState: ViewportState {
         }
     }
 
-    // viewport should only call this method when the state is not already updating the camera
-    public func startUpdatingCamera() -> Cancelable {
-        assert(!isUpdatingCamera)
+    public func startUpdatingCamera() {
+        guard !isUpdatingCamera else {
+            return
+        }
         isUpdatingCamera = true
         if let latestCameraOptions = latestLocation.map(cameraOptions(for:)) {
             animate(to: latestCameraOptions)
         }
-        return BlockCancelable { [weak self] in
-            self?.cameraAnimationCancelable?.cancel()
-            self?.cameraAnimationCancelable = nil
-            self?.isUpdatingCamera = false
-        }
+    }
+
+    public func stopUpdatingCamera() {
+        cameraAnimationCancelable?.cancel()
+        cameraAnimationCancelable = nil
+        isUpdatingCamera = false
     }
 }
 

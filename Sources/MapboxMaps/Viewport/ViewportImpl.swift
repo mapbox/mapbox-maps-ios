@@ -146,7 +146,11 @@ internal final class ViewportImpl: ViewportImplProtocol {
 
             if let self = self {
                 // transfer camera upating responsibility to toState
-                self.currentCancelable = toState.startUpdatingCamera()
+                toState.startUpdatingCamera()
+
+                self.currentCancelable = BlockCancelable {
+                    toState.stopUpdatingCamera()
+                }
 
                 // set the status before calling the completion block
                 // since it could trigger some further mutation to status

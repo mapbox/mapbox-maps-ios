@@ -65,12 +65,15 @@ extension OverviewViewportState: ViewportState {
         }
     }
 
-    public func startUpdatingCamera() -> Cancelable {
-        assert(!isUpdatingCamera)
+    public func startUpdatingCamera() {
+        guard !isUpdatingCamera else {
+            return
+        }
         isUpdatingCamera = true
         mapboxMap.setCamera(to: cameraOptions)
-        return BlockCancelable { [weak self] in
-            self?.isUpdatingCamera = false
-        }
+    }
+
+    public func stopUpdatingCamera() {
+        isUpdatingCamera = false
     }
 }

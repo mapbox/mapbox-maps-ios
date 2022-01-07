@@ -78,13 +78,11 @@ final class ViewportImplTests: XCTestCase {
     func testRemoveStateWhenStateIsCurrentSetsStatusToIdle() throws {
         let state = MockViewportState()
         try setUp(withCurrentState: state)
-        let startUpdatingCameraInvocation = try XCTUnwrap(state.startUpdatingCameraStub.invocations.first)
-        let startUpdatingCameraCancelable = try XCTUnwrap(startUpdatingCameraInvocation.returnValue as? MockCancelable)
 
         viewportImpl.removeState(state)
 
         XCTAssertEqual(viewportImpl.status, .state(nil))
-        XCTAssertEqual(startUpdatingCameraCancelable.cancelStub.invocations.count, 1)
+        XCTAssertEqual(state.stopUpdatingCameraStub.invocations.count, 1)
     }
 
     func testRemoveStateWhenTransitioningFromStateSetsStatusToIdle() throws {
@@ -127,9 +125,7 @@ final class ViewportImplTests: XCTestCase {
         }
 
         if let fromState = fromState {
-            let fromStateStartUpdatingInvocation = try XCTUnwrap(fromState.startUpdatingCameraStub.invocations.first)
-            let fromStateStartUpdatingCancelable = try XCTUnwrap(fromStateStartUpdatingInvocation.returnValue as? MockCancelable)
-            XCTAssertEqual(fromStateStartUpdatingCancelable.cancelStub.invocations.count, 1)
+            XCTAssertEqual(fromState.stopUpdatingCameraStub.invocations.count, 1)
         }
         XCTAssertEqual(viewportImpl.status, .transition(expectedTransition, fromState: fromState, toState: toState))
         XCTAssertEqual(expectedTransition.runStub.invocations.count, 1)
@@ -142,12 +138,9 @@ final class ViewportImplTests: XCTestCase {
         transitionCompletion()
 
         XCTAssertEqual(toState.startUpdatingCameraStub.invocations.count, 1)
-        let startUpdatingCameraInvocation = try XCTUnwrap(toState.startUpdatingCameraStub.invocations.first)
-        let startUpdatingCameraCancelable = try XCTUnwrap(startUpdatingCameraInvocation.returnValue as? MockCancelable)
-
         XCTAssertEqual(completionStub.invocations.map(\.parameters), [true])
         XCTAssertTrue(transitionCancelable.cancelStub.invocations.isEmpty)
-        XCTAssertTrue(startUpdatingCameraCancelable.cancelStub.invocations.isEmpty)
+        XCTAssertTrue(toState.stopUpdatingCameraStub.invocations.isEmpty)
     }
 
     func testTransitionToStateFromNilUsingDefaultTransition() throws {
@@ -210,10 +203,8 @@ final class ViewportImplTests: XCTestCase {
         let transitionCancelable = try XCTUnwrap(runInvocation.returnValue as? MockCancelable)
         XCTAssertTrue(transitionCancelable.cancelStub.invocations.isEmpty)
 
-        // verify that cancelable for state's startUpdateCamera was invoked
-        let startUpdatingCameraInvocation = try XCTUnwrap(state.startUpdatingCameraStub.invocations.first)
-        let startUpdatingCameraCancelable = try XCTUnwrap(startUpdatingCameraInvocation.returnValue as? MockCancelable)
-        XCTAssertEqual(startUpdatingCameraCancelable.cancelStub.invocations.count, 1)
+        // verify state's stopUpdatingCamera was invoked
+        XCTAssertEqual(state.stopUpdatingCameraStub.invocations.count, 1)
     }
 
     func testIdleFromNonNilState() throws {
@@ -222,9 +213,7 @@ final class ViewportImplTests: XCTestCase {
 
         viewportImpl.idle()
 
-        let fromStateStartUpdatingInvocation = try XCTUnwrap(fromState.startUpdatingCameraStub.invocations.first)
-        let fromStateStartUpdatingCancelable = try XCTUnwrap(fromStateStartUpdatingInvocation.returnValue as? MockCancelable)
-        XCTAssertEqual(fromStateStartUpdatingCancelable.cancelStub.invocations.count, 1)
+        XCTAssertEqual(fromState.stopUpdatingCameraStub.invocations.count, 1)
         XCTAssertEqual(viewportImpl.status, .state(nil))
     }
 
@@ -244,11 +233,9 @@ final class ViewportImplTests: XCTestCase {
             completionStub.call(with: finished)
         }
 
-        // no additional startUpdatingCameraInvocation
+        // no additional startUpdatingCamera invocation
         XCTAssertEqual(fromState.startUpdatingCameraStub.invocations.count, 1)
-        let fromStateStartUpdatingInvocation = try XCTUnwrap(fromState.startUpdatingCameraStub.invocations.first)
-        let fromStateStartUpdatingCancelable = try XCTUnwrap(fromStateStartUpdatingInvocation.returnValue as? MockCancelable)
-        XCTAssertTrue(fromStateStartUpdatingCancelable.cancelStub.invocations.isEmpty)
+        XCTAssertTrue(fromState.stopUpdatingCameraStub.invocations.isEmpty)
         XCTAssertEqual(completionStub.invocations.map(\.parameters), [true])
     }
 

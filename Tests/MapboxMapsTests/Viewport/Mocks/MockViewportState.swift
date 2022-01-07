@@ -7,8 +7,13 @@ final class MockViewportState: ViewportState {
         observeDataSourceStub.call(with: handler)
     }
 
-    let startUpdatingCameraStub = Stub<Void, Cancelable>(defaultReturnValue: MockCancelable())
-    func startUpdatingCamera() -> Cancelable {
+    let startUpdatingCameraStub = Stub<Void, Void>()
+    func startUpdatingCamera() {
         startUpdatingCameraStub.call()
+    }
+
+    let stopUpdatingCameraStub = Stub<Void, Void>()
+    func stopUpdatingCamera() {
+        stopUpdatingCameraStub.call()
     }
 }

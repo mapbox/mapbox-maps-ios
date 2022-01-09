@@ -47,7 +47,7 @@ final class FollowingViewportStateTest: XCTestCase {
         let easeToInvocation = try XCTUnwrap(cameraAnimationsManager.easeToStub.invocations.first)
         let expectedCamera = makeExpectedCamera(location: location, options: options)
         XCTAssertEqual(easeToInvocation.parameters.camera, expectedCamera)
-        XCTAssertEqual(easeToInvocation.parameters.duration, 1)
+        XCTAssertEqual(easeToInvocation.parameters.duration, max(0, options.animationDuration))
         XCTAssertEqual(easeToInvocation.parameters.curve, .linear)
         XCTAssertNil(easeToInvocation.parameters.completion)
     }

@@ -58,7 +58,7 @@ public final class FollowingViewportState {
         cameraAnimationCancelable?.cancel()
         cameraAnimationCancelable = cameraAnimationsManager.ease(
             to: cameraOptions,
-            duration: 1,
+            duration: max(0, options.animationDuration),
             curve: .linear,
             completion: nil)
     }

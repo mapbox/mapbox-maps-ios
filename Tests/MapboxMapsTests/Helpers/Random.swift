@@ -123,6 +123,7 @@ extension FollowingViewportStateOptions {
         return FollowingViewportStateOptions(
             zoom: .random(in: 0...20),
             pitch: .random(in: 0...80),
-            bearing: .random())
+            bearing: .random(),
+            animationDuration: .random(in: -2...2))
     }
 }

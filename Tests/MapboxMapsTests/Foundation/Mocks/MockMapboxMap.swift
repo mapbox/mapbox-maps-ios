@@ -140,4 +140,9 @@ final class MockMapboxMap: MapboxMapProtocol {
             bearing: bearing,
             pitch: pitch))
     }
+
+    let pointStub = Stub<CLLocationCoordinate2D, CGPoint>(defaultReturnValue: .random())
+    func point(for coordinate: CLLocationCoordinate2D) -> CGPoint {
+        pointStub.call(with: coordinate)
+    }
 }

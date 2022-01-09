@@ -52,18 +52,28 @@ final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
                 completion: completion))
     }
 
-    struct FlyToParams {
-        var camera: CameraOptions
-        var duration: TimeInterval?
-        var completion: AnimationCompletion?
+    struct MakeAnimatorParams {
+        var duration: TimeInterval
+        var curve: UIView.AnimationCurve
+        var animationOwner: AnimationOwner
+        var animations: (inout CameraTransition) -> Void
     }
-    let flyToStub = Stub<FlyToParams, Cancelable?>(defaultReturnValue: MockCancelable())
-    func fly(to camera: CameraOptions,
-             duration: TimeInterval?,
-             completion: AnimationCompletion?) -> Cancelable? {
-        flyToStub.call(with: .init(
-            camera: camera,
+    // TODO: refactor CameraAnimationsManager to use internal Impl and make internal components depend on the impl protocol
+    let makeAnimatorStub = Stub<MakeAnimatorParams, BasicCameraAnimator>(
+        defaultReturnValue: BasicCameraAnimator(
+            propertyAnimator: MockPropertyAnimator(),
+            owner: .unspecified,
+            mapboxMap: MockMapboxMap(),
+            cameraView: MockCameraView(),
+            delegate: MockCameraAnimatorDelegate()))
+    func makeAnimator(duration: TimeInterval,
+                      curve: UIView.AnimationCurve,
+                      animationOwner: AnimationOwner,
+                      animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator {
+        makeAnimatorStub.call(with: .init(
             duration: duration,
-            completion: completion))
+            curve: curve,
+            animationOwner: animationOwner,
+            animations: animations))
     }
 }

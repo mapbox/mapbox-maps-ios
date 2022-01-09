@@ -323,7 +323,8 @@ open class MapView: UIView {
             impl: ViewportImpl(
                 defaultTransition: DefaultViewportTransition(
                     options: .init(),
-                    cameraAnimationsManager: camera)),
+                    cameraAnimationsManager: camera,
+                    mapboxMap: mapboxMap)),
             locationProducer: locationProducer,
             cameraAnimationsManager: camera,
             mapboxMap: mapboxMap)

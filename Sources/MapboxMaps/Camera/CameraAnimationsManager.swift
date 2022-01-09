@@ -3,11 +3,6 @@ import UIKit
 
 internal protocol CameraAnimationsManagerProtocol: AnyObject {
     @discardableResult
-    func fly(to camera: CameraOptions,
-             duration: TimeInterval?,
-             completion: AnimationCompletion?) -> Cancelable?
-
-    @discardableResult
     func ease(to camera: CameraOptions,
               duration: TimeInterval,
               curve: UIView.AnimationCurve,
@@ -18,6 +13,11 @@ internal protocol CameraAnimationsManagerProtocol: AnyObject {
                     decelerationFactor: CGFloat,
                     locationChangeHandler: @escaping (_ fromLocation: CGPoint, _ toLocation: CGPoint) -> Void,
                     completion: @escaping () -> Void)
+
+    func makeAnimator(duration: TimeInterval,
+                      curve: UIView.AnimationCurve,
+                      animationOwner: AnimationOwner,
+                      animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator
 
     func cancelAnimations()
 

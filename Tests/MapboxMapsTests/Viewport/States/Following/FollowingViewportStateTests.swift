@@ -37,6 +37,7 @@ final class FollowingViewportStateTest: XCTestCase {
     func makeExpectedCamera(location: Location, options: FollowingViewportStateOptions) -> CameraOptions {
         return CameraOptions(
             center: location.location.coordinate,
+            padding: options.padding,
             zoom: options.zoom,
             bearing: options.bearing.evaluate(with: location),
             pitch: options.pitch)

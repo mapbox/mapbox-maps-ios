@@ -49,6 +49,7 @@ public final class FollowingViewportState {
     private func cameraOptions(for location: Location) -> CameraOptions {
         return CameraOptions(
             center: location.location.coordinate,
+            padding: options.padding,
             zoom: options.zoom,
             bearing: options.bearing.evaluate(with: location),
             pitch: options.pitch)

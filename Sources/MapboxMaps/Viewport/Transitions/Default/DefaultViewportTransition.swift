@@ -45,7 +45,7 @@ public final class DefaultViewportTransition {
             let distance = distanceInViewSpace(from: cameraState.center, to: center)
             // points / s
             let centerAnimationRate: Double = 500
-            centerDuration = min(distance / centerAnimationRate, maxDuration)
+            centerDuration = min(Double(distance) / centerAnimationRate, maxDuration)
             animations.append(Animation(
                 duration: centerDuration,
                 delay: 0,
@@ -60,7 +60,7 @@ public final class DefaultViewportTransition {
             // zoom level / s
             let zoomAnimationRate = 2.2
             zoomDelay = centerDuration / 2
-            zoomDuration = min(zoomDelta / zoomAnimationRate, maxDuration)
+            zoomDuration = min(Double(zoomDelta) / zoomAnimationRate, maxDuration)
             animations.append(Animation(
                 duration: zoomDuration,
                 delay: zoomDelay,

@@ -111,8 +111,9 @@ public final class Viewport {
     public func makeDefaultViewportTransition(options: DefaultViewportTransitionOptions = .init()) -> DefaultViewportTransition {
         return DefaultViewportTransition(
             options: options,
-            cameraAnimationsManager: cameraAnimationsManager,
-            mapboxMap: mapboxMap)
+            animationHelper: DefaultViewportTransitionAnimationHelper(
+                mapboxMap: mapboxMap,
+                cameraAnimationsManager: cameraAnimationsManager))
     }
 
     public func makeImmediateViewportTransition() -> ImmediateViewportTransition {

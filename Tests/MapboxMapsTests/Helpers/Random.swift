@@ -127,3 +127,10 @@ extension FollowingViewportStateOptions {
             animationDuration: .random(in: -2...2))
     }
 }
+
+extension DefaultViewportTransitionOptions {
+    static func random() -> Self {
+        return DefaultViewportTransitionOptions(
+            maxDuration: .random(in: 0...20))
+    }
+}

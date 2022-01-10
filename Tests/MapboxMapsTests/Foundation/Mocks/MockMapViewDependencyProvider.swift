@@ -57,4 +57,16 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
     func makeLocationManager(locationProducer: LocationProducerProtocol, style: StyleProtocol) -> LocationManager {
         return LocationManager(locationProducer: locationProducer, puckManager: MockPuckManager())
     }
+
+    struct MakeViewportImplParams {
+        var mapboxMap: MapboxMapProtocol
+        var cameraAnimationsManager: CameraAnimationsManagerProtocol
+    }
+    let makeViewportImplStub = Stub<MakeViewportImplParams, ViewportImplProtocol>(defaultReturnValue: MockViewportImpl())
+    func makeViewportImpl(mapboxMap: MapboxMapProtocol,
+                          cameraAnimationsManager: CameraAnimationsManagerProtocol) -> ViewportImplProtocol {
+        makeViewportImplStub.call(with: .init(
+            mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager))
+    }
 }

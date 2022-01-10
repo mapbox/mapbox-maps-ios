@@ -6,6 +6,8 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager
     func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool) -> LocationProducerProtocol
     func makeLocationManager(locationProducer: LocationProducerProtocol, style: StyleProtocol) -> LocationManager
+    func makeViewportImpl(mapboxMap: MapboxMapProtocol,
+                          cameraAnimationsManager: CameraAnimationsManagerProtocol) -> ViewportImplProtocol
 }
 
 internal final class MapViewDependencyProvider: MapViewDependencyProviderProtocol {
@@ -155,5 +157,15 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
         return LocationManager(
             locationProducer: locationProducer,
             puckManager: puckManager)
+    }
+
+    func makeViewportImpl(mapboxMap: MapboxMapProtocol,
+                          cameraAnimationsManager: CameraAnimationsManagerProtocol) -> ViewportImplProtocol {
+        return ViewportImpl(
+            defaultTransition: DefaultViewportTransition(
+                options: .init(),
+                animationHelper: DefaultViewportTransitionAnimationHelper(
+                    mapboxMap: mapboxMap,
+                    cameraAnimationsManager: cameraAnimationsManager)))
     }
 }

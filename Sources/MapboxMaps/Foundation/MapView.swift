@@ -320,12 +320,9 @@ open class MapView: UIView {
         viewAnnotations = ViewAnnotationManager(containerView: viewAnnotationContainerView, mapboxMap: mapboxMap)
 
         viewport = Viewport(
-            impl: ViewportImpl(
-                defaultTransition: DefaultViewportTransition(
-                    options: .init(),
-                    animationHelper: DefaultViewportTransitionAnimationHelper(
-                        mapboxMap: mapboxMap,
-                        cameraAnimationsManager: camera))),
+            impl: dependencyProvider.makeViewportImpl(
+                mapboxMap: mapboxMap,
+                cameraAnimationsManager: camera),
             locationProducer: locationProducer,
             cameraAnimationsManager: camera,
             mapboxMap: mapboxMap)

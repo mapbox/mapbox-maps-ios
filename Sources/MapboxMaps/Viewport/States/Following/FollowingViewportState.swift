@@ -3,57 +3,35 @@ public final class FollowingViewportState {
     // MARK: - Public Config
 
     public var options: FollowingViewportStateOptions {
-        didSet {
-            processUpdatedCamera()
+        get {
+            dataSource.options
+        }
+        set {
+            dataSource.options = newValue
         }
     }
 
     // MARK: - Injected Dependencies
 
+    private let dataSource: FollowingViewportStateDataSourceProtocol
+
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol
-
-    // MARK: - Private Dependencies
-
-    // avoids needing to expose a NSObject subclass in the public API.
-    // this can be improved in the next major version by eliminating
-    // the requirement that `LocationConsumer`s inherit from NSObject.
-    private let delegatingLocationConsumer: DelegatingLocationConsumer
 
     // MARK: - Private State
 
-    private var latestLocation: Location? {
-        didSet {
-            processUpdatedCamera()
-        }
-    }
-
-    private var observers = [CameraObserver]()
-
-    private var isUpdatingCamera = false
+    private var updatingCameraCancelable: Cancelable?
 
     private var cameraAnimationCancelable: Cancelable?
 
     // MARK: - Initialization
 
-    internal init(options: FollowingViewportStateOptions,
-                  locationProducer: LocationProducerProtocol,
+    internal init(dataSource: FollowingViewportStateDataSourceProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol) {
-        self.options = options
+        self.dataSource = dataSource
         self.cameraAnimationsManager = cameraAnimationsManager
-        self.delegatingLocationConsumer = DelegatingLocationConsumer(locationProducer: locationProducer)
-        self.delegatingLocationConsumer.delegate = self
     }
 
     // MARK: - Private Utilities
-
-    private func cameraOptions(for location: Location) -> CameraOptions {
-        return CameraOptions(
-            center: location.location.coordinate,
-            padding: options.padding,
-            zoom: options.zoom,
-            bearing: options.bearing.evaluate(with: location),
-            pitch: options.pitch)
-    }
 
     private func animate(to cameraOptions: CameraOptions) {
         cameraAnimationCancelable?.cancel()
@@ -63,68 +41,28 @@ public final class FollowingViewportState {
             curve: .linear,
             completion: nil)
     }
-
-    private func processUpdatedCamera() {
-        if let cameraOptions = latestLocation.map(cameraOptions(for:)) {
-            if isUpdatingCamera {
-                animate(to: cameraOptions)
-            }
-            observers.forEach { (observer) in
-                observer.invokeHandler(with: cameraOptions)
-            }
-        }
-    }
 }
 
 extension FollowingViewportState: ViewportState {
     // delivers the latest location synchronously, if available
     public func observeDataSource(with handler: @escaping (CameraOptions) -> Bool) -> Cancelable {
-        let observer = CameraObserver { [weak self] (observer, cameraOptions) in
-            // handler returns false if it wants to stop receiving updates
-            if !handler(cameraOptions) {
-                self?.observers.removeAll { $0 === observer }
-            }
-        }
-        observers.append(observer)
-        if let latestLocation = latestLocation {
-            observer.invokeHandler(with: cameraOptions(for: latestLocation))
-        }
-        return BlockCancelable { [weak self] in
-            self?.observers.removeAll { $0 === observer }
-        }
+        return dataSource.observe(with: handler)
     }
 
     public func startUpdatingCamera() {
-        guard !isUpdatingCamera else {
+        guard updatingCameraCancelable == nil else {
             return
         }
-        isUpdatingCamera = true
-        if let latestCameraOptions = latestLocation.map(cameraOptions(for:)) {
-            animate(to: latestCameraOptions)
+        updatingCameraCancelable = dataSource.observe { [weak self] cameraOptions in
+            self?.animate(to: cameraOptions)
+            return true
         }
     }
 
     public func stopUpdatingCamera() {
+        updatingCameraCancelable?.cancel()
+        updatingCameraCancelable = nil
         cameraAnimationCancelable?.cancel()
         cameraAnimationCancelable = nil
-        isUpdatingCamera = false
-    }
-}
-
-extension FollowingViewportState: DelegatingLocationConsumerDelegate {
-    internal func delegatingLocationConsumer(_ consumer: DelegatingLocationConsumer, didReceiveLocation location: Location) {
-        latestLocation = location
-    }
-}
-
-internal final class CameraObserver {
-    private let handler: (CameraObserver, CameraOptions) -> Void
-
-    internal init(handler: @escaping (CameraObserver, CameraOptions) -> Void) {
-        self.handler = handler
-    }
-
-    internal func invokeHandler(with cameraOptions: CameraOptions) {
-        handler(self, cameraOptions)
     }
 }

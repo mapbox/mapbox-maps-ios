@@ -2,258 +2,124 @@ import XCTest
 @testable import MapboxMaps
 
 final class FollowingViewportStateTest: XCTestCase {
-    var options: FollowingViewportStateOptions!
-    var locationProducer: MockLocationProducer!
+
+    var dataSource: MockFollowingViewportStateDataSource!
     var cameraAnimationsManager: MockCameraAnimationsManager!
     var state: FollowingViewportState!
 
     override func setUp() {
         super.setUp()
-        options = .random()
-        locationProducer = MockLocationProducer()
+        dataSource = MockFollowingViewportStateDataSource()
         cameraAnimationsManager = MockCameraAnimationsManager()
         state = FollowingViewportState(
-            options: options,
-            locationProducer: locationProducer,
+            dataSource: dataSource,
             cameraAnimationsManager: cameraAnimationsManager)
     }
 
     override func tearDown() {
         state = nil
         cameraAnimationsManager = nil
-        locationProducer = nil
-        options = nil
+        dataSource = nil
         super.tearDown()
     }
 
-    @discardableResult
-    func updateLocation() throws -> Location {
-        let consumer = try XCTUnwrap(locationProducer.addStub.invocations.first?.parameters)
-        let location = Location.random()
-        consumer.locationUpdate(newLocation: location)
-        return location
-    }
-
-    func makeExpectedCamera(location: Location, options: FollowingViewportStateOptions) -> CameraOptions {
-        return CameraOptions(
-            center: location.location.coordinate,
-            padding: options.padding,
-            zoom: options.zoom,
-            bearing: options.bearing.evaluate(with: location),
-            pitch: options.pitch)
-    }
-
-    func verifyEaseTo(for location: Location, options: FollowingViewportStateOptions) throws {
+    func verifyEaseTo(with expectedCamera: CameraOptions) throws -> MockCancelable {
         XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 1)
         let easeToInvocation = try XCTUnwrap(cameraAnimationsManager.easeToStub.invocations.first)
-        let expectedCamera = makeExpectedCamera(location: location, options: options)
         XCTAssertEqual(easeToInvocation.parameters.camera, expectedCamera)
-        XCTAssertEqual(easeToInvocation.parameters.duration, max(0, options.animationDuration))
+        XCTAssertEqual(easeToInvocation.parameters.duration,
+                       max(0, dataSource.options.animationDuration))
         XCTAssertEqual(easeToInvocation.parameters.curve, .linear)
         XCTAssertNil(easeToInvocation.parameters.completion)
+        return try XCTUnwrap(easeToInvocation.returnValue as? MockCancelable)
     }
 
-    func testOptionsInitialization() {
-        XCTAssertEqual(state.options, options)
+    func testGetOptions() {
+        let options = state.options
+
+        XCTAssertEqual(dataSource.$options.getStub.invocations.map(\.returnValue), [options])
     }
 
-    func testStartsConsumingLocationsUponInitialization() {
-        XCTAssertEqual(locationProducer.addStub.invocations.count, 1)
-    }
-
-    func testUpdatingOptionsWithoutLocationDoesNotSendUpdates() {
-        let handlerStub = Stub<CameraOptions, Bool>(defaultReturnValue: true)
-        _ = state.observeDataSource(with: handlerStub.call(with:))
-        state.startUpdatingCamera()
+    func testSetOptions() {
         let newOptions = FollowingViewportStateOptions.random()
 
         state.options = newOptions
 
-        XCTAssertEqual(state.options, newOptions)
-        XCTAssertTrue(handlerStub.invocations.isEmpty)
-        XCTAssertTrue(cameraAnimationsManager.easeToStub.invocations.isEmpty)
+        XCTAssertEqual(dataSource.$options.setStub.invocations.map(\.parameters), [newOptions])
     }
 
-    func testUpdatingOptionsWithLocationDoesSendUpdates() throws {
-        let handlerStub = Stub<CameraOptions, Bool>(defaultReturnValue: true)
-        _ = state.observeDataSource(with: handlerStub.call(with:))
-        state.startUpdatingCamera()
-        let location = try updateLocation()
-        handlerStub.reset()
-        cameraAnimationsManager.easeToStub.reset()
-        let newOptions = FollowingViewportStateOptions.random()
+    func testObserveDataSource() throws {
+        let handlerStub = Stub<CameraOptions, Bool>(defaultReturnValue: .random())
 
-        state.options = newOptions
-
-        XCTAssertEqual(state.options, newOptions)
-        let expectedCamera = makeExpectedCamera(location: location, options: newOptions)
-        XCTAssertEqual(handlerStub.invocations.map(\.parameters), [expectedCamera])
-        try verifyEaseTo(for: location, options: newOptions)
-    }
-
-    func testObserveDataSourceWithoutLatestLocation() {
-        let handlerStub = Stub<CameraOptions, Bool>(defaultReturnValue: true)
-
-        _ = state.observeDataSource(with: handlerStub.call(with:))
-
-        XCTAssertTrue(handlerStub.invocations.isEmpty)
-    }
-
-    func testObserveDataSourceWithLatestLocation() throws {
-        let handlerStub = Stub<CameraOptions, Bool>(defaultReturnValue: true)
-        try updateLocation()
-
-        _ = state.observeDataSource(with: handlerStub.call(with:))
-
-        XCTAssertEqual(handlerStub.invocations.count, 1)
-    }
-
-    func testObserveDataSourceHandlesLocationUpdate() throws {
-        let handlerStub = Stub<CameraOptions, Bool>(defaultReturnValue: true)
-        _ = state.observeDataSource(with: handlerStub.call(with:))
-
-        let location = try updateLocation()
-
-        let expectedCamera = makeExpectedCamera(location: location, options: options)
-        XCTAssertEqual(handlerStub.invocations.map(\.parameters), [expectedCamera])
-    }
-
-    func testObserveDataSourceCancelable() throws {
-        let handlerStub = Stub<CameraOptions, Bool>(defaultReturnValue: true)
         let cancelable = state.observeDataSource(with: handlerStub.call(with:))
 
+        XCTAssertEqual(dataSource.observeStub.invocations.count, 1)
+        let dataSourceInvocation = try XCTUnwrap(dataSource.observeStub.invocations.first)
+
+        // verify that when the handler passed to the internal data source is invoked
+        // the one passed in externally is as well.
+        let handler = dataSourceInvocation.parameters
+        let cameraOptions = CameraOptions.random()
+
+        let result = handler(cameraOptions)
+
+        XCTAssertEqual(handlerStub.invocations.map(\.parameters), [cameraOptions])
+        XCTAssertEqual(handlerStub.invocations.map(\.returnValue), [result])
+
+        // verify that canceling the returned cancelable also cancels
+        // the one returned by the call to the internal data source. They could
+        // be the same cancelable, but writing the test to avoid that
+        // assumption should make refactoring easier.
+        let observeCancelable = try XCTUnwrap(dataSourceInvocation.returnValue as? MockCancelable)
+
         cancelable.cancel()
 
-        try updateLocation()
-        XCTAssertTrue(handlerStub.invocations.isEmpty)
+        XCTAssertEqual(observeCancelable.cancelStub.invocations.count, 1)
     }
 
-    func testObserveDataSourceCancelsByReturningFalse() throws {
-        let handlerStub = Stub<CameraOptions, Bool>(defaultReturnValue: false)
-        _ = state.observeDataSource(with: handlerStub.call(with:))
-        // handler returns false
-        try updateLocation()
-        handlerStub.reset()
-
-        // subsequent invocation should not be delivered to handler
-        try updateLocation()
-
-        XCTAssertTrue(handlerStub.invocations.isEmpty)
-    }
-
-    func testObserveDataSourceCancelsContinuesWhenReturningTrue() throws {
-        let handlerStub = Stub<CameraOptions, Bool>(defaultReturnValue: true)
-        _ = state.observeDataSource(with: handlerStub.call(with:))
-        // handler returns true
-        try updateLocation()
-        handlerStub.reset()
-
-        // subsequent invocation should be delivered to handler
-        let location = try updateLocation()
-
-        let expectedCamera = makeExpectedCamera(location: location, options: options)
-        XCTAssertEqual(handlerStub.invocations.map(\.parameters), [expectedCamera])
-    }
-
-    func testStartUpdatingWithoutLatestLocation() {
+    func testStartAndStopUpdatingCamera() throws {
+        let cameraOptions = CameraOptions.random()
         state.startUpdatingCamera()
 
-        XCTAssertTrue(cameraAnimationsManager.easeToStub.invocations.isEmpty)
-    }
+        // verify that an observation was created
+        XCTAssertEqual(dataSource.observeStub.invocations.count, 1)
+        let dataSourceInvocation = try XCTUnwrap(dataSource.observeStub.invocations.first)
+        let observeHandler = dataSourceInvocation.parameters
+        let observeCancelable = try XCTUnwrap(dataSourceInvocation.returnValue as? MockCancelable)
 
-    func testStartUpdatingWithLatestLocation() throws {
-        let location = try updateLocation()
+        // exercise the observation handler
+        let result = observeHandler(cameraOptions)
 
-        state.startUpdatingCamera()
+        // verify that the expected animation was started
+        let easeToCancelable = try verifyEaseTo(with: cameraOptions)
+        // verify that the handler returns true (to continue receiving updates)
+        XCTAssertTrue(result)
 
-        try verifyEaseTo(for: location, options: options)
-    }
-
-    func testStartUpdatingHandlesLocationUpdate() throws {
-        state.startUpdatingCamera()
-
-        let location = try updateLocation()
-
-        try verifyEaseTo(for: location, options: options)
-    }
-
-    func testMultipleLocationUpdates() throws {
-        state.startUpdatingCamera()
-
-        try verifyEaseTo(for: updateLocation(), options: options)
-        cameraAnimationsManager.easeToStub.reset()
-        try verifyEaseTo(for: updateLocation(), options: options)
-    }
-
-    func testStopUpdating() throws {
-        state.startUpdatingCamera()
-
-        try updateLocation()
-
-        let easeToInvocation = try XCTUnwrap(cameraAnimationsManager.easeToStub.invocations.first)
-        let easeToCancelable = try XCTUnwrap(easeToInvocation.returnValue as? MockCancelable)
-        cameraAnimationsManager.easeToStub.reset()
-
+        // stop updates
         state.stopUpdatingCamera()
 
+        // verify that the animation and observe cancelables are both canceled
         XCTAssertEqual(easeToCancelable.cancelStub.invocations.count, 1)
-
-        try updateLocation()
-
-        XCTAssertTrue(cameraAnimationsManager.easeToStub.invocations.isEmpty)
+        XCTAssertEqual(observeCancelable.cancelStub.invocations.count, 1)
     }
 
-    func testMultipleStartsAndStops() throws {
+    func testStartUpdatingMultipleTimesDoesNothing() {
         state.startUpdatingCamera()
         state.startUpdatingCamera()
 
-        try verifyEaseTo(for: updateLocation(), options: options)
-        cameraAnimationsManager.easeToStub.reset()
-
-        state.startUpdatingCamera()
-
-        XCTAssertTrue(cameraAnimationsManager.easeToStub.invocations.isEmpty)
-
-        state.stopUpdatingCamera()
-        state.stopUpdatingCamera()
-
-        let location = try updateLocation()
-
-        XCTAssertTrue(cameraAnimationsManager.easeToStub.invocations.isEmpty)
-
-        state.startUpdatingCamera()
-        state.startUpdatingCamera()
-
-        try verifyEaseTo(for: location, options: options)
+        // only one observation is created
+        XCTAssertEqual(dataSource.observeStub.invocations.count, 1)
     }
 
-    func testUpdatingAndMultipleObservers() throws {
-        let handlerStub1 = Stub<CameraOptions, Bool>(defaultReturnValue: false)
-        _ = state.observeDataSource(with: handlerStub1.call(with:))
+    func testRestartingUpdates() {
+        state.startUpdatingCamera()
+        state.stopUpdatingCamera()
+        dataSource.observeStub.reset()
 
-        let handlerStub2 = Stub<CameraOptions, Bool>(defaultReturnValue: true)
-        let cancelable = state.observeDataSource(with: handlerStub2.call(with:))
-
+        // restart
         state.startUpdatingCamera()
 
-        let handlerStub3 = Stub<CameraOptions, Bool>(defaultReturnValue: true)
-        _ = state.observeDataSource(with: handlerStub3.call(with:))
-
-        try updateLocation()
-
-        try updateLocation()
-
-        cancelable.cancel()
-
-        try updateLocation()
-
-        state.stopUpdatingCamera()
-
-        try updateLocation()
-
-        XCTAssertEqual(handlerStub1.invocations.count, 1)
-        XCTAssertEqual(handlerStub2.invocations.count, 2)
-        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 3)
-        XCTAssertEqual(handlerStub3.invocations.count, 4)
+        // a new observation is created
+        XCTAssertEqual(dataSource.observeStub.invocations.count, 1)
     }
 }

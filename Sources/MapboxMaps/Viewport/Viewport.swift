@@ -94,15 +94,18 @@ public final class Viewport {
 
     public func makeFollowingViewportState(options: FollowingViewportStateOptions = .init()) -> FollowingViewportState {
         return FollowingViewportState(
-            options: options,
-            locationProducer: locationProducer,
+            dataSource: FollowingViewportStateDataSource(
+                options: options,
+                locationProducer: locationProducer,
+                observableCameraOptions: ObservableCameraOptions()),
             cameraAnimationsManager: cameraAnimationsManager)
     }
 
     public func makeOverviewViewportState(options: OverviewViewportStateOptions) -> OverviewViewportState {
         return OverviewViewportState(
             options: options,
-            mapboxMap: mapboxMap)
+            mapboxMap: mapboxMap,
+            observableCameraOptions: ObservableCameraOptions())
     }
 
     public func makeDefaultViewportTransition(options: DefaultViewportTransitionOptions = .init()) -> DefaultViewportTransition {

@@ -1,4 +1,3 @@
-import CoreLocation
 public final class DefaultViewportTransition {
 
     // modifications to options will take effect the next

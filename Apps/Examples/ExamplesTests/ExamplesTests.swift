@@ -20,7 +20,7 @@ class ExamplesTests: XCTestCase {
                 XCTAssertFalse(example.description.isEmpty, "Example '\(example.type)' should have a description.")
 
                 // Check that examples have titles.
-                XCTAssertTrue(example.title.isEmpty, "Example '\(example.type)' should have a title.")
+                XCTAssertFalse(example.title.isEmpty, "Example '\(example.type)' should have a title.")
 
                 // Check that example titles do not end in punctuation
                 if let last = example.title.last {

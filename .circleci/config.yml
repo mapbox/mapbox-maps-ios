@@ -428,12 +428,15 @@ jobs:
           commit-text: "[run app device tests]"
           always-run: << parameters.device-tests-always-run >>
       - configure-environment
+      - setup-google-cloud-account
       - run:
           name: Start Firebase lane
           working_directory: Apps
-          command: bundle install && bundle exec fastlane firebase
-      - install-dependencies
+          command: |
+            bundle install
+            bundle exec fastlane firebase
       - install-gcloud
+      - install-dependencies
       - login-google-cloud-platform
       # There's a command for this, but it only works if run *after* the build.
       # In this case, we need to determine the derived data path *before* building.
@@ -446,15 +449,6 @@ jobs:
               -scheme '<< parameters.scheme >>' \
               | sed -n 's:^ *BUILD_DIR = \(.*\)/Build/Products$:export DERIVED_DATA_PATH="\1":p' \
               >> $BASH_ENV
-      - run:
-          name: Testing << parameters.scheme >> on firebase
-          command: |
-            make test-with-firebase \
-              SCHEME=<< parameters.scheme >> \
-              APP_NAME=<< parameters.app-name >> \
-              CONFIGURATION=Debug \
-              BUILD_DIR="$DERIVED_DATA_PATH" \
-              XCODE_WORKSPACE=Apps/Apps.xcworkspace
           when: always
       - get-test-results-from-firebase:
             scheme: << parameters.scheme >>
@@ -629,14 +623,23 @@ commands:
           command: echo "machine api.mapbox.com login mapbox password $SDK_REGISTRY_TOKEN" >> ~/.netrc
       - inject-mapbox-public-token
 
+  setup-google-cloud-account:
+    steps:
+      - run:
+          name: Setup Google Cloud default application credentials
+          command: |
+            mkdir -p ~/.config/gcloud/
+            echo "${GOOGLE_CLOUD_KEY_FILE}" > ~/.config/gcloud/application_default_credentials.json
+
   login-google-cloud-platform:
+    parameters:
+      project:
+        type: string
+        default: mapbox-maps-ios-dc24c
     steps:
       - run:
           name: Log in to Google Cloud Platform
-          command: |
-            echo "${GOOGLE_CLOUD_KEY_FILE}" > secret.json
-            gcloud auth activate-service-account --key-file secret.json --project mapbox-maps-ios-dc24c
-            rm secret.json
+          command: gcloud auth activate-service-account --key-file ~/.config/gcloud/application_default_credentials.json --project << parameters.project >>
 
   get-test-results-from-firebase:
     parameters:

@@ -131,7 +131,6 @@ workflows:
           device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
           app-name: "Examples"
-          device-tests-always-run: true
           report_failure: true
           filters:
             branches:

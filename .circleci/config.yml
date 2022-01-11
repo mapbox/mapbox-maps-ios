@@ -165,9 +165,66 @@ workflows:
           requires:
             - wait-for-binaries
 
+  build:
+    jobs:
+      - build-for-testflight
+      - upload-to-testflight:
+          requires:
+            - build-for-testflight
+
 # ==============================================================================
 
 jobs:
+
+  build-for-testflight:
+    macos:
+      xcode: 13.2.1
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - inject-netrc-credentials
+      - inject-mapbox-public-token
+      - run:
+          name: Build
+          command: |
+            xcodebuild archive \
+            -workspace 'Apps/Apps.xcworkspace' \
+            -scheme 'Examples' \
+            -archivePath 'Examples-iOS.xcarchive' \
+            -destination 'generic/platform=iOS,name=Any iOS Device' \
+            CODE_SIGNING_ALLOWED="NO"
+      # - run: zip -r archive.zip Examples-iOS.xcarchive
+      # - store_artifacts:
+      #     path: archive.zip
+      - persist_to_workspace:
+          root: .
+          paths:
+            - Examples-iOS.xcarchive
+            - Apps/Appstore_exportOptions.plist
+
+  upload-to-testflight:
+    macos:
+      xcode: 13.2.1
+    steps:
+      - checkout
+      - run:
+          name: Inject ASC key
+          command: echo $ASC_ENCODED_KEY | base64 --decode > "/tmp/key.p8"
+      - run: dirname $ASC_KEY_PATH
+      - attach_workspace:
+          at: workspace
+      - run: ls -lA workspace
+      - run:
+          name: Export archive
+          command: |
+            xcodebuild -exportArchive \
+            -archivePath workspace/Examples-iOS.xcarchive \
+            -exportOptionsPlist workspace/Apps/Appstore_exportOptions.plist \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            -authenticationKeyPath '/tmp/key.p8' \
+            -allowProvisioningUpdates
+# -exportPath exportOutput\
 
   # This is a base job that can be merged into specific jobs. It uses anchors
   # and aliases as described here

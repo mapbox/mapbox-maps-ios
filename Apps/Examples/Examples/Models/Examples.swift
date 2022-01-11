@@ -156,9 +156,9 @@ public struct Examples {
                     to change.
                 """,
                 type: OfflineManagerExample.self),
-        Example(title: "Use OfflineRegionManager to download a region",
-                description: "Use the deprecated OfflineRegionManager to download regions for offline use.",
-                type: OfflineRegionManagerExample.self),
+//        Example(title: "Use OfflineRegionManager to download a region",
+//                description: "Use the deprecated OfflineRegionManager to download regions for offline use.",
+//                type: OfflineRegionManagerExample.self),
     ]
 
     // Examples that show how to use the map's snapshotter.

@@ -1,8 +1,6 @@
 import Foundation
 import MapboxMaps
 
-// swiftlint:disable type_body_length
-
 /**
  To add a new example, create a new `Example` struct
  and place it within the array for the category it belongs to below. Make sure

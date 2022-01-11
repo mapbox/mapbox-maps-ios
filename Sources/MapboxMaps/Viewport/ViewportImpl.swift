@@ -23,8 +23,12 @@ internal protocol ViewportImplProtocol: AnyObject {
 //
 internal final class ViewportImpl: ViewportImplProtocol {
 
+    private let mainQueue: MainQueueProtocol
+
     // viewport requires a default transition at all times
-    internal init(defaultTransition: ViewportTransition) {
+    internal init(mainQueue: MainQueueProtocol,
+                  defaultTransition: ViewportTransition) {
+        self.mainQueue = mainQueue
         self.defaultTransition = defaultTransition
         self.status = .state(nil)
     }
@@ -34,14 +38,16 @@ internal final class ViewportImpl: ViewportImplProtocol {
     // defaults to .state(nil), aka idle
     internal private(set) var status: ViewportStatus
 
-    private var statusObservers = [ObjectIdentifier: ViewportStatusObserver]()
+    private var statusObservers = [ViewportStatusObserver]()
 
     internal func addStatusObserver(_ observer: ViewportStatusObserver) {
-        statusObservers[ObjectIdentifier(observer)] = observer
+        if statusObservers.allSatisfy({ $0 !== observer }) {
+            statusObservers.append(observer)
+        }
     }
 
     internal func removeStatusObserver(_ observer: ViewportStatusObserver) {
-        statusObservers.removeValue(forKey: ObjectIdentifier(observer))
+        statusObservers.removeAll { $0 === observer }
     }
 
     private func notifyObservers(withFromStatus fromStatus: ViewportStatus,
@@ -50,8 +56,10 @@ internal final class ViewportImpl: ViewportImplProtocol {
         guard fromStatus != toStatus else {
             return
         }
-        statusObservers.values.forEach {
-            $0.viewportStatusDidChange(from: fromStatus, to: toStatus, reason: reason)
+        mainQueue.async { [weak self] in
+            self?.statusObservers.forEach {
+                $0.viewportStatusDidChange(from: fromStatus, to: toStatus, reason: reason)
+            }
         }
     }
 
@@ -115,8 +123,6 @@ internal final class ViewportImpl: ViewportImplProtocol {
         let transitionCancelable = transition.run(from: fromState, to: toState) { [weak self] in
             completionBlockInvoked = true
 
-            var fromStatus: ViewportStatus?
-            var toStatus: ViewportStatus?
             if let self = self {
                 // transfer camera upating responsibility to toState
                 toState.startUpdatingCamera()
@@ -128,23 +134,17 @@ internal final class ViewportImpl: ViewportImplProtocol {
                 // set the status before calling the completion block
                 // since it could trigger some further mutation to status
                 // which would then be clobbered by this line.
-                fromStatus = self.status
+                let fromStatus = self.status
                 self.status = .state(toState)
-                toStatus = self.status
+
+                self.notifyObservers(
+                    withFromStatus: fromStatus,
+                    toStatus: self.status,
+                    reason: .programmatic)
             }
 
             // and call the completion block
             completion?(true)
-
-            // notify of status change here if needed; decouple
-            // this from when status is actually set so that we can
-            // invoke the completion block first
-            if let self = self, let from = fromStatus, let to = toStatus {
-                self.notifyObservers(
-                    withFromStatus: from,
-                    toStatus: to,
-                    reason: .programmatic)
-            }
         }
 
         // since it's possible that a transition might invoke its

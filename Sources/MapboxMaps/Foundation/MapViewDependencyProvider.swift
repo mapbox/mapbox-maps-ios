@@ -162,6 +162,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     func makeViewportImpl(mapboxMap: MapboxMapProtocol,
                           cameraAnimationsManager: CameraAnimationsManagerProtocol) -> ViewportImplProtocol {
         return ViewportImpl(
+            mainQueue: MainQueue(),
             defaultTransition: DefaultViewportTransition(
                 options: .init(),
                 animationHelper: DefaultViewportTransitionAnimationHelper(

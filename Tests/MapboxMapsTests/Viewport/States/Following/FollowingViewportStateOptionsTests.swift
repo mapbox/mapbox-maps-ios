@@ -32,4 +32,54 @@ final class FollowingViewportStateOptionsTests: XCTestCase {
         XCTAssertEqual(options.padding, padding)
         XCTAssertEqual(options.animationDuration, animationDuration)
     }
+
+    func verifyEqual(_ lhs: FollowingViewportStateOptions, _ rhs: FollowingViewportStateOptions) {
+        XCTAssertTrue(lhs == rhs)
+        XCTAssertTrue(rhs == lhs)
+        XCTAssertEqual(lhs.hashValue, rhs.hashValue)
+    }
+
+    func verifyNotEqual(_ lhs: FollowingViewportStateOptions, _ rhs: FollowingViewportStateOptions) {
+        XCTAssertFalse(lhs == rhs)
+        XCTAssertFalse(rhs == lhs)
+    }
+
+    func testEquatableAndHashable() {
+        var options1 = FollowingViewportStateOptions.random()
+        options1.bearing = .constant(0)
+        var options2 = options1
+        verifyEqual(options1, options1)
+
+        options2 = options1
+        options2.zoom += .random(in: 1...10)
+        verifyNotEqual(options1, options2)
+
+        options2 = options1
+        options2.pitch += .random(in: 1...10)
+        verifyNotEqual(options1, options2)
+
+        options2 = options1
+        options2.bearing = .constant(.random(in: 0...10))
+        verifyNotEqual(options1, options2)
+
+        options2 = options1
+        options2.padding.top += .random(in: 1...10)
+        verifyNotEqual(options1, options2)
+
+        options2 = options1
+        options2.padding.left += .random(in: 1...10)
+        verifyNotEqual(options1, options2)
+
+        options2 = options1
+        options2.padding.bottom += .random(in: 1...10)
+        verifyNotEqual(options1, options2)
+
+        options2 = options1
+        options2.padding.right += .random(in: 1...10)
+        verifyNotEqual(options1, options2)
+
+        options2 = options1
+        options2.animationDuration += .random(in: 1...10)
+        verifyNotEqual(options1, options2)
+    }
 }

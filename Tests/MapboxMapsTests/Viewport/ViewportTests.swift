@@ -30,30 +30,6 @@ final class ViewportTests: XCTestCase {
         super.tearDown()
     }
 
-    func testStates() {
-        impl.states = .random(withLength: .random(in: 0..<4), generator: MockViewportState.init)
-
-        XCTAssertTrue(viewport.states.elementsEqual(impl.states, by: ===))
-    }
-
-    func testAddState() {
-        let state = MockViewportState()
-
-        viewport.addState(state)
-
-        XCTAssertEqual(impl.addStateStub.invocations.count, 1)
-        XCTAssertTrue(impl.addStateStub.invocations.first?.parameters === state)
-    }
-
-    func testRemoveState() {
-        let state = MockViewportState()
-
-        viewport.removeState(state)
-
-        XCTAssertEqual(impl.removeStateStub.invocations.count, 1)
-        XCTAssertTrue(impl.removeStateStub.invocations.first?.parameters === state)
-    }
-
     func testStatus() {
         impl.status = [
             .state(MockViewportState()),

@@ -20,7 +20,6 @@ final class ViewportImplTests: XCTestCase {
     }
 
     func setUp(withCurrentState currentState: MockViewportState) throws {
-        viewportImpl.addState(currentState)
         viewportImpl.transition(to: currentState, completion: nil)
         XCTAssertEqual(defaultTransition.runStub.invocations.count, 1)
         let runInvocation = try XCTUnwrap(defaultTransition.runStub.invocations.first)
@@ -30,88 +29,6 @@ final class ViewportImplTests: XCTestCase {
 
     func testStatusDefaultsToNilState() {
         XCTAssertEqual(viewportImpl.status, .state(nil))
-    }
-
-    func testStatesDefaultsToEmpty() {
-        XCTAssertTrue(viewportImpl.states.isEmpty)
-    }
-
-    func testAddState() {
-        let state = MockViewportState()
-
-        viewportImpl.addState(state)
-
-        XCTAssertEqual(viewportImpl.states.count, 1)
-        XCTAssertTrue(viewportImpl.states.first === state)
-    }
-
-    func testAddStateMoreThanOnceDoesNothing() {
-        let state = MockViewportState()
-
-        viewportImpl.addState(state)
-        viewportImpl.addState(state)
-
-        XCTAssertEqual(viewportImpl.states.count, 1)
-        XCTAssertTrue(viewportImpl.states.first === state)
-    }
-
-    func testRemoveStateThatWasNeverAddedDoesNothing() {
-        let stateA = MockViewportState()
-        let stateB = MockViewportState()
-        viewportImpl.addState(stateA)
-
-        viewportImpl.removeState(stateB)
-
-        XCTAssertEqual(viewportImpl.states.count, 1)
-        XCTAssertTrue(viewportImpl.states.first === stateA)
-    }
-
-    func testRemoveState() {
-        let state = MockViewportState()
-        viewportImpl.addState(state)
-
-        viewportImpl.removeState(state)
-
-        XCTAssertTrue(viewportImpl.states.isEmpty)
-    }
-
-    func testRemoveStateWhenStateIsCurrentSetsStatusToIdle() throws {
-        let state = MockViewportState()
-        try setUp(withCurrentState: state)
-
-        viewportImpl.removeState(state)
-
-        XCTAssertEqual(viewportImpl.status, .state(nil))
-        XCTAssertEqual(state.stopUpdatingCameraStub.invocations.count, 1)
-    }
-
-    func testRemoveStateWhenTransitioningFromStateSetsStatusToIdle() throws {
-        let fromState = MockViewportState()
-        try setUp(withCurrentState: fromState)
-        let toState = MockViewportState()
-        viewportImpl.addState(toState)
-        viewportImpl.transition(to: toState, completion: nil)
-        let runInvocation = try XCTUnwrap(defaultTransition.runStub.invocations.first)
-        let runCancelable = try XCTUnwrap(runInvocation.returnValue as? MockCancelable)
-
-        viewportImpl.removeState(fromState)
-
-        XCTAssertEqual(viewportImpl.status, .state(nil))
-        XCTAssertEqual(runCancelable.cancelStub.invocations.count, 1)
-    }
-
-    func testRemoveStateWhenTransitioningToStateSetsStatusToIdle() throws {
-        let toState = MockViewportState()
-        viewportImpl.addState(toState)
-        viewportImpl.transition(to: toState, completion: nil)
-
-        // get the run Cancelable
-        let cancelable = try XCTUnwrap(defaultTransition.runStub.invocations.last?.returnValue as? MockCancelable)
-
-        viewportImpl.removeState(toState)
-
-        XCTAssertEqual(viewportImpl.status, .state(nil))
-        XCTAssertEqual(cancelable.cancelStub.invocations.count, 1)
     }
 
     func verifyTransition(from fromState: MockViewportState?,
@@ -144,80 +61,37 @@ final class ViewportImplTests: XCTestCase {
     }
 
     func testTransitionToStateFromNilUsingDefaultTransition() throws {
-        let state = MockViewportState()
-        viewportImpl.addState(state)
-
-        try verifyTransition(from: nil, to: state, expectedTransition: defaultTransition)
-    }
-
-    func testTransitionToStateThatHasNotBeenAddedFromNilUsingDefaultTransition() throws {
-        let state = MockViewportState()
-
-        try verifyTransition(from: nil, to: state, expectedTransition: defaultTransition)
-        XCTAssertTrue(viewportImpl.states.contains { $0 === state })
+        try verifyTransition(from: nil, to: MockViewportState(), expectedTransition: defaultTransition)
     }
 
     func testTransitionToStateFromNilUsingNonDefaultTransition() throws {
         let state = MockViewportState()
-        viewportImpl.addState(state)
         let transition = MockViewportTransition()
         viewportImpl.setTransition(transition, from: nil, to: state)
 
         try verifyTransition(from: nil, to: state, expectedTransition: transition)
-    }
-
-    func testTransitionToStateThatHasNotBeenAddedFromNilUsingNonDefaultTransition() throws {
-        let state = MockViewportState()
-        let transition = MockViewportTransition()
-        viewportImpl.setTransition(transition, from: nil, to: state)
-
-        try verifyTransition(from: nil, to: state, expectedTransition: transition)
-        XCTAssertTrue(viewportImpl.states.contains { $0 === state })
     }
 
     func testTransitionToStateFromStateUsingDefaultTransition() throws {
         let fromState = MockViewportState()
         try setUp(withCurrentState: fromState)
         let toState = MockViewportState()
-        viewportImpl.addState(toState)
 
         try verifyTransition(from: fromState, to: toState, expectedTransition: defaultTransition)
-    }
-
-    func testTransitionToStateThatHasNotBeenAddedFromStateUsingDefaultTransition() throws {
-        let fromState = MockViewportState()
-        try setUp(withCurrentState: fromState)
-        let toState = MockViewportState()
-
-        try verifyTransition(from: fromState, to: toState, expectedTransition: defaultTransition)
-        XCTAssertTrue(viewportImpl.states.contains { $0 === toState })
     }
 
     func testTransitionToStateFromStateUsingNonDefaultTransition() throws {
         let fromState = MockViewportState()
         try setUp(withCurrentState: fromState)
         let toState = MockViewportState()
-        viewportImpl.addState(toState)
         let transition = MockViewportTransition()
         viewportImpl.setTransition(transition, from: fromState, to: toState)
 
         try verifyTransition(from: fromState, to: toState, expectedTransition: transition)
-    }
-
-    func testTransitionToStateThatHasNotBeenAddedFromStateUsingNonDefaultTransition() throws {
-        let fromState = MockViewportState()
-        try setUp(withCurrentState: fromState)
-        let toState = MockViewportState()
-        let transition = MockViewportTransition()
-        viewportImpl.setTransition(transition, from: fromState, to: toState)
-
-        try verifyTransition(from: fromState, to: toState, expectedTransition: transition)
-        XCTAssertTrue(viewportImpl.states.contains { $0 === toState })
     }
 
     func testTransitionThatInvokesItsCompletionBlockSynchronouslyDoesNotClobberTheToStatesCancelable() throws {
         let state = MockViewportState()
-        viewportImpl.addState(state)
         // create a mock transition that will invoke its completion block synchronously
         let transition = MockViewportTransition()
         transition.runStub.defaultSideEffect = { invocation in
@@ -277,7 +151,6 @@ final class ViewportImplTests: XCTestCase {
 
     func testInterruptingTransitionToStateWithSecondTransitionToSameState() throws {
         let state = MockViewportState()
-        viewportImpl.addState(state)
         // ensure that each run invocation gets a unique cancelable
         defaultTransition.runStub.returnValueQueue = [MockCancelable(), MockCancelable()]
 
@@ -304,9 +177,7 @@ final class ViewportImplTests: XCTestCase {
 
     func testInterruptingTransitionToStateAWithTransitionToStateB() throws {
         let stateA = MockViewportState()
-        viewportImpl.addState(stateA)
         let stateB = MockViewportState()
-        viewportImpl.addState(stateB)
         let transitionToACompletionStub = Stub<Bool, Void>()
         // ensure that each run invocation gets a unique cancelable
         defaultTransition.runStub.returnValueQueue = [MockCancelable(), MockCancelable()]
@@ -334,7 +205,6 @@ final class ViewportImplTests: XCTestCase {
 
     func testInterruptingTransitionToStateWithIdle() throws {
         let stateA = MockViewportState()
-        viewportImpl.addState(stateA)
         let transitionToACompletionStub = Stub<Bool, Void>()
         viewportImpl.transition(to: stateA, completion: transitionToACompletionStub.call(with:))
 

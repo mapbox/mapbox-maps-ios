@@ -1,18 +1,6 @@
 @testable import MapboxMaps
 
 final class MockViewportImpl: ViewportImplProtocol {
-    var states: [ViewportState] = []
-
-    let addStateStub = Stub<ViewportState, Void>()
-    func addState(_ state: ViewportState) {
-        addStateStub.call(with: state)
-    }
-
-    let removeStateStub = Stub<ViewportState, Void>()
-    func removeState(_ state: ViewportState) {
-        removeStateStub.call(with: state)
-    }
-
     var status: ViewportStatus = .state(nil)
 
     let idleStub = Stub<Void, Void>()

@@ -1,8 +1,4 @@
 internal protocol ViewportImplProtocol: AnyObject {
-    var states: [ViewportState] { get }
-    func addState(_ state: ViewportState)
-    func removeState(_ state: ViewportState)
-
     var status: ViewportStatus { get }
     func idle()
     func transition(to toState: ViewportState, completion: ((Bool) -> Void)?)
@@ -28,47 +24,6 @@ internal final class ViewportImpl: ViewportImplProtocol {
     internal init(defaultTransition: ViewportTransition) {
         self.defaultTransition = defaultTransition
         self.status = .state(nil)
-    }
-
-    // MARK: - States
-
-    private var statesByIdentity = [ObjectIdentifier: ViewportState]()
-
-    // the list of states
-    internal var states: [ViewportState] {
-        Array(statesByIdentity.values)
-    }
-
-    // adds state to the list of states
-    // adding the same state more than once has no effect
-    internal func addState(_ state: ViewportState) {
-        let key = ObjectIdentifier(state)
-        statesByIdentity[key] = state
-    }
-
-    // removes state from list of states
-    // sets current state to nil if it was identical to state
-    // attempting to remove a state that was not added has no effect
-    // any active transition to that state will also be canceled
-    internal func removeState(_ state: ViewportState) {
-        if statesByIdentity.removeValue(forKey: ObjectIdentifier(state)) != nil {
-            switch status {
-            case .state(let currentState) where state === currentState:
-                status = .state(nil)
-                currentCancelable?.cancel()
-                currentCancelable = nil
-
-                // TODO: notify of status change
-            case .transition(_, let fromState, let toState) where toState === state || fromState === state:
-                status = .state(nil)
-                currentCancelable?.cancel()
-                currentCancelable = nil
-
-                // TODO: notify of status change
-            default:
-                break
-            }
-        }
     }
 
     // MARK: - Current State
@@ -117,9 +72,6 @@ internal final class ViewportImpl: ViewportImplProtocol {
         // cancel any previous state or transition
         currentCancelable?.cancel()
         currentCancelable = nil
-
-        // add toState if needed (adding more than once does nothing)
-        addState(toState)
 
         let fromState: ViewportState?
         switch status {

@@ -24,11 +24,6 @@ extension MapboxCommon.Cancelable {
     }
 }
 
-internal final class EmptyCancelable: Cancelable {
-    internal func cancel() {
-    }
-}
-
 internal final class BlockCancelable: Cancelable {
     private var block: (() -> Void)?
 

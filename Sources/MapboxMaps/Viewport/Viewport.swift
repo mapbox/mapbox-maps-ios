@@ -24,25 +24,6 @@ public final class Viewport {
         self.mapboxMap = mapboxMap
     }
 
-    // the list of states
-    public var states: [ViewportState] {
-        impl.states
-    }
-
-    // adds state to the list of states
-    // adding the same state more than once has no effect
-    public func addState(_ state: ViewportState) {
-        impl.addState(state)
-    }
-
-    // removes state from list of states
-    // sets current state to nil if it was identical to state
-    // attempting to remove a state that was not added has no effect
-    // any active transition to that state will also be canceled
-    public func removeState(_ state: ViewportState) {
-        impl.removeState(state)
-    }
-
     // MARK: - Current State
 
     // a nil status is known as "idle"; this is the default

@@ -3,7 +3,7 @@ version: 2.1
 
 orbs:
   # https://circleci.com/orbs/registry/orb/circleci/slack
-  slack: circleci/slack@3.4.2
+  slack: circleci/slack@4.5
 
 workflows:
 
@@ -616,9 +616,6 @@ jobs:
     <<: *base-job
     steps:
       - parse-release-version-if-available
-      - slack/notify:
-          message: '<$CIRCLE_BUILD_URL|Release tag for \`v$VERSION\` started.>'
-          include_visit_job_action: true
       - checkout
       - add-mapbox-submodules-key
       - install-mbx-ci
@@ -677,11 +674,13 @@ jobs:
       - run:
           name: Build Studio Preview with new branch
           command: scripts/validate-integrations/validate-studio-preview.sh "$CIRCLE_BRANCH"
-      - slack/status:
-          fail_only: false
-          include_visit_job_action: true
-          failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release tag for \`v$VERSION\` failed.>'
-          success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release tag for \`v$VERSION\` succeeded!> :tada:'
+      - slack/notify:
+          event: always
+          mentions: '@maps-ios'
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: success_tagged_deploy_1
 
   wait-for-binaries:
     docker:
@@ -894,12 +893,24 @@ commands:
               circleci-agent step halt
             fi
           when: on_fail
-      - slack/status:
-          fail_only: true
-          include_visit_job_action: true
-          mentions: '$CIRCLE_USERNAME'
-          only_for_branches: main
-          failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL| << parameters.message >> failed.>'
+      - slack/notify:
+          branch_pattern: main
+          event: fail
+          mentions: '@$CIRCLE_USERNAME'
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "<< parameters.message >>"
+                    }
+                  ]
+                }
+              ]
+            }
 
   locate-derived-data-directory:
     parameters:

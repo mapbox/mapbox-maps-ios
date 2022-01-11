@@ -20,12 +20,10 @@ final class DebugViewController: UIViewController {
         mapView.location.options.puckType = .puck2D()
 
         let followingState = mapView.viewport.makeFollowingViewportState(options: .init(bearing: .course))
-        mapView.viewport.addState(followingState)
 
         let cupertino = CLLocationCoordinate2D(latitude: 37.3282643, longitude: -122.0733132)
         let cupertinoPolygon = Polygon(center: cupertino, radius: 20000, vertices: 200)
         let overviewState = mapView.viewport.makeOverviewViewportState(options: .init(geometry: cupertinoPolygon))
-        mapView.viewport.addState(overviewState)
 
         let immediateTransition = mapView.viewport.makeImmediateViewportTransition()
         mapView.viewport.setTransition(immediateTransition, from: nil, to: followingState)

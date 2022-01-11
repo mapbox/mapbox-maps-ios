@@ -42,6 +42,22 @@ final class ViewportTests: XCTestCase {
         XCTAssertEqual(viewport.status, impl.status)
     }
 
+    func testAddStatusObserver() {
+        let observer = MockViewportStatusObserver()
+
+        viewport.addStatusObserver(observer)
+
+        XCTAssertTrue(impl.addStatusObserverStub.invocations.map(\.parameters).elementsEqual([observer], by: ===))
+    }
+
+    func testRemoveStatusObserver() {
+        let observer = MockViewportStatusObserver()
+
+        viewport.removeStatusObserver(observer)
+
+        XCTAssertTrue(impl.removeStatusObserverStub.invocations.map(\.parameters).elementsEqual([observer], by: ===))
+    }
+
     func testIdle() {
         viewport.idle()
 

@@ -1,5 +1,8 @@
 internal protocol ViewportImplProtocol: AnyObject {
     var status: ViewportStatus { get }
+    func addStatusObserver(_ observer: ViewportStatusObserver)
+    func removeStatusObserver(_ observer: ViewportStatusObserver)
+
     func idle()
     func transition(to toState: ViewportState, completion: ((Bool) -> Void)?)
 
@@ -26,21 +29,44 @@ internal final class ViewportImpl: ViewportImplProtocol {
         self.status = .state(nil)
     }
 
-    // MARK: - Current State
+    // MARK: - Status
 
     // defaults to .state(nil), aka idle
     internal private(set) var status: ViewportStatus
 
+    private var statusObservers = [ObjectIdentifier: ViewportStatusObserver]()
+
+    internal func addStatusObserver(_ observer: ViewportStatusObserver) {
+        statusObservers[ObjectIdentifier(observer)] = observer
+    }
+
+    internal func removeStatusObserver(_ observer: ViewportStatusObserver) {
+        statusObservers.removeValue(forKey: ObjectIdentifier(observer))
+    }
+
+    private func notifyObservers(withFromStatus fromStatus: ViewportStatus,
+                                 toStatus: ViewportStatus,
+                                 reason: ViewportStatusChangeReason) {
+        guard fromStatus != toStatus else {
+            return
+        }
+        statusObservers.values.forEach {
+            $0.viewportStatusDidChange(from: fromStatus, to: toStatus, reason: reason)
+        }
+    }
+
     // a cancelable that can be used to stop the current state or transition
     private var currentCancelable: Cancelable?
+
+    // MARK: - Changing States
 
     internal func idle() {
         // cancel any previous state or transition
         currentCancelable?.cancel()
         currentCancelable = nil
+        let fromStatus = status
         status = .state(nil)
-
-        // TODO: notify of status change
+        notifyObservers(withFromStatus: fromStatus, toStatus: status, reason: .programmatic)
     }
 
     // set
@@ -84,15 +110,13 @@ internal final class ViewportImpl: ViewportImplProtocol {
         // get the transition (or default) for the from and to state
         let transition = getTransition(from: fromState, to: toState) ?? defaultTransition
 
-        status = .transition(transition, fromState: fromState, toState: toState)
-
-        // TODO: notify of state change
-
         // run the transition
         var completionBlockInvoked = false
         let transitionCancelable = transition.run(from: fromState, to: toState) { [weak self] in
             completionBlockInvoked = true
 
+            var fromStatus: ViewportStatus?
+            var toStatus: ViewportStatus?
             if let self = self {
                 // transfer camera upating responsibility to toState
                 toState.startUpdatingCamera()
@@ -104,15 +128,23 @@ internal final class ViewportImpl: ViewportImplProtocol {
                 // set the status before calling the completion block
                 // since it could trigger some further mutation to status
                 // which would then be clobbered by this line.
+                fromStatus = self.status
                 self.status = .state(toState)
+                toStatus = self.status
             }
 
             // and call the completion block
             completion?(true)
 
-            // TODO: notify of status change here if needed; decouple
+            // notify of status change here if needed; decouple
             // this from when status is actually set so that we can
             // invoke the completion block first
+            if let self = self, let from = fromStatus, let to = toStatus {
+                self.notifyObservers(
+                    withFromStatus: from,
+                    toStatus: to,
+                    reason: .programmatic)
+            }
         }
 
         // since it's possible that a transition might invoke its
@@ -124,10 +156,16 @@ internal final class ViewportImpl: ViewportImplProtocol {
                 transitionCancelable.cancel()
                 completion?(false)
             }
+            let fromStatus = status
+            status = .transition(transition, fromState: fromState, toState: toState)
+            notifyObservers(
+                withFromStatus: fromStatus,
+                toStatus: status,
+                reason: .programmatic)
         }
     }
 
-    // MARK: - Transitions
+    // MARK: - Configuring Transitions
 
     // this transition is used unless overridden by one of the registered transitions
     internal var defaultTransition: ViewportTransition

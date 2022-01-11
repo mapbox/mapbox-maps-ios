@@ -31,6 +31,14 @@ public final class Viewport {
         impl.status
     }
 
+    public func addStatusObserver(_ observer: ViewportStatusObserver) {
+        impl.addStatusObserver(observer)
+    }
+
+    public func removeStatusObserver(_ observer: ViewportStatusObserver) {
+        impl.removeStatusObserver(observer)
+    }
+
     public func idle() {
         impl.idle()
     }

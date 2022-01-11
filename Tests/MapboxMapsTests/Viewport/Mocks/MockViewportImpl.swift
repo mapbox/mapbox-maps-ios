@@ -3,6 +3,16 @@
 final class MockViewportImpl: ViewportImplProtocol {
     var status: ViewportStatus = .state(nil)
 
+    let addStatusObserverStub = Stub<ViewportStatusObserver, Void>()
+    func addStatusObserver(_ observer: ViewportStatusObserver) {
+        addStatusObserverStub.call(with: observer)
+    }
+
+    let removeStatusObserverStub = Stub<ViewportStatusObserver, Void>()
+    func removeStatusObserver(_ observer: ViewportStatusObserver) {
+        removeStatusObserverStub.call(with: observer)
+    }
+
     let idleStub = Stub<Void, Void>()
     func idle() {
         idleStub.call()

@@ -5,15 +5,19 @@ final class ViewportImplTests: XCTestCase {
 
     var defaultTransition: MockViewportTransition!
     var viewportImpl: ViewportImpl!
+    var statusObserver: MockViewportStatusObserver!
 
     override func setUp() {
         super.setUp()
         defaultTransition = MockViewportTransition()
         viewportImpl = ViewportImpl(
             defaultTransition: defaultTransition)
+        statusObserver = MockViewportStatusObserver()
+        viewportImpl.addStatusObserver(statusObserver)
     }
 
     override func tearDown() {
+        statusObserver = nil
         viewportImpl = nil
         defaultTransition = nil
         super.tearDown()
@@ -25,10 +29,43 @@ final class ViewportImplTests: XCTestCase {
         let runInvocation = try XCTUnwrap(defaultTransition.runStub.invocations.first)
         runInvocation.parameters.completion()
         defaultTransition.runStub.reset()
+        statusObserver.viewportStatusDidChangeStub.reset()
     }
 
     func testStatusDefaultsToNilState() {
         XCTAssertEqual(viewportImpl.status, .state(nil))
+    }
+
+    func testAddAndRemoveMultipleObservers() {
+        let statusObserver2 = MockViewportStatusObserver()
+
+        viewportImpl.transition(to: MockViewportState(), completion: nil)
+
+        viewportImpl.addStatusObserver(statusObserver2)
+        viewportImpl.addStatusObserver(statusObserver2) // second add should have no effect
+
+        XCTAssertEqual(statusObserver.viewportStatusDidChangeStub.invocations.count, 1)
+        XCTAssertTrue(statusObserver2.viewportStatusDidChangeStub.invocations.isEmpty)
+
+        viewportImpl.transition(to: MockViewportState(), completion: nil)
+
+        XCTAssertEqual(statusObserver.viewportStatusDidChangeStub.invocations.count, 2)
+        XCTAssertEqual(statusObserver2.viewportStatusDidChangeStub.invocations.count, 1)
+
+        viewportImpl.removeStatusObserver(statusObserver2)
+        viewportImpl.removeStatusObserver(statusObserver2) // second remove should have no effect
+
+        viewportImpl.transition(to: MockViewportState(), completion: nil)
+
+        XCTAssertEqual(statusObserver.viewportStatusDidChangeStub.invocations.count, 3)
+        XCTAssertEqual(statusObserver2.viewportStatusDidChangeStub.invocations.count, 1)
+
+        viewportImpl.removeStatusObserver(statusObserver)
+
+        viewportImpl.transition(to: MockViewportState(), completion: nil)
+
+        XCTAssertEqual(statusObserver.viewportStatusDidChangeStub.invocations.count, 3)
+        XCTAssertEqual(statusObserver2.viewportStatusDidChangeStub.invocations.count, 1)
     }
 
     func verifyTransition(from fromState: MockViewportState?,
@@ -44,7 +81,12 @@ final class ViewportImplTests: XCTestCase {
         if let fromState = fromState {
             XCTAssertEqual(fromState.stopUpdatingCameraStub.invocations.count, 1)
         }
-        XCTAssertEqual(viewportImpl.status, .transition(expectedTransition, fromState: fromState, toState: toState))
+        let transitionStatus = ViewportStatus.transition(expectedTransition, fromState: fromState, toState: toState)
+        XCTAssertEqual(viewportImpl.status, transitionStatus)
+        XCTAssertEqual(
+            statusObserver.viewportStatusDidChangeStub.invocations.map(\.parameters),
+            [.init(fromStatus: .state(fromState), toStatus: viewportImpl.status, reason: .programmatic)])
+        statusObserver.viewportStatusDidChangeStub.reset()
         XCTAssertEqual(expectedTransition.runStub.invocations.count, 1)
         let runInvocation = try XCTUnwrap(expectedTransition.runStub.invocations.first)
         XCTAssertTrue(runInvocation.parameters.fromState === fromState)
@@ -58,6 +100,10 @@ final class ViewportImplTests: XCTestCase {
         XCTAssertEqual(completionStub.invocations.map(\.parameters), [true])
         XCTAssertTrue(transitionCancelable.cancelStub.invocations.isEmpty)
         XCTAssertTrue(toState.stopUpdatingCameraStub.invocations.isEmpty)
+        XCTAssertEqual(viewportImpl.status, .state(toState))
+        XCTAssertEqual(
+            statusObserver.viewportStatusDidChangeStub.invocations.map(\.parameters),
+            [.init(fromStatus: transitionStatus, toStatus: .state(toState), reason: .programmatic)])
     }
 
     func testTransitionToStateFromNilUsingDefaultTransition() throws {
@@ -117,6 +163,45 @@ final class ViewportImplTests: XCTestCase {
         XCTAssertEqual(state.stopUpdatingCameraStub.invocations.count, 1)
     }
 
+    func testStatusObserverInitiatedTransition() throws {
+        let stateA = MockViewportState()
+        let stateB = MockViewportState()
+        // ensure that each run invocation gets a unique cancelable
+        defaultTransition.runStub.returnValueQueue = [MockCancelable(), MockCancelable()]
+
+        let transitionToBCompletionStub = Stub<Bool, Void>()
+        statusObserver.viewportStatusDidChangeStub.sideEffectQueue.append({ _ in
+            self.viewportImpl.transition(to: stateB, completion: transitionToBCompletionStub.call(with:))
+        })
+
+        let transitionToACompletionStub = Stub<Bool, Void>()
+        viewportImpl.transition(to: stateA, completion: transitionToACompletionStub.call(with:))
+
+        XCTAssertEqual(defaultTransition.runStub.invocations.count, 2)
+        let transitionToARunInvocation = try XCTUnwrap(defaultTransition.runStub.invocations.first)
+        let transitionToARunCancelable = try XCTUnwrap(transitionToARunInvocation.returnValue as? MockCancelable)
+        let transitionToBRunInvocation = try XCTUnwrap(defaultTransition.runStub.invocations.last)
+        let transitionToBRunCancelable = try XCTUnwrap(transitionToBRunInvocation.returnValue as? MockCancelable)
+
+        XCTAssertEqual(transitionToACompletionStub.invocations.map(\.parameters), [false])
+        XCTAssertEqual(transitionToARunCancelable.cancelStub.invocations.count, 1)
+        XCTAssertEqual(viewportImpl.status, .transition(defaultTransition, fromState: stateA, toState: stateB))
+        XCTAssertEqual(
+            statusObserver.viewportStatusDidChangeStub.invocations.map(\.parameters),
+            [.init(fromStatus: .state(nil),
+                   toStatus: .transition(defaultTransition, fromState: nil, toState: stateA),
+                   reason: .programmatic),
+             .init(fromStatus: .transition(defaultTransition, fromState: nil, toState: stateA),
+                   toStatus: .transition(defaultTransition, fromState: stateA, toState: stateB),
+                   reason: .programmatic)])
+
+        // idle to ensure that the correct final cancelable was stored
+        viewportImpl.idle()
+
+        XCTAssertEqual(transitionToBCompletionStub.invocations.map(\.parameters), [false])
+        XCTAssertEqual(transitionToBRunCancelable.cancelStub.invocations.count, 1)
+    }
+
     func testIdleFromNonNilState() throws {
         let fromState = MockViewportState()
         try setUp(withCurrentState: fromState)
@@ -125,12 +210,16 @@ final class ViewportImplTests: XCTestCase {
 
         XCTAssertEqual(fromState.stopUpdatingCameraStub.invocations.count, 1)
         XCTAssertEqual(viewportImpl.status, .state(nil))
+        XCTAssertEqual(
+            statusObserver.viewportStatusDidChangeStub.invocations.map(\.parameters),
+            [.init(fromStatus: .state(fromState), toStatus: .state(nil), reason: .programmatic)])
     }
 
     func testIdleFromNilState() {
         viewportImpl.idle()
 
         XCTAssertEqual(viewportImpl.status, .state(nil))
+        XCTAssertTrue(statusObserver.viewportStatusDidChangeStub.invocations.isEmpty)
     }
 
     func testTransitionToStateFromSameState() throws {
@@ -147,6 +236,7 @@ final class ViewportImplTests: XCTestCase {
         XCTAssertEqual(fromState.startUpdatingCameraStub.invocations.count, 1)
         XCTAssertTrue(fromState.stopUpdatingCameraStub.invocations.isEmpty)
         XCTAssertEqual(completionStub.invocations.map(\.parameters), [true])
+        XCTAssertTrue(statusObserver.viewportStatusDidChangeStub.invocations.isEmpty)
     }
 
     func testInterruptingTransitionToStateWithSecondTransitionToSameState() throws {
@@ -158,14 +248,16 @@ final class ViewportImplTests: XCTestCase {
         viewportImpl.transition(to: state, completion: firstTransitionCompletionStub.call(with:))
 
         XCTAssertEqual(defaultTransition.runStub.invocations.count, 1)
+        XCTAssertEqual(statusObserver.viewportStatusDidChangeStub.invocations.count, 1)
         let runInvocation = try XCTUnwrap(defaultTransition.runStub.invocations.first)
         let runCancelable = try XCTUnwrap(runInvocation.returnValue as? MockCancelable)
 
         let secondTransitionCompletionStub = Stub<Bool, Void>()
         viewportImpl.transition(to: state, completion: secondTransitionCompletionStub.call(with:))
 
-        // no further transition is run
+        // no further transition is run and no futher notification is delivered
         XCTAssertEqual(defaultTransition.runStub.invocations.count, 1)
+        XCTAssertEqual(statusObserver.viewportStatusDidChangeStub.invocations.count, 1)
 
         // the current transition is not canceled or completed
         XCTAssertTrue(runCancelable.cancelStub.invocations.isEmpty)
@@ -195,6 +287,14 @@ final class ViewportImplTests: XCTestCase {
         XCTAssertEqual(transitionToACompletionStub.invocations.map(\.parameters), [false])
         XCTAssertEqual(transitionToARunCancelable.cancelStub.invocations.count, 1)
         XCTAssertEqual(viewportImpl.status, .transition(defaultTransition, fromState: stateA, toState: stateB))
+        XCTAssertEqual(
+            statusObserver.viewportStatusDidChangeStub.invocations.map(\.parameters),
+            [.init(fromStatus: .state(nil),
+                   toStatus: .transition(defaultTransition, fromState: nil, toState: stateA),
+                   reason: .programmatic),
+             .init(fromStatus: .transition(defaultTransition, fromState: nil, toState: stateA),
+                   toStatus: .transition(defaultTransition, fromState: stateA, toState: stateB),
+                   reason: .programmatic)])
 
         // idle to ensure that the correct final cancelable was stored
         viewportImpl.idle()
@@ -217,6 +317,14 @@ final class ViewportImplTests: XCTestCase {
         XCTAssertEqual(transitionToACompletionStub.invocations.map(\.parameters), [false])
         XCTAssertEqual(transitionToARunCancelable.cancelStub.invocations.count, 1)
         XCTAssertEqual(viewportImpl.status, .state(nil))
+        XCTAssertEqual(
+            statusObserver.viewportStatusDidChangeStub.invocations.map(\.parameters),
+            [.init(fromStatus: .state(nil),
+                   toStatus: .transition(defaultTransition, fromState: nil, toState: stateA),
+                   reason: .programmatic),
+             .init(fromStatus: .transition(defaultTransition, fromState: nil, toState: stateA),
+                   toStatus: .state(nil),
+                   reason: .programmatic)])
     }
 
     func testDefaultTransitionInitialization() {

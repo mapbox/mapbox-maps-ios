@@ -650,7 +650,7 @@ commands:
       - run:
           name: Retrieve TestResult from gcloud for << parameters.scheme >>
           command: |
-            testResult=$(gsutil ls gs://${TEST_LAB_EXAMPLES}/<< parameters.scheme >>-${CIRCLE_BUILD_NUM}/iphone11-13.6-en-portrait)
+            testResult=$(gsutil ls gs://${TEST_LAB_EXAMPLES}/<< parameters.scheme >>-${CIRCLE_BUILD_NUM}/iphone11-13.6-en_US-portrait)
             gsutil cp -r $testResult $DERIVED_DATA_PATH
           when: always
 

@@ -30,16 +30,22 @@ final class ViewportTests: XCTestCase {
         super.tearDown()
     }
 
-    func testStatus() {
-        impl.status = [
-            .state(MockViewportState()),
-            .state(nil),
-            .transition(MockViewportTransition(),
-                        fromState: MockViewportState(),
-                        toState: MockViewportState())
-        ].randomElement()!
+    func testOptions() {
+        let value = viewport.options
 
-        XCTAssertEqual(viewport.status, impl.status)
+        XCTAssertEqual([value], impl.$options.getStub.invocations.map(\.returnValue))
+
+        let newValue = ViewportOptions.random()
+
+        viewport.options = newValue
+
+        XCTAssertEqual(impl.$options.setStub.invocations.map(\.parameters), [newValue])
+    }
+
+    func testStatus() {
+        let value = viewport.status
+
+        XCTAssertEqual([value], impl.$status.getStub.invocations.map(\.returnValue))
     }
 
     func testAddStatusObserver() {

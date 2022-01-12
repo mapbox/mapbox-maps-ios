@@ -5,6 +5,7 @@ final class ViewportImplTests: XCTestCase {
 
     var mainQueue: MockMainQueue!
     var defaultTransition: MockViewportTransition!
+    var idleGestureRecognizer: MockGestureRecognizer!
     var viewportImpl: ViewportImpl!
     var statusObserver: MockViewportStatusObserver!
 
@@ -12,9 +13,12 @@ final class ViewportImplTests: XCTestCase {
         super.setUp()
         mainQueue = MockMainQueue()
         defaultTransition = MockViewportTransition()
+        idleGestureRecognizer = MockGestureRecognizer()
         viewportImpl = ViewportImpl(
+            options: .init(),
             mainQueue: mainQueue,
-            defaultTransition: defaultTransition)
+            defaultTransition: defaultTransition,
+            idleGestureRecognizer: idleGestureRecognizer)
         statusObserver = MockViewportStatusObserver()
         viewportImpl.addStatusObserver(statusObserver)
     }
@@ -22,6 +26,7 @@ final class ViewportImplTests: XCTestCase {
     override func tearDown() {
         statusObserver = nil
         viewportImpl = nil
+        idleGestureRecognizer = nil
         defaultTransition = nil
         mainQueue = nil
         super.tearDown()
@@ -531,4 +536,34 @@ final class ViewportImplTests: XCTestCase {
 
         XCTAssertTrue(viewportImpl.getTransition(from: stateA, to: stateB) === transitionB)
     }
+
+    func testIdleGestureSetsStatusToIdleWhenOptionIsEnabled() throws {
+        viewportImpl.options.transitionsToIdleUponUserInteraction = true
+        let state = MockViewportState()
+        try setUp(withCurrentState: state)
+
+        idleGestureRecognizer.getStateStub.defaultReturnValue = .began
+        idleGestureRecognizer.sendActions()
+        drainMainQueue()
+
+        XCTAssertEqual(state.stopUpdatingCameraStub.invocations.count, 1)
+        XCTAssertEqual(viewportImpl.status, .state(nil))
+        XCTAssertEqual(
+            statusObserver.viewportStatusDidChangeStub.invocations.map(\.parameters),
+            [.init(fromStatus: .state(state), toStatus: .state(nil), reason: .userInteraction)])
+   }
+
+    func testIdleGestureDoesNotSetStatusToIdleWhenOptionIsDisabled() throws {
+        viewportImpl.options.transitionsToIdleUponUserInteraction = false
+        let state = MockViewportState()
+        try setUp(withCurrentState: state)
+
+        idleGestureRecognizer.getStateStub.defaultReturnValue = .began
+        idleGestureRecognizer.sendActions()
+        drainMainQueue()
+
+        XCTAssertTrue(state.stopUpdatingCameraStub.invocations.isEmpty)
+        XCTAssertEqual(viewportImpl.status, .state(state))
+        XCTAssertTrue(statusObserver.viewportStatusDidChangeStub.invocations.isEmpty)
+   }
 }

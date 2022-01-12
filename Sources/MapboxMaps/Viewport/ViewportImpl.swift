@@ -1,4 +1,6 @@
 internal protocol ViewportImplProtocol: AnyObject {
+    var options: ViewportOptions { get set }
+
     var status: ViewportStatus { get }
     func addStatusObserver(_ observer: ViewportStatusObserver)
     func removeStatusObserver(_ observer: ViewportStatusObserver)
@@ -23,14 +25,20 @@ internal protocol ViewportImplProtocol: AnyObject {
 //
 internal final class ViewportImpl: ViewportImplProtocol {
 
+    internal var options: ViewportOptions
+
     private let mainQueue: MainQueueProtocol
 
     // viewport requires a default transition at all times
-    internal init(mainQueue: MainQueueProtocol,
-                  defaultTransition: ViewportTransition) {
+    internal init(options: ViewportOptions,
+                  mainQueue: MainQueueProtocol,
+                  defaultTransition: ViewportTransition,
+                  idleGestureRecognizer: UIGestureRecognizer) {
+        self.options = options
         self.mainQueue = mainQueue
         self.defaultTransition = defaultTransition
         self.status = .state(nil)
+        idleGestureRecognizer.addTarget(self, action: #selector(handleIdleGesture(_:)))
     }
 
     // MARK: - Status
@@ -69,12 +77,18 @@ internal final class ViewportImpl: ViewportImplProtocol {
     // MARK: - Changing States
 
     internal func idle() {
-        // cancel any previous state or transition
-        currentCancelable?.cancel()
+        idle(invokingCancelable: true, reason: .programmatic)
+    }
+
+    private func idle(invokingCancelable: Bool, reason: ViewportStatusChangeReason) {
+        if invokingCancelable {
+            // cancel any previous state or transition
+            currentCancelable?.cancel()
+        }
         currentCancelable = nil
         let fromStatus = status
         status = .state(nil)
-        notifyObservers(withFromStatus: fromStatus, toStatus: status, reason: .programmatic)
+        notifyObservers(withFromStatus: fromStatus, toStatus: status, reason: reason)
     }
 
     // the Bool in the completion block indicates whether the transition ran to
@@ -157,14 +171,7 @@ internal final class ViewportImpl: ViewportImplProtocol {
                         reason: .programmatic)
                 } else {
                     // the transition failed for some reason (e.g. its animations were canceled externally)
-                    // idle without using idle() so that we don't invoke currentCancelable
-                    self.currentCancelable = nil
-                    let fromStatus = self.status
-                    self.status = .state(nil)
-                    self.notifyObservers(
-                        withFromStatus: fromStatus,
-                        toStatus: self.status,
-                        reason: .programmatic)
+                    self.idle(invokingCancelable: false, reason: .programmatic)
                 }
             }
 
@@ -222,6 +229,19 @@ internal final class ViewportImpl: ViewportImplProtocol {
     internal func removeTransition(from fromState: ViewportState?, to toState: ViewportState) {
         assert(fromState !== toState)
         registeredTransitions.removeValue(forKey: CompositeTransitionKey(from: fromState, to: toState))
+    }
+
+    // MARK: - Gestures
+
+    @objc private func handleIdleGesture(_ gestureRecognizer: UIGestureRecognizer) {
+        switch gestureRecognizer.state {
+        case .began:
+            if options.transitionsToIdleUponUserInteraction {
+                idle(invokingCancelable: true, reason: .userInteraction)
+            }
+        default:
+            break
+        }
     }
 }
 

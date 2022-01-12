@@ -1,7 +1,9 @@
 @testable import MapboxMaps
 
 final class MockViewportImpl: ViewportImplProtocol {
-    var status: ViewportStatus = .state(nil)
+    @Stubbed var options: ViewportOptions = .random()
+
+    @Stubbed var status: ViewportStatus = .random()
 
     let addStatusObserverStub = Stub<ViewportStatusObserver, Void>()
     func addStatusObserver(_ observer: ViewportStatusObserver) {

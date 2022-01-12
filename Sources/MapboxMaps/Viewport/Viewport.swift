@@ -9,6 +9,11 @@
 //
 public final class Viewport {
 
+    public var options: ViewportOptions {
+        get { impl.options }
+        set { impl.options = newValue }
+    }
+
     private let impl: ViewportImplProtocol
     private let locationProducer: LocationProducerProtocol
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol

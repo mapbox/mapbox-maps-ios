@@ -1,3 +1,5 @@
+import UIKit
+
 internal protocol MapViewDependencyProviderProtocol: AnyObject {
     func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView
     func makeDisplayLink(window: UIWindow, target: Any, selector: Selector) -> DisplayLinkProtocol?
@@ -7,7 +9,8 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
     func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool) -> LocationProducerProtocol
     func makeLocationManager(locationProducer: LocationProducerProtocol, style: StyleProtocol) -> LocationManager
     func makeViewportImpl(mapboxMap: MapboxMapProtocol,
-                          cameraAnimationsManager: CameraAnimationsManagerProtocol) -> ViewportImplProtocol
+                          cameraAnimationsManager: CameraAnimationsManagerProtocol,
+                          idleGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol
 }
 
 internal final class MapViewDependencyProvider: MapViewDependencyProviderProtocol {
@@ -160,13 +163,16 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     }
 
     func makeViewportImpl(mapboxMap: MapboxMapProtocol,
-                          cameraAnimationsManager: CameraAnimationsManagerProtocol) -> ViewportImplProtocol {
+                          cameraAnimationsManager: CameraAnimationsManagerProtocol,
+                          idleGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol {
         return ViewportImpl(
+            options: .init(),
             mainQueue: MainQueue(),
             defaultTransition: DefaultViewportTransition(
                 options: .init(),
                 animationHelper: DefaultViewportTransitionAnimationHelper(
                     mapboxMap: mapboxMap,
-                    cameraAnimationsManager: cameraAnimationsManager)))
+                    cameraAnimationsManager: cameraAnimationsManager)),
+            idleGestureRecognizer: idleGestureRecognizer)
     }
 }

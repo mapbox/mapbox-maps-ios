@@ -1,13 +1,8 @@
 import Turf
-public struct OverviewViewportStateOptions: Equatable {
-    public var geometry: Geometry
-
-    public init(geometry: GeometryConvertible) {
-        self.geometry = geometry.geometry
-    }
-}
 
 public final class OverviewViewportState {
+
+    // MARK: - Public Config
 
     public var options: OverviewViewportStateOptions {
         didSet {
@@ -15,27 +10,50 @@ public final class OverviewViewportState {
         }
     }
 
+    // MARK: - Injected Dependencies
+
     private let mapboxMap: MapboxMapProtocol
+
+    private let cameraAnimationsManager: CameraAnimationsManagerProtocol
 
     private let observableCameraOptions: ObservableCameraOptionsProtocol
 
+    // MARK: - Private State
+
     private var updatingCameraCancelable: Cancelable?
+
+    private var cameraAnimationCancelable: Cancelable?
+
+    // MARK: - Initialization
 
     internal init(options: OverviewViewportStateOptions,
                   mapboxMap: MapboxMapProtocol,
+                  cameraAnimationsManager: CameraAnimationsManagerProtocol,
                   observableCameraOptions: ObservableCameraOptionsProtocol) {
         self.options = options
         self.mapboxMap = mapboxMap
+        self.cameraAnimationsManager = cameraAnimationsManager
         self.observableCameraOptions = observableCameraOptions
         recalculateCameraOptions()
     }
 
+    // MARK: - Private Utilities
+
     private func recalculateCameraOptions() {
         observableCameraOptions.notify(with: mapboxMap.camera(
             for: options.geometry,
-               padding: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
-               bearing: 0,
-               pitch: 0))
+            padding: options.padding,
+            bearing: options.bearing,
+            pitch: options.pitch))
+    }
+
+    private func animate(to cameraOptions: CameraOptions) {
+        cameraAnimationCancelable?.cancel()
+        cameraAnimationCancelable = cameraAnimationsManager.ease(
+            to: cameraOptions,
+            duration: max(0, options.animationDuration),
+            curve: .linear,
+            completion: nil)
     }
 }
 
@@ -48,8 +66,8 @@ extension OverviewViewportState: ViewportState {
         guard updatingCameraCancelable == nil else {
             return
         }
-        updatingCameraCancelable = observableCameraOptions.observe { [mapboxMap] cameraOptions in
-            mapboxMap.setCamera(to: cameraOptions)
+        updatingCameraCancelable = observableCameraOptions.observe { [weak self] cameraOptions in
+            self?.animate(to: cameraOptions)
             return true
         }
     }
@@ -57,5 +75,7 @@ extension OverviewViewportState: ViewportState {
     public func stopUpdatingCamera() {
         updatingCameraCancelable?.cancel()
         updatingCameraCancelable = nil
+        cameraAnimationCancelable?.cancel()
+        cameraAnimationCancelable = nil
     }
 }

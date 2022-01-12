@@ -108,6 +108,7 @@ public final class Viewport {
         return OverviewViewportState(
             options: options,
             mapboxMap: mapboxMap,
+            cameraAnimationsManager: cameraAnimationsManager,
             observableCameraOptions: ObservableCameraOptions())
     }
 

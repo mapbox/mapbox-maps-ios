@@ -4,10 +4,12 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 10.3.0-beta.1 - January 12, 2022
+
 * Exposed `triggerRepaint()` to allow manual map repainting.
-    ([#964])(https://github.com/mapbox/mapbox-maps-ios/pull/964)
+    ([#964](https://github.com/mapbox/mapbox-maps-ios/pull/964))
 * Exposed `TransitionOptions` to allow control over symbol fade duration.
-    ([#902])(https://github.com/mapbox/mapbox-maps-ios/pull/902)
+    ([#902](https://github.com/mapbox/mapbox-maps-ios/pull/902))
 * Added `Style.removeTerrain()` to allow removing terrain. ([#918](https://github.com/mapbox/mapbox-maps-ios/pull/918))
 * `Snapshotter` initialization now triggers a turnstyle event. ([#908](https://github.com/mapbox/mapbox-maps-ios/pull/908))
 * Fixed a bug where 2D puck location was never set when location accuracy authorization was reduced. ([#989](https://github.com/mapbox/mapbox-maps-ios/pull/989))
@@ -520,11 +522,11 @@ Mapbox welcomes participation and contributions from everyone.
       * The setter for `BaseMapView.__map` is now private
       * `Snapshotter` no longer conforms to `Observer`, and the method it required is now internal.
   * The `BaseMapView.__map` property has been moved to `BaseMapView.mapboxMap.__map`. ([#280](https://github.com/mapbox/mapbox-maps-ios/pull/280))
-  * A `CameraOptions` struct has been introduced. This shadows the class of the same name from MapboxCoreMaps and. This avoids unintended sharing and better reflects the intended value semantics of the `CameraOptions` concept. ([#284](https://github.com/mapbox/mapbox-maps-ios/pull/284))  
+  * A `CameraOptions` struct has been introduced. This shadows the class of the same name from MapboxCoreMaps and. This avoids unintended sharing and better reflects the intended value semantics of the `CameraOptions` concept. ([#284](https://github.com/mapbox/mapbox-maps-ios/pull/284))
 
 - #### Dependencies
   * Updated dependencies to MapboxCoreMaps 10.0.0-beta.20 and MapboxCommon 11.0.1
-  * ResourceOptions now contains a `TileStore` instance. Tile store usage is enabled by default, the resource option `tileStoreEnabled` flag is introduced to disable it.  
+  * ResourceOptions now contains a `TileStore` instance. Tile store usage is enabled by default, the resource option `tileStoreEnabled` flag is introduced to disable it.
   * `TileStore` no longer returns cached responses for 401, 403 and unauthorized requests.
   * Fixed a bug where `TileStore` would not invoke completion closures (when client code did not keep a strong reference to the tile store instance).
 

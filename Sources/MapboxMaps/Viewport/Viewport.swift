@@ -26,8 +26,8 @@ public final class Viewport {
 
     // MARK: - Current State
 
-    // a nil status is known as "idle"; this is the default
-    public var status: ViewportStatus? {
+    // the status .state(nil) is known as "idle"; this is the default
+    public var status: ViewportStatus {
         impl.status
     }
 
@@ -43,9 +43,18 @@ public final class Viewport {
         impl.idle()
     }
 
-    // set
     // the Bool in the completion block indicates whether the transition ran to
-    // completion (true) or was interrupted by another transition (false)
+    // completion (true) or was interrupted in some way (false). if the source
+    // of the interruption was because transition(to:completion:) or idle() was
+    // invoked, the next status is determined by those interrupting calls. if
+    // the source of the interruption was external (e.g. the ViewportTransition
+    // failed for some reason), the status will be set to idle (.state(nil)).
+    //
+    // transitioning to state x when status equals .state(x) just
+    // invokes completion synchronously with `true` and does not modify status
+    //
+    // transitioning to state x when status equals .transition(_, _, x) just
+    // invokes completion synchronously with `false` and does not modify status
     public func transition(to toState: ViewportState, completion: ((Bool) -> Void)? = nil) {
         impl.transition(to: toState, completion: completion)
     }

@@ -16,17 +16,13 @@ public final class DefaultViewportTransition {
 extension DefaultViewportTransition: ViewportTransition {
     public func run(from fromState: ViewportState?,
                     to toState: ViewportState,
-                    completion: @escaping () -> Void) -> Cancelable {
+                    completion: @escaping (Bool) -> Void) -> Cancelable {
         let resultCancelable = CompositeCancelable()
         resultCancelable.add(toState.observeDataSource { [options, animationHelper] cameraOptions in
             resultCancelable.add(animationHelper.animate(
                 to: cameraOptions,
-                maxDuration: options.maxDuration) { finished in
-                    // only invoke the completion block if the animation was not canceled
-                    if finished {
-                        completion()
-                    }
-                })
+                maxDuration: options.maxDuration,
+                completion: completion))
             // stop receiving updates (ignore moving targets)
             return false
         })

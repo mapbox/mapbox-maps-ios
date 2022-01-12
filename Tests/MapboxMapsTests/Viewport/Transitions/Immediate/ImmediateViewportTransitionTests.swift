@@ -20,8 +20,10 @@ final class ImmediateViewportTransitionTests: XCTestCase {
 
     func testRunCancellation() throws {
         let toState = MockViewportState()
-        let completionStub = Stub<Void, Void>()
-        let cancelable = transition.run(from: nil, to: toState, completion: completionStub.call)
+        let cancelable = transition.run(
+            from: nil,
+            to: toState,
+            completion: { _ in })
 
         XCTAssertEqual(toState.observeDataSourceStub.invocations.count, 1)
         let observeDataSourceInvocation = try XCTUnwrap(toState.observeDataSourceStub.invocations.first)
@@ -30,13 +32,15 @@ final class ImmediateViewportTransitionTests: XCTestCase {
         cancelable.cancel()
 
         XCTAssertEqual(observeDataSourceCancelable.cancelStub.invocations.count, 1)
-        XCTAssertTrue(completionStub.invocations.isEmpty)
     }
 
     func testRunCompletion() throws {
         let toState = MockViewportState()
-        let completionStub = Stub<Void, Void>()
-        _ = transition.run(from: nil, to: toState, completion: completionStub.call)
+        let completionStub = Stub<Bool, Void>()
+        _ = transition.run(
+            from: nil,
+            to: toState,
+            completion: completionStub.call(with:))
 
         XCTAssertEqual(toState.observeDataSourceStub.invocations.count, 1)
         let observeDataSourceInvocation = try XCTUnwrap(toState.observeDataSourceStub.invocations.first)
@@ -46,7 +50,7 @@ final class ImmediateViewportTransitionTests: XCTestCase {
         let shouldContinue = observeDataSourceHandler(cameraOptions)
 
         XCTAssertEqual(mapboxMap.setCameraStub.invocations.map(\.parameters), [cameraOptions])
-        XCTAssertEqual(completionStub.invocations.count, 1)
+        XCTAssertEqual(completionStub.invocations.map(\.parameters), [true])
         XCTAssertFalse(shouldContinue)
     }
 }

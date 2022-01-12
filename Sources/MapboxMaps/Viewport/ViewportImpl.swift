@@ -77,9 +77,12 @@ internal final class ViewportImpl: ViewportImplProtocol {
         notifyObservers(withFromStatus: fromStatus, toStatus: status, reason: .programmatic)
     }
 
-    // set
     // the Bool in the completion block indicates whether the transition ran to
-    // completion (true) or was interrupted by another transition (false)
+    // completion (true) or was interrupted in some way (false). if the source
+    // of the interruption was because transition(to:completion:) or idle() was
+    // invoked, the next status is determined by those interrupting calls. if
+    // the source of the interruption was external (e.g. the ViewportTransition
+    // failed for some reason), the status will be set to idle (.state(nil)).
     //
     // transitioning to state x when status equals .state(x) just
     // invokes completion synchronously with `true` and does not modify status
@@ -119,32 +122,54 @@ internal final class ViewportImpl: ViewportImplProtocol {
         let transition = getTransition(from: fromState, to: toState) ?? defaultTransition
 
         // run the transition
+        var transitionCanceled = false
         var completionBlockInvoked = false
-        let transitionCancelable = transition.run(from: fromState, to: toState) { [weak self] in
+        let transitionCancelable = transition.run(from: fromState, to: toState) { [weak self] (success) in
             completionBlockInvoked = true
 
+            // transitions are allowed to invoke this completion block when we
+            // cancel the cancelable they return to us. If we initiate the
+            // cancellation, we just want to ignore the rest of this block
+            // since we handle the cleanup separately (and differently) in that
+            // case.
+            guard !transitionCanceled else {
+                return
+            }
+
             if let self = self {
-                // transfer camera upating responsibility to toState
-                toState.startUpdatingCamera()
+                if success {
+                    // transfer camera upating responsibility to toState
+                    toState.startUpdatingCamera()
 
-                self.currentCancelable = BlockCancelable {
-                    toState.stopUpdatingCamera()
+                    self.currentCancelable = BlockCancelable {
+                        toState.stopUpdatingCamera()
+                    }
+
+                    // set the status before calling the completion block
+                    // since it could trigger some further mutation to status
+                    // which would then be clobbered by this line.
+                    let fromStatus = self.status
+                    self.status = .state(toState)
+
+                    self.notifyObservers(
+                        withFromStatus: fromStatus,
+                        toStatus: self.status,
+                        reason: .programmatic)
+                } else {
+                    // the transition failed for some reason (e.g. its animations were canceled externally)
+                    // idle without using idle() so that we don't invoke currentCancelable
+                    self.currentCancelable = nil
+                    let fromStatus = self.status
+                    self.status = .state(nil)
+                    self.notifyObservers(
+                        withFromStatus: fromStatus,
+                        toStatus: self.status,
+                        reason: .programmatic)
                 }
-
-                // set the status before calling the completion block
-                // since it could trigger some further mutation to status
-                // which would then be clobbered by this line.
-                let fromStatus = self.status
-                self.status = .state(toState)
-
-                self.notifyObservers(
-                    withFromStatus: fromStatus,
-                    toStatus: self.status,
-                    reason: .programmatic)
             }
 
             // and call the completion block
-            completion?(true)
+            completion?(success)
         }
 
         // since it's possible that a transition might invoke its
@@ -153,6 +178,10 @@ internal final class ViewportImpl: ViewportImplProtocol {
         // so that we don't clobber the toState cancelable.
         if !completionBlockInvoked {
             currentCancelable = BlockCancelable {
+                // we canceled the transition; set this flag
+                // so that we skip the run completion block if
+                // it gets invoked when we cancel transitionCancelable
+                transitionCanceled = true
                 transitionCancelable.cancel()
                 completion?(false)
             }

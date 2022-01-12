@@ -26,12 +26,12 @@ final class DefaultViewportTransitionTests: XCTestCase {
     func testRunToCompletion() throws {
         let fromState = MockViewportState()
         let toState = MockViewportState()
-        let completionStub = Stub<Void, Void>()
+        let completionStub = Stub<Bool, Void>()
 
         _ = transition.run(
             from: fromState,
             to: toState,
-            completion: completionStub.call)
+            completion: completionStub.call(with:))
 
         XCTAssertEqual(toState.observeDataSourceStub.invocations.count, 1)
         let observeInvocation = try XCTUnwrap(toState.observeDataSourceStub.invocations.first)
@@ -54,18 +54,18 @@ final class DefaultViewportTransitionTests: XCTestCase {
         // exercise the animation completion
         animateCompletion(true) // true means the animation wasn't canceled
 
-        XCTAssertEqual(completionStub.invocations.count, 1)
+        XCTAssertEqual(completionStub.invocations.map(\.parameters), [true])
     }
 
     func testRunAnimationCanceled() throws {
         let fromState = MockViewportState()
         let toState = MockViewportState()
-        let completionStub = Stub<Void, Void>()
+        let completionStub = Stub<Bool, Void>()
 
         _ = transition.run(
             from: fromState,
             to: toState,
-            completion: completionStub.call)
+            completion: completionStub.call(with:))
 
         XCTAssertEqual(toState.observeDataSourceStub.invocations.count, 1)
         let observeInvocation = try XCTUnwrap(toState.observeDataSourceStub.invocations.first)
@@ -88,18 +88,17 @@ final class DefaultViewportTransitionTests: XCTestCase {
         // exercise the animation completion
         animateCompletion(false) // false means the animation was canceled
 
-        XCTAssertTrue(completionStub.invocations.isEmpty)
+        XCTAssertEqual(completionStub.invocations.map(\.parameters), [false])
     }
 
     func testRunAndCancelAfterAnimationStarts() throws {
         let fromState = MockViewportState()
         let toState = MockViewportState()
-        let completionStub = Stub<Void, Void>()
 
         let cancelable = transition.run(
             from: fromState,
             to: toState,
-            completion: completionStub.call)
+            completion: { _ in })
 
         XCTAssertEqual(toState.observeDataSourceStub.invocations.count, 1)
         let observeInvocation = try XCTUnwrap(toState.observeDataSourceStub.invocations.first)
@@ -129,12 +128,11 @@ final class DefaultViewportTransitionTests: XCTestCase {
     func testRunAndCancelBeforeAnimationStarts() throws {
         let fromState = MockViewportState()
         let toState = MockViewportState()
-        let completionStub = Stub<Void, Void>()
 
         let cancelable = transition.run(
             from: fromState,
             to: toState,
-            completion: completionStub.call)
+            completion: { _ in })
 
         XCTAssertEqual(toState.observeDataSourceStub.invocations.count, 1)
         let observeInvocation = try XCTUnwrap(toState.observeDataSourceStub.invocations.first)

@@ -95,6 +95,10 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertTrue(gestureManager.quickZoomGestureRecognizer === quickZoomGestureHandler.gestureRecognizer)
     }
 
+    func testAnimationLockoutGestureRecognizer() {
+        XCTAssertTrue(gestureManager.animationLockoutGestureRecognizer === animationLockoutGestureHandler.gestureRecognizer)
+    }
+
     func testPanGestureHandlerDelegate() {
         XCTAssertTrue(panGestureHandler.delegate === gestureManager)
     }

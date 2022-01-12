@@ -36,7 +36,7 @@ internal class CameraView: UIView {
             anchor: layer.anchorPoint,
             zoom: CGFloat(layer.opacity),
             bearing: CLLocationDirection(layer.cornerRadius),
-            pitch: layer.transform.m11)
+            pitch: layer.borderWidth)
     }
 
     internal func syncLayer(to cameraOptions: CameraOptions) {
@@ -58,7 +58,7 @@ internal class CameraView: UIView {
         }
 
         if let pitch = cameraOptions.pitch {
-            layer.transform.m11 = pitch
+            layer.borderWidth = pitch
         }
 
         if let anchor = cameraOptions.anchor {

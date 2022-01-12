@@ -9,7 +9,7 @@ final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
         var curve: UIView.AnimationCurve
         var completion: AnimationCompletion?
     }
-    let easeToStub = Stub<EaseToCameraParameters, CameraAnimator?>(defaultReturnValue: nil)
+    let easeToStub = Stub<EaseToCameraParameters, Cancelable?>(defaultReturnValue: MockCancelable())
     func ease(to camera: CameraOptions,
               duration: TimeInterval,
               curve: UIView.AnimationCurve,
@@ -50,5 +50,30 @@ final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
                 decelerationFactor: decelerationFactor,
                 locationChangeHandler: locationChangeHandler,
                 completion: completion))
+    }
+
+    struct MakeAnimatorParams {
+        var duration: TimeInterval
+        var curve: UIView.AnimationCurve
+        var animationOwner: AnimationOwner
+        var animations: (inout CameraTransition) -> Void
+    }
+    // TODO: refactor CameraAnimationsManager to use internal Impl and make internal components depend on the impl protocol
+    let makeAnimatorStub = Stub<MakeAnimatorParams, BasicCameraAnimator>(
+        defaultReturnValue: BasicCameraAnimator(
+            propertyAnimator: MockPropertyAnimator(),
+            owner: .unspecified,
+            mapboxMap: MockMapboxMap(),
+            cameraView: MockCameraView(),
+            delegate: MockCameraAnimatorDelegate()))
+    func makeAnimator(duration: TimeInterval,
+                      curve: UIView.AnimationCurve,
+                      animationOwner: AnimationOwner,
+                      animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator {
+        makeAnimatorStub.call(with: .init(
+            duration: duration,
+            curve: curve,
+            animationOwner: animationOwner,
+            animations: animations))
     }
 }

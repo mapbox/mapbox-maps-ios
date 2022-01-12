@@ -257,6 +257,3 @@ public struct Examples {
                 type: GlobeViewExample.self),
     ]
 }
-
-struct ExamplesCategories {
-}

@@ -1,4 +1,5 @@
 import Foundation
+import CoreLocation
 @testable import MapboxMaps
 
 extension Character {
@@ -75,5 +76,89 @@ extension UIEdgeInsets {
             left: .random(in: 0...100),
             bottom: .random(in: 0...100),
             right: .random(in: 0...100))
+    }
+}
+
+extension Location {
+    static func random() -> Location {
+        return Location(
+            location: .random(),
+            heading: .random(MockHeading()),
+            accuracyAuthorization: .random())
+    }
+}
+
+extension CLAccuracyAuthorization {
+    static func random() -> Self {
+        return .random() ? .fullAccuracy : .reducedAccuracy
+    }
+}
+
+extension CLLocation {
+    static func random() -> CLLocation {
+        return CLLocation(
+            latitude: .random(in: -89...89),
+            longitude: .random(in: -180..<180))
+    }
+}
+
+extension Optional {
+    static func random(_ generator: @autoclosure () -> Wrapped) -> Self {
+        return .random() ? .none : .some(generator())
+    }
+}
+
+extension FollowingViewportStateBearing {
+    static func random() -> Self {
+        return [
+            .constant(.random(in: 0..<360)),
+            .heading,
+            .course
+        ].randomElement()!
+    }
+}
+
+extension FollowingViewportStateOptions {
+    static func random() -> Self {
+        return FollowingViewportStateOptions(
+            zoom: .random(in: 0...20),
+            pitch: .random(in: 0...80),
+            bearing: .random(),
+            padding: .random(),
+            animationDuration: .random(in: -2...2))
+    }
+}
+
+extension DefaultViewportTransitionOptions {
+    static func random() -> Self {
+        return DefaultViewportTransitionOptions(
+            maxDuration: .random(in: 0...20))
+    }
+}
+
+extension ViewportStatus {
+    static func random() -> Self {
+        return [
+            .state(.random(MockViewportState())),
+            .transition(MockViewportTransition(), fromState: .random(MockViewportState()), toState: MockViewportState())
+        ].randomElement()!
+    }
+}
+
+extension ViewportOptions {
+    static func random() -> Self {
+        return ViewportOptions(
+            transitionsToIdleUponUserInteraction: .random())
+    }
+}
+
+extension OverviewViewportStateOptions {
+    static func random() -> Self {
+        return OverviewViewportStateOptions(
+            geometry: Point(.random()),
+            padding: .random(),
+            bearing: .random(in: 0..<360),
+            pitch: .random(in: 0...80),
+            animationDuration: .random(in: 0..<10))
     }
 }

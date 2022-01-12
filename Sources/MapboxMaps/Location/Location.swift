@@ -29,13 +29,7 @@ import CoreLocation
     /// Returns `nil` if `heading` is `nil`, `heading.trueHeading` if it's non-negative,
     /// and `heading.magneticHeading` otherwise.
     public var headingDirection: CLLocationDirection? {
-        guard let heading = heading else {
-            return nil
-        }
-        guard heading.trueHeading >= 0 else {
-            return heading.magneticHeading
-        }
-        return heading.trueHeading
+        return heading.map { $0.trueHeading >= 0 ? $0.trueHeading : $0.magneticHeading }
     }
 
     /// An accuracy authorization value.

@@ -608,6 +608,7 @@ jobs:
   # - creates a draft release on GitHub
   release:
     <<: *base-job
+    resource_class: large
     steps:
       - parse-release-version-if-available
       - checkout

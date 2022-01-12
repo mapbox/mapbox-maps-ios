@@ -67,7 +67,7 @@ maps_ios_upload_docs() {
 
     VERSION_BRANCH_NAME="docs/$VERSION"
     git checkout -b "$VERSION_BRANCH_NAME"
-    git push --force --quiet
+    git push --force --quiet --set-upstream origin
 
     popd > /dev/null
 }

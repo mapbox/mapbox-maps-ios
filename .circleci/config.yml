@@ -152,6 +152,8 @@ workflows:
           type: approval
           filters:
             <<: *release-tags-filter
+          requires:
+            - Release
       - wait-for-binaries:
           filters:
             <<: *release-tags-filter

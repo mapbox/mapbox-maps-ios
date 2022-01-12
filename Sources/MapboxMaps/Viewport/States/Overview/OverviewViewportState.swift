@@ -43,7 +43,7 @@ public final class OverviewViewportState {
         observableCameraOptions.notify(with: mapboxMap.camera(
             for: options.geometry,
             padding: options.padding,
-            bearing: options.bearing,
+            bearing: CGFloat(options.bearing),
             pitch: options.pitch))
     }
 

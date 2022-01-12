@@ -78,7 +78,7 @@ maps_ios_production_docs_pr() {
 
     PRODUCTION_DOCS_PR_URL=$(GITHUB_TOKEN=$(mbx-ci github writer public token) \
         gh pr create --repo mapbox/mapbox-maps-ios \
-            --head "publisher-staging" --base "$VERSION_BRANCH_NAME" \
+            --head "publisher-production" --base "$VERSION_BRANCH_NAME" \
             --draft \
             --title "Production docs for \`v$VERSION\`" \
             --body "$body" \

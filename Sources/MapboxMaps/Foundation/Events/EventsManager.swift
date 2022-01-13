@@ -75,3 +75,32 @@ internal final class EventsManager {
         mmeEventsManager.enqueueEvent(withName: MMEEventTypeMapLoad)
     }
 }
+
+class MMEEventsManager {
+    
+    static func shared() -> MMEEventsManager {
+        MMEEventsManager()
+    }
+    
+    var skuId: String = ""
+    
+    func flush() { }
+    func sendTurnstileEvent() { }
+    func initialize(withAccessToken: String, userAgentBase: String, hostSDKVersion: String) {
+            
+        }
+    func pauseOrResumeMetricsCollectionIfRequired() { }
+    
+    func enqueueEvent(withName: String) { }
+}
+
+extension UserDefaults {
+    class EventsOptions {
+        var mme_isCollectionEnabled = true
+    }
+    static func mme_configuration() -> EventsOptions {
+        return EventsOptions()
+    }
+}
+
+let MMEEventTypeMapLoad = "MMEEventTypeMapLoad"

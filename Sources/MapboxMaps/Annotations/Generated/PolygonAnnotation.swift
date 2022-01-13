@@ -12,7 +12,7 @@ public struct PolygonAnnotation: Annotation {
     }
 
     /// The polygon backing this annotation
-    public var polygon: Polygon
+    public var polygon: Turf.Polygon
 
     /// Properties associated with the annotation
     public var userInfo: [String: Any]?
@@ -33,7 +33,7 @@ public struct PolygonAnnotation: Annotation {
     }
 
     /// Create a polygon annotation with a `Polygon` and an optional identifier.
-    public init(id: String = UUID().uuidString, polygon: Polygon) {
+    public init(id: String = UUID().uuidString, polygon: Turf.Polygon) {
         self.id = id
         self.polygon = polygon
     }

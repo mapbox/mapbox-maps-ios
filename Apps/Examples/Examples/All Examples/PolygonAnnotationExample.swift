@@ -43,7 +43,7 @@ final class PolygonAnnotationExample: UIViewController, ExampleProtocol {
         polygonAnnotationManager.annotations = [polygonAnnotation]
     }
 
-    private func makePolygon() -> Polygon {
+    private func makePolygon() -> Turf.Polygon {
 
         // Describe the polygon's geometry
         let outerRingCoords = [

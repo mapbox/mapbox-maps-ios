@@ -194,6 +194,7 @@
 		CAC195B625AC098A00F69FEA /* CameraAnimatorsExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraAnimatorsExample.swift; sourceTree = "<group>"; };
 		CADCF742258499570065C51B /* BasicMapExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicMapExample.swift; sourceTree = "<group>"; };
 		CAF9A9802583E49B007EF9EC /* TestableExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestableExampleTests.swift; sourceTree = "<group>"; };
+		E6CE17E12790640A00F5DBBB /* Examples.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Examples.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -330,6 +331,7 @@
 		077C4EEC252F7E88007636F1 /* Examples */ = {
 			isa = PBXGroup;
 			children = (
+				E6CE17E12790640A00F5DBBB /* Examples.entitlements */,
 				0746C182252FB0F4001638BD /* All Examples */,
 				0746C143252FA97E001638BD /* Models */,
 				0746C144252FA983001638BD /* Controllers */,
@@ -791,6 +793,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Examples/Examples.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				INFOPLIST_FILE = Examples/Info.plist;
@@ -800,6 +803,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.examples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_WORKSPACE = YES;
@@ -811,6 +815,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Examples/Examples.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				INFOPLIST_FILE = Examples/Info.plist;
@@ -820,6 +825,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.examples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_WORKSPACE = YES;

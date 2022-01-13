@@ -1,6 +1,10 @@
 // swiftlint:disable file_length
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 import MapboxMaps
 
 /// Example that shows how to use OfflineManager and TileStore to

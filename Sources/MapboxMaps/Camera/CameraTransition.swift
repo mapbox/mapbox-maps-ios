@@ -1,4 +1,8 @@
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 import CoreLocation
 
 /// Structure used to represent a desired change to the map's camera

@@ -6,23 +6,26 @@ import PackageDescription
 let package = Package(
     name: "MapboxMaps",
     defaultLocalization: "en",
-    platforms: [.iOS(.v11)],
+    platforms: [.iOS(.v11), .macOS(.v10_12)],
     products: [
         .library(
             name: "MapboxMaps",
             targets: ["MapboxMaps"]),
     ],
     dependencies: [
-        .package(name: "MapboxCoreMaps", url: "https://github.com/mapbox/mapbox-core-maps-ios.git", .exact("10.3.0-beta.1")),
-        .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .exact("21.1.0-beta.1")),
-        .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", .exact("1.0.7")),
+//        .package(name: "MapboxCoreMaps", url: "https://github.com/mapbox/mapbox-core-maps-ios.git", .exact("10.3.0-beta.1")),
+//        .package(name: "MapboxCommon", url: "https://github.com/mapbox/mapbox-common-ios.git", .exact("21.1.0-beta.1")),
+//        .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", .exact("1.0.7")),
         .package(name: "Turf", url: "https://github.com/mapbox/turf-swift.git", from: "2.0.0"),
         .package(name: "CocoaImageHashing", url: "https://github.com/ameingast/cocoaimagehashing", .exact("1.9.0"))
     ],
     targets: [
         .target(
             name: "MapboxMaps",
-            dependencies: ["MapboxCoreMaps", "Turf", "MapboxMobileEvents", "MapboxCommon"],
+            dependencies: ["MapboxCoreMaps", "Turf",
+                           "MapboxCommon"
+//                           .byName(name: "MapboxMobileEvents", condition: .when(platforms: [.iOS]))
+                          ],
             exclude: [
                 "Info.plist"
             ],
@@ -55,6 +58,9 @@ let package = Package(
                 .copy("Snapshot/testSnapshotOverlay.png"),
                 .process("Resources/MapInitOptionsTests.xib"),
             ]
-        )
+        ),
+        .binaryTarget(name: "MapboxCoreMaps", path: "MapboxCoreMaps.xcframework"),
+        .binaryTarget(name: "MapboxCommon", path: "MapboxCommon.xcframework"),
+//        .binaryTarget(name: "MapboxCommon_Private", path: "MapboxCommon.xcframework"),
     ]
 )

@@ -1,4 +1,8 @@
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /// `SingleTapGestureHandler` manages a gesture recognizer looking for single tap touch events
 internal final class SingleTapGestureHandler: GestureHandler {

@@ -1,7 +1,11 @@
 import XCTest
 import MapboxMaps
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 //swiftlint:disable explicit_top_level_acl explicit_acl
 

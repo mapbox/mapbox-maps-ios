@@ -1,5 +1,9 @@
 import MapboxMaps
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 @objc(RasterTileSourceExample)
 class RasterTileSourceExample: UIViewController, ExampleProtocol {

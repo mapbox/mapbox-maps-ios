@@ -1,4 +1,8 @@
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 internal protocol PinchGestureHandlerProtocol: GestureHandler {
     var rotateEnabled: Bool { get set }

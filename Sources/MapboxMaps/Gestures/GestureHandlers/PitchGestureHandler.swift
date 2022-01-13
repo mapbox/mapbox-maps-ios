@@ -1,4 +1,8 @@
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /// `PitchGestureHandler` updates the map camera in response to a vertical,
 /// 2-touch pan gesture in which the angle between the touch points is less than 45°.

@@ -1,4 +1,8 @@
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 @_implementationOnly import MapboxCommon_Private
 
 // swiftlint:disable function_body_length file_length type_body_length

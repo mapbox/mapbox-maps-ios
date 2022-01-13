@@ -1,4 +1,8 @@
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /// `PinchGestureHandler` updates the map camera in response to a 2-touch
 /// gesture that may consist of translation, scaling, and rotation

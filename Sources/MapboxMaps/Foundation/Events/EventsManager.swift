@@ -1,5 +1,9 @@
+#if canImport(UIKit)
 import UIKit
-import MapboxMobileEvents
+#elseif canImport(AppKit)
+import AppKit
+#endif
+//import MapboxMobileEvents
 
 extension UserDefaults {
     // dynamic var's name has to be the same as corresponding key in UserDefaults

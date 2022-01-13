@@ -1,4 +1,8 @@
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /// Options used to configure the direction in which the map is allowed to move
 /// during a pan gesture. Called `ScrollMode` in the Android SDK for

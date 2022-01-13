@@ -1,4 +1,8 @@
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 internal protocol MapViewDependencyProviderProtocol: AnyObject {
     func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView

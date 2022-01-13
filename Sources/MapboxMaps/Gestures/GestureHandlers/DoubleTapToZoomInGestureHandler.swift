@@ -1,4 +1,8 @@
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /// `DoubleTapToZoomInGestureHandler` updates the map camera in response
 /// to double tap gestures with 1 touch

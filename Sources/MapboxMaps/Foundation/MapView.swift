@@ -5,7 +5,11 @@
 @_exported import Turf
 @_implementationOnly import MapboxCoreMaps_Private
 @_implementationOnly import MapboxCommon_Private
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 // swiftlint:disable type_body_length
 @available(iOSApplicationExtension, unavailable)

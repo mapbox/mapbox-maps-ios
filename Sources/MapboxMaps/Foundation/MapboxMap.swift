@@ -1,6 +1,10 @@
 // swiftlint:disable file_length
 import MapboxCoreMaps
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 @_implementationOnly import MapboxCommon_Private
 @_implementationOnly import MapboxCoreMaps_Private
 

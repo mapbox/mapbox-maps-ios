@@ -1,4 +1,8 @@
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 extension UIViewController {
     internal func addChildViewController(_ child: UIViewController) {

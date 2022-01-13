@@ -1,7 +1,11 @@
 import XCTest
 @testable import MapboxMaps
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 class AttributionTests: XCTestCase {
 

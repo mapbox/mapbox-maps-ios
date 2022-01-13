@@ -1,4 +1,8 @@
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 private let defaultOrnamentsMargin = CGPoint(x: 8.0, y: 8.0)
 

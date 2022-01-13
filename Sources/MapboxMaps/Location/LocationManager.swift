@@ -1,5 +1,9 @@
 import CoreLocation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 /// An object responsible for notifying the map view about location-related events,
 /// such as a change in the device’s location.

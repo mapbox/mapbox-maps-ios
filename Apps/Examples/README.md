@@ -60,7 +60,11 @@ To add a new example, go through the following steps:
    to import the dependencies needed to make the example work:
 
    ```swift
-   import UIKit
+   #if canImport(UIKit)
+import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
    import MapboxMaps
    import MapboxCoreMaps
    import MapboxCommon

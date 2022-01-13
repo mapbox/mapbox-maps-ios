@@ -1,4 +1,8 @@
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {

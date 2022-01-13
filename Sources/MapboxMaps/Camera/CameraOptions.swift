@@ -1,6 +1,10 @@
 import Foundation
 import CoreLocation
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 public struct CameraOptions: Hashable {
     public var center: CLLocationCoordinate2D?

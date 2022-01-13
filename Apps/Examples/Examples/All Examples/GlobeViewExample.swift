@@ -1,4 +1,8 @@
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 @_spi(Experimental) import MapboxMaps
 
 @objc(GlobeViewExample)

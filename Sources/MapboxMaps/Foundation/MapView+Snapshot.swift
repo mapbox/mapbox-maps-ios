@@ -1,5 +1,9 @@
 @_implementationOnly import MapboxCommon_Private
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 @available(iOSApplicationExtension, unavailable)
 extension MapView {

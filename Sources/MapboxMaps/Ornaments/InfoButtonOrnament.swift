@@ -1,4 +1,8 @@
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 @_implementationOnly import MapboxCommon_Private
 
 @available(iOSApplicationExtension, unavailable)

@@ -1,4 +1,8 @@
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 final class MockGestureRecognizer: UIGestureRecognizer {
     let getStateStub = Stub<Void, UIGestureRecognizer.State>(defaultReturnValue: .possible)

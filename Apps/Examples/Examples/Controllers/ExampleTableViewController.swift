@@ -8,7 +8,11 @@ import ObjectiveC
 //swiftlint:disable force_cast
 public class ExampleTableViewController: UITableViewController {
 
+    #if os(tvOS)
+    internal var searchBar: UISearchBar!
+    #else
     internal var searchBar = UISearchBar()
+    #endif
 
     public let allExamples = Examples.all
     public var filteredExamples = [Example]()

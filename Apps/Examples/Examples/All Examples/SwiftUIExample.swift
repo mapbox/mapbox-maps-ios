@@ -228,7 +228,9 @@ struct ContentView: View {
             ///     - Map sends the `.cameraChanged` event, which is observed by the coordinator
             ///     - The coordinator updates the value of the zoom on the `camera` binding
             ///     - SwiftUI updates the Slider accordingly
+#if !os(tvOS)
             Slider(value: $camera.zoom, in: 0...20)
+            #endif
 
             /// The picker is bound to `styleURI`.
             Picker(selection: $styleURI, label: Text("Map Style")) {

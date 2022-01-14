@@ -19,7 +19,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let navigationController = UINavigationController(rootViewController: examplesTableViewController)
 
         let appearance = UINavigationBar.appearance()
+        #if !os(tvOS)
         appearance.prefersLargeTitles = true
+        #endif
 
         if #available(iOS 13.0, *) {
             appearance.scrollEdgeAppearance = UINavigationBarAppearance()

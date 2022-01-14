@@ -28,7 +28,11 @@ public class OfflineRegionManagerExample: UIViewController, ExampleProtocol {
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(mapView)
 
+        #if !os(tvOS)
         progressView = UIProgressView(progressViewStyle: .bar)
+        #else
+        progressView = UIProgressView(progressViewStyle: .default)
+        #endif
         progressView.progress                                  = 0.0
         progressView.translatesAutoresizingMaskIntoConstraints = false
         progressView.trackTintColor                            = .white

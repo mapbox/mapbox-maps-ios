@@ -32,7 +32,9 @@ public struct Example {
         }
 
         exampleViewController.title = title
+        #if !os(tvOS)
         exampleViewController.navigationItem.largeTitleDisplayMode = .never
+        #endif
 
         let association = ExampleAssociation(example: self, viewController: exampleViewController)
         objc_setAssociatedObject(exampleViewController, &ExampleAssociationHandle, association, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)

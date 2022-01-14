@@ -26,7 +26,9 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         // then add switches that toggle the visibility for those two layers.
         mapView.mapboxMap.onNext(.mapLoaded) { _ in
             self.addStyleLayers()
+            #if !os(tvOS)
             self.addVisibilitySwitches()
+            #endif
         }
     }
 
@@ -90,6 +92,7 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         }
     }
 
+    @available(tvOS, unavailable)
     @objc func toggleMuseumLayerVisibility(sender: UISwitch) {
         let style = mapView.mapboxMap.style
         // Update the museum layer's visibility based on whether the switch
@@ -103,6 +106,7 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         }
     }
 
+    @available(tvOS, unavailable)
     @objc func toggleContourLayerVisibility(sender: UISwitch) {
         let style = mapView.mapboxMap.style
         // Update the contour layer's visibility based on whether the switch
@@ -116,6 +120,7 @@ class ShowHideLayerExample: UIViewController, ExampleProtocol {
         }
     }
 
+    @available(tvOS, unavailable)
     func addVisibilitySwitches() {
         // Create switches to toggle the layers' visibility.
         let museumSwitch = UISwitch()

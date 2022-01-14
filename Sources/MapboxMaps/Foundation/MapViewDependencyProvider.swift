@@ -38,6 +38,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             dateProvider: DefaultDateProvider())
     }
 
+    @available(tvOS, unavailable)
     func makePinchGestureHandler(view: UIView,
                                  mapboxMap: MapboxMapProtocol) -> PinchGestureHandlerProtocol {
         let gestureRecognizer = UIPinchGestureRecognizer()
@@ -103,18 +104,30 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             gestureRecognizer: gestureRecognizer,
             cameraAnimationsManager: cameraAnimationsManager)
     }
+    
+    class TVOSPinchGestureHandler: GestureHandler, PinchGestureHandlerProtocol {
+        var rotateEnabled: Bool = false
+        
+        var behavior: PinchGestureBehavior = .doesNotResetCameraAtEachFrame
+    }
 
     func makeGestureManager(view: UIView,
                             mapboxMap: MapboxMapProtocol,
                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager {
+        let pinchGesture: PinchGestureHandlerProtocol
+        
+        #if os(tvOS)
+        pinchGesture = TVOSPinchGestureHandler(gestureRecognizer: UITapGestureRecognizer())
+        #else
+        pinchGesture = makePinchGestureHandler(view: view, mapboxMap: mapboxMap)
+        #endif
+        
         return GestureManager(
             panGestureHandler: makePanGestureHandler(
                 view: view,
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: cameraAnimationsManager),
-            pinchGestureHandler: makePinchGestureHandler(
-                view: view,
-                mapboxMap: mapboxMap),
+            pinchGestureHandler:pinchGesture,
             pitchGestureHandler: makePitchGestureHandler(
                 view: view,
                 mapboxMap: mapboxMap),

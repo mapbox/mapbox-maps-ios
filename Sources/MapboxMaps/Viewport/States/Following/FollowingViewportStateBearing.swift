@@ -1,5 +1,6 @@
 public enum FollowingViewportStateBearing: Hashable {
     case constant(_ bearing: CLLocationDirection)
+    @available(tvOS, unavailable)
     case heading
     case course
 
@@ -7,8 +8,10 @@ public enum FollowingViewportStateBearing: Hashable {
         switch self {
         case .constant(let value):
             return value
+        #if !os(tvOS)
         case .heading:
             return location.headingDirection
+        #endif
         case .course:
             return location.course
         }

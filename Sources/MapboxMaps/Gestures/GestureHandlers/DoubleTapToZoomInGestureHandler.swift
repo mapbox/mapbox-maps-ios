@@ -16,7 +16,9 @@ internal final class DoubleTapToZoomInGestureHandler: GestureHandler {
                   mapboxMap: MapboxMapProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol) {
         gestureRecognizer.numberOfTapsRequired = 2
+        #if !os(tvOS)
         gestureRecognizer.numberOfTouchesRequired = 1
+        #endif
         self.mapboxMap = mapboxMap
         self.cameraAnimationsManager = cameraAnimationsManager
         super.init(gestureRecognizer: gestureRecognizer)

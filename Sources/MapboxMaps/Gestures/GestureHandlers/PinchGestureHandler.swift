@@ -9,12 +9,14 @@ internal protocol PinchGestureHandlerProtocol: GestureHandler {
     var behavior: PinchGestureBehavior { get set }
 }
 
+@available(tvOS, unavailable)
 internal protocol PinchGestureHandlerImpl: AnyObject {
     func handleGesture(_ gestureRecognizer: UIPinchGestureRecognizer, state: UIGestureRecognizer.State)
 }
 
 /// `PinchGestureHandler` updates the map camera in response to a 2-touch
 /// gesture that may consist of translation, scaling, and rotation
+@available(tvOS, unavailable)
 internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerProtocol {
     /// Whether pinch gesture can rotate map or not
     internal var rotateEnabled: Bool = true {
@@ -76,6 +78,7 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
     }
 }
 
+@available(tvOS, unavailable)
 extension PinchGestureHandler: GestureHandlerDelegate {
     func gestureBegan(for gestureType: GestureType) {
         delegate?.gestureBegan(for: gestureType)

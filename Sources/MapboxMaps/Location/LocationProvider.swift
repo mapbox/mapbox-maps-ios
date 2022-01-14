@@ -14,9 +14,10 @@ public protocol LocationProvider {
     /// The default value is `CLAccuracyAuthorization.fullAccuracy` on iOS versions prior to iOS 14.
     var accuracyAuthorization: CLAccuracyAuthorization { get }
 
+    #if !os(tvOS)
     /// Returns the latest heading update received, or `nil` if none is available.
     var heading: CLHeading? { get }
-
+    #endif
     /**
      Sets the delegate for `LocationProvider`. The implementation should hold a weak reference to the
      provided delegate to avoid creating a strong reference cycle with `LocationManager`.

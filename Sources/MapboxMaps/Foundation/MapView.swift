@@ -121,7 +121,7 @@ open class MapView: UIView {
     // building with iOS SDKs < 15
     #if swift(>=5.5)
     /// The preferred range of frame refresh rates.
-    @available(iOS 15.0, *)
+    @available(iOS 15.0, tvOS 15.0, *)
     public var preferredFrameRateRange: CAFrameRateRange {
         get {
             return _preferredFrameRateRange ?? .default
@@ -134,7 +134,7 @@ open class MapView: UIView {
     // Stored properties cannot be annotated with @available, so we
     // store the value as an `Any` in `_untypedPreferredFrameRateRange` below
     // and make this a computed property.
-    @available(iOS 15.0, *)
+    @available(iOS 15.0, tvOS 15.0, *)
     private var _preferredFrameRateRange: CAFrameRateRange? {
         get {
             return _untypedPreferredFrameRateRange as? CAFrameRateRange
@@ -393,8 +393,10 @@ open class MapView: UIView {
         if window == nil {
             return
         }
-
+        
+        #if !os(tvOS)
         updateHeadingOrientationIfNeeded()
+        #endif
 
         for participant in displayLinkParticipants.allObjects {
             participant.participate()
@@ -416,7 +418,7 @@ open class MapView: UIView {
             // Checking Swift version as a proxy for iOS SDK version to enable
             // building with iOS SDKs < 15
             #if swift(>=5.5)
-            if #available(iOS 15.0, *) {
+            if #available(iOS 15.0, tvOS 15.0, *) {
                 if let _preferredFrameRateRange = _preferredFrameRateRange {
                     displayLink.preferredFrameRateRange = _preferredFrameRateRange
                 }
@@ -462,6 +464,7 @@ open class MapView: UIView {
 
     // MARK: Location
 
+    @available(tvOS, unavailable)
     private func updateHeadingOrientationIfNeeded() {
         // locationProvider.headingOrientation should be adjusted based on the
         // current UIInterfaceOrientation of the containing window, not the

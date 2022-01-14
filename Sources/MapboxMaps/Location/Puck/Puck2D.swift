@@ -21,11 +21,19 @@ internal final class Puck2D: NSObject, Puck {
         }
     }
 
+    #if !os(tvOS)
     internal var puckBearingSource: PuckBearingSource = .heading {
         didSet {
             updateLayer()
         }
     }
+    #else
+    internal var puckBearingSource: PuckBearingSource = .course {
+        didSet {
+            updateLayer()
+        }
+    }
+    #endif
 
     private let configuration: Puck2DConfiguration
     private let style: StyleProtocol
@@ -104,8 +112,10 @@ internal final class Puck2D: NSObject, Puck {
                 layer.accuracyRadiusBorderColor = .constant(StyleColor(.lightGray))
             }
             switch puckBearingSource {
+#if !os(tvOS)
             case .heading:
                 layer.bearing = .constant(location.headingDirection ?? 0)
+                #endif
             case .course:
                 layer.bearing = .constant(location.course)
             }

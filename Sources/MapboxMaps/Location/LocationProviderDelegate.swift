@@ -11,11 +11,13 @@ public protocol LocationProviderDelegate: AnyObject {
     ///                with the last object representing the most recent location.
     func locationProvider(_ provider: LocationProvider, didUpdateLocations locations: [CLLocation])
 
+    #if !os(tvOS)
     /// Notifies the delegate with the new heading data.
     /// - Parameters:
     ///   - provider: The location provider reporting the update.
     ///   - newHeading: The new heading update.
     func locationProvider(_ provider: LocationProvider, didUpdateHeading newHeading: CLHeading)
+    #endif
 
     /// Notifies the delegate that the location provider was unable to retrieve
     /// location updates.
@@ -36,7 +38,9 @@ public protocol LocationProviderDelegate: AnyObject {
 /// the fact that the `LocationProvider` API does not allow the delegate to be set to `nil`.
 internal class EmptyLocationProviderDelegate: LocationProviderDelegate {
     func locationProvider(_ provider: LocationProvider, didFailWithError error: Error) {}
+    #if !os(tvOS)
     func locationProvider(_ provider: LocationProvider, didUpdateHeading newHeading: CLHeading) {}
+    #endif
     func locationProvider(_ provider: LocationProvider, didUpdateLocations locations: [CLLocation]) {}
     func locationProviderDidChangeAuthorization(_ provider: LocationProvider) {}
 }

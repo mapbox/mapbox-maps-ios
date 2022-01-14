@@ -1,13 +1,16 @@
 import Foundation
 import CoreLocation
 
+//@available(tvOS, unavailable)
 public final class AppleLocationProvider: NSObject {
     private var locationProvider: CLLocationManager
     private var privateLocationProviderOptions: LocationOptions {
         didSet {
             locationProvider.distanceFilter = privateLocationProviderOptions.distanceFilter
             locationProvider.desiredAccuracy = privateLocationProviderOptions.desiredAccuracy
+            #if !os(tvOS)
             locationProvider.activityType = privateLocationProviderOptions.activityType
+            #endif
         }
     }
     private weak var delegate: LocationProviderDelegate?
@@ -20,6 +23,7 @@ public final class AppleLocationProvider: NSObject {
     }
 }
 
+@available(tvOS, unavailable)
 extension AppleLocationProvider: LocationProvider {
 
     public var locationProviderOptions: LocationOptions {
@@ -97,14 +101,17 @@ extension AppleLocationProvider: LocationProvider {
     }
 }
 
+@available(tvOS, unavailable)
 extension AppleLocationProvider: CLLocationManagerDelegate {
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         delegate?.locationProvider(self, didUpdateLocations: locations)
     }
 
+    #if !os(tvOS)
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading heading: CLHeading) {
         delegate?.locationProvider(self, didUpdateHeading: heading)
     }
+    #endif
 
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         delegate?.locationProvider(self, didFailWithError: error)

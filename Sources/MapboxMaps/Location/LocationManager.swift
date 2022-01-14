@@ -100,9 +100,11 @@ extension LocationManager: LocationProviderDelegate {
     /// Deprecated. This method no longer has any effect.
     public func locationProvider(_ provider: LocationProvider, didUpdateLocations locations: [CLLocation]) {}
 
+    #if !os(tvOS)
     /// :nodoc:
     /// Deprecated. This method no longer has any effect.
     public func locationProvider(_ provider: LocationProvider, didUpdateHeading newHeading: CLHeading) {}
+    #endif
 
     /// :nodoc:
     /// Deprecated. This method no longer has any effect.

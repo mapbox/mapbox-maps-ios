@@ -16,7 +16,9 @@ internal final class DoubleTouchToZoomOutGestureHandler: GestureHandler {
                   mapboxMap: MapboxMapProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol) {
         gestureRecognizer.numberOfTapsRequired = 1
+        #if !os(tvOS)
         gestureRecognizer.numberOfTouchesRequired = 2
+        #endif
         self.mapboxMap = mapboxMap
         self.cameraAnimationsManager = cameraAnimationsManager
         super.init(

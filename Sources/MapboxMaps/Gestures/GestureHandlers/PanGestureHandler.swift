@@ -40,7 +40,9 @@ internal final class PanGestureHandler: GestureHandler, PanGestureHandlerProtoco
                   mapboxMap: MapboxMapProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol,
                   dateProvider: DateProvider) {
+        #if !os(tvOS)
         gestureRecognizer.maximumNumberOfTouches = 1
+        #endif
         self.mapboxMap = mapboxMap
         self.cameraAnimationsManager = cameraAnimationsManager
         self.dateProvider = dateProvider

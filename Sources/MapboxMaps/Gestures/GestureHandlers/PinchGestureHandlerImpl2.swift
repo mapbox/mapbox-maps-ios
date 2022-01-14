@@ -6,7 +6,7 @@ import AppKit
 
 /// `PinchGestureHandler` updates the map camera in response to a 2-touch
 /// gesture that may consist of translation, scaling, and rotation
-@available(iOS 11, * )
+@available(tvOS, unavailable)
 internal final class PinchGestureHandlerImpl2: PinchGestureHandlerImpl {
     /// Whether pinch gesture can rotate map or not
     internal var rotateEnabled: Bool = true

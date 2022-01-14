@@ -7,7 +7,7 @@ internal protocol DisplayLinkProtocol: AnyObject {
     // Checking Swift version as a proxy for iOS SDK version to enable
     // building with iOS SDKs < 15
     #if swift(>=5.5)
-    @available(iOS 15.0, *)
+    @available(iOS 15.0, tvOS 15.0, *)
     var preferredFrameRateRange: CAFrameRateRange { get set }
     #endif
     func add(to runloop: RunLoop, forMode mode: RunLoop.Mode)

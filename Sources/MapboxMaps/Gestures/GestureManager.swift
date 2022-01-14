@@ -23,9 +23,11 @@ public final class GestureManager: GestureHandlerDelegate {
     public var options: GestureOptions {
         set {
             panGestureRecognizer.isEnabled = newValue.panEnabled
+            #if !os(tvOS)
             pinchGestureRecognizer.isEnabled = newValue.pinchEnabled
             pinchGestureHandler.rotateEnabled = newValue.pinchRotateEnabled
             pinchGestureHandler.behavior = newValue.pinchBehavior
+            #endif
             pitchGestureRecognizer.isEnabled = newValue.pitchEnabled
             doubleTapToZoomInGestureRecognizer.isEnabled = newValue.doubleTapToZoomInEnabled
             doubleTouchToZoomOutGestureRecognizer.isEnabled = newValue.doubleTouchToZoomOutEnabled
@@ -36,9 +38,11 @@ public final class GestureManager: GestureHandlerDelegate {
         get {
             var gestureOptions = GestureOptions()
             gestureOptions.panEnabled = panGestureRecognizer.isEnabled
+            #if !os(tvOS)
             gestureOptions.pinchEnabled = pinchGestureRecognizer.isEnabled
             gestureOptions.pinchRotateEnabled = pinchGestureHandler.rotateEnabled
             gestureOptions.pinchBehavior = pinchGestureHandler.behavior
+            #endif
             gestureOptions.pitchEnabled = pitchGestureRecognizer.isEnabled
             gestureOptions.doubleTapToZoomInEnabled = doubleTapToZoomInGestureRecognizer.isEnabled
             gestureOptions.doubleTouchToZoomOutEnabled = doubleTouchToZoomOutGestureRecognizer.isEnabled
@@ -54,10 +58,12 @@ public final class GestureManager: GestureHandlerDelegate {
         return panGestureHandler.gestureRecognizer
     }
 
+    #if !os(tvOS)
     /// The gesture recognizer for the "pinch to zoom" gesture
     public var pinchGestureRecognizer: UIGestureRecognizer {
         return pinchGestureHandler.gestureRecognizer
     }
+    #endif
 
     /// The gesture recognizer for the pitch gesture
     public var pitchGestureRecognizer: UIGestureRecognizer {
@@ -95,7 +101,9 @@ public final class GestureManager: GestureHandlerDelegate {
     public weak var delegate: GestureManagerDelegate?
 
     private let panGestureHandler: PanGestureHandlerProtocol
+    #if !os(tvOS)
     private let pinchGestureHandler: PinchGestureHandlerProtocol
+    #endif
     private let pitchGestureHandler: GestureHandler
     private let doubleTapToZoomInGestureHandler: GestureHandler
     private let doubleTouchToZoomOutGestureHandler: GestureHandler
@@ -114,7 +122,9 @@ public final class GestureManager: GestureHandlerDelegate {
                   animationLockoutGestureHandler: GestureHandler,
                   mapboxMap: MapboxMapProtocol) {
         self.panGestureHandler = panGestureHandler
+        #if !os(tvOS)
         self.pinchGestureHandler = pinchGestureHandler
+        #endif
         self.pitchGestureHandler = pitchGestureHandler
         self.doubleTapToZoomInGestureHandler = doubleTapToZoomInGestureHandler
         self.doubleTouchToZoomOutGestureHandler = doubleTouchToZoomOutGestureHandler

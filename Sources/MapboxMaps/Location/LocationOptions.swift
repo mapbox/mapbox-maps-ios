@@ -21,17 +21,27 @@ public struct LocationOptions: Equatable {
     /// Sets the type of puck that should be used
     public var puckType: PuckType?
 
+    #if !os(tvOS)
     /// Specifies if a `Puck` should use `Heading` or `Course` for the bearing
     /// This is an experimental option. The default value is `PuckBearingSource.heading`.
     public var puckBearingSource: PuckBearingSource = .heading
+    
+    #else
+    
+    /// Specifies if a `Puck` should use `Heading` or `Course` for the bearing
+    /// This is an experimental option. The default value is `PuckBearingSource.heading`.
+    public var puckBearingSource: PuckBearingSource = .course
+    #endif
 
     public init() {}
 }
 
 /// Controls how the puck is oriented
 public enum PuckBearingSource: Equatable {
+    #if !os(tvOS)
     /// The puck should set its bearing using `heading: CLHeading`
     case heading
+    #endif
 
     /// The puck should set its bearing using `course: CLLocationDirection`
     case course

@@ -37,11 +37,19 @@ internal final class PuckManager: PuckManagerProtocol {
         }
     }
 
+    #if !os(tvOS)
     internal var puckBearingSource: PuckBearingSource = .heading {
         didSet {
             puck?.puckBearingSource = puckBearingSource
         }
     }
+    #else
+    internal var puckBearingSource: PuckBearingSource = .course {
+        didSet {
+            puck?.puckBearingSource = puckBearingSource
+        }
+    }
+    #endif
 
     private var puck: Puck? {
         didSet {

@@ -30,10 +30,16 @@ internal final class LocationProducer: LocationProducerProtocol {
     /// Represents the latest location received from the location provider.
     internal var latestLocation: Location? {
         return latestCLLocation.map {
+            #if !os(tvOS)
             Location(
                 location: $0,
                 heading: latestHeading,
                 accuracyAuthorization: latestAccuracyAuthorization)
+            #else
+            Location(
+                location: $0,
+                accuracyAuthorization: latestAccuracyAuthorization)
+            #endif
         }
     }
 
@@ -52,11 +58,13 @@ internal final class LocationProducer: LocationProducerProtocol {
         }
     }
 
+    #if !os(tvOS)
     private var latestHeading: CLHeading? {
         didSet {
             notifyConsumers()
         }
     }
+    #endif
 
     private var latestAccuracyAuthorization: CLAccuracyAuthorization {
         didSet {
@@ -165,10 +173,12 @@ extension LocationProducer: LocationProviderDelegate {
         latestCLLocation = locations.last
     }
 
+    #if !os(tvOS)
     internal func locationProvider(_ provider: LocationProvider, didUpdateHeading newHeading: CLHeading) {
         syncIsUpdating()
         latestHeading = newHeading
     }
+    #endif
 
     internal func locationProvider(_ provider: LocationProvider, didFailWithError error: Error) {
         syncIsUpdating()

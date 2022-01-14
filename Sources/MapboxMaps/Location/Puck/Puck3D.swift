@@ -22,11 +22,19 @@ internal final class Puck3D: NSObject, Puck {
         }
     }
 
+    #if !os(tvOS)
     internal var puckBearingSource: PuckBearingSource = .heading {
         didSet {
             updateSourceAndLayer()
         }
     }
+    #else
+    internal var puckBearingSource: PuckBearingSource = .course {
+        didSet {
+            updateSourceAndLayer()
+        }
+    }
+    #endif
 
     private let configuration: Puck3DConfiguration
     private let style: StyleProtocol
@@ -61,10 +69,12 @@ internal final class Puck3D: NSObject, Puck {
         }
 
         switch puckBearingSource {
+        #if !os(tvOS)
         case .heading:
             if let validHeadingDirection = location.headingDirection {
                 model.orientation?[2] += validHeadingDirection
             }
+        #endif
         case .course:
             model.orientation?[2] += location.course
         }

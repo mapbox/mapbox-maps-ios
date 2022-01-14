@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 internal struct Attribution: Hashable {
 
@@ -49,8 +50,12 @@ internal struct Attribution: Hashable {
         return title.lowercased() == "improve this map" ||
             Self.improveMapURLs.contains(url.absoluteString)
     }
-
+    
+    #if os(tvOS)
+    static let font = UIFont.preferredFont(forTextStyle: .caption1)
+    #else
     static let font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
+    #endif
 
     /// Return a combined text for attributions, intended for use with Snapshotters
     /// (via AttributionView)

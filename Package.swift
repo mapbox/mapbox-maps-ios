@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "MapboxMaps",
     defaultLocalization: "en",
-    platforms: [.iOS(.v11), .macOS(.v10_12)],
+    platforms: [.iOS(.v11), .macOS(.v10_12), .tvOS(.v14)],
     products: [
         .library(
             name: "MapboxMaps",

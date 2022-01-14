@@ -9,7 +9,9 @@ internal final class SingleTapGestureHandler: GestureHandler {
 
     internal init(gestureRecognizer: UITapGestureRecognizer) {
         gestureRecognizer.numberOfTapsRequired = 1
+        #if !os(tvOS)
         gestureRecognizer.numberOfTouchesRequired = 1
+        #endif
         super.init(gestureRecognizer: gestureRecognizer)
         gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))
     }

@@ -644,8 +644,8 @@ jobs:
       - run:
           name: Release Examples App to TestFlight
           command: |
-            brew install fastlane
-            fastlane beta
+            bundle install
+            bundle exec fastlane beta
       - open-docs-pull-requests
       - run:
           name: Publish CocoaPods Podspec

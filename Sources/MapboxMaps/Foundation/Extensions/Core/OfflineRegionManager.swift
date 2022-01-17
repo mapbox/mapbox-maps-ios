@@ -38,4 +38,14 @@ extension OfflineRegionManager {
                                                                                     type: OfflineRegion.self,
                                                                                     concreteErrorType: MapError.self))
     }
+
+    // :nodoc:
+    public func invalidateOfflineRegion(_ offlineRegion: OfflineRegion, completion: @escaping (Error?) -> Void) {
+        offlineRegion.invalidate(forCallback: coreAPIClosureAdapter(for: completion, concreteErrorType: MapError.self))
+    }
+
+    // :nodoc:
+    public func purgeOfflineRegion(_ offlineRegion: OfflineRegion, completion: @escaping (Error?) -> Void) {
+        offlineRegion.purge(forCallback: coreAPIClosureAdapter(for: completion, concreteErrorType: MapError.self))
+    }
 }

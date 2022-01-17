@@ -22,12 +22,14 @@ platform :ios do
     match
     update_code_signing_settings(
       use_automatic_signing: false,
-      path: "Examples/Examples.xcodeproj",
+      path: "Apps/Examples/Examples.xcodeproj",
       team_id: "GJZR2MEM28", # Developer Portal Team ID,
       profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.examples"],
-      targets: ["Examples"]
+      targets: ["Examples"],
+      code_sign_identity: "Apple Development: Machiney McMachineface",
     )
     scan(
+      workspace: 'Apps/Apps.xcworkspace',
       scheme: 'Examples',                  # XCTest scheme
       clean: true,                        # Recommended: This would ensure the build would not include unnecessary files
       skip_detect_devices: true,          # Required
@@ -35,7 +37,7 @@ platform :ios do
       sdk: 'iphoneos',                    # Required
       should_zip_build_products: true,     # Must be true to set the correct format for Firebase Test Lab,
       result_bundle: true,
-      output_directory: "../output/"
+      output_directory: "output/"
     )
 
     firebase_test

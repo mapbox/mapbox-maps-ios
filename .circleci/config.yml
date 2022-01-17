@@ -452,7 +452,6 @@ jobs:
       - setup-google-cloud-account
       - run:
           name: Start Firebase lane
-          working_directory: Apps
           command: |
             bundle install
             bundle exec fastlane firebase

@@ -72,6 +72,14 @@ platform :ios do
   desc "This will also make sure that the signing certificate and provisioning profiles are up to date."
   lane :build_and_submit do
     setup_circle_ci
+    sync_code_signing(type: "development")
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "Apps/Examples/Examples.xcodeproj",
+      team_id: "GJZR2MEM28", # Developer Portal Team ID,
+      profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.examples"],
+      targets: ["Examples"]
+    )
     sync_code_signing(type: "appstore")
     build_app(
       scheme: "Examples",

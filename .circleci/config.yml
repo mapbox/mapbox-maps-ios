@@ -672,7 +672,7 @@ jobs:
           name: Build Studio Preview with new branch
           command: scripts/validate-integrations/validate-studio-preview.sh "$CIRCLE_BRANCH"
       - slack/notify:
-          event: always
+          event: fail
           mentions: '@maps-ios'
           template: basic_fail_1
       - slack/notify:

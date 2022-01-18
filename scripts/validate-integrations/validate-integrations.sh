@@ -43,9 +43,6 @@ main() {
 
     pod install
 
-    info "Start simulator"
-    xcrun simctl boot "iPhone 13"
-
     info "Building logs available at $TMP_ROOT"
     WORKSPACE_PATH="$SCRIPT_DIR/ValidateLatestMaps.xcworkspace"
 

@@ -349,8 +349,10 @@ jobs:
           name: Testing MapboxMaps with simulator
           command: |
             make test-sdk-without-building-simulator
-            zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
-          no_output_timeout: 5m
+      - run:
+          name: Compress XCResult
+          command: zip -r MapboxMapsTests.xcresult.zip MapboxMapsTests.xcresult
+          when: always
       - store_artifacts:
           path: MapboxMapsTests.xcresult.zip
       - locate-derived-data-directory:

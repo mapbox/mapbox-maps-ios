@@ -17,37 +17,24 @@ final class ViewportStatusTests: XCTestCase {
     func testEquatableAndHashable() {
         let stateA = MockViewportState()
         let stateB = MockViewportState()
-        let stateC = MockViewportState()
         let transition1 = MockViewportTransition()
         let transition2 = MockViewportTransition()
 
-        verifyEqual(.state(nil), .state(nil))
+        verifyEqual(.idle, .idle)
         verifyEqual(.state(stateA), .state(stateA))
         verifyEqual(
-            .transition(transition1, fromState: nil, toState: stateA),
-            .transition(transition1, fromState: nil, toState: stateA))
-        verifyEqual(
-            .transition(transition1, fromState: stateA, toState: stateB),
-            .transition(transition1, fromState: stateA, toState: stateB))
+            .transition(transition1, toState: stateA),
+            .transition(transition1, toState: stateA))
 
-        verifyNotEqual(.state(nil), .state(stateA))
+        verifyNotEqual(.idle, .state(stateA))
+        verifyNotEqual(.idle, .transition(transition1, toState: stateA))
         verifyNotEqual(.state(stateA), .state(stateB))
-        verifyNotEqual(.state(nil), .transition(transition1, fromState: nil, toState: stateA))
-        verifyNotEqual(.state(stateA), .transition(transition1, fromState: nil, toState: stateA))
-        verifyNotEqual(.state(nil), .transition(transition1, fromState: stateA, toState: stateB))
-        verifyNotEqual(.state(stateA), .transition(transition1, fromState: stateA, toState: stateB))
-        verifyNotEqual(.state(stateB), .transition(transition1, fromState: stateA, toState: stateB))
+        verifyNotEqual(.state(stateA), .transition(transition1, toState: stateA))
         verifyNotEqual(
-            .transition(transition1, fromState: stateA, toState: stateB),
-            .transition(transition1, fromState: nil, toState: stateB))
+            .transition(transition1, toState: stateA),
+            .transition(transition1, toState: stateB))
         verifyNotEqual(
-            .transition(transition1, fromState: stateA, toState: stateB),
-            .transition(transition1, fromState: stateA, toState: stateC))
-        verifyNotEqual(
-            .transition(transition1, fromState: stateA, toState: stateC),
-            .transition(transition1, fromState: stateB, toState: stateC))
-        verifyNotEqual(
-            .transition(transition1, fromState: stateA, toState: stateB),
-            .transition(transition2, fromState: stateA, toState: stateB))
+            .transition(transition1, toState: stateA),
+            .transition(transition2, toState: stateA))
     }
 }

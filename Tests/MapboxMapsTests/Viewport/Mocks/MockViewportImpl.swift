@@ -22,40 +22,16 @@ final class MockViewportImpl: ViewportImplProtocol {
 
     struct TransitionParams {
         var toState: ViewportState
+        var transition: ViewportTransition?
         var completion: ((Bool) -> Void)?
     }
     let transitionStub = Stub<TransitionParams, Void>()
-    func transition(to toState: ViewportState, completion: ((Bool) -> Void)?) {
-        transitionStub.call(with: .init(toState: toState, completion: completion))
+    func transition(to toState: ViewportState, transition: ViewportTransition?, completion: ((Bool) -> Void)?) {
+        transitionStub.call(with: .init(
+            toState: toState,
+            transition: transition,
+            completion: completion))
     }
 
     var defaultTransition: ViewportTransition = MockViewportTransition()
-
-    struct SetTransitionParams {
-        var transition: ViewportTransition
-        var fromState: ViewportState?
-        var toState: ViewportState
-    }
-    let setTransitionStub = Stub<SetTransitionParams, Void>()
-    func setTransition(_ transition: ViewportTransition, from fromState: ViewportState?, to toState: ViewportState) {
-        setTransitionStub.call(with: .init(transition: transition, fromState: fromState, toState: toState))
-    }
-
-    struct GetTransitionParams {
-        var fromState: ViewportState?
-        var toState: ViewportState
-    }
-    let getTransitionStub = Stub<GetTransitionParams, ViewportTransition?>(defaultReturnValue: nil)
-    func getTransition(from fromState: ViewportState?, to toState: ViewportState) -> ViewportTransition? {
-        getTransitionStub.call(with: .init(fromState: fromState, toState: toState))
-    }
-
-    struct RemoveTransitionParams {
-        var fromState: ViewportState?
-        var toState: ViewportState
-    }
-    let removeTransitionStub = Stub<RemoveTransitionParams, Void>()
-    func removeTransition(from fromState: ViewportState?, to toState: ViewportState) {
-        removeTransitionStub.call(with: .init(fromState: fromState, toState: toState))
-    }
 }

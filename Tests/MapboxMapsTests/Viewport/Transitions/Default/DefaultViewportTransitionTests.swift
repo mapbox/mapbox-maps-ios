@@ -24,12 +24,10 @@ final class DefaultViewportTransitionTests: XCTestCase {
     }
 
     func testRunToCompletion() throws {
-        let fromState = MockViewportState()
         let toState = MockViewportState()
         let completionStub = Stub<Bool, Void>()
 
         _ = transition.run(
-            from: fromState,
             to: toState,
             completion: completionStub.call(with:))
 
@@ -58,12 +56,10 @@ final class DefaultViewportTransitionTests: XCTestCase {
     }
 
     func testRunAnimationCanceled() throws {
-        let fromState = MockViewportState()
         let toState = MockViewportState()
         let completionStub = Stub<Bool, Void>()
 
         _ = transition.run(
-            from: fromState,
             to: toState,
             completion: completionStub.call(with:))
 
@@ -92,11 +88,9 @@ final class DefaultViewportTransitionTests: XCTestCase {
     }
 
     func testRunAndCancelAfterAnimationStarts() throws {
-        let fromState = MockViewportState()
         let toState = MockViewportState()
 
         let cancelable = transition.run(
-            from: fromState,
             to: toState,
             completion: { _ in })
 
@@ -126,11 +120,9 @@ final class DefaultViewportTransitionTests: XCTestCase {
     }
 
     func testRunAndCancelBeforeAnimationStarts() throws {
-        let fromState = MockViewportState()
         let toState = MockViewportState()
 
         let cancelable = transition.run(
-            from: fromState,
             to: toState,
             completion: { _ in })
 

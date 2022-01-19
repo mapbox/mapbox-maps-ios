@@ -5,8 +5,7 @@ public final class ImmediateViewportTransition: ViewportTransition {
         self.mapboxMap = mapboxMap
     }
 
-    public func run(from fromState: ViewportState?,
-                    to toState: ViewportState,
+    public func run(to toState: ViewportState,
                     completion: @escaping (Bool) -> Void) -> Cancelable {
         return toState.observeDataSource { [mapboxMap] cameraOptions in
             mapboxMap.setCamera(to: cameraOptions)

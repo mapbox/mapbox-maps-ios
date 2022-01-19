@@ -10,7 +10,6 @@ public protocol ViewportTransition: AnyObject {
     // camera multiple times during the transition (a "moving target").
     //
     // Viewport never invokes run with the same state for from and to.
-    func run(from fromState: ViewportState?,
-             to toState: ViewportState,
+    func run(to toState: ViewportState,
              completion: @escaping (Bool) -> Void) -> Cancelable
 }

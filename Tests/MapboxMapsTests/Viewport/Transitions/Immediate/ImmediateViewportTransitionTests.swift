@@ -21,7 +21,6 @@ final class ImmediateViewportTransitionTests: XCTestCase {
     func testRunCancellation() throws {
         let toState = MockViewportState()
         let cancelable = transition.run(
-            from: nil,
             to: toState,
             completion: { _ in })
 
@@ -38,7 +37,6 @@ final class ImmediateViewportTransitionTests: XCTestCase {
         let toState = MockViewportState()
         let completionStub = Stub<Bool, Void>()
         _ = transition.run(
-            from: nil,
             to: toState,
             completion: completionStub.call(with:))
 

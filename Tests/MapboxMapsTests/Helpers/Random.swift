@@ -139,8 +139,9 @@ extension DefaultViewportTransitionOptions {
 extension ViewportStatus {
     static func random() -> Self {
         return [
-            .state(.random(MockViewportState())),
-            .transition(MockViewportTransition(), fromState: .random(MockViewportState()), toState: MockViewportState())
+            .idle,
+            .state(MockViewportState()),
+            .transition(MockViewportTransition(), toState: MockViewportState())
         ].randomElement()!
     }
 }

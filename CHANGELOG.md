@@ -4,6 +4,9 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+
+* Exposed API to invalidate `OfflineRegion`. ([#1026](https://github.com/mapbox/mapbox-maps-ios/pull/1026))
+
 ## 10.3.0-beta.1 - January 12, 2022
 
 * Exposed `triggerRepaint()` to allow manual map repainting.

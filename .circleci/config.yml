@@ -580,10 +580,12 @@ jobs:
     steps:
       - checkout
       - configure-environment
+      - declare-default-artifacts-path
       - run: brew install xcodegen
       - run:
           name: Validate SPM and CocoaPods integrations for current branch
           command: scripts/validate-integrations/validate-integrations.sh -b $CIRCLE_BRANCH
+      - store-default-artifacts
 
   validate-integrations:
     description: <
@@ -598,12 +600,14 @@ jobs:
       - parse-release-version-if-available
       - install-mbx-ci
       - configure-environment
+      - declare-default-artifacts-path
       - run:
           name: Install dependencies
           command: brew install gh xcodegen
       - run:
           name: Test direct download integrations
           command: scripts/validate-integrations/validate-integrations.sh -v "$VERSION"
+      - store-default-artifacts
 
   # This job:
   # - builds XCFrameworks
@@ -615,11 +619,7 @@ jobs:
     <<: *base-job
     resource_class: large
     steps:
-      - run:
-          name: Generate default Artifacts folder
-          command: |
-            echo "export DEFAULT_ARTIFACTS_DIR='$(mktemp -d)'" >> $BASH_ENV
-            echo $BASH_ENV
+      - declare-default-artifacts-path
       - parse-release-version-if-available
       - checkout
       - add-mapbox-submodules-key
@@ -679,6 +679,7 @@ jobs:
       - run:
           name: Build Studio Preview with new branch
           command: scripts/validate-integrations/validate-studio-preview.sh "$CIRCLE_BRANCH"
+      - store-default-artifacts
       - slack/notify:
           event: fail
           mentions: '@maps-ios'
@@ -1067,3 +1068,23 @@ commands:
             if [[ -n "$CIRCLE_TAG" ]]; then
               echo "export VERSION=${CIRCLE_TAG#v}" >> $BASH_ENV
             fi
+
+  declare-default-artifacts-path:
+    steps:
+      - run:
+          name: Create default artifacts folder
+          command: |
+            echo "export DEFAULT_ARTIFACTS_DIR='$(mktemp -d)'" >> $BASH_ENV
+            cat $BASH_ENV
+
+  store-default-artifacts:
+    steps:
+      - run:
+          name: Compress default artifacts
+          command: |
+            CURRENT_DIR=$(pwd)
+            cd $DEFAULT_ARTIFACTS_DIR
+            zip -yr "$CURRENT_DIR/artifacts.zip" .
+          when: always
+      - store_artifacts:
+          path: artifacts.zip

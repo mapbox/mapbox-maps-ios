@@ -1084,7 +1084,7 @@ commands:
           command: |
             CURRENT_DIR=$(pwd)
             cd $DEFAULT_ARTIFACTS_DIR
-            zip -yr "$CURRENT_DIR/artifacts.zip" .
+            zip -yr "$CURRENT_DIR/artifacts.zip" . || true
           when: always
       - store_artifacts:
           path: artifacts.zip

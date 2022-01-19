@@ -1,8 +1,8 @@
-public final class FollowingViewportState {
+public final class FollowPuckViewportState {
 
     // MARK: - Public Config
 
-    public var options: FollowingViewportStateOptions {
+    public var options: FollowPuckViewportStateOptions {
         get {
             dataSource.options
         }
@@ -13,7 +13,7 @@ public final class FollowingViewportState {
 
     // MARK: - Injected Dependencies
 
-    private let dataSource: FollowingViewportStateDataSourceProtocol
+    private let dataSource: FollowPuckViewportStateDataSourceProtocol
 
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol
 
@@ -25,7 +25,7 @@ public final class FollowingViewportState {
 
     // MARK: - Initialization
 
-    internal init(dataSource: FollowingViewportStateDataSourceProtocol,
+    internal init(dataSource: FollowPuckViewportStateDataSourceProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol) {
         self.dataSource = dataSource
         self.cameraAnimationsManager = cameraAnimationsManager
@@ -43,7 +43,7 @@ public final class FollowingViewportState {
     }
 }
 
-extension FollowingViewportState: ViewportState {
+extension FollowPuckViewportState: ViewportState {
     // delivers the latest location synchronously, if available
     public func observeDataSource(with handler: @escaping (CameraOptions) -> Bool) -> Cancelable {
         return dataSource.observe(with: handler)

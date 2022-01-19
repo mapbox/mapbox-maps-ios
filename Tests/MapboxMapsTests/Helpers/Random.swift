@@ -108,7 +108,7 @@ extension Optional {
     }
 }
 
-extension FollowingViewportStateBearing {
+extension FollowPuckViewportStateBearing {
     static func random() -> Self {
         return [
             .constant(.random(in: 0..<360)),
@@ -118,9 +118,9 @@ extension FollowingViewportStateBearing {
     }
 }
 
-extension FollowingViewportStateOptions {
+extension FollowPuckViewportStateOptions {
     static func random() -> Self {
-        return FollowingViewportStateOptions(
+        return FollowPuckViewportStateOptions(
             zoom: .random(in: 0...20),
             pitch: .random(in: 0...80),
             bearing: .random(),

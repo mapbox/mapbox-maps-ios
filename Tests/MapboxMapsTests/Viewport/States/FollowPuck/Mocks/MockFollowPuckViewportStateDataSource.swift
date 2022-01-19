@@ -1,8 +1,8 @@
 @testable import MapboxMaps
 
-final class MockFollowingViewportStateDataSource: FollowingViewportStateDataSourceProtocol {
+final class MockFollowPuckViewportStateDataSource: FollowPuckViewportStateDataSourceProtocol {
 
-    @Stubbed var options: FollowingViewportStateOptions = .random()
+    @Stubbed var options: FollowPuckViewportStateOptions = .random()
 
     let observeStub = Stub<(CameraOptions) -> Bool, Cancelable>(defaultReturnValue: MockCancelable())
     func observe(with handler: @escaping (CameraOptions) -> Bool) -> Cancelable {

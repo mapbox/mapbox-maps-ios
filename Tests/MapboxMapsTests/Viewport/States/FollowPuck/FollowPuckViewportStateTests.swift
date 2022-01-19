@@ -1,17 +1,17 @@
 import XCTest
 @testable import MapboxMaps
 
-final class FollowingViewportStateTest: XCTestCase {
+final class FollowPuckViewportStateTest: XCTestCase {
 
-    var dataSource: MockFollowingViewportStateDataSource!
+    var dataSource: MockFollowPuckViewportStateDataSource!
     var cameraAnimationsManager: MockCameraAnimationsManager!
-    var state: FollowingViewportState!
+    var state: FollowPuckViewportState!
 
     override func setUp() {
         super.setUp()
-        dataSource = MockFollowingViewportStateDataSource()
+        dataSource = MockFollowPuckViewportStateDataSource()
         cameraAnimationsManager = MockCameraAnimationsManager()
-        state = FollowingViewportState(
+        state = FollowPuckViewportState(
             dataSource: dataSource,
             cameraAnimationsManager: cameraAnimationsManager)
     }
@@ -41,7 +41,7 @@ final class FollowingViewportStateTest: XCTestCase {
     }
 
     func testSetOptions() {
-        let newOptions = FollowingViewportStateOptions.random()
+        let newOptions = FollowPuckViewportStateOptions.random()
 
         state.options = newOptions
 

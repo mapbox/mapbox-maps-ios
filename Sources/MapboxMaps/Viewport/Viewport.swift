@@ -76,9 +76,9 @@ public final class Viewport {
 
     // factory methods
 
-    public func makeFollowingViewportState(options: FollowingViewportStateOptions = .init()) -> FollowingViewportState {
-        return FollowingViewportState(
-            dataSource: FollowingViewportStateDataSource(
+    public func makeFollowPuckViewportState(options: FollowPuckViewportStateOptions = .init()) -> FollowPuckViewportState {
+        return FollowPuckViewportState(
+            dataSource: FollowPuckViewportStateDataSource(
                 options: options,
                 locationProducer: locationProducer,
                 observableCameraOptions: ObservableCameraOptions()),

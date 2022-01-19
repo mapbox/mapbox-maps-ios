@@ -1,11 +1,11 @@
-internal protocol FollowingViewportStateDataSourceProtocol: AnyObject {
-    var options: FollowingViewportStateOptions { get set }
+internal protocol FollowPuckViewportStateDataSourceProtocol: AnyObject {
+    var options: FollowPuckViewportStateOptions { get set }
     func observe(with handler: @escaping (CameraOptions) -> Bool) -> Cancelable
 }
 
-internal final class FollowingViewportStateDataSource: NSObject, FollowingViewportStateDataSourceProtocol {
+internal final class FollowPuckViewportStateDataSource: NSObject, FollowPuckViewportStateDataSourceProtocol {
 
-    internal var options: FollowingViewportStateOptions {
+    internal var options: FollowPuckViewportStateOptions {
         didSet {
             processUpdatedCamera()
         }
@@ -23,7 +23,7 @@ internal final class FollowingViewportStateDataSource: NSObject, FollowingViewpo
 
     // MARK: - Initialization
 
-    internal init(options: FollowingViewportStateOptions,
+    internal init(options: FollowPuckViewportStateOptions,
                   locationProducer: LocationProducerProtocol,
                   observableCameraOptions: ObservableCameraOptionsProtocol) {
         self.options = options
@@ -57,7 +57,7 @@ internal final class FollowingViewportStateDataSource: NSObject, FollowingViewpo
     }
 }
 
-extension FollowingViewportStateDataSource: LocationConsumer {
+extension FollowPuckViewportStateDataSource: LocationConsumer {
     internal func locationUpdate(newLocation: Location) {
         latestLocation = newLocation
     }

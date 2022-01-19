@@ -1,19 +1,19 @@
 import XCTest
 @testable import MapboxMaps
 
-final class FollowingViewportStateDataSourceTests: XCTestCase {
+final class FollowPuckViewportStateDataSourceTests: XCTestCase {
 
-    var options: FollowingViewportStateOptions!
+    var options: FollowPuckViewportStateOptions!
     var locationProducer: MockLocationProducer!
     var observableCameraOptions: MockObservableCameraOptions!
-    var dataSource: FollowingViewportStateDataSource!
+    var dataSource: FollowPuckViewportStateDataSource!
 
     override func setUp() {
         super.setUp()
         options = .random()
         locationProducer = MockLocationProducer()
         observableCameraOptions = MockObservableCameraOptions()
-        dataSource = FollowingViewportStateDataSource(
+        dataSource = FollowPuckViewportStateDataSource(
             options: options,
             locationProducer: locationProducer,
             observableCameraOptions: observableCameraOptions)
@@ -35,7 +35,7 @@ final class FollowingViewportStateDataSourceTests: XCTestCase {
         return location
     }
 
-    func makeExpectedCamera(location: Location, options: FollowingViewportStateOptions) -> CameraOptions {
+    func makeExpectedCamera(location: Location, options: FollowPuckViewportStateOptions) -> CameraOptions {
         return CameraOptions(
             center: location.location.coordinate,
             padding: options.padding,
@@ -49,7 +49,7 @@ final class FollowingViewportStateDataSourceTests: XCTestCase {
     }
 
     func testSettingOptionsWithoutLatestLocation() throws {
-        let newOptions = FollowingViewportStateOptions.random()
+        let newOptions = FollowPuckViewportStateOptions.random()
         dataSource.options = newOptions
 
         XCTAssertTrue(observableCameraOptions.notifyStub.invocations.isEmpty)
@@ -63,7 +63,7 @@ final class FollowingViewportStateDataSourceTests: XCTestCase {
 
     func testSettingOptionsWithLatestLocationNotifiesObservers() throws {
         let location = try updateLocation()
-        let newOptions = FollowingViewportStateOptions.random()
+        let newOptions = FollowPuckViewportStateOptions.random()
         let expectedCameraOptions = makeExpectedCamera(location: location, options: newOptions)
         observableCameraOptions.notifyStub.reset()
 

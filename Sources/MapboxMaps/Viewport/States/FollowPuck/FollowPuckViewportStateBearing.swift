@@ -1,4 +1,4 @@
-public enum FollowingViewportStateBearing: Hashable {
+public enum FollowPuckViewportStateBearing: Hashable {
     case constant(_ bearing: CLLocationDirection)
     case heading
     case course

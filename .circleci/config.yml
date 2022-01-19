@@ -242,6 +242,9 @@ jobs:
     steps:
       - checkout
       - configure-environment
+      - run: |
+            echo "export DEFAULT_ARTIFACTS_DIR='$(mktemp -d)'" >> $BASH_ENV
+            cat $BASH_ENV
       - run:
           name: Building MapboxMaps for simulator
           command: make build-sdk-for-simulator
@@ -612,6 +615,11 @@ jobs:
     <<: *base-job
     resource_class: large
     steps:
+      - run:
+          name: Generate default Artifacts folder
+          command: |
+            echo "export DEFAULT_ARTIFACTS_DIR='$(mktemp -d)'" >> $BASH_ENV
+            echo $BASH_ENV
       - parse-release-version-if-available
       - checkout
       - add-mapbox-submodules-key

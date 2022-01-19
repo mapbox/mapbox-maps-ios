@@ -30,9 +30,10 @@ main() {
     xcodebuild clean build -workspace StudioPreview.xcworkspace \
             -scheme "StudioPreview" \
             -destination "generic/platform=iOS" \
-            CODE_SIGNING_ALLOWED="NO"  &> "$ARTIFACTS_ROOT/validate-studio-preview_xcode.log"
+            CODE_SIGNING_ALLOWED="NO"  &> "$ARTIFACTS_ROOT/validate-studio-preview_xcode-$(date +%Y%m%d%H%M%S).log"
 
     finish "Studio Preview builds successfully"
+    exit 0
 }
 
 print_usage () {

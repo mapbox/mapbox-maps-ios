@@ -1,5 +1,5 @@
 // Uses pointer-based equality and hashing
-public enum ViewportStatus: Hashable {
+@_spi(Experimental) public enum ViewportStatus: Hashable {
     case idle
     case state(ViewportState)
     case transition(ViewportTransition, toState: ViewportState)

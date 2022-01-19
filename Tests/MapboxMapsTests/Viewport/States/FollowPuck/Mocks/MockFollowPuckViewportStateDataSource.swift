@@ -1,4 +1,4 @@
-@testable import MapboxMaps
+@testable @_spi(Experimental) import MapboxMaps
 
 final class MockFollowPuckViewportStateDataSource: FollowPuckViewportStateDataSourceProtocol {
 

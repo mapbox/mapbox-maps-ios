@@ -1,6 +1,6 @@
 import Foundation
 import CoreLocation
-@testable import MapboxMaps
+@testable @_spi(Experimental) import MapboxMaps
 
 extension Character {
     static func randomASCII() -> Self {

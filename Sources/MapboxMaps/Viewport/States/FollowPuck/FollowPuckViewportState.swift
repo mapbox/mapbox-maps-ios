@@ -1,4 +1,4 @@
-public final class FollowPuckViewportState {
+@_spi(Experimental) public final class FollowPuckViewportState {
 
     // MARK: - Public Config
 

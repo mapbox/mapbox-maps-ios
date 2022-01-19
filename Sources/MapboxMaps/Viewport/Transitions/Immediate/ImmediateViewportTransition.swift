@@ -1,4 +1,4 @@
-public final class ImmediateViewportTransition: ViewportTransition {
+@_spi(Experimental) public final class ImmediateViewportTransition: ViewportTransition {
     private let mapboxMap: MapboxMapProtocol
 
     internal init(mapboxMap: MapboxMapProtocol) {

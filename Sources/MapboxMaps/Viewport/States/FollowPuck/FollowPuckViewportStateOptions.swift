@@ -1,4 +1,4 @@
-public struct FollowPuckViewportStateOptions: Hashable {
+@_spi(Experimental) public struct FollowPuckViewportStateOptions: Hashable {
     public var zoom: CGFloat
     public var pitch: CGFloat
     public var bearing: FollowPuckViewportStateBearing

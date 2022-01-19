@@ -1,4 +1,4 @@
-public final class DefaultViewportTransition {
+@_spi(Experimental) public final class DefaultViewportTransition {
 
     // modifications to options will take effect the next
     // time run(from:to:completion:) is invoked

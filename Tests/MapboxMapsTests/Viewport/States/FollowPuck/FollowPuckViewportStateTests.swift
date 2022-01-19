@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@testable @_spi(Experimental) import MapboxMaps
 
 final class FollowPuckViewportStateTest: XCTestCase {
 

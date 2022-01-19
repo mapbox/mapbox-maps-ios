@@ -1,4 +1,4 @@
-public enum FollowPuckViewportStateBearing: Hashable {
+@_spi(Experimental) public enum FollowPuckViewportStateBearing: Hashable {
     case constant(_ bearing: CLLocationDirection)
     case heading
     case course

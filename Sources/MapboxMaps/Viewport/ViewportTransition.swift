@@ -1,4 +1,4 @@
-public protocol ViewportTransition: AnyObject {
+@_spi(Experimental) public protocol ViewportTransition: AnyObject {
     // The completion block must be invoked with true if the transition
     // completes successfully. If the transition fails, invoke the completion
     // block with false. If the returned Cancelable is canceled, it not

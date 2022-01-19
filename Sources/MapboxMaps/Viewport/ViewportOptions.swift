@@ -1,4 +1,4 @@
-public struct ViewportOptions: Hashable {
+@_spi(Experimental) public struct ViewportOptions: Hashable {
     public var transitionsToIdleUponUserInteraction: Bool
 
     public init(transitionsToIdleUponUserInteraction: Bool = true) {

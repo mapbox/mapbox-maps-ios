@@ -1,4 +1,4 @@
-public struct DefaultViewportTransitionOptions: Hashable {
+@_spi(Experimental) public struct DefaultViewportTransitionOptions: Hashable {
     public var maxDuration: TimeInterval
 
     public init(maxDuration: TimeInterval = 3.5) {

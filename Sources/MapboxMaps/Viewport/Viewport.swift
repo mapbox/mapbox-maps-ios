@@ -7,7 +7,7 @@
 //  - in a state (camera is being managed by a ViewportState)
 //  - transitioning (camera is being managed by a ViewportTransition)
 //
-public final class Viewport {
+@_spi(Experimental) public final class Viewport {
 
     public var options: ViewportOptions {
         get { impl.options }

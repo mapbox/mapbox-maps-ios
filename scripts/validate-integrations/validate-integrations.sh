@@ -4,7 +4,7 @@ set -eou pipefail
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 UTILS_PATH="$SCRIPT_DIR/../utils.sh"
 TMP_ROOT=$(mktemp -d)
-ARTIFACTS_ROOT=${DEFAULT_ARTIFACTS_DIR:-$(mktemp -d)}
+ARTIFACTS_ROOT=${DEFAULT_ARTIFACTS_DIR:-$TMP_ROOT}
 
 # shellcheck source=../utils.sh
 source "$UTILS_PATH"

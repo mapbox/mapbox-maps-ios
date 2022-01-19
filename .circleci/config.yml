@@ -141,8 +141,11 @@ workflows:
 
   release:
     jobs:
+      - release-precheck
       - release:
           name: "Release"
+          requires:
+            - release-precheck
           filters: &release-tags-filter
             tags:
               only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
@@ -609,6 +612,16 @@ jobs:
           command: scripts/validate-integrations/validate-integrations.sh -v "$VERSION"
       - store-default-artifacts
 
+  release-precheck:
+    macos:
+      xcode: 13.2.1
+    steps:
+      - checkout
+      - parse-release-version-if-available
+      - run:
+          name: Podspec points to the release version
+          command: < [[ $(pod ipc spec  MapboxMaps.podspec | jq -r .version) == "$VERSION" ]]
+
   # This job:
   # - builds XCFrameworks
   # - uploads them to S3
@@ -678,7 +691,7 @@ jobs:
           command: scripts/validate-integrations/validate-integrations.sh -d -v "$VERSION"
       - run:
           name: Build Studio Preview with new branch
-          command: scripts/validate-integrations/validate-studio-preview.sh "$CIRCLE_BRANCH"
+          command: scripts/validate-integrations/validate-studio-preview.sh -c "$CIRCLE_SHA1"
       - store-default-artifacts
       - slack/notify:
           event: fail

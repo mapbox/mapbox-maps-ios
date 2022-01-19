@@ -124,4 +124,46 @@ final class ViewportTests: XCTestCase {
 
         XCTAssertTrue(impl.defaultTransition === transitionB)
     }
+
+    func testMakeFollowPuckViewportStateWithDefaultOptions() {
+        let state = viewport.makeFollowPuckViewportState()
+
+        XCTAssertEqual(state.options, .init())
+    }
+
+    func testMakeFollowPuckViewportStateWithCustomOptions() {
+        let options = FollowPuckViewportStateOptions.random()
+
+        let state = viewport.makeFollowPuckViewportState(options: options)
+
+        XCTAssertEqual(state.options, options)
+    }
+
+    func testMakeOverviewViewportStateWithCustomOptions() {
+        let options = OverviewViewportStateOptions.random()
+
+        let state = viewport.makeOverviewViewportState(options: options)
+
+        XCTAssertEqual(state.options, options)
+    }
+
+    func testMakeDefaultViewportTransitionWithDefaultOptions() {
+        let transition = viewport.makeDefaultViewportTransition()
+
+        XCTAssertEqual(transition.options, .init())
+    }
+
+    func testMakeDefaultViewportTransitionWithCustomOptions() {
+        let options = DefaultViewportTransitionOptions.random()
+
+        let transition = viewport.makeDefaultViewportTransition(options: options)
+
+        XCTAssertEqual(transition.options, options)
+    }
+
+    func testMakeImmediateViewportTransition() {
+        _ = viewport.makeImmediateViewportTransition()
+
+        // doesn't crash; no interface to verify
+    }
 }

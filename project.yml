@@ -75,8 +75,9 @@ targets:
           - "Integration Tests/MapViewIntegrationTestCase.swift"
           - "Integration Tests/IntegrationTestCase.swift"
           - "Helpers/Bundle+MapboxMapsTests.swift"
-          - "Helpers/TestConveniences.swift"
-          - "Helpers/XCTestCase+MapboxMaps.swift"
+          - "Helpers/String+FileSystemSafe.swift"
+          - "Helpers/XCTestCase+GuardForMetalDevice.swift"
+          - "Helpers/XCTestCase+MapboxAccessToken.swift"
           - "Helpers/XCTestCase+TemporaryCacheDirectory.swift"
     dependencies:
       - target: MapboxTestHost

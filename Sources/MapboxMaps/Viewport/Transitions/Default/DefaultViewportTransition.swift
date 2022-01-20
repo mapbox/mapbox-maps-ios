@@ -1,4 +1,4 @@
-public final class DefaultViewportTransition {
+@_spi(Experimental) public final class DefaultViewportTransition {
 
     // modifications to options will take effect the next
     // time run(from:to:completion:) is invoked
@@ -14,8 +14,7 @@ public final class DefaultViewportTransition {
 }
 
 extension DefaultViewportTransition: ViewportTransition {
-    public func run(from fromState: ViewportState?,
-                    to toState: ViewportState,
+    public func run(to toState: ViewportState,
                     completion: @escaping (Bool) -> Void) -> Cancelable {
         let resultCancelable = CompositeCancelable()
         resultCancelable.add(toState.observeDataSource { [options, animationHelper] cameraOptions in

@@ -76,22 +76,4 @@ final class MapViewIntegrationTests: IntegrationTestCase {
         }
         XCTAssertNil(weakMapView)
     }
-
-    func testDataClearing() {
-        defer {
-            mapView?.removeFromSuperview()
-            mapView = nil
-        }
-
-        guard let mapView = mapView else {
-            return
-        }
-
-        let expectation = self.expectation(description: "Clear data using instance function")
-        mapView.mapboxMap.clearData { error in
-            XCTAssertNil(error)
-            expectation.fulfill()
-        }
-        wait(for: [expectation], timeout: 10.0)
-    }
 }

@@ -1,4 +1,4 @@
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 
 final class MockViewportStatusObserver: ViewportStatusObserver {
     struct ViewportStatusDidChangeParams: Equatable {

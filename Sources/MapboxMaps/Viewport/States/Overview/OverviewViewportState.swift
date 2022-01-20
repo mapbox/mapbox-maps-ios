@@ -1,6 +1,6 @@
 import Turf
 
-public final class OverviewViewportState {
+@_spi(Experimental) public final class OverviewViewportState {
 
     // MARK: - Public Config
 

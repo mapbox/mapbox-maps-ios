@@ -1,5 +1,5 @@
 import XCTest
-@testable import MapboxMaps
+@testable @_spi(Experimental) import MapboxMaps
 
 final class ViewportTests: XCTestCase {
     var impl: MockViewportImpl!
@@ -72,30 +72,36 @@ final class ViewportTests: XCTestCase {
 
     func testTransition() throws {
         let toState = MockViewportState()
+        let transition = MockViewportTransition()
         let completionStub = Stub<Bool, Void>()
 
-        viewport.transition(to: toState, completion: completionStub.call(with:))
+        viewport.transition(
+            to: toState,
+            transition: transition,
+            completion: completionStub.call(with:))
 
         XCTAssertEqual(impl.transitionStub.invocations.count, 1)
         let implInvocation = try XCTUnwrap(impl.transitionStub.invocations.first)
         XCTAssertTrue(implInvocation.parameters.toState === toState)
+        XCTAssertTrue(implInvocation.parameters.transition === transition)
         let finished = Bool.random()
         implInvocation.parameters.completion?(finished)
         XCTAssertEqual(completionStub.invocations.map(\.parameters), [finished])
     }
 
-    func testTransitionWithNilCompletion() throws {
+    func testTransitionWithNilTransitionAndNilCompletion() throws {
         let toState = MockViewportState()
 
-        viewport.transition(to: toState, completion: nil)
+        viewport.transition(to: toState, transition: nil, completion: nil)
 
         XCTAssertEqual(impl.transitionStub.invocations.count, 1)
         let implInvocation = try XCTUnwrap(impl.transitionStub.invocations.first)
         XCTAssertTrue(implInvocation.parameters.toState === toState)
+        XCTAssertNil(implInvocation.parameters.transition)
         XCTAssertNil(implInvocation.parameters.completion)
     }
 
-    func testTransitionWithDefaultCompletion() throws {
+    func testTransitionWithDefaultTransitionAndCompletion() throws {
         let toState = MockViewportState()
 
         viewport.transition(to: toState)
@@ -103,6 +109,7 @@ final class ViewportTests: XCTestCase {
         XCTAssertEqual(impl.transitionStub.invocations.count, 1)
         let implInvocation = try XCTUnwrap(impl.transitionStub.invocations.first)
         XCTAssertTrue(implInvocation.parameters.toState === toState)
+        XCTAssertNil(implInvocation.parameters.transition)
         XCTAssertNil(implInvocation.parameters.completion)
     }
 
@@ -118,43 +125,45 @@ final class ViewportTests: XCTestCase {
         XCTAssertTrue(impl.defaultTransition === transitionB)
     }
 
-    func testSetTransition() throws {
-        let transition = MockViewportTransition()
-        let fromState: MockViewportState? = [nil, .init()].randomElement()!
-        let toState = MockViewportState()
+    func testMakeFollowPuckViewportStateWithDefaultOptions() {
+        let state = viewport.makeFollowPuckViewportState()
 
-        viewport.setTransition(transition, from: fromState, to: toState)
-
-        XCTAssertEqual(impl.setTransitionStub.invocations.count, 1)
-        let implInvocation = try XCTUnwrap(impl.setTransitionStub.invocations.first)
-        XCTAssertTrue(implInvocation.parameters.transition === transition)
-        XCTAssertTrue(implInvocation.parameters.fromState === fromState)
-        XCTAssertTrue(implInvocation.parameters.toState === toState)
+        XCTAssertEqual(state.options, .init())
     }
 
-    func testGetTransition() throws {
-        impl.getTransitionStub.defaultReturnValue = [nil, MockViewportTransition()].randomElement()!
-        let fromState: MockViewportState? = [nil, .init()].randomElement()!
-        let toState = MockViewportState()
+    func testMakeFollowPuckViewportStateWithCustomOptions() {
+        let options = FollowPuckViewportStateOptions.random()
 
-        let transition = viewport.getTransition(from: fromState, to: toState)
+        let state = viewport.makeFollowPuckViewportState(options: options)
 
-        XCTAssertEqual(impl.getTransitionStub.invocations.count, 1)
-        let implInvocation = try XCTUnwrap(impl.getTransitionStub.invocations.first)
-        XCTAssertTrue(implInvocation.parameters.fromState === fromState)
-        XCTAssertTrue(implInvocation.parameters.toState === toState)
-        XCTAssertTrue(transition === implInvocation.returnValue)
+        XCTAssertEqual(state.options, options)
     }
 
-    func testRemoveTransition() throws {
-        let fromState: MockViewportState? = [nil, .init()].randomElement()!
-        let toState = MockViewportState()
+    func testMakeOverviewViewportStateWithCustomOptions() {
+        let options = OverviewViewportStateOptions.random()
 
-        viewport.removeTransition(from: fromState, to: toState)
+        let state = viewport.makeOverviewViewportState(options: options)
 
-        XCTAssertEqual(impl.removeTransitionStub.invocations.count, 1)
-        let implInvocation = try XCTUnwrap(impl.removeTransitionStub.invocations.first)
-        XCTAssertTrue(implInvocation.parameters.fromState === fromState)
-        XCTAssertTrue(implInvocation.parameters.toState === toState)
+        XCTAssertEqual(state.options, options)
+    }
+
+    func testMakeDefaultViewportTransitionWithDefaultOptions() {
+        let transition = viewport.makeDefaultViewportTransition()
+
+        XCTAssertEqual(transition.options, .init())
+    }
+
+    func testMakeDefaultViewportTransitionWithCustomOptions() {
+        let options = DefaultViewportTransitionOptions.random()
+
+        let transition = viewport.makeDefaultViewportTransition(options: options)
+
+        XCTAssertEqual(transition.options, options)
+    }
+
+    func testMakeImmediateViewportTransition() {
+        _ = viewport.makeImmediateViewportTransition()
+
+        // doesn't crash; no interface to verify
     }
 }

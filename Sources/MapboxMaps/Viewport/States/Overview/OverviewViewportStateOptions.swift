@@ -1,7 +1,7 @@
 import Turf
 import CoreLocation
 
-public struct OverviewViewportStateOptions: Equatable {
+@_spi(Experimental) public struct OverviewViewportStateOptions: Equatable {
     public var geometry: Geometry
     public var padding: UIEdgeInsets
     public var bearing: CLLocationDirection

@@ -17,6 +17,9 @@ UTILS_PATH="$SCRIPT_DIR/../utils.sh"
 source "$UTILS_PATH"
 
 main() {
+    GITHUB_TOKEN=$(mbx-ci github reader token)
+    export GITHUB_TOKEN
+
     GL_NATIVE_RELEASE_URL=$(gh release view --repo mapbox/mapbox-gl-native-internal "maps-v$(jq -r .MapboxCoreMaps scripts/release/packager/versions.json)" --json url -q .url)
     COMMON_RELEASE_URL=$(gh release view --repo mapbox/mapbox-sdk-common "v$(jq -r .MapboxCommon scripts/release/packager/versions.json)" --json url -q .url)
 
@@ -55,26 +58,6 @@ EOF
             --notes-file notes.txt)
 
     info "New Release: $PRODUCTION_DOCS_PR_URL"
-
-    # # Custom message for release
-    # MESSAGE=
-
-    # # Body that is passed to the POST request
-    # BODY="{\"tag_name\":\"v$TAG\",\"target_commitish\":\"main\",\"name\":\"v$TAG\",\"body\":\"$MESSAGE\",\"draft\":true,\"prerelease\":true}"
-
-    # # Performing the request using github API
-    # CURL_RESULT=0
-    # HTTP_CODE=$(curl $URL \
-    #     -H "Authorization: token $GITHUB_TOKEN" \
-    #     -H "Accept: application/vnd.github.v3+json" \
-    #     -d "$BODY" -w "%{response_code}") || CURL_RESULT=$?
-
-    # if [[ $CURL_RESULT != 0 ]]; then
-    #     echo "Failed to create draft release (curl error: $CURL_RESULT)"
-    #     exit $CURL_RESULT
-    # fi
-
-    # echo "Result from draft release creation: $HTTP_CODE"
 }
 
 main

@@ -1091,7 +1091,6 @@ commands:
       - slack/notify:
           event: fail
           mentions: '@maps-ios'
-          channel: maps-test-alerts
           template: basic_fail_1
 
   report-failure:

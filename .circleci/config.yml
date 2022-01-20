@@ -5,6 +5,8 @@ orbs:
   # https://circleci.com/orbs/registry/orb/circleci/slack
   slack: circleci/slack@4.5
 
+
+### Shared anchors
 release-precheck: &release-anchor
   filters:
     tags:
@@ -13,6 +15,8 @@ release-precheck: &release-anchor
       ignore: /.*/
   requires:
     - release-precheck
+
+### Workflows
 
 workflows:
 
@@ -149,37 +153,6 @@ workflows:
       - validate-integrations-for-branch
 
   release:
-    jobs:
-      - release-precheck:
-          filters: &release-tags-filter
-            tags:
-              only: /^vv[0-9]+\.[0-9]+\.[0-9]+.*/
-            branches:
-              ignore: /.*/
-      - release:
-          name: "Release"
-          filters:
-            <<: *release-tags-filter
-          requires:
-            - release-precheck
-      - binaries-accessible?:
-          type: approval
-          filters:
-            <<: *release-tags-filter
-          requires:
-            - Release
-      - wait-for-binaries:
-          filters:
-            <<: *release-tags-filter
-          requires:
-            - binaries-accessible?
-      - validate-integrations:
-          filters:
-            <<: *release-tags-filter
-          requires:
-            - wait-for-binaries
-
-  release-new:
     jobs:
       - release-precheck:
           <<: *release-anchor
@@ -686,7 +659,7 @@ jobs:
 
   build-dynamic:
     macos:
-      xcode: 13.2.1
+      xcode: 12.5.1
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
@@ -704,7 +677,7 @@ jobs:
 
   build-static:
     macos:
-      xcode: 13.2.1
+      xcode: 12.5.1
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
@@ -827,80 +800,6 @@ jobs:
           event: pass
           template: success_tagged_deploy_1
 
-  # This job:
-  # - builds XCFrameworks
-  # - uploads them to S3
-  # - creates SDK Registry PR
-  # - builds API docs
-  # - creates a draft release on GitHub
-  release:
-    <<: *base-job
-    resource_class: large
-    steps:
-      - checkout
-      - configure-environment
-      - run:
-          name: Run `npm ci`
-          command: |
-            mbx-ci npm token -w
-            npm ci
-          when: on_success
-      - run:
-          name: Create draft release on Github
-          command: ./scripts/release/create-github-draft-release.sh "$VERSION"
-          when: always
-      - make-xcframework-bundle:
-          bundle_style: "dynamic"
-      - store_artifacts:
-          path: MapboxMaps.zip
-      - make-xcframework-bundle:
-          bundle_style: "static"
-      - store_artifacts:
-          path: MapboxMaps-static.zip
-      - run:
-          name: Uploading direct download bundles (static & dynamic) to SDK Registry
-          command: |
-            ./scripts/release/upload-to-registry.sh MapboxMaps.zip mobile-maps-ios "$VERSION" MapboxMaps.zip
-            ./scripts/release/upload-to-registry.sh MapboxMaps-static.zip mobile-maps-ios-static "$VERSION" MapboxMaps-static.zip
-      - run:
-          name: Creating SDK Registry PR
-          command: ./scripts/release/create-api-downloads-pr.sh mobile-maps-ios "$VERSION"
-          when: on_success
-      - make-docs
-      - run:
-          name: Release Examples App to TestFlight
-          command: |
-            bundle install
-            bundle exec fastlane beta
-      - open-docs-pull-requests
-      - run:
-          name: Publish CocoaPods Podspec
-          command: pod trunk push
-      - run:
-          name: Inject new Podspec version to CDN cache
-          description: |
-            Force adding new version to the cache to avoid long running clone operation
-            The following command would take the latest CocoaPods version from cache.
-
-            Alternative is to replace CDN with Specs repository and checkout it for the latest changes. It usually takes 3+ minutes on CircleCI
-          command: |
-            source scripts/utilities/cocoapods.sh
-            pod_inject_cdn_version MapboxMaps "$VERSION"
-      - run:
-          name: Test SPM and CocoaPods integrations per version rule
-          command: scripts/validate-integrations/validate-integrations.sh -d -v "$VERSION"
-      - run:
-          name: Build Studio Preview with new branch
-          command: scripts/validate-integrations/validate-studio-preview.sh -c "$CIRCLE_SHA1"
-      - store-default-artifacts
-      - slack/notify:
-          event: fail
-          mentions: '@maps-ios'
-          template: basic_fail_1
-      - slack/notify:
-          event: pass
-          template: success_tagged_deploy_1
-
   wait-for-binaries:
     docker:
       - image: cimg/base:stable
@@ -913,6 +812,7 @@ jobs:
             echo $VERSION
             timeout 1800 bash -c 'while [[ "$(curl -n -s -o /dev/null -w ''%{http_code}'' https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/$VERSION/MapboxMaps.zip)" != "200" ]]; do sleep 5; done' || false
           no_output_timeout: 30m
+
 # ==============================================================================
 # Reusable commands
 commands:

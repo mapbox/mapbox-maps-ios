@@ -1,5 +1,5 @@
 import XCTest
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 
 final class DefaultViewportTransitionOptionsTests: XCTestCase {
 

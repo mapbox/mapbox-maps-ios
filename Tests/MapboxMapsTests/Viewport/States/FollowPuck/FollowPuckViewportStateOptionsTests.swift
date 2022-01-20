@@ -1,9 +1,9 @@
 import XCTest
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 
-final class FollowingViewportStateOptionsTests: XCTestCase {
+final class FollowPuckViewportStateOptionsTests: XCTestCase {
     func testInitializerDefaultParameters() {
-        let options = FollowingViewportStateOptions()
+        let options = FollowPuckViewportStateOptions()
 
         XCTAssertEqual(options.zoom, 15)
         XCTAssertEqual(options.pitch, 40)
@@ -15,11 +15,11 @@ final class FollowingViewportStateOptionsTests: XCTestCase {
     func testInitializer() {
         let zoom = CGFloat.random(in: 0...20)
         let pitch = CGFloat.random(in: 0...80)
-        let bearing = FollowingViewportStateBearing.random()
+        let bearing = FollowPuckViewportStateBearing.random()
         let padding = UIEdgeInsets.random()
         let animationDuration = TimeInterval.random(in: 0...10)
 
-        let options = FollowingViewportStateOptions(
+        let options = FollowPuckViewportStateOptions(
             zoom: zoom,
             pitch: pitch,
             bearing: bearing,
@@ -33,19 +33,19 @@ final class FollowingViewportStateOptionsTests: XCTestCase {
         XCTAssertEqual(options.animationDuration, animationDuration)
     }
 
-    func verifyEqual(_ lhs: FollowingViewportStateOptions, _ rhs: FollowingViewportStateOptions) {
+    func verifyEqual(_ lhs: FollowPuckViewportStateOptions, _ rhs: FollowPuckViewportStateOptions) {
         XCTAssertTrue(lhs == rhs)
         XCTAssertTrue(rhs == lhs)
         XCTAssertEqual(lhs.hashValue, rhs.hashValue)
     }
 
-    func verifyNotEqual(_ lhs: FollowingViewportStateOptions, _ rhs: FollowingViewportStateOptions) {
+    func verifyNotEqual(_ lhs: FollowPuckViewportStateOptions, _ rhs: FollowPuckViewportStateOptions) {
         XCTAssertFalse(lhs == rhs)
         XCTAssertFalse(rhs == lhs)
     }
 
     func testEquatableAndHashable() {
-        var options1 = FollowingViewportStateOptions.random()
+        var options1 = FollowPuckViewportStateOptions.random()
         options1.bearing = .constant(0)
         var options2 = options1
         verifyEqual(options1, options1)

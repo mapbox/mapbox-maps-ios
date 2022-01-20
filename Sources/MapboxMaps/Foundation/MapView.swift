@@ -40,7 +40,7 @@ open class MapView: UIView {
     /// Manages the configuration of custom view annotations on the map.
     public private(set) var viewAnnotations: ViewAnnotationManager!
 
-    public private(set) var viewport: Viewport!
+    @_spi(Experimental) public private(set) var viewport: Viewport!
 
     /// Controls the display of attribution dialogs
     private var attributionDialogManager: AttributionDialogManager!

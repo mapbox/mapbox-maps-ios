@@ -1,13 +1,13 @@
-public struct FollowingViewportStateOptions: Hashable {
+@_spi(Experimental) public struct FollowPuckViewportStateOptions: Hashable {
     public var zoom: CGFloat
     public var pitch: CGFloat
-    public var bearing: FollowingViewportStateBearing
+    public var bearing: FollowPuckViewportStateBearing
     public var padding: UIEdgeInsets
     public var animationDuration: TimeInterval
 
     public init(zoom: CGFloat = 15,
                 pitch: CGFloat = 40,
-                bearing: FollowingViewportStateBearing = .constant(0),
+                bearing: FollowPuckViewportStateBearing = .constant(0),
                 padding: UIEdgeInsets = .zero,
                 animationDuration: TimeInterval = 1) {
         self.zoom = zoom

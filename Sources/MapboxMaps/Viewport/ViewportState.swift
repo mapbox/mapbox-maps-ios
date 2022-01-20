@@ -5,7 +5,7 @@
 // States should generally pre-warm their data sources as soon as they are created
 // to minimize delays when they become current. For this reason, only states that
 // are currently needed should be kept alive.
-public protocol ViewportState: AnyObject {
+@_spi(Experimental) public protocol ViewportState: AnyObject {
     // this method allows a transition to observe the target camera. The handler must
     // be invoked on the main queue. Transitions typically can't start until after the
     // handler is invoked for the first time, so it's a good idea for states to invoke

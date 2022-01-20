@@ -1,4 +1,4 @@
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 import XCTest
 
 final class ViewportOptionsTests: XCTestCase {

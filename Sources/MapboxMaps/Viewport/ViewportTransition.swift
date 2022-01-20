@@ -1,4 +1,4 @@
-public protocol ViewportTransition: AnyObject {
+@_spi(Experimental) public protocol ViewportTransition: AnyObject {
     // The completion block must be invoked with true if the transition
     // completes successfully. If the transition fails, invoke the completion
     // block with false. If the returned Cancelable is canceled, it not
@@ -10,7 +10,6 @@ public protocol ViewportTransition: AnyObject {
     // camera multiple times during the transition (a "moving target").
     //
     // Viewport never invokes run with the same state for from and to.
-    func run(from fromState: ViewportState?,
-             to toState: ViewportState,
+    func run(to toState: ViewportState,
              completion: @escaping (Bool) -> Void) -> Cancelable
 }

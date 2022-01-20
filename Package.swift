@@ -35,7 +35,7 @@ let package = Package(
             dependencies: ["MapboxMaps", "CocoaImageHashing"],
             exclude: [
                 "Info.plist",
-                "Foundation/Integration Tests/HTTP/HTTPIntegrationTests.swift",
+                "Integration Tests/HTTP/HTTPIntegrationTests.swift",
             ],
             resources: [
                 .copy("MigrationGuide/Fixtures/polygon.geojson"),

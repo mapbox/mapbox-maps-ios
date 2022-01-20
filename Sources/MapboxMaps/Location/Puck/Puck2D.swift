@@ -185,9 +185,9 @@ private extension Puck2DConfiguration {
 
 public extension Puck2DConfiguration {
     // Create a Puck2DConfiguration instance with or without an arrow bearing image. Default without the arrow bearing image.
-    static func makeDefault(withBearing: Bool = false) -> Puck2DConfiguration {
+    static func makeDefault(showBearing: Bool = false) -> Puck2DConfiguration {
         return Puck2DConfiguration(topImage: UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!,
-                                   bearingImage: withBearing ? makeBearingImage() : nil,
+                                   bearingImage: showBearing ? makeBearingImage() : nil,
                                 shadowImage: UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!)
     }
 }

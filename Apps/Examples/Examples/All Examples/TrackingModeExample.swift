@@ -47,7 +47,7 @@ public class TrackingModeExample: UIViewController, ExampleProtocol {
 
     func syncPuckAndButton() {
         // Update puck config
-        let configuration = Puck2DConfiguration.makeDefault(withBearing: showsBearingImage)
+        let configuration = Puck2DConfiguration.makeDefault(showBearing: showsBearingImage)
 
         mapView.location.options.puckType = .puck2D(configuration)
 

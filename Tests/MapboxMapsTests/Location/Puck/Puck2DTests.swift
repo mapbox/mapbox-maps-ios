@@ -62,7 +62,7 @@ final class Puck2DTests: XCTestCase {
     }
 
     func testMakeDefaultWithBearing() {
-        let puck2D = Puck2DConfiguration.makeDefault(withBearing: true)
+        let puck2D = Puck2DConfiguration.makeDefault(showBearing: true)
         XCTAssertEqual(puck2D.topImage, UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!)
         XCTAssertNotNil(puck2D.bearingImage)
         XCTAssertEqual(puck2D.shadowImage, UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!)

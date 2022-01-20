@@ -48,7 +48,7 @@ internal final class PinchGestureHandlerImpl2: PinchGestureHandlerImpl {
             }
             startDragging(with: pinchMidpoint)
             previousPinchMidpoint = pinchMidpoint
-            initialPinchAngle = pinchAngleForGestureBegan(with: gestureRecognizer)
+            initialPinchAngle = pinchAngle(with: gestureRecognizer)
             initialZoom = mapboxMap.cameraState.zoom
             initialBearing = mapboxMap.cameraState.bearing
             initialRotateEnabled = rotateEnabled
@@ -73,7 +73,7 @@ internal final class PinchGestureHandlerImpl2: PinchGestureHandlerImpl {
             // if a second touch goes down again before the gesture ends, we
             // resume and re-capture the initial state (except for zoom since
             // UIPinchGestureRecognizer provides continuity of scale values)
-            let pinchAngle = pinchAngleForGestureChanged(with: gestureRecognizer)
+            let pinchAngle = self.pinchAngle(with: gestureRecognizer)
             guard let previousPinchMidpoint = previousPinchMidpoint,
                   let initialPinchAngle = initialPinchAngle,
                   let initialBearing = initialBearing else {
@@ -145,18 +145,6 @@ internal final class PinchGestureHandlerImpl2: PinchGestureHandlerImpl {
             angle += 2 * .pi
         }
         return angle
-    }
-
-    // this method is added to help diagnose a crash in pinchAngle. if the crash continues to happen,
-    // we'll be able to tell which invocation of pinchAngle is responsible.
-    private func pinchAngleForGestureBegan(with gestureRecognizer: UIPinchGestureRecognizer) -> CGFloat {
-        return pinchAngle(with: gestureRecognizer)
-    }
-
-    // this method is added to help diagnose a crash in pinchAngle. if the crash continues to happen,
-    // we'll be able to tell which invocation of pinchAngle is responsible.
-    private func pinchAngleForGestureChanged(with gestureRecognizer: UIPinchGestureRecognizer) -> CGFloat {
-        return pinchAngle(with: gestureRecognizer)
     }
 
     private func pinchAngle(with gestureRecognizer: UIPinchGestureRecognizer) -> CGFloat {

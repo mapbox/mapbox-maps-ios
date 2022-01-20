@@ -48,7 +48,7 @@ internal final class PinchGestureHandlerImpl1: PinchGestureHandlerImpl {
                 return
             }
             initialPinchMidpoint = pinchMidpoint
-            initialPinchAngle = pinchAngleForGestureBegan(with: gestureRecognizer)
+            initialPinchAngle = pinchAngle(with: gestureRecognizer)
             initialCenter = mapboxMap.cameraState.center
             initialZoom = mapboxMap.cameraState.zoom
             initialBearing = mapboxMap.cameraState.bearing
@@ -76,7 +76,7 @@ internal final class PinchGestureHandlerImpl1: PinchGestureHandlerImpl {
             }
             // Using explicit self to help older versions of Xcode (pre-12.5) figure
             // out the scope of these variables. https://bugs.swift.org/browse/SR-8669
-            let pinchAngle = self.pinchAngleForGestureChanged(with: gestureRecognizer)
+            let pinchAngle = self.pinchAngle(with: gestureRecognizer)
             guard let initialPinchMidpoint = initialPinchMidpoint,
                   let initialPinchAngle = initialPinchAngle,
                   let initialCenter = initialCenter,
@@ -143,18 +143,6 @@ internal final class PinchGestureHandlerImpl1: PinchGestureHandlerImpl {
             angle += 2 * .pi
         }
         return angle
-    }
-
-    // this method is added to help diagnose a crash in pinchAngle. if the crash continues to happen,
-    // we'll be able to tell which invocation of pinchAngle is responsible.
-    private func pinchAngleForGestureBegan(with gestureRecognizer: UIPinchGestureRecognizer) -> CGFloat {
-        return pinchAngle(with: gestureRecognizer)
-    }
-
-    // this method is added to help diagnose a crash in pinchAngle. if the crash continues to happen,
-    // we'll be able to tell which invocation of pinchAngle is responsible.
-    private func pinchAngleForGestureChanged(with gestureRecognizer: UIPinchGestureRecognizer) -> CGFloat {
-        return pinchAngle(with: gestureRecognizer)
     }
 
     private func pinchAngle(with gestureRecognizer: UIPinchGestureRecognizer) -> CGFloat {

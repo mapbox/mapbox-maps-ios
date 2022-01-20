@@ -40,7 +40,7 @@ final class FollowPuckViewportStateDataSourceTests: XCTestCase {
             center: location.location.coordinate,
             padding: options.padding,
             zoom: options.zoom,
-            bearing: options.bearing.evaluate(with: location),
+            bearing: options.bearing?.evaluate(with: location),
             pitch: options.pitch)
     }
 

@@ -3,7 +3,7 @@ version: 2.1
 
 orbs:
   # https://circleci.com/orbs/registry/orb/circleci/slack
-  slack: circleci/slack@3.4.2
+  slack: circleci/slack@4.5
 
 workflows:
 
@@ -105,10 +105,9 @@ workflows:
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
           xcode: "13.0.0"
-          device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
-          device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
           app-name: "Examples"
+          device-tests-always-run: true
           filters:
             branches:
               ignore: main
@@ -132,7 +131,6 @@ workflows:
           device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
           scheme: "Examples"
           app-name: "Examples"
-          device-tests-always-run: true
           report_failure: true
           filters:
             branches:
@@ -451,10 +449,15 @@ jobs:
           commit-text: "[run app device tests]"
           always-run: << parameters.device-tests-always-run >>
       - configure-environment
+      - setup-google-cloud-account
       - run:
-          name: Install Device Farm Dependencies
-          command: make install-devicefarm-dependencies
+          name: Start Firebase lane
+          command: |
+            bundle install
+            bundle exec fastlane firebase
+      - install-gcloud
       - install-dependencies
+      - login-google-cloud-platform
       # There's a command for this, but it only works if run *after* the build.
       # In this case, we need to determine the derived data path *before* building.
       - run:
@@ -466,26 +469,14 @@ jobs:
               -scheme '<< parameters.scheme >>' \
               | sed -n 's:^ *BUILD_DIR = \(.*\)/Build/Products$:export DERIVED_DATA_PATH="\1":p' \
               >> $BASH_ENV
-      - run:
-          name: Testing << parameters.scheme >> on AWS Device Farm
-          command: |
-            make test-with-device-farm \
-              SCHEME=<< parameters.scheme >> \
-              APP_NAME=<< parameters.app-name >> \
-              CONFIGURATION=Release \
-              BUILD_DIR="$DERIVED_DATA_PATH" \
-              XCODE_WORKSPACE=Apps/Apps.xcworkspace
           when: always
-      # get xcresults here, may be zipped with more than one result
-      - run:
-          name: "Gathering results"
-          command: make gather-results BUILD_DIR="$DERIVED_DATA_PATH"
-          when: always
+      - get-test-results-from-firebase:
+            scheme: << parameters.scheme >>
       - run:
           name: "Parsing xcresults for errors"
           command: |
-            RESULTS=`find "$DERIVED_DATA_PATH/testruns" -name '*.xcresult'`
-            xargs swift run --package-path scripts/xcparty xcparty \<<< "$RESULTS" | tee "$DERIVED_DATA_PATH/testruns/failures.txt"
+            RESULTS=`find "$DERIVED_DATA_PATH" -name '*.xcresult'`
+            xargs swift run --package-path scripts/xcparty xcparty \<<< "$RESULTS" | tee "$DERIVED_DATA_PATH/failures.txt"
           when: on_fail
       - run:
           name: Symbolicate crash logs
@@ -493,19 +484,20 @@ jobs:
             make symbolicate \
               SCHEME=<< parameters.scheme >> \
               APP_NAME=<< parameters.app-name >> \
-              CONFIGURATION=Release \
+              CONFIGURATION=Debug \
               BUILD_DIR="$DERIVED_DATA_PATH"
           when: always
       - run:
           name: Converting and uploading coverage
+          when: always
           command: |
             pip3 install awscli gitpython
             make device-update-codecov-with-profdata \
               SCHEME=<< parameters.scheme >> \
               APP_NAME=<< parameters.app-name >> \
-              CONFIGURATION=Release \
+              CONFIGURATION=Debug \
               BUILD_DIR="$DERIVED_DATA_PATH"
-      - store-device-farm-artifacts:
+      - store-firebase-artifacts:
           derived_data_path: $DERIVED_DATA_PATH
       - store-logs:
           derived_data_path: $DERIVED_DATA_PATH
@@ -616,9 +608,6 @@ jobs:
     <<: *base-job
     steps:
       - parse-release-version-if-available
-      - slack/notify:
-          message: '<$CIRCLE_BUILD_URL|Release tag for \`v$VERSION\` started.>'
-          include_visit_job_action: true
       - checkout
       - add-mapbox-submodules-key
       - install-mbx-ci
@@ -655,8 +644,8 @@ jobs:
       - run:
           name: Release Examples App to TestFlight
           command: |
-            brew install fastlane
-            fastlane beta
+            bundle install
+            bundle exec fastlane beta
       - open-docs-pull-requests
       - run:
           name: Publish CocoaPods Podspec
@@ -677,11 +666,13 @@ jobs:
       - run:
           name: Build Studio Preview with new branch
           command: scripts/validate-integrations/validate-studio-preview.sh "$CIRCLE_BRANCH"
-      - slack/status:
-          fail_only: false
-          include_visit_job_action: true
-          failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL|Release tag for \`v$VERSION\` failed.>'
-          success_message: ':green_circle: <$CIRCLE_BUILD_URL|Release tag for \`v$VERSION\` succeeded!> :tada:'
+      - slack/notify:
+          event: always
+          mentions: '@maps-ios'
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: success_tagged_deploy_1
 
   wait-for-binaries:
     docker:
@@ -719,6 +710,37 @@ commands:
           command: |
             echo "machine api.mapbox.com login mapbox password $SDK_REGISTRY_TOKEN" >> ~/.netrc
             chmod 0600 ~/.netrc
+
+  setup-google-cloud-account:
+    steps:
+      - run:
+          name: Setup Google Cloud default application credentials
+          command: |
+            mkdir -p ~/.config/gcloud/
+            echo "${GOOGLE_CLOUD_KEY_FILE}" > ~/.config/gcloud/application_default_credentials.json
+
+  login-google-cloud-platform:
+    parameters:
+      project:
+        type: string
+        default: mapbox-maps-ios-dc24c
+    steps:
+      - run:
+          name: Log in to Google Cloud Platform
+          command: gcloud auth activate-service-account --key-file ~/.config/gcloud/application_default_credentials.json --project << parameters.project >>
+
+  get-test-results-from-firebase:
+    parameters:
+      scheme:
+        type: string
+        default: ""
+    steps:
+      - run:
+          name: Retrieve TestResult from gcloud for << parameters.scheme >>
+          command: |
+            testResult=$(gsutil ls gs://${TEST_LAB_EXAMPLES}/<< parameters.scheme >>-${CIRCLE_BUILD_NUM}/iphone11-13.6-en_US-portrait)
+            gsutil cp -r $testResult $DERIVED_DATA_PATH
+          when: always
 
   inject-mapbox-public-token:
     steps:
@@ -829,6 +851,57 @@ commands:
       - store_artifacts:
           path: << parameters.artifact_name >>.zip
 
+  store-firebase-artifacts:
+    parameters:
+      artifact_name:
+        type: string
+        default: "firebase"
+      derived_data_path:
+        type: string
+        default: "build"
+    description: "Save firebase Results as Artifacts"
+    steps:
+      - run:
+          name: Zipping firebase results
+          command: |
+            export ZIP_FILE="$PWD/<< parameters.artifact_name >>.zip"
+            cd "<< parameters.derived_data_path >>"
+            zip -r "$ZIP_FILE" xcodebuild_output.log || echo "Skipping xcodebuild_output.log"
+            zip -r "$ZIP_FILE" video.mp4 || echo "Skipping video.mp4"
+            zip -r "$ZIP_FILE" test_result_0.xml || echo "Skipping test_result_0.xml"
+            zip -r "$ZIP_FILE" syslog.txt || echo "Skipping syslog.txt"
+            zip -r "$ZIP_FILE" TestLogs || echo "Skipping TestLogs"
+            zip -r "$ZIP_FILE" ProfileData || echo "Skipping ProfileData"
+            zip -r "$ZIP_FILE" CrashLogs || echo "Skipping CrashLogs"
+          when: always
+      - store_artifacts:
+          path: << parameters.artifact_name >>.zip
+
+  install-gcloud:
+    # Link for gcloud versions: https://cloud.google.com/sdk/docs/downloads-versioned-archives#installation_instructions
+    parameters:
+      version:
+        type: string
+        default: "google-cloud-sdk-367.0.0-linux-x86_64.tar.gz"
+      checksum:
+        type: string
+        default: "94328b9c6559a1b7ec2eeaab9ef0e4702215e16e8327c5b99718750526ae1efe"
+    description: "Install gcloud"
+    steps:
+      - run:
+          name: Install gcloud
+          command: |
+            brew install ccache
+            mkdir /tmp/gcloud && cd /tmp/gcloud
+            curl -OL https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/<< parameters.version >>
+            echo '<< parameters.checksum >> *<< parameters.version >>' >> checksumfile
+            shasum -a 256 -c checksumfile
+            tar zxvf << parameters.version >>
+            ./google-cloud-sdk/install.sh -q
+            echo "source /tmp/gcloud/google-cloud-sdk/path.bash.inc" >> $BASH_ENV
+            echo "source /tmp/gcloud/google-cloud-sdk/completion.bash.inc" >> $BASH_ENV
+            source $BASH_ENV
+
   install-dependencies:
     description: "Install Dependencies"
     steps:
@@ -894,12 +967,74 @@ commands:
               circleci-agent step halt
             fi
           when: on_fail
-      - slack/status:
-          fail_only: true
-          include_visit_job_action: true
-          mentions: '$CIRCLE_USERNAME'
-          only_for_branches: main
-          failure_message: ':tests-fail-red-cross: <$CIRCLE_BUILD_URL| << parameters.message >> failed.>'
+      - slack/notify:
+          branch_pattern: main
+          event: fail
+          custom: |
+            {
+              "text": "CircleCI job failed.",
+              "blocks": [
+                  {
+                      "type": "header",
+                      "text": {
+                          "type": "plain_text",
+                          "text": "Job Failed. :red_circle:",
+                          "emoji": true
+                      }
+                  },
+                  {
+                      "type": "section",
+                      "fields": [
+                          {
+                              "type": "mrkdwn",
+                              "text": "*Job*: ${CIRCLE_JOB}"
+                          }
+                      ]
+                  },
+                  {
+                      "type": "section",
+                      "fields": [
+                          {
+                              "type": "mrkdwn",
+                              "text": "*Project*: $CIRCLE_PROJECT_REPONAME"
+                          },
+                          {
+                              "type": "mrkdwn",
+                              "text": "*Branch*: $CIRCLE_BRANCH"
+                          },
+                          {
+                              "type": "mrkdwn",
+                              "text": "*Author*: @${CIRCLE_USERNAME}"
+                          }
+                      ],
+                      "accessory": {
+                          "type": "image",
+                          "image_url": "https://assets.brandfolder.com/otz5mn-bw4j2w-6jzqo8/original/circle-logo-badge-black.png",
+                          "alt_text": "CircleCI logo"
+                      }
+                  },
+                  {
+                    "type": "section",
+                    "text": {
+                      "type": "mrkdwn",
+                      "text": "*Message*: << parameters.message >>"
+                    }
+                  },
+                  {
+                      "type": "actions",
+                      "elements": [
+                          {
+                              "type": "button",
+                              "text": {
+                                  "type": "plain_text",
+                                  "text": "View Job"
+                              },
+                              "url": "${CIRCLE_BUILD_URL}"
+                          }
+                      ]
+                  }
+              ]
+            }
 
   locate-derived-data-directory:
     parameters:

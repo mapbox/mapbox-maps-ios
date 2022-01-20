@@ -14,6 +14,11 @@ internal protocol CameraAnimationsManagerProtocol: AnyObject {
                     locationChangeHandler: @escaping (_ fromLocation: CGPoint, _ toLocation: CGPoint) -> Void,
                     completion: @escaping () -> Void)
 
+    func makeAnimator(duration: TimeInterval,
+                      curve: UIView.AnimationCurve,
+                      animationOwner: AnimationOwner,
+                      animations: @escaping (inout CameraTransition) -> Void) -> BasicCameraAnimator
+
     func cancelAnimations()
 
     var animationsEnabled: Bool { get set }

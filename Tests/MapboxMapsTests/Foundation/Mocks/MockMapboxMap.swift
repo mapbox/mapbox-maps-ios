@@ -20,17 +20,17 @@ final class MockMapboxMap: MapboxMapProtocol {
         minPitch: 0)
 
     var cameraState = CameraState(
-        MapboxCoreMaps.CameraState(
-            center: CLLocationCoordinate2D(
-                latitude: 0, longitude: 0),
-            padding: EdgeInsets(
-                top: 0,
-                left: 0,
-                bottom: 0,
-                right: 0),
-            zoom: 0,
-            bearing: 0,
-            pitch: 0))
+        center: CLLocationCoordinate2D(
+            latitude: 0,
+            longitude: 0),
+        padding: UIEdgeInsets(
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0),
+        zoom: 0,
+        bearing: 0,
+        pitch: 0)
 
     var anchor = CGPoint.zero
 
@@ -88,8 +88,6 @@ final class MockMapboxMap: MapboxMapProtocol {
         endGestureStub.call()
     }
 
-    // MARK: - View annotation management
-
     let setViewAnnotationPositionsUpdateListenerStub = Stub<ViewAnnotationPositionsUpdateListener?, Void>()
     func setViewAnnotationPositionsUpdateListener(_ listener: ViewAnnotationPositionsUpdateListener?) {
         setViewAnnotationPositionsUpdateListenerStub.call(with: listener)
@@ -123,5 +121,28 @@ final class MockMapboxMap: MapboxMapProtocol {
     let pointIsAboveHorizonStub = Stub<CGPoint, Bool>(defaultReturnValue: .random())
     func pointIsAboveHorizon(_ point: CGPoint) -> Bool {
         pointIsAboveHorizonStub.call(with: point)
+    }
+
+    struct CameraForGeometryParams {
+        var geometry: Geometry
+        var padding: UIEdgeInsets
+        var bearing: CGFloat?
+        var pitch: CGFloat?
+    }
+    let cameraForGeometryStub = Stub<CameraForGeometryParams, MapboxMaps.CameraOptions>(defaultReturnValue: .random())
+    func camera(for geometry: Geometry,
+                padding: UIEdgeInsets,
+                bearing: CGFloat?,
+                pitch: CGFloat?) -> MapboxMaps.CameraOptions {
+        cameraForGeometryStub.call(with: .init(
+            geometry: geometry,
+            padding: padding,
+            bearing: bearing,
+            pitch: pitch))
+    }
+
+    let pointStub = Stub<CLLocationCoordinate2D, CGPoint>(defaultReturnValue: .random())
+    func point(for coordinate: CLLocationCoordinate2D) -> CGPoint {
+        pointStub.call(with: coordinate)
     }
 }

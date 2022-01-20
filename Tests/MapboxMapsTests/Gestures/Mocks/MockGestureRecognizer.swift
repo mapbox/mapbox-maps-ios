@@ -28,7 +28,7 @@ final class MockGestureRecognizer: UIGestureRecognizer {
 
     func sendActions() {
         for param in addTargetStub.parameters {
-            (param.target as? NSObject)?.perform(param.action, with: self)
+            _ = (param.target as AnyObject).perform(param.action, with: self)
         }
     }
 }

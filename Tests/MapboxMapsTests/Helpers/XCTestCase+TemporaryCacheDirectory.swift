@@ -1,13 +1,11 @@
 import XCTest
 
 extension XCTestCase {
-
-    internal func temporaryCacheDirectory() throws -> URL {
-
+    func temporaryCacheDirectory() throws -> URL {
         let processId = ProcessInfo().processIdentifier
         var cacheDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
         cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent("mapbox/tests/\(processId)")
-        cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent(name.fileSystemSafeString())
+        cacheDirectoryURL = cacheDirectoryURL.appendingPathComponent(name.fileSystemSafe())
 
         try FileManager.default.createDirectory(at: cacheDirectoryURL,
                                                 withIntermediateDirectories: true,

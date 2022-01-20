@@ -342,7 +342,8 @@ symbolicate:
 	@echo Symbolicating crash reports
 
 	@export DEVELOPER_DIR=$$(xcode-select -p); \
-	CRASHES=`find $(DEVICE_TEST_PATH) -name Application_Crash_Report.ips` ; \
+	CRASHES=`find $(BUILD_DIR) -name *.ips` ; \
+	echo "crashes: $${CRASHES}"; \
 	for CRASH in $${CRASHES[@]} ; \
 	do \
 		if [ ! -f $${CRASH}.symbolicated.txt ]; then \
@@ -432,7 +433,7 @@ update-codecov-with-profdata:
 device-update-codecov-with-profdata:
 	make update-codecov-with-profdata \
 		COVERAGE_ARCH=arm64 \
-		COVERAGE_ROOT_DIR=$(BUILD_DIR)/testruns \
+		COVERAGE_ROOT_DIR=$(BUILD_DIR)/ \
 		COVERAGE_MAPBOX_MAPS='$(BUILT_DEVICE_PRODUCTS_DIR)/MapboxMaps.o'
 
 # ----------------------------------------------------------------------------------------------------------------------

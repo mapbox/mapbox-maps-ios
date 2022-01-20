@@ -22,23 +22,25 @@ open class MapView: UIView {
     }
 
     /// The `gestures` object will be responsible for all gestures on the map.
-    public internal(set) var gestures: GestureManager!
+    public private(set) var gestures: GestureManager!
 
     /// The `ornaments`object will be responsible for all ornaments on the map.
-    public internal(set) var ornaments: OrnamentsManager!
+    public private(set) var ornaments: OrnamentsManager!
 
     /// The `camera` object manages a camera's view lifecycle.
-    public internal(set) var camera: CameraAnimationsManager!
+    public private(set) var camera: CameraAnimationsManager!
 
     /// The `location`object handles location events of the map.
-    public internal(set) var location: LocationManager!
+    public private(set) var location: LocationManager!
     private var locationProducer: LocationProducerProtocol!
 
     /// Controls the addition/removal of annotations to the map.
-    public internal(set) var annotations: AnnotationOrchestrator!
+    public private(set) var annotations: AnnotationOrchestrator!
 
     /// Manages the configuration of custom view annotations on the map.
-    public internal(set) var viewAnnotations: ViewAnnotationManager!
+    public private(set) var viewAnnotations: ViewAnnotationManager!
+
+    @_spi(Experimental) public private(set) var viewport: Viewport!
 
     /// Controls the display of attribution dialogs
     private var attributionDialogManager: AttributionDialogManager!
@@ -316,6 +318,15 @@ open class MapView: UIView {
 
         // Initialize/Configure view annotations manager
         viewAnnotations = ViewAnnotationManager(containerView: viewAnnotationContainerView, mapboxMap: mapboxMap)
+
+        viewport = Viewport(
+            impl: dependencyProvider.makeViewportImpl(
+                mapboxMap: mapboxMap,
+                cameraAnimationsManager: camera,
+                idleGestureRecognizer: gestures.animationLockoutGestureRecognizer),
+            locationProducer: locationProducer,
+            cameraAnimationsManager: camera,
+            mapboxMap: mapboxMap)
     }
 
     private func checkForMetalSupport() {

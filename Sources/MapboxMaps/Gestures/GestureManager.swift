@@ -83,6 +83,10 @@ public final class GestureManager: GestureHandlerDelegate {
         return singleTapGestureHandler.gestureRecognizer
     }
 
+    internal var animationLockoutGestureRecognizer: UIGestureRecognizer {
+        return animationLockoutGestureHandler.gestureRecognizer
+    }
+
     /// Set this delegate to be called back if a gesture begins
     public weak var delegate: GestureManagerDelegate?
 

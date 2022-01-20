@@ -41,7 +41,7 @@ final class CameraViewTests: XCTestCase {
         let center = cameraOptions.center!
         XCTAssertEqual(cameraView.layer.position, CGPoint(x: center.longitude,
                                                           y: center.latitude))
-        XCTAssertEqual(cameraView.layer.transform.m11, cameraOptions.pitch!)
+        XCTAssertEqual(cameraView.layer.borderWidth, cameraOptions.pitch!)
         XCTAssertEqual(cameraView.layer.anchorPoint, cameraOptions.anchor!)
     }
 

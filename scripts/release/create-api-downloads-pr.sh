@@ -12,7 +12,7 @@ VERSION=$2
 
 # Variables needed for github actions
 BRANCH_NAME="$PROJECT_ROOT/$VERSION"
-GITHUB_TOKEN=$(./scripts/release/get_token.js)
+GITHUB_TOKEN=$(mbx-ci github writer private token)
 
 TMPDIR=$(mktemp -d)
 

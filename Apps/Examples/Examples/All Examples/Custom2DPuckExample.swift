@@ -78,6 +78,6 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         // Constraints
         toggleAccuracyRadiusButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20.0).isActive = true
         toggleAccuracyRadiusButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20.0).isActive = true
-        toggleAccuracyRadiusButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 650.0).isActive = true
+        toggleAccuracyRadiusButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100.0).isActive = true
     }
 }

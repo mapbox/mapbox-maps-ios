@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-common-ios.git",
         "state": {
           "branch": null,
-          "revision": "7a21f03e963c1780e0a85443c8d611226ffa54ce",
-          "version": "21.1.0-beta.1"
+          "revision": "8a63edd2e83fd75ef67bd9450400ecd6d8592d70",
+          "version": "21.1.0-rc.1"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-core-maps-ios.git",
         "state": {
           "branch": null,
-          "revision": "9955bce4cc6772903f7473a745b7a36a22ff4c3c",
-          "version": "10.3.0-beta.1"
+          "revision": "cdd47bd2954bda58d87c7becd28e4bd663200907",
+          "version": "10.3.0-rc.1"
         }
       },
       {

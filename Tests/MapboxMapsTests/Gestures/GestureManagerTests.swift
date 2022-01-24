@@ -95,10 +95,6 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertTrue(gestureManager.quickZoomGestureRecognizer === quickZoomGestureHandler.gestureRecognizer)
     }
 
-    func testAnimationLockoutGestureRecognizer() {
-        XCTAssertTrue(gestureManager.animationLockoutGestureRecognizer === animationLockoutGestureHandler.gestureRecognizer)
-    }
-
     func testPanGestureHandlerDelegate() {
         XCTAssertTrue(panGestureHandler.delegate === gestureManager)
     }
@@ -335,7 +331,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertTrue(gestureManager.quickZoomGestureRecognizer.isEnabled)
     }
 
-    func testPanDecelerationFactor() {
+    func testOptionsPanDecelerationFactor() {
         XCTAssertEqual(gestureManager.options.panDecelerationFactor, UIScrollView.DecelerationRate.normal.rawValue)
         XCTAssertEqual(panGestureHandler.decelerationFactor, UIScrollView.DecelerationRate.normal.rawValue)
 
@@ -360,7 +356,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertEqual(panGestureHandler.decelerationFactor, UIScrollView.DecelerationRate.normal.rawValue)
     }
 
-    func testPanMode() {
+    func testOptionsPanMode() {
         XCTAssertEqual(gestureManager.options.panMode, .horizontalAndVertical)
         XCTAssertEqual(panGestureHandler.panMode, .horizontalAndVertical)
 
@@ -384,7 +380,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertEqual(gestureManager.options.panMode, panGestureHandler.panMode)
     }
 
-    func testPinchRotateEnabled() {
+    func testOptionsPinchRotateEnabled() {
         XCTAssertEqual(gestureManager.options.pinchRotateEnabled, true)
         XCTAssertEqual(pinchGestureHandler.rotateEnabled, true)
 
@@ -407,7 +403,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertEqual(gestureManager.options.pinchRotateEnabled, pinchGestureHandler.rotateEnabled)
     }
 
-    func testPinchBehavior() {
+    func testOptionsPinchBehavior() {
         XCTAssertEqual(gestureManager.options.pinchBehavior, .tracksTouchLocationsWhenPanningAfterZoomChange)
         XCTAssertEqual(pinchGestureHandler.behavior, .tracksTouchLocationsWhenPanningAfterZoomChange)
 
@@ -428,5 +424,28 @@ final class GestureManagerTests: XCTestCase {
         pinchGestureHandler.behavior = .tracksTouchLocationsWhenPanningAfterZoomChange
 
         XCTAssertEqual(gestureManager.options.pinchBehavior, pinchGestureHandler.behavior)
+    }
+
+    func testOptionsDisableAnimationsDuringGestures() {
+        XCTAssertTrue(gestureManager.options.disableAnimationsDuringGestures)
+        XCTAssertTrue(animationLockoutGestureHandler.gestureRecognizer.isEnabled)
+
+        gestureManager.options.disableAnimationsDuringGestures = false
+
+        XCTAssertFalse(gestureManager.options.disableAnimationsDuringGestures)
+        XCTAssertFalse(animationLockoutGestureHandler.gestureRecognizer.isEnabled)
+
+        gestureManager.options.disableAnimationsDuringGestures = true
+
+        XCTAssertTrue(gestureManager.options.disableAnimationsDuringGestures)
+        XCTAssertTrue(animationLockoutGestureHandler.gestureRecognizer.isEnabled)
+
+        animationLockoutGestureHandler.gestureRecognizer.isEnabled = false
+
+        XCTAssertFalse(gestureManager.options.disableAnimationsDuringGestures)
+
+        animationLockoutGestureHandler.gestureRecognizer.isEnabled = true
+
+        XCTAssertTrue(gestureManager.options.disableAnimationsDuringGestures)
     }
 }

@@ -8,9 +8,10 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager
     func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool) -> LocationProducerProtocol
     func makeLocationManager(locationProducer: LocationProducerProtocol, style: StyleProtocol) -> LocationManager
-    func makeViewportImpl(mapboxMap: MapboxMapProtocol,
+    func makeViewportImpl(view: UIView,
+                          mapboxMap: MapboxMapProtocol,
                           cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                          idleGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol
+                          idleGestureRecognizers: [UIGestureRecognizer]) -> ViewportImplProtocol
 }
 
 internal final class MapViewDependencyProvider: MapViewDependencyProviderProtocol {
@@ -93,7 +94,9 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     func makeAnimationLockoutGestureHandler(view: UIView,
                                             mapboxMap: MapboxMapProtocol,
                                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
-        let gestureRecognizer = AnyTouchGestureRecognizer()
+        let gestureRecognizer = ContinuousAnyTouchGestureRecognizer(
+            minimumPressDuration: 0.15,
+            timerProvider: TimerProvider())
         view.addGestureRecognizer(gestureRecognizer)
         return AnimationLockoutGestureHandler(
             gestureRecognizer: gestureRecognizer,
@@ -162,9 +165,14 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             puckManager: puckManager)
     }
 
-    func makeViewportImpl(mapboxMap: MapboxMapProtocol,
+    func makeViewportImpl(view: UIView,
+                          mapboxMap: MapboxMapProtocol,
                           cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                          idleGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol {
+                          idleGestureRecognizers: [UIGestureRecognizer]) -> ViewportImplProtocol {
+        let gestureRecognizer = DiscreteAnyTouchGestureRecognizer(
+            minimumPressDuration: 0.15,
+            timerProvider: TimerProvider())
+        view.addGestureRecognizer(gestureRecognizer)
         return ViewportImpl(
             options: .init(),
             mainQueue: MainQueue(),
@@ -173,6 +181,6 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                 animationHelper: DefaultViewportTransitionAnimationHelper(
                     mapboxMap: mapboxMap,
                     cameraAnimationsManager: cameraAnimationsManager)),
-            idleGestureRecognizer: idleGestureRecognizer)
+            idleGestureRecognizers: idleGestureRecognizers + [gestureRecognizer])
     }
 }

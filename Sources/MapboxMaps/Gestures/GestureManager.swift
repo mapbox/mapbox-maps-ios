@@ -28,6 +28,7 @@ public final class GestureManager: GestureHandlerDelegate {
             quickZoomGestureRecognizer.isEnabled = newValue.quickZoomEnabled
             panGestureHandler.panMode = newValue.panMode
             panGestureHandler.decelerationFactor = newValue.panDecelerationFactor
+            animationLockoutGestureHandler.gestureRecognizer.isEnabled = newValue.disableAnimationsDuringGestures
         }
         get {
             var gestureOptions = GestureOptions()
@@ -41,6 +42,7 @@ public final class GestureManager: GestureHandlerDelegate {
             gestureOptions.quickZoomEnabled = quickZoomGestureRecognizer.isEnabled
             gestureOptions.panMode = panGestureHandler.panMode
             gestureOptions.panDecelerationFactor = panGestureHandler.decelerationFactor
+            gestureOptions.disableAnimationsDuringGestures = animationLockoutGestureHandler.gestureRecognizer.isEnabled
             return gestureOptions
         }
     }
@@ -81,10 +83,6 @@ public final class GestureManager: GestureHandlerDelegate {
     ///         to be notified when a single tap occurs on the map.
     public var singleTapGestureRecognizer: UIGestureRecognizer {
         return singleTapGestureHandler.gestureRecognizer
-    }
-
-    internal var animationLockoutGestureRecognizer: UIGestureRecognizer {
-        return animationLockoutGestureHandler.gestureRecognizer
     }
 
     /// Set this delegate to be called back if a gesture begins

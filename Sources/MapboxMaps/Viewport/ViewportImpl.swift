@@ -30,12 +30,14 @@ internal final class ViewportImpl: ViewportImplProtocol {
     internal init(options: ViewportOptions,
                   mainQueue: MainQueueProtocol,
                   defaultTransition: ViewportTransition,
-                  idleGestureRecognizer: UIGestureRecognizer) {
+                  idleGestureRecognizers: [UIGestureRecognizer]) {
         self.options = options
         self.mainQueue = mainQueue
         self.defaultTransition = defaultTransition
         self.status = .idle
-        idleGestureRecognizer.addTarget(self, action: #selector(handleIdleGesture(_:)))
+        for recognizer in idleGestureRecognizers {
+            recognizer.addTarget(self, action: #selector(handleIdleGesture(_:)))
+        }
     }
 
     // MARK: - Status
@@ -201,7 +203,7 @@ internal final class ViewportImpl: ViewportImplProtocol {
 
     @objc private func handleIdleGesture(_ gestureRecognizer: UIGestureRecognizer) {
         switch gestureRecognizer.state {
-        case .began:
+        case .recognized:
             if options.transitionsToIdleUponUserInteraction {
                 idle(invokingCancelable: true, reason: .userInteraction)
             }

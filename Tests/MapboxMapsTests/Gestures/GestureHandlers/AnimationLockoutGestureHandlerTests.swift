@@ -23,10 +23,6 @@ final class AnimationLockoutGestureHandlerTests: XCTestCase {
         super.tearDown()
     }
 
-    func testInitialization() {
-        XCTAssertFalse(gestureRecognizer.cancelsTouchesInView)
-    }
-
     func testGestureBegan() {
         cameraAnimationsManager.animationsEnabled = true
 

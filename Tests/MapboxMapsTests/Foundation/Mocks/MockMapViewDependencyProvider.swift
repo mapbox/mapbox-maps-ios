@@ -59,17 +59,20 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
     }
 
     struct MakeViewportImplParams {
+        var view: UIView
         var mapboxMap: MapboxMapProtocol
         var cameraAnimationsManager: CameraAnimationsManagerProtocol
-        var idleGestureRecognizer: UIGestureRecognizer
+        var idleGestureRecognizers: [UIGestureRecognizer]
     }
     let makeViewportImplStub = Stub<MakeViewportImplParams, ViewportImplProtocol>(defaultReturnValue: MockViewportImpl())
-    func makeViewportImpl(mapboxMap: MapboxMapProtocol,
+    func makeViewportImpl(view: UIView,
+                          mapboxMap: MapboxMapProtocol,
                           cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                          idleGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol {
+                          idleGestureRecognizers: [UIGestureRecognizer]) -> ViewportImplProtocol {
         makeViewportImplStub.call(with: .init(
+            view: view,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager,
-            idleGestureRecognizer: idleGestureRecognizer))
+            idleGestureRecognizers: idleGestureRecognizers))
     }
 }

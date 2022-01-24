@@ -321,9 +321,12 @@ open class MapView: UIView {
 
         viewport = Viewport(
             impl: dependencyProvider.makeViewportImpl(
+                view: self,
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: camera,
-                idleGestureRecognizer: gestures.animationLockoutGestureRecognizer),
+                idleGestureRecognizers: [
+                    gestures.doubleTapToZoomInGestureRecognizer,
+                    gestures.doubleTouchToZoomOutGestureRecognizer]),
             locationProducer: locationProducer,
             cameraAnimationsManager: camera,
             mapboxMap: mapboxMap)

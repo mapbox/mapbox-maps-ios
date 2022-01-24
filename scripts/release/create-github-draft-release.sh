@@ -35,6 +35,8 @@ main() {
 
 * Compatible version of MapboxCoreMaps: \`$MAPBOX_COREMAPS_VERSION\`
 * Compatible version of MapboxCommon: \`$MAPBOX_COMMON_VERSION\`
+* Compatible version of Xcode: \`12.5.1\`
+
 ### Changes
 
 $CHANGELOG

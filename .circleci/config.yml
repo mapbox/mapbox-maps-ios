@@ -423,7 +423,7 @@ jobs:
             bundle install
             bundle exec fastlane build_tests_host
       - store_artifacts:
-          path: MapboxTestHost.zip
+          path: output/build_products.zip
 
   # We may want to split this across multiple jobs, rather than multiple
   run-tests-on-devices:

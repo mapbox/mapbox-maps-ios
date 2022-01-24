@@ -74,7 +74,7 @@ internal final class ViewportImpl: ViewportImplProtocol {
     // MARK: - Changing States
 
     internal func idle() {
-        idle(invokingCancelable: true, reason: .programmatic)
+        idle(invokingCancelable: true, reason: .idleRequested)
     }
 
     private func idle(invokingCancelable: Bool, reason: ViewportStatusChangeReason) {
@@ -159,10 +159,10 @@ internal final class ViewportImpl: ViewportImplProtocol {
                     self.notifyObservers(
                         withFromStatus: fromStatus,
                         toStatus: self.status,
-                        reason: .programmatic)
+                        reason: .transitionSucceeded)
                 } else {
                     // the transition failed for some reason (e.g. its animations were canceled externally)
-                    self.idle(invokingCancelable: false, reason: .programmatic)
+                    self.idle(invokingCancelable: false, reason: .transitionFailed)
                 }
             }
 
@@ -188,7 +188,7 @@ internal final class ViewportImpl: ViewportImplProtocol {
             notifyObservers(
                 withFromStatus: fromStatus,
                 toStatus: status,
-                reason: .programmatic)
+                reason: .transitionStarted)
         }
     }
 

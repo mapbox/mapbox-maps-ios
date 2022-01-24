@@ -116,7 +116,7 @@ final class ViewportImplTests: XCTestCase {
         XCTAssertEqual(viewportImpl.status, transitionStatus)
         XCTAssertEqual(
             statusObserver.viewportStatusDidChangeStub.invocations.map(\.parameters),
-            [.init(fromStatus: fromState.map(ViewportStatus.state) ?? .idle, toStatus: viewportImpl.status, reason: .programmatic)])
+            [.init(fromStatus: fromState.map(ViewportStatus.state) ?? .idle, toStatus: viewportImpl.status, reason: .transitionStarted)])
         statusObserver.viewportStatusDidChangeStub.reset()
         XCTAssertEqual(expectedTransition.runStub.invocations.count, 1)
         let runInvocation = try XCTUnwrap(expectedTransition.runStub.invocations.first)
@@ -134,7 +134,7 @@ final class ViewportImplTests: XCTestCase {
         XCTAssertEqual(viewportImpl.status, .state(toState))
         XCTAssertEqual(
             statusObserver.viewportStatusDidChangeStub.invocations.map(\.parameters),
-            [.init(fromStatus: transitionStatus, toStatus: .state(toState), reason: .programmatic)])
+            [.init(fromStatus: transitionStatus, toStatus: .state(toState), reason: .transitionSucceeded)])
     }
 
     func testTransitionToStateFromNilUsingDefaultTransition() throws {
@@ -218,10 +218,10 @@ final class ViewportImplTests: XCTestCase {
             statusObserver.viewportStatusDidChangeStub.invocations.map(\.parameters),
             [.init(fromStatus: .idle,
                    toStatus: .transition(defaultTransition, toState: stateA),
-                   reason: .programmatic),
+                   reason: .transitionStarted),
              .init(fromStatus: .transition(defaultTransition, toState: stateA),
                    toStatus: .transition(defaultTransition, toState: stateB),
-                   reason: .programmatic)])
+                   reason: .transitionStarted)])
 
         // idle to ensure that the correct final cancelable was stored
         idleAndNotify()
@@ -249,18 +249,18 @@ final class ViewportImplTests: XCTestCase {
             statusObserver.viewportStatusDidChangeStub.invocations.map(\.parameters),
             [.init(fromStatus: .idle,
                    toStatus: .transition(defaultTransition, toState: stateA),
-                   reason: .programmatic),
+                   reason: .transitionStarted),
              .init(fromStatus: .transition(defaultTransition, toState: stateA),
                    toStatus: .transition(defaultTransition, toState: stateB),
-                   reason: .programmatic)])
+                   reason: .transitionStarted)])
         XCTAssertEqual(
             observer2.viewportStatusDidChangeStub.invocations.map(\.parameters),
             [.init(fromStatus: .idle,
                    toStatus: .transition(defaultTransition, toState: stateA),
-                   reason: .programmatic),
+                   reason: .transitionStarted),
              .init(fromStatus: .transition(defaultTransition, toState: stateA),
                    toStatus: .transition(defaultTransition, toState: stateB),
-                   reason: .programmatic)])
+                   reason: .transitionStarted)])
     }
 
     func testIdleFromNonNilState() throws {
@@ -273,7 +273,7 @@ final class ViewportImplTests: XCTestCase {
         XCTAssertEqual(viewportImpl.status, .idle)
         XCTAssertEqual(
             statusObserver.viewportStatusDidChangeStub.invocations.map(\.parameters),
-            [.init(fromStatus: .state(fromState), toStatus: .idle, reason: .programmatic)])
+            [.init(fromStatus: .state(fromState), toStatus: .idle, reason: .idleRequested)])
     }
 
     func testIdleFromNilState() {
@@ -352,10 +352,10 @@ final class ViewportImplTests: XCTestCase {
             statusObserver.viewportStatusDidChangeStub.invocations.map(\.parameters),
             [.init(fromStatus: .idle,
                    toStatus: .transition(defaultTransition, toState: stateA),
-                   reason: .programmatic),
+                   reason: .transitionStarted),
              .init(fromStatus: .transition(defaultTransition, toState: stateA),
                    toStatus: .transition(defaultTransition, toState: stateB),
-                   reason: .programmatic)])
+                   reason: .transitionStarted)])
 
         // idle to ensure that the correct final cancelable was stored
         viewportImpl.idle()
@@ -382,10 +382,10 @@ final class ViewportImplTests: XCTestCase {
             statusObserver.viewportStatusDidChangeStub.invocations.map(\.parameters),
             [.init(fromStatus: .idle,
                    toStatus: .transition(defaultTransition, toState: stateA),
-                   reason: .programmatic),
+                   reason: .transitionStarted),
              .init(fromStatus: .transition(defaultTransition, toState: stateA),
                    toStatus: .idle,
-                   reason: .programmatic)])
+                   reason: .idleRequested)])
     }
 
     func testIgnoresViewportTransitionRunCompletionBlockInvocationIfCanceledBySecondTransition() throws {
@@ -419,10 +419,10 @@ final class ViewportImplTests: XCTestCase {
             statusObserver.viewportStatusDidChangeStub.invocations.map(\.parameters),
             [.init(fromStatus: .idle,
                    toStatus: .transition(defaultTransition, toState: stateA),
-                   reason: .programmatic),
+                   reason: .transitionStarted),
              .init(fromStatus: .transition(defaultTransition, toState: stateA),
                    toStatus: .transition(defaultTransition, toState: stateB),
-                   reason: .programmatic)])
+                   reason: .transitionStarted)])
 
         // idle to ensure that the correct final cancelable was stored
         viewportImpl.idle()
@@ -459,10 +459,10 @@ final class ViewportImplTests: XCTestCase {
             statusObserver.viewportStatusDidChangeStub.invocations.map(\.parameters),
             [.init(fromStatus: .idle,
                    toStatus: .transition(defaultTransition, toState: state),
-                   reason: .programmatic),
+                   reason: .transitionStarted),
              .init(fromStatus: .transition(defaultTransition, toState: state),
                    toStatus: .idle,
-                   reason: .programmatic)])
+                   reason: .idleRequested)])
     }
 
     func testViewportTransitionRunFailureResultsInIdleStatus() throws {
@@ -485,10 +485,10 @@ final class ViewportImplTests: XCTestCase {
             statusObserver.viewportStatusDidChangeStub.invocations.map(\.parameters),
             [.init(fromStatus: .idle,
                    toStatus: .transition(defaultTransition, toState: state),
-                   reason: .programmatic),
+                   reason: .transitionStarted),
              .init(fromStatus: .transition(defaultTransition, toState: state),
                    toStatus: .idle,
-                   reason: .programmatic)])
+                   reason: .transitionFailed)])
     }
 
     func testDefaultTransitionInitialization() {

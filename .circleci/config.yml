@@ -104,6 +104,7 @@ workflows:
       - unit-test-sdk:
           name: "Run Unit tests"
           xcode: "12.5.0"
+      - build-test-host-tests
       # Not on main
       - run-tests-on-devices:
           name: "Run MapboxTestHost tests on devices"
@@ -410,6 +411,18 @@ jobs:
       - report-failure:
           report_failure: << parameters.report_failure >>
           message: "unit-test-sdk"
+
+  build-test-host-tests:
+    macos:
+      xcode: 13.2.1
+    steps:
+      - checkout
+      - configure-environment
+      - run:
+          name: Build MapboxTestHost for testing
+          command: bundle exec fastlane build_tests_host
+      - store_artifacts:
+          path: MapboxTestHost.zip
 
   # We may want to split this across multiple jobs, rather than multiple
   run-tests-on-devices:

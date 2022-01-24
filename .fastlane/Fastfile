@@ -94,4 +94,40 @@ platform :ios do
     )
   end
 
+  lane :build_tests_host do
+    sh("cd .. && xcodegen")
+    run_tests(
+      project: 'MapboxMaps.xcodeproj',
+      scheme: 'MapboxTestHost',                  # XCTest scheme
+      build_for_testing: true,            # Required
+      sdk: 'iphoneos',                    # Required
+      should_zip_build_products: true,     # Must be true to set the correct format for Firebase Test Lab,
+      output_directory: "output/"
+    )
+  end
+
+  lane :build_host_for_testing do
+    sh("cd .. && xcodegen")
+    setup_circle_ci
+    sync_code_signing(type: "development", username: "applemachine@mapbox.com", app_identifier: "com.mapbox.MapboxMapsTestHost")
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "MapboxMaps.xcodeproj",
+      team_id: "GJZR2MEM28", # Developer Portal Team ID,
+      profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.examples"]
+    )
+
+    # build_app(
+    #   project: "MapboxMaps.xcodeproj",
+    #   scheme: "MapboxTestHost",
+    #   output_directory: "out", # Destination directory. Defaults to current directory.
+    #   xcargs: 'build-for-testing -destination "generic/platform=iOS"'
+    # )
+
+    sh('cd .. && xcodebuild -resolvePackageDependencies -scheme MapboxTestHost -project MapboxMaps.xcodeproj -derivedDataPath build')
+    sh('cd .. && xcodebuild build-for-testing -scheme MapboxTestHost -project MapboxMaps.xcodeproj -destination "generic/platform=iOS" -derivedDataPath build')
+    sh('cd ../build/Build/Products && zip -yr ../../../MapboxTestHost.zip .')
+
+  end
+
 end

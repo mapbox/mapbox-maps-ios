@@ -4,16 +4,20 @@
                                  reason: ViewportStatusChangeReason)
 }
 
-@_spi(Experimental) public struct ViewportStatusChangeReason: RawRepresentable, Hashable {
-    public typealias RawValue = String
+@_spi(Experimental) public struct ViewportStatusChangeReason: Hashable {
+    private var rawValue: String
 
-    public var rawValue: String
-
-    public init(rawValue: String) {
+    private init(rawValue: String) {
         self.rawValue = rawValue
     }
 
-    public static let programmatic = ViewportStatusChangeReason(rawValue: "PROGRAMMATIC")
+    public static let idleRequested = ViewportStatusChangeReason(rawValue: "IDLE_REQUESTED")
+
+    public static let transitionStarted = ViewportStatusChangeReason(rawValue: "TRANSITION_STARTED")
+
+    public static let transitionSucceeded = ViewportStatusChangeReason(rawValue: "TRANSITION_SUCCEEDED")
+
+    public static let transitionFailed = ViewportStatusChangeReason(rawValue: "TRANSITION_FAILED")
 
     public static let userInteraction = ViewportStatusChangeReason(rawValue: "USER_INTERACTION")
 }

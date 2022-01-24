@@ -43,7 +43,7 @@ final class OverviewViewportStateTest: XCTestCase {
         let cameraForInvocation = try XCTUnwrap(mapboxMap.cameraForGeometryStub.invocations.first)
         XCTAssertEqual(cameraForInvocation.parameters.geometry, options.geometry)
         XCTAssertEqual(cameraForInvocation.parameters.padding, options.padding)
-        XCTAssertEqual(cameraForInvocation.parameters.bearing, CGFloat(options.bearing))
+        XCTAssertEqual(cameraForInvocation.parameters.bearing, options.bearing.map(CGFloat.init(_:)))
         XCTAssertEqual(cameraForInvocation.parameters.pitch, options.pitch)
 
         XCTAssertEqual(observableCameraOptions.notifyStub.invocations.map(\.parameters), [cameraForInvocation.returnValue])

@@ -414,6 +414,7 @@ jobs:
   build-test-host-tests:
     macos:
       xcode: 13.2.1
+    resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - configure-environment

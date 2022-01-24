@@ -20,19 +20,21 @@ main() {
     GITHUB_TOKEN=$(mbx-ci github reader token)
     export GITHUB_TOKEN
 
-    GL_NATIVE_RELEASE_URL=$(gh release view --repo mapbox/mapbox-gl-native-internal "maps-v$(jq -r .MapboxCoreMaps scripts/release/packager/versions.json)" --json url -q .url)
-    COMMON_RELEASE_URL=$(gh release view --repo mapbox/mapbox-sdk-common "v$(jq -r .MapboxCommon scripts/release/packager/versions.json)" --json url -q .url)
+    VERSION_JSON_PATH="$SCRIPT_DIR/packager/versions.json"
+
+    GL_NATIVE_RELEASE_URL=$(gh release view --repo mapbox/mapbox-gl-native-internal "maps-v$(jq -r .MapboxCoreMaps "$VERSION_JSON_PATH")" --json url -q .url)
+    COMMON_RELEASE_URL=$(gh release view --repo mapbox/mapbox-sdk-common "v$(jq -r .MapboxCommon "$VERSION_JSON_PATH")" --json url -q .url)
+
+    MAPBOX_COMMON_VERSION=$(jq -r .MapboxCommon "$VERSION_JSON_PATH")
+    MAPBOX_COREMAPS_VERSION=$(jq -r .MapboxCoreMaps "$VERSION_JSON_PATH")
 
     CHANGELOG=$( ([[ $(command -v parse-changelog) ]] && parse-changelog CHANGELOG.md) || echo "<Compose changelog here>" )
 
     cat << EOF > notes.txt
 ### Dependency requirements:
 
-* Compatible version of MapboxCoreMaps:
-* Compatible version of MapboxCommon:
-* Compatible version of Xcode:
-* Compatible version of macOS:
-
+* Compatible version of MapboxCoreMaps: \`$MAPBOX_COREMAPS_VERSION\`
+* Compatible version of MapboxCommon: \`$MAPBOX_COMMON_VERSION\`
 ### Changes
 
 $CHANGELOG

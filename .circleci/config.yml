@@ -419,7 +419,9 @@ jobs:
       - configure-environment
       - run:
           name: Build MapboxTestHost for testing
-          command: bundle exec fastlane build_tests_host
+          command: |
+            bundle install
+            bundle exec fastlane build_tests_host
       - store_artifacts:
           path: MapboxTestHost.zip
 

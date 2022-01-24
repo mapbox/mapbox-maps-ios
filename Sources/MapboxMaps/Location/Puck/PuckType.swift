@@ -26,6 +26,12 @@ public struct Puck2DConfiguration: Equatable {
     /// Flag determining if the horizontal accuracy ring should be shown arround the `Puck`. default value is false
     public var showsAccuracyRing: Bool
 
+    /// The color of the accuracy ring.
+    public var accuracyRingColor: UIColor
+
+    /// The color of the accuracy ring border.
+    public var accuracyRingBorderColor: UIColor
+
     /// Initialize a `Puck2D` object with a top image, bearing image, shadow image, scale, and accuracy ring visibility.
     /// - Parameters:
     ///   - topImage: The image to use as the top layer for the location indicator.
@@ -37,12 +43,41 @@ public struct Puck2DConfiguration: Equatable {
                 bearingImage: UIImage? = nil,
                 shadowImage: UIImage? = nil,
                 scale: Value<Double>? = nil,
-                showsAccuracyRing: Bool = false) {
+                showsAccuracyRing: Bool = false
+    ) {
         self.topImage = topImage
         self.bearingImage = bearingImage
         self.shadowImage = shadowImage
         self.scale = scale
         self.showsAccuracyRing = showsAccuracyRing
+        self.accuracyRingColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)
+        self.accuracyRingBorderColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)
+    }
+
+    /// Initialize a `Puck2D` object with a top image, bearing image, shadow image, scale, and accuracy ring visibility.
+    /// - Parameters:
+    ///   - topImage: The image to use as the top layer for the location indicator.
+    ///   - bearingImage: The image used as the middle of the location indicator.
+    ///   - shadowImage: The image that acts as a background of the location indicator.
+    ///   - scale: The size of the images, as a scale factor applied to the size of the specified image..
+    ///   - showsAccuracyRing: Indicates whether the location accurary ring should be shown.
+    ///   - accuracyRingColor:The color of the accuracy ring.
+    ///   - accuracyRingBorderColor: The color of the accuracy ring border.
+    public init(topImage: UIImage? = nil,
+                bearingImage: UIImage? = nil,
+                shadowImage: UIImage? = nil,
+                scale: Value<Double>? = nil,
+                showsAccuracyRing: Bool = false,
+                accuracyRingColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3),
+                accuracyRingBorderColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)
+    ) {
+        self.topImage = topImage
+        self.bearingImage = bearingImage
+        self.shadowImage = shadowImage
+        self.scale = scale
+        self.showsAccuracyRing = showsAccuracyRing
+        self.accuracyRingColor = accuracyRingColor
+        self.accuracyRingBorderColor = accuracyRingBorderColor
     }
 }
 

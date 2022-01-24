@@ -279,7 +279,7 @@ final class Puck2DTests: XCTestCase {
         var expectedLayer = makeExpectedLayer()
         expectedLayer.accuracyRadius = .constant(location.horizontalAccuracy)
         expectedLayer.accuracyRadiusColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
-        expectedLayer.accuracyRadiusBorderColor = .constant(StyleColor(.lightGray))
+        expectedLayer.accuracyRadiusBorderColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
         let expectedProperties = try expectedLayer.jsonObject()
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
@@ -348,7 +348,7 @@ final class Puck2DTests: XCTestCase {
             5000
         })
         expectedLayer.accuracyRadiusColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
-        expectedLayer.accuracyRadiusBorderColor = .constant(StyleColor(.lightGray))
+        expectedLayer.accuracyRadiusBorderColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
         let expectedProperties = try expectedLayer.jsonObject()
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
@@ -391,7 +391,7 @@ final class Puck2DTests: XCTestCase {
             5000
         })
         expectedLayer.accuracyRadiusColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
-        expectedLayer.accuracyRadiusBorderColor = .constant(StyleColor(.lightGray))
+        expectedLayer.accuracyRadiusBorderColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
         var expectedProperties = try expectedLayer.jsonObject()
         for key in originalKeys where expectedProperties[key] == nil {
             expectedProperties[key] = Style.layerPropertyDefaultValue(for: .locationIndicator, property: key)

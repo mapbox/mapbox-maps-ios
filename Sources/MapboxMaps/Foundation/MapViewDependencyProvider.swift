@@ -96,6 +96,12 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     func makeAnyTouchGestureHandler(view: UIView,
                                     mapboxMap: MapboxMapProtocol,
                                     cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
+        // 0.15 seconds is a sufficient delay to avoid interrupting animations
+        // in between a rapid succession of double tap or double touch gestures.
+        // It's also not so long as to feel unnatural when touching the map to
+        // stop an animation. The map continues to animate under the touch
+        // briefly, but comes to a stop within a reasonable amount of time. In
+        // the future, we may want to expose this as a tunable option.
         let gestureRecognizer = AnyTouchGestureRecognizer(
             minimumPressDuration: 0.15,
             timerProvider: TimerProvider())

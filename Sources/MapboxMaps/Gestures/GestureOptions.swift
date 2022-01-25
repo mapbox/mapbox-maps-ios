@@ -73,13 +73,5 @@ public struct GestureOptions: Equatable {
     /// Defaults to `UIScrollView.DecelerationRate.normal.rawValue`
     public var panDecelerationFactor: CGFloat = UIScrollView.DecelerationRate.normal.rawValue
 
-    /// Whether animations (existing and new) are automatically canceled while a gesture is
-    /// in progress. Cancellation begins after a short delay to allow short, discrete gestures
-    /// like double tap and double touch to be used repeatedly without interruption. Set this
-    /// flag to `false` in situations where a gestures should be allowed to run in parallel
-    /// with animations (e.g. when an animation is modifying the camera center and a
-    /// gesture should be allowed to modify zoom). Defaults to `true`.
-    public var disableAnimationsDuringGestures: Bool = true
-
     public init() {}
 }

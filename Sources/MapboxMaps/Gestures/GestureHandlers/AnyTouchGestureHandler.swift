@@ -1,6 +1,6 @@
 import UIKit
 
-internal final class AnimationLockoutGestureHandler: GestureHandler {
+internal final class AnyTouchGestureHandler: GestureHandler {
 
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol
 

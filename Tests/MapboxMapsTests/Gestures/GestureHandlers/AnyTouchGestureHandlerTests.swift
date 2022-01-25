@@ -1,17 +1,17 @@
 import XCTest
 @testable import MapboxMaps
 
-final class AnimationLockoutGestureHandlerTests: XCTestCase {
+final class AnyTouchGestureHandlerTests: XCTestCase {
 
     var gestureRecognizer: MockGestureRecognizer!
     var cameraAnimationsManager: MockCameraAnimationsManager!
-    var gestureHandler: AnimationLockoutGestureHandler!
+    var gestureHandler: AnyTouchGestureHandler!
 
     override func setUp() {
         super.setUp()
         gestureRecognizer = MockGestureRecognizer()
         cameraAnimationsManager = MockCameraAnimationsManager()
-        gestureHandler = AnimationLockoutGestureHandler(
+        gestureHandler = AnyTouchGestureHandler(
             gestureRecognizer: gestureRecognizer,
             cameraAnimationsManager: cameraAnimationsManager)
     }

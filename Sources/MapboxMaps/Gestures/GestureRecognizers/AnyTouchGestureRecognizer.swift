@@ -1,29 +1,6 @@
 import UIKit.UIGestureRecognizerSubclass
 
-internal final class DiscreteAnyTouchGestureRecognizer: AnyTouchGestureRecognizer {
-
-    override func touchesAdded() {
-        state = .recognized
-    }
-
-    override func touchesRemoved() {
-    }
-}
-
-internal final class ContinuousAnyTouchGestureRecognizer: AnyTouchGestureRecognizer {
-
-    override func touchesAdded() {
-        state = .began
-    }
-
-    override func touchesRemoved() {
-        if state == .began {
-            state = .ended
-        }
-    }
-}
-
-internal class AnyTouchGestureRecognizer: UIGestureRecognizer {
+internal final class AnyTouchGestureRecognizer: UIGestureRecognizer {
 
     private let minimumPressDuration: TimeInterval
 
@@ -36,12 +13,14 @@ internal class AnyTouchGestureRecognizer: UIGestureRecognizer {
                     timeInterval: minimumPressDuration,
                     repeats: false,
                     block: { [weak self] _ in
-                        self?.touchesAdded()
+                        self?.state = .began
                     })
             } else if !oldValue.isEmpty, touches.isEmpty {
                 timer?.invalidate()
                 timer = nil
-                touchesRemoved()
+                if state == .began {
+                    state = .ended
+                }
             }
         }
     }
@@ -54,14 +33,6 @@ internal class AnyTouchGestureRecognizer: UIGestureRecognizer {
         self.timerProvider = timerProvider
         super.init(target: nil, action: nil)
         self.cancelsTouchesInView = false
-    }
-
-    internal func touchesAdded() {
-        fatalError("subclasses must implement")
-    }
-
-    internal func touchesRemoved() {
-        fatalError("subclasses must implement")
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {

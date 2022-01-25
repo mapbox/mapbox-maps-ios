@@ -324,9 +324,9 @@ open class MapView: UIView {
                 view: self,
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: camera,
-                idleGestureRecognizers: [
-                    gestures.doubleTapToZoomInGestureRecognizer,
-                    gestures.doubleTouchToZoomOutGestureRecognizer]),
+                anyTouchGestureRecognizer: gestures.anyTouchGestureRecognizer,
+                doubleTapGestureRecognizer: gestures.doubleTapToZoomInGestureRecognizer,
+                doubleTouchGestureRecognizer: gestures.doubleTouchToZoomOutGestureRecognizer),
             locationProducer: locationProducer,
             cameraAnimationsManager: camera,
             mapboxMap: mapboxMap)

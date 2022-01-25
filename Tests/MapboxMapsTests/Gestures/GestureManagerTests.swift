@@ -12,7 +12,7 @@ final class GestureManagerTests: XCTestCase {
     var doubleTouchToZoomOutGestureHandler: GestureHandler!
     var quickZoomGestureHandler: GestureHandler!
     var singleTapGestureHandler: GestureHandler!
-    var animationLockoutGestureHandler: GestureHandler!
+    var anyTouchGestureHandler: GestureHandler!
     var gestureManager: GestureManager!
     // swiftlint:disable:next weak_delegate
     var delegate: MockGestureManagerDelegate!
@@ -30,7 +30,7 @@ final class GestureManagerTests: XCTestCase {
         doubleTouchToZoomOutGestureHandler = makeGestureHandler()
         quickZoomGestureHandler = makeGestureHandler()
         singleTapGestureHandler = makeGestureHandler()
-        animationLockoutGestureHandler = makeGestureHandler()
+        anyTouchGestureHandler = makeGestureHandler()
         gestureManager = GestureManager(
             panGestureHandler: panGestureHandler,
             pinchGestureHandler: pinchGestureHandler,
@@ -39,7 +39,7 @@ final class GestureManagerTests: XCTestCase {
             doubleTouchToZoomOutGestureHandler: doubleTouchToZoomOutGestureHandler,
             quickZoomGestureHandler: quickZoomGestureHandler,
             singleTapGestureHandler: singleTapGestureHandler,
-            animationLockoutGestureHandler: animationLockoutGestureHandler,
+            anyTouchGestureHandler: anyTouchGestureHandler,
             mapboxMap: mapboxMap)
         delegate = MockGestureManagerDelegate()
         gestureManager.delegate = delegate
@@ -48,7 +48,7 @@ final class GestureManagerTests: XCTestCase {
     override func tearDown() {
         delegate = nil
         gestureManager = nil
-        animationLockoutGestureHandler = nil
+        anyTouchGestureHandler = nil
         singleTapGestureHandler = nil
         quickZoomGestureHandler = nil
         doubleTouchToZoomOutGestureHandler = nil
@@ -93,6 +93,10 @@ final class GestureManagerTests: XCTestCase {
 
     func testQuickZoomGestureRecognizer() {
         XCTAssertTrue(gestureManager.quickZoomGestureRecognizer === quickZoomGestureHandler.gestureRecognizer)
+    }
+
+    func testAnyTouchGestureRecognizer() {
+        XCTAssertTrue(gestureManager.anyTouchGestureRecognizer === anyTouchGestureHandler.gestureRecognizer)
     }
 
     func testPanGestureHandlerDelegate() {
@@ -424,28 +428,5 @@ final class GestureManagerTests: XCTestCase {
         pinchGestureHandler.behavior = .tracksTouchLocationsWhenPanningAfterZoomChange
 
         XCTAssertEqual(gestureManager.options.pinchBehavior, pinchGestureHandler.behavior)
-    }
-
-    func testOptionsDisableAnimationsDuringGestures() {
-        XCTAssertTrue(gestureManager.options.disableAnimationsDuringGestures)
-        XCTAssertTrue(animationLockoutGestureHandler.gestureRecognizer.isEnabled)
-
-        gestureManager.options.disableAnimationsDuringGestures = false
-
-        XCTAssertFalse(gestureManager.options.disableAnimationsDuringGestures)
-        XCTAssertFalse(animationLockoutGestureHandler.gestureRecognizer.isEnabled)
-
-        gestureManager.options.disableAnimationsDuringGestures = true
-
-        XCTAssertTrue(gestureManager.options.disableAnimationsDuringGestures)
-        XCTAssertTrue(animationLockoutGestureHandler.gestureRecognizer.isEnabled)
-
-        animationLockoutGestureHandler.gestureRecognizer.isEnabled = false
-
-        XCTAssertFalse(gestureManager.options.disableAnimationsDuringGestures)
-
-        animationLockoutGestureHandler.gestureRecognizer.isEnabled = true
-
-        XCTAssertTrue(gestureManager.options.disableAnimationsDuringGestures)
     }
 }

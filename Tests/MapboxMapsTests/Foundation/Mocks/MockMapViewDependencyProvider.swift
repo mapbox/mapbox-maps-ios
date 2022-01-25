@@ -42,7 +42,7 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
             doubleTouchToZoomOutGestureHandler: makeGestureHandler(),
             quickZoomGestureHandler: makeGestureHandler(),
             singleTapGestureHandler: makeGestureHandler(),
-            animationLockoutGestureHandler: makeGestureHandler(),
+            anyTouchGestureHandler: makeGestureHandler(),
             mapboxMap: mapboxMap)
     }
 
@@ -62,17 +62,23 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
         var view: UIView
         var mapboxMap: MapboxMapProtocol
         var cameraAnimationsManager: CameraAnimationsManagerProtocol
-        var idleGestureRecognizers: [UIGestureRecognizer]
+        var anyTouchGestureRecognizer: UIGestureRecognizer
+        var doubleTapGestureRecognizer: UIGestureRecognizer
+        var doubleTouchGestureRecognizer: UIGestureRecognizer
     }
     let makeViewportImplStub = Stub<MakeViewportImplParams, ViewportImplProtocol>(defaultReturnValue: MockViewportImpl())
     func makeViewportImpl(view: UIView,
                           mapboxMap: MapboxMapProtocol,
                           cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                          idleGestureRecognizers: [UIGestureRecognizer]) -> ViewportImplProtocol {
+                          anyTouchGestureRecognizer: UIGestureRecognizer,
+                          doubleTapGestureRecognizer: UIGestureRecognizer,
+                          doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol {
         makeViewportImplStub.call(with: .init(
             view: view,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager,
-            idleGestureRecognizers: idleGestureRecognizers))
+            anyTouchGestureRecognizer: anyTouchGestureRecognizer,
+            doubleTapGestureRecognizer: doubleTapGestureRecognizer,
+            doubleTouchGestureRecognizer: doubleTouchGestureRecognizer))
     }
 }

@@ -438,6 +438,7 @@ jobs:
     steps:
       - checkout
       - configure-environment
+      - setup-google-cloud-account
       - attach_workspace:
           at: output
       - run: bundle install

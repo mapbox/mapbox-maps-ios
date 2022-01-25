@@ -94,4 +94,16 @@ platform :ios do
     )
   end
 
+  lane :build_tests_host do
+    sh("cd .. && xcodegen")
+    run_tests(
+      project: 'MapboxMaps.xcodeproj',
+      scheme: 'MapboxTestHost',           # XCTest scheme
+      build_for_testing: true,            # Required
+      sdk: 'iphoneos',                    # Required
+      should_zip_build_products: true,    # Must be true to set the correct format for Firebase Test Lab,
+      output_directory: "output/"
+    )
+  end
+
 end

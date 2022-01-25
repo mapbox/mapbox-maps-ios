@@ -104,3 +104,8 @@ targets:
         product: MapboxMaps
       - package: MapboxMaps
         product: CocoaImageHashing
+    scheme:
+      testTargets:
+          - MapboxMapsHTTPTestsWithHost
+          - MapboxMapsTestsWithHost
+      gatherCoverageData: true

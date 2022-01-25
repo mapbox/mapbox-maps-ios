@@ -1,3 +1,4 @@
+import UIKit
 internal protocol ViewportImplProtocol: AnyObject {
     var options: ViewportOptions { get set }
 
@@ -22,20 +23,36 @@ internal protocol ViewportImplProtocol: AnyObject {
 //
 internal final class ViewportImpl: ViewportImplProtocol {
 
-    internal var options: ViewportOptions
+    internal var options: ViewportOptions {
+        get {
+            ViewportOptions(
+                transitionsToIdleUponUserInteraction: anyTouchGestureRecognizer.isEnabled)
+        }
+        set {
+            anyTouchGestureRecognizer.isEnabled = newValue.transitionsToIdleUponUserInteraction
+        }
+    }
 
     private let mainQueue: MainQueueProtocol
+
+    private let anyTouchGestureRecognizer: UIGestureRecognizer
 
     // viewport requires a default transition at all times
     internal init(options: ViewportOptions,
                   mainQueue: MainQueueProtocol,
                   defaultTransition: ViewportTransition,
-                  idleGestureRecognizer: UIGestureRecognizer) {
-        self.options = options
+                  anyTouchGestureRecognizer: UIGestureRecognizer,
+                  doubleTapGestureRecognizer: UIGestureRecognizer,
+                  doubleTouchGestureRecognizer: UIGestureRecognizer) {
         self.mainQueue = mainQueue
         self.defaultTransition = defaultTransition
         self.status = .idle
-        idleGestureRecognizer.addTarget(self, action: #selector(handleIdleGesture(_:)))
+        self.anyTouchGestureRecognizer = anyTouchGestureRecognizer
+        anyTouchGestureRecognizer.addTarget(self, action: #selector(handleAnyTouchGesture(_:)))
+        doubleTapGestureRecognizer.addTarget(self, action: #selector(handleDoubleTapAndTouchGestures(_:)))
+        doubleTouchGestureRecognizer.addTarget(self, action: #selector(handleDoubleTapAndTouchGestures(_:)))
+        // sync with provided options
+        self.options = options
     }
 
     // MARK: - Status
@@ -199,12 +216,25 @@ internal final class ViewportImpl: ViewportImplProtocol {
 
     // MARK: - Gestures
 
-    @objc private func handleIdleGesture(_ gestureRecognizer: UIGestureRecognizer) {
+    @objc private func handleAnyTouchGesture(_ gestureRecognizer: UIGestureRecognizer) {
+        guard options.transitionsToIdleUponUserInteraction else {
+            return
+        }
         switch gestureRecognizer.state {
         case .began:
-            if options.transitionsToIdleUponUserInteraction {
-                idle(invokingCancelable: true, reason: .userInteraction)
-            }
+            idle(invokingCancelable: true, reason: .userInteraction)
+        default:
+            break
+        }
+    }
+
+    @objc private func handleDoubleTapAndTouchGestures(_ gestureRecognizer: UIGestureRecognizer) {
+        guard options.transitionsToIdleUponUserInteraction else {
+            return
+        }
+        switch gestureRecognizer.state {
+        case .recognized:
+            idle(invokingCancelable: true, reason: .userInteraction)
         default:
             break
         }

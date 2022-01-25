@@ -33,7 +33,7 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
     }
 
     /// Pointer HashTable for holding camera animators
-    private var cameraAnimatorsSet = WeakSet<CameraAnimatorInterface>()
+    private let cameraAnimatorsSet = WeakSet<CameraAnimatorInterface>()
 
     private var runningCameraAnimators = [CameraAnimator]()
 

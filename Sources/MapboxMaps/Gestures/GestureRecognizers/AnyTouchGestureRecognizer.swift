@@ -2,14 +2,37 @@ import UIKit.UIGestureRecognizerSubclass
 
 internal final class AnyTouchGestureRecognizer: UIGestureRecognizer {
 
+    private let minimumPressDuration: TimeInterval
+
+    private var timer: TimerProtocol?
+
     private var touches: Set<UITouch> = [] {
         didSet {
             if oldValue.isEmpty, !touches.isEmpty {
-                state = .began
+                timer = timerProvider.makeScheduledTimer(
+                    timeInterval: minimumPressDuration,
+                    repeats: false,
+                    block: { [weak self] _ in
+                        self?.state = .began
+                    })
             } else if !oldValue.isEmpty, touches.isEmpty {
-                state = .ended
+                timer?.invalidate()
+                timer = nil
+                if state == .began {
+                    state = .ended
+                }
             }
         }
+    }
+
+    private let timerProvider: TimerProviderProtocol
+
+    internal init(minimumPressDuration: TimeInterval,
+                  timerProvider: TimerProviderProtocol) {
+        self.minimumPressDuration = minimumPressDuration
+        self.timerProvider = timerProvider
+        super.init(target: nil, action: nil)
+        self.cancelsTouchesInView = false
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {

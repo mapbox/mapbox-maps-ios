@@ -42,7 +42,7 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
             doubleTouchToZoomOutGestureHandler: makeGestureHandler(),
             quickZoomGestureHandler: makeGestureHandler(),
             singleTapGestureHandler: makeGestureHandler(),
-            animationLockoutGestureHandler: makeGestureHandler(),
+            anyTouchGestureHandler: makeGestureHandler(),
             mapboxMap: mapboxMap)
     }
 
@@ -61,15 +61,21 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
     struct MakeViewportImplParams {
         var mapboxMap: MapboxMapProtocol
         var cameraAnimationsManager: CameraAnimationsManagerProtocol
-        var idleGestureRecognizer: UIGestureRecognizer
+        var anyTouchGestureRecognizer: UIGestureRecognizer
+        var doubleTapGestureRecognizer: UIGestureRecognizer
+        var doubleTouchGestureRecognizer: UIGestureRecognizer
     }
     let makeViewportImplStub = Stub<MakeViewportImplParams, ViewportImplProtocol>(defaultReturnValue: MockViewportImpl())
     func makeViewportImpl(mapboxMap: MapboxMapProtocol,
                           cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                          idleGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol {
+                          anyTouchGestureRecognizer: UIGestureRecognizer,
+                          doubleTapGestureRecognizer: UIGestureRecognizer,
+                          doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol {
         makeViewportImplStub.call(with: .init(
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager,
-            idleGestureRecognizer: idleGestureRecognizer))
+            anyTouchGestureRecognizer: anyTouchGestureRecognizer,
+            doubleTapGestureRecognizer: doubleTapGestureRecognizer,
+            doubleTouchGestureRecognizer: doubleTouchGestureRecognizer))
     }
 }

@@ -1,12 +1,11 @@
 import UIKit
 
-internal final class AnimationLockoutGestureHandler: GestureHandler {
+internal final class AnyTouchGestureHandler: GestureHandler {
 
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol
 
     internal init(gestureRecognizer: UIGestureRecognizer,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol) {
-        gestureRecognizer.cancelsTouchesInView = false
         self.cameraAnimationsManager = cameraAnimationsManager
         super.init(gestureRecognizer: gestureRecognizer)
         gestureRecognizer.addTarget(self, action: #selector(handleGesture(_:)))

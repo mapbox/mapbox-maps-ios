@@ -105,6 +105,9 @@ workflows:
           name: "Run Unit tests"
           xcode: "12.5.0"
       - build-test-host-tests
+      - test-host-tests:
+          requires:
+            - build-test-host-tests
       # Not on main
       - run-tests-on-devices:
           name: "Run MapboxTestHost tests on devices"
@@ -418,13 +421,29 @@ jobs:
     steps:
       - checkout
       - configure-environment
+      - run: bundle install
       - run:
           name: Build MapboxTestHost for testing
-          command: |
-            bundle install
-            bundle exec fastlane build_tests_host
+          command: bundle exec fastlane build_tests_host
       - store_artifacts:
           path: output/build_products.zip
+      - persist_to_workspace:
+          root: output/
+          paths:
+            - build_products.zip
+
+  test-host-tests:
+    macos:
+      xcode: 13.2.1
+    steps:
+      - checkout
+      - configure-environment
+      - attach_workspace:
+          at: output
+      - run: bundle install
+      - run:
+          name: Test MapboxTestHost
+          command: bundle exec fastlane test_tests_host
 
   # We may want to split this across multiple jobs, rather than multiple
   run-tests-on-devices:

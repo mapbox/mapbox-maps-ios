@@ -13,6 +13,7 @@ cleanup() {
         git -C "$SCRIPT_DIR" worktree remove "$WORKTREE_TO_REMOVE" --force
     fi
 
+    git -C "$SCRIPT_DIR" worktree prune
     rm -rf "$TMP_ROOT"
 }
 trap cleanup INT TERM HUP EXIT
@@ -67,7 +68,7 @@ maps_ios_upload_docs() {
 
     VERSION_BRANCH_NAME="docs/$VERSION"
     git checkout -b "$VERSION_BRANCH_NAME"
-    git push --force --quiet
+    git push --set-upstream origin "$VERSION_BRANCH_NAME" --force --quiet
 
     popd > /dev/null
 }
@@ -78,7 +79,7 @@ maps_ios_production_docs_pr() {
 
     PRODUCTION_DOCS_PR_URL=$(GITHUB_TOKEN=$(mbx-ci github writer public token) \
         gh pr create --repo mapbox/mapbox-maps-ios \
-            --head "publisher-staging" --base "$VERSION_BRANCH_NAME" \
+            --head "$VERSION_BRANCH_NAME" --base "publisher-production" \
             --draft \
             --title "Production docs for \`v$VERSION\`" \
             --body "$body" \
@@ -148,7 +149,7 @@ ios_sdk_open_pr() {
             --head "$IOS_SDK_BRANCH_NAME" \
             --draft \
             --title "[maps] Update for v$VERSION" \
-            --label "maps" \
+            --label "Maps SDK" \
             --label "update" \
             --body "$body")
 

@@ -43,8 +43,7 @@ public struct Puck2DConfiguration: Equatable {
                 bearingImage: UIImage? = nil,
                 shadowImage: UIImage? = nil,
                 scale: Value<Double>? = nil,
-                showsAccuracyRing: Bool = false
-    ) {
+                showsAccuracyRing: Bool = false) {
         self.topImage = topImage
         self.bearingImage = bearingImage
         self.shadowImage = shadowImage
@@ -69,8 +68,7 @@ public struct Puck2DConfiguration: Equatable {
                 scale: Value<Double>? = nil,
                 showsAccuracyRing: Bool = false,
                 accuracyRingColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3),
-                accuracyRingBorderColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)
-    ) {
+                accuracyRingBorderColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)) {
         self.topImage = topImage
         self.bearingImage = bearingImage
         self.shadowImage = shadowImage

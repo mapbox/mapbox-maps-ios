@@ -107,4 +107,28 @@ final class AnyTouchGestureRecognizerTests: XCTestCase {
         XCTAssertEqual(timer.invalidateStub.invocations.count, 1)
         XCTAssertEqual(gestureRecognizer.state, .possible)
     }
+
+    func testTouchHandlingWithChangedTouches() throws {
+        let touch = UITouch()
+        let event = UIEvent()
+
+        // touch 0 begins
+        gestureRecognizer.touchesBegan([touch], with: event)
+
+        // the timer fires
+        let makeTimerInvocation = try XCTUnwrap(timerProvider.makeScheduledTimerStub.invocations.first)
+        makeTimerInvocation.parameters.block(makeTimerInvocation.returnValue)
+
+        // the state changes
+        XCTAssertEqual(gestureRecognizer.state, .began)
+
+        // the state is updated to .changed (UIKit does this automatically,
+        // but for testing purposes, we'll do it manually
+        gestureRecognizer.state = .changed
+
+        // touch 0 ends
+        gestureRecognizer.touchesEnded([touch], with: event)
+
+        XCTAssertEqual(gestureRecognizer.state, .ended)
+    }
 }

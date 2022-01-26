@@ -18,8 +18,15 @@ internal final class AnyTouchGestureRecognizer: UIGestureRecognizer {
             } else if !oldValue.isEmpty, touches.isEmpty {
                 timer?.invalidate()
                 timer = nil
-                if state == .began {
+                // handling .changed here because even though
+                // this class never sets state to .changed,
+                // the superclass does so automatically if
+                // the touch input changes after .began
+                switch state {
+                case .began, .changed:
                     state = .ended
+                default:
+                    break
                 }
             }
         }

@@ -192,11 +192,11 @@ public extension Puck2DConfiguration {
     }
 }
 
-private func makeBearingImage(withGap gap: CGFloat = 30, arcLength: CGFloat = 0.5) -> UIImage {
+private func makeBearingImage(withGap gap: CGFloat = 3.8, arcLength: CGFloat = 1.1) -> UIImage {
     assert(arcLength <= .pi / 2)
 
     let lineWidth: CGFloat = 1
-    let size: CGFloat = 22
+    let size: CGFloat = 30
     // The gap determines how much space we put between the circles and the arrow
     // strokes are centered on the path, so half of the width of the line is drawn
     // on either side.

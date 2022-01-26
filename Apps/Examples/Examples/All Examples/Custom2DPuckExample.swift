@@ -58,6 +58,9 @@ public class Custom2DPuckExample: UIViewController, ExampleProtocol {
         // Update puck config
         var configuration = Puck2DConfiguration(topImage: UIImage(named: "star"))
         configuration.showsAccuracyRing = showsAccuracyRing
+        configuration.accuracyRingColor = UIColor.skyBlue
+        configuration.accuracyRingBorderColor = UIColor.lightGray
+
         mapView.location.options.puckType = .puck2D(configuration)
 
         // Update button title

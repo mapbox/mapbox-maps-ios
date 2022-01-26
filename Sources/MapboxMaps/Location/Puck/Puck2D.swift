@@ -102,8 +102,8 @@ internal final class Puck2D: NSObject, Puck {
             layer.bearingTransition = StyleTransition(duration: 0, delay: 0)
             if configuration.showsAccuracyRing {
                 layer.accuracyRadius = .constant(location.horizontalAccuracy)
-                layer.accuracyRadiusColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
-                layer.accuracyRadiusBorderColor = .constant(StyleColor(.lightGray))
+                layer.accuracyRadiusColor = .constant(StyleColor(configuration.accuracyRingColor))
+                layer.accuracyRadiusBorderColor = .constant(StyleColor(configuration.accuracyRingBorderColor))
             }
             switch puckBearingSource {
             case .heading:
@@ -124,8 +124,8 @@ internal final class Puck2D: NSObject, Puck {
                 8
                 5000
             })
-            layer.accuracyRadiusColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
-            layer.accuracyRadiusBorderColor = .constant(StyleColor(.lightGray))
+            layer.accuracyRadiusColor = .constant(StyleColor(configuration.accuracyRingColor))
+            layer.accuracyRadiusBorderColor = .constant(StyleColor(configuration.accuracyRingBorderColor))
         }
 
         // LocationIndicatorLayer is a struct, and by default, most of its properties are nil. When it gets

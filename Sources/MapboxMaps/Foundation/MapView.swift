@@ -76,7 +76,6 @@ open class MapView: UIView {
     internal private(set) var resourceOptions: ResourceOptions!
 
     private var needsDisplayRefresh: Bool = false
-    private var dormant: Bool = false
     private var displayCallback: (() -> Void)?
     private var displayLink: DisplayLinkProtocol?
 
@@ -233,10 +232,6 @@ open class MapView: UIView {
         mapClient.delegate = self
         mapboxMap = MapboxMap(mapClient: mapClient, mapInitOptions: resolvedMapInitOptions)
 
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(willTerminate),
-                                               name: UIApplication.willTerminateNotification,
-                                               object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(didReceiveMemoryWarning),
                                                name: UIApplication.didReceiveMemoryWarningNotification,
@@ -406,7 +401,7 @@ open class MapView: UIView {
         }
     }
 
-    func updateDisplayLinkPreferredFramesPerSecond() {
+    private func updateDisplayLinkPreferredFramesPerSecond() {
         if let displayLink = displayLink {
             if let _preferredFramesPerSecond = _preferredFramesPerSecond {
                 displayLink.preferredFramesPerSecond = _preferredFramesPerSecond
@@ -445,13 +440,6 @@ open class MapView: UIView {
     open override func didMoveToSuperview() {
         validateDisplayLink()
         super.didMoveToSuperview()
-    }
-
-    @objc func willTerminate() {
-        if !dormant {
-            validateDisplayLink()
-            dormant = true
-        }
     }
 
     @objc func didReceiveMemoryWarning() {

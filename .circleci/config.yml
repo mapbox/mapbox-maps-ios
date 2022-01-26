@@ -441,10 +441,18 @@ jobs:
       - setup-google-cloud-account
       - attach_workspace:
           at: output
-      - run: bundle install
+      - install-gcloud
+      - login-google-cloud-platform
+      # - run: bundle install
       - run:
           name: Test MapboxTestHost
-          command: bundle exec fastlane test_tests_host
+          command: |
+            gcloud firebase test ios run --test output/build_products.zip \
+              --device model=iphone11,version=13.6 \
+              | tee firebase_test_lab_run.log
+            # bundle exec fastlane test_tests_host
+      - store_artifacts:
+          path: firebase_test_lab_run.log
 
   # We may want to split this across multiple jobs, rather than multiple
   run-tests-on-devices:
@@ -1046,10 +1054,10 @@ commands:
     parameters:
       version:
         type: string
-        default: "google-cloud-sdk-367.0.0-linux-x86_64.tar.gz"
+        default: "google-cloud-sdk-370.0.0-darwin-x86_64.tar.gz"
       checksum:
         type: string
-        default: "94328b9c6559a1b7ec2eeaab9ef0e4702215e16e8327c5b99718750526ae1efe"
+        default: "e08541e2e319457698b9154cd064edc5efa95653f5a84b94a1f2f3d0f87ee196"
     description: "Install gcloud"
     steps:
       - run:

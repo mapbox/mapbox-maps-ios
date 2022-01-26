@@ -1,4 +1,6 @@
 @_implementationOnly import MapboxCommon_Private
+import CoreGraphics
+import UIKit
 
 internal final class Puck2D: NSObject, Puck {
 
@@ -186,21 +188,24 @@ private extension Puck2DConfiguration {
 public extension Puck2DConfiguration {
     // Create a Puck2DConfiguration instance with or without an arrow bearing image. Default without the arrow bearing image.
     static func makeDefault(showBearing: Bool = false) -> Puck2DConfiguration {
-        return Puck2DConfiguration(topImage: UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!,
-                                   bearingImage: showBearing ? makeBearingImage() : nil,
-                                shadowImage: UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!)
+        let shadowImage = UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!
+        return Puck2DConfiguration(
+            topImage: UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!,
+            bearingImage: showBearing ? makeBearingImage(size: shadowImage.size) : nil,
+            shadowImage: shadowImage)
     }
 }
 
-private func makeBearingImage(withGap gap: CGFloat = 30, arcLength: CGFloat = 0.5) -> UIImage {
+private func makeBearingImage(size: CGSize) -> UIImage {
+    let gap: CGFloat = 1
+    let arcLength: CGFloat = .pi / 4
     assert(arcLength <= .pi / 2)
-
     let lineWidth: CGFloat = 1
-    let size: CGFloat = 22
+
     // The gap determines how much space we put between the circles and the arrow
     // strokes are centered on the path, so half of the width of the line is drawn
     // on either side.
-    let radius = size / 2 + lineWidth / 2 + gap
+    let radius = size.height / 2 + lineWidth / 2 + gap
 
     let rightArcPoint = CGPoint(
         x: radius * cos(.pi / 2 - arcLength / 2),
@@ -228,19 +233,21 @@ private func makeBearingImage(withGap gap: CGFloat = 30, arcLength: CGFloat = 0.
     // draw the circles, centering them at the origin
     let outerImageBounds = CGRect(
         origin: CGPoint(
-            x: -size / 2,
-            y: -size / 2),
-        size: CGSize(width: size, height: size))
+            x: -size.width / 2,
+            y: -size.height / 2),
+        size: size)
 
     // Union that rectangle with the bounds
     // of the arrow, also union it with the arrow
-    // reflected over the horizontal axis to ensure
-    // that the resulting image is centered on the origin.
+    // at 90, 180, and 270 degree rotations to ensure that
+    // that the resulting image is square and centered on the origin.
     // finally, pad the image a little to ensure that
     // the arrow's stroke is not cut off.
     let imageBounds = outerImageBounds
         .union(path.bounds)
-        .union(path.bounds.applying(.init(scaleX: 1, y: -1)))
+        .union(path.bounds.applying(.init(rotationAngle: .pi / 2)))
+        .union(path.bounds.applying(.init(rotationAngle: .pi)))
+        .union(path.bounds.applying(.init(rotationAngle: 3 * .pi / 2)))
         .insetBy(dx: -2, dy: -2)
 
     // render the image

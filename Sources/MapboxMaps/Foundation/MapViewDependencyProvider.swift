@@ -93,7 +93,6 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     }
 
     func makeAnyTouchGestureHandler(view: UIView,
-                                    mapboxMap: MapboxMapProtocol,
                                     cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
         // 0.15 seconds is a sufficient delay to avoid interrupting animations
         // in between a rapid succession of double tap or double touch gestures.
@@ -140,7 +139,6 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                 mapboxMap: mapboxMap),
             anyTouchGestureHandler: makeAnyTouchGestureHandler(
                 view: view,
-                mapboxMap: mapboxMap,
                 cameraAnimationsManager: cameraAnimationsManager),
             mapboxMap: mapboxMap)
     }

@@ -23,4 +23,15 @@ extension OfflineRegion {
             }
         }, concreteErrorType: MapError.self))
     }
+
+    // :nodoc:
+    func setMetadata(_ metadata: Data, completion: @escaping (Result<Void, Error>) -> Void) {
+        self.setMetadataForMetadata(metadata, callback: coreAPIClosureAdapter(for: { error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(()))
+            }
+        }, concreteErrorType: MapError.self))
+    }
 }

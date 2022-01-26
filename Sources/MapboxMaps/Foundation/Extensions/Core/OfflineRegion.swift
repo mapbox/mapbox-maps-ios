@@ -3,7 +3,7 @@
 @available(*, deprecated)
 extension OfflineRegion {
     // :nodoc:
-    func invalidate(completion: @escaping (Result<Void, Error>) -> Void) {
+    public func invalidate(completion: @escaping (Result<Void, Error>) -> Void) {
         self.invalidate(forCallback: coreAPIClosureAdapter(for: { error in
             if let error = error {
                 completion(.failure(error))
@@ -14,7 +14,7 @@ extension OfflineRegion {
     }
 
     // :nodoc:
-    func purge(completion: @escaping (Result<Void, Error>) -> Void) {
+    public func purge(completion: @escaping (Result<Void, Error>) -> Void) {
         self.purge(forCallback: coreAPIClosureAdapter(for: { error in
             if let error = error {
                 completion(.failure(error))
@@ -25,7 +25,7 @@ extension OfflineRegion {
     }
 
     // :nodoc:
-    func setMetadata(_ metadata: Data, completion: @escaping (Result<Void, Error>) -> Void) {
+    public func setMetadata(_ metadata: Data, completion: @escaping (Result<Void, Error>) -> Void) {
         self.setMetadataForMetadata(metadata, callback: coreAPIClosureAdapter(for: { error in
             if let error = error {
                 completion(.failure(error))

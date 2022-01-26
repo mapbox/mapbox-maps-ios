@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 10.3.0-rc.1 – January 26, 2022
+
 * Exposed API to invalidate `OfflineRegion`. ([#1026](https://github.com/mapbox/mapbox-maps-ios/pull/1026))
 * Exposed API to set metadata for `OfflineRegion`. ([#1060](https://github.com/mapbox/mapbox-maps-ios/pull/1060))
 * Refined Viewport API. ([#1040](https://github.com/mapbox/mapbox-maps-ios/pull/1040), [#1050](https://github.com/mapbox/mapbox-maps-ios/pull/1050), [#1058](https://github.com/mapbox/mapbox-maps-ios/pull/1058))

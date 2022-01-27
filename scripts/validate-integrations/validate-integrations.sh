@@ -4,6 +4,7 @@ set -eou pipefail
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 UTILS_PATH="$SCRIPT_DIR/../utils.sh"
 TMP_ROOT=$(mktemp -d)
+ARTIFACTS_ROOT=${DEFAULT_ARTIFACTS_DIR:-$TMP_ROOT}
 
 # shellcheck source=../utils.sh
 source "$UTILS_PATH"
@@ -43,10 +44,7 @@ main() {
 
     pod install
 
-    info "Start simulator"
-    xcrun simctl boot "iPhone 13"
-
-    info "Building logs available at $TMP_ROOT"
+    info "Building logs available at $ARTIFACTS_ROOT"
     WORKSPACE_PATH="$SCRIPT_DIR/ValidateLatestMaps.xcworkspace"
 
     results_path="$SCRIPT_DIR/results"
@@ -55,7 +53,7 @@ main() {
     for scheme in "${PROJECTS_TO_TEST[@]}"
     do
         step "Building $scheme scheme"
-        xcodebuild clean build -workspace "$WORKSPACE_PATH" -scheme "$scheme" -destination 'platform=iOS Simulator,name=iPhone 13' CODE_SIGNING_ALLOWED='NO' &> "$TMP_ROOT/${scheme}_xcode.log"
+        xcodebuild clean build -workspace "$WORKSPACE_PATH" -scheme "$scheme" -destination 'platform=iOS Simulator,name=iPhone 12' CODE_SIGNING_ALLOWED='NO' &> "$ARTIFACTS_ROOT/${scheme}_xcode-$(date +%Y%m%d%H%M%S).log"
         info "Finished $scheme building"
     done
 

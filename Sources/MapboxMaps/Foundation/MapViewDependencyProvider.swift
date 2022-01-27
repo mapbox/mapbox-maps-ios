@@ -10,7 +10,9 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
     func makeLocationManager(locationProducer: LocationProducerProtocol, style: StyleProtocol) -> LocationManager
     func makeViewportImpl(mapboxMap: MapboxMapProtocol,
                           cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                          idleGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol
+                          anyTouchGestureRecognizer: UIGestureRecognizer,
+                          doubleTapGestureRecognizer: UIGestureRecognizer,
+                          doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol
 }
 
 internal final class MapViewDependencyProvider: MapViewDependencyProviderProtocol {
@@ -90,12 +92,19 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
         return SingleTapGestureHandler(gestureRecognizer: gestureRecognizer)
     }
 
-    func makeAnimationLockoutGestureHandler(view: UIView,
-                                            mapboxMap: MapboxMapProtocol,
-                                            cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
-        let gestureRecognizer = AnyTouchGestureRecognizer()
+    func makeAnyTouchGestureHandler(view: UIView,
+                                    cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
+        // 0.15 seconds is a sufficient delay to avoid interrupting animations
+        // in between a rapid succession of double tap or double touch gestures.
+        // It's also not so long as to feel unnatural when touching the map to
+        // stop an animation. The map continues to animate under the touch
+        // briefly, but comes to a stop within a reasonable amount of time. In
+        // the future, we may want to expose this as a tunable option.
+        let gestureRecognizer = AnyTouchGestureRecognizer(
+            minimumPressDuration: 0.15,
+            timerProvider: TimerProvider())
         view.addGestureRecognizer(gestureRecognizer)
-        return AnimationLockoutGestureHandler(
+        return AnyTouchGestureHandler(
             gestureRecognizer: gestureRecognizer,
             cameraAnimationsManager: cameraAnimationsManager)
     }
@@ -128,9 +137,8 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             singleTapGestureHandler: makeSingleTapGestureHandler(
                 view: view,
                 mapboxMap: mapboxMap),
-            animationLockoutGestureHandler: makeAnimationLockoutGestureHandler(
+            anyTouchGestureHandler: makeAnyTouchGestureHandler(
                 view: view,
-                mapboxMap: mapboxMap,
                 cameraAnimationsManager: cameraAnimationsManager),
             mapboxMap: mapboxMap)
     }
@@ -164,7 +172,9 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
 
     func makeViewportImpl(mapboxMap: MapboxMapProtocol,
                           cameraAnimationsManager: CameraAnimationsManagerProtocol,
-                          idleGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol {
+                          anyTouchGestureRecognizer: UIGestureRecognizer,
+                          doubleTapGestureRecognizer: UIGestureRecognizer,
+                          doubleTouchGestureRecognizer: UIGestureRecognizer) -> ViewportImplProtocol {
         return ViewportImpl(
             options: .init(),
             mainQueue: MainQueue(),
@@ -173,6 +183,8 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
                 animationHelper: DefaultViewportTransitionAnimationHelper(
                     mapboxMap: mapboxMap,
                     cameraAnimationsManager: cameraAnimationsManager)),
-            idleGestureRecognizer: idleGestureRecognizer)
+            anyTouchGestureRecognizer: anyTouchGestureRecognizer,
+            doubleTapGestureRecognizer: doubleTapGestureRecognizer,
+            doubleTouchGestureRecognizer: doubleTouchGestureRecognizer)
     }
 }

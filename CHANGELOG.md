@@ -4,6 +4,15 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+## 10.3.0-rc.1 – January 26, 2022
+
+* Exposed API to invalidate `OfflineRegion`. ([#1026](https://github.com/mapbox/mapbox-maps-ios/pull/1026))
+* Exposed API to set metadata for `OfflineRegion`. ([#1060](https://github.com/mapbox/mapbox-maps-ios/pull/1060))
+* Refined Viewport API. ([#1040](https://github.com/mapbox/mapbox-maps-ios/pull/1040), [#1050](https://github.com/mapbox/mapbox-maps-ios/pull/1050), [#1058](https://github.com/mapbox/mapbox-maps-ios/pull/1058))
+* Add extension function to show or hide bearing image. ([#980](https://github.com/mapbox/mapbox-maps-ios/pull/980))
+* Updated to MapboxCoreMaps 10.3.0-rc.1 and MapboxCommon 21.1.0-rc.1. ([#1051](https://github.com/mapbox/mapbox-maps-ios/pull/1051))
+* Add APIs to enable customizing 2D puck accuracy ring color. ([#1057](https://github.com/mapbox/mapbox-maps-ios/pull/1057))
+
 ## 10.3.0-beta.1 - January 12, 2022
 
 * Exposed `triggerRepaint()` to allow manual map repainting.
@@ -14,7 +23,6 @@ Mapbox welcomes participation and contributions from everyone.
 * `Snapshotter` initialization now triggers a turnstyle event. ([#908](https://github.com/mapbox/mapbox-maps-ios/pull/908))
 * Fixed a bug where 2D puck location was never set when location accuracy authorization was reduced. ([#989](https://github.com/mapbox/mapbox-maps-ios/pull/989))
 * Fixed a bug where setting LocationManager.options would cause the LocationProvider to be reconfigured. ([#992](https://github.com/mapbox/mapbox-maps-ios/pull/992))
-* Added Viewport API. ([#996](https://github.com/mapbox/mapbox-maps-ios/pull/996))
 
 ## 10.2.0 - December 15, 2021
 * Update to MapboxCoreMaps 10.2.0 and MapboxCommon 21.0.1. ([#952](https://github.com/mapbox/mapbox-maps-ios/pull/952))

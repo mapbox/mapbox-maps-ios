@@ -1,6 +1,6 @@
 import Turf
 
-public final class OverviewViewportState {
+@_spi(Experimental) public final class OverviewViewportState {
 
     // MARK: - Public Config
 
@@ -43,7 +43,7 @@ public final class OverviewViewportState {
         observableCameraOptions.notify(with: mapboxMap.camera(
             for: options.geometry,
             padding: options.padding,
-            bearing: CGFloat(options.bearing),
+            bearing: options.bearing.map(CGFloat.init(_:)),
             pitch: options.pitch))
     }
 

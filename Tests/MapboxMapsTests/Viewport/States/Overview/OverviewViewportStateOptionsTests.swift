@@ -1,4 +1,4 @@
-import MapboxMaps
+@_spi(Experimental) import MapboxMaps
 import XCTest
 
 final class OverviewViewportStateOptionsTests: XCTestCase {
@@ -23,8 +23,8 @@ final class OverviewViewportStateOptionsTests: XCTestCase {
             LineString([.random(), .random()])
         ].randomElement()!
         let padding = UIEdgeInsets.random()
-        let bearing = CLLocationDirection.random(in: 0..<360)
-        let pitch = CGFloat.random(in: 0...80)
+        let bearing = CLLocationDirection?.random(.random(in: 0..<360))
+        let pitch = CGFloat?.random(.random(in: 0...80))
         let animationDuration = TimeInterval.random(in: 0..<10)
 
         let options = OverviewViewportStateOptions(

@@ -83,8 +83,8 @@ public final class GestureManager: GestureHandlerDelegate {
         return singleTapGestureHandler.gestureRecognizer
     }
 
-    internal var animationLockoutGestureRecognizer: UIGestureRecognizer {
-        return animationLockoutGestureHandler.gestureRecognizer
+    internal var anyTouchGestureRecognizer: UIGestureRecognizer {
+        return anyTouchGestureHandler.gestureRecognizer
     }
 
     /// Set this delegate to be called back if a gesture begins
@@ -97,7 +97,7 @@ public final class GestureManager: GestureHandlerDelegate {
     private let doubleTouchToZoomOutGestureHandler: GestureHandler
     private let quickZoomGestureHandler: GestureHandler
     private let singleTapGestureHandler: GestureHandler
-    private let animationLockoutGestureHandler: GestureHandler
+    private let anyTouchGestureHandler: GestureHandler
     private let mapboxMap: MapboxMapProtocol
 
     internal init(panGestureHandler: PanGestureHandlerProtocol,
@@ -107,7 +107,7 @@ public final class GestureManager: GestureHandlerDelegate {
                   doubleTouchToZoomOutGestureHandler: GestureHandler,
                   quickZoomGestureHandler: GestureHandler,
                   singleTapGestureHandler: GestureHandler,
-                  animationLockoutGestureHandler: GestureHandler,
+                  anyTouchGestureHandler: GestureHandler,
                   mapboxMap: MapboxMapProtocol) {
         self.panGestureHandler = panGestureHandler
         self.pinchGestureHandler = pinchGestureHandler
@@ -116,7 +116,7 @@ public final class GestureManager: GestureHandlerDelegate {
         self.doubleTouchToZoomOutGestureHandler = doubleTouchToZoomOutGestureHandler
         self.quickZoomGestureHandler = quickZoomGestureHandler
         self.singleTapGestureHandler = singleTapGestureHandler
-        self.animationLockoutGestureHandler = animationLockoutGestureHandler
+        self.anyTouchGestureHandler = anyTouchGestureHandler
         self.mapboxMap = mapboxMap
 
         panGestureHandler.delegate = self

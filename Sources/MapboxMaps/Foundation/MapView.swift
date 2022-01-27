@@ -40,7 +40,7 @@ open class MapView: UIView {
     /// Manages the configuration of custom view annotations on the map.
     public private(set) var viewAnnotations: ViewAnnotationManager!
 
-    public private(set) var viewport: Viewport!
+    @_spi(Experimental) public private(set) var viewport: Viewport!
 
     /// Controls the display of attribution dialogs
     private var attributionDialogManager: AttributionDialogManager!
@@ -76,7 +76,6 @@ open class MapView: UIView {
     internal private(set) var resourceOptions: ResourceOptions!
 
     private var needsDisplayRefresh: Bool = false
-    private var dormant: Bool = false
     private var displayCallback: (() -> Void)?
     private var displayLink: DisplayLinkProtocol?
 
@@ -234,10 +233,6 @@ open class MapView: UIView {
         mapboxMap = MapboxMap(mapClient: mapClient, mapInitOptions: resolvedMapInitOptions)
 
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(willTerminate),
-                                               name: UIApplication.willTerminateNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
                                                selector: #selector(didReceiveMemoryWarning),
                                                name: UIApplication.didReceiveMemoryWarningNotification,
                                                object: nil)
@@ -323,7 +318,9 @@ open class MapView: UIView {
             impl: dependencyProvider.makeViewportImpl(
                 mapboxMap: mapboxMap,
                 cameraAnimationsManager: camera,
-                idleGestureRecognizer: gestures.animationLockoutGestureRecognizer),
+                anyTouchGestureRecognizer: gestures.anyTouchGestureRecognizer,
+                doubleTapGestureRecognizer: gestures.doubleTapToZoomInGestureRecognizer,
+                doubleTouchGestureRecognizer: gestures.doubleTouchToZoomOutGestureRecognizer),
             locationProducer: locationProducer,
             cameraAnimationsManager: camera,
             mapboxMap: mapboxMap)
@@ -404,7 +401,7 @@ open class MapView: UIView {
         }
     }
 
-    func updateDisplayLinkPreferredFramesPerSecond() {
+    private func updateDisplayLinkPreferredFramesPerSecond() {
         if let displayLink = displayLink {
             if let _preferredFramesPerSecond = _preferredFramesPerSecond {
                 displayLink.preferredFramesPerSecond = _preferredFramesPerSecond
@@ -443,13 +440,6 @@ open class MapView: UIView {
     open override func didMoveToSuperview() {
         validateDisplayLink()
         super.didMoveToSuperview()
-    }
-
-    @objc func willTerminate() {
-        if !dormant {
-            validateDisplayLink()
-            dormant = true
-        }
     }
 
     @objc func didReceiveMemoryWarning() {

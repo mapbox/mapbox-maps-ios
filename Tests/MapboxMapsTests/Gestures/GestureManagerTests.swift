@@ -12,7 +12,7 @@ final class GestureManagerTests: XCTestCase {
     var doubleTouchToZoomOutGestureHandler: GestureHandler!
     var quickZoomGestureHandler: GestureHandler!
     var singleTapGestureHandler: GestureHandler!
-    var animationLockoutGestureHandler: GestureHandler!
+    var anyTouchGestureHandler: GestureHandler!
     var gestureManager: GestureManager!
     // swiftlint:disable:next weak_delegate
     var delegate: MockGestureManagerDelegate!
@@ -30,7 +30,7 @@ final class GestureManagerTests: XCTestCase {
         doubleTouchToZoomOutGestureHandler = makeGestureHandler()
         quickZoomGestureHandler = makeGestureHandler()
         singleTapGestureHandler = makeGestureHandler()
-        animationLockoutGestureHandler = makeGestureHandler()
+        anyTouchGestureHandler = makeGestureHandler()
         gestureManager = GestureManager(
             panGestureHandler: panGestureHandler,
             pinchGestureHandler: pinchGestureHandler,
@@ -39,7 +39,7 @@ final class GestureManagerTests: XCTestCase {
             doubleTouchToZoomOutGestureHandler: doubleTouchToZoomOutGestureHandler,
             quickZoomGestureHandler: quickZoomGestureHandler,
             singleTapGestureHandler: singleTapGestureHandler,
-            animationLockoutGestureHandler: animationLockoutGestureHandler,
+            anyTouchGestureHandler: anyTouchGestureHandler,
             mapboxMap: mapboxMap)
         delegate = MockGestureManagerDelegate()
         gestureManager.delegate = delegate
@@ -48,7 +48,7 @@ final class GestureManagerTests: XCTestCase {
     override func tearDown() {
         delegate = nil
         gestureManager = nil
-        animationLockoutGestureHandler = nil
+        anyTouchGestureHandler = nil
         singleTapGestureHandler = nil
         quickZoomGestureHandler = nil
         doubleTouchToZoomOutGestureHandler = nil
@@ -95,8 +95,8 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertTrue(gestureManager.quickZoomGestureRecognizer === quickZoomGestureHandler.gestureRecognizer)
     }
 
-    func testAnimationLockoutGestureRecognizer() {
-        XCTAssertTrue(gestureManager.animationLockoutGestureRecognizer === animationLockoutGestureHandler.gestureRecognizer)
+    func testAnyTouchGestureRecognizer() {
+        XCTAssertTrue(gestureManager.anyTouchGestureRecognizer === anyTouchGestureHandler.gestureRecognizer)
     }
 
     func testPanGestureHandlerDelegate() {
@@ -335,7 +335,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertTrue(gestureManager.quickZoomGestureRecognizer.isEnabled)
     }
 
-    func testPanDecelerationFactor() {
+    func testOptionsPanDecelerationFactor() {
         XCTAssertEqual(gestureManager.options.panDecelerationFactor, UIScrollView.DecelerationRate.normal.rawValue)
         XCTAssertEqual(panGestureHandler.decelerationFactor, UIScrollView.DecelerationRate.normal.rawValue)
 
@@ -360,7 +360,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertEqual(panGestureHandler.decelerationFactor, UIScrollView.DecelerationRate.normal.rawValue)
     }
 
-    func testPanMode() {
+    func testOptionsPanMode() {
         XCTAssertEqual(gestureManager.options.panMode, .horizontalAndVertical)
         XCTAssertEqual(panGestureHandler.panMode, .horizontalAndVertical)
 
@@ -384,7 +384,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertEqual(gestureManager.options.panMode, panGestureHandler.panMode)
     }
 
-    func testPinchRotateEnabled() {
+    func testOptionsPinchRotateEnabled() {
         XCTAssertEqual(gestureManager.options.pinchRotateEnabled, true)
         XCTAssertEqual(pinchGestureHandler.rotateEnabled, true)
 
@@ -407,7 +407,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertEqual(gestureManager.options.pinchRotateEnabled, pinchGestureHandler.rotateEnabled)
     }
 
-    func testPinchBehavior() {
+    func testOptionsPinchBehavior() {
         XCTAssertEqual(gestureManager.options.pinchBehavior, .tracksTouchLocationsWhenPanningAfterZoomChange)
         XCTAssertEqual(pinchGestureHandler.behavior, .tracksTouchLocationsWhenPanningAfterZoomChange)
 

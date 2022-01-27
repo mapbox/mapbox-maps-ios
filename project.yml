@@ -50,7 +50,7 @@ targets:
     sources:
       - path: "Tests/MapboxMapsTests"
         excludes:
-          - "Foundation/Integration Tests/HTTP/HTTPIntegrationTests.swift"
+          - "Integration Tests/HTTP/HTTPIntegrationTests.swift"
     dependencies:
       - target: MapboxTestHost
   MapboxMapsHTTPTestsWithHost:
@@ -71,12 +71,13 @@ targets:
     sources:
       - path: "Tests/MapboxMapsTests"
         includes:
-          - "Foundation/Integration Tests/HTTP/HTTPIntegrationTests.swift"
-          - "Foundation/Integration Tests/MapViewIntegrationTestCase.swift"
-          - "Foundation/Integration Tests/IntegrationTestCase.swift"
+          - "Integration Tests/HTTP/HTTPIntegrationTests.swift"
+          - "Integration Tests/MapViewIntegrationTestCase.swift"
+          - "Integration Tests/IntegrationTestCase.swift"
           - "Helpers/Bundle+MapboxMapsTests.swift"
-          - "Helpers/TestConveniences.swift"
-          - "Helpers/XCTestCase+MapboxMaps.swift"
+          - "Helpers/String+FileSystemSafe.swift"
+          - "Helpers/XCTestCase+GuardForMetalDevice.swift"
+          - "Helpers/XCTestCase+MapboxAccessToken.swift"
           - "Helpers/XCTestCase+TemporaryCacheDirectory.swift"
     dependencies:
       - target: MapboxTestHost
@@ -103,3 +104,8 @@ targets:
         product: MapboxMaps
       - package: MapboxMaps
         product: CocoaImageHashing
+    scheme:
+      testTargets:
+          - MapboxMapsHTTPTestsWithHost
+          - MapboxMapsTestsWithHost
+      gatherCoverageData: true

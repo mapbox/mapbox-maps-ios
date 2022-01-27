@@ -96,13 +96,43 @@ platform :ios do
 
   lane :build_tests_host do
     sh("cd .. && xcodegen")
+    app_store_connect_api_key # Generate API Token
+    setup_circle_ci
+    sync_code_signing(app_identifier: "com.mapbox.MapboxMapsTestHost")
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "MapboxMaps.xcodeproj",
+      team_id: "GJZR2MEM28", # Developer Portal Team ID,
+      profile_name: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]["com.mapbox.MapboxMapsTestHost"],
+      targets: ["MapboxTestHost"],
+      code_sign_identity: "Apple Development: Machiney McMachineface",
+    )
     run_tests(
       project: 'MapboxMaps.xcodeproj',
-      scheme: 'MapboxTestHost',           # XCTest scheme
-      build_for_testing: true,            # Required
-      sdk: 'iphoneos',                    # Required
-      should_zip_build_products: true,    # Must be true to set the correct format for Firebase Test Lab,
+      scheme: 'MapboxTestHost',
+      clean: true,
+      build_for_testing: true,
+      destination: 'generic/platform=iOS',
+      should_zip_build_products: true,
       output_directory: "output/"
+    )
+  end
+
+  lane :test_tests_host do
+    # build_tests_host
+    # storage_path = "gs://#{ENV["TEST_LAB_EXAMPLES"]}/MapboxTestHost-#{ENV["CIRCLE_BUILD_NUM"]}"
+    firebase_test_lab_ios_xctest(
+      app_path: "output/build_products.zip",
+      gcp_project: 'mapbox-maps-ios-dc24c', # Your Google Cloud project name
+      devices: [                          # Device(s) to run tests on
+        {
+          ios_model_id: 'iphone11',        # Device model ID, see gcloud command above
+          ios_version_id: '13.6',         # iOS version ID, see gcloud command above
+        }
+      ],
+      timeout_sec: 20*60,
+      skip_validation: true,
+      # result_storage: storage_path
     )
   end
 

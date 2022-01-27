@@ -53,6 +53,11 @@ targets:
           - "Integration Tests/HTTP/HTTPIntegrationTests.swift"
     dependencies:
       - target: MapboxTestHost
+    postBuildScripts:
+      - path: scripts/insert_access_token.sh
+        name: Insert Mapbox Token
+        inputFiles:
+          - $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
   MapboxMapsHTTPTestsWithHost:
     type: bundle.unit-test
     platform: iOS
@@ -81,6 +86,12 @@ targets:
           - "Helpers/XCTestCase+TemporaryCacheDirectory.swift"
     dependencies:
       - target: MapboxTestHost
+    postBuildScripts:
+      - path: scripts/insert_access_token.sh
+        name: Insert Mapbox Token
+        inputFiles:
+          - $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
+
   MapboxTestHost:
     type: application
     platform: iOS

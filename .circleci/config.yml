@@ -51,15 +51,10 @@ workflows:
               xcode: ["12.5.0", "13.0.0"]
               configuration: ["Debug", "Release"]
               report_failure: [true]
-      - run-tests-on-devices:
-          name: "Run MapboxTestHost tests on devices"
-          xcode: "13.0.0"
-          device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
-          device-pool: $(DEVICE_FARM_5_DEVICE_POOL)
-          scheme: "MapboxTestHost"
-          app-name: "MapboxTestHost"
-          device-tests-always-run: true
-          report_failure: true
+      - build-test-host-tests
+      - test-host-tests:
+          requires:
+            - build-test-host-tests
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
           xcode: "13.0.0"
@@ -105,17 +100,12 @@ workflows:
           name: "Run Unit tests"
           xcode: "12.5.0"
       - build-test-host-tests
-      # Not on main
-      - run-tests-on-devices:
-          name: "Run MapboxTestHost tests on devices"
-          xcode: "13.0.0"
-          device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
-          device-pool: $(DEVICE_FARM_1_PHONE_POOL)
-          scheme: "MapboxTestHost"
-          app-name: "MapboxTestHost"
+      - test-host-tests:
+          requires:
+            - build-test-host-tests
           filters:
             branches:
-              ignore: main
+              only: main
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
           xcode: "13.0.0"
@@ -124,19 +114,6 @@ workflows:
           filters:
             branches:
               ignore: main
-      # On main
-      - run-tests-on-devices:
-          name: "Run MapboxTestHost tests on devices (main)"
-          xcode: "13.0.0"
-          device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
-          device-pool: $(DEVICE_FARM_5_DEVICE_POOL)
-          scheme: "MapboxTestHost"
-          app-name: "MapboxTestHost"
-          device-tests-always-run: true
-          report_failure: true
-          filters:
-            branches:
-              only: main
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices (main)"
           xcode: "13.0.0"
@@ -418,13 +395,50 @@ jobs:
     steps:
       - checkout
       - configure-environment
+      - run: bundle install
       - run:
           name: Build MapboxTestHost for testing
-          command: |
-            bundle install
-            bundle exec fastlane build_tests_host
+          command: bundle exec fastlane build_tests_host
       - store_artifacts:
           path: output/build_products.zip
+      - persist_to_workspace:
+          root: output/
+          paths:
+            - build_products.zip
+
+  test-host-tests:
+    macos:
+      xcode: 13.2.1
+    steps:
+      - checkout
+      - configure-environment
+      - setup-google-cloud-account
+      - attach_workspace:
+          at: output
+      - install-gcloud
+      - login-google-cloud-platform
+      # - run: bundle install
+      - run:
+          name: Test MapboxTestHost
+          command: |
+            gcloud firebase test ios run --test output/build_products.zip \
+              --device model=iphone11,version=13.6 \
+              --device model=iphone11pro,version=14.7 \
+              --device model=iphone8,version=12.4 \
+              --device model=iphonexr,version=13.2 \
+              2>&1 | tee firebase_test_lab_run.log
+            # bundle exec fastlane test_tests_host
+      - run: |
+          mkdir testlab_results
+          TEST_LAB_PATH=$(cat firebase_test_lab_run.log | grep -o "test-lab.*/")
+          gsutil -m cp -r \
+          "gs://${TEST_LAB_PATH}i*" \
+          testlab_results
+          zip -r testlab_results.zip testlab_results
+      - store_artifacts:
+          path: firebase_test_lab_run.log
+      - store_artifacts:
+          path: testlab_results.zip
 
   # We may want to split this across multiple jobs, rather than multiple
   run-tests-on-devices:
@@ -1026,10 +1040,10 @@ commands:
     parameters:
       version:
         type: string
-        default: "google-cloud-sdk-367.0.0-linux-x86_64.tar.gz"
+        default: "google-cloud-sdk-370.0.0-darwin-x86_64.tar.gz"
       checksum:
         type: string
-        default: "94328b9c6559a1b7ec2eeaab9ef0e4702215e16e8327c5b99718750526ae1efe"
+        default: "e08541e2e319457698b9154cd064edc5efa95653f5a84b94a1f2f3d0f87ee196"
     description: "Install gcloud"
     steps:
       - run:

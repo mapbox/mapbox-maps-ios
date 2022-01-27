@@ -51,15 +51,10 @@ workflows:
               xcode: ["12.5.0", "13.0.0"]
               configuration: ["Debug", "Release"]
               report_failure: [true]
-      - run-tests-on-devices:
-          name: "Run MapboxTestHost tests on devices"
-          xcode: "13.0.0"
-          device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
-          device-pool: $(DEVICE_FARM_5_DEVICE_POOL)
-          scheme: "MapboxTestHost"
-          app-name: "MapboxTestHost"
-          device-tests-always-run: true
-          report_failure: true
+      - build-test-host-tests
+      - test-host-tests:
+          requires:
+            - build-test-host-tests
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
           xcode: "13.0.0"
@@ -108,17 +103,9 @@ workflows:
       - test-host-tests:
           requires:
             - build-test-host-tests
-      # Not on main
-      - run-tests-on-devices:
-          name: "Run MapboxTestHost tests on devices"
-          xcode: "13.0.0"
-          device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
-          device-pool: $(DEVICE_FARM_1_PHONE_POOL)
-          scheme: "MapboxTestHost"
-          app-name: "MapboxTestHost"
           filters:
             branches:
-              ignore: main
+              only: main
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices"
           xcode: "13.0.0"
@@ -127,19 +114,6 @@ workflows:
           filters:
             branches:
               ignore: main
-      # On main
-      - run-tests-on-devices:
-          name: "Run MapboxTestHost tests on devices (main)"
-          xcode: "13.0.0"
-          device-farm-project: $(DEVICE_FARM_PROJECT_MAPS)
-          device-pool: $(DEVICE_FARM_5_DEVICE_POOL)
-          scheme: "MapboxTestHost"
-          app-name: "MapboxTestHost"
-          device-tests-always-run: true
-          report_failure: true
-          filters:
-            branches:
-              only: main
       - run-app-tests-on-devices:
           name: "Run Examples tests on devices (main)"
           xcode: "13.0.0"

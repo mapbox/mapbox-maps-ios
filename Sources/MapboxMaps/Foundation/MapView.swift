@@ -508,7 +508,7 @@ extension MapView: DelegatingMapClientDelegate {
     internal func getMetalView(for metalDevice: MTLDevice?) -> MTKView? {
         let metalView = dependencyProvider.makeMetalView(frame: bounds, device: metalDevice)
         displayCallback = {
-            metalView.setNeedsDisplay()
+            metalView.draw()
         }
 
         metalView.translatesAutoresizingMaskIntoConstraints = false
@@ -518,7 +518,7 @@ extension MapView: DelegatingMapClientDelegate {
         metalView.isOpaque = isOpaque
         metalView.layer.isOpaque = isOpaque
         metalView.isPaused = true
-        metalView.enableSetNeedsDisplay = true
+        metalView.enableSetNeedsDisplay = false
         metalView.presentsWithTransaction = false
 
         insertSubview(metalView, at: 0)

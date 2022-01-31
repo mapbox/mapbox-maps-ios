@@ -232,29 +232,6 @@ open class MapView: UIView {
         mapClient.delegate = self
         mapboxMap = MapboxMap(mapClient: mapClient, mapInitOptions: resolvedMapInitOptions)
 
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(willEnterForeground),
-                                               name: UIApplication.willEnterForegroundNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(didEnterBackground),
-                                               name: UIApplication.didEnterBackgroundNotification,
-                                               object: nil)
-        if #available(iOS 13.0, *) {
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(willEnterForeground),
-                                                   name: UIScene.willEnterForegroundNotification,
-                                                   object: nil)
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(didEnterBackground),
-                                                   name: UIScene.didEnterBackgroundNotification,
-                                                   object: nil)
-        }
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(didReceiveMemoryWarning),
-                                               name: UIApplication.didReceiveMemoryWarningNotification,
-                                               object: nil)
-
         // Use the overriding style URI if provided (currently from IB)
         if let initialStyleURI = overridingStyleURI,
            let styleURI = StyleURI(url: initialStyleURI) {
@@ -292,6 +269,8 @@ open class MapView: UIView {
 
         // Set up managers
         setupManagers()
+
+        subscribeToLifecycleNotifications()
     }
 
     internal func setupManagers() {
@@ -460,15 +439,11 @@ open class MapView: UIView {
         super.didMoveToSuperview()
     }
 
-    @objc func didReceiveMemoryWarning() {
-        mapboxMap.reduceMemoryUse()
-    }
-
-    @objc func willEnterForeground() {
+    internal func resumeDisplayLink() {
         displayLink?.isPaused = false
     }
 
-    @objc func didEnterBackground() {
+    internal func pauseDisplayLink() {
         displayLink?.isPaused = true
     }
 

@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Updated to MapboxCoreMaps 10.3.0 and MapboxCommon 21.1.0. ([#1078](https://github.com/mapbox/mapbox-maps-ios/pull/1078))
+
 ## 10.3.0-rc.1 – January 26, 2022
 
 * Exposed API to invalidate `OfflineRegion`. ([#1026](https://github.com/mapbox/mapbox-maps-ios/pull/1026))

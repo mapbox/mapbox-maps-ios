@@ -240,6 +240,16 @@ open class MapView: UIView {
                                                selector: #selector(didEnterBackground),
                                                name: UIApplication.didEnterBackgroundNotification,
                                                object: nil)
+        if #available(iOS 13.0, *) {
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(willEnterForeground),
+                                                   name: UIScene.willEnterForegroundNotification,
+                                                   object: nil)
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(didEnterBackground),
+                                                   name: UIScene.didEnterBackgroundNotification,
+                                                   object: nil)
+        }
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(didReceiveMemoryWarning),
                                                name: UIApplication.didReceiveMemoryWarningNotification,

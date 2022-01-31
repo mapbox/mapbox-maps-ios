@@ -187,4 +187,15 @@ final class MapViewTests: XCTestCase {
         mapView.didReceiveMemoryWarning()
     }
 
+    func testWillEnterForeground() {
+        mapView.willEnterForeground()
+
+        XCTAssertFalse(displayLink.isPaused)
+    }
+
+    func testDidEnterBackground() {
+        mapView.didEnterBackground()
+
+        XCTAssertTrue(displayLink.isPaused)
+    }
 }

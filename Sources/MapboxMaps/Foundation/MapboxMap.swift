@@ -30,7 +30,12 @@ internal protocol MapboxMapProtocol: AnyObject {
     func point(for coordinate: CLLocationCoordinate2D) -> CGPoint
 }
 
-// swiftlint:disable:next type_body_length
+// swiftlint:disable type_body_length
+
+/// MapboxMap provides access to the map model, including the camera, style, observable map events,
+/// and querying rendered features. Obtain the MapboxMap instance for a MapView via MapView.mapboxMap.
+///
+/// Note: MapboxMap should only be used from the main thread.
 public final class MapboxMap: MapboxMapProtocol {
     /// The underlying renderer object responsible for rendering the map
     private let __map: Map
@@ -613,6 +618,8 @@ public final class MapboxMap: MapboxMapProtocol {
         }
     }
 }
+
+// swiftlint:enable type_body_length
 
 // MARK: - MapFeatureQueryable
 

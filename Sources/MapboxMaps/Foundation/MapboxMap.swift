@@ -36,7 +36,7 @@ public final class MapboxMap: MapboxMapProtocol {
     private let __map: Map
 
     /// The `style` object supports run time styling.
-    public internal(set) var style: Style
+    public let style: Style
 
     private let eventHandlers = WeakSet<MapEventHandler>()
 

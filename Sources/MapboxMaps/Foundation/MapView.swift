@@ -270,7 +270,7 @@ open class MapView: UIView {
         // Set up managers
         setupManagers()
 
-        subscribeToLifecycleNotifications()
+        subscribeToMemoryWarningNotification()
     }
 
     internal func setupManagers() {
@@ -427,7 +427,9 @@ open class MapView: UIView {
 
         if window != nil {
             validateDisplayLink()
+            subscribeToLifecycleNotifications()
         } else {
+            unsubscribeFromLifecycleNotifications()
             // TODO: Fix this up correctly.
             displayLink?.invalidate()
             displayLink = nil

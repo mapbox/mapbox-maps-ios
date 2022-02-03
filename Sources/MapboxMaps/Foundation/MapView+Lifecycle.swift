@@ -43,6 +43,7 @@ extension MapView {
     }
 
     @objc internal func didEnterBackground() {
+        mapboxMap.reduceMemoryUse()
         pauseDisplayLink()
     }
 

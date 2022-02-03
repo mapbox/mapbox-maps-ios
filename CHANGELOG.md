@@ -6,6 +6,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Updated to MapboxCoreMaps 10.3.0 and MapboxCommon 21.1.0. ([#1078](https://github.com/mapbox/mapbox-maps-ios/pull/1078))
 * Fix compass button regression introduced in rc.1. ([#1083](https://github.com/mapbox/mapbox-maps-ios/pull/1083))
+* Prevent rendering in background by pausing/resuming display link in response to application or scene lifecycle events ([#1086](https://github.com/mapbox/mapbox-maps-ios/pull/1086))
 
 ## 10.3.0-rc.1 – January 26, 2022
 

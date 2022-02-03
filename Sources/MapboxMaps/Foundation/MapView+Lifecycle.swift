@@ -50,7 +50,7 @@ extension MapView {
     @available(iOS 13.0, *)
     @objc private func didReceiveSceneLifecycleNotification(_ notification: Notification) {
         // making sure the scene is the correct one, as the scene may not be available when subscribing
-        guard let scene = notification.object as? UIScene, scene == window?.windowScene else {
+        guard let scene = notification.object as? UIScene, scene == window?.parentScene else {
             return
         }
 
@@ -69,11 +69,11 @@ extension MapView {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(willEnterForeground),
                                                name: UIScene.willEnterForegroundNotification,
-                                               object: window?.windowScene)
+                                               object: window?.parentScene)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(didEnterBackground),
                                                name: UIScene.didEnterBackgroundNotification,
-                                               object: window?.windowScene)
+                                               object: window?.parentScene)
     }
 
     private func subscribeToApplicationsLifecycleNotifications() {

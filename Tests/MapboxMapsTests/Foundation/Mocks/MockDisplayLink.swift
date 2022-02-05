@@ -9,7 +9,7 @@ final class MockDisplayLink: DisplayLinkProtocol {
 
     var preferredFramesPerSecond: Int = 0
 
-    var isPaused: Bool = false
+    @Stubbed var isPaused: Bool = false
 
     // Checking Swift version as a proxy for iOS SDK version to enable
     // building with iOS SDKs < 15

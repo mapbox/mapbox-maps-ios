@@ -190,12 +190,12 @@ final class MapViewTests: XCTestCase {
     func testWillEnterForeground() {
         mapView.willEnterForeground()
 
-        XCTAssertFalse(displayLink.isPaused)
+        XCTAssertEqual(displayLink.$isPaused.setStub.parameters, [false])
     }
 
     func testDidEnterBackground() {
         mapView.didEnterBackground()
 
-        XCTAssertTrue(displayLink.isPaused)
+        XCTAssertEqual(displayLink.$isPaused.setStub.parameters, [true])
     }
 }

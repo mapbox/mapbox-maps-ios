@@ -23,15 +23,12 @@ extension MapView {
     }
 
     internal func unsubscribeFromLifecycleNotifications() {
-        if Bundle.main.object(forInfoDictionaryKey: MapView.UIApplicationSceneManifestKey) != nil {
-            if #available(iOS 13.0, *) {
-                NotificationCenter.default.removeObserver(self, name: UIScene.willEnterForegroundNotification, object: nil)
-                NotificationCenter.default.removeObserver(self, name: UIScene.didEnterBackgroundNotification, object: nil)
-            }
-        } else {
-            NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
-            NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
+        if #available(iOS 13.0, *) {
+            NotificationCenter.default.removeObserver(self, name: UIScene.willEnterForegroundNotification, object: nil)
+            NotificationCenter.default.removeObserver(self, name: UIScene.didEnterBackgroundNotification, object: nil)
         }
+        NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
 
     @objc internal func didReceiveMemoryWarning() {
@@ -78,11 +75,11 @@ extension MapView {
 
     private func subscribeToApplicationsLifecycleNotifications() {
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(willEnterForeground),
+                                               selector: #selector(didReceiveSceneLifecycleNotification(_:)),
                                                name: UIApplication.willEnterForegroundNotification,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(didEnterBackground),
+                                               selector: #selector(didReceiveSceneLifecycleNotification(_:)),
                                                name: UIApplication.didEnterBackgroundNotification,
                                                object: nil)
     }

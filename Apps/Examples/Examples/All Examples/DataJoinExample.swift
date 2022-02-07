@@ -18,7 +18,7 @@ final class DataJoinExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        // Add the live data layer once the map has finished loading.
+        // Add the data layer once the map has finished loading.
         mapView.mapboxMap.onNext(.mapLoaded) { _ in
             self.addJSONDataLayer()
         }
@@ -75,30 +75,17 @@ final class DataJoinExample: UIViewController, ExampleProtocol {
                         Country(code: "UKR", hdi: 0.751 ),
                         Country(code: "GBR", hdi: 0.922 )]
         
-        // Add source for country polygons using the Mapbox Countries tileset
+        // Create the source for country polygons using the Mapbox Countries tileset
         // The polygons contain an ISO 3166 alpha-3 code which can be used to for joining the data
         // https://docs.mapbox.com/vector-tiles/reference/mapbox-countries-v1
         let sourceID = "countries"
         var source = VectorSource()
         source.url = "mapbox://mapbox.country-boundaries-v1"
         
-        do {
-            try mapView.mapboxMap.style.addSource(source, id: sourceID)
-        } catch {
-            print("Failed to add the country boundaries source. Error: \(error.localizedDescription)")
-        }
-        
         // Add layer from the vector tile source to create the choropleth
-        // Insert it below the 'admin-1-boundary-bg' layer in the style
         var layer = FillLayer(id: "countries")
         layer.source = sourceID
         layer.sourceLayer = "country_boundaries"
-        
-        do {
-            try mapView.mapboxMap.style.addLayer(layer, layerPosition: .below("admin-1-boundary-bg"))
-        } catch {
-            print("Failed to add the country boundaries layer. Error: \(error.localizedDescription)")
-        }
         
         // Build a GL match expression that defines the color for every vector tile feature
         // https://docs.mapbox.com/mapbox-gl-js/style-spec/expressions/#match
@@ -132,10 +119,15 @@ final class DataJoinExample: UIViewController, ExampleProtocol {
             """
         
         // Combine the expression strings into a single JSON expression
-        // You can alternatively translate JSON expresions into Swift: https://docs.mapbox.com/ios/maps/guides/styles/use-expressions/
+        // You can alternatively translate JSON expressions into Swift: https://docs.mapbox.com/ios/maps/guides/styles/use-expressions/
         let jsonExpression = expressionHeader + expressionBody + expressionFooter
 
+        // Add the source
+        // Insert the vector layer below the 'admin-1-boundary-bg' layer in the style
+        // Join data to the vector layer
         do {
+            try mapView.mapboxMap.style.addSource(source, id: sourceID)
+            try mapView.mapboxMap.style.addLayer(layer, layerPosition: .below("admin-1-boundary-bg"))
             if let expressionData = jsonExpression.data(using: .utf8) {
                 let expJSONObject = try JSONSerialization.jsonObject(with: expressionData, options: [])
                 try mapView.mapboxMap.style.setLayerProperty(for: "countries",
@@ -143,7 +135,7 @@ final class DataJoinExample: UIViewController, ExampleProtocol {
                                                            value: expJSONObject)
             }
         } catch {
-            print("Failed to join the data to the vector layer. Error: \(error.localizedDescription)")
+            print("Failed to add the data layer. Error: \(error.localizedDescription)")
         }
     }
 }

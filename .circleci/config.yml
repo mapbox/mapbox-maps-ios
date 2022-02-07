@@ -16,6 +16,14 @@ release-precheck: &release-anchor
   requires:
     - release-precheck
 
+executors:
+  xcode-latest:
+    macos:
+      xcode: 13.2.1
+  xcode-sdk-min:
+    macos:
+      xcode: 12.5.1
+
 ### Workflows
 
 workflows:
@@ -30,8 +38,7 @@ workflows:
               only:
                 - main
     jobs:
-      - swiftlint:
-          xcode: "12.5.0"
+      - swiftlint
       - depsvalidator:
           xcode: "12.5.0"
       - build-sdk:
@@ -73,8 +80,7 @@ workflows:
 
   steve:
     jobs:
-      - swiftlint:
-          xcode: "12.5.0"
+      - swiftlint
       - depsvalidator:
           xcode: "12.5.0"
       - build-sdk:
@@ -234,7 +240,7 @@ jobs:
       - run: exit 1
 
   swiftlint:
-    <<: *base-job
+    executor: xcode-latest
     steps:
       - checkout
       - run: brew install swiftlint
@@ -389,8 +395,7 @@ jobs:
           message: "unit-test-sdk"
 
   build-test-host-tests:
-    macos:
-      xcode: 13.2.1
+    executor: xcode-latest
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
@@ -407,8 +412,7 @@ jobs:
             - build_products.zip
 
   test-host-tests:
-    macos:
-      xcode: 13.2.1
+    executor: xcode-latest
     steps:
       - checkout
       - configure-environment
@@ -633,8 +637,7 @@ jobs:
       This job is designed to be called on daily bases.
       It is validating dependency managers integration per branch version rule.
       However, this job would run exclusively for open PRs to the release branches (aka "release/v.*"")
-    macos:
-      xcode: 13.2.1
+    executor: xcode-latest
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
@@ -650,8 +653,7 @@ jobs:
       This job is designed to be called after SDK Registry PR merge.
       It requires binaries to be publicly available and downloadable.
       SPM, Cocoapods and DirectDownload tests would be called.
-    macos:
-      xcode: 13.2.1
+    executor: xcode-latest
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
@@ -673,8 +675,7 @@ jobs:
       - slack-notify-failure-if-any
 
   release-precheck:
-    macos:
-      xcode: 13.2.1
+    executor: xcode-latest
     steps:
       - checkout
       - parse-release-version-if-available
@@ -684,8 +685,7 @@ jobs:
       - slack-notify-failure-if-any
 
   build-dynamic:
-    macos:
-      xcode: 12.5.1
+    executor: xcode-sdk-min
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
@@ -702,8 +702,7 @@ jobs:
       - slack-notify-failure-if-any
 
   build-static:
-    macos:
-      xcode: 12.5.1
+    executor: xcode-sdk-min
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
@@ -720,8 +719,7 @@ jobs:
       - slack-notify-failure-if-any
 
   build-docs:
-    macos:
-      xcode: 13.2.1
+    executor: xcode-latest
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
@@ -730,8 +728,7 @@ jobs:
       - slack-notify-failure-if-any
 
   build-studio-preview:
-    macos:
-      xcode: 13.2.1
+    executor: xcode-latest
     steps:
       - checkout
       - configure-environment
@@ -741,8 +738,7 @@ jobs:
       - slack-notify-failure-if-any
 
   create-registry-pr:
-    macos:
-      xcode: 13.2.1
+    executor: xcode-latest
     steps:
       - checkout
       - configure-environment
@@ -769,8 +765,7 @@ jobs:
       - slack-notify-failure-if-any
 
   create-docs-prs:
-    macos:
-      xcode: 13.2.1
+    executor: xcode-latest
     steps:
       - checkout
       - configure-environment
@@ -785,8 +780,7 @@ jobs:
       - slack-notify-failure-if-any
 
   update-examples:
-    macos:
-      xcode: 13.2.1
+    executor: xcode-latest
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
@@ -800,8 +794,7 @@ jobs:
 
 
   publish-podspec:
-    macos:
-      xcode: 13.2.1
+    executor: xcode-latest
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
@@ -812,8 +805,7 @@ jobs:
       - slack-notify-failure-if-any
 
   create-draft-release:
-    macos:
-      xcode: 13.2.1
+    executor: xcode-latest
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout

@@ -346,6 +346,15 @@ open class MapView: UIView {
                                                selector: #selector(didReceiveNotification(_:)),
                                                name: UIScene.didEnterBackgroundNotification,
                                                object: window?.parentScene)
+            } else {
+                notificationCenter.addObserver(self,
+                                               selector: #selector(didReceiveNotification(_:)),
+                                               name: UIApplication.willEnterForegroundNotification,
+                                               object: nil)
+                notificationCenter.addObserver(self,
+                                               selector: #selector(didReceiveNotification(_:)),
+                                               name: UIApplication.didEnterBackgroundNotification,
+                                               object: nil)
             }
         } else {
             notificationCenter.addObserver(self,

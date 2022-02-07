@@ -104,7 +104,7 @@ internal class MapboxScaleBarOrnamentView: UIView {
     }
 
     internal var isMetricLocale: Bool {
-        return Locale(identifier: Bundle.main.preferredLocalizations.first!).usesMetricSystem
+        return Locale.current.usesMetricSystem
     }
 
     internal override var intrinsicContentSize: CGSize {

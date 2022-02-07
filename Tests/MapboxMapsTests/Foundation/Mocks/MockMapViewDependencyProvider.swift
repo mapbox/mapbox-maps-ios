@@ -54,7 +54,14 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
         return MockLocationProducer()
     }
 
-    func makeLocationManager(locationProducer: LocationProducerProtocol, style: StyleProtocol) -> LocationManager {
+    func makeInterpolatedLocationProducer(locationProducer: LocationProducerProtocol,
+                                          displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol {
+        return MockInterpolatedLocationProducer()
+    }
+
+    func makeLocationManager(locationProducer: LocationProducerProtocol,
+                             interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
+                             style: StyleProtocol) -> LocationManager {
         return LocationManager(locationProducer: locationProducer, puckManager: MockPuckManager())
     }
 

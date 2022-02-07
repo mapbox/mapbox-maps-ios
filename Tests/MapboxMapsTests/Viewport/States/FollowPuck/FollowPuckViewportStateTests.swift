@@ -5,33 +5,26 @@ final class FollowPuckViewportStateTest: XCTestCase {
 
     var dataSource: MockFollowPuckViewportStateDataSource!
     var cameraAnimationsManager: MockCameraAnimationsManager!
+    var mapboxMap: MockMapboxMap!
     var state: FollowPuckViewportState!
 
     override func setUp() {
         super.setUp()
         dataSource = MockFollowPuckViewportStateDataSource()
         cameraAnimationsManager = MockCameraAnimationsManager()
+        mapboxMap = MockMapboxMap()
         state = FollowPuckViewportState(
             dataSource: dataSource,
-            cameraAnimationsManager: cameraAnimationsManager)
+            cameraAnimationsManager: cameraAnimationsManager,
+            mapboxMap: mapboxMap)
     }
 
     override func tearDown() {
         state = nil
+        mapboxMap = nil
         cameraAnimationsManager = nil
         dataSource = nil
         super.tearDown()
-    }
-
-    func verifyEaseTo(with expectedCamera: CameraOptions) throws -> MockCancelable {
-        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 1)
-        let easeToInvocation = try XCTUnwrap(cameraAnimationsManager.easeToStub.invocations.first)
-        XCTAssertEqual(easeToInvocation.parameters.camera, expectedCamera)
-        XCTAssertEqual(easeToInvocation.parameters.duration,
-                       max(0, dataSource.options.animationDuration))
-        XCTAssertEqual(easeToInvocation.parameters.curve, .linear)
-        XCTAssertNil(easeToInvocation.parameters.completion)
-        return try XCTUnwrap(easeToInvocation.returnValue as? MockCancelable)
     }
 
     func testGetOptions() {
@@ -90,16 +83,15 @@ final class FollowPuckViewportStateTest: XCTestCase {
         // exercise the observation handler
         let result = observeHandler(cameraOptions)
 
-        // verify that the expected animation was started
-        let easeToCancelable = try verifyEaseTo(with: cameraOptions)
+        // verify that the camera was set
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.map(\.parameters), [cameraOptions])
         // verify that the handler returns true (to continue receiving updates)
         XCTAssertTrue(result)
 
         // stop updates
         state.stopUpdatingCamera()
 
-        // verify that the animation and observe cancelables are both canceled
-        XCTAssertEqual(easeToCancelable.cancelStub.invocations.count, 1)
+        // verify that the observe cancelable is canceled
         XCTAssertEqual(observeCancelable.cancelStub.invocations.count, 1)
     }
 

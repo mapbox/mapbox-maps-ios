@@ -16,8 +16,8 @@ ENV["FASTLANE_SKIP_UPDATE_CHECK"] = "1"
 ENV["SPACESHIP_SKIP_2FA_UPGRADE"] = "1"
 
 platform :ios do
-  desc "Description of what the lane does"
-  lane :firebase do
+
+  lane :build_examples_tests do
     setup_circle_ci
     sync_code_signing
     update_code_signing_settings(
@@ -37,14 +37,12 @@ platform :ios do
       sdk: 'iphoneos',                    # Required
       should_zip_build_products: true,     # Must be true to set the correct format for Firebase Test Lab,
       result_bundle: true,
-      output_directory: "output/"
+      output_directory: "output/",
+      code_coverage: true
     )
-
-    firebase_test
   end
 
-  lane :firebase_test do
-    storage_path = "gs://#{ENV["TEST_LAB_EXAMPLES"]}/Examples-#{ENV["CIRCLE_BUILD_NUM"]}"
+  lane :run_examples_firebase_tests do
     firebase_test_lab_ios_xctest(
       gcp_project: 'mapbox-maps-ios-dc24c', # Your Google Cloud project name
       devices: [                          # Device(s) to run tests on
@@ -55,8 +53,13 @@ platform :ios do
       ],
       timeout_sec: 20*60,
       skip_validation: true,
-      result_storage: storage_path
     )
+  end
+
+  desc "Test Examples scheme on Firebase Test Lab"
+  lane :firebase_examples_tests do
+    build_examples_tests
+    run_examples_firebase_tests
   end
 
   lane :beta do
@@ -94,7 +97,7 @@ platform :ios do
     )
   end
 
-  lane :build_tests_host do
+  lane :build_tests do
     sh("cd .. && xcodegen")
     app_store_connect_api_key # Generate API Token
     setup_circle_ci
@@ -114,15 +117,14 @@ platform :ios do
       build_for_testing: true,
       destination: 'generic/platform=iOS',
       should_zip_build_products: true,
-      output_directory: "output/"
+      output_directory: "output/",
+      code_coverage: true
     )
   end
 
-  lane :test_tests_host do
-    # build_tests_host
-    # storage_path = "gs://#{ENV["TEST_LAB_EXAMPLES"]}/MapboxTestHost-#{ENV["CIRCLE_BUILD_NUM"]}"
+  lane :firebase_tests do
+    build_tests
     firebase_test_lab_ios_xctest(
-      app_path: "output/build_products.zip",
       gcp_project: 'mapbox-maps-ios-dc24c', # Your Google Cloud project name
       devices: [                          # Device(s) to run tests on
         {
@@ -132,7 +134,6 @@ platform :ios do
       ],
       timeout_sec: 20*60,
       skip_validation: true,
-      # result_storage: storage_path
     )
   end
 

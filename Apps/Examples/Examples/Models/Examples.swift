@@ -231,6 +231,9 @@ public struct Examples {
         Example(title: "Add live data",
                 description: "Update feature coordinates from a geoJSON source in real time.",
                 type: LiveDataExample.self),
+        Example(title: "Join data to vector geometry",
+                description: "Join local JSON data with vector tile geometries.",
+                type: DataJoinExample.self),
         Example(title: "Use a distance expression", description: "Use a distance style expression to show features within a specific radius.", type: DistanceExpressionExample.self)
     ]
 

@@ -1113,6 +1113,7 @@ commands:
           event: fail
           mentions: '@maps-ios'
           template: basic_fail_1
+          branch_pattern: ^(main|release.*)$
 
   report-failure:
     parameters:

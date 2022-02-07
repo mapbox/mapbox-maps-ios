@@ -4,7 +4,7 @@ import Foundation
 @objc(DataJoinExample)
 final class DataJoinExample: UIViewController, ExampleProtocol {
     var mapView: MapView!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -74,19 +74,19 @@ final class DataJoinExample: UIViewController, ExampleProtocol {
                         Country(code: "LUX", hdi: 0.904 ),
                         Country(code: "UKR", hdi: 0.751 ),
                         Country(code: "GBR", hdi: 0.922 )]
-        
+
         // Create the source for country polygons using the Mapbox Countries tileset
         // The polygons contain an ISO 3166 alpha-3 code which can be used to for joining the data
         // https://docs.mapbox.com/vector-tiles/reference/mapbox-countries-v1
         let sourceID = "countries"
         var source = VectorSource()
         source.url = "mapbox://mapbox.country-boundaries-v1"
-        
+
         // Add layer from the vector tile source to create the choropleth
         var layer = FillLayer(id: "countries")
         layer.source = sourceID
         layer.sourceLayer = "country_boundaries"
-        
+
         // Build a GL match expression that defines the color for every vector tile feature
         // https://docs.mapbox.com/mapbox-gl-js/style-spec/expressions/#match
         // Use the ISO 3166-1 alpha 3 code as the lookup key for the country shape
@@ -95,9 +95,9 @@ final class DataJoinExample: UIViewController, ExampleProtocol {
             [
             "match",
             ["get", "iso_3166_1_alpha_3"],
-            
+
             """
-        
+
         // Calculate color values for each country based on 'hdi' value
         var green: Double
         var expressionBody: String = ""
@@ -107,17 +107,17 @@ final class DataJoinExample: UIViewController, ExampleProtocol {
             expressionBody += """
             "\(country.code)",
             "rgb(0, \(green), 0)",
-            
+
             """
         }
-        
+
         // Last value is the default, used where there is no data
         let expressionFooter =
             """
             "rgba(0, 0, 0, 0)"
             ]
             """
-        
+
         // Combine the expression strings into a single JSON expression
         // You can alternatively translate JSON expressions into Swift: https://docs.mapbox.com/ios/maps/guides/styles/use-expressions/
         let jsonExpression = expressionHeader + expressionBody + expressionFooter

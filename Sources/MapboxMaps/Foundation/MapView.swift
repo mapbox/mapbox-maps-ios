@@ -232,6 +232,11 @@ open class MapView: UIView {
         mapClient.delegate = self
         mapboxMap = MapboxMap(mapClient: mapClient, mapInitOptions: resolvedMapInitOptions)
 
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(didReceiveNotification(_:)),
+                                               name: UIApplication.didReceiveMemoryWarningNotification,
+                                               object: nil)
+
         // Use the overriding style URI if provided (currently from IB)
         if let initialStyleURI = overridingStyleURI,
            let styleURI = StyleURI(url: initialStyleURI) {
@@ -269,8 +274,6 @@ open class MapView: UIView {
 
         // Set up managers
         setupManagers()
-
-        subscribeToMemoryWarningNotification()
     }
 
     internal func setupManagers() {
@@ -321,6 +324,65 @@ open class MapView: UIView {
             locationProducer: locationProducer,
             cameraAnimationsManager: camera,
             mapboxMap: mapboxMap)
+    }
+
+    private func subscribeToLifecycleNotifications() {
+        if Bundle.main.object(forInfoDictionaryKey: "UIApplicationSceneManifest") != nil {
+            if #available(iOS 13.0, *) {
+                NotificationCenter.default.addObserver(self,
+                                                       selector: #selector(didReceiveNotification(_:)),
+                                                       name: UIScene.willEnterForegroundNotification,
+                                                       object: window?.parentScene)
+                NotificationCenter.default.addObserver(self,
+                                                       selector: #selector(didReceiveNotification(_:)),
+                                                       name: UIScene.didEnterBackgroundNotification,
+                                                       object: window?.parentScene)
+            }
+        } else {
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(didReceiveNotification(_:)),
+                                                   name: UIApplication.willEnterForegroundNotification,
+                                                   object: nil)
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(didReceiveNotification(_:)),
+                                                   name: UIApplication.didEnterBackgroundNotification,
+                                                   object: nil)
+        }
+    }
+
+    private func unsubscribeFromLifecycleNotifications() {
+        if #available(iOS 13.0, *) {
+            NotificationCenter.default.removeObserver(self, name: UIScene.willEnterForegroundNotification, object: nil)
+            NotificationCenter.default.removeObserver(self, name: UIScene.didEnterBackgroundNotification, object: nil)
+        }
+        NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
+    }
+
+    @objc private func didReceiveNotification(_ notification: Notification) {
+        if #available(iOS 13.0, *) {
+            switch notification.name {
+            case UIScene.willEnterForegroundNotification where notification.object as? UIScene == window?.parentScene:
+                displayLink?.isPaused = false
+                return
+            case UIScene.didEnterBackgroundNotification where notification.object as? UIScene == window?.parentScene:
+                displayLink?.isPaused = true
+                return
+            default:
+                break
+            }
+        }
+
+        switch notification.name {
+        case UIApplication.willEnterForegroundNotification:
+            displayLink?.isPaused = false
+        case UIApplication.didEnterBackgroundNotification:
+            displayLink?.isPaused = true
+        case UIApplication.didReceiveMemoryWarningNotification:
+            mapboxMap.reduceMemoryUse()
+        default:
+            Log.warning(forMessage: "Unhandled notification: \(notification.name)", category: "MapView")
+        }
     }
 
     private func checkForMetalSupport() {
@@ -439,14 +501,6 @@ open class MapView: UIView {
     open override func didMoveToSuperview() {
         validateDisplayLink()
         super.didMoveToSuperview()
-    }
-
-    internal func resumeDisplayLink() {
-        displayLink?.isPaused = false
-    }
-
-    internal func pauseDisplayLink() {
-        displayLink?.isPaused = true
     }
 
     // MARK: Location

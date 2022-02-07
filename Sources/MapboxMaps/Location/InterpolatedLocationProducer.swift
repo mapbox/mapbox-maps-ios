@@ -59,17 +59,21 @@ extension InterpolatedLocationProducer: LocationConsumer {
     internal func locationUpdate(newLocation: Location) {
         let currentDate = dateProvider.now
 
+        // as a first iteration, assume a 1s location update interval and use a
+        // slightly longer interpolation duration to avoid pauses between updates
+        let duration: TimeInterval = 1.1
+
         if let location = interpolatedLocation(with: currentDate) {
             // calculate new start location via interpolation to current date
             startLocation = location
             startDate = currentDate
             endLocation = InterpolatedLocation(location: newLocation)
-            endDate = currentDate + 1
+            endDate = currentDate + duration
         } else {
             // first location: initialize state, no interpolation will happen
             // until the next location update
             startLocation = InterpolatedLocation(location: newLocation)
-            startDate = currentDate - 1
+            startDate = currentDate - duration
             endLocation = startLocation
             endDate = currentDate
         }

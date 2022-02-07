@@ -44,10 +44,27 @@ extension FollowPuckViewportState: ViewportState {
         guard updatingCameraCancelable == nil else {
             return
         }
-        updatingCameraCancelable = dataSource.observe { [mapboxMap] cameraOptions in
-            mapboxMap.setCamera(to: cameraOptions)
+        var animationStarted = false
+        var animationComplete = false
+
+        let compositeCancelable = CompositeCancelable()
+
+        updatingCameraCancelable = compositeCancelable
+
+        compositeCancelable.add(dataSource.observe { [mapboxMap, cameraAnimationsManager, options] cameraOptions in
+            if animationComplete {
+                mapboxMap.setCamera(to: cameraOptions)
+            } else if !animationStarted {
+                animationStarted = true
+                compositeCancelable.add(cameraAnimationsManager.ease(
+                    to: cameraOptions,
+                    duration: options.animationDuration,
+                    curve: .linear) { _ in
+                        animationComplete = true
+                    }!)
+            }
             return true
-        }
+        })
     }
 
     public func stopUpdatingCamera() {

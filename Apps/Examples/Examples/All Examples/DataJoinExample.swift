@@ -79,23 +79,23 @@ final class DataJoinExample: UIViewController, ExampleProtocol {
         // The polygons contain an ISO 3166 alpha-3 code which can be used to for joining the data
         // https://docs.mapbox.com/vector-tiles/reference/mapbox-countries-v1
         let sourceID = "countries"
-        var Source = VectorSource()
-        Source.url = "mapbox://mapbox.country-boundaries-v1"
+        var source = VectorSource()
+        source.url = "mapbox://mapbox.country-boundaries-v1"
         
         do {
-            try mapView.mapboxMap.style.addSource(Source, id: sourceID)
+            try mapView.mapboxMap.style.addSource(source, id: sourceID)
         } catch {
             print("Failed to add the country boundaries source. Error: \(error.localizedDescription)")
         }
         
         // Add layer from the vector tile source to create the choropleth
         // Insert it below the 'admin-1-boundary-bg' layer in the style
-        var Layer = FillLayer(id: "countries")
-        Layer.source = sourceID
-        Layer.sourceLayer = "country_boundaries"
+        var layer = FillLayer(id: "countries")
+        layer.source = sourceID
+        layer.sourceLayer = "country_boundaries"
         
         do {
-            try mapView.mapboxMap.style.addLayer(Layer, layerPosition: .below("admin-1-boundary-bg"))
+            try mapView.mapboxMap.style.addLayer(layer, layerPosition: .below("admin-1-boundary-bg"))
         } catch {
             print("Failed to add the country boundaries layer. Error: \(error.localizedDescription)")
         }

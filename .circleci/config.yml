@@ -42,41 +42,61 @@ workflows:
       - depsvalidator:
           xcode: "12.5.0"
       - build-sdk:
-          matrix:
-            parameters:
-              xcode: ["12.5.0", "13.0.0"]
-              configuration: ["Debug", "Release"]
-              report_failure: [true]
-      - build-debug-app:
+          configuration: "Release"
           report_failure: true
           matrix:
             parameters:
               xcode: ["12.5.0", "13.0.0"]
       - unit-test-sdk:
+          configuration: "Release"
+          report_failure: true
           matrix:
             parameters:
               xcode: ["12.5.0", "13.0.0"]
-              configuration: ["Debug", "Release"]
-              report_failure: [true]
-      - build-test-host-tests
-      - test-host-tests:
+      - build-tests
+      - run-tests:
           requires:
-            - build-test-host-tests
-      - run-app-tests-on-devices:
-          name: "Run Examples tests on devices"
-          xcode: "13.0.0"
-          device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
-          device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
-          scheme: "Examples"
-          app-name: "Examples"
-          device-tests-always-run: true
-          report_failure: true
+            - build-tests
+      - build-examples-tests
+      - run-examples-tests:
+          requires:
+            - build-examples-tests
       - create-xcframework:
           create-xcframework-always-run: true
           report_failure: true
           matrix:
             parameters:
               xcode: ["12.5.0", "13.0.0"]
+
+  optional-tests:
+    jobs:
+      - run-tests?:
+          type: approval
+          filters:
+            branches:
+              ignore: main
+      - build-tests:
+          requires:
+            - run-tests?
+      - run-tests:
+          name: Run tests [non-main]
+          requires:
+            - build-tests
+          devices: --device model=iphone8,version=14.7
+
+      - run-examples-tests?:
+          type: approval
+          filters:
+            branches:
+              ignore: main
+      - build-examples-tests:
+          requires:
+            - run-examples-tests?
+      - run-examples-tests:
+          name: Run Examples tests [non-main]
+          requires:
+            - build-examples-tests
+          devices: --device model=iphone8,version=14.7
 
   steve:
     jobs:
@@ -85,11 +105,13 @@ workflows:
           xcode: "12.5.0"
       - build-sdk:
           xcode: "12.5.0"
-          matrix:
-            parameters:
-              configuration: ["Debug", "Release"]
-      - build-debug-app:
-          xcode: "12.5.0"
+          configuration: "Release"
+
+      - check-api-compatibility
+      - create-xcframework
+      - validate-integrations-for-branch
+
+      # Trigger mobile-metrics workflows
       - trigger-binary-size:
           requires:
             - build-sdk
@@ -102,39 +124,33 @@ workflows:
           filters:
             branches:
               only: main
+
+      # Run unit tests on CI simulator
       - unit-test-sdk:
           name: "Run Unit tests"
           xcode: "12.5.0"
-      - build-test-host-tests
-      - test-host-tests:
+
+      # Build all tests with host application
+      # Run on main by default
+      # Can be approved to run on other branches
+      - build-tests
+      - run-tests:
           requires:
-            - build-test-host-tests
+            - build-tests
           filters:
             branches:
               only: main
-      - run-app-tests-on-devices:
-          name: "Run Examples tests on devices"
-          xcode: "13.0.0"
-          scheme: "Examples"
-          app-name: "Examples"
-          filters:
-            branches:
-              ignore: main
-      - run-app-tests-on-devices:
-          name: "Run Examples tests on devices (main)"
-          xcode: "13.0.0"
-          device-farm-project: $(DEVICE_FARM_PROJECT_EXAMPLES)
-          device-pool: $(DEVICE_FARM_EXAMPLES_POOL)
-          scheme: "Examples"
-          app-name: "Examples"
-          device-tests-always-run: true
-          report_failure: true
+
+      # Build and Run tests on Examples scheme.
+      # Enabled by-default on 'main' branch
+      # Can be approved on purpose for others
+      - build-examples-tests
+      - run-examples-tests:
+          requires:
+            - build-examples-tests
           filters:
             branches:
               only: main
-      - check-api-compatibility
-      - create-xcframework
-      - validate-integrations-for-branch
 
   release:
     jobs:
@@ -203,15 +219,6 @@ jobs:
       xcode:
         type: string
         default: "12.5.0"
-      device-farm-project:
-        type: string
-        default: $(DEVICE_FARM_PROJECT_MAPS)
-      device-pool:
-        type: string
-        default: $(DEVICE_FARM_1_PHONE_POOL)
-      device-tests-always-run:
-        type: boolean
-        default: false
       create-xcframework-always-run:
         type: boolean
         default: false
@@ -232,8 +239,6 @@ jobs:
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
       HOMEBREW_NO_INSTALL_CLEANUP: 1
-      DEVICE_FARM_DEVICE_POOL: << parameters.device-pool >>
-      DEVICE_FARM_PROJECT: << parameters.device-farm-project >>
       CONFIGURATION: << parameters.configuration >>
     steps:
       # Don't run the default job
@@ -280,16 +285,6 @@ jobs:
           base_name: $(basename $(pwd))
       - store-logs:
           derived_data_path: $DERIVED_DATA_PATH
-      - report-failure:
-          report_failure: << parameters.report_failure >>
-          message: "build-sdk"
-      - store-default-artifacts
-
-  build-debug-app:
-    <<: *base-job
-    steps:
-      - checkout
-      - configure-environment
       - run:
           name: Building scheme DebugApp for simulator
           command: make build-app-for-simulator SCHEME=DebugApp
@@ -304,7 +299,7 @@ jobs:
           derived_data_path: $DERIVED_DATA_PATH
       - report-failure:
           report_failure: << parameters.report_failure >>
-          message: "build-debug-app"
+          message: "build-sdk"
       - store-default-artifacts
 
   trigger-binary-size:
@@ -394,7 +389,7 @@ jobs:
           report_failure: << parameters.report_failure >>
           message: "unit-test-sdk"
 
-  build-test-host-tests:
+  build-tests:
     executor: xcode-latest
     resource_class: macos.x86.medium.gen2
     steps:
@@ -403,181 +398,119 @@ jobs:
       - run: bundle install
       - run:
           name: Build MapboxTestHost for testing
-          command: bundle exec fastlane build_tests_host
+          command: bundle exec fastlane build_tests
       - store_artifacts:
           path: output/build_products.zip
       - persist_to_workspace:
           root: output/
           paths:
             - build_products.zip
+      - slack-notify-failure-if-any
 
-  test-host-tests:
+  run-tests:
+    parameters:
+      devices:
+        default: |
+          --device model=iphone11,version=13.6 \
+          --device model=iphone11pro,version=14.7 \
+          --device model=iphone8,version=12.4 \
+        type: string
     executor: xcode-latest
     steps:
       - checkout
+      - install-gcloud
       - configure-environment
-      - setup-google-cloud-account
       - attach_workspace:
           at: output
-      - install-gcloud
-      - login-google-cloud-platform
-      # - run: bundle install
       - run:
           name: Test MapboxTestHost
           command: |
             gcloud firebase test ios run --test output/build_products.zip \
-              --device model=iphone11,version=13.6 \
-              --device model=iphone11pro,version=14.7 \
-              --device model=iphone8,version=12.4 \
-              --device model=iphonexr,version=13.2 \
-              2>&1 | tee firebase_test_lab_run.log
-            # bundle exec fastlane test_tests_host
-      - run: |
-          mkdir testlab_results
-          TEST_LAB_PATH=$(cat firebase_test_lab_run.log | grep -o "test-lab.*/")
-          gsutil -m cp -r \
-          "gs://${TEST_LAB_PATH}i*" \
-          testlab_results
-          zip -r testlab_results.zip testlab_results
+              << parameters.devices >> 2>&1 | tee firebase_test_lab_run.log
+      - run:
+          name: Download XCResults
+          command: |
+            mkdir testlab_results
+            TEST_LAB_PATH=$(cat firebase_test_lab_run.log | grep -o "test-lab.*/")
+            gsutil -m cp -r \
+            "gs://${TEST_LAB_PATH}i*" \
+            testlab_results
+            zip -r testlab_results.zip testlab_results
+      - run:
+          name: Update coverage
+          command: |
+            unzip -j output/build_products.zip Debug-iphoneos/MapboxMaps.o -d testlab_results/
+            make update-codecov-with-profdata \
+                COVERAGE_ARCH=arm64 \
+                COVERAGE_ROOT_DIR="$(pwd)/testlab_results" \
+                COVERAGE_MAPBOX_MAPS="$(pwd)/testlab_results/MapboxMaps.o" SCHEME=MapboxTestHost
       - store_artifacts:
           path: firebase_test_lab_run.log
       - store_artifacts:
           path: testlab_results.zip
+      - slack-notify-failure-if-any
 
-  # We may want to split this across multiple jobs, rather than multiple
-  run-tests-on-devices:
-    <<: *base-job
+  build-examples-tests:
+    executor: xcode-latest
     steps:
       - checkout
       - configure-environment
-      - ensure-text-exists-in-commit:
-          commit-text: "[run device tests]"
-          always-run: << parameters.device-tests-always-run >>
       - run:
-          name: Install Device Farm Dependencies
-          command: make install-devicefarm-dependencies
-      - install-dependencies
-
-      # There's a command for this, but it only works if run *after* the build.
-      # In this case, we need to determine the derived data path *before* building.
-      - run:
-          name: Locate derived data directory
-          command: |
-            xcodegen
-            xcodebuild \
-              -showBuildSettings \
-              -project MapboxMaps.xcodeproj \
-              -scheme 'MapboxTestHost' \
-              | sed -n 's:^ *BUILD_DIR = \(.*\)/Build/Products$:export DERIVED_DATA_PATH="\1":p' \
-              >> $BASH_ENV
-      - run:
-          name: Testing << parameters.scheme >> on AWS Device Farm
-          command: |
-            make test-with-device-farm \
-              SCHEME=<< parameters.scheme >> \
-              APP_NAME=<< parameters.app-name >> \
-              CONFIGURATION=Release \
-              BUILD_DIR="$DERIVED_DATA_PATH"
-          when: always
-      # get xcresults here, may be zipped with more than one result
-      - run:
-          name: "Gathering results"
-          command: make gather-results BUILD_DIR="$DERIVED_DATA_PATH"
-          when: always
-      - run:
-          name: "Parsing xcresults for errors"
-          command: |
-            RESULTS=`find "$DERIVED_DATA_PATH/testruns" -name '*.xcresult'`
-            xargs swift run --package-path scripts/xcparty xcparty \<<< "$RESULTS" | tee "$DERIVED_DATA_PATH/testruns/failures.txt"
-          when: on_fail
-      - run:
-          name: Symbolicate crash logs
-          command: |
-            make symbolicate \
-              SCHEME=<< parameters.scheme >> \
-              APP_NAME=<< parameters.app-name >> \
-              CONFIGURATION=Release \
-              BUILD_DIR="$DERIVED_DATA_PATH" || true
-          when: always
-      - run:
-          name: Converting and uploading coverage
-          command: |
-            make device-update-codecov-with-profdata \
-              SCHEME=<< parameters.scheme >> \
-              APP_NAME=<< parameters.app-name >> \
-              CONFIGURATION=Release \
-              BUILD_DIR="$DERIVED_DATA_PATH"
-      - store-device-farm-artifacts:
-          derived_data_path: $DERIVED_DATA_PATH
-      - store-logs:
-          derived_data_path: $DERIVED_DATA_PATH
-      - report-failure:
-          report_failure: << parameters.report_failure >>
-          message: "<< parameters.scheme >> device tests"
-
-  run-app-tests-on-devices:
-    <<: *base-job
-    steps:
-      - checkout
-      - ensure-text-exists-in-commit:
-          commit-text: "[run app device tests]"
-          always-run: << parameters.device-tests-always-run >>
-      - configure-environment
-      - setup-google-cloud-account
-      - run:
-          name: Start Firebase lane
+          name: Build Examples tests
           command: |
             bundle install
-            bundle exec fastlane firebase
+            bundle exec fastlane build_examples_tests
+            mv output/build_products.zip output/Examples.zip
+      - store_artifacts:
+          path: output/Examples.zip
+      - persist_to_workspace:
+          root: output/
+          paths:
+            - Examples.zip
+      - slack-notify-failure-if-any
+
+  run-examples-tests:
+    parameters:
+      devices:
+        default: |
+          --device model=iphone11,version=13.6 \
+          --device model=iphone11pro,version=14.7 \
+          --device model=iphone8,version=12.4 \
+        type: string
+    executor: xcode-latest
+    steps:
+      - checkout
       - install-gcloud
-      - install-dependencies
-      - login-google-cloud-platform
-      # There's a command for this, but it only works if run *after* the build.
-      # In this case, we need to determine the derived data path *before* building.
+      - configure-environment
+      - attach_workspace:
+          at: output
       - run:
-          name: Locate derived data directory
+          name: Test Examples
           command: |
-            xcodebuild \
-              -showBuildSettings \
-              -workspace Apps/Apps.xcworkspace \
-              -scheme '<< parameters.scheme >>' \
-              | sed -n 's:^ *BUILD_DIR = \(.*\)/Build/Products$:export DERIVED_DATA_PATH="\1":p' \
-              >> $BASH_ENV
-          when: always
-      - get-test-results-from-firebase:
-            scheme: << parameters.scheme >>
+            gcloud firebase test ios run --test output/Examples.zip \
+              << parameters.devices >> 2>&1 | tee firebase_test_lab_run.log
       - run:
-          name: "Parsing xcresults for errors"
+          name: Download XCResults
           command: |
-            RESULTS=`find "$DERIVED_DATA_PATH" -name '*.xcresult'`
-            xargs swift run --package-path scripts/xcparty xcparty \<<< "$RESULTS" | tee "$DERIVED_DATA_PATH/failures.txt"
-          when: on_fail
+            mkdir testlab_results
+            TEST_LAB_PATH=$(cat firebase_test_lab_run.log | grep -o "test-lab.*/")
+            gsutil -m cp -r \
+            "gs://${TEST_LAB_PATH}i*" \
+            testlab_results
+            zip -r testlab_results.zip testlab_results
       - run:
-          name: Symbolicate crash logs
+          name: Update coverage
           command: |
-            make symbolicate \
-              SCHEME=<< parameters.scheme >> \
-              APP_NAME=<< parameters.app-name >> \
-              CONFIGURATION=Debug \
-              BUILD_DIR="$DERIVED_DATA_PATH" || true
-          when: always
-      - run:
-          name: Converting and uploading coverage
-          when: always
-          command: |
-            pip3 install awscli gitpython
-            make device-update-codecov-with-profdata \
-              SCHEME=<< parameters.scheme >> \
-              APP_NAME=<< parameters.app-name >> \
-              CONFIGURATION=Debug \
-              BUILD_DIR="$DERIVED_DATA_PATH"
-      - store-firebase-artifacts:
-          derived_data_path: $DERIVED_DATA_PATH
-      - store-logs:
-          derived_data_path: $DERIVED_DATA_PATH
-      - report-failure:
-          report_failure: << parameters.report_failure >>
-          message: "<< parameters.scheme >> device tests"
+            unzip -j output/Examples.zip Debug-iphoneos/MapboxMaps.o -d testlab_results/
+            make update-codecov-with-profdata \
+                COVERAGE_ARCH=arm64 \
+                COVERAGE_ROOT_DIR="$(pwd)/testlab_results" \
+                COVERAGE_MAPBOX_MAPS="$(pwd)/testlab_results/MapboxMaps.o" SCHEME=Examples
+      - store_artifacts:
+          path: firebase_test_lab_run.log
+      - store_artifacts:
+          path: testlab_results.zip
+      - slack-notify-failure-if-any
 
   create-xcframework:
     <<: *base-job
@@ -1041,16 +974,19 @@ commands:
       - run:
           name: Install gcloud
           command: |
-            brew install ccache
             mkdir /tmp/gcloud && cd /tmp/gcloud
+
             curl -OL https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/<< parameters.version >>
             echo '<< parameters.checksum >> *<< parameters.version >>' >> checksumfile
             shasum -a 256 -c checksumfile
+
             tar zxvf << parameters.version >>
-            ./google-cloud-sdk/install.sh -q
+            ./google-cloud-sdk/install.sh -q --install-python false
+
             echo "source /tmp/gcloud/google-cloud-sdk/path.bash.inc" >> $BASH_ENV
             echo "source /tmp/gcloud/google-cloud-sdk/completion.bash.inc" >> $BASH_ENV
-            source $BASH_ENV
+      - setup-google-cloud-account
+      - login-google-cloud-platform
 
   install-dependencies:
     description: "Install Dependencies"
@@ -1058,8 +994,8 @@ commands:
       - run:
           name: Install basic dependencies
           command: |
-            pip3 install awscli gitpython requests python-dateutil
-            brew install xcodegen gh
+            python3 -m pip install awscli gitpython requests python-dateutil
+            brew install xcodegen gh ccache
 
   make-docs:
     description: "Generate Documentation"

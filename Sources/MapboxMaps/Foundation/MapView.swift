@@ -93,6 +93,9 @@ open class MapView: UIView {
 
     private var displayLinkParticipants = WeakSet<DisplayLinkParticipant>()
 
+    private let notificationCenter: NotificationCenterProtocol
+    private let bundle: BundleProtocol
+
     /*** The preferred frames per second used for map rendering.
         NOTE: `MapView.preferredFrameRateRange` is available for iOS 15.0 and above.
      */
@@ -164,7 +167,7 @@ open class MapView: UIView {
     }
 
     deinit {
-        NotificationCenter.default.removeObserver(self)
+        notificationCenter.removeObserver(self)
     }
 
     /// Initialize a MapView
@@ -174,12 +177,16 @@ open class MapView: UIView {
     ///    `ResourceOptionsManager.default` to retrieve a shared default resource option, including the access token.
     public init(frame: CGRect, mapInitOptions: MapInitOptions = MapInitOptions()) {
         dependencyProvider = MapViewDependencyProvider()
+        notificationCenter = dependencyProvider.makeNotificationCenter()
+        bundle = dependencyProvider.makeBundle()
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
 
     required public init?(coder: NSCoder) {
         dependencyProvider = MapViewDependencyProvider()
+        notificationCenter = dependencyProvider.makeNotificationCenter()
+        bundle = dependencyProvider.makeBundle()
         super.init(coder: coder)
     }
 
@@ -187,6 +194,8 @@ open class MapView: UIView {
                   mapInitOptions: MapInitOptions,
                   dependencyProvider: MapViewDependencyProviderProtocol) {
         self.dependencyProvider = dependencyProvider
+        notificationCenter = dependencyProvider.makeNotificationCenter()
+        bundle = dependencyProvider.makeBundle()
         super.init(frame: frame)
         commonInit(mapInitOptions: mapInitOptions, overridingStyleURI: nil)
     }
@@ -232,10 +241,10 @@ open class MapView: UIView {
         mapClient.delegate = self
         mapboxMap = MapboxMap(mapClient: mapClient, mapInitOptions: resolvedMapInitOptions)
 
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(didReceiveNotification(_:)),
-                                               name: UIApplication.didReceiveMemoryWarningNotification,
-                                               object: nil)
+        notificationCenter.addObserver(self,
+                                       selector: #selector(didReceiveNotification(_:)),
+                                       name: UIApplication.didReceiveMemoryWarningNotification,
+                                       object: nil)
 
         // Use the overriding style URI if provided (currently from IB)
         if let initialStyleURI = overridingStyleURI,
@@ -299,7 +308,7 @@ open class MapView: UIView {
 
         // Initialize/Configure location source and location manager
         locationProducer = dependencyProvider.makeLocationProducer(
-            mayRequestWhenInUseAuthorization: Bundle.main.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil)
+            mayRequestWhenInUseAuthorization: bundle.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil)
         location = dependencyProvider.makeLocationManager(
             locationProducer: locationProducer,
             style: mapboxMap.style)
@@ -327,36 +336,36 @@ open class MapView: UIView {
     }
 
     private func subscribeToLifecycleNotifications() {
-        if Bundle.main.object(forInfoDictionaryKey: "UIApplicationSceneManifest") != nil {
+        if bundle.infoDictionary?["UIApplicationSceneManifest"] != nil {
             if #available(iOS 13.0, *) {
-                NotificationCenter.default.addObserver(self,
-                                                       selector: #selector(didReceiveNotification(_:)),
-                                                       name: UIScene.willEnterForegroundNotification,
-                                                       object: window?.parentScene)
-                NotificationCenter.default.addObserver(self,
-                                                       selector: #selector(didReceiveNotification(_:)),
-                                                       name: UIScene.didEnterBackgroundNotification,
-                                                       object: window?.parentScene)
+                notificationCenter.addObserver(self,
+                                               selector: #selector(didReceiveNotification(_:)),
+                                               name: UIScene.willEnterForegroundNotification,
+                                               object: window?.parentScene)
+                notificationCenter.addObserver(self,
+                                               selector: #selector(didReceiveNotification(_:)),
+                                               name: UIScene.didEnterBackgroundNotification,
+                                               object: window?.parentScene)
             }
         } else {
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(didReceiveNotification(_:)),
-                                                   name: UIApplication.willEnterForegroundNotification,
-                                                   object: nil)
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(didReceiveNotification(_:)),
-                                                   name: UIApplication.didEnterBackgroundNotification,
-                                                   object: nil)
+            notificationCenter.addObserver(self,
+                                           selector: #selector(didReceiveNotification(_:)),
+                                           name: UIApplication.willEnterForegroundNotification,
+                                           object: nil)
+            notificationCenter.addObserver(self,
+                                           selector: #selector(didReceiveNotification(_:)),
+                                           name: UIApplication.didEnterBackgroundNotification,
+                                           object: nil)
         }
     }
 
     private func unsubscribeFromLifecycleNotifications() {
         if #available(iOS 13.0, *) {
-            NotificationCenter.default.removeObserver(self, name: UIScene.willEnterForegroundNotification, object: nil)
-            NotificationCenter.default.removeObserver(self, name: UIScene.didEnterBackgroundNotification, object: nil)
+            notificationCenter.removeObserver(self, name: UIScene.willEnterForegroundNotification, object: nil)
+            notificationCenter.removeObserver(self, name: UIScene.didEnterBackgroundNotification, object: nil)
         }
-        NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
+        notificationCenter.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
+        notificationCenter.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
 
     @objc private func didReceiveNotification(_ notification: Notification) {

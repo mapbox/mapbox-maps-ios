@@ -4,6 +4,8 @@ import XCTest
 final class MapViewTests: XCTestCase {
 
     var displayLink: MockDisplayLink!
+    var notificationCenter: MockNotificationCenter!
+    var bundle: MockBundle!
     var dependencyProvider: MockMapViewDependencyProvider!
     var mapView: MapView!
     var window: UIWindow!
@@ -12,8 +14,12 @@ final class MapViewTests: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
         displayLink = MockDisplayLink()
+        notificationCenter = MockNotificationCenter()
+        bundle = MockBundle()
         dependencyProvider = MockMapViewDependencyProvider()
         dependencyProvider.makeDisplayLinkStub.defaultReturnValue = displayLink
+        dependencyProvider.makeNotificationCenterStub.defaultReturnValue = notificationCenter
+        dependencyProvider.makeBundleStub.defaultReturnValue = bundle
         mapView = MapView(
             frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
             mapInitOptions: MapInitOptions(),
@@ -182,19 +188,112 @@ final class MapViewTests: XCTestCase {
         XCTAssertEqual(participant2.participateStub.invocations.count, 1)
     }
 
-    func testMemoryWarning() {
-        // Verifies that a memory warning call is not causing side effects
-        mapView.didReceiveMemoryWarning()
+    func testAppLifecycleNotificationSubscribedWhenDidMoveToNewWindow() {
+        let notificationCenter = MockNotificationCenter()
+        let bundle = MockBundle()
+        bundle.infoDictionaryStub.defaultReturnValue = [:]
+        dependencyProvider.makeNotificationCenterStub.defaultReturnValue = notificationCenter
+        dependencyProvider.makeBundleStub.defaultReturnValue = bundle
+        let mapView = MapView(
+            frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
+            mapInitOptions: MapInitOptions(),
+            dependencyProvider: dependencyProvider)
+
+        window.addSubview(mapView)
+
+        XCTAssertTrue(notificationCenter.addObserverStub.invocations.contains(where: { stub in
+            stub.parameters.name == UIApplication.didEnterBackgroundNotification
+        }))
+        XCTAssertTrue(notificationCenter.addObserverStub.invocations.contains(where: { stub in
+            stub.parameters.name == UIApplication.willEnterForegroundNotification
+        }))
+        XCTAssertTrue(notificationCenter.addObserverStub.invocations.contains(where: { stub in
+            stub.parameters.name == UIApplication.didReceiveMemoryWarningNotification
+        }))
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations.count, 3)
     }
 
-    func testWillEnterForeground() {
-        mapView.willEnterForeground()
+    @available(iOS 13.0, *)
+    func testSceneLifecycleNotificationSubscribedWhenDidMoveToNewWindow() {
+        let notificationCenter = MockNotificationCenter()
+        let bundle = MockBundle()
+        bundle.infoDictionaryStub.defaultReturnValue = ["UIApplicationSceneManifest": []]
+        dependencyProvider.makeNotificationCenterStub.defaultReturnValue = notificationCenter
+        dependencyProvider.makeBundleStub.defaultReturnValue = bundle
+        let mapView = MapView(
+            frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
+            mapInitOptions: MapInitOptions(),
+            dependencyProvider: dependencyProvider)
+
+        window.addSubview(mapView)
+
+        XCTAssertTrue(notificationCenter.addObserverStub.invocations.contains(where: { stub in
+            stub.parameters.name == UIScene.didEnterBackgroundNotification
+        }))
+        XCTAssertTrue(notificationCenter.addObserverStub.invocations.contains(where: { stub in
+            stub.parameters.name == UIScene.willEnterForegroundNotification
+        }))
+        XCTAssertTrue(notificationCenter.addObserverStub.invocations.contains(where: { stub in
+            stub.parameters.name == UIApplication.didReceiveMemoryWarningNotification
+        }))
+        XCTAssertEqual(notificationCenter.addObserverStub.invocations.count, 3)
+    }
+
+    @available(iOS 13.0, *)
+    func testLifecycleNotificationsUnsubscribedWhenMovingFromWindow() {
+        let notificationCenter = MockNotificationCenter()
+        dependencyProvider.makeNotificationCenterStub.defaultReturnValue = notificationCenter
+        let mapView = MapView(
+            frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
+            mapInitOptions: MapInitOptions(),
+            dependencyProvider: dependencyProvider)
+
+        window.addSubview(mapView)
+        mapView.removeFromSuperview()
+
+        XCTAssertTrue(notificationCenter.removeObserverStub.invocations.contains(where: { stub in
+            stub.parameters.name == UIApplication.didEnterBackgroundNotification
+        }))
+        XCTAssertTrue(notificationCenter.removeObserverStub.invocations.contains(where: { stub in
+            stub.parameters.name == UIApplication.willEnterForegroundNotification
+        }))
+        XCTAssertTrue(notificationCenter.removeObserverStub.invocations.contains(where: { stub in
+            stub.parameters.name == UIScene.didEnterBackgroundNotification
+        }))
+        XCTAssertTrue(notificationCenter.removeObserverStub.invocations.contains(where: { stub in
+            stub.parameters.name == UIScene.willEnterForegroundNotification
+        }))
+        XCTAssertEqual(notificationCenter.removeObserverStub.invocations.count, 4)
+    }
+
+    func testDisplayLinkPausedWhenAppMovingToBackground() {
+        notificationCenter.post(name: UIApplication.didEnterBackgroundNotification, object: nil)
+
+        XCTAssertEqual(displayLink.$isPaused.setStub.parameters, [true])
+    }
+
+    func testDisplayLinkResumedWhenAppMovingToForeground() {
+        notificationCenter.post(name: UIApplication.willEnterForegroundNotification, object: nil)
 
         XCTAssertEqual(displayLink.$isPaused.setStub.parameters, [false])
     }
 
-    func testDidEnterBackground() {
-        mapView.didEnterBackground()
+    @available(iOS 13.0, *)
+    func testDisplayLinkResumedWhenSceneMovingToForeground() {
+        bundle.infoDictionaryStub.defaultReturnValue = ["UIApplicationSceneManifest": []]
+        mapView.didMoveToWindow()
+
+        notificationCenter.post(name: UIScene.willEnterForegroundNotification, object: window.parentScene)
+
+        XCTAssertEqual(displayLink.$isPaused.setStub.parameters, [false])
+    }
+
+    @available(iOS 13.0, *)
+    func testDisplayLinkPausedWhenSceneMovingToBackground() {
+        bundle.infoDictionaryStub.defaultReturnValue = ["UIApplicationSceneManifest": []]
+        mapView.didMoveToWindow()
+
+        notificationCenter.post(name: UIScene.didEnterBackgroundNotification, object: window.parentScene)
 
         XCTAssertEqual(displayLink.$isPaused.setStub.parameters, [true])
     }

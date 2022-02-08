@@ -114,10 +114,10 @@ final class InterpolatedLocationProducerTests: XCTestCase {
         }
 
         try verifyParticipate(withTimeInterval: 1, expectedPercent: 0)
-        try verifyParticipate(withTimeInterval: 1.5, expectedPercent: 0.5)
-        try verifyParticipate(withTimeInterval: 1.9, expectedPercent: 0.9)
+        try verifyParticipate(withTimeInterval: 1.55, expectedPercent: 0.5)
+        try verifyParticipate(withTimeInterval: 1.99, expectedPercent: 0.9)
 
-        dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 2)
+        dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 2.1)
         interpolatedLocationProducer.participate()
         XCTAssertEqual(locationInterpolator.interpolateStub.invocations.count, 0)
         XCTAssertEqual(observableInterpolatedLocation.notifyStub.invocations.map(\.parameters), [interpolatedLocation1])
@@ -142,7 +142,7 @@ final class InterpolatedLocationProducerTests: XCTestCase {
         interpolatedLocationProducer.locationUpdate(newLocation: location1)
 
         // third location delivered while still interpolating from first to second
-        dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 1.5)
+        dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 1.55)
         locationInterpolator.interpolateStub.defaultReturnValue = .random()
         interpolatedLocationProducer.locationUpdate(newLocation: location2)
 
@@ -170,11 +170,11 @@ final class InterpolatedLocationProducerTests: XCTestCase {
             locationInterpolator.interpolateStub.reset()
         }
 
-        try verifyParticipate(withTimeInterval: 1.5, expectedPercent: 0)
-        try verifyParticipate(withTimeInterval: 2, expectedPercent: 0.5)
-        try verifyParticipate(withTimeInterval: 2.4, expectedPercent: 0.9)
+        try verifyParticipate(withTimeInterval: 1.55, expectedPercent: 0)
+        try verifyParticipate(withTimeInterval: 2.1, expectedPercent: 0.5)
+        try verifyParticipate(withTimeInterval: 2.54, expectedPercent: 0.9)
 
-        dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 2.5)
+        dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 2.66)
         interpolatedLocationProducer.participate()
         XCTAssertEqual(locationInterpolator.interpolateStub.invocations.count, 0)
         XCTAssertEqual(observableInterpolatedLocation.notifyStub.invocations.map(\.parameters), [interpolatedLocation2])

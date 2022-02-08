@@ -3,19 +3,19 @@ import Foundation
 
 final class MockCameraAnimationsManager: CameraAnimationsManagerProtocol {
 
-    struct EaseToCameraParameters {
+    struct EaseToParameters {
         var camera: CameraOptions
         var duration: TimeInterval
         var curve: UIView.AnimationCurve
         var completion: AnimationCompletion?
     }
-    let easeToStub = Stub<EaseToCameraParameters, Cancelable?>(defaultReturnValue: MockCancelable())
-    func ease(to camera: CameraOptions,
-              duration: TimeInterval,
-              curve: UIView.AnimationCurve,
-              completion: AnimationCompletion?) -> Cancelable? {
+    let easeToStub = Stub<EaseToParameters, Cancelable>(defaultReturnValue: MockCancelable())
+    func internalEase(to camera: CameraOptions,
+                      duration: TimeInterval,
+                      curve: UIView.AnimationCurve,
+                      completion: AnimationCompletion?) -> Cancelable {
         return easeToStub.call(
-            with: EaseToCameraParameters(
+            with: EaseToParameters(
                 camera: camera,
                 duration: duration,
                 curve: curve,

@@ -3,10 +3,10 @@ import UIKit
 
 internal protocol CameraAnimationsManagerProtocol: AnyObject {
     @discardableResult
-    func ease(to camera: CameraOptions,
-              duration: TimeInterval,
-              curve: UIView.AnimationCurve,
-              completion: AnimationCompletion?) -> Cancelable?
+    func internalEase(to camera: CameraOptions,
+                      duration: TimeInterval,
+                      curve: UIView.AnimationCurve,
+                      completion: AnimationCompletion?) -> Cancelable
 
     func decelerate(location: CGPoint,
                     velocity: CGPoint,
@@ -137,6 +137,17 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
                      duration: TimeInterval,
                      curve: UIView.AnimationCurve = .easeOut,
                      completion: AnimationCompletion? = nil) -> Cancelable? {
+        return internalEase(to: camera, duration: duration, curve: curve, completion: completion)
+    }
+
+    /// Ease to implementation that returns non-optional cancelable. The public API should have
+    /// been like this, but we have to wait until the next major version to change it. This internal API
+    /// allows us to avoid force-unwrapping for internal use.
+    @discardableResult
+    internal func internalEase(to camera: CameraOptions,
+                               duration: TimeInterval,
+                               curve: UIView.AnimationCurve,
+                               completion: AnimationCompletion?) -> Cancelable {
 
         internalAnimator?.stopAnimation()
 
@@ -164,7 +175,7 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
         animator.startAnimation()
         internalAnimator = animator
 
-        return internalAnimator
+        return animator
     }
 
     // MARK: Animator Functions

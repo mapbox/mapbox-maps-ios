@@ -62,7 +62,7 @@ public class OrnamentsManager: NSObject {
         compassView.translatesAutoresizingMaskIntoConstraints = false
         compassView.tapAction = {
             cameraAnimationsManager.cancelAnimations()
-            cameraAnimationsManager.ease(
+            cameraAnimationsManager.internalEase(
                 to: CameraOptions(bearing: 0),
                 duration: 0.3,
                 curve: .easeOut,

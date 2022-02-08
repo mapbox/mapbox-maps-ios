@@ -166,10 +166,6 @@ open class MapView: UIView {
         return mapboxMap.anchor
     }
 
-    deinit {
-        notificationCenter.removeObserver(self)
-    }
-
     /// Initialize a MapView
     /// - Parameters:
     ///   - frame: frame for the MapView.
@@ -242,7 +238,7 @@ open class MapView: UIView {
         mapboxMap = MapboxMap(mapClient: mapClient, mapInitOptions: resolvedMapInitOptions)
 
         notificationCenter.addObserver(self,
-                                       selector: #selector(didReceiveNotification(_:)),
+                                       selector: #selector(didReceiveMemoryWarning),
                                        name: UIApplication.didReceiveMemoryWarningNotification,
                                        object: nil)
 
@@ -336,33 +332,22 @@ open class MapView: UIView {
     }
 
     private func subscribeToLifecycleNotifications() {
-        if bundle.infoDictionary?["UIApplicationSceneManifest"] != nil {
-            if #available(iOS 13.0, *) {
-                notificationCenter.addObserver(self,
-                                               selector: #selector(didReceiveNotification(_:)),
-                                               name: UIScene.willEnterForegroundNotification,
-                                               object: window?.parentScene)
-                notificationCenter.addObserver(self,
-                                               selector: #selector(didReceiveNotification(_:)),
-                                               name: UIScene.didEnterBackgroundNotification,
-                                               object: window?.parentScene)
-            } else {
-                notificationCenter.addObserver(self,
-                                               selector: #selector(didReceiveNotification(_:)),
-                                               name: UIApplication.willEnterForegroundNotification,
-                                               object: nil)
-                notificationCenter.addObserver(self,
-                                               selector: #selector(didReceiveNotification(_:)),
-                                               name: UIApplication.didEnterBackgroundNotification,
-                                               object: nil)
-            }
+        if #available(iOS 13.0, *), bundle.infoDictionary?["UIApplicationSceneManifest"] != nil {
+            notificationCenter.addObserver(self,
+                                           selector: #selector(sceneWillEnterForeground(_:)),
+                                           name: UIScene.willEnterForegroundNotification,
+                                           object: window?.parentScene)
+            notificationCenter.addObserver(self,
+                                           selector: #selector(sceneDidEnterBackground(_:)),
+                                           name: UIScene.didEnterBackgroundNotification,
+                                           object: window?.parentScene)
         } else {
             notificationCenter.addObserver(self,
-                                           selector: #selector(didReceiveNotification(_:)),
+                                           selector: #selector(appWillEnterForeground),
                                            name: UIApplication.willEnterForegroundNotification,
                                            object: nil)
             notificationCenter.addObserver(self,
-                                           selector: #selector(didReceiveNotification(_:)),
+                                           selector: #selector(appDidEnterBackground),
                                            name: UIApplication.didEnterBackgroundNotification,
                                            object: nil)
         }
@@ -377,30 +362,31 @@ open class MapView: UIView {
         notificationCenter.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
 
-    @objc private func didReceiveNotification(_ notification: Notification) {
-        if #available(iOS 13.0, *) {
-            switch notification.name {
-            case UIScene.willEnterForegroundNotification where notification.object as? UIScene == window?.parentScene:
-                displayLink?.isPaused = false
-                return
-            case UIScene.didEnterBackgroundNotification where notification.object as? UIScene == window?.parentScene:
-                displayLink?.isPaused = true
-                return
-            default:
-                break
-            }
-        }
+    @objc private func appWillEnterForeground() {
+        displayLink?.isPaused = false
+    }
 
-        switch notification.name {
-        case UIApplication.willEnterForegroundNotification:
-            displayLink?.isPaused = false
-        case UIApplication.didEnterBackgroundNotification:
-            displayLink?.isPaused = true
-        case UIApplication.didReceiveMemoryWarningNotification:
-            mapboxMap.reduceMemoryUse()
-        default:
-            Log.warning(forMessage: "Unhandled notification: \(notification.name)", category: "MapView")
-        }
+    @objc private func appDidEnterBackground() {
+        displayLink?.isPaused = true
+    }
+
+    @available(iOS 13.0, *)
+    @objc private func sceneWillEnterForeground(_ notification: Notification) {
+        guard notification.object as? UIScene == window?.parentScene else { return }
+
+        displayLink?.isPaused = false
+
+    }
+
+    @available(iOS 13, *)
+    @objc private func sceneDidEnterBackground(_ notification: Notification) {
+        guard notification.object as? UIScene == window?.parentScene else { return }
+
+        displayLink?.isPaused = true
+    }
+
+    @objc private func didReceiveMemoryWarning() {
+        mapboxMap.reduceMemoryUse()
     }
 
     private func checkForMetalSupport() {

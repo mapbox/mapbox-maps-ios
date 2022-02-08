@@ -49,7 +49,7 @@ import Turf
 
     private func animate(to cameraOptions: CameraOptions) {
         cameraAnimationCancelable?.cancel()
-        cameraAnimationCancelable = cameraAnimationsManager.ease(
+        cameraAnimationCancelable = cameraAnimationsManager.internalEase(
             to: cameraOptions,
             duration: max(0, options.animationDuration),
             curve: .linear,

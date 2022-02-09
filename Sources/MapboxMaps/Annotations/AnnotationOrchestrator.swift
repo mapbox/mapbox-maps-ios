@@ -77,7 +77,8 @@ public class AnnotationOrchestrator {
     /// Creates a `PointAnnotationManager` which is used to manage a collection of
     /// `PointAnnotation`s. Annotations persist across style changes. If an annotation manager with
     /// the same `id` has already been created, the old one will be removed as if
-    /// `removeAnnotationManager(withId:)` had been called.
+    /// `removeAnnotationManager(withId:)` had been called. `AnnotationOrchestrator`
+    ///  keeps a strong reference to any `PointAnnotationManager` until it is removed.
     /// - Parameters:
     ///   - id: Optional string identifier for this manager.
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
@@ -100,7 +101,8 @@ public class AnnotationOrchestrator {
     /// Creates a `PolygonAnnotationManager` which is used to manage a collection of
     /// `PolygonAnnotation`s. Annotations persist across style changes. If an annotation manager with
     /// the same `id` has already been created, the old one will be removed as if
-    /// `removeAnnotationManager(withId:)` had been called.
+    /// `removeAnnotationManager(withId:)` had been called. `AnnotationOrchestrator`
+    ///  keeps a strong reference to any `PolygonAnnotationManager` until it is removed.
     /// - Parameters:
     ///   - id: Optional string identifier for this manager..
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
@@ -123,7 +125,8 @@ public class AnnotationOrchestrator {
     /// Creates a `PolylineAnnotationManager` which is used to manage a collection of
     /// `PolylineAnnotation`s. Annotations persist across style changes. If an annotation manager with
     /// the same `id` has already been created, the old one will be removed as if
-    /// `removeAnnotationManager(withId:)` had been called.
+    /// `removeAnnotationManager(withId:)` had been called. `AnnotationOrchestrator`
+    ///  keeps a strong reference to any `PolylineAnnotationManager` until it is removed.
     /// - Parameters:
     ///   - id: Optional string identifier for this manager.
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.
@@ -146,7 +149,8 @@ public class AnnotationOrchestrator {
     /// Creates a `CircleAnnotationManager` which is used to manage a collection of
     /// `CircleAnnotation`s. Annotations persist across style changes. If an annotation manager with
     /// the same `id` has already been created, the old one will be removed as if
-    /// `removeAnnotationManager(withId:)` had been called.
+    /// `removeAnnotationManager(withId:)` had been called. `AnnotationOrchestrator`
+    ///  keeps a strong reference to any `CircleAnnotationManager` until it is removed.
     /// - Parameters:
     ///   - id: Optional string identifier for this manager.
     ///   - layerPosition: Optionally set the `LayerPosition` of the layer managed.

@@ -87,26 +87,7 @@ final class PitchGestureHandlerTests: XCTestCase {
 
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(gestureRecognizer.locationOfTouchStub.invocations.count, 2)
-        guard gestureRecognizer.locationOfTouchStub.invocations.count == 2 else {
-            return
-        }
-        XCTAssertEqual(gestureRecognizer.locationOfTouchStub.parameters[0].touchIndex, 0)
-        XCTAssertEqual(gestureRecognizer.locationOfTouchStub.parameters[1].touchIndex, 1)
         XCTAssertEqual(mapboxMap.setCameraStub.parameters, [CameraOptions(pitch: mapboxMap.cameraState.pitch - 12.5)])
-    }
-
-    func testPitchWillNotTrigger() {
-        gestureRecognizer.getStateStub.defaultReturnValue = .began
-        gestureRecognizer.sendActions() // Start gesture to set it to .began
-        gestureRecognizer.getStateStub.defaultReturnValue = .changed
-        gestureRecognizer.locationOfTouchStub.returnValueQueue = [CGPoint(x: 0, y: 0), CGPoint(x: 100, y: .random(in: 100...200))]
-        gestureRecognizer.translationStub.defaultReturnValue = CGPoint(x: 0, y: 25)
-
-        gestureRecognizer.sendActions()
-
-        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 0,
-                       "pitch gesture isn't triggered if touch points equals or exceeds 45°")
     }
 
     func testPitchEnded() throws {

@@ -119,8 +119,7 @@ final class ExpressionTests: XCTestCase {
         let firstArgument = try XCTUnwrap(withinExpression.arguments.first)
         XCTAssertEqual(firstArgument, .geoJSONObject(.feature(colorado)))
 
-        let withinData = try JSONEncoder().encode(withinExpression)
-        let withinJSON = try XCTUnwrap(try JSONSerialization.jsonObject(with: withinData, options: []) as? [Any?])
+        let withinJSON = try XCTUnwrap(try withinExpression.toJSON() as? [Any?])
         XCTAssertEqual(withinJSON.first as? String, "within")
         XCTAssertEqual(withinJSON.count, 2)
 

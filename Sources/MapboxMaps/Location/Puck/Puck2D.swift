@@ -69,8 +69,7 @@ internal final class Puck2D: Puck {
         self.configuration = configuration
         self.style = style
         self.interpolatedLocationProducer = interpolatedLocationProducer
-        // swiftlint:disable:next force_cast
-        self.encodedScale = (try! JSONSerialization.jsonObject(with: JSONEncoder().encode([configuration.resolvedScale])) as! [Any]).first!
+        self.encodedScale = try! configuration.resolvedScale.toJSON()
     }
 
     private func addImages() {

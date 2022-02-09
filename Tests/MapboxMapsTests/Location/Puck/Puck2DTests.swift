@@ -184,8 +184,7 @@ final class Puck2DTests: XCTestCase {
         expectedLayoutLayerProperties[.shadowImage] = "locationIndicatorLayerShadowImage"
 
         let resolvedScale = configuration.scale ?? .constant(1)
-        // swiftlint:disable:next force_cast
-        let scale = (try! JSONSerialization.jsonObject(with: JSONEncoder().encode([resolvedScale]), options: []) as! [Any]).first!
+        let scale = try! resolvedScale.toJSON()
 
         var expectedPaintLayerProperties = [LocationIndicatorLayer.PaintCodingKeys: Any]()
         expectedPaintLayerProperties[.location] = [location.coordinate.latitude, location.coordinate.longitude, location.altitude]

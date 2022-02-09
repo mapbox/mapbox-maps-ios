@@ -4,7 +4,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
-* Updated to MapboxCoreMaps 10.3.1 and MapboxCommon 21.1.0. ([#1091](https://github.com/mapbox/mapbox-maps-ios/pull/1091))
+* Updated to MapboxCoreMaps 10.3.2 and MapboxCommon 21.1.0. ([#1078](https://github.com/mapbox/mapbox-maps-ios/pull/1078), [#1091](https://github.com/mapbox/mapbox-maps-ios/pull/1091), [#1104](https://github.com/mapbox/mapbox-maps-ios/pull/1104))
 * Fixed compass button regression introduced in rc.1. ([#1083](https://github.com/mapbox/mapbox-maps-ios/pull/1083))
 * Removed pitch gesture change angle requirements to avoid map freezing during gesture. ([#1089](https://github.com/mapbox/mapbox-maps-ios/pull/1089))
 * Prevent rendering in background by pausing/resuming display link in response to application or scene lifecycle events ([#1086](https://github.com/mapbox/mapbox-maps-ios/pull/1086))

@@ -35,9 +35,10 @@ public struct OrnamentOptions: Equatable {
     public var attributionButton = AttributionButtonOptions()
 }
 
+/// :nodoc:
+/// Deprecated. This protocol will be removed in a future major version.
 public protocol OrnamentOptionsProtocol {
     var position: OrnamentPosition { get set }
-    /// The default value for this property is `CGPoint(x: 8.0, y: 8.0)`.
     var margins: CGPoint { get set }
 }
 
@@ -70,6 +71,8 @@ public struct AttributionButtonOptions: OrnamentOptionsProtocol, Equatable {
     /// The default value for this property is `visible`. Setting this property to `.adaptive`
     /// will lead to the same behavior as `.visible`. The attribution button will be visible
     /// as long as the map view is visible.
+    /// :nodoc:
+    /// Restricted API. Please contact Mapbox to discuss your use case if you intend to use this property.
     @_spi(Restricted) public var visibility: OrnamentVisibility = .visible
 }
 
@@ -82,5 +85,7 @@ public struct LogoViewOptions: OrnamentOptionsProtocol, Equatable {
     /// The default value for this property is `visible`. Setting this property to `.adaptive`
     /// willl lead to the same behavior as `.visible`. The logo view will be visible as long
     /// as the map view is visible.
+    /// :nodoc:
+    /// Restricted API. Please contact Mapbox to discuss your use case if you intend to use this property.
     @_spi(Restricted) public var visibility: OrnamentVisibility = .visible
 }

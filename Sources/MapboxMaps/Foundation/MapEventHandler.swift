@@ -1,34 +1,11 @@
 import Foundation
 
+/// :nodoc:
+/// Deprecated. This protocol will be removed from the public API in a future major version.
 public protocol MapEventsObservable: AnyObject {
-    /// Listen to multiple occurrences of a Map event.
-    ///
-    /// - Parameters:
-    ///   - eventType: The event type to listen to.
-    ///   - handler: The closure to execute when the event occurs.
-    ///
-    /// - Returns: A `Cancelable` object that you can use to stop listening for
-    ///     events. This is especially important if you have a retain cycle in
-    ///     the handler.
     @discardableResult
     func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable
 
-    /// Listen to a single occurrence of a Map event.
-    ///
-    /// This will observe the next (and only the next) event of the specified
-    /// type. After observation, the underlying subscriber will unsubscribe from
-    /// the map or snapshotter.
-    ///
-    /// If you need to unsubscribe before the event fires, call `cancel()` on
-    /// the returned `Cancelable` object.
-    ///
-    /// - Parameters:
-    ///   - eventType: The event type to listen to.
-    ///   - handler: The closure to execute when the event occurs.
-    ///
-    /// - Returns: A `Cancelable` object that you can use to stop listening for
-    ///     the event. This is especially important if you have a retain cycle in
-    ///     the handler.
     @discardableResult
     func onNext(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable
 }

@@ -10,6 +10,7 @@ internal protocol DisplayLinkProtocol: AnyObject {
     @available(iOS 15.0, *)
     var preferredFrameRateRange: CAFrameRateRange { get set }
     #endif
+    var isPaused: Bool { get set }
     func add(to runloop: RunLoop, forMode mode: RunLoop.Mode)
     func invalidate()
 }

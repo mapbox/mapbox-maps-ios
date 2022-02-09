@@ -78,4 +78,14 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
             doubleTapGestureRecognizer: doubleTapGestureRecognizer,
             doubleTouchGestureRecognizer: doubleTouchGestureRecognizer))
     }
+
+    let makeNotificationCenterStub = Stub<Void, NotificationCenterProtocol>(defaultReturnValue: MockNotificationCenter())
+    func makeNotificationCenter() -> NotificationCenterProtocol {
+        makeNotificationCenterStub.call()
+    }
+
+    let makeBundleStub = Stub<Void, BundleProtocol>(defaultReturnValue: MockBundle())
+    func makeBundle() -> BundleProtocol {
+        makeBundleStub.call()
+    }
 }

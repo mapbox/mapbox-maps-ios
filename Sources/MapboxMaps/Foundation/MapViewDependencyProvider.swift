@@ -1,6 +1,8 @@
 import UIKit
 
 internal protocol MapViewDependencyProviderProtocol: AnyObject {
+    func makeNotificationCenter() -> NotificationCenterProtocol
+    func makeBundle() -> BundleProtocol
     func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView
     func makeDisplayLink(window: UIWindow, target: Any, selector: Selector) -> DisplayLinkProtocol?
     func makeGestureManager(view: UIView,
@@ -16,6 +18,14 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
 }
 
 internal final class MapViewDependencyProvider: MapViewDependencyProviderProtocol {
+    func makeNotificationCenter() -> NotificationCenterProtocol {
+        return NotificationCenter.default
+    }
+
+    func makeBundle() -> BundleProtocol {
+        return Bundle.main
+    }
+
     func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView {
         MTKView(frame: frame, device: device)
     }

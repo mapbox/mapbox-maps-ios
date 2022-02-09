@@ -3,6 +3,8 @@ import UIKit
 @_implementationOnly import MapboxCommon_Private
 
 #if swift(>=5.4)
+/// :nodoc:
+/// This API enables the Expressions DSL syntax and is not designed to be called directly.
 @resultBuilder
 public struct ExpressionArgumentBuilder {
     public static func buildBlock(_ arguments: ExpressionArgumentConvertible...) -> [Expression.Argument] {
@@ -10,6 +12,8 @@ public struct ExpressionArgumentBuilder {
     }
 }
 #else
+/// :nodoc:
+/// This API enables the Expressions DSL syntax and is not designed to be called directly.
 @_functionBuilder
 public struct ExpressionArgumentBuilder {
     public static func buildBlock(_ arguments: ExpressionArgumentConvertible...) -> [Expression.Argument] {
@@ -18,40 +22,54 @@ public struct ExpressionArgumentBuilder {
 }
 #endif
 
+/// :nodoc:
+/// This API enables the Expressions DSL syntax and is not designed to be called directly.
 public protocol ExpressionArgumentConvertible {
     var expressionArguments: [Expression.Argument] { get }
 }
 
+/// :nodoc:
+/// This API enables the Expressions DSL syntax and is not designed to be called directly.
 extension Int: ExpressionArgumentConvertible {
     public var expressionArguments: [Expression.Argument] {
         return [.number(Double(self))]
     }
 }
 
+/// :nodoc:
+/// This API enables the Expressions DSL syntax and is not designed to be called directly.
 extension UInt: ExpressionArgumentConvertible {
     public var expressionArguments: [Expression.Argument] {
         return [.number(Double(self))]
     }
 }
 
+/// :nodoc:
+/// This API enables the Expressions DSL syntax and is not designed to be called directly.
 extension Double: ExpressionArgumentConvertible {
     public var expressionArguments: [Expression.Argument] {
         return [.number(Double(self))]
     }
 }
 
+/// :nodoc:
+/// This API enables the Expressions DSL syntax and is not designed to be called directly.
 extension String: ExpressionArgumentConvertible {
     public var expressionArguments: [Expression.Argument] {
         return [.string(self)]
     }
 }
 
+/// :nodoc:
+/// This API enables the Expressions DSL syntax and is not designed to be called directly.
 extension Bool: ExpressionArgumentConvertible {
     public var expressionArguments: [Expression.Argument] {
         return [.boolean(self)]
     }
 }
 
+/// :nodoc:
+/// This API enables the Expressions DSL syntax and is not designed to be called directly.
 extension Array: ExpressionArgumentConvertible {
     public var expressionArguments: [Expression.Argument] {
         if let validStringArray = self as? [String] {
@@ -65,12 +83,16 @@ extension Array: ExpressionArgumentConvertible {
     }
 }
 
+/// :nodoc:
+/// This API enables the Expressions DSL syntax and is not designed to be called directly.
 extension Expression: ExpressionArgumentConvertible {
     public var expressionArguments: [Expression.Argument] {
         return [.expression(self)]
     }
 }
 
+/// :nodoc:
+/// This API enables the Expressions DSL syntax and is not designed to be called directly.
 extension Dictionary: ExpressionArgumentConvertible where Key == Double,
                                                     Value: ExpressionArgumentConvertible {
     public var expressionArguments: [Expression.Argument] {
@@ -85,12 +107,16 @@ extension Dictionary: ExpressionArgumentConvertible where Key == Double,
     }
 }
 
+/// :nodoc:
+/// This API enables the Expressions DSL syntax and is not designed to be called directly.
 extension UIColor: ExpressionArgumentConvertible {
     public var expressionArguments: [Expression.Argument] {
         return [.string(StyleColor(self).rgbaString)]
     }
 }
 
+/// :nodoc:
+/// This API enables the Expressions DSL syntax and is not designed to be called directly.
 extension GeoJSONObject: ExpressionArgumentConvertible {
     public var expressionArguments: [Expression.Argument] {
         return [.geoJSONObject(self)]

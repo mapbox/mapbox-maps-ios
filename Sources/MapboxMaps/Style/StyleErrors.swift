@@ -4,13 +4,10 @@ import Foundation
 
 /// Type of errors thrown by the `Style` APIs.
 public struct StyleError: RawRepresentable, LocalizedError {
-    /// :nodoc:
     public typealias RawValue = String
 
-    /// :nodoc:
     public var rawValue: String
 
-    /// :nodoc:
     public init?(rawValue: String) {
         self.rawValue = rawValue
     }
@@ -95,7 +92,6 @@ public enum MapLoadingError: LocalizedError {
 
 /// Type of errors thrown by the `MapboxMap` APIs.
 public struct MapError: LocalizedError, CoreErrorRepresentable {
-    /// :nodoc:
     internal typealias CoreErrorType = NSString
 
     /// Error message

@@ -1,7 +1,7 @@
 import Foundation
 @_implementationOnly import MapboxCommon_Private
 
-extension MapboxCoreMaps.OfflineManager {
+extension OfflineManager {
 
     /// Construct a new offline manager
     ///

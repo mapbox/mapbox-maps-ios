@@ -98,6 +98,7 @@ run_jazzy() {
             jazzy \
                 --source-directory "$worktree_path" \
                 --config "$jazzy_config_path" \
+                --include-spi-declarations \
                 --module-version "$VERSION" \
                 --output "$output_dir"
     } &> "$VERBOSE_LOGGER"

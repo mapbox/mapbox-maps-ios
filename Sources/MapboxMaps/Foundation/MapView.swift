@@ -146,12 +146,16 @@ open class MapView: UIView {
     private var _untypedPreferredFrameRateRange: Any?
     #endif
 
-    /// The `timestamp` from the underlying `CADisplayLink` if it exists, otherwise `nil`
+    /// The `timestamp` from the underlying `CADisplayLink` if it exists, otherwise `nil`.
+    /// :nodoc:
+    /// This property is for internal metrics purposes only and should not be considered part of the public API.
     @_spi(Metrics) public var displayLinkTimestamp: CFTimeInterval? {
         return displayLink?.timestamp
     }
 
     /// The `duration` from the underlying `CADisplayLink` if it exists, otherwise `nil`
+    /// :nodoc:
+    /// This property is for internal metrics purposes only and should not be considered part of the public API.
     @_spi(Metrics) public var displayLinkDuration: CFTimeInterval? {
         return displayLink?.duration
     }

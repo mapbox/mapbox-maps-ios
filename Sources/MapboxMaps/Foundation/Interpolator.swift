@@ -1,10 +1,10 @@
 internal protocol InterpolatorProtocol {
-    func interpolate(from: Double, to: Double, percent: Double) -> Double
+    func interpolate(from: Double, to: Double, fraction: Double) -> Double
 }
 
 internal final class Interpolator: InterpolatorProtocol {
-    internal func interpolate(from: Double, to: Double, percent: Double) -> Double {
-        return from + (to - from) * percent
+    internal func interpolate(from: Double, to: Double, fraction: Double) -> Double {
+        return from + (to - from) * fraction
     }
 }
 
@@ -15,7 +15,7 @@ internal final class WrappingInterpolator: InterpolatorProtocol {
         self.range = range
     }
 
-    internal func interpolate(from: Double, to: Double, percent: Double) -> Double {
+    internal func interpolate(from: Double, to: Double, fraction: Double) -> Double {
         let wrappedFrom = from.wrapped(to: range)
         let wrappedTo = to.wrapped(to: range)
         let resolvedTo: Double
@@ -34,6 +34,6 @@ internal final class WrappingInterpolator: InterpolatorProtocol {
                 resolvedTo = wrappedTo + rangeWidth
             }
         }
-        return (wrappedFrom + (resolvedTo - wrappedFrom) * percent).wrapped(to: range)
+        return (wrappedFrom + (resolvedTo - wrappedFrom) * fraction).wrapped(to: range)
     }
 }

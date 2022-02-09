@@ -44,14 +44,14 @@ internal final class InterpolatedLocationProducer: NSObject, InterpolatedLocatio
               let endLocation = endLocation else {
                   return nil
               }
-        let percent = date.timeIntervalSince(startDate) / endDate.timeIntervalSince(startDate)
-        guard percent < 1 else {
+        let fraction = date.timeIntervalSince(startDate) / endDate.timeIntervalSince(startDate)
+        guard fraction < 1 else {
             return endLocation
         }
         return locationInterpolator.interpolate(
             from: startLocation,
             to: endLocation,
-            percent: percent)
+            fraction: fraction)
     }
 }
 

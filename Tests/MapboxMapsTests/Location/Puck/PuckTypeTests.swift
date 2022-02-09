@@ -150,4 +150,18 @@ internal class PuckTypeTests: XCTestCase {
         XCTAssertEqual(config.accuracyRingColor, accuracyRingColor)
         XCTAssertEqual(config.accuracyRingBorderColor, accuracyRingBorderColor)
     }
+
+    func testPuck2DMakeDefault() {
+        let puck2D = Puck2DConfiguration.makeDefault()
+        XCTAssertEqual(puck2D.topImage, UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!)
+        XCTAssertNil(puck2D.bearingImage)
+        XCTAssertEqual(puck2D.shadowImage, UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!)
+    }
+
+    func testPuck2DMakeDefaultWithBearing() {
+        let puck2D = Puck2DConfiguration.makeDefault(showBearing: true)
+        XCTAssertEqual(puck2D.topImage, UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!)
+        XCTAssertNotNil(puck2D.bearingImage)
+        XCTAssertEqual(puck2D.shadowImage, UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!)
+    }
 }

@@ -9,7 +9,11 @@ internal protocol MapViewDependencyProviderProtocol: AnyObject {
                             mapboxMap: MapboxMapProtocol,
                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureManager
     func makeLocationProducer(mayRequestWhenInUseAuthorization: Bool) -> LocationProducerProtocol
-    func makeLocationManager(locationProducer: LocationProducerProtocol, style: StyleProtocol) -> LocationManager
+    func makeInterpolatedLocationProducer(locationProducer: LocationProducerProtocol,
+                                          displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol
+    func makeLocationManager(locationProducer: LocationProducerProtocol,
+                             interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
+                             style: StyleProtocol) -> LocationManager
     func makeViewportImpl(mapboxMap: MapboxMapProtocol,
                           cameraAnimationsManager: CameraAnimationsManagerProtocol,
                           anyTouchGestureRecognizer: UIGestureRecognizer,
@@ -160,19 +164,34 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             mayRequestWhenInUseAuthorization: mayRequestWhenInUseAuthorization)
     }
 
-    func makeLocationManager(locationProducer: LocationProducerProtocol, style: StyleProtocol) -> LocationManager {
+    func makeInterpolatedLocationProducer(locationProducer: LocationProducerProtocol,
+                                          displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol {
+        return InterpolatedLocationProducer(
+            observableInterpolatedLocation: ObservableInterpolatedLocation(),
+            locationInterpolator: LocationInterpolator(
+                interpolator: Interpolator(),
+                directionInterpolator: WrappingInterpolator(range: 0..<360),
+                latitudeInterpolator: WrappingInterpolator(range: -180..<180)),
+            dateProvider: DefaultDateProvider(),
+            locationProducer: locationProducer,
+            displayLinkCoordinator: displayLinkCoordinator)
+    }
+
+    func makeLocationManager(locationProducer: LocationProducerProtocol,
+                             interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
+                             style: StyleProtocol) -> LocationManager {
         let puckManager = PuckManager(
             puck2DProvider: { configuration in
                 Puck2D(
                     configuration: configuration,
                     style: style,
-                    locationProducer: locationProducer)
+                    interpolatedLocationProducer: interpolatedLocationProducer)
             },
             puck3DProvider: { configuration in
                 Puck3D(
                     configuration: configuration,
                     style: style,
-                    locationProducer: locationProducer)
+                    interpolatedLocationProducer: interpolatedLocationProducer)
             })
 
         return LocationManager(

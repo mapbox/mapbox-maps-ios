@@ -5,4 +5,9 @@ final class MockCancelable: Cancelable {
     func cancel() {
         cancelStub.call()
     }
+
+    let deinitStub = Stub<Void, Void>()
+    deinit {
+        deinitStub.call()
+    }
 }

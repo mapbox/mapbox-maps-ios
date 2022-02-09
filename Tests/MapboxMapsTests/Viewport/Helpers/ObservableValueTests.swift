@@ -26,6 +26,14 @@ final class ObservableValueTests: XCTestCase {
         return value
     }
 
+    func testValue() {
+        XCTAssertNil(observableValue.value)
+
+        let value = update()
+
+        XCTAssertEqual(observableValue.value, value)
+    }
+
     func testObservePriorToFirstUpdate() {
         let handlerStub = Stub<Int, Bool>(defaultReturnValue: true)
 

@@ -4,40 +4,41 @@ import XCTest
 final class FollowPuckViewportStateDataSourceTests: XCTestCase {
 
     var options: FollowPuckViewportStateOptions!
-    var locationProducer: MockLocationProducer!
+    var interpolatedLocationProducer: MockInterpolatedLocationProducer!
     var observableCameraOptions: MockObservableCameraOptions!
     var dataSource: FollowPuckViewportStateDataSource!
 
     override func setUp() {
         super.setUp()
         options = .random()
-        locationProducer = MockLocationProducer()
+        interpolatedLocationProducer = MockInterpolatedLocationProducer()
         observableCameraOptions = MockObservableCameraOptions()
         dataSource = FollowPuckViewportStateDataSource(
             options: options,
-            locationProducer: locationProducer,
+            interpolatedLocationProducer: interpolatedLocationProducer,
             observableCameraOptions: observableCameraOptions)
     }
 
     override func tearDown() {
         dataSource = nil
         observableCameraOptions = nil
-        locationProducer = nil
+        interpolatedLocationProducer = nil
         options = nil
         super.tearDown()
     }
 
     @discardableResult
-    func updateLocation() throws -> Location {
-        let consumer = try XCTUnwrap(locationProducer.addStub.invocations.first?.parameters)
-        let location = Location.random()
-        consumer.locationUpdate(newLocation: location)
+    func updateLocation() throws -> InterpolatedLocation {
+        let handler = try XCTUnwrap(interpolatedLocationProducer.observeStub.invocations.first?.parameters)
+        let location = InterpolatedLocation.random()
+        interpolatedLocationProducer.location = location
+        XCTAssertTrue(handler(location))
         return location
     }
 
-    func makeExpectedCamera(location: Location, options: FollowPuckViewportStateOptions) -> CameraOptions {
+    func makeExpectedCamera(location: InterpolatedLocation, options: FollowPuckViewportStateOptions) -> CameraOptions {
         return CameraOptions(
-            center: location.location.coordinate,
+            center: location.coordinate,
             padding: options.padding,
             zoom: options.zoom,
             bearing: options.bearing?.evaluate(with: location),

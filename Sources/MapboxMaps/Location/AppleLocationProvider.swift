@@ -23,12 +23,8 @@ public final class AppleLocationProvider: NSObject {
 extension AppleLocationProvider: LocationProvider {
 
     public var locationProviderOptions: LocationOptions {
-        get {
-            return privateLocationProviderOptions
-        }
-        set {
-            privateLocationProviderOptions = newValue
-        }
+        get { privateLocationProviderOptions }
+        set { privateLocationProviderOptions = newValue }
     }
 
     public var authorizationStatus: CLAuthorizationStatus {
@@ -77,11 +73,8 @@ extension AppleLocationProvider: LocationProvider {
     }
 
     public var headingOrientation: CLDeviceOrientation {
-        set {
-            locationProvider.headingOrientation = newValue
-        } get {
-            return locationProvider.headingOrientation
-        }
+        get { locationProvider.headingOrientation }
+        set { locationProvider.headingOrientation = newValue }
     }
 
     public func startUpdatingHeading() {

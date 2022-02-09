@@ -7,7 +7,7 @@ final class MockObservableCameraOptions: ObservableCameraOptionsProtocol {
     }
 
     let notifyStub = Stub<CameraOptions, Void>()
-    func notify(with value: CameraOptions) {
-        notifyStub.call(with: value)
+    func notify(with newValue: CameraOptions) {
+        notifyStub.call(with: newValue)
     }
 }

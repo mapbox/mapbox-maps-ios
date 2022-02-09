@@ -15,16 +15,16 @@
     }
 
     private let impl: ViewportImplProtocol
-    private let locationProducer: LocationProducerProtocol
+    private let interpolatedLocationProducer: InterpolatedLocationProducerProtocol
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol
     private let mapboxMap: MapboxMapProtocol
 
     internal init(impl: ViewportImplProtocol,
-                  locationProducer: LocationProducerProtocol,
+                  interpolatedLocationProducer: InterpolatedLocationProducerProtocol,
                   cameraAnimationsManager: CameraAnimationsManagerProtocol,
                   mapboxMap: MapboxMapProtocol) {
         self.impl = impl
-        self.locationProducer = locationProducer
+        self.interpolatedLocationProducer = interpolatedLocationProducer
         self.cameraAnimationsManager = cameraAnimationsManager
         self.mapboxMap = mapboxMap
     }
@@ -80,9 +80,10 @@
         return FollowPuckViewportState(
             dataSource: FollowPuckViewportStateDataSource(
                 options: options,
-                locationProducer: locationProducer,
+                interpolatedLocationProducer: interpolatedLocationProducer,
                 observableCameraOptions: ObservableCameraOptions()),
-            cameraAnimationsManager: cameraAnimationsManager)
+            cameraAnimationsManager: cameraAnimationsManager,
+            mapboxMap: mapboxMap)
     }
 
     public func makeOverviewViewportState(options: OverviewViewportStateOptions) -> OverviewViewportState {

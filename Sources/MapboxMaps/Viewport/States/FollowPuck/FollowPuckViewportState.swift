@@ -17,29 +17,20 @@
 
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol
 
+    private let mapboxMap: MapboxMapProtocol
+
     // MARK: - Private State
 
     private var updatingCameraCancelable: Cancelable?
 
-    private var cameraAnimationCancelable: Cancelable?
-
     // MARK: - Initialization
 
     internal init(dataSource: FollowPuckViewportStateDataSourceProtocol,
-                  cameraAnimationsManager: CameraAnimationsManagerProtocol) {
+                  cameraAnimationsManager: CameraAnimationsManagerProtocol,
+                  mapboxMap: MapboxMapProtocol) {
         self.dataSource = dataSource
         self.cameraAnimationsManager = cameraAnimationsManager
-    }
-
-    // MARK: - Private Utilities
-
-    private func animate(to cameraOptions: CameraOptions) {
-        cameraAnimationCancelable?.cancel()
-        cameraAnimationCancelable = cameraAnimationsManager.ease(
-            to: cameraOptions,
-            duration: max(0, options.animationDuration),
-            curve: .linear,
-            completion: nil)
+        self.mapboxMap = mapboxMap
     }
 }
 
@@ -53,8 +44,8 @@ extension FollowPuckViewportState: ViewportState {
         guard updatingCameraCancelable == nil else {
             return
         }
-        updatingCameraCancelable = dataSource.observe { [weak self] cameraOptions in
-            self?.animate(to: cameraOptions)
+        updatingCameraCancelable = dataSource.observe { [mapboxMap] cameraOptions in
+            mapboxMap.setCamera(to: cameraOptions)
             return true
         }
     }
@@ -62,7 +53,5 @@ extension FollowPuckViewportState: ViewportState {
     public func stopUpdatingCamera() {
         updatingCameraCancelable?.cancel()
         updatingCameraCancelable = nil
-        cameraAnimationCancelable?.cancel()
-        cameraAnimationCancelable = nil
     }
 }

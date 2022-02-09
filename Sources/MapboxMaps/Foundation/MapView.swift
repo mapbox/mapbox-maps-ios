@@ -102,7 +102,7 @@ open class MapView: UIView {
     @available(iOS, deprecated: 1000000)
     public var preferredFramesPerSecond: Int {
         get {
-            return _preferredFramesPerSecond ?? 0
+            return _preferredFramesPerSecond ?? displayLink?.preferredFramesPerSecond ?? 0
         }
         set {
             _preferredFramesPerSecond = newValue
@@ -122,7 +122,7 @@ open class MapView: UIView {
     @available(iOS 15.0, *)
     public var preferredFrameRateRange: CAFrameRateRange {
         get {
-            return _preferredFrameRateRange ?? .default
+            return _preferredFrameRateRange ?? displayLink?.preferredFrameRateRange ?? .default
         }
         set {
             _preferredFrameRateRange = newValue
@@ -432,19 +432,6 @@ open class MapView: UIView {
         mapboxMap.size = bounds.size
     }
 
-    private func validateDisplayLink() {
-        if let window = window, displayLink == nil {
-            displayLink = dependencyProvider.makeDisplayLink(
-                window: window,
-                target: ForwardingDisplayLinkTarget { [weak self] in
-                    self?.updateFromDisplayLink(displayLink: $0)
-                },
-                selector: #selector(ForwardingDisplayLinkTarget.update(with:)))
-            updateDisplayLinkPreferredFramesPerSecond()
-            displayLink?.add(to: .current, forMode: .common)
-        }
-    }
-
     private func updateFromDisplayLink(displayLink: CADisplayLink) {
         if window == nil {
             return
@@ -481,30 +468,26 @@ open class MapView: UIView {
         }
     }
 
-    open override func willMove(toWindow newWindow: UIWindow?) {
-        super.willMove(toWindow: newWindow)
-        if newWindow != nil {
-            validateDisplayLink()
-        }
-    }
-
     open override func didMoveToWindow() {
         super.didMoveToWindow()
 
-        if window != nil {
-            validateDisplayLink()
-            subscribeToLifecycleNotifications()
-        } else {
-            unsubscribeFromLifecycleNotifications()
-            // TODO: Fix this up correctly.
-            displayLink?.invalidate()
-            displayLink = nil
-        }
-    }
+        unsubscribeFromLifecycleNotifications()
+        
+        displayLink?.invalidate()
+        displayLink = nil
 
-    open override func didMoveToSuperview() {
-        validateDisplayLink()
-        super.didMoveToSuperview()
+        guard let window = window else { return }
+
+        displayLink = dependencyProvider.makeDisplayLink(
+            window: window,
+            target: ForwardingDisplayLinkTarget { [weak self] in
+                self?.updateFromDisplayLink(displayLink: $0)
+            },
+            selector: #selector(ForwardingDisplayLinkTarget.update(with:)))
+        updateDisplayLinkPreferredFramesPerSecond()
+        displayLink?.add(to: .current, forMode: .common)
+
+        subscribeToLifecycleNotifications()
     }
 
     // MARK: Location

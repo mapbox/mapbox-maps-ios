@@ -3,12 +3,12 @@
     case heading
     case course
 
-    internal func evaluate(with location: Location) -> CLLocationDirection? {
+    internal func evaluate(with location: InterpolatedLocation) -> CLLocationDirection? {
         switch self {
         case .constant(let value):
             return value
         case .heading:
-            return location.headingDirection
+            return location.heading
         case .course:
             return location.course
         }

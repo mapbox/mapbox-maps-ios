@@ -44,4 +44,15 @@ final class CancelableTests: XCTestCase {
         XCTAssertTrue(child2.cancelStub.invocations.isEmpty)
         XCTAssertTrue(child3.cancelStub.invocations.isEmpty)
     }
+
+    func testAddToCancelableCollection() {
+        let cancelable = MockCancelable()
+        let container = CancelableContainer()
+
+        cancelable.add(to: container)
+
+        container.cancelAll()
+
+        XCTAssertEqual(cancelable.cancelStub.invocations.count, 1)
+    }
 }

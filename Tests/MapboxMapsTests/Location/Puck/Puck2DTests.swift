@@ -4,9 +4,8 @@ import XCTest
 final class Puck2DTests: XCTestCase {
     var configuration: Puck2DConfiguration!
     var style: MockStyle!
-    var locationProducer: MockLocationProducer!
+    var interpolatedLocationProducer: MockInterpolatedLocationProducer!
     var puck2D: Puck2D!
-    var location: CLLocation!
 
     override func setUp() {
         super.setUp()
@@ -16,22 +15,13 @@ final class Puck2DTests: XCTestCase {
             shadowImage: UIImage(),
             scale: .constant(.random(in: 1..<10)))
         style = MockStyle()
-        locationProducer = MockLocationProducer()
+        interpolatedLocationProducer = MockInterpolatedLocationProducer()
         recreatePuck()
-        location = CLLocation(
-            coordinate: .random(),
-            altitude: .random(in: 0..<100),
-            horizontalAccuracy: 0,
-            verticalAccuracy: 0,
-            course: .random(in: 0..<360),
-            speed: 0,
-            timestamp: Date())
     }
 
     override func tearDown() {
-        location = nil
         puck2D = nil
-        locationProducer = nil
+        interpolatedLocationProducer = nil
         style = nil
         configuration = nil
         super.tearDown()
@@ -41,7 +31,32 @@ final class Puck2DTests: XCTestCase {
         puck2D = Puck2D(
             configuration: configuration,
             style: style,
-            locationProducer: locationProducer)
+            interpolatedLocationProducer: interpolatedLocationProducer)
+    }
+
+    @discardableResult
+    func updateLocation(with accuracyAuthorization: CLAccuracyAuthorization = .random(),
+                        course: CLLocationDirection? = .random(.random(in: 0..<360)),
+                        heading: CLLocationDirection? = .random(.random(in: 0..<360))) -> InterpolatedLocation {
+        var location = InterpolatedLocation.random()
+        location.accuracyAuthorization = accuracyAuthorization
+        location.course = course
+        location.heading = heading
+        interpolatedLocationProducer.location = location
+        // invoke handler synchronously to mimic the actual implementation
+        interpolatedLocationProducer.observeStub.defaultSideEffect = {
+            let handler = $0.parameters
+            XCTAssertTrue(handler(location))
+        }
+        // invoke handlers that haven't been canceled
+        for observeInvocation in interpolatedLocationProducer.observeStub.invocations {
+            if let cancelable = observeInvocation.returnValue as? MockCancelable,
+               cancelable.cancelStub.invocations.isEmpty {
+                let handler = observeInvocation.parameters
+                XCTAssertTrue(handler(location))
+            }
+        }
+        return location
     }
 
     func testDefaultPropertyValues() {
@@ -50,54 +65,38 @@ final class Puck2DTests: XCTestCase {
     }
 
     func testLocationConsumerIsNotAddedAtInitialization() {
-        XCTAssertEqual(locationProducer.addStub.invocations.count, 0)
-        XCTAssertEqual(locationProducer.removeStub.invocations.count, 0)
+        XCTAssertEqual(interpolatedLocationProducer.observeStub.invocations.count, 0)
     }
 
-    func testMakeDefault() {
-        let puck2D = Puck2DConfiguration.makeDefault()
-        XCTAssertEqual(puck2D.topImage, UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!)
-        XCTAssertNil(puck2D.bearingImage)
-        XCTAssertEqual(puck2D.shadowImage, UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!)
-    }
-
-    func testMakeDefaultWithBearing() {
-        let puck2D = Puck2DConfiguration.makeDefault(showBearing: true)
-        XCTAssertEqual(puck2D.topImage, UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!)
-        XCTAssertNotNil(puck2D.bearingImage)
-        XCTAssertEqual(puck2D.shadowImage, UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!)
-    }
-
-    func testActivatingPuckAddsLocationConsumer() {
+    func testActivatingPuckAddsLocationConsumer() throws {
         puck2D.isActive = true
 
-        XCTAssertEqual(locationProducer.addStub.invocations.count, 1)
-        XCTAssertTrue(locationProducer.addStub.parameters.first === puck2D)
-        XCTAssertEqual(locationProducer.removeStub.invocations.count, 0)
+        XCTAssertEqual(interpolatedLocationProducer.observeStub.invocations.count, 1)
+        let cancelable = try XCTUnwrap(interpolatedLocationProducer.observeStub.invocations.first?.returnValue as? MockCancelable)
+        XCTAssertEqual(cancelable.cancelStub.invocations.count, 0)
 
         // activating again should have no effect
         puck2D.isActive = true
 
-        XCTAssertEqual(locationProducer.addStub.invocations.count, 1)
-        XCTAssertEqual(locationProducer.removeStub.invocations.count, 0)
+        XCTAssertEqual(interpolatedLocationProducer.observeStub.invocations.count, 1)
+        XCTAssertEqual(cancelable.cancelStub.invocations.count, 0)
     }
 
-    func testDeactivatingPuckRemovesLocationConsumer() {
+    func testDeactivatingPuckRemovesLocationConsumer() throws {
         puck2D.isActive = true
-        locationProducer.addStub.reset()
-        locationProducer.removeStub.reset()
+        let cancelable = try XCTUnwrap(interpolatedLocationProducer.observeStub.invocations.first?.returnValue as? MockCancelable)
+        interpolatedLocationProducer.observeStub.reset()
 
         puck2D.isActive = false
 
-        XCTAssertEqual(locationProducer.addStub.invocations.count, 0)
-        XCTAssertEqual(locationProducer.removeStub.invocations.count, 1)
-        XCTAssertTrue(locationProducer.removeStub.parameters.first === puck2D)
+        XCTAssertEqual(interpolatedLocationProducer.observeStub.invocations.count, 0)
+        XCTAssertEqual(cancelable.cancelStub.invocations.count, 1)
 
         // deactivating again should have no effect
         puck2D.isActive = false
 
-        XCTAssertEqual(locationProducer.addStub.invocations.count, 0)
-        XCTAssertEqual(locationProducer.removeStub.invocations.count, 1)
+        XCTAssertEqual(interpolatedLocationProducer.observeStub.invocations.count, 0)
+        XCTAssertEqual(cancelable.cancelStub.invocations.count, 1)
     }
 
     func testLayerAndImagesAreNotAddedAtInitialization() {
@@ -107,8 +106,6 @@ final class Puck2DTests: XCTestCase {
     }
 
     func testActivatingPuckDoesNotAddLayerIfLatestLocationIsNil() {
-        locationProducer.latestLocation = nil
-
         puck2D.isActive = true
 
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
@@ -137,30 +134,19 @@ final class Puck2DTests: XCTestCase {
         XCTAssertTrue(style.addImageStub.parameters[2].image === configuration.shadowImage, line: line)
     }
 
-    func testActivatingPuckDoesNotAddImagesIfLatestLocationIsNil() {
-        locationProducer.latestLocation = nil
-
+    func testActivatingPuckDoesNotAddImagesIfLatestLocationIsNil() throws {
         puck2D.isActive = true
 
         XCTAssertEqual(style.addImageStub.invocations.count, 0)
 
         // When the location becomes non-nil, then the images get added
-        let location = Location(
-            location: CLLocation(),
-            heading: nil,
-            accuracyAuthorization: .fullAccuracy)
-        locationProducer.latestLocation = location
-
-        puck2D.locationUpdate(newLocation: location)
+        updateLocation()
 
         verifyAddImages()
     }
 
     func testActivatingPuckAddsImagesIfLatestLocationIsNonNil() {
-        locationProducer.latestLocation = Location(
-            location: CLLocation(),
-            heading: nil,
-            accuracyAuthorization: .fullAccuracy)
+        updateLocation()
 
         puck2D.isActive = true
 
@@ -173,10 +159,7 @@ final class Puck2DTests: XCTestCase {
             bearingImage: nil,
             shadowImage: nil)
         recreatePuck()
-        locationProducer.latestLocation = Location(
-            location: CLLocation(),
-            heading: nil,
-            accuracyAuthorization: .fullAccuracy)
+        updateLocation()
 
         puck2D.isActive = true
 
@@ -194,33 +177,44 @@ final class Puck2DTests: XCTestCase {
         XCTAssertTrue(style.addImageStub.parameters[1].image.isEqual(expectedBearingImage))
     }
 
-    func makeExpectedLayer() -> LocationIndicatorLayer {
-        var expectedLayer = LocationIndicatorLayer(id: "puck")
-        expectedLayer.topImage = .constant(.name("locationIndicatorLayerTopImage"))
-        expectedLayer.bearingImage = .constant(.name("locationIndicatorLayerBearingImage"))
-        expectedLayer.shadowImage = .constant(.name("locationIndicatorLayerShadowImage"))
-        expectedLayer.location = .constant([location.coordinate.latitude, location.coordinate.longitude, location.altitude])
-        expectedLayer.locationTransition = StyleTransition(duration: 0.5, delay: 0)
-        expectedLayer.topImageSize = configuration.scale ?? .constant(1)
-        expectedLayer.bearingImageSize = configuration.scale ?? .constant(1)
-        expectedLayer.shadowImageSize = configuration.scale ?? .constant(1)
-        expectedLayer.emphasisCircleRadiusTransition = StyleTransition(duration: 0, delay: 0)
-        expectedLayer.bearingTransition = StyleTransition(duration: 0, delay: 0)
-        expectedLayer.bearing = .constant(0)
-        return expectedLayer
+    func makeExpectedLayerProperties(with location: InterpolatedLocation) -> [String: Any] {
+        var expectedLayoutLayerProperties = [LocationIndicatorLayer.LayoutCodingKeys: Any]()
+        expectedLayoutLayerProperties[.topImage] = "locationIndicatorLayerTopImage"
+        expectedLayoutLayerProperties[.bearingImage] = "locationIndicatorLayerBearingImage"
+        expectedLayoutLayerProperties[.shadowImage] = "locationIndicatorLayerShadowImage"
+
+        let resolvedScale = configuration.scale ?? .constant(1)
+        let scale = try! resolvedScale.toJSON()
+
+        var expectedPaintLayerProperties = [LocationIndicatorLayer.PaintCodingKeys: Any]()
+        expectedPaintLayerProperties[.location] = [location.coordinate.latitude, location.coordinate.longitude, location.altitude]
+        expectedPaintLayerProperties[.locationTransition] = ["duration": 0, "delay": 0]
+        expectedPaintLayerProperties[.topImageSize] = scale
+        expectedPaintLayerProperties[.bearingImageSize] = scale
+        expectedPaintLayerProperties[.shadowImageSize] = scale
+        expectedPaintLayerProperties[.emphasisCircleRadiusTransition] = ["duration": 0, "delay": 0]
+        expectedPaintLayerProperties[.bearingTransition] = ["duration": 0, "delay": 0]
+        expectedPaintLayerProperties[.bearing] = 0
+
+        var expectedProperties = expectedLayoutLayerProperties
+            .mapKeys(\.rawValue)
+            .merging(
+                expectedPaintLayerProperties.mapKeys(\.rawValue),
+                uniquingKeysWith: { $1 })
+
+        expectedProperties["id"] = "puck"
+        expectedProperties["type"] = "location-indicator"
+
+        return expectedProperties
     }
 
     func testActivatingPuckAddsLayerIfLatestLocationIsNonNil() throws {
-        locationProducer.latestLocation = Location(
-            location: location,
-            heading: nil,
-            accuracyAuthorization: .fullAccuracy)
+        let location = updateLocation(with: .fullAccuracy, heading: nil)
         style.layerExistsStub.defaultReturnValue = false
 
         puck2D.isActive = true
 
-        let expectedLayer = makeExpectedLayer()
-        let expectedProperties = try expectedLayer.jsonObject()
+        let expectedProperties = makeExpectedLayerProperties(with: location)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 1)
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
@@ -228,22 +222,37 @@ final class Puck2DTests: XCTestCase {
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.parameters.first?.layerPosition, nil)
     }
 
+    func testReactivatingPuckDoesNotTakeFastPath() throws {
+        let location = updateLocation(with: .fullAccuracy, heading: nil)
+        style.layerExistsStub.defaultReturnValue = false
+        puck2D.isActive = true
+        puck2D.isActive = false
+        style.addPersistentLayerWithPropertiesStub.reset()
+        style.setLayerPropertiesStub.reset()
+
+        puck2D.isActive = true
+
+        let expectedProperties = makeExpectedLayerProperties(with: location)
+        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
+        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 1)
+        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
+        XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
+        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.parameters.first?.layerPosition, nil)
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 0)
+    }
+
     func testActivatingPuckWithNilImages() throws {
         configuration.shadowImage = nil
         configuration.topImage = nil
         configuration.bearingImage = nil
         recreatePuck()
-        locationProducer.latestLocation = Location(
-            location: location,
-            heading: nil,
-            accuracyAuthorization: .fullAccuracy)
+        let location = updateLocation(with: .fullAccuracy, heading: nil)
         style.layerExistsStub.defaultReturnValue = false
 
         puck2D.isActive = true
 
-        var expectedLayer = makeExpectedLayer()
-        expectedLayer.bearingImage = nil
-        let expectedProperties = try expectedLayer.jsonObject()
+        var expectedProperties = makeExpectedLayerProperties(with: location)
+        expectedProperties.removeValue(forKey: LocationIndicatorLayer.LayoutCodingKeys.bearingImage.rawValue)
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
@@ -251,16 +260,12 @@ final class Puck2DTests: XCTestCase {
     func testActivatingPuckWithNilScale() throws {
         configuration.scale = nil
         recreatePuck()
-        locationProducer.latestLocation = Location(
-            location: location,
-            heading: nil,
-            accuracyAuthorization: .fullAccuracy)
+        let location = updateLocation(with: .fullAccuracy, heading: nil)
         style.layerExistsStub.defaultReturnValue = false
 
         puck2D.isActive = true
 
-        let expectedLayer = makeExpectedLayer()
-        let expectedProperties = try expectedLayer.jsonObject()
+        let expectedProperties = makeExpectedLayerProperties(with: location)
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
@@ -268,133 +273,107 @@ final class Puck2DTests: XCTestCase {
     func testActivatingPuckWithShowsAccuracyRingTrue() throws {
         configuration.showsAccuracyRing = true
         recreatePuck()
-        locationProducer.latestLocation = Location(
-            location: location,
-            heading: nil,
-            accuracyAuthorization: .fullAccuracy)
+        let location = updateLocation(with: .fullAccuracy, heading: nil)
         style.layerExistsStub.defaultReturnValue = false
 
         puck2D.isActive = true
 
-        var expectedLayer = makeExpectedLayer()
-        expectedLayer.accuracyRadius = .constant(location.horizontalAccuracy)
-        expectedLayer.accuracyRadiusColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
-        expectedLayer.accuracyRadiusBorderColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
-        let expectedProperties = try expectedLayer.jsonObject()
+        var expectedProperties = makeExpectedLayerProperties(with: location)
+        expectedProperties["accuracy-radius"] = location.horizontalAccuracy
+        expectedProperties["accuracy-radius-color"] = StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
+        expectedProperties["accuracy-radius-border-color"] = StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
 
     func testActivatingPuckWithNonNilHeading() throws {
-        let heading = MockHeading()
-        heading.trueHeadingStub.defaultReturnValue = .random(in: 0..<360)
-        locationProducer.latestLocation = Location(
-            location: location,
-            heading: heading,
-            accuracyAuthorization: .fullAccuracy)
+        let location = updateLocation(with: .fullAccuracy, heading: .random(in: 0..<360))
         style.layerExistsStub.defaultReturnValue = false
 
         puck2D.isActive = true
 
-        var expectedLayer = makeExpectedLayer()
-        expectedLayer.bearing = .constant(locationProducer.latestLocation!.headingDirection!)
-        let expectedProperties = try expectedLayer.jsonObject()
+        var expectedProperties = makeExpectedLayerProperties(with: location)
+        expectedProperties["bearing"] = interpolatedLocationProducer.location!.heading!
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
 
     func testActivatingPuckWithPuckBearingSourceSetToCourse() throws {
-        let heading = MockHeading()
-        heading.trueHeadingStub.defaultReturnValue = .random(in: 0..<360)
-        locationProducer.latestLocation = Location(
-            location: location,
-            heading: heading,
-            accuracyAuthorization: .fullAccuracy)
+        let location = updateLocation(with: .fullAccuracy, course: .random(in: 0..<360))
         style.layerExistsStub.defaultReturnValue = false
         puck2D.puckBearingSource = .course
 
         puck2D.isActive = true
 
-        var expectedLayer = makeExpectedLayer()
-        expectedLayer.bearing = .constant(locationProducer.latestLocation!.course)
-        let expectedProperties = try expectedLayer.jsonObject()
+        var expectedProperties = makeExpectedLayerProperties(with: location)
+        expectedProperties["bearing"] = interpolatedLocationProducer.location!.course!
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
 
     func testActivatingPuckWithReducedAccuracy() throws {
-        locationProducer.latestLocation = Location(
-            location: location,
-            heading: nil,
-            accuracyAuthorization: .reducedAccuracy)
+        let location = updateLocation(with: .reducedAccuracy, heading: .random(in: 0..<360))
         style.layerExistsStub.defaultReturnValue = false
 
         puck2D.isActive = true
 
-        var expectedLayer = LocationIndicatorLayer(id: "puck")
-        expectedLayer.location = .constant([
+        var expectedProperties = [String: Any]()
+        expectedProperties["id"] = "puck"
+        expectedProperties["type"] = "location-indicator"
+        expectedProperties["location"] = [
             location.coordinate.latitude,
             location.coordinate.longitude,
             location.altitude
-        ])
-        expectedLayer.accuracyRadius = .expression(Exp(.interpolate) {
-            Exp(.linear)
-            Exp(.zoom)
-            0
-            400000
-            4
-            200000
-            8
-            5000
-        })
-        expectedLayer.accuracyRadiusColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
-        expectedLayer.accuracyRadiusBorderColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
-        let expectedProperties = try expectedLayer.jsonObject()
+        ]
+        expectedProperties["accuracy-radius"] = [
+            "interpolate",
+            "linear",
+            "zoom",
+            0,
+            400000,
+            4,
+            200000,
+            8,
+            5000]
+        expectedProperties["accuracy-radius-color"] = StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
+        expectedProperties["accuracy-radius-border-color"] = StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
 
     func testResetsPropertiesToDefaultValues() throws {
-        locationProducer.latestLocation = Location(
-            location: location,
-            heading: nil,
-            accuracyAuthorization: .fullAccuracy)
+        let originalLocation = updateLocation(with: .fullAccuracy, heading: nil)
         puck2D.isActive = true
         style.layerExistsStub.defaultReturnValue = true
+        var originalKeys = Set(makeExpectedLayerProperties(with: originalLocation).keys)
+        originalKeys.remove("id")
+        originalKeys.remove("type")
 
         // there are a bunch of properties that aren't used in "reduced" mode
         // and they should be reset to their default values if the layer already
         // existed
-        locationProducer.latestLocation = Location(
-            location: location,
-            heading: nil,
-            accuracyAuthorization: .reducedAccuracy)
-        puck2D.locationUpdate(newLocation: locationProducer.latestLocation!)
+        let location = updateLocation(with: .reducedAccuracy, heading: nil)
 
-        let originalLayer = makeExpectedLayer()
-        let originalKeys = try originalLayer.jsonObject().keys
-
-        var expectedLayer = LocationIndicatorLayer(id: "puck")
-        expectedLayer.location = .constant([
+        var expectedProperties = [String: Any]()
+        expectedProperties["location"] = [
             location.coordinate.latitude,
             location.coordinate.longitude,
             location.altitude
-        ])
-        expectedLayer.accuracyRadius = .expression(Exp(.interpolate) {
-            Exp(.linear)
-            Exp(.zoom)
-            0
-            400000
-            4
-            200000
-            8
-            5000
-        })
-        expectedLayer.accuracyRadiusColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
-        expectedLayer.accuracyRadiusBorderColor = .constant(StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)))
-        var expectedProperties = try expectedLayer.jsonObject()
+        ]
+        expectedProperties["accuracy-radius"] = [
+            "interpolate",
+            "linear",
+            "zoom",
+            0,
+            400000,
+            4,
+            200000,
+            8,
+            5000]
+        expectedProperties["accuracy-radius-color"] = StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
+        expectedProperties["accuracy-radius-border-color"] = StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
         for key in originalKeys where expectedProperties[key] == nil {
-            expectedProperties[key] = Style.layerPropertyDefaultValue(for: .locationIndicator, property: key)
+            expectedProperties[key] = Style.layerPropertyDefaultValue(for: .locationIndicator, property: key).value
         }
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
         let actualProperties = try XCTUnwrap(style.setLayerPropertiesStub.parameters.first?.properties)
@@ -402,10 +381,7 @@ final class Puck2DTests: XCTestCase {
     }
 
     func testSettingPuckBearingSourceWhenInactive() {
-        locationProducer.latestLocation = Location(
-            location: CLLocation(),
-            heading: nil,
-            accuracyAuthorization: .fullAccuracy)
+        updateLocation()
         style.layerExistsStub.defaultReturnValue = false
         puck2D.isActive = false
 
@@ -415,10 +391,7 @@ final class Puck2DTests: XCTestCase {
     }
 
     func testSettingPuckBearingSourceWhenActive() {
-        locationProducer.latestLocation = Location(
-            location: CLLocation(),
-            heading: nil,
-            accuracyAuthorization: .fullAccuracy)
+        updateLocation()
         puck2D.isActive = true
         style.layerExistsStub.defaultReturnValue = true
 
@@ -427,29 +400,131 @@ final class Puck2DTests: XCTestCase {
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
     }
 
-    func testLocationUpdateWhenInactive() {
-        locationProducer.latestLocation = Location(
-            location: CLLocation(),
-            heading: nil,
-            accuracyAuthorization: .fullAccuracy)
-        style.layerExistsStub.defaultReturnValue = false
-        puck2D.isActive = false
-
-        puck2D.locationUpdate(newLocation: locationProducer.latestLocation!)
-
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 0)
-    }
-
     func testLocationUpdateWhenActive() {
-        locationProducer.latestLocation = Location(
-            location: CLLocation(),
-            heading: nil,
-            accuracyAuthorization: .fullAccuracy)
+        updateLocation()
         puck2D.isActive = true
         style.layerExistsStub.defaultReturnValue = true
 
-        puck2D.locationUpdate(newLocation: locationProducer.latestLocation!)
+        updateLocation()
 
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+    }
+
+    func testFastPathFullAccuracyWithAccuracyRingNilHeading() throws {
+        configuration.showsAccuracyRing = true
+        recreatePuck()
+        puck2D.puckBearingSource = .heading
+        puck2D.isActive = true
+        updateLocation(with: .fullAccuracy)
+
+        let newLocation = updateLocation(with: .fullAccuracy, heading: nil)
+
+        let expectedProperties: [LocationIndicatorLayer.PaintCodingKeys: Any] = [
+            .location: [
+                newLocation.coordinate.latitude,
+                newLocation.coordinate.longitude,
+                newLocation.altitude],
+            .accuracyRadius: newLocation.horizontalAccuracy,
+            .bearing: 0
+        ]
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        let invocation = try XCTUnwrap(style.setLayerPropertiesStub.invocations.first)
+        XCTAssertEqual(invocation.parameters.layerId, "puck")
+        XCTAssertEqual(invocation.parameters.properties as NSDictionary,
+                       expectedProperties.mapKeys(\.rawValue) as NSDictionary)
+    }
+
+    func testFastPathFullAccuracyWithoutAccuracyRingNilHeading() throws {
+        configuration.showsAccuracyRing = false
+        recreatePuck()
+        puck2D.puckBearingSource = .heading
+        puck2D.isActive = true
+        updateLocation(with: .fullAccuracy)
+
+        let newLocation = updateLocation(with: .fullAccuracy, heading: nil)
+
+        let expectedProperties: [LocationIndicatorLayer.PaintCodingKeys: Any] = [
+            .location: [
+                newLocation.coordinate.latitude,
+                newLocation.coordinate.longitude,
+                newLocation.altitude],
+            .bearing: 0
+        ]
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        let invocation = try XCTUnwrap(style.setLayerPropertiesStub.invocations.first)
+        XCTAssertEqual(invocation.parameters.layerId, "puck")
+        XCTAssertEqual(invocation.parameters.properties as NSDictionary,
+                       expectedProperties.mapKeys(\.rawValue) as NSDictionary)
+    }
+
+    func testFastPathFullAccuracyWithoutAccuracyRingNonNilHeading() throws {
+        configuration.showsAccuracyRing = false
+        recreatePuck()
+        puck2D.puckBearingSource = .heading
+        puck2D.isActive = true
+        updateLocation(with: .fullAccuracy)
+
+        let heading = CLLocationDirection.random(in: 0..<360)
+        let newLocation = updateLocation(with: .fullAccuracy, heading: heading)
+
+        let expectedProperties: [LocationIndicatorLayer.PaintCodingKeys: Any] = [
+            .location: [
+                newLocation.coordinate.latitude,
+                newLocation.coordinate.longitude,
+                newLocation.altitude],
+            .bearing: heading
+        ]
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        let invocation = try XCTUnwrap(style.setLayerPropertiesStub.invocations.first)
+        XCTAssertEqual(invocation.parameters.layerId, "puck")
+        XCTAssertEqual(invocation.parameters.properties as NSDictionary,
+                       expectedProperties.mapKeys(\.rawValue) as NSDictionary)
+    }
+
+    func testFastPathFullAccuracyWithoutAccuracyRingUsingCourse() throws {
+        configuration.showsAccuracyRing = false
+        recreatePuck()
+        puck2D.puckBearingSource = .course
+        puck2D.isActive = true
+        updateLocation(with: .fullAccuracy)
+
+        let newLocation = updateLocation(with: .fullAccuracy, course: .random(in: 0..<360))
+
+        let expectedProperties: [LocationIndicatorLayer.PaintCodingKeys: Any] = [
+            .location: [
+                newLocation.coordinate.latitude,
+                newLocation.coordinate.longitude,
+                newLocation.altitude],
+            .bearing: newLocation.course!
+        ]
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        let invocation = try XCTUnwrap(style.setLayerPropertiesStub.invocations.first)
+        XCTAssertEqual(invocation.parameters.layerId, "puck")
+        XCTAssertEqual(invocation.parameters.properties as NSDictionary,
+                       expectedProperties.mapKeys(\.rawValue) as NSDictionary)
+    }
+
+    func testFastPathReducedAccuracy() throws {
+        puck2D.isActive = true
+        updateLocation(with: .reducedAccuracy)
+
+        let newLocation = updateLocation(with: .reducedAccuracy)
+
+        let expectedProperties: [LocationIndicatorLayer.PaintCodingKeys: Any] = [
+            .location: [
+                newLocation.coordinate.latitude,
+                newLocation.coordinate.longitude,
+                newLocation.altitude]
+        ]
+
+        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        let invocation = try XCTUnwrap(style.setLayerPropertiesStub.invocations.first)
+        XCTAssertEqual(invocation.parameters.layerId, "puck")
+        XCTAssertEqual(invocation.parameters.properties as NSDictionary,
+                       expectedProperties.mapKeys(\.rawValue) as NSDictionary)
     }
 }

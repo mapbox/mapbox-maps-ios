@@ -213,9 +213,7 @@ public final class Style: StyleProtocol {
               sourceInfo.type == .geoJson else {
             fatalError("updateGeoJSONSource: Source with id '\(id)' is not a GeoJSONSource.")
         }
-        let data = try JSONEncoder().encode(geoJSON)
-        let value = try JSONSerialization.jsonObject(with: data)
-        try setSourceProperty(for: id, property: "data", value: value)
+        try setSourceProperty(for: id, property: "data", value: geoJSON.toJSON())
     }
 
     /// `true` if and only if the style JSON contents, the style specified sprite
@@ -799,8 +797,7 @@ public final class Style: StyleProtocol {
     /// - Throws:
     ///     An error describing why the operation was unsuccessful.
     public func setTerrain(_ terrain: Terrain) throws {
-        let terrainData = try JSONEncoder().encode(terrain)
-        guard let terrainDictionary = try JSONSerialization.jsonObject(with: terrainData) as? [String: Any] else {
+        guard let terrainDictionary = try terrain.toJSON() as? [String: Any] else {
             throw TypeConversionError.unexpectedType
         }
 

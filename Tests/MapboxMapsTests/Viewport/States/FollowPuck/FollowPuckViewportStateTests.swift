@@ -5,33 +5,26 @@ final class FollowPuckViewportStateTest: XCTestCase {
 
     var dataSource: MockFollowPuckViewportStateDataSource!
     var cameraAnimationsManager: MockCameraAnimationsManager!
+    var mapboxMap: MockMapboxMap!
     var state: FollowPuckViewportState!
 
     override func setUp() {
         super.setUp()
         dataSource = MockFollowPuckViewportStateDataSource()
         cameraAnimationsManager = MockCameraAnimationsManager()
+        mapboxMap = MockMapboxMap()
         state = FollowPuckViewportState(
             dataSource: dataSource,
-            cameraAnimationsManager: cameraAnimationsManager)
+            cameraAnimationsManager: cameraAnimationsManager,
+            mapboxMap: mapboxMap)
     }
 
     override func tearDown() {
         state = nil
+        mapboxMap = nil
         cameraAnimationsManager = nil
         dataSource = nil
         super.tearDown()
-    }
-
-    func verifyEaseTo(with expectedCamera: CameraOptions) throws -> MockCancelable {
-        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 1)
-        let easeToInvocation = try XCTUnwrap(cameraAnimationsManager.easeToStub.invocations.first)
-        XCTAssertEqual(easeToInvocation.parameters.camera, expectedCamera)
-        XCTAssertEqual(easeToInvocation.parameters.duration,
-                       max(0, dataSource.options.animationDuration))
-        XCTAssertEqual(easeToInvocation.parameters.curve, .linear)
-        XCTAssertNil(easeToInvocation.parameters.completion)
-        return try XCTUnwrap(easeToInvocation.returnValue as? MockCancelable)
     }
 
     func testGetOptions() {
@@ -78,7 +71,9 @@ final class FollowPuckViewportStateTest: XCTestCase {
     }
 
     func testStartAndStopUpdatingCamera() throws {
-        let cameraOptions = CameraOptions.random()
+        let cameraOptions0 = CameraOptions.random()
+        let cameraOptions1 = CameraOptions.random()
+        let cameraOptions2 = CameraOptions.random()
         state.startUpdatingCamera()
 
         // verify that an observation was created
@@ -87,20 +82,52 @@ final class FollowPuckViewportStateTest: XCTestCase {
         let observeHandler = dataSourceInvocation.parameters
         let observeCancelable = try XCTUnwrap(dataSourceInvocation.returnValue as? MockCancelable)
 
-        // exercise the observation handler
-        let result = observeHandler(cameraOptions)
+        // exercise the observation handler and
+        // verify that it returns true (to continue receiving updates)
+        XCTAssertTrue(observeHandler(cameraOptions0))
 
-        // verify that the expected animation was started
-        let easeToCancelable = try verifyEaseTo(with: cameraOptions)
-        // verify that the handler returns true (to continue receiving updates)
-        XCTAssertTrue(result)
+        // verify that an animation was started
+        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 1)
+        let easeToInvocation = try XCTUnwrap(cameraAnimationsManager.easeToStub.invocations.first)
+        XCTAssertEqual(easeToInvocation.parameters.camera, cameraOptions0)
+        XCTAssertEqual(easeToInvocation.parameters.duration, state.options.animationDuration)
+        XCTAssertEqual(easeToInvocation.parameters.curve, .linear)
+        let easeToCompletion = try XCTUnwrap(easeToInvocation.parameters.completion)
+        let easeToCancelable = try XCTUnwrap(easeToInvocation.returnValue as? MockCancelable)
+        cameraAnimationsManager.easeToStub.reset()
+
+        // verify that the camera was not set
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 0)
+
+        // exercise the observation handler again and
+        // verify that it returns true (to continue receiving updates)
+        XCTAssertTrue(observeHandler(cameraOptions1))
+
+        // verify that no further animation was started
+        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 0)
+
+        // verify that the camera was not set
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 0)
+
+        // invoke the animation completion block
+        easeToCompletion(.random())
+
+        // exercise the observation handler again and
+        // verify that it returns true (to continue receiving updates)
+        XCTAssertTrue(observeHandler(cameraOptions2))
+
+        // verify that no further animation was started
+        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 0)
+
+        // verify that the camera was set
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.map(\.parameters), [cameraOptions2])
 
         // stop updates
         state.stopUpdatingCamera()
 
-        // verify that the animation and observe cancelables are both canceled
-        XCTAssertEqual(easeToCancelable.cancelStub.invocations.count, 1)
+        // verify that the observe cancelable and animation cancelable are both canceled
         XCTAssertEqual(observeCancelable.cancelStub.invocations.count, 1)
+        XCTAssertEqual(easeToCancelable.cancelStub.invocations.count, 1)
     }
 
     func testStartUpdatingMultipleTimesDoesNothing() {

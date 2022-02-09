@@ -17,29 +17,20 @@
 
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol
 
+    private let mapboxMap: MapboxMapProtocol
+
     // MARK: - Private State
 
     private var updatingCameraCancelable: Cancelable?
 
-    private var cameraAnimationCancelable: Cancelable?
-
     // MARK: - Initialization
 
     internal init(dataSource: FollowPuckViewportStateDataSourceProtocol,
-                  cameraAnimationsManager: CameraAnimationsManagerProtocol) {
+                  cameraAnimationsManager: CameraAnimationsManagerProtocol,
+                  mapboxMap: MapboxMapProtocol) {
         self.dataSource = dataSource
         self.cameraAnimationsManager = cameraAnimationsManager
-    }
-
-    // MARK: - Private Utilities
-
-    private func animate(to cameraOptions: CameraOptions) {
-        cameraAnimationCancelable?.cancel()
-        cameraAnimationCancelable = cameraAnimationsManager.ease(
-            to: cameraOptions,
-            duration: max(0, options.animationDuration),
-            curve: .linear,
-            completion: nil)
+        self.mapboxMap = mapboxMap
     }
 }
 
@@ -53,16 +44,31 @@ extension FollowPuckViewportState: ViewportState {
         guard updatingCameraCancelable == nil else {
             return
         }
-        updatingCameraCancelable = dataSource.observe { [weak self] cameraOptions in
-            self?.animate(to: cameraOptions)
+        var animationStarted = false
+        var animationComplete = false
+
+        let compositeCancelable = CompositeCancelable()
+
+        updatingCameraCancelable = compositeCancelable
+
+        compositeCancelable.add(dataSource.observe { [mapboxMap, cameraAnimationsManager, options] cameraOptions in
+            if animationComplete {
+                mapboxMap.setCamera(to: cameraOptions)
+            } else if !animationStarted {
+                animationStarted = true
+                compositeCancelable.add(cameraAnimationsManager.internalEase(
+                    to: cameraOptions,
+                    duration: options.animationDuration,
+                    curve: .linear) { _ in
+                        animationComplete = true
+                    })
+            }
             return true
-        }
+        })
     }
 
     public func stopUpdatingCamera() {
         updatingCameraCancelable?.cancel()
         updatingCameraCancelable = nil
-        cameraAnimationCancelable?.cancel()
-        cameraAnimationCancelable = nil
     }
 }

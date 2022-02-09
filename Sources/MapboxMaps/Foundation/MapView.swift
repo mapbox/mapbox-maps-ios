@@ -91,7 +91,7 @@ open class MapView: UIView {
 
     private let dependencyProvider: MapViewDependencyProviderProtocol
 
-    private var displayLinkParticipants = WeakSet<DisplayLinkParticipant>()
+    private let displayLinkParticipants = WeakSet<DisplayLinkParticipant>()
 
     private let notificationCenter: NotificationCenterProtocol
     private let bundle: BundleProtocol
@@ -309,8 +309,12 @@ open class MapView: UIView {
         // Initialize/Configure location source and location manager
         locationProducer = dependencyProvider.makeLocationProducer(
             mayRequestWhenInUseAuthorization: bundle.infoDictionary?["NSLocationWhenInUseUsageDescription"] != nil)
+        let interpolatedLocationProducer = dependencyProvider.makeInterpolatedLocationProducer(
+            locationProducer: locationProducer,
+            displayLinkCoordinator: self)
         location = dependencyProvider.makeLocationManager(
             locationProducer: locationProducer,
+            interpolatedLocationProducer: interpolatedLocationProducer,
             style: mapboxMap.style)
 
         // Initialize/Configure annotations orchestrator
@@ -330,7 +334,7 @@ open class MapView: UIView {
                 anyTouchGestureRecognizer: gestures.anyTouchGestureRecognizer,
                 doubleTapGestureRecognizer: gestures.doubleTapToZoomInGestureRecognizer,
                 doubleTouchGestureRecognizer: gestures.doubleTouchToZoomOutGestureRecognizer),
-            locationProducer: locationProducer,
+            interpolatedLocationProducer: interpolatedLocationProducer,
             cameraAnimationsManager: camera,
             mapboxMap: mapboxMap)
     }

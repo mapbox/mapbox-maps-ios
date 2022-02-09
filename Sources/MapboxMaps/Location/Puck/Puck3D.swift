@@ -1,6 +1,6 @@
 @_implementationOnly import MapboxCommon_Private
 
-internal final class Puck3D: NSObject, Puck {
+internal final class Puck3D: Puck {
 
     internal var isActive = false {
         didSet {
@@ -8,10 +8,15 @@ internal final class Puck3D: NSObject, Puck {
                 return
             }
             if isActive {
-                locationProducer.add(self)
+                interpolatedLocationProducer
+                    .observe { [weak self] _ in
+                        self?.updateSourceAndLayer()
+                        return true
+                    }
+                    .add(to: cancelables)
                 updateSourceAndLayer()
             } else {
-                locationProducer.remove(self)
+                cancelables.cancelAll()
                 if style.layerExists(withId: Self.layerID) {
                     try! style.removeLayer(withId: Self.layerID)
                 }
@@ -30,22 +35,23 @@ internal final class Puck3D: NSObject, Puck {
 
     private let configuration: Puck3DConfiguration
     private let style: StyleProtocol
-    private let locationProducer: LocationProducerProtocol
+    private let interpolatedLocationProducer: InterpolatedLocationProducerProtocol
+
+    private let cancelables = CancelableContainer()
 
     private static let sourceID = "puck-model-source"
     private static let layerID = "puck-model-layer"
 
     internal init(configuration: Puck3DConfiguration,
                   style: StyleProtocol,
-                  locationProducer: LocationProducerProtocol) {
+                  interpolatedLocationProducer: InterpolatedLocationProducerProtocol) {
         self.configuration = configuration
         self.style = style
-        self.locationProducer = locationProducer
-        super.init()
+        self.interpolatedLocationProducer = interpolatedLocationProducer
     }
 
     private func updateSourceAndLayer() {
-        guard isActive, let location = locationProducer.latestLocation else {
+        guard isActive, let location = interpolatedLocationProducer.location else {
             return
         }
 
@@ -62,11 +68,13 @@ internal final class Puck3D: NSObject, Puck {
 
         switch puckBearingSource {
         case .heading:
-            if let validHeadingDirection = location.headingDirection {
+            if let validHeadingDirection = location.heading {
                 model.orientation?[2] += validHeadingDirection
             }
         case .course:
-            model.orientation?[2] += location.course
+            if let validCourseDirection = location.course {
+                model.orientation?[2] += validCourseDirection
+            }
         }
 
         var source = ModelSource()
@@ -89,11 +97,5 @@ internal final class Puck3D: NSObject, Puck {
             modelLayer.paint?.modelRotation = configuration.modelRotation
             try! style.addPersistentLayer(modelLayer, layerPosition: nil)
         }
-    }
-}
-
-extension Puck3D: LocationConsumer {
-    internal func locationUpdate(newLocation: Location) {
-        updateSourceAndLayer()
     }
 }

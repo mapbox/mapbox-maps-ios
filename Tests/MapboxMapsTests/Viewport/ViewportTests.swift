@@ -3,7 +3,7 @@ import XCTest
 
 final class ViewportTests: XCTestCase {
     var impl: MockViewportImpl!
-    var locationProducer: MockLocationProducer!
+    var interpolatedLocationProducer: MockInterpolatedLocationProducer!
     var cameraAnimationsManager: MockCameraAnimationsManager!
     var mapboxMap: MockMapboxMap!
     var viewport: Viewport!
@@ -11,12 +11,12 @@ final class ViewportTests: XCTestCase {
     override func setUp() {
         super.setUp()
         impl = MockViewportImpl()
-        locationProducer = MockLocationProducer()
+        interpolatedLocationProducer = MockInterpolatedLocationProducer()
         cameraAnimationsManager = MockCameraAnimationsManager()
         mapboxMap = MockMapboxMap()
         viewport = Viewport(
             impl: impl,
-            locationProducer: locationProducer,
+            interpolatedLocationProducer: interpolatedLocationProducer,
             cameraAnimationsManager: cameraAnimationsManager,
             mapboxMap: mapboxMap)
     }
@@ -25,7 +25,7 @@ final class ViewportTests: XCTestCase {
         viewport = nil
         mapboxMap = nil
         cameraAnimationsManager = nil
-        locationProducer = nil
+        interpolatedLocationProducer = nil
         impl = nil
         super.tearDown()
     }

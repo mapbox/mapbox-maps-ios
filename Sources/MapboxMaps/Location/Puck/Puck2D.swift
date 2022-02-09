@@ -2,7 +2,7 @@
 import CoreGraphics
 import UIKit
 
-internal final class Puck2D: NSObject, Puck {
+internal final class Puck2D: Puck {
 
     internal var isActive = false {
         didSet {
@@ -10,15 +10,20 @@ internal final class Puck2D: NSObject, Puck {
                 return
             }
             if isActive {
-                locationProducer.add(self)
-                updateLayer()
+                interpolatedLocationProducer
+                    .observe { [weak self] (location) in
+                        self?.latestLocation = location
+                        return true
+                    }
+                    .add(to: cancelables)
             } else {
-                locationProducer.remove(self)
+                cancelables.cancelAll()
                 try? style.removeLayer(withId: Self.layerID)
                 try? style.removeImage(withId: Self.topImageId)
                 try? style.removeImage(withId: Self.bearingImageId)
                 try? style.removeImage(withId: Self.shadowImageId)
                 previouslySetLayerPropertyKeys.removeAll()
+                latestLocation = nil
             }
         }
     }
@@ -29,9 +34,24 @@ internal final class Puck2D: NSObject, Puck {
         }
     }
 
+    private var latestLocation: InterpolatedLocation? {
+        didSet {
+            if oldValue?.accuracyAuthorization == latestLocation?.accuracyAuthorization {
+                updateLayerLocationFastPath()
+            } else {
+                updateLayer()
+            }
+        }
+    }
+
     private let configuration: Puck2DConfiguration
     private let style: StyleProtocol
-    private let locationProducer: LocationProducerProtocol
+    private let interpolatedLocationProducer: InterpolatedLocationProducerProtocol
+
+    private let cancelables = CancelableContainer()
+
+    // cache the encoded configuration.resolvedScale to avoid work at every location update
+    private let encodedScale: Any
 
     /// The keys of the style properties that were set during the previous sync.
     /// Used to identify which styles need to be restored to their default values in
@@ -45,10 +65,11 @@ internal final class Puck2D: NSObject, Puck {
 
     internal init(configuration: Puck2DConfiguration,
                   style: StyleProtocol,
-                  locationProducer: LocationProducerProtocol) {
+                  interpolatedLocationProducer: InterpolatedLocationProducerProtocol) {
         self.configuration = configuration
         self.style = style
-        self.locationProducer = locationProducer
+        self.interpolatedLocationProducer = interpolatedLocationProducer
+        self.encodedScale = try! configuration.resolvedScale.toJSON()
     }
 
     private func addImages() {
@@ -78,54 +99,60 @@ internal final class Puck2D: NSObject, Puck {
     }
 
     private func updateLayer() {
-        guard isActive, let location = locationProducer.latestLocation else {
+        guard isActive, let location = latestLocation else {
             return
         }
-        var layer = LocationIndicatorLayer(id: Self.layerID)
-        layer.location = .constant([
+
+        var newLayerLayoutProperties = [LocationIndicatorLayer.LayoutCodingKeys: Any]()
+        var newLayerPaintProperties = [LocationIndicatorLayer.PaintCodingKeys: Any]()
+
+        newLayerPaintProperties[.location] = [
             location.coordinate.latitude,
             location.coordinate.longitude,
-            location.location.altitude
-        ])
+            location.altitude
+        ]
         switch location.accuracyAuthorization {
         case .fullAccuracy:
-            layer.topImage = .constant(.name(Self.topImageId))
+            let immediateTransition = [
+                StyleTransition.CodingKeys.duration.rawValue: 0,
+                StyleTransition.CodingKeys.delay.rawValue: 0]
+            newLayerLayoutProperties[.topImage] = Self.topImageId
             if configuration.bearingImage != nil {
-                layer.bearingImage = .constant(.name(Self.bearingImageId))
+                newLayerLayoutProperties[.bearingImage] = Self.bearingImageId
             }
-            layer.shadowImage = .constant(.name(Self.shadowImageId))
-            layer.locationTransition = StyleTransition(duration: 0.5, delay: 0)
-            layer.topImageSize = configuration.resolvedScale
-            layer.bearingImageSize = configuration.resolvedScale
-            layer.shadowImageSize = configuration.resolvedScale
-            layer.emphasisCircleRadiusTransition = StyleTransition(duration: 0, delay: 0)
-            layer.bearingTransition = StyleTransition(duration: 0, delay: 0)
+            newLayerLayoutProperties[.shadowImage] = Self.shadowImageId
+            newLayerPaintProperties[.locationTransition] = immediateTransition
+            newLayerPaintProperties[.topImageSize] = encodedScale
+            newLayerPaintProperties[.bearingImageSize] = encodedScale
+            newLayerPaintProperties[.shadowImageSize] = encodedScale
+            newLayerPaintProperties[.emphasisCircleRadiusTransition] = immediateTransition
+            newLayerPaintProperties[.bearingTransition] = immediateTransition
             if configuration.showsAccuracyRing {
-                layer.accuracyRadius = .constant(location.horizontalAccuracy)
-                layer.accuracyRadiusColor = .constant(StyleColor(configuration.accuracyRingColor))
-                layer.accuracyRadiusBorderColor = .constant(StyleColor(configuration.accuracyRingBorderColor))
+                newLayerPaintProperties[.accuracyRadius] = location.horizontalAccuracy
+                newLayerPaintProperties[.accuracyRadiusColor] = StyleColor(configuration.accuracyRingColor).rgbaString
+                newLayerPaintProperties[.accuracyRadiusBorderColor] = StyleColor(configuration.accuracyRingBorderColor).rgbaString
             }
             switch puckBearingSource {
             case .heading:
-                layer.bearing = .constant(location.headingDirection ?? 0)
+                newLayerPaintProperties[.bearing] = location.heading ?? 0
             case .course:
-                layer.bearing = .constant(location.course)
+                newLayerPaintProperties[.bearing] = location.course ?? 0
             }
         case .reducedAccuracy:
             fallthrough
         @unknown default:
-            layer.accuracyRadius = .expression(Exp(.interpolate) {
-                Exp(.linear)
-                Exp(.zoom)
-                0
-                400000
-                4
-                200000
-                8
-                5000
-            })
-            layer.accuracyRadiusColor = .constant(StyleColor(configuration.accuracyRingColor))
-            layer.accuracyRadiusBorderColor = .constant(StyleColor(configuration.accuracyRingBorderColor))
+            newLayerPaintProperties[.accuracyRadius] = [
+                Expression.Operator.interpolate.rawValue,
+                Expression.Operator.linear.rawValue,
+                Expression.Operator.zoom.rawValue,
+                0,
+                400000,
+                4,
+                200000,
+                8,
+                5000]
+            newLayerPaintProperties[.accuracyRadiusColor] = StyleColor(configuration.accuracyRingColor).rgbaString
+            newLayerPaintProperties[.accuracyRadiusBorderColor] = StyleColor(configuration.accuracyRingBorderColor).rgbaString
         }
 
         // LocationIndicatorLayer is a struct, and by default, most of its properties are nil. When it gets
@@ -139,14 +166,20 @@ internal final class Puck2D: NSObject, Puck {
         // values for the properties we were using before but no longer want to customize.
 
         // Create the properties dictionary for the updated layer
-        let newLayerProperties = try! layer.jsonObject()
+        let newLayerProperties = newLayerLayoutProperties
+            .mapKeys(\.rawValue)
+            .merging(
+                newLayerPaintProperties.mapKeys(\.rawValue),
+                uniquingKeysWith: { $1 })
         // Construct the properties dictionary to reset any properties that are no longer used
         let unusedPropertyKeys = previouslySetLayerPropertyKeys.subtracting(newLayerProperties.keys)
         let unusedProperties = Dictionary(uniqueKeysWithValues: unusedPropertyKeys.map { (key) -> (String, Any) in
             (key, Style.layerPropertyDefaultValue(for: .locationIndicator, property: key).value)
         })
         // Merge the new and unused properties
-        let allLayerProperties = newLayerProperties.merging(unusedProperties, uniquingKeysWith: { $1 })
+        var allLayerProperties = newLayerProperties.merging(
+            unusedProperties,
+            uniquingKeysWith: { $1 })
         // Store the new set of property keys
         previouslySetLayerPropertyKeys = Set(newLayerProperties.keys)
 
@@ -160,14 +193,41 @@ internal final class Puck2D: NSObject, Puck {
             // layer causes MapboxCoreMaps to skip clearing images when the style reloads.
             // https://github.com/mapbox/mapbox-maps-ios/issues/860
             addImages()
+            allLayerProperties[LocationIndicatorLayer.RootCodingKeys.id.rawValue] = Self.layerID
+            allLayerProperties[LocationIndicatorLayer.RootCodingKeys.type.rawValue] = LayerType.locationIndicator.rawValue
             try! style.addPersistentLayer(with: allLayerProperties, layerPosition: nil)
         }
     }
-}
 
-extension Puck2D: LocationConsumer {
-    internal func locationUpdate(newLocation: Location) {
-        updateLayer()
+    private func updateLayerLocationFastPath() {
+        guard isActive, let location = latestLocation else {
+            return
+        }
+        var layerProperties: [String: Any] = [
+            LocationIndicatorLayer.PaintCodingKeys.location.rawValue: [
+                location.coordinate.latitude,
+                location.coordinate.longitude,
+                location.altitude
+            ]
+        ]
+        switch location.accuracyAuthorization {
+        case .fullAccuracy:
+            if configuration.showsAccuracyRing {
+                layerProperties[LocationIndicatorLayer.PaintCodingKeys.accuracyRadius.rawValue] = location.horizontalAccuracy
+            }
+            switch puckBearingSource {
+            case .heading:
+                layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = location.heading ?? 0
+            case .course:
+                layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = location.course
+            }
+        case .reducedAccuracy:
+            fallthrough
+        @unknown default:
+            break
+        }
+
+        try! style.setLayerProperties(for: Self.layerID, properties: layerProperties)
     }
 }
 
@@ -182,79 +242,5 @@ private extension Puck2DConfiguration {
 
     var resolvedScale: Value<Double> {
         scale ?? .constant(1.0)
-    }
-}
-
-public extension Puck2DConfiguration {
-    // Create a Puck2DConfiguration instance with or without an arrow bearing image. Default without the arrow bearing image.
-    static func makeDefault(showBearing: Bool = false) -> Puck2DConfiguration {
-        let shadowImage = UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!
-        return Puck2DConfiguration(
-            topImage: UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!,
-            bearingImage: showBearing ? makeBearingImage(size: shadowImage.size) : nil,
-            shadowImage: shadowImage)
-    }
-}
-
-private func makeBearingImage(size: CGSize) -> UIImage {
-    let gap: CGFloat = 1
-    let arcLength: CGFloat = .pi / 4
-    assert(arcLength <= .pi / 2)
-    let lineWidth: CGFloat = 1
-
-    // The gap determines how much space we put between the circles and the arrow
-    // strokes are centered on the path, so half of the width of the line is drawn
-    // on either side.
-    let radius = size.height / 2 + lineWidth / 2 + gap
-
-    let rightArcPoint = CGPoint(
-        x: radius * cos(.pi / 2 - arcLength / 2),
-        y: -radius * sin(.pi / 2 - arcLength / 2))
-
-    // The top point is always centered at 0. Calculate its height
-    // to produce a right angle between the left and right sides of the arrow
-    let topPoint = CGPoint(x: 0, y: rightArcPoint.y - rightArcPoint.x * tan(.pi / 4))
-
-    // Create the path
-    let path = UIBezierPath()
-    path.move(to: topPoint)
-    path.addLine(to: rightArcPoint)
-    path.addArc(
-        withCenter: .zero,
-        radius: radius,
-        startAngle: -.pi / 2 + arcLength / 2,
-        endAngle: -.pi / 2 - arcLength / 2,
-        clockwise: false)
-    path.close()
-    path.lineWidth = lineWidth
-    path.lineJoinStyle = .round
-
-    // Create a rectangle to
-    // draw the circles, centering them at the origin
-    let outerImageBounds = CGRect(
-        origin: CGPoint(
-            x: -size.width / 2,
-            y: -size.height / 2),
-        size: size)
-
-    // Union that rectangle with the bounds
-    // of the arrow, also union it with the arrow
-    // at 90, 180, and 270 degree rotations to ensure that
-    // that the resulting image is square and centered on the origin.
-    // finally, pad the image a little to ensure that
-    // the arrow's stroke is not cut off.
-    let imageBounds = outerImageBounds
-        .union(path.bounds)
-        .union(path.bounds.applying(.init(rotationAngle: .pi / 2)))
-        .union(path.bounds.applying(.init(rotationAngle: .pi)))
-        .union(path.bounds.applying(.init(rotationAngle: 3 * .pi / 2)))
-        .insetBy(dx: -2, dy: -2)
-
-    // render the image
-    return UIGraphicsImageRenderer(bounds: imageBounds).image { _ in
-        UIColor.systemBlue.setFill()
-        path.fill()
-        UIColor.white.setStroke()
-        path.stroke()
     }
 }

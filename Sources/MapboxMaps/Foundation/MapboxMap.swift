@@ -1027,9 +1027,7 @@ extension MapboxMap {
     /// - Parameter mode: The `MapProjection` to be used by the map.
     /// - Throws: Errors during encoding or `MapProjectionError.unsupportedProjection` if the supplied projection is not compatible with the SDK.
     @_spi(Experimental) public func setMapProjection(_ mapProjection: MapProjection) throws {
-        let data = try JSONEncoder().encode(mapProjection)
-        let object = try JSONSerialization.jsonObject(with: data, options: [])
-        __map.setMapProjectionForProjection(object)
+        try __map.setMapProjectionForProjection(mapProjection.toJSON())
     }
 
     /// Get current map projection for Mapbox map.

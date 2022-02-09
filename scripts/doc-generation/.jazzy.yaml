@@ -10,4 +10,251 @@ build_tool_arguments:
   - MapboxMaps
   - -destination
   - generic/platform=iOS Simulator
+custom_categories:
+  - name: MapView
+    children:
+      - MapView
+      - MapInitOptions
+      - MapInitOptionsProvider
+      - ResourceOptions
+      - ResourceOptionsManager
+      - MapOptions
+      - GlyphsRasterizationOptions
+
+  - name: Snapshotter
+    children:
+      - Snapshotter
+      - MapSnapshotOptions
+      - SnapshotOverlay
+      - SnapshotOverlayHandler
+
+  - name: MapboxMap
+    children:
+      - MapboxMap
+      - CameraState
+      - CameraOptions
+      - CameraBounds
+      - CameraBoundsOptions
+      - CoordinateBounds
+      - Event
+      - MapEvents
+      - RenderedQueryOptions
+      - QueriedFeature
+      - FeatureExtensionValue
+      - MapError
+      - MapLoadingError
+      - MapProjection
+      - GlobeMapProjection
+      - MercatorMapProjection
+      - MapProjectionError
+
+  - name: Style
+    children:
+      - Style
+      - StyleURI
+      - LayerPosition
+      - TransitionOptions
+      - Light
+      - Terrain
+      - StyleDecodable
+      - StyleEncodable
+      - StyleError
+      - TypeConversionError
+
+  - name: Sources
+    children:
+      - Source
+      - SourceType
+      - SourceInfo
+      - GeoJSONSource
+      - GeoJSONSourceData
+      - ImageSource
+      - RasterDemSource
+      - RasterSource
+      - VectorSource
+      - CustomGeometrySourceOptions
+      - CanonicalTileID
+      - PromoteId
+      - Scheme
+      - Encoding
+
+  - name: Layers
+    children:
+      - Layer
+      - LayerType
+      - LayerInfo
+      - BackgroundLayer
+      - CircleLayer
+      - FillExtrusionLayer
+      - FillLayer
+      - HeatmapLayer
+      - HillshadeLayer
+      - LineLayer
+      - LocationIndicatorLayer
+      - RasterLayer
+      - SkyLayer
+      - SymbolLayer
+
+  - name: Layer Property Values
+    children:
+      - Value
+      - Anchor
+      - CirclePitchAlignment
+      - CirclePitchScale
+      - CircleTranslateAnchor
+      - FillExtrusionTranslateAnchor
+      - FillTranslateAnchor
+      - HillshadeIlluminationAnchor
+      - IconAnchor
+      - IconPitchAlignment
+      - IconRotationAlignment
+      - IconTextFit
+      - IconTranslateAnchor
+      - LineCap
+      - LineJoin
+      - LineTranslateAnchor
+      - RasterResampling
+      - ResolvedImage
+      - ResolvedImageData
+      - SkyType
+      - StyleColor
+      - StyleTransition
+      - SymbolPlacement
+      - SymbolZOrder
+      - TextAnchor
+      - TextJustify
+      - TextPitchAlignment
+      - TextRotationAlignment
+      - TextTransform
+      - TextTranslateAnchor
+      - TextWritingMode
+      - Visibility
+
+  - name: Expressions
+    children:
+      - Expression
+      - Exp
+      - FormatOptions
+      - NumberFormatOptions
+      - CollatorOptions
+
+  - name: Annotations
+    children:
+      - AnnotationOrchestrator
+      - AnnotationInteractionDelegate
+      - Annotation
+      - AnnotationManager
+      - CircleAnnotation
+      - CircleAnnotationManager
+      - PointAnnotation
+      - PointAnnotationManager
+      - PolygonAnnotation
+      - PolygonAnnotationManager
+      - PolylineAnnotation
+      - PolylineAnnotationManager
+
+  - name: View Annotations
+    children:
+      - ViewAnnotationManager
+      - ViewAnnotationOptions
+      - ViewAnnotationManagerError
+
+  - name: Camera Animations
+    children:
+      - CameraAnimationsManager
+      - CameraAnimator
+      - BasicCameraAnimator
+      - CameraTransition
+      - FlyToCameraAnimator
+      - AnimationCompletion
+      - AnimationOwner
+
+  - name: Ornaments
+    children:
+      - OrnamentsManager
+      - OrnamentOptions
+      - OrnamentPosition
+      - OrnamentVisibility
+      - AttributionButtonOptions
+      - CompassViewOptions
+      - LogoViewOptions
+      - ScaleBarViewOptions
+
+  - name: Gestures
+    children:
+      - GestureManager
+      - GestureOptions
+      - PanMode
+      - PinchGestureBehavior
+      - GestureManagerDelegate
+      - GestureType
+
+  - name: Location
+    children:
+      - LocationManager
+      - LocationOptions
+      - PuckType
+      - Puck2DConfiguration
+      - Puck3DConfiguration
+      - Model
+      - PuckBearingSource
+      - Location
+      - LocationConsumer
+      - LocationPermissionsDelegate
+      - LocationProvider
+      - LocationProviderDelegate
+      - AppleLocationProvider
+
+  - name: Viewport
+    children:
+      - Viewport
+      - ViewportOptions
+      - ViewportStatus
+      - ViewportStatusObserver
+      - ViewportStatusChangeReason
+      - ViewportState
+      - FollowPuckViewportState
+      - FollowPuckViewportStateOptions
+      - FollowPuckViewportStateBearing
+      - OverviewViewportState
+      - OverviewViewportStateOptions
+      - ViewportTransition
+      - DefaultViewportTransition
+      - DefaultViewportTransitionOptions
+      - ImmediateViewportTransition
+
+  - name: Offline
+    children:
+      - OfflineManager
+      - OfflineRegion
+      - OfflineRegionGeometryDefinition
+      - OfflineSwitch
+      - StylePackError
+      - StylePackLoadOptions
+      - TileRegionError
+      - TileRegionLoadOptions
+      - TilesetDescriptorOptions
+      - TileStore
+      - TileStoreObserver
+
+  - name: Custom Networking Stack
+    children:
+      - DownloadError
+      - DownloadStatus
+      - HttpRequestError
+      - HttpResponse
+
+  - name: GeoJSON
+    children:
+      - Feature
+      - Geometry
+
+  - name: Utilities
+    children:
+      - CompassDirectionFormatter
+      - Projection
+
+  - name: Other
+    children:
+      - Cancelable
 ...

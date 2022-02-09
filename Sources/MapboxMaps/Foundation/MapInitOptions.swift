@@ -51,7 +51,6 @@ public final class MapInitOptions: NSObject {
         fatalError("This initializer should not be called.")
     }
 
-    /// :nodoc:
     public override func isEqual(_ object: Any?) -> Bool {
         guard let other = object as? MapInitOptions else {
             return false
@@ -64,7 +63,6 @@ public final class MapInitOptions: NSObject {
             (styleURI == other.styleURI)
     }
 
-    /// :nodoc:
     public override var hash: Int {
         var hasher = Hasher()
         hasher.combine(resourceOptions)

@@ -1,5 +1,5 @@
 import Foundation
-extension MapboxCoreMaps.TransitionOptions {
+extension TransitionOptions {
     public convenience init(duration: TimeInterval?,
                             delay: TimeInterval?,
                             enablePlacementTransitions: Bool?) {

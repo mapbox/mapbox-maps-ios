@@ -6,83 +6,81 @@ final class FillLayerTests: XCTestCase {
 
     func testLayerProtocolMembers() {
 
-       var layer = FillLayer(id: "test-id")
-       layer.source = "some-source"
-       layer.sourceLayer = nil
-       layer.minZoom = 10.0
-       layer.maxZoom = 20.0
+        var layer = FillLayer(id: "test-id")
+        layer.source = "some-source"
+        layer.sourceLayer = nil
+        layer.minZoom = 10.0
+        layer.maxZoom = 20.0
 
-       XCTAssert(layer.id == "test-id")
-       XCTAssert(layer.type == LayerType.fill)
-       XCTAssert(layer.filter == nil)
-       XCTAssert(layer.source == "some-source")
-       XCTAssertNil(layer.sourceLayer)
-       XCTAssert(layer.minZoom == 10.0)
-       XCTAssert(layer.maxZoom == 20.0)
+        XCTAssert(layer.id == "test-id")
+        XCTAssert(layer.type == LayerType.fill)
+        XCTAssert(layer.filter == nil)
+        XCTAssert(layer.source == "some-source")
+        XCTAssertNil(layer.sourceLayer)
+        XCTAssert(layer.minZoom == 10.0)
+        XCTAssert(layer.maxZoom == 20.0)
     }
 
     func testEncodingAndDecodingOfLayerProtocolProperties() {
-       var layer = FillLayer(id: "test-id")
-       layer.source = "some-source"
-       layer.sourceLayer = nil
-       layer.minZoom = 10.0
-       layer.maxZoom = 20.0
+        var layer = FillLayer(id: "test-id")
+        layer.source = "some-source"
+        layer.sourceLayer = nil
+        layer.minZoom = 10.0
+        layer.maxZoom = 20.0
 
-       var data: Data?
-       do {
-       	   data = try JSONEncoder().encode(layer)
-       } catch {
-           XCTFail("Failed to encode FillLayer")
-       }
+        var data: Data?
+        do {
+            data = try JSONEncoder().encode(layer)
+        } catch {
+            XCTFail("Failed to encode FillLayer")
+        }
 
-       guard let validData = data else {
-           XCTFail("Failed to encode FillLayer")
-           return
-       }
+        guard let validData = data else {
+            XCTFail("Failed to encode FillLayer")
+            return
+        }
 
-       do {
-           let decodedLayer = try JSONDecoder().decode(FillLayer.self, from: validData)
-           XCTAssert(decodedLayer.id == "test-id")
-       	   XCTAssert(decodedLayer.type == LayerType.fill)
-           XCTAssert(decodedLayer.filter == nil)
-           XCTAssert(decodedLayer.source == "some-source")
-           XCTAssertNil(decodedLayer.sourceLayer)
-           XCTAssert(decodedLayer.minZoom == 10.0)
-           XCTAssert(decodedLayer.maxZoom == 20.0)
-       } catch {
-           XCTFail("Failed to decode FillLayer")
-       }
+        do {
+            let decodedLayer = try JSONDecoder().decode(FillLayer.self, from: validData)
+            XCTAssert(decodedLayer.id == "test-id")
+            XCTAssert(decodedLayer.type == LayerType.fill)
+            XCTAssert(decodedLayer.filter == nil)
+            XCTAssert(decodedLayer.source == "some-source")
+            XCTAssertNil(decodedLayer.sourceLayer)
+            XCTAssert(decodedLayer.minZoom == 10.0)
+            XCTAssert(decodedLayer.maxZoom == 20.0)
+        } catch {
+            XCTFail("Failed to decode FillLayer")
+        }
     }
 
     func testEncodingAndDecodingOfLayoutProperties() {
+        var layer = FillLayer(id: "test-id")
+        layer.visibility = .constant(.visible)
+        layer.fillSortKey = Value<Double>.testConstantValue()
 
-       var layer = FillLayer(id: "test-id")
-       layer.visibility = .constant(.visible)
-       layer.fillSortKey = Value<Double>.testConstantValue()
+        var data: Data?
+        do {
+            data = try JSONEncoder().encode(layer)
+        } catch {
+            XCTFail("Failed to encode FillLayer")
+        }
 
-       var data: Data?
-       do {
-       	   data = try JSONEncoder().encode(layer)
-       } catch {
-           XCTFail("Failed to encode FillLayer")
-       }
+        guard let validData = data else {
+            XCTFail("Failed to encode FillLayer")
+            return
+        }
 
-       guard let validData = data else {
-           XCTFail("Failed to encode FillLayer")
-           return
-       }
-
-       do {
-           let decodedLayer = try JSONDecoder().decode(FillLayer.self, from: validData)
-           XCTAssert(decodedLayer.visibility == .constant(.visible))
-       	   XCTAssert(layer.fillSortKey == Value<Double>.testConstantValue())
-       } catch {
-           XCTFail("Failed to decode FillLayer")
-       }
+        do {
+            let decodedLayer = try JSONDecoder().decode(FillLayer.self, from: validData)
+            XCTAssert(decodedLayer.visibility == .constant(.visible))
+            XCTAssert(layer.fillSortKey == Value<Double>.testConstantValue())
+        } catch {
+            XCTFail("Failed to decode FillLayer")
+        }
     }
 
     func testEncodingAndDecodingOfPaintProperties() {
-
        var layer = FillLayer(id: "test-id")
        layer.fillAntialias = Value<Bool>.testConstantValue()
        layer.fillColor = Value<StyleColor>.testConstantValue()
@@ -99,7 +97,7 @@ final class FillLayerTests: XCTestCase {
 
        var data: Data?
        do {
-       	   data = try JSONEncoder().encode(layer)
+           data = try JSONEncoder().encode(layer)
        } catch {
            XCTFail("Failed to encode FillLayer")
        }
@@ -112,13 +110,13 @@ final class FillLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(FillLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
-       	   XCTAssert(layer.fillAntialias == Value<Bool>.testConstantValue())
-       	   XCTAssert(layer.fillColor == Value<StyleColor>.testConstantValue())
-       	   XCTAssert(layer.fillOpacity == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.fillOutlineColor == Value<StyleColor>.testConstantValue())
-       	   XCTAssert(layer.fillPattern == Value<ResolvedImage>.testConstantValue())
-       	   XCTAssert(layer.fillTranslate == Value<[Double]>.testConstantValue())
-       	   XCTAssert(layer.fillTranslateAnchor == Value<FillTranslateAnchor>.testConstantValue())
+           XCTAssert(layer.fillAntialias == Value<Bool>.testConstantValue())
+           XCTAssert(layer.fillColor == Value<StyleColor>.testConstantValue())
+           XCTAssert(layer.fillOpacity == Value<Double>.testConstantValue())
+           XCTAssert(layer.fillOutlineColor == Value<StyleColor>.testConstantValue())
+           XCTAssert(layer.fillPattern == Value<ResolvedImage>.testConstantValue())
+           XCTAssert(layer.fillTranslate == Value<[Double]>.testConstantValue())
+           XCTAssert(layer.fillTranslateAnchor == Value<FillTranslateAnchor>.testConstantValue())
        } catch {
            XCTFail("Failed to decode FillLayer")
        }

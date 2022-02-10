@@ -6,81 +6,79 @@ final class HeatmapLayerTests: XCTestCase {
 
     func testLayerProtocolMembers() {
 
-       var layer = HeatmapLayer(id: "test-id")
-       layer.source = "some-source"
-       layer.sourceLayer = nil
-       layer.minZoom = 10.0
-       layer.maxZoom = 20.0
+        var layer = HeatmapLayer(id: "test-id")
+        layer.source = "some-source"
+        layer.sourceLayer = nil
+        layer.minZoom = 10.0
+        layer.maxZoom = 20.0
 
-       XCTAssert(layer.id == "test-id")
-       XCTAssert(layer.type == LayerType.heatmap)
-       XCTAssert(layer.filter == nil)
-       XCTAssert(layer.source == "some-source")
-       XCTAssertNil(layer.sourceLayer)
-       XCTAssert(layer.minZoom == 10.0)
-       XCTAssert(layer.maxZoom == 20.0)
+        XCTAssert(layer.id == "test-id")
+        XCTAssert(layer.type == LayerType.heatmap)
+        XCTAssert(layer.filter == nil)
+        XCTAssert(layer.source == "some-source")
+        XCTAssertNil(layer.sourceLayer)
+        XCTAssert(layer.minZoom == 10.0)
+        XCTAssert(layer.maxZoom == 20.0)
     }
 
     func testEncodingAndDecodingOfLayerProtocolProperties() {
-       var layer = HeatmapLayer(id: "test-id")
-       layer.source = "some-source"
-       layer.sourceLayer = nil
-       layer.minZoom = 10.0
-       layer.maxZoom = 20.0
+        var layer = HeatmapLayer(id: "test-id")
+        layer.source = "some-source"
+        layer.sourceLayer = nil
+        layer.minZoom = 10.0
+        layer.maxZoom = 20.0
 
-       var data: Data?
-       do {
-       	   data = try JSONEncoder().encode(layer)
-       } catch {
-           XCTFail("Failed to encode HeatmapLayer")
-       }
+        var data: Data?
+        do {
+            data = try JSONEncoder().encode(layer)
+        } catch {
+            XCTFail("Failed to encode HeatmapLayer")
+        }
 
-       guard let validData = data else {
-           XCTFail("Failed to encode HeatmapLayer")
-           return
-       }
+        guard let validData = data else {
+            XCTFail("Failed to encode HeatmapLayer")
+            return
+        }
 
-       do {
-           let decodedLayer = try JSONDecoder().decode(HeatmapLayer.self, from: validData)
-           XCTAssert(decodedLayer.id == "test-id")
-       	   XCTAssert(decodedLayer.type == LayerType.heatmap)
-           XCTAssert(decodedLayer.filter == nil)
-           XCTAssert(decodedLayer.source == "some-source")
-           XCTAssertNil(decodedLayer.sourceLayer)
-           XCTAssert(decodedLayer.minZoom == 10.0)
-           XCTAssert(decodedLayer.maxZoom == 20.0)
-       } catch {
-           XCTFail("Failed to decode HeatmapLayer")
-       }
+        do {
+            let decodedLayer = try JSONDecoder().decode(HeatmapLayer.self, from: validData)
+            XCTAssert(decodedLayer.id == "test-id")
+            XCTAssert(decodedLayer.type == LayerType.heatmap)
+            XCTAssert(decodedLayer.filter == nil)
+            XCTAssert(decodedLayer.source == "some-source")
+            XCTAssertNil(decodedLayer.sourceLayer)
+            XCTAssert(decodedLayer.minZoom == 10.0)
+            XCTAssert(decodedLayer.maxZoom == 20.0)
+        } catch {
+            XCTFail("Failed to decode HeatmapLayer")
+        }
     }
 
     func testEncodingAndDecodingOfLayoutProperties() {
+        var layer = HeatmapLayer(id: "test-id")
+        layer.visibility = .constant(.visible)
 
-       var layer = HeatmapLayer(id: "test-id")
-       layer.visibility = .constant(.visible)
+        var data: Data?
+        do {
+            data = try JSONEncoder().encode(layer)
+        } catch {
+            XCTFail("Failed to encode HeatmapLayer")
+        }
 
-       var data: Data?
-       do {
-       	   data = try JSONEncoder().encode(layer)
-       } catch {
-           XCTFail("Failed to encode HeatmapLayer")
-       }
+        guard let validData = data else {
+            XCTFail("Failed to encode HeatmapLayer")
+            return
+        }
 
-       guard let validData = data else {
-           XCTFail("Failed to encode HeatmapLayer")
-           return
-       }
-
-       do {
-           let decodedLayer = try JSONDecoder().decode(HeatmapLayer.self, from: validData)
-           XCTAssert(decodedLayer.visibility == .constant(.visible))
-       } catch {
-           XCTFail("Failed to decode HeatmapLayer")
-       }
+        do {
+            let decodedLayer = try JSONDecoder().decode(HeatmapLayer.self, from: validData)
+            XCTAssert(decodedLayer.visibility == .constant(.visible))
+        } catch {
+            XCTFail("Failed to decode HeatmapLayer")
+        }
     }
 
     func testEncodingAndDecodingOfPaintProperties() {
-
        var layer = HeatmapLayer(id: "test-id")
        layer.heatmapColor = Value<StyleColor>.testConstantValue()
        layer.heatmapIntensity = Value<Double>.testConstantValue()
@@ -93,7 +91,7 @@ final class HeatmapLayerTests: XCTestCase {
 
        var data: Data?
        do {
-       	   data = try JSONEncoder().encode(layer)
+           data = try JSONEncoder().encode(layer)
        } catch {
            XCTFail("Failed to encode HeatmapLayer")
        }
@@ -106,11 +104,11 @@ final class HeatmapLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(HeatmapLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
-       	   XCTAssert(layer.heatmapColor == Value<StyleColor>.testConstantValue())
-       	   XCTAssert(layer.heatmapIntensity == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.heatmapOpacity == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.heatmapRadius == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.heatmapWeight == Value<Double>.testConstantValue())
+           XCTAssert(layer.heatmapColor == Value<StyleColor>.testConstantValue())
+           XCTAssert(layer.heatmapIntensity == Value<Double>.testConstantValue())
+           XCTAssert(layer.heatmapOpacity == Value<Double>.testConstantValue())
+           XCTAssert(layer.heatmapRadius == Value<Double>.testConstantValue())
+           XCTAssert(layer.heatmapWeight == Value<Double>.testConstantValue())
        } catch {
            XCTFail("Failed to decode HeatmapLayer")
        }

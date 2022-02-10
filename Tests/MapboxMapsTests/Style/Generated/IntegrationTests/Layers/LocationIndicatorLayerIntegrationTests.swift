@@ -55,7 +55,7 @@ final class LocationIndicatorLayerIntegrationTests: MapViewIntegrationTestCase {
             // Add the layer
             do {
                 try style.addPersistentLayer(layer)
-            successfullyAddedLayerExpectation.fulfill()
+                successfullyAddedLayerExpectation.fulfill()
             } catch {
                 XCTFail("Failed to add LocationIndicatorLayer because of error: \(error)")
             }

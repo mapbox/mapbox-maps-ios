@@ -298,6 +298,35 @@ final class Puck2DTests: XCTestCase {
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
 
+    func testActivatingPuckWithBearingDisabledForHeading() throws {
+        configuration.puckBearingEnabled = false
+        recreatePuck()
+        let location = updateLocation(with: .fullAccuracy, heading: .random(in: 0..<360))
+        style.layerExistsStub.defaultReturnValue = false
+
+        puck2D.isActive = true
+
+        var expectedProperties = makeExpectedLayerProperties(with: location)
+        expectedProperties.removeValue(forKey: "bearing")
+        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
+        XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
+    }
+
+    func testActivatingPuckWithBearingDisabledForCourse() throws {
+        configuration.puckBearingEnabled = false
+        puck2D.puckBearingSource = .course
+        recreatePuck()
+        let location = updateLocation(with: .fullAccuracy, course: .random(in: 0..<360))
+        style.layerExistsStub.defaultReturnValue = false
+
+        puck2D.isActive = true
+
+        var expectedProperties = makeExpectedLayerProperties(with: location)
+        expectedProperties.removeValue(forKey: "bearing")
+        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
+        XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
+    }
+
     func testActivatingPuckWithPuckBearingSourceSetToCourse() throws {
         let location = updateLocation(with: .fullAccuracy, course: .random(in: 0..<360))
         style.layerExistsStub.defaultReturnValue = false

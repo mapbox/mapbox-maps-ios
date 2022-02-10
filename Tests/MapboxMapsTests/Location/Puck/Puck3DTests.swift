@@ -157,6 +157,47 @@ final class Puck3DTests: XCTestCase {
         XCTAssertEqual(actualSource.models?["puck-model"]?.orientation, expectedOrientation)
     }
 
+    func testPuckBearingDisabledForHeading() throws {
+        configuration.puckBearingEnabled = false
+        configuration.model.orientation = [
+            .random(in: 0..<360),
+            .random(in: 0..<360),
+            .random(in: 0..<360)]
+        recreatePuck()
+        let heading = CLLocationDirection.random(in: 0..<360)
+        var location = InterpolatedLocation.random()
+        location.heading = heading
+        interpolatedLocationProducer.location = location
+        style.sourceExistsStub.defaultReturnValue = false
+        puck3D.puckBearingSource = .heading
+
+        puck3D.isActive = true
+
+        let expectedOrientation = configuration.model.orientation!
+        let actualSource = try XCTUnwrap(style.addSourceStub.parameters.first?.source as? ModelSource)
+        XCTAssertEqual(actualSource.models?["puck-model"]?.orientation, expectedOrientation)
+    }
+
+    func testPuckBearingDisabledForCourse() throws {
+        configuration.puckBearingEnabled = false
+        configuration.model.orientation = [
+            .random(in: 0..<360),
+            .random(in: 0..<360),
+            .random(in: 0..<360)]
+        recreatePuck()
+        var location = InterpolatedLocation.random()
+        location.course = .random(in: 0..<360)
+        interpolatedLocationProducer.location = location
+        style.sourceExistsStub.defaultReturnValue = false
+        puck3D.puckBearingSource = .course
+
+        puck3D.isActive = true
+
+        let expectedOrientation = configuration.model.orientation!
+        let actualSource = try XCTUnwrap(style.addSourceStub.parameters.first?.source as? ModelSource)
+        XCTAssertEqual(actualSource.models?["puck-model"]?.orientation, expectedOrientation)
+    }
+
     func testModelScaleAndRotation() throws {
         configuration.modelScale = .constant(.random(withLength: 3, generator: { .random(in: 1..<10) }))
         configuration.modelRotation = .constant(.random(withLength: 3, generator: { .random(in: 0..<360) }))

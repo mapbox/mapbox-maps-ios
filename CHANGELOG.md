@@ -9,6 +9,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Removed pitch gesture change angle requirements to avoid map freezing during gesture. ([#1089](https://github.com/mapbox/mapbox-maps-ios/pull/1089))
 * Prevent rendering in background by pausing/resuming display link in response to application or scene lifecycle events ([#1086](https://github.com/mapbox/mapbox-maps-ios/pull/1086))
 * Sync viewport and puck animations. ([#1090](https://github.com/mapbox/mapbox-maps-ios/pull/1090))
+* Add puckBearingEnabled property for location ([#1107](https://github.com/mapbox/mapbox-maps-ios/pull/1107))
 
 ## 10.3.0-rc.1 – January 26, 2022
 

@@ -65,18 +65,18 @@ internal final class Puck3D: Puck {
             }
             model.orientation = [0, 0, 0]
         }
-
-        switch puckBearingSource {
-        case .heading:
-            if let validHeadingDirection = location.heading {
-                model.orientation?[2] += validHeadingDirection
-            }
-        case .course:
-            if let validCourseDirection = location.course {
-                model.orientation?[2] += validCourseDirection
+        if configuration.puckBearingEnabled {
+            switch puckBearingSource {
+            case .heading:
+                if let validHeadingDirection = location.heading {
+                    model.orientation?[2] += validHeadingDirection
+                }
+            case .course:
+                if let validCourseDirection = location.course {
+                    model.orientation?[2] += validCourseDirection
+                }
             }
         }
-
         var source = ModelSource()
         source.models = ["puck-model": model]
 

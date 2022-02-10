@@ -52,6 +52,7 @@
 		B5327E9D260124C00095B6BD /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = B5327E9C260124C00095B6BD /* MapboxMaps */; };
 		B5327EBF260277930095B6BD /* Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5327EBE260277930095B6BD /* Example.swift */; };
 		B5327EC3260277AC0095B6BD /* ExampleProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5327EC2260277AC0095B6BD /* ExampleProtocol.swift */; };
+		B57E1BAE27B5B6B900E8E3BA /* ViewportExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57E1BAD27B5B6B900E8E3BA /* ViewportExample.swift */; };
 		C608C107267BC5B1003C86C3 /* LocalizationExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = C608C106267BC5B1003C86C3 /* LocalizationExample.swift */; };
 		CA03F10F26268DF700673961 /* OfflineManagerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA03F10E26268DF700673961 /* OfflineManagerExample.swift */; };
 		CA4F1F7225E815CF00822D2A /* SwiftUIExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A2E03C25CB64E20082BC31 /* SwiftUIExample.swift */; };
@@ -185,6 +186,7 @@
 		A4AC5DEB2542CB2200995E4C /* CustomStyleURLExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomStyleURLExample.swift; sourceTree = "<group>"; };
 		B5327EBE260277930095B6BD /* Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Example.swift; sourceTree = "<group>"; };
 		B5327EC2260277AC0095B6BD /* ExampleProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleProtocol.swift; sourceTree = "<group>"; };
+		B57E1BAD27B5B6B900E8E3BA /* ViewportExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewportExample.swift; sourceTree = "<group>"; };
 		C608C106267BC5B1003C86C3 /* LocalizationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationExample.swift; sourceTree = "<group>"; };
 		C64ED3842540A2BE00ADADFB /* CameraAnimationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAnimationExample.swift; sourceTree = "<group>"; };
 		C64ED3C42540DD6E00ADADFB /* CustomPointAnnotationExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPointAnnotationExample.swift; sourceTree = "<group>"; };
@@ -267,6 +269,7 @@
 				C64ED3C42540DD6E00ADADFB /* CustomPointAnnotationExample.swift */,
 				A4AC5DEB2542CB2200995E4C /* CustomStyleURLExample.swift */,
 				C69F01EC2543646A001AB49B /* DataDrivenSymbolsExample.swift */,
+				73E27C2527AF024C0067F277 /* DataJoinExample.swift */,
 				17B48066268A4E9300CF0D5E /* DistanceExpressionExample.swift */,
 				077E3B2B2581810600564A3E /* ExternalVectorSourceExample.swift */,
 				07B0715F254789D6007F2865 /* FeaturesAtPointExample.swift */,
@@ -278,7 +281,6 @@
 				C64ED3C82541CA3A00ADADFB /* LineAnnotationExample.swift */,
 				0C78AC2825BF70E40057F570 /* LineGradientExample.swift */,
 				17B40D2326A85500000887EF /* LiveDataExample.swift */,
-				73E27C2527AF024C0067F277 /* DataJoinExample.swift */,
 				C608C106267BC5B1003C86C3 /* LocalizationExample.swift */,
 				07B071CD2547CF2B007F2865 /* MultipleGeometriesExample.swift */,
 				17483DFC2670113300396F8D /* MultiplePointAnnotationsExample.swift */,
@@ -305,6 +307,7 @@
 				077E3B932581987B00564A3E /* UpdatePointAnnotationPositionExample.swift */,
 				30517C69274BD4D300B706E5 /* ViewAnnotationBasicExample.swift */,
 				304AB3B427439287005B6D09 /* ViewAnnotationMarkerExample.swift */,
+				B57E1BAD27B5B6B900E8E3BA /* ViewportExample.swift */,
 			);
 			path = "All Examples";
 			sourceTree = "<group>";
@@ -620,6 +623,7 @@
 				B5327EBF260277930095B6BD /* Example.swift in Sources */,
 				CADCF736258499170065C51B /* ExampleTableViewController.swift in Sources */,
 				17B4805A2684FB2300CF0D5E /* AnimateImageLayerExample.swift in Sources */,
+				B57E1BAE27B5B6B900E8E3BA /* ViewportExample.swift in Sources */,
 				A4211CE62592549900D215B4 /* RestrictCoordinateBoundsExample.swift in Sources */,
 				0C52BA9825AF8C880054ECA8 /* Custom3DPuckExample.swift in Sources */,
 				CADCF7292584990E0065C51B /* FeaturesAtPointExample.swift in Sources */,

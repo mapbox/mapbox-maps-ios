@@ -258,5 +258,8 @@ public struct Examples {
         Example(title: "Globe View",
                 description: "Display map on a globe.",
                 type: GlobeViewExample.self),
+        Example(title: "Viewport",
+                description: "Viewport camera showcase",
+                type: ViewportExample.self),
     ]
 }

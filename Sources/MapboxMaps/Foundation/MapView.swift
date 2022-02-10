@@ -40,6 +40,11 @@ open class MapView: UIView {
     /// Manages the configuration of custom view annotations on the map.
     public private(set) var viewAnnotations: ViewAnnotationManager!
 
+    /// ``Viewport`` is a high-level and extensible API for driving the map camera. It
+    /// provides built-in states for following the location puck and showing an overview of
+    /// a GeoJSON geometry, and enables the creation of custom states. Transitions
+    /// between states can be animated with a built-in default transition and via custom
+    /// transitions.
     @_spi(Experimental) public private(set) var viewport: Viewport!
 
     /// Controls the display of attribution dialogs

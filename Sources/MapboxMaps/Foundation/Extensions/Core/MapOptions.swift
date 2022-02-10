@@ -1,4 +1,4 @@
-extension MapboxCoreMaps.MapOptions {
+extension MapOptions {
     /// Initialize a `MapOptions` object that is used when initializing a Map.
     ///
     /// For initializing a `MapView` please see `MapInitOptions`, and
@@ -90,7 +90,6 @@ extension MapboxCoreMaps.MapOptions {
         return CGSize(width: Double(size.width), height: Double(size.height))
     }
 
-    /// :nodoc:
     public override func isEqual(_ object: Any?) -> Bool {
         guard let other = object as? MapOptions else {
             return false
@@ -110,7 +109,6 @@ extension MapboxCoreMaps.MapOptions {
             (glyphsRasterizationOptions == other.glyphsRasterizationOptions)
     }
 
-    /// :nodoc:
     open override var hash: Int {
         var hasher = Hasher()
         hasher.combine(constrainMode)

@@ -1,7 +1,7 @@
 import Foundation
 @_implementationOnly import MapboxCommon_Private
 
-extension MapboxCoreMaps.RenderedQueryOptions {
+extension RenderedQueryOptions {
 
     /// Initialize a set of options to optimize feature querying
     /// - Parameters:

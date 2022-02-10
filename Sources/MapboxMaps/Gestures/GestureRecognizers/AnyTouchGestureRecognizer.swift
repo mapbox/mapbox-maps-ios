@@ -40,6 +40,7 @@ internal final class AnyTouchGestureRecognizer: UIGestureRecognizer {
         self.timerProvider = timerProvider
         super.init(target: nil, action: nil)
         self.cancelsTouchesInView = false
+        self.delaysTouchesEnded = false
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {

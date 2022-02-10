@@ -6,83 +6,81 @@ final class CircleLayerTests: XCTestCase {
 
     func testLayerProtocolMembers() {
 
-       var layer = CircleLayer(id: "test-id")
-       layer.source = "some-source"
-       layer.sourceLayer = nil
-       layer.minZoom = 10.0
-       layer.maxZoom = 20.0
+        var layer = CircleLayer(id: "test-id")
+        layer.source = "some-source"
+        layer.sourceLayer = nil
+        layer.minZoom = 10.0
+        layer.maxZoom = 20.0
 
-       XCTAssert(layer.id == "test-id")
-       XCTAssert(layer.type == LayerType.circle)
-       XCTAssert(layer.filter == nil)
-       XCTAssert(layer.source == "some-source")
-       XCTAssertNil(layer.sourceLayer)
-       XCTAssert(layer.minZoom == 10.0)
-       XCTAssert(layer.maxZoom == 20.0)
+        XCTAssert(layer.id == "test-id")
+        XCTAssert(layer.type == LayerType.circle)
+        XCTAssert(layer.filter == nil)
+        XCTAssert(layer.source == "some-source")
+        XCTAssertNil(layer.sourceLayer)
+        XCTAssert(layer.minZoom == 10.0)
+        XCTAssert(layer.maxZoom == 20.0)
     }
 
     func testEncodingAndDecodingOfLayerProtocolProperties() {
-       var layer = CircleLayer(id: "test-id")
-       layer.source = "some-source"
-       layer.sourceLayer = nil
-       layer.minZoom = 10.0
-       layer.maxZoom = 20.0
+        var layer = CircleLayer(id: "test-id")
+        layer.source = "some-source"
+        layer.sourceLayer = nil
+        layer.minZoom = 10.0
+        layer.maxZoom = 20.0
 
-       var data: Data?
-       do {
-       	   data = try JSONEncoder().encode(layer)
-       } catch {
-           XCTFail("Failed to encode CircleLayer")
-       }
+        var data: Data?
+        do {
+            data = try JSONEncoder().encode(layer)
+        } catch {
+            XCTFail("Failed to encode CircleLayer")
+        }
 
-       guard let validData = data else {
-           XCTFail("Failed to encode CircleLayer")
-           return
-       }
+        guard let validData = data else {
+            XCTFail("Failed to encode CircleLayer")
+            return
+        }
 
-       do {
-           let decodedLayer = try JSONDecoder().decode(CircleLayer.self, from: validData)
-           XCTAssert(decodedLayer.id == "test-id")
-       	   XCTAssert(decodedLayer.type == LayerType.circle)
-           XCTAssert(decodedLayer.filter == nil)
-           XCTAssert(decodedLayer.source == "some-source")
-           XCTAssertNil(decodedLayer.sourceLayer)
-           XCTAssert(decodedLayer.minZoom == 10.0)
-           XCTAssert(decodedLayer.maxZoom == 20.0)
-       } catch {
-           XCTFail("Failed to decode CircleLayer")
-       }
+        do {
+            let decodedLayer = try JSONDecoder().decode(CircleLayer.self, from: validData)
+            XCTAssert(decodedLayer.id == "test-id")
+            XCTAssert(decodedLayer.type == LayerType.circle)
+            XCTAssert(decodedLayer.filter == nil)
+            XCTAssert(decodedLayer.source == "some-source")
+            XCTAssertNil(decodedLayer.sourceLayer)
+            XCTAssert(decodedLayer.minZoom == 10.0)
+            XCTAssert(decodedLayer.maxZoom == 20.0)
+        } catch {
+            XCTFail("Failed to decode CircleLayer")
+        }
     }
 
     func testEncodingAndDecodingOfLayoutProperties() {
+        var layer = CircleLayer(id: "test-id")
+        layer.visibility = .constant(.visible)
+        layer.circleSortKey = Value<Double>.testConstantValue()
 
-       var layer = CircleLayer(id: "test-id")
-       layer.visibility = .constant(.visible)
-       layer.circleSortKey = Value<Double>.testConstantValue()
+        var data: Data?
+        do {
+            data = try JSONEncoder().encode(layer)
+        } catch {
+            XCTFail("Failed to encode CircleLayer")
+        }
 
-       var data: Data?
-       do {
-       	   data = try JSONEncoder().encode(layer)
-       } catch {
-           XCTFail("Failed to encode CircleLayer")
-       }
+        guard let validData = data else {
+            XCTFail("Failed to encode CircleLayer")
+            return
+        }
 
-       guard let validData = data else {
-           XCTFail("Failed to encode CircleLayer")
-           return
-       }
-
-       do {
-           let decodedLayer = try JSONDecoder().decode(CircleLayer.self, from: validData)
-           XCTAssert(decodedLayer.visibility == .constant(.visible))
-       	   XCTAssert(layer.circleSortKey == Value<Double>.testConstantValue())
-       } catch {
-           XCTFail("Failed to decode CircleLayer")
-       }
+        do {
+            let decodedLayer = try JSONDecoder().decode(CircleLayer.self, from: validData)
+            XCTAssert(decodedLayer.visibility == .constant(.visible))
+            XCTAssert(layer.circleSortKey == Value<Double>.testConstantValue())
+        } catch {
+            XCTFail("Failed to decode CircleLayer")
+        }
     }
 
     func testEncodingAndDecodingOfPaintProperties() {
-
        var layer = CircleLayer(id: "test-id")
        layer.circleBlur = Value<Double>.testConstantValue()
        layer.circleBlurTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -106,7 +104,7 @@ final class CircleLayerTests: XCTestCase {
 
        var data: Data?
        do {
-       	   data = try JSONEncoder().encode(layer)
+           data = try JSONEncoder().encode(layer)
        } catch {
            XCTFail("Failed to encode CircleLayer")
        }
@@ -119,17 +117,17 @@ final class CircleLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(CircleLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
-       	   XCTAssert(layer.circleBlur == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.circleColor == Value<StyleColor>.testConstantValue())
-       	   XCTAssert(layer.circleOpacity == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.circlePitchAlignment == Value<CirclePitchAlignment>.testConstantValue())
-       	   XCTAssert(layer.circlePitchScale == Value<CirclePitchScale>.testConstantValue())
-       	   XCTAssert(layer.circleRadius == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.circleStrokeColor == Value<StyleColor>.testConstantValue())
-       	   XCTAssert(layer.circleStrokeOpacity == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.circleStrokeWidth == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.circleTranslate == Value<[Double]>.testConstantValue())
-       	   XCTAssert(layer.circleTranslateAnchor == Value<CircleTranslateAnchor>.testConstantValue())
+           XCTAssert(layer.circleBlur == Value<Double>.testConstantValue())
+           XCTAssert(layer.circleColor == Value<StyleColor>.testConstantValue())
+           XCTAssert(layer.circleOpacity == Value<Double>.testConstantValue())
+           XCTAssert(layer.circlePitchAlignment == Value<CirclePitchAlignment>.testConstantValue())
+           XCTAssert(layer.circlePitchScale == Value<CirclePitchScale>.testConstantValue())
+           XCTAssert(layer.circleRadius == Value<Double>.testConstantValue())
+           XCTAssert(layer.circleStrokeColor == Value<StyleColor>.testConstantValue())
+           XCTAssert(layer.circleStrokeOpacity == Value<Double>.testConstantValue())
+           XCTAssert(layer.circleStrokeWidth == Value<Double>.testConstantValue())
+           XCTAssert(layer.circleTranslate == Value<[Double]>.testConstantValue())
+           XCTAssert(layer.circleTranslateAnchor == Value<CircleTranslateAnchor>.testConstantValue())
        } catch {
            XCTFail("Failed to decode CircleLayer")
        }

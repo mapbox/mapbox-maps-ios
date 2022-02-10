@@ -1,9 +1,18 @@
 import Turf
 
+/// A ``ViewportState`` implementation that shows an overview of the geometry specified by its
+/// ``OverviewViewportStateOptions/geometry``.
+///
+/// Use ``Viewport/makeOverviewViewportState(options:)`` to create instances of this
+/// class.
 @_spi(Experimental) public final class OverviewViewportState {
 
-    // MARK: - Public Config
-
+    /// Configuration options.
+    ///
+    /// When set, the viewport reframes the geometry using the new options and updates its camera with
+    /// an ``CameraAnimationsManager/ease(to:duration:curve:completion:)``
+    /// animation with a linear timing curve and duration specified by the new value's
+    /// ``OverviewViewportStateOptions/animationDuration``.
     public var options: OverviewViewportStateOptions {
         didSet {
             recalculateCameraOptions()
@@ -58,10 +67,14 @@ import Turf
 }
 
 extension OverviewViewportState: ViewportState {
+    /// :nodoc:
+    /// See ``ViewportState/observeDataSource(with:)``.
     public func observeDataSource(with handler: @escaping (CameraOptions) -> Bool) -> Cancelable {
         return observableCameraOptions.observe(with: handler)
     }
 
+    /// :nodoc:
+    /// See ``ViewportState/startUpdatingCamera()``.
     public func startUpdatingCamera() {
         guard updatingCameraCancelable == nil else {
             return
@@ -72,6 +85,8 @@ extension OverviewViewportState: ViewportState {
         }
     }
 
+    /// :nodoc:
+    /// See ``ViewportState/stopUpdatingCamera()``.
     public func stopUpdatingCamera() {
         updatingCameraCancelable?.cancel()
         updatingCameraCancelable = nil

@@ -30,13 +30,18 @@ internal protocol MapboxMapProtocol: AnyObject {
     func point(for coordinate: CLLocationCoordinate2D) -> CGPoint
 }
 
-// swiftlint:disable:next type_body_length
+// swiftlint:disable type_body_length
+
+/// MapboxMap provides access to the map model, including the camera, style, observable map events,
+/// and querying rendered features. Obtain the MapboxMap instance for a MapView via MapView.mapboxMap.
+///
+/// Note: MapboxMap should only be used from the main thread.
 public final class MapboxMap: MapboxMapProtocol {
     /// The underlying renderer object responsible for rendering the map
     private let __map: Map
 
     /// The `style` object supports run time styling.
-    public internal(set) var style: Style
+    public let style: Style
 
     private let eventHandlers = WeakSet<MapEventHandler>()
 
@@ -614,6 +619,8 @@ public final class MapboxMap: MapboxMapProtocol {
     }
 }
 
+// swiftlint:enable type_body_length
+
 // MARK: - MapFeatureQueryable
 
 extension MapboxMap: MapFeatureQueryable {
@@ -844,11 +851,36 @@ extension MapboxMap: MapEventsObservable {
         return handler
     }
 
+    /// Listen to a single occurrence of a Map event.
+    ///
+    /// This will observe the next (and only the next) event of the specified
+    /// type. After observation, the underlying subscriber will unsubscribe from
+    /// the map or snapshotter.
+    ///
+    /// If you need to unsubscribe before the event fires, call `cancel()` on
+    /// the returned `Cancelable` object.
+    ///
+    /// - Parameters:
+    ///   - eventType: The event type to listen to.
+    ///   - handler: The closure to execute when the event occurs.
+    ///
+    /// - Returns: A `Cancelable` object that you can use to stop listening for
+    ///     the event. This is especially important if you have a retain cycle in
+    ///     the handler.
     @discardableResult
     public func onNext(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
         return onNext(eventTypes: [eventType], handler: handler)
     }
 
+    /// Listen to multiple occurrences of a Map event.
+    ///
+    /// - Parameters:
+    ///   - eventType: The event type to listen to.
+    ///   - handler: The closure to execute when the event occurs.
+    ///
+    /// - Returns: A `Cancelable` object that you can use to stop listening for
+    ///     events. This is especially important if you have a retain cycle in
+    ///     the handler.
     @discardableResult
     public func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
         let handler = MapEventHandler(for: [eventType.rawValue],

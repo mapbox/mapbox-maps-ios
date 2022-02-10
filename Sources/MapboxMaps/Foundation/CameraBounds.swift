@@ -20,7 +20,6 @@ public struct CameraBounds: Hashable {
     /// The minimum allowed pitch value degrees.
     public let minPitch: CGFloat
 
-    /// :nodoc:
     internal init(bounds: CoordinateBounds,
                   maxZoom: CGFloat,
                   minZoom: CGFloat,
@@ -41,7 +40,6 @@ public struct CameraBounds: Hashable {
         self.minPitch = CGFloat(objcValue.minPitch)
     }
 
-    /// :nodoc:
     public static func == (lhs: CameraBounds, rhs: CameraBounds) -> Bool {
         return lhs.bounds == rhs.bounds
             && lhs.maxZoom == rhs.maxZoom
@@ -50,7 +48,6 @@ public struct CameraBounds: Hashable {
             && lhs.minPitch == rhs.minPitch
     }
 
-    /// :nodoc:
     public func hash(into hasher: inout Hasher) {
         hasher.combine(bounds)
         hasher.combine(maxZoom)

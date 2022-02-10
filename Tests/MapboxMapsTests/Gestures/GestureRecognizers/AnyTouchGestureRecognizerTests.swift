@@ -25,6 +25,8 @@ final class AnyTouchGestureRecognizerTests: XCTestCase {
 
     func testInitialization() {
         XCTAssertFalse(gestureRecognizer.cancelsTouchesInView)
+        XCTAssertFalse(gestureRecognizer.delaysTouchesBegan)
+        XCTAssertFalse(gestureRecognizer.delaysTouchesEnded)
     }
 
     func testCanBePreventedBy() {

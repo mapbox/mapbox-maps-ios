@@ -40,6 +40,11 @@ open class MapView: UIView {
     /// Manages the configuration of custom view annotations on the map.
     public private(set) var viewAnnotations: ViewAnnotationManager!
 
+    /// ``Viewport`` is a high-level and extensible API for driving the map camera. It
+    /// provides built-in states for following the location puck and showing an overview of
+    /// a GeoJSON geometry, and enables the creation of custom states. Transitions
+    /// between states can be animated with a built-in default transition and via custom
+    /// transitions.
     @_spi(Experimental) public private(set) var viewport: Viewport!
 
     /// Controls the display of attribution dialogs
@@ -143,12 +148,16 @@ open class MapView: UIView {
     private var _untypedPreferredFrameRateRange: Any?
     #endif
 
-    /// The `timestamp` from the underlying `CADisplayLink` if it exists, otherwise `nil`
+    /// The `timestamp` from the underlying `CADisplayLink` if it exists, otherwise `nil`.
+    /// :nodoc:
+    /// This property is for internal metrics purposes only and should not be considered part of the public API.
     @_spi(Metrics) public var displayLinkTimestamp: CFTimeInterval? {
         return displayLink?.timestamp
     }
 
     /// The `duration` from the underlying `CADisplayLink` if it exists, otherwise `nil`
+    /// :nodoc:
+    /// This property is for internal metrics purposes only and should not be considered part of the public API.
     @_spi(Metrics) public var displayLinkDuration: CFTimeInterval? {
         return displayLink?.duration
     }

@@ -24,7 +24,13 @@ internal protocol StyleProtocol: AnyObject {
     func removeImage(withId id: String) throws
 }
 
-// swiftlint:disable:next type_body_length
+// swiftlint:disable type_body_length
+
+/// Style provides access to the APIs used to dynamically modify the map's style. Use it
+/// to read and write layers, sources, and images. Obtain the Style instance for a MapView
+/// via MapView.mapboxMap.style.
+///
+/// Note: Style should only be used from the main thread.
 public final class Style: StyleProtocol {
 
     public private(set) weak var styleManager: StyleManager!
@@ -945,6 +951,8 @@ public final class Style: StyleProtocol {
         return result
     }
 }
+
+// swiftlint:enable type_body_length
 
 // MARK: - Attribution -
 

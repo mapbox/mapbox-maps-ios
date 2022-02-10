@@ -1,9 +1,22 @@
-// Uses pointer-based equality and hashing
+/// `ViewportStatus` contains 3 cases that express what the ``Viewport`` is doing at any given time.
+///
+/// The ``ViewportStatus/state(_:)`` and ``ViewportStatus/transition(_:toState:)``
+/// cases have associated values that are reference types, so equality and hash are implemented in terms of
+/// the identities of those objects.
 @_spi(Experimental) public enum ViewportStatus: Hashable {
-    case idle
-    case state(ViewportState)
-    case transition(ViewportTransition, toState: ViewportState)
 
+    /// The `idle` status indicates that ``Viewport`` is inactive.
+    case idle
+
+    /// The `state(_:)` status indicates that ``Viewport`` is running the associated value `state`.
+    case state(_ state: ViewportState)
+
+    /// The `transition(_:toState:)` status indicates that ``Viewport`` is running `transition`
+    /// and will start running `toState` upon success.
+    case transition(_ transition: ViewportTransition, toState: ViewportState)
+
+    /// Compares two `ViewportStatus` values. Returns `true` if and only if they are the same case
+    /// and any associated values are identical.
     public static func == (lhs: ViewportStatus, rhs: ViewportStatus) -> Bool {
         switch (lhs, rhs) {
         case (.idle, .idle):
@@ -19,6 +32,7 @@
         }
     }
 
+    /// Combines the `ObjectIdentifier` of each associated value into `hasher`.
     public func hash(into hasher: inout Hasher) {
         switch self {
         case .idle:

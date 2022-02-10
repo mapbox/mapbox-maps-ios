@@ -45,16 +45,10 @@ internal final class PitchGestureHandler: GestureHandler, UIGestureRecognizerDel
             }
 
             let translation = gestureRecognizer.translation(in: view)
-            let translationAngle = angleOfLine(from: .zero, to: translation)
-
-            // If the angle between the touch locations is less than the maximum
-            // AND the translation angle is more than 60 degrees, update the pitch.
-            if touchAngleIsLessThanMaximum(for: gestureRecognizer), abs(translationAngle) > 60 {
-                let verticalGestureTranslation = translation.y
-                let slowDown = CGFloat(2.0)
-                let newPitch = initialPitch - (verticalGestureTranslation / slowDown)
-                mapboxMap.setCamera(to: CameraOptions(pitch: newPitch))
-            }
+            let verticalGestureTranslation = translation.y
+            let slowDown = CGFloat(2.0)
+            let newPitch = initialPitch - (verticalGestureTranslation / slowDown)
+            mapboxMap.setCamera(to: CameraOptions(pitch: newPitch))
         case .ended, .cancelled:
             initialPitch = nil
             delegate?.gestureEnded(for: .pitch, willAnimate: false)

@@ -1,0 +1,2093 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MBMMap Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    <link rel='shortcut icon' href='https://www.mapbox.com/img/favicon.ico' type='image/x-icon' />
+
+    <style type="text/css">
+      .nav-group-name[data-name="MBMMap"] > .small-heading,
+      .nav-group-task[data-name="MBMMap"] {
+        background-color: #f5f8fc;
+        font-family: "Open Sans Bold";
+        border-left: 3px solid #3a68d8;
+        padding-left: 5px
+      }
+    </style>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Class/MBMMap" class="dashAnchor"></a>
+
+    <a title="MBMMap Class Reference"></a>
+
+    <header class="header-container">
+      <div class="limiter">
+        <div class="header">
+        <p class="header-col header-col--primary">
+          <a class="header-link" href="../index.html">
+            <img style="height: 25px;"  class="header-icon" src="../img/mapbox.svg" alt="MapboxCoreMaps Docs"/>
+            <span class='header-tag'>MapboxCoreMaps for iOS Reference (10.3.2)</span>
+          </a>
+          
+        </p>
+    
+    
+      </div>
+      </div>
+    </header>
+
+    <div class="breadcrumbs">
+      <div class="limiter">
+        <a class="breadcrumb" href="../index.html">MapboxCoreMaps Reference</a>
+        <img class="carat" src="../img/carat.png" />
+        MBMMap Class Reference
+      </div>
+    </div>
+
+    <div class="content-wrapper limiter">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name" data-name="Map">
+            <a class="small-heading" href="../Map.html">Map<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMMap" data-url="Classes/MBMMap.html">
+                <a title="MBMMap" class="nav-group-task-link" href="../Classes/MBMMap.html">MBMMap</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMMapOptions" data-url="Classes/MBMMapOptions.html">
+                <a title="MBMMapOptions" class="nav-group-task-link" href="../Classes/MBMMapOptions.html">MBMMapOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMResourceOptions" data-url="Classes/MBMResourceOptions.html">
+                <a title="MBMResourceOptions" class="nav-group-task-link" href="../Classes/MBMResourceOptions.html">MBMResourceOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMContextMode" data-url="Enums/MBMContextMode.html">
+                <a title="MBMContextMode" class="nav-group-task-link" href="../Enums/MBMContextMode.html">MBMContextMode</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMConstrainMode" data-url="Enums/MBMConstrainMode.html">
+                <a title="MBMConstrainMode" class="nav-group-task-link" href="../Enums/MBMConstrainMode.html">MBMConstrainMode</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMViewportMode" data-url="Enums/MBMViewportMode.html">
+                <a title="MBMViewportMode" class="nav-group-task-link" href="../Enums/MBMViewportMode.html">MBMViewportMode</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMGlyphsRasterizationOptions" data-url="Classes/MBMGlyphsRasterizationOptions.html">
+                <a title="MBMGlyphsRasterizationOptions" class="nav-group-task-link" href="../Classes/MBMGlyphsRasterizationOptions.html">MBMGlyphsRasterizationOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMGlyphsRasterizationMode" data-url="Enums/MBMGlyphsRasterizationMode.html">
+                <a title="MBMGlyphsRasterizationMode" class="nav-group-task-link" href="../Enums/MBMGlyphsRasterizationMode.html">MBMGlyphsRasterizationMode</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMNorthOrientation" data-url="Enums/MBMNorthOrientation.html">
+                <a title="MBMNorthOrientation" class="nav-group-task-link" href="../Enums/MBMNorthOrientation.html">MBMNorthOrientation</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMScreenCoordinate" data-url="Classes/MBMScreenCoordinate.html">
+                <a title="MBMScreenCoordinate" class="nav-group-task-link" href="../Classes/MBMScreenCoordinate.html">MBMScreenCoordinate</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMScreenBox" data-url="Classes/MBMScreenBox.html">
+                <a title="MBMScreenBox" class="nav-group-task-link" href="../Classes/MBMScreenBox.html">MBMScreenBox</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCoordinateBoundsZoom" data-url="Classes/MBMCoordinateBoundsZoom.html">
+                <a title="MBMCoordinateBoundsZoom" class="nav-group-task-link" href="../Classes/MBMCoordinateBoundsZoom.html">MBMCoordinateBoundsZoom</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMMapDebugOptions" data-url="Enums/MBMMapDebugOptions.html">
+                <a title="MBMMapDebugOptions" class="nav-group-task-link" href="../Enums/MBMMapDebugOptions.html">MBMMapDebugOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMMapConstants" data-url="Classes/MBMMapConstants.html">
+                <a title="MBMMapConstants" class="nav-group-task-link" href="../Classes/MBMMapConstants.html">MBMMapConstants</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMSize" data-url="Classes/MBMSize.html">
+                <a title="MBMSize" class="nav-group-task-link" href="../Classes/MBMSize.html">MBMSize</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Map style management">
+            <a class="small-heading" href="../Map style management.html">Map style management<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMStyleManager" data-url="Classes/MBMStyleManager.html">
+                <a title="MBMStyleManager" class="nav-group-task-link" href="../Classes/MBMStyleManager.html">MBMStyleManager</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMImage" data-url="Classes/MBMImage.html">
+                <a title="MBMImage" class="nav-group-task-link" href="../Classes/MBMImage.html">MBMImage</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMImageContent" data-url="Classes/MBMImageContent.html">
+                <a title="MBMImageContent" class="nav-group-task-link" href="../Classes/MBMImageContent.html">MBMImageContent</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMImageStretches" data-url="Classes/MBMImageStretches.html">
+                <a title="MBMImageStretches" class="nav-group-task-link" href="../Classes/MBMImageStretches.html">MBMImageStretches</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMLayerPosition" data-url="Classes/MBMLayerPosition.html">
+                <a title="MBMLayerPosition" class="nav-group-task-link" href="../Classes/MBMLayerPosition.html">MBMLayerPosition</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMTileOptions" data-url="Classes/MBMTileOptions.html">
+                <a title="MBMTileOptions" class="nav-group-task-link" href="../Classes/MBMTileOptions.html">MBMTileOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCanonicalTileID" data-url="Classes/MBMCanonicalTileID.html">
+                <a title="MBMCanonicalTileID" class="nav-group-task-link" href="../Classes/MBMCanonicalTileID.html">MBMCanonicalTileID</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCustomGeometrySourceOptions" data-url="Classes/MBMCustomGeometrySourceOptions.html">
+                <a title="MBMCustomGeometrySourceOptions" class="nav-group-task-link" href="../Classes/MBMCustomGeometrySourceOptions.html">MBMCustomGeometrySourceOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCancelTileFunctionCallback" data-url="Map%20style%20management.html#/c:MBMCancelTileFunctionCallback.h@T@MBMCancelTileFunctionCallback">
+                <a title="MBMCancelTileFunctionCallback" class="nav-group-task-link" href="../Map%20style%20management.html#/c:MBMCancelTileFunctionCallback.h@T@MBMCancelTileFunctionCallback">MBMCancelTileFunctionCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMFetchTileFunctionCallback" data-url="Map%20style%20management.html#/c:MBMFetchTileFunctionCallback.h@T@MBMFetchTileFunctionCallback">
+                <a title="MBMFetchTileFunctionCallback" class="nav-group-task-link" href="../Map%20style%20management.html#/c:MBMFetchTileFunctionCallback.h@T@MBMFetchTileFunctionCallback">MBMFetchTileFunctionCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePropertyValue" data-url="Classes/MBMStylePropertyValue.html">
+                <a title="MBMStylePropertyValue" class="nav-group-task-link" href="../Classes/MBMStylePropertyValue.html">MBMStylePropertyValue</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePropertyValueKind" data-url="Enums/MBMStylePropertyValueKind.html">
+                <a title="MBMStylePropertyValueKind" class="nav-group-task-link" href="../Enums/MBMStylePropertyValueKind.html">MBMStylePropertyValueKind</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMElevationData" data-url="Protocols/MBMElevationData.html">
+                <a title="MBMElevationData" class="nav-group-task-link" href="../Protocols/MBMElevationData.html">MBMElevationData</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCustomLayerRenderParameters" data-url="Classes/MBMCustomLayerRenderParameters.html">
+                <a title="MBMCustomLayerRenderParameters" class="nav-group-task-link" href="../Classes/MBMCustomLayerRenderParameters.html">MBMCustomLayerRenderParameters</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCustomLayerHost" data-url="Protocols/MBMCustomLayerHost.html">
+                <a title="MBMCustomLayerHost" class="nav-group-task-link" href="../Protocols/MBMCustomLayerHost.html">MBMCustomLayerHost</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStyleObjectInfo" data-url="Classes/MBMStyleObjectInfo.html">
+                <a title="MBMStyleObjectInfo" class="nav-group-task-link" href="../Classes/MBMStyleObjectInfo.html">MBMStyleObjectInfo</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Map camera management">
+            <a class="small-heading" href="../Map camera management.html">Map camera management<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMCameraManager" data-url="Classes/MBMCameraManager.html">
+                <a title="MBMCameraManager" class="nav-group-task-link" href="../Classes/MBMCameraManager.html">MBMCameraManager</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCameraBounds" data-url="Classes/MBMCameraBounds.html">
+                <a title="MBMCameraBounds" class="nav-group-task-link" href="../Classes/MBMCameraBounds.html">MBMCameraBounds</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCameraBoundsOptions" data-url="Classes/MBMCameraBoundsOptions.html">
+                <a title="MBMCameraBoundsOptions" class="nav-group-task-link" href="../Classes/MBMCameraBoundsOptions.html">MBMCameraBoundsOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCameraOptions" data-url="Classes/MBMCameraOptions.html">
+                <a title="MBMCameraOptions" class="nav-group-task-link" href="../Classes/MBMCameraOptions.html">MBMCameraOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCameraState" data-url="Classes/MBMCameraState.html">
+                <a title="MBMCameraState" class="nav-group-task-link" href="../Classes/MBMCameraState.html">MBMCameraState</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMCoordinateBounds" data-url="Classes/MBMCoordinateBounds.html">
+                <a title="MBMCoordinateBounds" class="nav-group-task-link" href="../Classes/MBMCoordinateBounds.html">MBMCoordinateBounds</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMEdgeInsets" data-url="Classes/MBMEdgeInsets.html">
+                <a title="MBMEdgeInsets" class="nav-group-task-link" href="../Classes/MBMEdgeInsets.html">MBMEdgeInsets</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMFreeCameraOptions" data-url="Classes/MBMFreeCameraOptions.html">
+                <a title="MBMFreeCameraOptions" class="nav-group-task-link" href="../Classes/MBMFreeCameraOptions.html">MBMFreeCameraOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMTransitionOptions" data-url="Classes/MBMTransitionOptions.html">
+                <a title="MBMTransitionOptions" class="nav-group-task-link" href="../Classes/MBMTransitionOptions.html">MBMTransitionOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMVec3" data-url="Classes/MBMVec3.html">
+                <a title="MBMVec3" class="nav-group-task-link" href="../Classes/MBMVec3.html">MBMVec3</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMVec4" data-url="Classes/MBMVec4.html">
+                <a title="MBMVec4" class="nav-group-task-link" href="../Classes/MBMVec4.html">MBMVec4</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Map querying and feature state">
+            <a class="small-heading" href="../Map querying and feature state.html">Map querying and feature state<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMQueryFeatureExtensionCallback" data-url="Map%20querying%20and%20feature%20state.html#/c:MBMQueryFeatureExtensionCallback_Internal.h@T@MBMQueryFeatureExtensionCallback">
+                <a title="MBMQueryFeatureExtensionCallback" class="nav-group-task-link" href="../Map%20querying%20and%20feature%20state.html#/c:MBMQueryFeatureExtensionCallback_Internal.h@T@MBMQueryFeatureExtensionCallback">MBMQueryFeatureExtensionCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMQueryFeatureStateCallback" data-url="Map%20querying%20and%20feature%20state.html#/c:MBMQueryFeatureStateCallback_Internal.h@T@MBMQueryFeatureStateCallback">
+                <a title="MBMQueryFeatureStateCallback" class="nav-group-task-link" href="../Map%20querying%20and%20feature%20state.html#/c:MBMQueryFeatureStateCallback_Internal.h@T@MBMQueryFeatureStateCallback">MBMQueryFeatureStateCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMQueryFeaturesCallback" data-url="Map%20querying%20and%20feature%20state.html#/c:MBMQueryFeaturesCallback_Internal.h@T@MBMQueryFeaturesCallback">
+                <a title="MBMQueryFeaturesCallback" class="nav-group-task-link" href="../Map%20querying%20and%20feature%20state.html#/c:MBMQueryFeaturesCallback_Internal.h@T@MBMQueryFeaturesCallback">MBMQueryFeaturesCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMQueriedFeature" data-url="Classes/MBMQueriedFeature.html">
+                <a title="MBMQueriedFeature" class="nav-group-task-link" href="../Classes/MBMQueriedFeature.html">MBMQueriedFeature</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMRenderedQueryOptions" data-url="Classes/MBMRenderedQueryOptions.html">
+                <a title="MBMRenderedQueryOptions" class="nav-group-task-link" href="../Classes/MBMRenderedQueryOptions.html">MBMRenderedQueryOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMSourceQueryOptions" data-url="Classes/MBMSourceQueryOptions.html">
+                <a title="MBMSourceQueryOptions" class="nav-group-task-link" href="../Classes/MBMSourceQueryOptions.html">MBMSourceQueryOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMFeatureExtensionValue" data-url="Classes/MBMFeatureExtensionValue.html">
+                <a title="MBMFeatureExtensionValue" class="nav-group-task-link" href="../Classes/MBMFeatureExtensionValue.html">MBMFeatureExtensionValue</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Map events">
+            <a class="small-heading" href="../Map events.html">Map events<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMEvent" data-url="Classes/MBMEvent.html">
+                <a title="MBMEvent" class="nav-group-task-link" href="../Classes/MBMEvent.html">MBMEvent</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMMapEvents" data-url="Classes/MBMMapEvents.html">
+                <a title="MBMMapEvents" class="nav-group-task-link" href="../Classes/MBMMapEvents.html">MBMMapEvents</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMObservable" data-url="Classes/MBMObservable.html">
+                <a title="MBMObservable" class="nav-group-task-link" href="../Classes/MBMObservable.html">MBMObservable</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMObserver" data-url="Protocols/MBMObserver.html">
+                <a title="MBMObserver" class="nav-group-task-link" href="../Protocols/MBMObserver.html">MBMObserver</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Map render cache">
+            <a class="small-heading" href="../Map render cache.html">Map render cache<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMRenderCacheOptions" data-url="Classes/MBMRenderCacheOptions.html">
+                <a title="MBMRenderCacheOptions" class="nav-group-task-link" href="../Classes/MBMRenderCacheOptions.html">MBMRenderCacheOptions</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Map embedding">
+            <a class="small-heading" href="../Map embedding.html">Map embedding<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMMapClient" data-url="Protocols/MBMMapClient.html">
+                <a title="MBMMapClient" class="nav-group-task-link" href="../Protocols/MBMMapClient.html">MBMMapClient</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMMetalViewProvider" data-url="Protocols/MBMMetalViewProvider.html">
+                <a title="MBMMetalViewProvider" class="nav-group-task-link" href="../Protocols/MBMMetalViewProvider.html">MBMMetalViewProvider</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMTask" data-url="Map%20embedding.html#/c:MBMTask_Internal.h@T@MBMTask">
+                <a title="MBMTask" class="nav-group-task-link" href="../Map%20embedding.html#/c:MBMTask_Internal.h@T@MBMTask">MBMTask</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Map snapshotter">
+            <a class="small-heading" href="../Map snapshotter.html">Map snapshotter<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMMapSnapshotter" data-url="Classes/MBMMapSnapshotter.html">
+                <a title="MBMMapSnapshotter" class="nav-group-task-link" href="../Classes/MBMMapSnapshotter.html">MBMMapSnapshotter</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMMapSnapshotOptions" data-url="Classes/MBMMapSnapshotOptions.html">
+                <a title="MBMMapSnapshotOptions" class="nav-group-task-link" href="../Classes/MBMMapSnapshotOptions.html">MBMMapSnapshotOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMSnapshotCompleteCallback" data-url="Map%20snapshotter.html#/c:MBMSnapshotCompleteCallback_Internal.h@T@MBMSnapshotCompleteCallback">
+                <a title="MBMSnapshotCompleteCallback" class="nav-group-task-link" href="../Map%20snapshotter.html#/c:MBMSnapshotCompleteCallback_Internal.h@T@MBMSnapshotCompleteCallback">MBMSnapshotCompleteCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMMapSnapshot" data-url="Classes/MBMMapSnapshot.html">
+                <a title="MBMMapSnapshot" class="nav-group-task-link" href="../Classes/MBMMapSnapshot.html">MBMMapSnapshot</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Offline">
+            <a class="small-heading" href="../Offline.html">Offline<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMAsyncOperationResultCallback" data-url="Offline.html#/c:MBMAsyncOperationResultCallback_Internal.h@T@MBMAsyncOperationResultCallback">
+                <a title="MBMAsyncOperationResultCallback" class="nav-group-task-link" href="../Offline.html#/c:MBMAsyncOperationResultCallback_Internal.h@T@MBMAsyncOperationResultCallback">MBMAsyncOperationResultCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMOfflineManager" data-url="Classes/MBMOfflineManager.html">
+                <a title="MBMOfflineManager" class="nav-group-task-link" href="../Classes/MBMOfflineManager.html">MBMOfflineManager</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMTileStoreUsageMode" data-url="Enums/MBMTileStoreUsageMode.html">
+                <a title="MBMTileStoreUsageMode" class="nav-group-task-link" href="../Enums/MBMTileStoreUsageMode.html">MBMTileStoreUsageMode</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMTilesetDescriptorOptions" data-url="Classes/MBMTilesetDescriptorOptions.html">
+                <a title="MBMTilesetDescriptorOptions" class="nav-group-task-link" href="../Classes/MBMTilesetDescriptorOptions.html">MBMTilesetDescriptorOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePack" data-url="Classes/MBMStylePack.html">
+                <a title="MBMStylePack" class="nav-group-task-link" href="../Classes/MBMStylePack.html">MBMStylePack</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePackError" data-url="Classes/MBMStylePackError.html">
+                <a title="MBMStylePackError" class="nav-group-task-link" href="../Classes/MBMStylePackError.html">MBMStylePackError</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePackLoadOptions" data-url="Classes/MBMStylePackLoadOptions.html">
+                <a title="MBMStylePackLoadOptions" class="nav-group-task-link" href="../Classes/MBMStylePackLoadOptions.html">MBMStylePackLoadOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePackLoadProgress" data-url="Classes/MBMStylePackLoadProgress.html">
+                <a title="MBMStylePackLoadProgress" class="nav-group-task-link" href="../Classes/MBMStylePackLoadProgress.html">MBMStylePackLoadProgress</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePackCallback" data-url="Offline.html#/c:MBMStylePackCallback_Internal.h@T@MBMStylePackCallback">
+                <a title="MBMStylePackCallback" class="nav-group-task-link" href="../Offline.html#/c:MBMStylePackCallback_Internal.h@T@MBMStylePackCallback">MBMStylePackCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePacksCallback" data-url="Offline.html#/c:MBMStylePacksCallback_Internal.h@T@MBMStylePacksCallback">
+                <a title="MBMStylePacksCallback" class="nav-group-task-link" href="../Offline.html#/c:MBMStylePacksCallback_Internal.h@T@MBMStylePacksCallback">MBMStylePacksCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePackLoadProgressCallback" data-url="Offline.html#/c:MBMStylePackLoadProgressCallback.h@T@MBMStylePackLoadProgressCallback">
+                <a title="MBMStylePackLoadProgressCallback" class="nav-group-task-link" href="../Offline.html#/c:MBMStylePackLoadProgressCallback.h@T@MBMStylePackLoadProgressCallback">MBMStylePackLoadProgressCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePackMetadataCallback" data-url="Offline.html#/c:MBMStylePackMetadataCallback_Internal.h@T@MBMStylePackMetadataCallback">
+                <a title="MBMStylePackMetadataCallback" class="nav-group-task-link" href="../Offline.html#/c:MBMStylePackMetadataCallback_Internal.h@T@MBMStylePackMetadataCallback">MBMStylePackMetadataCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePackErrorType" data-url="Enums/MBMStylePackErrorType.html">
+                <a title="MBMStylePackErrorType" class="nav-group-task-link" href="../Enums/MBMStylePackErrorType.html">MBMStylePackErrorType</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMStylePackErrorTypeToString" data-url="Offline.html#/c:@F@MBMStylePackErrorTypeToString">
+                <a title="MBMStylePackErrorTypeToString" class="nav-group-task-link" href="../Offline.html#/c:@F@MBMStylePackErrorTypeToString">MBMStylePackErrorTypeToString</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMTileStoreUsageModeToString" data-url="Offline.html#/c:@F@MBMTileStoreUsageModeToString">
+                <a title="MBMTileStoreUsageModeToString" class="nav-group-task-link" href="../Offline.html#/c:@F@MBMTileStoreUsageModeToString">MBMTileStoreUsageModeToString</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Utilities">
+            <a class="small-heading" href="../Utilities.html">Utilities<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMSettings" data-url="Classes/MBMSettings.html">
+                <a title="MBMSettings" class="nav-group-task-link" href="../Classes/MBMSettings.html">MBMSettings</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMProjection" data-url="Classes/MBMProjection.html">
+                <a title="MBMProjection" class="nav-group-task-link" href="../Classes/MBMProjection.html">MBMProjection</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMProjectedMeters" data-url="Classes/MBMProjectedMeters.html">
+                <a title="MBMProjectedMeters" class="nav-group-task-link" href="../Classes/MBMProjectedMeters.html">MBMProjectedMeters</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMMercatorCoordinate" data-url="Classes/MBMMercatorCoordinate.html">
+                <a title="MBMMercatorCoordinate" class="nav-group-task-link" href="../Classes/MBMMercatorCoordinate.html">MBMMercatorCoordinate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Offline region management (deprecated)">
+            <a class="small-heading" href="../Offline region management (deprecated).html">Offline region management (deprecated)<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMOfflineRegionManager" data-url="Classes/MBMOfflineRegionManager.html">
+                <a title="MBMOfflineRegionManager" class="nav-group-task-link" href="../Classes/MBMOfflineRegionManager.html">MBMOfflineRegionManager</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMOfflineRegion" data-url="Classes/MBMOfflineRegion.html">
+                <a title="MBMOfflineRegion" class="nav-group-task-link" href="../Classes/MBMOfflineRegion.html">MBMOfflineRegion</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMOfflineRegionGeometryDefinition" data-url="Classes/MBMOfflineRegionGeometryDefinition.html">
+                <a title="MBMOfflineRegionGeometryDefinition" class="nav-group-task-link" href="../Classes/MBMOfflineRegionGeometryDefinition.html">MBMOfflineRegionGeometryDefinition</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMOfflineRegionTilePyramidDefinition" data-url="Classes/MBMOfflineRegionTilePyramidDefinition.html">
+                <a title="MBMOfflineRegionTilePyramidDefinition" class="nav-group-task-link" href="../Classes/MBMOfflineRegionTilePyramidDefinition.html">MBMOfflineRegionTilePyramidDefinition</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMResponseErrorReason" data-url="Enums/MBMResponseErrorReason.html">
+                <a title="MBMResponseErrorReason" class="nav-group-task-link" href="../Enums/MBMResponseErrorReason.html">MBMResponseErrorReason</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMResponseError" data-url="Classes/MBMResponseError.html">
+                <a title="MBMResponseError" class="nav-group-task-link" href="../Classes/MBMResponseError.html">MBMResponseError</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMOfflineRegionDownloadState" data-url="Enums/MBMOfflineRegionDownloadState.html">
+                <a title="MBMOfflineRegionDownloadState" class="nav-group-task-link" href="../Enums/MBMOfflineRegionDownloadState.html">MBMOfflineRegionDownloadState</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMOfflineRegionStatus" data-url="Classes/MBMOfflineRegionStatus.html">
+                <a title="MBMOfflineRegionStatus" class="nav-group-task-link" href="../Classes/MBMOfflineRegionStatus.html">MBMOfflineRegionStatus</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMOfflineDatabaseMergeCallback" data-url="Offline%20region%20management%20%28deprecated%29.html#/c:MBMOfflineDatabaseMergeCallback_Internal.h@T@MBMOfflineDatabaseMergeCallback">
+                <a title="MBMOfflineDatabaseMergeCallback" class="nav-group-task-link" href="../Offline%20region%20management%20%28deprecated%29.html#/c:MBMOfflineDatabaseMergeCallback_Internal.h@T@MBMOfflineDatabaseMergeCallback">MBMOfflineDatabaseMergeCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMOfflineRegionCallback" data-url="Offline%20region%20management%20%28deprecated%29.html#/c:MBMOfflineRegionCallback_Internal.h@T@MBMOfflineRegionCallback">
+                <a title="MBMOfflineRegionCallback" class="nav-group-task-link" href="../Offline%20region%20management%20%28deprecated%29.html#/c:MBMOfflineRegionCallback_Internal.h@T@MBMOfflineRegionCallback">MBMOfflineRegionCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMOfflineRegionCreateCallback" data-url="Offline%20region%20management%20%28deprecated%29.html#/c:MBMOfflineRegionCreateCallback_Internal.h@T@MBMOfflineRegionCreateCallback">
+                <a title="MBMOfflineRegionCreateCallback" class="nav-group-task-link" href="../Offline%20region%20management%20%28deprecated%29.html#/c:MBMOfflineRegionCreateCallback_Internal.h@T@MBMOfflineRegionCreateCallback">MBMOfflineRegionCreateCallback</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMOfflineRegionObserver" data-url="Protocols/MBMOfflineRegionObserver.html">
+                <a title="MBMOfflineRegionObserver" class="nav-group-task-link" href="../Protocols/MBMOfflineRegionObserver.html">MBMOfflineRegionObserver</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Classes">
+            <a class="small-heading" href="../Other Classes.html">Other Classes<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMMapMemoryBudget" data-url="Classes/MBMMapMemoryBudget.html">
+                <a title="MBMMapMemoryBudget" class="nav-group-task-link" href="../Classes/MBMMapMemoryBudget.html">MBMMapMemoryBudget</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMMapMemoryBudgetInMegabytes" data-url="Classes/MBMMapMemoryBudgetInMegabytes.html">
+                <a title="MBMMapMemoryBudgetInMegabytes" class="nav-group-task-link" href="../Classes/MBMMapMemoryBudgetInMegabytes.html">MBMMapMemoryBudgetInMegabytes</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMMapMemoryBudgetInTiles" data-url="Classes/MBMMapMemoryBudgetInTiles.html">
+                <a title="MBMMapMemoryBudgetInTiles" class="nav-group-task-link" href="../Classes/MBMMapMemoryBudgetInTiles.html">MBMMapMemoryBudgetInTiles</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMRenderedQueryGeometry" data-url="Classes/MBMRenderedQueryGeometry.html">
+                <a title="MBMRenderedQueryGeometry" class="nav-group-task-link" href="../Classes/MBMRenderedQueryGeometry.html">MBMRenderedQueryGeometry</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMViewAnnotationOptions" data-url="Classes/MBMViewAnnotationOptions.html">
+                <a title="MBMViewAnnotationOptions" class="nav-group-task-link" href="../Classes/MBMViewAnnotationOptions.html">MBMViewAnnotationOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMViewAnnotationPositionDescriptor" data-url="Classes/MBMViewAnnotationPositionDescriptor.html">
+                <a title="MBMViewAnnotationPositionDescriptor" class="nav-group-task-link" href="../Classes/MBMViewAnnotationPositionDescriptor.html">MBMViewAnnotationPositionDescriptor</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Enumerations">
+            <a class="small-heading" href="../Other Enumerations.html">Other Enumerations<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMMapMemoryBudgetType" data-url="Enums/MBMMapMemoryBudgetType.html">
+                <a title="MBMMapMemoryBudgetType" class="nav-group-task-link" href="../Enums/MBMMapMemoryBudgetType.html">MBMMapMemoryBudgetType</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMRenderedQueryGeometryType" data-url="Enums/MBMRenderedQueryGeometryType.html">
+                <a title="MBMRenderedQueryGeometryType" class="nav-group-task-link" href="../Enums/MBMRenderedQueryGeometryType.html">MBMRenderedQueryGeometryType</a>
+              </li>
+              <li class="nav-group-task" data-name="MBMViewAnnotationAnchor" data-url="Enums/MBMViewAnnotationAnchor.html">
+                <a title="MBMViewAnnotationAnchor" class="nav-group-task-link" href="../Enums/MBMViewAnnotationAnchor.html">MBMViewAnnotationAnchor</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Protocols">
+            <a class="small-heading" href="../Other Protocols.html">Other Protocols<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="MBMViewAnnotationPositionsUpdateListener" data-url="Protocols/MBMViewAnnotationPositionsUpdateListener.html">
+                <a title="MBMViewAnnotationPositionsUpdateListener" class="nav-group-task-link" href="../Protocols/MBMViewAnnotationPositionsUpdateListener.html">MBMViewAnnotationPositionsUpdateListener</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            <a href="#/MBMMap"><h1 id="MBMMap">MBMMap<span class="anchor-icon" /></h1></a>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight objective_c"><code>
+<span class="k">@interface</span> <span class="nc">MBMMap</span> <span class="p">:</span> <span class="nc"><a href="../Classes/MBMCameraManager.html">MBMCameraManager</a></span></code></pre>
+
+                </div>
+              </div>
+            <p>Map class provides map rendering functionality.</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)init"></a>
+                    <a name="//apple_ref/swift/Method/-init" class="dashAnchor"></a>
+                    <a class="token discouraged" href="#/c:objc(cs)MBMMap(im)init"><span class="token-name">-init</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="aside aside-unavailable">
+                        <p class="aside-title">Unavailable</p>
+                        
+                      </div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="n">init</span> <span class="n">NS_UNAVAILABLE</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(cm)new"></a>
+                    <a name="//apple_ref/swift/Method/+new" class="dashAnchor"></a>
+                    <a class="token discouraged" href="#/c:objc(cs)MBMMap(cm)new"><span class="token-name">+new</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="aside aside-unavailable">
+                        <p class="aside-title">Unavailable</p>
+                        
+                      </div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="n">new</span> <span class="n">NS_UNAVAILABLE</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)createRenderer"></a>
+                    <a name="//apple_ref/swift/Method/-createRenderer" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)createRenderer"><span class="token-name">-createRenderer</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Creates the infrastructure needed for rendering the map.
+It should be called before any call to <code>render</code> method. Must be called on the render thread.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">createRenderer</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">createRenderer</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)destroyRenderer"></a>
+                    <a name="//apple_ref/swift/Method/-destroyRenderer" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)destroyRenderer"><span class="token-name">-destroyRenderer</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Destroys the infrastructure needed for rendering the map, releasing resources.
+Must be called on the render thread.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">destroyRenderer</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">destroyRenderer</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)render"></a>
+                    <a name="//apple_ref/swift/Method/-render" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)render"><span class="token-name">-render</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Renders the map.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">render</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">render</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)setSizeForSize:"></a>
+                    <a name="//apple_ref/swift/Method/-setSizeForSize:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)setSizeForSize:"><span class="token-name">-setSizeForSize:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Sets the size of the map.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setSizeForSize</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/MBMSize.html">MBMSize</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">size</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setSizeFor</span><span class="p">(</span><span class="n">_</span> <span class="nv">size</span><span class="p">:</span> <span class="kt"><a href="../Classes/MBMSize.html">MBMSize</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                  size
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The new <code>size</code> of the map in <code>platform pixels</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)getSize"></a>
+                    <a name="//apple_ref/swift/Method/-getSize" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)getSize"><span class="token-name">-getSize</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Gets the size of the map.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/MBMSize.html">MBMSize</a></span> <span class="o">*</span><span class="p">)</span><span class="n">getSize</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">getSize</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/MBMSize.html">MBMSize</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The <code>size</code> of the map in <code>platform pixels</code>.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)triggerRepaint"></a>
+                    <a name="//apple_ref/swift/Method/-triggerRepaint" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)triggerRepaint"><span class="token-name">-triggerRepaint</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Triggers a repaint of the map.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">triggerRepaint</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">triggerRepaint</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)setGestureInProgressForInProgress:"></a>
+                    <a name="//apple_ref/swift/Method/-setGestureInProgressForInProgress:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)setGestureInProgressForInProgress:"><span class="token-name">-setGestureInProgressForInProgress:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Tells the map rendering engine that there is currently a gesture in progress. This
+ affects how the map renders labels, as it will use different texture filters if a gesture
+ is ongoing.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setGestureInProgressForInProgress</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">inProgress</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setGestureInProgressForInProgress</span><span class="p">(</span><span class="n">_</span> <span class="nv">inProgress</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                  inProgress
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>boolean</code> value representing if a gesture is in progress.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)isGestureInProgress"></a>
+                    <a name="//apple_ref/swift/Method/-isGestureInProgress" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)isGestureInProgress"><span class="token-name">-isGestureInProgress</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Returns <code>true</code> if a gesture is currently in progress.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">isGestureInProgress</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">isGestureInProgress</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>true</code> if a gesture is currently in progress, <code>false</code> otherwise.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)setUserAnimationInProgressForInProgress:"></a>
+                    <a name="//apple_ref/swift/Method/-setUserAnimationInProgressForInProgress:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)setUserAnimationInProgressForInProgress:"><span class="token-name">-setUserAnimationInProgressForInProgress:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Tells the map rendering engine that the animation is currently performed by the
+ user (e.g. with a <code>setCamera</code> calls series). It adjusts the engine for the animation use case.
+ In particular, it brings more stability to symbol placement and rendering.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setUserAnimationInProgressForInProgress</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">inProgress</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setUserAnimationInProgressForInProgress</span><span class="p">(</span><span class="n">_</span> <span class="nv">inProgress</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                  inProgress
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>boolean</code> value representing if user animation is in progress</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)isUserAnimationInProgress"></a>
+                    <a name="//apple_ref/swift/Method/-isUserAnimationInProgress" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)isUserAnimationInProgress"><span class="token-name">-isUserAnimationInProgress</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Returns <code>true</code> if user animation is currently in progress.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">isUserAnimationInProgress</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">isUserAnimationInProgress</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>true</code> if a user animation is currently in progress, <code>false</code> otherwise.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)setPrefetchZoomDeltaForDelta:"></a>
+                    <a name="//apple_ref/swift/Method/-setPrefetchZoomDeltaForDelta:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)setPrefetchZoomDeltaForDelta:"><span class="token-name">-setPrefetchZoomDeltaForDelta:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>When loading a map, if prefetch zoom <code>delta</code> is set to any number greater than 0,
+ the map will first request a tile at zoom level lower than <code>zoom - delta</code>, with requested
+ zoom level a multiple of <code>delta</code>, in an attempt to display a full map at lower resolution as quick as possible.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setPrefetchZoomDeltaForDelta</span><span class="p">:(</span><span class="kt">uint8_t</span><span class="p">)</span><span class="nv">delta</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setPrefetchZoomDeltaForDelta</span><span class="p">(</span><span class="n">_</span> <span class="nv">delta</span><span class="p">:</span> <span class="kt">UInt8</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                  delta
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The new prefetch zoom delta.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)getPrefetchZoomDelta"></a>
+                    <a name="//apple_ref/swift/Method/-getPrefetchZoomDelta" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)getPrefetchZoomDelta"><span class="token-name">-getPrefetchZoomDelta</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Returns the map&rsquo;s prefetch zoom delta.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">uint8_t</span><span class="p">)</span><span class="n">getPrefetchZoomDelta</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">getPrefetchZoomDelta</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">UInt8</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The map&rsquo;s prefetch zoom <code>delta</code>.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)setNorthOrientationForOrientation:"></a>
+                    <a name="//apple_ref/swift/Method/-setNorthOrientationForOrientation:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)setNorthOrientationForOrientation:"><span class="token-name">-setNorthOrientationForOrientation:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Sets the north <code>orientation mode</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setNorthOrientationForOrientation</span><span class="p">:(</span><span class="n"><a href="../Enums/MBMNorthOrientation.html">MBMNorthOrientation</a></span><span class="p">)</span><span class="nv">orientation</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setNorthOrientationFor</span><span class="p">(</span><span class="n">_</span> <span class="nv">orientation</span><span class="p">:</span> <span class="kt">NorthOrientation</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)setConstrainModeForMode:"></a>
+                    <a name="//apple_ref/swift/Method/-setConstrainModeForMode:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)setConstrainModeForMode:"><span class="token-name">-setConstrainModeForMode:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Sets the map <code>constrain mode</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setConstrainModeForMode</span><span class="p">:(</span><span class="n"><a href="../Enums/MBMConstrainMode.html">MBMConstrainMode</a></span><span class="p">)</span><span class="nv">mode</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setConstrainModeFor</span><span class="p">(</span><span class="n">_</span> <span class="nv">mode</span><span class="p">:</span> <span class="kt">ConstrainMode</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)setViewportModeForMode:"></a>
+                    <a name="//apple_ref/swift/Method/-setViewportModeForMode:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)setViewportModeForMode:"><span class="token-name">-setViewportModeForMode:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Sets the <code>viewport mode</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setViewportModeForMode</span><span class="p">:(</span><span class="n"><a href="../Enums/MBMViewportMode.html">MBMViewportMode</a></span><span class="p">)</span><span class="nv">mode</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setViewportModeFor</span><span class="p">(</span><span class="n">_</span> <span class="nv">mode</span><span class="p">:</span> <span class="kt">ViewportMode</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)getMapOptions"></a>
+                    <a name="//apple_ref/swift/Method/-getMapOptions" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)getMapOptions"><span class="token-name">-getMapOptions</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Returns the <code>map options</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/MBMMapOptions.html">MBMMapOptions</a></span> <span class="o">*</span><span class="p">)</span><span class="n">getMapOptions</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">getOptions</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/MBMMapOptions.html">MBMMapOptions</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The map&rsquo;s <code>map options</code>.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)getDebug"></a>
+                    <a name="//apple_ref/swift/Method/-getDebug" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)getDebug"><span class="token-name">-getDebug</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Returns the <code>map debug options</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSNumber</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="n">getDebug</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">getDebug</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">NSNumber</span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An array of <code>map debug options</code> flags currently set to the map.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)setDebugForDebugOptions:value:"></a>
+                    <a name="//apple_ref/swift/Method/-setDebugForDebugOptions:value:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)setDebugForDebugOptions:value:"><span class="token-name">-setDebugForDebugOptions:value:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Sets the <code>map debug options</code> and enables debug mode based on the passed value.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setDebugForDebugOptions</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">NSNumber</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">debugOptions</span>
+                          <span class="nf">value</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">value</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setDebugForDebugOptions</span><span class="p">(</span><span class="n">_</span> <span class="nv">debugOptions</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSNumber</span><span class="p">],</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                  debugOptions
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An array of <code>map debug options</code> to be set.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                  value
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A <code>boolean</code> value representing the state for a given <code>map debug options</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)isMapLoaded"></a>
+                    <a name="//apple_ref/swift/Method/-isMapLoaded" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)isMapLoaded"><span class="token-name">-isMapLoaded</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Returns <code>true</code> when the map is completely rendered, <code>false</code> otherwise. A partially
+ rendered map ranges from nothing rendered at all to only labels missing.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">isMapLoaded</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">isMapLoaded</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>true</code> when the map is completely rendered, <code>false</code> otherwise.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)setFeatureStateForSourceId:sourceLayerId:featureId:state:"></a>
+                    <a name="//apple_ref/swift/Method/-setFeatureStateForSourceId:sourceLayerId:featureId:state:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)setFeatureStateForSourceId:sourceLayerId:featureId:state:"><span class="token-name">-setFeatureStateForSourceId:sourceLayerId:featureId:state:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Updates the state object of a feature within a style source.</p>
+
+<p>Update entries in the <code>state</code> object of a given feature within a style source. Only properties of the
+ <code>state</code> object will be updated. A property in the feature <code>state</code> object that is not listed in <code>state</code> will
+ retain its previous value.</p>
+
+<p>Note that updates to feature <code>state</code> are asynchronous, so changes made by this method migth not be
+ immediately visible using <code>getStateFeature</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setFeatureStateForSourceId</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">sourceId</span>
+                     <span class="nf">sourceLayerId</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">sourceLayerId</span>
+                         <span class="nf">featureId</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">featureId</span>
+                             <span class="nf">state</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="p">)</span><span class="nv">state</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setFeatureStateForSourceId</span><span class="p">(</span><span class="n">_</span> <span class="nv">sourceId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">sourceLayerId</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">featureId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">state</span><span class="p">:</span> <span class="kt">Any</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                  sourceId
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The style source identifier.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                  sourceLayerId
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The style source layer identifier (for multi-layer sources such as vector sources).</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                  featureId
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The feature identifier of the feature whose state should be updated.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                  state
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>state</code> object with properties to update with their respective new values.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)removeFeatureStateForSourceId:sourceLayerId:featureId:stateKey:"></a>
+                    <a name="//apple_ref/swift/Method/-removeFeatureStateForSourceId:sourceLayerId:featureId:stateKey:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)removeFeatureStateForSourceId:sourceLayerId:featureId:stateKey:"><span class="token-name">-removeFeatureStateForSourceId:sourceLayerId:featureId:stateKey:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Removes entries from a feature state object.</p>
+
+<p>Remove a specified property or all property from a feature&rsquo;s state object, depending on the value of
+ <code>stateKey</code>.</p>
+
+<p>Note that updates to feature state are asynchronous, so changes made by this method migth not be
+ immediately visible using <code>getStateFeature</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">removeFeatureStateForSourceId</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">sourceId</span>
+                        <span class="nf">sourceLayerId</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">sourceLayerId</span>
+                            <span class="nf">featureId</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">featureId</span>
+                             <span class="nf">stateKey</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">stateKey</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">removeFeatureState</span><span class="p">(</span><span class="n">forSourceId</span> <span class="nv">sourceId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">sourceLayerId</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">featureId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">stateKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                  sourceId
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The style source identifier.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                  sourceLayerId
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The style source layer identifier (for multi-layer sources such as vector sources).</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                  featureId
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The feature identifier of the feature whose state should be removed.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                  stateKey
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The key of the property to remove. If <code>null</code>, all feature&rsquo;s state object properties are removed.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)reduceMemoryUse"></a>
+                    <a name="//apple_ref/swift/Method/-reduceMemoryUse" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)reduceMemoryUse"><span class="token-name">-reduceMemoryUse</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Reduces memory use. Useful to call when the application gets paused or sent to background.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">reduceMemoryUse</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">reduceMemoryUse</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)getResourceOptions"></a>
+                    <a name="//apple_ref/swift/Method/-getResourceOptions" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)getResourceOptions"><span class="token-name">-getResourceOptions</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Gets the resource options for the map.</p>
+
+<p>All optional fields of the retuned object are initialized with the actual values.</p>
+
+<p>Note that result of this method is different from the <code>resource options</code> that were provided to the map&rsquo;s constructor.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/MBMResourceOptions.html">MBMResourceOptions</a></span> <span class="o">*</span><span class="p">)</span><span class="n">getResourceOptions</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">getResourceOptions</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/MBMResourceOptions.html">MBMResourceOptions</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The <code>resource options</code> for the map.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)getElevationForCoordinate:"></a>
+                    <a name="//apple_ref/swift/Method/-getElevationForCoordinate:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)getElevationForCoordinate:"><span class="token-name">-getElevationForCoordinate:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Gets elevation for the given coordinate.
+ Note: Elevation is only available for the visible region on the screen.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">NSNumber</span> <span class="o">*</span><span class="p">)</span><span class="nf">getElevationForCoordinate</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">CLLocationCoordinate2D</span><span class="p">)</span><span class="nv">coordinate</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">getElevationFor</span><span class="p">(</span><span class="n">_</span> <span class="nv">coordinate</span><span class="p">:</span> <span class="kt">CLLocationCoordinate2D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSNumber</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                  coordinate
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>coordinate</code> defined as longitude-latitude pair.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The elevation (in meters) multiplied by current terrain exaggeration, or empty if elevation for the coordinate is not available.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)setRenderCacheOptionsForOptions:"></a>
+                    <a name="//apple_ref/swift/Method/-setRenderCacheOptionsForOptions:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)setRenderCacheOptionsForOptions:"><span class="token-name">-setRenderCacheOptionsForOptions:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Enables or disables the experimental render cache feature.</p>
+
+<p>Render cache is an experimental feature aiming to reduce resource usage of map rendering
+ by caching intermediate rendering results of tiles into specific cache textures for reuse between frames.
+ Performance benefit of the cache depends on the style as not all layers are cacheable due to e.g.
+ viewport aligned features. Render cache always prefers quality over performance.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setRenderCacheOptionsForOptions</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/MBMRenderCacheOptions.html">MBMRenderCacheOptions</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">options</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setRenderCacheOptionsFor</span><span class="p">(</span><span class="n">_</span> <span class="nv">options</span><span class="p">:</span> <span class="kt"><a href="../Classes/MBMRenderCacheOptions.html">MBMRenderCacheOptions</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                  options
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>render cache options</code> defining the render cache behavior.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)getRenderCacheOptions"></a>
+                    <a name="//apple_ref/swift/Method/-getRenderCacheOptions" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)getRenderCacheOptions"><span class="token-name">-getRenderCacheOptions</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Returns the <code>render cache options</code> used by the map.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/MBMRenderCacheOptions.html">MBMRenderCacheOptions</a></span> <span class="o">*</span><span class="p">)</span><span class="n">getRenderCacheOptions</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">getRenderCacheOptions</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/MBMRenderCacheOptions.html">MBMRenderCacheOptions</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The <code>render cache options</code> currently used by the map.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)initWithClient:mapOptions:resourceOptions:"></a>
+                    <a name="//apple_ref/swift/Method/-initWithClient:mapOptions:resourceOptions:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)initWithClient:mapOptions:resourceOptions:"><span class="token-name">-initWithClient:mapOptions:resourceOptions:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithClient</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/MBMMapClient.html">MBMMapClient</a></span><span class="o">&gt;</span><span class="p">)</span><span class="nv">client</span>
+                            <span class="nf">mapOptions</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/MBMMapOptions.html">MBMMapOptions</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">mapOptions</span>
+                       <span class="nf">resourceOptions</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/MBMResourceOptions.html">MBMResourceOptions</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">resourceOptions</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)queryRenderedFeaturesForShape:options:callback:"></a>
+                    <a name="//apple_ref/swift/Method/-queryRenderedFeaturesForShape:options:callback:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)queryRenderedFeaturesForShape:options:callback:"><span class="token-name">-queryRenderedFeaturesForShape:options:callback:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">queryRenderedFeaturesForShape</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSArray</span><span class="o">&lt;</span><span class="n"><a href="../Classes/MBMScreenCoordinate.html">MBMScreenCoordinate</a></span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">shape</span>
+                              <span class="nf">options</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/MBMRenderedQueryOptions.html">MBMRenderedQueryOptions</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">options</span>
+                             <span class="nf">callback</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Map%20querying%20and%20feature%20state.html#/c:MBMQueryFeaturesCallback_Internal.h@T@MBMQueryFeaturesCallback">MBMQueryFeaturesCallback</a></span><span class="p">)</span><span class="nv">callback</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">queryRenderedFeatures</span><span class="p">(</span><span class="n">forShape</span> <span class="nv">shape</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Classes/MBMScreenCoordinate.html">MBMScreenCoordinate</a></span><span class="p">],</span> <span class="nv">options</span><span class="p">:</span> <span class="kt"><a href="../Classes/MBMRenderedQueryOptions.html">MBMRenderedQueryOptions</a></span><span class="p">,</span> <span class="nv">callback</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">QueryFeaturesCallback</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)queryRenderedFeaturesForBox:options:callback:"></a>
+                    <a name="//apple_ref/swift/Method/-queryRenderedFeaturesForBox:options:callback:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)queryRenderedFeaturesForBox:options:callback:"><span class="token-name">-queryRenderedFeaturesForBox:options:callback:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">queryRenderedFeaturesForBox</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/MBMScreenBox.html">MBMScreenBox</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">box</span>
+                            <span class="nf">options</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/MBMRenderedQueryOptions.html">MBMRenderedQueryOptions</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">options</span>
+                           <span class="nf">callback</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Map%20querying%20and%20feature%20state.html#/c:MBMQueryFeaturesCallback_Internal.h@T@MBMQueryFeaturesCallback">MBMQueryFeaturesCallback</a></span><span class="p">)</span><span class="nv">callback</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">queryRenderedFeatures</span><span class="p">(</span><span class="k">for</span> <span class="nv">box</span><span class="p">:</span> <span class="kt"><a href="../Classes/MBMScreenBox.html">MBMScreenBox</a></span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt"><a href="../Classes/MBMRenderedQueryOptions.html">MBMRenderedQueryOptions</a></span><span class="p">,</span> <span class="nv">callback</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">QueryFeaturesCallback</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)queryRenderedFeaturesForPixel:options:callback:"></a>
+                    <a name="//apple_ref/swift/Method/-queryRenderedFeaturesForPixel:options:callback:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)queryRenderedFeaturesForPixel:options:callback:"><span class="token-name">-queryRenderedFeaturesForPixel:options:callback:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">queryRenderedFeaturesForPixel</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/MBMScreenCoordinate.html">MBMScreenCoordinate</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">pixel</span>
+                              <span class="nf">options</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/MBMRenderedQueryOptions.html">MBMRenderedQueryOptions</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">options</span>
+                             <span class="nf">callback</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Map%20querying%20and%20feature%20state.html#/c:MBMQueryFeaturesCallback_Internal.h@T@MBMQueryFeaturesCallback">MBMQueryFeaturesCallback</a></span><span class="p">)</span><span class="nv">callback</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">queryRenderedFeatures</span><span class="p">(</span><span class="n">forPixel</span> <span class="nv">pixel</span><span class="p">:</span> <span class="kt"><a href="../Classes/MBMScreenCoordinate.html">MBMScreenCoordinate</a></span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt"><a href="../Classes/MBMRenderedQueryOptions.html">MBMRenderedQueryOptions</a></span><span class="p">,</span> <span class="nv">callback</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">QueryFeaturesCallback</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)queryRenderedFeaturesForGeometry:options:callback:"></a>
+                    <a name="//apple_ref/swift/Method/-queryRenderedFeaturesForGeometry:options:callback:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)queryRenderedFeaturesForGeometry:options:callback:"><span class="token-name">-queryRenderedFeaturesForGeometry:options:callback:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">MBXCancelable</span> <span class="o">*</span><span class="p">)</span><span class="nf">queryRenderedFeaturesForGeometry</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/MBMRenderedQueryGeometry.html">MBMRenderedQueryGeometry</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">geometry</span>
+                                                    <span class="nf">options</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/MBMRenderedQueryOptions.html">MBMRenderedQueryOptions</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">options</span>
+                                                   <span class="nf">callback</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Map%20querying%20and%20feature%20state.html#/c:MBMQueryFeaturesCallback_Internal.h@T@MBMQueryFeaturesCallback">MBMQueryFeaturesCallback</a></span><span class="p">)</span><span class="nv">callback</span> <span class="n">__attribute</span><span class="p">((</span><span class="n">ns_returns_retained</span><span class="p">))</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)querySourceFeaturesForSourceId:options:callback:"></a>
+                    <a name="//apple_ref/swift/Method/-querySourceFeaturesForSourceId:options:callback:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)querySourceFeaturesForSourceId:options:callback:"><span class="token-name">-querySourceFeaturesForSourceId:options:callback:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">querySourceFeaturesForSourceId</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">sourceId</span>
+                               <span class="nf">options</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/MBMSourceQueryOptions.html">MBMSourceQueryOptions</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">options</span>
+                              <span class="nf">callback</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Map%20querying%20and%20feature%20state.html#/c:MBMQueryFeaturesCallback_Internal.h@T@MBMQueryFeaturesCallback">MBMQueryFeaturesCallback</a></span><span class="p">)</span><span class="nv">callback</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">querySourceFeatures</span><span class="p">(</span><span class="n">forSourceId</span> <span class="nv">sourceId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt"><a href="../Classes/MBMSourceQueryOptions.html">MBMSourceQueryOptions</a></span><span class="p">,</span> <span class="nv">callback</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">QueryFeaturesCallback</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)queryFeatureExtensionsForSourceIdentifier:feature:extension:extensionField:args:callback:"></a>
+                    <a name="//apple_ref/swift/Method/-queryFeatureExtensionsForSourceIdentifier:feature:extension:extensionField:args:callback:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)queryFeatureExtensionsForSourceIdentifier:feature:extension:extensionField:args:callback:"><span class="token-name">-queryFeatureExtensionsForSourceIdentifier:feature:extension:extensionField:args:callback:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">queryFeatureExtensionsForSourceIdentifier</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">sourceIdentifier</span>
+                                          <span class="nf">feature</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">MBXFeature</span> <span class="o">*</span><span class="p">)</span><span class="nv">feature</span>
+                                        <span class="nf">extension</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">extension</span>
+                                   <span class="nf">extensionField</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">extensionField</span>
+                                             <span class="nf">args</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSDictionary</span><span class="o">&lt;</span><span class="n">NSString</span> <span class="o">*</span><span class="p">,</span> <span class="n">id</span><span class="o">&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">args</span>
+                                         <span class="nf">callback</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Map%20querying%20and%20feature%20state.html#/c:MBMQueryFeatureExtensionCallback_Internal.h@T@MBMQueryFeatureExtensionCallback">MBMQueryFeatureExtensionCallback</a></span><span class="p">)</span><span class="nv">callback</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">queryFeatureExtensions</span><span class="p">(</span><span class="n">forSourceIdentifier</span> <span class="nv">sourceIdentifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">feature</span><span class="p">:</span> <span class="kt">MBXFeature</span><span class="p">,</span> <span class="nv">extension</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">extensionField</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">args</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]?,</span> <span class="nv">callback</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">QueryFeatureExtensionCallback</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)getFeatureStateForSourceId:sourceLayerId:featureId:callback:"></a>
+                    <a name="//apple_ref/swift/Method/-getFeatureStateForSourceId:sourceLayerId:featureId:callback:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)getFeatureStateForSourceId:sourceLayerId:featureId:callback:"><span class="token-name">-getFeatureStateForSourceId:sourceLayerId:featureId:callback:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">getFeatureStateForSourceId</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">sourceId</span>
+                     <span class="nf">sourceLayerId</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">sourceLayerId</span>
+                         <span class="nf">featureId</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">featureId</span>
+                          <span class="nf">callback</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Map%20querying%20and%20feature%20state.html#/c:MBMQueryFeatureStateCallback_Internal.h@T@MBMQueryFeatureStateCallback">MBMQueryFeatureStateCallback</a></span><span class="p">)</span><span class="nv">callback</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">getFeatureState</span><span class="p">(</span><span class="n">forSourceId</span> <span class="nv">sourceId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">sourceLayerId</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">featureId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">callback</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">QueryFeatureStateCallback</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)setMemoryBudgetForMemoryBudget:"></a>
+                    <a name="//apple_ref/swift/Method/-setMemoryBudgetForMemoryBudget:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)setMemoryBudgetForMemoryBudget:"><span class="token-name">-setMemoryBudgetForMemoryBudget:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setMemoryBudgetForMemoryBudget</span><span class="p">:(</span><span class="n">nullable</span> <span class="n"><a href="../Classes/MBMMapMemoryBudget.html">MBMMapMemoryBudget</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">memoryBudget</span> <span class="n">NS_REFINED_FOR_SWIFT</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(cm)clearDataForResourceOptions:callback:"></a>
+                    <a name="//apple_ref/swift/Method/+clearDataForResourceOptions:callback:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(cm)clearDataForResourceOptions:callback:"><span class="token-name">+clearDataForResourceOptions:callback:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">clearDataForResourceOptions</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/MBMResourceOptions.html">MBMResourceOptions</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">resourceOptions</span>
+                           <span class="nf">callback</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Offline.html#/c:MBMAsyncOperationResultCallback_Internal.h@T@MBMAsyncOperationResultCallback">MBMAsyncOperationResultCallback</a></span><span class="p">)</span><span class="nv">callback</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">clearData</span><span class="p">(</span><span class="k">for</span> <span class="nv">resourceOptions</span><span class="p">:</span> <span class="kt"><a href="../Classes/MBMResourceOptions.html">MBMResourceOptions</a></span><span class="p">,</span> <span class="nv">callback</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">AsyncOperationResultCallback</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)setViewAnnotationPositionsUpdateListenerForListener:"></a>
+                    <a name="//apple_ref/swift/Method/-setViewAnnotationPositionsUpdateListenerForListener:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)setViewAnnotationPositionsUpdateListenerForListener:"><span class="token-name">-setViewAnnotationPositionsUpdateListenerForListener:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setViewAnnotationPositionsUpdateListenerForListener</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/MBMViewAnnotationPositionsUpdateListener.html">MBMViewAnnotationPositionsUpdateListener</a></span><span class="o">&gt;</span><span class="p">)</span><span class="nv">listener</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)addViewAnnotationForIdentifier:options:"></a>
+                    <a name="//apple_ref/swift/Method/-addViewAnnotationForIdentifier:options:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)addViewAnnotationForIdentifier:options:"><span class="token-name">-addViewAnnotationForIdentifier:options:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">MBXExpected</span> <span class="o">*</span><span class="p">)</span><span class="nf">addViewAnnotationForIdentifier</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">identifier</span>
+                                                <span class="nf">options</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/MBMViewAnnotationOptions.html">MBMViewAnnotationOptions</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">options</span> <span class="n">__attribute</span><span class="p">((</span><span class="n">ns_returns_retained</span><span class="p">));</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">addViewAnnotation</span><span class="p">(</span><span class="n">forIdentifier</span> <span class="nv">identifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt"><a href="../Classes/MBMViewAnnotationOptions.html">MBMViewAnnotationOptions</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">MBXExpected</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)updateViewAnnotationForIdentifier:options:"></a>
+                    <a name="//apple_ref/swift/Method/-updateViewAnnotationForIdentifier:options:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)updateViewAnnotationForIdentifier:options:"><span class="token-name">-updateViewAnnotationForIdentifier:options:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">MBXExpected</span> <span class="o">*</span><span class="p">)</span><span class="nf">updateViewAnnotationForIdentifier</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">identifier</span>
+                                                   <span class="nf">options</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/MBMViewAnnotationOptions.html">MBMViewAnnotationOptions</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">options</span> <span class="n">__attribute</span><span class="p">((</span><span class="n">ns_returns_retained</span><span class="p">));</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">updateViewAnnotation</span><span class="p">(</span><span class="n">forIdentifier</span> <span class="nv">identifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt"><a href="../Classes/MBMViewAnnotationOptions.html">MBMViewAnnotationOptions</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">MBXExpected</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)removeViewAnnotationForIdentifier:"></a>
+                    <a name="//apple_ref/swift/Method/-removeViewAnnotationForIdentifier:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)removeViewAnnotationForIdentifier:"><span class="token-name">-removeViewAnnotationForIdentifier:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">MBXExpected</span> <span class="o">*</span><span class="p">)</span><span class="nf">removeViewAnnotationForIdentifier</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">identifier</span> <span class="n">__attribute</span><span class="p">((</span><span class="n">ns_returns_retained</span><span class="p">));</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">removeViewAnnotation</span><span class="p">(</span><span class="n">forIdentifier</span> <span class="nv">identifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">MBXExpected</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MBMMap(im)getViewAnnotationOptionsForIdentifier:"></a>
+                    <a name="//apple_ref/swift/Method/-getViewAnnotationOptionsForIdentifier:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MBMMap(im)getViewAnnotationOptionsForIdentifier:"><span class="token-name">-getViewAnnotationOptionsForIdentifier:</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">MBXExpected</span> <span class="o">*</span><span class="p">)</span><span class="nf">getViewAnnotationOptionsForIdentifier</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">identifier</span> <span class="n">__attribute</span><span class="p">((</span><span class="n">ns_returns_retained</span><span class="p">));</span></code></pre>
+
+                        </div>
+                        <div class="language keyline-purple">
+                          <p style="background: rgba(149, 149, 209, 0.21);" class="aside-title text-purple">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">getViewAnnotationOptions</span><span class="p">(</span><span class="n">forIdentifier</span> <span class="nv">identifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">MBXExpected</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer limiter">
+      <p>&copy; 2022 <a class="link" href="" target="_blank" rel="external noopener">Mapbox</a>. All rights reserved. (Last updated: 2022-02-08)</p> Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.
+    </section>
+  </body>
+</div>
+</html>

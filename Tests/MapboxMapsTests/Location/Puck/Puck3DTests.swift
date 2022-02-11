@@ -34,6 +34,7 @@ final class Puck3DTests: XCTestCase {
     func testDefaultPropertyValues() {
         XCTAssertFalse(puck3D.isActive)
         XCTAssertEqual(puck3D.puckBearingSource, .heading)
+        XCTAssertEqual(puck3D.puckBearingEnabled, true)
     }
 
     func testLocationConsumerIsNotAddedAtInitialization() {

@@ -1,35 +1,7 @@
 @testable import MapboxMaps
 
 final class MockPuck: Puck {
-
-    let setIsActiveStub = Stub<Bool, Void>()
-    var isActive: Bool {
-        get {
-            fatalError("unimplemented")
-        }
-        set {
-            setIsActiveStub.call(with: newValue)
-        }
-    }
-
-    let setPuckBearingSourceStub = Stub<PuckBearingSource, Void>()
-    var puckBearingSource: PuckBearingSource {
-        get {
-            fatalError("unimplemented")
-        }
-        set {
-            setPuckBearingSourceStub.call(with: newValue)
-        }
-    }
-
-    let setPuckBearingEnabledStub = Stub<Bool, Void>()
-    var puckBearingEnabled: Bool {
-        get {
-            fatalError("unimplemented")
-        }
-        set {
-            setPuckBearingEnabledStub.call(with: newValue)
-        }
-    }
-
+    @Stubbed var isActive: Bool = false
+    @Stubbed var puckBearingSource: PuckBearingSource = .heading
+    @Stubbed var puckBearingEnabled: Bool = true
 }

@@ -30,6 +30,7 @@ internal final class PuckManager: PuckManagerProtocol {
                 puck = puck3DProvider(configuration)
             }
             puck.puckBearingSource = puckBearingSource
+            puck.puckBearingEnabled = puckBearingEnabled
             self.puck = puck
         }
     }

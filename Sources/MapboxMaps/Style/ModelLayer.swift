@@ -4,12 +4,7 @@ import Foundation
 import MapboxCoreMaps
 import MapboxCommon
 
-/**
- * 
- *
- * @see <a href="https://www.mapbox.com/mapbox-gl-style-spec/#layers-model">The online documentation</a>
- *
- */
+/// - SeeAlso: [Online documentation](https://www.mapbox.com/mapbox-gl-style-spec/#layers-model)
 internal struct ModelLayer: Layer {
 
     // MARK: - Conformance to `Layer` protocol
@@ -27,16 +22,16 @@ internal struct ModelLayer: Layer {
 
     internal struct Layout: Codable {
 
-      /// Whether this layer is displayed.
-      internal var visibility: Value<Visibility>?
+        /// Whether this layer is displayed.
+        internal var visibility: Value<Visibility>?
 
-      internal init() {
-        self.visibility = .constant(.visible)
-      }
+        internal init() {
+            self.visibility = .constant(.visible)
+        }
 
-      enum CodingKeys: String, CodingKey {
-        case visibility
-      }
+        enum CodingKeys: String, CodingKey {
+            case visibility
+        }
     }
 
     /// Changes to a paint property are cheap and happen synchronously.
@@ -44,57 +39,57 @@ internal struct ModelLayer: Layer {
 
     internal struct Paint: Codable {
 
-      internal init() {}
+        internal init() {}
 
-      /// Defines rendering behavior of model in respect to other 3D scene objects. Defaults to .common3D.
-      internal var modelLayerType: Value<ModelLayerType>?
+        /// Defines rendering behavior of model in respect to other 3D scene objects. Defaults to .common3D.
+        internal var modelLayerType: Value<ModelLayerType>?
 
-      /// The opacity of the model layer.
-      internal var modelOpacity: Value<Double>?
+        /// The opacity of the model layer.
+        internal var modelOpacity: Value<Double>?
 
-      /// Transition options for `modelOpacity`.
-      internal var modelOpacityTransition: StyleTransition?
+        /// Transition options for `modelOpacity`.
+        internal var modelOpacityTransition: StyleTransition?
 
-      /// The rotation of the model in euler angles [lon, lat, z].
-      internal var modelRotation: Value<[Double]>?
+        /// The rotation of the model in euler angles [lon, lat, z].
+        internal var modelRotation: Value<[Double]>?
 
-      /// Transition options for `modelRotation`.
-      internal var modelRotationTransition: StyleTransition?
+        /// Transition options for `modelRotation`.
+        internal var modelRotationTransition: StyleTransition?
 
-      /// The scale of the model.
-      internal var modelScale: Value<[Double]>?
+        /// The scale of the model.
+        internal var modelScale: Value<[Double]>?
 
-      /// The translation of the model [lon, lat, z]
-      internal var modelTranslation: Value<[Double]>?
+        /// The translation of the model [lon, lat, z]
+        internal var modelTranslation: Value<[Double]>?
 
-      enum CodingKeys: String, CodingKey {
-        case modelLayerType = "model-type"
-        case modelOpacity = "model-opacity"
-        case modelOpacityTransition = "model-opacity-transition"
-        case modelRotation = "model-rotation"
-        case modelRotationTransition = "model-rotation-transition"
-        case modelScale = "model-scale"
-        case modelTranslation = "model-translation"
-      }
+        enum CodingKeys: String, CodingKey {
+            case modelLayerType = "model-type"
+            case modelOpacity = "model-opacity"
+            case modelOpacityTransition = "model-opacity-transition"
+            case modelRotation = "model-rotation"
+            case modelRotationTransition = "model-rotation-transition"
+            case modelScale = "model-scale"
+            case modelTranslation = "model-translation"
+        }
     }
 
     internal init(id: String) {
-      self.id = id
-      self.type = LayerType.model
-      self.paint = Paint()
-      self.layout = Layout()
+        self.id = id
+        self.type = LayerType.model
+        self.paint = Paint()
+        self.layout = Layout()
     }
 
     enum CodingKeys: String, CodingKey {
-      case id = "id"
-      case type = "type"
-      case filter = "filter"
-      case source = "source"
-      case sourceLayer = "source-layer"
-      case minZoom = "minzoom"
-      case maxZoom = "maxzoom"
-      case layout = "layout"
-      case paint = "paint"
+        case id = "id"
+        case type = "type"
+        case filter = "filter"
+        case source = "source"
+        case sourceLayer = "source-layer"
+        case minZoom = "minzoom"
+        case maxZoom = "maxzoom"
+        case layout = "layout"
+        case paint = "paint"
     }
 }
 

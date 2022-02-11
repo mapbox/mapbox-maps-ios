@@ -6,87 +6,85 @@ final class LocationIndicatorLayerTests: XCTestCase {
 
     func testLayerProtocolMembers() {
 
-       var layer = LocationIndicatorLayer(id: "test-id")
-       layer.source = "some-source"
-       layer.sourceLayer = nil
-       layer.minZoom = 10.0
-       layer.maxZoom = 20.0
+        var layer = LocationIndicatorLayer(id: "test-id")
+        layer.source = "some-source"
+        layer.sourceLayer = nil
+        layer.minZoom = 10.0
+        layer.maxZoom = 20.0
 
-       XCTAssert(layer.id == "test-id")
-       XCTAssert(layer.type == LayerType.locationIndicator)
-       XCTAssert(layer.filter == nil)
-       XCTAssert(layer.source == "some-source")
-       XCTAssertNil(layer.sourceLayer)
-       XCTAssert(layer.minZoom == 10.0)
-       XCTAssert(layer.maxZoom == 20.0)
+        XCTAssert(layer.id == "test-id")
+        XCTAssert(layer.type == LayerType.locationIndicator)
+        XCTAssert(layer.filter == nil)
+        XCTAssert(layer.source == "some-source")
+        XCTAssertNil(layer.sourceLayer)
+        XCTAssert(layer.minZoom == 10.0)
+        XCTAssert(layer.maxZoom == 20.0)
     }
 
     func testEncodingAndDecodingOfLayerProtocolProperties() {
-       var layer = LocationIndicatorLayer(id: "test-id")
-       layer.source = "some-source"
-       layer.sourceLayer = nil
-       layer.minZoom = 10.0
-       layer.maxZoom = 20.0
+        var layer = LocationIndicatorLayer(id: "test-id")
+        layer.source = "some-source"
+        layer.sourceLayer = nil
+        layer.minZoom = 10.0
+        layer.maxZoom = 20.0
 
-       var data: Data?
-       do {
-       	   data = try JSONEncoder().encode(layer)
-       } catch {
-           XCTFail("Failed to encode LocationIndicatorLayer")
-       }
+        var data: Data?
+        do {
+            data = try JSONEncoder().encode(layer)
+        } catch {
+            XCTFail("Failed to encode LocationIndicatorLayer")
+        }
 
-       guard let validData = data else {
-           XCTFail("Failed to encode LocationIndicatorLayer")
-           return
-       }
+        guard let validData = data else {
+            XCTFail("Failed to encode LocationIndicatorLayer")
+            return
+        }
 
-       do {
-           let decodedLayer = try JSONDecoder().decode(LocationIndicatorLayer.self, from: validData)
-           XCTAssert(decodedLayer.id == "test-id")
-       	   XCTAssert(decodedLayer.type == LayerType.locationIndicator)
-           XCTAssert(decodedLayer.filter == nil)
-           XCTAssert(decodedLayer.source == "some-source")
-           XCTAssertNil(decodedLayer.sourceLayer)
-           XCTAssert(decodedLayer.minZoom == 10.0)
-           XCTAssert(decodedLayer.maxZoom == 20.0)
-       } catch {
-           XCTFail("Failed to decode LocationIndicatorLayer")
-       }
+        do {
+            let decodedLayer = try JSONDecoder().decode(LocationIndicatorLayer.self, from: validData)
+            XCTAssert(decodedLayer.id == "test-id")
+            XCTAssert(decodedLayer.type == LayerType.locationIndicator)
+            XCTAssert(decodedLayer.filter == nil)
+            XCTAssert(decodedLayer.source == "some-source")
+            XCTAssertNil(decodedLayer.sourceLayer)
+            XCTAssert(decodedLayer.minZoom == 10.0)
+            XCTAssert(decodedLayer.maxZoom == 20.0)
+        } catch {
+            XCTFail("Failed to decode LocationIndicatorLayer")
+        }
     }
 
     func testEncodingAndDecodingOfLayoutProperties() {
+        var layer = LocationIndicatorLayer(id: "test-id")
+        layer.visibility = .constant(.visible)
+        layer.bearingImage = Value<ResolvedImage>.testConstantValue()
+        layer.shadowImage = Value<ResolvedImage>.testConstantValue()
+        layer.topImage = Value<ResolvedImage>.testConstantValue()
 
-       var layer = LocationIndicatorLayer(id: "test-id")
-       layer.visibility = .constant(.visible)
-       layer.bearingImage = Value<ResolvedImage>.testConstantValue()
-       layer.shadowImage = Value<ResolvedImage>.testConstantValue()
-       layer.topImage = Value<ResolvedImage>.testConstantValue()
+        var data: Data?
+        do {
+            data = try JSONEncoder().encode(layer)
+        } catch {
+            XCTFail("Failed to encode LocationIndicatorLayer")
+        }
 
-       var data: Data?
-       do {
-       	   data = try JSONEncoder().encode(layer)
-       } catch {
-           XCTFail("Failed to encode LocationIndicatorLayer")
-       }
+        guard let validData = data else {
+            XCTFail("Failed to encode LocationIndicatorLayer")
+            return
+        }
 
-       guard let validData = data else {
-           XCTFail("Failed to encode LocationIndicatorLayer")
-           return
-       }
-
-       do {
-           let decodedLayer = try JSONDecoder().decode(LocationIndicatorLayer.self, from: validData)
-           XCTAssert(decodedLayer.visibility == .constant(.visible))
-       	   XCTAssert(layer.bearingImage == Value<ResolvedImage>.testConstantValue())
-       	   XCTAssert(layer.shadowImage == Value<ResolvedImage>.testConstantValue())
-       	   XCTAssert(layer.topImage == Value<ResolvedImage>.testConstantValue())
-       } catch {
-           XCTFail("Failed to decode LocationIndicatorLayer")
-       }
+        do {
+            let decodedLayer = try JSONDecoder().decode(LocationIndicatorLayer.self, from: validData)
+            XCTAssert(decodedLayer.visibility == .constant(.visible))
+            XCTAssert(layer.bearingImage == Value<ResolvedImage>.testConstantValue())
+            XCTAssert(layer.shadowImage == Value<ResolvedImage>.testConstantValue())
+            XCTAssert(layer.topImage == Value<ResolvedImage>.testConstantValue())
+        } catch {
+            XCTFail("Failed to decode LocationIndicatorLayer")
+        }
     }
 
     func testEncodingAndDecodingOfPaintProperties() {
-
        var layer = LocationIndicatorLayer(id: "test-id")
        layer.accuracyRadius = Value<Double>.testConstantValue()
        layer.accuracyRadiusTransition = StyleTransition(duration: 10.0, delay: 10.0)
@@ -112,7 +110,7 @@ final class LocationIndicatorLayerTests: XCTestCase {
 
        var data: Data?
        do {
-       	   data = try JSONEncoder().encode(layer)
+           data = try JSONEncoder().encode(layer)
        } catch {
            XCTFail("Failed to encode LocationIndicatorLayer")
        }
@@ -125,18 +123,18 @@ final class LocationIndicatorLayerTests: XCTestCase {
        do {
            let decodedLayer = try JSONDecoder().decode(LocationIndicatorLayer.self, from: validData)
            XCTAssert(decodedLayer.visibility == .constant(.visible))
-       	   XCTAssert(layer.accuracyRadius == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.accuracyRadiusBorderColor == Value<StyleColor>.testConstantValue())
-       	   XCTAssert(layer.accuracyRadiusColor == Value<StyleColor>.testConstantValue())
-       	   XCTAssert(layer.bearing == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.bearingImageSize == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.emphasisCircleColor == Value<StyleColor>.testConstantValue())
-       	   XCTAssert(layer.emphasisCircleRadius == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.imagePitchDisplacement == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.location == Value<[Double]>.testConstantValue())
-       	   XCTAssert(layer.perspectiveCompensation == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.shadowImageSize == Value<Double>.testConstantValue())
-       	   XCTAssert(layer.topImageSize == Value<Double>.testConstantValue())
+           XCTAssert(layer.accuracyRadius == Value<Double>.testConstantValue())
+           XCTAssert(layer.accuracyRadiusBorderColor == Value<StyleColor>.testConstantValue())
+           XCTAssert(layer.accuracyRadiusColor == Value<StyleColor>.testConstantValue())
+           XCTAssert(layer.bearing == Value<Double>.testConstantValue())
+           XCTAssert(layer.bearingImageSize == Value<Double>.testConstantValue())
+           XCTAssert(layer.emphasisCircleColor == Value<StyleColor>.testConstantValue())
+           XCTAssert(layer.emphasisCircleRadius == Value<Double>.testConstantValue())
+           XCTAssert(layer.imagePitchDisplacement == Value<Double>.testConstantValue())
+           XCTAssert(layer.location == Value<[Double]>.testConstantValue())
+           XCTAssert(layer.perspectiveCompensation == Value<Double>.testConstantValue())
+           XCTAssert(layer.shadowImageSize == Value<Double>.testConstantValue())
+           XCTAssert(layer.topImageSize == Value<Double>.testConstantValue())
        } catch {
            XCTFail("Failed to decode LocationIndicatorLayer")
        }

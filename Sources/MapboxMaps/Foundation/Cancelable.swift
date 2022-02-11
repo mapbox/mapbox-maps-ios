@@ -1,6 +1,6 @@
 /// A type that conforms to ``Cancelable`` typically represents a long
 /// running operation that can be canceled. Custom implementations
-/// must behave correctly if ``Cancelable.cancel()`` is invoked
+/// must behave correctly if ``Cancelable/cancel()`` is invoked
 /// more than once.
 public protocol Cancelable: AnyObject {
     func cancel()

@@ -5,6 +5,7 @@ author: Mapbox
 theme: jazzy-theme
 sdk: iphonesimulator
 swift_build_tool: xcodebuild
+include_spi_declarations: true
 build_tool_arguments:
   - -scheme
   - MapboxMaps

@@ -1,7 +1,13 @@
+/// A default ``ViewportTransition`` implementation.
+///
+/// Use ``Viewport/makeDefaultViewportTransition(options:)`` to create instances of this
+/// class.
 @_spi(Experimental) public final class DefaultViewportTransition {
 
-    // modifications to options will take effect the next
-    // time run(from:to:completion:) is invoked
+    /// Configuration options.
+    ///
+    /// New values will take effect the next time ``ViewportTransition/run(to:completion:)``
+    /// is invoked
     public var options: DefaultViewportTransitionOptions
 
     private let animationHelper: DefaultViewportTransitionAnimationHelperProtocol
@@ -14,6 +20,9 @@
 }
 
 extension DefaultViewportTransition: ViewportTransition {
+
+    /// :nodoc:
+    /// See ``ViewportTransition/run(to:completion:)``.
     public func run(to toState: ViewportState,
                     completion: @escaping (Bool) -> Void) -> Cancelable {
         let resultCancelable = CompositeCancelable()

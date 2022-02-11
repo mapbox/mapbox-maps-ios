@@ -1,7 +1,11 @@
+/// A ``ViewportState`` implementation that tracks the location puck (to show a puck, use
+/// ``LocationOptions/puckType``)
+///
+/// Use ``Viewport/makeFollowPuckViewportState(options:)`` to create instances of this
+/// class.
 @_spi(Experimental) public final class FollowPuckViewportState {
 
-    // MARK: - Public Config
-
+    /// Configuration options for this state.
     public var options: FollowPuckViewportStateOptions {
         get {
             dataSource.options
@@ -35,11 +39,14 @@
 }
 
 extension FollowPuckViewportState: ViewportState {
-    // delivers the latest location synchronously, if available
+    /// :nodoc:
+    /// See ``ViewportState/observeDataSource(with:)``.
     public func observeDataSource(with handler: @escaping (CameraOptions) -> Bool) -> Cancelable {
         return dataSource.observe(with: handler)
     }
 
+    /// :nodoc:
+    /// See ``ViewportState/startUpdatingCamera()``.
     public func startUpdatingCamera() {
         guard updatingCameraCancelable == nil else {
             return
@@ -67,6 +74,8 @@ extension FollowPuckViewportState: ViewportState {
         })
     }
 
+    /// :nodoc:
+    /// See ``ViewportState/stopUpdatingCamera()``.
     public func stopUpdatingCamera() {
         updatingCameraCancelable?.cancel()
         updatingCameraCancelable = nil

@@ -25,6 +25,9 @@ public struct LocationOptions: Equatable {
     /// This is an experimental option. The default value is `PuckBearingSource.heading`.
     public var puckBearingSource: PuckBearingSource = .heading
 
+    /// Whether the puck rotates to track the bearing source.
+    public var puckBearingEnabled: Bool = true
+
     public init() {}
 }
 

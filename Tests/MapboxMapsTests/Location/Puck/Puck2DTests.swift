@@ -299,11 +299,9 @@ final class Puck2DTests: XCTestCase {
     }
 
     func testActivatingPuckWithBearingDisabledForHeading() throws {
-        configuration.puckBearingEnabled = false
-        recreatePuck()
         let location = updateLocation(with: .fullAccuracy, heading: .random(in: 0..<360))
         style.layerExistsStub.defaultReturnValue = false
-
+        puck2D.puckBearingEnabled = false
         puck2D.isActive = true
 
         var expectedProperties = makeExpectedLayerProperties(with: location)
@@ -313,11 +311,9 @@ final class Puck2DTests: XCTestCase {
     }
 
     func testActivatingPuckWithBearingDisabledForCourse() throws {
-        configuration.puckBearingEnabled = false
-        puck2D.puckBearingSource = .course
-        recreatePuck()
         let location = updateLocation(with: .fullAccuracy, course: .random(in: 0..<360))
         style.layerExistsStub.defaultReturnValue = false
+        puck2D.puckBearingEnabled = false
 
         puck2D.isActive = true
 

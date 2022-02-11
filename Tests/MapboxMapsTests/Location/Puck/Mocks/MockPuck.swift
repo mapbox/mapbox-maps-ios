@@ -21,4 +21,15 @@ final class MockPuck: Puck {
             setPuckBearingSourceStub.call(with: newValue)
         }
     }
+
+    let setPuckBearingEnabledStub = Stub<Bool, Void>()
+    var puckBearingEnabled: Bool {
+        get {
+            fatalError("unimplemented")
+        }
+        set {
+            setPuckBearingEnabledStub.call(with: newValue)
+        }
+    }
+
 }

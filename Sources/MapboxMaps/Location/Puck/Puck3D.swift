@@ -33,6 +33,8 @@ internal final class Puck3D: Puck {
         }
     }
 
+    internal var puckBearingEnabled: Bool = true
+
     private let configuration: Puck3DConfiguration
     private let style: StyleProtocol
     private let interpolatedLocationProducer: InterpolatedLocationProducerProtocol
@@ -65,7 +67,7 @@ internal final class Puck3D: Puck {
             }
             model.orientation = [0, 0, 0]
         }
-        if configuration.puckBearingEnabled {
+        if puckBearingEnabled {
             switch puckBearingSource {
             case .heading:
                 if let validHeadingDirection = location.heading {

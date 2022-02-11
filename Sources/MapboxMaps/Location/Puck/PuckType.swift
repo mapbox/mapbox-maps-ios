@@ -32,9 +32,6 @@ public struct Puck2DConfiguration: Equatable {
     /// The color of the accuracy ring border.
     public var accuracyRingBorderColor: UIColor
 
-    /// Whether the puck rotates to track the bearing source.
-    public var puckBearingEnabled: Bool
-
     /// Initialize a `Puck2D` object with a top image, bearing image, shadow image, scale, and accuracy ring visibility.
     /// - Parameters:
     ///   - topImage: The image to use as the top layer for the location indicator.
@@ -54,7 +51,6 @@ public struct Puck2DConfiguration: Equatable {
         self.showsAccuracyRing = showsAccuracyRing
         self.accuracyRingColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)
         self.accuracyRingBorderColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)
-        self.puckBearingEnabled = true
     }
 
     /// Initialize a `Puck2D` object with a top image, bearing image, shadow image, scale, and accuracy ring visibility.
@@ -80,35 +76,6 @@ public struct Puck2DConfiguration: Equatable {
         self.showsAccuracyRing = showsAccuracyRing
         self.accuracyRingColor = accuracyRingColor
         self.accuracyRingBorderColor = accuracyRingBorderColor
-        self.puckBearingEnabled = true
-    }
-
-    /// Initialize a `Puck2D` object with a top image, bearing image, shadow image, scale, and accuracy ring visibility.
-    /// - Parameters:
-    ///   - topImage: The image to use as the top layer for the location indicator.
-    ///   - bearingImage: The image used as the middle of the location indicator.
-    ///   - shadowImage: The image that acts as a background of the location indicator.
-    ///   - scale: The size of the images, as a scale factor applied to the size of the specified image..
-    ///   - showsAccuracyRing: Indicates whether the location accurary ring should be shown.
-    ///   - accuracyRingColor:The color of the accuracy ring.
-    ///   - accuracyRingBorderColor: The color of the accuracy ring border.
-    ///   - puckBearingEnabled: Indicates whether the puck rotates to track the bearing source.
-    public init(topImage: UIImage? = nil,
-                bearingImage: UIImage? = nil,
-                shadowImage: UIImage? = nil,
-                scale: Value<Double>? = nil,
-                showsAccuracyRing: Bool = false,
-                accuracyRingColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3),
-                accuracyRingBorderColor: UIColor = UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3),
-                puckBearingEnabled: Bool = true) {
-        self.topImage = topImage
-        self.bearingImage = bearingImage
-        self.shadowImage = shadowImage
-        self.scale = scale
-        self.showsAccuracyRing = showsAccuracyRing
-        self.accuracyRingColor = accuracyRingColor
-        self.accuracyRingBorderColor = accuracyRingBorderColor
-        self.puckBearingEnabled = puckBearingEnabled
     }
 
     /// Create a Puck2DConfiguration instance with or without an arrow bearing image. Default without the arrow bearing image.
@@ -132,9 +99,6 @@ public struct Puck3DConfiguration: Equatable {
     /// The rotation of the model in euler angles [lon, lat, z].
     public var modelRotation: Value<[Double]>?
 
-    /// Whether the puck rotates to track the bearing source.
-    public var puckBearingEnabled: Bool
-
     /// Initialize a `Puck3DConfiguration` with a model, scale and rotation.
     /// - Parameters:
     ///   - model: The `gltf` model to use for the puck.
@@ -144,20 +108,6 @@ public struct Puck3DConfiguration: Equatable {
         self.model = model
         self.modelScale = modelScale
         self.modelRotation = modelRotation
-        self.puckBearingEnabled = true
-    }
-
-    /// Initialize a `Puck3DConfiguration` with a model, scale and rotation.
-    /// - Parameters:
-    ///   - model: The `gltf` model to use for the puck.
-    ///   - modelScale: The amount to scale the model by.
-    ///   - modelRotation: The rotation of the model in euler angles `[lon, lat, z]`.
-    ///   - puckBearingEnabled: Indicates whether the puck rotates to track the bearing source.
-    public init(model: Model, modelScale: Value<[Double]>? = nil, modelRotation: Value<[Double]>? = nil, puckBearingEnabled: Bool = true) {
-        self.model = model
-        self.modelScale = modelScale
-        self.modelRotation = modelRotation
-        self.puckBearingEnabled = puckBearingEnabled
     }
 }
 

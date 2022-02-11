@@ -34,6 +34,8 @@ internal final class Puck2D: Puck {
         }
     }
 
+    internal var puckBearingEnabled: Bool = true
+
     private var latestLocation: InterpolatedLocation? {
         didSet {
             if oldValue?.accuracyAuthorization == latestLocation?.accuracyAuthorization {
@@ -133,7 +135,7 @@ internal final class Puck2D: Puck {
                 newLayerPaintProperties[.accuracyRadiusBorderColor] = StyleColor(configuration.accuracyRingBorderColor).rgbaString
             }
 
-            if configuration.puckBearingEnabled {
+            if puckBearingEnabled {
                 switch puckBearingSource {
                 case .heading:
                     newLayerPaintProperties[.bearing] = location.heading ?? 0
@@ -218,12 +220,12 @@ internal final class Puck2D: Puck {
             if configuration.showsAccuracyRing {
                 layerProperties[LocationIndicatorLayer.PaintCodingKeys.accuracyRadius.rawValue] = location.horizontalAccuracy
             }
-            if configuration.puckBearingEnabled {
+            if puckBearingEnabled {
                 switch puckBearingSource {
                 case .heading:
                     layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = location.heading ?? 0
                 case .course:
-                    layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = location.course
+                    layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = location.course ?? 0
                 }
             }
         case .reducedAccuracy:

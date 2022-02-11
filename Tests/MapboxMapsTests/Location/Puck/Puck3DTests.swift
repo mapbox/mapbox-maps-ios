@@ -158,7 +158,6 @@ final class Puck3DTests: XCTestCase {
     }
 
     func testPuckBearingDisabledForHeading() throws {
-        configuration.puckBearingEnabled = false
         configuration.model.orientation = [
             .random(in: 0..<360),
             .random(in: 0..<360),
@@ -170,7 +169,7 @@ final class Puck3DTests: XCTestCase {
         interpolatedLocationProducer.location = location
         style.sourceExistsStub.defaultReturnValue = false
         puck3D.puckBearingSource = .heading
-
+        puck3D.puckBearingEnabled = false
         puck3D.isActive = true
 
         let expectedOrientation = configuration.model.orientation!
@@ -179,7 +178,6 @@ final class Puck3DTests: XCTestCase {
     }
 
     func testPuckBearingDisabledForCourse() throws {
-        configuration.puckBearingEnabled = false
         configuration.model.orientation = [
             .random(in: 0..<360),
             .random(in: 0..<360),
@@ -190,7 +188,7 @@ final class Puck3DTests: XCTestCase {
         interpolatedLocationProducer.location = location
         style.sourceExistsStub.defaultReturnValue = false
         puck3D.puckBearingSource = .course
-
+        puck3D.puckBearingEnabled = false
         puck3D.isActive = true
 
         let expectedOrientation = configuration.model.orientation!

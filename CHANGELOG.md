@@ -8,6 +8,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Sync viewport and puck animations. ([#1090](https://github.com/mapbox/mapbox-maps-ios/pull/1090))
 * Add puckBearingEnabled property for location ([#1107](https://github.com/mapbox/mapbox-maps-ios/pull/1107))
 * Fix camera change events being fired after map has stopped moving ([#1118])(https://github.com/mapbox/mapbox-maps-ios/pull/1118))
+* Fix issue where single tap and double tap to zoom in gestures could recognize simultaneously. ([#1113](https://github.com/mapbox/mapbox-maps-ios/pull/1113))
 
 ## 10.3.0 - February 10, 2022
 

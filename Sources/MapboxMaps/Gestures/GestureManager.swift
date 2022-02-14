@@ -21,7 +21,6 @@ public final class GestureManager: GestureHandlerDelegate {
             panGestureRecognizer.isEnabled = newValue.panEnabled
             pinchGestureRecognizer.isEnabled = newValue.pinchEnabled
             pinchGestureHandler.rotateEnabled = newValue.pinchRotateEnabled
-            pinchGestureHandler.behavior = newValue.pinchBehavior
             pitchGestureRecognizer.isEnabled = newValue.pitchEnabled
             doubleTapToZoomInGestureRecognizer.isEnabled = newValue.doubleTapToZoomInEnabled
             doubleTouchToZoomOutGestureRecognizer.isEnabled = newValue.doubleTouchToZoomOutEnabled
@@ -34,7 +33,6 @@ public final class GestureManager: GestureHandlerDelegate {
             gestureOptions.panEnabled = panGestureRecognizer.isEnabled
             gestureOptions.pinchEnabled = pinchGestureRecognizer.isEnabled
             gestureOptions.pinchRotateEnabled = pinchGestureHandler.rotateEnabled
-            gestureOptions.pinchBehavior = pinchGestureHandler.behavior
             gestureOptions.pitchEnabled = pitchGestureRecognizer.isEnabled
             gestureOptions.doubleTapToZoomInEnabled = doubleTapToZoomInGestureRecognizer.isEnabled
             gestureOptions.doubleTouchToZoomOutEnabled = doubleTouchToZoomOutGestureRecognizer.isEnabled

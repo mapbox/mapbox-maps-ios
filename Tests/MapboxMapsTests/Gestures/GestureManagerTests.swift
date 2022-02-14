@@ -1,5 +1,5 @@
 import XCTest
-@_spi(Experimental) @testable import MapboxMaps
+@testable import MapboxMaps
 
 final class GestureManagerTests: XCTestCase {
 
@@ -413,28 +413,5 @@ final class GestureManagerTests: XCTestCase {
         pinchGestureHandler.rotateEnabled = true
 
         XCTAssertEqual(gestureManager.options.pinchRotateEnabled, pinchGestureHandler.rotateEnabled)
-    }
-
-    func testOptionsPinchBehavior() {
-        XCTAssertEqual(gestureManager.options.pinchBehavior, .tracksTouchLocationsWhenPanningAfterZoomChange)
-        XCTAssertEqual(pinchGestureHandler.behavior, .tracksTouchLocationsWhenPanningAfterZoomChange)
-
-        gestureManager.options.pinchBehavior = .doesNotResetCameraAtEachFrame
-
-        XCTAssertEqual(gestureManager.options.pinchBehavior, .doesNotResetCameraAtEachFrame)
-        XCTAssertEqual(pinchGestureHandler.behavior, .doesNotResetCameraAtEachFrame)
-
-        gestureManager.options.pinchBehavior = .tracksTouchLocationsWhenPanningAfterZoomChange
-
-        XCTAssertEqual(gestureManager.options.pinchBehavior, .tracksTouchLocationsWhenPanningAfterZoomChange)
-        XCTAssertEqual(pinchGestureHandler.behavior, .tracksTouchLocationsWhenPanningAfterZoomChange)
-
-        pinchGestureHandler.behavior = .doesNotResetCameraAtEachFrame
-
-        XCTAssertEqual(gestureManager.options.pinchBehavior, pinchGestureHandler.behavior)
-
-        pinchGestureHandler.behavior = .tracksTouchLocationsWhenPanningAfterZoomChange
-
-        XCTAssertEqual(gestureManager.options.pinchBehavior, pinchGestureHandler.behavior)
     }
 }

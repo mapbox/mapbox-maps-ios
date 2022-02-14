@@ -102,7 +102,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
                        accuracy: 0.0000000001)
         locationChangeHandler.reset()
         // After the previous update() call, the velocity should have also been reduced
-        // to be sufficiently low (< 1 in both x and y) to end the animation.
+        // to be sufficiently low (< 20 in both x and y) to end the animation.
         XCTAssertEqual(animator.state, .inactive)
         XCTAssertEqual(completion.invocations.count, 1)
         XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)

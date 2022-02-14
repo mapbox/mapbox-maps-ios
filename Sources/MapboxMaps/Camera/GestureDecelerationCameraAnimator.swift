@@ -70,7 +70,7 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
         velocity.x *= pow(decelerationFactor, (elapsedTime * 1000))
         velocity.y *= pow(decelerationFactor, (elapsedTime * 1000))
 
-        guard abs(velocity.x) >= 1 || abs(velocity.y) >= 1 else {
+        if abs(velocity.x) < 20, abs(velocity.y) < 20 {
             stopAnimation()
             return
         }

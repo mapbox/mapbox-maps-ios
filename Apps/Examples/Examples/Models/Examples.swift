@@ -261,5 +261,8 @@ public struct Examples {
         Example(title: "Viewport",
                 description: "Viewport camera showcase",
                 type: ViewportExample.self),
+        Example(title: "Advanced Viewport Gestures",
+                description: "Viewport configured to allow gestures",
+                type: AdvancedViewportGesturesExample.self),
     ]
 }

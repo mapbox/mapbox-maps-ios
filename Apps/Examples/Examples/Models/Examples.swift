@@ -1,12 +1,12 @@
 import Foundation
 import MapboxMaps
 
-/**
- To add a new example, create a new `Example` struct
- and place it within the array for the category it belongs to below. Make sure
- the `fileName` is the same name of the new `UIViewController`
- you added in Examples/All Examples. See the README.md for more details.
- */
+// To add a new example, create a new `Example` struct
+// and place it within the array for the category it belongs to below. Make sure
+// the `fileName` is the same name of the new `UIViewController`
+// you added in Examples/All Examples. See the README.md for more details.
+
+// swiftlint:disable:next type_body_length
 public struct Examples {
     public static let all = [
         [

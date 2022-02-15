@@ -24,7 +24,7 @@ git -C repo checkout "$VERSION"
 step "Build $NAME"
 ../../create-xcframework.sh "$NAME" "$LINK_TYPE" "$SCHEME" "repo/$NAME.xcodeproj"
 
-mv *.xcframework ../
+mv ./*.xcframework ../
 
 popd
 rm -rf .build

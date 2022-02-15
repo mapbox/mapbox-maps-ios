@@ -51,7 +51,7 @@ xcodegen
 popd
 
 step 'Building MapboxMaps.xcframework'
-../create-xcframework.sh MapboxMaps "$LINK_TYPE" MapboxMaps .xcode/MapboxMaps.xcodeproj
+../create-xcframework.sh 'MapboxMaps' "$LINK_TYPE" 'MapboxMaps' ".xcode/MapboxMaps.xcodeproj" 'MapboxMaps'
 rm -rf .xcode
 
 popd
@@ -61,7 +61,7 @@ cp ../../../LICENSE.md artifacts/
 cp "$README_PATH" artifacts/README.md
 
 step 'Zip Bundle'
-zip -r "$ZIP_ARCHIVE_NAME" artifacts
+zip -qyr "$ZIP_ARCHIVE_NAME" artifacts
 
 step 'Delete Artifacts Directory'
 rm -rf artifacts

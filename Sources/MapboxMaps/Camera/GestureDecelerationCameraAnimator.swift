@@ -72,7 +72,6 @@ internal final class GestureDecelerationCameraAnimator: NSObject, CameraAnimator
 
         if abs(velocity.x) < 20, abs(velocity.y) < 20 {
             stopAnimation()
-            return
         }
     }
 }

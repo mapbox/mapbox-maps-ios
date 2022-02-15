@@ -16,5 +16,6 @@ final class GestureOptionsTests: XCTestCase {
         XCTAssertTrue(options.quickZoomEnabled)
         XCTAssertEqual(options.panMode, .horizontalAndVertical)
         XCTAssertEqual(options.panDecelerationFactor, UIScrollView.DecelerationRate.normal.rawValue)
+        XCTAssertNil(options.focalPoint)
     }
 }

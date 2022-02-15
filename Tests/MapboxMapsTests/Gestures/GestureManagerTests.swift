@@ -468,4 +468,38 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertTrue(gestureManager.options.pinchPanEnabled)
         XCTAssertTrue(pinchGestureHandler.panEnabled)
     }
+
+    func testOptionsFocalPoint() {
+        XCTAssertNil(gestureManager.options.focalPoint)
+        XCTAssertNil(doubleTapToZoomInGestureHandler.focalPoint)
+        XCTAssertNil(doubleTouchToZoomOutGestureHandler.focalPoint)
+        XCTAssertNil(quickZoomGestureHandler.focalPoint)
+        XCTAssertNil(pinchGestureHandler.focalPoint)
+
+        let firstFocalPoint = CGPoint.random()
+        gestureManager.options.focalPoint = firstFocalPoint
+
+        XCTAssertEqual(gestureManager.options.focalPoint, firstFocalPoint)
+        XCTAssertEqual(doubleTapToZoomInGestureHandler.focalPoint, firstFocalPoint)
+        XCTAssertEqual(doubleTouchToZoomOutGestureHandler.focalPoint, firstFocalPoint)
+        XCTAssertEqual(quickZoomGestureHandler.focalPoint, firstFocalPoint)
+        XCTAssertEqual(pinchGestureHandler.focalPoint, firstFocalPoint)
+
+        gestureManager.options.focalPoint = nil
+
+        XCTAssertNil(doubleTapToZoomInGestureHandler.focalPoint)
+        XCTAssertNil(doubleTouchToZoomOutGestureHandler.focalPoint)
+        XCTAssertNil(quickZoomGestureHandler.focalPoint)
+        XCTAssertNil(pinchGestureHandler.focalPoint)
+
+        let secondFocalPoint = CGPoint.random()
+        doubleTapToZoomInGestureHandler.focalPoint = secondFocalPoint
+
+        XCTAssertEqual(gestureManager.options.focalPoint, doubleTapToZoomInGestureHandler.focalPoint)
+
+        doubleTapToZoomInGestureHandler.focalPoint = nil
+
+        XCTAssertNil(gestureManager.options.focalPoint)
+
+    }
 }

@@ -46,6 +46,10 @@ public struct Examples {
             "examples": userInteractionExamples
         ],
         [
+            "title": "Accessibility",
+            "examples": accessibilityExamples
+        ],
+        [
             "title": "Experimental",
             "examples": experimentalExamples
         ]
@@ -272,6 +276,12 @@ public struct Examples {
         Example(title: "Add an interactive clustered layer",
                 description: "Display an alert controller after selecting a feature.",
                 type: SymbolClusteringExample.self),
+    ]
+
+    public static let accessibilityExamples = [
+        Example(title: "Read annotation features using VoiceOver",
+                description: "Use voice over to highlight annotations and hear their associated features.",
+                type: VoiceOverAccessibilityExample.self),
     ]
 
     // Examples that uses experimental APIs

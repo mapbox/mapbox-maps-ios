@@ -60,5 +60,7 @@ public struct GestureOptions: Equatable {
     /// Defaults to `UIScrollView.DecelerationRate.normal.rawValue`
     public var panDecelerationFactor: CGFloat = UIScrollView.DecelerationRate.normal.rawValue
 
+    public var focalPoint: CGPoint? = nil
+
     public init() {}
 }

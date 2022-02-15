@@ -29,6 +29,7 @@ public final class GestureManager: GestureHandlerDelegate {
             quickZoomGestureRecognizer.isEnabled = newValue.quickZoomEnabled
             panGestureHandler.panMode = newValue.panMode
             panGestureHandler.decelerationFactor = newValue.panDecelerationFactor
+            doubleTapToZoomInGestureHandler.focalPoint = newValue.focalPoint
         }
         get {
             var gestureOptions = GestureOptions()
@@ -43,6 +44,7 @@ public final class GestureManager: GestureHandlerDelegate {
             gestureOptions.quickZoomEnabled = quickZoomGestureRecognizer.isEnabled
             gestureOptions.panMode = panGestureHandler.panMode
             gestureOptions.panDecelerationFactor = panGestureHandler.decelerationFactor
+            gestureOptions.focalPoint = doubleTapToZoomInGestureHandler.focalPoint
             return gestureOptions
         }
     }
@@ -95,7 +97,7 @@ public final class GestureManager: GestureHandlerDelegate {
     private let panGestureHandler: PanGestureHandlerProtocol
     private let pinchGestureHandler: PinchGestureHandlerProtocol
     private let pitchGestureHandler: GestureHandler
-    private let doubleTapToZoomInGestureHandler: GestureHandler
+    private let doubleTapToZoomInGestureHandler: DoubleTapToZoomInGestureHandlerProtocol
     private let doubleTouchToZoomOutGestureHandler: GestureHandler
     private let quickZoomGestureHandler: GestureHandler
     private let singleTapGestureHandler: GestureHandler
@@ -105,7 +107,7 @@ public final class GestureManager: GestureHandlerDelegate {
     internal init(panGestureHandler: PanGestureHandlerProtocol,
                   pinchGestureHandler: PinchGestureHandlerProtocol,
                   pitchGestureHandler: GestureHandler,
-                  doubleTapToZoomInGestureHandler: GestureHandler,
+                  doubleTapToZoomInGestureHandler: DoubleTapToZoomInGestureHandlerProtocol,
                   doubleTouchToZoomOutGestureHandler: GestureHandler,
                   quickZoomGestureHandler: GestureHandler,
                   singleTapGestureHandler: GestureHandler,

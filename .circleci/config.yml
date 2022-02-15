@@ -444,6 +444,11 @@ jobs:
                 COVERAGE_ARCH=arm64 \
                 COVERAGE_ROOT_DIR="$(pwd)/testlab_results" \
                 COVERAGE_MAPBOX_MAPS="$(pwd)/testlab_results/MapboxMaps.o" SCHEME=MapboxTestHost
+      - run:
+          name: Parsing xcresults for errors
+          command: |
+            find "testlab_results" -name '*.xcresult' -exec swift run --package-path scripts/xcparty xcparty {} \;
+          when: on_fail
       - store_artifacts:
           path: firebase_test_lab_run.log
       - store_artifacts:
@@ -506,6 +511,11 @@ jobs:
                 COVERAGE_ARCH=arm64 \
                 COVERAGE_ROOT_DIR="$(pwd)/testlab_results" \
                 COVERAGE_MAPBOX_MAPS="$(pwd)/testlab_results/MapboxMaps.o" SCHEME=Examples
+      - run:
+          name: Parsing xcresults for errors
+          command: |
+            find "testlab_results" -name '*.xcresult' -exec swift run --package-path scripts/xcparty xcparty {} \;
+          when: on_fail
       - store_artifacts:
           path: firebase_test_lab_run.log
       - store_artifacts:

@@ -472,7 +472,7 @@ open class MapView: UIView {
         super.didMoveToWindow()
 
         unsubscribeFromLifecycleNotifications()
-        
+
         displayLink?.invalidate()
         displayLink = nil
 

@@ -151,6 +151,14 @@ final class GestureManagerTests: XCTestCase {
                         === doubleTapToZoomInGestureHandler.gestureRecognizer)
     }
 
+    func testSingleTapGestureRecognizerRequiresDoubleTapToZoomInGestureRecognizerToFail() throws {
+        let singleTapGestureRecognizer = try XCTUnwrap(singleTapGestureHandler.gestureRecognizer as? MockGestureRecognizer)
+
+        XCTAssertEqual(singleTapGestureRecognizer.requireToFailStub.invocations.count, 1)
+        XCTAssertTrue(singleTapGestureRecognizer.requireToFailStub.parameters.first
+                        === doubleTapToZoomInGestureHandler.gestureRecognizer)
+    }
+
     func testGestureBegan() {
         let gestureType = GestureType.allCases.randomElement()!
 

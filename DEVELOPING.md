@@ -19,7 +19,7 @@ This project:
 
 4. uses [secret-shield](https://github.com/mapbox/secret-shield) to help block secrets such as access tokens from being exposed. Install `secret-shield` by entering `npm install -g @mapbox/secret-shield`. Install the pre-commit hook by running `scripts/install-pre-commit/install-pre-commit.sh`
 
-5. uses CircleCI and AWS Device Farm for continuous integration.
+5. uses CircleCI and Firebase Test Lab for continuous integration.
 
 ### Accessing the Maps SDK's source
 
@@ -58,13 +58,7 @@ To run device tests there are few options:
   - Open the resulting `MapboxMaps.xcodeproj`.
   - Test (Cmd-U) the `MapboxTestHost` scheme.
 
-2. Trigger via CI by adding `[run device tests]` to a git commit message. These tests also run "nightly". 
-(Examples can also be run as tests on CI by adding `[run app device tests]`.)
-
-3. Trigger tests on AWS Device Farm from the command line by running `make test-with-device-farm SCHEME=MapboxTestHost APP_NAME=MapboxTestHost`. This requires certain environment variables to be set; please see the makefile for these.
-
-4. Trigger tests on a local device (connected by USB) using the same setup as Device Farm testing by running:
-`make local-test-with-device-farm-ipa SCHEME=MapboxTestHost CONFIGURATION=Release ENABLE_CODE_SIGNING=1`
+2. Trigger via CI by manual approve of `optional-tests` workflow. These tests also run "nightly".
 
 ## Integration Tests
 
@@ -85,7 +79,7 @@ There is **no host application**, so `MapViewIntegrationTestCase` creates its ow
 
 - These tests cannot be run on devices.
 - Tests will be skipped on simulators < iOS 13 because there's no valid Metal device.
-- Tests will be skipped entirely on CircleCI because of the VM (no Metal). **So for CI purposes, integration tests should be run on AWS Device Farm via `MapboxTestHost`**
+- Tests will be skipped entirely on CircleCI because of the VM (no Metal). **So for CI purposes, integration tests should be run on Firebase Test Lab via `MapboxTestHost`**
 
 As you can see the most useful case is to run within from the host application. Be aware that this has the potential for side-effects, since the application is not restarted for each test.
 

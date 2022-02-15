@@ -62,6 +62,7 @@ final class Puck2DTests: XCTestCase {
     func testDefaultPropertyValues() {
         XCTAssertFalse(puck2D.isActive)
         XCTAssertEqual(puck2D.puckBearingSource, .heading)
+        XCTAssertEqual(puck2D.puckBearingEnabled, true)
     }
 
     func testLocationConsumerIsNotAddedAtInitialization() {
@@ -298,6 +299,31 @@ final class Puck2DTests: XCTestCase {
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
 
+    func testActivatingPuckWithBearingDisabledForHeading() throws {
+        let location = updateLocation(with: .fullAccuracy, heading: .random(in: 0..<360))
+        style.layerExistsStub.defaultReturnValue = false
+        puck2D.puckBearingEnabled = false
+        puck2D.isActive = true
+
+        var expectedProperties = makeExpectedLayerProperties(with: location)
+        expectedProperties.removeValue(forKey: "bearing")
+        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
+        XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
+    }
+
+    func testActivatingPuckWithBearingDisabledForCourse() throws {
+        let location = updateLocation(with: .fullAccuracy, course: .random(in: 0..<360))
+        style.layerExistsStub.defaultReturnValue = false
+        puck2D.puckBearingEnabled = false
+
+        puck2D.isActive = true
+
+        var expectedProperties = makeExpectedLayerProperties(with: location)
+        expectedProperties.removeValue(forKey: "bearing")
+        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
+        XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
+    }
+
     func testActivatingPuckWithPuckBearingSourceSetToCourse() throws {
         let location = updateLocation(with: .fullAccuracy, course: .random(in: 0..<360))
         style.layerExistsStub.defaultReturnValue = false
@@ -309,6 +335,46 @@ final class Puck2DTests: XCTestCase {
         expectedProperties["bearing"] = interpolatedLocationProducer.location!.course!
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
+    }
+
+    func testActivatingPuckWithPuckBearingSourceSetToCourseWithNilCourse() throws {
+        updateLocation(with: .fullAccuracy, course: .random(in: 0..<360))
+        style.layerExistsStub.defaultReturnValue = false
+        puck2D.puckBearingSource = .course
+
+        puck2D.isActive = true
+        let location = updateLocation(with: .fullAccuracy, course: nil)
+
+        let expectedProperties: [LocationIndicatorLayer.PaintCodingKeys: Any] = [
+            .location: [
+                location.coordinate.latitude,
+                location.coordinate.longitude,
+                location.altitude],
+            .bearing: 0
+        ]
+
+        let actualProperties = try XCTUnwrap(style.setLayerPropertiesStub.parameters.last?.properties)
+        XCTAssertEqual(actualProperties as NSDictionary, expectedProperties.mapKeys(\.rawValue) as NSDictionary)
+    }
+
+    func testActivatingPuckWithPuckBearingSourceSetToHeadingWithNilHeading() throws {
+        updateLocation(with: .fullAccuracy, heading: .random(in: 0..<360))
+        style.layerExistsStub.defaultReturnValue = false
+        puck2D.puckBearingSource = .heading
+
+        puck2D.isActive = true
+        let location = updateLocation(with: .fullAccuracy, heading: nil)
+
+        let expectedProperties: [LocationIndicatorLayer.PaintCodingKeys: Any] = [
+            .location: [
+                location.coordinate.latitude,
+                location.coordinate.longitude,
+                location.altitude],
+            .bearing: 0
+        ]
+
+        let actualProperties = try XCTUnwrap(style.setLayerPropertiesStub.parameters.last?.properties)
+        XCTAssertEqual(actualProperties as NSDictionary, expectedProperties.mapKeys(\.rawValue) as NSDictionary)
     }
 
     func testActivatingPuckWithReducedAccuracy() throws {

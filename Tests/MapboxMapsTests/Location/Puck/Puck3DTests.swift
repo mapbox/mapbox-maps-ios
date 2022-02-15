@@ -34,6 +34,7 @@ final class Puck3DTests: XCTestCase {
     func testDefaultPropertyValues() {
         XCTAssertFalse(puck3D.isActive)
         XCTAssertEqual(puck3D.puckBearingSource, .heading)
+        XCTAssertEqual(puck3D.puckBearingEnabled, true)
     }
 
     func testLocationConsumerIsNotAddedAtInitialization() {
@@ -153,6 +154,45 @@ final class Puck3DTests: XCTestCase {
 
         var expectedOrientation = configuration.model.orientation!
         expectedOrientation[2] += location.course!
+        let actualSource = try XCTUnwrap(style.addSourceStub.parameters.first?.source as? ModelSource)
+        XCTAssertEqual(actualSource.models?["puck-model"]?.orientation, expectedOrientation)
+    }
+
+    func testPuckBearingDisabledForHeading() throws {
+        configuration.model.orientation = [
+            .random(in: 0..<360),
+            .random(in: 0..<360),
+            .random(in: 0..<360)]
+        recreatePuck()
+        let heading = CLLocationDirection.random(in: 0..<360)
+        var location = InterpolatedLocation.random()
+        location.heading = heading
+        interpolatedLocationProducer.location = location
+        style.sourceExistsStub.defaultReturnValue = false
+        puck3D.puckBearingSource = .heading
+        puck3D.puckBearingEnabled = false
+        puck3D.isActive = true
+
+        let expectedOrientation = configuration.model.orientation!
+        let actualSource = try XCTUnwrap(style.addSourceStub.parameters.first?.source as? ModelSource)
+        XCTAssertEqual(actualSource.models?["puck-model"]?.orientation, expectedOrientation)
+    }
+
+    func testPuckBearingDisabledForCourse() throws {
+        configuration.model.orientation = [
+            .random(in: 0..<360),
+            .random(in: 0..<360),
+            .random(in: 0..<360)]
+        recreatePuck()
+        var location = InterpolatedLocation.random()
+        location.course = .random(in: 0..<360)
+        interpolatedLocationProducer.location = location
+        style.sourceExistsStub.defaultReturnValue = false
+        puck3D.puckBearingSource = .course
+        puck3D.puckBearingEnabled = false
+        puck3D.isActive = true
+
+        let expectedOrientation = configuration.model.orientation!
         let actualSource = try XCTUnwrap(style.addSourceStub.parameters.first?.source as? ModelSource)
         XCTAssertEqual(actualSource.models?["puck-model"]?.orientation, expectedOrientation)
     }

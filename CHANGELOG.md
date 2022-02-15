@@ -6,6 +6,7 @@ Mapbox welcomes participation and contributions from everyone.
 
 * Prevent rendering in background by pausing/resuming display link in response to application or scene lifecycle events ([#1086](https://github.com/mapbox/mapbox-maps-ios/pull/1086))
 * Sync viewport and puck animations. ([#1090](https://github.com/mapbox/mapbox-maps-ios/pull/1090))
+* Add puckBearingEnabled property for location ([#1107](https://github.com/mapbox/mapbox-maps-ios/pull/1107))
 
 ## 10.3.0 - February 10, 2022
 

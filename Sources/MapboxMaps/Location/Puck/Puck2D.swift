@@ -34,6 +34,8 @@ internal final class Puck2D: Puck {
         }
     }
 
+    internal var puckBearingEnabled: Bool = true
+
     private var latestLocation: InterpolatedLocation? {
         didSet {
             if oldValue?.accuracyAuthorization == latestLocation?.accuracyAuthorization {
@@ -132,11 +134,14 @@ internal final class Puck2D: Puck {
                 newLayerPaintProperties[.accuracyRadiusColor] = StyleColor(configuration.accuracyRingColor).rgbaString
                 newLayerPaintProperties[.accuracyRadiusBorderColor] = StyleColor(configuration.accuracyRingBorderColor).rgbaString
             }
-            switch puckBearingSource {
-            case .heading:
-                newLayerPaintProperties[.bearing] = location.heading ?? 0
-            case .course:
-                newLayerPaintProperties[.bearing] = location.course ?? 0
+
+            if puckBearingEnabled {
+                switch puckBearingSource {
+                case .heading:
+                    newLayerPaintProperties[.bearing] = location.heading ?? 0
+                case .course:
+                    newLayerPaintProperties[.bearing] = location.course ?? 0
+                }
             }
         case .reducedAccuracy:
             fallthrough
@@ -215,11 +220,13 @@ internal final class Puck2D: Puck {
             if configuration.showsAccuracyRing {
                 layerProperties[LocationIndicatorLayer.PaintCodingKeys.accuracyRadius.rawValue] = location.horizontalAccuracy
             }
-            switch puckBearingSource {
-            case .heading:
-                layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = location.heading ?? 0
-            case .course:
-                layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = location.course
+            if puckBearingEnabled {
+                switch puckBearingSource {
+                case .heading:
+                    layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = location.heading ?? 0
+                case .course:
+                    layerProperties[LocationIndicatorLayer.PaintCodingKeys.bearing.rawValue] = location.course ?? 0
+                }
             }
         case .reducedAccuracy:
             fallthrough

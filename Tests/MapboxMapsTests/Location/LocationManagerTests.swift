@@ -63,12 +63,13 @@ final class LocationManagerTests: XCTestCase {
         options.activityType = [.automotiveNavigation, .fitness, .other, .otherNavigation].randomElement()!
         options.puckType = [.puck2D(), .puck3D(Puck3DConfiguration(model: Model()))].randomElement()!
         options.puckBearingSource = [.heading, .course].randomElement()!
-
+        options.puckBearingEnabled = .random()
         locationManager.options = options
 
         XCTAssertEqual(locationProducer.locationProvider.locationProviderOptions, options)
         XCTAssertEqual(puckManager.puckType, options.puckType)
         XCTAssertEqual(puckManager.puckBearingSource, options.puckBearingSource)
+        XCTAssertEqual(puckManager.puckBearingEnabled, options.puckBearingEnabled)
     }
 
     func testOptionsPropagationDoesNotInvokeLocationProviderSetterWhenItIsAClass() {

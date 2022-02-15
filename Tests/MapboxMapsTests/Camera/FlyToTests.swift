@@ -40,14 +40,11 @@ internal class FlyToTests: XCTestCase {
             bearing: 0,
             pitch: 0)
 
-        guard let flyTo = FlyToInterpolator(
-                from: source,
-                to: dest,
-                cameraBounds: CameraBounds.default,
-                size: CGSize(width: 1000.0, height: 1000.0)) else {
-            XCTFail("Failed to create interpolator")
-            return
-        }
+        let flyTo = FlyToInterpolator(
+            from: source,
+            to: dest,
+            cameraBounds: CameraBounds.default,
+            size: CGSize(width: 1000.0, height: 1000.0))
 
         let d0 = flyTo.coordinate(at: 0.0)
         let d1 = flyTo.coordinate(at: 0.5)
@@ -99,8 +96,8 @@ internal class FlyToTests: XCTestCase {
                                      bearing: 90,
                                      pitch: 45)
 
-            guard let flyTo = FlyToInterpolator(from: source, to: dest, cameraBounds: CameraBounds.default, size: CGSize(width: 500.0, height: 500.0)),
-                  var boundingBox = BoundingBox(from: [sourceCoord, destCoord]) else {
+            let flyTo = FlyToInterpolator(from: source, to: dest, cameraBounds: CameraBounds.default, size: CGSize(width: 500.0, height: 500.0))
+            guard var boundingBox = BoundingBox(from: [sourceCoord, destCoord]) else {
                 XCTFail("Failed to create interpolator")
                 continue
             }

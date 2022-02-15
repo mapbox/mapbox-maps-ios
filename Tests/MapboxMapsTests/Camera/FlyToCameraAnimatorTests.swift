@@ -65,21 +65,6 @@ final class FlyToCameraAnimatorTests: XCTestCase {
         XCTAssertEqual(flyToCameraAnimator.state, .inactive)
     }
 
-    func testInitializationWithANegativeDurationReturnsNil() {
-        XCTAssertNil(
-            FlyToCameraAnimator(
-                initial: initialCameraState,
-                final: finalCameraOptions,
-                cameraBounds: CameraBounds.default,
-                owner: AnimationOwner(rawValue: "fly-to"),
-                duration: -1,
-                mapSize: CGSize(width: 500, height: 500),
-                mapboxMap: mapboxMap,
-                dateProvider: dateProvider,
-                delegate: delegate)
-        )
-    }
-
     func testInitializationWithANilDurationSetsDurationToCalculatedValue() {
         let animator = FlyToCameraAnimator(
             initial: initialCameraState,
@@ -91,7 +76,7 @@ final class FlyToCameraAnimatorTests: XCTestCase {
             mapboxMap: mapboxMap,
             dateProvider: dateProvider,
             delegate: delegate)
-        XCTAssertNotNil(animator?.duration)
+        XCTAssertNotNil(animator.duration)
     }
 
     func testStartAnimationChangesStateToActiveAndInformsDelegate() {

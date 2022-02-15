@@ -4,10 +4,10 @@ set -euo pipefail
 
 #
 # Usage:
-#   ./scripts/release/create-github-draft-release.sh <tag name>
+#   ./scripts/release/create-github-draft-release.sh <version-without-v-prefix>
 #
 
-TAG=${1:-$VERSION}
+VERSION=$1
 
 set -euo pipefail
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
@@ -50,15 +50,15 @@ $CHANGELOG
 Link to download binaries (append your own Mapbox access token [scoped with \`DOWNLOADS:READ\`](https://account.mapbox.com/)):
 
 \`\`\`
-https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/$TAG/MapboxMaps.zip?access_token=<access-token>
+https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/$VERSION/MapboxMaps.zip?access_token=<access-token>
 \`\`\`
 EOF
 
     PRODUCTION_DOCS_PR_URL=$(GITHUB_TOKEN=$(mbx-ci github writer public token) \
-        gh release create "$TAG" --repo mapbox/mapbox-maps-ios \
+        gh release create "v$VERSION" --repo mapbox/mapbox-maps-ios \
             --prerelease \
             --draft \
-            --title "$TAG" \
+            --title "v$VERSION" \
             --notes-file notes.txt)
 
     info "New Release: $PRODUCTION_DOCS_PR_URL"

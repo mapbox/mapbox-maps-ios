@@ -38,10 +38,7 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
     private var runningCameraAnimators = [CameraAnimator]()
 
     /// Internal camera animator used for animated transition
-    internal var internalAnimator: CameraAnimator?
-
-    /// May want to convert to an enum.
-    fileprivate let northBearing: CGFloat = 0
+    private var internalAnimator: CameraAnimator?
 
     internal var animationsEnabled: Bool = true
 
@@ -91,19 +88,16 @@ public class CameraAnimationsManager: CameraAnimationsManagerProtocol {
                     duration: TimeInterval? = nil,
                     completion: AnimationCompletion? = nil) -> Cancelable? {
 
-        guard let flyToAnimator = FlyToCameraAnimator(
-                initial: mapboxMap.cameraState,
-                final: camera,
-                cameraBounds: mapboxMap.cameraBounds,
-                owner: AnimationOwner(rawValue: "com.mapbox.maps.cameraAnimationsManager.flyToAnimator"),
-                duration: duration,
-                mapSize: mapboxMap.size,
-                mapboxMap: mapboxMap,
-                dateProvider: DefaultDateProvider(),
-                delegate: self) else {
-            Log.warning(forMessage: "Unable to start fly-to animation", category: "CameraManager")
-            return nil
-        }
+        let flyToAnimator = FlyToCameraAnimator(
+            initial: mapboxMap.cameraState,
+            final: camera,
+            cameraBounds: mapboxMap.cameraBounds,
+            owner: AnimationOwner(rawValue: "com.mapbox.maps.cameraAnimationsManager.flyToAnimator"),
+            duration: duration,
+            mapSize: mapboxMap.size,
+            mapboxMap: mapboxMap,
+            dateProvider: DefaultDateProvider(),
+            delegate: self)
 
         // Stop the `internalAnimator` before beginning a `flyTo`
         internalAnimator?.stopAnimation()

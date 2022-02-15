@@ -98,7 +98,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     }
 
     func makeQuickZoomGestureHandler(view: UIView,
-                                     mapboxMap: MapboxMapProtocol) -> GestureHandler {
+                                     mapboxMap: MapboxMapProtocol) -> QuickZoomGestureHandlerProtocol {
         let gestureRecognizer = UILongPressGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         return QuickZoomGestureHandler(

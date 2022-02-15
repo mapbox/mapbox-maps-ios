@@ -43,16 +43,15 @@ public final class MapboxMap: MapboxMapProtocol {
     /// The `style` object supports run time styling.
     public let style: Style
 
-    private let eventHandlers = WeakSet<MapEventHandler>()
+    private let observable: MapboxObservableProtocol
 
     deinit {
-        eventHandlers.allObjects.forEach {
-            $0.cancel()
-        }
         __map.destroyRenderer()
     }
 
-    internal init(mapClient: MapClient, mapInitOptions: MapInitOptions) {
+    internal init(mapClient: MapClient,
+                  mapInitOptions: MapInitOptions,
+                  mapboxObservableProvider: (ObservableProtocol) -> MapboxObservableProtocol) {
         let coreOptions = MapboxCoreMaps.ResourceOptions(mapInitOptions.resourceOptions)
 
         __map = Map(
@@ -60,6 +59,8 @@ public final class MapboxMap: MapboxMapProtocol {
             mapOptions: mapInitOptions.mapOptions,
             resourceOptions: coreOptions)
         __map.createRenderer()
+
+        observable = mapboxObservableProvider(__map)
 
         style = Style(with: __map)
     }
@@ -797,9 +798,7 @@ extension MapboxMap: MapFeatureQueryable {
     }
 }
 
-// MARK: - ObservableProtocol
-
-extension MapboxMap: ObservableProtocol {
+extension MapboxMap {
     /// Subscribes an observer to a list of events.
     ///
     /// `MapboxMap` holds a strong reference to `observer` while it is subscribed. To stop receiving
@@ -813,7 +812,7 @@ extension MapboxMap: ObservableProtocol {
     ///     Prefer `onNext(eventTypes:handler:)`, `onNext(_:handler:)`, and
     ///     `onEvery(_:handler:)` to using this lower-level APIs
     public func subscribe(_ observer: Observer, events: [String]) {
-        __map.subscribe(for: observer, events: events)
+        observable.subscribe(observer, events: events)
     }
 
     /// Unsubscribes an observer from a provided list of event types.
@@ -827,11 +826,7 @@ extension MapboxMap: ObservableProtocol {
     ///   - events: Array of event types to unsubscribe from. Pass an
     ///     empty array (the default) to unsubscribe from all events.
     public func unsubscribe(_ observer: Observer, events: [String] = []) {
-        if events.isEmpty {
-            __map.unsubscribe(for: observer)
-        } else {
-            __map.unsubscribe(for: observer, events: events)
-        }
+        observable.unsubscribe(observer, events: events)
     }
 }
 
@@ -841,14 +836,7 @@ extension MapboxMap: MapEventsObservable {
 
     @discardableResult
     private func onNext(eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable {
-        let rawTypes = eventTypes.map { $0.rawValue }
-        let handler = MapEventHandler(for: rawTypes,
-                                      observable: self) { event in
-            handler(event)
-            return true
-        }
-        eventHandlers.add(handler)
-        return handler
+        return observable.onNext(eventTypes, handler: handler)
     }
 
     /// Listen to a single occurrence of a Map event.
@@ -869,7 +857,7 @@ extension MapboxMap: MapEventsObservable {
     ///     the handler.
     @discardableResult
     public func onNext(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
-        return onNext(eventTypes: [eventType], handler: handler)
+        return observable.onNext([eventType], handler: handler)
     }
 
     /// Listen to multiple occurrences of a Map event.
@@ -883,13 +871,7 @@ extension MapboxMap: MapEventsObservable {
     ///     the handler.
     @discardableResult
     public func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
-        let handler = MapEventHandler(for: [eventType.rawValue],
-                                      observable: self) { event in
-            handler(event)
-            return false
-        }
-        eventHandlers.add(handler)
-        return handler
+        return observable.onEvery([eventType], handler: handler)
     }
 }
 

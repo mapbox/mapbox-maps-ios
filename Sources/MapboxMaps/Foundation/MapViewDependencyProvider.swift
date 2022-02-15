@@ -3,6 +3,7 @@ import UIKit
 internal protocol MapViewDependencyProviderProtocol: AnyObject {
     func makeNotificationCenter() -> NotificationCenterProtocol
     func makeBundle() -> BundleProtocol
+    func makeMapboxObservableProvider() -> (ObservableProtocol) -> MapboxObservableProtocol
     func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView
     func makeDisplayLink(window: UIWindow, target: Any, selector: Selector) -> DisplayLinkProtocol?
     func makeGestureManager(view: UIView,
@@ -28,6 +29,10 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
 
     func makeBundle() -> BundleProtocol {
         return Bundle.main
+    }
+
+    func makeMapboxObservableProvider() -> (ObservableProtocol) -> MapboxObservableProtocol {
+        return MapboxObservable.init
     }
 
     func makeMetalView(frame: CGRect, device: MTLDevice?) -> MTKView {

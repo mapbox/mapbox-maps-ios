@@ -6,6 +6,7 @@ final class MapboxMapTests: XCTestCase {
 
     var mapClient: MockMapClient!
     var mapInitOptions: MapInitOptions!
+    var mapboxObservableProviderStub: Stub<ObservableProtocol, MapboxObservableProtocol>!
     var mapboxMap: MapboxMap!
 
     override func setUp() {
@@ -14,11 +15,16 @@ final class MapboxMapTests: XCTestCase {
         mapClient = MockMapClient()
         mapClient.getMetalViewStub.defaultReturnValue = MTKView(frame: CGRect(origin: .zero, size: size))
         mapInitOptions = MapInitOptions(mapOptions: MapOptions(size: size))
-        mapboxMap = MapboxMap(mapClient: mapClient, mapInitOptions: mapInitOptions)
+        mapboxObservableProviderStub = Stub(defaultReturnValue: MockMapboxObservable())
+        mapboxMap = MapboxMap(
+            mapClient: mapClient,
+            mapInitOptions: mapInitOptions,
+            mapboxObservableProvider: mapboxObservableProviderStub.call(with:))
     }
 
     override func tearDown() {
         mapboxMap = nil
+        mapboxObservableProviderStub = nil
         mapInitOptions = nil
         mapClient = nil
         super.tearDown()
@@ -48,6 +54,11 @@ final class MapboxMapTests: XCTestCase {
 
     func testInitializationInvokesMapClientGetMetalView() {
         XCTAssertEqual(mapClient.getMetalViewStub.invocations.count, 1)
+    }
+
+    func testInitializationMapboxObservable() {
+        XCTAssertEqual(mapboxObservableProviderStub.invocations.count, 1)
+        XCTAssertIdentical(mapboxObservableProviderStub.invocations.first?.parameters, mapboxMap.__testingMap)
     }
 
     func testSetSize() {
@@ -144,7 +155,6 @@ final class MapboxMapTests: XCTestCase {
     func testProtocolConformance() {
         // Compilation check only
         _ = mapboxMap as MapFeatureQueryable
-        _ = mapboxMap as ObservableProtocol
         _ = mapboxMap as MapEventsObservable
     }
 
@@ -218,5 +228,61 @@ final class MapboxMapTests: XCTestCase {
         mapboxMap.__testingMap.setMapProjectionForProjection(["name": "globe"])
         projection = try? mapboxMap.mapProjection()
         XCTAssertEqual(projection, .globe())
+    }
+
+    func testSubscribe() throws {
+        let observer = MockObserver()
+        let events: [String] = .random()
+        let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
+
+        mapboxMap.subscribe(observer, events: events)
+
+        XCTAssertEqual(mapboxObservable.subscribeStub.invocations.count, 1)
+        XCTAssertIdentical(mapboxObservable.subscribeStub.invocations.first?.parameters.observer, observer)
+        XCTAssertEqual(mapboxObservable.subscribeStub.invocations.first?.parameters.events, events)
+    }
+
+    func testUnsubscribe() throws {
+        let observer = MockObserver()
+        let events: [String] = .random()
+        let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
+
+        mapboxMap.unsubscribe(observer, events: events)
+
+        XCTAssertEqual(mapboxObservable.unsubscribeStub.invocations.count, 1)
+        XCTAssertIdentical(mapboxObservable.unsubscribeStub.invocations.first?.parameters.observer, observer)
+        XCTAssertEqual(mapboxObservable.unsubscribeStub.invocations.first?.parameters.events, events)
+    }
+
+    func testOnNext() throws {
+        let handlerStub = Stub<Event, Void>()
+        let eventType = MapEvents.EventKind.allCases.randomElement()!
+        let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
+
+        mapboxMap.onNext(eventType, handler: handlerStub.call(with:))
+
+        XCTAssertEqual(mapboxObservable.onNextStub.invocations.count, 1)
+        XCTAssertEqual(mapboxObservable.onNextStub.invocations.first?.parameters.eventTypes, [eventType])
+        let handler = try XCTUnwrap(mapboxObservable.onNextStub.invocations.first?.parameters.handler)
+        let event = Event(type: "", data: 0)
+        handler(event)
+        XCTAssertEqual(handlerStub.invocations.count, 1)
+        XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
+    }
+
+    func testOnEvery() throws {
+        let handlerStub = Stub<Event, Void>()
+        let eventType = MapEvents.EventKind.allCases.randomElement()!
+        let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
+
+        mapboxMap.onEvery(eventType, handler: handlerStub.call(with:))
+
+        XCTAssertEqual(mapboxObservable.onEveryStub.invocations.count, 1)
+        XCTAssertEqual(mapboxObservable.onEveryStub.invocations.first?.parameters.eventTypes, [eventType])
+        let handler = try XCTUnwrap(mapboxObservable.onEveryStub.invocations.first?.parameters.handler)
+        let event = Event(type: "", data: 0)
+        handler(event)
+        XCTAssertEqual(handlerStub.invocations.count, 1)
+        XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
     }
 }

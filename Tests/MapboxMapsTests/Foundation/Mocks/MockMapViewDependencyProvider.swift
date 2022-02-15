@@ -2,6 +2,21 @@ import Foundation
 @testable import MapboxMaps
 
 final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
+    let makeNotificationCenterStub = Stub<Void, NotificationCenterProtocol>(defaultReturnValue: MockNotificationCenter())
+    func makeNotificationCenter() -> NotificationCenterProtocol {
+        makeNotificationCenterStub.call()
+    }
+
+    let makeBundleStub = Stub<Void, BundleProtocol>(defaultReturnValue: MockBundle())
+    func makeBundle() -> BundleProtocol {
+        makeBundleStub.call()
+    }
+
+    let makeMapboxObservableProviderStub = Stub<Void, (ObservableProtocol) -> MapboxObservableProtocol>(defaultReturnValue: { _ in MockMapboxObservable() })
+    func makeMapboxObservableProvider() -> (ObservableProtocol) -> MapboxObservableProtocol {
+        makeMapboxObservableProviderStub.call()
+    }
+
     struct MakeMetalViewParams {
         var frame: CGRect
         var device: MTLDevice?
@@ -84,15 +99,5 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
             anyTouchGestureRecognizer: anyTouchGestureRecognizer,
             doubleTapGestureRecognizer: doubleTapGestureRecognizer,
             doubleTouchGestureRecognizer: doubleTouchGestureRecognizer))
-    }
-
-    let makeNotificationCenterStub = Stub<Void, NotificationCenterProtocol>(defaultReturnValue: MockNotificationCenter())
-    func makeNotificationCenter() -> NotificationCenterProtocol {
-        makeNotificationCenterStub.call()
-    }
-
-    let makeBundleStub = Stub<Void, BundleProtocol>(defaultReturnValue: MockBundle())
-    func makeBundle() -> BundleProtocol {
-        makeBundleStub.call()
     }
 }

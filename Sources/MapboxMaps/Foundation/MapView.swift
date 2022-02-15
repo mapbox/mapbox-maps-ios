@@ -244,7 +244,10 @@ open class MapView: UIView {
 
         let mapClient = DelegatingMapClient()
         mapClient.delegate = self
-        mapboxMap = MapboxMap(mapClient: mapClient, mapInitOptions: resolvedMapInitOptions)
+        mapboxMap = MapboxMap(
+            mapClient: mapClient,
+            mapInitOptions: resolvedMapInitOptions,
+            mapboxObservableProvider: dependencyProvider.makeMapboxObservableProvider())
 
         notificationCenter.addObserver(self,
                                        selector: #selector(didReceiveMemoryWarning),

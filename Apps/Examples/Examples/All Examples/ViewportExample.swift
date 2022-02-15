@@ -1,6 +1,11 @@
 import UIKit
 @_spi(Experimental) import MapboxMaps
 
+// This example shows how to use the viewport API to keep the camera in sync with the puck,
+// show an overview of a region, and toggle between those states with transitions.
+//
+// When trying this example in the simulator, choose Features > Location > Freeway Drive
+// to get a good sense of the resulting user experience.
 @objc(ViewportExample)
 final class ViewportExample: UIViewController, ExampleProtocol {
 

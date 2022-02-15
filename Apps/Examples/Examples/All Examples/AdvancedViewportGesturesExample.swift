@@ -1,6 +1,12 @@
 import UIKit
 @_spi(Experimental) import MapboxMaps
 
+// This example configures the viewport so that when it's in the follow puck state,
+// zoom and pitch gestures work alongside updates coming from the state itself.
+// Single tap on the map to switch to the overview state.
+//
+// When trying this example in the simulator, choose Features > Location > Freeway Drive
+// to get a good sense of the resulting user experience.
 @objc(AdvancedViewportGesturesExample)
 final class AdvancedViewportGesturesExample: UIViewController, ExampleProtocol {
 

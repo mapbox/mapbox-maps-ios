@@ -140,15 +140,4 @@ final class PuckManagerTests: XCTestCase {
 
         XCTAssertEqual(puck.$puckBearingEnabled.setStub.parameters, [bearingEnable])
     }
-
-    func testSettingPuckBearingEnableeWhenPuckTypeIsNonNil() {
-        let puck = MockPuck()
-        puck2DProvider.defaultReturnValue = puck
-        puck3DProvider.defaultReturnValue = puck
-        puckManager.puckType = [.puck2D(), .puck3D(.init(model: Model()))].randomElement()!
-        puck.$puckBearingEnabled.setStub.reset()
-        puckManager.puckBearingEnabled = false
-
-        XCTAssertEqual(puck.$puckBearingEnabled.setStub.parameters, [false])
-    }
 }

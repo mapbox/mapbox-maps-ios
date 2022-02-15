@@ -30,6 +30,7 @@ public final class GestureManager: GestureHandlerDelegate {
             panGestureHandler.panMode = newValue.panMode
             panGestureHandler.decelerationFactor = newValue.panDecelerationFactor
             doubleTapToZoomInGestureHandler.focalPoint = newValue.focalPoint
+            doubleTouchToZoomOutGestureHandler.focalPoint = newValue.focalPoint
         }
         get {
             var gestureOptions = GestureOptions()
@@ -44,6 +45,7 @@ public final class GestureManager: GestureHandlerDelegate {
             gestureOptions.quickZoomEnabled = quickZoomGestureRecognizer.isEnabled
             gestureOptions.panMode = panGestureHandler.panMode
             gestureOptions.panDecelerationFactor = panGestureHandler.decelerationFactor
+#warning("TODO: which of many handlers should be source of truth here")
             gestureOptions.focalPoint = doubleTapToZoomInGestureHandler.focalPoint
             return gestureOptions
         }
@@ -98,7 +100,7 @@ public final class GestureManager: GestureHandlerDelegate {
     private let pinchGestureHandler: PinchGestureHandlerProtocol
     private let pitchGestureHandler: GestureHandler
     private let doubleTapToZoomInGestureHandler: DoubleTapToZoomInGestureHandlerProtocol
-    private let doubleTouchToZoomOutGestureHandler: GestureHandler
+    private let doubleTouchToZoomOutGestureHandler: DoubleTouchToZoomOutGestureHandlerProtocol
     private let quickZoomGestureHandler: GestureHandler
     private let singleTapGestureHandler: GestureHandler
     private let anyTouchGestureHandler: GestureHandler
@@ -108,7 +110,7 @@ public final class GestureManager: GestureHandlerDelegate {
                   pinchGestureHandler: PinchGestureHandlerProtocol,
                   pitchGestureHandler: GestureHandler,
                   doubleTapToZoomInGestureHandler: DoubleTapToZoomInGestureHandlerProtocol,
-                  doubleTouchToZoomOutGestureHandler: GestureHandler,
+                  doubleTouchToZoomOutGestureHandler: DoubleTouchToZoomOutGestureHandlerProtocol,
                   quickZoomGestureHandler: GestureHandler,
                   singleTapGestureHandler: GestureHandler,
                   anyTouchGestureHandler: GestureHandler,

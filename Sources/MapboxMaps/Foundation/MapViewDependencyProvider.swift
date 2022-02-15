@@ -88,7 +88,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
 
     func makeDoubleTouchToZoomOutGestureHandler(view: UIView,
                                                 mapboxMap: MapboxMapProtocol,
-                                                cameraAnimationsManager: CameraAnimationsManagerProtocol) -> GestureHandler {
+                                                cameraAnimationsManager: CameraAnimationsManagerProtocol) -> DoubleTouchToZoomOutGestureHandlerProtocol {
         let gestureRecognizer = UITapGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         return DoubleTouchToZoomOutGestureHandler(

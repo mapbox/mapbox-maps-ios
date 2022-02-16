@@ -10,6 +10,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix camera change events being fired after map has stopped moving. ([#1118])(https://github.com/mapbox/mapbox-maps-ios/pull/1118))
 * Fix issue where single tap and double tap to zoom in gestures could recognize simultaneously. ([#1113](https://github.com/mapbox/mapbox-maps-ios/pull/1113))
 * Remove experimental GestureOptions.pinchBehavior property. ([#1125](https://github.com/mapbox/mapbox-maps-ios/pull/1125))
+* Update to MapboxCoreMaps 10.4.0-beta.1 and MapboxCommon 21.2.0-beta.1. ([#1126](https://github.com/mapbox/mapbox-maps-ios/pull/1126))
 
 ## 10.3.0 - February 10, 2022
 

@@ -32,12 +32,15 @@ public class OrnamentsManager: NSObject {
     public var logoView: UIView {
         return _logoView
     }
+
     public var scaleBarView: UIView {
         return _scaleBarView
     }
+
     public var compassView: UIView {
         return _compassView
     }
+
     public var attributionButton: UIView {
         return _attributionButton
     }

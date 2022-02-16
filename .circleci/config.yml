@@ -436,6 +436,7 @@ jobs:
             "gs://${TEST_LAB_PATH}i*" \
             testlab_results
             zip -r testlab_results.zip testlab_results
+          when: always
       - run:
           name: Update coverage
           command: |
@@ -499,10 +500,9 @@ jobs:
           command: |
             mkdir testlab_results
             TEST_LAB_PATH=$(cat firebase_test_lab_run.log | grep -o "test-lab.*/")
-            gsutil -m cp -r \
-            "gs://${TEST_LAB_PATH}i*" \
-            testlab_results
+            gsutil -m cp -r "gs://${TEST_LAB_PATH}i*" testlab_results
             zip -r testlab_results.zip testlab_results
+          when: always
       - run:
           name: Update coverage
           command: |

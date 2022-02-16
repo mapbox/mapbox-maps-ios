@@ -2,7 +2,7 @@ import CoreLocation
 import UIKit
 
 internal class MapboxCompassOrnamentView: UIButton {
-    enum Constants {
+    private enum Constants {
         static let localizableTableName = "OrnamentsLocalizable"
         static let compassSize = CGSize(width: 40, height: 40)
         static let animationDuration: TimeInterval = 0.3

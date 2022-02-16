@@ -8,6 +8,10 @@ final class OrnamentManagerTests: XCTestCase {
     var cameraAnimationsManager: MockCameraAnimationsManager!
     // swiftlint:disable:next weak_delegate
     var infoButtonOrnamentDelegate: MockInfoButtonOrnamentDelegate!
+    var logoView: LogoView!
+    var scaleBarView: MapboxScaleBarOrnamentView!
+    var compassView: MapboxCompassOrnamentView!
+    var attributionButton: InfoButtonOrnament!
     var ornamentsManager: OrnamentsManager!
 
     override func setUp() {
@@ -17,16 +21,28 @@ final class OrnamentManagerTests: XCTestCase {
         mapboxMap = MockMapboxMap()
         cameraAnimationsManager = MockCameraAnimationsManager()
         infoButtonOrnamentDelegate = MockInfoButtonOrnamentDelegate()
+        logoView = LogoView(logoSize: .regular())
+        scaleBarView = MapboxScaleBarOrnamentView()
+        compassView = MapboxCompassOrnamentView()
+        attributionButton = InfoButtonOrnament()
         ornamentsManager = OrnamentsManager(
             options: options,
             view: view,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: cameraAnimationsManager,
-            infoButtonOrnamentDelegate: infoButtonOrnamentDelegate)
+            infoButtonOrnamentDelegate: infoButtonOrnamentDelegate,
+            logoView: logoView,
+            scaleBarView: scaleBarView,
+            compassView: compassView,
+            attributionButton: attributionButton)
     }
 
     override func tearDown() {
         ornamentsManager = nil
+        attributionButton = nil
+        compassView = nil
+        scaleBarView = nil
+        logoView = nil
         infoButtonOrnamentDelegate = nil
         cameraAnimationsManager = nil
         mapboxMap = nil
@@ -119,5 +135,21 @@ final class OrnamentManagerTests: XCTestCase {
         options.compass.visibility = .visible
         ornamentsManager.options = options
         XCTAssertEqual(options.compass.visibility, compass.visibility)
+    }
+
+    func testLogoView() {
+        XCTAssertIdentical(ornamentsManager.logoView, logoView)
+    }
+
+    func testScaleBarView() {
+        XCTAssertIdentical(ornamentsManager.scaleBarView, scaleBarView)
+    }
+
+    func testCompassView() {
+        XCTAssertIdentical(ornamentsManager.compassView, compassView)
+    }
+
+    func testAttributionButton() {
+        XCTAssertIdentical(ornamentsManager.attributionButton, attributionButton)
     }
 }

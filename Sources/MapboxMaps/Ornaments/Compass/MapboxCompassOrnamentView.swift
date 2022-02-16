@@ -2,7 +2,7 @@ import CoreLocation
 import UIKit
 
 internal class MapboxCompassOrnamentView: UIButton {
-    private enum Constants {
+    enum Constants {
         static let localizableTableName = "OrnamentsLocalizable"
         static let compassSize = CGSize(width: 40, height: 40)
         static let animationDuration: TimeInterval = 0.3
@@ -34,10 +34,9 @@ internal class MapboxCompassOrnamentView: UIButton {
         }
     }
 
-    required internal init(visibility: OrnamentVisibility) {
+    required internal init() {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
-        self.visibility = visibility
         containerView.isHidden = visibility != .visible
         let bundle = Bundle.mapboxMaps
         accessibilityLabel = NSLocalizedString("COMPASS_A11Y_LABEL",

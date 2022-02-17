@@ -289,7 +289,7 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
             let mapWasLoaded = XCTestExpectation(description: "Map was loaded")
 
-            mapView.mapboxMap.onEvery(.resourceRequest) { event in
+            let cancelable = mapView.mapboxMap.onEvery(.resourceRequest) { event in
                 // swiftlint:disable:next force_cast
                 let eventElements = event.data as! [String: Any]
                 // swiftlint:disable:next force_cast
@@ -308,6 +308,8 @@ final class OfflineManagerIntegrationTestCase: IntegrationTestCase {
 
             let expectations = [mapIsUsingDatabase, mapWasLoaded]
             wait(for: expectations, timeout: 5.0, enforceOrder: true)
+
+            cancelable.cancel()
 
             OfflineSwitch.shared.isMapboxStackConnected = true
             mapView.removeFromSuperview()

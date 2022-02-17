@@ -123,6 +123,20 @@ public final class ViewAnnotationManager {
         }
     }
 
+    public func removeAll() {
+        let viewsByIdCopy = viewsById
+
+        for (id, view) in viewsByIdCopy {
+            try? mapboxMap.removeViewAnnotation(withId: id)
+            view.removeFromSuperview()
+        }
+
+        expectedHiddenByView.removeAll()
+        idsByView.removeAll()
+        viewsById.removeAll()
+        viewsByFeatureIds.removeAll()
+    }
+
     /// Update given `UIView` with `ViewAnnotationOptions`.
     /// Important thing to keep in mind that only properties present in `options` will be updated,
     /// all other will remain the same as specified before.

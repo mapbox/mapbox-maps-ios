@@ -11,6 +11,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix issue where single tap and double tap to zoom in gestures could recognize simultaneously. ([#1113](https://github.com/mapbox/mapbox-maps-ios/pull/1113))
 * Remove experimental GestureOptions.pinchBehavior property. ([#1125](https://github.com/mapbox/mapbox-maps-ios/pull/1125))
 * Update to MapboxCoreMaps 10.4.0-beta.1 and MapboxCommon 21.2.0-beta.1. ([#1126](https://github.com/mapbox/mapbox-maps-ios/pull/1126))
+* Exposed APIs to allow positioning of other views relative to the logoView, compassView, scaleBarView and attributionButton. ([#1130](https://github.com/mapbox/mapbox-maps-ios/pull/1130))
 
 ## 10.3.0 - February 10, 2022
 

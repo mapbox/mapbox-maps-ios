@@ -309,7 +309,11 @@ open class MapView: UIView {
             view: self,
             mapboxMap: mapboxMap,
             cameraAnimationsManager: camera,
-            infoButtonOrnamentDelegate: attributionDialogManager)
+            infoButtonOrnamentDelegate: attributionDialogManager,
+            logoView: LogoView(logoSize: .regular()),
+            scaleBarView: MapboxScaleBarOrnamentView(),
+            compassView: MapboxCompassOrnamentView(),
+            attributionButton: InfoButtonOrnament())
 
         // Initialize/Configure location source and location manager
         locationProducer = dependencyProvider.makeLocationProducer(

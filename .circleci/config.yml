@@ -920,30 +920,6 @@ commands:
       - store_artifacts:
           path: << parameters.artifact_name >>.zip
 
-  store-device-farm-artifacts:
-    parameters:
-      artifact_name:
-        type: string
-        default: "DeviceFarm"
-      derived_data_path:
-        type: string
-        default: "build"
-    description: "Save Device Farm Results as Artifacts"
-    steps:
-      - run:
-          name: Zipping device farm results
-          command: |
-            export ZIP_FILE="$PWD/<< parameters.artifact_name >>.zip"
-            cd "<< parameters.derived_data_path >>"
-            zip -r "$ZIP_FILE" DeviceFarmResults || echo "Skipping DeviceFarmResults"
-            zip -r "$ZIP_FILE" Payload || echo "Skipping Payload"
-            zip -r "$ZIP_FILE" test-root || echo "Skipping test-root"
-            zip -r "$ZIP_FILE" testruns || echo "Skipping testruns"
-            zip -r "$ZIP_FILE" *.json || echo "Skipping *.json"
-          when: always
-      - store_artifacts:
-          path: << parameters.artifact_name >>.zip
-
   store-firebase-artifacts:
     parameters:
       artifact_name:

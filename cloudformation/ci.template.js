@@ -8,18 +8,6 @@ AWSTemplateFormatVersion: '2010-09-09',
       Properties: {
         Policies: [
           {
-            PolicyName: 'devicefarm',
-            PolicyDocument: {
-              Statement: [
-                {
-                  Action: ['devicefarm:*'],
-                  Effect: 'Allow',
-                  Resource: '*'
-                }
-              ]
-            }
-          },
-          {
             PolicyName: 'upload-sdk-registry',
             PolicyDocument: {
               Statement: [

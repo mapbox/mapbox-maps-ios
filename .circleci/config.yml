@@ -440,7 +440,7 @@ jobs:
       - run:
           name: Update coverage
           command: |
-            unzip -j output/build_products.zip Debug-iphoneos/MapboxMaps.o -d testlab_results/
+            unzip -j output/build_products.zip Release-iphoneos/MapboxMaps.o -d testlab_results/
             make update-codecov-with-profdata \
                 COVERAGE_ARCH=arm64 \
                 COVERAGE_ROOT_DIR="$(pwd)/testlab_results" \
@@ -506,7 +506,7 @@ jobs:
       - run:
           name: Update coverage
           command: |
-            unzip -j output/Examples.zip Debug-iphoneos/MapboxMaps.o -d testlab_results/
+            unzip -j output/Examples.zip Release-iphoneos/MapboxMaps.o -d testlab_results/
             make update-codecov-with-profdata \
                 COVERAGE_ARCH=arm64 \
                 COVERAGE_ROOT_DIR="$(pwd)/testlab_results" \

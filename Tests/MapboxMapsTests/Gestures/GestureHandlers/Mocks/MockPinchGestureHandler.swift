@@ -2,4 +2,8 @@
 
 final class MockPinchGestureHandler: GestureHandler, PinchGestureHandlerProtocol {
     var rotateEnabled: Bool = true
+
+    var zoomEnabled: Bool = true
+
+    var panEnabled: Bool = true
 }

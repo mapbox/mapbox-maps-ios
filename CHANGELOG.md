@@ -12,6 +12,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Remove experimental GestureOptions.pinchBehavior property. ([#1125](https://github.com/mapbox/mapbox-maps-ios/pull/1125))
 * Update to MapboxCoreMaps 10.4.0-beta.1 and MapboxCommon 21.2.0-beta.1. ([#1126](https://github.com/mapbox/mapbox-maps-ios/pull/1126))
 * Exposed APIs to allow positioning of other views relative to the logoView, compassView, scaleBarView and attributionButton. ([#1130](https://github.com/mapbox/mapbox-maps-ios/pull/1130))
+* Add `GestureOptions.pinchPanEnabled` and `.pinchZoomEnabled`. ([#1092](https://github.com/mapbox/mapbox-maps-ios/pull/1092))
 
 ## 10.3.0 - February 10, 2022
 

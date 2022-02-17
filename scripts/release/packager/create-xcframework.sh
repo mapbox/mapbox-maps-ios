@@ -73,9 +73,9 @@ do
   for dSYM_NAME in $DSYM_NAMES
   do
     dSYM="$archive/dSYMS/$dSYM_NAME.framework.dSYM"
-    BUILD_XCFRAMEWORK_COMMAND+=" \\${DEBUG_BREAK} -debug-symbols '$dSYM'"
 
     if [[ -d "$dSYM" ]]; then
+      BUILD_XCFRAMEWORK_COMMAND+=" \\${DEBUG_BREAK} -debug-symbols '$dSYM'"
       # Get all UUIDs for dSyms (one per architecture) and find corresponding BCSymbolMap
       dSYM_UUIDs=$(dwarfdump --uuid "$dSYM"  | cut -d ' ' -f2)
 

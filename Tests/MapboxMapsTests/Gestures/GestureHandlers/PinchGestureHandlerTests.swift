@@ -1,7 +1,7 @@
 import XCTest
-@_spi(Experimental) @testable import MapboxMaps
+@testable import MapboxMaps
 
-final class PinchGestureHandlerImpl1Tests: XCTestCase {
+final class PinchGestureHandlerTests: XCTestCase {
     var view: UIView!
     var gestureRecognizer: MockPinchGestureRecognizer!
     var mapboxMap: MockMapboxMap!
@@ -20,7 +20,6 @@ final class PinchGestureHandlerImpl1Tests: XCTestCase {
             mapboxMap: mapboxMap)
         delegate = MockGestureHandlerDelegate()
         pinchGestureHandler.delegate = delegate
-        pinchGestureHandler.behavior = .tracksTouchLocationsWhenPanningAfterZoomChange
     }
 
     override func tearDown() {
@@ -243,10 +242,10 @@ final class PinchGestureHandlerImpl1Tests: XCTestCase {
         XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.willAnimate, false)
     }
 
-    // This should not be a scenario that actually happens; however, we've received
-    // some crash reports that suggest that this might actually be happening in some
-    // situations, so we're adding some defensive mechanisms to make sure it does
-    // not result in a crash
+    // This doesn't seem like a scenario that would actually happen; however, we received
+    // crash reports that suggest that it does in some situations, so we added some
+    // defensive mechanisms to make sure it does not result in a crash. We confirmed that
+    // these changes cleared up the crashes for the developers who were seeing them.
     func testGestureBeganWithOnlyOneTouch() {
         gestureRecognizer.getNumberOfTouchesStub.defaultReturnValue = 1
         gestureRecognizer.getStateStub.defaultReturnValue = .began

@@ -1,4 +1,4 @@
-@_spi(Experimental) import MapboxMaps
+import MapboxMaps
 import XCTest
 
 final class GestureOptionsTests: XCTestCase {
@@ -8,7 +8,6 @@ final class GestureOptionsTests: XCTestCase {
         XCTAssertTrue(options.panEnabled)
         XCTAssertTrue(options.pinchEnabled)
         XCTAssertTrue(options.pinchRotateEnabled)
-        XCTAssertEqual(options.pinchBehavior, .tracksTouchLocationsWhenPanningAfterZoomChange)
         XCTAssertTrue(options.pitchEnabled)
         XCTAssertTrue(options.doubleTapToZoomInEnabled)
         XCTAssertTrue(options.doubleTouchToZoomOutEnabled)

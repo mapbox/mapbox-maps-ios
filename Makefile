@@ -15,7 +15,7 @@ JOBS             ?= $(shell sysctl -n hw.ncpu)
 APP_NAME         ?= $(SCHEME)
 
 # Circle
-CIRCLE_CI_CLI       ?= /usr/local/bin/circleci
+CIRCLE_CI_CLI       ?= /tmp/circleci
 CIRCLE_CI_BRANCH    ?= main
 CIRCLE_BUILD_NUM    ?= 0
 
@@ -461,4 +461,4 @@ validate: $(CIRCLE_CI_CLI)
 	$(CIRCLE_CI_CLI) config validate -c .circleci/config.yml
 
 $(CIRCLE_CI_CLI):
-	curl -fLSs https://circle.ci/cli | bash
+	curl -fLSs https://circle.ci/cli | DESTDIR=/tmp bash

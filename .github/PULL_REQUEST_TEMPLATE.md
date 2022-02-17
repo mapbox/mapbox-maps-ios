@@ -18,7 +18,7 @@ Describe the changes in this PR here.
 ## Pull request checklist:
  - [ ] Write tests for all new functionality. If tests were not written, please explain why.
  - [ ] Add documentation comments for any added or updated public APIs.
- - [ ] Add any new public symbols to the Jazzy config's `custom_categories` (scripts/doc-generation/.jazzy.yaml)
+ - [ ] Add any new public, top-level symbols to the Jazzy config's `custom_categories` (scripts/doc-generation/.jazzy.yaml)
  - [ ] Describe the changes in this PR, especially public API changes.
  - [ ] Add a changelog entry to to bottom of the relevant section (typically the `## main` heading near the top).
  - [ ] Update the guides (internal access only), README.md, and DEVELOPING.md if their contents are impacted by these changes.

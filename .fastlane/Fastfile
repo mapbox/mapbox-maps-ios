@@ -32,6 +32,8 @@ platform :ios do
       workspace: 'Apps/Apps.xcworkspace',
       scheme: 'Examples',                  # XCTest scheme
       clean: true,                        # Recommended: This would ensure the build would not include unnecessary files
+      configuration: "Release",
+      xcargs: "ENABLE_TESTABILITY=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO",
       skip_detect_devices: true,          # Required
       build_for_testing: true,            # Required
       sdk: 'iphoneos',                    # Required
@@ -114,6 +116,8 @@ platform :ios do
       project: 'MapboxMaps.xcodeproj',
       scheme: 'MapboxTestHost',
       clean: true,
+      configuration: "Release",
+      xcargs: "ENABLE_TESTABILITY=YES",
       build_for_testing: true,
       destination: 'generic/platform=iOS',
       should_zip_build_products: true,

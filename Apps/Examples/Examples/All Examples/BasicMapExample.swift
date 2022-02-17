@@ -2,12 +2,11 @@ import UIKit
 import MapboxMaps
 
 @objc(BasicMapExample)
+final class BasicMapExample: UIViewController, ExampleProtocol {
 
-public class BasicMapExample: UIViewController, ExampleProtocol {
+    private var mapView: MapView!
 
-    internal var mapView: MapView!
-
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         mapView = MapView(frame: view.bounds)
@@ -17,9 +16,9 @@ public class BasicMapExample: UIViewController, ExampleProtocol {
         view.addSubview(mapView)
     }
 
-    override public func viewDidAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-         // The below line is used for internal testing purposes only.
+        // The below line is used for internal testing purposes only.
         finish()
     }
 }

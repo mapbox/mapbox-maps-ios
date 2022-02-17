@@ -436,14 +436,20 @@ jobs:
             "gs://${TEST_LAB_PATH}i*" \
             testlab_results
             zip -r testlab_results.zip testlab_results
+          when: always
       - run:
           name: Update coverage
           command: |
-            unzip -j output/build_products.zip Debug-iphoneos/MapboxMaps.o -d testlab_results/
+            unzip -j output/build_products.zip Release-iphoneos/MapboxMaps.o -d testlab_results/
             make update-codecov-with-profdata \
                 COVERAGE_ARCH=arm64 \
                 COVERAGE_ROOT_DIR="$(pwd)/testlab_results" \
                 COVERAGE_MAPBOX_MAPS="$(pwd)/testlab_results/MapboxMaps.o" SCHEME=MapboxTestHost
+      - run:
+          name: Parsing xcresults for errors
+          command: |
+            find "testlab_results" -name '*.xcresult' -exec swift run --package-path scripts/xcparty xcparty {} \;
+          when: on_fail
       - store_artifacts:
           path: firebase_test_lab_run.log
       - store_artifacts:
@@ -494,18 +500,22 @@ jobs:
           command: |
             mkdir testlab_results
             TEST_LAB_PATH=$(cat firebase_test_lab_run.log | grep -o "test-lab.*/")
-            gsutil -m cp -r \
-            "gs://${TEST_LAB_PATH}i*" \
-            testlab_results
+            gsutil -m cp -r "gs://${TEST_LAB_PATH}i*" testlab_results
             zip -r testlab_results.zip testlab_results
+          when: always
       - run:
           name: Update coverage
           command: |
-            unzip -j output/Examples.zip Debug-iphoneos/MapboxMaps.o -d testlab_results/
+            unzip -j output/Examples.zip Release-iphoneos/MapboxMaps.o -d testlab_results/
             make update-codecov-with-profdata \
                 COVERAGE_ARCH=arm64 \
                 COVERAGE_ROOT_DIR="$(pwd)/testlab_results" \
                 COVERAGE_MAPBOX_MAPS="$(pwd)/testlab_results/MapboxMaps.o" SCHEME=Examples
+      - run:
+          name: Parsing xcresults for errors
+          command: |
+            find "testlab_results" -name '*.xcresult' -exec swift run --package-path scripts/xcparty xcparty {} \;
+          when: on_fail
       - store_artifacts:
           path: firebase_test_lab_run.log
       - store_artifacts:

@@ -7,15 +7,17 @@ internal protocol MapboxObservableProtocol: AnyObject {
     func onEvery(_ eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable
 }
 
-internal protocol ObservableProtocol: AnyObject {
-    func subscribe(for observer: Observer, events: [String])
-    func unsubscribe(for observer: Observer)
-}
-
-extension Map: ObservableProtocol {}
-
-extension MapSnapshotter: ObservableProtocol {}
-
+/// `MapboxObservable` wraps the event listener APIs of ``MapboxCoreMaps/MBMObservable``,
+/// re-exposing the subscribe/unsubscribe interfaces and adding onNext/onEvery block-based interfaces.
+/// This design reduces duplication between ``MapboxMap`` and ``Snapshotter``, which can both
+/// implement their public versions of this API via thin wrappers around this class.
+///
+/// Regardless of whether a listener is added via ``MapboxObservable/subscribe(_:events:)``,
+/// ``MapboxObservalbe/onNext(_:handler:)``, or
+/// ``MapboxObservable/onEvery(_:handler:)``, `MapboxObservable` wraps the provided
+/// object or closure, keeps a strong reference to the wrapper, and passes the wrapper to
+/// `MapboxCoreMaps`. This will enable us to build filtering capabilities by selectively ignoring certain
+/// events regardless of which listener API was used.
 internal final class MapboxObservable: MapboxObservableProtocol {
 
     private let observable: ObservableProtocol

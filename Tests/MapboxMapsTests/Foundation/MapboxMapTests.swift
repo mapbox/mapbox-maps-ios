@@ -263,6 +263,9 @@ final class MapboxMapTests: XCTestCase {
 
         XCTAssertEqual(mapboxObservable.onNextStub.invocations.count, 1)
         XCTAssertEqual(mapboxObservable.onNextStub.invocations.first?.parameters.eventTypes, [eventType])
+        // To verify that the handler passed to MapboxMap is effectively the same as the one received by MapboxObservable,
+        // we exercise the received handler and verify that the passed one is invoked. If blocks were identifiable, maybe
+        // we'd just write this as `passedHandler === receivedHandler`.
         let handler = try XCTUnwrap(mapboxObservable.onNextStub.invocations.first?.parameters.handler)
         let event = Event(type: "", data: 0)
         handler(event)
@@ -279,6 +282,9 @@ final class MapboxMapTests: XCTestCase {
 
         XCTAssertEqual(mapboxObservable.onEveryStub.invocations.count, 1)
         XCTAssertEqual(mapboxObservable.onEveryStub.invocations.first?.parameters.eventTypes, [eventType])
+        // To verify that the handler passed to MapboxMap is effectively the same as the one received by MapboxObservable,
+        // we exercise the received handler and verify that the passed one is invoked. If blocks were identifiable, maybe
+        // we'd just write this as `passedHandler === receivedHandler`.
         let handler = try XCTUnwrap(mapboxObservable.onEveryStub.invocations.first?.parameters.handler)
         let event = Event(type: "", data: 0)
         handler(event)

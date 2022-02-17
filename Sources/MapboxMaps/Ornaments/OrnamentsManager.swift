@@ -29,15 +29,31 @@ public class OrnamentsManager: NSObject {
         }
     }
 
+    /// The view for the logo ornament. This view can be used to position other views relative to the logo
+    /// ornament, but it should not be manipulated. Use ``OrnamentOptions/logo`` to configure the
+    /// logo presentation if customization is needed.
     public var logoView: UIView {
         return _logoView
     }
+
+    /// The view for the scale bar ornament. This view can be used to position other views relative to the
+    /// scale bar ornament, but it should not be manipulated. Use ``OrnamentOptions/scaleBar``
+    /// to configure the scale bar presentation if customization is needed.
     public var scaleBarView: UIView {
         return _scaleBarView
     }
+
+    /// The view for the compass ornament. This view can be used to position other views relative to the
+    /// compass ornament, but it should not be manipulated. Use ``OrnamentOptions/compass`` to
+    /// configure the compass presentation if customization is needed..
     public var compassView: UIView {
         return _compassView
     }
+
+    /// The view for the attribution button ornament. This view can be used to position other views relative
+    /// to the attribution button ornament, but it should not be manipulated. Use
+    /// ``OrnamentOptions/attributionButton`` to configure the attribution button presentation
+    /// if customization is needed..
     public var attributionButton: UIView {
         return _attributionButton
     }
@@ -57,7 +73,7 @@ public class OrnamentsManager: NSObject {
                   logoView: LogoView,
                   scaleBarView: MapboxScaleBarOrnamentView,
                   compassView: MapboxCompassOrnamentView,
-                  attributionButton: InfoButtonOrnament){
+                  attributionButton: InfoButtonOrnament) {
         self.options = options
 
         // Logo View

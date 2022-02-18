@@ -53,14 +53,20 @@ workflows:
           matrix:
             parameters:
               xcode: ["12.5.0", "13.0.0"]
-      - build-tests
+      - build-tests:
+          name: Build MapboxTestHost tests
       - run-tests:
+          name: Run MapboxTestHost tests
+          scheme: MapboxTestHost
           requires:
-            - build-tests
-      - build-examples-tests
-      - run-examples-tests:
+            - Build MapboxTestHost tests
+      - build-examples-tests:
+          name: Build Examples tests
+      - run-tests:
+          name: Run Examples tests
+          scheme: Examples
           requires:
-            - build-examples-tests
+            - Build Examples tests
       - create-xcframework:
           create-xcframework-always-run: true
           report_failure: true
@@ -76,12 +82,14 @@ workflows:
             branches:
               ignore: main
       - build-tests:
+          name: Build MapboxTestHost tests [non-main]
           requires:
             - run-tests?
       - run-tests:
-          name: Run tests [non-main]
+          name: Run MapboxTestHost tests [non-main]
+          scheme: MapboxTestHost
           requires:
-            - build-tests
+            - Build MapboxTestHost tests [non-main]
           devices: --device model=iphone8,version=14.7
 
       - run-examples-tests?:
@@ -90,12 +98,14 @@ workflows:
             branches:
               ignore: main
       - build-examples-tests:
+          name: Build Examples tests [non-main]
           requires:
             - run-examples-tests?
-      - run-examples-tests:
+      - run-tests:
           name: Run Examples tests [non-main]
+          scheme: Examples
           requires:
-            - build-examples-tests
+            - Build Examples tests [non-main]
           devices: --device model=iphone8,version=14.7
 
   steve:
@@ -133,10 +143,13 @@ workflows:
       # Build all tests with host application
       # Run on main by default
       # Can be approved to run on other branches
-      - build-tests
+      - build-tests:
+          name: Build MapboxTestHost tests
       - run-tests:
+          name: Run MapboxTestHost tests
+          scheme: MapboxTestHost
           requires:
-            - build-tests
+            - Build MapboxTestHost tests
           filters:
             branches:
               only: main
@@ -144,10 +157,13 @@ workflows:
       # Build and Run tests on Examples scheme.
       # Enabled by-default on 'main' branch
       # Can be approved on purpose for others
-      - build-examples-tests
-      - run-examples-tests:
+      - build-examples-tests:
+          name: Build Examples tests
+      - run-tests:
+          name: Run Examples tests
+          scheme: Examples
           requires:
-            - build-examples-tests
+            - Build Examples tests
           filters:
             branches:
               only: main
@@ -415,73 +431,7 @@ jobs:
           --device model=iphone11pro,version=14.7 \
           --device model=iphone8,version=12.4 \
         type: string
-    executor: xcode-latest
-    steps:
-      - checkout
-      - install-gcloud
-      - configure-environment
-      - attach_workspace:
-          at: output
-      - run:
-          name: Test MapboxTestHost
-          command: |
-            gcloud firebase test ios run --test output/build_products.zip \
-              << parameters.devices >> 2>&1 | tee firebase_test_lab_run.log
-      - run:
-          name: Download XCResults
-          command: |
-            mkdir testlab_results
-            TEST_LAB_PATH=$(cat firebase_test_lab_run.log | grep -o "test-lab.*/")
-            gsutil -m cp -r \
-            "gs://${TEST_LAB_PATH}i*" \
-            testlab_results
-            zip -r testlab_results.zip testlab_results
-          when: always
-      - run:
-          name: Update coverage
-          command: |
-            unzip -j output/build_products.zip Release-iphoneos/MapboxMaps.o -d testlab_results/
-            make update-codecov-with-profdata \
-                COVERAGE_ARCH=arm64 \
-                COVERAGE_ROOT_DIR="$(pwd)/testlab_results" \
-                COVERAGE_MAPBOX_MAPS="$(pwd)/testlab_results/MapboxMaps.o" SCHEME=MapboxTestHost
-      - run:
-          name: Parsing xcresults for errors
-          command: |
-            find "testlab_results" -name '*.xcresult' -exec swift run --package-path scripts/xcparty xcparty {} \;
-          when: on_fail
-      - store_artifacts:
-          path: firebase_test_lab_run.log
-      - store_artifacts:
-          path: testlab_results.zip
-      - slack-notify-failure-if-any
-
-  build-examples-tests:
-    executor: xcode-latest
-    steps:
-      - checkout
-      - configure-environment
-      - run:
-          name: Build Examples tests
-          command: |
-            bundle install
-            bundle exec fastlane build_examples_tests
-            mv output/build_products.zip output/Examples.zip
-      - store_artifacts:
-          path: output/Examples.zip
-      - persist_to_workspace:
-          root: output/
-          paths:
-            - Examples.zip
-      - slack-notify-failure-if-any
-
-  run-examples-tests:
-    parameters:
-      devices:
-        default: |
-          --device model=iphone11,version=13.6 \
-          --device model=iphone11pro,version=14.7 \
-          --device model=iphone8,version=12.4 \
+      scheme:
         type: string
     executor: xcode-latest
     steps:
@@ -491,26 +441,40 @@ jobs:
       - attach_workspace:
           at: output
       - run:
-          name: Test Examples
+          name: Run << parameters.scheme >> tests on devices
           command: |
-            gcloud firebase test ios run --test output/Examples.zip \
+            gcloud firebase test ios run --test output/build_products.zip \
               << parameters.devices >> 2>&1 | tee firebase_test_lab_run.log
+          no_output_timeout: 30m
       - run:
           name: Download XCResults
           command: |
-            mkdir testlab_results
             TEST_LAB_PATH=$(cat firebase_test_lab_run.log | grep -o "test-lab.*/")
+
+            mkdir testlab_results
             gsutil -m cp -r "gs://${TEST_LAB_PATH}i*" testlab_results
             zip -r testlab_results.zip testlab_results
           when: always
       - run:
+          name: Symbolicate crash logs
+          command: |
+            (
+              unzip output/build_products.zip -d testlab_results/
+              rsync -R testlab_results/*/CrashLogs/*.ips CrashLogs/
+              make symbolicate \
+                BUILD_DIR=CrashLogs \
+                BUILT_DEVICE_PRODUCTS_DIR=testlab_results/Release-iphoneos/ \
+                APP_NAME=<< parameters.scheme >>
+              zip -r crashlogs.zip CrashLogs
+            ) || true
+          when: always
+      - run:
           name: Update coverage
           command: |
-            unzip -j output/Examples.zip Release-iphoneos/MapboxMaps.o -d testlab_results/
             make update-codecov-with-profdata \
                 COVERAGE_ARCH=arm64 \
                 COVERAGE_ROOT_DIR="$(pwd)/testlab_results" \
-                COVERAGE_MAPBOX_MAPS="$(pwd)/testlab_results/MapboxMaps.o" SCHEME=Examples
+                COVERAGE_MAPBOX_MAPS="$(pwd)/testlab_results/Release-iphoneos/MapboxMaps.o" SCHEME=<< parameters.scheme >>
       - run:
           name: Parsing xcresults for errors
           command: |
@@ -519,7 +483,30 @@ jobs:
       - store_artifacts:
           path: firebase_test_lab_run.log
       - store_artifacts:
+          path: crashlogs.zip
+      - store_artifacts:
           path: testlab_results.zip
+      - store_test_results:
+          path: testlab_results
+      - slack-notify-failure-if-any
+
+  build-examples-tests:
+    executor: xcode-latest
+    resource_class: macos.x86.medium.gen2
+    steps:
+      - checkout
+      - configure-environment
+      - run:
+          name: Build Examples tests
+          command: |
+            bundle install
+            bundle exec fastlane build_examples_tests
+      - store_artifacts:
+          path: output/Examples.zip
+      - persist_to_workspace:
+          root: output/
+          paths:
+            - build_products.zip
       - slack-notify-failure-if-any
 
   create-xcframework:

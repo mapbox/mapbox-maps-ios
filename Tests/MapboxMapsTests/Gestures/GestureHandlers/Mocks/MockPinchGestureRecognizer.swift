@@ -13,13 +13,13 @@ final class MockPinchGestureRecognizer: UIPinchGestureRecognizer {
     }
 
     let getScaleStub = Stub<Void, CGFloat>(defaultReturnValue: 1)
+    let setScaleStub = Stub<CGFloat, Void>()
     override var scale: CGFloat {
         get {
             getScaleStub.call()
         }
-        // swiftlint:disable:next unused_setter_value
         set {
-            fatalError("unimplemented")
+            setScaleStub.call(with: newValue)
         }
     }
 

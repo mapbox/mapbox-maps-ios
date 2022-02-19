@@ -61,7 +61,9 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
         view.addGestureRecognizer(gestureRecognizer)
         return PinchGestureHandler(
             gestureRecognizer: gestureRecognizer,
-            mapboxMap: mapboxMap)
+            mapboxMap: mapboxMap,
+            pinchBehaviorProvider: PinchBehaviorProvider(
+                mapboxMap: mapboxMap))
     }
 
     func makePitchGestureHandler(view: UIView,

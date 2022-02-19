@@ -8,6 +8,8 @@ final class GestureOptionsTests: XCTestCase {
         XCTAssertTrue(options.panEnabled)
         XCTAssertTrue(options.pinchEnabled)
         XCTAssertTrue(options.pinchRotateEnabled)
+        XCTAssertTrue(options.pinchZoomEnabled)
+        XCTAssertTrue(options.pinchPanEnabled)
         XCTAssertTrue(options.pitchEnabled)
         XCTAssertTrue(options.doubleTapToZoomInEnabled)
         XCTAssertTrue(options.doubleTouchToZoomOutEnabled)

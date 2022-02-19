@@ -1,25 +1,25 @@
 import XCTest
 @testable import MapboxMaps
 
-final class PanRotatePinchChangedBehaviorTests: BasePinchChangedBehaviorTests {
+final class PanZoomPinchBehaviorTests: BasePinchBehaviorTests {
     override func setUp() {
         super.setUp()
-        behavior = PanRotatePinchBehavior(
+        behavior = PanZoomPinchBehavior(
             initialCameraState: initialCameraState,
             initialPinchMidpoint: initialPinchMidpoint,
-            initialPinchAngle: initialPinchAngle,
             mapboxMap: mapboxMap)
     }
 
     func testUpdate() throws {
         let pinchMidpoint = CGPoint.random()
+        let pinchScale = CGFloat.random(in: 0.1..<10)
         let dragCameraOptions = CameraOptions.random()
         mapboxMap.dragCameraOptionsStub.defaultReturnValue = dragCameraOptions
 
         behavior.update(
             pinchMidpoint: pinchMidpoint,
-            pinchScale: .random(in: 0..<2),
-            pinchAngle: initialPinchAngle + (.pi/4))
+            pinchScale: pinchScale,
+            pinchAngle: .random(in: 0..<2 * .pi))
 
         // verify that setCamera is invoked 3 times
         guard mapboxMap.setCameraStub.invocations.count == 3 else {
@@ -27,12 +27,12 @@ final class PanRotatePinchChangedBehaviorTests: BasePinchChangedBehaviorTests {
             return
         }
 
-        // verify that the first setCamera invocation resets center and bearing
+        // verify that the first setCamera invocation resets center and zoom
         XCTAssertEqual(
             mapboxMap.setCameraStub.invocations[0].parameters,
             CameraOptions(
                 center: initialCameraState.center,
-                bearing: initialCameraState.bearing))
+                zoom: initialCameraState.zoom))
 
         // verify that dragStart is invoked once with the initial pinch midpoint
         XCTAssertEqual(
@@ -55,11 +55,14 @@ final class PanRotatePinchChangedBehaviorTests: BasePinchChangedBehaviorTests {
         XCTAssertEqual(mapboxMap.dragEndStub.invocations.count, 1)
 
         // verify that setCamera is invoked a third time with the expected
-        // anchor and bearing
+        // anchor and zoom
         XCTAssertEqual(
             mapboxMap.setCameraStub.invocations[2].parameters.anchor,
             pinchMidpoint)
-        let bearing = try XCTUnwrap(mapboxMap.setCameraStub.invocations[2].parameters.bearing)
-        XCTAssertEqual(bearing, initialCameraState.bearing - 45, accuracy: 1e-10)
+        let zoom = try XCTUnwrap(mapboxMap.setCameraStub.invocations[2].parameters.zoom)
+        XCTAssertEqual(zoom, initialCameraState.zoom + log2(pinchScale))
+
+        // verify that only one camera changed notification was emitted
+        XCTAssertEqual(cameraChangedCount, 1)
     }
 }

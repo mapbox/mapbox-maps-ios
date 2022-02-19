@@ -5,6 +5,7 @@ internal protocol MapboxObservableProtocol: AnyObject {
     func unsubscribe(_ observer: Observer, events: [String])
     func onNext(_ eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable
     func onEvery(_ eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable
+    func performWithoutNotifying(_ block: () -> Void)
 }
 
 /// `MapboxObservable` wraps the event listener APIs of ``MapboxCoreMaps/MBMObservable``,
@@ -101,9 +102,20 @@ internal final class MapboxObservable: MapboxObservableProtocol {
         }
     }
 
+    internal func performWithoutNotifying(_ block: () -> Void) {
+        for wrapper in observerWrappers.values {
+            wrapper.isEnabled = false
+        }
+        block()
+        for wrapper in observerWrappers.values {
+            wrapper.isEnabled = true
+        }
+    }
+
     private final class ObserverWrapper: Observer {
         internal let wrapped: Observer
         internal let events: [String]
+        internal var isEnabled = true
 
         internal init(wrapped: Observer, events: [String]) {
             self.wrapped = wrapped
@@ -111,7 +123,9 @@ internal final class MapboxObservable: MapboxObservableProtocol {
         }
 
         internal func notify(for event: Event) {
-            wrapped.notify(for: event)
+            if isEnabled {
+                wrapped.notify(for: event)
+            }
         }
     }
 

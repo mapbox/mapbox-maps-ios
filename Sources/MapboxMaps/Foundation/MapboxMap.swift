@@ -28,6 +28,7 @@ internal protocol MapboxMapProtocol: AnyObject {
     func pointIsAboveHorizon(_ point: CGPoint) -> Bool
     func camera(for geometry: Geometry, padding: UIEdgeInsets, bearing: CGFloat?, pitch: CGFloat?) -> CameraOptions
     func point(for coordinate: CLLocationCoordinate2D) -> CGPoint
+    func performWithoutNotifying(_ block: () -> Void)
 }
 
 // swiftlint:disable type_body_length
@@ -872,6 +873,10 @@ extension MapboxMap: MapEventsObservable {
     @discardableResult
     public func onEvery(_ eventType: MapEvents.EventKind, handler: @escaping (Event) -> Void) -> Cancelable {
         return observable.onEvery([eventType], handler: handler)
+    }
+
+    internal func performWithoutNotifying(_ block: () -> Void) {
+        observable.performWithoutNotifying(block)
     }
 }
 

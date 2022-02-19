@@ -145,4 +145,15 @@ final class MockMapboxMap: MapboxMapProtocol {
     func point(for coordinate: CLLocationCoordinate2D) -> CGPoint {
         pointStub.call(with: coordinate)
     }
+
+    // not using Stub here since the block is not escaping
+    var performWithoutNotifyingInvocationCount = 0
+    var performWithoutNotifyingWillInvokeBlock = {}
+    var performWithoutNotifyingDidInvokeBlock = {}
+    func performWithoutNotifying(_ block: () -> Void) {
+        performWithoutNotifyingInvocationCount += 1
+        performWithoutNotifyingWillInvokeBlock()
+        block()
+        performWithoutNotifyingDidInvokeBlock()
+    }
 }

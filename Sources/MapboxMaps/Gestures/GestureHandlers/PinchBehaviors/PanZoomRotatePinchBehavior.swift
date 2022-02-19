@@ -17,18 +17,20 @@ internal final class PanZoomRotatePinchBehavior: PinchBehavior {
     internal func update(pinchMidpoint: CGPoint,
                          pinchScale: CGFloat,
                          pinchAngle: CGFloat) {
-        mapboxMap.setCamera(
-            to: CameraOptions(
-                center: initialCameraState.center,
-                zoom: initialCameraState.zoom,
-                bearing: initialCameraState.bearing))
+        mapboxMap.performWithoutNotifying {
+            mapboxMap.setCamera(
+                to: CameraOptions(
+                    center: initialCameraState.center,
+                    zoom: initialCameraState.zoom,
+                    bearing: initialCameraState.bearing))
 
-        mapboxMap.dragStart(for: initialPinchMidpoint)
-        let dragOptions = mapboxMap.dragCameraOptions(
-            from: initialPinchMidpoint,
-            to: pinchMidpoint)
-        mapboxMap.setCamera(to: dragOptions)
-        mapboxMap.dragEnd()
+            mapboxMap.dragStart(for: initialPinchMidpoint)
+            let dragOptions = mapboxMap.dragCameraOptions(
+                from: initialPinchMidpoint,
+                to: pinchMidpoint)
+            mapboxMap.setCamera(to: dragOptions)
+            mapboxMap.dragEnd()
+        }
 
         let zoomIncrement = log2(pinchScale)
         // flip the sign since the UIKit coordinate system is flipped

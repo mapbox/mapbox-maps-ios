@@ -104,18 +104,18 @@ internal final class MapboxObservable: MapboxObservableProtocol {
 
     internal func performWithoutNotifying(_ block: () -> Void) {
         for wrapper in observerWrappers.values {
-            wrapper.isEnabled = false
+            wrapper.ignoringCount += 1
         }
         block()
         for wrapper in observerWrappers.values {
-            wrapper.isEnabled = true
+            wrapper.ignoringCount -= 1
         }
     }
 
     private final class ObserverWrapper: Observer {
         internal let wrapped: Observer
         internal let events: [String]
-        internal var isEnabled = true
+        internal var ignoringCount = 0
 
         internal init(wrapped: Observer, events: [String]) {
             self.wrapped = wrapped
@@ -123,7 +123,7 @@ internal final class MapboxObservable: MapboxObservableProtocol {
         }
 
         internal func notify(for event: Event) {
-            if isEnabled {
+            if ignoringCount == 0 {
                 wrapped.notify(for: event)
             }
         }

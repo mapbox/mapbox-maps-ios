@@ -21,8 +21,6 @@ public enum SourceType: String, Codable {
     /// A model source
     case model = "model"
 
-    case customVector = "customvector"
-
     internal enum CodingKeys: String, CodingKey {
         case vector = "vector"
         case raster = "raster"
@@ -48,8 +46,6 @@ public enum SourceType: String, Codable {
             return ImageSource.self
         case .model:
             return ModelSource.self
-        case .customVector:
-            return VectorSource.self
         }
     }
 }

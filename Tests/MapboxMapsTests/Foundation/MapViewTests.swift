@@ -105,7 +105,7 @@ final class MapViewTests: XCTestCase {
         guard #available(iOS 15.0, *) else {
             throw XCTSkip("Test requires iOS 15 or higher.")
         }
-        let frameRateRange = CAFrameRateRange(minimum: 0, maximum: 120, __preferred: 80)
+        let frameRateRange = CAFrameRateRange(minimum: 0, maximum: 120, preferred: 80)
         mapView.preferredFrameRateRange = frameRateRange
         XCTAssertEqual(displayLink.preferredFrameRateRange, frameRateRange)
         XCTAssertEqual(mapView.preferredFrameRateRange, frameRateRange)
@@ -257,8 +257,9 @@ final class MapViewTests: XCTestCase {
             frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)),
             mapInitOptions: MapInitOptions(),
             dependencyProvider: dependencyProvider)
-
         window.addSubview(mapView)
+        notificationCenter.removeObserverStub.reset()
+
         mapView.removeFromSuperview()
 
         XCTAssertTrue(notificationCenter.removeObserverStub.invocations.contains(where: { invocation in

@@ -98,7 +98,7 @@ To run device tests there are few options:
 
 ## Integration Tests
 
-Integration tests typically test the integration between components. As such most will require a `MapView`. These can be run locally and on AWS Device Farm.
+Integration tests typically require a Metal device, so these tests can only run locally and on Firebase Test Lab. They are skipped when running on CircleCI inside of a VM.
 
 Since these tests require a map view, they also need a `UIWindow` and Metal rendering to work. For both testing scenarios, if there's no valid Metal device the test will be skipped (i.e. not failure/success).
 

@@ -1,5 +1,5 @@
 @testable import MapboxMaps
 
-final class MockDoubleTouchToZoomOutGestureHandler: GestureHandler, DoubleTouchToZoomOutGestureHandlerProtocol {
+final class MockDoubleTouchToZoomOutGestureHandler: GestureHandler, ZoomGestureHandlerProtocol {
     var focalPoint: CGPoint?
 }

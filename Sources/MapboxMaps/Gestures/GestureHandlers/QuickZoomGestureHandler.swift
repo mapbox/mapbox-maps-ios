@@ -1,11 +1,7 @@
 import UIKit
 
-internal protocol QuickZoomGestureHandlerProtocol: GestureHandler {
-    var focalPoint: CGPoint? { get set }
-}
-
 /// `QuickZoomGestureHandler` updates the map camera in response to double tap and drag gestures
-internal final class QuickZoomGestureHandler: GestureHandler, QuickZoomGestureHandlerProtocol {
+internal final class QuickZoomGestureHandler: GestureHandler, ZoomGestureHandlerProtocol {
     internal var focalPoint: CGPoint?
 
     private var initialLocation: CGPoint?

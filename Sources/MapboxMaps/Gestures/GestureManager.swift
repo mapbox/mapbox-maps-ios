@@ -101,9 +101,9 @@ public final class GestureManager: GestureHandlerDelegate {
     private let panGestureHandler: PanGestureHandlerProtocol
     private let pinchGestureHandler: PinchGestureHandlerProtocol
     private let pitchGestureHandler: GestureHandler
-    private let doubleTapToZoomInGestureHandler: DoubleTapToZoomInGestureHandlerProtocol
-    private let doubleTouchToZoomOutGestureHandler: DoubleTouchToZoomOutGestureHandlerProtocol
-    private let quickZoomGestureHandler: QuickZoomGestureHandlerProtocol
+    private let doubleTapToZoomInGestureHandler: ZoomGestureHandlerProtocol
+    private let doubleTouchToZoomOutGestureHandler: ZoomGestureHandlerProtocol
+    private let quickZoomGestureHandler: ZoomGestureHandlerProtocol
     private let singleTapGestureHandler: GestureHandler
     private let anyTouchGestureHandler: GestureHandler
     private let mapboxMap: MapboxMapProtocol
@@ -111,9 +111,9 @@ public final class GestureManager: GestureHandlerDelegate {
     internal init(panGestureHandler: PanGestureHandlerProtocol,
                   pinchGestureHandler: PinchGestureHandlerProtocol,
                   pitchGestureHandler: GestureHandler,
-                  doubleTapToZoomInGestureHandler: DoubleTapToZoomInGestureHandlerProtocol,
-                  doubleTouchToZoomOutGestureHandler: DoubleTouchToZoomOutGestureHandlerProtocol,
-                  quickZoomGestureHandler: QuickZoomGestureHandlerProtocol,
+                  doubleTapToZoomInGestureHandler: ZoomGestureHandlerProtocol,
+                  doubleTouchToZoomOutGestureHandler: ZoomGestureHandlerProtocol,
+                  quickZoomGestureHandler: ZoomGestureHandlerProtocol,
                   singleTapGestureHandler: GestureHandler,
                   anyTouchGestureHandler: GestureHandler,
                   mapboxMap: MapboxMapProtocol) {

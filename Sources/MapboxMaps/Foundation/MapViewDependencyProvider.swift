@@ -77,7 +77,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
 
     func makeDoubleTapToZoomInGestureHandler(view: UIView,
                                              mapboxMap: MapboxMapProtocol,
-                                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> DoubleTapToZoomInGestureHandlerProtocol {
+                                             cameraAnimationsManager: CameraAnimationsManagerProtocol) -> ZoomGestureHandlerProtocol {
         let gestureRecognizer = UITapGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         return DoubleTapToZoomInGestureHandler(
@@ -88,7 +88,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
 
     func makeDoubleTouchToZoomOutGestureHandler(view: UIView,
                                                 mapboxMap: MapboxMapProtocol,
-                                                cameraAnimationsManager: CameraAnimationsManagerProtocol) -> DoubleTouchToZoomOutGestureHandlerProtocol {
+                                                cameraAnimationsManager: CameraAnimationsManagerProtocol) -> ZoomGestureHandlerProtocol {
         let gestureRecognizer = UITapGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         return DoubleTouchToZoomOutGestureHandler(
@@ -97,8 +97,7 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
             cameraAnimationsManager: cameraAnimationsManager)
     }
 
-    func makeQuickZoomGestureHandler(view: UIView,
-                                     mapboxMap: MapboxMapProtocol) -> QuickZoomGestureHandlerProtocol {
+    func makeQuickZoomGestureHandler(view: UIView, mapboxMap: MapboxMapProtocol) -> ZoomGestureHandlerProtocol {
         let gestureRecognizer = UILongPressGestureRecognizer()
         view.addGestureRecognizer(gestureRecognizer)
         return QuickZoomGestureHandler(

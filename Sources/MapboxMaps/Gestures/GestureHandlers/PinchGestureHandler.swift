@@ -1,6 +1,6 @@
 import UIKit
 
-internal protocol PinchGestureHandlerProtocol: GestureHandler {
+internal protocol PinchGestureHandlerProtocol: ZoomGestureHandlerProtocol {
     var rotateEnabled: Bool { get set }
     var zoomEnabled: Bool { get set }
     var panEnabled: Bool { get set }

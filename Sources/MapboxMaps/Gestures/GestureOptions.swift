@@ -61,7 +61,7 @@ public struct GestureOptions: Equatable {
     public var panDecelerationFactor: CGFloat = UIScrollView.DecelerationRate.normal.rawValue
 
     /// By default, gestures rotate and zoom around the center of the gesture. Set this property to rotate and zoom around a fixed point instead.
-    public var focalPoint: CGPoint? = nil
+    public var focalPoint: CGPoint?
 
     public init() {}
 }

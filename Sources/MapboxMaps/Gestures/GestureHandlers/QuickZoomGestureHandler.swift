@@ -6,7 +6,7 @@ internal protocol QuickZoomGestureHandlerProtocol: GestureHandler {
 
 /// `QuickZoomGestureHandler` updates the map camera in response to double tap and drag gestures
 internal final class QuickZoomGestureHandler: GestureHandler, QuickZoomGestureHandlerProtocol {
-    internal var focalPoint: CGPoint? = nil
+    internal var focalPoint: CGPoint?
 
     private var initialLocation: CGPoint?
     private var initialZoom: CGFloat?

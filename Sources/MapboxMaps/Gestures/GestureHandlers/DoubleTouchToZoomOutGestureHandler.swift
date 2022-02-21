@@ -7,7 +7,7 @@ internal protocol DoubleTouchToZoomOutGestureHandlerProtocol: GestureHandler {
 /// `DoubleTouchToZoomOutGestureHandler` updates the map camera in response
 /// to single tap gestures with 2 touches
 internal final class DoubleTouchToZoomOutGestureHandler: GestureHandler, DoubleTouchToZoomOutGestureHandlerProtocol {
-    internal var focalPoint: CGPoint? = nil
+    internal var focalPoint: CGPoint?
 
     private let mapboxMap: MapboxMapProtocol
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol

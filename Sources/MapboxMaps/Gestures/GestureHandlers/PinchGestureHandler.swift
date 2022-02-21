@@ -4,6 +4,7 @@ internal protocol PinchGestureHandlerProtocol: GestureHandler {
     var rotateEnabled: Bool { get set }
     var zoomEnabled: Bool { get set }
     var panEnabled: Bool { get set }
+    var focalPoint: CGPoint? { get set }
 }
 
 /// `PinchGestureHandler` updates the map camera in response to a 2-touch
@@ -17,6 +18,9 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
 
     /// Whether pinch gesture can pan map or not
     internal var panEnabled: Bool = true
+
+    /// Anchor point for rotating and zooming
+    internal var focalPoint: CGPoint? = nil
 
     /// The behavior for the current gesture, based on the initial state of the \*Enabled flags.
     private var pinchBehavior: PinchBehavior?
@@ -92,7 +96,8 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
             rotateEnabled: rotateEnabled,
             initialCameraState: mapboxMap.cameraState,
             initialPinchMidpoint: gestureRecognizer.location(in: view),
-            initialPinchAngle: pinchAngle(with: gestureRecognizer))
+            initialPinchAngle: pinchAngle(with: gestureRecognizer),
+            focalPoint: focalPoint)
         // if this is the first time we started handling the gesture, inform
         // the delegate.
         if !invokedGestureBegan {

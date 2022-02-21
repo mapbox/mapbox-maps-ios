@@ -15,6 +15,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Add `GestureOptions.pinchPanEnabled` and `.pinchZoomEnabled`. ([#1092](https://github.com/mapbox/mapbox-maps-ios/pull/1092))
 * Fix an issue where pinch gesture emitted superfluous camera changed events. ([#1137](https://github.com/mapbox/mapbox-maps-ios/pull/1137))
 * Zoom focal point ([#1122](https://github.com/mapbox/mapbox-maps-ios/pull/1122))
+* Add focalPoint property to zoom and rotate gestures ([#1122](https://github.com/mapbox/mapbox-maps-ios/pull/1122))
 
 ## 10.3.0 - February 10, 2022
 

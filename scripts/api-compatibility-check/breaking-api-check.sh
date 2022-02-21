@@ -59,6 +59,7 @@ main() {
         -target arm64-apple-ios11.0\
         --iframework "$product_artifacts_dir"/MapboxCommon.xcframework/ios-arm64_armv7/ \
         --iframework "$product_artifacts_dir"/MapboxCoreMaps.xcframework/ios-arm64/ \
+        --breakage-allowlist-path "$SCRIPT_DIR/breakage_allowlist.txt" \
         --baseline-dir "$SCRIPT_DIR"\
         -module MapboxMaps \
         2>&1 > "$report" 2>&1

@@ -66,7 +66,7 @@ swift package update
 
 ### Running the Debug App
 
-In order to use the debug app, open Apps/Apps.xcworkspace and build and run the `DebugApp` target.
+In order to use the debug app, open Apps/Apps.xcworkspace and build and run the `DebugApp` scheme.
 
 You must provide a Mapbox access token to display Mapbox-hosted maps in the `DebugApp` test application. Add your Mapbox token to the `MBXAccessToken` key in `DebugApp/DebugApp/Info.plist`. Alternatively, create a [file at `~/mapbox`](https://docs.mapbox.com/help/troubleshooting/private-access-token-android-and-ios/#ios) containing your access token.
 

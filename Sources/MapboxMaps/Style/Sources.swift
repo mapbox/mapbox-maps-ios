@@ -28,7 +28,6 @@ public enum SourceType: String, Codable {
         case geojson = "geojson"
         case image = "image"
         case model = "model"
-        case customVector = "customvector"
     }
 
     /// The associated Swift struct type

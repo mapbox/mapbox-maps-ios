@@ -2,7 +2,7 @@ import UIKit
 
 /// `DoubleTouchToZoomOutGestureHandler` updates the map camera in response
 /// to single tap gestures with 2 touches
-internal final class DoubleTouchToZoomOutGestureHandler: GestureHandler, ZoomGestureHandlerProtocol {
+internal final class DoubleTouchToZoomOutGestureHandler: GestureHandler, FocusableGestureHandlerProtocol {
     internal var focalPoint: CGPoint?
 
     private let mapboxMap: MapboxMapProtocol

@@ -1,6 +1,7 @@
 import UIKit
+@_implementationOnly import MapboxCommon_Private
 
-internal protocol PinchGestureHandlerProtocol: ZoomGestureHandlerProtocol {
+internal protocol PinchGestureHandlerProtocol: FocusableGestureHandlerProtocol {
     var rotateEnabled: Bool { get set }
     var zoomEnabled: Bool { get set }
     var panEnabled: Bool { get set }
@@ -20,7 +21,7 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
     internal var panEnabled: Bool = true
 
     /// Anchor point for rotating and zooming
-    internal var focalPoint: CGPoint? = nil
+    internal var focalPoint: CGPoint?
 
     /// The behavior for the current gesture, based on the initial state of the \*Enabled flags.
     private var pinchBehavior: PinchBehavior?
@@ -90,6 +91,13 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
         guard let view = gestureRecognizer.view else {
             return
         }
+
+        if panEnabled, focalPoint != nil {
+            Log.warning(
+                forMessage: "Possible pinch gesture recognizer misconfiguration: the specified focal point may be ignored when pinching. In order for the focal point to work, pinch pan has to be disabled.",
+                category: "Gestures")
+        }
+
         pinchBehavior = pinchBehaviorProvider.makePinchBehavior(
             panEnabled: panEnabled,
             zoomEnabled: zoomEnabled,

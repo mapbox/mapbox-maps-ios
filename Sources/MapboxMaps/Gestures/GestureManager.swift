@@ -67,7 +67,7 @@ public final class GestureManager: GestureHandlerDelegate {
         return doubleTapToZoomInGestureHandler.gestureRecognizer
     }
 
-    /// The gesture recognizer for the "double tap to zoom out" gesture
+    /// The gesture recognizer for the "double touch to zoom out" gesture
     public var doubleTouchToZoomOutGestureRecognizer: UIGestureRecognizer {
         return doubleTouchToZoomOutGestureHandler.gestureRecognizer
     }
@@ -143,12 +143,12 @@ public final class GestureManager: GestureHandlerDelegate {
         delegate?.gestureManager(self, didBegin: gestureType)
     }
 
-    func gestureEnded(for gestureType: GestureType, willAnimate: Bool) {
+    internal func gestureEnded(for gestureType: GestureType, willAnimate: Bool) {
         mapboxMap.endGesture()
         delegate?.gestureManager(self, didEnd: gestureType, willAnimate: willAnimate)
     }
 
-    func animationEnded(for gestureType: GestureType) {
+    internal func animationEnded(for gestureType: GestureType) {
         delegate?.gestureManager(self, didEndAnimatingFor: gestureType)
     }
 }

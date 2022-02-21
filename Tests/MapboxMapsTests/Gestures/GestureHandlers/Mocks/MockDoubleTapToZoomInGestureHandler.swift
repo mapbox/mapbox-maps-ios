@@ -1,3 +1,5 @@
-//
+@testable import MapboxMaps
 
-import Foundation
+final class MockDoubleTapToZoomInGestureHandler: GestureHandler, DoubleTapToZoomInGestureHandlerProtocol {
+    var focalPoint: CGPoint? = nil
+}

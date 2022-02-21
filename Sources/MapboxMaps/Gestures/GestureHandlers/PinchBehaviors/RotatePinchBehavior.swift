@@ -1,16 +1,20 @@
+import CoreGraphics
 internal final class RotatePinchBehavior: PinchBehavior {
     private let initialCameraState: CameraState
     private let initialPinchMidpoint: CGPoint
     private let initialPinchAngle: CGFloat
     private let mapboxMap: MapboxMapProtocol
+    private let focalPoint: CGPoint?
 
     internal init(initialCameraState: CameraState,
                   initialPinchMidpoint: CGPoint,
                   initialPinchAngle: CGFloat,
+                  focalPoint: CGPoint?,
                   mapboxMap: MapboxMapProtocol) {
         self.initialCameraState = initialCameraState
         self.initialPinchMidpoint = initialPinchMidpoint
         self.initialPinchAngle = initialPinchAngle
+        self.focalPoint = focalPoint
         self.mapboxMap = mapboxMap
     }
 
@@ -23,7 +27,7 @@ internal final class RotatePinchBehavior: PinchBehavior {
             .wrappedAngle(to: pinchAngle)
             .toDegrees()
         mapboxMap.setCamera(to: CameraOptions(
-            anchor: initialPinchMidpoint,
+            anchor: focalPoint ?? initialPinchMidpoint,
             bearing: initialCameraState.bearing + CLLocationDirection(bearingIncrement)))
     }
 }

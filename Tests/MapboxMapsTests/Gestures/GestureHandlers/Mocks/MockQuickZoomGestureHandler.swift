@@ -1,3 +1,5 @@
-//
+@testable import MapboxMaps
 
-import Foundation
+final class MockQuickZoomGestureHandler: GestureHandler, QuickZoomGestureHandlerProtocol {
+    var focalPoint: CGPoint? = nil
+}

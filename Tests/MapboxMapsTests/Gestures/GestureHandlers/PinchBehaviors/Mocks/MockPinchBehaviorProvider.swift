@@ -8,6 +8,7 @@ final class MockPinchBehaviorProvider: PinchBehaviorProviderProtocol {
         var initialCameraState: CameraState
         var initialPinchMidpoint: CGPoint
         var initialPinchAngle: CGFloat
+        var focalPoint: CGPoint?
     }
     let makePinchBehaviorStub = Stub<MakePinchBehaviorParams, PinchBehavior>(defaultReturnValue: MockPinchBehavior())
     // swiftlint:disable:next function_parameter_count
@@ -16,13 +17,15 @@ final class MockPinchBehaviorProvider: PinchBehaviorProviderProtocol {
                            rotateEnabled: Bool,
                            initialCameraState: CameraState,
                            initialPinchMidpoint: CGPoint,
-                           initialPinchAngle: CGFloat) -> PinchBehavior {
+                           initialPinchAngle: CGFloat,
+                           focalPoint: CGPoint?) -> PinchBehavior {
         makePinchBehaviorStub.call(with: .init(
             panEnabled: panEnabled,
             zoomEnabled: zoomEnabled,
             rotateEnabled: rotateEnabled,
             initialCameraState: initialCameraState,
             initialPinchMidpoint: initialPinchMidpoint,
-            initialPinchAngle: initialPinchAngle))
+            initialPinchAngle: initialPinchAngle,
+            focalPoint: focalPoint))
     }
 }

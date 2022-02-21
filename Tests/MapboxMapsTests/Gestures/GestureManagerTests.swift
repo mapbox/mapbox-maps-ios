@@ -8,9 +8,9 @@ final class GestureManagerTests: XCTestCase {
     var panGestureHandler: MockPanGestureHandler!
     var pinchGestureHandler: MockPinchGestureHandler!
     var pitchGestureHandler: GestureHandler!
-    var doubleTapToZoomInGestureHandler: MockDoubleTapToZoomInGestureHandler!
-    var doubleTouchToZoomOutGestureHandler: MockDoubleTouchToZoomOutGestureHandler!
-    var quickZoomGestureHandler: MockQuickZoomGestureHandler!
+    var doubleTapToZoomInGestureHandler: MockFocusableGestureHandler!
+    var doubleTouchToZoomOutGestureHandler: MockFocusableGestureHandler!
+    var quickZoomGestureHandler: MockFocusableGestureHandler!
     var singleTapGestureHandler: GestureHandler!
     var anyTouchGestureHandler: GestureHandler!
     var gestureManager: GestureManager!
@@ -26,11 +26,11 @@ final class GestureManagerTests: XCTestCase {
         pinchGestureHandler = MockPinchGestureHandler(
             gestureRecognizer: MockGestureRecognizer())
         pitchGestureHandler = makeGestureHandler()
-        doubleTapToZoomInGestureHandler = MockDoubleTapToZoomInGestureHandler(
+        doubleTapToZoomInGestureHandler = MockFocusableGestureHandler(
             gestureRecognizer: MockGestureRecognizer())
-        doubleTouchToZoomOutGestureHandler = MockDoubleTouchToZoomOutGestureHandler(
+        doubleTouchToZoomOutGestureHandler = MockFocusableGestureHandler(
             gestureRecognizer: MockGestureRecognizer())
-        quickZoomGestureHandler = MockQuickZoomGestureHandler(gestureRecognizer: MockGestureRecognizer())
+        quickZoomGestureHandler = MockFocusableGestureHandler(gestureRecognizer: MockGestureRecognizer())
         singleTapGestureHandler = makeGestureHandler()
         anyTouchGestureHandler = makeGestureHandler()
         gestureManager = GestureManager(

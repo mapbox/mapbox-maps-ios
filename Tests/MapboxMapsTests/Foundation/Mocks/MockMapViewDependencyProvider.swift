@@ -53,11 +53,11 @@ final class MockMapViewDependencyProvider: MapViewDependencyProviderProtocol {
                 gestureRecognizer: UIGestureRecognizer()),
             pinchGestureHandler: MockPinchGestureHandler(gestureRecognizer: UIGestureRecognizer()),
             pitchGestureHandler: makeGestureHandler(),
-            doubleTapToZoomInGestureHandler: MockDoubleTapToZoomInGestureHandler(
+            doubleTapToZoomInGestureHandler: MockFocusableGestureHandler(
                 gestureRecognizer: UIGestureRecognizer()),
-            doubleTouchToZoomOutGestureHandler: MockDoubleTouchToZoomOutGestureHandler(
+            doubleTouchToZoomOutGestureHandler: MockFocusableGestureHandler(
                 gestureRecognizer: UIGestureRecognizer()),
-            quickZoomGestureHandler: MockQuickZoomGestureHandler(gestureRecognizer: UIGestureRecognizer()),
+            quickZoomGestureHandler: MockFocusableGestureHandler(gestureRecognizer: UIGestureRecognizer()),
             singleTapGestureHandler: makeGestureHandler(),
             anyTouchGestureHandler: makeGestureHandler(),
             mapboxMap: mapboxMap)

@@ -273,7 +273,6 @@ public final class ViewAnnotationManager {
 
             view.frame = newFrame
 
-            #warning("Sometimes the new frame is the same as the old one, bug in Core/GL Native?")
             if oldFrame != view.frame {
                 viewsWithUpdatedFrame.insert(view)
             }

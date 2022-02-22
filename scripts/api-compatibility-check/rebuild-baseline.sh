@@ -3,10 +3,11 @@
 set -eou pipefail
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+UTILS_PATH="$SCRIPT_DIR/../utils.sh"
 
-BASEAPI_REF=$(cat "$SCRIPT_DIR/.baseapi")
-BASEAPI_WORKTREE_PATH="$SCRIPT_DIR/.$BASEAPI_REF.checkout"
-BASEAPI_PACKAGER_DIR="$BASEAPI_WORKTREE_PATH/scripts/release/packager"
+# shellcheck source=../utils.sh
+source "$UTILS_PATH"
+
 
 API_DIGESTER_PATH="$(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-api-digester"
 
@@ -14,16 +15,19 @@ API_DIGESTER_PATH="$(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain/usr/bi
 PRODUCTS_DIR="$SCRIPT_DIR"
 PRODUCT_ARTIFACTS_DIR="$PRODUCTS_DIR/artifacts"
 
-# 1. Checkout tag
-git worktree add "$BASEAPI_WORKTREE_PATH" "$BASEAPI_REF"
-pushd "$BASEAPI_PACKAGER_DIR" || exit 1
+if [[ -d "$PRODUCT_ARTIFACTS_DIR" ]]; then
+    rm -rf "$PRODUCT_ARTIFACTS_DIR"
+fi
 
-# 2. Build release products as for distribution (with enabled library evolution and so on)
-./package-mapbox-maps.sh
-unzip "$BASEAPI_PACKAGER_DIR/MapboxMaps.zip" -d "$PRODUCTS_DIR"
-git worktree remove "$BASEAPI_WORKTREE_PATH" --force
+LATEST_PUBLIC_VERSION=$(gh release view --json name -q ".name")
+step "Download ${LATEST_PUBLIC_VERSION} binaries"
 
-# 3. Workaround for swift-api-digester – move all swiftmodules and modulemaps to the framework roots
+curl -n "https://api.mapbox.com/downloads/v2/mobile-maps-ios/releases/ios/${LATEST_PUBLIC_VERSION#v}/MapboxMaps.zip" --output "$SCRIPT_DIR/MapboxMaps.zip"
+
+unzip -q "$SCRIPT_DIR/MapboxMaps.zip" -d "$PRODUCTS_DIR"
+rm -rf "$SCRIPT_DIR/MapboxMaps.zip"
+
+#  Workaround for swift-api-digester – move all swiftmodules and modulemaps to the framework roots
 #       to avoid 'module was built in directory '.framework' but now resides in directory '/Modules' error
 iOS_FRAMEWORK_PATHS=$(find "$PRODUCT_ARTIFACTS_DIR" -path '*.framework' ! -path "*simulator*" ! -path "*maccatalyst*")
 
@@ -35,11 +39,16 @@ done
 
 # 4. Build new baseline digester dump
 BASELINE_REPORT_DIR="$SCRIPT_DIR/API"
+BASELINE_REPORT_PATH="$BASELINE_REPORT_DIR/iphoneos.json"
+BASELINE_OLD_REPORT_PATH="$BASELINE_REPORT_DIR/iphoneos_old.json"
 BASELINE_ARCHIVE_PATH="$SCRIPT_DIR/.baseline.zip"
 
-rm -f "$BASELINE_ARCHIVE_PATH"
-mkdir "$BASELINE_REPORT_DIR"
+# mkdir "$BASELINE_REPORT_DIR"
+unzip -q "$BASELINE_ARCHIVE_PATH" -d "$SCRIPT_DIR"
+# Move actual report to the old location to compare reports.
+mv "$BASELINE_REPORT_PATH" "$BASELINE_OLD_REPORT_PATH"
 
+step "Generate new JSON API dump"
 xcrun --sdk iphoneos "$API_DIGESTER_PATH"\
     --dump-sdk \
     --module=MapboxMaps\
@@ -57,7 +66,18 @@ xcrun --sdk iphoneos "$API_DIGESTER_PATH"\
      -v
 # 5. Pack generated baseline report to compare with
 cd "$SCRIPT_DIR" || exit 1
-zip -r "$BASELINE_ARCHIVE_PATH" "API"
+
+set +e
+if ! cmp -s <(jq -S . "$BASELINE_OLD_REPORT_PATH") <(jq -S . "$BASELINE_REPORT_PATH") > /dev/null; then
+    info "JSON API dump has changed. Updating the baseline"
+    rm -f "$BASELINE_ARCHIVE_PATH"
+    rm -f "$BASELINE_OLD_REPORT_PATH"
+    zip -r "$BASELINE_ARCHIVE_PATH" "API"
+fi
+set -e
+
 rm -rf "$BASELINE_REPORT_DIR"
 
 rm -rf "$PRODUCT_ARTIFACTS_DIR"
+
+finish "Rebuilding baseline finished successfully"

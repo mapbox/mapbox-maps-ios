@@ -13,7 +13,7 @@ public enum ViewAnnotationManagerError: Error {
 /// An interface you use to detect when the map view lays out or updates visibility of annotation views.
 ///
 /// When visible portion of a map changes, e.g. responding to the user interaction, the map view adjusts the positions and visibility of its annotation views.
-/// Implement methods of ``ViewAnnotationUpdateObserver``to detect when the map view updates position/size for supplied annotation views.
+/// Implement methods of ``ViewAnnotationUpdateObserver`` to detect when the map view updates position/size for supplied annotation views.
 /// As well as when annotation views get show/hidden when going in/out of visible portion of the map.
 ///
 /// To register an observer for view annotation updates, call the ``ViewAnnotationManager/addViewAnnotationUpdateObserver(_:)`` method.
@@ -28,7 +28,7 @@ public protocol ViewAnnotationUpdateObserver: AnyObject {
 
     /// Tells the observer that the visibility of the annotation views changed.
     ///
-    /// > Note: Use `isHidden` property to determine whether a view is visible or not.
+    /// Use `isHidden` property to determine whether a view is visible or not.
     /// - Parameters:
     ///   - annotationsViews: The annotation vies whose visibility changed.
     func visibilityDidChange(for annotationViews: [UIView])

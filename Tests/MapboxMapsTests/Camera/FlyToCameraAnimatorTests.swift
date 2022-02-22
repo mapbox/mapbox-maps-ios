@@ -83,7 +83,7 @@ final class FlyToCameraAnimatorTests: XCTestCase {
         flyToCameraAnimator.startAnimation()
 
         XCTAssertEqual(flyToCameraAnimator.state, .active)
-        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 1)
+        assertMethodCall(delegate.cameraAnimatorDidStartRunningStub)
         XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.parameters.first === flyToCameraAnimator)
     }
 
@@ -99,7 +99,7 @@ final class FlyToCameraAnimatorTests: XCTestCase {
 
         XCTAssertEqual(flyToCameraAnimator.state, .inactive)
         XCTAssertEqual(animatingPositions, [.end])
-        XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
+        assertMethodCall(delegate.cameraAnimatorDidStopRunningStub)
         XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === flyToCameraAnimator)
     }
 
@@ -114,7 +114,7 @@ final class FlyToCameraAnimatorTests: XCTestCase {
 
         XCTAssertEqual(animatingPositions, [.current])
         XCTAssertEqual(flyToCameraAnimator.state, .inactive)
-        XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
+        assertMethodCall(delegate.cameraAnimatorDidStopRunningStub)
         XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === flyToCameraAnimator)
     }
 

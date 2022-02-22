@@ -36,9 +36,9 @@ final class InterpolatedLocationProducerTests: XCTestCase {
     }
 
     func testInitialization() {
-        XCTAssertEqual(locationProducer.addStub.invocations.count, 1)
+        assertMethodCall(locationProducer.addStub)
         XCTAssertIdentical(locationProducer.addStub.invocations.first?.parameters, interpolatedLocationProducer)
-        XCTAssertEqual(displayLinkCoordinator.addStub.invocations.count, 1)
+        assertMethodCall(displayLinkCoordinator.addStub)
         XCTAssertIdentical(displayLinkCoordinator.addStub.invocations.first?.parameters, interpolatedLocationProducer)
     }
 
@@ -53,7 +53,7 @@ final class InterpolatedLocationProducerTests: XCTestCase {
 
         let cancelable = interpolatedLocationProducer.observe(with: handler.call(with:))
 
-        XCTAssertEqual(observableInterpolatedLocation.observeStub.invocations.count, 1)
+        assertMethodCall(observableInterpolatedLocation.observeStub)
         let returnedCancelable = try XCTUnwrap(observableInterpolatedLocation.observeStub.invocations.first?.returnValue as? MockCancelable)
         let receivedHandler = try XCTUnwrap(observableInterpolatedLocation.observeStub.invocations.first?.parameters)
         let location = InterpolatedLocation.random()
@@ -65,7 +65,7 @@ final class InterpolatedLocationProducerTests: XCTestCase {
 
         cancelable.cancel()
 
-        XCTAssertEqual(returnedCancelable.cancelStub.invocations.count, 1)
+        assertMethodCall(returnedCancelable.cancelStub)
     }
 
     func testParticipateBeforeInitialLocationDelivery() {
@@ -103,7 +103,7 @@ final class InterpolatedLocationProducerTests: XCTestCase {
             dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: timeInterval)
             locationInterpolator.interpolateStub.defaultReturnValue = .random()
             interpolatedLocationProducer.participate()
-            XCTAssertEqual(locationInterpolator.interpolateStub.invocations.count, 1)
+            assertMethodCall(locationInterpolator.interpolateStub)
             let interpolateInvocation = try XCTUnwrap(locationInterpolator.interpolateStub.invocations.first)
             XCTAssertEqual(interpolateInvocation.parameters.fromLocation, interpolatedLocation0)
             XCTAssertEqual(interpolateInvocation.parameters.toLocation, interpolatedLocation1)
@@ -147,7 +147,7 @@ final class InterpolatedLocationProducerTests: XCTestCase {
         interpolatedLocationProducer.locationUpdate(newLocation: location2)
 
         // new start location calculated via interpolation
-        XCTAssertEqual(locationInterpolator.interpolateStub.invocations.count, 1)
+        assertMethodCall(locationInterpolator.interpolateStub)
         let interpolateInvocation = try XCTUnwrap(locationInterpolator.interpolateStub.invocations.first)
         XCTAssertEqual(interpolateInvocation.parameters.fromLocation, interpolatedLocation0)
         XCTAssertEqual(interpolateInvocation.parameters.toLocation, interpolatedLocation1)
@@ -160,7 +160,7 @@ final class InterpolatedLocationProducerTests: XCTestCase {
             dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: timeInterval)
             locationInterpolator.interpolateStub.defaultReturnValue = .random()
             interpolatedLocationProducer.participate()
-            XCTAssertEqual(locationInterpolator.interpolateStub.invocations.count, 1)
+            assertMethodCall(locationInterpolator.interpolateStub)
             let interpolateInvocation = try XCTUnwrap(locationInterpolator.interpolateStub.invocations.first)
             XCTAssertEqual(interpolateInvocation.parameters.fromLocation, newStartLocation)
             XCTAssertEqual(interpolateInvocation.parameters.toLocation, interpolatedLocation2)

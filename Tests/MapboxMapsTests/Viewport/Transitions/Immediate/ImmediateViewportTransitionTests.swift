@@ -24,13 +24,13 @@ final class ImmediateViewportTransitionTests: XCTestCase {
             to: toState,
             completion: { _ in })
 
-        XCTAssertEqual(toState.observeDataSourceStub.invocations.count, 1)
+        assertMethodCall(toState.observeDataSourceStub)
         let observeDataSourceInvocation = try XCTUnwrap(toState.observeDataSourceStub.invocations.first)
         let observeDataSourceCancelable = try XCTUnwrap(observeDataSourceInvocation.returnValue as? MockCancelable)
 
         cancelable.cancel()
 
-        XCTAssertEqual(observeDataSourceCancelable.cancelStub.invocations.count, 1)
+        assertMethodCall(observeDataSourceCancelable.cancelStub)
     }
 
     func testRunCompletion() throws {
@@ -40,7 +40,7 @@ final class ImmediateViewportTransitionTests: XCTestCase {
             to: toState,
             completion: completionStub.call(with:))
 
-        XCTAssertEqual(toState.observeDataSourceStub.invocations.count, 1)
+        assertMethodCall(toState.observeDataSourceStub)
         let observeDataSourceInvocation = try XCTUnwrap(toState.observeDataSourceStub.invocations.first)
         let observeDataSourceHandler = observeDataSourceInvocation.parameters
         let cameraOptions = CameraOptions.random()

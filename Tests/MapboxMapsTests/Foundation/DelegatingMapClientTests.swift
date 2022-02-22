@@ -23,7 +23,7 @@ final class DelegatingMapClientTests: XCTestCase {
     func testScheduleRepaintForwardsToDelegate() {
         delegatingMapClient.scheduleRepaint()
 
-        XCTAssertEqual(delegate.scheduleRepaintStub.invocations.count, 1)
+        assertMethodCall(delegate.scheduleRepaintStub)
     }
 
     func testScheduleTaskForwardsToDelegate() {
@@ -34,7 +34,7 @@ final class DelegatingMapClientTests: XCTestCase {
         }
         delegate.scheduleTaskStub.parameters.first?()
 
-        XCTAssertEqual(delegate.scheduleTaskStub.invocations.count, 1)
+        assertMethodCall(delegate.scheduleTaskStub)
         XCTAssertTrue(invoked)
     }
 
@@ -45,7 +45,7 @@ final class DelegatingMapClientTests: XCTestCase {
 
         let actualView = delegatingMapClient.getMetalView(for: expectedDevice)
 
-        XCTAssertEqual(delegate.getMetalViewStub.invocations.count, 1)
+        assertMethodCall(delegate.getMetalViewStub)
         guard let actualDevice = delegate.getMetalViewStub.parameters.first else {
             return
         }

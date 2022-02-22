@@ -52,7 +52,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         animator.startAnimation()
 
         XCTAssertEqual(animator.state, .active)
-        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 1)
+        assertMethodCall(delegate.cameraAnimatorDidStartRunningStub)
         XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.parameters.first === animator)
     }
 
@@ -63,7 +63,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
 
         XCTAssertEqual(animator.state, .inactive)
         XCTAssertEqual(completion.invocations.count, 1)
-        XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
+        assertMethodCall(delegate.cameraAnimatorDidStopRunningStub)
         XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === animator)
     }
 
@@ -105,7 +105,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         // to be sufficiently low (< 20 in both x and y) to end the animation.
         XCTAssertEqual(animator.state, .inactive)
         XCTAssertEqual(completion.invocations.count, 1)
-        XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
+        assertMethodCall(delegate.cameraAnimatorDidStopRunningStub)
         XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === animator)
     }
 }

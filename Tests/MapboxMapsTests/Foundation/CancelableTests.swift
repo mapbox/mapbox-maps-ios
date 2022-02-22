@@ -8,7 +8,7 @@ final class CancelableTests: XCTestCase {
 
         cancelable.cancel()
 
-        XCTAssertEqual(blockStub.invocations.count, 1)
+        assertMethodCall(blockStub)
         blockStub.reset()
 
         cancelable.cancel()
@@ -27,12 +27,12 @@ final class CancelableTests: XCTestCase {
 
         cancelable.cancel()
 
-        XCTAssertEqual(child1.cancelStub.invocations.count, 1)
-        XCTAssertEqual(child2.cancelStub.invocations.count, 1)
+        assertMethodCall(child1.cancelStub)
+        assertMethodCall(child2.cancelStub)
 
         let child3 = MockCancelable()
         cancelable.add(child3)
-        XCTAssertEqual(child3.cancelStub.invocations.count, 1)
+        assertMethodCall(child3.cancelStub)
 
         child1.cancelStub.reset()
         child2.cancelStub.reset()
@@ -53,6 +53,6 @@ final class CancelableTests: XCTestCase {
 
         container.cancelAll()
 
-        XCTAssertEqual(cancelable.cancelStub.invocations.count, 1)
+        assertMethodCall(cancelable.cancelStub)
     }
 }

@@ -49,7 +49,7 @@ final class DoubleTapToZoomInGestureHandlerTests: XCTestCase {
 
         let tapLocation = try XCTUnwrap(gestureRecognizer.locationStub.returnedValues.first)
         XCTAssertEqual(delegate.gestureBeganStub.parameters, [.doubleTapToZoomIn])
-        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 1)
+        assertMethodCall(cameraAnimationsManager.easeToStub)
         XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.camera, CameraOptions(anchor: tapLocation, zoom: mapboxMap.cameraState.zoom + 1))
         XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.duration, 0.3)
         XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.curve, .easeOut)

@@ -43,7 +43,7 @@ final class CameraAnimationsManagerTests: XCTestCase {
         cameraAnimationsManager.update()
 
         XCTAssertEqual(animator.state, .active)
-        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 1)
+        assertMethodCall(mapboxMap.setCameraStub)
     }
 
     func testUpdateWithAnimationsDisabled() {
@@ -68,12 +68,12 @@ final class CameraAnimationsManagerTests: XCTestCase {
 
         // start once
         cameraAnimationsManager.cameraAnimatorDidStartRunning(animator1)
-        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 1)
+        assertMethodCall(mapboxMap.beginAnimationStub)
         XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 0)
 
         // start twice
         cameraAnimationsManager.cameraAnimatorDidStartRunning(animator1)
-        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 1)
+        assertMethodCall(mapboxMap.beginAnimationStub)
         XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 0)
 
         // start a second
@@ -84,12 +84,12 @@ final class CameraAnimationsManagerTests: XCTestCase {
         // end the first
         cameraAnimationsManager.cameraAnimatorDidStopRunning(animator1)
         XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 2)
-        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 1)
+        assertMethodCall(mapboxMap.endAnimationStub)
 
         // end the first again
         cameraAnimationsManager.cameraAnimatorDidStopRunning(animator1)
         XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 2)
-        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 1)
+        assertMethodCall(mapboxMap.endAnimationStub)
 
         // end the second
         cameraAnimationsManager.cameraAnimatorDidStopRunning(animator2)

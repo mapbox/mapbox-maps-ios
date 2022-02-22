@@ -95,7 +95,7 @@ final class PitchGestureHandlerTests: XCTestCase {
 
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(delegate.gestureEndedStub.invocations.count, 1)
+        assertMethodCall(delegate.gestureEndedStub)
         XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.gestureType, .pitch)
 
         let willAnimate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willAnimate)

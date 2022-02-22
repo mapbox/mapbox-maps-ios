@@ -11,7 +11,7 @@ final class CancelableConatinerTests: XCTestCase {
         container.cancelAll()
 
         for cancelable in cancelables {
-            XCTAssertEqual(cancelable.cancelStub.invocations.count, 1)
+            assertMethodCall(cancelable.cancelStub)
         }
 
         // subsequent invocation only cancels newly-added cancelables
@@ -21,7 +21,7 @@ final class CancelableConatinerTests: XCTestCase {
         container.cancelAll()
 
         for cancelable in cancelables + otherCancelables {
-            XCTAssertEqual(cancelable.cancelStub.invocations.count, 1)
+            assertMethodCall(cancelable.cancelStub)
         }
     }
 
@@ -34,7 +34,7 @@ final class CancelableConatinerTests: XCTestCase {
         }
 
         for cancelable in cancelables {
-            XCTAssertEqual(cancelable.cancelStub.invocations.count, 1)
+            assertMethodCall(cancelable.cancelStub)
         }
     }
 
@@ -50,7 +50,7 @@ final class CancelableConatinerTests: XCTestCase {
 
         container.cancelAll()
 
-        XCTAssertEqual(deinitStub.invocations.count, 1)
+        assertMethodCall(deinitStub)
     }
 
     func testAddingSameCancelableMultipleTimesHasNoEffect() {
@@ -61,6 +61,6 @@ final class CancelableConatinerTests: XCTestCase {
 
         container.cancelAll()
 
-        XCTAssertEqual(cancelable.cancelStub.invocations.count, 1)
+        assertMethodCall(cancelable.cancelStub)
     }
 }

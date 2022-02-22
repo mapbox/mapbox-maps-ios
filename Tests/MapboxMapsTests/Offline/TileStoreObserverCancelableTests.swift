@@ -26,7 +26,7 @@ final class TileStoreObserverCancelableTests: XCTestCase {
     func testCancel() {
         cancelable.cancel()
 
-        XCTAssertEqual(tileStore.__removeObserverStub.invocations.count, 1)
+        assertMethodCall(tileStore.__removeObserverStub)
         XCTAssertTrue(tileStore.__removeObserverStub.parameters.first === observer)
     }
 

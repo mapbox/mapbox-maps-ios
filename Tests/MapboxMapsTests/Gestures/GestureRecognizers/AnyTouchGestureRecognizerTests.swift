@@ -45,7 +45,7 @@ final class AnyTouchGestureRecognizerTests: XCTestCase {
         gestureRecognizer.touchesBegan([touches[0]], with: event)
 
         // the timer is created
-        XCTAssertEqual(timerProvider.makeScheduledTimerStub.invocations.count, 1)
+        assertMethodCall(timerProvider.makeScheduledTimerStub)
         let makeTimerInvocation = try XCTUnwrap(timerProvider.makeScheduledTimerStub.invocations.first)
         XCTAssertEqual(makeTimerInvocation.parameters.timeInterval, minimumPressDuration)
         XCTAssertFalse(makeTimerInvocation.parameters.repeats)
@@ -63,19 +63,19 @@ final class AnyTouchGestureRecognizerTests: XCTestCase {
         gestureRecognizer.touchesBegan([touches[1]], with: event)
 
         // no additional timer is created
-        XCTAssertEqual(timerProvider.makeScheduledTimerStub.invocations.count, 1)
+        assertMethodCall(timerProvider.makeScheduledTimerStub)
 
         // touch 0 is cancelled
         gestureRecognizer.touchesCancelled([touches[0]], with: event)
 
         // no additional timer is created
-        XCTAssertEqual(timerProvider.makeScheduledTimerStub.invocations.count, 1)
+        assertMethodCall(timerProvider.makeScheduledTimerStub)
 
         // touch 1 ends
         gestureRecognizer.touchesEnded([touches[1]], with: event)
 
         // no additional timer is created
-        XCTAssertEqual(timerProvider.makeScheduledTimerStub.invocations.count, 1)
+        assertMethodCall(timerProvider.makeScheduledTimerStub)
         XCTAssertEqual(gestureRecognizer.state, .ended)
 
         // touch 2 begins
@@ -93,7 +93,7 @@ final class AnyTouchGestureRecognizerTests: XCTestCase {
         gestureRecognizer.touchesBegan([touch], with: event)
 
         // the timer is created
-        XCTAssertEqual(timerProvider.makeScheduledTimerStub.invocations.count, 1)
+        assertMethodCall(timerProvider.makeScheduledTimerStub)
         let makeTimerInvocation = try XCTUnwrap(timerProvider.makeScheduledTimerStub.invocations.first)
         XCTAssertEqual(makeTimerInvocation.parameters.timeInterval, minimumPressDuration)
         XCTAssertFalse(makeTimerInvocation.parameters.repeats)
@@ -106,7 +106,7 @@ final class AnyTouchGestureRecognizerTests: XCTestCase {
 
         // the timer is invalidated and the state does not change
         let timer = try XCTUnwrap(makeTimerInvocation.returnValue as? MockTimer)
-        XCTAssertEqual(timer.invalidateStub.invocations.count, 1)
+        assertMethodCall(timer.invalidateStub)
         XCTAssertEqual(gestureRecognizer.state, .possible)
     }
 

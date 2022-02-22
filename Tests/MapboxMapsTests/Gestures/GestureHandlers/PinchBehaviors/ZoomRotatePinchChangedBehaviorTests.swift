@@ -19,7 +19,7 @@ final class ZoomRotatePinchChangedBehaviorTests: BasePinchChangedBehaviorTests {
             pinchScale: pinchScale,
             pinchAngle: initialPinchAngle + (.pi/4))
 
-        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 1)
+        assertMethodCall(mapboxMap.setCameraStub)
 
         let invocation = try XCTUnwrap(mapboxMap.setCameraStub.invocations.first)
         XCTAssertEqual(invocation.parameters.anchor, initialPinchMidpoint)

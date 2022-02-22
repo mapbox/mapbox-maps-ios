@@ -161,7 +161,7 @@ final class PanGestureHandlerTests: XCTestCase {
 
         XCTAssertEqual(delegate.gestureEndedStub.parameters, [.init(gestureType: .pan, willAnimate: true)])
 
-        XCTAssertEqual(cameraAnimationsManager.decelerateStub.invocations.count, 1)
+        assertMethodCall(cameraAnimationsManager.decelerateStub)
         let decelerateParams = cameraAnimationsManager.decelerateStub.parameters.first
         let expectedDecelerateLocation = CGPoint(
             x: endedTouchLocation.x,
@@ -190,7 +190,7 @@ final class PanGestureHandlerTests: XCTestCase {
         let animationEndedCompletion = try XCTUnwrap(decelerateParams?.completion)
         animationEndedCompletion()
 
-        XCTAssertEqual(mapboxMap.dragEndStub.invocations.count, 1)
+        assertMethodCall(mapboxMap.dragEndStub)
         XCTAssertEqual(delegate.animationEndedStub.parameters, [.pan])
     }
 
@@ -229,7 +229,7 @@ final class PanGestureHandlerTests: XCTestCase {
         gestureRecognizer.sendActions()
 
         XCTAssertEqual(cameraAnimationsManager.decelerateStub.invocations.count, 0, "Cancelled pan should not trigger deceleration")
-        XCTAssertEqual(mapboxMap.dragEndStub.invocations.count, 1)
+        assertMethodCall(mapboxMap.dragEndStub)
         XCTAssertEqual(delegate.gestureEndedStub.parameters, [.init(gestureType: .pan, willAnimate: false)])
     }
 
@@ -253,7 +253,7 @@ final class PanGestureHandlerTests: XCTestCase {
         // cleared the initial state for the subsequent gesture
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 1)
+        assertMethodCall(mapboxMap.setCameraStub)
     }
 
     func testGestureDoesNotStartUntilTouchLocationIsBelowHorizon() {
@@ -275,15 +275,15 @@ final class PanGestureHandlerTests: XCTestCase {
         mapboxMap.pointIsAboveHorizonStub.defaultReturnValue = false
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(mapboxMap.dragStartStub.invocations.count, 1)
+        assertMethodCall(mapboxMap.dragStartStub)
         XCTAssertEqual(delegate.gestureBeganStub.invocations.map(\.parameters), [.pan])
         XCTAssertTrue(mapboxMap.dragCameraOptionsStub.invocations.isEmpty)
         XCTAssertTrue(mapboxMap.setCameraStub.invocations.isEmpty)
 
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(mapboxMap.dragCameraOptionsStub.invocations.count, 1)
-        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 1)
+        assertMethodCall(mapboxMap.dragCameraOptionsStub)
+        assertMethodCall(mapboxMap.setCameraStub)
 
         // once gesture starts, locations above the horizon continue to be handled
         mapboxMap.pointIsAboveHorizonStub.defaultReturnValue = true
@@ -296,7 +296,7 @@ final class PanGestureHandlerTests: XCTestCase {
         gestureRecognizer.getStateStub.defaultReturnValue = .ended
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(mapboxMap.dragEndStub.invocations.count, 1)
+        assertMethodCall(mapboxMap.dragEndStub)
         XCTAssertTrue(cameraAnimationsManager.decelerateStub.invocations.isEmpty)
         XCTAssertEqual(delegate.gestureEndedStub.invocations.map(\.parameters), [.init(gestureType: .pan, willAnimate: false)])
     }
@@ -315,7 +315,7 @@ final class PanGestureHandlerTests: XCTestCase {
         gestureRecognizer.sendActions()
 
         XCTAssertTrue(mapboxMap.dragEndStub.invocations.isEmpty)
-        XCTAssertEqual(cameraAnimationsManager.decelerateStub.invocations.count, 1)
+        assertMethodCall(cameraAnimationsManager.decelerateStub)
         XCTAssertEqual(delegate.gestureEndedStub.invocations.map(\.parameters), [.init(gestureType: .pan, willAnimate: true)])
     }
 

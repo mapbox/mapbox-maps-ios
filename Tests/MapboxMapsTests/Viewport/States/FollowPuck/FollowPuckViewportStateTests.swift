@@ -46,7 +46,7 @@ final class FollowPuckViewportStateTest: XCTestCase {
 
         let cancelable = state.observeDataSource(with: handlerStub.call(with:))
 
-        XCTAssertEqual(dataSource.observeStub.invocations.count, 1)
+        assertMethodCall(dataSource.observeStub)
         let dataSourceInvocation = try XCTUnwrap(dataSource.observeStub.invocations.first)
 
         // verify that when the handler passed to the internal data source is invoked
@@ -67,7 +67,7 @@ final class FollowPuckViewportStateTest: XCTestCase {
 
         cancelable.cancel()
 
-        XCTAssertEqual(observeCancelable.cancelStub.invocations.count, 1)
+        assertMethodCall(observeCancelable.cancelStub)
     }
 
     func testStartAndStopUpdatingCamera() throws {
@@ -77,7 +77,7 @@ final class FollowPuckViewportStateTest: XCTestCase {
         state.startUpdatingCamera()
 
         // verify that an observation was created
-        XCTAssertEqual(dataSource.observeStub.invocations.count, 1)
+        assertMethodCall(dataSource.observeStub)
         let dataSourceInvocation = try XCTUnwrap(dataSource.observeStub.invocations.first)
         let observeHandler = dataSourceInvocation.parameters
         let observeCancelable = try XCTUnwrap(dataSourceInvocation.returnValue as? MockCancelable)
@@ -87,7 +87,7 @@ final class FollowPuckViewportStateTest: XCTestCase {
         XCTAssertTrue(observeHandler(cameraOptions0))
 
         // verify that an animation was started
-        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 1)
+        assertMethodCall(cameraAnimationsManager.easeToStub)
         let easeToInvocation = try XCTUnwrap(cameraAnimationsManager.easeToStub.invocations.first)
         XCTAssertEqual(easeToInvocation.parameters.camera, cameraOptions0)
         XCTAssertEqual(easeToInvocation.parameters.duration, state.options.animationDuration)
@@ -126,8 +126,8 @@ final class FollowPuckViewportStateTest: XCTestCase {
         state.stopUpdatingCamera()
 
         // verify that the observe cancelable and animation cancelable are both canceled
-        XCTAssertEqual(observeCancelable.cancelStub.invocations.count, 1)
-        XCTAssertEqual(easeToCancelable.cancelStub.invocations.count, 1)
+        assertMethodCall(observeCancelable.cancelStub)
+        assertMethodCall(easeToCancelable.cancelStub)
     }
 
     func testStartUpdatingMultipleTimesDoesNothing() {
@@ -135,7 +135,7 @@ final class FollowPuckViewportStateTest: XCTestCase {
         state.startUpdatingCamera()
 
         // only one observation is created
-        XCTAssertEqual(dataSource.observeStub.invocations.count, 1)
+        assertMethodCall(dataSource.observeStub)
     }
 
     func testRestartingUpdates() {
@@ -147,6 +147,6 @@ final class FollowPuckViewportStateTest: XCTestCase {
         state.startUpdatingCamera()
 
         // a new observation is created
-        XCTAssertEqual(dataSource.observeStub.invocations.count, 1)
+        assertMethodCall(dataSource.observeStub)
     }
 }

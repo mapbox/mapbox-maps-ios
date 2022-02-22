@@ -72,14 +72,14 @@ final class Puck2DTests: XCTestCase {
     func testActivatingPuckAddsLocationConsumer() throws {
         puck2D.isActive = true
 
-        XCTAssertEqual(interpolatedLocationProducer.observeStub.invocations.count, 1)
+        assertMethodCall(interpolatedLocationProducer.observeStub)
         let cancelable = try XCTUnwrap(interpolatedLocationProducer.observeStub.invocations.first?.returnValue as? MockCancelable)
         XCTAssertEqual(cancelable.cancelStub.invocations.count, 0)
 
         // activating again should have no effect
         puck2D.isActive = true
 
-        XCTAssertEqual(interpolatedLocationProducer.observeStub.invocations.count, 1)
+        assertMethodCall(interpolatedLocationProducer.observeStub)
         XCTAssertEqual(cancelable.cancelStub.invocations.count, 0)
     }
 
@@ -91,13 +91,13 @@ final class Puck2DTests: XCTestCase {
         puck2D.isActive = false
 
         XCTAssertEqual(interpolatedLocationProducer.observeStub.invocations.count, 0)
-        XCTAssertEqual(cancelable.cancelStub.invocations.count, 1)
+        assertMethodCall(cancelable.cancelStub)
 
         // deactivating again should have no effect
         puck2D.isActive = false
 
         XCTAssertEqual(interpolatedLocationProducer.observeStub.invocations.count, 0)
-        XCTAssertEqual(cancelable.cancelStub.invocations.count, 1)
+        assertMethodCall(cancelable.cancelStub)
     }
 
     func testLayerAndImagesAreNotAddedAtInitialization() {
@@ -217,7 +217,7 @@ final class Puck2DTests: XCTestCase {
 
         let expectedProperties = makeExpectedLayerProperties(with: location)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 1)
+        assertMethodCall(style.addPersistentLayerWithPropertiesStub)
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.parameters.first?.layerPosition, nil)
@@ -235,7 +235,7 @@ final class Puck2DTests: XCTestCase {
 
         let expectedProperties = makeExpectedLayerProperties(with: location)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 1)
+        assertMethodCall(style.addPersistentLayerWithPropertiesStub)
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.parameters.first?.layerPosition, nil)
@@ -441,7 +441,7 @@ final class Puck2DTests: XCTestCase {
         for key in originalKeys where expectedProperties[key] == nil {
             expectedProperties[key] = Style.layerPropertyDefaultValue(for: .locationIndicator, property: key).value
         }
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        assertMethodCall(style.setLayerPropertiesStub)
         let actualProperties = try XCTUnwrap(style.setLayerPropertiesStub.parameters.first?.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
@@ -463,7 +463,7 @@ final class Puck2DTests: XCTestCase {
 
         puck2D.puckBearingSource = [.heading, .course].randomElement()!
 
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        assertMethodCall(style.setLayerPropertiesStub)
     }
 
     func testLocationUpdateWhenActive() {
@@ -473,7 +473,7 @@ final class Puck2DTests: XCTestCase {
 
         updateLocation()
 
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        assertMethodCall(style.setLayerPropertiesStub)
     }
 
     func testFastPathFullAccuracyWithAccuracyRingNilHeading() throws {
@@ -494,7 +494,7 @@ final class Puck2DTests: XCTestCase {
             .bearing: 0
         ]
 
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        assertMethodCall(style.setLayerPropertiesStub)
         let invocation = try XCTUnwrap(style.setLayerPropertiesStub.invocations.first)
         XCTAssertEqual(invocation.parameters.layerId, "puck")
         XCTAssertEqual(invocation.parameters.properties as NSDictionary,
@@ -518,7 +518,7 @@ final class Puck2DTests: XCTestCase {
             .bearing: 0
         ]
 
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        assertMethodCall(style.setLayerPropertiesStub)
         let invocation = try XCTUnwrap(style.setLayerPropertiesStub.invocations.first)
         XCTAssertEqual(invocation.parameters.layerId, "puck")
         XCTAssertEqual(invocation.parameters.properties as NSDictionary,
@@ -543,7 +543,7 @@ final class Puck2DTests: XCTestCase {
             .bearing: heading
         ]
 
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        assertMethodCall(style.setLayerPropertiesStub)
         let invocation = try XCTUnwrap(style.setLayerPropertiesStub.invocations.first)
         XCTAssertEqual(invocation.parameters.layerId, "puck")
         XCTAssertEqual(invocation.parameters.properties as NSDictionary,
@@ -567,7 +567,7 @@ final class Puck2DTests: XCTestCase {
             .bearing: newLocation.course!
         ]
 
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        assertMethodCall(style.setLayerPropertiesStub)
         let invocation = try XCTUnwrap(style.setLayerPropertiesStub.invocations.first)
         XCTAssertEqual(invocation.parameters.layerId, "puck")
         XCTAssertEqual(invocation.parameters.properties as NSDictionary,
@@ -587,7 +587,7 @@ final class Puck2DTests: XCTestCase {
                 newLocation.altitude]
         ]
 
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
+        assertMethodCall(style.setLayerPropertiesStub)
         let invocation = try XCTUnwrap(style.setLayerPropertiesStub.invocations.first)
         XCTAssertEqual(invocation.parameters.layerId, "puck")
         XCTAssertEqual(invocation.parameters.properties as NSDictionary,

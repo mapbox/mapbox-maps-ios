@@ -44,14 +44,14 @@ final class Puck3DTests: XCTestCase {
     func testActivatingPuckAddsLocationConsumer() throws {
         puck3D.isActive = true
 
-        XCTAssertEqual(interpolatedLocationProducer.observeStub.invocations.count, 1)
+        assertMethodCall(interpolatedLocationProducer.observeStub)
         let cancelable = try XCTUnwrap(interpolatedLocationProducer.observeStub.invocations.first?.returnValue as? MockCancelable)
         XCTAssertEqual(cancelable.cancelStub.invocations.count, 0)
 
         // activating again should have no effect
         puck3D.isActive = true
 
-        XCTAssertEqual(interpolatedLocationProducer.observeStub.invocations.count, 1)
+        assertMethodCall(interpolatedLocationProducer.observeStub)
         XCTAssertEqual(cancelable.cancelStub.invocations.count, 0)
     }
 
@@ -63,13 +63,13 @@ final class Puck3DTests: XCTestCase {
         puck3D.isActive = false
 
         XCTAssertEqual(interpolatedLocationProducer.observeStub.invocations.count, 0)
-        XCTAssertEqual(cancelable.cancelStub.invocations.count, 1)
+        assertMethodCall(cancelable.cancelStub)
 
         // deactivating again should have no effect
         puck3D.isActive = false
 
         XCTAssertEqual(interpolatedLocationProducer.observeStub.invocations.count, 0)
-        XCTAssertEqual(cancelable.cancelStub.invocations.count, 1)
+        assertMethodCall(cancelable.cancelStub)
     }
 
     func testSourceAndLayerAreNotAddedAtInitialization() {
@@ -102,14 +102,14 @@ final class Puck3DTests: XCTestCase {
         var expectedModel = configuration.model
         expectedModel.position = [coordinate.longitude, coordinate.latitude]
         expectedModel.orientation = [0, 0, 0]
-        XCTAssertEqual(style.addSourceStub.invocations.count, 1)
+        assertMethodCall(style.addSourceStub)
         let actualSource = try XCTUnwrap(style.addSourceStub.parameters.first?.source as? ModelSource)
         XCTAssertEqual(actualSource.type, .model)
         XCTAssertEqual(actualSource.models, ["puck-model": expectedModel])
         XCTAssertEqual(style.addSourceStub.parameters.first?.id, "puck-model-source")
 
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 1)
+        assertMethodCall(style.addPersistentLayerStub)
         let actualLayer = try XCTUnwrap(style.addPersistentLayerStub.parameters.first?.layer as? ModelLayer)
         XCTAssertEqual(actualLayer.id, "puck-model-layer")
         XCTAssertEqual(actualLayer.paint?.modelLayerType, .constant(.locationIndicator))
@@ -228,7 +228,7 @@ final class Puck3DTests: XCTestCase {
         var expectedSource = ModelSource()
         expectedSource.models = ["puck-model": expectedModel]
         XCTAssertEqual(style.addSourceStub.invocations.count, 0)
-        XCTAssertEqual(style.setSourcePropertiesStub.invocations.count, 1)
+        assertMethodCall(style.setSourcePropertiesStub)
         let actualProperties = try XCTUnwrap(style.setSourcePropertiesStub.parameters.first?.properties)
         let expectedProperties = try expectedSource.jsonObject()
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
@@ -264,7 +264,7 @@ final class Puck3DTests: XCTestCase {
         puck3D.puckBearingSource = [.heading, .course].randomElement()!
 
         XCTAssertEqual(style.addSourceStub.invocations.count, 0)
-        XCTAssertEqual(style.setSourcePropertiesStub.invocations.count, 1)
+        assertMethodCall(style.setSourcePropertiesStub)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
     }
@@ -283,7 +283,7 @@ final class Puck3DTests: XCTestCase {
 
         XCTAssertTrue(wantsMoreUpdates)
         XCTAssertEqual(style.addSourceStub.invocations.count, 0)
-        XCTAssertEqual(style.setSourcePropertiesStub.invocations.count, 1)
+        assertMethodCall(style.setSourcePropertiesStub)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
     }

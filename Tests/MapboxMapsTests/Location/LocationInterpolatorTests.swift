@@ -41,7 +41,7 @@ final class LocationInterpolatorTests: XCTestCase {
     }
 
     func verifyCommonCases(withResult result: InterpolatedLocation) {
-        XCTAssertEqual(latitudeInterpolator.interpolateStub.invocations.count, 1)
+        assertMethodCall(latitudeInterpolator.interpolateStub)
         XCTAssertEqual(interpolator.interpolateStub.invocations.count, 3)
 
         guard latitudeInterpolator.interpolateStub.invocations.count == 1,

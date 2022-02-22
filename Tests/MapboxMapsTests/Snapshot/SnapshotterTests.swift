@@ -24,7 +24,7 @@ final class SnapshotterTests: XCTestCase {
     }
 
     func testInitializationMapboxObservable() {
-        XCTAssertEqual(mapboxObservableProviderStub.invocations.count, 1)
+        assertMethodCall(mapboxObservableProviderStub)
         XCTAssertIdentical(mapboxObservableProviderStub.invocations.first?.parameters, snapshotter.mapSnapshotter)
     }
 
@@ -35,7 +35,7 @@ final class SnapshotterTests: XCTestCase {
 
         snapshotter.subscribe(observer, events: events)
 
-        XCTAssertEqual(mapboxObservable.subscribeStub.invocations.count, 1)
+        assertMethodCall(mapboxObservable.subscribeStub)
         XCTAssertIdentical(mapboxObservable.subscribeStub.invocations.first?.parameters.observer, observer)
         XCTAssertEqual(mapboxObservable.subscribeStub.invocations.first?.parameters.events, events)
     }
@@ -47,7 +47,7 @@ final class SnapshotterTests: XCTestCase {
 
         snapshotter.unsubscribe(observer, events: events)
 
-        XCTAssertEqual(mapboxObservable.unsubscribeStub.invocations.count, 1)
+        assertMethodCall(mapboxObservable.unsubscribeStub)
         XCTAssertIdentical(mapboxObservable.unsubscribeStub.invocations.first?.parameters.observer, observer)
         XCTAssertEqual(mapboxObservable.unsubscribeStub.invocations.first?.parameters.events, events)
     }
@@ -59,7 +59,7 @@ final class SnapshotterTests: XCTestCase {
 
         snapshotter.onNext(eventType, handler: handlerStub.call(with:))
 
-        XCTAssertEqual(mapboxObservable.onNextStub.invocations.count, 1)
+        assertMethodCall(mapboxObservable.onNextStub)
         XCTAssertEqual(mapboxObservable.onNextStub.invocations.first?.parameters.eventTypes, [eventType])
         // To verify that the handler passed to Snapshotter is effectively the same as the one received by MapboxObservable,
         // we exercise the received handler and verify that the passed one is invoked. If blocks were identifiable, maybe
@@ -67,7 +67,7 @@ final class SnapshotterTests: XCTestCase {
         let handler = try XCTUnwrap(mapboxObservable.onNextStub.invocations.first?.parameters.handler)
         let event = Event(type: "", data: 0)
         handler(event)
-        XCTAssertEqual(handlerStub.invocations.count, 1)
+        assertMethodCall(handlerStub)
         XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
     }
 
@@ -78,7 +78,7 @@ final class SnapshotterTests: XCTestCase {
 
         snapshotter.onEvery(eventType, handler: handlerStub.call(with:))
 
-        XCTAssertEqual(mapboxObservable.onEveryStub.invocations.count, 1)
+        assertMethodCall(mapboxObservable.onEveryStub)
         XCTAssertEqual(mapboxObservable.onEveryStub.invocations.first?.parameters.eventTypes, [eventType])
         // To verify that the handler passed to Snapshotter is effectively the same as the one received by MapboxObservable,
         // we exercise the received handler and verify that the passed one is invoked. If blocks were identifiable, maybe
@@ -86,7 +86,7 @@ final class SnapshotterTests: XCTestCase {
         let handler = try XCTUnwrap(mapboxObservable.onEveryStub.invocations.first?.parameters.handler)
         let event = Event(type: "", data: 0)
         handler(event)
-        XCTAssertEqual(handlerStub.invocations.count, 1)
+        assertMethodCall(handlerStub)
         XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
     }
 

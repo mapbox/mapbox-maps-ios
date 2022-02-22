@@ -63,8 +63,8 @@ final class MapViewTests: XCTestCase {
 
     func testDisplayLinkManagement() throws {
         do {
-            XCTAssertEqual(dependencyProvider.makeDisplayLinkStub.invocations.count, 1)
-            XCTAssertEqual(displayLink.addStub.invocations.count, 1)
+            assertMethodCall(dependencyProvider.makeDisplayLinkStub)
+            assertMethodCall(displayLink.addStub)
             XCTAssertEqual(displayLink.addStub.parameters.first?.runloop, .current)
             XCTAssertEqual(displayLink.addStub.parameters.first?.mode, .common)
         }
@@ -72,7 +72,7 @@ final class MapViewTests: XCTestCase {
         do {
             mapView.removeFromSuperview()
             let displayLink = try XCTUnwrap(dependencyProvider.makeDisplayLinkStub.returnedValues.first)
-            XCTAssertEqual(displayLink?.invalidateStub.invocations.count, 1)
+            assertMethodCall(displayLink?.invalidateStub)
         }
     }
 
@@ -141,7 +141,7 @@ final class MapViewTests: XCTestCase {
 
         try invokeDisplayLinkCallback()
 
-        XCTAssertEqual(metalView.setNeedsDisplayStub.invocations.count, 1)
+        assertMethodCall(metalView.setNeedsDisplayStub)
     }
 
     func testMetalViewDoesFitMapView() {
@@ -165,7 +165,7 @@ final class MapViewTests: XCTestCase {
 
         try invokeDisplayLinkCallback()
 
-        XCTAssertEqual(participant1.participateStub.invocations.count, 1)
+        assertMethodCall(participant1.participateStub)
         XCTAssertEqual(participant2.participateStub.invocations.count, 0)
 
         mapView.add(participant2)
@@ -173,21 +173,21 @@ final class MapViewTests: XCTestCase {
         try invokeDisplayLinkCallback()
 
         XCTAssertEqual(participant1.participateStub.invocations.count, 2)
-        XCTAssertEqual(participant2.participateStub.invocations.count, 1)
+        assertMethodCall(participant2.participateStub)
 
         mapView.remove(participant2)
 
         try invokeDisplayLinkCallback()
 
         XCTAssertEqual(participant1.participateStub.invocations.count, 3)
-        XCTAssertEqual(participant2.participateStub.invocations.count, 1)
+        assertMethodCall(participant2.participateStub)
 
         mapView.remove(participant1)
 
         try invokeDisplayLinkCallback()
 
         XCTAssertEqual(participant1.participateStub.invocations.count, 3)
-        XCTAssertEqual(participant2.participateStub.invocations.count, 1)
+        assertMethodCall(participant2.participateStub)
     }
 
     func testAppLifecycleNotificationSubscribedWhenDidMoveToNewWindow() {

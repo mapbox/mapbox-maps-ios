@@ -52,7 +52,7 @@ final class PanZoomPinchChangedBehaviorTests: BasePinchChangedBehaviorTests {
             dragCameraOptions)
 
         // verify that dragEnd is invoked once
-        XCTAssertEqual(mapboxMap.dragEndStub.invocations.count, 1)
+        assertMethodCall(mapboxMap.dragEndStub)
 
         // verify that setCamera is invoked a third time with the expected
         // anchor and zoom

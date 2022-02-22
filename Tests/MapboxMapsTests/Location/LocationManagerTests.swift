@@ -84,7 +84,7 @@ final class LocationManagerTests: XCTestCase {
 
         locationManager.options = LocationOptions()
 
-        XCTAssertEqual(locationProducer.didSetLocationProviderStub.invocations.count, 1)
+        assertMethodCall(locationProducer.didSetLocationProviderStub)
     }
 
     func testOverrideLocationProvider() {
@@ -105,7 +105,7 @@ final class LocationManagerTests: XCTestCase {
 
         locationManager.addLocationConsumer(newConsumer: consumer)
 
-        XCTAssertEqual(locationProducer.addStub.invocations.count, 1)
+        assertMethodCall(locationProducer.addStub)
         XCTAssertTrue(locationProducer.addStub.parameters.first === consumer)
     }
 
@@ -114,7 +114,7 @@ final class LocationManagerTests: XCTestCase {
 
         locationManager.removeLocationConsumer(consumer: consumer)
 
-        XCTAssertEqual(locationProducer.removeStub.invocations.count, 1)
+        assertMethodCall(locationProducer.removeStub)
         XCTAssertTrue(locationProducer.removeStub.parameters.first === consumer)
     }
 
@@ -135,7 +135,7 @@ final class LocationManagerTests: XCTestCase {
 
         locationManager.locationProducer(locationProducer, didFailWithError: error)
 
-        XCTAssertEqual(delegate.didFailToLocateUserWithErrorStub.invocations.count, 1)
+        assertMethodCall(delegate.didFailToLocateUserWithErrorStub)
         XCTAssertTrue(delegate.didFailToLocateUserWithErrorStub.parameters.first?.locationManager === locationManager)
         XCTAssertTrue(delegate.didFailToLocateUserWithErrorStub.parameters.first?.error as? MockError === error)
     }
@@ -147,7 +147,7 @@ final class LocationManagerTests: XCTestCase {
 
         locationManager.locationProducer(locationProducer, didChangeAccuracyAuthorization: accuracyAuthorization)
 
-        XCTAssertEqual(delegate.didChangeAccuracyAuthorizationStub.invocations.count, 1)
+        assertMethodCall(delegate.didChangeAccuracyAuthorizationStub)
         XCTAssertTrue(delegate.didChangeAccuracyAuthorizationStub.parameters.first?.locationManager === locationManager)
         XCTAssertEqual(delegate.didChangeAccuracyAuthorizationStub.parameters.first?.accuracyAuthorization, accuracyAuthorization)
     }

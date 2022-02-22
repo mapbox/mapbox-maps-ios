@@ -78,7 +78,7 @@ final class FollowPuckViewportStateDataSourceTests: XCTestCase {
 
         let cancelable = dataSource.observe(with: handlerStub.call(with:))
 
-        XCTAssertEqual(observableCameraOptions.observeStub.invocations.count, 1)
+        assertMethodCall(observableCameraOptions.observeStub)
         let observeInvocation = try XCTUnwrap(observableCameraOptions.observeStub.invocations.first)
 
         // verify that when the handler passed to the internal observable is invoked
@@ -99,7 +99,7 @@ final class FollowPuckViewportStateDataSourceTests: XCTestCase {
 
         cancelable.cancel()
 
-        XCTAssertEqual(observeCancelable.cancelStub.invocations.count, 1)
+        assertMethodCall(observeCancelable.cancelStub)
     }
 
     func testLocationUpdateNotifiesObservers() throws {

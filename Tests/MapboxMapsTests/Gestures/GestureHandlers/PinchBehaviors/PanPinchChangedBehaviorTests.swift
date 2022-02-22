@@ -48,6 +48,6 @@ final class PanPinchChangedBehaviorTests: BasePinchChangedBehaviorTests {
             dragCameraOptions)
 
         // verify drag end is invoked once
-        XCTAssertEqual(mapboxMap.dragEndStub.invocations.count, 1)
+        assertMethodCall(mapboxMap.dragEndStub)
     }
 }

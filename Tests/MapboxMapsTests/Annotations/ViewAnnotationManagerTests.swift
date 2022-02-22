@@ -26,7 +26,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         let geometry = Point(CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0))
         let options = ViewAnnotationOptions(geometry: geometry, width: 0.0, height: 0.0)
         try? manager.add(testView, options: options)
-        XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.count, 1)
+        assertMethodCall(mapboxMap.addViewAnnotationStub)
         XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.last?.parameters, .init(id: "0", options: options))
         XCTAssertEqual(testView.superview, container)
         XCTAssertEqual(container.subviews.count, 1)
@@ -66,7 +66,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         let expectedId = mapboxMap.addViewAnnotationStub.invocations.last!.parameters.id
         XCTAssertEqual(container.subviews.count, 1)
         manager.remove(annotationView)
-        XCTAssertEqual(mapboxMap.removeViewAnnotationStub.invocations.count, 1)
+        assertMethodCall(mapboxMap.removeViewAnnotationStub)
         XCTAssertEqual(mapboxMap.removeViewAnnotationStub.invocations.first?.parameters, expectedId)
         XCTAssertEqual(container.subviews.count, 0)
     }
@@ -118,7 +118,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertEqual(mapboxMap.updateViewAnnotationStub.invocations.count, 0)
         let options = ViewAnnotationOptions(width: 10.0, allowOverlap: false, anchor: .bottomRight)
         XCTAssertNoThrow(try manager.update(annotationView, options: options))
-        XCTAssertEqual(mapboxMap.updateViewAnnotationStub.invocations.count, 1)
+        assertMethodCall(mapboxMap.updateViewAnnotationStub)
         XCTAssertEqual(mapboxMap.updateViewAnnotationStub.invocations.first?.parameters.options, options)
 
         // Trying to update the view after removal should throw

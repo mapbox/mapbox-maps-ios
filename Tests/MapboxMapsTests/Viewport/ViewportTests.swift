@@ -67,7 +67,7 @@ final class ViewportTests: XCTestCase {
     func testIdle() {
         viewport.idle()
 
-        XCTAssertEqual(impl.idleStub.invocations.count, 1)
+        assertMethodCall(impl.idleStub)
     }
 
     func testTransition() throws {
@@ -80,7 +80,7 @@ final class ViewportTests: XCTestCase {
             transition: transition,
             completion: completionStub.call(with:))
 
-        XCTAssertEqual(impl.transitionStub.invocations.count, 1)
+        assertMethodCall(impl.transitionStub)
         let implInvocation = try XCTUnwrap(impl.transitionStub.invocations.first)
         XCTAssertTrue(implInvocation.parameters.toState === toState)
         XCTAssertTrue(implInvocation.parameters.transition === transition)
@@ -94,7 +94,7 @@ final class ViewportTests: XCTestCase {
 
         viewport.transition(to: toState, transition: nil, completion: nil)
 
-        XCTAssertEqual(impl.transitionStub.invocations.count, 1)
+        assertMethodCall(impl.transitionStub)
         let implInvocation = try XCTUnwrap(impl.transitionStub.invocations.first)
         XCTAssertTrue(implInvocation.parameters.toState === toState)
         XCTAssertNil(implInvocation.parameters.transition)
@@ -106,7 +106,7 @@ final class ViewportTests: XCTestCase {
 
         viewport.transition(to: toState)
 
-        XCTAssertEqual(impl.transitionStub.invocations.count, 1)
+        assertMethodCall(impl.transitionStub)
         let implInvocation = try XCTUnwrap(impl.transitionStub.invocations.first)
         XCTAssertTrue(implInvocation.parameters.toState === toState)
         XCTAssertNil(implInvocation.parameters.transition)

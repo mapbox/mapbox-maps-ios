@@ -31,7 +31,7 @@ final class DefaultViewportTransitionTests: XCTestCase {
             to: toState,
             completion: completionStub.call(with:))
 
-        XCTAssertEqual(toState.observeDataSourceStub.invocations.count, 1)
+        assertMethodCall(toState.observeDataSourceStub)
         let observeInvocation = try XCTUnwrap(toState.observeDataSourceStub.invocations.first)
         let observeHandler = observeInvocation.parameters
 
@@ -42,7 +42,7 @@ final class DefaultViewportTransitionTests: XCTestCase {
         XCTAssertFalse(result)
 
         // verify that animate was invoked as expected
-        XCTAssertEqual(animationHelper.animateStub.invocations.count, 1)
+        assertMethodCall(animationHelper.animateStub)
         let animateInvocation = try XCTUnwrap(animationHelper.animateStub.invocations.first)
         XCTAssertEqual(animateInvocation.parameters.cameraOptions, cameraOptions)
         XCTAssertEqual(animateInvocation.parameters.maxDuration, options.maxDuration)
@@ -63,7 +63,7 @@ final class DefaultViewportTransitionTests: XCTestCase {
             to: toState,
             completion: completionStub.call(with:))
 
-        XCTAssertEqual(toState.observeDataSourceStub.invocations.count, 1)
+        assertMethodCall(toState.observeDataSourceStub)
         let observeInvocation = try XCTUnwrap(toState.observeDataSourceStub.invocations.first)
         let observeHandler = observeInvocation.parameters
 
@@ -74,7 +74,7 @@ final class DefaultViewportTransitionTests: XCTestCase {
         XCTAssertFalse(result)
 
         // verify that animate was invoked as expected
-        XCTAssertEqual(animationHelper.animateStub.invocations.count, 1)
+        assertMethodCall(animationHelper.animateStub)
         let animateInvocation = try XCTUnwrap(animationHelper.animateStub.invocations.first)
         XCTAssertEqual(animateInvocation.parameters.cameraOptions, cameraOptions)
         XCTAssertEqual(animateInvocation.parameters.maxDuration, options.maxDuration)
@@ -94,7 +94,7 @@ final class DefaultViewportTransitionTests: XCTestCase {
             to: toState,
             completion: { _ in })
 
-        XCTAssertEqual(toState.observeDataSourceStub.invocations.count, 1)
+        assertMethodCall(toState.observeDataSourceStub)
         let observeInvocation = try XCTUnwrap(toState.observeDataSourceStub.invocations.first)
         let observeHandler = observeInvocation.parameters
         let observeCancelable = try XCTUnwrap(observeInvocation.returnValue as? MockCancelable)
@@ -106,7 +106,7 @@ final class DefaultViewportTransitionTests: XCTestCase {
         XCTAssertFalse(result)
 
         // verify that animate was invoked as expected
-        XCTAssertEqual(animationHelper.animateStub.invocations.count, 1)
+        assertMethodCall(animationHelper.animateStub)
         let animateInvocation = try XCTUnwrap(animationHelper.animateStub.invocations.first)
         XCTAssertEqual(animateInvocation.parameters.cameraOptions, cameraOptions)
         XCTAssertEqual(animateInvocation.parameters.maxDuration, options.maxDuration)
@@ -115,8 +115,8 @@ final class DefaultViewportTransitionTests: XCTestCase {
 
         cancelable.cancel()
 
-        XCTAssertEqual(observeCancelable.cancelStub.invocations.count, 1)
-        XCTAssertEqual(animateCancelable.cancelStub.invocations.count, 1)
+        assertMethodCall(observeCancelable.cancelStub)
+        assertMethodCall(animateCancelable.cancelStub)
     }
 
     func testRunAndCancelBeforeAnimationStarts() throws {
@@ -126,12 +126,12 @@ final class DefaultViewportTransitionTests: XCTestCase {
             to: toState,
             completion: { _ in })
 
-        XCTAssertEqual(toState.observeDataSourceStub.invocations.count, 1)
+        assertMethodCall(toState.observeDataSourceStub)
         let observeInvocation = try XCTUnwrap(toState.observeDataSourceStub.invocations.first)
         let observeCancelable = try XCTUnwrap(observeInvocation.returnValue as? MockCancelable)
 
         cancelable.cancel()
 
-        XCTAssertEqual(observeCancelable.cancelStub.invocations.count, 1)
+        assertMethodCall(observeCancelable.cancelStub)
     }
 }

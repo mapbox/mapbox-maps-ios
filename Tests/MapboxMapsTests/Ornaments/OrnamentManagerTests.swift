@@ -98,8 +98,8 @@ final class OrnamentManagerTests: XCTestCase {
             }
         }
 
-        XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1)
-        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 1)
+        assertMethodCall(cameraAnimationsManager.cancelAnimationsStub)
+        assertMethodCall(cameraAnimationsManager.easeToStub)
         XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.camera, CameraOptions(bearing: 0))
         XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.duration, 0.3)
         XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.curve, .easeOut)
@@ -109,7 +109,7 @@ final class OrnamentManagerTests: XCTestCase {
     func testUpdateMapBearing() throws {
         let compass = try XCTUnwrap(view.subviews.compactMap { $0 as? MapboxCompassOrnamentView }.first)
 
-        XCTAssertEqual(mapboxMap.onEveryStub.invocations.count, 1)
+        assertMethodCall(mapboxMap.onEveryStub)
         XCTAssertEqual(mapboxMap.onEveryStub.parameters.first?.eventType, .cameraChanged)
         let onEveryCameraChangeHandler = try XCTUnwrap(mapboxMap.onEveryStub.parameters.first?.handler)
 

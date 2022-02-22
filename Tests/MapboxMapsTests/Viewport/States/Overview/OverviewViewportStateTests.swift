@@ -28,7 +28,7 @@ final class OverviewViewportStateTest: XCTestCase {
     }
 
     func verifyEaseTo(with expectedCamera: CameraOptions) throws -> MockCancelable {
-        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 1)
+        assertMethodCall(cameraAnimationsManager.easeToStub)
         let easeToInvocation = try XCTUnwrap(cameraAnimationsManager.easeToStub.invocations.first)
         XCTAssertEqual(easeToInvocation.parameters.camera, expectedCamera)
         XCTAssertEqual(easeToInvocation.parameters.duration,
@@ -39,7 +39,7 @@ final class OverviewViewportStateTest: XCTestCase {
     }
 
     func verifyCameraOptionsUpdate(with options: OverviewViewportStateOptions) throws {
-        XCTAssertEqual(mapboxMap.cameraForGeometryStub.invocations.count, 1)
+        assertMethodCall(mapboxMap.cameraForGeometryStub)
         let cameraForInvocation = try XCTUnwrap(mapboxMap.cameraForGeometryStub.invocations.first)
         XCTAssertEqual(cameraForInvocation.parameters.geometry, options.geometry)
         XCTAssertEqual(cameraForInvocation.parameters.padding, options.padding)
@@ -68,7 +68,7 @@ final class OverviewViewportStateTest: XCTestCase {
 
         let cancelable = state.observeDataSource(with: handlerStub.call(with:))
 
-        XCTAssertEqual(observableCameraOptions.observeStub.invocations.count, 1)
+        assertMethodCall(observableCameraOptions.observeStub)
         let observableCameraOptionsInvocation = try XCTUnwrap(observableCameraOptions.observeStub.invocations.first)
 
         // verify that when the handler passed to the internal observableCameraOptions is invoked
@@ -89,7 +89,7 @@ final class OverviewViewportStateTest: XCTestCase {
 
         cancelable.cancel()
 
-        XCTAssertEqual(observeCancelable.cancelStub.invocations.count, 1)
+        assertMethodCall(observeCancelable.cancelStub)
     }
 
     func testStartAndStopUpdatingCamera() throws {
@@ -97,7 +97,7 @@ final class OverviewViewportStateTest: XCTestCase {
         state.startUpdatingCamera()
 
         // verify that an observation was created
-        XCTAssertEqual(observableCameraOptions.observeStub.invocations.count, 1)
+        assertMethodCall(observableCameraOptions.observeStub)
         let observableCameraOptionsInvocation = try XCTUnwrap(observableCameraOptions.observeStub.invocations.first)
         let observeHandler = observableCameraOptionsInvocation.parameters
         let observeCancelable = try XCTUnwrap(observableCameraOptionsInvocation.returnValue as? MockCancelable)
@@ -114,8 +114,8 @@ final class OverviewViewportStateTest: XCTestCase {
         state.stopUpdatingCamera()
 
         // verify that the animation and observe cancelables are both canceled
-        XCTAssertEqual(easeToCancelable.cancelStub.invocations.count, 1)
-        XCTAssertEqual(observeCancelable.cancelStub.invocations.count, 1)
+        assertMethodCall(easeToCancelable.cancelStub)
+        assertMethodCall(observeCancelable.cancelStub)
     }
 
     func testStartUpdatingMultipleTimesDoesNothing() {
@@ -123,7 +123,7 @@ final class OverviewViewportStateTest: XCTestCase {
         state.startUpdatingCamera()
 
         // only one observation is created
-        XCTAssertEqual(observableCameraOptions.observeStub.invocations.count, 1)
+        assertMethodCall(observableCameraOptions.observeStub)
     }
 
     func testRestartingUpdates() {
@@ -135,6 +135,6 @@ final class OverviewViewportStateTest: XCTestCase {
         state.startUpdatingCamera()
 
         // a new observation is created
-        XCTAssertEqual(observableCameraOptions.observeStub.invocations.count, 1)
+        assertMethodCall(observableCameraOptions.observeStub)
     }
 }

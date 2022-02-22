@@ -33,7 +33,7 @@ final class TileStoreObserverWrapperTests: XCTestCase {
 
         wrapper.onRegionLoadProgress(forId: id, progress: progress)
 
-        XCTAssertEqual(observer.onRegionLoadProgressStub.invocations.count, 1)
+        assertMethodCall(observer.onRegionLoadProgressStub)
         XCTAssertEqual(observer.onRegionLoadProgressStub.parameters.first?.id, id)
         XCTAssertTrue(observer.onRegionLoadProgressStub.parameters.first?.progress === progress)
     }
@@ -49,7 +49,7 @@ final class TileStoreObserverWrapperTests: XCTestCase {
 
         wrapper.onRegionLoadFinished(forId: id, region: expected)
 
-        XCTAssertEqual(observer.onRegionLoadFinishedStub.invocations.count, 1)
+        assertMethodCall(observer.onRegionLoadFinishedStub)
         let parameters = try XCTUnwrap(observer.onRegionLoadFinishedStub.parameters.first)
         XCTAssertEqual(parameters.id, id)
         guard case .success(let regionParameter) = parameters.region else {
@@ -64,7 +64,7 @@ final class TileStoreObserverWrapperTests: XCTestCase {
 
         wrapper.onRegionLoadFinished(forId: id, region: expected)
 
-        XCTAssertEqual(observer.onRegionLoadFinishedStub.invocations.count, 1)
+        assertMethodCall(observer.onRegionLoadFinishedStub)
         let parameters = try XCTUnwrap(observer.onRegionLoadFinishedStub.parameters.first)
         XCTAssertEqual(parameters.id, id)
         guard case .failure(TypeConversionError.unexpectedType) = parameters.region else {
@@ -80,7 +80,7 @@ final class TileStoreObserverWrapperTests: XCTestCase {
 
         wrapper.onRegionLoadFinished(forId: id, region: expected)
 
-        XCTAssertEqual(observer.onRegionLoadFinishedStub.invocations.count, 1)
+        assertMethodCall(observer.onRegionLoadFinishedStub)
         let parameters = try XCTUnwrap(observer.onRegionLoadFinishedStub.parameters.first)
         XCTAssertEqual(parameters.id, id)
         guard case .failure(let e) = parameters.region, let tileRegionError = e as? MapboxMaps.TileRegionError else {
@@ -94,7 +94,7 @@ final class TileStoreObserverWrapperTests: XCTestCase {
         let expected = Expected<AnyObject, AnyObject>(error: NSError())
         wrapper.onRegionLoadFinished(forId: id, region: expected)
 
-        XCTAssertEqual(observer.onRegionLoadFinishedStub.invocations.count, 1)
+        assertMethodCall(observer.onRegionLoadFinishedStub)
         let parameters = try XCTUnwrap(observer.onRegionLoadFinishedStub.parameters.first)
         XCTAssertEqual(parameters.id, id)
         guard case .failure(TypeConversionError.unexpectedType) = parameters.region else {
@@ -114,7 +114,7 @@ final class TileStoreObserverWrapperTests: XCTestCase {
 
         wrapper.onRegionGeometryChanged(forId: id, geometry: MapboxCommon.Geometry(geometry))
 
-        XCTAssertEqual(observer.onRegionGeometryChangedStub.invocations.count, 1)
+        assertMethodCall(observer.onRegionGeometryChangedStub)
         XCTAssertEqual(observer.onRegionGeometryChangedStub.parameters.first?.id, id)
         XCTAssertEqual(observer.onRegionGeometryChangedStub.parameters.first?.geometry, geometry)
     }
@@ -124,7 +124,7 @@ final class TileStoreObserverWrapperTests: XCTestCase {
 
         wrapper.onRegionMetadataChanged(forId: id, value: value)
 
-        XCTAssertEqual(observer.onRegionMetadataChangedStub.invocations.count, 1)
+        assertMethodCall(observer.onRegionMetadataChangedStub)
         XCTAssertEqual(observer.onRegionMetadataChangedStub.parameters.first?.id, id)
         XCTAssertEqual(observer.onRegionMetadataChangedStub.parameters.first?.value as? Int, value)
     }

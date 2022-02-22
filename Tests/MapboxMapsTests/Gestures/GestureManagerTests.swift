@@ -130,7 +130,7 @@ final class GestureManagerTests: XCTestCase {
     func testPinchGestureRecognizerRequiresPanGestureRecognizerToFail() throws {
         let pinchGestureRecognizer = try XCTUnwrap(pinchGestureHandler.gestureRecognizer as? MockGestureRecognizer)
 
-        XCTAssertEqual(pinchGestureRecognizer.requireToFailStub.invocations.count, 1)
+        assertMethodCall(pinchGestureRecognizer.requireToFailStub)
         XCTAssertTrue(pinchGestureRecognizer.requireToFailStub.parameters.first
                         === panGestureHandler.gestureRecognizer)
     }
@@ -138,7 +138,7 @@ final class GestureManagerTests: XCTestCase {
     func testPitchGestureRecognizerRequiresPanGestureRecognizerToFail() throws {
         let pitchGestureRecognizer = try XCTUnwrap(pitchGestureHandler.gestureRecognizer as? MockGestureRecognizer)
 
-        XCTAssertEqual(pitchGestureRecognizer.requireToFailStub.invocations.count, 1)
+        assertMethodCall(pitchGestureRecognizer.requireToFailStub)
         XCTAssertTrue(pitchGestureRecognizer.requireToFailStub.parameters.first
                         === panGestureHandler.gestureRecognizer)
     }
@@ -146,7 +146,7 @@ final class GestureManagerTests: XCTestCase {
     func testQuickZoomGestureRecognizerRequiresDoubleTapToZoomInGestureRecognizerToFail() throws {
         let quickZoomGestureRecognizer = try XCTUnwrap(quickZoomGestureHandler.gestureRecognizer as? MockGestureRecognizer)
 
-        XCTAssertEqual(quickZoomGestureRecognizer.requireToFailStub.invocations.count, 1)
+        assertMethodCall(quickZoomGestureRecognizer.requireToFailStub)
         XCTAssertTrue(quickZoomGestureRecognizer.requireToFailStub.parameters.first
                         === doubleTapToZoomInGestureHandler.gestureRecognizer)
     }
@@ -154,7 +154,7 @@ final class GestureManagerTests: XCTestCase {
     func testSingleTapGestureRecognizerRequiresDoubleTapToZoomInGestureRecognizerToFail() throws {
         let singleTapGestureRecognizer = try XCTUnwrap(singleTapGestureHandler.gestureRecognizer as? MockGestureRecognizer)
 
-        XCTAssertEqual(singleTapGestureRecognizer.requireToFailStub.invocations.count, 1)
+        assertMethodCall(singleTapGestureRecognizer.requireToFailStub)
         XCTAssertTrue(singleTapGestureRecognizer.requireToFailStub.parameters.first
                         === doubleTapToZoomInGestureHandler.gestureRecognizer)
     }
@@ -167,7 +167,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertEqual(delegate.gestureDidBeginStub.invocations.count, 1, "GestureBegan should have been invoked once. It was called \(delegate.gestureDidBeginStub.invocations.count) times.")
         XCTAssertTrue(delegate.gestureDidBeginStub.parameters.first?.gestureManager === gestureManager)
         XCTAssertEqual(delegate.gestureDidBeginStub.parameters.first?.gestureType, gestureType)
-        XCTAssertEqual(mapboxMap.beginGestureStub.invocations.count, 1)
+        assertMethodCall(mapboxMap.beginGestureStub)
     }
 
     func testGestureEnded() throws {
@@ -180,7 +180,7 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertEqual(delegate.gestureDidEndStub.parameters.first?.gestureType, gestureType)
         let willAnimateValue = try XCTUnwrap(delegate.gestureDidEndStub.parameters.first?.willAnimate)
         XCTAssertEqual(willAnimateValue, willAnimate)
-        XCTAssertEqual(mapboxMap.endGestureStub.invocations.count, 1)
+        assertMethodCall(mapboxMap.endGestureStub)
     }
 
     func testAnimationEnded() {

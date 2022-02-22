@@ -71,6 +71,6 @@ final class DoubleTouchToZoomOutGestureHandlerTests: XCTestCase {
         gestureRecognizer.sendActions()
 
         XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 1)
-        XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters[0].camera.anchor, focalPoint)
+        XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.camera.anchor, focalPoint)
     }
 }

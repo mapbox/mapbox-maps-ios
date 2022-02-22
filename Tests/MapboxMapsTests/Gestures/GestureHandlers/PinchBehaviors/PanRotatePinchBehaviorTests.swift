@@ -8,7 +8,6 @@ final class PanRotatePinchBehaviorTests: BasePinchBehaviorTests {
             initialCameraState: initialCameraState,
             initialPinchMidpoint: initialPinchMidpoint,
             initialPinchAngle: initialPinchAngle,
-            focalPoint: nil,
             mapboxMap: mapboxMap)
     }
 
@@ -65,21 +64,5 @@ final class PanRotatePinchBehaviorTests: BasePinchBehaviorTests {
 
         // verify that only one camera changed notification was emitted
         XCTAssertEqual(cameraChangedCount, 1)
-    }
-
-    func testFocalPoint() {
-        let focalPoint: CGPoint = .random()
-        behavior = PanRotatePinchBehavior(
-            initialCameraState: initialCameraState,
-            initialPinchMidpoint: initialPinchMidpoint,
-            initialPinchAngle: initialPinchAngle,
-            focalPoint: focalPoint,
-            mapboxMap: mapboxMap)
-
-        behavior.update(pinchMidpoint: .random(),
-                        pinchScale: .random(in: 1...10),
-                        pinchAngle: .random(in: 0..<2 * .pi))
-
-        XCTAssertEqual(mapboxMap.setCameraStub.invocations[2].parameters.anchor, focalPoint)
     }
 }

@@ -41,6 +41,6 @@ final class RotatePinchBehaviorTests: BasePinchBehaviorTests {
                         pinchScale: .random(in: 1...10),
                         pinchAngle: .random(in: 0..<2 * .pi))
 
-        XCTAssertEqual(mapboxMap.setCameraStub.invocations[0].parameters.anchor, focalPoint)
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.first?.parameters.anchor, focalPoint)
     }
 }

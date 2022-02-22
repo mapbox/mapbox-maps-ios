@@ -92,12 +92,6 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
             return
         }
 
-        if panEnabled, focalPoint != nil {
-            Log.warning(
-                forMessage: "Possible pinch gesture recognizer misconfiguration: the specified focal point may be ignored when pinching. In order for the focal point to work, pinch pan has to be disabled.",
-                category: "Gestures")
-        }
-
         pinchBehavior = pinchBehaviorProvider.makePinchBehavior(
             panEnabled: panEnabled,
             zoomEnabled: zoomEnabled,

@@ -34,20 +34,17 @@ internal final class PinchBehaviorProvider: PinchBehaviorProviderProtocol {
                 initialCameraState: initialCameraState,
                 initialPinchMidpoint: initialPinchMidpoint,
                 initialPinchAngle: initialPinchAngle,
-                focalPoint: focalPoint,
                 mapboxMap: mapboxMap)
         case (true, true, false):
             return PanZoomPinchBehavior(
                 initialCameraState: initialCameraState,
                 initialPinchMidpoint: initialPinchMidpoint,
-                focalPoint: focalPoint,
                 mapboxMap: mapboxMap)
         case (true, false, true):
             return PanRotatePinchBehavior(
                 initialCameraState: initialCameraState,
                 initialPinchMidpoint: initialPinchMidpoint,
                 initialPinchAngle: initialPinchAngle,
-                focalPoint: focalPoint,
                 mapboxMap: mapboxMap)
         case (true, false, false):
             return PanPinchBehavior(

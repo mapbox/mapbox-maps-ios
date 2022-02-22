@@ -5,17 +5,14 @@ internal final class PanRotatePinchBehavior: PinchBehavior {
     private let initialPinchMidpoint: CGPoint
     private let initialPinchAngle: CGFloat
     private let mapboxMap: MapboxMapProtocol
-    private let focalPoint: CGPoint?
 
     internal init(initialCameraState: CameraState,
                   initialPinchMidpoint: CGPoint,
                   initialPinchAngle: CGFloat,
-                  focalPoint: CGPoint?,
                   mapboxMap: MapboxMapProtocol) {
         self.initialCameraState = initialCameraState
         self.initialPinchMidpoint = initialPinchMidpoint
         self.initialPinchAngle = initialPinchAngle
-        self.focalPoint = focalPoint
         self.mapboxMap = mapboxMap
     }
 
@@ -42,7 +39,7 @@ internal final class PanRotatePinchBehavior: PinchBehavior {
             .wrappedAngle(to: pinchAngle)
             .toDegrees()
         mapboxMap.setCamera(to: CameraOptions(
-            anchor: focalPoint ?? pinchMidpoint,
+            anchor: pinchMidpoint,
             bearing: initialCameraState.bearing + CLLocationDirection(bearingIncrement)))
     }
 }

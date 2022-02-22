@@ -1,4 +1,5 @@
 import UIKit
+@_implementationOnly import MapboxCommon_Private
 
 /// Options used to configure the direction in which the map is allowed to move
 /// during a pan gesture. Called `ScrollMode` in the Android SDK for
@@ -34,7 +35,18 @@ public struct GestureOptions: Equatable {
 
     /// Whether pan is enabled for the pinch gesture.
     /// Defaults to `true`.
-    public var pinchPanEnabled: Bool = true
+    ///
+    /// Setting this property to `true` sets ``GestureOptions/focalPoint`` to `nil`.
+    public var pinchPanEnabled: Bool = true {
+        didSet {
+            if focalPoint != nil, pinchPanEnabled {
+                Log.warning(
+                    forMessage: "Gesture options misconfiguration detected: pinch pan cannot be enabled when having a fixed focal point. Focal point option will be set to nil.",
+                    category: "Gestures")
+                focalPoint = nil
+            }
+        }
+    }
 
     /// Whether the pitch gesture is enabled. Defaults to `true`.
     public var pitchEnabled: Bool = true
@@ -62,9 +74,18 @@ public struct GestureOptions: Equatable {
 
     /// By default, gestures rotate and zoom around the center of the gesture. Set this property to rotate and zoom around a fixed point instead.
     ///
-    /// In order to force the map to only revolve around the specified focal point, disable
-    /// ``GestureOptions/pinchPanEnabled`` and ``GestureOptions/panEnabled``. 
-    public var focalPoint: CGPoint?
+    /// Setting this property to any valid point sets ``GestureOptions/pinchPanEnabled`` to `false`.
+    public var focalPoint: CGPoint? {
+        didSet {
+            if pinchPanEnabled, focalPoint != nil {
+                Log.warning(
+                    forMessage: "Gesture options misconfiguration detected: a fixed focal point cannot be specified with pinch pan enabled. Pinch pan will be disabled.",
+                    category: "Gestures")
+
+                pinchPanEnabled = false
+            }
+        }
+    }
 
     public init() {}
 }

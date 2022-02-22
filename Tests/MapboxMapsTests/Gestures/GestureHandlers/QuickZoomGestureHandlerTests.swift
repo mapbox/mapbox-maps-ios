@@ -92,6 +92,6 @@ final class QuickZoomGestureHandlerTest: XCTestCase {
         gestureRecognizer.sendActions()
 
         XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 1)
-        XCTAssertEqual(mapboxMap.setCameraStub.parameters[0].anchor, focalPoint)
+        XCTAssertEqual(mapboxMap.setCameraStub.parameters.first?.anchor, focalPoint)
     }
 }

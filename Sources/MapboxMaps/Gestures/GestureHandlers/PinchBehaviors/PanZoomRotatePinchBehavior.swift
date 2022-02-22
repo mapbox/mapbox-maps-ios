@@ -2,18 +2,15 @@ internal final class PanZoomRotatePinchBehavior: PinchBehavior {
     private let initialCameraState: CameraState
     private let initialPinchMidpoint: CGPoint
     private let initialPinchAngle: CGFloat
-    private let focalPoint: CGPoint?
     private let mapboxMap: MapboxMapProtocol
 
     internal init(initialCameraState: CameraState,
                   initialPinchMidpoint: CGPoint,
                   initialPinchAngle: CGFloat,
-                  focalPoint: CGPoint?,
                   mapboxMap: MapboxMapProtocol) {
         self.initialCameraState = initialCameraState
         self.initialPinchMidpoint = initialPinchMidpoint
         self.initialPinchAngle = initialPinchAngle
-        self.focalPoint = focalPoint
         self.mapboxMap = mapboxMap
     }
 
@@ -43,7 +40,7 @@ internal final class PanZoomRotatePinchBehavior: PinchBehavior {
             .toDegrees()
         mapboxMap.setCamera(
             to: CameraOptions(
-                anchor: focalPoint ?? pinchMidpoint,
+                anchor: pinchMidpoint,
                 zoom: initialCameraState.zoom + zoomIncrement,
                 bearing: initialCameraState.bearing + CLLocationDirection(bearingIncrement)))
     }

@@ -290,9 +290,8 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         // add custom source to map style
         let customSourceId = "custom-vector-source"
         let customSourceOptions = CustomGeometrySourceOptions(fetchTileFunction: { tileId in
-            var features: [Feature] = []
             do {
-                try self.style.setCustomGeometrySourceTileData(forSourceId: customSourceId, tileId: tileId, features: features)
+                try self.style.setCustomGeometrySourceTileData(forSourceId: customSourceId, tileId: tileId, features: [])
             } catch {
                 debugPrint(error)
             }

@@ -42,12 +42,7 @@ final class LocationInterpolatorTests: XCTestCase {
 
     func verifyCommonCases(withResult result: InterpolatedLocation) {
         assertMethodCall(latitudeInterpolator.interpolateStub)
-        XCTAssertEqual(interpolator.interpolateStub.invocations.count, 3)
-
-        guard latitudeInterpolator.interpolateStub.invocations.count == 1,
-              interpolator.interpolateStub.invocations.count == 3 else {
-            return
-        }
+        assertMethodCall(interpolator.interpolateStub, times: 3)
 
         let latitudeInterpolateInvocation = latitudeInterpolator.interpolateStub.invocations[0]
         XCTAssertEqual(latitudeInterpolateInvocation.parameters.from, from.coordinate.latitude)
@@ -143,11 +138,7 @@ final class LocationInterpolatorTests: XCTestCase {
 
         verifyCommonCases(withResult: location)
 
-        XCTAssertEqual(directionInterpolator.interpolateStub.invocations.count, 2)
-
-        guard directionInterpolator.interpolateStub.invocations.count == 2 else {
-            return
-        }
+        assertMethodCall(directionInterpolator.interpolateStub, times: 2)
 
         let courseInterpolateInvocation = directionInterpolator.interpolateStub.invocations[0]
         XCTAssertEqual(courseInterpolateInvocation.parameters.from, from.course)

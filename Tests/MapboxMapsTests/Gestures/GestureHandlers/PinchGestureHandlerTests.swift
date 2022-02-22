@@ -53,10 +53,8 @@ final class PinchGestureHandlerTests: XCTestCase {
     }
 
     func verifyMakePinchBehavior() {
-        guard pinchBehaviorProvider.makePinchBehaviorStub.invocations.count == 1 else {
-            XCTFail("makePinchBehavior was not invoked exactly 1 time.")
-            return
-        }
+        assertMethodCall(pinchBehaviorProvider.makePinchBehaviorStub)
+
         let parameters = pinchBehaviorProvider.makePinchBehaviorStub.invocations[0].parameters
         XCTAssertEqual(parameters.panEnabled, pinchGestureHandler.panEnabled)
         XCTAssertEqual(parameters.zoomEnabled, pinchGestureHandler.zoomEnabled)

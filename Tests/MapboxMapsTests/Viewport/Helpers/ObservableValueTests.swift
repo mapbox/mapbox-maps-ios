@@ -96,9 +96,9 @@ final class ObservableValueTests: XCTestCase {
 
         update()
 
-        XCTAssertEqual(handlerStub1.invocations.count, 1)
-        XCTAssertEqual(handlerStub2.invocations.count, 2)
-        XCTAssertEqual(handlerStub3.invocations.count, 3)
+        assertMethodCall(handlerStub1, times: 1)
+        assertMethodCall(handlerStub2, times: 2)
+        assertMethodCall(handlerStub3, times: 3)
     }
 
     func testDeduplicatesNotifications() {

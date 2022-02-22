@@ -78,22 +78,22 @@ final class CameraAnimationsManagerTests: XCTestCase {
 
         // start a second
         cameraAnimationsManager.cameraAnimatorDidStartRunning(animator2)
-        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 2)
+        assertMethodCall(mapboxMap.beginAnimationStub, times: 2)
         assertMethodNotCall(mapboxMap.endAnimationStub)
 
         // end the first
         cameraAnimationsManager.cameraAnimatorDidStopRunning(animator1)
-        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 2)
+        assertMethodCall(mapboxMap.beginAnimationStub, times: 2)
         assertMethodCall(mapboxMap.endAnimationStub)
 
         // end the first again
         cameraAnimationsManager.cameraAnimatorDidStopRunning(animator1)
-        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 2)
+        assertMethodCall(mapboxMap.beginAnimationStub, times: 2)
         assertMethodCall(mapboxMap.endAnimationStub)
 
         // end the second
         cameraAnimationsManager.cameraAnimatorDidStopRunning(animator2)
-        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 2)
-        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 2)
+        assertMethodCall(mapboxMap.beginAnimationStub, times: 2)
+        assertMethodCall(mapboxMap.endAnimationStub, times: 2)
     }
 }

@@ -114,7 +114,8 @@ final class Puck2DTests: XCTestCase {
     }
 
     func verifyAddImages(line: UInt = #line) {
-        XCTAssertEqual(style.addImageStub.invocations.count, 3, line: line)
+        assertMethodCall(style.addImageStub, times: 3, line: line)
+
         let parameters = style.addImageStub.parameters
         for p in parameters {
             XCTAssertFalse(p.sdf, line: line)
@@ -164,7 +165,7 @@ final class Puck2DTests: XCTestCase {
 
         puck2D.isActive = true
 
-        XCTAssertEqual(style.addImageStub.invocations.count, 2)
+        assertMethodCall(style.addImageStub, times: 2)
         let parameters = style.addImageStub.parameters
         guard parameters.count >= 2 else {
             return

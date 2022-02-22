@@ -21,10 +21,7 @@ final class PanPinchChangedBehaviorTests: BasePinchChangedBehaviorTests {
             pinchAngle: .random(in: 0..<2 * .pi))
 
         // verify camera gets set twice
-        guard mapboxMap.setCameraStub.invocations.count == 2 else {
-            XCTFail("Did not receive the expected number of setCamera invocations.")
-            return
-        }
+        assertMethodCall(mapboxMap.setCameraStub, times: 2, "Did not receive the expected number of setCamera invocations.")
 
         // verify that the first set camera invocation resets the center
         XCTAssertEqual(

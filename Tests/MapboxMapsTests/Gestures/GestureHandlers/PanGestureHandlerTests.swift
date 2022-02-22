@@ -228,7 +228,7 @@ final class PanGestureHandlerTests: XCTestCase {
 
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(cameraAnimationsManager.decelerateStub.invocations.count, 0, "Cancelled pan should not trigger deceleration")
+        assertMethodNotCall(cameraAnimationsManager.decelerateStub, "Cancelled pan should not trigger deceleration")
         assertMethodCall(mapboxMap.dragEndStub)
         XCTAssertEqual(delegate.gestureEndedStub.parameters, [.init(gestureType: .pan, willAnimate: false)])
     }
@@ -289,8 +289,8 @@ final class PanGestureHandlerTests: XCTestCase {
         mapboxMap.pointIsAboveHorizonStub.defaultReturnValue = true
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(mapboxMap.dragCameraOptionsStub.invocations.count, 2)
-        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 2)
+        assertMethodCall(mapboxMap.dragCameraOptionsStub, times: 2)
+        assertMethodCall(mapboxMap.setCameraStub, times: 2)
 
         // but deceleration is skipped if the final location is above the horizon
         gestureRecognizer.getStateStub.defaultReturnValue = .ended

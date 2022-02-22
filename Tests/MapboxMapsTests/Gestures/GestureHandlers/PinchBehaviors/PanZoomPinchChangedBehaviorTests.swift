@@ -22,10 +22,7 @@ final class PanZoomPinchChangedBehaviorTests: BasePinchChangedBehaviorTests {
             pinchAngle: .random(in: 0..<2 * .pi))
 
         // verify that setCamera is invoked 3 times
-        guard mapboxMap.setCameraStub.invocations.count == 3 else {
-            XCTFail("Did not receive the expected number of setCamera invocations.")
-            return
-        }
+        assertMethodCall(mapboxMap.setCameraStub, times: 3, "Did not receive the expected number of setCamera invocations.")
 
         // verify that the first setCamera invocation resets center and zoom
         XCTAssertEqual(

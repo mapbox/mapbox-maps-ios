@@ -62,7 +62,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         animator.stopAnimation()
 
         XCTAssertEqual(animator.state, .inactive)
-        XCTAssertEqual(completion.invocations.count, 1)
+        assertMethodCall(completion)
         assertMethodCall(delegate.cameraAnimatorDidStopRunningStub)
         XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === animator)
     }
@@ -83,7 +83,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         locationChangeHandler.reset()
         // Make sure the animation didn't end yet
         XCTAssertEqual(animator.state, .active)
-        XCTAssertEqual(completion.invocations.count, 0)
+        assertMethodNotCall(completion)
 
         // This time, advance by 20 ms to keep it distinct
         // from the first update() call.
@@ -92,7 +92,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
 
         // The expected value this time is the previous location + the reduced
         // velocity (velocity * expectedVelocityAdjustmentFactor) times the elapsed duration
-        XCTAssertEqual(locationChangeHandler.invocations.count, 1)
+        assertMethodCall(locationChangeHandler)
         XCTAssertEqual(locationChangeHandler.invocations[0].parameters.fromLocation, location)
         XCTAssertEqual(locationChangeHandler.invocations[0].parameters.toLocation.x,
                        (velocity.x * expectedVelocityAdjustmentFactor) * 0.02,
@@ -104,7 +104,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         // After the previous update() call, the velocity should have also been reduced
         // to be sufficiently low (< 20 in both x and y) to end the animation.
         XCTAssertEqual(animator.state, .inactive)
-        XCTAssertEqual(completion.invocations.count, 1)
+        assertMethodCall(completion)
         assertMethodCall(delegate.cameraAnimatorDidStopRunningStub)
         XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === animator)
     }

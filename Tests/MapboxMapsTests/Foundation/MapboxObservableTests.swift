@@ -252,11 +252,11 @@ final class MapboxObservableTests: XCTestCase {
             _ = mapboxObservable.onNext(eventTypes, handler: handlerStub.call(with:))
             _ = mapboxObservable.onEvery(eventTypes, handler: handlerStub.call(with:))
 
-            XCTAssertEqual(observable.subscribeStub.invocations.count, 4)
+            assertMethodCall(observable.subscribeStub, times: 4)
             subscribedObservers = observable.subscribeStub.invocations.map(\.parameters.observer)
         }
 
-        XCTAssertEqual(observable.unsubscribeStub.invocations.count, 4)
+        assertMethodCall(observable.unsubscribeStub, times: 4)
         let unsubscribedObservers = observable.unsubscribeStub.invocations.map(\.parameters)
 
         XCTAssertEqual(

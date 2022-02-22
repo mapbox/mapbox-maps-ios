@@ -347,7 +347,7 @@ final class LocationProducerTests: XCTestCase {
 
         assertMethodCall(locationProvider.stopUpdatingLocationStub)
         assertMethodCall(locationProvider.stopUpdatingHeadingStub)
-        assertMethodCall(delegate?.didFailWithErrorStub)
+        assertMethodCall(delegate.didFailWithErrorStub)
     }
 
     func testStopUpdatingDuringDidChangeAuthorizationDueToConsumerDeinit() {
@@ -361,7 +361,7 @@ final class LocationProducerTests: XCTestCase {
 
         assertMethodCall(locationProvider.stopUpdatingLocationStub)
         assertMethodCall(locationProvider.stopUpdatingHeadingStub)
-        assertMethodCall(delegate?.didChangeAccuracyAuthorizationStub)
+        assertMethodCall(delegate.didChangeAccuracyAuthorizationStub)
     }
 
     func testDidFailWithErrorNotifiesDelegate() throws {

@@ -71,8 +71,8 @@ final class MapViewTests: XCTestCase {
 
         do {
             mapView.removeFromSuperview()
-            let displayLink = try XCTUnwrap(dependencyProvider.makeDisplayLinkStub.returnedValues.first)
-            assertMethodCall(displayLink?.invalidateStub)
+            let displayLink = try XCTUnwrap(XCTUnwrap(dependencyProvider.makeDisplayLinkStub.returnedValues.first))
+            assertMethodCall(displayLink.invalidateStub)
         }
     }
 
@@ -172,21 +172,21 @@ final class MapViewTests: XCTestCase {
 
         try invokeDisplayLinkCallback()
 
-        XCTAssertEqual(participant1.participateStub.invocations.count, 2)
+        assertMethodCall(participant1.participateStub, times: 2)
         assertMethodCall(participant2.participateStub)
 
         mapView.remove(participant2)
 
         try invokeDisplayLinkCallback()
 
-        XCTAssertEqual(participant1.participateStub.invocations.count, 3)
+        assertMethodCall(participant1.participateStub, times: 3)
         assertMethodCall(participant2.participateStub)
 
         mapView.remove(participant1)
 
         try invokeDisplayLinkCallback()
 
-        XCTAssertEqual(participant1.participateStub.invocations.count, 3)
+        assertMethodCall(participant1.participateStub, times: 3)
         assertMethodCall(participant2.participateStub)
     }
 
@@ -212,7 +212,7 @@ final class MapViewTests: XCTestCase {
         XCTAssertTrue(notificationCenter.addObserverStub.invocations.contains(where: { invocation in
             invocation.parameters.name == UIApplication.didReceiveMemoryWarningNotification
         }))
-        XCTAssertEqual(notificationCenter.addObserverStub.invocations.count, 3)
+        assertMethodCall(notificationCenter.addObserverStub, times: 3)
     }
 
     func testSceneLifecycleNotificationSubscribedWhenDidMoveToNewWindow() throws {
@@ -243,7 +243,7 @@ final class MapViewTests: XCTestCase {
         XCTAssertTrue(notificationCenter.addObserverStub.invocations.contains(where: { invocation in
             invocation.parameters.name == UIApplication.didReceiveMemoryWarningNotification
         }))
-        XCTAssertEqual(notificationCenter.addObserverStub.invocations.count, 3)
+        assertMethodCall(notificationCenter.addObserverStub, times: 3)
     }
 
     func testLifecycleNotificationsUnsubscribedWhenMovingFromWindow() throws {
@@ -274,7 +274,7 @@ final class MapViewTests: XCTestCase {
         XCTAssertTrue(notificationCenter.removeObserverStub.invocations.contains(where: { invocation in
             return invocation.parameters.name == UIScene.willEnterForegroundNotification
         }))
-        XCTAssertEqual(notificationCenter.removeObserverStub.invocations.count, 4)
+        assertMethodCall(notificationCenter.removeObserverStub, times: 4)
     }
 
     func testDisplayLinkPausedWhenAppMovingToBackground() {

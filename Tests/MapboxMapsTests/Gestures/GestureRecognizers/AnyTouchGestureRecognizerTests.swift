@@ -82,7 +82,7 @@ final class AnyTouchGestureRecognizerTests: XCTestCase {
         gestureRecognizer.touchesBegan([touches[2]], with: event)
 
         // another timer is created
-        XCTAssertEqual(timerProvider.makeScheduledTimerStub.invocations.count, 2)
+        assertMethodCall(timerProvider.makeScheduledTimerStub, times: 2)
     }
 
     func testTouchHandlingWithInsufficientDelay() throws {

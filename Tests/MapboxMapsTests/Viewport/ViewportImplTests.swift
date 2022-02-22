@@ -90,7 +90,7 @@ final class ViewportImplTests: XCTestCase {
 
         transitionAndNotify(withToState: MockViewportState(), completion: nil)
 
-        XCTAssertEqual(statusObserver.viewportStatusDidChangeStub.invocations.count, 2)
+        assertMethodCall(statusObserver.viewportStatusDidChangeStub, times: 2)
         assertMethodCall(statusObserver2.viewportStatusDidChangeStub)
 
         viewportImpl.removeStatusObserver(statusObserver2)
@@ -98,14 +98,14 @@ final class ViewportImplTests: XCTestCase {
 
         transitionAndNotify(withToState: MockViewportState(), completion: nil)
 
-        XCTAssertEqual(statusObserver.viewportStatusDidChangeStub.invocations.count, 3)
+        assertMethodCall(statusObserver.viewportStatusDidChangeStub, times: 3)
         assertMethodCall(statusObserver2.viewportStatusDidChangeStub)
 
         viewportImpl.removeStatusObserver(statusObserver)
 
         transitionAndNotify(withToState: MockViewportState(), completion: nil)
 
-        XCTAssertEqual(statusObserver.viewportStatusDidChangeStub.invocations.count, 3)
+        assertMethodCall(statusObserver.viewportStatusDidChangeStub, times: 3)
         assertMethodCall(statusObserver2.viewportStatusDidChangeStub)
     }
 
@@ -216,7 +216,7 @@ final class ViewportImplTests: XCTestCase {
         let transitionToACompletionStub = Stub<Bool, Void>()
         transitionAndNotify(withToState: stateA, completion: transitionToACompletionStub.call(with:))
 
-        XCTAssertEqual(defaultTransition.runStub.invocations.count, 2)
+        assertMethodCall(defaultTransition.runStub, times: 2)
         let transitionToARunInvocation = try XCTUnwrap(defaultTransition.runStub.invocations.first)
         let transitionToARunCancelable = try XCTUnwrap(transitionToARunInvocation.returnValue as? MockCancelable)
         let transitionToBRunInvocation = try XCTUnwrap(defaultTransition.runStub.invocations.last)
@@ -350,7 +350,7 @@ final class ViewportImplTests: XCTestCase {
         let transitionToBCompletionStub = Stub<Bool, Void>()
         transitionAndNotify(withToState: stateB, completion: transitionToBCompletionStub.call(with:))
 
-        XCTAssertEqual(defaultTransition.runStub.invocations.count, 2)
+        assertMethodCall(defaultTransition.runStub, times: 2)
         let transitionToARunInvocation = try XCTUnwrap(defaultTransition.runStub.invocations.first)
         let transitionToARunCancelable = try XCTUnwrap(transitionToARunInvocation.returnValue as? MockCancelable)
         let transitionToBRunInvocation = try XCTUnwrap(defaultTransition.runStub.invocations.last)
@@ -417,7 +417,7 @@ final class ViewportImplTests: XCTestCase {
         let transitionToBCompletionStub = Stub<Bool, Void>()
         transitionAndNotify(withToState: stateB, completion: transitionToBCompletionStub.call(with:))
 
-        XCTAssertEqual(defaultTransition.runStub.invocations.count, 2)
+        assertMethodCall(defaultTransition.runStub, times: 2)
         let transitionToARunInvocation = try XCTUnwrap(defaultTransition.runStub.invocations.first)
         let transitionToARunCancelable = try XCTUnwrap(transitionToARunInvocation.returnValue as? MockCancelable)
         let transitionToBRunInvocation = try XCTUnwrap(defaultTransition.runStub.invocations.last)

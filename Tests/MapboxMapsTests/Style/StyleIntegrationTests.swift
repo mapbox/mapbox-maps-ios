@@ -277,7 +277,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertTrue(exaggerationTerrainProperty is NSNull)
     }
 
-    func testCustomVectorSource() {
+    func testCustomVector() {
         // add GeoJSON source to map style
         let sourceId = "source"
         var source = GeoJSONSource()
@@ -297,7 +297,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
             } catch {
                 debugPrint(error)
             }
-        }, cancelTileFunction: { tileId in
+        }, cancelTileFunction: { _ in
             // do nothing
         }, tileOptions: TileOptions.init())
         try! self.style.addCustomGeometrySource(withId: customSourceId, options: customSourceOptions)

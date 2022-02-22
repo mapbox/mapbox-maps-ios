@@ -291,4 +291,14 @@ final class MapboxMapTests: XCTestCase {
         XCTAssertEqual(handlerStub.invocations.count, 1)
         XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
     }
+
+    func testPerformWithoutNotifying() throws {
+        let blockStub = Stub<Void, Void>()
+        let mapboxObservable = try XCTUnwrap(mapboxObservableProviderStub.invocations.first?.returnValue as? MockMapboxObservable)
+
+        mapboxMap.performWithoutNotifying(blockStub.call)
+
+        XCTAssertEqual(mapboxObservable.performWithoutNotifyingInvocationCount, 1)
+        XCTAssertEqual(blockStub.invocations.count, 1)
+    }
 }

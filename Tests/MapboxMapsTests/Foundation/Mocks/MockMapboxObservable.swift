@@ -1,7 +1,6 @@
 @testable import MapboxMaps
 
 final class MockMapboxObservable: MapboxObservableProtocol {
-
     struct SubscribeParams {
         var observer: Observer
         var events: [String]
@@ -36,5 +35,12 @@ final class MockMapboxObservable: MapboxObservableProtocol {
     let onEveryStub = Stub<OnEveryParams, Cancelable>(defaultReturnValue: MockCancelable())
     func onEvery(_ eventTypes: [MapEvents.EventKind], handler: @escaping (Event) -> Void) -> Cancelable {
         onEveryStub.call(with: .init(eventTypes: eventTypes, handler: handler))
+    }
+
+    // not using Stub here since the block is not escaping
+    var performWithoutNotifyingInvocationCount = 0
+    func performWithoutNotifying(_ block: () -> Void) {
+        performWithoutNotifyingInvocationCount += 1
+        block()
     }
 }

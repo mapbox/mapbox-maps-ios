@@ -1,7 +1,7 @@
 import XCTest
 @testable import MapboxMaps
 
-final class ZoomPinchChangedBehaviorTests: BasePinchChangedBehaviorTests {
+final class ZoomPinchBehaviorTests: BasePinchBehaviorTests {
     override func setUp() {
         super.setUp()
         behavior = ZoomPinchBehavior(
@@ -23,5 +23,8 @@ final class ZoomPinchChangedBehaviorTests: BasePinchChangedBehaviorTests {
             [CameraOptions(
                 anchor: initialPinchMidpoint,
                 zoom: initialCameraState.zoom + log2(pinchScale))])
+
+        // verify that only one camera changed notification was emitted
+        XCTAssertEqual(cameraChangedCount, 1)
     }
 }

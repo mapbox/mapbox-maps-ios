@@ -142,6 +142,9 @@ public struct Examples {
         Example(title: "Use a 3D model to show the user's location",
                 description: "A 3D model is used to represent the user's location.",
                 type: Custom3DPuckExample.self),
+        Example(title: "Add a custom location provider",
+                description: "Display the location puck at a custom location.",
+                type: CustomLocationProviderExample.self),
     ]
 
     // Examples that highlight using the Offline APIs.

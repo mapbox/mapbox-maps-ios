@@ -302,6 +302,6 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         try! self.style.addCustomGeometrySource(withId: customSourceId, options: customSourceOptions)
 
         // style sources’ identifiers count remains at 1, excluding custom vector sources
-        XCTAssertEqual(self.style.allSourceIdentifiers, [sourceId])
+        XCTAssertEqual(self.style.allSourceIdentifiers.map(\.id), [sourceId])
     }
 }

@@ -277,7 +277,7 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertTrue(exaggerationTerrainProperty is NSNull)
     }
 
-    func testCustomVectorSource() {
+    func testAllSourceIdentifiersOmitsIdentifiersForCustomVectorSources() {
         // add GeoJSON source to map style
         let sourceId = "source"
         var source = GeoJSONSource()

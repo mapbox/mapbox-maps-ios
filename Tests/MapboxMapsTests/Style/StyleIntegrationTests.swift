@@ -276,4 +276,32 @@ internal class StyleIntegrationTests: MapViewIntegrationTestCase {
         XCTAssertTrue(sourceTerrainProperty is NSNull)
         XCTAssertTrue(exaggerationTerrainProperty is NSNull)
     }
+
+    func testAllSourceIdentifiersOmitsIdentifiersForCustomVectorSources() {
+        // add GeoJSON source to map style
+        let sourceId = "source"
+        var source = GeoJSONSource()
+        source.data = .empty
+        try! self.style.addSource(source, id: sourceId)
+
+        // style sources’ identifiers count increases to 1, excluding custom vector sources
+        XCTAssertEqual(self.style.allSourceIdentifiers.map(\.id), [sourceId])
+
+        // add custom source to map style
+        let customSourceId = "custom-vector-source"
+        let customSourceOptions = CustomGeometrySourceOptions(fetchTileFunction: { tileId in
+            var features: [Feature] = []
+            do {
+                try self.style.setCustomGeometrySourceTileData(forSourceId: customSourceId, tileId: tileId, features: features)
+            } catch {
+                debugPrint(error)
+            }
+        }, cancelTileFunction: { _ in
+            // do nothing
+        }, tileOptions: TileOptions.init())
+        try! self.style.addCustomGeometrySource(withId: customSourceId, options: customSourceOptions)
+
+        // style sources’ identifiers count remains at 1, excluding custom vector sources
+        XCTAssertEqual(self.style.allSourceIdentifiers.map(\.id), [sourceId])
+    }
 }

@@ -129,7 +129,7 @@ final class PanGestureHandlerTests: XCTestCase {
         gestureRecognizer.getStateStub.defaultReturnValue = .ended
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(cameraAnimationsManager.decelerateStub.invocations.count, 0)
+        assertMethodNotCall(cameraAnimationsManager.decelerateStub)
     }
 
     func verifyHandlePanEnded(panMode: PanMode,

@@ -166,7 +166,7 @@ final class MapViewTests: XCTestCase {
         try invokeDisplayLinkCallback()
 
         assertMethodCall(participant1.participateStub)
-        XCTAssertEqual(participant2.participateStub.invocations.count, 0)
+        assertMethodNotCall(participant2.participateStub)
 
         mapView.add(participant2)
 

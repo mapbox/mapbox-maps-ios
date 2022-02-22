@@ -490,7 +490,7 @@ final class ViewportImplTests: XCTestCase {
         drainMainQueue()
 
         XCTAssertEqual(completionStub.invocations.map(\.parameters), [false])
-        XCTAssertEqual(runCancelable.cancelStub.invocations.count, 0)
+        assertMethodNotCall(runCancelable.cancelStub)
         XCTAssertEqual(viewportImpl.status, .idle)
         XCTAssertEqual(
             statusObserver.viewportStatusDidChangeStub.invocations.map(\.parameters),

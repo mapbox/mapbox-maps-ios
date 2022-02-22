@@ -74,7 +74,7 @@ final class PitchGestureHandlerTests: XCTestCase {
         gestureRecognizer.sendActions()
 
         XCTAssertEqual(delegate.gestureBeganStub.parameters, [.pitch])
-        XCTAssertEqual(gestureRecognizer.locationOfTouchStub.invocations.count, 0)
+        assertMethodNotCall(gestureRecognizer.locationOfTouchStub)
     }
 
     func testPitchChanged() {

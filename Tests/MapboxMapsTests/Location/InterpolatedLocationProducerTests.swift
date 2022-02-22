@@ -71,7 +71,7 @@ final class InterpolatedLocationProducerTests: XCTestCase {
     func testParticipateBeforeInitialLocationDelivery() {
         interpolatedLocationProducer.participate()
 
-        XCTAssertEqual(observableInterpolatedLocation.notifyStub.invocations.count, 0)
+        assertMethodNotCall(observableInterpolatedLocation.notifyStub)
     }
 
     func testParticipateAfterSingleLocationDelivery() {
@@ -83,7 +83,7 @@ final class InterpolatedLocationProducerTests: XCTestCase {
         for timeInterval: TimeInterval in [0, 0.5, 1, 2] {
             dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: timeInterval)
             interpolatedLocationProducer.participate()
-            XCTAssertEqual(locationInterpolator.interpolateStub.invocations.count, 0)
+            assertMethodNotCall(locationInterpolator.interpolateStub)
             XCTAssertEqual(observableInterpolatedLocation.notifyStub.invocations.map(\.parameters), [interpolatedLocation])
             observableInterpolatedLocation.notifyStub.reset()
         }
@@ -119,13 +119,13 @@ final class InterpolatedLocationProducerTests: XCTestCase {
 
         dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 2.1)
         interpolatedLocationProducer.participate()
-        XCTAssertEqual(locationInterpolator.interpolateStub.invocations.count, 0)
+        assertMethodNotCall(locationInterpolator.interpolateStub)
         XCTAssertEqual(observableInterpolatedLocation.notifyStub.invocations.map(\.parameters), [interpolatedLocation1])
         observableInterpolatedLocation.notifyStub.reset()
 
         dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 3)
         interpolatedLocationProducer.participate()
-        XCTAssertEqual(locationInterpolator.interpolateStub.invocations.count, 0)
+        assertMethodNotCall(locationInterpolator.interpolateStub)
         XCTAssertEqual(observableInterpolatedLocation.notifyStub.invocations.map(\.parameters), [interpolatedLocation1])
     }
 
@@ -176,13 +176,13 @@ final class InterpolatedLocationProducerTests: XCTestCase {
 
         dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 2.66)
         interpolatedLocationProducer.participate()
-        XCTAssertEqual(locationInterpolator.interpolateStub.invocations.count, 0)
+        assertMethodNotCall(locationInterpolator.interpolateStub)
         XCTAssertEqual(observableInterpolatedLocation.notifyStub.invocations.map(\.parameters), [interpolatedLocation2])
         observableInterpolatedLocation.notifyStub.reset()
 
         dateProvider.nowStub.defaultReturnValue = Date(timeIntervalSinceReferenceDate: 3.5)
         interpolatedLocationProducer.participate()
-        XCTAssertEqual(locationInterpolator.interpolateStub.invocations.count, 0)
+        assertMethodNotCall(locationInterpolator.interpolateStub)
         XCTAssertEqual(observableInterpolatedLocation.notifyStub.invocations.map(\.parameters), [interpolatedLocation2])
     }
 }

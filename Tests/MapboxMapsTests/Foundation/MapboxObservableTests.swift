@@ -38,7 +38,7 @@ final class MapboxObservableTests: XCTestCase {
         mapboxObservable.subscribe(observer, events: events)
 
         // Initial subscribe invokes subscribe only with expected events
-        XCTAssertEqual(observable.unsubscribeStub.invocations.count, 0)
+        assertMethodNotCall(observable.unsubscribeStub)
         assertMethodCall(observable.subscribeStub)
         let subscribeInvocation = try XCTUnwrap(observable.subscribeStub.invocations.first)
         XCTAssertEqual(Set(subscribeInvocation.parameters.events), Set(events))
@@ -57,8 +57,8 @@ final class MapboxObservableTests: XCTestCase {
 
         mapboxObservable.subscribe(observer, events: events)
 
-        XCTAssertEqual(observable.unsubscribeStub.invocations.count, 0)
-        XCTAssertEqual(observable.subscribeStub.invocations.count, 0)
+        assertMethodNotCall(observable.unsubscribeStub)
+        assertMethodNotCall(observable.subscribeStub)
     }
 
     func testSubscribingToAdditionalEvents() throws {
@@ -85,7 +85,7 @@ final class MapboxObservableTests: XCTestCase {
         mapboxObservable.unsubscribe(observer, events: [])
         assertMethodCall(observable.unsubscribeStub)
         XCTAssertIdentical(observable.unsubscribeStub.invocations.first?.parameters, subscribedObserver)
-        XCTAssertEqual(observable.subscribeStub.invocations.count, 0)
+        assertMethodNotCall(observable.subscribeStub)
     }
 
     func testUnsubscribeFromAllEventsByPassingSameEvents() throws {
@@ -96,7 +96,7 @@ final class MapboxObservableTests: XCTestCase {
         mapboxObservable.unsubscribe(observer, events: events)
         assertMethodCall(observable.unsubscribeStub)
         XCTAssertIdentical(observable.unsubscribeStub.invocations.first?.parameters, subscribedObserver)
-        XCTAssertEqual(observable.subscribeStub.invocations.count, 0)
+        assertMethodNotCall(observable.subscribeStub)
     }
 
     func testUnsubscribeFromSomeEvents() throws {
@@ -118,8 +118,8 @@ final class MapboxObservableTests: XCTestCase {
     func testUnsubscribeWithoutSubscribingIsIgnored() {
         mapboxObservable.unsubscribe(observer, events: .random(withMinLength: 0))
 
-        XCTAssertEqual(observable.unsubscribeStub.invocations.count, 0)
-        XCTAssertEqual(observable.subscribeStub.invocations.count, 0)
+        assertMethodNotCall(observable.unsubscribeStub)
+        assertMethodNotCall(observable.subscribeStub)
     }
 
     func testUnsubscribeFromEventsThatWereNotSubscribedIsIgnored() {
@@ -129,8 +129,8 @@ final class MapboxObservableTests: XCTestCase {
 
         mapboxObservable.unsubscribe(observer, events: newEvents)
 
-        XCTAssertEqual(observable.unsubscribeStub.invocations.count, 0)
-        XCTAssertEqual(observable.subscribeStub.invocations.count, 0)
+        assertMethodNotCall(observable.unsubscribeStub)
+        assertMethodNotCall(observable.subscribeStub)
     }
 
     func testUnsubscribeFromSomeEventsThatWereSubscribedAndOthersThatWereNotSubscribed() throws {
@@ -155,7 +155,7 @@ final class MapboxObservableTests: XCTestCase {
         _ = mapboxObservable.onNext(eventTypes, handler: handlerStub.call(with:))
 
         // Initial subscribe invokes subscribe only with expected events
-        XCTAssertEqual(observable.unsubscribeStub.invocations.count, 0)
+        assertMethodNotCall(observable.unsubscribeStub)
         assertMethodCall(observable.subscribeStub)
         let subscribeInvocation = try XCTUnwrap(observable.subscribeStub.invocations.first)
         XCTAssertEqual(Set(subscribeInvocation.parameters.events), Set(eventTypes.map(\.rawValue)))
@@ -186,7 +186,7 @@ final class MapboxObservableTests: XCTestCase {
 
         cancelable.cancel()
 
-        XCTAssertEqual(observable.unsubscribeStub.invocations.count, 0)
+        assertMethodNotCall(observable.unsubscribeStub)
     }
 
     func testOnNextWithSynchronousInvocation() throws {
@@ -205,14 +205,14 @@ final class MapboxObservableTests: XCTestCase {
 
         cancelable.cancel()
 
-        XCTAssertEqual(observable.unsubscribeStub.invocations.count, 0)
+        assertMethodNotCall(observable.unsubscribeStub)
     }
 
     func testOnEvery() throws {
         let cancelable = mapboxObservable.onEvery(eventTypes, handler: handlerStub.call(with:))
 
         // Initial subscribe invokes subscribe only with expected events
-        XCTAssertEqual(observable.unsubscribeStub.invocations.count, 0)
+        assertMethodNotCall(observable.unsubscribeStub)
         assertMethodCall(observable.subscribeStub)
         let subscribeInvocation = try XCTUnwrap(observable.subscribeStub.invocations.first)
         XCTAssertEqual(Set(subscribeInvocation.parameters.events), Set(eventTypes.map(\.rawValue)))
@@ -225,7 +225,7 @@ final class MapboxObservableTests: XCTestCase {
         XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
 
         // event delivery does not end the subscription
-        XCTAssertEqual(observable.unsubscribeStub.invocations.count, 0)
+        assertMethodNotCall(observable.unsubscribeStub)
 
         // invoking the cancelable ends the subscription
         cancelable.cancel()
@@ -238,7 +238,7 @@ final class MapboxObservableTests: XCTestCase {
 
         cancelable.cancel()
 
-        XCTAssertEqual(observable.unsubscribeStub.invocations.count, 0)
+        assertMethodNotCall(observable.unsubscribeStub)
     }
 
     func testUnsubscribesOnDeinit() {

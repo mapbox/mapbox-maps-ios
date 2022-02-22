@@ -52,7 +52,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
 
     func testAddViewMissingGeometry() {
         XCTAssertThrowsError(try manager.add(UIView(), options: ViewAnnotationOptions()))
-        XCTAssertEqual(mapboxMap.addViewAnnotationStub.invocations.count, 0)
+        assertMethodNotCall(mapboxMap.addViewAnnotationStub)
         XCTAssertEqual(container.subviews.count, 0)
     }
 
@@ -60,7 +60,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         // Removing a view which wasn't added should not call internal remove method
         let view = UIView()
         manager.remove(view)
-        XCTAssertEqual(mapboxMap.removeViewAnnotationStub.invocations.count, 0)
+        assertMethodNotCall(mapboxMap.removeViewAnnotationStub)
 
         let annotationView = addTestAnnotationView()
         let expectedId = mapboxMap.addViewAnnotationStub.invocations.last!.parameters.id
@@ -115,7 +115,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
 
     func testUpdate() {
         let annotationView = addTestAnnotationView()
-        XCTAssertEqual(mapboxMap.updateViewAnnotationStub.invocations.count, 0)
+        assertMethodNotCall(mapboxMap.updateViewAnnotationStub)
         let options = ViewAnnotationOptions(width: 10.0, allowOverlap: false, anchor: .bottomRight)
         XCTAssertNoThrow(try manager.update(annotationView, options: options))
         assertMethodCall(mapboxMap.updateViewAnnotationStub)
@@ -163,7 +163,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
 
         // Position update should also call validation
         triggerPositionUpdate(forId: id)
-        XCTAssertEqual(mapboxMap.removeViewAnnotationStub.invocations.count, 0)
+        assertMethodNotCall(mapboxMap.removeViewAnnotationStub)
 
         annotationView.removeFromSuperview()
         XCTAssertEqual(container.subviews.count, 0)

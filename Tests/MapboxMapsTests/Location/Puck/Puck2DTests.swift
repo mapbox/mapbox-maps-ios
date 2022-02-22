@@ -66,7 +66,7 @@ final class Puck2DTests: XCTestCase {
     }
 
     func testLocationConsumerIsNotAddedAtInitialization() {
-        XCTAssertEqual(interpolatedLocationProducer.observeStub.invocations.count, 0)
+        assertMethodNotCall(interpolatedLocationProducer.observeStub)
     }
 
     func testActivatingPuckAddsLocationConsumer() throws {
@@ -74,13 +74,13 @@ final class Puck2DTests: XCTestCase {
 
         assertMethodCall(interpolatedLocationProducer.observeStub)
         let cancelable = try XCTUnwrap(interpolatedLocationProducer.observeStub.invocations.first?.returnValue as? MockCancelable)
-        XCTAssertEqual(cancelable.cancelStub.invocations.count, 0)
+        assertMethodNotCall(cancelable.cancelStub)
 
         // activating again should have no effect
         puck2D.isActive = true
 
         assertMethodCall(interpolatedLocationProducer.observeStub)
-        XCTAssertEqual(cancelable.cancelStub.invocations.count, 0)
+        assertMethodNotCall(cancelable.cancelStub)
     }
 
     func testDeactivatingPuckRemovesLocationConsumer() throws {
@@ -90,27 +90,27 @@ final class Puck2DTests: XCTestCase {
 
         puck2D.isActive = false
 
-        XCTAssertEqual(interpolatedLocationProducer.observeStub.invocations.count, 0)
+        assertMethodNotCall(interpolatedLocationProducer.observeStub)
         assertMethodCall(cancelable.cancelStub)
 
         // deactivating again should have no effect
         puck2D.isActive = false
 
-        XCTAssertEqual(interpolatedLocationProducer.observeStub.invocations.count, 0)
+        assertMethodNotCall(interpolatedLocationProducer.observeStub)
         assertMethodCall(cancelable.cancelStub)
     }
 
     func testLayerAndImagesAreNotAddedAtInitialization() {
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
-        XCTAssertEqual(style.addImageStub.invocations.count, 0)
+        assertMethodNotCall(style.addPersistentLayerStub)
+        assertMethodNotCall(style.addPersistentLayerWithPropertiesStub)
+        assertMethodNotCall(style.addImageStub)
     }
 
     func testActivatingPuckDoesNotAddLayerIfLatestLocationIsNil() {
         puck2D.isActive = true
 
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
-        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 0)
+        assertMethodNotCall(style.addPersistentLayerStub)
+        assertMethodNotCall(style.addPersistentLayerWithPropertiesStub)
     }
 
     func verifyAddImages(line: UInt = #line) {
@@ -138,7 +138,7 @@ final class Puck2DTests: XCTestCase {
     func testActivatingPuckDoesNotAddImagesIfLatestLocationIsNil() throws {
         puck2D.isActive = true
 
-        XCTAssertEqual(style.addImageStub.invocations.count, 0)
+        assertMethodNotCall(style.addImageStub)
 
         // When the location becomes non-nil, then the images get added
         updateLocation()
@@ -216,7 +216,7 @@ final class Puck2DTests: XCTestCase {
         puck2D.isActive = true
 
         let expectedProperties = makeExpectedLayerProperties(with: location)
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
+        assertMethodNotCall(style.addPersistentLayerStub)
         assertMethodCall(style.addPersistentLayerWithPropertiesStub)
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
@@ -234,12 +234,12 @@ final class Puck2DTests: XCTestCase {
         puck2D.isActive = true
 
         let expectedProperties = makeExpectedLayerProperties(with: location)
-        XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
+        assertMethodNotCall(style.addPersistentLayerStub)
         assertMethodCall(style.addPersistentLayerWithPropertiesStub)
         let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.parameters.first?.layerPosition, nil)
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 0)
+        assertMethodNotCall(style.setLayerPropertiesStub)
     }
 
     func testActivatingPuckWithNilImages() throws {
@@ -453,7 +453,7 @@ final class Puck2DTests: XCTestCase {
 
         puck2D.puckBearingSource = [.heading, .course].randomElement()!
 
-        XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 0)
+        assertMethodNotCall(style.setLayerPropertiesStub)
     }
 
     func testSettingPuckBearingSourceWhenActive() {

@@ -97,17 +97,17 @@ final class FollowPuckViewportStateTest: XCTestCase {
         cameraAnimationsManager.easeToStub.reset()
 
         // verify that the camera was not set
-        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 0)
+        assertMethodNotCall(mapboxMap.setCameraStub)
 
         // exercise the observation handler again and
         // verify that it returns true (to continue receiving updates)
         XCTAssertTrue(observeHandler(cameraOptions1))
 
         // verify that no further animation was started
-        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 0)
+        assertMethodNotCall(cameraAnimationsManager.easeToStub)
 
         // verify that the camera was not set
-        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 0)
+        assertMethodNotCall(mapboxMap.setCameraStub)
 
         // invoke the animation completion block
         easeToCompletion(.random())
@@ -117,7 +117,7 @@ final class FollowPuckViewportStateTest: XCTestCase {
         XCTAssertTrue(observeHandler(cameraOptions2))
 
         // verify that no further animation was started
-        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 0)
+        assertMethodNotCall(cameraAnimationsManager.easeToStub)
 
         // verify that the camera was set
         XCTAssertEqual(mapboxMap.setCameraStub.invocations.map(\.parameters), [cameraOptions2])

@@ -255,9 +255,9 @@ final class LocationProducerTests: XCTestCase {
         assertMethodCall(locationProvider.stopUpdatingLocationStub)
         assertMethodCall(locationProvider.stopUpdatingHeadingStub)
 
-        XCTAssertEqual(otherProvider.requestWhenInUseAuthorizationStub.invocations.count, 0)
-        XCTAssertEqual(otherProvider.startUpdatingLocationStub.invocations.count, 0)
-        XCTAssertEqual(otherProvider.startUpdatingHeadingStub.invocations.count, 0)
+        assertMethodNotCall(otherProvider.requestWhenInUseAuthorizationStub)
+        assertMethodNotCall(otherProvider.startUpdatingLocationStub)
+        assertMethodNotCall(otherProvider.startUpdatingHeadingStub)
     }
 
     func testDeinit() throws {
@@ -407,7 +407,7 @@ final class LocationProducerTests: XCTestCase {
 
         locationProducer.locationProviderDidChangeAuthorization(locationProvider)
 
-        XCTAssertEqual(delegate.didChangeAccuracyAuthorizationStub.invocations.count, 0)
+        assertMethodNotCall(delegate.didChangeAccuracyAuthorizationStub)
     }
 
     func testRequestsTemporaryFullAccuracyAuthorizationWhenAccuracyIsReduced() {

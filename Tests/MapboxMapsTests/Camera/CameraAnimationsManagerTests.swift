@@ -54,7 +54,7 @@ final class CameraAnimationsManagerTests: XCTestCase {
         cameraAnimationsManager.update()
 
         XCTAssertEqual(animator.state, .inactive)
-        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 0)
+        assertMethodNotCall(mapboxMap.setCameraStub)
     }
 
     func testCameraAnimatorDelegate() {
@@ -63,23 +63,23 @@ final class CameraAnimationsManagerTests: XCTestCase {
 
         // stopping before starting should have no effect
         cameraAnimationsManager.cameraAnimatorDidStopRunning(animator1)
-        XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 0)
-        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 0)
+        assertMethodNotCall(mapboxMap.beginAnimationStub)
+        assertMethodNotCall(mapboxMap.endAnimationStub)
 
         // start once
         cameraAnimationsManager.cameraAnimatorDidStartRunning(animator1)
         assertMethodCall(mapboxMap.beginAnimationStub)
-        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 0)
+        assertMethodNotCall(mapboxMap.endAnimationStub)
 
         // start twice
         cameraAnimationsManager.cameraAnimatorDidStartRunning(animator1)
         assertMethodCall(mapboxMap.beginAnimationStub)
-        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 0)
+        assertMethodNotCall(mapboxMap.endAnimationStub)
 
         // start a second
         cameraAnimationsManager.cameraAnimatorDidStartRunning(animator2)
         XCTAssertEqual(mapboxMap.beginAnimationStub.invocations.count, 2)
-        XCTAssertEqual(mapboxMap.endAnimationStub.invocations.count, 0)
+        assertMethodNotCall(mapboxMap.endAnimationStub)
 
         // end the first
         cameraAnimationsManager.cameraAnimatorDidStopRunning(animator1)

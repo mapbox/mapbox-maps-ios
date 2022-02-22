@@ -89,7 +89,7 @@ final class LocationInterpolatorTests: XCTestCase {
 
         verifyCommonCases(withResult: location)
 
-        XCTAssertEqual(directionInterpolator.interpolateStub.invocations.count, 0)
+        assertMethodNotCall(directionInterpolator.interpolateStub)
         XCTAssertEqual(location.course, to.course)
         XCTAssertEqual(location.heading, to.heading)
     }
@@ -107,7 +107,7 @@ final class LocationInterpolatorTests: XCTestCase {
 
         verifyCommonCases(withResult: location)
 
-        XCTAssertEqual(directionInterpolator.interpolateStub.invocations.count, 0)
+        assertMethodNotCall(directionInterpolator.interpolateStub)
         XCTAssertNil(location.course)
         XCTAssertNil(location.heading)
     }
@@ -125,7 +125,7 @@ final class LocationInterpolatorTests: XCTestCase {
 
         verifyCommonCases(withResult: location)
 
-        XCTAssertEqual(directionInterpolator.interpolateStub.invocations.count, 0)
+        assertMethodNotCall(directionInterpolator.interpolateStub)
         XCTAssertNil(location.course)
         XCTAssertNil(location.heading)
     }

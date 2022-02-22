@@ -87,8 +87,8 @@ final class PinchGestureHandlerTests: XCTestCase {
     func testPinchBeganWith1Touch() {
         sendActions(with: .began, numberOfTouches: 1)
 
-        XCTAssertEqual(pinchBehaviorProvider.makePinchBehaviorStub.invocations.count, 0)
-        XCTAssertEqual(delegate.gestureBeganStub.invocations.count, 0)
+        assertMethodNotCall(pinchBehaviorProvider.makePinchBehaviorStub)
+        assertMethodNotCall(delegate.gestureBeganStub)
     }
 
     func testPinchBeganWith2Touches() throws {
@@ -105,7 +105,7 @@ final class PinchGestureHandlerTests: XCTestCase {
         sendActions(with: .began, numberOfTouches: 1)
         sendActions(with: .ended, numberOfTouches: 1)
 
-        XCTAssertEqual(delegate.gestureEndedStub.invocations.count, 0)
+        assertMethodNotCall(delegate.gestureEndedStub)
     }
 
     func testBegin2Ended() {
@@ -120,7 +120,7 @@ final class PinchGestureHandlerTests: XCTestCase {
         sendActions(with: .changed, numberOfTouches: 1)
         sendActions(with: .ended, numberOfTouches: 1)
 
-        XCTAssertEqual(delegate.gestureEndedStub.invocations.count, 0)
+        assertMethodNotCall(delegate.gestureEndedStub)
     }
 
     func testBegin1Changed2Ended() {
@@ -177,7 +177,7 @@ final class PinchGestureHandlerTests: XCTestCase {
             CGPoint(x: 1, y: 1)]
         sendActions(with: .changed, numberOfTouches: 2)
         verifyMakePinchBehavior()
-        XCTAssertEqual(delegate.gestureBeganStub.invocations.count, 0)
+        assertMethodNotCall(delegate.gestureBeganStub)
 
         sendActions(with: .ended, numberOfTouches: 2)
         verifyGestureEnded()

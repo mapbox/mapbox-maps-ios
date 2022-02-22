@@ -143,7 +143,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
         animator.pauseAnimation()
 
         assertMethodCall(propertyAnimator.pauseAnimationStub)
-        XCTAssertEqual(propertyAnimator.stopAnimationStub.invocations.count, 0)
+        assertMethodNotCall(propertyAnimator.stopAnimationStub)
     }
 
     func testStartAnimationAfterDelayIsRunning() {
@@ -246,7 +246,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.pauseAnimation()
-        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 0)
+        assertMethodNotCall(delegate.cameraAnimatorDidStartRunningStub)
 
         animator.startAnimation()
         assertMethodCall(delegate.cameraAnimatorDidStartRunningStub)
@@ -284,7 +284,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.pauseAnimation()
-        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 0)
+        assertMethodNotCall(delegate.cameraAnimatorDidStartRunningStub)
 
         animator.continueAnimation(withTimingParameters: nil, durationFactor: 1)
         assertMethodCall(delegate.cameraAnimatorDidStartRunningStub)
@@ -313,12 +313,12 @@ final class BasicCameraAnimatorTests: XCTestCase {
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.pauseAnimation()
-        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 0)
-        XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 0)
+        assertMethodNotCall(delegate.cameraAnimatorDidStartRunningStub)
+        assertMethodNotCall(delegate.cameraAnimatorDidStopRunningStub)
 
         animator.stopAnimation()
-        XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 0)
-        XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 0)
+        assertMethodNotCall(delegate.cameraAnimatorDidStartRunningStub)
+        assertMethodNotCall(delegate.cameraAnimatorDidStopRunningStub)
     }
 
     func testAnimatorCompletionUpdatesCameraIfAnimationCompletedAtEnd() throws {
@@ -354,7 +354,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
 
         completion(.current)
 
-        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 0)
+        assertMethodNotCall(mapboxMap.setCameraStub)
     }
 
     func testAnimatorCompletionInformsDelegate() throws {

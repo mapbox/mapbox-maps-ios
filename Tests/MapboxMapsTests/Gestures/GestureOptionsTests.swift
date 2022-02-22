@@ -18,22 +18,4 @@ final class GestureOptionsTests: XCTestCase {
         XCTAssertEqual(options.panDecelerationFactor, UIScrollView.DecelerationRate.normal.rawValue)
         XCTAssertNil(options.focalPoint)
     }
-
-    func testPinchPanEnabledResetsFocalPoint() {
-        var options = GestureOptions()
-        options.focalPoint = .random()
-
-        options.pinchPanEnabled = true
-
-        XCTAssertNil(options.focalPoint)
-    }
-
-    func testSetFocalPointDisablesPinchPan() {
-        var options = GestureOptions()
-        options.pinchPanEnabled = true
-
-        options.focalPoint = .random()
-
-        XCTAssertFalse(options.pinchPanEnabled)
-    }
 }

@@ -491,10 +491,5 @@ final class GestureManagerTests: XCTestCase {
         XCTAssertNil(doubleTouchToZoomOutGestureHandler.focalPoint)
         XCTAssertNil(quickZoomGestureHandler.focalPoint)
         XCTAssertNil(pinchGestureHandler.focalPoint)
-
-        let secondFocalPoint = CGPoint.random()
-        doubleTapToZoomInGestureHandler.focalPoint = secondFocalPoint
-
-        XCTAssertEqual(gestureManager.options.focalPoint, doubleTapToZoomInGestureHandler.focalPoint)
     }
 }

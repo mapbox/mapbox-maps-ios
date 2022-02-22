@@ -117,7 +117,10 @@ workflows:
           xcode: "12.5.0"
           configuration: "Release"
 
-      - check-api-compatibility
+      - build-sdk-for-api-compatibility-check
+      - check-api-compatibility:
+          requires:
+            - build-sdk-for-api-compatibility-check
       - create-xcframework
       - validate-integrations-for-branch
 
@@ -183,10 +186,11 @@ workflows:
           <<: *release-anchor
       - check-api-compatibility:
           <<: *release-anchor
+          requires:
+            - build-dynamic
       - create-registry-pr:
           <<: *release-anchor
           requires:
-            - build-dynamic
             - build-static
             - build-docs
             - build-studio-preview
@@ -551,15 +555,30 @@ jobs:
           report_failure: << parameters.report_failure >>
           message: "create-xcframework"
 
-  check-api-compatibility:
-    <<: *base-job
-    macos:
-      xcode: 13.0.0
+  build-sdk-for-api-compatibility-check:
+    executor: xcode-sdk-min
     resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - configure-environment
-      - check-breaking-api
+      - make-xcframework-bundle
+      - persist_to_workspace:
+          root: .
+          paths:
+            - MapboxMaps.zip
+      - store_artifacts:
+          path: MapboxMaps.zip
+      - store-default-artifacts
+
+  check-api-compatibility:
+    executor: xcode-latest
+    steps:
+      - checkout
+      - configure-environment
+      - attach_workspace:
+          at: workspace
+      - check-breaking-api:
+          bundle_path: workspace/MapboxMaps.zip
       - store-default-artifacts
 
   validate-integrations-for-branch:
@@ -626,6 +645,10 @@ jobs:
           working_directory: scripts/release/packager
       - store_artifacts:
           path: scripts/release/packager/MapboxMaps.zip
+      - persist_to_workspace:
+          root: scripts/release/packager
+          paths:
+            - MapboxMaps.zip
       - run:
           name: Upload to S3
           command: scripts/release/upload-to-registry.sh scripts/release/packager/MapboxMaps.zip mobile-maps-ios "$VERSION" MapboxMaps.zip
@@ -1014,7 +1037,7 @@ commands:
     steps:
       - run:
           name: Breaking API check
-          command: "true" # scripts/api-compatibility-check/breaking-api-check.sh -p << parameters.bundle_path >>
+          command: scripts/api-compatibility-check/breaking-api-check.sh -p << parameters.bundle_path >>
 
   slack-notify-failure-if-any:
     steps:

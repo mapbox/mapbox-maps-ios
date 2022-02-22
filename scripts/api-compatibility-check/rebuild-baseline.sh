@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -eou pipefail
+
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 BASEAPI_REF=$(cat "$SCRIPT_DIR/.baseapi")
@@ -35,7 +37,7 @@ done
 BASELINE_REPORT_DIR="$SCRIPT_DIR/API"
 BASELINE_ARCHIVE_PATH="$SCRIPT_DIR/.baseline.zip"
 
-rm "$BASELINE_ARCHIVE_PATH"
+rm -f "$BASELINE_ARCHIVE_PATH"
 mkdir "$BASELINE_REPORT_DIR"
 
 xcrun --sdk iphoneos "$API_DIGESTER_PATH"\

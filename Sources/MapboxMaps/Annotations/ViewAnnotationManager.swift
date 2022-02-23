@@ -55,7 +55,7 @@ public final class ViewAnnotationManager {
     private var expectedHiddenByView: [UIView: Bool] = [:]
     private var viewsByFeatureIds: [String: UIView] = [:]
 
-    private var observers = [ViewAnnotationUpdateObserver]()
+    private var observers = [ObjectIdentifier: ViewAnnotationUpdateObserver]()
 
     /// If the superview or the `UIView.isHidden` property of a custom view annotation is changed manually by the users
     /// the SDK prints a warning and reverts the changes, as the view is still considered for layout calculation.

@@ -16,6 +16,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Fix an issue where pinch gesture emitted superfluous camera changed events. ([#1137](https://github.com/mapbox/mapbox-maps-ios/pull/1137))
 * Add focalPoint property to zoom and rotate gestures ([#1122](https://github.com/mapbox/mapbox-maps-ios/pull/1122))
 * Expose public initializers for `LayerInfo` and `SourceInfo`. ([#1144](https://github.com/mapbox/mapbox-maps-ios/pull/1144))
+* Add `ViewAnnotationManager.removeAll()` that removes all view annotations added before. Introduce `ViewAnnotationUpdateObserver` protocol for notifying when annotion views get their frames or visibility changed. Add `ViewAnnotationManager.addViewAnnotationUpdateObserver(_:)` and `ViewAnnotationManager.removeViewAnnotationUpdateObserver(_:)` to add and remove observers. ([#1136](https://github.com/mapbox/mapbox-maps-ios/pull/1136))
 
 ## 10.3.0 - February 10, 2022
 

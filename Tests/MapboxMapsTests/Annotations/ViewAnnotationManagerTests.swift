@@ -57,18 +57,42 @@ final class ViewAnnotationManagerTests: XCTestCase {
     }
 
     func testRemove() {
-        // Removing a view which wasn't added should not call internal remove method
-        let view = UIView()
-        manager.remove(view)
-        XCTAssertEqual(mapboxMap.removeViewAnnotationStub.invocations.count, 0)
-
         let annotationView = addTestAnnotationView()
         let expectedId = mapboxMap.addViewAnnotationStub.invocations.last!.parameters.id
         XCTAssertEqual(container.subviews.count, 1)
+
         manager.remove(annotationView)
+
         XCTAssertEqual(mapboxMap.removeViewAnnotationStub.invocations.count, 1)
         XCTAssertEqual(mapboxMap.removeViewAnnotationStub.invocations.first?.parameters, expectedId)
         XCTAssertEqual(container.subviews.count, 0)
+    }
+
+    func testRemoveNoAnnotationViews() {
+        // Removing a view which wasn't added should not call internal remove method
+        let view = UIView()
+
+        manager.remove(view)
+
+        XCTAssertEqual(mapboxMap.removeViewAnnotationStub.invocations.count, 0)
+    }
+
+    func testRemoveAll() {
+        _ = addTestAnnotationView()
+        _ = addTestAnnotationView()
+        _ = addTestAnnotationView()
+        let viewIds = mapboxMap.addViewAnnotationStub.parameters.map(\.id)
+
+        manager.removeAll()
+
+        XCTAssertEqual(Set(mapboxMap.removeViewAnnotationStub.parameters), Set(viewIds))
+        XCTAssertTrue(container.subviews.isEmpty)
+    }
+
+    func testRemoveAllNoAnnotationViews() {
+        manager.removeAll()
+
+        XCTAssertTrue(mapboxMap.removeViewAnnotationStub.invocations.isEmpty)
     }
 
     func testAssociatedFeatureIdIsAlreadyInUse() {
@@ -246,6 +270,70 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertFalse(annotationViewA.isHidden)
         XCTAssertTrue(annotationViewB.isHidden)
         XCTAssertTrue(annotationViewC.isHidden)
+    }
+
+    func testViewAnnotationUpdateObserverNotifiedAboutUpdatedFrames() throws {
+        let annotationView = addTestAnnotationView()
+        let id = try XCTUnwrap(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.id)
+        let observer = MockViewAnnotationUpdateObserver()
+        manager.addViewAnnotationUpdateObserver(observer)
+
+        triggerPositionUpdate(forId: id)
+
+        XCTAssertEqual(observer.framesDidChangeStub.parameters.first, [annotationView])
+    }
+
+    func testViewAnnotationUpdateObserverNotNotifiedAboutSameFrames() {
+        _ = addTestAnnotationView()
+        let id = mapboxMap.addViewAnnotationStub.invocations.last!.parameters.id
+        let observer = MockViewAnnotationUpdateObserver()
+        manager.addViewAnnotationUpdateObserver(observer)
+        triggerPositionUpdate(forId: id)
+        observer.framesDidChangeStub.reset()
+
+        triggerPositionUpdate(forId: id)
+
+        XCTAssertTrue(observer.framesDidChangeStub.parameters.isEmpty)
+    }
+
+    func testViewAnnotationUpdateObserverNotifiedAboutNewlyHiddenViews() {
+        let annotationView = addTestAnnotationView()
+        let observer = MockViewAnnotationUpdateObserver()
+        manager.addViewAnnotationUpdateObserver(observer)
+
+        manager.onViewAnnotationPositionsUpdate(forPositions: [])
+
+        XCTAssertTrue(annotationView.isHidden)
+        XCTAssertEqual(observer.visibilityDidChangeStub.parameters.first, [annotationView])
+    }
+
+    func testViewAnnotationUpdateObserverNotifiedAboutNewlyVisibleViews() {
+        let annotationView = addTestAnnotationView()
+        let id = mapboxMap.addViewAnnotationStub.invocations.last!.parameters.id
+        let observer = MockViewAnnotationUpdateObserver()
+        manager.addViewAnnotationUpdateObserver(observer)
+        try? manager.update(annotationView, options: ViewAnnotationOptions(visible: false))
+
+        triggerPositionUpdate(forId: id)
+
+        XCTAssertFalse(annotationView.isHidden)
+        XCTAssertEqual(observer.visibilityDidChangeStub.parameters.first, [annotationView])
+    }
+
+    func testRemoveViewAnnotationUpdateObserver() {
+        _ = addTestAnnotationView()
+        let id = mapboxMap.addViewAnnotationStub.invocations.last!.parameters.id
+        let observer = MockViewAnnotationUpdateObserver()
+        manager.addViewAnnotationUpdateObserver(observer)
+
+        manager.removeViewAnnotationUpdateObserver(observer)
+        // triggers frame did change observation
+        triggerPositionUpdate(forId: id)
+        // triggers visibility update observation
+        manager.onViewAnnotationPositionsUpdate(forPositions: [])
+
+        XCTAssertTrue(observer.framesDidChangeStub.invocations.isEmpty)
+        XCTAssertTrue(observer.visibilityDidChangeStub.invocations.isEmpty)
     }
 
     // MARK: - Helper functions

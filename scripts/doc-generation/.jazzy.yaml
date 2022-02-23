@@ -157,6 +157,7 @@ custom_categories:
   - name: View Annotations
     children:
       - ViewAnnotationManager
+      - ViewAnnotationUpdateObserver
       - ViewAnnotationOptions
       - ViewAnnotationManagerError
 

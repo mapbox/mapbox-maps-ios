@@ -246,7 +246,7 @@ public final class ViewAnnotationManager {
     ///
     /// - Parameter observer: The object to stop sending notifications to.
     public func removeViewAnnotationUpdateObserver(_ observer: ViewAnnotationUpdateObserver) {
-        observers.removeAll(where: { $0 === observer })
+        observers.removeValue(forKey: ObjectIdentifier(observer))
     }
 
     // MARK: - Private functions

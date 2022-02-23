@@ -115,15 +115,22 @@ class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
         // annotations, location annotation and mapview
         view.accessibilityElements = [Array(self.markerAccessibilityElements.values), self.mapView.location, self.mapView]
 
+        let filterExpression = Exp(.neq) {
+            Exp(.get) {
+                "shield"
+            }
+            "default"
+        }
+
         // query route-shields visible in current map view
         mapView.mapboxMap.queryRenderedFeatures(
             in: mapView.safeAreaLayoutGuide.layoutFrame,
-            options: RenderedQueryOptions(layerIds: ["road-number-shield"], filter: nil)) { [weak self] result in
+            options: RenderedQueryOptions(layerIds: ["road-number-shield"], filter: filterExpression)) { [weak self] result in
                 switch result {
                 case .success(let queriedfeatures):
                     for queriedFeature in queriedfeatures {
-                        let shield = queriedFeature.feature.properties!["shield"]!!.rawValue as! String
-                        let shieldNumber = queriedFeature.feature.properties!["ref"]!!.rawValue as! String
+                        let shield = queriedFeature.feature.properties!["shield"]!!.rawValue as? String
+                        let shieldNumber = queriedFeature.feature.properties!["ref"]!!.rawValue as? String
                         let geometry = queriedFeature.feature.geometry
 
                         switch geometry {
@@ -132,10 +139,10 @@ class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
                             // shield in the map view.
                             let element = UIAccessibilityElement(accessibilityContainer: self?.mapView.mapboxMap.style)
                             element.accessibilityIdentifier = queriedFeature.feature.identifier.debugDescription
-                            element.accessibilityLabel = "U.S. interstate \(shieldNumber)"
+                            element.accessibilityLabel = "U.S. interstate\(shieldNumber!)"
                             element.accessibilityFrame = (self?.mapView.rect(for: point.coordinates))!
                             self?.routeShields.append(element)
-                            self?.view.accessibilityElements?.append(self?.routeShields)
+                            self?.view.accessibilityElements?.append(self!.routeShields)
                         default:  break
                         }
                     }

@@ -8,9 +8,9 @@ final class GestureManagerTests: XCTestCase {
     var panGestureHandler: MockPanGestureHandler!
     var pinchGestureHandler: MockPinchGestureHandler!
     var pitchGestureHandler: GestureHandler!
-    var doubleTapToZoomInGestureHandler: GestureHandler!
-    var doubleTouchToZoomOutGestureHandler: GestureHandler!
-    var quickZoomGestureHandler: GestureHandler!
+    var doubleTapToZoomInGestureHandler: MockFocusableGestureHandler!
+    var doubleTouchToZoomOutGestureHandler: MockFocusableGestureHandler!
+    var quickZoomGestureHandler: MockFocusableGestureHandler!
     var singleTapGestureHandler: GestureHandler!
     var anyTouchGestureHandler: GestureHandler!
     var gestureManager: GestureManager!
@@ -26,9 +26,11 @@ final class GestureManagerTests: XCTestCase {
         pinchGestureHandler = MockPinchGestureHandler(
             gestureRecognizer: MockGestureRecognizer())
         pitchGestureHandler = makeGestureHandler()
-        doubleTapToZoomInGestureHandler = makeGestureHandler()
-        doubleTouchToZoomOutGestureHandler = makeGestureHandler()
-        quickZoomGestureHandler = makeGestureHandler()
+        doubleTapToZoomInGestureHandler = MockFocusableGestureHandler(
+            gestureRecognizer: MockGestureRecognizer())
+        doubleTouchToZoomOutGestureHandler = MockFocusableGestureHandler(
+            gestureRecognizer: MockGestureRecognizer())
+        quickZoomGestureHandler = MockFocusableGestureHandler(gestureRecognizer: MockGestureRecognizer())
         singleTapGestureHandler = makeGestureHandler()
         anyTouchGestureHandler = makeGestureHandler()
         gestureManager = GestureManager(
@@ -465,5 +467,29 @@ final class GestureManagerTests: XCTestCase {
 
         XCTAssertTrue(gestureManager.options.pinchPanEnabled)
         XCTAssertTrue(pinchGestureHandler.panEnabled)
+    }
+
+    func testOptionsFocalPoint() {
+        XCTAssertNil(gestureManager.options.focalPoint)
+        XCTAssertNil(doubleTapToZoomInGestureHandler.focalPoint)
+        XCTAssertNil(doubleTouchToZoomOutGestureHandler.focalPoint)
+        XCTAssertNil(quickZoomGestureHandler.focalPoint)
+        XCTAssertNil(pinchGestureHandler.focalPoint)
+
+        let firstFocalPoint = CGPoint.random()
+        gestureManager.options.focalPoint = firstFocalPoint
+
+        XCTAssertEqual(gestureManager.options.focalPoint, firstFocalPoint)
+        XCTAssertEqual(doubleTapToZoomInGestureHandler.focalPoint, firstFocalPoint)
+        XCTAssertEqual(doubleTouchToZoomOutGestureHandler.focalPoint, firstFocalPoint)
+        XCTAssertEqual(quickZoomGestureHandler.focalPoint, firstFocalPoint)
+        XCTAssertEqual(pinchGestureHandler.focalPoint, firstFocalPoint)
+
+        gestureManager.options.focalPoint = nil
+
+        XCTAssertNil(doubleTapToZoomInGestureHandler.focalPoint)
+        XCTAssertNil(doubleTouchToZoomOutGestureHandler.focalPoint)
+        XCTAssertNil(quickZoomGestureHandler.focalPoint)
+        XCTAssertNil(pinchGestureHandler.focalPoint)
     }
 }

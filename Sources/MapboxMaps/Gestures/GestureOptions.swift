@@ -60,5 +60,10 @@ public struct GestureOptions: Equatable {
     /// Defaults to `UIScrollView.DecelerationRate.normal.rawValue`
     public var panDecelerationFactor: CGFloat = UIScrollView.DecelerationRate.normal.rawValue
 
+    /// By default, gestures rotate and zoom around the center of the gesture. Set this property to rotate and zoom around a fixed point instead.
+    ///
+    /// This property will be ignored by the pinch gesture if ``GestureOptions/pinchPanEnabled`` is set to `true`.
+    public var focalPoint: CGPoint?
+
     public init() {}
 }

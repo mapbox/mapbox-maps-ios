@@ -1,3 +1,5 @@
+import CoreGraphics
+
 internal final class PanZoomPinchBehavior: PinchBehavior {
     private let initialCameraState: CameraState
     private let initialPinchMidpoint: CGPoint

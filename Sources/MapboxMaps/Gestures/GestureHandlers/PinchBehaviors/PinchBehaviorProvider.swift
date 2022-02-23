@@ -1,3 +1,4 @@
+import CoreFoundation
 import CoreLocation
 
 internal protocol PinchBehaviorProviderProtocol: AnyObject {
@@ -7,7 +8,8 @@ internal protocol PinchBehaviorProviderProtocol: AnyObject {
                            rotateEnabled: Bool,
                            initialCameraState: CameraState,
                            initialPinchMidpoint: CGPoint,
-                           initialPinchAngle: CGFloat) -> PinchBehavior
+                           initialPinchAngle: CGFloat,
+                           focalPoint: CGPoint?) -> PinchBehavior
 }
 
 internal final class PinchBehaviorProvider: PinchBehaviorProviderProtocol {
@@ -24,7 +26,8 @@ internal final class PinchBehaviorProvider: PinchBehaviorProviderProtocol {
                                     rotateEnabled: Bool,
                                     initialCameraState: CameraState,
                                     initialPinchMidpoint: CGPoint,
-                                    initialPinchAngle: CGFloat) -> PinchBehavior {
+                                    initialPinchAngle: CGFloat,
+                                    focalPoint: CGPoint?) -> PinchBehavior {
         switch (panEnabled, zoomEnabled, rotateEnabled) {
         case (true, true, true):
             return PanZoomRotatePinchBehavior(
@@ -53,17 +56,20 @@ internal final class PinchBehaviorProvider: PinchBehaviorProviderProtocol {
                 initialCameraState: initialCameraState,
                 initialPinchMidpoint: initialPinchMidpoint,
                 initialPinchAngle: initialPinchAngle,
+                focalPoint: focalPoint,
                 mapboxMap: mapboxMap)
         case (false, true, false):
             return ZoomPinchBehavior(
                 initialCameraState: initialCameraState,
                 initialPinchMidpoint: initialPinchMidpoint,
+                focalPoint: focalPoint,
                 mapboxMap: mapboxMap)
         case (false, false, true):
             return RotatePinchBehavior(
                 initialCameraState: initialCameraState,
                 initialPinchMidpoint: initialPinchMidpoint,
                 initialPinchAngle: initialPinchAngle,
+                focalPoint: focalPoint,
                 mapboxMap: mapboxMap)
         case (false, false, false):
             return EmptyPinchBehavior()

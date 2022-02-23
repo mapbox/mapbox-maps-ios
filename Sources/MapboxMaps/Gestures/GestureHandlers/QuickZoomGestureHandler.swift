@@ -1,10 +1,12 @@
 import UIKit
 
 /// `QuickZoomGestureHandler` updates the map camera in response to double tap and drag gestures
-internal final class QuickZoomGestureHandler: GestureHandler {
+internal final class QuickZoomGestureHandler: GestureHandler, FocusableGestureHandlerProtocol {
     private var initialLocation: CGPoint?
     private var initialZoom: CGFloat?
+    internal var focalPoint: CGPoint?
     private let mapboxMap: MapboxMapProtocol
+    private var initialFocalPoint: CGPoint?
 
     internal init(gestureRecognizer: UILongPressGestureRecognizer,
                   mapboxMap: MapboxMapProtocol) {
@@ -25,6 +27,7 @@ internal final class QuickZoomGestureHandler: GestureHandler {
             delegate?.gestureBegan(for: .quickZoom)
             initialLocation = location
             initialZoom = mapboxMap.cameraState.zoom
+            initialFocalPoint = focalPoint
         case .changed:
             guard let initialLocation = initialLocation,
                   let initialZoom = initialZoom else {
@@ -33,10 +36,12 @@ internal final class QuickZoomGestureHandler: GestureHandler {
             let distance = location.y - initialLocation.y
             // change by 1 zoom level per 75 points of translation
             let newZoom = initialZoom + distance / 75
-            mapboxMap.setCamera(to: CameraOptions(anchor: initialLocation, zoom: newZoom))
+            let anchor = initialFocalPoint ?? initialLocation
+            mapboxMap.setCamera(to: CameraOptions(anchor: anchor, zoom: newZoom))
         case .ended, .cancelled:
             initialLocation = nil
             initialZoom = nil
+            initialFocalPoint = nil
             delegate?.gestureEnded(for: .quickZoom, willAnimate: false)
         default:
             break

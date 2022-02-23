@@ -6,4 +6,6 @@ final class MockPinchGestureHandler: GestureHandler, PinchGestureHandlerProtocol
     var zoomEnabled: Bool = true
 
     var panEnabled: Bool = true
+
+    var focalPoint: CGPoint?
 }

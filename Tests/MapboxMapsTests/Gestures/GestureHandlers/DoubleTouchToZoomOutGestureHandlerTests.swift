@@ -61,4 +61,16 @@ final class DoubleTouchToZoomOutGestureHandlerTests: XCTestCase {
         easeToCompletion(.end)
         XCTAssertEqual(delegate.animationEndedStub.parameters, [.doubleTouchToZoomOut])
     }
+
+    func testFocalPoint() {
+        let focalPoint = CGPoint(x: 1000, y: 1000)
+        gestureHandler.focalPoint = focalPoint
+        gestureRecognizer.getStateStub.defaultReturnValue = .recognized
+        mapboxMap.cameraState = .random()
+
+        gestureRecognizer.sendActions()
+
+        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 1)
+        XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.camera.anchor, focalPoint)
+    }
 }

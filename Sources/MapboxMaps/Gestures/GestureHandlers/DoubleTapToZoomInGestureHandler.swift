@@ -2,10 +2,10 @@ import UIKit
 
 /// `DoubleTapToZoomInGestureHandler` updates the map camera in response
 /// to double tap gestures with 1 touch
-internal final class DoubleTapToZoomInGestureHandler: GestureHandler {
+internal final class DoubleTapToZoomInGestureHandler: GestureHandler, FocusableGestureHandlerProtocol {
+    internal var focalPoint: CGPoint?
 
     private let mapboxMap: MapboxMapProtocol
-
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol
 
     internal init(gestureRecognizer: UITapGestureRecognizer,
@@ -26,9 +26,9 @@ internal final class DoubleTapToZoomInGestureHandler: GestureHandler {
             delegate?.gestureBegan(for: .doubleTapToZoomIn)
             delegate?.gestureEnded(for: .doubleTapToZoomIn, willAnimate: true)
 
-            let tapLocation = gestureRecognizer.location(in: view)
+            let anchor = focalPoint ?? gestureRecognizer.location(in: view)
             cameraAnimationsManager.internalEase(
-                to: CameraOptions(anchor: tapLocation, zoom: mapboxMap.cameraState.zoom + 1),
+                to: CameraOptions(anchor: anchor, zoom: mapboxMap.cameraState.zoom + 1),
                 duration: 0.3,
                 curve: .easeOut) { _ in
                     self.delegate?.animationEnded(for: .doubleTapToZoomIn)

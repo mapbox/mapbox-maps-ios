@@ -72,7 +72,7 @@ workflows:
           report_failure: true
           matrix:
             parameters:
-              xcode: ["12.5.0", "13.0.0"]
+              xcode: ["12.5.0", "13.2.1"]
 
   optional-tests:
     jobs:
@@ -997,7 +997,7 @@ commands:
     description: "Generate Documentation"
     steps:
       - run: git submodule update --init -- scripts/doc-generation/jazzy-theme
-      - run: scripts/doc-generation/generate-maps-docs.sh
+      - run: scripts/doc-generation/generate-maps-docs.sh -v
       - run: zip -r api-docs.zip api-docs
       - store_artifacts:
           path: api-docs.zip

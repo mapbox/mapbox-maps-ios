@@ -14,6 +14,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Exposed APIs to allow positioning of other views relative to the logoView, compassView, scaleBarView and attributionButton. ([#1130](https://github.com/mapbox/mapbox-maps-ios/pull/1130))
 * Add `GestureOptions.pinchPanEnabled` and `.pinchZoomEnabled`. ([#1092](https://github.com/mapbox/mapbox-maps-ios/pull/1092))
 * Fix an issue where pinch gesture emitted superfluous camera changed events. ([#1137](https://github.com/mapbox/mapbox-maps-ios/pull/1137))
+* Expose public initializers for `LayerInfo` and `SourceInfo`. ([#1144](https://github.com/mapbox/mapbox-maps-ios/pull/1144))
 
 ## 10.3.0 - February 10, 2022
 

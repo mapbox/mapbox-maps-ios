@@ -34,6 +34,13 @@ final class MapboxObservableTests: XCTestCase {
         super.tearDown()
     }
 
+    func notify(with event: Event) {
+        let observers = observable.subscribeStub.invocations.map(\.parameters.observer)
+        for observer in observers {
+            observer.notify(for: event)
+        }
+    }
+
     func testSubscribe() throws {
         mapboxObservable.subscribe(observer, events: events)
 
@@ -44,9 +51,8 @@ final class MapboxObservableTests: XCTestCase {
         XCTAssertEqual(Set(subscribeInvocation.parameters.events), Set(events))
 
         // notifying the observer passed to the observable should notify the observer passed to mapboxObservable
-        let subscribedObserver = subscribeInvocation.parameters.observer
         let event = Event(type: "", data: 0)
-        subscribedObserver.notify(for: event)
+        notify(with: event)
         XCTAssertEqual(observer.notifyStub.invocations.count, 1)
         XCTAssertIdentical(observer.notifyStub.invocations.first?.parameters, event)
     }
@@ -161,13 +167,13 @@ final class MapboxObservableTests: XCTestCase {
         XCTAssertEqual(Set(subscribeInvocation.parameters.events), Set(eventTypes.map(\.rawValue)))
 
         // notifying the observer passed to the observable should notify the handler passed to mapboxObservable
-        let subscribedObserver = subscribeInvocation.parameters.observer
         let event = Event(type: "", data: 0)
-        subscribedObserver.notify(for: event)
+        notify(with: event)
         XCTAssertEqual(handlerStub.invocations.count, 1)
         XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
 
         // event delivery ends the subscription
+        let subscribedObserver = subscribeInvocation.parameters.observer
         XCTAssertEqual(observable.unsubscribeStub.invocations.count, 1)
         XCTAssertIdentical(observable.unsubscribeStub.invocations.first?.parameters, subscribedObserver)
     }
@@ -218,9 +224,8 @@ final class MapboxObservableTests: XCTestCase {
         XCTAssertEqual(Set(subscribeInvocation.parameters.events), Set(eventTypes.map(\.rawValue)))
 
         // notifying the observer passed to the observable should notify the handler passed to mapboxObservable
-        let subscribedObserver = subscribeInvocation.parameters.observer
         let event = Event(type: "", data: 0)
-        subscribedObserver.notify(for: event)
+        notify(with: event)
         XCTAssertEqual(handlerStub.invocations.count, 1)
         XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
 
@@ -230,6 +235,7 @@ final class MapboxObservableTests: XCTestCase {
         // invoking the cancelable ends the subscription
         cancelable.cancel()
 
+        let subscribedObserver = subscribeInvocation.parameters.observer
         XCTAssertEqual(observable.unsubscribeStub.invocations.count, 1)
         XCTAssertIdentical(observable.unsubscribeStub.invocations.first?.parameters, subscribedObserver)
 
@@ -262,5 +268,59 @@ final class MapboxObservableTests: XCTestCase {
         XCTAssertEqual(
             Set(subscribedObservers.map(ObjectIdentifier.init)),
             Set(unsubscribedObservers.map(ObjectIdentifier.init)))
+    }
+
+    func testPerformWithoutNotifying() {
+        let otherObserver = MockObserver()
+        let otherHandlerStub = Stub<Event, Void>()
+        mapboxObservable.subscribe(observer, events: events)
+        mapboxObservable.subscribe(otherObserver, events: events)
+        _ = mapboxObservable.onNext(eventTypes, handler: handlerStub.call(with:))
+        _ = mapboxObservable.onEvery(eventTypes, handler: otherHandlerStub.call(with:))
+
+        mapboxObservable.performWithoutNotifying {
+            // do actions that trigger notifications
+            notify(with: Event(type: "", data: 0))
+        }
+
+        XCTAssertEqual(observer.notifyStub.invocations.count, 0)
+        XCTAssertEqual(otherObserver.notifyStub.invocations.count, 0)
+        XCTAssertEqual(handlerStub.invocations.count, 0)
+        XCTAssertEqual(otherHandlerStub.invocations.count, 0)
+
+        // do actions that trigger notifications again
+        let event = Event(type: "", data: 0)
+        notify(with: event)
+
+        XCTAssertEqual(observer.notifyStub.invocations.count, 1)
+        XCTAssertIdentical(observer.notifyStub.invocations.first?.parameters, event)
+        XCTAssertEqual(otherObserver.notifyStub.invocations.count, 1)
+        XCTAssertIdentical(otherObserver.notifyStub.invocations.first?.parameters, event)
+        XCTAssertEqual(handlerStub.invocations.count, 1)
+        XCTAssertIdentical(handlerStub.invocations.first?.parameters, event)
+        XCTAssertEqual(otherHandlerStub.invocations.count, 1)
+        XCTAssertIdentical(otherHandlerStub.invocations.first?.parameters, event)
+    }
+
+    func testReentrantPerformWithoutNotifying() {
+        let otherObserver = MockObserver()
+        let otherHandlerStub = Stub<Event, Void>()
+        mapboxObservable.subscribe(observer, events: events)
+        mapboxObservable.subscribe(otherObserver, events: events)
+        _ = mapboxObservable.onNext(eventTypes, handler: handlerStub.call(with:))
+        _ = mapboxObservable.onEvery(eventTypes, handler: otherHandlerStub.call(with:))
+
+        mapboxObservable.performWithoutNotifying {
+            mapboxObservable.performWithoutNotifying {
+                notify(with: Event(type: "", data: 0))
+            }
+
+            notify(with: Event(type: "", data: 0))
+        }
+
+        XCTAssertEqual(observer.notifyStub.invocations.count, 0)
+        XCTAssertEqual(otherObserver.notifyStub.invocations.count, 0)
+        XCTAssertEqual(handlerStub.invocations.count, 0)
+        XCTAssertEqual(otherHandlerStub.invocations.count, 0)
     }
 }

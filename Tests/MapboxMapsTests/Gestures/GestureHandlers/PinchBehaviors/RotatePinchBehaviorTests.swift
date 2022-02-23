@@ -1,13 +1,14 @@
 import XCTest
 @testable import MapboxMaps
 
-final class RotatePinchChangedBehaviorTests: BasePinchChangedBehaviorTests {
+final class RotatePinchBehaviorTests: BasePinchBehaviorTests {
     override func setUp() {
         super.setUp()
         behavior = RotatePinchBehavior(
             initialCameraState: initialCameraState,
             initialPinchMidpoint: initialPinchMidpoint,
             initialPinchAngle: initialPinchAngle,
+            focalPoint: nil,
             mapboxMap: mapboxMap)
     }
 
@@ -22,5 +23,24 @@ final class RotatePinchChangedBehaviorTests: BasePinchChangedBehaviorTests {
         XCTAssertEqual(invocation.parameters.anchor, initialPinchMidpoint)
         let bearing = try XCTUnwrap(invocation.parameters.bearing)
         XCTAssertEqual(bearing, initialCameraState.bearing - 45, accuracy: 1e-10)
+
+        // verify that only one camera changed notification was emitted
+        XCTAssertEqual(cameraChangedCount, 1)
+    }
+
+    func testFocalPoint() {
+        let focalPoint: CGPoint = .random()
+        behavior = RotatePinchBehavior(
+            initialCameraState: initialCameraState,
+            initialPinchMidpoint: initialPinchMidpoint,
+            initialPinchAngle: initialPinchAngle,
+            focalPoint: focalPoint,
+            mapboxMap: mapboxMap)
+
+        behavior.update(pinchMidpoint: .random(),
+                        pinchScale: .random(in: 1...10),
+                        pinchAngle: .random(in: 0..<2 * .pi))
+
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.first?.parameters.anchor, focalPoint)
     }
 }

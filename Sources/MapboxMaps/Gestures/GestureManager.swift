@@ -29,6 +29,10 @@ public final class GestureManager: GestureHandlerDelegate {
             quickZoomGestureRecognizer.isEnabled = newValue.quickZoomEnabled
             panGestureHandler.panMode = newValue.panMode
             panGestureHandler.decelerationFactor = newValue.panDecelerationFactor
+            doubleTapToZoomInGestureHandler.focalPoint = newValue.focalPoint
+            doubleTouchToZoomOutGestureHandler.focalPoint = newValue.focalPoint
+            quickZoomGestureHandler.focalPoint = newValue.focalPoint
+            pinchGestureHandler.focalPoint = newValue.focalPoint
         }
         get {
             var gestureOptions = GestureOptions()
@@ -43,6 +47,7 @@ public final class GestureManager: GestureHandlerDelegate {
             gestureOptions.quickZoomEnabled = quickZoomGestureRecognizer.isEnabled
             gestureOptions.panMode = panGestureHandler.panMode
             gestureOptions.panDecelerationFactor = panGestureHandler.decelerationFactor
+            gestureOptions.focalPoint = doubleTapToZoomInGestureHandler.focalPoint
             return gestureOptions
         }
     }
@@ -95,9 +100,9 @@ public final class GestureManager: GestureHandlerDelegate {
     private let panGestureHandler: PanGestureHandlerProtocol
     private let pinchGestureHandler: PinchGestureHandlerProtocol
     private let pitchGestureHandler: GestureHandler
-    private let doubleTapToZoomInGestureHandler: GestureHandler
-    private let doubleTouchToZoomOutGestureHandler: GestureHandler
-    private let quickZoomGestureHandler: GestureHandler
+    private let doubleTapToZoomInGestureHandler: FocusableGestureHandlerProtocol
+    private let doubleTouchToZoomOutGestureHandler: FocusableGestureHandlerProtocol
+    private let quickZoomGestureHandler: FocusableGestureHandlerProtocol
     private let singleTapGestureHandler: GestureHandler
     private let anyTouchGestureHandler: GestureHandler
     private let mapboxMap: MapboxMapProtocol
@@ -105,9 +110,9 @@ public final class GestureManager: GestureHandlerDelegate {
     internal init(panGestureHandler: PanGestureHandlerProtocol,
                   pinchGestureHandler: PinchGestureHandlerProtocol,
                   pitchGestureHandler: GestureHandler,
-                  doubleTapToZoomInGestureHandler: GestureHandler,
-                  doubleTouchToZoomOutGestureHandler: GestureHandler,
-                  quickZoomGestureHandler: GestureHandler,
+                  doubleTapToZoomInGestureHandler: FocusableGestureHandlerProtocol,
+                  doubleTouchToZoomOutGestureHandler: FocusableGestureHandlerProtocol,
+                  quickZoomGestureHandler: FocusableGestureHandlerProtocol,
                   singleTapGestureHandler: GestureHandler,
                   anyTouchGestureHandler: GestureHandler,
                   mapboxMap: MapboxMapProtocol) {

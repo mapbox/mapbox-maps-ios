@@ -1,7 +1,7 @@
 import XCTest
 @testable import MapboxMaps
 
-final class EmptyPinchChangedBehaviorTests: BasePinchChangedBehaviorTests {
+final class EmptyPinchBehaviorTests: BasePinchBehaviorTests {
     override func setUp() {
         super.setUp()
         behavior = EmptyPinchBehavior()

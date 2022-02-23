@@ -2,10 +2,10 @@ import UIKit
 
 /// `DoubleTouchToZoomOutGestureHandler` updates the map camera in response
 /// to single tap gestures with 2 touches
-internal final class DoubleTouchToZoomOutGestureHandler: GestureHandler {
+internal final class DoubleTouchToZoomOutGestureHandler: GestureHandler, FocusableGestureHandlerProtocol {
+    internal var focalPoint: CGPoint?
 
     private let mapboxMap: MapboxMapProtocol
-
     private let cameraAnimationsManager: CameraAnimationsManagerProtocol
 
     internal init(gestureRecognizer: UITapGestureRecognizer,
@@ -26,9 +26,9 @@ internal final class DoubleTouchToZoomOutGestureHandler: GestureHandler {
             delegate?.gestureBegan(for: .doubleTouchToZoomOut)
             delegate?.gestureEnded(for: .doubleTouchToZoomOut, willAnimate: true)
 
-            let tapLocation = gestureRecognizer.location(in: view)
+            let anchor = focalPoint ?? gestureRecognizer.location(in: view)
             cameraAnimationsManager.internalEase(
-                to: CameraOptions(anchor: tapLocation, zoom: mapboxMap.cameraState.zoom - 1),
+                to: CameraOptions(anchor: anchor, zoom: mapboxMap.cameraState.zoom - 1),
                 duration: 0.3,
                 curve: .easeOut) { _ in
                     self.delegate?.animationEnded(for: .doubleTouchToZoomOut)

@@ -1,7 +1,7 @@
 import XCTest
 @testable import MapboxMaps
 
-final class PanZoomRotatePinchChangedBehaviorTests: BasePinchChangedBehaviorTests {
+final class PanZoomRotatePinchBehaviorTests: BasePinchBehaviorTests {
     override func setUp() {
         super.setUp()
         behavior = PanZoomRotatePinchBehavior(
@@ -65,5 +65,8 @@ final class PanZoomRotatePinchChangedBehaviorTests: BasePinchChangedBehaviorTest
         XCTAssertEqual(zoom, initialCameraState.zoom + log2(pinchScale))
         let bearing = try XCTUnwrap(mapboxMap.setCameraStub.invocations[2].parameters.bearing)
         XCTAssertEqual(bearing, initialCameraState.bearing - 45, accuracy: 1e-10)
+
+        // verify that only one camera changed notification was emitted
+        XCTAssertEqual(cameraChangedCount, 1)
     }
 }

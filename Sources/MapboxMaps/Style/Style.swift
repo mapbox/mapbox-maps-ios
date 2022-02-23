@@ -552,11 +552,12 @@ public final class Style: StyleProtocol {
         return styleManager.styleSourceExists(forSourceId: id)
     }
 
-    /// The ordered list of the current style sources' identifiers and types
+    /// The ordered list of the current style sources' identifiers and types. Identifiers for custom vector
+    /// sources will not be included
     public var allSourceIdentifiers: [SourceInfo] {
         return styleManager.getStyleSources().compactMap { info in
             guard let sourceType = SourceType(rawValue: info.type) else {
-                assertionFailure("Failed to create SourceType from \(info.type)")
+                Log.error(forMessage: "Failed to create SourceType from \(info.type)", category: "Example")
                 return nil
             }
             return SourceInfo(id: info.id, type: sourceType)

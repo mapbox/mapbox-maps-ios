@@ -1,3 +1,5 @@
+import CoreGraphics
+
 internal final class PanZoomPinchBehavior: PinchBehavior {
     private let initialCameraState: CameraState
     private let initialPinchMidpoint: CGPoint
@@ -14,17 +16,19 @@ internal final class PanZoomPinchBehavior: PinchBehavior {
     internal func update(pinchMidpoint: CGPoint,
                          pinchScale: CGFloat,
                          pinchAngle: CGFloat) {
-        mapboxMap.setCamera(
-            to: CameraOptions(
-                center: initialCameraState.center,
-                zoom: initialCameraState.zoom))
+        mapboxMap.performWithoutNotifying {
+            mapboxMap.setCamera(
+                to: CameraOptions(
+                    center: initialCameraState.center,
+                    zoom: initialCameraState.zoom))
 
-        mapboxMap.dragStart(for: initialPinchMidpoint)
-        let dragOptions = mapboxMap.dragCameraOptions(
-            from: initialPinchMidpoint,
-            to: pinchMidpoint)
-        mapboxMap.setCamera(to: dragOptions)
-        mapboxMap.dragEnd()
+            mapboxMap.dragStart(for: initialPinchMidpoint)
+            let dragOptions = mapboxMap.dragCameraOptions(
+                from: initialPinchMidpoint,
+                to: pinchMidpoint)
+            mapboxMap.setCamera(to: dragOptions)
+            mapboxMap.dragEnd()
+        }
 
         let zoomIncrement = log2(pinchScale)
         mapboxMap.setCamera(to: CameraOptions(

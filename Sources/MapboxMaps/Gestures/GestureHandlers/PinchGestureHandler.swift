@@ -1,9 +1,11 @@
 import UIKit
+@_implementationOnly import MapboxCommon_Private
 
-internal protocol PinchGestureHandlerProtocol: GestureHandler {
+internal protocol PinchGestureHandlerProtocol: FocusableGestureHandlerProtocol {
     var rotateEnabled: Bool { get set }
     var zoomEnabled: Bool { get set }
     var panEnabled: Bool { get set }
+    var focalPoint: CGPoint? { get set }
 }
 
 /// `PinchGestureHandler` updates the map camera in response to a 2-touch
@@ -17,6 +19,9 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
 
     /// Whether pinch gesture can pan map or not
     internal var panEnabled: Bool = true
+
+    /// Anchor point for rotating and zooming
+    internal var focalPoint: CGPoint?
 
     /// The behavior for the current gesture, based on the initial state of the \*Enabled flags.
     private var pinchBehavior: PinchBehavior?
@@ -86,13 +91,21 @@ internal final class PinchGestureHandler: GestureHandler, PinchGestureHandlerPro
         guard let view = gestureRecognizer.view else {
             return
         }
+
+        if panEnabled, focalPoint != nil {
+            Log.warning(
+                forMessage: "Possible pinch gesture recognizer misconfiguration: the specified focal point will be ignored when pinching. In order for the focal point to work, pinch pan has to be disabled.",
+                category: "Gestures")
+        }
+
         pinchBehavior = pinchBehaviorProvider.makePinchBehavior(
             panEnabled: panEnabled,
             zoomEnabled: zoomEnabled,
             rotateEnabled: rotateEnabled,
             initialCameraState: mapboxMap.cameraState,
             initialPinchMidpoint: gestureRecognizer.location(in: view),
-            initialPinchAngle: pinchAngle(with: gestureRecognizer))
+            initialPinchAngle: pinchAngle(with: gestureRecognizer),
+            focalPoint: focalPoint)
         // if this is the first time we started handling the gesture, inform
         // the delegate.
         if !invokedGestureBegan {

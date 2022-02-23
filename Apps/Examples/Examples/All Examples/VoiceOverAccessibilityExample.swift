@@ -122,7 +122,6 @@ class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
                 switch result {
                 case .success(let queriedfeatures):
                     for queriedFeature in queriedfeatures {
-
                         let shield = queriedFeature.feature.properties!["shield"]!!.rawValue as! String
                         let shieldNumber = queriedFeature.feature.properties!["ref"]!!.rawValue as! String
                         let geometry = queriedFeature.feature.geometry
@@ -137,21 +136,7 @@ class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
                             element.accessibilityFrame = (self?.mapView.rect(for: point.coordinates))!
                             self?.routeShields.append(element)
                             self?.view.accessibilityElements?.append(self?.routeShields)
-
-                        case .geometryCollection(_):
-                            break
-                        case .lineString(_):
-                            break
-                        case .multiLineString(_):
-                            break
-                        case .multiPoint(_):
-                            break
-                        case .polygon(_):
-                            break
-                        case .multiPolygon(_):
-                            break
-                        case .none:
-                            break
+                        default:  break
                         }
                     }
 

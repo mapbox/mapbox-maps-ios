@@ -85,7 +85,7 @@ public final class ViewAnnotationManager {
     /// Width and height could be specified explicitly but better idea will be not specifying them
     /// as they will be calculated automatically based on view layout.
     ///
-    /// > Important: The annotation view to be added should have `UIView.frame` property set to `identify`.
+    /// > Important: The annotation view to be added should have `UIView.transform` property set to `.identity`.
     /// Providing a transformed view can result in annotation views being misplaced, overlapped and other layout artifacts.
     ///
     /// - Note: Use ``ViewAnnotationManager/update(_:options:)`` for changing the visibilty of the view, instead

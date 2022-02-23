@@ -284,7 +284,7 @@ public final class ViewAnnotationManager {
             visibleAnnotationIds.insert(position.identifier)
         }
 
-        assert(!viewsWithUpdatedFrame.contains(where: {$0.isHidden == true }))
+        assert(viewsWithUpdatedFrame.allSatisfy { !$0.isHidden })
         notifyViewAnnotationObserversFrameDidChange(for: Array(viewsWithUpdatedFrame))
 
         let annotationsToHide = Set<String>(viewsById.keys).subtracting(visibleAnnotationIds)

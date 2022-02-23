@@ -72,7 +72,7 @@ workflows:
           report_failure: true
           matrix:
             parameters:
-              xcode: ["12.5.0", "13.0.0"]
+              xcode: ["12.5.0", "13.2.1"]
 
   optional-tests:
     jobs:

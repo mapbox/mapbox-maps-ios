@@ -235,7 +235,7 @@ public final class ViewAnnotationManager {
 
     /// Add an observer for annotation views updates
     ///
-    /// Observers are hels strongly.
+    /// Observers are held strongly.
     ///
     /// - Parameter observer: The object to notify when updates occur.
     public func addViewAnnotationUpdateObserver(_ observer: ViewAnnotationUpdateObserver) {

@@ -264,12 +264,8 @@ public final class ViewAnnotationManager {
             validate(view)
 
             view.translatesAutoresizingMaskIntoConstraints = true
-            let oldFrame = view.frame
-            let newFrame = position.frame
-
-            view.frame = newFrame
-
-            if oldFrame != view.frame {
+            if view.frame != position.frame {
+                view.frame = position.frame
                 viewsWithUpdatedFrame.insert(view)
             }
             if view.isHidden {

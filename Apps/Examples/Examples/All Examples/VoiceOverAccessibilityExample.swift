@@ -36,10 +36,7 @@ class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
-        // set custom location to New York City using CustomLocationProvider
-        let customLocationProvider = CustomLocationProvider(currentLocation: CLLocation(latitude: 40.7131854, longitude: -74.0165265))
-        mapView.location.overrideLocationProvider(with: customLocationProvider)
-        mapView.location.options.puckType = .puck2D()
+        setUserLocation()
 
         // create point annotation manager to house point annotations
         pointAnnotationManager =  mapView.annotations.makePointAnnotationManager(id: "annotation-manager")
@@ -73,7 +70,7 @@ class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
 
         mapView.coordinates = data.map(\.coordinate)
 
-        // create UIAccessibilityElements from data
+        // create UIAccessibilityElements from data points
         for datum in data {
             let element = UIAccessibilityElement(accessibilityContainer: view!)
             element.accessibilityIdentifier = datum.id.description
@@ -101,6 +98,10 @@ class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
     }
 
     func setUserLocation() {
+        // set custom location to New York City using CustomLocationProvider
+        let customLocationProvider = CustomLocationProvider(currentLocation: CLLocation(latitude: 40.7131854, longitude: -74.0165265))
+        mapView.location.overrideLocationProvider(with: customLocationProvider)
+        mapView.location.options.puckType = .puck2D()
         mapView.location.isAccessibilityElement = true
         mapView.location.accessibilityLabel = "Current location"
         mapView.location.accessibilityFrame = self.mapView.rect(for: (self.mapView.location.latestLocation?.location.coordinate)!)

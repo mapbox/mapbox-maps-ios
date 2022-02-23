@@ -239,9 +239,7 @@ public final class ViewAnnotationManager {
     ///
     /// - Parameter observer: The object to notify when updates occur.
     public func addViewAnnotationUpdateObserver(_ observer: ViewAnnotationUpdateObserver) {
-        if !observers.contains(where: { $0 === observer }) {
-            observers.append(observer)
-        }
+        observers[ObjectIdentifier(observer)] = observer
     }
 
     /// Remove an observer for annotation views updates.

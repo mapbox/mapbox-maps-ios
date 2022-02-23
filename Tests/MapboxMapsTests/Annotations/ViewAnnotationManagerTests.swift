@@ -274,7 +274,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
 
     func testViewAnnotationUpdateObserverNotifiedAboutUpdatedFrames() {
         let annotationView = addTestAnnotationView()
-        let id = mapboxMap.addViewAnnotationStub.invocations.last!.parameters.id
+        let id = try XCTUnwrap(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.id)
         let observer = MockViewAnnotationUpdateObserver()
         manager.addViewAnnotationUpdateObserver(observer)
 

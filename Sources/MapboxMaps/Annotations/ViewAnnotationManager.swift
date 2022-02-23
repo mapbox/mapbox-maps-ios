@@ -1,7 +1,6 @@
 import UIKit
 @_implementationOnly import MapboxCommon_Private
 @_implementationOnly import MapboxCoreMaps_Private
-import SwiftUI
 
 public enum ViewAnnotationManagerError: Error {
     case viewIsAlreadyAdded
@@ -36,14 +35,14 @@ public protocol ViewAnnotationUpdateObserver: AnyObject {
 
 /// Manager API to control View Annotations.
 ///
-/// View annotations are `UIView` instances that are drawn on top of the ``MapView`` and bound to some ``Geometry`` (only ``Point`` is supported for now).
+/// View annotations are `UIView` instances that are drawn on top of the ``MapView`` and bound to some `Geometry` (only `Point` is supported for now).
 /// In case some view annotations intersect on the screen Z-index is based on addition order.
 ///
 /// View annotations are invariant to map camera transformations however such properties as size, visibility etc
 /// could be controlled by the user using update operation.
 ///
 /// View annotations are not explicitly bound to any sources however ``ViewAnnotationOptions/associatedFeatureId`` could be
-/// used to bind given view annotation with some ``Feature`` by ``Feature.identifier`` meaning visibility of view annotation will be driven
+/// used to bind given view annotation with some `Feature` by `Feature.identifier` meaning visibility of view annotation will be driven
 /// by visibility of given feature.
 public final class ViewAnnotationManager {
 
@@ -96,7 +95,7 @@ public final class ViewAnnotationManager {
     ///   - options: ``ViewAnnotationOptions`` to control the layout and visibility of the annotation
     ///
     /// - Throws:
-    ///   -  ``ViewAnnotationManagerError/view`` if the supplied view is already added as an annotation
+    ///   -  ``ViewAnnotationManagerError/viewIsAlreadyAdded`` if the supplied view is already added as an annotation
     ///   -  ``ViewAnnotationManagerError/geometryFieldMissing`` if options did not include geometry
     ///   -  ``ViewAnnotationManagerError/associatedFeatureIdIsAlreadyInUse`` if the
     ///   supplied ``ViewAnnotationOptions/associatedFeatureId`` is already used by another annotation view
@@ -153,10 +152,9 @@ public final class ViewAnnotationManager {
         }
     }
 
+    /// Removes all annotations views from the map.
     public func removeAll() {
-        let viewsByIdCopy = viewsById
-
-        for (id, view) in viewsByIdCopy {
+        for (id, view) in viewsById {
             try? mapboxMap.removeViewAnnotation(withId: id)
             view.removeFromSuperview()
         }
@@ -282,8 +280,10 @@ public final class ViewAnnotationManager {
             visibleAnnotationIds.insert(position.identifier)
         }
 
-        assert(viewsWithUpdatedFrame.allSatisfy { !$0.isHidden })
-        notifyViewAnnotationObserversFrameDidChange(for: Array(viewsWithUpdatedFrame))
+        defer {
+            assert(viewsWithUpdatedFrame.allSatisfy { !$0.isHidden })
+            notifyViewAnnotationObserversFrameDidChange(for: Array(viewsWithUpdatedFrame))
+        }
 
         let annotationsToHide = Set<String>(viewsById.keys).subtracting(visibleAnnotationIds)
 
@@ -318,7 +318,7 @@ public final class ViewAnnotationManager {
     private func notifyViewAnnotationObserversFrameDidChange(for annotationViews: [UIView]) {
         guard !annotationViews.isEmpty else { return }
 
-        observers.forEach { observer in
+        observers.values.forEach { observer in
             observer.framesDidChange(for: annotationViews)
         }
     }
@@ -326,7 +326,7 @@ public final class ViewAnnotationManager {
     private func notifyViewAnnotationObserversVisibilityDidChange(for annotationViews: [UIView]) {
         guard !annotationViews.isEmpty else { return }
 
-        observers.forEach { observer in
+        observers.values.forEach { observer in
             observer.visibilityDidChange(for: annotationViews)
         }
     }

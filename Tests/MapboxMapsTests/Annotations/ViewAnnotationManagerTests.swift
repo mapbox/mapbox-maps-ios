@@ -272,7 +272,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         XCTAssertTrue(annotationViewC.isHidden)
     }
 
-    func testViewAnnotationUpdateObserverNotifiedAboutUpdatedFrames() {
+    func testViewAnnotationUpdateObserverNotifiedAboutUpdatedFrames() throws {
         let annotationView = addTestAnnotationView()
         let id = try XCTUnwrap(mapboxMap.addViewAnnotationStub.invocations.last?.parameters.id)
         let observer = MockViewAnnotationUpdateObserver()

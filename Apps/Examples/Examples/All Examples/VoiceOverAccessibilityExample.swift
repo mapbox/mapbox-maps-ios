@@ -24,6 +24,7 @@ class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
     var pointAnnotation: PointAnnotation?
     var pointAnnotationManager: PointAnnotationManager?
     var visibleAnnotationArray: [PointAnnotation] = []
+    var accessibilityInfoLabel = UILabel(frame: CGRect.zero)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,10 +36,26 @@ class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
 
         view.addSubview(mapView)
 
+        // set custom location to New York City using CustomLocationProvider
+        let customLocationProvider = CustomLocationProvider(currentLocation: CLLocation(latitude: 40.7131854, longitude: -74.0165265))
+        mapView.location.overrideLocationProvider(with: customLocationProvider)
+        mapView.location.options.puckType = .puck2D()
+
+        // create point annotation manager to house point annotations
         pointAnnotationManager =  mapView.annotations.makePointAnnotationManager(id: "annotation-manager")
 
+        // configure example instructions label
+        accessibilityInfoLabel.translatesAutoresizingMaskIntoConstraints = false
+        accessibilityInfoLabel.backgroundColor = .lightGray
+        accessibilityInfoLabel.textColor = .black
+        accessibilityInfoLabel.text = "Turn on VoiceOver to interact with the mapview annotations."
+        accessibilityInfoLabel.textAlignment = .center
+        accessibilityInfoLabel.lineBreakMode = .byWordWrapping
+        accessibilityInfoLabel.numberOfLines = 0
+        view.addSubview(accessibilityInfoLabel)
+        labelConstraints()
+
         mapView.mapboxMap.onNext(.mapLoaded) { _ in
-            self.setUserLocation()
             self.calculateVisibleAnnotations()
             self.queryRenderedHighwayShields()
         }
@@ -48,9 +65,12 @@ class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
                 let element = self.markerAccessibilityElements[datum.id]
                 element?.accessibilityFrame = self.mapView.rect(for: datum.coordinate)
             }
+
+            // query newly visible route shields and location at current map view
+            self.setUserLocation()
             self.queryRenderedHighwayShields()
         }
-        
+
         mapView.coordinates = data.map(\.coordinate)
 
         // create UIAccessibilityElements from data
@@ -61,7 +81,7 @@ class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
             element.accessibilityLabel = datum.name
             markerAccessibilityElements[datum.id] = element
 
-            pointAnnotation = PointAnnotation(id: datum.name , coordinate: datum.coordinate)
+            pointAnnotation = PointAnnotation(id: datum.name, coordinate: datum.coordinate)
             pointAnnotation!.image = .init(image: UIImage(named: "custom_marker")!, name: "custom_marker")
             pointAnnotationManager?.annotations.append(pointAnnotation!)
         }
@@ -71,23 +91,32 @@ class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
         calculateVisibleAnnotations()
     }
 
+    func labelConstraints() {
+        let safeAreaLayoutForView = view.safeAreaLayoutGuide
+        NSLayoutConstraint.activate([
+            accessibilityInfoLabel.topAnchor.constraint(equalTo: safeAreaLayoutForView.topAnchor),
+            accessibilityInfoLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutForView.leadingAnchor),
+            accessibilityInfoLabel.trailingAnchor.constraint(equalTo: safeAreaLayoutForView.trailingAnchor),
+        ])
+    }
+
     func setUserLocation() {
-        // set custom location to New York City
-        let customLocationProvider = CustomLocationProvider(currentLocation: CLLocation(latitude: 40.7131854, longitude: -74.0165265))
-        mapView.location.overrideLocationProvider(with: customLocationProvider)
-        mapView.location.options.puckType = .puck2D()
-        mapView.location.options.puckBearingSource = .course
         mapView.location.isAccessibilityElement = true
         mapView.location.accessibilityLabel = "Current location"
         mapView.location.accessibilityFrame = self.mapView.rect(for: (self.mapView.location.latestLocation?.location.coordinate)!)
-        view.accessibilityElements?.append(self.mapView.location!)
+        view.accessibilityElements?.append(self.mapView.location.latestLocation!)
     }
 
     func queryRenderedHighwayShields() {
         routeShields = []
 
+        // reset accessibility elements aray to only include existing point
+        // annotations, location annotation and mapview
+        view.accessibilityElements = [Array(self.markerAccessibilityElements.values), self.mapView.location, self.mapView]
+
+        // query route-shields visible in current map view
         mapView.mapboxMap.queryRenderedFeatures(
-            in: mapView.bounds,
+            in: mapView.safeAreaLayoutGuide.layoutFrame,
             options: RenderedQueryOptions(layerIds: ["road-number-shield"], filter: nil)) { [weak self] result in
                 switch result {
                 case .success(let queriedfeatures):
@@ -101,11 +130,12 @@ class VoiceOverAccessibilityExample: UIViewController, ExampleProtocol {
                         case .point(let point):
                             // create the UIAccessibility element for each route
                             // shield in the map view.
-                             let element = UIAccessibilityElement(accessibilityContainer: self?.mapView.mapboxMap.style)
+                            let element = UIAccessibilityElement(accessibilityContainer: self?.mapView.mapboxMap.style)
                             element.accessibilityIdentifier = queriedFeature.feature.identifier.debugDescription
-                            element.accessibilityLabel = "\(shield) \(shieldNumber)"
+                            element.accessibilityLabel = "U.S. interstate \(shieldNumber)"
                             element.accessibilityFrame = (self?.mapView.rect(for: point.coordinates))!
-                            self?.view.accessibilityElements?.append(element)
+                            self?.routeShields.append(element)
+                            self?.view.accessibilityElements?.append(self?.routeShields)
 
                         case .geometryCollection(_):
                             break
@@ -177,6 +207,7 @@ class CustomLocationProvider: LocationProvider {
     func setDelegate(_ delegate: LocationProviderDelegate) {
         self.delegate = delegate
         delegate.locationProvider(self, didUpdateLocations: [currentLocation])
+        delegate.locationProviderDidChangeAuthorization(self)
     }
 
     func requestAlwaysAuthorization() {
@@ -215,7 +246,7 @@ class CustomLocationProvider: LocationProvider {
 
     init(currentLocation: CLLocation) {
         self.locationProviderOptions = .init()
-        self.authorizationStatus = .authorizedWhenInUse
+        self.authorizationStatus = .notDetermined
         self.accuracyAuthorization = .fullAccuracy
         self.headingOrientation = .portrait
         self.heading = nil

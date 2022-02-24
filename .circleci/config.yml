@@ -20,8 +20,8 @@ executors:
   xcode-latest:
     macos:
       xcode: 13.2.1
-  # Pay attention that `create-github-draft-release.sh` script depends on the this structure to parse the minimum Xcode supported version.
-  # Please, keep them in sync in case of any changes
+  # Note that `create-github-draft-release.sh` depends on this structure to parse the minimum supported Xcode version.
+  # Please keep them in sync if this structure changes.
   xcode-sdk-min:
     macos:
       xcode: 12.5.1

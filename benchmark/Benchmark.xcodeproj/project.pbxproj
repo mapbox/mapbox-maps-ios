@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		745D052527C8D185004E7B53 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 745D052427C8D185004E7B53 /* MapboxMaps */; };
 		7499661827C64ECD00DA186A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499661727C64ECD00DA186A /* AppDelegate.swift */; };
 		7499661A27C64ECD00DA186A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499661927C64ECD00DA186A /* SceneDelegate.swift */; };
 		7499661C27C64ECD00DA186A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7499661B27C64ECD00DA186A /* ViewController.swift */; };
@@ -27,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		745D052327C8D15F004E7B53 /* mapbox-maps-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "mapbox-maps-ios"; path = "../mapbox-maps-ios"; sourceTree = "<group>"; };
 		7499661427C64ECD00DA186A /* Benchmark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Benchmark.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7499661727C64ECD00DA186A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7499661927C64ECD00DA186A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -44,6 +46,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				745D052527C8D185004E7B53 /* MapboxMaps in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -57,12 +60,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		745D052027C8D130004E7B53 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		7499660B27C64ECD00DA186A = {
 			isa = PBXGroup;
 			children = (
+				7499663C27C7BCE900DA186A /* Packages */,
 				7499661627C64ECD00DA186A /* Sources */,
 				7499663327C7AD2A00DA186A /* Tests */,
 				7499661527C64ECD00DA186A /* Products */,
+				745D052027C8D130004E7B53 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -97,6 +109,14 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
+		7499663C27C7BCE900DA186A /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				745D052327C8D15F004E7B53 /* mapbox-maps-ios */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -107,13 +127,16 @@
 				7499661027C64ECD00DA186A /* Sources */,
 				7499661127C64ECD00DA186A /* Frameworks */,
 				7499661227C64ECD00DA186A /* Resources */,
-				7499663B27C7AD4100DA186A /* ShellScript */,
+				7499663B27C7AD4100DA186A /* Insert access token */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = Benchmark;
+			packageProductDependencies = (
+				745D052427C8D185004E7B53 /* MapboxMaps */,
+			);
 			productName = Benchmark;
 			productReference = 7499661427C64ECD00DA186A /* Benchmark.app */;
 			productType = "com.apple.product-type.application";
@@ -195,7 +218,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		7499663B27C7AD4100DA186A /* ShellScript */ = {
+		7499663B27C7AD4100DA186A /* Insert access token */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -204,6 +227,7 @@
 			);
 			inputPaths = (
 			);
+			name = "Insert access token";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -387,7 +411,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Benchmark/Info.plist;
+				INFOPLIST_FILE = Sources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -414,7 +438,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Benchmark/Info.plist;
+				INFOPLIST_FILE = Sources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -498,6 +522,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		745D052427C8D185004E7B53 /* MapboxMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MapboxMaps;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7499660C27C64ECD00DA186A /* Project object */;
 }

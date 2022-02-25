@@ -1,0 +1,114 @@
+---
+version: 2.1
+
+parameters:
+  maps-ios-checkout-reference:
+    type: string
+    default: ""
+  run-tests:
+    type: boolean
+    default: false
+
+workflows:
+  benchmark:
+    jobs:
+      - build-benchmark:
+          context:
+            - SDK Registry Token
+
+jobs:
+  build-benchmark:
+    executor: xcode-min
+    steps:
+      - checkout
+      - mapbox/add-mapbox-ssh-key
+      - run:
+          name: Checkout Maps iOS
+          command: |
+            git submodule update --init
+
+            # If parameter is not empty, checkout the commit
+            if [[ -n "<< pipeline.parameters.maps-ios-checkout-reference >>" ]];then
+              cd mapbox-maps-ios
+              git checkout << pipeline.parameters.maps-ios-checkout-reference >>
+            fi
+
+            git submodule status
+      - mapbox/add-mapbox-netrc
+      - mapbox/add-mapbox-filetoken
+      - build-benchmark
+
+  run-benchmark-on-devices:
+    executor: base-docker
+    steps:
+      - checkout
+
+commands:
+  build-benchmark:
+    steps:
+      - run:
+          name: Build Benchmark
+          command: |
+            xcodebuild -resolvePackageDependencies -scheme Benchmark
+            xcodebuild -scheme Benchmark CODE_SIGNING_ALLOWED=NO
+          working_directory: benchmark/
+
+  checkout-mobile-metrics:
+    steps:
+      - run:
+          name: Checkout Mobile Metrics repository
+          command: git submodule update --init mobile-metrics
+
+executors:
+  xcode-min:
+    macos:
+      xcode: 12.5.1
+    resource_class: macos.x86.medium.gen2
+  base-docker:
+    docker:
+      - image: cimg/base:stable
+
+orbs:
+  mapbox:
+    commands:
+      add-mapbox-ssh-key:
+        steps:
+          - add_ssh_keys:
+              fingerprints:
+                - 3b:cd:47:bf:57:9c:e5:36:b0:4d:5f:12:5e:d3:b3:3e
+
+      add-mapbox-netrc:
+        parameters:
+          token:
+            type: string
+            default: $SDK_REGISTRY_TOKEN
+        steps:
+          - run:
+              name: Configure .netrc
+              command: |
+                echo "machine api.mapbox.com login mapbox password <<parameters.token>>" >> ~/.netrc
+                chmod 0600 ~/.netrc
+                cat ~/.netrc
+
+      add-mapbox-filetoken:
+        parameters:
+          token:
+            type: string
+            default: $SDK_REGISTRY_TOKEN
+          path:
+            type: string
+            default: ~/.mapbox
+        steps:
+          - run:
+              name: Add Mapbox Token to file
+              command: |
+                echo "<<parameters.token>>" > <<parameters.path>>
+
+    jobs:
+      my_job:
+        executor: node/default # Node orb executor
+        steps:
+          - checkout
+          - my_command
+          - store_test_results:
+              path: test-results

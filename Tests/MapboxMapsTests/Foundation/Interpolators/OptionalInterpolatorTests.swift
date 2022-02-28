@@ -3,18 +3,18 @@ import XCTest
 
 final class OptionalInterpolatorTests: XCTestCase {
 
-    var interpolator: MockInterpolator!
+    var doubleInterpolator: MockDoubleInterpolator!
     var optionalInterpolator: OptionalInterpolator!
 
     override func setUp() {
         super.setUp()
-        interpolator = MockInterpolator()
+        doubleInterpolator = MockDoubleInterpolator()
         optionalInterpolator = OptionalInterpolator()
     }
 
     override func tearDown() {
         optionalInterpolator = nil
-        interpolator = nil
+        doubleInterpolator = nil
         super.tearDown()
     }
 
@@ -23,10 +23,10 @@ final class OptionalInterpolatorTests: XCTestCase {
             from: nil,
             to: nil,
             fraction: .random(in: 0...1),
-            interpolate: interpolator.interpolate(from:to:fraction:))
+            interpolate: doubleInterpolator.interpolate(from:to:fraction:))
 
         XCTAssertNil(result)
-        XCTAssertTrue(interpolator.interpolateStub.invocations.isEmpty)
+        XCTAssertTrue(doubleInterpolator.interpolateStub.invocations.isEmpty)
     }
 
     func testFromNil() {
@@ -34,10 +34,10 @@ final class OptionalInterpolatorTests: XCTestCase {
             from: nil,
             to: Double.random(in: 0..<10),
             fraction: .random(in: 0...1),
-            interpolate: interpolator.interpolate(from:to:fraction:))
+            interpolate: doubleInterpolator.interpolate(from:to:fraction:))
 
         XCTAssertNil(result)
-        XCTAssertTrue(interpolator.interpolateStub.invocations.isEmpty)
+        XCTAssertTrue(doubleInterpolator.interpolateStub.invocations.isEmpty)
     }
 
     func testToNil() {
@@ -45,10 +45,10 @@ final class OptionalInterpolatorTests: XCTestCase {
             from: Double.random(in: 0..<10),
             to: nil,
             fraction: .random(in: 0...1),
-            interpolate: interpolator.interpolate(from:to:fraction:))
+            interpolate: doubleInterpolator.interpolate(from:to:fraction:))
 
         XCTAssertNil(result)
-        XCTAssertTrue(interpolator.interpolateStub.invocations.isEmpty)
+        XCTAssertTrue(doubleInterpolator.interpolateStub.invocations.isEmpty)
     }
 
     func testBothNonNil() throws {
@@ -60,10 +60,10 @@ final class OptionalInterpolatorTests: XCTestCase {
             from: from,
             to: to,
             fraction: fraction,
-            interpolate: interpolator.interpolate(from:to:fraction:))
+            interpolate: doubleInterpolator.interpolate(from:to:fraction:))
 
-        XCTAssertEqual(interpolator.interpolateStub.invocations.count, 1)
-        let interpolateInvocation = try XCTUnwrap(interpolator.interpolateStub.invocations.first)
+        XCTAssertEqual(doubleInterpolator.interpolateStub.invocations.count, 1)
+        let interpolateInvocation = try XCTUnwrap(doubleInterpolator.interpolateStub.invocations.first)
         XCTAssertEqual(interpolateInvocation.parameters.from, from)
         XCTAssertEqual(interpolateInvocation.parameters.to, to)
         XCTAssertEqual(interpolateInvocation.parameters.fraction, fraction)

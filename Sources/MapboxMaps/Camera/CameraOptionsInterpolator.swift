@@ -11,16 +11,16 @@ internal final class CameraOptionsInterpolator: CameraOptionsInterpolatorProtoco
     private let optionalInterpolator = OptionalInterpolator()
     private let coordinateInterpolator: CoordinateInterpolatorProtocol
     private let uiEdgeInsetsInterpolator: UIEdgeInsetsInterpolatorProtocol
-    private let interpolator: InterpolatorProtocol
+    private let doubleInterpolator: DoubleInterpolatorProtocol
     private let directionInterpolator: DirectionInterpolatorProtocol
 
     internal init(coordinateInterpolator: CoordinateInterpolatorProtocol,
                   uiEdgeInsetsInterpolator: UIEdgeInsetsInterpolatorProtocol,
-                  interpolator: InterpolatorProtocol,
+                  doubleInterpolator: DoubleInterpolatorProtocol,
                   directionInterpolator: DirectionInterpolatorProtocol) {
         self.coordinateInterpolator = coordinateInterpolator
         self.uiEdgeInsetsInterpolator = uiEdgeInsetsInterpolator
-        self.interpolator = interpolator
+        self.doubleInterpolator = doubleInterpolator
         self.directionInterpolator = directionInterpolator
     }
 
@@ -43,7 +43,7 @@ internal final class CameraOptionsInterpolator: CameraOptionsInterpolatorProtoco
             from: from.zoom.map(Double.init(_:)),
             to: to.zoom.map(Double.init(_:)),
             fraction: fraction,
-            interpolate: interpolator.interpolate(from:to:fraction:))
+            interpolate: doubleInterpolator.interpolate(from:to:fraction:))
 
         let bearing = optionalInterpolator.interpolate(
             from: from.bearing,
@@ -55,7 +55,7 @@ internal final class CameraOptionsInterpolator: CameraOptionsInterpolatorProtoco
             from: from.pitch.map(Double.init(_:)),
             to: to.pitch.map(Double.init(_:)),
             fraction: fraction,
-            interpolate: interpolator.interpolate(from:to:fraction:))
+            interpolate: doubleInterpolator.interpolate(from:to:fraction:))
 
         return CameraOptions(
             center: center,

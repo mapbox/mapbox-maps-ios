@@ -7,19 +7,19 @@ internal protocol CoordinateInterpolatorProtocol: AnyObject {
 }
 
 internal final class CoordinateInterpolator: CoordinateInterpolatorProtocol {
-    private let interpolator: InterpolatorProtocol
+    private let doubleInterpolator: DoubleInterpolatorProtocol
     private let longitudeInterpolator: LongitudeInterpolatorProtocol
 
-    internal init(interpolator: InterpolatorProtocol,
+    internal init(doubleInterpolator: DoubleInterpolatorProtocol,
                   longitudeInterpolator: LongitudeInterpolatorProtocol) {
-        self.interpolator = interpolator
+        self.doubleInterpolator = doubleInterpolator
         self.longitudeInterpolator = longitudeInterpolator
     }
 
     func interpolate(from: CLLocationCoordinate2D,
                      to: CLLocationCoordinate2D,
                      fraction: Double) -> CLLocationCoordinate2D {
-        let latitude = interpolator.interpolate(
+        let latitude = doubleInterpolator.interpolate(
             from: from.latitude,
             to: to.latitude,
             fraction: fraction)

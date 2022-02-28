@@ -1,9 +1,9 @@
 import XCTest
 @testable import MapboxMaps
 
-final class InterpolatorTests: XCTestCase {
+final class DoubleInterpolatorTests: XCTestCase {
     func testInterpolate() {
-        let interpolator = Interpolator()
+        let interpolator = DoubleInterpolator()
 
         let fraction = Double.random(in: -1000...1000)
 

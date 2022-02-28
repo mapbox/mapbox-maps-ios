@@ -3,7 +3,7 @@ import XCTest
 
 final class LocationInterpolatorTests: XCTestCase {
 
-    var interpolator: MockInterpolator!
+    var doubleInterpolator: MockDoubleInterpolator!
     var directionInterpolator: MockDirectionInterpolator!
     var coordinateInterpolator: MockCoordinateInterpolator!
     var locationInterpolator: LocationInterpolator!
@@ -13,18 +13,18 @@ final class LocationInterpolatorTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        interpolator = MockInterpolator()
+        doubleInterpolator = MockDoubleInterpolator()
         directionInterpolator = MockDirectionInterpolator()
         coordinateInterpolator = MockCoordinateInterpolator()
         locationInterpolator = LocationInterpolator(
-            interpolator: interpolator,
+            doubleInterpolator: doubleInterpolator,
             directionInterpolator: directionInterpolator,
             coordinateInterpolator: coordinateInterpolator)
         from = .random()
         to = .random()
         fraction = .random(in: -10...10)
 
-        interpolator.interpolateStub.returnValueQueue = .random(
+        doubleInterpolator.interpolateStub.returnValueQueue = .random(
             withLength: 3,
             generator: { .random(in: -200...200) })
         directionInterpolator.interpolateStub.returnValueQueue = .random(
@@ -40,16 +40,16 @@ final class LocationInterpolatorTests: XCTestCase {
         locationInterpolator = nil
         coordinateInterpolator = nil
         directionInterpolator = nil
-        interpolator = nil
+        doubleInterpolator = nil
         super.tearDown()
     }
 
     func verifyCommonCases(withResult result: InterpolatedLocation) {
         XCTAssertEqual(coordinateInterpolator.interpolateStub.invocations.count, 1)
-        XCTAssertEqual(interpolator.interpolateStub.invocations.count, 2)
+        XCTAssertEqual(doubleInterpolator.interpolateStub.invocations.count, 2)
 
         guard coordinateInterpolator.interpolateStub.invocations.count == 1,
-              interpolator.interpolateStub.invocations.count == 2 else {
+              doubleInterpolator.interpolateStub.invocations.count == 2 else {
             return
         }
 
@@ -59,13 +59,13 @@ final class LocationInterpolatorTests: XCTestCase {
         XCTAssertEqual(coordinateInterpolateInvocation.parameters.fraction, fraction)
         XCTAssertEqual(result.coordinate, coordinateInterpolateInvocation.returnValue)
 
-        let altitudeInterpolateInvocation = interpolator.interpolateStub.invocations[0]
+        let altitudeInterpolateInvocation = doubleInterpolator.interpolateStub.invocations[0]
         XCTAssertEqual(altitudeInterpolateInvocation.parameters.from, from.altitude)
         XCTAssertEqual(altitudeInterpolateInvocation.parameters.to, to.altitude)
         XCTAssertEqual(altitudeInterpolateInvocation.parameters.fraction, fraction)
         XCTAssertEqual(result.altitude, altitudeInterpolateInvocation.returnValue)
 
-        let horizontalAccuracyInterpolateInvocation = interpolator.interpolateStub.invocations[1]
+        let horizontalAccuracyInterpolateInvocation = doubleInterpolator.interpolateStub.invocations[1]
         XCTAssertEqual(horizontalAccuracyInterpolateInvocation.parameters.from, from.horizontalAccuracy)
         XCTAssertEqual(horizontalAccuracyInterpolateInvocation.parameters.to, to.horizontalAccuracy)
         XCTAssertEqual(horizontalAccuracyInterpolateInvocation.parameters.fraction, fraction)

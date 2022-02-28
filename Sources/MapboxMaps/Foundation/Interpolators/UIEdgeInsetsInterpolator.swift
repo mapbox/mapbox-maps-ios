@@ -7,28 +7,28 @@ internal protocol UIEdgeInsetsInterpolatorProtocol: AnyObject {
 }
 
 internal final class UIEdgeInsetsInterpolator: UIEdgeInsetsInterpolatorProtocol {
-    private let interpolator: InterpolatorProtocol
+    private let doubleInterpolator: DoubleInterpolatorProtocol
 
-    internal init(interpolator: InterpolatorProtocol) {
-        self.interpolator = interpolator
+    internal init(doubleInterpolator: DoubleInterpolatorProtocol) {
+        self.doubleInterpolator = doubleInterpolator
     }
 
     func interpolate(from: UIEdgeInsets,
                      to: UIEdgeInsets,
                      fraction: Double) -> UIEdgeInsets {
-        let top = interpolator.interpolate(
+        let top = doubleInterpolator.interpolate(
             from: Double(from.top),
             to: Double(to.top),
             fraction: fraction)
-        let left = interpolator.interpolate(
+        let left = doubleInterpolator.interpolate(
             from: Double(from.left),
             to: Double(to.left),
             fraction: fraction)
-        let bottom = interpolator.interpolate(
+        let bottom = doubleInterpolator.interpolate(
             from: Double(from.bottom),
             to: Double(to.bottom),
             fraction: fraction)
-        let right = interpolator.interpolate(
+        let right = doubleInterpolator.interpolate(
             from: Double(from.right),
             to: Double(to.right),
             fraction: fraction)

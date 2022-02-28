@@ -1,6 +1,6 @@
 @testable import MapboxMaps
 
-final class MockInterpolator: InterpolatorProtocol {
+final class MockDoubleInterpolator: DoubleInterpolatorProtocol {
     struct InterpolateParams: Equatable {
         var from: Double
         var to: Double

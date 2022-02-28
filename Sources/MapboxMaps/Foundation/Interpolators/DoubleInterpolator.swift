@@ -1,8 +1,8 @@
-internal protocol InterpolatorProtocol {
+internal protocol DoubleInterpolatorProtocol {
     func interpolate(from: Double, to: Double, fraction: Double) -> Double
 }
 
-internal final class Interpolator: InterpolatorProtocol {
+internal final class DoubleInterpolator: DoubleInterpolatorProtocol {
     internal func interpolate(from: Double,
                               to: Double,
                               fraction: Double) -> Double {

@@ -3,23 +3,23 @@ import XCTest
 
 final class CoordinateInterpolatorTests: XCTestCase {
 
-    var interpolator: MockInterpolator!
+    var doubleInterpolator: MockDoubleInterpolator!
     var longitudeInterpolator: MockLongitudeInterpolator!
     var coordinateInterpolator: CoordinateInterpolator!
 
     override func setUp() {
         super.setUp()
-        interpolator = MockInterpolator()
+        doubleInterpolator = MockDoubleInterpolator()
         longitudeInterpolator = MockLongitudeInterpolator()
         coordinateInterpolator = CoordinateInterpolator(
-            interpolator: interpolator,
+            doubleInterpolator: doubleInterpolator,
             longitudeInterpolator: longitudeInterpolator)
     }
 
     override func tearDown() {
         coordinateInterpolator = nil
         longitudeInterpolator = nil
-        interpolator = nil
+        doubleInterpolator = nil
         super.tearDown()
     }
 
@@ -27,13 +27,13 @@ final class CoordinateInterpolatorTests: XCTestCase {
         let from = CLLocationCoordinate2D.random()
         let to = CLLocationCoordinate2D.random()
         let fraction = Double.random(in: 0...1)
-        interpolator.interpolateStub.defaultReturnValue = .random(in: 0..<100)
+        doubleInterpolator.interpolateStub.defaultReturnValue = .random(in: 0..<100)
         longitudeInterpolator.interpolateStub.defaultReturnValue = .random(in: 0..<100)
 
         let result = coordinateInterpolator.interpolate(from: from, to: to, fraction: fraction)
 
-        XCTAssertEqual(interpolator.interpolateStub.invocations.count, 1)
-        let interpolateInvocation = try XCTUnwrap(interpolator.interpolateStub.invocations.first)
+        XCTAssertEqual(doubleInterpolator.interpolateStub.invocations.count, 1)
+        let interpolateInvocation = try XCTUnwrap(doubleInterpolator.interpolateStub.invocations.first)
         XCTAssertEqual(interpolateInvocation.parameters.from, from.latitude)
         XCTAssertEqual(interpolateInvocation.parameters.to, to.latitude)
         XCTAssertEqual(interpolateInvocation.parameters.fraction, fraction)

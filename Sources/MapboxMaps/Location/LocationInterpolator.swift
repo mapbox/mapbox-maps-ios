@@ -5,15 +5,15 @@ internal protocol LocationInterpolatorProtocol: AnyObject {
 }
 
 internal final class LocationInterpolator: LocationInterpolatorProtocol {
-    private let interpolator: InterpolatorProtocol
+    private let doubleInterpolator: DoubleInterpolatorProtocol
     private let directionInterpolator: DirectionInterpolatorProtocol
     private let coordinateInterpolator: CoordinateInterpolatorProtocol
     private let optionalInterpolator = OptionalInterpolator()
 
-    internal init(interpolator: InterpolatorProtocol,
+    internal init(doubleInterpolator: DoubleInterpolatorProtocol,
                   directionInterpolator: DirectionInterpolatorProtocol,
                   coordinateInterpolator: CoordinateInterpolatorProtocol) {
-        self.interpolator = interpolator
+        self.doubleInterpolator = doubleInterpolator
         self.directionInterpolator = directionInterpolator
         self.coordinateInterpolator = coordinateInterpolator
     }
@@ -27,12 +27,12 @@ internal final class LocationInterpolator: LocationInterpolatorProtocol {
             to: toLocation.coordinate,
             fraction: fraction)
 
-        let altitude = interpolator.interpolate(
+        let altitude = doubleInterpolator.interpolate(
             from: fromLocation.altitude,
             to: toLocation.altitude,
             fraction: fraction)
 
-        let horizontalAccuracy = interpolator.interpolate(
+        let horizontalAccuracy = doubleInterpolator.interpolate(
             from: fromLocation.horizontalAccuracy,
             to: toLocation.horizontalAccuracy,
             fraction: fraction)

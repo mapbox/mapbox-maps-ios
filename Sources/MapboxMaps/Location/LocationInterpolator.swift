@@ -6,12 +6,12 @@ internal protocol LocationInterpolatorProtocol: AnyObject {
 
 internal final class LocationInterpolator: LocationInterpolatorProtocol {
     private let interpolator: InterpolatorProtocol
-    private let directionInterpolator: InterpolatorProtocol
+    private let directionInterpolator: DirectionInterpolatorProtocol
     private let coordinateInterpolator: CoordinateInterpolatorProtocol
     private let optionalInterpolator = OptionalInterpolator()
 
     internal init(interpolator: InterpolatorProtocol,
-                  directionInterpolator: InterpolatorProtocol,
+                  directionInterpolator: DirectionInterpolatorProtocol,
                   coordinateInterpolator: CoordinateInterpolatorProtocol) {
         self.interpolator = interpolator
         self.directionInterpolator = directionInterpolator

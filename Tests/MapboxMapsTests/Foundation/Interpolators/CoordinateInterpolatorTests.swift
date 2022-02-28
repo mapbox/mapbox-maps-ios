@@ -4,13 +4,13 @@ import XCTest
 final class CoordinateInterpolatorTests: XCTestCase {
 
     var interpolator: MockInterpolator!
-    var longitudeInterpolator: MockInterpolator!
+    var longitudeInterpolator: MockLongitudeInterpolator!
     var coordinateInterpolator: CoordinateInterpolator!
 
     override func setUp() {
         super.setUp()
         interpolator = MockInterpolator()
-        longitudeInterpolator = MockInterpolator()
+        longitudeInterpolator = MockLongitudeInterpolator()
         coordinateInterpolator = CoordinateInterpolator(
             interpolator: interpolator,
             longitudeInterpolator: longitudeInterpolator)

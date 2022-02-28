@@ -173,8 +173,11 @@ internal final class MapViewDependencyProvider: MapViewDependencyProviderProtoco
     func makeInterpolatedLocationProducer(locationProducer: LocationProducerProtocol,
                                           displayLinkCoordinator: DisplayLinkCoordinator) -> InterpolatedLocationProducerProtocol {
         let interpolator = Interpolator()
-        let directionInterpolator = WrappingInterpolator(range: 0..<360)
-        let longitudeInterpolator = WrappingInterpolator(range: -180..<180)
+        let wrappingInterpolator = WrappingInterpolator()
+        let directionInterpolator = DirectionInterpolator(
+            wrappingInterpolator: wrappingInterpolator)
+        let longitudeInterpolator = LongitudeInterpolator(
+            wrappingInterpolator: wrappingInterpolator)
         let coordinateInterpolator = CoordinateInterpolator(
             interpolator: interpolator,
             longitudeInterpolator: longitudeInterpolator)

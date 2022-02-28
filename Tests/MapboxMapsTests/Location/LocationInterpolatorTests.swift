@@ -4,7 +4,7 @@ import XCTest
 final class LocationInterpolatorTests: XCTestCase {
 
     var interpolator: MockInterpolator!
-    var directionInterpolator: MockInterpolator!
+    var directionInterpolator: MockDirectionInterpolator!
     var coordinateInterpolator: MockCoordinateInterpolator!
     var locationInterpolator: LocationInterpolator!
     var from: InterpolatedLocation!
@@ -14,7 +14,7 @@ final class LocationInterpolatorTests: XCTestCase {
     override func setUp() {
         super.setUp()
         interpolator = MockInterpolator()
-        directionInterpolator = MockInterpolator()
+        directionInterpolator = MockDirectionInterpolator()
         coordinateInterpolator = MockCoordinateInterpolator()
         locationInterpolator = LocationInterpolator(
             interpolator: interpolator,

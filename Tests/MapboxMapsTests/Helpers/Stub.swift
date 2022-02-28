@@ -56,6 +56,13 @@ extension Stub where ParametersType == Void {
     }
 }
 
+extension Stub.Invocation: Equatable where ParametersType: Equatable, ReturnType: Equatable {
+    static func == (lhs: Stub.Invocation, rhs: Stub.Invocation) -> Bool {
+        return (lhs.parameters == rhs.parameters &&
+                lhs.returnValue == rhs.returnValue)
+    }
+}
+
 @propertyWrapper
 final class Stubbed<T> {
     let getStub: Stub<Void, T>

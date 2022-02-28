@@ -12,16 +12,16 @@ internal final class CameraOptionsInterpolator: CameraOptionsInterpolatorProtoco
     private let coordinateInterpolator: CoordinateInterpolatorProtocol
     private let uiEdgeInsetsInterpolator: UIEdgeInsetsInterpolatorProtocol
     private let interpolator: InterpolatorProtocol
-    private let bearingInterpolator: InterpolatorProtocol
+    private let directionInterpolator: DirectionInterpolatorProtocol
 
     internal init(coordinateInterpolator: CoordinateInterpolatorProtocol,
                   uiEdgeInsetsInterpolator: UIEdgeInsetsInterpolatorProtocol,
                   interpolator: InterpolatorProtocol,
-                  bearingInterpolator: InterpolatorProtocol) {
+                  directionInterpolator: DirectionInterpolatorProtocol) {
         self.coordinateInterpolator = coordinateInterpolator
         self.uiEdgeInsetsInterpolator = uiEdgeInsetsInterpolator
         self.interpolator = interpolator
-        self.bearingInterpolator = bearingInterpolator
+        self.directionInterpolator = directionInterpolator
     }
 
     internal func interpolate(from: CameraOptions,
@@ -49,7 +49,7 @@ internal final class CameraOptionsInterpolator: CameraOptionsInterpolatorProtoco
             from: from.bearing,
             to: to.bearing,
             fraction: fraction,
-            interpolate: bearingInterpolator.interpolate(from:to:fraction:))
+            interpolate: directionInterpolator.interpolate(from:to:fraction:))
 
         let pitch = optionalInterpolator.interpolate(
             from: from.pitch.map(Double.init(_:)),

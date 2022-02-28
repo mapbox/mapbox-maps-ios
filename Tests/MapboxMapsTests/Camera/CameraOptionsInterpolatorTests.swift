@@ -5,7 +5,7 @@ final class CameraOptionsInterpolatorTests: XCTestCase {
     var coordinateInterpolator: MockCoordinateInterpolator!
     var uiEdgeInsetsInterpolator: MockUIEdgeInsetsInterpolator!
     var interpolator: MockInterpolator!
-    var bearingInterpolator: MockInterpolator!
+    var directionInterpolator: MockDirectionInterpolator!
     var cameraOptionsInterpolator: CameraOptionsInterpolator!
     var fraction: Double!
 
@@ -14,19 +14,19 @@ final class CameraOptionsInterpolatorTests: XCTestCase {
         coordinateInterpolator = MockCoordinateInterpolator()
         uiEdgeInsetsInterpolator = MockUIEdgeInsetsInterpolator()
         interpolator = MockInterpolator()
-        bearingInterpolator = MockInterpolator()
+        directionInterpolator = MockDirectionInterpolator()
         cameraOptionsInterpolator = CameraOptionsInterpolator(
             coordinateInterpolator: coordinateInterpolator,
             uiEdgeInsetsInterpolator: uiEdgeInsetsInterpolator,
             interpolator: interpolator,
-            bearingInterpolator: bearingInterpolator)
+            directionInterpolator: directionInterpolator)
         fraction = .random(in: 0...1)
     }
 
     override func tearDown() {
         fraction = nil
         cameraOptionsInterpolator = nil
-        bearingInterpolator = nil
+        directionInterpolator = nil
         interpolator = nil
         uiEdgeInsetsInterpolator = nil
         coordinateInterpolator = nil
@@ -45,7 +45,7 @@ final class CameraOptionsInterpolatorTests: XCTestCase {
         XCTAssertTrue(coordinateInterpolator.interpolateStub.invocations.isEmpty)
         XCTAssertTrue(uiEdgeInsetsInterpolator.interpolateStub.invocations.isEmpty)
         XCTAssertTrue(interpolator.interpolateStub.invocations.isEmpty)
-        XCTAssertTrue(bearingInterpolator.interpolateStub.invocations.isEmpty)
+        XCTAssertTrue(directionInterpolator.interpolateStub.invocations.isEmpty)
 
         XCTAssertNil(result.center)
         XCTAssertNil(result.padding)
@@ -73,7 +73,7 @@ final class CameraOptionsInterpolatorTests: XCTestCase {
         XCTAssertTrue(coordinateInterpolator.interpolateStub.invocations.isEmpty)
         XCTAssertTrue(uiEdgeInsetsInterpolator.interpolateStub.invocations.isEmpty)
         XCTAssertTrue(interpolator.interpolateStub.invocations.isEmpty)
-        XCTAssertTrue(bearingInterpolator.interpolateStub.invocations.isEmpty)
+        XCTAssertTrue(directionInterpolator.interpolateStub.invocations.isEmpty)
 
         XCTAssertNil(result.center)
         XCTAssertNil(result.padding)
@@ -101,7 +101,7 @@ final class CameraOptionsInterpolatorTests: XCTestCase {
         XCTAssertTrue(coordinateInterpolator.interpolateStub.invocations.isEmpty)
         XCTAssertTrue(uiEdgeInsetsInterpolator.interpolateStub.invocations.isEmpty)
         XCTAssertTrue(interpolator.interpolateStub.invocations.isEmpty)
-        XCTAssertTrue(bearingInterpolator.interpolateStub.invocations.isEmpty)
+        XCTAssertTrue(directionInterpolator.interpolateStub.invocations.isEmpty)
 
         XCTAssertNil(result.center)
         XCTAssertNil(result.padding)
@@ -131,7 +131,7 @@ final class CameraOptionsInterpolatorTests: XCTestCase {
         interpolator.interpolateStub.returnValueQueue = .random(
             withLength: 2,
             generator: { .random(in: -100...100) })
-        bearingInterpolator.interpolateStub.defaultReturnValue = .random(in: 0..<360)
+        directionInterpolator.interpolateStub.defaultReturnValue = .random(in: 0..<360)
 
         let result = cameraOptionsInterpolator.interpolate(
             from: from,
@@ -141,12 +141,12 @@ final class CameraOptionsInterpolatorTests: XCTestCase {
         XCTAssertEqual(coordinateInterpolator.interpolateStub.invocations.count, 1)
         XCTAssertEqual(uiEdgeInsetsInterpolator.interpolateStub.invocations.count, 1)
         XCTAssertEqual(interpolator.interpolateStub.invocations.count, 2)
-        XCTAssertEqual(bearingInterpolator.interpolateStub.invocations.count, 1)
+        XCTAssertEqual(directionInterpolator.interpolateStub.invocations.count, 1)
 
         guard coordinateInterpolator.interpolateStub.invocations.count == 1,
               uiEdgeInsetsInterpolator.interpolateStub.invocations.count == 1,
               interpolator.interpolateStub.invocations.count == 2,
-              bearingInterpolator.interpolateStub.invocations.count == 1 else {
+              directionInterpolator.interpolateStub.invocations.count == 1 else {
                   return
               }
 
@@ -168,7 +168,7 @@ final class CameraOptionsInterpolatorTests: XCTestCase {
         XCTAssertEqual(interpolatorInvocation0.parameters.fraction, fraction)
         XCTAssertEqual(result.zoom, CGFloat(interpolatorInvocation0.returnValue))
 
-        let bearingInterpolatorInvocation = bearingInterpolator.interpolateStub.invocations[0]
+        let bearingInterpolatorInvocation = directionInterpolator.interpolateStub.invocations[0]
         XCTAssertEqual(bearingInterpolatorInvocation.parameters.from, from.bearing)
         XCTAssertEqual(bearingInterpolatorInvocation.parameters.to, to.bearing)
         XCTAssertEqual(bearingInterpolatorInvocation.parameters.fraction, fraction)

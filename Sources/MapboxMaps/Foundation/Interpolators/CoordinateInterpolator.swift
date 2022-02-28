@@ -8,10 +8,10 @@ internal protocol CoordinateInterpolatorProtocol: AnyObject {
 
 internal final class CoordinateInterpolator: CoordinateInterpolatorProtocol {
     private let interpolator: InterpolatorProtocol
-    private let longitudeInterpolator: InterpolatorProtocol
+    private let longitudeInterpolator: LongitudeInterpolatorProtocol
 
     internal init(interpolator: InterpolatorProtocol,
-                  longitudeInterpolator: InterpolatorProtocol) {
+                  longitudeInterpolator: LongitudeInterpolatorProtocol) {
         self.interpolator = interpolator
         self.longitudeInterpolator = longitudeInterpolator
     }

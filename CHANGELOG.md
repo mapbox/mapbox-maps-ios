@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Update to MapboxCoreMaps 10.4.0-rc.1 and MapboxCommon 21.2.0-rc.1. ([#1158](https://github.com/mapbox/mapbox-maps-ios/pull/1158))
+
 ## 10.4.0-beta.1 - February 23, 2022
 
 * Prevent rendering in background by pausing/resuming display link in response to application or scene lifecycle events. ([#1086](https://github.com/mapbox/mapbox-maps-ios/pull/1086))

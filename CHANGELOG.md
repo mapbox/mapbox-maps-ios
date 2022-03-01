@@ -5,6 +5,7 @@ Mapbox welcomes participation and contributions from everyone.
 ## main
 
 * Update to MapboxCoreMaps 10.4.0-rc.1 and MapboxCommon 21.2.0-rc.1. ([#1158](https://github.com/mapbox/mapbox-maps-ios/pull/1158))
+* Enable explicit drawing behavior for metal view(call `draw()` explicitly instead of `setNeedsDisplay` when view's content need to be redrawn).([#1157](https://github.com/mapbox/mapbox-maps-ios/pull/1157))
 
 ## 10.4.0-beta.1 - February 23, 2022
 

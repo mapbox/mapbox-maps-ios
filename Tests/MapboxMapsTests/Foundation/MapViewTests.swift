@@ -27,8 +27,6 @@ final class MapViewTests: XCTestCase {
         window = UIWindow()
         window.addSubview(mapView)
         metalView = try XCTUnwrap(XCTUnwrap(dependencyProvider.makeMetalViewStub.returnedValues.first))
-        // reset is required here to ignore the setNeedsDisplay() invocation during initialization
-        metalView.setNeedsDisplayStub.reset()
     }
 
     override func tearDown() {
@@ -136,12 +134,12 @@ final class MapViewTests: XCTestCase {
         XCTAssertEqual(mapView.displayLinkDuration, displayLink.duration)
     }
 
-    func testMetalViewSetNeedsDisplayIsTriggeredByScheduleRepaint() throws {
+    func testMetalViewDrawIsTriggeredByScheduleRepaint() throws {
         mapView.scheduleRepaint()
 
         try invokeDisplayLinkCallback()
 
-        XCTAssertEqual(metalView.setNeedsDisplayStub.invocations.count, 1)
+        XCTAssertEqual(metalView.drawStub.invocations.count, 1)
     }
 
     func testMetalViewDoesFitMapView() {

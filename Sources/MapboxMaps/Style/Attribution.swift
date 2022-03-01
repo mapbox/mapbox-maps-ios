@@ -15,7 +15,7 @@ internal struct Attribution: Hashable {
     static let aboutTelemetryURL    = URL(string: "https://www.mapbox.com/telemetry")!
 
     var title: String
-    var url: URL
+    var url: URL?
 
     var titleAbbreviation: String {
         return title == Self.OSM ? Self.OSMAbbr : title
@@ -46,6 +46,8 @@ internal struct Attribution: Hashable {
     ]
 
     var isFeedbackURL: Bool {
+        guard let url = url else { return false }
+
         return title.lowercased() == "improve this map" ||
             Self.improveMapURLs.contains(url.absoluteString)
     }
@@ -104,8 +106,7 @@ internal struct Attribution: Hashable {
             attributedString.enumerateAttribute(.link,
                                                 in: NSRange(location: 0, length: attributedString.length),
                                                 options: []) { (value: Any?, range: NSRange, _: UnsafeMutablePointer<ObjCBool>) in
-                guard let url = value as? URL,
-                      range.location != NSNotFound else {
+                guard range.location != NSNotFound else {
                     return
                 }
 
@@ -116,7 +117,7 @@ internal struct Attribution: Hashable {
                     return
                 }
 
-                let attribution = Attribution(title: trimmedString, url: url)
+                let attribution = Attribution(title: trimmedString, url: value as? URL)
 
                 // Disallow duplicates.
                 if !attributions.contains(attribution) {

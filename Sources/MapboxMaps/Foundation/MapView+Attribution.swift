@@ -7,7 +7,10 @@ extension MapView: AttributionDialogManagerDelegate {
     }
 
     func attributionDialogManager(_ attributionDialogManager: AttributionDialogManager, didTriggerActionFor attribution: Attribution) {
-        let url: URL = attribution.isFeedbackURL ? mapboxFeedbackURL() : attribution.url
+        guard let url: URL = attribution.isFeedbackURL ? mapboxFeedbackURL() : attribution.url else {
+            return
+        }
+
         Log.debug(forMessage: "Open url: \(url))", category: "Attribution")
         UIApplication.shared.open(url)
     }

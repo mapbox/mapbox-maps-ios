@@ -135,6 +135,7 @@ extension AttributionDialogManager: InfoButtonOrnamentDelegate {
                 let action = UIAlertAction(title: attribution.title, style: .default) { _ in
                     self.delegate?.attributionDialogManager(self, didTriggerActionFor: attribution)
                 }
+                action.isEnabled = attribution.url != nil
                 alert.addAction(action)
             }
         }

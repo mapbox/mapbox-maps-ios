@@ -3,9 +3,9 @@ import XCTest
 
 final class LocationInterpolatorTests: XCTestCase {
 
-    var interpolator: MockInterpolator!
-    var directionInterpolator: MockInterpolator!
-    var latitudeInterpolator: MockInterpolator!
+    var doubleInterpolator: MockDoubleInterpolator!
+    var directionInterpolator: MockDirectionInterpolator!
+    var coordinateInterpolator: MockCoordinateInterpolator!
     var locationInterpolator: LocationInterpolator!
     var from: InterpolatedLocation!
     var to: InterpolatedLocation!
@@ -13,20 +13,24 @@ final class LocationInterpolatorTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        interpolator = MockInterpolator()
-        directionInterpolator = MockInterpolator()
-        latitudeInterpolator = MockInterpolator()
+        doubleInterpolator = MockDoubleInterpolator()
+        directionInterpolator = MockDirectionInterpolator()
+        coordinateInterpolator = MockCoordinateInterpolator()
         locationInterpolator = LocationInterpolator(
-            interpolator: interpolator,
+            doubleInterpolator: doubleInterpolator,
             directionInterpolator: directionInterpolator,
-            latitudeInterpolator: latitudeInterpolator)
+            coordinateInterpolator: coordinateInterpolator)
         from = .random()
         to = .random()
         fraction = .random(in: -10...10)
 
-        interpolator.interpolateStub.returnValueQueue = .random(
+        doubleInterpolator.interpolateStub.returnValueQueue = .random(
             withLength: 3,
             generator: { .random(in: -200...200) })
+        directionInterpolator.interpolateStub.returnValueQueue = .random(
+            withLength: 2,
+            generator: { .random(in: 0..<360) })
+        coordinateInterpolator.interpolateStub.defaultReturnValue = .random()
     }
 
     override func tearDown() {
@@ -34,40 +38,34 @@ final class LocationInterpolatorTests: XCTestCase {
         to = nil
         from = nil
         locationInterpolator = nil
-        latitudeInterpolator = nil
+        coordinateInterpolator = nil
         directionInterpolator = nil
-        interpolator = nil
+        doubleInterpolator = nil
         super.tearDown()
     }
 
     func verifyCommonCases(withResult result: InterpolatedLocation) {
-        XCTAssertEqual(latitudeInterpolator.interpolateStub.invocations.count, 1)
-        XCTAssertEqual(interpolator.interpolateStub.invocations.count, 3)
+        XCTAssertEqual(coordinateInterpolator.interpolateStub.invocations.count, 1)
+        XCTAssertEqual(doubleInterpolator.interpolateStub.invocations.count, 2)
 
-        guard latitudeInterpolator.interpolateStub.invocations.count == 1,
-              interpolator.interpolateStub.invocations.count == 3 else {
+        guard coordinateInterpolator.interpolateStub.invocations.count == 1,
+              doubleInterpolator.interpolateStub.invocations.count == 2 else {
             return
         }
 
-        let latitudeInterpolateInvocation = latitudeInterpolator.interpolateStub.invocations[0]
-        XCTAssertEqual(latitudeInterpolateInvocation.parameters.from, from.coordinate.latitude)
-        XCTAssertEqual(latitudeInterpolateInvocation.parameters.to, to.coordinate.latitude)
-        XCTAssertEqual(latitudeInterpolateInvocation.parameters.fraction, fraction)
-        XCTAssertEqual(result.coordinate.latitude, latitudeInterpolateInvocation.returnValue)
+        let coordinateInterpolateInvocation = coordinateInterpolator.interpolateStub.invocations[0]
+        XCTAssertEqual(coordinateInterpolateInvocation.parameters.from, from.coordinate)
+        XCTAssertEqual(coordinateInterpolateInvocation.parameters.to, to.coordinate)
+        XCTAssertEqual(coordinateInterpolateInvocation.parameters.fraction, fraction)
+        XCTAssertEqual(result.coordinate, coordinateInterpolateInvocation.returnValue)
 
-        let longitudeInterpolateInvocation = interpolator.interpolateStub.invocations[0]
-        XCTAssertEqual(longitudeInterpolateInvocation.parameters.from, from.coordinate.longitude)
-        XCTAssertEqual(longitudeInterpolateInvocation.parameters.to, to.coordinate.longitude)
-        XCTAssertEqual(longitudeInterpolateInvocation.parameters.fraction, fraction)
-        XCTAssertEqual(result.coordinate.longitude, longitudeInterpolateInvocation.returnValue)
-
-        let altitudeInterpolateInvocation = interpolator.interpolateStub.invocations[1]
+        let altitudeInterpolateInvocation = doubleInterpolator.interpolateStub.invocations[0]
         XCTAssertEqual(altitudeInterpolateInvocation.parameters.from, from.altitude)
         XCTAssertEqual(altitudeInterpolateInvocation.parameters.to, to.altitude)
         XCTAssertEqual(altitudeInterpolateInvocation.parameters.fraction, fraction)
         XCTAssertEqual(result.altitude, altitudeInterpolateInvocation.returnValue)
 
-        let horizontalAccuracyInterpolateInvocation = interpolator.interpolateStub.invocations[2]
+        let horizontalAccuracyInterpolateInvocation = doubleInterpolator.interpolateStub.invocations[1]
         XCTAssertEqual(horizontalAccuracyInterpolateInvocation.parameters.from, from.horizontalAccuracy)
         XCTAssertEqual(horizontalAccuracyInterpolateInvocation.parameters.to, to.horizontalAccuracy)
         XCTAssertEqual(horizontalAccuracyInterpolateInvocation.parameters.fraction, fraction)

@@ -5,66 +5,54 @@ internal protocol LocationInterpolatorProtocol: AnyObject {
 }
 
 internal final class LocationInterpolator: LocationInterpolatorProtocol {
+    private let doubleInterpolator: DoubleInterpolatorProtocol
+    private let directionInterpolator: DirectionInterpolatorProtocol
+    private let coordinateInterpolator: CoordinateInterpolatorProtocol
+    private let optionalInterpolator = OptionalInterpolator()
 
-    private let interpolator: InterpolatorProtocol
-    private let directionInterpolator: InterpolatorProtocol
-    private let latitudeInterpolator: InterpolatorProtocol
-
-    internal init(interpolator: InterpolatorProtocol,
-                  directionInterpolator: InterpolatorProtocol,
-                  latitudeInterpolator: InterpolatorProtocol) {
-        self.interpolator = interpolator
+    internal init(doubleInterpolator: DoubleInterpolatorProtocol,
+                  directionInterpolator: DirectionInterpolatorProtocol,
+                  coordinateInterpolator: CoordinateInterpolatorProtocol) {
+        self.doubleInterpolator = doubleInterpolator
         self.directionInterpolator = directionInterpolator
-        self.latitudeInterpolator = latitudeInterpolator
+        self.coordinateInterpolator = coordinateInterpolator
     }
 
     internal func interpolate(from fromLocation: InterpolatedLocation,
                               to toLocation: InterpolatedLocation,
                               fraction: Double) -> InterpolatedLocation {
-        let course: CLLocationDirection?
-        if let startCourse = fromLocation.course,
-           let endCourse = toLocation.course {
-            course = directionInterpolator.interpolate(
-                from: startCourse,
-                to: endCourse,
-                fraction: fraction)
-        } else if let endCourse = toLocation.course {
-            course = endCourse
-        } else {
-            course = nil
-        }
 
-        let heading: CLLocationDirection?
-        if let startHeading = fromLocation.heading,
-           let endHeading = toLocation.heading {
-            heading = directionInterpolator.interpolate(
-                from: startHeading,
-                to: endHeading,
-                fraction: fraction)
-        } else if let endHeading = toLocation.heading {
-            heading = endHeading
-        } else {
-            heading = nil
-        }
+        let coordinate = coordinateInterpolator.interpolate(
+            from: fromLocation.coordinate,
+            to: toLocation.coordinate,
+            fraction: fraction)
+
+        let altitude = doubleInterpolator.interpolate(
+            from: fromLocation.altitude,
+            to: toLocation.altitude,
+            fraction: fraction)
+
+        let horizontalAccuracy = doubleInterpolator.interpolate(
+            from: fromLocation.horizontalAccuracy,
+            to: toLocation.horizontalAccuracy,
+            fraction: fraction)
+
+        let course = optionalInterpolator.interpolate(
+            from: fromLocation.course,
+            to: toLocation.course,
+            fraction: fraction,
+            interpolate: directionInterpolator.interpolate(from:to:fraction:)) ?? toLocation.course
+
+        let heading = optionalInterpolator.interpolate(
+            from: fromLocation.heading,
+            to: toLocation.heading,
+            fraction: fraction,
+            interpolate: directionInterpolator.interpolate(from:to:fraction:)) ?? toLocation.heading
 
         return InterpolatedLocation(
-            coordinate: CLLocationCoordinate2D(
-                latitude: latitudeInterpolator.interpolate(
-                    from: fromLocation.coordinate.latitude,
-                    to: toLocation.coordinate.latitude,
-                    fraction: fraction),
-                longitude: interpolator.interpolate(
-                    from: fromLocation.coordinate.longitude,
-                    to: toLocation.coordinate.longitude,
-                    fraction: fraction)),
-            altitude: interpolator.interpolate(
-                from: fromLocation.altitude,
-                to: toLocation.altitude,
-                fraction: fraction),
-            horizontalAccuracy: interpolator.interpolate(
-                from: fromLocation.horizontalAccuracy,
-                to: toLocation.horizontalAccuracy,
-                fraction: fraction),
+            coordinate: coordinate,
+            altitude: altitude,
+            horizontalAccuracy: horizontalAccuracy,
             course: course,
             heading: heading,
             accuracyAuthorization: toLocation.accuracyAuthorization)

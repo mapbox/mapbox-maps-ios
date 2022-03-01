@@ -4,6 +4,8 @@ Mapbox welcomes participation and contributions from everyone.
 
 ## main
 
+* Enable explicit drawing behavior for metal view(call `draw()` explicitly instead of `setNeedsDisplay` when view's content need to be redrawn).([#1157](https://github.com/mapbox/mapbox-maps-ios/pull/1157))
+
 ## 10.4.0-beta.1 - February 23, 2022
 
 * Prevent rendering in background by pausing/resuming display link in response to application or scene lifecycle events. ([#1086](https://github.com/mapbox/mapbox-maps-ios/pull/1086))

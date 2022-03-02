@@ -127,6 +127,7 @@ workflows:
       - validate-integrations-for-branch
 
       # Trigger mobile-metrics workflows
+      - trigger-metrics-v2
       - trigger-binary-size:
           requires:
             - build-sdk
@@ -358,6 +359,36 @@ jobs:
               fi
             else
               echo "CIRCLECI_METRICS_TOKEN not provided"
+            fi
+
+  trigger-metrics-v2:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Run Workflow
+          command: |
+            if [[ $CIRCLE_BRANCH == main ]]; then
+              curl -X POST "https://circleci.com/api/v2/project/github/mapbox/mapbox-maps-ios-internal/pipeline" \
+                  -H 'Content-Type: application/json' \
+                  -H "Circle-Token: $CIRCLECI_METRICS_TOKEN" \
+                  -d $'{
+                "branch": "main",
+                "parameters": {
+                  "maps-ios-checkout-reference": "<< pipeline.git.revision >>",
+                  "run-tests": true
+                }
+              }'
+            else
+              curl -X POST "https://circleci.com/api/v2/project/github/mapbox/mapbox-maps-ios-internal/pipeline" \
+                -H 'Content-Type: application/json' \
+                -H "Circle-Token: $CIRCLECI_METRICS_TOKEN" \
+                -d $'{
+              "branch": "main",
+              "parameters": {
+                "maps-ios-checkout-reference": "<< pipeline.git.revision >>"
+              }
+            }'
             fi
 
   trigger-metrics-collection:

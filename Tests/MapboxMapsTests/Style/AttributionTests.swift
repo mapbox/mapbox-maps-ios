@@ -80,6 +80,23 @@ class AttributionTests: XCTestCase {
         XCTAssertEqual(attribution.kind, .nonActionable)
     }
 
+    func testDuplicateAttributionParsing() {
+        let attributionsHTML = """
+  <a href=\"https://www.mapbox.com/about/maps/\" target=\"_blank\" title=\"Mapbox\" aria-label=\"Mapbox\" role=\"listitem\">&copy; Mapbox</a>
+  <a href=\"https://www.mapbox.com/about/maps/\" target=\"_blank\" title=\"Mapbox\" aria-label=\"Mapbox\" role=\"listitem\">&copy; Mapbox</a>
+"""
+        let attributions = Attribution.parse([attributionsHTML])
+
+        guard attributions.count == 1 else {
+            XCTFail("Parsing should return 1 attribution")
+            return
+        }
+
+        let attribution0 = attributions[0]
+        XCTAssertEqual(attribution0.title, "Mapbox")
+        XCTAssertEqual(attribution0.kind, .actionable(URL(string: "https://www.mapbox.com/about/maps/")!))
+    }
+
     func testAttributionAbbreviation() {
         let attributionsHTML = """
   <a href=\"https://www.mapbox.com/about/maps/\" target=\"_blank\" title=\"Mapbox\" aria-label=\"Mapbox\" role=\"listitem\">&copy; Mapbox</a> <a href=\"https://www.openstreetmap.org/about/\" target=\"_blank\" title=\"OpenStreetMap\" aria-label=\"OpenStreetMap\" role=\"listitem\">&copy; OpenStreetMap</a>

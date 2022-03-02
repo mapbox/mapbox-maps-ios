@@ -11,10 +11,21 @@ parameters:
 
 workflows:
   benchmark:
+    when:
+      not: << pipeline.parameters.run-tests >>
     jobs:
       - build-benchmark:
           context:
             - SDK Registry Token
+            - MapboxCI GitHub UserToken
+  run-benchmark:
+    when: << pipeline.parameters.run-tests >>
+    jobs:
+      - build-benchmark:
+          context:
+            - SDK Registry Token
+            - MapboxCI GitHub UserToken
+      - run-benchmark
 
 jobs:
   build-benchmark:
@@ -34,16 +45,39 @@ jobs:
             fi
 
             git submodule status
-      - mapbox/add-mapbox-netrc
-      - mapbox/add-mapbox-filetoken
-      - build-benchmark
+      - github-commit-progress:
+          commit: << pipeline.parameters.maps-ios-checkout-reference >>
+          repo-slug: mapbox/mapbox-maps-ios
+          steps:
+            - mapbox/add-mapbox-netrc
+            - mapbox/add-mapbox-filetoken
+            - build-benchmark
 
-  run-benchmark-on-devices:
+  run-benchmark:
     executor: base-docker
     steps:
       - checkout
+      - run: echo $'Running tests\nLoading'
 
 commands:
+  github-commit-progress:
+    parameters:
+      steps:
+        type: steps
+      commit:
+        type: string
+      repo-slug:
+        type: string
+    steps:
+      - github-commit-set-status:
+          commit: << parameters.commit >>
+          pending: true
+          repo-slug: << parameters.repo-slug >>
+      - steps: << parameters.steps >>
+      - github-commit-set-status:
+          commit: << parameters.commit >>
+          repo-slug: << parameters.repo-slug >>
+
   build-benchmark:
     steps:
       - run:
@@ -52,6 +86,39 @@ commands:
             xcodebuild -resolvePackageDependencies -scheme Benchmark
             xcodebuild -scheme Benchmark CODE_SIGNING_ALLOWED=NO
           working_directory: benchmark/
+
+  github-commit-set-status:
+    parameters:
+      commit:
+        type: string
+      pending:
+        type: boolean
+        default: false
+      repo-slug:
+        type: string
+    steps:
+      - run:
+          name: Report upstream status
+          command: |
+            python3 -m pip install requests
+            if [ -n "<< parameters.commit >>" ]; then
+              if [[ "<< parameters.pending >>" = "true" ]]; then
+                python3 ./scripts/ci-github-set-commit-status.py --token ${MAPBOXCI_GITHUB_USER_TOKEN} --pending --slug "<< parameters.repo-slug >>" --hash << parameters.commit >>
+              else
+                python3 ./scripts/ci-github-set-commit-status.py --token ${MAPBOXCI_GITHUB_USER_TOKEN} --success --slug "<< parameters.repo-slug >>" --hash << parameters.commit >>
+              fi
+            fi
+          working_directory: mobile-metrics
+      - run:
+          name: Report upstream failure status
+          command: |
+            python3 -m pip install requests
+            if [ -n "<< parameters.commit >>" ]; then
+                python3 ./scripts/ci-github-set-commit-status.py --token ${MAPBOXCI_GITHUB_USER_TOKEN} --slug "<< parameters.repo-slug >>" --hash << parameters.commit >>
+            fi
+          working_directory: mobile-metrics
+          when: on_fail
+
 
   checkout-mobile-metrics:
     steps:

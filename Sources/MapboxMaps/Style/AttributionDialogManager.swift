@@ -134,14 +134,14 @@ extension AttributionDialogManager: InfoButtonOrnamentDelegate {
         if let attributions = dataSource?.attributions() {
 
             // Non actionable single item gets displayed as alert's message
-            if attributions.count == 1, let attribution = attributions.first, attribution.url == nil {
+            if attributions.count == 1, let attribution = attributions.first, attribution.kind == .nonActionable {
                 alert.message = attribution.title
             } else {
                 for attribution in attributions {
                     let action = UIAlertAction(title: attribution.title, style: .default) { _ in
                         self.delegate?.attributionDialogManager(self, didTriggerActionFor: attribution)
                     }
-                    action.isEnabled = attribution.url != nil
+                    action.isEnabled = attribution.kind != .nonActionable
                     alert.addAction(action)
                 }
             }

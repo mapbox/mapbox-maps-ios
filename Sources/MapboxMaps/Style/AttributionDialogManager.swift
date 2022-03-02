@@ -133,7 +133,7 @@ extension AttributionDialogManager: InfoButtonOrnamentDelegate {
 
         if let attributions = dataSource?.attributions() {
 
-            // Non actionable single item get's displayed as alert's title
+            // Non actionable single item gets displayed as alert's message
             if attributions.count == 1, let attribution = attributions.first, attribution.url == nil {
                 alert.message = attribution.title
             } else {

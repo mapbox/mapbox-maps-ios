@@ -17,23 +17,117 @@ class AttributionTests: XCTestCase {
         Bundle.mapboxMapsMetadata.version = sdkVersion
     }
 
-    func testAttribution() {
-        let a1 = Attribution(title: "Hello World", url: URL(string: "https://example.com")!)
-        XCTAssertEqual(a1.title, "Hello World")
-        XCTAssertEqual(a1.titleAbbreviation, "Hello World")
-        XCTAssertFalse(a1.isFeedbackURL)
+    func testActionableAttributionParsing() {
+        let attributionsHTML = """
+  <a href=\"https://www.mapbox.com/about/maps/\" target=\"_blank\" title=\"Mapbox\" aria-label=\"Mapbox\" role=\"listitem\">&copy; Mapbox</a>
+<a href=\"https://www.openstreetmap.org/about/\" target=\"_blank\" title=\"OpenStreetMap\" aria-label=\"OpenStreetMap\" role=\"listitem\">&copy; OpenStreetMap</a>
+"""
+        let attributions = Attribution.parse([attributionsHTML])
 
-        let a2 = Attribution(title: Attribution.OSM, url: URL(string: "https://example.com")!)
-        XCTAssertEqual(a2.title, Attribution.OSM)
-        XCTAssertEqual(a2.titleAbbreviation, Attribution.OSMAbbr)
-
-        for urlString in Attribution.improveMapURLs {
-            let a3 = Attribution(title: "Don't Improve this map", url: URL(string: urlString)!)
-            XCTAssert(a3.isFeedbackURL)
+        guard attributions.count == 2 else {
+            XCTFail("Parsing should return 2 attributions")
+            return
         }
 
-        let a4 = Attribution(title: "Improve this map", url: URL(string: "https://example.com")!)
-        XCTAssert(a4.isFeedbackURL)
+        let attribution0 = attributions[0]
+        XCTAssertEqual(attribution0.title, "Mapbox")
+        XCTAssertEqual(attribution0.kind, .actionable(URL(string: "https://www.mapbox.com/about/maps/")!))
+
+        let attribution1 = attributions[1]
+        XCTAssertEqual(attribution1.title, "OpenStreetMap")
+        XCTAssertEqual(attribution1.kind, .actionable(URL(string: "https://www.openstreetmap.org/about/")!))
+    }
+
+    func testFeedbackAttributionParsing() throws {
+        let attributionsHTML = """
+<a class=\"mapbox-improve-map\" href=\"https://www.mapbox.com/\" target=\"_blank\" title=\"Improve this map\" aria-label=\"Improve this map\" role=\"listitem\">Improve this map</a>
+<a class=\"mapbox-improve-map\" href=\"https://www.mapbox.com/feedback/\" target=\"_blank\" title=\"Attribution 1\" aria-label=\"Attribution 3\" role=\"listitem\">Attribution 1</a>
+<a class=\"mapbox-improve-map\" href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\" title=\"Attribution 2\" aria-label=\"Attribution 2\" role=\"listitem\">Attribution 2</a>
+<a class=\"mapbox-improve-map\" href=\"https://apps.mapbox.com/feedback/\" target=\"_blank\" title=\"Attribution 3\" aria-label=\"Attribution 3\" role=\"listitem\">Attribution 3</a>
+"""
+
+        let attributions = Attribution.parse([attributionsHTML])
+
+        guard attributions.count == 4 else {
+            XCTFail("Parsing should return 4 attributions")
+            return
+        }
+
+        let attribution0 = attributions[0]
+        XCTAssertEqual(attribution0.title, "Improve this map")
+        XCTAssertEqual(attribution0.kind, .feedback)
+
+        let attribution1 = attributions[1]
+        XCTAssertEqual(attribution1.title, "Attribution 1")
+        XCTAssertEqual(attribution1.kind, .feedback)
+
+        let attribution2 = attributions[2]
+        XCTAssertEqual(attribution2.title, "Attribution 2")
+        XCTAssertEqual(attribution2.kind, .feedback)
+
+        let attribution3 = attributions[3]
+        XCTAssertEqual(attribution3.title, "Attribution 3")
+        XCTAssertEqual(attribution3.kind, .feedback)
+    }
+
+    func testPlainTextAttributionParsing() throws {
+        let attributionString = String.randomASCII(withLength: 10)
+
+        let attributions = Attribution.parse([attributionString])
+
+        let attribution = try XCTUnwrap(attributions.first)
+        XCTAssertEqual(attribution.title, attributionString)
+        XCTAssertEqual(attribution.kind, .nonActionable)
+    }
+
+    func testAttributionAbbreviation() {
+        let attributionsHTML = """
+  <a href=\"https://www.mapbox.com/about/maps/\" target=\"_blank\" title=\"Mapbox\" aria-label=\"Mapbox\" role=\"listitem\">&copy; Mapbox</a> <a href=\"https://www.openstreetmap.org/about/\" target=\"_blank\" title=\"OpenStreetMap\" aria-label=\"OpenStreetMap\" role=\"listitem\">&copy; OpenStreetMap</a>
+"""
+        let attributions = Attribution.parse([attributionsHTML])
+
+        guard attributions.count == 2 else {
+            XCTFail("Parsing should return 2 attributions")
+            return
+        }
+
+        let attribution0 = attributions[0]
+        XCTAssertEqual(attribution0.titleAbbreviation, "Mapbox")
+
+        let attribution1 = attributions[1]
+        XCTAssertEqual(attribution1.titleAbbreviation, "OSM")
+    }
+
+    func testFeedbackSnapshotTitle() {
+        let attribution = Attribution(title: "Improve this map", url: URL(string: "http://mapbox.com/")!)
+
+        XCTAssertEqual(attribution.kind, .feedback)
+
+        Attribution.Style.allCases.forEach { style in
+            XCTAssertNil(attribution.snapshotTitle(for: style))
+        }
+    }
+
+    func testOSMSnapshotTitle() {
+        let url = URL(string: "http://mapbox.com/")!
+        let attribution = Attribution(title: "OpenStreetMap", url: url)
+
+        XCTAssertEqual(attribution.kind, .actionable(url))
+
+        XCTAssertEqual(attribution.snapshotTitle(for: .regular), "OpenStreetMap")
+        XCTAssertEqual(attribution.snapshotTitle(for: .abbreviated), "OSM")
+        XCTAssertNil(attribution.snapshotTitle(for: .none))
+    }
+
+    func testNonOSMSnapshotTitle() {
+        let attributionTitle = String.randomASCII(withLength: 10)
+        let attribution = Attribution(title: attributionTitle, url: nil)
+
+        XCTAssertEqual(attribution.kind, .nonActionable)
+
+        XCTAssertEqual(attribution.snapshotTitle(for: .regular), attributionTitle)
+        XCTAssertEqual(attribution.snapshotTitle(for: .abbreviated), attributionTitle)
+        XCTAssertNil(attribution.snapshotTitle(for: .none))
     }
 
     func testAttributionFeedbackURL() throws {

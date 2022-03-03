@@ -48,13 +48,13 @@ workflows:
           report_failure: true
           matrix:
             parameters:
-              xcode: ["12.5.1", "13.0.0"]
+              xcode: ["12.5.1", "13.2.1"]
       - unit-test-sdk:
           configuration: "Release"
           report_failure: true
           matrix:
             parameters:
-              xcode: ["12.5.1", "13.0.0"]
+              xcode: ["12.5.1", "13.2.1"]
       - build-tests:
           name: Build MapboxTestHost tests
       - run-tests:

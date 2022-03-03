@@ -25,7 +25,9 @@ workflows:
           context:
             - SDK Registry Token
             - MapboxCI GitHub UserToken
-      - run-benchmark
+      - run-benchmark:
+          requires:
+            - build-benchmark
 
 jobs:
   build-benchmark:
@@ -42,12 +44,17 @@ jobs:
             if [[ -n "<< pipeline.parameters.maps-ios-checkout-reference >>" ]];then
               cd mapbox-maps-ios
               git checkout << pipeline.parameters.maps-ios-checkout-reference >>
+              MAPS_COMMIT_HASH=$(git rev-parse HEAD)
+              echo "export MAPS_COMMIT_HASH=${MAPS_COMMIT_HASH}" >> $BASH_ENV
+              cat $BASH_ENV
+
             fi
 
             git submodule status
-      - github-commit-progress:
-          commit: << pipeline.parameters.maps-ios-checkout-reference >>
-          repo-slug: mapbox/mapbox-maps-ios
+      - mapbox/github-commit-progress:
+          commit: $MAPS_COMMIT_HASH
+          repository: mapbox-maps-ios
+          token: $MAPBOXCI_GITHUB_USER_TOKEN
           steps:
             - mapbox/add-mapbox-netrc
             - mapbox/add-mapbox-filetoken
@@ -60,24 +67,6 @@ jobs:
       - run: echo $'Running tests\nLoading'
 
 commands:
-  github-commit-progress:
-    parameters:
-      steps:
-        type: steps
-      commit:
-        type: string
-      repo-slug:
-        type: string
-    steps:
-      - github-commit-set-status:
-          commit: << parameters.commit >>
-          pending: true
-          repo-slug: << parameters.repo-slug >>
-      - steps: << parameters.steps >>
-      - github-commit-set-status:
-          commit: << parameters.commit >>
-          repo-slug: << parameters.repo-slug >>
-
   build-benchmark:
     steps:
       - run:
@@ -86,39 +75,6 @@ commands:
             xcodebuild -resolvePackageDependencies -scheme Benchmark
             xcodebuild -scheme Benchmark CODE_SIGNING_ALLOWED=NO
           working_directory: benchmark/
-
-  github-commit-set-status:
-    parameters:
-      commit:
-        type: string
-      pending:
-        type: boolean
-        default: false
-      repo-slug:
-        type: string
-    steps:
-      - run:
-          name: Report upstream status
-          command: |
-            python3 -m pip install requests
-            if [ -n "<< parameters.commit >>" ]; then
-              if [[ "<< parameters.pending >>" = "true" ]]; then
-                python3 ./scripts/ci-github-set-commit-status.py --token ${MAPBOXCI_GITHUB_USER_TOKEN} --pending --slug "<< parameters.repo-slug >>" --hash << parameters.commit >>
-              else
-                python3 ./scripts/ci-github-set-commit-status.py --token ${MAPBOXCI_GITHUB_USER_TOKEN} --success --slug "<< parameters.repo-slug >>" --hash << parameters.commit >>
-              fi
-            fi
-          working_directory: mobile-metrics
-      - run:
-          name: Report upstream failure status
-          command: |
-            python3 -m pip install requests
-            if [ -n "<< parameters.commit >>" ]; then
-                python3 ./scripts/ci-github-set-commit-status.py --token ${MAPBOXCI_GITHUB_USER_TOKEN} --slug "<< parameters.repo-slug >>" --hash << parameters.commit >>
-            fi
-          working_directory: mobile-metrics
-          when: on_fail
-
 
   checkout-mobile-metrics:
     steps:
@@ -153,7 +109,7 @@ orbs:
           - run:
               name: Configure .netrc
               command: |
-                echo "machine api.mapbox.com login mapbox password <<parameters.token>>" >> ~/.netrc
+                echo "machine api.mapbox.com login mapbox password << parameters.token >>" >> ~/.netrc
                 chmod 0600 ~/.netrc
                 cat ~/.netrc
 
@@ -169,7 +125,114 @@ orbs:
           - run:
               name: Add Mapbox Token to file
               command: |
-                echo "<<parameters.token>>" > <<parameters.path>>
+                echo "<< parameters.token >>" > <<parameters.path>>
+
+      set-github-commit-status:
+        parameters:
+          hash:
+            type: string
+          state:
+            type: enum
+            enum:
+              - pending
+              - success
+          repository:
+            type: string
+          company:
+            type: string
+            default: mapbox
+          token:
+            type: string
+            default: $GITHUB_TOKEN
+          target_url:
+            type: string
+            default: $CIRCLE_BUILD_URL
+          description:
+            type: string
+            default: ""
+          fail_description:
+            type: string
+            default: Job failed
+          context:
+            type: string
+            default: "internal: $CIRCLE_JOB"
+        steps:
+          - run:
+              name: Set github status
+              command: |
+                if [ -n "<< parameters.hash >>" ]; then
+                  curl -X "POST" "https://api.github.com/repos/<< parameters.company >>/<< parameters.repository >>/statuses/<< parameters.hash >>" \
+                      -H "Authorization: Token << parameters.token >>" \
+                      -H 'Content-Type: application/json; charset=utf-8' \
+                      -d "{
+                        \"target_url\": \"<< parameters.target_url >>\",
+                        \"state\": \"<< parameters.state >>\",
+                        \"description\": \"<< parameters.description >>\",
+                        \"context\": \"<< parameters.context >>\"
+                      }"
+                fi
+          - when:
+              condition:
+                equal: [<< parameters.state >>, success]
+              steps:
+                 - run:
+                    name: Set github status
+                    command: |
+                      if [ -n "<< parameters.hash >>" ]; then
+                        curl -X "POST" "https://api.github.com/repos/<< parameters.company >>/<< parameters.repository >>/statuses/<< parameters.hash >>" \
+                            -H "Authorization: Token << parameters.token >>" \
+                            -H 'Content-Type: application/json; charset=utf-8' \
+                            -d "{
+                              \"target_url\": \"<< parameters.target_url >>\",
+                              \"state\": \"failure\",
+                              \"description\": \"<< parameters.fail_description >>\",
+                              \"context\": \"<< parameters.context >>\"
+                            }"
+                      fi
+                    when: on_fail
+
+
+      github-commit-progress:
+        parameters:
+          steps:
+            type: steps
+          commit:
+            type: string
+          repository:
+            type: string
+          company:
+            type: string
+            default: mapbox
+          token:
+            type: string
+            default: $GITHUB_TOKEN
+          target_url:
+            type: string
+            default: $CIRCLE_BUILD_URL
+          context:
+            type: string
+            default: "internal: $CIRCLE_JOB"
+        steps:
+          - set-github-commit-status:
+              company: << parameters.company >>
+              context: << parameters.context >>
+              description: MapboxCI is running your tests
+              hash: << parameters.commit >>
+              repository: << parameters.repository >>
+              state: pending
+              target_url: << parameters.target_url >>
+              token: << parameters.token >>
+          - steps: << parameters.steps >>
+          - set-github-commit-status:
+              company: << parameters.company >>
+              context: << parameters.context >>
+              description: Your tests passed on MapboxCI!
+              fail_description: Your tests didn't pass on MapboxCI!
+              hash: << parameters.commit >>
+              repository: << parameters.repository >>
+              state: success
+              target_url: << parameters.target_url >>
+              token: << parameters.token >>
 
     jobs:
       my_job:

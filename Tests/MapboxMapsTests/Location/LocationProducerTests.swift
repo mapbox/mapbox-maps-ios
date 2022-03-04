@@ -224,18 +224,50 @@ final class LocationProducerTests: XCTestCase {
     }
 
     func testSetLocationProviderWithConsumers() {
-        let otherProvider = MockLocationProvider()
-        otherProvider.authorizationStatus = .notDetermined
+        // populate location, heading, and accuracy authorization from the original location provider
+        let oldHeading = MockHeading()
+        locationProducer.locationProvider(locationProvider, didUpdateHeading: oldHeading)
+        let oldLocation = CLLocation.random()
+        locationProducer.locationProvider(locationProvider, didUpdateLocations: [oldLocation])
+        locationProvider.accuracyAuthorization = CLAccuracyAuthorization.reducedAccuracy
+        locationProducer.locationProviderDidChangeAuthorization(locationProvider)
+
+        // add a consumer
         locationProducer.add(consumer)
 
+        // set up the new provider
+        let otherProvider = MockLocationProvider()
+        otherProvider.authorizationStatus = .notDetermined
+        otherProvider.accuracyAuthorization = .random()
         locationProducer.locationProvider = otherProvider
 
+        // verify that the producer stops the old provider
         XCTAssertEqual(locationProvider.stopUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(locationProvider.stopUpdatingHeadingStub.invocations.count, 1)
 
+        // verify that the producer starts the new provider
         XCTAssertEqual(otherProvider.requestWhenInUseAuthorizationStub.invocations.count, 1)
         XCTAssertEqual(otherProvider.startUpdatingLocationStub.invocations.count, 1)
         XCTAssertEqual(otherProvider.startUpdatingHeadingStub.invocations.count, 1)
+
+        // send a heading update from the new provider and verify that observers
+        // are not notified since the new provider has not yet produced a
+        // location
+        let newHeading = MockHeading()
+        locationProducer.locationProvider(locationProvider, didUpdateHeading: newHeading)
+
+        XCTAssertTrue(consumer.locationUpdateStub.invocations.isEmpty)
+
+        // send a location update and verify that the observers are notified
+        // with the correct value
+        let newLocation = CLLocation.random()
+        locationProducer.locationProvider(locationProvider, didUpdateLocations: [newLocation])
+
+        XCTAssertEqual(consumer.locationUpdateStub.invocations.count, 1)
+        let location = consumer.locationUpdateStub.invocations.first?.parameters
+        XCTAssertIdentical(location?.location, newLocation)
+        XCTAssertIdentical(location?.heading, newHeading)
+        XCTAssertEqual(location?.accuracyAuthorization, otherProvider.accuracyAuthorization)
     }
 
     func testSetLocationProviderWithRecentlyDeinitedConsumers() {

@@ -148,8 +148,8 @@ internal final class Puck2D: Puck {
         @unknown default:
             newLayerPaintProperties[.accuracyRadius] = [
                 Expression.Operator.interpolate.rawValue,
-                Expression.Operator.linear.rawValue,
-                Expression.Operator.zoom.rawValue,
+                [Expression.Operator.linear.rawValue],
+                [Expression.Operator.zoom.rawValue],
                 0,
                 400000,
                 4,

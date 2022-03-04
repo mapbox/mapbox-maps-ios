@@ -393,8 +393,8 @@ final class Puck2DTests: XCTestCase {
         ]
         expectedProperties["accuracy-radius"] = [
             "interpolate",
-            "linear",
-            "zoom",
+            ["linear"],
+            ["zoom"],
             0,
             400000,
             4,
@@ -428,8 +428,8 @@ final class Puck2DTests: XCTestCase {
         ]
         expectedProperties["accuracy-radius"] = [
             "interpolate",
-            "linear",
-            "zoom",
+            ["linear"],
+            ["zoom"],
             0,
             400000,
             4,

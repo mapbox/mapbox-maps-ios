@@ -32,7 +32,7 @@ final class DelegatingMapClientTests: XCTestCase {
         delegatingMapClient.scheduleTask {
             invoked = true
         }
-        delegate.scheduleTaskStub.parameters.first?()
+        delegate.scheduleTaskStub.invocations.first?.parameters()
 
         XCTAssertEqual(delegate.scheduleTaskStub.invocations.count, 1)
         XCTAssertTrue(invoked)
@@ -46,12 +46,11 @@ final class DelegatingMapClientTests: XCTestCase {
         let actualView = delegatingMapClient.getMetalView(for: expectedDevice)
 
         XCTAssertEqual(delegate.getMetalViewStub.invocations.count, 1)
-        guard let actualDevice = delegate.getMetalViewStub.parameters.first else {
+        guard let actualDevice = delegate.getMetalViewStub.invocations.first?.parameters else {
             return
         }
-        if case let .some(actual) = actualDevice,
-           let expected = expectedDevice {
-            XCTAssertTrue(actual === expected)
+        if let expected = expectedDevice {
+            XCTAssertTrue(actualDevice === expected)
         } else {
             XCTAssertNil(actualDevice)
             XCTAssertNil(expectedDevice)

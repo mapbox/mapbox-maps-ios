@@ -115,7 +115,7 @@ final class Puck2DTests: XCTestCase {
 
     func verifyAddImages(line: UInt = #line) {
         XCTAssertEqual(style.addImageStub.invocations.count, 3, line: line)
-        let parameters = style.addImageStub.parameters
+        let parameters = style.addImageStub.invocations.map(\.parameters)
         for p in parameters {
             XCTAssertFalse(p.sdf, line: line)
             XCTAssertEqual(p.stretchX, [], line: line)
@@ -125,14 +125,14 @@ final class Puck2DTests: XCTestCase {
         guard parameters.count == 3 else {
             return
         }
-        XCTAssertEqual(style.addImageStub.parameters[0].id, "locationIndicatorLayerTopImage", line: line)
-        XCTAssertTrue(style.addImageStub.parameters[0].image === configuration.topImage, line: line)
+        XCTAssertEqual(parameters[0].id, "locationIndicatorLayerTopImage", line: line)
+        XCTAssertTrue(parameters[0].image === configuration.topImage, line: line)
 
-        XCTAssertEqual(style.addImageStub.parameters[1].id, "locationIndicatorLayerBearingImage", line: line)
-        XCTAssertTrue(style.addImageStub.parameters[1].image === configuration.bearingImage, line: line)
+        XCTAssertEqual(parameters[1].id, "locationIndicatorLayerBearingImage", line: line)
+        XCTAssertTrue(parameters[1].image === configuration.bearingImage, line: line)
 
-        XCTAssertEqual(style.addImageStub.parameters[2].id, "locationIndicatorLayerShadowImage", line: line)
-        XCTAssertTrue(style.addImageStub.parameters[2].image === configuration.shadowImage, line: line)
+        XCTAssertEqual(parameters[2].id, "locationIndicatorLayerShadowImage", line: line)
+        XCTAssertTrue(parameters[2].image === configuration.shadowImage, line: line)
     }
 
     func testActivatingPuckDoesNotAddImagesIfLatestLocationIsNil() throws {
@@ -165,17 +165,17 @@ final class Puck2DTests: XCTestCase {
         puck2D.isActive = true
 
         XCTAssertEqual(style.addImageStub.invocations.count, 2)
-        let parameters = style.addImageStub.parameters
+        let parameters = style.addImageStub.invocations.map(\.parameters)
         guard parameters.count >= 2 else {
             return
         }
-        XCTAssertEqual(style.addImageStub.parameters[0].id, "locationIndicatorLayerTopImage")
+        XCTAssertEqual(parameters[0].id, "locationIndicatorLayerTopImage")
         let expectedTopImage = UIImage(named: "location-dot-inner", in: .mapboxMaps, compatibleWith: nil)!
-        XCTAssertTrue(style.addImageStub.parameters[0].image.isEqual(expectedTopImage))
+        XCTAssertTrue(parameters[0].image.isEqual(expectedTopImage))
 
-        XCTAssertEqual(style.addImageStub.parameters[1].id, "locationIndicatorLayerShadowImage")
+        XCTAssertEqual(parameters[1].id, "locationIndicatorLayerShadowImage")
         let expectedBearingImage = UIImage(named: "location-dot-outer", in: .mapboxMaps, compatibleWith: nil)!
-        XCTAssertTrue(style.addImageStub.parameters[1].image.isEqual(expectedBearingImage))
+        XCTAssertTrue(parameters[1].image.isEqual(expectedBearingImage))
     }
 
     func makeExpectedLayerProperties(with location: InterpolatedLocation) -> [String: Any] {
@@ -218,9 +218,9 @@ final class Puck2DTests: XCTestCase {
         let expectedProperties = makeExpectedLayerProperties(with: location)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 1)
-        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
+        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
-        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.parameters.first?.layerPosition, nil)
+        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.layerPosition, nil)
     }
 
     func testReactivatingPuckDoesNotTakeFastPath() throws {
@@ -236,9 +236,9 @@ final class Puck2DTests: XCTestCase {
         let expectedProperties = makeExpectedLayerProperties(with: location)
         XCTAssertEqual(style.addPersistentLayerStub.invocations.count, 0)
         XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.count, 1)
-        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
+        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
-        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.parameters.first?.layerPosition, nil)
+        XCTAssertEqual(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.layerPosition, nil)
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 0)
     }
 
@@ -254,7 +254,7 @@ final class Puck2DTests: XCTestCase {
 
         var expectedProperties = makeExpectedLayerProperties(with: location)
         expectedProperties.removeValue(forKey: LocationIndicatorLayer.LayoutCodingKeys.bearingImage.rawValue)
-        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
+        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
 
@@ -267,7 +267,7 @@ final class Puck2DTests: XCTestCase {
         puck2D.isActive = true
 
         let expectedProperties = makeExpectedLayerProperties(with: location)
-        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
+        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
 
@@ -283,7 +283,7 @@ final class Puck2DTests: XCTestCase {
         expectedProperties["accuracy-radius"] = location.horizontalAccuracy
         expectedProperties["accuracy-radius-color"] = StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
         expectedProperties["accuracy-radius-border-color"] = StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
-        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
+        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
 
@@ -295,7 +295,7 @@ final class Puck2DTests: XCTestCase {
 
         var expectedProperties = makeExpectedLayerProperties(with: location)
         expectedProperties["bearing"] = interpolatedLocationProducer.location!.heading!
-        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
+        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
 
@@ -307,7 +307,7 @@ final class Puck2DTests: XCTestCase {
 
         var expectedProperties = makeExpectedLayerProperties(with: location)
         expectedProperties.removeValue(forKey: "bearing")
-        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
+        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
 
@@ -320,7 +320,7 @@ final class Puck2DTests: XCTestCase {
 
         var expectedProperties = makeExpectedLayerProperties(with: location)
         expectedProperties.removeValue(forKey: "bearing")
-        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
+        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
 
@@ -333,7 +333,7 @@ final class Puck2DTests: XCTestCase {
 
         var expectedProperties = makeExpectedLayerProperties(with: location)
         expectedProperties["bearing"] = interpolatedLocationProducer.location!.course!
-        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
+        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
 
@@ -353,7 +353,7 @@ final class Puck2DTests: XCTestCase {
             .bearing: 0
         ]
 
-        let actualProperties = try XCTUnwrap(style.setLayerPropertiesStub.parameters.last?.properties)
+        let actualProperties = try XCTUnwrap(style.setLayerPropertiesStub.invocations.last?.parameters.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties.mapKeys(\.rawValue) as NSDictionary)
     }
 
@@ -373,7 +373,7 @@ final class Puck2DTests: XCTestCase {
             .bearing: 0
         ]
 
-        let actualProperties = try XCTUnwrap(style.setLayerPropertiesStub.parameters.last?.properties)
+        let actualProperties = try XCTUnwrap(style.setLayerPropertiesStub.invocations.last?.parameters.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties.mapKeys(\.rawValue) as NSDictionary)
     }
 
@@ -403,7 +403,7 @@ final class Puck2DTests: XCTestCase {
             5000]
         expectedProperties["accuracy-radius-color"] = StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
         expectedProperties["accuracy-radius-border-color"] = StyleColor(UIColor(red: 0.537, green: 0.812, blue: 0.941, alpha: 0.3)).rgbaString
-        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.parameters.first?.properties)
+        let actualProperties = try XCTUnwrap(style.addPersistentLayerWithPropertiesStub.invocations.first?.parameters.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
 
@@ -442,7 +442,7 @@ final class Puck2DTests: XCTestCase {
             expectedProperties[key] = Style.layerPropertyDefaultValue(for: .locationIndicator, property: key).value
         }
         XCTAssertEqual(style.setLayerPropertiesStub.invocations.count, 1)
-        let actualProperties = try XCTUnwrap(style.setLayerPropertiesStub.parameters.first?.properties)
+        let actualProperties = try XCTUnwrap(style.setLayerPropertiesStub.invocations.first?.parameters.properties)
         XCTAssertEqual(actualProperties as NSDictionary, expectedProperties as NSDictionary)
     }
 

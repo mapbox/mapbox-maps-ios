@@ -26,7 +26,7 @@ final class MapViewTests: XCTestCase {
             dependencyProvider: dependencyProvider)
         window = UIWindow()
         window.addSubview(mapView)
-        metalView = try XCTUnwrap(XCTUnwrap(dependencyProvider.makeMetalViewStub.returnedValues.first))
+        metalView = try XCTUnwrap(XCTUnwrap(dependencyProvider.makeMetalViewStub.invocations.first?.returnValue))
     }
 
     override func tearDown() {
@@ -41,7 +41,7 @@ final class MapViewTests: XCTestCase {
     }
 
     func invokeDisplayLinkCallback() throws {
-        let makeDisplayLinkParams = try XCTUnwrap(dependencyProvider.makeDisplayLinkStub.parameters.first)
+        let makeDisplayLinkParams = try XCTUnwrap(dependencyProvider.makeDisplayLinkStub.invocations.first?.parameters)
         let target = try XCTUnwrap(makeDisplayLinkParams.target as? NSObject)
 
         // Invoke the display link callback while there's an animator; verify that this alone does
@@ -63,14 +63,14 @@ final class MapViewTests: XCTestCase {
         do {
             XCTAssertEqual(dependencyProvider.makeDisplayLinkStub.invocations.count, 1)
             XCTAssertEqual(displayLink.addStub.invocations.count, 1)
-            XCTAssertEqual(displayLink.addStub.parameters.first?.runloop, .current)
-            XCTAssertEqual(displayLink.addStub.parameters.first?.mode, .common)
+            XCTAssertEqual(displayLink.addStub.invocations.first?.parameters.runloop, .current)
+            XCTAssertEqual(displayLink.addStub.invocations.first?.parameters.mode, .common)
         }
 
         do {
             mapView.removeFromSuperview()
-            let displayLink = try XCTUnwrap(dependencyProvider.makeDisplayLinkStub.returnedValues.first)
-            XCTAssertEqual(displayLink?.invalidateStub.invocations.count, 1)
+            let displayLink = try XCTUnwrap(dependencyProvider.makeDisplayLinkStub.invocations.first?.returnValue)
+            XCTAssertEqual(displayLink.invalidateStub.invocations.count, 1)
         }
     }
 
@@ -278,13 +278,13 @@ final class MapViewTests: XCTestCase {
     func testDisplayLinkPausedWhenAppMovingToBackground() {
         notificationCenter.post(name: UIApplication.didEnterBackgroundNotification, object: nil)
 
-        XCTAssertEqual(displayLink.$isPaused.setStub.parameters, [true])
+        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
     }
 
     func testDisplayLinkResumedWhenAppMovingToForeground() {
         notificationCenter.post(name: UIApplication.willEnterForegroundNotification, object: nil)
 
-        XCTAssertEqual(displayLink.$isPaused.setStub.parameters, [false])
+        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [false])
     }
 
     func testDisplayLinkResumedWhenSceneMovingToForeground() throws {
@@ -296,7 +296,7 @@ final class MapViewTests: XCTestCase {
 
         notificationCenter.post(name: UIScene.willEnterForegroundNotification, object: window.parentScene)
 
-        XCTAssertEqual(displayLink.$isPaused.setStub.parameters, [false])
+        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [false])
     }
 
     func testDisplayLinkPausedWhenSceneMovingToBackground() throws {
@@ -308,6 +308,6 @@ final class MapViewTests: XCTestCase {
 
         notificationCenter.post(name: UIScene.didEnterBackgroundNotification, object: window.parentScene)
 
-        XCTAssertEqual(displayLink.$isPaused.setStub.parameters, [true])
+        XCTAssertEqual(displayLink.$isPaused.setStub.invocations.map(\.parameters), [true])
     }
 }

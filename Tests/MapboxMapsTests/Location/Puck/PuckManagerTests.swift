@@ -35,11 +35,11 @@ final class PuckManagerTests: XCTestCase {
         puckManager.puckBearingEnabled = .random()
         puckManager.puckType = .puck2D(configuration)
 
-        XCTAssertEqual(puck2DProvider.parameters, [configuration])
-        let puck = try XCTUnwrap(puck2DProvider.returnedValues.first)
-        XCTAssertEqual(puck.$puckBearingSource.setStub.parameters, [puckManager.puckBearingSource])
-        XCTAssertEqual(puck.$puckBearingEnabled.setStub.parameters, [puckManager.puckBearingEnabled])
-        XCTAssertEqual(puck.$isActive.setStub.parameters, [true])
+        XCTAssertEqual(puck2DProvider.invocations.map(\.parameters), [configuration])
+        let puck = try XCTUnwrap(puck2DProvider.invocations.first?.returnValue)
+        XCTAssertEqual(puck.$puckBearingSource.setStub.invocations.map(\.parameters), [puckManager.puckBearingSource])
+        XCTAssertEqual(puck.$puckBearingEnabled.setStub.invocations.map(\.parameters), [puckManager.puckBearingEnabled])
+        XCTAssertEqual(puck.$isActive.setStub.invocations.map(\.parameters), [true])
 
         // setting the same puck again should have no further effect
         puck2DProvider.reset()
@@ -59,11 +59,11 @@ final class PuckManagerTests: XCTestCase {
         puckManager.puckBearingEnabled = .random()
         puckManager.puckType = .puck3D(configuration)
 
-        XCTAssertEqual(puck3DProvider.parameters, [configuration])
-        let puck = try XCTUnwrap(puck3DProvider.returnedValues.first)
-        XCTAssertEqual(puck.$puckBearingSource.setStub.parameters, [puckManager.puckBearingSource])
-        XCTAssertEqual(puck.$puckBearingEnabled.setStub.parameters, [puckManager.puckBearingEnabled])
-        XCTAssertEqual(puck.$isActive.setStub.parameters, [true])
+        XCTAssertEqual(puck3DProvider.invocations.map(\.parameters), [configuration])
+        let puck = try XCTUnwrap(puck3DProvider.invocations.first?.returnValue)
+        XCTAssertEqual(puck.$puckBearingSource.setStub.invocations.map(\.parameters), [puckManager.puckBearingSource])
+        XCTAssertEqual(puck.$puckBearingEnabled.setStub.invocations.map(\.parameters), [puckManager.puckBearingEnabled])
+        XCTAssertEqual(puck.$isActive.setStub.invocations.map(\.parameters), [true])
 
         // setting the same puck again should have no further effect
         puck3DProvider.reset()
@@ -112,7 +112,7 @@ final class PuckManagerTests: XCTestCase {
 
         XCTAssertTrue(puck2DProvider.invocations.isEmpty)
         XCTAssertTrue(puck3DProvider.invocations.isEmpty)
-        XCTAssertEqual(puck.$isActive.setStub.parameters, [false])
+        XCTAssertEqual(puck.$isActive.setStub.invocations.map(\.parameters), [false])
     }
 
     func testSettingPuckBearingSourceWhenPuckTypeIsNonNil() {
@@ -125,7 +125,7 @@ final class PuckManagerTests: XCTestCase {
 
         puckManager.puckBearingSource = bearingSource
 
-        XCTAssertEqual(puck.$puckBearingSource.setStub.parameters, [bearingSource])
+        XCTAssertEqual(puck.$puckBearingSource.setStub.invocations.map(\.parameters), [bearingSource])
     }
 
     func testSettingPuckBearingEnabledWhenPuckTypeIsNonNil() {
@@ -138,6 +138,6 @@ final class PuckManagerTests: XCTestCase {
         let bearingEnable = Bool.random()
         puckManager.puckBearingEnabled = bearingEnable
 
-        XCTAssertEqual(puck.$puckBearingEnabled.setStub.parameters, [bearingEnable])
+        XCTAssertEqual(puck.$puckBearingEnabled.setStub.invocations.map(\.parameters), [bearingEnable])
     }
 }

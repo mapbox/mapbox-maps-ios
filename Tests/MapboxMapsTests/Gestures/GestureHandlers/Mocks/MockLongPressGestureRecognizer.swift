@@ -27,7 +27,7 @@ final class MockLongPressGestureRecognizer: UILongPressGestureRecognizer {
     }
 
     func sendActions() {
-        for param in addTargetStub.parameters {
+        for param in addTargetStub.invocations.map(\.parameters) {
             (param.target as? NSObject)?.perform(param.action, with: self)
         }
     }

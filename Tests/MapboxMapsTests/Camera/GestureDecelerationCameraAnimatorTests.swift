@@ -53,7 +53,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
 
         XCTAssertEqual(animator.state, .active)
         XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 1)
-        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.parameters.first === animator)
+        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.invocations.first?.parameters === animator)
     }
 
     func testStopAnimation() {
@@ -64,7 +64,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         XCTAssertEqual(animator.state, .inactive)
         XCTAssertEqual(completion.invocations.count, 1)
         XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
-        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === animator)
+        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.invocations.first?.parameters === animator)
     }
 
     func testUpdate() {
@@ -75,7 +75,7 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         animator.update()
 
         // Expected value is duration * velocity;
-        XCTAssertEqual(locationChangeHandler.parameters, [.init(fromLocation: location, toLocation: CGPoint(x: 10, y: -10))])
+        XCTAssertEqual(locationChangeHandler.invocations.map(\.parameters), [.init(fromLocation: location, toLocation: CGPoint(x: 10, y: -10))])
         // The previous update() should also have reduced the velocity
         // by multiplying it by the decelerationFactor once for each elapsed
         // millisecond. In this simulateion, 10 ms have elapsed.
@@ -106,6 +106,6 @@ final class GestureDecelerationCameraAnimatorTests: XCTestCase {
         XCTAssertEqual(animator.state, .inactive)
         XCTAssertEqual(completion.invocations.count, 1)
         XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
-        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === animator)
+        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.invocations.first?.parameters === animator)
     }
 }

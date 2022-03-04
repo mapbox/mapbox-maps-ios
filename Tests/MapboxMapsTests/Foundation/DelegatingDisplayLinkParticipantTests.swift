@@ -11,6 +11,6 @@ final class DelegatingDisplayLinkParticipantTests: XCTestCase {
         delegatingParticipant.participate()
 
         XCTAssertEqual(delegate.participateStub.invocations.count, 1)
-        XCTAssertTrue(delegate.participateStub.parameters.first === delegatingParticipant)
+        XCTAssertTrue(delegate.participateStub.invocations.first?.parameters === delegatingParticipant)
     }
 }

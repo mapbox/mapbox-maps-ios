@@ -48,7 +48,7 @@ final class BasicCameraAnimatorIntegrationTests: XCTestCase {
 
         animator.update()
 
-        XCTAssertEqual(mapboxMap.setCameraStub.parameters, [])
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.count, 0)
     }
 
     func testUpdateAfterAnimationsAreFlushed() {
@@ -57,6 +57,6 @@ final class BasicCameraAnimatorIntegrationTests: XCTestCase {
 
         animator.update()
 
-        XCTAssertEqual(mapboxMap.setCameraStub.parameters, [cameraView.presentationCameraOptions])
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.map(\.parameters), [cameraView.presentationCameraOptions])
     }
 }

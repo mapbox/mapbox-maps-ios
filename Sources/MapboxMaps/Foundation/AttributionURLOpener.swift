@@ -7,9 +7,9 @@ public protocol AttributionURLOpener {
 
 @available(iOSApplicationExtension, unavailable)
 internal final class DefaultAttributionURLOpener: AttributionURLOpener {
-    let application: UIApplication
+    let application: UIApplicationProtocol
 
-    init(application: UIApplication = .shared) {
+    init(application: UIApplicationProtocol = UIApplication.shared) {
         self.application = application
     }
 

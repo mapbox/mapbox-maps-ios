@@ -9,6 +9,7 @@ Mapbox welcomes participation and contributions from everyone.
 * Restore cancellation of animations on single tap. ([#1166](https://github.com/mapbox/mapbox-maps-ios/pull/1166))
 * Fix issue where invalid locations could be emitted when setting a custom location provider. ([#1172](https://github.com/mapbox/mapbox-maps-ios/pull/1172))
 * Fix crash in Puck2D when location accuracy authorization is reduced. ([#1173](https://github.com/mapbox/mapbox-maps-ios/pull/1173))
+* Fix an issue where plain text source attribution was not populated in attribution dialog.([1163](https://github.com/mapbox/mapbox-maps-ios/pull/1163))
 
 ## 10.4.0-beta.1 - February 23, 2022
 

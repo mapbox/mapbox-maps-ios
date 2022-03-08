@@ -8,21 +8,28 @@ internal struct Attribution: Hashable {
         case none
     }
 
-    static let OSM                  = "OpenStreetMap"
-    static let OSMAbbr              = "OSM"
-    static let telemetrySettings    = "Telemetry Settings"
-    static let aboutMapsURL         = URL(string: "https://www.mapbox.com/about/maps")!
-    static let aboutTelemetryURL    = URL(string: "https://www.mapbox.com/telemetry")!
+    enum Kind: Hashable {
+        case feedback
+        case actionable(URL)
+        case nonActionable
+    }
+
+    // Feedback URLs
+    private static let improveMapURLs = [
+        "https://www.mapbox.com/feedback/",
+        "https://www.mapbox.com/map-feedback/",
+        "https://apps.mapbox.com/feedback/"
+    ]
 
     var title: String
-    var url: URL
+    var kind: Kind
 
     var titleAbbreviation: String {
-        return title == Self.OSM ? Self.OSMAbbr : title
+        return title == "OpenStreetMap" ? "OSM" : title
     }
 
     func snapshotTitle(for style: Style) -> String? {
-        guard !isFeedbackURL else {
+        guard kind != .feedback else {
             return nil
         }
 
@@ -38,19 +45,19 @@ internal struct Attribution: Hashable {
         }
     }
 
-    // Feedback URLs as fallback
-    static let improveMapURLs = [
-        "https://www.mapbox.com/feedback/",
-        "https://www.mapbox.com/map-feedback/",
-        "https://apps.mapbox.com/feedback/"
-    ]
+    internal init(title: String, url: URL?) {
+        self.title = title
 
-    var isFeedbackURL: Bool {
-        return title.lowercased() == "improve this map" ||
-            Self.improveMapURLs.contains(url.absoluteString)
+        guard let url = url else {
+            self.kind = .nonActionable
+            return
+        }
+
+        let isFeedback = title.lowercased() == "improve this map" ||
+        Self.improveMapURLs.contains(url.absoluteString)
+
+        self.kind = isFeedback ? .feedback : .actionable(url)
     }
-
-    static let font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
 
     /// Return a combined text for attributions, intended for use with Snapshotters
     /// (via AttributionView)
@@ -69,7 +76,7 @@ internal struct Attribution: Hashable {
         let attributionText = "© \(titleArray.joined(separator: " / "))"
 
         let attributes: [NSAttributedString.Key: Any] = [
-            .font: font,
+            .font: UIFont.systemFont(ofSize: UIFont.smallSystemFontSize),
             .foregroundColor: UIColor(white: 0.2, alpha: 1.0),
         ]
 
@@ -104,8 +111,7 @@ internal struct Attribution: Hashable {
             attributedString.enumerateAttribute(.link,
                                                 in: NSRange(location: 0, length: attributedString.length),
                                                 options: []) { (value: Any?, range: NSRange, _: UnsafeMutablePointer<ObjCBool>) in
-                guard let url = value as? URL,
-                      range.location != NSNotFound else {
+                guard range.location != NSNotFound else {
                     return
                 }
 
@@ -116,7 +122,7 @@ internal struct Attribution: Hashable {
                     return
                 }
 
-                let attribution = Attribution(title: trimmedString, url: url)
+                let attribution = Attribution(title: trimmedString, url: value as? URL)
 
                 // Disallow duplicates.
                 if !attributions.contains(attribution) {

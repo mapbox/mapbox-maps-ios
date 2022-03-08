@@ -3,12 +3,11 @@
 This guide contains the steps required to contribute to the development of this project.
 
   * [Setting up a development environment](#setting-up-a-development-environment)
-<!--  * [Accessing the Maps SDK's source](#accessing-the-maps-sdks-source)-->
   * [Building the Maps SDK](#building-the-maps-sdk)
   * [Updating dependency versioning](#update-dependency-versions)
   * [Running the Debug app](#running-the-debug-app)
   * [CircleCI](#circleci)
-- [Testing](#testing)
+  * [Testing](#testing)
   * [Unit testing on devices](#unit-testing-on-devices)
   * [Integration testing](#integration-tests)
     + [What happens if I run from `MapboxTestHost`](#what-happens-if-I-run-from-mapboxtesthost)

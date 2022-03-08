@@ -100,18 +100,18 @@ final class OrnamentManagerTests: XCTestCase {
 
         XCTAssertEqual(cameraAnimationsManager.cancelAnimationsStub.invocations.count, 1)
         XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.count, 1)
-        XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.camera, CameraOptions(bearing: 0))
-        XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.duration, 0.3)
-        XCTAssertEqual(cameraAnimationsManager.easeToStub.parameters.first?.curve, .easeOut)
-        XCTAssertNil(cameraAnimationsManager.easeToStub.parameters.first?.completion)
+        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.first?.parameters.camera, CameraOptions(bearing: 0))
+        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.first?.parameters.duration, 0.3)
+        XCTAssertEqual(cameraAnimationsManager.easeToStub.invocations.first?.parameters.curve, .easeOut)
+        XCTAssertNil(cameraAnimationsManager.easeToStub.invocations.first?.parameters.completion)
     }
 
     func testUpdateMapBearing() throws {
         let compass = try XCTUnwrap(view.subviews.compactMap { $0 as? MapboxCompassOrnamentView }.first)
 
         XCTAssertEqual(mapboxMap.onEveryStub.invocations.count, 1)
-        XCTAssertEqual(mapboxMap.onEveryStub.parameters.first?.eventType, .cameraChanged)
-        let onEveryCameraChangeHandler = try XCTUnwrap(mapboxMap.onEveryStub.parameters.first?.handler)
+        XCTAssertEqual(mapboxMap.onEveryStub.invocations.first?.parameters.eventType, .cameraChanged)
+        let onEveryCameraChangeHandler = try XCTUnwrap(mapboxMap.onEveryStub.invocations.first?.parameters.handler)
 
         XCTAssertEqual(mapboxMap.cameraState.bearing, 0)
         XCTAssertTrue(compass.containerView.isHidden, "The compass should be hidden initially")

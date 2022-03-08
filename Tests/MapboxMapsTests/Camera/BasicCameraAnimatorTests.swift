@@ -58,18 +58,18 @@ final class BasicCameraAnimatorTests: XCTestCase {
     func testDeinit() {
         animator = nil
         XCTAssertEqual(cameraView.removeFromSuperviewStub.invocations.count, 1)
-        XCTAssertEqual(propertyAnimator.stopAnimationStub.parameters, [true])
+        XCTAssertEqual(propertyAnimator.stopAnimationStub.invocations.map(\.parameters), [true])
         XCTAssertTrue(propertyAnimator.finishAnimationStub.invocations.isEmpty)
     }
 
     func testIsReversed() {
         animator.isReversed = true
 
-        XCTAssertEqual(propertyAnimator.setIsReversedStub.parameters, [true])
+        XCTAssertEqual(propertyAnimator.setIsReversedStub.invocations.map(\.parameters), [true])
 
         animator.isReversed = false
 
-        XCTAssertEqual(propertyAnimator.setIsReversedStub.parameters, [true, false])
+        XCTAssertEqual(propertyAnimator.setIsReversedStub.invocations.map(\.parameters), [true, false])
     }
 
     func testStartAndStopAnimation() {
@@ -85,14 +85,14 @@ final class BasicCameraAnimatorTests: XCTestCase {
         XCTAssertNotNil(animator?.transition)
         XCTAssertEqual(animator?.transition?.toCameraOptions.zoom, 10)
         XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 1)
-        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.parameters.first === animator)
+        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.invocations.first?.parameters === animator)
 
         animator.stopAnimation()
         XCTAssertEqual(propertyAnimator.stopAnimationStub.invocations.count, 1)
         XCTAssertEqual(propertyAnimator.finishAnimationStub.invocations.count, 1)
         XCTAssertEqual(propertyAnimator.finishAnimationStub.invocations.first?.parameters, .current)
         XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
-        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === animator)
+        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.invocations.first?.parameters === animator)
     }
 
     func testStartAndStopAnimationAfterDelay() throws {
@@ -250,7 +250,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
 
         animator.startAnimation()
         XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 1)
-        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.parameters.first === animator)
+        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.invocations.first?.parameters === animator)
     }
 
     func testInformsDelegateWhenStartingAfterDelay() {
@@ -259,7 +259,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
         }
         animator.startAnimation(afterDelay: 1)
         XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 1)
-        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.parameters.first === animator)
+        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.invocations.first?.parameters === animator)
     }
 
     func testInformsDelegateWhenStartingPausingAndStarting() {
@@ -268,15 +268,15 @@ final class BasicCameraAnimatorTests: XCTestCase {
         }
         animator.startAnimation()
         XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 1)
-        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.parameters.first === animator)
+        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.invocations.first?.parameters === animator)
 
         animator.pauseAnimation()
         XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
-        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === animator)
+        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.invocations.first?.parameters === animator)
 
         animator.startAnimation()
         XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 2)
-        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.parameters.last === animator)
+        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.invocations.last?.parameters === animator)
     }
 
     func testInformsDelegateWhenPausingAndContinuing() {
@@ -288,7 +288,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
 
         animator.continueAnimation(withTimingParameters: nil, durationFactor: 1)
         XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 1)
-        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.parameters.first === animator)
+        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.invocations.first?.parameters === animator)
     }
 
     func testInformsDelegateWhenStartingPausingAndContinuing() {
@@ -297,15 +297,15 @@ final class BasicCameraAnimatorTests: XCTestCase {
         }
         animator.startAnimation()
         XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 1)
-        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.parameters.first === animator)
+        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.invocations.first?.parameters === animator)
 
         animator.pauseAnimation()
         XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
-        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === animator)
+        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.invocations.first?.parameters === animator)
 
         animator.continueAnimation(withTimingParameters: nil, durationFactor: 1)
         XCTAssertEqual(delegate.cameraAnimatorDidStartRunningStub.invocations.count, 2)
-        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.parameters.last === animator)
+        XCTAssertTrue(delegate.cameraAnimatorDidStartRunningStub.invocations.last?.parameters === animator)
     }
 
     func testInformsDelegateWhenPausingAndStopping() {
@@ -326,7 +326,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.startAnimation()
-        let completion = try XCTUnwrap(propertyAnimator.addCompletionStub.parameters.first)
+        let completion = try XCTUnwrap(propertyAnimator.addCompletionStub.invocations.first?.parameters)
 
         completion(.end)
 
@@ -338,7 +338,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.startAnimation()
-        let completion = try XCTUnwrap(propertyAnimator.addCompletionStub.parameters.first)
+        let completion = try XCTUnwrap(propertyAnimator.addCompletionStub.invocations.first?.parameters)
 
         completion(.start)
 
@@ -350,7 +350,7 @@ final class BasicCameraAnimatorTests: XCTestCase {
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.startAnimation()
-        let completion = try XCTUnwrap(propertyAnimator.addCompletionStub.parameters.first)
+        let completion = try XCTUnwrap(propertyAnimator.addCompletionStub.invocations.first?.parameters)
 
         completion(.current)
 
@@ -362,11 +362,11 @@ final class BasicCameraAnimatorTests: XCTestCase {
             transition.zoom.toValue = cameraOptionsTestValue.zoom!
         }
         animator.startAnimation()
-        let completion = try XCTUnwrap(propertyAnimator.addCompletionStub.parameters.first)
+        let completion = try XCTUnwrap(propertyAnimator.addCompletionStub.invocations.first?.parameters)
 
         completion(.current)
 
         XCTAssertEqual(delegate.cameraAnimatorDidStopRunningStub.invocations.count, 1)
-        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.parameters.first === animator)
+        XCTAssertTrue(delegate.cameraAnimatorDidStopRunningStub.invocations.first?.parameters === animator)
     }
 }

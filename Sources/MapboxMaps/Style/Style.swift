@@ -281,13 +281,15 @@ public final class Style: StyleProtocol {
     /// Get or set the map style's transition options.
     ///
     /// By default, the style parser will attempt to read the style default
-    /// transition options, if any, falling back to an immediate transition
-    /// otherwise.
+    /// transition, if any, falling back to a 0.3 s transition otherwise.
     ///
-    /// The style transition is re-evaluated when a new style is loaded.
-    ///
-    /// - Attention:
-    ///     Overridden transition options are reset once a new style has been loaded.
+    /// Overridden transitions are reset once a new style has been loaded.
+    /// To customize the transition used when switching styles, set this
+    /// property after `MapEvents.EventKind.styleDataLoaded` where
+    /// `Event.type == "style"` and before
+    /// `MapEvents.EventKind.styleDataLoaded` where `Event.type == "sprite"`
+    /// and where `Event.type == "sources"`.
+    /// - SeeAlso: ``MapboxMap/onNext(_:handler:)``
     public var transition: TransitionOptions {
         get {
             styleManager.getStyleTransition()

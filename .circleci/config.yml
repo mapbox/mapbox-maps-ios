@@ -42,19 +42,19 @@ workflows:
     jobs:
       - swiftlint
       - depsvalidator:
-          xcode: "12.5.0"
+          xcode: "12.5.1"
       - build-sdk:
           configuration: "Release"
           report_failure: true
           matrix:
             parameters:
-              xcode: ["12.5.0", "13.0.0"]
+              xcode: ["12.5.1", "13.2.1"]
       - unit-test-sdk:
           configuration: "Release"
           report_failure: true
           matrix:
             parameters:
-              xcode: ["12.5.0", "13.0.0"]
+              xcode: ["12.5.1", "13.2.1"]
       - build-tests:
           name: Build MapboxTestHost tests
       - run-tests:
@@ -72,9 +72,7 @@ workflows:
       - create-xcframework:
           create-xcframework-always-run: true
           report_failure: true
-          matrix:
-            parameters:
-              xcode: ["12.5.0", "13.2.1"]
+          xcode: "12.5.1"
 
   optional-tests:
     jobs:
@@ -114,9 +112,9 @@ workflows:
     jobs:
       - swiftlint
       - depsvalidator:
-          xcode: "12.5.0"
+          xcode: "12.5.1"
       - build-sdk:
-          xcode: "12.5.0"
+          xcode: "12.5.1"
           configuration: "Release"
 
       - build-sdk-for-api-compatibility-check
@@ -143,7 +141,7 @@ workflows:
       # Run unit tests on CI simulator
       - unit-test-sdk:
           name: "Run Unit tests"
-          xcode: "12.5.0"
+          xcode: "12.5.1"
 
       # Build all tests with host application
       # Run on main by default
@@ -240,7 +238,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "12.5.0"
+        default: "12.5.1"
       create-xcframework-always-run:
         type: boolean
         default: false

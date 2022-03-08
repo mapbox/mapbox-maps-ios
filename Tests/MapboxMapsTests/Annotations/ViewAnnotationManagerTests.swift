@@ -81,11 +81,11 @@ final class ViewAnnotationManagerTests: XCTestCase {
         _ = addTestAnnotationView()
         _ = addTestAnnotationView()
         _ = addTestAnnotationView()
-        let viewIds = mapboxMap.addViewAnnotationStub.parameters.map(\.id)
+        let viewIds = mapboxMap.addViewAnnotationStub.invocations.map(\.parameters.id)
 
         manager.removeAll()
 
-        XCTAssertEqual(Set(mapboxMap.removeViewAnnotationStub.parameters), Set(viewIds))
+        XCTAssertEqual(Set(mapboxMap.removeViewAnnotationStub.invocations.map(\.parameters)), Set(viewIds))
         XCTAssertTrue(container.subviews.isEmpty)
     }
 
@@ -280,7 +280,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
 
         triggerPositionUpdate(forId: id)
 
-        XCTAssertEqual(observer.framesDidChangeStub.parameters.first, [annotationView])
+        XCTAssertEqual(observer.framesDidChangeStub.invocations.first?.parameters, [annotationView])
     }
 
     func testViewAnnotationUpdateObserverNotNotifiedAboutSameFrames() {
@@ -293,7 +293,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
 
         triggerPositionUpdate(forId: id)
 
-        XCTAssertTrue(observer.framesDidChangeStub.parameters.isEmpty)
+        XCTAssertTrue(observer.framesDidChangeStub.invocations.isEmpty)
     }
 
     func testViewAnnotationUpdateObserverNotifiedAboutNewlyHiddenViews() {
@@ -304,7 +304,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         manager.onViewAnnotationPositionsUpdate(forPositions: [])
 
         XCTAssertTrue(annotationView.isHidden)
-        XCTAssertEqual(observer.visibilityDidChangeStub.parameters.first, [annotationView])
+        XCTAssertEqual(observer.visibilityDidChangeStub.invocations.first?.parameters, [annotationView])
     }
 
     func testViewAnnotationUpdateObserverNotifiedAboutNewlyVisibleViews() {
@@ -317,7 +317,7 @@ final class ViewAnnotationManagerTests: XCTestCase {
         triggerPositionUpdate(forId: id)
 
         XCTAssertFalse(annotationView.isHidden)
-        XCTAssertEqual(observer.visibilityDidChangeStub.parameters.first, [annotationView])
+        XCTAssertEqual(observer.visibilityDidChangeStub.invocations.first?.parameters, [annotationView])
     }
 
     func testRemoveViewAnnotationUpdateObserver() {

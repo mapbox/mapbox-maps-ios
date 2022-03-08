@@ -21,14 +21,6 @@ final class Stub<ParametersType, ReturnType> {
         self.defaultReturnValue = defaultReturnValue
     }
 
-    var returnedValues: [ReturnType] {
-        invocations.map(\.returnValue)
-    }
-
-    var parameters: [ParametersType] {
-        invocations.map(\.parameters)
-    }
-
     func call(with parameters: ParametersType) -> ReturnType {
         let invocation = Invocation(parameters: parameters,
                                     returnValue: returnValueQueue.isEmpty ? defaultReturnValue : returnValueQueue.removeFirst())

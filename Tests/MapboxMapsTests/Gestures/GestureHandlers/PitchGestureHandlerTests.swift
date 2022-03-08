@@ -73,7 +73,7 @@ final class PitchGestureHandlerTests: XCTestCase {
 
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(delegate.gestureBeganStub.parameters, [.pitch])
+        XCTAssertEqual(delegate.gestureBeganStub.invocations.map(\.parameters), [.pitch])
         XCTAssertEqual(gestureRecognizer.locationOfTouchStub.invocations.count, 0)
     }
 
@@ -87,7 +87,7 @@ final class PitchGestureHandlerTests: XCTestCase {
 
         gestureRecognizer.sendActions()
 
-        XCTAssertEqual(mapboxMap.setCameraStub.parameters, [CameraOptions(pitch: mapboxMap.cameraState.pitch - 12.5)])
+        XCTAssertEqual(mapboxMap.setCameraStub.invocations.map(\.parameters), [CameraOptions(pitch: mapboxMap.cameraState.pitch - 12.5)])
     }
 
     func testPitchEnded() throws {
@@ -96,9 +96,9 @@ final class PitchGestureHandlerTests: XCTestCase {
         gestureRecognizer.sendActions()
 
         XCTAssertEqual(delegate.gestureEndedStub.invocations.count, 1)
-        XCTAssertEqual(delegate.gestureEndedStub.parameters.first?.gestureType, .pitch)
+        XCTAssertEqual(delegate.gestureEndedStub.invocations.first?.parameters.gestureType, .pitch)
 
-        let willAnimate = try XCTUnwrap(delegate.gestureEndedStub.parameters.first?.willAnimate)
+        let willAnimate = try XCTUnwrap(delegate.gestureEndedStub.invocations.first?.parameters.willAnimate)
         XCTAssertFalse(willAnimate)
     }
 }

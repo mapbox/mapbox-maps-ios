@@ -28,8 +28,8 @@ class AttributionDialogTests: XCTestCase {
         let viewController = UIViewController()
         let bundle = Bundle.mapboxMaps
         let window = UIWindow()
-        window.makeKeyAndVisible()
         window.rootViewController = viewController
+        window.makeKeyAndVisible()
         attributionDialogManager.isMetricsEnabled = true
 
         attributionDialogManager.showTelemetryAlertController(from: viewController)
@@ -75,8 +75,8 @@ class AttributionDialogTests: XCTestCase {
         let viewController = UIViewController()
         let bundle = Bundle.mapboxMaps
         let window = UIWindow()
-        window.makeKeyAndVisible()
         window.rootViewController = viewController
+        window.makeKeyAndVisible()
         attributionDialogManager.isMetricsEnabled = false
 
         attributionDialogManager.showTelemetryAlertController(from: viewController)
@@ -122,8 +122,8 @@ class AttributionDialogTests: XCTestCase {
         let viewController = UIViewController()
         let bundle = Bundle.mapboxMaps
         let window = UIWindow()
-        window.makeKeyAndVisible()
         window.rootViewController = viewController
+        window.makeKeyAndVisible()
         mockDelegate.viewControllerForPresentingStub.defaultReturnValue = viewController
 
         attributionDialogManager.didTap(InfoButtonOrnament())
@@ -159,8 +159,8 @@ class AttributionDialogTests: XCTestCase {
         let viewController = UIViewController()
         let window = UIWindow()
         let attribution = Attribution(title: String.randomASCII(withLength: 10), url: nil)
-        window.makeKeyAndVisible()
         window.rootViewController = viewController
+        window.makeKeyAndVisible()
         mockDataSource.attributionsStub.defaultReturnValue = [attribution]
         mockDelegate.viewControllerForPresentingStub.defaultReturnValue = viewController
 
@@ -189,8 +189,8 @@ class AttributionDialogTests: XCTestCase {
         let attribution0 = Attribution(title: String.randomASCII(withLength: 10), url: nil)
         let attribution1 = Attribution(title: String.randomASCII(withLength: 10), url: URL(string: "http://example.com")!)
 
-        window.makeKeyAndVisible()
         window.rootViewController = viewController
+        window.makeKeyAndVisible()
         mockDataSource.attributionsStub.defaultReturnValue = [attribution0, attribution1]
         mockDelegate.viewControllerForPresentingStub.defaultReturnValue = viewController
 
